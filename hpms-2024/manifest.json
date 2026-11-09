@@ -1,0 +1,320 @@
+{
+ "version": 1,
+ "source": "FHWA HPMS Spatial All Sections 2024 (data.transportation.gov 42um-tgh5)",
+ "year": 2024,
+ "kept": "f_system 1-6 with through_lanes, and all ramps",
+ "files": [
+  {
+   "state": "AK",
+   "file": "hpms_AK.bin",
+   "bytes": 2389959,
+   "sha256": "80b2af3451a19180b7572934a7c8a34269915a9a06a47f44ecbc1cd2ac578ee7"
+  },
+  {
+   "state": "AL",
+   "file": "hpms_AL.bin",
+   "bytes": 11153920,
+   "sha256": "b2eb1c99f6a39a4b0d8225888c32573594e5a33f47db19375920217e80ea50e3"
+  },
+  {
+   "state": "AR",
+   "file": "hpms_AR.bin",
+   "bytes": 5925319,
+   "sha256": "969f914e6c92af41e4dd8d3cad48216211aa8aa644122697f467f9fbb78e08c5"
+  },
+  {
+   "state": "AZ",
+   "file": "hpms_AZ.bin",
+   "bytes": 6095117,
+   "sha256": "9ea53e8484a5341e5ac3af3301f6ab071c059eda8bb29ee50607428cc7d030d9"
+  },
+  {
+   "state": "CA",
+   "file": "hpms_CA.bin",
+   "bytes": 18648022,
+   "sha256": "089e238eb48a07b2bd49887935219c360e5ce0ec58f634aaa8ed9d92d57f10af"
+  },
+  {
+   "state": "CO",
+   "file": "hpms_CO.bin",
+   "bytes": 5103793,
+   "sha256": "a4a4e30917ad9cd90df4c856b4f24aaaf8cae2513b45cf83ea87f3341e9ff68a"
+  },
+  {
+   "state": "CT",
+   "file": "hpms_CT.bin",
+   "bytes": 2402377,
+   "sha256": "264468a0f4f1e585ba526eb229d289d622417dd0ab6173d521b17de575879170"
+  },
+  {
+   "state": "DC",
+   "file": "hpms_DC.bin",
+   "bytes": 418398,
+   "sha256": "4f319ac50fb78aacee80cea67d1d1dbe71e070277dbee88897f1c96b69b792a5"
+  },
+  {
+   "state": "DE",
+   "file": "hpms_DE.bin",
+   "bytes": 758647,
+   "sha256": "78510426c4e4b3702651a66d4ff145dec8aebf04638bd3b55dc60d7f07585990"
+  },
+  {
+   "state": "FL",
+   "file": "hpms_FL.bin",
+   "bytes": 7694029,
+   "sha256": "68534579bb8805f92109495b43dc70156d4fd7f3860f492f5f78ed3f3e414b80"
+  },
+  {
+   "state": "GA",
+   "file": "hpms_GA.bin",
+   "bytes": 10121665,
+   "sha256": "c8b41ae6033cb9757bbb26efc75e05a67edf58771c7d849b84de157f867558ee"
+  },
+  {
+   "state": "HI",
+   "file": "hpms_HI.bin",
+   "bytes": 2660369,
+   "sha256": "de48a1446eace06b281cdb97150a938a016a94695918b897819ded39a7dbdf96"
+  },
+  {
+   "state": "IA",
+   "file": "hpms_IA.bin",
+   "bytes": 8561634,
+   "sha256": "ad3118ee48cf9f98753934ef67b53d22eeeeab66433d456a5c5483c39ee8fd94"
+  },
+  {
+   "state": "ID",
+   "file": "hpms_ID.bin",
+   "bytes": 4043930,
+   "sha256": "75952f025a3987b9a86b9e377d26be4ba0302c48e6282e63c2786666c474fb12"
+  },
+  {
+   "state": "IL",
+   "file": "hpms_IL.bin",
+   "bytes": 7928381,
+   "sha256": "2b25ac1eb46f46cae368981e2aeedd54a47e419305ec26570277b39ba0154597"
+  },
+  {
+   "state": "IN",
+   "file": "hpms_IN.bin",
+   "bytes": 12764504,
+   "sha256": "409afc158af0f650b79609510f427956a0fc0a0856092d4bf244192d121723ba"
+  },
+  {
+   "state": "KS",
+   "file": "hpms_KS.bin",
+   "bytes": 7555782,
+   "sha256": "587a6765bd5fead467db9b2713c92fc33ca4dbecf6d58e101439cba60341a113"
+  },
+  {
+   "state": "KY",
+   "file": "hpms_KY.bin",
+   "bytes": 6396046,
+   "sha256": "e09373ba9f84d8ecccbfecd9d7f4d8b97d6449a44e837a51e0cb455303c310ae"
+  },
+  {
+   "state": "LA",
+   "file": "hpms_LA.bin",
+   "bytes": 9323578,
+   "sha256": "40d1c28aab962b7b0454077aa265c1703fe80203be086e6c36210e73df31187a"
+  },
+  {
+   "state": "MA",
+   "file": "hpms_MA.bin",
+   "bytes": 6634541,
+   "sha256": "0ba8bbbece08ff5a398e95974173d757cb99f42ff728941ec26d95a71c67e136"
+  },
+  {
+   "state": "MD",
+   "file": "hpms_MD.bin",
+   "bytes": 3919253,
+   "sha256": "d5cf982528d01fb8ac81022834b37891c24065aa1c0cd027a55428dd0dc8d95a"
+  },
+  {
+   "state": "ME",
+   "file": "hpms_ME.bin",
+   "bytes": 4238489,
+   "sha256": "408f4028e92938c6ee556a9d834f6d2134d5ca8312d4e2150f01498302a3634b"
+  },
+  {
+   "state": "MI",
+   "file": "hpms_MI.bin",
+   "bytes": 8612298,
+   "sha256": "2aca160ee2e8b97a28b6e7234fb5d9a3b8dbbba0f8d5f35cfb256b842931b5ad"
+  },
+  {
+   "state": "MN",
+   "file": "hpms_MN.bin",
+   "bytes": 7727277,
+   "sha256": "af0408c3e46becd6e12aa99edaf6d33f46eb1fb28423f7812a1aa6087f95babd"
+  },
+  {
+   "state": "MO",
+   "file": "hpms_MO.bin",
+   "bytes": 14205203,
+   "sha256": "b21cd61e5cb3871d85c3ae7af686de1304b32a5ae1dd9d6fe4d2082c1b15fb89"
+  },
+  {
+   "state": "MS",
+   "file": "hpms_MS.bin",
+   "bytes": 5141329,
+   "sha256": "75049edb61905483208bde3d15b34483c0c7adf2abe8b2f60004f0cfd7c1ec4a"
+  },
+  {
+   "state": "MT",
+   "file": "hpms_MT.bin",
+   "bytes": 3014791,
+   "sha256": "cf05e766233383c4cff2a742f5bd09c541865cae6605069f3d36299973adfe77"
+  },
+  {
+   "state": "NC",
+   "file": "hpms_NC.bin",
+   "bytes": 10922300,
+   "sha256": "ef475e8d72d8c04f6fa5721120f55dd0a2faa47c9bd34f7459a5ea67fe71ead5"
+  },
+  {
+   "state": "ND",
+   "file": "hpms_ND.bin",
+   "bytes": 3208944,
+   "sha256": "f6d6bdfe4ed98bb607405d74a3ceddc12370b23baf323a577e84fb2251bfa87e"
+  },
+  {
+   "state": "NE",
+   "file": "hpms_NE.bin",
+   "bytes": 10663116,
+   "sha256": "c1ba42a4eb6fd281323d4514d5a1f380fd23cfe31911f14cf568560b357b4b1b"
+  },
+  {
+   "state": "NH",
+   "file": "hpms_NH.bin",
+   "bytes": 2053204,
+   "sha256": "f01460997f1168bdf1359dacecfdf1a6c22993709de000a94aaa1fb6f4aca27d"
+  },
+  {
+   "state": "NJ",
+   "file": "hpms_NJ.bin",
+   "bytes": 3607471,
+   "sha256": "e4195d5e7df2c0c9b6a8774cff866dfcad59571b8fc828375d2484e745e5ee11"
+  },
+  {
+   "state": "NM",
+   "file": "hpms_NM.bin",
+   "bytes": 2556920,
+   "sha256": "7c8658508f1cc2a4cf4114fdc04c02a59c08f42aa1ebe27bc87e158e93671575"
+  },
+  {
+   "state": "NV",
+   "file": "hpms_NV.bin",
+   "bytes": 2636202,
+   "sha256": "ebbb50d19e1b19670649b6e91f878dda177b5a0f3ce0e0b85f218270c7399e61"
+  },
+  {
+   "state": "NY",
+   "file": "hpms_NY.bin",
+   "bytes": 15812288,
+   "sha256": "0c92caa9cc620b4f852591a5d1e4af57bc40899b790b0ab98c2804ccca327e85"
+  },
+  {
+   "state": "OH",
+   "file": "hpms_OH.bin",
+   "bytes": 9761926,
+   "sha256": "a3494585cf8443c045b7f9546b51da7ebfa915e4df38086081081b31673a6283"
+  },
+  {
+   "state": "OK",
+   "file": "hpms_OK.bin",
+   "bytes": 7912286,
+   "sha256": "c1bf8ac7047aabffa80fe3a583c5662e0b29f15f724e719da0d06bfc728a6e7d"
+  },
+  {
+   "state": "OR",
+   "file": "hpms_OR.bin",
+   "bytes": 7543912,
+   "sha256": "2d69bd6f2ba21a1c0438711523b35dd52e8b0caf60ef3aabf00de588078de441"
+  },
+  {
+   "state": "PA",
+   "file": "hpms_PA.bin",
+   "bytes": 17061356,
+   "sha256": "d905438fbc63b4c794b8be955319a49240341b64c4e12119c93ff9d66a696923"
+  },
+  {
+   "state": "PR",
+   "file": "hpms_PR.bin",
+   "bytes": 2176681,
+   "sha256": "32b5faffb66797f6383fd25219ddec054294844d53c01550641e27e06cdf5cb4"
+  },
+  {
+   "state": "RI",
+   "file": "hpms_RI.bin",
+   "bytes": 1096513,
+   "sha256": "ef52cfe8e32d580bbcc8d735ed391d1ee83ef1e0e0a9ab73d9b0fa31dd0a1719"
+  },
+  {
+   "state": "SC",
+   "file": "hpms_SC.bin",
+   "bytes": 5192520,
+   "sha256": "e3293754ce17ded479638dca80f725d83bca2da1dca7c04001356d69125cb0ed"
+  },
+  {
+   "state": "SD",
+   "file": "hpms_SD.bin",
+   "bytes": 4767745,
+   "sha256": "b7c4fa614375416a92da0f7bfa554856938fb9a4e2af3afd72b67b1bb2cfca82"
+  },
+  {
+   "state": "TN",
+   "file": "hpms_TN.bin",
+   "bytes": 12220419,
+   "sha256": "61b6bcc769c9e96b3c1d1c4a5daf7d3486c9e2ed78182bd980357d62e9fa2cfb"
+  },
+  {
+   "state": "TX",
+   "file": "hpms_TX.bin",
+   "bytes": 20935434,
+   "sha256": "be55893d8af9c8df388451af4d1e860f2418dc41c72528ff2e16399018ba439e"
+  },
+  {
+   "state": "UT",
+   "file": "hpms_UT.bin",
+   "bytes": 4372431,
+   "sha256": "136b856196c7bf067a48bb55ce07533eb3092786b9343a72ccd3b9353be10a67"
+  },
+  {
+   "state": "VA",
+   "file": "hpms_VA.bin",
+   "bytes": 13534211,
+   "sha256": "c6e83160a778aff8cca4f0e9c99074ec3b5c926b7bb9003247670821f3ee3478"
+  },
+  {
+   "state": "VT",
+   "file": "hpms_VT.bin",
+   "bytes": 2079548,
+   "sha256": "a0f99419278d20d2efbb82f71b4b6d6e417e2580e38f002bf7a2de7dc6299a33"
+  },
+  {
+   "state": "WA",
+   "file": "hpms_WA.bin",
+   "bytes": 5935516,
+   "sha256": "2a6140f2af75ab3e7681822f4dab7d239c59bc178317982180f6b88e14eaebb5"
+  },
+  {
+   "state": "WI",
+   "file": "hpms_WI.bin",
+   "bytes": 7598640,
+   "sha256": "c44366abb808ad4df20e73885d6ee839b372cab9c9b577e4204dd3d8d3be62c4"
+  },
+  {
+   "state": "WV",
+   "file": "hpms_WV.bin",
+   "bytes": 6503476,
+   "sha256": "68694e792a7cc063e63fa22f37e2f1bb3e73780cf657c69f7c825f000592cc38"
+  },
+  {
+   "state": "WY",
+   "file": "hpms_WY.bin",
+   "bytes": 3790208,
+   "sha256": "980123cf1da52c509e63c9c29a95a62bf65f00dbdbc7d9de831005a1e889f3ec"
+  }
+ ]
+}
