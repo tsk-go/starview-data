@@ -249,7 +249,7 @@ public final class DestinationActivity extends AppCompatActivity {
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     @Override
     protected void onCreate(Bundle var1) {
-        Object var11 = null; // declarations Vineflower left out
+        String var11 = null; // declarations Vineflower left out
         super.onCreate(var1);
         double var4 = this.getIntent().getDoubleExtra("lat", Double.NaN);
         double var2 = this.getIntent().getDoubleExtra("lon", Double.NaN);
@@ -640,14 +640,12 @@ public final class DestinationActivity extends AppCompatActivity {
                         String addr = (String) pair.component2();
                         String optString3 = o.optString("label");
                         if (Intrinsics.areEqual(optString3, "home")) {
-                            str = "Home";
+                            name = "Home";
                         } else if (Intrinsics.areEqual(optString3, "work")) {
-                            str = "Work";
+                            name = "Work";
                         } else {
                             name = name0;
-                            out.add(new Place(name, addr, lat, lon, null, 0.0d, null, false, 240, null));
                         }
-                        name = str;
                         out.add(new Place(name, addr, lat, lon, null, 0.0d, null, false, 240, null));
                     }
                 }
@@ -866,7 +864,9 @@ public final class DestinationActivity extends AppCompatActivity {
                     textView = null;
                 }
                 Intrinsics.checkNotNull(e);
-                if (!StringsKt.contains((CharSequence) e, (CharSequence) "unknown action", false)) {
+                if (StringsKt.contains((CharSequence) e, (CharSequence) "unknown action", false)) {
+                    str = "The comma needs the StarView navigation update for this";
+                } else {
                     String str2 = e;
                     if (str2.length() == 0) {
                         str2 = "No answer from the comma";
@@ -988,275 +988,51 @@ public final class DestinationActivity extends AppCompatActivity {
 
     /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     public static final void androidSearch$lambda$48(DestinationActivity var0, Pair var1, String var2, int var3) {
-        ArrayList var38 = null; ArrayList var41 = null; ArrayList var42 = null; boolean var48 = false; Object var49 = null; Object var50 = null; Object var56 = null; // declarations Vineflower left out
-        label223: {
-            label225: {
-                Geocoder var9;
-                try {
-                    var9 = new Geocoder((Context)var0, Locale.getDefault());
-                } catch (Exception var35) {
-                    break label225;
-                }
-
-                List var36;
-                if (var1 != null) {
-                    try {
-                        double var4 = 0.45 / RangesKt.coerceAtLeast(Math.cos(Math.toRadians(((Number)var1.getFirst()).doubleValue())), 0.2);
-                        var36 = var9.getFromLocationName(
-                            var2,
-                            8,
-                            ((Number)var1.getFirst()).doubleValue() - 0.45,
-                            ((Number)var1.getSecond()).doubleValue() - var4,
-                            ((Number)var1.getFirst()).doubleValue() + 0.45,
-                            ((Number)var1.getSecond()).doubleValue() + var4
-                        );
-                    } catch (Exception var34) {
-                        break label225;
-                    }
-                } else {
-                    var36 = null;
-                }
-
-                Collection var10;
-                try {
-                    var10 = var36;
-                } catch (Exception var33) {
-                    break label225;
-                }
-
-                int var6;
-                label210: {
-                    if (var10 != null) {
-                        boolean var8;
-                        try {
-                            var8 = var10.isEmpty();
-                        } catch (Exception var32) {
-                            break label225;
-                        }
-
-                        if (!var8) {
-                            var6 = 0;
-                            break label210;
-                        }
-                    }
-
-                    var6 = 1;
-                }
-
-                if ((var6 != 0)) {
-                    try {
-                        var36 = var9.getFromLocationName(var2, 8);
-                    } catch (Exception var31) {
-                        break label225;
-                    }
-                }
-
-                List var39;
-                if (var36 == null) {
-                    try {
-                        var39 = CollectionsKt.emptyList();
-                    } catch (Exception var30) {
-                        break label225;
-                    }
-                } else {
-                    var39 = var36;
-                }
-
-                Iterator var11;
-                try {
-                    Iterable var53 = var39;
-                    ArrayList var40 = new ArrayList();
-                    var41 = var40;
-                    var11 = var53.iterator();
-                } catch (Exception var28) {
-                    break label225;
-                }
-
-                while (true) {
-                    Object var12;
-                    label190: {
-                        label189: {
-                            try {
-                                if (!var11.hasNext()) {
-                                    break;
-                                }
-
-                                var12 = var11.next();
-                                Address var54 = (Address)var12;
-                                if (var54.hasLatitude() && var54.hasLongitude()) {
-                                    break label189;
-                                }
-                            } catch (Exception var29) {
-                                break label225;
-                            }
-
-                            var6 = (((boolean)false) ? 1 : 0);
-                            break label190;
-                        }
-
-                        var6 = (((boolean)true) ? 1 : 0);
-                    }
-
-                    if ((var6 != 0)) {
-                        try {
-                            var41.add(var12);
-                        } catch (Exception var27) {
-                            break label225;
-                        }
-                    }
-                }
-
-                try {
-                    var42 = var41;
-                } catch (Exception var26) {
-                    break label225;
-                }
-
-                Iterator var13;
-                ArrayList var57;
-                try {
-                    Iterable var43 = ((Iterable) var42);
-                    ArrayList var55 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var43, 10));
-                    var57 = var55;
-                    var13 = var43.iterator();
-                } catch (Exception var25) {
-                    break label225;
-                }
-
-                Geocoder var37 = var9;
-
-                while (true) {
-                    byte var7 = 0;
-
-                    Address var14;
-                    try {
-                        if (!var13.hasNext()) {
-                            break;
-                        }
-
-                        var14 = (Address)var13.next();
-                        var56 = var14.getAddressLine(0);
-                    } catch (Exception var21) {
-                        break label225;
-                    }
-
-                    if (var56 == null) {
-                        try {
-                            var56 = CollectionsKt.joinToString(CollectionsKt.listOfNotNull(new String[]{var14.getThoroughfare(), var14.getLocality()}), ", ", "", "", -1, "...", null);
-                        } catch (Exception var20) {
-                            break label225;
-                        }
-                    }
-
-                    try {
-                        var49 = var14.getFeatureName();
-                    } catch (Exception var19) {
-                        break label225;
-                    }
-
-                    var2 = ((String) var49);
-                    if (var49 == null) {
-                        var2 = "";
-                    }
-
-                    label159: {
-                        label158: {
-                            try {
-                                if (var2.length() > 0) {
-                                    break label158;
-                                }
-                            } catch (Exception var24) {
-                                break label225;
-                            }
-
-                            var6 = (((boolean)false) ? 1 : 0);
-                            break label159;
-                        }
-
-                        var6 = (((boolean)true) ? 1 : 0);
-                    }
-
-                    label228: {
-                        if ((var6 != 0)) {
-                            try {
-                                var50 = var2;
-                            } catch (Exception var18) {
-                                break label225;
-                            }
-
-                            var6 = var7;
-
-                            label148: {
-                                while (true) {
-                                    label145: {
-                                        try {
-                                            if (var6 < var50.length()) {
-                                                if (Character.isLetter(var50.charAt(var6))) {
-                                                    break;
-                                                }
-                                                break label145;
-                                            }
-                                        } catch (Exception var23) {
-                                            break label225;
-                                        }
-
-                                        var48 = false;
-                                        break label148;
-                                    }
-
-                                    var6++;
-                                }
-
-                                var48 = true;
-                            }
-
-                            if (var48) {
-                                var9 = var37;
-
-                                try {
-                                    if (!StringsKt.startsWith(var56, var2, false)) {
-                                        break label228;
-                                    }
-                                } catch (Exception var22) {
-                                    break label225;
-                                }
-                            } else {
-                                var9 = var37;
-                            }
-                        } else {
-                            var9 = var37;
-                        }
-
-                        try {
-                            var2 = StringsKt.substringBefore(var56, ",", var56);
-                        } catch (Exception var17) {
-                            break label225;
-                        }
-
-                        var37 = var9;
-                    }
-
-                    try {
-                        DestinationActivity.Place var52 = new DestinationActivity.Place(
-                            var2, ((String) var56), var14.getLatitude(), var14.getLongitude(), null, 0.0, null, false, 240, null
-                        );
-                        var57.add(var52);
-                    } catch (Exception var16) {
-                        break label225;
-                    }
-                }
-
-                try {
-                    var38 = var57;
-                    break label223;
-                } catch (Exception var15) {
+        List out;
+        try {
+            Geocoder g = new Geocoder((Context) var0, Locale.getDefault());
+            List<Address> found = null;
+            if (var1 != null) {
+                double dLon = 0.45 / RangesKt.coerceAtLeast(Math.cos(Math.toRadians(((Number) var1.getFirst()).doubleValue())), 0.2);
+                found = g.getFromLocationName(var2, 8, ((Number) var1.getFirst()).doubleValue() - 0.45, ((Number) var1.getSecond()).doubleValue() - dLon, ((Number) var1.getFirst()).doubleValue() + 0.45, ((Number) var1.getSecond()).doubleValue() + dLon);
+            }
+            if (found == null || found.isEmpty()) {
+                found = g.getFromLocationName(var2, 8);
+            }
+            List<Address> all = found != null ? found : CollectionsKt.emptyList();
+            List<Address> located = new ArrayList();
+            for (Address a : all) {
+                if (a.hasLatitude() && a.hasLongitude()) {
+                    located.add(a);
                 }
             }
-
-            var38 = null;
+            ArrayList places = new ArrayList(CollectionsKt.collectionSizeOrDefault(located, 10));
+            for (Address a2 : located) {
+                String line = a2.getAddressLine(0);
+                if (line == null) {
+                    line = CollectionsKt.joinToString(CollectionsKt.listOfNotNull(new String[]{a2.getThoroughfare(), a2.getLocality()}), ", ", "", "", -1, "...", null);
+                }
+                String feat = a2.getFeatureName();
+                if (feat == null) {
+                    feat = "";
+                }
+                boolean letter = false;
+                if (feat.length() > 0) {
+                    for (int i = 0; i < feat.length(); i++) {
+                        if (Character.isLetter(feat.charAt(i))) {
+                            letter = true;
+                            break;
+                        }
+                    }
+                }
+                String name = (letter && !StringsKt.startsWith(line, feat, false)) ? feat : StringsKt.substringBefore(line, ",", line);
+                places.add(new DestinationActivity.Place(name, line, a2.getLatitude(), a2.getLongitude(), null, 0.0, null, false, 240, null));
+            }
+            out = places;
+        } catch (Exception e) {
+            out = null;
         }
-
-        var0.ui.post(new DestinationActivity$$ExternalSyntheticLambda9(var3, var0, var38));
+        var0.ui.post(new DestinationActivity$$ExternalSyntheticLambda9(var3, var0, out));
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1524,7 +1300,9 @@ public final class DestinationActivity extends AppCompatActivity {
         if (mi != null) {
             double d = mi.doubleValue();
             TextView $this$row_u24lambda_u2467_u24lambda_u2466 = new TextView(this);
-            if (d >= 0.1d) {
+            if (d < 0.1d) {
+                str = "here";
+            } else {
                 String format = d < 10.0d ? String.format("%.1f mi", Arrays.copyOf(new Object[]{Double.valueOf(d)}, 1)) : String.format("%.0f mi", Arrays.copyOf(new Object[]{Double.valueOf(d)}, 1));
                 Intrinsics.checkNotNullExpressionValue(format, "format(...)");
                 str = format;

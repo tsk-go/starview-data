@@ -420,11 +420,12 @@ public final class LaneShots {
                 now = now2;
                 det = det2;
                 final var rp$f = rp;
+                final String ms$f = ms;
                 det.setWideReq(new Function1() { // from class: com.starpilot.starview.LaneShots$$ExternalSyntheticLambda2
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         Unit request$lambda$4;
-                        request$lambda$4 = LaneShots.request$lambda$4(lock, wideDone, wide2, cam2, sceneDone, clean, LaneShots.this, side, m, n, caption, why, now, rd, ans, rp$f, ms, copyTo, (Bitmap) obj);
+                        request$lambda$4 = LaneShots.request$lambda$4(lock, wideDone, wide2, cam2, sceneDone, clean, LaneShots.this, side, m, n, caption, why, now, rd, ans, rp$f, ms$f, copyTo, (Bitmap) obj);
                         return request$lambda$4;
                     }
                 });
@@ -744,7 +745,7 @@ public final class LaneShots {
                 String t = "MAP: " + upperCase;
                 float tw = $this$compose_u24lambda_u2416.measureText(t);
                 float y = (index$iv * 34.0f) + 10.0f;
-                Iterable $this$forEachIndexed$iv2 = $this$forEachIndexed$iv;
+                List<LaneRamps.Ramp> $this$forEachIndexed$iv2 = $this$forEachIndexed$iv;
                 if (r.getSide() < 0) {
                     rightW2 = rightW;
                     rightW3 = $i$f$forEachIndexed;
@@ -917,267 +918,71 @@ public final class LaneShots {
     }
 
     /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
-    public final int deleteDrive(String var1) {
-        ArrayList var33 = null; ArrayList var34 = null; String var53 = null; Object var57 = null; Object var61 = null; // declarations Vineflower left out
-        Intrinsics.checkNotNullParameter(var1, "drive");
-
-        Object var4;
+    public final int deleteDrive(String drive) {
+        Intrinsics.checkNotNullParameter(drive, "drive");
+        List<String> lines;
         try {
-            var4 = FilesKt.readLines(this.index, kotlin.text.Charsets.UTF_8);
-        } catch (Exception var14) {
+            lines = FilesKt.readLines(this.index, kotlin.text.Charsets.UTF_8);
+        } catch (Exception e3) {
             return 0;
         }
-
-        Iterable var43 = ((Iterable) var4);
-        ArrayList var7 = new ArrayList();
-        ArrayList var6 = new ArrayList();
-        Iterator var8 = var43.iterator();
-
-        while (true) {
-            boolean var3 = var8.hasNext();
-            Object var5 = "";
-            if (!var3) {
-                Pair var46 = new Pair<>(var7, var6);
-                List var62 = (List)var46.component1();
-                List var4s = (List)var46.component2();
-                Iterator var63 = var62.iterator();
-
-                while (var63.hasNext()) {
-                    List var58 = StringsKt.split((String)var63.next(), new String[]{"\t"}, false, 0);
-
-                    try {
-                        this.ctx.getContentResolver().delete(Uri.parse((String)var58.get(1)), null, null);
-                    } catch (Exception var13) {
-                    }
-
-                    boolean var37;
-                    if (9 < var58.size()) {
-                        var37 = true;
-                    } else {
-                        var37 = false;
-                    }
-
-                    Object var54;
-                    if (var37) {
-                        var54 = var58.get(9);
-                    } else {
-                        var54 = "";
-                    }
-
-                    if (10 < var58.size()) {
-                        var37 = true;
-                    } else {
-                        var37 = false;
-                    }
-
-                    Object var59;
-                    if (var37) {
-                        var59 = var58.get(10);
-                    } else {
-                        var59 = "";
-                    }
-
-                    for (Object var54$it : (Iterable) CollectionsKt.listOf(new String[]{(String)var54, (String)var59})) {
-                        var54 = var54$it;
-                        if (((CharSequence)var54).length() > 0) {
-                            var37 = true;
-                        } else {
-                            var37 = false;
-                        }
-
-                        if (var37) {
-                            new File(this.getCleanDir(), (String)var54).delete();
-                        }
-                    }
+        {
+            ArrayList<String> gone = new ArrayList();
+            ArrayList<String> keep = new ArrayList();
+            for (String line : lines) {
+                List<String> p = StringsKt.split(line, new String[]{"\t"}, false, 0);
+                String d = 5 < p.size() ? p.get(5) : "";
+                if (d.length() == 0) {
+                    d = "earlier";
                 }
-
-                File var56 = new File(this.getCleanDir(), var1);
-                if (var56.isDirectory()) {
-                    boolean var41;
-                    label231: {
-                        String[] var29 = var56.list();
-                        if (var29 != null) {
-                            if (var29.length == 0) {
-                                var41 = true;
-                            } else {
-                                var41 = false;
-                            }
-
-                            if (!var41) {
-                                var41 = true;
-                                break label231;
-                            }
-                        }
-
-                        var41 = false;
-                    }
-
-                    if (!var41) {
-                        var56.delete();
-                    }
+                if (Intrinsics.areEqual(d, drive)) {
+                    gone.add(line);
+                } else {
+                    keep.add(line);
                 }
-
-                File var30 = this.index;
-                if (!var4s.isEmpty()) {
-                    var5 = CollectionsKt.joinToString(var4s, "\n", "", "", -1, "...", null);
-                    var5 = var5 + "\n";
-                }
-
-                FilesKt.writeText(var30, ((String) var5), kotlin.text.Charsets.UTF_8);
-                var5 = var62;
-                var var31 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var5, 10));
-                Iterator var52 = ((Iterable) var5).iterator();
-
-                while (var52.hasNext()) {
-                    var31.add(StringsKt.substringBefore((String)var52.next(), '\t', ((String)var52.next())));
-                }
-
-                List var32 = var31;
-                HashSet var64 = CollectionsKt.toHashSet(var32);
-
-                try {
-                    var61 = this.reviews;
-                } catch (Exception var28) {
-                    return var62.size();
-                }
-
-                try {
-                    var57 = FilesKt.readLines(this.reviews, kotlin.text.Charsets.UTF_8);
-                } catch (Exception var27) {
-                    return var62.size();
-                }
-
-                try {
-                } catch (Exception var26) {
-                    return var62.size();
-                }
-
-                try {
-                    var33 = new ArrayList();
-                } catch (Exception var25) {
-                    return var62.size();
-                }
-
-                ArrayList var10;
-                try {
-                    var10 = var33;
-                } catch (Exception var24) {
-                    return var62.size();
-                }
-
-                Iterator var11;
-                try {
-                    var11 = var57.iterator();
-                } catch (Exception var23) {
-                    return var62.size();
-                }
-
-                while (true) {
-                    try {
-                        if (!var11.hasNext()) {
-                            break;
-                        }
-                    } catch (Exception var22) {
-                        return var62.size();
-                    }
-
-                    try {
-                        var4 = (List)var11.next();
-                    } catch (Exception var21) {
-                        return var62.size();
-                    }
-
-                    try {
-                        var53 = (String)var4;
-                    } catch (Exception var20) {
-                        return var62.size();
-                    }
-
-                    try {
-                        if (!var64.contains(StringsKt.substringBefore(var53, '\t', var53))) {
-                            var10.add(var4);
-                        }
-                    } catch (Exception var19) {
-                        return var62.size();
-                    }
-                }
-
-                try {
-                    var34 = var10;
-                } catch (Exception var18) {
-                    return var62.size();
-                }
-
-                try {
-                    var1 = CollectionsKt.joinToString(var34, "\n", "", "", -1, "...", null);
-                } catch (Exception var17) {
-                    return var62.size();
-                }
-
-                boolean var42;
-                label172: {
-                    label171: {
-                        try {
-                            if (var1.length() == 0) {
-                                break label171;
-                            }
-                        } catch (Exception var16) {
-                            return var62.size();
-                        }
-
-                        var42 = false;
-                        break label172;
-                    }
-
-                    var42 = true;
-                }
-
-                if (!var42) {
-                    try {
-                        StringBuilder var49 = new StringBuilder();
-                        var1 = var49.append(var1).append("\n").toString();
-                    } catch (Exception var15) {
-                        return var62.size();
-                    }
-                }
-
-                try {
-                    FilesKt.writeText(((File) var61), var1, kotlin.text.Charsets.UTF_8);
-                } catch (Exception var12) {
-                }
-
-                return var62.size();
             }
-
-            Object var9 = var8.next();
-            var4 = StringsKt.split((String)var9, new String[]{"\t"}, false, 0);
-            boolean var2;
-            if (5 < ((List) var4).size()) {
-                var2 = true;
-            } else {
-                var2 = false;
+            for (String line2 : gone) {
+                List<String> p2 = StringsKt.split(line2, new String[]{"\t"}, false, 0);
+                try {
+                    this.ctx.getContentResolver().delete(Uri.parse(p2.get(1)), null, null);
+                } catch (Exception e) {
+                }
+                for (String f : CollectionsKt.listOf(new String[]{9 < p2.size() ? p2.get(9) : "", 10 < p2.size() ? p2.get(10) : ""})) {
+                    if (f.length() > 0) {
+                        new File(getCleanDir(), f).delete();
+                    }
+                }
             }
-
-            if (var2) {
-                var5 = (Iterable)((List) var4).get(5);
+            File dir = new File(getCleanDir(), drive);
+            if (dir.isDirectory()) {
+                String[] l = dir.list();
+                if (!(l != null && l.length != 0)) {
+                    dir.delete();
+                }
             }
-
-            var4 = (CharSequence)var5;
-            if (((CharSequence) var4).length() == 0) {
-                var2 = true;
-            } else {
-                var2 = false;
+            FilesKt.writeText(this.index, keep.isEmpty() ? "" : CollectionsKt.joinToString(keep, "\n", "", "", -1, "...", null) + "\n", kotlin.text.Charsets.UTF_8);
+            ArrayList ids0 = new ArrayList(CollectionsKt.collectionSizeOrDefault(gone, 10));
+            for (String line3 : gone) {
+                ids0.add(StringsKt.substringBefore(line3, '\t', line3));
             }
-
-            if (var2) {
-                var4 = "earlier";
+            HashSet ids = CollectionsKt.toHashSet(ids0);
+            try {
+                File file = this.reviews;
+                List<String> rl = FilesKt.readLines(this.reviews, kotlin.text.Charsets.UTF_8);
+                ArrayList kept = new ArrayList();
+                for (String r : rl) {
+                    if (!ids.contains(StringsKt.substringBefore(r, '\t', r))) {
+                        kept.add(r);
+                    }
+                }
+                String txt = CollectionsKt.joinToString(kept, "\n", "", "", -1, "...", null);
+                if (txt.length() != 0) {
+                    txt = txt + "\n";
+                }
+                FilesKt.writeText(file, txt, kotlin.text.Charsets.UTF_8);
+            } catch (Exception e2) {
             }
-
-            if (Intrinsics.areEqual(var4, var1)) {
-                var7.add(var9);
-            } else {
-                var6.add(var9);
-            }
+            return gone.size();
         }
     }
 
@@ -1302,12 +1107,8 @@ public final class LaneShots {
     }
 
     public final Map<String, String> fixes() {
-        HashMap r;
         try {
-            r = new HashMap();
-        } catch (Exception e) {
-        }
-        try {
+            HashMap r = new HashMap();
             Iterable $this$forEach$iv = FilesKt.readLines(this.reviews, kotlin.text.Charsets.UTF_8);
             for (Object element$iv : $this$forEach$iv) {
                 String ln = (String) element$iv;

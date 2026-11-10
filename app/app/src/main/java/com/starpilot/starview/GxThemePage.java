@@ -667,126 +667,50 @@ public final class GxThemePage extends GxPage {
     }
 
     /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:15:0x0117  */
-    /* JADX WARN: Removed duplicated region for block: B:18:0x0118 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public static final void fetchAssets$lambda$29(List $urls, GxThemePage this$0, final Function1 $then) {
-        Iterable $this$map$iv;
-        int $i$f$map;
-        Iterable $this$mapTo$iv$iv;
-        Object m1191constructorimpl;
-        Throwable th;
-        GxThemeFile gxThemeFile;
-        String mime;
-        String substringBefore$default;
-        String obj;
-        List $this$map$iv2 = $urls;
-        int $i$f$map2 = 0;
-        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv2, 10));
-        Iterable $this$mapTo$iv$iv2 = $this$map$iv2;
-        for (Object item$iv$iv : $this$mapTo$iv$iv2) {
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault((Iterable) $urls, 10));
+        for (Object item$iv$iv : (Iterable) $urls) {
             String u = (String) item$iv$iv;
-            Object obj2 = null;
+            Object res;
             try {
-                Result.Companion companion = Result.Companion;
-                Response execute = GxPage.Companion.client(30L).newCall(new Request.Builder().url(u).build()).execute();
+                Response r = GxPage.Companion.client(30L).newCall(new Request.Builder().url(u).build()).execute();
+                Throwable rCause = null;
+                GxThemeFile file = null;
                 try {
-                    Response r = execute;
                     if (r.isSuccessful()) {
                         ResponseBody body = r.body();
-                        if (body != null) {
-                            byte[] bytes = body.bytes();
-                            if (bytes == null) {
-                                $this$map$iv = $this$map$iv2;
-                                $i$f$map = $i$f$map2;
-                                $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
-                            } else {
-                                $this$map$iv = $this$map$iv2;
-                                $i$f$map = $i$f$map2;
-                                try {
-                                    $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
-                                    try {
-                                        String name = URLDecoder.decode(StringsKt.substringAfterLast(StringsKt.substringBefore(u, '?', u), '/', (StringsKt.substringBefore(u, '?', u))), "UTF-8");
-                                        String header$default = r.header("Content-Type", null);
-                                        if (header$default != null && (substringBefore$default = StringsKt.substringBefore(header$default, ';', header$default)) != null && (obj = StringsKt.trim((CharSequence) substringBefore$default).toString()) != null) {
-                                            String str = obj;
-                                            if (StringsKt.isBlank(str)) {
-                                                str = null;
-                                            }
-                                            mime = str;
-                                            if (mime == null) {
-                                            }
-                                            Intrinsics.checkNotNull(name);
-                                            gxThemeFile = new GxThemeFile(name, bytes, mime);
-                                        }
-                                        Intrinsics.checkNotNull(name);
-                                        mime = this$0.guessMime(name);
-                                        if (mime == null) {
-                                            mime = "application/octet-stream";
-                                        }
-                                        Intrinsics.checkNotNull(name);
-                                        gxThemeFile = new GxThemeFile(name, bytes, mime);
-                                    } catch (Throwable th2) {
-                                        th = th2;
-                                        try {
-                                            throw th;
-                                        } catch (Throwable th3) {
-                                            CloseableKt.closeFinally(execute, th);
-                                            throw th3;
-                                        }
-                                    }
-                                } catch (Throwable th4) {
-                                    $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
-                                    th = th4;
+                        byte[] bytes = body != null ? body.bytes() : null;
+                        if (bytes != null) {
+                            String before = StringsKt.substringBefore(u, '?', u);
+                            String name = URLDecoder.decode(StringsKt.substringAfterLast(before, '/', before), "UTF-8");
+                            String mime = null;
+                            String ct = r.header("Content-Type", null);
+                            if (ct != null) {
+                                String m = StringsKt.trim((CharSequence) StringsKt.substringBefore(ct, ';', ct)).toString();
+                                mime = StringsKt.isBlank(m) ? null : m;
+                            }
+                            if (mime == null) {
+                                Intrinsics.checkNotNull(name);
+                                mime = this$0.guessMime(name);
+                                if (mime == null) {
+                                    mime = "application/octet-stream";
                                 }
                             }
-                        } else {
-                            $this$map$iv = $this$map$iv2;
-                            $i$f$map = $i$f$map2;
-                            $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
+                            Intrinsics.checkNotNull(name);
+                            file = new GxThemeFile(name, bytes, mime);
                         }
-                        gxThemeFile = null;
-                    } else {
-                        $this$map$iv = $this$map$iv2;
-                        $i$f$map = $i$f$map2;
-                        $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
-                        gxThemeFile = null;
                     }
-                    try {
-                        CloseableKt.closeFinally(execute, null);
-                        m1191constructorimpl = KtCompat.resultOf(gxThemeFile);
-                    } catch (Throwable th5) {
-                        th = th5;
-                        Result.Companion companion2 = Result.Companion;
-                        m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
-                        if (KtCompat.isFailure(m1191constructorimpl)) {
-                        }
-                        destination$iv$iv.add((GxThemeFile) obj2);
-                        $this$map$iv2 = ((List) $this$map$iv);
-                        $i$f$map2 = $i$f$map;
-                        $this$mapTo$iv$iv2 = $this$mapTo$iv$iv;
-                    }
-                } catch (Throwable th6) {
-                    $this$map$iv = $this$map$iv2;
-                    $i$f$map = $i$f$map2;
-                    $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
-                    th = th6;
+                } catch (Throwable th) {
+                    rCause = th;
+                    throw th;
+                } finally {
+                    CloseableKt.closeFinally(r, rCause);
                 }
-            } catch (Throwable th7) {
-                th = th7;
-                $this$map$iv = $this$map$iv2;
-                $i$f$map = $i$f$map2;
-                $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
+                res = KtCompat.resultOf(file);
+            } catch (Throwable th2) {
+                res = KtCompat.resultOf(ResultKt.createFailure(th2));
             }
-            if (KtCompat.isFailure(m1191constructorimpl)) {
-                obj2 = m1191constructorimpl;
-            }
-            destination$iv$iv.add((GxThemeFile) obj2);
-            $this$map$iv2 = ((List) $this$map$iv);
-            $i$f$map2 = $i$f$map;
-            $this$mapTo$iv$iv2 = $this$mapTo$iv$iv;
+            destination$iv$iv.add((GxThemeFile) (KtCompat.isFailure(res) ? null : res));
         }
         final List out = (List) destination$iv$iv;
         this$0.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda38
@@ -1769,7 +1693,7 @@ public final class GxThemePage extends GxPage {
 
     /* VF: from Vineflower (jadx: ) */
     private final void clearComp(String var1) {
-        Object var4 = null; // declarations Vineflower left out
+        List<String> var4 = null; // declarations Vineflower left out
         label52: {
             this.sources.put(var1, null);
             switch (var1.hashCode()) {
@@ -2153,20 +2077,20 @@ public final class GxThemePage extends GxPage {
         }
         setBusy(true);
         Pair<LinkedHashMap<String, String>, List<Triple<String, String, Pair<byte[], String>>>> form = form();
-        LinkedHashMap fields = form.component1();
-        List parts = form.component2();
+        LinkedHashMap<String, String> fields = form.component1();
+        List<Triple<String, String, Pair<byte[], String>>> parts = form.component2();
         final String fileName = new Regex("\\s+").replace(StringsKt.trim((CharSequence) this.themeName).toString(), "_") + ".zip";
-        MultipartBody.Builder b = new MultipartBody.Builder(null, 1, null).setType(MultipartBody.FORM);
-        for (Map.Entry<String, String> entry : ((Entry<String,String>) fields.entrySet())) {
+        MultipartBody.Builder b = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        for (Map.Entry<String, String> entry : fields.entrySet()) {
             String k = entry.getKey();
             String v = entry.getValue();
             b.addFormDataPart(k, v);
         }
-        for (Triple<String, String, Pair<byte[], String>> triple : ((Triple<String,String,Pair<byte[],String>>) parts)) {
+        for (Triple<String, String, Pair<byte[], String>> triple : parts) {
             String field = triple.component1();
             String name = triple.component2();
-            Pair data = triple.component3();
-            b.addFormDataPart(field, name, RequestBody.Companion.create(data.getFirst(), MediaType.Companion.get(((String) data.getSecond())), 0, data.getFirst().length));
+            Pair<byte[], String> data = triple.component3();
+            b.addFormDataPart(field, name, RequestBody.Companion.create(data.getFirst(), MediaType.Companion.get(data.getSecond()), 0, data.getFirst().length));
         }
         final MultipartBody body = b.build();
         new Thread(new Runnable() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda7
@@ -2178,118 +2102,80 @@ public final class GxThemePage extends GxPage {
     }
 
     /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:29:0x00b5, code lost:
-    
-        if (r8 == null) goto L32;
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r0v25, types: [T, java.lang.String] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public static final void exportTheme$lambda$102(String str, MultipartBody multipartBody, String str2, final GxThemePage gxThemePage) {
-        Response execute;
-        Response response;
-        String str3;
-        InputStream byteStream;
-        String str4;
-        Object m1191constructorimpl;
-        String str5;
-        String str6 = "Failed to export theme.";
         final Ref.ObjectRef objectRef = new Ref.ObjectRef();
         try {
-        } catch (Exception e) {
-            e = e;
-        }
-        try {
-            execute = GxPage.Companion.client(300L).newCall(new Request.Builder().url("http://" + str + ":8082/api/themes/download").post(multipartBody).build()).execute();
+            Response response = GxPage.Companion.client(300L).newCall(new Request.Builder().url("http://" + str + ":8082/api/themes/download").post(multipartBody).build()).execute();
+            Throwable rCause = null;
             try {
-                response = execute;
-                str3 = null;
-            } finally {
-            }
-        } catch (Exception e2) {
-            e = e2;
-            String message = e.getMessage();
-            T t = str6;
-            if (message != null) {
-                t = message;
-            }
-            objectRef.element = t;
-            gxThemePage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda53
-                @Override // java.lang.Runnable
-                public final void run() {
-                    GxThemePage.exportTheme$lambda$102$lambda$101(gxThemePage, objectRef);
-                }
-            });
-            return;
-        }
-        if (response.isSuccessful()) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("_display_name", str2);
-            contentValues.put("mime_type", "application/zip");
-            contentValues.put("relative_path", "Download/StarView");
-            Uri insert = gxThemePage.getAct().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-            if (insert == null) {
-                throw new IllegalStateException("cannot create file");
-            }
-            OutputStream openOutputStream = gxThemePage.getAct().getContentResolver().openOutputStream(insert);
-            if (openOutputStream != null) {
-                OutputStream outputStream = openOutputStream;
-                Throwable outputStream$c = null;
-                try {
-                    OutputStream outputStream2 = outputStream;
-                    ResponseBody body = response.body();
-                    if (body != null && (byteStream = body.byteStream()) != null) {
-                        Long.valueOf(ByteStreamsKt.copyTo(byteStream, outputStream2, 8192));
+                if (!response.isSuccessful()) {
+                    ResponseBody eb = response.body();
+                    String txt = eb != null ? eb.string() : null;
+                    if (txt == null) {
+                        txt = "";
                     }
-                } catch (Throwable outputStream$t) {
-                    outputStream$c = outputStream$t;
-                    throw outputStream$t;
-                } finally {
-                    CloseableKt.closeFinally(outputStream, outputStream$c);
+                    Object res;
+                    try {
+                        JSONObject j = new JSONObject(txt);
+                        String m = j.optString("message");
+                        if (StringsKt.isBlank(m)) {
+                            m = j.optString("error");
+                        }
+                        res = KtCompat.resultOf(m);
+                    } catch (Throwable th) {
+                        res = KtCompat.resultOf(ResultKt.createFailure(th));
+                    }
+                    if (KtCompat.isFailure(res)) {
+                        res = null;
+                    }
+                    String m2 = (String) res;
+                    String why = (m2 == null || StringsKt.isBlank(m2)) ? null : m2;
+                    if (why == null) {
+                        why = "Failed to export theme.";
+                    }
+                    throw new IllegalStateException(why);
                 }
+                ContentValues cv = new ContentValues();
+                cv.put("_display_name", str2);
+                cv.put("mime_type", "application/zip");
+                cv.put("relative_path", "Download/StarView");
+                Uri insert = gxThemePage.getAct().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, cv);
+                if (insert == null) {
+                    throw new IllegalStateException("cannot create file");
+                }
+                OutputStream out = gxThemePage.getAct().getContentResolver().openOutputStream(insert);
+                if (out != null) {
+                    Throwable oCause = null;
+                    try {
+                        ResponseBody body = response.body();
+                        InputStream in = body != null ? body.byteStream() : null;
+                        if (in != null) {
+                            Long.valueOf(ByteStreamsKt.copyTo(in, out, 8192));
+                        }
+                    } catch (Throwable th) {
+                        oCause = th;
+                        throw th;
+                    } finally {
+                        CloseableKt.closeFinally(out, oCause);
+                    }
+                }
+            } catch (Throwable th) {
+                rCause = th;
+                throw th;
+            } finally {
+                CloseableKt.closeFinally(response, rCause);
             }
-            CloseableKt.closeFinally(execute, null);
             objectRef.element = "Theme exported as a zip: Downloads/StarView/" + str2;
-            gxThemePage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda53
-                @Override // java.lang.Runnable
-                public final void run() {
-                    GxThemePage.exportTheme$lambda$102$lambda$101(gxThemePage, objectRef);
-                }
-            });
-            return;
+        } catch (Exception e) {
+            String message = e.getMessage();
+            objectRef.element = message != null ? message : "Failed to export theme.";
         }
-        ResponseBody body2 = response.body();
-        if (body2 == null || (str4 = body2.string()) == null) {
-            str4 = "";
-        }
-        String str7 = str4;
-        try {
-            Result.Companion companion = Result.Companion;
-            JSONObject jSONObject = new JSONObject(str7);
-            String optString = jSONObject.optString("message");
-            if (StringsKt.isBlank(optString)) {
-                optString = jSONObject.optString("error");
+        gxThemePage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda53
+            @Override // java.lang.Runnable
+            public final void run() {
+                GxThemePage.exportTheme$lambda$102$lambda$101(gxThemePage, objectRef);
             }
-            m1191constructorimpl = KtCompat.resultOf(optString);
-        } catch (Throwable th) {
-            Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
-        }
-        if (KtCompat.isFailure(m1191constructorimpl)) {
-            m1191constructorimpl = null;
-        }
-        String str8 = (String) m1191constructorimpl;
-        if (str8 != null) {
-            String str9 = str8;
-            if (!StringsKt.isBlank(str9)) {
-                str3 = str9;
-            }
-            str5 = str3;
-        }
-        str5 = "Failed to export theme.";
-        throw new IllegalStateException(str5);
+        });
     }
 
     /* VF: from Vineflower (jadx: ) */

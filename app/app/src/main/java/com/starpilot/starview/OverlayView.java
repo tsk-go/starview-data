@@ -970,53 +970,36 @@ public final class OverlayView extends View {
     }
 
     private final void drawSignalFlashes(Canvas c) {
-        int color;
-        boolean signals;
-        boolean bsm;
-        RectF rect;
         if (getT().getStarted()) {
-            boolean signals2 = getT().s("signal_flashes");
-            boolean bsm2 = getT().s("blindspot_flashes");
-            int side = 0;
-            while (side < 2) {
+            boolean signals = getT().s("signal_flashes");
+            boolean bsm = getT().s("blindspot_flashes");
+            for (int side = 0; side < 2; side++) {
                 Telemetry t = getT();
                 boolean blink = side == 0 ? t.getLeftBlinker() : t.getRightBlinker();
                 Telemetry t2 = getT();
                 boolean blind = side == 0 ? t2.getLeftBlindspot() : t2.getRightBlindspot();
-                boolean showBlink = signals2 && blink;
-                boolean showBlind = bsm2 && blind;
+                boolean showBlink = signals && blink;
+                boolean showBlind = bsm && blind;
                 if (showBlink || showBlind) {
                     int period = (showBlink && showBlind) ? 250 : 500;
                     boolean on = (this.blinkPhase / ((long) period)) % ((long) 2) == 0;
+                    int color;
                     if (showBlink && showBlind) {
                         color = on ? Color.rgb(255, 214, 0) : Color.rgb(201, 34, 49);
-                    } else if (!showBlink) {
-                        color = Color.rgb(201, 34, 49);
-                    } else if (on) {
+                    } else if (showBlink) {
+                        if (!on) {
+                            continue;
+                        }
                         color = Color.rgb(255, 214, 0);
                     } else {
-                        signals = signals2;
-                        bsm = bsm2;
+                        color = Color.rgb(201, 34, 49);
                     }
                     float wdt = dp(120.0f);
-                    if (side == 0) {
-                        rect = new RectF(0.0f, 0.0f, wdt, getHeight());
-                        signals = signals2;
-                    } else {
-                        signals = signals2;
-                        rect = new RectF(getWidth() - wdt, 0.0f, getWidth(), getHeight());
-                    }
-                    bsm = bsm2;
+                    RectF rect = side == 0 ? new RectF(0.0f, 0.0f, wdt, getHeight()) : new RectF(getWidth() - wdt, 0.0f, getWidth(), getHeight());
                     this.fill.setShader(new LinearGradient(rect.left, 0.0f, rect.right, 0.0f, side == 0 ? new int[]{Companion.withAlpha(color, 170), Companion.withAlpha(color, 0)} : new int[]{Companion.withAlpha(color, 0), Companion.withAlpha(color, 170)}, (float[]) null, Shader.TileMode.CLAMP));
                     c.drawRect(rect, this.fill);
                     this.fill.setShader(null);
-                } else {
-                    signals = signals2;
-                    bsm = bsm2;
                 }
-                side++;
-                signals2 = signals;
-                bsm2 = bsm;
             }
         }
     }
@@ -1098,11 +1081,6 @@ public final class OverlayView extends View {
         }
 
         public final int cscColor(float curvature) {
-            Integer invoke;
-            OverlayView$Companion$cscColor$b$1 overlayView$Companion$cscColor$b$1;
-            Integer valueOf;
-            Integer valueOf2;
-            float f;
             float cv = Math.abs(curvature);
             float tIn = RangesKt.coerceIn((cv - 5.0E-4f) / 0.0195f, 0.0f, 1.0f);
             float tt = (0.3f * tIn) + 0.7f;
@@ -1112,22 +1090,12 @@ public final class OverlayView extends View {
             int red = Color.rgb(201, 34, 49);
             KFunction b = OverlayView$Companion$cscColor$b$1.INSTANCE;
             if (tt < 0.5f) {
-                overlayView$Companion$cscColor$b$1 = (Function3) b;
-                valueOf = Integer.valueOf(green);
-                valueOf2 = Integer.valueOf(amber);
-                f = tt / 0.5f;
-            } else {
-                if (tt >= 0.6f) {
-                    invoke = ((Function3) b).invoke((OverlayView$Companion$cscColor$b$1) Integer.valueOf(orange), Integer.valueOf(red), (Integer) Float.valueOf(RangesKt.coerceIn((tt - 0.6f) / 0.4f, 0.0f, 1.0f)));
-                    return invoke.intValue();
-                }
-                overlayView$Companion$cscColor$b$1 = (Function3) b;
-                valueOf = Integer.valueOf(amber);
-                valueOf2 = Integer.valueOf(orange);
-                f = (tt - 0.5f) / 0.1f;
+                return ((Number) ((Function3) b).invoke(Integer.valueOf(green), Integer.valueOf(amber), Float.valueOf(tt / 0.5f))).intValue();
             }
-            invoke = overlayView$Companion$cscColor$b$1.invoke((OverlayView$Companion$cscColor$b$1) valueOf, valueOf2, (Integer) Float.valueOf(f));
-            return invoke.intValue();
+            if (tt < 0.6f) {
+                return ((Number) ((Function3) b).invoke(Integer.valueOf(amber), Integer.valueOf(orange), Float.valueOf((tt - 0.5f) / 0.1f))).intValue();
+            }
+            return ((Number) ((Function3) b).invoke(Integer.valueOf(orange), Integer.valueOf(red), Float.valueOf(RangesKt.coerceIn((tt - 0.6f) / 0.4f, 0.0f, 1.0f)))).intValue();
         }
 
         public final int withAlpha(int c, int a) {

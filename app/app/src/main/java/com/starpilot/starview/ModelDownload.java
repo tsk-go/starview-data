@@ -79,25 +79,21 @@ public final class ModelDownload {
     }
 
     public final String importDetector(Context ctx, Uri uri) {
-        Throwable th;
         Intrinsics.checkNotNullParameter(ctx, "ctx");
         Intrinsics.checkNotNullParameter(uri, "uri");
         File tmp = new File(file(ctx).getPath() + ".part");
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             long got = 0;
-            InputStream openInputStream = ctx.getContentResolver().openInputStream(uri);
-            if (openInputStream == null) {
+            InputStream inp = ctx.getContentResolver().openInputStream(uri);
+            if (inp == null) {
                 return "Couldn't open that file";
             }
-            InputStream inputStream = openInputStream;
-            Throwable inputStream$c = null;
+            Throwable inCause = null;
             try {
-                InputStream inp = inputStream;
-                int i = 0;
-                FileOutputStream fileOutputStream = new FileOutputStream(tmp);
+                FileOutputStream out = new FileOutputStream(tmp);
+                Throwable outCause = null;
                 try {
-                    FileOutputStream out = fileOutputStream;
                     byte[] buf = new byte[65536];
                     while (true) {
                         int n = inp.read(buf);
@@ -107,51 +103,37 @@ public final class ModelDownload {
                         out.write(buf, 0, n);
                         md.update(buf, 0, n);
                         got += n;
-                        inp = inp;
-                        i = i;
                     }
-                } catch (Throwable th2) {
-                    th = th2;
+                } catch (Throwable th) {
+                    outCause = th;
+                    throw th;
+                } finally {
+                    CloseableKt.closeFinally(out, outCause);
                 }
-                try {
-                    Unit unit = Unit.INSTANCE;
-                    CloseableKt.closeFinally(fileOutputStream, null);
-                    Unit unit2 = Unit.INSTANCE;
-                    byte[] digest = md.digest();
-                    Intrinsics.checkNotNullExpressionValue(digest, "digest(...)");
-                    String sha = ArraysKt.joinToString(digest, (CharSequence) "", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.ModelDownload$$ExternalSyntheticLambda2
-                        @Override // kotlin.jvm.functions.Function1
-                        public final Object invoke(Object obj) {
-                            CharSequence importDetector$lambda$3;
-                            importDetector$lambda$3 = ModelDownload.importDetector$lambda$3(((Byte) obj).byteValue());
-                            return importDetector$lambda$3;
-                        }
-                    });
-                    if (got == 17995664 && Intrinsics.areEqual(sha, "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587")) {
-                        if (!tmp.renameTo(file(ctx))) {
-                            return "Couldn't save it";
-                        }
-                        FilesKt.writeText(mark(ctx), "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587", kotlin.text.Charsets.UTF_8);
-                        status = "detector model installed";
-                        return null;
-                    }
-                    tmp.delete();
-                    return "That's not yolox_s_384x640_fp16.lite (wrong size or contents)";
-                } catch (Throwable th3) {
-                    th = th3;
-                    try {
-                        throw th;
-                    } catch (Throwable th4) {
-                        CloseableKt.closeFinally(fileOutputStream, th);
-                        throw th4;
-                    }
-                }
-            } catch (Throwable inputStream$t) {
-                inputStream$c = inputStream$t;
-                throw inputStream$t;
+            } catch (Throwable th2) {
+                inCause = th2;
+                throw th2;
             } finally {
-                CloseableKt.closeFinally(inputStream, inputStream$c);
+                CloseableKt.closeFinally(inp, inCause);
             }
+            byte[] digest = md.digest();
+            Intrinsics.checkNotNullExpressionValue(digest, "digest(...)");
+            String sha = ArraysKt.joinToString(digest, (CharSequence) "", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.ModelDownload$$ExternalSyntheticLambda2
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj) {
+                    return ModelDownload.importDetector$lambda$3(((Byte) obj).byteValue());
+                }
+            });
+            if (got == 17995664 && Intrinsics.areEqual(sha, "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587")) {
+                if (!tmp.renameTo(file(ctx))) {
+                    return "Couldn't save it";
+                }
+                FilesKt.writeText(mark(ctx), "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587", kotlin.text.Charsets.UTF_8);
+                status = "detector model installed";
+                return null;
+            }
+            tmp.delete();
+            return "That's not yolox_s_384x640_fp16.lite (wrong size or contents)";
         } catch (Exception e) {
             tmp.delete();
             String message = e.getMessage();
@@ -205,21 +187,65 @@ public final class ModelDownload {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void ensure$lambda$7(Context $ctx) {
-        HttpURLConnection c;
-        Throwable th;
-        Throwable th2;
-        FileOutputStream out;
-        byte[] buf;
         File tmp = new File(INSTANCE.file($ctx).getPath() + ".part");
-        int i = 0;
         try {
             try {
                 URLConnection openConnection = new URL("https://raw.githubusercontent.com/tsk-go/openpilot/starview-models/yolox_s_384x640_fp16.lite").openConnection();
                 Intrinsics.checkNotNull(openConnection, "null cannot be cast to non-null type java.net.HttpURLConnection");
-                c = (HttpURLConnection) openConnection;
+                HttpURLConnection c = (HttpURLConnection) openConnection;
                 c.setConnectTimeout(15000);
                 c.setReadTimeout(30000);
                 notThere = c.getResponseCode() == 404;
+                if (c.getResponseCode() != 200) {
+                    throw new IllegalStateException(notThere ? "not online yet" : "server answered " + c.getResponseCode());
+                }
+                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                long got = 0;
+                InputStream inp = c.getInputStream();
+                Throwable inCause = null;
+                try {
+                    FileOutputStream out = new FileOutputStream(tmp);
+                    Throwable outCause = null;
+                    try {
+                        byte[] buf = new byte[65536];
+                        while (true) {
+                            int n = inp.read(buf);
+                            if (n < 0) {
+                                break;
+                            }
+                            out.write(buf, 0, n);
+                            md.update(buf, 0, n);
+                            got += n;
+                            status = "downloading the detector model: " + ((100 * got) / 17995664) + "% (" + (got / 1048576) + " of 17 MB)";
+                        }
+                    } catch (Throwable th) {
+                        outCause = th;
+                        throw th;
+                    } finally {
+                        CloseableKt.closeFinally(out, outCause);
+                    }
+                } catch (Throwable th2) {
+                    inCause = th2;
+                    throw th2;
+                } finally {
+                    CloseableKt.closeFinally(inp, inCause);
+                }
+                byte[] digest = md.digest();
+                Intrinsics.checkNotNullExpressionValue(digest, "digest(...)");
+                String sha = ArraysKt.joinToString(digest, (CharSequence) "", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.ModelDownload$$ExternalSyntheticLambda1
+                    @Override // kotlin.jvm.functions.Function1
+                    public final Object invoke(Object obj) {
+                        return ModelDownload.ensure$lambda$7$lambda$6(((Byte) obj).byteValue());
+                    }
+                });
+                if (got != 17995664 || !Intrinsics.areEqual(sha, "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587")) {
+                    throw new IllegalStateException("download damaged (" + got + " bytes) - trying again in a minute");
+                }
+                if (!tmp.renameTo(INSTANCE.file($ctx))) {
+                    throw new IllegalStateException("couldn't save it");
+                }
+                FilesKt.writeText(INSTANCE.mark($ctx), "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587", kotlin.text.Charsets.UTF_8);
+                status = "detector model downloaded";
             } catch (Exception e) {
                 Log.w("StarView/Models", "detector model: " + e);
                 tmp.delete();
@@ -228,98 +254,6 @@ public final class ModelDownload {
                     message = e.getClass().getSimpleName();
                 }
                 status = "detector model not installed (" + message + "): download yolox_s_384x640_fp16.lite from the chat on this tablet, then Settings › Camera & view › Detector model › Import";
-            }
-            if (c.getResponseCode() != 200) {
-                throw new IllegalStateException(notThere ? "not online yet" : "server answered " + c.getResponseCode());
-            }
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            long got = 0;
-            InputStream inputStream = c.getInputStream();
-            try {
-                try {
-                    InputStream inp = inputStream;
-                    int i2 = 0;
-                    FileOutputStream fileOutputStream = new FileOutputStream(tmp);
-                    try {
-                        out = fileOutputStream;
-                        buf = new byte[65536];
-                    } catch (Throwable th3) {
-                        th2 = th3;
-                    }
-                    while (true) {
-                        int n = inp.read(buf);
-                        if (n < 0) {
-                            break;
-                        }
-                        out.write(buf, i, n);
-                        md.update(buf, i, n);
-                        HttpURLConnection c2 = c;
-                        long got2 = got + n;
-                        try {
-                            InputStream inp2 = inp;
-                            int i3 = i2;
-                            try {
-                                try {
-                                    status = "downloading the detector model: " + ((100 * got2) / 17995664) + "% (" + (got2 / 1048576) + " of 17 MB)";
-                                    c = c2;
-                                    inp = inp2;
-                                    i2 = i3;
-                                    got = got2;
-                                    i = 0;
-                                } catch (Throwable th4) {
-                                    th2 = th4;
-                                }
-                            } catch (Throwable th5) {
-                                th2 = th5;
-                            }
-                        } catch (Throwable th6) {
-                            th2 = th6;
-                        }
-                        try {
-                            throw th2;
-                        } catch (Throwable th7) {
-                            CloseableKt.closeFinally(fileOutputStream, th2);
-                            throw th7;
-                        }
-                    }
-                    try {
-                        Unit unit = Unit.INSTANCE;
-                        CloseableKt.closeFinally(fileOutputStream, null);
-                        Unit unit2 = Unit.INSTANCE;
-                        CloseableKt.closeFinally(inputStream, null);
-                        byte[] digest = md.digest();
-                        Intrinsics.checkNotNullExpressionValue(digest, "digest(...)");
-                        String sha = ArraysKt.joinToString(digest, (CharSequence) "", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.ModelDownload$$ExternalSyntheticLambda1
-                            @Override // kotlin.jvm.functions.Function1
-                            public final Object invoke(Object obj) {
-                                CharSequence ensure$lambda$7$lambda$6;
-                                ensure$lambda$7$lambda$6 = ModelDownload.ensure$lambda$7$lambda$6(((Byte) obj).byteValue());
-                                return ensure$lambda$7$lambda$6;
-                            }
-                        });
-                        if (got != 17995664 || !Intrinsics.areEqual(sha, "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587")) {
-                            throw new IllegalStateException("download damaged (" + got + " bytes) - trying again in a minute");
-                        }
-                        if (!tmp.renameTo(INSTANCE.file($ctx))) {
-                            throw new IllegalStateException("couldn't save it");
-                        }
-                        FilesKt.writeText(INSTANCE.mark($ctx), "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587", kotlin.text.Charsets.UTF_8);
-                        status = "detector model downloaded";
-                    } catch (Throwable th8) {
-                        th2 = th8;
-                    }
-                } catch (Throwable th9) {
-                    th = th9;
-                    try {
-                        throw th;
-                    } catch (Throwable th10) {
-                        CloseableKt.closeFinally(inputStream, th);
-                        throw th10;
-                    }
-                }
-            } catch (Throwable th11) {
-                th = th11;
-                throw th;
             }
         } finally {
             busy = false;
