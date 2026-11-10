@@ -3680,7 +3680,7 @@ public final class GxNavigationPage extends GxPage {
                         Comparable var4 = ((Comparable) var1);
                         var2 = var2.toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
-                        return ComparisonsKt.compareValues(var4, var2);
+                        return ComparisonsKt.compareValues((Comparable)var4, (Comparable)var2);
                     }
                 }), ", ", "", "", -1, "...", null);
             }
