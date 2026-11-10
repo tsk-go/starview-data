@@ -36,7 +36,7 @@ import kotlin.text.StringsKt;
 
 /* compiled from: OverlayView.kt */
 public final class OverlayView extends View {
-    public static final Companion Companion = new Companion(null);
+    public static final Companion_ Companion = new Companion_(null);
     private final Bitmap ambBmp;
     private final Paint ambFade;
     private final float[] ambNow;
@@ -368,7 +368,7 @@ public final class OverlayView extends View {
                                     }
                                     this.fill.setShader(null);
                                     Paint paint = this.fill;
-                                    Companion companion = Companion;
+                                    Companion_ companion = Companion;
                                     if (effortLine) {
                                         state = state2;
                                         if (this.tracks.getEffort() > 0.55f) {
@@ -1046,12 +1046,12 @@ public final class OverlayView extends View {
     }
 
     /* compiled from: OverlayView.kt */
-    public static final class Companion {
-        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+    public static final class Companion_ {
+        public /* synthetic */ Companion_(DefaultConstructorMarker defaultConstructorMarker) {
             this();
         }
 
-        private Companion() {
+        private Companion_() {
         }
 
         public final int cscColor(float curvature) {

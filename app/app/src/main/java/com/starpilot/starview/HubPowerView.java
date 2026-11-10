@@ -159,7 +159,7 @@ public final class HubPowerView extends CardPage {
         $this$switchRow_u24lambda_u247_u24lambda_u244.setOrientation(1);
         TextView $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u242 = new TextView($this$switchRow_u24lambda_u247_u24lambda_u244.getContext());
         $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u242.setText(label);
-        CarUi.Companion companion = CarUi.Companion;
+        CarUi.Companion_ companion = CarUi.Companion;
         $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u242.setTextColor(enabled ? companion.getTEXT() : companion.getDIM());
         $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u242.setTextSize(19.0f);
         $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u242.setTypeface(Typeface.DEFAULT_BOLD);
@@ -196,7 +196,7 @@ public final class HubPowerView extends CardPage {
         $this$stepRow_u24lambda_u2414.setPadding(0, getUi().dp(8), 0, getUi().dp(8));
         TextView $this$stepRow_u24lambda_u2414_u24lambda_u248 = new TextView($this$stepRow_u24lambda_u2414.getContext());
         $this$stepRow_u24lambda_u2414_u24lambda_u248.setText(label);
-        CarUi.Companion companion = CarUi.Companion;
+        CarUi.Companion_ companion = CarUi.Companion;
         $this$stepRow_u24lambda_u2414_u24lambda_u248.setTextColor(enabled ? companion.getTEXT() : companion.getDIM());
         $this$stepRow_u24lambda_u2414_u24lambda_u248.setTextSize(18.0f);
         $this$stepRow_u24lambda_u2414.addView($this$stepRow_u24lambda_u2414_u24lambda_u248, new LinearLayout.LayoutParams(0, -2, 1.0f));
@@ -221,7 +221,7 @@ public final class HubPowerView extends CardPage {
         $this$stepRow_u24lambda_u2414.addView($this$stepRow_u24lambda_u2414_u24lambda_u2410);
         TextView $this$stepRow_u24lambda_u2414_u24lambda_u2413 = new TextView($this$stepRow_u24lambda_u2414.getContext());
         $this$stepRow_u24lambda_u2414_u24lambda_u2413.setText(value);
-        CarUi.Companion companion2 = CarUi.Companion;
+        CarUi.Companion_ companion2 = CarUi.Companion;
         $this$stepRow_u24lambda_u2414_u24lambda_u2413.setTextColor(enabled ? companion2.getTEXT() : companion2.getDIM());
         $this$stepRow_u24lambda_u2414_u24lambda_u2413.setTextSize(24.0f);
         $this$stepRow_u24lambda_u2414_u24lambda_u2413.setTypeface(Typeface.DEFAULT_BOLD);

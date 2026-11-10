@@ -683,7 +683,7 @@ public final class GxSystemPage extends GxPage {
         TextView $this$kv_u24lambda_u2420 = new TextView(getAct());
         $this$kv_u24lambda_u2420.setText(value);
         $this$kv_u24lambda_u2420.setTextSize(17.0f);
-        CarUi.Companion companion = CarUi.Companion;
+        CarUi.Companion_ companion = CarUi.Companion;
         $this$kv_u24lambda_u2420.setTextColor(onClick != null ? companion.getACCENT() : companion.getTEXT());
         $this$kv_u24lambda_u2420.setTypeface(mono ? Typeface.MONOSPACE : Typeface.DEFAULT_BOLD);
         if (onClick != null) {

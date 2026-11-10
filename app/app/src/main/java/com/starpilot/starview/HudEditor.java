@@ -365,7 +365,7 @@ public final class HudEditor extends FrameLayout {
             i++;
             boolean on = i2 == this.tab;
             CarUi carUi = this.ui;
-            CarUi.Companion companion = CarUi.Companion;
+            CarUi.Companion_ companion = CarUi.Companion;
             b.setBackground(CarUi.rounded$default(carUi, on ? companion.getACCENT() : companion.getCARD(), 22, null, 4, null));
             b.setTextColor(on ? CarUi.Companion.getBG() : -1);
         }
@@ -454,7 +454,7 @@ public final class HudEditor extends FrameLayout {
         r.setOrientation(0);
         r.setGravity(16);
         CarUi carUi = this.ui;
-        CarUi.Companion companion = CarUi.Companion;
+        CarUi.Companion_ companion = CarUi.Companion;
         r.setBackground(carUi.rounded(sel ? companion.getCARD_ON() : companion.getCARD(), 14, sel ? Integer.valueOf(CarUi.Companion.getACCENT()) : null));
         r.setPadding(this.ui.dp(16), this.ui.dp(6), this.ui.dp(8), this.ui.dp(6));
         r.setMinimumHeight(this.ui.dp(58));

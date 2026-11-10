@@ -100,58 +100,13 @@ public final class BlinkerCardView extends View {
         this.t = telemetry;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r4v0 */
-    /* JADX WARN: Type inference failed for: r4v1 */
-    /* JADX WARN: Type inference failed for: r4v2 */
-    /* JADX WARN: Type inference failed for: r4v3 */
     public final String held() {
-        Iterable $this$any$iv;
-        Iterable values = this.pointers.values();
-        Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
-        Iterable $this$any$iv2 = values;
-        ?? r4 = 1;
-        if (!((Collection) $this$any$iv2).isEmpty()) {
-            Iterator it = $this$any$iv2.iterator();
-            while (true) {
-                if (!it.hasNext()) {
-                    $this$any$iv = null;
-                    break;
-                }
-                Object element$iv = it.next();
-                Integer it2 = (Integer) element$iv;
-                Integer it3 = it2.intValue() < 0 ? 1 : null;
-                if (it3 != null) {
-                    $this$any$iv = 1;
-                    break;
-                }
-            }
-        } else {
-            $this$any$iv = null;
+        boolean left = false, right = false;
+        for (Integer v : this.pointers.values()) {
+            if (v.intValue() < 0) left = true;
+            if (v.intValue() > 0) right = true;
         }
-        Iterable values2 = this.pointers.values();
-        Intrinsics.checkNotNullExpressionValue(values2, "<get-values>(...)");
-        Iterable $this$any$iv3 = values2;
-        if (!((Collection) $this$any$iv3).isEmpty()) {
-            Iterator it4 = $this$any$iv3.iterator();
-            while (true) {
-                if (!it4.hasNext()) {
-                    r4 = 0;
-                    break;
-                }
-                Object element$iv2 = it4.next();
-                Integer it5 = (Integer) element$iv2;
-                Integer it6 = it5.intValue() > 0 ? 1 : null;
-                if (it6 != null) {
-                    break;
-                }
-            }
-        } else {
-            r4 = 0;
-        }
-        Iterable $this$any$iv4 = r4;
-        return ($this$any$iv == null || $this$any$iv4 == null) ? $this$any$iv != null ? "left" : $this$any$iv4 != null ? "right" : "off" : "both";
+        return (left && right) ? "both" : left ? "left" : right ? "right" : "off";
     }
 
     /* JADX INFO: Access modifiers changed from: private */

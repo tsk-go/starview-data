@@ -155,7 +155,7 @@ public final class QuickPanel extends FrameLayout {
         $this$tile_u24lambda_u2413_u24lambda_u2410.addView($this$tile_u24lambda_u2413_u24lambda_u2410_u24lambda_u248);
         TextView $this$tile_u24lambda_u2413_u24lambda_u2410_u24lambda_u249 = new TextView($this$tile_u24lambda_u2413_u24lambda_u2410.getContext());
         $this$tile_u24lambda_u2413_u24lambda_u2410_u24lambda_u249.setText(sub);
-        CarUi.Companion companion = CarUi.Companion;
+        CarUi.Companion_ companion = CarUi.Companion;
         $this$tile_u24lambda_u2413_u24lambda_u2410_u24lambda_u249.setTextColor(lit ? companion.getACCENT() : companion.getDIM());
         $this$tile_u24lambda_u2413_u24lambda_u2410_u24lambda_u249.setTextSize(16.0f);
         $this$tile_u24lambda_u2413_u24lambda_u2410.addView($this$tile_u24lambda_u2413_u24lambda_u2410_u24lambda_u249);

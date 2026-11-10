@@ -1546,7 +1546,7 @@ public final class DevicePanel extends ScrollView {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit buildDevice$lambda$88(DevicePanel this$0) {
-        PairScanner.scan$default(PairScanner.INSTANCE, this$0.act, null, 2, null);
+        PairScanner.INSTANCE.scan(this$0.act, () -> Unit.INSTANCE);
         return Unit.INSTANCE;
     }
 
