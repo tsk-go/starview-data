@@ -1576,4 +1576,9 @@ public final class LanePicturesActivity extends AppCompatActivity {
             var0.pick(((String) var19));
         }
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void listDrives$lambda$43$lambda$41(LanePicturesActivity var0, String var1, View var2) {
+       var0.pick(var1);
+    }
 }

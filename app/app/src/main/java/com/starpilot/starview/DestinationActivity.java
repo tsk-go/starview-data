@@ -1748,4 +1748,9 @@ public final class DestinationActivity extends AppCompatActivity {
         setResult(-1, out);
         finish();
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void onCreate$lambda$4$lambda$3(DestinationActivity var0, View var1) {
+       var0.finish();
+    }
 }

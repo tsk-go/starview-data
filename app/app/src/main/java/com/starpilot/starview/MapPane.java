@@ -4031,4 +4031,24 @@ public final class MapPane extends FrameLayout {
             this$0.host.navigateTo($name, $addr == null ? "" : $addr, $lat, $lon);
         }
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void fillSheet$lambda$68$lambda$67(MapPane var0, View var1) {
+       var0.openSheet("routes");
+    }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void fillSheet$lambda$74$lambda$73(MapPane var0, View var1) {
+       var0.openSheet("options");
+    }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void fillSheet$lambda$77$lambda$76(MapPane var0, View var1) {
+       var0.closeSheet();
+    }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void fillSheet$lambda$84$lambda$83(Function0 var0, View var1) {
+       var0.invoke();
+    }
 }

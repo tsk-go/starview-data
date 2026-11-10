@@ -326,4 +326,9 @@ public final class BookmarkCard extends LinearLayout {
     public static final void typeNote$lambda$20(BookmarkCard this$0, DialogInterface dialogInterface, int i) {
         this$0.main.postDelayed(this$0.hide, 4000L);
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void _init_$lambda$8(BookmarkCard var0, View var1) {
+       var0.typeNote();
+    }
 }

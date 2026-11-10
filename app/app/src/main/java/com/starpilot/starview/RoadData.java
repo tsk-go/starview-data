@@ -247,232 +247,173 @@ public final class RoadData {
         }).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:23:0x0074, code lost:
-    
-        r6.add(r10);
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public static final void download$lambda$10(Context $ctx, Function0 $onChange) {
-        int i;
-        Iterator it;
-        Context context = $ctx;
-        boolean z = false;
         try {
-            try {
-            } finally {
-                busy = false;
-                $onChange.invoke();
-            }
-        } catch (Exception e) {
-            status = "Couldn't download: " + e.getMessage();
-        }
-        if (!INSTANCE.onWifi(context)) {
-            status = "Not on Wi-Fi - the road data only downloads on Wi-Fi.";
-            busy = false;
-            $onChange.invoke();
-            return;
-        }
-        List items = INSTANCE.manifest(context);
-        File $this$download_u24lambda_u2410_u24lambda_u246 = Hpms.INSTANCE.getDir();
-        if ($this$download_u24lambda_u2410_u24lambda_u246 == null) {
-            $this$download_u24lambda_u2410_u24lambda_u246 = new File($ctx.getFilesDir(), "hpms");
-            $this$download_u24lambda_u2410_u24lambda_u246.mkdirs();
-        }
-        File $this$download_u24lambda_u2410_u24lambda_u2462 = $this$download_u24lambda_u2410_u24lambda_u246;
-        List $this$filter$iv = items;
-        Collection destination$iv$iv = new ArrayList();
-        Iterator it2 = $this$filter$iv.iterator();
-        while (true) {
-            i = 1;
-            if (!it2.hasNext()) {
-                break;
-            }
-            Object element$iv$iv = it2.next();
-            Item it3 = (Item) element$iv$iv;
-            File f = new File($this$download_u24lambda_u2410_u24lambda_u2462, it3.getFile());
-            if (f.exists() && f.length() == it3.getBytes()) {
-                i = 0;
-            }
-        }
-        List todo = (List) destination$iv$iv;
-        total = todo.size();
-        if (todo.isEmpty()) {
-            status = "Up to date: " + items.size() + " states.";
-            busy = false;
-            $onChange.invoke();
-            return;
-        }
-        Iterator it4 = todo.iterator();
-        while (it4.hasNext()) {
-            Item it5 = (Item) it4.next();
-            if (stop) {
-                status = "Stopped.";
-                busy = z;
-                $onChange.invoke();
+            if (!INSTANCE.onWifi($ctx)) {
+                status = "Not on Wi-Fi - the road data only downloads on Wi-Fi.";
                 return;
             }
-            if (!INSTANCE.onWifi(context)) {
-                status = "Wi-Fi lost - stopped (Download again to continue).";
-                busy = z;
-                $onChange.invoke();
+            List<Item> items = INSTANCE.manifest($ctx);
+            File dir = Hpms.INSTANCE.getDir();
+            if (dir == null) {
+                dir = new File($ctx.getFilesDir(), "hpms");
+                dir.mkdirs();
+            }
+            List<Item> todo = new ArrayList<>();
+            for (Item it : items) {
+                File f = new File(dir, it.getFile());
+                if (!(f.exists() && f.length() == it.getBytes())) {
+                    todo.add(it);
+                }
+            }
+            total = todo.size();
+            if (todo.isEmpty()) {
+                status = "Up to date: " + items.size() + " states.";
                 return;
             }
-            status = "Downloading " + it5.getSt() + " (" + INSTANCE.mb(it5.getBytes()) + ")…  " + (done + i) + " of " + total;
-            $onChange.invoke();
-            File part = new File($this$download_u24lambda_u2410_u24lambda_u2462, it5.getFile() + ".part");
-            HttpURLConnection c = INSTANCE.get(INSTANCE.base(context) + it5.getFile());
-            if (c.getResponseCode() != 200) {
-                throw new IllegalStateException(it5.getFile() + ": HTTP " + c.getResponseCode());
-            }
-            FileOutputStream inputStream = c.getInputStream();
-            try {
-                InputStream i2 = inputStream;
-                inputStream = new FileOutputStream(part);
-                Throwable inputStream$c = null;
+            for (Item it : todo) {
+                if (stop) {
+                    status = "Stopped.";
+                    return;
+                }
+                if (!INSTANCE.onWifi($ctx)) {
+                    status = "Wi-Fi lost - stopped (Download again to continue).";
+                    return;
+                }
+                status = "Downloading " + it.getSt() + " (" + INSTANCE.mb(it.getBytes()) + ")…  " + (done + 1) + " of " + total;
+                $onChange.invoke();
+                File part = new File(dir, it.getFile() + ".part");
+                HttpURLConnection c = INSTANCE.get(INSTANCE.base($ctx) + it.getFile());
+                if (c.getResponseCode() != 200) {
+                    throw new IllegalStateException(it.getFile() + ": HTTP " + c.getResponseCode());
+                }
+                InputStream in = c.getInputStream();
+                Throwable inCause = null;
                 try {
-                    FileOutputStream o = inputStream;
-                    byte[] b = new byte[65536];
-                    while (true) {
-                        if (!stop) {
-                            int n = i2.read(b);
+                    FileOutputStream o = new FileOutputStream(part);
+                    Throwable oCause = null;
+                    try {
+                        byte[] b = new byte[65536];
+                        while (!stop) {
+                            int n = in.read(b);
                             if (n < 0) {
-                                it = it4;
                                 break;
                             }
-                            Iterator it6 = it4;
-                            FileOutputStream o2 = o;
-                            o2.write(b, 0, n);
-                            o = o2;
-                            it4 = it6;
-                        } else {
-                            it = it4;
-                            break;
+                            o.write(b, 0, n);
                         }
+                    } catch (Throwable th) {
+                        oCause = th;
+                        throw th;
+                    } finally {
+                        CloseableKt.closeFinally(o, oCause);
                     }
-                    Unit unit = Unit.INSTANCE;
-                    Unit unit2 = Unit.INSTANCE;
-                    if (stop) {
-                        part.delete();
-                        status = "Stopped.";
-                        return;
-                    }
-                    if (!Intrinsics.areEqual(INSTANCE.sha256(part), it5.getSha())) {
-                        part.delete();
-                        throw new IllegalStateException(it5.getFile() + ": download damaged (checksum)");
-                    }
-                    part.renameTo(new File($this$download_u24lambda_u2410_u24lambda_u2462, it5.getFile()));
-                    done++;
-                    Hpms.INSTANCE.reload();
-                    $onChange.invoke();
-                    z = false;
-                    i = 1;
-                    it4 = it;
-                    context = $ctx;
-                } catch (Throwable inputStream$t) {
-                    inputStream$c = inputStream$t;
-                    throw inputStream$t;
+                } catch (Throwable th) {
+                    inCause = th;
+                    throw th;
                 } finally {
-                    CloseableKt.closeFinally(inputStream, inputStream$c);
+                    CloseableKt.closeFinally(in, inCause);
                 }
-            } finally {
+                if (stop) {
+                    part.delete();
+                    status = "Stopped.";
+                    return;
+                }
+                if (!Intrinsics.areEqual(INSTANCE.sha256(part), it.getSha())) {
+                    part.delete();
+                    throw new IllegalStateException(it.getFile() + ": download damaged (checksum)");
+                }
+                part.renameTo(new File(dir, it.getFile()));
+                done++;
+                Hpms.INSTANCE.reload();
+                $onChange.invoke();
             }
+            status = "Done: " + items.size() + " states.";
+        } catch (Exception e) {
+            status = "Couldn't download: " + e.getMessage();
+        } finally {
+            busy = false;
+            $onChange.invoke();
         }
-        status = "Done: " + items.size() + " states.";
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:12:0x003e, code lost:
-    
-        if (r5 == null) goto L22;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:46:0x00dc, code lost:
-    
-        if (r6 == null) goto L47;
-     */
     /* renamed from: import, reason: not valid java name */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public final String importFile(Context ctx, Uri uri) {
-        String str;
-        FileOutputStream fileOutputStream;
-        Hpms.Pack p;
-        String str2;
         Intrinsics.checkNotNullParameter(ctx, "ctx");
         Intrinsics.checkNotNullParameter(uri, "uri");
         try {
             Cursor query = ctx.getContentResolver().query(uri, null, null, null, null);
-            String st = "";
+            String name = null;
             if (query != null) {
-                fileOutputStream = query;
+                Throwable qCause = null;
                 try {
-                    Cursor c = fileOutputStream;
-                    str = c.moveToFirst() ? c.getString(c.getColumnIndexOrThrow("_display_name")) : null;
-                    CloseableKt.closeFinally(fileOutputStream, null);
+                    name = query.moveToFirst() ? query.getString(query.getColumnIndexOrThrow("_display_name")) : null;
+                } catch (Throwable th) {
+                    qCause = th;
+                    throw th;
                 } finally {
-                    try {
-                        throw th;
-                    } finally {
-                        CloseableKt.closeFinally(fileOutputStream, th);
-                    }
+                    CloseableKt.closeFinally(query, qCause);
                 }
             }
-            str = "";
-            String name = str;
-            File $this$import_u24lambda_u2412 = Hpms.INSTANCE.getDir();
-            if ($this$import_u24lambda_u2412 == null) {
-                $this$import_u24lambda_u2412 = new File(ctx.getFilesDir(), "hpms");
-                $this$import_u24lambda_u2412.mkdirs();
+            if (name == null) {
+                name = "";
             }
-            File $this$import_u24lambda_u24122 = $this$import_u24lambda_u2412;
-            File tmp = new File($this$import_u24lambda_u24122, "import.part");
-            InputStream openInputStream = ctx.getContentResolver().openInputStream(uri);
-            Intrinsics.checkNotNull(openInputStream);
-            fileOutputStream = openInputStream;
+            File dir = Hpms.INSTANCE.getDir();
+            if (dir == null) {
+                dir = new File(ctx.getFilesDir(), "hpms");
+                dir.mkdirs();
+            }
+            File tmp = new File(dir, "import.part");
+            InputStream in = ctx.getContentResolver().openInputStream(uri);
+            Intrinsics.checkNotNull(in);
+            Throwable inCause = null;
             try {
-                InputStream i = fileOutputStream;
-                fileOutputStream = new FileOutputStream(tmp);
-                Throwable fileOutputStream$c = null;
+                FileOutputStream o = new FileOutputStream(tmp);
+                Throwable oCause = null;
                 try {
-                    FileOutputStream o = fileOutputStream;
-                    ByteStreamsKt.copyTo(i, o, 8192);
-                    try {
-                        p = new Hpms.Pack(tmp);
-                    } catch (Exception e) {
-                        p = null;
-                    }
-                    if (p == null) {
-                        tmp.delete();
-                        return "Not a StarView road data file.";
-                    }
-                    MatchResult find$default = (new Regex("hpms_([A-Z]{2})\\.bin")).find(name, 0);
-                    if (find$default != null) {
-                        List<String> groupValues = find$default.getGroupValues();
-                        if (groupValues != null) {
-                            str2 = groupValues.get(1);
-                            if (str2 == null) {
-                            }
-                            st = str2;
-                            if (st.length() == 0) {
-                                tmp.delete();
-                                return "Unknown state in that file.";
-                            }
-                            tmp.renameTo(new File($this$import_u24lambda_u24122, "hpms_" + st + ".bin"));
-                            Hpms.INSTANCE.reload();
-                            return null;
-                        }
-                    }
-                    str2 = STATES.get(Integer.valueOf(p.getState()));
-                } catch (Throwable fileOutputStream$t) {
-                    fileOutputStream$c = fileOutputStream$t;
-                    throw fileOutputStream$t;
+                    ByteStreamsKt.copyTo(in, o, 8192);
+                } catch (Throwable th) {
+                    oCause = th;
+                    throw th;
                 } finally {
-                    CloseableKt.closeFinally(fileOutputStream, fileOutputStream$c);
+                    CloseableKt.closeFinally(o, oCause);
                 }
+            } catch (Throwable th) {
+                inCause = th;
+                throw th;
             } finally {
+                CloseableKt.closeFinally(in, inCause);
             }
+            Hpms.Pack p;
+            try {
+                p = new Hpms.Pack(tmp);
+            } catch (Exception e) {
+                p = null;
+            }
+            if (p == null) {
+                tmp.delete();
+                return "Not a StarView road data file.";
+            }
+            String st = null;
+            MatchResult m = new Regex("hpms_([A-Z]{2})\\.bin").find(name, 0);
+            if (m != null) {
+                List<String> g = m.getGroupValues();
+                if (g != null) {
+                    st = g.get(1);
+                }
+            }
+            if (st == null) {
+                st = STATES.get(Integer.valueOf(p.getState()));
+            }
+            if (st == null) {
+                st = "";
+            }
+            if (st.length() == 0) {
+                tmp.delete();
+                return "Unknown state in that file.";
+            }
+            tmp.renameTo(new File(dir, "hpms_" + st + ".bin"));
+            Hpms.INSTANCE.reload();
+            return null;
         } catch (Exception e2) {
             return "Couldn't import: " + e2.getMessage();
         }

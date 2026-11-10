@@ -706,4 +706,9 @@ public final class SettingsLauncher extends FrameLayout {
         this$0.addShortcut($e, this$0.pickFor);
         return true;
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void lambda$6$lambda$5(SettingsLauncher var0, View var1) {
+       var0.openDrawer(-1);
+    }
 }

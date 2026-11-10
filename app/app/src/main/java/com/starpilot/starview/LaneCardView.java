@@ -1154,4 +1154,9 @@ public final class LaneCardView extends View {
             appendLog(ctx, format + format2 + e.getText() + "  => " + tr.label() + " [lane " + (n > 0 ? Integer.valueOf(n) : "?") + " of " + (m > 0 ? m + " (" + src + ")" : "?") + "], " + ((int) (100 * conf)) + "%  L=" + tr.lanesLeft() + " R=" + tr.lanesRight());
         }
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void _init_$lambda$8(LaneCardView var0, View var1) {
+       var0.showHistory();
+    }
 }

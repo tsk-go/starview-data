@@ -363,4 +363,9 @@ public final class ConnectionsView extends ScrollView {
         }
         return Unit.INSTANCE;
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void lambda$7$lambda$6(ConnectionsView var0, Triple var1, View var2) {
+       var0.open.invoke((String)var1.getThird());
+    }
 }

@@ -1450,4 +1450,19 @@ public final class OffroadHome extends FrameLayout {
     public static final void toggleExperimental$lambda$86(OffroadHome this$0, DialogInterface dialogInterface, int i) {
         this$0.actions.control(new JSONObject(MapsKt.mapOf(TuplesKt.to("action", "param"), TuplesKt.to("key", "ExperimentalMode"), TuplesKt.to("value", true))));
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void _init_$lambda$34(OffroadHome var0, View var1) {
+       var0.toggleExperimental();
+    }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void lambda$53$lambda$51$lambda$50(Function0 var0, View var1) {
+       var0.invoke();
+    }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void lambda$62$lambda$61(OffroadHome var0, View var1) {
+       var0.setState(OffroadHome.State.HOME);
+    }
 }

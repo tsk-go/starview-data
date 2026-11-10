@@ -11169,4 +11169,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         MapdMaps.INSTANCE.setOnChange(null);
         super.onDestroy();
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final Unit tabletVoiceStudioPage$lambda$366() {
+       return Unit.INSTANCE;
+    }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final Unit tabletVoiceStudioPage$lambda$369() {
+       return Unit.INSTANCE;
+    }
 }
