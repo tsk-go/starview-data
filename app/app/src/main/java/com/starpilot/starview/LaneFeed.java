@@ -475,7 +475,7 @@ public final class LaneFeed {
 
     /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     private final void matchOwnMap() {
-        String var30 = null; Boolean var31 = null; Object var32 = null; Object var33 = null; Object var34 = null; Object var37 = null; // declarations Vineflower left out
+        String var30 = null; Boolean var31 = null; Hpms.Match var32 = null; List var33 = null; OsmRoads var34 = null; LaneRamps var37 = null; // declarations Vineflower left out
         OsmRoads.Fix var18 = OsmRoads.INSTANCE.getLastFix();
         if (var18 != null && !Double.isNaN(OsmRoads.INSTANCE.getLat0()) && System.nanoTime() - var18.getTNs() <= 3000000000L) {
             if (var18.getSpeed() > 3.0F) {
@@ -572,7 +572,7 @@ public final class LaneFeed {
                     var32 = null;
                 }
 
-                this.hpms = ((Match) var32);
+                this.hpms = var32;
                 if (var17 == null) {
                     this.road = null;
                     this.way = null;
@@ -600,7 +600,7 @@ public final class LaneFeed {
                         var33 = CollectionsKt.emptyList();
                     }
 
-                    this.ramps = ((List<Ramp>) var33);
+                    this.ramps = (List<LaneRamps.Ramp>) var33;
                     OsmRoads.Way var35 = this.way;
                     if (var35 != null
                         && var35.getId() != var17.getId()
@@ -680,7 +680,7 @@ public final class LaneFeed {
         if (nl == null || ((Number) nl.getSecond()).doubleValue() >= 600.0d) {
             kL = kL2;
         } else {
-            Nav.Step step = ((Step) nl.component1());
+            Nav.Step step = ((Nav.Step) nl.component1());
             double d = ((Number) nl.component2()).doubleValue();
             navDist = d;
             Iterable $this$map$iv = step.getLanes();

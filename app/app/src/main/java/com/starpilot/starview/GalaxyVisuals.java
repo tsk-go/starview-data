@@ -859,7 +859,7 @@ public final class GalaxyVisuals {
                 $this$mixer_u24lambda_u2442_u24lambda_u2441.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GalaxyVisuals$$ExternalSyntheticLambda7
                     @Override // android.view.View.OnClickListener
                     public final void onClick(View view) {
-                        GalaxyVisuals.mixer$lambda$42$lambda$41$lambda$40(r, write, slider, view);
+                        GalaxyVisuals.mixer$lambda$42$lambda$41$lambda$40(r2, write, slider, view);
                     }
                 });
                 $this$mixer_u24lambda_u2442.addView($this$mixer_u24lambda_u2442_u24lambda_u2441);
@@ -1170,7 +1170,7 @@ public final class GalaxyVisuals {
             $this$conditions_u24lambda_u2468.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GalaxyVisuals$$ExternalSyntheticLambda12
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
-                    GalaxyVisuals.conditions$lambda$68$lambda$66(it3, write, lit, view);
+                    GalaxyVisuals.conditions$lambda$68$lambda$66(r, write, lit, view);
                 }
             });
             $this$conditions_u24lambda_u2468.setOnLongClickListener(new View.OnLongClickListener() { // from class: com.starpilot.starview.GalaxyVisuals$$ExternalSyntheticLambda13

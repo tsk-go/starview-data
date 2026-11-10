@@ -196,29 +196,16 @@ public final class LaneCardView extends View {
     }
 
     private final int confColor(double c) {
-        int i;
-        int i2;
-        int i3;
-        int i4;
-        int i5;
-        if (c < 0.7d) {
-            if (c >= 0.4d) {
-                i4 = 196;
-                i5 = 0;
-            } else if (c > 0.0d) {
-                i4 = 140;
-                i5 = 60;
-            } else {
-                i = 138;
-                i2 = 150;
-                i3 = 130;
-            }
-            return Color.rgb(255, i4, i5);
+        if (c >= 0.7d) {
+            return Color.rgb(52, 199, 89);
         }
-        i = 199;
-        i2 = 89;
-        i3 = 52;
-        return Color.rgb(i3, i, i2);
+        if (c >= 0.4d) {
+            return Color.rgb(255, 196, 0);
+        }
+        if (c > 0.0d) {
+            return Color.rgb(255, 140, 60);
+        }
+        return Color.rgb(130, 138, 150);
     }
 
     private final String ago(long ms) {
@@ -241,7 +228,7 @@ public final class LaneCardView extends View {
 
     /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     protected void onDraw(Canvas var1) {
-        Pair var122 = null; Object var123 = null; Pair var129 = null; // declarations Vineflower left out
+        Pair var122 = null; Function0 var123 = null; Pair var129 = null; // declarations Vineflower left out
         Intrinsics.checkNotNullParameter(var1, "c");
         LaneBrain var33 = this.tracker;
         if (var33 != null) {

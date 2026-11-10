@@ -237,7 +237,7 @@ public final class GxBluetoothPage extends GxPage {
         gxVehicleNotice2 = GxVehicleKt.gxVehicleNotice(this, "", i, box);
         this.btErrNote = gxVehicleNotice2;
         this.btPromptBox = box(box);
-        bs = GxVehicleKt.gxVehicleButtons(this, box, CollectionsKt.listOf(new Triple[]{new Triple("Search for Devices", true, new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda7
+        bs = GxVehicleKt.gxVehicleButtons(this, box, (List) CollectionsKt.listOf(new Triple[]{new Triple("Search for Devices", true, new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda7
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit buildBt$lambda$5;
@@ -850,7 +850,7 @@ public final class GxBluetoothPage extends GxPage {
 
             if (!var17.optBoolean("display_only")) {
                 boolean var1 = Intrinsics.areEqual(this.btBusy, "pairing_response");
-                GxVehicleKt.gxVehicleButtons(this, (ViewGroup)var5, CollectionsKt.listOf(
+                GxVehicleKt.gxVehicleButtons(this, (ViewGroup)var5, (List) CollectionsKt.listOf(
                         new Triple[]{
                             new Triple<>("Allow", var1 ^ true, new GxBluetoothPage$$ExternalSyntheticLambda20(this)),
                             new Triple<>("Cancel", var1 ^ true, new GxBluetoothPage$$ExternalSyntheticLambda21(this))

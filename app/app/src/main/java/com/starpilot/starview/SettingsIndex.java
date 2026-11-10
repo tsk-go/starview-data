@@ -345,7 +345,7 @@ public final class SettingsIndex {
                         break;
                     }
                     i = 0;
-                    $this$filter$iv3 = $this$filter$iv;
+                    $this$filter$iv3 = (List<Entry>) $this$filter$iv;
                     $i$f$filter3 = $i$f$filter;
                 }
             }
@@ -353,7 +353,7 @@ public final class SettingsIndex {
                 destination$iv$iv2.add(element$iv$iv2);
             }
             i = $i$f$filter2;
-            $this$filter$iv3 = $this$filter$iv;
+            $this$filter$iv3 = (List<Entry>) $this$filter$iv;
             $i$f$filter3 = $i$f$filter;
         }
         final Comparator comparator = new Comparator() { // from class: com.starpilot.starview.SettingsIndex$search$$inlined$compareByDescending$1

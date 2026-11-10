@@ -708,17 +708,17 @@ public final class LaneSuggest {
                                 }
 
                                 if (this.state == LaneSuggest.State.IDLE && (var28 != 0)) {
-                                    var47 = new int[]{-1, 1};
-                                    int var36 = ((Object[])var47).length;
+                                    int[] var47a = new int[]{-1, 1};
+                                    int var36 = var47a.length;
                                     var28 = 0;
 
                                     while (true) {
                                         if (var28 >= var36) {
-                                            var47 = (Integer)var19;
+                                            var47 = null;
                                             break;
                                         }
 
-                                        int var8 = (int)((Object[])var47)[var28];
+                                        int var8 = var47a[var28];
                                         boolean var35;
                                         if (this.highSince[this.idx(var8)] == 0L
                                             || var13 - this.highSince[this.idx(var8)] < 1000L
@@ -738,8 +738,8 @@ public final class LaneSuggest {
                                     }
 
                                     if (var47 != null) {
-                                        var28 = var47;
-                                        String var50 = this.side(var47).toLowerCase(Locale.ROOT);
+                                        var28 = (Integer) var47;
+                                        String var50 = this.side((Integer) var47).toLowerCase(Locale.ROOT);
                                         Intrinsics.checkNotNullExpressionValue(var50, "toLowerCase(...)");
                                         this.ask(var28, "the driving model wants to move " + var50, var13, "model");
                                     } else if (var1.getRouteDir() != 0

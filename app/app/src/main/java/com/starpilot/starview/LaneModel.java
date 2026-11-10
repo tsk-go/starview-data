@@ -375,13 +375,13 @@ public final class LaneModel {
                     d.close();
                 } catch (Throwable th) {
                 }
-                Interpreter it2 = new Interpreter($this$ensure_u24lambda_u244, new Interpreter.Options().setNumThreads(2));
-                this.accel = "cpu";
-                this.interp = it2;
-                return it2;
             }
         } catch (Throwable e2) {
             Log.w("StarView/LaneModel", "GPU delegate: " + e2);
         }
+        Interpreter it2 = new Interpreter($this$ensure_u24lambda_u244, new Interpreter.Options().setNumThreads(2));
+        this.accel = "cpu";
+        this.interp = it2;
+        return it2;
     }
 }

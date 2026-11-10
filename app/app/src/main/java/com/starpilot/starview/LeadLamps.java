@@ -63,6 +63,8 @@ public final class LeadLamps {
         Pair br = blinks(this.r);
         if (((Number) bl.getFirst()).intValue() < 2) {
             z = ((Number) br.getFirst()).intValue() >= 2;
+        } else {
+            z = true;
         }
         return z;
     }

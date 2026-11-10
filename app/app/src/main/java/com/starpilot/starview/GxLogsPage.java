@@ -377,9 +377,9 @@ public final class GxLogsPage extends GxPage {
                         obj = KtCompat.resultOf(ResultKt.createFailure(th));
                     }
                     boolean m1197isFailureimpl = KtCompat.isFailure(obj);
-                    T t = obj;
+                    Object t = obj;
                     if (m1197isFailureimpl) {
-                        t = 0;
+                        t = null;
                     }
                     objectRef2.element = t;
                 } else {
@@ -394,7 +394,7 @@ public final class GxLogsPage extends GxPage {
             }
         } catch (Exception e) {
             String message = e.getMessage();
-            T t2 = message;
+            String t2 = message;
             if (message == null) {
                 t2 = e.toString();
             }
@@ -1888,6 +1888,7 @@ public final class GxLogsPage extends GxPage {
         TextView value3 = $this$monPaintVitals_u24lambda_u2485.getValue();
         if (used == null) {
             textView = value3;
+            str3 = "—";
         } else {
             textView = value3;
             str3 = monNumber$default(this, Double.valueOf(used.doubleValue() / 1.073741824E9d), null, 2, null) + " GiB";
@@ -1896,6 +1897,8 @@ public final class GxLogsPage extends GxPage {
         TextView small3 = $this$monPaintVitals_u24lambda_u2485.getSmall();
         if (total != null) {
             str4 = monNumber$default(this, Double.valueOf(total.doubleValue() / 1.073741824E9d), null, 2, null) + " GiB total · " + monNumber(used == null ? null : Double.valueOf((100 * used.doubleValue()) / total.doubleValue()), "%");
+        } else {
+            str4 = "";
         }
         small3.setText(str4);
         ProgressBar bar = $this$monPaintVitals_u24lambda_u2485.getBar();
@@ -2427,14 +2430,14 @@ public final class GxLogsPage extends GxPage {
         View childAt = btns.getChildAt(0);
         Intrinsics.checkNotNull(childAt, "null cannot be cast to non-null type android.widget.TextView");
         this.tsRefreshBtn = (TextView) childAt;
-        toggle("Only non-default values", null, false, c, new Function1() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda16
+        ((GxPage.Row) toggle("Only non-default values", null, false, c, new Function1() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda16
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildTroubleshoot$lambda$101;
                 buildTroubleshoot$lambda$101 = GxLogsPage.buildTroubleshoot$lambda$101(GxLogsPage.this, ((Boolean) obj).booleanValue());
                 return buildTroubleshoot$lambda$101;
             }
-        }).getFirst().getView().setBackground(CarUi.rounded$default(getUi(), CarUi.Companion.getCARD_ON(), 14, null, 4, null));
+        }).getFirst()).getView().setBackground(CarUi.rounded$default(getUi(), CarUi.Companion.getCARD_ON(), 14, null, 4, null));
         LinearLayout $this$buildTroubleshoot_u24lambda_u24102 = new LinearLayout(getAct());
         $this$buildTroubleshoot_u24lambda_u24102.setOrientation(1);
         $this$buildTroubleshoot_u24lambda_u24102.setPadding(0, getUi().dp(8), 0, 0);

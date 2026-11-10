@@ -1193,7 +1193,7 @@ public final class GxModelsPage extends GxPage {
         Row var33 = null; // declarations Vineflower left out
         LinearLayout var5 = this.listBox;
         Object var4 = null;
-        Object var3 = var5;
+        LinearLayout var3 = var5;
         if (var5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("listBox");
             var3 = null;
@@ -1206,7 +1206,7 @@ public final class GxModelsPage extends GxPage {
                 var3 = this.listBox;
                 if (var3 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("listBox");
-                    var3 = var4;
+                    var3 = null;
                 }
 
                 var3.addView((View)this.empty("No models match these filters. Try Both or clear the favourite filters."));

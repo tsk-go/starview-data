@@ -97,14 +97,15 @@ public final class GalaxyWebPool {
                     String base;
                     Intrinsics.checkNotNullParameter(view, "view");
                     Intrinsics.checkNotNullParameter(request, "request");
-                    Intrinsics.checkNotNullExpressionValue(request.getUrl().toString(), "toString(...)");
+                    String u = request.getUrl().toString();
+                    Intrinsics.checkNotNullExpressionValue(u, "toString(...)");
                     GalaxyWebPool galaxyWebPool = GalaxyWebPool.this;
                     str = GalaxyWebPool.loadedHost;
                     if (str == null) {
                         str = "";
                     }
                     base = galaxyWebPool.base(str);
-                    return !StringsKt.startsWith(r0, base, false);
+                    return !StringsKt.startsWith(u, base, false);
                 }
 
                 @Override // android.webkit.WebViewClient

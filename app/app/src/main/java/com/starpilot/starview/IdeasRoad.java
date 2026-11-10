@@ -360,7 +360,7 @@ public final class IdeasRoad {
         } else {
             this.cutinFrom = Double.NaN;
             if ((var29 != 0) && (var3) != null && !Double.isNaN(var3.getYaw())) {
-                IdeaSpots.Seen var24 = (Seen) CollectionsKt.firstOrNull(
+                IdeaSpots.Seen var24 = (IdeaSpots.Seen) CollectionsKt.firstOrNull(
                     IdeaSpots.around$default(
                         IdeaSpots.INSTANCE, var3.getLat(), var3.getLon(), var3.getYaw(), SetsKt.setOf("cutin"), 400.0, 50.0, 25.0, 2, false, 256, null
                     )
@@ -468,8 +468,8 @@ public final class IdeasRoad {
                 try {
                     String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(new Date(at));
                     Object obj = "";
-                    String valueOf = h != null ? Double.valueOf(h.getLat()) : "";
-                    String valueOf2 = h != null ? Double.valueOf(h.getLon()) : "";
+                    Object valueOf = h != null ? Double.valueOf(h.getLat()) : "";
+                    Object valueOf2 = h != null ? Double.valueOf(h.getLon()) : "";
                     if (h != null) {
                         Ideas.Here it = h;
                         obj = Long.valueOf(Math.round(Ideas.INSTANCE.mph(it.getV())));

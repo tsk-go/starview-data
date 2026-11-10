@@ -308,7 +308,7 @@ public final class IdeasSense {
         }
         Iterator it5 = this.people.entrySet().iterator();
         while (it5.hasNext()) {
-            Map.Entry<Long, Person> next = ((Entry<Long,Person>) it5.next());
+            Map.Entry<Long, Person> next = ((Map.Entry<Long,Person>) it5.next());
             Intrinsics.checkNotNullExpressionValue(next, "next(...)");
             Map.Entry<Long, Person> entry = next;
             Long key = entry.getKey();
@@ -326,7 +326,7 @@ public final class IdeasSense {
                     float x = p2.getX();
                     if (3.0f <= x && x <= 35.0f) {
                         float abs = Math.abs(p2.getY());
-                        if ((1.0f <= abs && abs <= 7.0f) && p2.getVy() * p2.getY() < f && Math.abs(p2.getVy()) > 0.5f) {
+                        if ((1.0f <= abs && abs <= 7.0f) && p2.getVy() * p2.getY() < 0.0f && Math.abs(p2.getVy()) > 0.5f) {
                             this.ghosts.add(new Ghost(p2.getX(), p2.getY(), p2.getVy(), nowMs));
                         }
                     }

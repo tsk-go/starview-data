@@ -7427,24 +7427,16 @@ public final class MainActivity extends AppCompatActivity {
             if (Double.isNaN(lat)) {
                 try {
                     JSONObject j = new JSONObject(Telemetry.pStr$default(t, "LastGPSPosition", null, 2, null));
-                    try {
-                        lat = j.optDouble("latitude", Double.NaN);
-                        lon = j.optDouble("longitude", Double.NaN);
-                    } catch (Exception e) {
-                    }
-                } catch (Exception e2) {
-                }
-                if (!Double.isNaN(lat) || Double.isNaN(lon)) {
-                    int h = Calendar.getInstance().get(11);
-                    n = h >= 6 || h >= 19;
-                } else {
-                    n = Theme.INSTANCE.isNight(lat, lon, System.currentTimeMillis());
+                    lat = j.optDouble("latitude", Double.NaN);
+                    lon = j.optDouble("longitude", Double.NaN);
+                } catch (Exception e) {
                 }
             }
-            if (Double.isNaN(lat)) {
-            }
-            int h2 = Calendar.getInstance().get(11);
-            if (h2 >= 6) {
+            if (Double.isNaN(lat) || Double.isNaN(lon)) {
+                int h = Calendar.getInstance().get(11);
+                n = h < 6 || h >= 19;
+            } else {
+                n = Theme.INSTANCE.isNight(lat, lon, System.currentTimeMillis());
             }
         }
         if (n == this.night && this.lastThemeApplied) {

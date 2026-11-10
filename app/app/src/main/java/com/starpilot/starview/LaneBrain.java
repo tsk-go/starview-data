@@ -2356,7 +2356,7 @@ public final class LaneBrain {
                     var28.invoke();
                 }
 
-                Object var29 = var19.getName();
+                String var29 = var19.getName();
                 boolean var20 = var12;
                 if (var29.length() == 0) {
                     var20 = true;
@@ -2454,7 +2454,7 @@ public final class LaneBrain {
 
             var9 = var25.toString();
             if (var19 != null && var3) {
-                Object var27 = var19.getName();
+                String var27 = var19.getName();
                 boolean var21 = var14;
                 if (var27.length() == 0) {
                     var21 = true;
