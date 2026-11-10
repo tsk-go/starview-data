@@ -12,4 +12,13 @@
   <item type="id" name="pipRight"/>
   <item type="id" name="slcActions"/>
   <item type="id" name="slowCard"/>
+  <item type="id" name="hudScene"/>
+  <item type="id" name="hudWhere"/>
+  <item type="id" name="hudMap"/>
+  <item type="id" name="hudBookmark"/>
+  <item type="id" name="hudMic"/>
+  <item type="id" name="hudQuick"/>
+  <item type="id" name="hudSaver"/>
+  <item type="id" name="hudFavBar"/>
+  <item type="id" name="hudIdeas"/>
 </resources>

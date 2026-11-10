@@ -2020,6 +2020,19 @@ public final class MainActivity extends AppCompatActivity {
         $this$onCreate_u24lambda_u24119.topMargin = dp(70);
         Unit unit28 = Unit.INSTANCE;
         frameLayout21.addView(textView11, $this$onCreate_u24lambda_u24119);
+        // 2.85.3: the bottom buttons, the saver pill, the favorites bar and the "why" chip are screen-editor widgets
+        HudLayout hudLate = this.hud;
+        if (hudLate != null) {
+            hudLate.adoptLate(this.sceneBtn, R.id.hudScene);
+            hudLate.adoptLate(this.whereBtn, R.id.hudWhere);
+            hudLate.adoptLate(this.mapBtn, R.id.hudMap);
+            hudLate.adoptLate(this.bookmarkBtn, R.id.hudBookmark);
+            hudLate.adoptLate(this.micBtn, R.id.hudMic);
+            hudLate.adoptLate(this.quickBtn, R.id.hudQuick);
+            hudLate.adoptLate(this.saverPill, R.id.hudSaver);
+            hudLate.adoptLate(this.favBar, R.id.hudFavBar);
+            hudLate.adoptLate(this.ideasChip, R.id.hudIdeas);
+        }
         LinearLayout $this$onCreate_u24lambda_u24127 = new LinearLayout(this);
         int i2 = 0;
         $this$onCreate_u24lambda_u24127.setOrientation(1);
@@ -4134,9 +4147,10 @@ public final class MainActivity extends AppCompatActivity {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final List floating_delegate$lambda$172(MainActivity this$0) {
-        View[] viewArr = new View[8];
+        // 2.85.3: the scene / where-to / map buttons and the favorites bar are screen-editor widgets now (HudLayout
+        // places and scales them); what is left floats with the window scale as before
+        View[] viewArr = new View[4];
         TextView textView = this$0.statsTv;
-        LinearLayout linearLayout = null;
         if (textView == null) {
             Intrinsics.throwUninitializedPropertyAccessException("statsTv");
             textView = null;
@@ -4148,33 +4162,8 @@ public final class MainActivity extends AppCompatActivity {
             textView2 = null;
         }
         viewArr[1] = textView2;
-        TextView textView3 = this$0.sceneBtn;
-        if (textView3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("sceneBtn");
-            textView3 = null;
-        }
-        viewArr[2] = textView3;
-        TextView textView4 = this$0.whereBtn;
-        if (textView4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("whereBtn");
-            textView4 = null;
-        }
-        viewArr[3] = textView4;
-        TextView textView5 = this$0.mapBtn;
-        if (textView5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapBtn");
-            textView5 = null;
-        }
-        viewArr[4] = textView5;
-        LinearLayout linearLayout2 = this$0.favBar;
-        if (linearLayout2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("favBar");
-        } else {
-            linearLayout = linearLayout2;
-        }
-        viewArr[5] = linearLayout;
-        viewArr[6] = this$0.findViewById(R.id.alertBox);
-        viewArr[7] = this$0.findViewById(R.id.connectBar);
+        viewArr[2] = this$0.findViewById(R.id.alertBox);
+        viewArr[3] = this$0.findViewById(R.id.connectBar);
         return CollectionsKt.listOf((Object[]) viewArr);
     }
 
@@ -4284,11 +4273,8 @@ public final class MainActivity extends AppCompatActivity {
             dataClient = null;
         }
         nav.newDestination(dataClient);
-        this$0.openMap();
-        MapPane mapPane = this$0.mapPane;
-        if (mapPane != null) {
-            mapPane.expectRoutes();
-        }
+        // 2.85.3: stay on the driving screen; the turn card and the see-through map show the route (tap for routes)
+        this$0.closeMap();
         return Unit.INSTANCE;
     }
 
@@ -4388,11 +4374,8 @@ public final class MainActivity extends AppCompatActivity {
             dataClient = null;
         }
         nav.newDestination(dataClient);
-        this$0.openMap();
-        MapPane mapPane = this$0.mapPane;
-        if (mapPane != null) {
-            mapPane.expectRoutes();
-        }
+        // 2.85.3: stay on the driving screen; the turn card and the see-through map show the route (tap for routes)
+        this$0.closeMap();
         return Unit.INSTANCE;
     }
 
@@ -6772,14 +6755,9 @@ public final class MainActivity extends AppCompatActivity {
             var13 = null;
         }
 
+        // 2.85.3: the full-screen map is never put back at start (it was the split-screen pane's remembered state)
         if (var13.get("map_open")) {
-            var1 = this.outer;
-            if (var1 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("outer");
-                var1 = (FrameLayout)var3;
-            }
-
-            var1.post(new MainActivity$$ExternalSyntheticLambda51(this));
+            var13.set("map_open", false);
         }
     }
 

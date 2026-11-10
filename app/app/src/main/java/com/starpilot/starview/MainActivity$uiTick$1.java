@@ -1138,10 +1138,10 @@ public final class MainActivity$uiTick$1 implements Runnable {
         }
 
         var309.setVisibility(var132);
-        // 2.85.0: the see-through map shows with the turn card (its own switch / editor entry)
+        // 2.85.3: the see-through map shows whenever the car is on (streets; the route too while one is set)
         NavMapView navMapView = this.this$0.navMap;
         if (navMapView != null) {
-            navMapView.setVisibility(((var58.getStarted() && var58.s("nav_map") && var645 != null && !this.this$0.getMapOpen()) || NavOverlay.editing) ? 0 : 8);
+            navMapView.setVisibility(((var58.getStarted() && var58.s("nav_map") && !this.this$0.getMapOpen()) || NavOverlay.editing) ? 0 : 8);
         }
         NavCardView var529 = this.this$0.navCard;
         NavCardView var310 = var529;
@@ -2055,43 +2055,8 @@ public final class MainActivity$uiTick$1 implements Runnable {
             var55.syncFavBar(var28);
         }
 
-        TextView var568 = this.this$0.mapBtn;
-        TextView var355 = var568;
-        if (var568 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapBtn");
-            var355 = null;
-        }
-
-        android.view.ViewGroup.LayoutParams var356 = var355.getLayoutParams();
-        Intrinsics.checkNotNull(var356, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
-        android.widget.FrameLayout.LayoutParams var662 = (android.widget.FrameLayout.LayoutParams)var356;
+        // 2.85.3: the map button is a screen-editor widget now (it used to move beside "Where to?")
         MainActivity var703 = this.this$0;
-        TextView var569 = var703.whereBtn;
-        TextView var357 = var569;
-        if (var569 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("whereBtn");
-            var357 = null;
-        }
-
-        if (var357.getVisibility() == 0) {
-            var151 = (short)330;
-        } else {
-            var151 = (short)160;
-        }
-
-        var151 = var703.dp(var151);
-        if (var662.getMarginStart() != var151) {
-            var662.setMarginStart(var151);
-            TextView var570 = var703.mapBtn;
-            TextView var358 = var570;
-            if (var570 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("mapBtn");
-                var358 = null;
-            }
-
-            var358.setLayoutParams((android.view.ViewGroup.LayoutParams)var662);
-        }
-
         Unit var359 = Unit.INSTANCE;
         var703 = this.this$0;
         MainActivity$uiTick$1 var360 = this;

@@ -7427,7 +7427,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             carUi8 = null;
         }
         col.addView(header, CarUi.lp$default(carUi8, 0, 0, 3, null));
-        toggleCard(col, "See-through map under the turn card", "Street lines and your route over the road view while a route is set. Move or resize it and the turn card in the screen editor (hold the road view). Tap either one for the full navigation screen.", new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda229
+        toggleCard(col, "See-through map under the turn card", "Street lines over the road view while the car is on, and your route while one is set. Move or resize it, the turn card and every button in the screen editor (hold the road view). Tap the map or the card for the full navigation screen.", new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda229
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletNavPage$lambda$254;
