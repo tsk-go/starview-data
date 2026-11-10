@@ -425,7 +425,7 @@ public final class IdeasRoad {
         boolean en = t.getEnabled();
         if (this.wasEnabled && !en && t.getVEgo() > 2.5f) {
             if (h != null && (Ideas.INSTANCE.on(s, "spot_settings") || Ideas.INSTANCE.on(s, "takeover_why"))) {
-                IdeaSpots.INSTANCE.record("takeover", h.getLat(), h.getLon(), h.getHdgDeg(), (r35 & 16) != 0 ? Double.NaN : 0.0d, (r35 & 32) != 0 ? "" : null, (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 60.0d, (r35 & 256) != 0 ? "me" : null);
+                IdeaSpots.INSTANCE.record("takeover", h.getLat(), h.getLon(), h.getHdgDeg(), Double.NaN, "", System.currentTimeMillis(), 60.0d, "me");
             }
             if (Ideas.INSTANCE.on(s, "takeover_why")) {
                 this.askWhy = nowMs;
@@ -449,7 +449,7 @@ public final class IdeasRoad {
                 h = h2;
                 at = at2;
                 str = why;
-                record = IdeaSpots.INSTANCE.record("takeover", h2.getLat(), h2.getLon(), h2.getHdgDeg(), (r35 & 16) != 0 ? Double.NaN : 0.0d, (r35 & 32) != 0 ? "" : why, (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 60.0d, (r35 & 256) != 0 ? "me" : null);
+                record = IdeaSpots.INSTANCE.record("takeover", h2.getLat(), h2.getLon(), h2.getHdgDeg(), Double.NaN, why, System.currentTimeMillis(), 60.0d, "me");
                 record.setCount(record.getCount() - 1);
             } else {
                 h = h2;

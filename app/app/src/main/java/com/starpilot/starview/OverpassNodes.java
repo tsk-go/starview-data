@@ -125,7 +125,7 @@ public class OverpassNodes {
             int length = optJSONArray.length();
             for (int i3 = 0; i3 < length; i3++) {
                 JSONObject jSONObject = optJSONArray.getJSONObject(i3);
-                IdeaSpots.INSTANCE.record(overpassNodes.kind, jSONObject.getDouble("lat"), jSONObject.getDouble("lon"), Double.NaN, (r35 & 16) != 0 ? Double.NaN : 0.0d, (r35 & 32) != 0 ? "" : null, (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 3.0d, (r35 & 256) != 0 ? "me" : "osm");
+                IdeaSpots.INSTANCE.record(overpassNodes.kind, jSONObject.getDouble("lat"), jSONObject.getDouble("lon"), Double.NaN, Double.NaN, "", System.currentTimeMillis(), 3.0d, "osm");
             }
         } catch (Exception e) {
             overpassNodes.done.remove(str);

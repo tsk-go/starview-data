@@ -3712,7 +3712,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         Function1 function1;
         $lastSel.element = i;
         $search.setText("");
-        if ($select.element == 0) {
+        if ($select.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("select");
             function1 = null;
         } else {
@@ -3815,7 +3815,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
         char c2 = 2;
         if (lowerCase.length() < 2) {
-            if (objectRef.element == 0) {
+            if (objectRef.element == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("select");
                 function12 = null;
             } else {
@@ -3970,7 +3970,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void togglesPage$lambda$133(Ref.ObjectRef $select) {
         Function1 function1;
-        if ($select.element == 0) {
+        if ($select.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("select");
             function1 = null;
         } else {
@@ -4529,7 +4529,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     public static final Unit choiceCard$lambda$151(Function1 $set, List $options, Ref.ObjectRef $paint, int i) {
         Function1 function1;
         $set.invoke(((Pair) $options.get(i)).getFirst());
-        if ($paint.element == 0) {
+        if ($paint.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
             function1 = null;
         } else {
@@ -10129,7 +10129,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     public static final void tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361$lambda$360(Ref.ObjectRef $fillVoices, LinearLayout $engineBox, SettingsActivity this$0, TextView $status) {
         Function0 function0;
         tabletVoiceStudioPage$fillEngine($engineBox, this$0, $status, $fillVoices);
-        if ($fillVoices.element == 0) {
+        if ($fillVoices.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
             function0 = null;
         } else {
@@ -10295,7 +10295,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         if ($err != null && $status != null) {
             $status.setText($err);
         }
-        if ($fillVoices.element == 0) {
+        if ($fillVoices.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
             function0 = null;
         } else {
@@ -10802,7 +10802,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         VoiceStudio.INSTANCE.freeEngine();
         VoiceStudio.INSTANCE.deleteModel(this$0, $v.getKey());
         tabletVoiceStudioPage$say(this$0, $status, $v.getTitle() + ": download deleted (voices you made from it stay)");
-        if ($fillVoices.element == 0) {
+        if ($fillVoices.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
             function0 = null;
         } else {
@@ -10887,7 +10887,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void tabletVoiceStudioPage$loadCat$lambda$399$lambda$398(Ref.ObjectRef $fillVoices) {
         Function0 function0;
-        if ($fillVoices.element == 0) {
+        if ($fillVoices.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
             function0 = null;
         } else {

@@ -935,7 +935,7 @@ public final class LaneCardView extends View {
         } catch (Exception e) {
             emptyList = CollectionsKt.emptyList();
         }
-        laneFixDialog.show(context, "Fix lanes", lanesOurWay, str, i, true, (r34 & 64) != 0 ? 0 : saved, (r34 & 128) != 0 ? null : function0, (r34 & 256) != 0 ? null : null, (r34 & 512) != 0 ? null : null, (r34 & 1024) != 0 ? "" : null, (r34 & 2048) != 0 ? CollectionsKt.emptyList() : emptyList, (r34 & 4096) != 0 ? null : null, (r34 & 8192) != 0 ? null : start, new Function1() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda9
+        laneFixDialog.show(context, "Fix lanes", lanesOurWay, str, i, true, saved, function0, null, null, "", emptyList, null, start, new Function1() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda9
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit askCount$lambda$18;
@@ -947,7 +947,7 @@ public final class LaneCardView extends View {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit askCount$lambda$17(LaneBrain $tr, LaneCardView this$0) {
-        $tr.setCount(0, 0, true, (r22 & 8) != 0 ? $tr.lastMs : 0L, (r22 & 16) != 0 ? 0 : 0, (r22 & 32) != 0 ? 0 : 0, (r22 & 64) != 0 ? "" : null, (r22 & 128) != 0 ? "" : null);
+        $tr.setCount(0, 0, true, $tr.lastMs, 0, 0, "", "");
         this$0.flashOk = true;
         this$0.flashMs = System.currentTimeMillis();
         this$0.flash = "saved count deleted - the map's again";
@@ -963,7 +963,7 @@ public final class LaneCardView extends View {
         if (laneShots != null) {
             LaneShots.request$default(laneShots, LaneShots.Companion.caption($tr, "before your Fix: you said " + r.text(), this$0.where.invoke().getThird().floatValue()), LaneShots.Why.USER, null, 4, null);
         }
-        $tr.setCount(r.getThrough(), r.getLane(), r.getRemember(), (r22 & 8) != 0 ? $tr.lastMs : 0L, (r22 & 16) != 0 ? 0 : r.getExtraL(), (r22 & 32) != 0 ? 0 : r.getExtraR(), (r22 & 64) != 0 ? "" : r.getKind(), (r22 & 128) != 0 ? "" : r.getKindR());
+        $tr.setCount(r.getThrough(), r.getLane(), r.getRemember(), $tr.lastMs, r.getExtraL(), r.getExtraR(), r.getKind(), r.getKindR());
         this$0.flashOk = true;
         this$0.flashMs = System.currentTimeMillis();
         String str2 = "";

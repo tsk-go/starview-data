@@ -514,9 +514,9 @@ public final class VoiceStudio {
     /* JADX INFO: Access modifiers changed from: private */
     public static final Comparable catalog$lambda$9(Map $q, Voice it) {
         Intrinsics.checkNotNullParameter(it, "it");
-        int i = (Integer) $q.get(it.getQuality());
+        Integer i = (Integer) $q.get(it.getQuality());
         if (i == null) {
-            i = 9;
+            i = Integer.valueOf(9);
         }
         return i;
     }

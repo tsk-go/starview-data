@@ -1144,14 +1144,14 @@ public final class LanePicturesActivity extends AppCompatActivity {
         if (street2.length() == 0) {
             street2 = "no street";
         }
-        laneFixDialog.show(lanePicturesActivity, "Fix lanes", 0, str, 0, false, (r34 & 64) != 0 ? 0 : saved, (r34 & 128) != 0 ? null : function0, (r34 & 256) != 0 ? null : lastFix, (r34 & 512) != 0 ? null : pic, (r34 & 1024) != 0 ? "" : ((Object) street2) + "  ·  " + StringsKt.take(StringsKt.substringBefore(s.getCaption(), "\n", s.getCaption()), 9) + "  ·  pinch to zoom  ·  picture " + (this.i + 1) + " of " + this.cur.size(), (r34 & 2048) != 0 ? CollectionsKt.emptyList() : LaneRamps.INSTANCE.parse(s.getRamps()), (r34 & 4096) != 0 ? null : new Function1() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda6
+        laneFixDialog.show(lanePicturesActivity, "Fix lanes", 0, str, 0, false, saved, function0, lastFix, pic, ((Object) street2) + "  ·  " + StringsKt.take(StringsKt.substringBefore(s.getCaption(), "\n", s.getCaption()), 9) + "  ·  pinch to zoom  ·  picture " + (this.i + 1) + " of " + this.cur.size(), LaneRamps.INSTANCE.parse(s.getRamps()), new Function1() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda6
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit askFix$lambda$60;
                 askFix$lambda$60 = LanePicturesActivity.askFix$lambda$60(LanePicturesActivity.this, (String) obj);
                 return askFix$lambda$60;
             }
-        }, (r34 & 8192) != 0 ? null : null, new Function1() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda7
+        }, null, new Function1() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda7
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit askFix$lambda$61;

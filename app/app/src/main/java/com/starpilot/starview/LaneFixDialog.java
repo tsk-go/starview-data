@@ -1376,7 +1376,7 @@ public final class LaneFixDialog {
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit show$lambda$12(Ref.ObjectRef $paint) {
         Function0 function0;
-        if ($paint.element == 0) {
+        if ($paint.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
             function0 = null;
         } else {

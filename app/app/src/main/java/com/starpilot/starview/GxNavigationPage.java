@@ -5095,7 +5095,7 @@ public final class GxNavigationPage extends GxPage {
         }
 
         String var62 = "";
-        Object var59 = var62;
+        String var59 = var62;
         if (var4 > 0) {
             if (var4 != 1) {
                 var62 = "s";

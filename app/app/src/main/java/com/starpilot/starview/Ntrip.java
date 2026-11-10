@@ -565,7 +565,7 @@ public final class Ntrip {
             }
             mounts = emptyList;
         }
-        nearestBase = NtripCore.INSTANCE.nearestBase(mounts, st.getLat(), st.getLon(), (r20 & 8) != 0 ? 25.0d : 0.0d, (r20 & 16) != 0 ? SetsKt.emptySet() : skipBases(now));
+        nearestBase = NtripCore.INSTANCE.nearestBase(mounts, st.getLat(), st.getLon(), 25.0d, skipBases(now));
         return nearestBase;
     }
 
@@ -1028,7 +1028,7 @@ public final class Ntrip {
                                     try {
                                         checkAt = now;
                                         if (base.milesFrom(k2.getLat(), k2.getLon()) > 15.0d) {
-                                            near = NtripCore.INSTANCE.nearestBase(mounts, k2.getLat(), k2.getLon(), (r20 & 8) != 0 ? 25.0d : 0.0d, (r20 & 16) != 0 ? SetsKt.emptySet() : INSTANCE.skipBases(now));
+                                            near = NtripCore.INSTANCE.nearestBase(mounts, k2.getLat(), k2.getLon(), 25.0d, INSTANCE.skipBases(now));
                                             if (near == null || Intrinsics.areEqual(near.getName(), base.getName())) {
                                                 inp2 = inp;
                                                 ggaAt = ggaAt3;
@@ -1130,7 +1130,7 @@ public final class Ntrip {
                 s.connect(new InetSocketAddress(StringsKt.trim((CharSequence) host).toString(), port), 10000);
                 s.setSoTimeout(10000);
                 OutputStream outputStream = s.getOutputStream();
-                request = NtripCore.INSTANCE.request("", user, pass, (r17 & 8) != 0 ? "" : host, (r17 & 16) != 0 ? 0 : port, (r17 & 32) != 0 ? false : false, (r17 & 64) != 0 ? null : null);
+                request = NtripCore.INSTANCE.request("", user, pass, host, port, false, null);
                 byte[] bytes = request.getBytes(Charsets.UTF_8);
                 Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
                 outputStream.write(bytes);
@@ -1182,7 +1182,7 @@ public final class Ntrip {
                 s.connect(new InetSocketAddress(StringsKt.trim((CharSequence) $host).toString(), $port), 10000);
                 s.setSoTimeout(10000);
                 OutputStream outputStream = s.getOutputStream();
-                request = NtripCore.INSTANCE.request("", $user, $pass, (r17 & 8) != 0 ? "" : $host, (r17 & 16) != 0 ? 0 : $port, (r17 & 32) != 0 ? false : false, (r17 & 64) != 0 ? null : null);
+                request = NtripCore.INSTANCE.request("", $user, $pass, $host, $port, false, null);
                 byte[] bytes = request.getBytes(Charsets.UTF_8);
                 Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
                 outputStream.write(bytes);
