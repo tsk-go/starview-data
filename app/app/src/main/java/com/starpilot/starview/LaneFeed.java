@@ -18,6 +18,8 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref;
 import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
+import kotlin.jvm.internal.Ref.BooleanRef;
+import kotlin.jvm.internal.Ref.IntRef;
 
 /* compiled from: LaneFeed.kt */
 public final class LaneFeed {
@@ -40,191 +42,261 @@ public final class LaneFeed {
         return this.hpms;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Removed duplicated region for block: B:102:0x02a3  */
-    /* JADX WARN: Removed duplicated region for block: B:103:0x0292  */
-    /* JADX WARN: Removed duplicated region for block: B:104:0x027b  */
-    /* JADX WARN: Removed duplicated region for block: B:105:0x0272  */
-    /* JADX WARN: Removed duplicated region for block: B:106:0x025f  */
-    /* JADX WARN: Removed duplicated region for block: B:107:0x0256  */
-    /* JADX WARN: Removed duplicated region for block: B:109:0x021c  */
-    /* JADX WARN: Removed duplicated region for block: B:110:0x020d  */
-    /* JADX WARN: Removed duplicated region for block: B:111:0x01ff  */
-    /* JADX WARN: Removed duplicated region for block: B:112:0x01e8  */
-    /* JADX WARN: Removed duplicated region for block: B:113:0x01e1  */
-    /* JADX WARN: Removed duplicated region for block: B:114:0x01d4  */
-    /* JADX WARN: Removed duplicated region for block: B:115:0x01cd  */
-    /* JADX WARN: Removed duplicated region for block: B:116:0x01a3  */
-    /* JADX WARN: Removed duplicated region for block: B:34:0x00ea  */
-    /* JADX WARN: Removed duplicated region for block: B:61:0x01cb  */
-    /* JADX WARN: Removed duplicated region for block: B:63:0x01d0  */
-    /* JADX WARN: Removed duplicated region for block: B:66:0x01df  */
-    /* JADX WARN: Removed duplicated region for block: B:68:0x01e4  */
-    /* JADX WARN: Removed duplicated region for block: B:71:0x01f6  */
-    /* JADX WARN: Removed duplicated region for block: B:73:0x0203  */
-    /* JADX WARN: Removed duplicated region for block: B:76:0x0217  */
-    /* JADX WARN: Removed duplicated region for block: B:84:0x0254  */
-    /* JADX WARN: Removed duplicated region for block: B:86:0x0259  */
-    /* JADX WARN: Removed duplicated region for block: B:89:0x026f  */
-    /* JADX WARN: Removed duplicated region for block: B:91:0x0276  */
-    /* JADX WARN: Removed duplicated region for block: B:94:0x028b  */
-    /* JADX WARN: Removed duplicated region for block: B:96:0x0296  */
-    /* JADX WARN: Removed duplicated region for block: B:99:0x029e  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final LaneBrain.Frame frame(Telemetry t, LaneMarks marks, long nowMs) {
-        LaneMarks.Mark[] markArr;
-        int i;
-        Ref.BooleanRef booleanRef;
-        Ref.IntRef intRef;
-        Ref.IntRef intRef2;
-        int i2;
-        int i3;
-        RadarTrack[] radarTrackArr;
-        Ref.BooleanRef booleanRef2;
-        Ref.IntRef intRef3;
-        Ref.IntRef intRef4;
-        boolean z;
-        Intrinsics.checkNotNullParameter(t, "t");
-        ModelSnapshot model = t.getModel();
-        if (model == null || model.getFrameId() == this.lastFrameId) {
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public final LaneBrain.Frame frame(Telemetry var1, LaneMarks var2, long var3) {
+        Intrinsics.checkNotNullParameter(var1, "t");
+        ModelSnapshot var37 = var1.getModel();
+        if (var37 == null) {
             return null;
-        }
-        this.lastFrameId = model.getFrameId();
-        float poseYawZ = t.getPoseYawZ();
-        boolean z2 = false;
-        float poseYawZ2 = ((!Float.isInfinite(poseYawZ) && !Float.isNaN(poseYawZ)) == true && System.nanoTime() - t.getPoseAtNs() < 500000000) == true ? t.getPoseYawZ() * Odometry.INSTANCE.getGyroSign() : (float) ((t.getVEgo() * Math.tan(Math.toRadians(t.getSteeringAngleDeg() - t.getAngleOffsetDeg()) / (t.getSteerRatioLive() > 5.0f ? t.getSteerRatioLive() : 15.5f))) / 3.03d);
-        if (nowMs - this.lastRoadMs > 500) {
-            this.lastRoadMs = nowMs;
-            matchRoad(t);
-        }
-        int i4 = this.pendingEntry;
-        this.pendingEntry = 0;
-        if (marks != null) {
-            LaneMarks laneMarks = (((System.nanoTime() - marks.getLastNs()) > 1000000000L ? 1 : ((System.nanoTime() - marks.getLastNs()) == 1000000000L ? 0 : -1)) < 0 ? 1 : null) != null ? marks : null;
-            if (laneMarks != null) {
-                markArr = laneMarks.getMarks();
-                Ref.IntRef intRef5 = new Ref.IntRef();
-                Ref.IntRef intRef6 = new Ref.IntRef();
-                Ref.BooleanRef booleanRef3 = new Ref.BooleanRef();
-                if (t.getVEgo() <= 3.0f) {
-                    RadarTrack[] radar = t.getRadar();
-                    int length = radar.length;
-                    i = i4;
-                    int i5 = 0;
-                    while (i5 < length) {
-                        RadarTrack radarTrack = radar[i5];
-                        if (radarTrack.getMeasured()) {
-                            radarTrackArr = radar;
-                            i3 = length;
-                            booleanRef2 = booleanRef3;
-                            intRef3 = intRef6;
-                            intRef4 = intRef5;
-                            z = z2;
-                            frame$place(intRef5, intRef6, booleanRef3, model, radarTrack.getDRel() + 2.3f, -radarTrack.getYRel(), t.getVEgo() + radarTrack.getVRel());
-                        } else {
-                            i3 = length;
-                            radarTrackArr = radar;
-                            booleanRef2 = booleanRef3;
-                            intRef3 = intRef6;
-                            intRef4 = intRef5;
-                            z = z2;
-                        }
-                        i5++;
-                        z2 = z;
-                        radar = radarTrackArr;
-                        length = i3;
-                        booleanRef3 = booleanRef2;
-                        intRef6 = intRef3;
-                        intRef5 = intRef4;
-                    }
-                    booleanRef = booleanRef3;
-                    intRef = intRef6;
-                    intRef2 = intRef5;
-                    Lead[] leadArr = new Lead[2];
-                    leadArr[z2 ? 1 : 0] = t.getLeadLeft();
-                    int i6 = 1;
-                    leadArr[1] = t.getLeadRight();
-                    for (Lead lead : CollectionsKt.listOf((Object[]) leadArr)) {
-                        if (lead.getStatus()) {
-                            frame$place(intRef2, intRef, booleanRef, model, lead.getDRel() + 2.3f, -lead.getYRel(), lead.getVLead());
-                            i6 = i6;
-                        }
-                    }
-                    i2 = i6;
-                } else {
-                    i = i4;
-                    booleanRef = booleanRef3;
-                    intRef = intRef6;
-                    intRef2 = intRef5;
-                    i2 = 1;
-                }
-                Rtk rtkOffset = rtkOffset(nowMs, t.getVEgo());
-                float vEgo = t.getVEgo();
-                float frame$lineAt = frame$lineAt(model, i2, 3.0f);
-                float frame$lineAt2 = frame$lineAt(model, 2, 3.0f);
-                float[] laneProb = model.getLaneProb();
-                float f = (i2 >= laneProb.length ? i2 : 0) == 0 ? laneProb[i2] : 0.0f;
-                float[] laneProb2 = model.getLaneProb();
-                float f2 = (2 >= laneProb2.length ? i2 : 0) == 0 ? laneProb2[2] : 0.0f;
-                float frame$edge = frame$edge(model, 0);
-                float frame$edge2 = frame$edge(model, i2);
-                LaneMarks.Mark mark = markArr == null ? (LaneMarks.Mark) ArraysKt.getOrNull(markArr, i2) : null;
-                LaneMarks.Mark mark2 = markArr == null ? (LaneMarks.Mark) ArraysKt.getOrNull(markArr, 2) : null;
-                LaneBrain.Road road = this.road;
-                int laneChangeDir = !model.getLaneChanging() ? model.getLaneChangeDir() : 0;
-                int i7 = (model.getLaneChanging() || !model.getLaneChangeFinishing()) ? 0 : i2;
-                float f3 = poseYawZ2;
-                int i8 = intRef2.element;
-                int i9 = intRef.element;
-                boolean z3 = booleanRef.element;
-                float frame$lineAt3 = frame$lineAt(model, 0, 3.0f);
-                float frame$lineAt4 = frame$lineAt(model, 3, 3.0f);
-                float[] laneProb3 = model.getLaneProb();
-                float f4 = !(laneProb3.length <= 0) ? laneProb3[0] : 0.0f;
-                float[] laneProb4 = model.getLaneProb();
-                return new LaneBrain.Frame(nowMs, vEgo, f3, frame$lineAt, frame$lineAt2, f, f2, frame$edge, frame$edge2, mark, mark2, road, i, laneChangeDir, i7, i8, i9, z3, frame$lineAt3, frame$lineAt4, f4, !(3 >= laneProb4.length) ? laneProb4[3] : 0.0f, t.getLeftBlindspot(), t.getRightBlindspot(), rtkOffset == null ? rtkOffset.getOffset() : Double.NaN, rtkOffset != null ? rtkOffset.getSigma() : Double.NaN, rtkOffset == null ? rtkOffset.getWay() : 0L, model.getLaneChangeProb(), this.info);
+        } else if (var37.getFrameId() == this.lastFrameId) {
+            return null;
+        } else {
+            this.lastFrameId = var37.getFrameId();
+            float var9 = var1.getPoseYawZ();
+            boolean var27 = Float.isInfinite(var9);
+            int var22 = 0;
+            boolean var21;
+            if (!var27 && !Float.isNaN(var9)) {
+                var21 = true;
+            } else {
+                var21 = false;
             }
+
+            if (var21 && System.nanoTime() - var1.getPoseAtNs() < 500000000L) {
+                var21 = (boolean)true;
+            } else {
+                var21 = (boolean)false;
+            }
+
+            if (var21) {
+                var9 = var1.getPoseYawZ() * Odometry.INSTANCE.getGyroSign();
+            } else {
+                if (var1.getSteerRatioLive() > 5.0F) {
+                    var9 = var1.getSteerRatioLive();
+                } else {
+                    var9 = 15.5F;
+                }
+
+                var9 = (float)(var1.getVEgo() * Math.tan(Math.toRadians(var1.getSteeringAngleDeg() - var1.getAngleOffsetDeg()) / var9) / 3.03);
+            }
+
+            if (var3 - this.lastRoadMs > 500L) {
+                this.lastRoadMs = var3;
+                this.matchRoad(var1);
+            }
+
+            int var25;
+            LaneMarks.Mark[] var34;
+            label156: {
+                var25 = this.pendingEntry;
+                this.pendingEntry = 0;
+                if (var2 != null) {
+                    if (System.nanoTime() - var2.getLastNs() < 1000000000L) {
+                        var21 = (boolean)true;
+                    } else {
+                        var21 = (boolean)false;
+                    }
+
+                    if (!var21) {
+                        var2 = null;
+                    }
+
+                    if (var2 != null) {
+                        var34 = var2.getMarks();
+                        break label156;
+                    }
+                }
+
+                var34 = null;
+            }
+
+            IntRef var32 = new IntRef();
+            IntRef var33 = new IntRef();
+            BooleanRef var35 = new BooleanRef();
+            BooleanRef var42;
+            if (var1.getVEgo() > 3.0F) {
+                RadarTrack[] var36 = var1.getRadar();
+                int var23 = var36.length;
+                byte var24 = 0;
+                IntRef var39 = var32;
+                var32 = var33;
+                BooleanRef var60 = var35;
+                RadarTrack[] var62 = var36;
+
+                for (int var51 = var24; var51 < var23; var51++) {
+                    RadarTrack var67 = var62[var51];
+                    if (var67.getMeasured()) {
+                        frame$place(var39, var32, var60, var37, var67.getDRel() + 2.3F, -var67.getYRel(), var1.getVEgo() + var67.getVRel());
+                    }
+                }
+
+                IntRef var63 = var39;
+                Lead[] var40 = new Lead[2];
+                var40[var22] = var1.getLeadLeft();
+                Lead var68 = var1.getLeadRight();
+                var21 = true;
+                var40[1] = var68;
+
+                for (Lead var69 : CollectionsKt.listOf(var40)) {
+                    if (var69.getStatus()) {
+                        frame$place(var63, var32, var60, var37, var69.getDRel() + 2.3F, -var69.getYRel(), var69.getVLead());
+                    }
+                }
+
+                var42 = var60;
+                var33 = var32;
+                var32 = var63;
+            } else {
+                var42 = var35;
+                var21 = true;
+            }
+
+            LaneFeed.Rtk var70 = this.rtkOffset(var3, var1.getVEgo());
+            float var16 = var1.getVEgo();
+            float var14 = frame$lineAt(var37, ((var21) ? 1 : 0), 3.0F);
+            float var15 = frame$lineAt(var37, 2, 3.0F);
+            float[] var64 = var37.getLaneProb();
+            if (var21 < var64.length) {
+                var22 = ((var21) ? 1 : 0);
+            } else {
+                var22 = (byte)0;
+            }
+
+            float var10;
+            if (var22 != 0) {
+                var10 = var64[((var21) ? 1 : 0)];
+            } else {
+                var10 = 0.0F;
+            }
+
+            float[] var65 = var37.getLaneProb();
+            if (2 < var65.length) {
+                var22 = ((var21) ? 1 : 0);
+            } else {
+                var22 = (byte)0;
+            }
+
+            float var11;
+            if (var22 != 0) {
+                var11 = var65[2];
+            } else {
+                var11 = 0.0F;
+            }
+
+            float var18 = frame$edge(var37, 0);
+            float var20 = frame$edge(var37, ((var21) ? 1 : 0));
+            LaneMarks.Mark var66;
+            if (var34 != null) {
+                var66 = ArraysKt.getOrNull(var34, var21);
+            } else {
+                var66 = null;
+            }
+
+            LaneMarks.Mark var61;
+            if (var34 != null) {
+                var61 = ArraysKt.getOrNull(var34, 2);
+            } else {
+                var61 = null;
+            }
+
+            LaneBrain.Road var38 = this.road;
+            if (var37.getLaneChanging()) {
+                var22 = var37.getLaneChangeDir();
+            } else {
+                var22 = 0;
+            }
+
+            if (!var37.getLaneChanging() || !var37.getLaneChangeFinishing()) {
+                var21 = false;
+            }
+
+            int var57 = var32.element;
+            int var26 = var33.element;
+            var27 = var42.element;
+            float var19 = frame$lineAt(var37, 0, 3.0F);
+            float var17 = frame$lineAt(var37, 3, 3.0F);
+            float[] var43 = var37.getLaneProb();
+            boolean var55;
+            if (var43.length > 0) {
+                var55 = true;
+            } else {
+                var55 = false;
+            }
+
+            float var12;
+            if (var55) {
+                var12 = var43[0];
+            } else {
+                var12 = 0.0F;
+            }
+
+            float[] var44 = var37.getLaneProb();
+            if (3 < var44.length) {
+                var55 = true;
+            } else {
+                var55 = false;
+            }
+
+            float var13;
+            if (var55) {
+                var13 = var44[3];
+            } else {
+                var13 = 0.0F;
+            }
+
+            boolean var29 = var1.getLeftBlindspot();
+            boolean var28 = var1.getRightBlindspot();
+            double var7 = Double.NaN;
+            double var5;
+            if (var70 != null) {
+                var5 = var70.getOffset();
+            } else {
+                var5 = Double.NaN;
+            }
+
+            if (var70 != null) {
+                var7 = var70.getSigma();
+            }
+
+            long var30;
+            if (var70 != null) {
+                var30 = var70.getWay();
+            } else {
+                var30 = 0L;
+            }
+
+            return new LaneBrain.Frame(
+                var3,
+                var16,
+                var9,
+                var14,
+                var15,
+                var10,
+                var11,
+                var18,
+                var20,
+                var66,
+                var61,
+                var38,
+                var25,
+                var22,
+                (boolean)var21,
+                var57,
+                var26,
+                var27,
+                var19,
+                var17,
+                var12,
+                var13,
+                var29,
+                var28,
+                var5,
+                var7,
+                var30,
+                var37.getLaneChangeProb(),
+                this.info
+            );
         }
-        markArr = null;
-        Ref.IntRef intRef52 = new Ref.IntRef();
-        Ref.IntRef intRef62 = new Ref.IntRef();
-        Ref.BooleanRef booleanRef32 = new Ref.BooleanRef();
-        if (t.getVEgo() <= 3.0f) {
-        }
-        Rtk rtkOffset2 = rtkOffset(nowMs, t.getVEgo());
-        float vEgo2 = t.getVEgo();
-        float frame$lineAt5 = frame$lineAt(model, i2, 3.0f);
-        float frame$lineAt22 = frame$lineAt(model, 2, 3.0f);
-        float[] laneProb5 = model.getLaneProb();
-        if ((i2 >= laneProb5.length ? i2 : 0) == 0) {
-        }
-        float[] laneProb22 = model.getLaneProb();
-        if ((2 >= laneProb22.length ? i2 : 0) == 0) {
-        }
-        float frame$edge3 = frame$edge(model, 0);
-        float frame$edge22 = frame$edge(model, i2);
-        if (markArr == null) {
-        }
-        if (markArr == null) {
-        }
-        LaneBrain.Road road2 = this.road;
-        if (!model.getLaneChanging()) {
-        }
-        if (model.getLaneChanging()) {
-        }
-        float f32 = poseYawZ2;
-        int i82 = intRef2.element;
-        int i92 = intRef.element;
-        boolean z32 = booleanRef.element;
-        float frame$lineAt32 = frame$lineAt(model, 0, 3.0f);
-        float frame$lineAt42 = frame$lineAt(model, 3, 3.0f);
-        float[] laneProb32 = model.getLaneProb();
-        if (!(laneProb32.length <= 0)) {
-        }
-        float[] laneProb42 = model.getLaneProb();
-        return new LaneBrain.Frame(nowMs, vEgo2, f32, frame$lineAt5, frame$lineAt22, f, f2, frame$edge3, frame$edge22, mark, mark2, road2, i, laneChangeDir, i7, i82, i92, z32, frame$lineAt32, frame$lineAt42, f4, !(3 >= laneProb42.length) ? laneProb42[3] : 0.0f, t.getLeftBlindspot(), t.getRightBlindspot(), rtkOffset2 == null ? rtkOffset2.getOffset() : Double.NaN, rtkOffset2 != null ? rtkOffset2.getSigma() : Double.NaN, rtkOffset2 == null ? rtkOffset2.getWay() : 0L, model.getLaneChangeProb(), this.info);
     }
 
     private static final float frame$lineAt(ModelSnapshot m, int i, float x) {
@@ -401,122 +473,172 @@ public final class LaneFeed {
         this.info = roadInfo();
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:26:0x00a6, code lost:
-    
-        if ((r0.getDist() < 15.0d) != false) goto L31;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:43:0x00ee  */
-    /* JADX WARN: Removed duplicated region for block: B:45:0x00f9  */
-    /* JADX WARN: Removed duplicated region for block: B:67:0x0184  */
-    /* JADX WARN: Removed duplicated region for block: B:71:0x01b5  */
-    /* JADX WARN: Removed duplicated region for block: B:74:0x01b7  */
-    /* JADX WARN: Removed duplicated region for block: B:75:0x0188  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     private final void matchOwnMap() {
-        int i;
-        Hpms.Match match;
-        OsmRoads.Way w;
-        List<LaneRamps.Ramp> emptyList;
-        OsmRoads.Way prev;
-        OsmRoads.Way w2;
-        boolean z;
-        int ourWay;
-        String kind;
-        OsmRoads.Fix f = OsmRoads.INSTANCE.getLastFix();
-        if (f == null || Double.isNaN(OsmRoads.INSTANCE.getLat0()) || System.nanoTime() - f.getTNs() > 3000000000L) {
+        Object var30 = null; Boolean var31 = null; Object var32 = null; Object var33 = null; Object var34 = null; Object var37 = null; // declarations Vineflower left out
+        OsmRoads.Fix var18 = OsmRoads.INSTANCE.getLastFix();
+        if (var18 != null && !Double.isNaN(OsmRoads.INSTANCE.getLat0()) && System.nanoTime() - var18.getTNs() <= 3000000000L) {
+            if (var18.getSpeed() > 3.0F) {
+                float var11 = var18.getBearingDeg();
+                boolean var12;
+                if (!Float.isInfinite(var11) && !Float.isNaN(var11)) {
+                    var12 = true;
+                } else {
+                    var12 = false;
+                }
+
+                if (var12) {
+                    this.lastYaw = (Math.PI / 2) - Math.toRadians(var18.getBearingDeg());
+                }
+            }
+
+            double var7 = this.lastYaw;
+            if (!Double.isNaN(var7)) {
+                double var1;
+                double var9;
+                OsmRoads.Match var29;
+                label128: {
+                    Pair var16 = OsmRoads.INSTANCE.toLocal(var18.getLat(), var18.getLon());
+                    var1 = ((Number)var16.component1()).doubleValue();
+                    var9 = ((Number)var16.component2()).doubleValue();
+                    var29 = OsmRoads.INSTANCE.matchSeg(var1, var9, var7);
+                    if (var29 != null) {
+                        boolean var26;
+                        if (var29.getDist() < 15.0) {
+                            var26 = true;
+                        } else {
+                            var26 = false;
+                        }
+
+                        if (var26) {
+                            break label128;
+                        }
+                    }
+
+                    var29 = null;
+                }
+
+                OsmRoads.Way var17;
+                if (var29 != null) {
+                    var17 = var29.getWay();
+                } else {
+                    var17 = null;
+                }
+
+                label121: {
+                    label143: {
+                        double var3;
+                        double var5;
+                        Hpms var19;
+                        try {
+                            var19 = Hpms.INSTANCE;
+                            var3 = var18.getLat();
+                            var5 = var18.getLon();
+                        } catch (Exception var25) {
+                            break label143;
+                        }
+
+                        label116: {
+                            if (var17 != null) {
+                                try {
+                                    var30 = var17.getKind();
+                                } catch (Exception var24) {
+                                    break label143;
+                                }
+
+                                if (var30 != null) {
+                                    boolean var13;
+                                    try {
+                                        var13 = StringsKt.endsWith(var30, "_link", false);
+                                    } catch (Exception var23) {
+                                        break label143;
+                                    }
+
+                                    var31 = var13;
+                                    break label116;
+                                }
+                            }
+
+                            var31 = null;
+                        }
+
+                        try {
+                            var32 = Hpms.match$default(var19, var3, var5, var7, var31, 0.0, null, 48, null);
+                            break label121;
+                        } catch (Exception var22) {
+                        }
+                    }
+
+                    var32 = null;
+                }
+
+                this.hpms = var32;
+                if (var17 == null) {
+                    this.road = null;
+                    this.way = null;
+                    this.ramps = CollectionsKt.emptyList();
+                } else {
+                    label101:
+                    if (var17.getHighway() && !StringsKt.endsWith(var17.getKind(), "_link", false)) {
+                        label97: {
+                            try {
+                                var37 = LaneRamps.INSTANCE;
+                                var34 = OsmRoads.INSTANCE;
+                            } catch (Exception var21) {
+                                break label97;
+                            }
+
+                            try {
+                                var33 = var37.scan(var34.near(var1, var9, 450.0), var17, var1, var9, var7);
+                                break label101;
+                            } catch (Exception var20) {
+                            }
+                        }
+
+                        var33 = CollectionsKt.emptyList();
+                    } else {
+                        var33 = CollectionsKt.emptyList();
+                    }
+
+                    this.ramps = var33;
+                    OsmRoads.Way var35 = this.way;
+                    if (var35 != null
+                        && var35.getId() != var17.getId()
+                        && StringsKt.endsWith(var35.getKind(), "_link", false)
+                        && var17.getHighway()
+                        && !StringsKt.endsWith(var17.getKind(), "_link", false)) {
+                        this.pendingEntry = Companion.rampSide(var35, var17, var1, var9, var7);
+                    }
+
+                    this.way = var17;
+                    int var27;
+                    if (var17.getLanes() <= 0) {
+                        var27 = 0;
+                    } else if (var17.getOneway() != 0) {
+                        var27 = var17.getLanes();
+                    } else {
+                        var27 = Math.max(1, var17.getLanes() / 2);
+                    }
+
+                    long var14 = var17.getId();
+                    String var36 = var17.getName();
+                    String var38 = var17.getKind();
+                    boolean var28;
+                    if (var17.getOneway() != 0) {
+                        var28 = true;
+                    } else {
+                        var28 = false;
+                    }
+
+                    this.road = new LaneBrain.Road(var14, var36, var38, var28, var17.getHighway(), var27);
+                }
+            }
+        } else {
             this.road = null;
             this.way = null;
             this.ramps = CollectionsKt.emptyList();
             this.hpms = null;
-            return;
         }
-        if (f.getSpeed() > 3.0f) {
-            float bearingDeg = f.getBearingDeg();
-            if ((Float.isInfinite(bearingDeg) || Float.isNaN(bearingDeg)) ? false : true) {
-                this.lastYaw = 1.5707963267948966d - Math.toRadians(f.getBearingDeg());
-            }
-        }
-        double yaw = this.lastYaw;
-        if (Double.isNaN(yaw)) {
-            return;
-        }
-        Pair<Double, Double> local = OsmRoads.INSTANCE.toLocal(f.getLat(), f.getLon());
-        double e = local.component1().doubleValue();
-        double n = local.component2().doubleValue();
-        OsmRoads.Match it = OsmRoads.INSTANCE.matchSeg(e, n, yaw);
-        if (it != null) {
-        }
-        it = null;
-        OsmRoads.Match mt = it;
-        OsmRoads.Way w3 = mt != null ? mt.getWay() : null;
-        try {
-            i = 2;
-        } catch (Exception e2) {
-            i = 2;
-        }
-        try {
-            match = Hpms.INSTANCE.match(f.getLat(), f.getLon(), yaw, (w3 == null || (kind = w3.getKind()) == null) ? null : Boolean.valueOf(StringsKt.endsWith(kind, "_link", false)), (r24 & 16) != 0 ? 45.0d : 0.0d, (r24 & 32) != 0 ? "" : null);
-        } catch (Exception e3) {
-            match = null;
-            this.hpms = match;
-            if (w3 != null) {
-            }
-        }
-        this.hpms = match;
-        if (w3 != null) {
-            this.road = null;
-            this.way = null;
-            this.ramps = CollectionsKt.emptyList();
-            return;
-        }
-        if (!w3.getHighway() || StringsKt.endsWith(w3.getKind(), "_link", false)) {
-            w = w3;
-            emptyList = CollectionsKt.emptyList();
-        } else {
-            try {
-                w = w3;
-            } catch (Exception e4) {
-                w = w3;
-            }
-            try {
-                emptyList = LaneRamps.INSTANCE.scan(OsmRoads.INSTANCE.near(e, n, 450.0d), w, e, n, yaw);
-            } catch (Exception e5) {
-                emptyList = CollectionsKt.emptyList();
-                this.ramps = emptyList;
-                prev = this.way;
-                if (prev != null) {
-                    this.pendingEntry = Companion.rampSide(prev, w, e, n, yaw);
-                }
-                w2 = w;
-                this.way = w2;
-                if (w2.getLanes() > 0) {
-                }
-                z = true;
-                this.road = new LaneBrain.Road(w2.getId(), w2.getName(), w2.getKind(), w2.getOneway() != 0 ? z : false, w2.getHighway(), ourWay);
-            }
-        }
-        this.ramps = emptyList;
-        prev = this.way;
-        if (prev != null && prev.getId() != w.getId() && StringsKt.endsWith(prev.getKind(), "_link", false) && w.getHighway() && !StringsKt.endsWith(w.getKind(), "_link", false)) {
-            this.pendingEntry = Companion.rampSide(prev, w, e, n, yaw);
-        }
-        w2 = w;
-        this.way = w2;
-        if (w2.getLanes() > 0) {
-            ourWay = 0;
-        } else {
-            if (w2.getOneway() == 0) {
-                int lanes = w2.getLanes() / i;
-                z = true;
-                ourWay = Math.max(1, lanes);
-                this.road = new LaneBrain.Road(w2.getId(), w2.getName(), w2.getKind(), w2.getOneway() != 0 ? z : false, w2.getHighway(), ourWay);
-            }
-            ourWay = w2.getLanes();
-        }
-        z = true;
-        this.road = new LaneBrain.Road(w2.getId(), w2.getName(), w2.getKind(), w2.getOneway() != 0 ? z : false, w2.getHighway(), ourWay);
     }
 
     private final LaneBrain.RoadInfo roadInfo() {

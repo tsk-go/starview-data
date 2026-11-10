@@ -76,15 +76,17 @@ public final class Replay {
         return format;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void control$default(Replay replay, String str, double d, Function1 function1, int i, Object obj) {
-        if ((i & 2) != 0) {
-            d = 0.0d;
+    /* VF: from Vineflower (jadx: ) */
+    public static void control$default(Replay var0, String var1, double var2, Function1 var4, int var5, Object var6) {
+        if ((var5 & 2) != 0) {
+            var2 = 0.0;
         }
-        if ((i & 4) != 0) {
-            function1 = null;
+
+        if ((var5 & 4) != 0) {
+            var4 = null;
         }
-        replay.control(str, d, function1);
+
+        var0.control(var1, var2, var4);
     }
 
     public final void control(String op, double value, Function1<? super JSONObject, Unit> cb) {

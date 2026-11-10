@@ -36,6 +36,7 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
+import android.graphics.Paint.Align;
 
 /* compiled from: LaneSuggest.kt */
 public final class LaneSuggestView extends View {
@@ -119,30 +120,30 @@ public final class LaneSuggestView extends View {
         }
     }
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public LaneSuggestView(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
+    /* VF: from Vineflower (jadx: ) */
+    public LaneSuggestView(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
         this.logic = new LaneSuggest();
         this.turn = new TurnSignal();
-        this.d = getResources().getDisplayMetrics().density;
+        this.d = this.getResources().getDisplayMetrics().density;
         this.bg = new Paint(1);
         this.p = new Paint(1);
-        TextPaint $this$title_u24lambda_u240 = new TextPaint(1);
-        $this$title_u24lambda_u240.setColor(-1);
-        $this$title_u24lambda_u240.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$title_u24lambda_u240.setTextSize(this.d * 20.0f);
-        this.title = $this$title_u24lambda_u240;
-        TextPaint $this$sub_u24lambda_u241 = new TextPaint(1);
-        $this$sub_u24lambda_u241.setColor(Color.rgb(225, 230, 240));
-        $this$sub_u24lambda_u241.setTextSize(this.d * 14.0f);
-        this.sub = $this$sub_u24lambda_u241;
-        Paint $this$btn_u24lambda_u242 = new Paint(1);
-        $this$btn_u24lambda_u242.setColor(-1);
-        $this$btn_u24lambda_u242.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$btn_u24lambda_u242.setTextSize(this.d * 17.0f);
-        $this$btn_u24lambda_u242.setTextAlign(Paint.Align.CENTER);
-        this.btn = $this$btn_u24lambda_u242;
+        TextPaint var3 = new TextPaint(1);
+        var3.setColor(-1);
+        var3.setTypeface(Typeface.DEFAULT_BOLD);
+        var3.setTextSize(this.d * 20.0F);
+        this.title = var3;
+        TextPaint var4 = new TextPaint(1);
+        var4.setColor(Color.rgb(225, 230, 240));
+        var4.setTextSize(this.d * 14.0F);
+        this.sub = var4;
+        Paint var5 = new Paint(1);
+        var5.setColor(-1);
+        var5.setTypeface(Typeface.DEFAULT_BOLD);
+        var5.setTextSize(this.d * 17.0F);
+        var5.setTextAlign(android.graphics.Paint.Align.CENTER);
+        this.btn = var5;
         this.okR = new RectF();
         this.noR = new RectF();
         this.main = new Handler(Looper.getMainLooper());
@@ -150,7 +151,25 @@ public final class LaneSuggestView extends View {
         this.lastState = LaneSuggest.State.IDLE;
         this.lastTurn = TurnSignal.State.IDLE;
         this.crossGap = Double.NaN;
-        this.repeat = new LaneSuggestView$repeat$1(this);
+        this.repeat = new Runnable() {
+            final LaneSuggestView this$0 = LaneSuggestView.this;
+
+            @Override
+            public void run() {
+                if (this.this$0.holding != 0) {
+                    LaneSuggestView var2x = this.this$0;
+                    String var1x;
+                    if (this.this$0.holding < 0) {
+                        var1x = "left";
+                    } else {
+                        var1x = "right";
+                    }
+
+                    var2x.send(var1x, this.this$0.holdWhy);
+                    this.this$0.main.postDelayed(this, 250L);
+                }
+            }
+        };
     }
 
     public /* synthetic */ LaneSuggestView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {
@@ -270,643 +289,611 @@ public final class LaneSuggestView extends View {
         return this.crossGap;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:92:0x0bfe, code lost:
-    
-        if (com.starpilot.starview.AmyVoice.INSTANCE.busy(r13) == false) goto L296;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:252:0x06b0  */
-    /* JADX WARN: Removed duplicated region for block: B:255:0x06b3 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void tick(LaneSuggest.In i, TurnSignal.In turnIn) {
-        String str;
-        String str2;
-        LaneSuggest.State s;
-        String str3;
-        String str4;
-        String str5;
-        String str6;
-        String str7;
-        String str8;
-        LaneSuggest.State s2;
-        long now;
-        TurnSignal.State ts;
-        long now2;
-        int i2;
-        String str9;
-        Pair pair;
-        LaneSuggest.State s3;
-        String tside;
-        String str10;
-        String str11;
-        String lside;
-        String str12;
-        String str13;
-        String str14;
-        String str15;
-        String str16;
-        String str17;
-        LaneSuggest.State s4;
-        Object obj;
-        String str18;
-        StringBuilder append;
-        String str19;
-        String str20;
-        boolean z;
-        String str21;
-        String str22;
-        String str23;
-        String str24;
-        StringBuilder append2;
-        String str25;
-        String str26;
-        long now3 = i != null ? i.getNowMs() : turnIn != null ? turnIn.getNowMs() : System.currentTimeMillis();
-        probe(now3);
-        LaneSuggest laneSuggest = this.logic;
-        if (i != null) {
-            laneSuggest.update(i);
-        } else if (laneSuggest.getState() != LaneSuggest.State.IDLE && !this.logic.getTest()) {
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+    public final void tick(LaneSuggest.In var1, TurnSignal.In var2) {
+        String var32 = null; // declarations Vineflower left out
+        long var11;
+        if (var1 != null) {
+            var11 = var1.getNowMs();
+        } else if (var2 != null) {
+            var11 = var2.getNowMs();
+        } else {
+            var11 = System.currentTimeMillis();
+        }
+
+        this.probe(var11);
+        LaneSuggest var13 = this.logic;
+        if (var1 != null) {
+            var13.update(var1);
+        } else if (var13.getState() != LaneSuggest.State.IDLE && !this.logic.getTest()) {
             this.logic.reset();
         }
-        if (turnIn != null && Intrinsics.areEqual((Object) this.commaConfirms, (Object) true)) {
-            this.turn.update(turnIn);
+
+        if (var2 != null && Intrinsics.areEqual(this.commaConfirms, true)) {
+            this.turn.update(var2);
         } else if (this.turn.getState() != TurnSignal.State.IDLE) {
             this.turn.reset();
         }
-        LaneSuggest.State s5 = this.logic.getState();
-        String side = this.logic.getDir() < 0 ? "left" : "right";
-        boolean amy = Speech.INSTANCE.getUseAmy() && AmyVoice.INSTANCE.getReady();
-        String str27 = ".";
-        str = "left";
-        if (s5 != this.lastState) {
-            String lside2 = this.logic.getDir() < 0 ? "LEFT" : "RIGHT";
-            switch (WhenMappings.$EnumSwitchMapping$0[s5.ordinal()]) {
+
+        LaneSuggest.State var59 = this.logic.getState();
+        String var79;
+        if (this.logic.getDir() < 0) {
+            var79 = "left";
+        } else {
+            var79 = "right";
+        }
+
+        int var6;
+        if (Speech.INSTANCE.getUseAmy() && AmyVoice.INSTANCE.getReady()) {
+            var6 = 1;
+        } else {
+            var6 = 0;
+        }
+
+        LaneSuggest.State var21 = this.lastState;
+        String var17 = "left";
+        String var14;
+        if (var59 != var21) {
+            if (this.logic.getDir() < 0) {
+                var14 = "LEFT";
+            } else {
+                var14 = "RIGHT";
+            }
+
+            switch (LaneSuggestView.WhenMappings.$EnumSwitchMapping$0[var59.ordinal()]) {
                 case 1:
-                    lside = "sig_";
-                    str12 = "Change lanes ";
-                    str13 = ".";
-                    str3 = "?";
-                    str14 = "toUpperCase(...)";
                     if (this.lastState != LaneSuggest.State.WAITING) {
-                        BlinkLog.INSTANCE.add("Change lanes? " + lside2 + " asked" + (this.logic.getAutoAsk() ? " (automatic, 3 s)" : "") + " - " + this.logic.getWhy());
+                        BlinkLog var97 = BlinkLog.INSTANCE;
+                        String var35;
+                        if (this.logic.getAutoAsk()) {
+                            var35 = " (automatic, 3 s)";
+                        } else {
+                            var35 = "";
+                        }
+
+                        String var122 = this.logic.getWhy();
+                        var97.add("Change lanes? " + var14 + " asked" + var35 + " - " + var122);
                     }
-                    Unit unit = Unit.INSTANCE;
+
+                    Unit var36 = Unit.INSTANCE;
                     break;
                 case 2:
-                    lside = "sig_";
-                    str12 = "Change lanes ";
-                    str13 = ".";
-                    str3 = "?";
-                    BlinkLog blinkLog = BlinkLog.INSTANCE;
-                    String confirmedBy = this.logic.getConfirmedBy();
-                    switch (confirmedBy.hashCode()) {
-                        case 114595:
-                            str14 = "toUpperCase(...)";
-                            if (confirmedBy.equals("tap")) {
-                                str15 = "tapping Change";
-                                break;
-                            }
-                            str15 = this.logic.getConfirmedBy();
-                            break;
-                        case 3005871:
-                            str14 = "toUpperCase(...)";
-                            if (confirmedBy.equals("auto")) {
-                                str15 = "automatic mode";
-                                break;
-                            }
-                            str15 = this.logic.getConfirmedBy();
-                            break;
-                        case 105172251:
-                            str14 = "toUpperCase(...)";
-                            if (confirmedBy.equals("nudge")) {
-                                String format = String.format("%.0f", Arrays.copyOf(new Object[]{Float.valueOf(this.logic.getNudgeTorque())}, 1));
-                                Intrinsics.checkNotNullExpressionValue(format, "format(...)");
-                                str15 = "a steering nudge (torque " + format + ")";
-                                break;
-                            }
-                            str15 = this.logic.getConfirmedBy();
-                            break;
-                        case 108704329:
-                            if (!confirmedBy.equals("route")) {
-                                str14 = "toUpperCase(...)";
-                                str15 = this.logic.getConfirmedBy();
-                                break;
-                            } else {
-                                String why = this.logic.getWhy();
-                                if (this.logic.getExitTries() > 1) {
-                                    str14 = "toUpperCase(...)";
-                                    str16 = ", try " + this.logic.getExitTries();
-                                } else {
-                                    str14 = "toUpperCase(...)";
-                                    str16 = "";
+                    BlinkLog var16;
+                    label436: {
+                        var16 = BlinkLog.INSTANCE;
+                        String var30 = this.logic.getConfirmedBy();
+                        switch (var30.hashCode()) {
+                            case 114595:
+                                if (var30.equals("tap")) {
+                                    var32 = "tapping Change";
+                                    break label436;
                                 }
-                                str15 = "the route (" + why + str16 + ")";
                                 break;
-                            }
-                        default:
-                            str14 = "toUpperCase(...)";
-                            str15 = this.logic.getConfirmedBy();
-                            break;
+                            case 3005871:
+                                if (var30.equals("auto")) {
+                                    var32 = "automatic mode";
+                                    break label436;
+                                }
+                                break;
+                            case 105172251:
+                                if (var30.equals("nudge")) {
+                                    String var33 = String.format("%.0f", Arrays.copyOf(new Object[]{this.logic.getNudgeTorque()}, 1));
+                                    Intrinsics.checkNotNullExpressionValue(var33, "format(...)");
+                                    var32 = "a steering nudge (torque " + var33 + ")";
+                                    break label436;
+                                }
+                                break;
+                            case 108704329:
+                                if (var30.equals("route")) {
+                                    String var95 = this.logic.getWhy();
+                                    String var31;
+                                    if (this.logic.getExitTry() > 1) {
+                                        int var7 = this.logic.getExitTry();
+                                        var31 = ", try " + var7;
+                                    } else {
+                                        var31 = "";
+                                    }
+
+                                    var32 = "the route (" + var95 + var31 + ")";
+                                    break label436;
+                                }
+                        }
+
+                        var32 = this.logic.getConfirmedBy();
                     }
-                    blinkLog.add("Blinker " + lside2 + " ON - lane change confirmed by " + str15 + (this.logic.getTest() ? " (parked test)" : ""));
-                    Unit unit2 = Unit.INSTANCE;
+
+                    String var96;
+                    if (this.logic.getTest()) {
+                        var96 = " (parked test)";
+                    } else {
+                        var96 = "";
+                    }
+
+                    var16.add("Blinker " + var14 + " ON - lane change confirmed by " + var32 + var96);
+                    Unit var34 = Unit.INSTANCE;
                     break;
                 case 3:
-                    lside = "sig_";
-                    str12 = "Change lanes ";
-                    str13 = ".";
-                    str3 = "?";
-                    BlinkLog.INSTANCE.add("Blinker off - openpilot started the lane change " + lside2);
-                    Unit unit3 = Unit.INSTANCE;
-                    str14 = "toUpperCase(...)";
+                    BlinkLog.INSTANCE.add("Blinker off - openpilot started the lane change " + var14);
+                    Unit var29 = Unit.INSTANCE;
                     break;
                 case 4:
-                    lside = "sig_";
-                    str12 = "Change lanes ";
-                    str13 = ".";
-                    str3 = "?";
-                    BlinkLog.INSTANCE.add("Change lanes: " + this.logic.getResult());
-                    Unit unit4 = Unit.INSTANCE;
-                    str14 = "toUpperCase(...)";
+                    BlinkLog var27 = BlinkLog.INSTANCE;
+                    var14 = this.logic.getResult();
+                    var27.add("Change lanes: " + var14);
+                    Unit var28 = Unit.INSTANCE;
                     break;
                 case 5:
-                    lside = "sig_";
-                    str12 = "Change lanes ";
-                    str3 = "?";
-                    BlinkLog blinkLog2 = BlinkLog.INSTANCE;
+                    BlinkLog var15 = BlinkLog.INSTANCE;
+                    String var24;
                     if (this.logic.getArmed()) {
-                        String lowerCase = lside2.toLowerCase(Locale.ROOT);
-                        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                        str13 = ".";
-                        str17 = "Blinker off - car in the " + lowerCase + " blind spot, goes again once it's clear";
+                        String var23 = var14.toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(var23, "toLowerCase(...)");
+                        var24 = "Blinker off - car in the " + var23 + " blind spot, goes again once it's clear";
                     } else {
-                        str13 = ".";
-                        String lowerCase2 = lside2.toLowerCase(Locale.ROOT);
-                        Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
-                        str17 = "Change lanes? " + lside2 + " - car in the " + lowerCase2 + " blind spot, waiting to ask again";
+                        String var25 = var14.toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(var25, "toLowerCase(...)");
+                        var24 = "Change lanes? " + var14 + " - car in the " + var25 + " blind spot, waiting to ask again";
                     }
-                    blinkLog2.add(str17);
-                    Unit unit5 = Unit.INSTANCE;
-                    str14 = "toUpperCase(...)";
+
+                    var15.add(var24);
+                    Unit var26 = Unit.INSTANCE;
                     break;
                 case 6:
-                    lside = "sig_";
-                    str12 = "Change lanes ";
                     if (this.lastState == LaneSuggest.State.ASKING) {
-                        str3 = "?";
-                        BlinkLog.INSTANCE.add("Change lanes? " + lside2 + " - not answered / No");
-                    } else {
-                        str3 = "?";
-                        if (this.lastState == LaneSuggest.State.WAITING) {
-                            BlinkLog.INSTANCE.add("Change lanes? " + lside2 + " - stopped waiting (No, gave up, or no longer needed)");
-                        }
+                        BlinkLog.INSTANCE.add("Change lanes? " + var14 + " - not answered / No");
+                    } else if (this.lastState == LaneSuggest.State.WAITING) {
+                        BlinkLog.INSTANCE.add("Change lanes? " + var14 + " - stopped waiting (No, gave up, or no longer needed)");
                     }
-                    Unit unit6 = Unit.INSTANCE;
-                    str13 = ".";
-                    str14 = "toUpperCase(...)";
+
+                    Unit var22 = Unit.INSTANCE;
                     break;
                 default:
                     throw new NoWhenBranchMatchedException();
             }
-            switch (WhenMappings.$EnumSwitchMapping$0[s5.ordinal()]) {
+
+            String var37;
+            switch (LaneSuggestView.WhenMappings.$EnumSwitchMapping$0[var59.ordinal()]) {
                 case 1:
-                    str7 = " - ";
-                    s4 = s5;
-                    String str28 = lside;
-                    str6 = "substring(...)";
-                    String str29 = str12;
-                    str27 = str13;
-                    obj = "nudge";
-                    str4 = str14;
-                    this.askedAt = now3;
+                    this.askedAt = var11;
                     this.repeated = false;
-                    boolean route = !StringsKt.startsWith(this.logic.getWhy(), "the driving model", false);
+                    boolean var8 = StringsKt.startsWith(this.logic.getWhy(), "the driving model", false) ^ true;
                     if (this.lastState == LaneSuggest.State.WAITING) {
-                        BlinkLog.INSTANCE.add("Change lanes? " + (this.logic.getDir() < 0 ? "LEFT" : "RIGHT") + " asked again - the blind spot is clear");
-                        String str30 = str3;
-                        str2 = str28;
-                        say("Clear now. Change lanes " + side + str30, AmySynth.Style.ASK, CollectionsKt.listOf("ask_" + side), now3);
-                        str5 = "ask_";
-                        str8 = str29;
-                        str3 = str30;
-                    } else {
-                        str2 = str28;
-                        String str31 = "ask_";
-                        String str32 = str3;
-                        if (this.logic.getAutoAsk()) {
-                            Iterable $this$filter$iv = AmyPrompts.INSTANCE.ask(this.logic.getDir(), this.logic.getWhy());
-                            int $i$f$filter = 0;
-                            Collection destination$iv$iv = new ArrayList();
-                            Iterable $this$filterTo$iv$iv = $this$filter$iv;
-                            int $i$f$filterTo = 0;
-                            Iterator it = $this$filterTo$iv$iv.iterator();
-                            while (it.hasNext()) {
-                                Iterable $this$filter$iv2 = $this$filter$iv;
-                                Object element$iv$iv = it.next();
-                                int $i$f$filter2 = $i$f$filter;
-                                String it2 = (String) element$iv$iv;
-                                Iterable $this$filterTo$iv$iv2 = $this$filterTo$iv$iv;
-                                int $i$f$filterTo2 = $i$f$filterTo;
-                                Iterator it3 = it;
-                                if (StringsKt.startsWith(it2, str31, false)) {
-                                    str20 = str31;
-                                } else {
-                                    str20 = str31;
-                                    if (!StringsKt.startsWith(it2, "lanes", false)) {
-                                        z = true;
-                                        if (!z) {
-                                            destination$iv$iv.add(element$iv$iv);
-                                        }
-                                        $this$filter$iv = $this$filter$iv2;
-                                        $i$f$filter = $i$f$filter2;
-                                        $this$filterTo$iv$iv = $this$filterTo$iv$iv2;
-                                        $i$f$filterTo = $i$f$filterTo2;
-                                        it = it3;
-                                        str31 = str20;
-                                    }
-                                }
-                                z = false;
-                                if (!z) {
-                                }
-                                $this$filter$iv = $this$filter$iv2;
-                                $i$f$filter = $i$f$filter2;
-                                $this$filterTo$iv$iv = $this$filterTo$iv$iv2;
-                                $i$f$filterTo = $i$f$filterTo2;
-                                it = it3;
-                                str31 = str20;
-                            }
-                            String str33 = str31;
-                            List keys = CollectionsKt.plus((Collection<? extends String>) destination$iv$iv, "changing");
-                            if (route) {
-                                String substringBefore$default = StringsKt.substringBefore(Speech.INSTANCE.spoken(this.logic.getWhy()), str7, (Speech.INSTANCE.spoken(this.logic.getWhy())));
-                                if (substringBefore$default.length() > 0) {
-                                    StringBuilder sb = new StringBuilder();
-                                    char it4 = substringBefore$default.charAt(0);
-                                    String valueOf = String.valueOf(it4);
-                                    Intrinsics.checkNotNull(valueOf, "null cannot be cast to non-null type java.lang.String");
-                                    String upperCase = valueOf.toUpperCase(Locale.ROOT);
-                                    Intrinsics.checkNotNullExpressionValue(upperCase, str4);
-                                    StringBuilder append3 = sb.append((Object) upperCase);
-                                    String substring = substringBefore$default.substring(1);
-                                    Intrinsics.checkNotNullExpressionValue(substring, str6);
-                                    substringBefore$default = append3.append(substring).toString();
-                                }
-                                str19 = substringBefore$default + ". ";
-                            } else {
-                                str19 = "";
-                            }
-                            say(str19 + "Changing lanes " + side + str27, AmySynth.Style.ASK, keys, now3);
-                            str8 = str29;
-                            str5 = str33;
-                            str3 = str32;
-                        } else if (Intrinsics.areEqual(this.logic.getKind(), "pass")) {
-                            str5 = str31;
-                            say("Slower car ahead. Change lanes " + side + str32, AmySynth.Style.ASK, CollectionsKt.listOf(str31 + side), now3);
-                            str3 = str32;
-                            str8 = str29;
+                        BlinkLog var85 = BlinkLog.INSTANCE;
+                        String var48;
+                        if (this.logic.getDir() < 0) {
+                            var48 = "LEFT";
                         } else {
-                            str5 = str31;
-                            if (route) {
-                                str18 = str29;
-                                String spoken = Speech.INSTANCE.spoken(this.logic.getWhy());
-                                if (spoken.length() > 0) {
-                                    StringBuilder sb2 = new StringBuilder();
-                                    char it5 = spoken.charAt(0);
-                                    String valueOf2 = String.valueOf(it5);
-                                    Intrinsics.checkNotNull(valueOf2, "null cannot be cast to non-null type java.lang.String");
-                                    String upperCase2 = valueOf2.toUpperCase(Locale.ROOT);
-                                    Intrinsics.checkNotNullExpressionValue(upperCase2, str4);
-                                    StringBuilder append4 = sb2.append((Object) upperCase2);
-                                    String substring2 = spoken.substring(1);
-                                    Intrinsics.checkNotNullExpressionValue(substring2, str6);
-                                    spoken = append4.append(substring2).toString();
+                            var48 = "RIGHT";
+                        }
+
+                        var85.add("Change lanes? " + var48 + " asked again - the blind spot is clear");
+                        this.say("Clear now. Change lanes " + var79 + "?", AmySynth.Style.ASK, CollectionsKt.listOf("ask_" + var79), var11);
+                        var37 = "ask_";
+                    } else {
+                        var37 = "ask_";
+                        if (this.logic.getAutoAsk()) {
+                            Iterable var125 = AmyPrompts.INSTANCE.ask(this.logic.getDir(), this.logic.getWhy());
+                            boolean var10 = false;
+                            var var142 = new ArrayList();
+                            boolean var9 = false;
+
+                            for (Object var19 : var125) {
+                                String var20 = (String)var19;
+                                boolean var71;
+                                if (!StringsKt.startsWith(var20, var37, false) && !StringsKt.startsWith(var20, "lanes", false)) {
+                                    var71 = true;
+                                } else {
+                                    var71 = false;
                                 }
-                                append = new StringBuilder().append(spoken).append(". Change lanes ");
-                            } else {
-                                str18 = str29;
-                                append = new StringBuilder().append(str18);
+
+                                if (var71) {
+                                    var142.add(var19);
+                                }
                             }
-                            str3 = str32;
-                            str8 = str18;
-                            say(append.append(side).append(str32).toString(), AmySynth.Style.ASK, AmyPrompts.INSTANCE.ask(this.logic.getDir(), this.logic.getWhy()), now3);
+
+                            List var87 = var142;
+                            List var126 = CollectionsKt.plus(var87, "changing");
+                            if (var8) {
+                                String var100 = StringsKt.substringBefore(Speech.INSTANCE.spoken(this.logic.getWhy()), " - ", (Speech.INSTANCE.spoken(this.logic.getWhy())));
+                                boolean var72;
+                                if (var100.length() > 0) {
+                                    var72 = true;
+                                } else {
+                                    var72 = false;
+                                }
+
+                                var14 = var100;
+                                if (var72) {
+                                    StringBuilder var89 = new StringBuilder();
+                                    String var143 = String.valueOf(var100.charAt(0));
+                                    Intrinsics.checkNotNull(var143, "null cannot be cast to non-null type java.lang.String");
+                                    String var144 = var143.toUpperCase(Locale.ROOT);
+                                    Intrinsics.checkNotNullExpressionValue(var144, "toUpperCase(...)");
+                                    StringBuilder var90 = var89.append(var144);
+                                    var100 = var100.substring(1);
+                                    Intrinsics.checkNotNullExpressionValue(var100, "substring(...)");
+                                    var14 = var90.append(var100).toString();
+                                }
+
+                                var14 = var14 + ". ";
+                            } else {
+                                var14 = "";
+                            }
+
+                            this.say(var14 + "Changing lanes " + var79 + ".", AmySynth.Style.ASK, var126, var11);
+                        } else if (Intrinsics.areEqual(this.logic.getKind(), "pass")) {
+                            String var127 = "Slower car ahead. Change lanes " + var79 + "?";
+                            AmySynth.Style var92 = AmySynth.Style.ASK;
+                            List var102 = CollectionsKt.listOf("ask_" + var79);
+                            var37 = "ask_";
+                            this.say(var127, var92, var102, var11);
+                        } else {
+                            var14 = "ask_";
+                            StringBuilder var49;
+                            if (!var8) {
+                                var49 = new StringBuilder().append("Change lanes ");
+                            } else {
+                                String var103 = Speech.INSTANCE.spoken(this.logic.getWhy());
+                                boolean var73;
+                                if (var103.length() > 0) {
+                                    var73 = true;
+                                } else {
+                                    var73 = false;
+                                }
+
+                                String var50 = var103;
+                                if (var73) {
+                                    StringBuilder var51 = new StringBuilder();
+                                    String var128 = String.valueOf(var103.charAt(0));
+                                    Intrinsics.checkNotNull(var128, "null cannot be cast to non-null type java.lang.String");
+                                    var128 = var128.toUpperCase(Locale.ROOT);
+                                    Intrinsics.checkNotNullExpressionValue(var128, "toUpperCase(...)");
+                                    StringBuilder var52 = var51.append(var128);
+                                    var103 = var103.substring(1);
+                                    Intrinsics.checkNotNullExpressionValue(var103, "substring(...)");
+                                    var50 = var52.append(var103).toString();
+                                }
+
+                                var49 = new StringBuilder().append(var50).append(". Change lanes ");
+                            }
+
+                            String var130 = var49.append(var79).append("?").toString();
+                            AmySynth.Style var105 = AmySynth.Style.ASK;
+                            List var53 = AmyPrompts.INSTANCE.ask(this.logic.getDir(), this.logic.getWhy());
+                            this.say(var130, var105, var53, var11);
+                            var37 = var14;
                         }
                     }
-                    Unit unit7 = Unit.INSTANCE;
+
+                    Unit var94 = Unit.INSTANCE;
                     break;
                 case 2:
-                    str7 = " - ";
-                    String str34 = lside;
-                    str6 = "substring(...)";
-                    String str35 = str12;
-                    str27 = str13;
-                    obj = "nudge";
-                    str4 = str14;
-                    if (Intrinsics.areEqual(this.logic.getKind(), "exit")) {
-                        s4 = s5;
-                        str21 = str34;
-                        if (this.logic.getExitTries() == 1) {
-                            say((StringsKt.startsWith(this.logic.getWhy(), "fork", false) ? "Fork" : "Exit") + " on the " + side + ". Signaling.", AmySynth.Style.SHORT, CollectionsKt.listOf(str21 + side), now3);
+                    if (!Intrinsics.areEqual(this.logic.getKind(), "exit")) {
+                        this.say("Signaling " + var79 + ".", AmySynth.Style.SHORT, CollectionsKt.listOf("sig_" + var79), var11);
+                    } else if (this.logic.getExitTry() == 1) {
+                        String var46;
+                        if (StringsKt.startsWith(this.logic.getWhy(), "fork", false)) {
+                            var46 = "Fork";
+                        } else {
+                            var46 = "Exit";
                         }
-                    } else {
-                        s4 = s5;
-                        str21 = str34;
-                        say("Signaling " + side + str27, AmySynth.Style.SHORT, CollectionsKt.listOf(str34 + side), now3);
+
+                        this.say(var46 + " on the " + var79 + ". Signaling.", AmySynth.Style.SHORT, CollectionsKt.listOf("sig_" + var79), var11);
                     }
-                    Unit unit8 = Unit.INSTANCE;
-                    str2 = str21;
-                    str5 = "ask_";
-                    str8 = str35;
+
+                    Unit var47 = Unit.INSTANCE;
+                    var37 = "ask_";
                     break;
                 case 3:
-                    str7 = " - ";
-                    str2 = lside;
-                    str6 = "substring(...)";
-                    String str36 = str12;
-                    str27 = str13;
-                    obj = "nudge";
-                    str4 = str14;
                     if (!Intrinsics.areEqual(this.logic.getConfirmedBy(), "auto")) {
-                        say("Changing lanes.", AmySynth.Style.SHORT, CollectionsKt.listOf("changing"), now3);
+                        this.say("Changing lanes.", AmySynth.Style.SHORT, CollectionsKt.listOf("changing"), var11);
                     }
-                    Unit unit9 = Unit.INSTANCE;
-                    s4 = s5;
-                    str5 = "ask_";
-                    str8 = str36;
+
+                    Unit var45 = Unit.INSTANCE;
+                    var37 = "ask_";
                     break;
                 case 4:
-                    str7 = " - ";
-                    str2 = lside;
-                    str6 = "substring(...)";
-                    String str37 = str12;
-                    if (StringsKt.contains((CharSequence) this.logic.getResult(), (CharSequence) "signaling again", false)) {
-                        str27 = str13;
-                        obj = "nudge";
-                        str4 = str14;
-                    } else {
-                        Pair<AmySynth.Style, String> result = AmyPrompts.INSTANCE.result(this.logic.getResult(), this.logic.getDir());
-                        AmySynth.Style st = result.component1();
-                        String key = result.component2();
+                    if (!StringsKt.contains(this.logic.getResult(), "signaling again", false)) {
+                        Pair var40 = AmyPrompts.INSTANCE.result(this.logic.getResult(), this.logic.getDir());
+                        AmySynth.Style var84 = (AmySynth.Style)var40.component1();
+                        String var98 = (String)var40.component2();
+                        String var41;
                         if (StringsKt.startsWith(this.logic.getResult(), "changed lanes", false)) {
-                            str24 = "Done.";
-                            str23 = str13;
-                            str22 = str14;
+                            var41 = "Done.";
                         } else {
-                            String replace$default = StringsKt.replace(this.logic.getResult(), " - ", ". ", false);
-                            if (replace$default.length() > 0) {
-                                StringBuilder sb3 = new StringBuilder();
-                                char it6 = replace$default.charAt(0);
-                                String valueOf3 = String.valueOf(it6);
-                                Intrinsics.checkNotNull(valueOf3, "null cannot be cast to non-null type java.lang.String");
-                                String upperCase3 = valueOf3.toUpperCase(Locale.ROOT);
-                                str22 = str14;
-                                Intrinsics.checkNotNullExpressionValue(upperCase3, str22);
-                                StringBuilder append5 = sb3.append((Object) upperCase3);
-                                String substring3 = replace$default.substring(1);
-                                Intrinsics.checkNotNullExpressionValue(substring3, str6);
-                                replace$default = append5.append(substring3).toString();
+                            String var42 = StringsKt.replace(this.logic.getResult(), " - ", ". ", false);
+                            boolean var70;
+                            if (var42.length() > 0) {
+                                var70 = true;
                             } else {
-                                str22 = str14;
+                                var70 = false;
                             }
-                            str23 = str13;
-                            str24 = replace$default + str23;
+
+                            if (var70) {
+                                StringBuilder var123 = new StringBuilder();
+                                char var3 = var42.charAt(0);
+                                String var18 = String.valueOf(var3);
+                                Intrinsics.checkNotNull(var18, "null cannot be cast to non-null type java.lang.String");
+                                var18 = var18.toUpperCase(Locale.ROOT);
+                                Intrinsics.checkNotNullExpressionValue(var18, "toUpperCase(...)");
+                                var123 = var123.append(var18);
+                                String var43 = var42.substring(1);
+                                Intrinsics.checkNotNullExpressionValue(var43, "substring(...)");
+                                var42 = var123.append(var43).toString();
+                            }
+
+                            var41 = var42 + ".";
                         }
-                        str27 = str23;
-                        obj = "nudge";
-                        str4 = str22;
-                        say(str24, st, CollectionsKt.listOf(key), now3);
+
+                        List var99 = CollectionsKt.listOf(var98);
+                        this.say(var41, var84, var99, var11);
                     }
-                    Unit unit10 = Unit.INSTANCE;
-                    s4 = s5;
-                    str5 = "ask_";
-                    str8 = str37;
+
+                    Unit var44 = Unit.INSTANCE;
+                    var37 = "ask_";
                     break;
                 case 5:
-                    if (amy) {
+                    if ((var6 != 0)) {
                         AmyVoice.INSTANCE.ping();
-                        str7 = " - ";
-                        str2 = lside;
-                        str6 = "substring(...)";
-                        str26 = str12;
                     } else {
+                        StringBuilder var38;
                         if (this.logic.getArmed()) {
-                            append2 = new StringBuilder().append("Car on your ").append(side);
-                            str25 = ". Waiting.";
+                            var38 = new StringBuilder().append("Car on your ").append(var79);
+                            var14 = ". Waiting.";
                         } else {
-                            append2 = new StringBuilder().append("Car on your ").append(side);
-                            str25 = ". I'll ask again.";
+                            var38 = new StringBuilder().append("Car on your ").append(var79);
+                            var14 = ". I'll ask again.";
                         }
-                        str6 = "substring(...)";
-                        str7 = " - ";
-                        str2 = lside;
-                        str26 = str12;
-                        say(append2.append(str25).toString(), AmySynth.Style.SHORT, CollectionsKt.emptyList(), now3);
+
+                        this.say(var38.append(var14).toString(), AmySynth.Style.SHORT, CollectionsKt.emptyList(), var11);
                     }
-                    Unit unit11 = Unit.INSTANCE;
-                    s4 = s5;
-                    str5 = "ask_";
-                    str27 = str13;
-                    str8 = str26;
-                    obj = "nudge";
-                    str4 = str14;
+
+                    Unit var39 = Unit.INSTANCE;
+                    var37 = "ask_";
                     break;
                 default:
-                    str7 = " - ";
-                    s4 = s5;
-                    str5 = "ask_";
-                    str2 = lside;
-                    str6 = "substring(...)";
-                    str8 = str12;
-                    str27 = str13;
-                    obj = "nudge";
-                    str4 = str14;
-                    if (this.lastState == LaneSuggest.State.ASKING && amy) {
+                    var37 = "ask_";
+                    if (this.lastState == LaneSuggest.State.ASKING && var6) {
                         AmyVoice.INSTANCE.stop();
                     }
-                    Unit unit12 = Unit.INSTANCE;
-                    break;
+
+                    Unit var82 = Unit.INSTANCE;
             }
-            s = s4;
-            if (s == LaneSuggest.State.SIGNALING && Intrinsics.areEqual(this.logic.getConfirmedBy(), obj)) {
-                performHapticFeedback(16);
+
+            LaneSuggest.State var106 = LaneSuggest.State.SIGNALING;
+            if (var59 == var106 && Intrinsics.areEqual(this.logic.getConfirmedBy(), "nudge")) {
+                this.performHapticFeedback(16);
             }
-            this.lastState = s;
+
+            this.lastState = var59;
+            var14 = var37;
         } else {
-            str2 = "sig_";
-            s = s5;
-            str3 = "?";
-            str4 = "toUpperCase(...)";
-            str5 = "ask_";
-            str6 = "substring(...)";
-            str7 = " - ";
-            str8 = "Change lanes ";
+            var14 = "ask_";
         }
-        TurnSignal.State ts2 = this.turn.getState();
+
+        TurnSignal.State var145 = this.turn.getState();
         if (this.turn.getLaneHold() != this.lastLaneHold) {
             this.lastLaneHold = this.turn.getLaneHold();
             if (this.turn.getLaneHold() && this.turn.getState() == TurnSignal.State.WAITING) {
-                BlinkLog.INSTANCE.add("Turn signal held off - not in a lane that turns " + (this.turn.getDir() < 0 ? str : "right") + " (route lanes + lane card)");
+                BlinkLog var107 = BlinkLog.INSTANCE;
+                String var60;
+                if (this.turn.getDir() < 0) {
+                    var60 = "left";
+                } else {
+                    var60 = "right";
+                }
+
+                var107.add("Turn signal held off - not in a lane that turns " + var60 + " (route lanes + lane card)");
             }
         }
-        if (ts2 != this.lastTurn) {
-            String tside2 = this.turn.getDir() >= 0 ? "right" : "left";
-            switch (WhenMappings.$EnumSwitchMapping$1[ts2.ordinal()]) {
+
+        if (var145 != this.lastTurn) {
+            String var61;
+            if (this.turn.getDir() < 0) {
+                var61 = var17;
+            } else {
+                var61 = "right";
+            }
+
+            switch (LaneSuggestView.WhenMappings.$EnumSwitchMapping$1[var145.ordinal()]) {
                 case 1:
-                    s3 = s;
-                    BlinkLog blinkLog3 = BlinkLog.INSTANCE;
-                    String upperCase4 = tside2.toUpperCase(Locale.ROOT);
-                    Intrinsics.checkNotNullExpressionValue(upperCase4, str4);
+                    BlinkLog var146 = BlinkLog.INSTANCE;
+                    var17 = var61.toUpperCase(Locale.ROOT);
+                    Intrinsics.checkNotNullExpressionValue(var17, "toUpperCase(...)");
+                    boolean var74;
                     if (this.turn.getStreet().length() > 0) {
-                        tside = tside2;
-                        str10 = " onto " + this.turn.getStreet();
+                        var74 = true;
                     } else {
-                        tside = tside2;
-                        str10 = "";
+                        var74 = false;
                     }
-                    String far = far(this.turn.getStartedAtM());
-                    double gap = this.turn.getGap();
-                    if ((Double.isInfinite(gap) || Double.isNaN(gap)) ? false : true) {
-                        now = now3;
-                        str11 = " (last cross street " + far(this.turn.getGap()) + " before the turn)";
+
+                    String var114;
+                    if (var74) {
+                        var114 = this.turn.getStreet();
+                        var114 = " onto " + var114;
                     } else {
-                        now = now3;
-                        str11 = "";
+                        var114 = "";
                     }
-                    blinkLog3.add("Blinker " + upperCase4 + " ON - route turn" + str10 + ", " + far + " before it" + str11);
-                    Unit unit13 = Unit.INSTANCE;
+
+                    String var147 = this.far(this.turn.getStartedAtM());
+                    double var4 = this.turn.getGap();
+                    if (!Double.isInfinite(var4) && !Double.isNaN(var4)) {
+                        var74 = true;
+                    } else {
+                        var74 = false;
+                    }
+
+                    String var134;
+                    if (var74) {
+                        var134 = this.far(this.turn.getGap());
+                        var134 = " (last cross street " + var134 + " before the turn)";
+                    } else {
+                        var134 = "";
+                    }
+
+                    var146.add("Blinker " + var17 + " ON - route turn" + var114 + ", " + var147 + " before it" + var134);
+                    Unit var115 = Unit.INSTANCE;
                     break;
                 case 2:
-                    s3 = s;
-                    BlinkLog.INSTANCE.add("Turn signal off - " + this.turn.getResult());
-                    Unit unit14 = Unit.INSTANCE;
-                    tside = tside2;
-                    now = now3;
+                    BlinkLog var111 = BlinkLog.INSTANCE;
+                    String var132 = this.turn.getResult();
+                    var111.add("Turn signal off - " + var132);
+                    Unit var112 = Unit.INSTANCE;
                     break;
                 case 3:
                     if (this.lastTurn == TurnSignal.State.SIGNALING) {
-                        s3 = s;
-                        BlinkLog.INSTANCE.add("Turn signal off - " + this.turn.getResult());
-                    } else {
-                        s3 = s;
+                        BlinkLog var131 = BlinkLog.INSTANCE;
+                        String var109 = this.turn.getResult();
+                        var131.add("Turn signal off - " + var109);
                     }
-                    Unit unit15 = Unit.INSTANCE;
-                    tside = tside2;
-                    now = now3;
+
+                    Unit var110 = Unit.INSTANCE;
                     break;
                 default:
-                    tside = tside2;
-                    s3 = s;
-                    now = now3;
-                    Unit unit16 = Unit.INSTANCE;
-                    break;
+                    Unit var108 = Unit.INSTANCE;
             }
-            switch (WhenMappings.$EnumSwitchMapping$1[ts2.ordinal()]) {
+
+            switch (LaneSuggestView.WhenMappings.$EnumSwitchMapping$1[var145.ordinal()]) {
                 case 1:
-                    ts = ts2;
-                    String tside3 = tside;
-                    s2 = s3;
-                    double m = this.turn.getStartedAtM();
-                    List dk = (120.0d > m ? 1 : (120.0d == m ? 0 : -1)) <= 0 && (m > 350.0d ? 1 : (m == 350.0d ? 0 : -1)) <= 0 ? CollectionsKt.listOf("turn_" + tside3 + "_" + AmyPrompts.INSTANCE.distKey(m)) : CollectionsKt.emptyList();
-                    say("Signaling " + tside3 + " for the turn.", AmySynth.Style.SHORT, CollectionsKt.plus((Collection<? extends String>) dk, str2 + tside3), now);
-                    Unit unit17 = Unit.INSTANCE;
+                    double var66 = this.turn.getStartedAtM();
+                    boolean var77;
+                    if (120.0 <= var66 && var66 <= 350.0) {
+                        var77 = true;
+                    } else {
+                        var77 = false;
+                    }
+
+                    List var120;
+                    if (var77) {
+                        String var119 = AmyPrompts.INSTANCE.distKey(var66);
+                        var120 = CollectionsKt.listOf("turn_" + var61 + "_" + var119);
+                    } else {
+                        var120 = CollectionsKt.emptyList();
+                    }
+
+                    this.say("Signaling " + var61 + " for the turn.", AmySynth.Style.SHORT, CollectionsKt.plus(var120, "sig_" + var61), var11);
+                    Unit var64 = Unit.INSTANCE;
                     break;
                 case 2:
-                    if (StringsKt.startsWith(this.turn.getResult(), "turned", false)) {
-                        ts = ts2;
-                        s2 = s3;
-                    } else {
-                        String key2 = StringsKt.startsWith(this.turn.getResult(), "cancelled", false) ? "stop_cancelled" : StringsKt.startsWith(this.turn.getResult(), "other blinker", false) ? "stop_blinker" : "stop_generic";
-                        String substringBefore$default2 = StringsKt.substringBefore(this.turn.getResult(), str7, this.turn.getResult());
-                        if (substringBefore$default2.length() > 0) {
-                            StringBuilder sb4 = new StringBuilder();
-                            char it7 = substringBefore$default2.charAt(0);
-                            String valueOf4 = String.valueOf(it7);
-                            Intrinsics.checkNotNull(valueOf4, "null cannot be cast to non-null type java.lang.String");
-                            String upperCase5 = valueOf4.toUpperCase(Locale.ROOT);
-                            Intrinsics.checkNotNullExpressionValue(upperCase5, str4);
-                            StringBuilder append6 = sb4.append((Object) upperCase5);
-                            String substring4 = substringBefore$default2.substring(1);
-                            Intrinsics.checkNotNullExpressionValue(substring4, str6);
-                            substringBefore$default2 = append6.append(substring4).toString();
+                    if (!StringsKt.startsWith(this.turn.getResult(), "turned", false)) {
+                        String var62;
+                        if (StringsKt.startsWith(this.turn.getResult(), "cancelled", false)) {
+                            var62 = "stop_cancelled";
+                        } else if (StringsKt.startsWith(this.turn.getResult(), "other blinker", false)) {
+                            var62 = "stop_blinker";
+                        } else {
+                            var62 = "stop_generic";
                         }
-                        ts = ts2;
-                        s2 = s3;
-                        say(substringBefore$default2 + str27, AmySynth.Style.STOPPED, CollectionsKt.listOf(key2), now);
+
+                        String var135 = StringsKt.substringBefore(this.turn.getResult(), " - ", this.turn.getResult());
+                        boolean var76;
+                        if (var135.length() > 0) {
+                            var76 = true;
+                        } else {
+                            var76 = false;
+                        }
+
+                        String var116 = var135;
+                        if (var76) {
+                            StringBuilder var117 = new StringBuilder();
+                            var17 = String.valueOf(var135.charAt(0));
+                            Intrinsics.checkNotNull(var17, "null cannot be cast to non-null type java.lang.String");
+                            var17 = var17.toUpperCase(Locale.ROOT);
+                            Intrinsics.checkNotNullExpressionValue(var17, "toUpperCase(...)");
+                            StringBuilder var118 = var117.append(var17);
+                            var135 = var135.substring(1);
+                            Intrinsics.checkNotNullExpressionValue(var135, "substring(...)");
+                            var116 = var118.append(var135).toString();
+                        }
+
+                        this.say(var116 + ".", AmySynth.Style.STOPPED, CollectionsKt.listOf(var62), var11);
                     }
-                    Unit unit18 = Unit.INSTANCE;
-                    break;
                 default:
-                    ts = ts2;
-                    s2 = s3;
-                    Unit unit182 = Unit.INSTANCE;
-                    break;
+                    Unit var63 = Unit.INSTANCE;
             }
-            this.lastTurn = ts;
-        } else {
-            s2 = s;
-            now = now3;
-            ts = ts2;
+
+            this.lastTurn = var145;
         }
-        if (this.logic.getArmed() && !this.lastArmed && s2 == LaneSuggest.State.WAITING) {
-            BlinkLog blinkLog4 = BlinkLog.INSTANCE;
-            String str38 = this.logic.getDir() < 0 ? "LEFT" : "RIGHT";
-            String format2 = String.format("%.0f", Arrays.copyOf(new Object[]{Float.valueOf(this.logic.getNudgeTorque())}, 1));
-            Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
-            blinkLog4.add(str8 + str38 + " confirmed by a steering nudge (torque " + format2 + ") - signals once the blind spot is clear");
-            performHapticFeedback(16);
-        }
-        this.lastArmed = this.logic.getArmed();
-        if (s2 != LaneSuggest.State.ASKING || this.logic.getAutoAsk() || this.repeated || now - this.askedAt <= 7000) {
-            now2 = now;
-        } else {
-            if (amy) {
-                now2 = now;
+
+        if (this.logic.getArmed() && !this.lastArmed && var59 == LaneSuggest.State.WAITING) {
+            BlinkLog var121 = BlinkLog.INSTANCE;
+            String var55;
+            if (this.logic.getDir() < 0) {
+                var55 = "LEFT";
             } else {
-                now2 = now;
+                var55 = "RIGHT";
             }
-            this.repeated = true;
-            say(str8 + side + str3, AmySynth.Style.SHORT, CollectionsKt.listOf(str5 + side), now2);
+
+            String var137 = String.format("%.0f", Arrays.copyOf(new Object[]{this.logic.getNudgeTorque()}, 1));
+            Intrinsics.checkNotNullExpressionValue(var137, "format(...)");
+            var121.add("Change lanes " + var55 + " confirmed by a steering nudge (torque " + var137 + ") - signals once the blind spot is clear");
+            this.performHapticFeedback(16);
         }
+
+        this.lastArmed = this.logic.getArmed();
+        if (var59 == LaneSuggest.State.ASKING
+            && !this.logic.getAutoAsk()
+            && !this.repeated
+            && var11 - this.askedAt > 7000L
+            && (!var6 || !AmyVoice.INSTANCE.busy(var11))) {
+            this.repeated = true;
+            this.say("Change lanes " + var79 + "?", AmySynth.Style.SHORT, CollectionsKt.listOf(var14 + var79), var11);
+        }
+
         if (this.logic.getBeepNow()) {
-            if (amy) {
-                if (!AmyVoice.INSTANCE.busy(now2) && now2 - this.lastSpoke > 1500) {
+            if ((var6 != 0)) {
+                if (!AmyVoice.INSTANCE.busy(var11) && var11 - this.lastSpoke > 1500L) {
                     AmyVoice.INSTANCE.ping();
                 }
-            } else if (!Speech.INSTANCE.getEnabled() || now2 - this.lastSpoke > 2500) {
-                beep();
+            } else if (!Speech.INSTANCE.getEnabled() || var11 - this.lastSpoke > 2500L) {
+                this.beep();
             }
         }
-        if (amy && AmyVoice.INSTANCE.busy(now2)) {
-            this.lastSpoke = now2;
+
+        if (var6 && AmyVoice.INSTANCE.busy(var11)) {
+            this.lastSpoke = var11;
         }
+
+        Pair var57;
         if (this.logic.getHoldSide() != 0) {
-            pair = TuplesKt.to(Integer.valueOf(this.logic.getHoldSide()), this.logic.getTest() ? "" : "lane");
-            str9 = "";
-            i2 = 0;
+            var6 = this.logic.getHoldSide();
+            String var56;
+            if (this.logic.getTest()) {
+                var56 = "";
+            } else {
+                var56 = "lane";
+            }
+
+            var57 = TuplesKt.to(var6, var56);
         } else if (this.turn.getHoldSide() != 0) {
-            pair = TuplesKt.to(Integer.valueOf(this.turn.getHoldSide()), "turn");
-            str9 = "";
-            i2 = 0;
+            var57 = TuplesKt.to(this.turn.getHoldSide(), "turn");
         } else {
-            i2 = 0;
-            str9 = "";
-            pair = TuplesKt.to(0, str9);
+            var57 = TuplesKt.to(0, "");
         }
-        int want = ((Number) pair.component1()).intValue();
-        String why2 = (String) pair.component2();
-        if (want != this.holding || !Intrinsics.areEqual(why2, this.holdWhy)) {
-            int was = this.holding;
-            this.holding = want;
-            this.holdWhy = why2;
+
+        int var78 = ((Number)var57.component1()).intValue();
+        String var58 = (String)var57.component2();
+        if (var78 != this.holding || !Intrinsics.areEqual(var58, this.holdWhy)) {
+            var6 = this.holding;
+            this.holding = var78;
+            this.holdWhy = var58;
             this.main.removeCallbacks(this.repeat);
-            if (want != 0) {
+            if (var78 != 0) {
                 this.repeat.run();
-            } else if (was != 0) {
-                send("off", str9);
+            } else if ((var6 != 0)) {
+                this.send("off", "");
             }
         }
-        setVisibility((s2 == LaneSuggest.State.IDLE && (ts == TurnSignal.State.IDLE || ts == TurnSignal.State.WAITING)) ? 8 : i2);
-        invalidate();
+
+        byte var69;
+        if (var59 != LaneSuggest.State.IDLE || var145 != TurnSignal.State.IDLE && var145 != TurnSignal.State.WAITING) {
+            var69 = 0;
+        } else {
+            var69 = 8;
+        }
+
+        this.setVisibility(var69);
+        this.invalidate();
     }
 
     /* JADX INFO: Access modifiers changed from: private */

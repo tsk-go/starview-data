@@ -27,6 +27,8 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
+import android.graphics.drawable.Drawable;
+import android.view.ViewGroup.LayoutParams;
 
 /* compiled from: SettingsHome.kt */
 public final class SettingsHomeView extends LinearLayout {
@@ -49,6 +51,7 @@ public final class SettingsHomeView extends LinearLayout {
         Code decompiled incorrectly, please refer to instructions dump.
     */
     public /* synthetic */ SettingsHomeView(Context context, CarUi carUi, View view, Function0 function0, Function1 function1, Function1 function12, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        super(var1);
         this(context, carUi, view, function0, r5, function12);
         Function1 function13;
         if ((i & 16) == 0) {
@@ -58,107 +61,106 @@ public final class SettingsHomeView extends LinearLayout {
         }
     }
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    /* JADX WARN: Multi-variable type inference failed */
-    public SettingsHomeView(Context ctx, CarUi ui, View grid, Function0<? extends List<SettingsIndex.Entry>> extraEntries, Function1<? super SettingsIndex.Entry, Unit> function1, Function1<? super String, Unit> open) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
-        Intrinsics.checkNotNullParameter(grid, "grid");
-        Intrinsics.checkNotNullParameter(extraEntries, "extraEntries");
-        Intrinsics.checkNotNullParameter(open, "open");
-        this.ui = ui;
-        this.grid = grid;
-        this.extraEntries = extraEntries;
-        this.addShortcut = function1;
-        this.open = open;
-        LinearLayout $this$results_u24lambda_u240 = new LinearLayout(ctx);
-        $this$results_u24lambda_u240.setOrientation(1);
-        this.results = $this$results_u24lambda_u240;
-        ScrollView $this$resultsScroll_u24lambda_u241 = new ScrollView(ctx);
-        $this$resultsScroll_u24lambda_u241.addView(this.results);
-        $this$resultsScroll_u24lambda_u241.setVisibility(8);
-        this.resultsScroll = $this$resultsScroll_u24lambda_u241;
+    /* VF: from Vineflower (jadx: ) */
+    public SettingsHomeView(
+        Context var1,
+        CarUi var2,
+        View var3,
+        Function0<? extends List<SettingsIndex.Entry>> var4,
+        Function1<? super SettingsIndex.Entry, Unit> var5,
+        Function1<? super String, Unit> var6
+    ) {
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
+        Intrinsics.checkNotNullParameter(var3, "grid");
+        Intrinsics.checkNotNullParameter(var4, "extraEntries");
+        Intrinsics.checkNotNullParameter(var6, "open");
+        this.ui = var2;
+        this.grid = var3;
+        this.extraEntries = var4;
+        this.addShortcut = var5;
+        this.open = var6;
+        LinearLayout var8 = new LinearLayout(var1);
+        var8.setOrientation(1);
+        this.results = var8;
+        ScrollView var9 = new ScrollView(var1);
+        var9.addView((View)this.results);
+        var9.setVisibility(8);
+        this.resultsScroll = var9;
         this.entries = CollectionsKt.emptyList();
         this.main = new Handler(Looper.getMainLooper());
-        this.prefs = new UiSettings(ctx);
+        this.prefs = new UiSettings(var1);
         this.history = new SearchHistory(this.prefs.getStr("settings_search_history", "[]"));
-        setOrientation(1);
-        LinearLayout bar = new LinearLayout(ctx);
-        bar.setOrientation(0);
-        bar.setGravity(16);
-        bar.setBackground(CarUi.rounded$default(this.ui, CarUi.Companion.getCARD(), 18, null, 4, null));
-        bar.setPadding(this.ui.dp(18), 0, this.ui.dp(10), 0);
-        View $this$_init__u24lambda_u243 = new View(ctx);
-        $this$_init__u24lambda_u243.setBackground(SvIcon.drawable$default(SvIcon.INSTANCE, "eye", CarUi.Companion.getDIM(), 0, 4, null));
-        bar.addView($this$_init__u24lambda_u243, new LinearLayout.LayoutParams(this.ui.dp(26), this.ui.dp(26)));
-        EditText $this$_init__u24lambda_u247 = new EditText(ctx);
-        $this$_init__u24lambda_u247.setHint("Search every setting - comma and tablet");
-        $this$_init__u24lambda_u247.setHintTextColor(CarUi.Companion.getDIM());
-        $this$_init__u24lambda_u247.setTextColor(CarUi.Companion.getTEXT());
-        $this$_init__u24lambda_u247.setTextSize(20.0f);
-        $this$_init__u24lambda_u247.setBackground(null);
-        $this$_init__u24lambda_u247.setSingleLine(true);
-        $this$_init__u24lambda_u247.setImeOptions(3);
-        $this$_init__u24lambda_u247.setPadding(this.ui.dp(14), this.ui.dp(16), this.ui.dp(8), this.ui.dp(16));
-        $this$_init__u24lambda_u247.setOnFocusChangeListener(new View.OnFocusChangeListener() { // from class: com.starpilot.starview.SettingsHomeView$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnFocusChangeListener
-            public final void onFocusChange(View view, boolean z) {
-                SettingsHomeView.lambda$7$lambda$4(SettingsHomeView.this, view, z);
-            }
-        });
-        $this$_init__u24lambda_u247.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsHomeView$$ExternalSyntheticLambda2
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                SettingsHomeView.this.showResults();
-            }
-        });
-        $this$_init__u24lambda_u247.setOnEditorActionListener(new TextView.OnEditorActionListener() { // from class: com.starpilot.starview.SettingsHomeView$$ExternalSyntheticLambda3
-            @Override // android.widget.TextView.OnEditorActionListener
-            public final boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                return SettingsHomeView.lambda$7$lambda$6(SettingsHomeView.this, textView, i, keyEvent);
-            }
-        });
-        this.field = $this$_init__u24lambda_u247;
-        bar.addView(this.field, new LinearLayout.LayoutParams(0, -2, 1.0f));
-        final TextView $this$_init__u24lambda_u249 = new TextView(ctx);
-        $this$_init__u24lambda_u249.setText("✕");
-        $this$_init__u24lambda_u249.setTextSize(22.0f);
-        $this$_init__u24lambda_u249.setTextColor(CarUi.Companion.getDIM());
-        $this$_init__u24lambda_u249.setPadding(this.ui.dp(14), this.ui.dp(8), this.ui.dp(10), this.ui.dp(8));
-        $this$_init__u24lambda_u249.setVisibility(8);
-        $this$_init__u24lambda_u249.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsHomeView$$ExternalSyntheticLambda4
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                SettingsHomeView.this.field.setText("");
-            }
-        });
-        bar.addView($this$_init__u24lambda_u249);
-        LinearLayout.LayoutParams $this$_init__u24lambda_u2410 = new LinearLayout.LayoutParams(-1, -2);
-        $this$_init__u24lambda_u2410.bottomMargin = this.ui.dp(16);
-        Unit unit = Unit.INSTANCE;
-        addView(bar, $this$_init__u24lambda_u2410);
-        this.field.addTextChangedListener(new TextWatcher() { // from class: com.starpilot.starview.SettingsHomeView.4
-            @Override // android.text.TextWatcher
-            public void beforeTextChanged(CharSequence s, int a, int b, int c) {
+        this.setOrientation(1);
+        LinearLayout var13 = new LinearLayout(var1);
+        var13.setOrientation(0);
+        var13.setGravity(16);
+        var13.setBackground((Drawable)CarUi.rounded$default(this.ui, CarUi.Companion.getCARD(), 18, null, 4, null));
+        var13.setPadding(this.ui.dp(18), 0, this.ui.dp(10), 0);
+        View var10 = new View(var1);
+        var10.setBackground(SvIcon.drawable$default(SvIcon.INSTANCE, "eye", CarUi.Companion.getDIM(), 0, 4, null));
+        var13.addView(var10, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(this.ui.dp(26), this.ui.dp(26))));
+        EditText var11 = new EditText(var1);
+        var11.setHint("Search every setting - comma and tablet");
+        var11.setHintTextColor(CarUi.Companion.getDIM());
+        var11.setTextColor(CarUi.Companion.getTEXT());
+        var11.setTextSize(20.0F);
+        var11.setBackground(null);
+        var11.setSingleLine(true);
+        var11.setImeOptions(3);
+        var11.setPadding(this.ui.dp(14), this.ui.dp(16), this.ui.dp(8), this.ui.dp(16));
+        var11.setOnFocusChangeListener(new SettingsHomeView$$ExternalSyntheticLambda0(this));
+        var11.setOnClickListener(new SettingsHomeView$$ExternalSyntheticLambda2(this));
+        var11.setOnEditorActionListener(new SettingsHomeView$$ExternalSyntheticLambda3(this));
+        this.field = var11;
+        var13.addView((View)this.field, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
+        TextView var12 = new TextView(var1);
+        var12.setText("✕");
+        var12.setTextSize(22.0F);
+        var12.setTextColor(CarUi.Companion.getDIM());
+        var12.setPadding(this.ui.dp(14), this.ui.dp(8), this.ui.dp(10), this.ui.dp(8));
+        var12.setVisibility(8);
+        var12.setOnClickListener(new SettingsHomeView$$ExternalSyntheticLambda4(this));
+        var13.addView((View)var12);
+        View var15 = (View)var13;
+        android.widget.LinearLayout.LayoutParams var16 = new android.widget.LinearLayout.LayoutParams(-1, -2);
+        var16.bottomMargin = this.ui.dp(16);
+        Unit var14 = Unit.INSTANCE;
+        this.addView(var15, (android.view.ViewGroup.LayoutParams)var16);
+        this.field.addTextChangedListener(new TextWatcher() {
+            final TextView $clear = var12;
+            final SettingsHomeView this$0 = SettingsHomeView.this;
+
+            public void afterTextChanged(Editable var1) {
+                TextView var4x = this.$clear;
+                CharSequence var5x = (CharSequence)var1;
+                byte var3x = 0;
+                boolean var2x;
+                if (var5x != null && var5x.length() != 0) {
+                    var2x = false;
+                } else {
+                    var2x = true;
+                }
+
+                if (var2x) {
+                    var3x = 8;
+                }
+
+                var4x.setVisibility(var3x);
+                this.this$0.startIndex();
+                this.this$0.showResults();
             }
 
-            @Override // android.text.TextWatcher
-            public void onTextChanged(CharSequence s, int a, int b, int c) {
+            public void beforeTextChanged(CharSequence var1, int var2x, int var3x, int var4x) {
             }
 
-            @Override // android.text.TextWatcher
-            public void afterTextChanged(Editable e) {
-                Editable editable = e;
-                $this$_init__u24lambda_u249.setVisibility(editable == null || editable.length() == 0 ? 8 : 0);
-                this.startIndex();
-                this.showResults();
+            public void onTextChanged(CharSequence var1, int var2x, int var3x, int var4x) {
             }
         });
-        FrameLayout frame = new FrameLayout(ctx);
-        frame.addView(this.grid, new FrameLayout.LayoutParams(-1, -1));
-        frame.addView(this.resultsScroll, new FrameLayout.LayoutParams(-1, -1));
-        addView(frame, new LinearLayout.LayoutParams(-1, 0, 1.0f));
+        FrameLayout var7 = new FrameLayout(var1);
+        var7.addView(this.grid, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
+        var7.addView((View)this.resultsScroll, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
+        this.addView((View)var7, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F)));
     }
 
     private final void saveHistory() {
@@ -209,12 +211,13 @@ public final class SettingsHomeView extends LinearLayout {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void query$default(SettingsHomeView settingsHomeView, String str, List list, int i, Object obj) {
-        if ((i & 2) != 0) {
-            list = null;
+    /* VF: from Vineflower (jadx: ) */
+    public static void query$default(SettingsHomeView var0, String var1, List var2, int var3, Object var4) {
+        if ((var3 & 2) != 0) {
+            var2 = null;
         }
-        settingsHomeView.query(str, list);
+
+        var0.query(var1, var2);
     }
 
     public final void query(String q, List<SettingsIndex.Entry> with) {

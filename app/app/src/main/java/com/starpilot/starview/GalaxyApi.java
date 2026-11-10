@@ -447,12 +447,13 @@ public final class GalaxyApi {
         }
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void refreshValues$default(GalaxyApi galaxyApi, Function1 function1, int i, Object obj) {
-        if ((i & 1) != 0) {
-            function1 = null;
+    /* VF: from Vineflower (jadx: ) */
+    public static void refreshValues$default(GalaxyApi var0, Function1 var1, int var2, Object var3) {
+        if ((var2 & 1) != 0) {
+            var1 = null;
         }
-        galaxyApi.refreshValues(function1);
+
+        var0.refreshValues(var1);
     }
 
     public final void refreshValues(final Function1<? super Boolean, Unit> then) {
@@ -575,15 +576,17 @@ public final class GalaxyApi {
         }
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void put$default(GalaxyApi galaxyApi, String str, Object obj, Map map, Function1 function1, int i, Object obj2) {
-        if ((i & 4) != 0) {
-            map = MapsKt.emptyMap();
+    /* VF: from Vineflower (jadx: ) */
+    public static void put$default(GalaxyApi var0, String var1, Object var2, Map var3, Function1 var4, int var5, Object var6) {
+        if ((var5 & 4) != 0) {
+            var3 = MapsKt.emptyMap();
         }
-        if ((i & 8) != 0) {
-            function1 = null;
+
+        if ((var5 & 8) != 0) {
+            var4 = null;
         }
-        galaxyApi.put(str, obj, map, function1);
+
+        var0.put(var1, var2, var3, var4);
     }
 
     public final void put(final String key, final Object value, final Map<String, ? extends Object> extra, final Function1<? super String, Unit> then) {
@@ -729,7 +732,7 @@ public final class GalaxyApi {
     /* JADX INFO: Access modifiers changed from: private */
     public static final void put$lambda$24$lambda$23(GalaxyApi this$0, Ref.ObjectRef $err, String $key, Object $value, Function1 $then) {
         this$0.writeGen++;
-        if ($err.element != 0) {
+        if ($err.element) {
             this$0.pending.remove($key);
             refreshValues$default(this$0, null, 1, null);
         } else {

@@ -29,28 +29,14 @@ final class GxCamerasRegionView extends GxCamerasSnapView {
     private final ArrayList<float[]> right;
     private boolean tracking;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxCamerasRegionView(Context ctx) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
+    /* VF: from Vineflower (jadx: ) */
+    public GxCamerasRegionView(Context var1) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
         this.left = new ArrayList<>();
         this.right = new ArrayList<>();
-        this.onChanged = new Function0() { // from class: com.starpilot.starview.GxCamerasRegionView$$ExternalSyntheticLambda0
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit unit;
-                unit = Unit.INSTANCE;
-                return unit;
-            }
-        };
-        this.onClose = new Function0() { // from class: com.starpilot.starview.GxCamerasRegionView$$ExternalSyntheticLambda1
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit unit;
-                unit = Unit.INSTANCE;
-                return unit;
-            }
-        };
+        this.onChanged = new GxCamerasRegionView$$ExternalSyntheticLambda0();
+        this.onClose = new GxCamerasRegionView$$ExternalSyntheticLambda1();
     }
 
     @Override // android.view.View
@@ -180,114 +166,134 @@ final class GxCamerasRegionView extends GxCamerasSnapView {
         return best;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:77:0x018d  */
-    @Override // android.view.View
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public boolean onTouchEvent(MotionEvent e) {
-        ArrayList<float[]> arrayList;
-        ViewParent parent;
-        int gxCamRound;
-        int gxCamRound2;
-        Intrinsics.checkNotNullParameter(e, "e");
-        if (getBmp() == null) {
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public boolean onTouchEvent(MotionEvent var1) {
+        Intrinsics.checkNotNullParameter(var1, "e");
+        if (this.getBmp() == null) {
             return false;
-        }
-        float x = RangesKt.coerceIn(cx(e.getX()), 0.0f, getCw());
-        float y = RangesKt.coerceIn(cy(e.getY()), 0.0f, getCh());
-        switch (e.getActionMasked()) {
-            case 0:
-                String a = this.annotating;
-                if (!Intrinsics.areEqual(a, "left")) {
-                    if (Intrinsics.areEqual(a, "right") || (r4 = hit(x, y, this.left)) == null) {
-                        arrayList = this.right;
+        } else {
+            float var3 = RangesKt.coerceIn(this.cx(var1.getX()), 0.0F, this.getCw());
+            float var2 = RangesKt.coerceIn(this.cy(var1.getY()), 0.0F, this.getCh());
+            switch (var1.getActionMasked()) {
+                case 0:
+                    String var6;
+                    float[] var13;
+                    label102: {
+                        var6 = this.annotating;
+                        ArrayList var12;
+                        if (Intrinsics.areEqual(var6, "left")) {
+                            var12 = this.left;
+                        } else {
+                            if (!Intrinsics.areEqual(var6, "right")) {
+                                float[] var5 = this.hit(var3, var2, this.left);
+                                var13 = var5;
+                                if (var5 != null) {
+                                    break label102;
+                                }
+                            }
+
+                            var12 = this.right;
+                        }
+
+                        var13 = this.hit(var3, var2, var12);
                     }
-                    this.drag = r4;
-                    if (a != null && this.drag == null) {
+
+                    this.drag = var13;
+                    if (var6 == null && this.drag == null) {
+                        return false;
+                    } else {
+                        this.tracking = true;
+                        this.moved = false;
+                        this.downX = var1.getX();
+                        this.downY = var1.getY();
+                        ViewParent var10 = this.getParent();
+                        if (var10 != null) {
+                            var10.requestDisallowInterceptTouchEvent(true);
+                        }
+
+                        return true;
+                    }
+                case 1:
+                    if (!this.tracking) {
+                        return false;
+                    } else {
+                        this.tracking = false;
+                        ViewParent var4 = this.getParent();
+                        if (var4 != null) {
+                            var4.requestDisallowInterceptTouchEvent(false);
+                        }
+
+                        if (this.moved) {
+                            if (this.drag != null) {
+                                this.onChanged.invoke();
+                            }
+
+                            this.drag = null;
+                            return true;
+                        } else {
+                            this.drag = null;
+                            String var11 = this.annotating;
+                            if (var11 == null) {
+                                return true;
+                            } else {
+                                if (!(this.cx(var1.getX()) < 0.0F)
+                                    && !(this.cy(var1.getY()) < 0.0F)
+                                    && !(this.cx(var1.getX()) > this.getCw())
+                                    && !(this.cy(var1.getY()) > this.getCh())) {
+                                    ArrayList var9;
+                                    if (Intrinsics.areEqual(var11, "left")) {
+                                        var9 = this.left;
+                                    } else {
+                                        var9 = this.right;
+                                    }
+
+                                    if (var9.size() >= 3 && (float)Math.hypot(var3 - ((float[])var9.get(0))[0], var2 - ((float[])var9.get(0))[1]) < this.u(26.0F)) {
+                                        this.onClose.invoke();
+                                        return true;
+                                    }
+
+                                    if (var9.size() >= 64) {
+                                        return true;
+                                    }
+
+                                    var9.add(new float[]{GxCamerasKt.gxCamRound(var3), GxCamerasKt.gxCamRound(var2)});
+                                    this.onChanged.invoke();
+                                    return true;
+                                }
+
+                                return true;
+                            }
+                        }
+                    }
+                case 2:
+                    if (!this.tracking) {
                         return false;
                     }
-                    this.tracking = true;
-                    this.moved = false;
-                    this.downX = e.getX();
-                    this.downY = e.getY();
-                    parent = getParent();
-                    if (parent != null) {
-                        parent.requestDisallowInterceptTouchEvent(true);
+
+                    if (!this.moved && (float)Math.hypot(var1.getX() - this.downX, var1.getY() - this.downY) > 10 * this.getDensity()) {
+                        this.moved = true;
                     }
+
+                    float[] var8 = this.drag;
+                    if (this.moved && var8 != null) {
+                        var8[0] = var3;
+                        var8[1] = var2;
+                        this.invalidate();
+                    }
+
                     return true;
-                }
-                arrayList = this.left;
-                float[] hit = hit(x, y, arrayList);
-                this.drag = hit;
-                if (a != null) {
-                }
-                this.tracking = true;
-                this.moved = false;
-                this.downX = e.getX();
-                this.downY = e.getY();
-                parent = getParent();
-                if (parent != null) {
-                }
-                return true;
-            case 1:
-                if (!this.tracking) {
-                    return false;
-                }
-                this.tracking = false;
-                ViewParent parent2 = getParent();
-                if (parent2 != null) {
-                    parent2.requestDisallowInterceptTouchEvent(false);
-                }
-                if (this.moved) {
-                    if (this.drag != null) {
-                        this.onChanged.invoke();
-                    }
+                case 3:
+                    this.tracking = false;
                     this.drag = null;
+                    ViewParent var7 = this.getParent();
+                    if (var7 != null) {
+                        var7.requestDisallowInterceptTouchEvent(false);
+                    }
+
                     return true;
-                }
-                this.drag = null;
-                String a2 = this.annotating;
-                if (a2 == null || cx(e.getX()) < 0.0f || cy(e.getY()) < 0.0f || cx(e.getX()) > getCw() || cy(e.getY()) > getCh()) {
-                    return true;
-                }
-                ArrayList pts = Intrinsics.areEqual(a2, "left") ? this.left : this.right;
-                if (pts.size() >= 3 && ((float) Math.hypot(x - pts.get(0)[0], y - pts.get(0)[1])) < u(26.0f)) {
-                    this.onClose.invoke();
-                    return true;
-                }
-                if (pts.size() >= 64) {
-                    return true;
-                }
-                gxCamRound = GxCamerasKt.gxCamRound(x);
-                gxCamRound2 = GxCamerasKt.gxCamRound(y);
-                pts.add(new float[]{gxCamRound, gxCamRound2});
-                this.onChanged.invoke();
-                return true;
-            case 2:
-                if (!this.tracking) {
-                    return false;
-                }
-                if (!this.moved && ((float) Math.hypot(e.getX() - this.downX, e.getY() - this.downY)) > 10 * getDensity()) {
-                    this.moved = true;
-                }
-                float[] d = this.drag;
-                if (this.moved && d != null) {
-                    d[0] = x;
-                    d[1] = y;
-                    invalidate();
-                }
-                return true;
-            case 3:
-                this.tracking = false;
-                this.drag = null;
-                ViewParent parent3 = getParent();
-                if (parent3 != null) {
-                    parent3.requestDisallowInterceptTouchEvent(false);
-                }
-                return true;
-            default:
-                return this.tracking;
+                default:
+                    return this.tracking;
+            }
         }
     }
 }

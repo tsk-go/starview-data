@@ -33,6 +33,9 @@ import kotlin.math.MathKt;
 import kotlin.ranges.RangesKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.graphics.drawable.Drawable;
+import android.widget.LinearLayout.LayoutParams;
+import kotlin.Result.Companion;
 
 /* compiled from: GalaxyVasm.kt */
 public final class VasmEditorCard extends LinearLayout {
@@ -61,15 +64,14 @@ public final class VasmEditorCard extends LinearLayout {
     private boolean warming;
     private int width0;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    /* JADX WARN: Multi-variable type inference failed */
-    public VasmEditorCard(Context ctx, CarUi ui, Function1<? super JSONObject, Unit> save) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
-        Intrinsics.checkNotNullParameter(save, "save");
-        this.ui = ui;
-        this.save = save;
+    /* VF: from Vineflower (jadx: ) */
+    public VasmEditorCard(Context var1, CarUi var2, Function1<? super JSONObject, Unit> var3) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
+        Intrinsics.checkNotNullParameter(var3, "save");
+        this.ui = var2;
+        this.save = var3;
         this.width0 = 1928;
         this.height0 = 1208;
         this.camLeft = new ArrayList<>();
@@ -80,92 +82,58 @@ public final class VasmEditorCard extends LinearLayout {
         this.localNote = "";
         this.status = this.ui.note("");
         this.note = this.ui.note("");
-        TextView $this$parkedNote_u24lambda_u240 = this.ui.note("Turn the vehicle off to change these settings.");
-        $this$parkedNote_u24lambda_u240.setTextColor(Color.rgb(255, 184, 101));
-        this.parkedNote = $this$parkedNote_u24lambda_u240;
-        this.leftBtn = CarUi.button$default(this.ui, "Left", false, new Function0() { // from class: com.starpilot.starview.VasmEditorCard$$ExternalSyntheticLambda1
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit leftBtn$lambda$1;
-                leftBtn$lambda$1 = VasmEditorCard.leftBtn$lambda$1(VasmEditorCard.this);
-                return leftBtn$lambda$1;
-            }
-        }, 2, null);
-        this.rightBtn = CarUi.button$default(this.ui, "Right", false, new Function0() { // from class: com.starpilot.starview.VasmEditorCard$$ExternalSyntheticLambda2
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit rightBtn$lambda$2;
-                rightBtn$lambda$2 = VasmEditorCard.rightBtn$lambda$2(VasmEditorCard.this);
-                return rightBtn$lambda$2;
-            }
-        }, 2, null);
-        this.undoBtn = CarUi.button$default(this.ui, "↶ Undo", false, new Function0() { // from class: com.starpilot.starview.VasmEditorCard$$ExternalSyntheticLambda3
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit undoBtn$lambda$4;
-                undoBtn$lambda$4 = VasmEditorCard.undoBtn$lambda$4(VasmEditorCard.this);
-                return undoBtn$lambda$4;
-            }
-        }, 2, null);
-        this.clearBtn = CarUi.button$default(this.ui, "Clear", false, new Function0() { // from class: com.starpilot.starview.VasmEditorCard$$ExternalSyntheticLambda4
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit clearBtn$lambda$5;
-                clearBtn$lambda$5 = VasmEditorCard.clearBtn$lambda$5(VasmEditorCard.this);
-                return clearBtn$lambda$5;
-            }
-        }, 2, null);
-        this.saveBtn = this.ui.button("Save", true, new Function0() { // from class: com.starpilot.starview.VasmEditorCard$$ExternalSyntheticLambda5
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit saveBtn$lambda$6;
-                saveBtn$lambda$6 = VasmEditorCard.saveBtn$lambda$6(VasmEditorCard.this);
-                return saveBtn$lambda$6;
-            }
-        });
-        this.snapBtn = CarUi.button$default(this.ui, "Take new snapshot", false, new Function0() { // from class: com.starpilot.starview.VasmEditorCard$$ExternalSyntheticLambda6
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit snapBtn$lambda$7;
-                snapBtn$lambda$7 = VasmEditorCard.snapBtn$lambda$7(VasmEditorCard.this);
-                return snapBtn$lambda$7;
-            }
-        }, 2, null);
-        this.canvas = new Board(this, ctx);
-        setOrientation(1);
-        setBackground(CarUi.rounded$default(this.ui, CarUi.Companion.getCARD(), 0, null, 6, null));
-        setPadding(this.ui.dp(18), this.ui.dp(14), this.ui.dp(18), this.ui.dp(14));
-        TextView $this$_init__u24lambda_u248 = new TextView(ctx);
-        $this$_init__u24lambda_u248.setText("Camera Window Regions");
-        $this$_init__u24lambda_u248.setTextColor(CarUi.Companion.getTEXT());
-        $this$_init__u24lambda_u248.setTextSize(20.0f);
-        $this$_init__u24lambda_u248.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$_init__u24lambda_u248.setPadding(this.ui.dp(6), 0, 0, this.ui.dp(6));
-        addView($this$_init__u24lambda_u248);
-        addView(this.ui.note("The display is mirrored: vehicle left is camera right; vehicle right is camera left. Trace visible side glass, leaving pillars and interior out."));
-        addView(this.parkedNote);
-        addView(this.status);
-        LinearLayout bar = new LinearLayout(ctx);
-        bar.setOrientation(0);
-        for (TextView b : CollectionsKt.listOf((Object[]) new TextView[]{this.leftBtn, this.rightBtn, this.undoBtn, this.clearBtn, this.saveBtn})) {
-            LinearLayout.LayoutParams $this$_init__u24lambda_u2410 = new LinearLayout.LayoutParams(-2, -2);
-            $this$_init__u24lambda_u2410.rightMargin = this.ui.dp(10);
-            Unit unit = Unit.INSTANCE;
-            bar.addView(b, $this$_init__u24lambda_u2410);
+        TextView var9 = this.ui.note("Turn the vehicle off to change these settings.");
+        var9.setTextColor(Color.rgb(255, 184, 101));
+        this.parkedNote = var9;
+        this.leftBtn = CarUi.button$default(this.ui, "Left", false, new VasmEditorCard$$ExternalSyntheticLambda1(this), 2, null);
+        this.rightBtn = CarUi.button$default(this.ui, "Right", false, new VasmEditorCard$$ExternalSyntheticLambda2(this), 2, null);
+        this.undoBtn = CarUi.button$default(this.ui, "↶ Undo", false, new VasmEditorCard$$ExternalSyntheticLambda3(this), 2, null);
+        this.clearBtn = CarUi.button$default(this.ui, "Clear", false, new VasmEditorCard$$ExternalSyntheticLambda4(this), 2, null);
+        this.saveBtn = this.ui.button("Save", true, new VasmEditorCard$$ExternalSyntheticLambda5(this));
+        this.snapBtn = CarUi.button$default(this.ui, "Take new snapshot", false, new VasmEditorCard$$ExternalSyntheticLambda6(this), 2, null);
+        this.canvas = new VasmEditorCard.Board(this, var1);
+        this.setOrientation(1);
+        this.setBackground((Drawable)CarUi.rounded$default(this.ui, CarUi.Companion.getCARD(), 0, null, 6, null));
+        this.setPadding(this.ui.dp(18), this.ui.dp(14), this.ui.dp(18), this.ui.dp(14));
+        TextView var10 = new TextView(var1);
+        var10.setText("Camera Window Regions");
+        var10.setTextColor(CarUi.Companion.getTEXT());
+        var10.setTextSize(20.0F);
+        var10.setTypeface(Typeface.DEFAULT_BOLD);
+        var10.setPadding(this.ui.dp(6), 0, 0, this.ui.dp(6));
+        this.addView((View)var10);
+        this.addView(
+            (View)this.ui
+                .note(
+                    "The display is mirrored: vehicle left is camera right; vehicle right is camera left. Trace visible side glass, leaving pillars and interior out."
+                )
+        );
+        this.addView((View)this.parkedNote);
+        this.addView((View)this.status);
+        LinearLayout var11 = new LinearLayout(var1);
+        var11.setOrientation(0);
+
+        for (View var13 : CollectionsKt.listOf(new TextView[]{this.leftBtn, this.rightBtn, this.undoBtn, this.clearBtn, this.saveBtn})) {
+            android.widget.LinearLayout.LayoutParams var4 = new LayoutParams(-2, -2);
+            var4.rightMargin = this.ui.dp(10);
+            Unit var5 = Unit.INSTANCE;
+            var11.addView(var13, (android.view.ViewGroup.LayoutParams)var4);
         }
-        bar.addView(new View(ctx), new LinearLayout.LayoutParams(0, 1, 1.0f));
-        bar.addView(this.snapBtn);
-        HorizontalScrollView $this$_init__u24lambda_u2411 = new HorizontalScrollView(ctx);
-        $this$_init__u24lambda_u2411.setHorizontalScrollBarEnabled(false);
-        $this$_init__u24lambda_u2411.addView(bar);
-        LinearLayout.LayoutParams $this$_init__u24lambda_u2412 = new LinearLayout.LayoutParams(-1, -2);
-        $this$_init__u24lambda_u2412.bottomMargin = this.ui.dp(10);
-        Unit unit2 = Unit.INSTANCE;
-        addView($this$_init__u24lambda_u2411, $this$_init__u24lambda_u2412);
-        addView(this.canvas, new LinearLayout.LayoutParams(-1, -2));
-        addView(this.note);
-        addView(this.ui.note("A saved choice alone does not activate monitoring."));
-        paint();
+
+        var11.addView(new View(var1), (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, 1, 1.0F)));
+        var11.addView((View)this.snapBtn);
+        HorizontalScrollView var7 = new HorizontalScrollView(var1);
+        var7.setHorizontalScrollBarEnabled(false);
+        var7.addView((View)var11);
+        View var12 = (View)var7;
+        android.widget.LinearLayout.LayoutParams var14 = new LayoutParams(-1, -2);
+        var14.bottomMargin = this.ui.dp(10);
+        Unit var8 = Unit.INSTANCE;
+        this.addView(var12, (android.view.ViewGroup.LayoutParams)var14);
+        this.addView(this.canvas, (android.view.ViewGroup.LayoutParams)(new LayoutParams(-1, -2)));
+        this.addView((View)this.note);
+        this.addView((View)this.ui.note("A saved choice alone does not activate monitoring."));
+        this.paint();
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -294,27 +262,48 @@ public final class VasmEditorCard extends LinearLayout {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final Unit snapshot$lambda$16(VasmEditorCard vasmEditorCard, byte[] bArr, String str) {
-        Bitmap bitmap;
-        vasmEditorCard.warming = false;
-        if (bArr != null) {
+    /* VF: from Vineflower (jadx: ) */
+    public static final Unit snapshot$lambda$16(VasmEditorCard var0, byte[] var1, String var2) {
+        var0.warming = false;
+        Bitmap var3 = null;
+        Object var4 = null;
+        if (var1 != null) {
+            label50:
             try {
-                Result.Companion companion = Result.Companion;
-                bitmap = KtCompat.resultOf(BitmapFactory.decodeByteArray(bArr, 0, bArr.length));
-            } catch (Throwable th) {
-                Result.Companion companion2 = Result.Companion;
-                bitmap = KtCompat.resultOf(ResultKt.createFailure(th));
+                kotlin.Result.Companion var10 = Result.Companion;
+                var3 = (Bitmap)KtCompat.resultOf(BitmapFactory.decodeByteArray(var1, 0, var1.length));
+            } catch (Throwable var7) {
+                kotlin.Result.Companion var5 = Result.Companion;
+                var3 = (Bitmap)KtCompat.resultOf(ResultKt.createFailure(var7));
+                break label50;
             }
-            r1 = KtCompat.isFailure(bitmap) ? null : bitmap;
+
+            if (KtCompat.isFailure(var3)) {
+                var3 = (Bitmap)var4;
+            }
+
+            var3 = var3;
         }
-        Bitmap bitmap2 = r1;
-        if (bitmap2 != null) {
-            vasmEditorCard.image = bitmap2;
+
+        if (var3 != null) {
+            var0.image = var3;
         }
-        vasmEditorCard.cameraError = bitmap2 != null ? "" : str == null ? bArr != null ? "Camera frame could not be displayed." : "No cabin frame was available. Try taking a new snapshot." : str;
-        vasmEditorCard.paint();
+
+        String var8;
+        if (var3 != null) {
+            var8 = "";
+        } else if (var2 == null) {
+            if (var1 != null) {
+                var8 = "Camera frame could not be displayed.";
+            } else {
+                var8 = "No cabin frame was available. Try taking a new snapshot.";
+            }
+        } else {
+            var8 = var2;
+        }
+
+        var0.cameraError = var8;
+        var0.paint();
         return Unit.INSTANCE;
     }
 
@@ -375,11 +364,11 @@ public final class VasmEditorCard extends LinearLayout {
         private final Paint p;
         final /* synthetic */ VasmEditorCard this$0;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public Board(VasmEditorCard this$0, Context ctx) {
-            super(ctx);
-            Intrinsics.checkNotNullParameter(ctx, "ctx");
-            this.this$0 = this$0;
+        /* VF: from Vineflower (jadx: ) */
+        public Board(Context var1, Context var2) {
+            super(var2);
+            Intrinsics.checkNotNullParameter(var2, "ctx");
+            this.this$0 = var1;
             this.p = new Paint(3);
             this.drag = -1;
             this.dragSide = "";

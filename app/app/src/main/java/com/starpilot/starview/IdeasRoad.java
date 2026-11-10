@@ -109,57 +109,76 @@ public final class IdeasRoad {
         }
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */
-    private final void learnJolts(UiSettings s, Ideas.Here h, TabletMotion m, long nowMs) {
+    /* VF: from Vineflower (jadx: ) */
+    private final void learnJolts(UiSettings var1, Ideas.Here var2, TabletMotion var3, long var4) {
         while (true) {
-            TabletMotion.Jolt j = m.poll();
-            if (j != null) {
-                if (h != null && !Double.isNaN(h.getYaw())) {
-                    String kind = j.getKind();
-                    switch (kind.hashCode()) {
-                        case -390630251:
-                            if (!kind.equals("pothole")) {
-                                continue;
-                            } else if (!Ideas.INSTANCE.on(s, "potholes")) {
-                                break;
-                            } else {
-                                double lat = Ideas.INSTANCE.lateralOnStreet(h);
-                                IdeaSpots.INSTANCE.record("pothole", h.getLat(), h.getLon(), h.getHdgDeg(), (r35 & 16) != 0 ? Double.NaN : Double.isNaN(lat) ? lat : (j.getSide() * 0.8d) + lat, (r35 & 32) != 0 ? "" : j.getSide() < 0 ? "left wheel" : "right wheel", (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 4.0d, (r35 & 256) != 0 ? "me" : null);
-                                break;
-                            }
-                        case 3035446:
-                            if (!kind.equals("bump")) {
-                                break;
-                            } else {
-                                break;
-                            }
-                        case 108703929:
-                            if (!kind.equals("rough")) {
-                                break;
-                            } else {
-                                break;
-                            }
+            TabletMotion.Jolt var16 = var3.poll();
+            if (var16 == null) {
+                return;
+            }
+
+            if (var2 != null && !Double.isNaN(var2.getYaw())) {
+                String var17 = var16.getKind();
+                switch (var17.hashCode()) {
+                    case -390630251:
+                        if (!var17.equals("pothole") || !Ideas.INSTANCE.on(var1, "potholes")) {
+                            continue;
+                        }
+
+                        double var19 = Ideas.INSTANCE.lateralOnStreet(var2);
+                        IdeaSpots var26 = IdeaSpots.INSTANCE;
+                        double var20 = var2.getLat();
+                        double var12 = var2.getLon();
+                        double var21 = var2.getHdgDeg();
+                        if (!Double.isNaN(var19)) {
+                            var19 += var16.getSide() * 0.8;
+                        }
+
+                        String var23;
+                        if (var16.getSide() < 0) {
+                            var23 = "left wheel";
+                        } else {
+                            var23 = "right wheel";
+                        }
+
+                        IdeaSpots.record$default(var26, "pothole", var20, var12, var21, var19, var23, 0L, 4.0, null, 320, null);
+                        continue;
+                    case 3035446:
+                        if (!var17.equals("bump")) {
+                            continue;
+                        }
+                        break;
+                    case 108703929:
+                        if (!var17.equals("rough")) {
+                            continue;
+                        }
+                        break;
+                    default:
+                        continue;
+                }
+
+                if (Ideas.INSTANCE.on(var1, "speed_bumps") && var2.getV() < 13.5) {
+                    OsmRoads.Way var24 = Ideas.INSTANCE.street(var2);
+                    boolean var15 = false;
+                    boolean var14 = var15;
+                    if (var24 != null) {
+                        var14 = var15;
+                        if (var24.getHighway()) {
+                            var14 = true;
+                        }
                     }
-                    if (Ideas.INSTANCE.on(s, "speed_bumps") && h.getV() < 13.5d) {
-                        OsmRoads.Way street = Ideas.INSTANCE.street(h);
-                        boolean z = false;
-                        if (street != null && street.getHighway()) {
-                            z = true;
-                        }
-                        if (!z) {
-                            IdeaSpots ideaSpots = IdeaSpots.INSTANCE;
-                            String kind2 = j.getKind();
-                            double lat2 = h.getLat();
-                            double lon = h.getLon();
-                            double hdgDeg = h.getHdgDeg();
-                            String format = String.format("felt %.1f", Arrays.copyOf(new Object[]{Float.valueOf(j.getSize())}, 1));
-                            Intrinsics.checkNotNullExpressionValue(format, "format(...)");
-                            ideaSpots.record(kind2, lat2, lon, hdgDeg, (r35 & 16) != 0 ? Double.NaN : 0.0d, (r35 & 32) != 0 ? "" : format, (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 0.0d, (r35 & 256) != 0 ? "me" : null);
-                        }
+
+                    if (!var14) {
+                        IdeaSpots var25 = IdeaSpots.INSTANCE;
+                        String var18 = var16.getKind();
+                        double var10 = var2.getLat();
+                        double var6 = var2.getLon();
+                        double var8 = var2.getHdgDeg();
+                        String var22 = String.format("felt %.1f", Arrays.copyOf(new Object[]{var16.getSize()}, 1));
+                        Intrinsics.checkNotNullExpressionValue(var22, "format(...)");
+                        IdeaSpots.record$default(var25, var18, var10, var6, var8, 0.0, var22, 0L, 0.0, null, 464, null);
                     }
                 }
-            } else {
-                return;
             }
         }
     }
@@ -188,167 +207,169 @@ public final class IdeasRoad {
         out.add(new Ideas.Part("potholes", valueOf, 0.0d, 0.0d, "Pothole ahead", 40, 12, null));
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:73:0x0184, code lost:
-    
-        if (r7 == false) goto L74;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:74:0x0186, code lost:
-    
-        r31.cutinUntil = 3000 + r35;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:75:0x0191, code lost:
-    
-        if (java.lang.Double.isNaN(r31.cutinFrom) == false) goto L73;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:76:0x0193, code lost:
-    
-        r31.cutinFrom = r5;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:77:0x0195, code lost:
-    
-        r31.cutinText = r11;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:9:0x0027, code lost:
-    
-        if ((r7 != null && r7.getHighway()) != false) goto L14;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:112:0x0202  */
-    /* JADX WARN: Removed duplicated region for block: B:14:0x003f  */
-    /* JADX WARN: Removed duplicated region for block: B:27:0x00db A[LOOP:1: B:25:0x00d3->B:27:0x00db, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:80:0x01a1  */
-    /* JADX WARN: Removed duplicated region for block: B:96:0x020c  */
-    /* JADX WARN: Removed duplicated region for block: B:99:0x023a  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void cutins(Telemetry t, UiSettings s, Ideas.Here h, long nowMs, List<Ideas.Part> out) {
-        boolean highway;
-        String str;
-        int length;
-        int i;
-        Lead l;
-        IdeaSpots.Seen spot;
-        String it;
-        RadarTrack[] radarTrackArr;
-        ArrayDeque arrayDeque;
-        int i2;
-        float f;
-        float f2;
-        double v = t.getVEgo();
-        if (v <= 15.0d) {
-            if (h != null) {
-                OsmRoads.Way street = Ideas.INSTANCE.street(h);
-            }
-            highway = false;
-            HashSet seenIds = new HashSet();
-            str = null;
-            ModelSnapshot m = t.getModel();
-            RadarTrack[] radar = t.getRadar();
-            length = radar.length;
-            i = 0;
-            while (i < length) {
-                RadarTrack r = radar[i];
-                seenIds.add(Long.valueOf(r.getId()));
-                Map $this$getOrPut$iv = this.trackHist;
-                Long valueOf = Long.valueOf(r.getId());
-                ArrayDeque<float[]> arrayDeque2 = $this$getOrPut$iv.get(valueOf);
-                if (arrayDeque2 == null) {
-                    arrayDeque = new ArrayDeque();
-                    radarTrackArr = radar;
-                    $this$getOrPut$iv.put(valueOf, arrayDeque);
-                } else {
-                    radarTrackArr = radar;
-                    arrayDeque = arrayDeque2;
-                }
-                ArrayDeque q = arrayDeque;
-                if (m == null || m.getPosX().length <= 2) {
-                    i2 = length;
-                    f = 0.0f;
-                } else {
-                    f = 0.0f;
-                    if (r.getDRel() > 0.0f) {
-                        i2 = length;
-                        f2 = Companion.interp(r.getDRel(), m.getPosX(), m.getPosY());
-                        float pathY = f2;
-                        q.addLast(new float[]{nowMs % 1000000, r.getDRel(), Math.abs(r.getYRel() + pathY)});
-                        while (q.size() > 12) {
-                            q.removeFirst();
-                        }
-                        if (!highway && q.size() >= 6) {
-                            float dRel = r.getDRel();
-                            if (-3.0f <= dRel && dRel <= 40.0f) {
-                                float[] a = q.first();
-                                float[] b = q.last();
-                                float dt = (b[0] - a[0]) / 1000.0f;
-                                if (dt >= 0.4f) {
-                                    float toward = (a[2] - b[2]) / dt;
-                                    float f3 = b[2];
-                                    if ((1.6f <= f3 && f3 <= 4.6f) && toward > 0.45f) {
-                                        str = "Car drifting into your lane - making room";
-                                    }
-                                }
-                            }
-                        }
-                        i++;
-                        length = i2;
-                        radar = radarTrackArr;
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+    private final void cutins(Telemetry var1, UiSettings var2, Ideas.Here var3, long var4, List<Ideas.Part> var6) {
+        double var7;
+        int var29;
+        label151: {
+            label150: {
+                var7 = var1.getVEgo();
+                if (!(var7 > 15.0)) {
+                    if (var3 == null) {
+                        break label150;
+                    }
+
+                    OsmRoads.Way var15 = Ideas.INSTANCE.street(var3);
+                    if (var15 != null && var15.getHighway()) {
+                        var29 = (((boolean)true) ? 1 : 0);
                     } else {
-                        i2 = length;
+                        var29 = (((boolean)false) ? 1 : 0);
+                    }
+
+                    if (!var29) {
+                        break label150;
                     }
                 }
-                f2 = f;
-                float pathY2 = f2;
-                q.addLast(new float[]{nowMs % 1000000, r.getDRel(), Math.abs(r.getYRel() + pathY2)});
-                while (q.size() > 12) {
-                }
-                if (!highway) {
-                }
-                i++;
-                length = i2;
-                radar = radarTrackArr;
+
+                var29 = 1;
+                break label151;
             }
-            this.trackHist.keySet().retainAll(seenIds);
-            if (str == null && Ideas.INSTANCE.on(s, "wheels") && (it = Ideas.INSTANCE.getSense().cameraDrift(nowMs)) != null) {
-                str = it;
+
+            var29 = 0;
+        }
+
+        HashSet var18 = new HashSet();
+        String var32 = null;
+        ModelSnapshot var19 = var1.getModel();
+        RadarTrack[] var16 = var1.getRadar();
+        int var12 = var16.length;
+        int var13 = 0;
+
+        while (var13 < var12) {
+            RadarTrack var20 = var16[var13];
+            var18.add(var20.getId());
+            Map var22 = this.trackHist;
+            Long var21 = var20.getId();
+            ArrayDeque var17 = (ArrayDeque)var22.get(var21);
+            if (var17 == null) {
+                var17 = new ArrayDeque();
+                var22.put(var21, var17);
             }
-            l = t.getLeadOne();
-            if (l.getStatus()) {
-                this.leadD = Float.NaN;
+
+            var17 = var17;
+            float var9;
+            if (var19 != null && var19.getPosX().length > 2 && var20.getDRel() > 0.0F) {
+                var9 = Companion.interp(var20.getDRel(), var19.getPosX(), var19.getPosY());
             } else {
-                if (!Float.isNaN(this.leadD) && nowMs - this.leadMs < 400 && this.leadD - l.getDRel() > 8.0f && l.getDRel() < 30.0f && highway && h != null && !Double.isNaN(h.getYaw())) {
-                    IdeaSpots.INSTANCE.record("cutin", h.getLat(), h.getLon(), h.getHdgDeg(), (r35 & 16) != 0 ? Double.NaN : 0.0d, (r35 & 32) != 0 ? "" : null, (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 60.0d, (r35 & 256) != 0 ? "me" : null);
-                }
-                this.leadD = l.getDRel();
-                this.leadMs = nowMs;
+                var9 = 0.0F;
             }
-            if (nowMs < this.cutinUntil) {
-                this.cutinFrom = Double.NaN;
-                if (highway && h != null && !Double.isNaN(h.getYaw()) && (spot = (IdeaSpots.Seen) CollectionsKt.firstOrNull(IdeaSpots.around$default(IdeaSpots.INSTANCE, h.getLat(), h.getLon(), h.getYaw(), SetsKt.setOf("cutin"), 400.0d, 50.0d, 25.0d, 2, false, 256, null))) != null) {
-                    out.add(new Ideas.Part("nyc_cutins", null, 0.3d, 0.0d, "Cut-in spot - extra room (" + spot.getSpot().getCount() + "x)", 20, 10, null));
-                    return;
-                }
-                return;
+
+            var17.addLast(new float[]{(float)(var4 % 1000000L), var20.getDRel(), Math.abs(var20.getYRel() + var9)});
+
+            while (var17.size() > 12) {
+                var17.removeFirst();
             }
-            out.add(new Ideas.Part("nyc_cutins", Double.valueOf(Math.max(4.4704d, this.cutinFrom - 1.5d)), 0.5d, 0.0d, this.cutinText, 70, 8, null));
-            return;
+
+            String var35;
+            if (var29 && var17.size() >= 6) {
+                var9 = var20.getDRel();
+                boolean var14;
+                if (-3.0F <= var9 && var9 <= 40.0F) {
+                    var14 = true;
+                } else {
+                    var14 = false;
+                }
+
+                if (!var14) {
+                    var35 = var32;
+                } else {
+                    float[] var36 = (float[])var17.first();
+                    float[] var37 = (float[])var17.last();
+                    var9 = (var37[0] - var36[0]) / 1000.0F;
+                    var35 = var32;
+                    if (!(var9 < 0.4F)) {
+                        float var10 = (var36[2] - var37[2]) / var9;
+                        var9 = var37[2];
+                        if (1.6F <= var9 && var9 <= 4.6F) {
+                            var14 = true;
+                        } else {
+                            var14 = false;
+                        }
+
+                        var35 = var32;
+                        if (var14) {
+                            var35 = var32;
+                            if (var10 > 0.45F) {
+                                var35 = "Car drifting into your lane - making room";
+                            }
+                        }
+                    }
+                }
+            } else {
+                var35 = var32;
+            }
+
+            var13++;
+            var32 = var35;
         }
-        highway = true;
-        HashSet seenIds2 = new HashSet();
-        str = null;
-        ModelSnapshot m2 = t.getModel();
-        RadarTrack[] radar2 = t.getRadar();
-        length = radar2.length;
-        i = 0;
-        while (i < length) {
+
+        this.trackHist.keySet().retainAll(var18);
+        String var33;
+        if (var32 == null) {
+            var33 = var32;
+            if (Ideas.INSTANCE.on(var2, "wheels")) {
+                String var25 = Ideas.INSTANCE.getSense().cameraDrift(var4);
+                var33 = var32;
+                if (var25 != null) {
+                    var33 = var25;
+                }
+            }
+        } else {
+            var33 = var32;
         }
-        this.trackHist.keySet().retainAll(seenIds2);
-        if (str == null) {
-            str = it;
+
+        if (var33 != null && var29) {
+            this.cutinUntil = 3000L + var4;
+            if (Double.isNaN(this.cutinFrom)) {
+                this.cutinFrom = var7;
+            }
+
+            this.cutinText = var33;
         }
-        l = t.getLeadOne();
-        if (l.getStatus()) {
+
+        Lead var23 = var1.getLeadOne();
+        if (var23.getStatus()) {
+            if (!Float.isNaN(this.leadD)
+                && var4 - this.leadMs < 400L
+                && this.leadD - var23.getDRel() > 8.0F
+                && var23.getDRel() < 30.0F
+                && var29
+                && var3 != null
+                && !Double.isNaN(var3.getYaw())) {
+                IdeaSpots.record$default(IdeaSpots.INSTANCE, "cutin", var3.getLat(), var3.getLon(), var3.getHdgDeg(), 0.0, null, 0L, 60.0, null, 368, null);
+            }
+
+            this.leadD = var23.getDRel();
+            this.leadMs = var4;
+        } else {
+            this.leadD = Float.NaN;
         }
-        if (nowMs < this.cutinUntil) {
+
+        if (var4 < this.cutinUntil) {
+            var6.add(new Ideas.Part("nyc_cutins", Math.max(4.4704, this.cutinFrom - 1.5), 0.5, 0.0, this.cutinText, 70, 8, null));
+        } else {
+            this.cutinFrom = Double.NaN;
+            if (var29 && var3 != null && !Double.isNaN(var3.getYaw())) {
+                IdeaSpots.Seen var24 = CollectionsKt.firstOrNull(
+                    IdeaSpots.around$default(
+                        IdeaSpots.INSTANCE, var3.getLat(), var3.getLon(), var3.getYaw(), SetsKt.setOf("cutin"), 400.0, 50.0, 25.0, 2, false, 256, null
+                    )
+                );
+                if (var24 != null) {
+                    var29 = var24.getSpot().getCount();
+                    var6.add(new Ideas.Part("nyc_cutins", null, 0.3, 0.0, "Cut-in spot - extra room (" + var29 + "x)", 20, 10, null));
+                }
+            }
         }
     }
 

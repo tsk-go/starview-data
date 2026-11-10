@@ -16,6 +16,8 @@ import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
+import android.graphics.drawable.Drawable;
+import android.view.ViewGroup.LayoutParams;
 
 /* compiled from: QuickPanel.kt */
 public final class QuickPanel extends FrameLayout {
@@ -56,53 +58,43 @@ public final class QuickPanel extends FrameLayout {
         void toggleScene();
     }
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public QuickPanel(Context ctx, Actions a) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(a, "a");
-        this.a = a;
-        this.ui = new CarUi(ctx, false, 2, null);
-        GridLayout $this$grid_u24lambda_u240 = new GridLayout(ctx);
-        $this$grid_u24lambda_u240.setColumnCount(3);
-        this.grid = $this$grid_u24lambda_u240;
-        setBackgroundColor(Color.argb(215, 6, 8, 12));
-        setClickable(true);
-        setTranslationZ(this.ui.dp(150));
-        setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.QuickPanel$$ExternalSyntheticLambda3
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                QuickPanel._init_$lambda$1(QuickPanel.this, view);
-            }
-        });
-        LinearLayout box = new LinearLayout(ctx);
-        box.setOrientation(1);
-        box.setBackground(CarUi.rounded$default(this.ui, CarUi.Companion.getFRAME(), 26, null, 4, null));
-        box.setPadding(this.ui.dp(24), this.ui.dp(20), this.ui.dp(24), this.ui.dp(24));
-        box.setClickable(true);
-        LinearLayout $this$_init__u24lambda_u245 = new LinearLayout(ctx);
-        $this$_init__u24lambda_u245.setOrientation(0);
-        $this$_init__u24lambda_u245.setGravity(16);
-        TextView $this$lambda_u245_u24lambda_u243 = new TextView(ctx);
-        $this$lambda_u245_u24lambda_u243.setText("Quick settings");
-        $this$lambda_u245_u24lambda_u243.setTextColor(CarUi.Companion.getTEXT());
-        $this$lambda_u245_u24lambda_u243.setTextSize(26.0f);
-        $this$lambda_u245_u24lambda_u243.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$_init__u24lambda_u245.addView($this$lambda_u245_u24lambda_u243, new LinearLayout.LayoutParams(0, -2, 1.0f));
-        $this$_init__u24lambda_u245.addView(this.ui.button("Close", true, new Function0() { // from class: com.starpilot.starview.QuickPanel$$ExternalSyntheticLambda4
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                return QuickPanel.lambda$5$lambda$4(QuickPanel.this);
-            }
-        }));
-        box.addView($this$_init__u24lambda_u245);
-        GridLayout gridLayout = this.grid;
-        LinearLayout.LayoutParams $this$_init__u24lambda_u246 = new LinearLayout.LayoutParams(-1, -2);
-        $this$_init__u24lambda_u246.topMargin = this.ui.dp(14);
-        Unit unit = Unit.INSTANCE;
-        box.addView(gridLayout, $this$_init__u24lambda_u246);
-        addView(box, new FrameLayout.LayoutParams(this.ui.dp(920), -2, 17));
-        paint();
+    /* VF: from Vineflower (jadx: ) */
+    public QuickPanel(Context var1, QuickPanel.Actions var2) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "a");
+        this.a = var2;
+        this.ui = new CarUi(var1, false, 2, null);
+        GridLayout var7 = new GridLayout(var1);
+        var7.setColumnCount(3);
+        this.grid = var7;
+        this.setBackgroundColor(Color.argb(215, 6, 8, 12));
+        this.setClickable(true);
+        this.setTranslationZ(this.ui.dp(150));
+        this.setOnClickListener(new QuickPanel$$ExternalSyntheticLambda3(this));
+        LinearLayout var8 = new LinearLayout(var1);
+        var8.setOrientation(1);
+        var8.setBackground((Drawable)CarUi.rounded$default(this.ui, CarUi.Companion.getFRAME(), 26, null, 4, null));
+        var8.setPadding(this.ui.dp(24), this.ui.dp(20), this.ui.dp(24), this.ui.dp(24));
+        var8.setClickable(true);
+        LinearLayout var3 = new LinearLayout(var1);
+        var3.setOrientation(0);
+        var3.setGravity(16);
+        TextView var5 = new TextView(var1);
+        var5.setText("Quick settings");
+        var5.setTextColor(CarUi.Companion.getTEXT());
+        var5.setTextSize(26.0F);
+        var5.setTypeface(Typeface.DEFAULT_BOLD);
+        var3.addView((View)var5, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
+        var3.addView((View)this.ui.button("Close", true, new QuickPanel$$ExternalSyntheticLambda4(this)));
+        var8.addView((View)var3);
+        View var4 = (View)this.grid;
+        android.widget.LinearLayout.LayoutParams var6 = new android.widget.LinearLayout.LayoutParams(-1, -2);
+        var6.topMargin = this.ui.dp(14);
+        Unit var9 = Unit.INSTANCE;
+        var8.addView(var4, (android.view.ViewGroup.LayoutParams)var6);
+        this.addView((View)var8, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(this.ui.dp(920), -2, 17)));
+        this.paint();
     }
 
     /* JADX INFO: Access modifiers changed from: private */

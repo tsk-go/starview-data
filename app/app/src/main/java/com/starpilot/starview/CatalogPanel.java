@@ -47,6 +47,10 @@ import kotlin.text.MatchResult;
 import kotlin.text.Regex;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
+import android.content.Context;
+import android.widget.LinearLayout.LayoutParams;
+import kotlin.jvm.internal.Ref.IntRef;
+import kotlin.jvm.internal.Ref.ObjectRef;
 
 /* compiled from: CatalogPanel.kt */
 public final class CatalogPanel extends ScrollView {
@@ -90,81 +94,78 @@ public final class CatalogPanel extends ScrollView {
         }
     }
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    /* JADX WARN: Multi-variable type inference failed */
-    public CatalogPanel(Activity act, GalaxyApi api, List<GalaxyApi.Param> params, String sectionName, boolean flat, Function1<? super String, Unit> openWeb) {
-        super(act);
-        boolean z;
-        Object answer$iv$iv$iv;
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(api, "api");
-        Intrinsics.checkNotNullParameter(params, "params");
-        Intrinsics.checkNotNullParameter(sectionName, "sectionName");
-        Intrinsics.checkNotNullParameter(openWeb, "openWeb");
-        this.act = act;
-        this.api = api;
-        this.params = params;
-        this.sectionName = sectionName;
-        this.openWeb = openWeb;
-        this.ui = new CarUi(this.act, flat);
-        LinearLayout $this$col_u24lambda_u240 = new LinearLayout(this.act);
-        $this$col_u24lambda_u240.setOrientation(1);
-        CarUi carUi = this.ui;
-        if (flat) {
-            $this$col_u24lambda_u240.setPadding(0, 0, 0, carUi.dp(40));
+    /* VF: from Vineflower (jadx: ) */
+    public CatalogPanel(Activity var1, GalaxyApi var2, List<GalaxyApi.Param> var3, String var4, boolean var5, Function1<? super String, Unit> var6) {
+        super((Context)var1);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "api");
+        Intrinsics.checkNotNullParameter(var3, "params");
+        Intrinsics.checkNotNullParameter(var4, "sectionName");
+        Intrinsics.checkNotNullParameter(var6, "openWeb");
+        this.act = var1;
+        this.api = var2;
+        this.params = var3;
+        this.sectionName = var4;
+        this.openWeb = var6;
+        this.ui = new CarUi((Context)this.act, var5);
+        LinearLayout var13 = new LinearLayout((Context)this.act);
+        var13.setOrientation(1);
+        CarUi var7 = this.ui;
+        if (var5) {
+            var13.setPadding(0, 0, 0, var7.dp(40));
         } else {
-            $this$col_u24lambda_u240.setPadding(carUi.dp(10), this.ui.dp(4), this.ui.dp(24), this.ui.dp(60));
+            var13.setPadding(var7.dp(10), this.ui.dp(4), this.ui.dp(24), this.ui.dp(60));
         }
-        this.col = $this$col_u24lambda_u240;
-        Iterable $this$associateBy$iv = this.params;
-        int capacity$iv = RangesKt.coerceAtLeast(MapsKt.mapCapacity(CollectionsKt.collectionSizeOrDefault($this$associateBy$iv, 10)), 16);
-        Map destination$iv$iv = new LinkedHashMap(capacity$iv);
-        for (Object element$iv$iv : $this$associateBy$iv) {
-            GalaxyApi.Param it = (GalaxyApi.Param) element$iv$iv;
-            destination$iv$iv.put(it.getKey(), element$iv$iv);
+
+        this.col = var13;
+        Iterable var14 = this.params;
+        Map var8 = new LinkedHashMap(RangesKt.coerceAtLeast(MapsKt.mapCapacity(CollectionsKt.collectionSizeOrDefault(var14, 10)), 16));
+
+        for (Object var17 : var14) {
+            var8.put(((GalaxyApi.Param)var17).getKey(), var17);
         }
-        this.byKey = destination$iv$iv;
-        Iterable $this$groupBy$iv = this.params;
-        Map destination$iv$iv2 = new LinkedHashMap();
-        for (Object element$iv$iv2 : $this$groupBy$iv) {
-            GalaxyApi.Param it2 = (GalaxyApi.Param) element$iv$iv2;
-            String parentKey = it2.getParentKey();
-            Object value$iv$iv$iv = destination$iv$iv2.get(parentKey);
-            if (value$iv$iv$iv == null) {
-                answer$iv$iv$iv = new ArrayList();
-                destination$iv$iv2.put(parentKey, answer$iv$iv$iv);
-            } else {
-                answer$iv$iv$iv = value$iv$iv$iv;
+
+        this.byKey = var8;
+        Iterable var9 = this.params;
+        Map var16 = new LinkedHashMap();
+
+        for (Object var19 : var9) {
+            String var21 = ((GalaxyApi.Param)var19).getParentKey();
+            Object var10 = var16.get(var21);
+            if (var10 == null) {
+                var10 = new ArrayList();
+                var16.put(var21, var10);
             }
-            List list$iv$iv = (List) answer$iv$iv$iv;
-            list$iv$iv.add(element$iv$iv2);
+
+            ((List)var10).add(var19);
         }
-        this.children = destination$iv$iv2;
+
+        this.children = var16;
         this.rows = new ArrayList<>();
         this.optionCache = new HashMap<>();
-        Iterable $this$any$iv = this.params;
-        if (!($this$any$iv instanceof Collection) || !((Collection) $this$any$iv).isEmpty()) {
-            Iterator it3 = $this$any$iv.iterator();
+        var var11 = this.params;
+        if (var11 instanceof Collection && ((Collection)var11).isEmpty()) {
+            var5 = false;
+        } else {
+            Iterator var12 = var11.iterator();
+
             while (true) {
-                if (it3.hasNext()) {
-                    Object element$iv = it3.next();
-                    GalaxyApi.Param it4 = (GalaxyApi.Param) element$iv;
-                    if (it4.getO().optBoolean("requires_offroad")) {
-                        z = true;
-                        break;
-                    }
-                } else {
-                    z = false;
+                if (!var12.hasNext()) {
+                    var5 = false;
+                    break;
+                }
+
+                if (((GalaxyApi.Param)var12.next()).getO().optBoolean("requires_offroad")) {
+                    var5 = true;
                     break;
                 }
             }
-        } else {
-            z = false;
         }
-        this.needsOffroad = z;
-        addView(this.col);
+
+        this.needsOffroad = var5;
+        this.addView((View)this.col);
         this.advanced = this.api.bool("GalaxyDeveloperMode");
-        build();
+        this.build();
         this.lastSig = "";
     }
 
@@ -640,124 +641,81 @@ public final class CatalogPanel extends ScrollView {
         }
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */
-    private final void addRowUnsafe(final GalaxyApi.Param p) {
-        int depth = depthOf(p);
-        String uiType = p.getUiType();
-        switch (uiType.hashCode()) {
+    /* VF: from Vineflower (jadx: ) */
+    private final void addRowUnsafe(GalaxyApi.Param var1) {
+        int var3 = this.depthOf(var1);
+        String var5 = var1.getUiType();
+        int var2 = var5.hashCode();
+        TextView var4 = null;
+        switch (var2) {
             case -2000413939:
-                if (uiType.equals("numeric")) {
-                    addNumeric(p, depth);
-                    break;
+                if (var5.equals("numeric")) {
+                    this.addNumeric(var1, var3);
                 }
                 break;
             case -1785238953:
-                if (uiType.equals("favorites")) {
-                    final LinearLayout r = (LinearLayout) CarUi.row$default(this.ui, p.getLabel(), p.getDescription(), 0, null, null, 28, null).component1();
-                    r.addView(CarUi.button$default(this.ui, "Open", false, new Function0() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda35
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit addRowUnsafe$lambda$18;
-                            addRowUnsafe$lambda$18 = CatalogPanel.addRowUnsafe$lambda$18(CatalogPanel.this);
-                            return addRowUnsafe$lambda$18;
-                        }
-                    }, 2, null));
-                    this.col.addView(r, CarUi.lp$default(this.ui, depth, 0, 2, null));
-                    this.rows.add(new Row(p, r, depth, new Function0() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda36
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit addRowUnsafe$lambda$19;
-                            addRowUnsafe$lambda$19 = CatalogPanel.addRowUnsafe$lambda$19(r, this, p);
-                            return addRowUnsafe$lambda$19;
-                        }
-                    }));
-                    break;
+                if (var5.equals("favorites")) {
+                    LinearLayout var12 = (LinearLayout)CarUi.row$default(this.ui, var1.getLabel(), var1.getDescription(), 0, null, null, 28, null).component1();
+                    var12.addView((View)CarUi.button$default(this.ui, "Open", false, new CatalogPanel$$ExternalSyntheticLambda35(this), 2, null));
+                    this.col.addView((View)var12, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(this.ui, var3, 0, 2, null));
+                    this.rows.add(new CatalogPanel.Row(var1, (View)var12, var3, new CatalogPanel$$ExternalSyntheticLambda36(var12, this, var1)));
                 }
                 break;
             case -1422950858:
-                if (uiType.equals("action")) {
-                    Pair row$default = CarUi.row$default(this.ui, p.getLabel(), p.getDescription(), depth, null, null, 24, null);
-                    final LinearLayout r2 = (LinearLayout) row$default.component1();
-                    final TextView descTv = (TextView) row$default.component2();
-                    CarUi carUi = this.ui;
-                    String str = p.str("action_label");
-                    if (str == null) {
-                        str = "Run";
+                if (var5.equals("action")) {
+                    Pair var10 = CarUi.row$default(this.ui, var1.getLabel(), var1.getDescription(), var3, null, null, 24, null);
+                    LinearLayout var6 = (LinearLayout)var10.component1();
+                    TextView var8 = (TextView)var10.component2();
+                    CarUi var7 = this.ui;
+                    var5 = var1.str("action_label");
+                    String var11 = var5;
+                    if (var5 == null) {
+                        var11 = "Run";
                     }
-                    r2.addView(CarUi.button$default(carUi, str, false, new Function0() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda38
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit addRowUnsafe$lambda$25;
-                            addRowUnsafe$lambda$25 = CatalogPanel.addRowUnsafe$lambda$25(p, this);
-                            return addRowUnsafe$lambda$25;
-                        }
-                    }, 2, null));
-                    this.col.addView(r2, CarUi.lp$default(this.ui, depth, 0, 2, null));
-                    this.rows.add(new Row(p, r2, depth, new Function0() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda1
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit addRowUnsafe$lambda$26;
-                            addRowUnsafe$lambda$26 = CatalogPanel.addRowUnsafe$lambda$26(r2, this, p, descTv);
-                            return addRowUnsafe$lambda$26;
-                        }
-                    }));
-                    break;
+
+                    var6.addView((View)CarUi.button$default(var7, var11, false, new CatalogPanel$$ExternalSyntheticLambda38(var1, this), 2, null));
+                    this.col.addView((View)var6, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(this.ui, var3, 0, 2, null));
+                    this.rows.add(new CatalogPanel.Row(var1, (View)var6, var3, new CatalogPanel$$ExternalSyntheticLambda1(var6, this, var1, var8)));
                 }
                 break;
             case -868304044:
-                if (uiType.equals("toggle")) {
-                    addToggle(p, depth);
-                    break;
+                if (var5.equals("toggle")) {
+                    this.addToggle(var1, var3);
                 }
                 break;
             case -432061423:
-                if (uiType.equals("dropdown")) {
-                    addDropdown(p, depth);
-                    break;
+                if (var5.equals("dropdown")) {
+                    this.addDropdown(var1, var3);
                 }
                 break;
             case 94842723:
-                if (uiType.equals("color")) {
-                    addColor(p, depth);
-                    break;
+                if (var5.equals("color")) {
+                    this.addColor(var1, var3);
                 }
                 break;
             case 98629247:
-                if (uiType.equals("group")) {
-                    final TextView h = this.ui.header(p.getLabel());
-                    this.col.addView(h, this.ui.lp(depth, 0));
-                    final TextView n = p.getDescription() != null ? this.ui.note(p.getDescription()) : null;
-                    if (n != null) {
-                        this.col.addView(n, this.ui.lp(depth, 4));
+                if (var5.equals("group")) {
+                    TextView var14 = this.ui.header(var1.getLabel());
+                    this.col.addView((View)var14, (android.view.ViewGroup.LayoutParams)this.ui.lp(var3, 0));
+                    if (var1.getDescription() != null) {
+                        var4 = this.ui.note(var1.getDescription());
                     }
-                    this.rows.add(new Row(p, h, depth, new Function0() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda2
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit addRowUnsafe$lambda$27;
-                            addRowUnsafe$lambda$27 = CatalogPanel.addRowUnsafe$lambda$27(CatalogPanel.this, p, h, n);
-                            return addRowUnsafe$lambda$27;
-                        }
-                    }));
-                    break;
+
+                    if (var4 != null) {
+                        this.col.addView((View)var4, (android.view.ViewGroup.LayoutParams)this.ui.lp(var3, 4));
+                    }
+
+                    this.rows.add(new CatalogPanel.Row(var1, (View)var14, var3, new CatalogPanel$$ExternalSyntheticLambda2(this, var1, var14, var4)));
                 }
                 break;
             case 1080419832:
-                if (uiType.equals("readout")) {
-                    final LinearLayout r3 = (LinearLayout) CarUi.row$default(this.ui, p.getLabel(), p.getDescription(), depth, null, null, 24, null).component1();
-                    final TextView tv = value();
-                    r3.addView(tv);
-                    this.col.addView(r3, CarUi.lp$default(this.ui, depth, 0, 2, null));
-                    this.rows.add(new Row(p, r3, depth, new Function0() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda37
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit addRowUnsafe$lambda$20;
-                            addRowUnsafe$lambda$20 = CatalogPanel.addRowUnsafe$lambda$20(r3, this, p, tv);
-                            return addRowUnsafe$lambda$20;
-                        }
-                    }));
-                    break;
+                if (var5.equals("readout")) {
+                    LinearLayout var13 = (LinearLayout)CarUi.row$default(this.ui, var1.getLabel(), var1.getDescription(), var3, null, null, 24, null).component1();
+                    var4 = this.value();
+                    var13.addView((View)var4);
+                    this.col.addView((View)var13, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(this.ui, var3, 0, 2, null));
+                    this.rows.add(new CatalogPanel.Row(var1, (View)var13, var3, new CatalogPanel$$ExternalSyntheticLambda37(var13, this, var1, var4)));
                 }
-                break;
         }
     }
 
@@ -1206,100 +1164,81 @@ public final class CatalogPanel extends ScrollView {
         throw new NoSuchElementException("Collection contains no element matching the predicate.");
     }
 
-    /* JADX WARN: Type inference failed for: r2v7, types: [T, java.util.List] */
-    private final void addDropdown(final GalaxyApi.Param p, int depth) {
-        final LinearLayout $this$addDropdown_u24lambda_u2448 = new LinearLayout(this.act);
-        $this$addDropdown_u24lambda_u2448.setOrientation(1);
-        $this$addDropdown_u24lambda_u2448.setBackground(this.ui.rowBg());
-        $this$addDropdown_u24lambda_u2448.setPadding(this.ui.dp(20), this.ui.dp(14), this.ui.dp(18), this.ui.dp(14));
-        Pair row$default = CarUi.row$default(this.ui, p.getLabel(), p.getDescription(), 0, null, null, 28, null);
-        LinearLayout titleRow = (LinearLayout) row$default.component1();
-        final TextView descTv = (TextView) row$default.component2();
-        titleRow.setBackground(null);
-        titleRow.setPadding(0, 0, 0, 0);
-        titleRow.setMinimumHeight(0);
-        $this$addDropdown_u24lambda_u2448.addView(titleRow);
-        final LinearLayout $this$addDropdown_u24lambda_u2449 = new LinearLayout(this.act);
-        $this$addDropdown_u24lambda_u2449.setOrientation(1);
-        $this$addDropdown_u24lambda_u2449.setPadding(0, this.ui.dp(10), 0, 0);
-        $this$addDropdown_u24lambda_u2448.addView($this$addDropdown_u24lambda_u2449);
-        final Ref.ObjectRef opts = new Ref.ObjectRef();
-        opts.element = p.getOptions();
-        final Ref.ObjectRef paint = new Ref.ObjectRef();
-        final Ref.ObjectRef lastKey = new Ref.ObjectRef();
-        lastKey.element = "";
-        final Ref.IntRef paintedIdx = new Ref.IntRef();
-        paintedIdx.element = -2;
-        final Ref.ObjectRef paintedFn = new Ref.ObjectRef();
-        addDropdown$rebuild($this$addDropdown_u24lambda_u2449, paint, opts, this, p);
-        this.col.addView($this$addDropdown_u24lambda_u2448, CarUi.lp$default(this.ui, depth, 0, 2, null));
-        this.rows.add(new Row(p, $this$addDropdown_u24lambda_u2448, depth, new Function0() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda22
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit addDropdown$lambda$64;
-                addDropdown$lambda$64 = CatalogPanel.addDropdown$lambda$64($this$addDropdown_u24lambda_u2448, this, p, opts, paintedIdx, paint, paintedFn, descTv, lastKey, $this$addDropdown_u24lambda_u2449);
-                return addDropdown$lambda$64;
-            }
-        }));
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    private final void addDropdown(GalaxyApi.Param var1, int var2) {
+        LinearLayout var3 = new LinearLayout((Context)this.act);
+        var3.setOrientation(1);
+        var3.setBackground(this.ui.rowBg());
+        var3.setPadding(this.ui.dp(20), this.ui.dp(14), this.ui.dp(18), this.ui.dp(14));
+        Pair var4 = CarUi.row$default(this.ui, var1.getLabel(), var1.getDescription(), 0, null, null, 28, null);
+        LinearLayout var5 = (LinearLayout)var4.component1();
+        TextView var11 = (TextView)var4.component2();
+        var5.setBackground(null);
+        var5.setPadding(0, 0, 0, 0);
+        var5.setMinimumHeight(0);
+        var3.addView((View)var5);
+        LinearLayout var8 = new LinearLayout((Context)this.act);
+        var8.setOrientation(1);
+        var8.setPadding(0, this.ui.dp(10), 0, 0);
+        var3.addView((View)var8);
+        ObjectRef var12 = new ObjectRef();
+        var12.element = (T)var1.getOptions();
+        ObjectRef var6 = new ObjectRef();
+        ObjectRef var10 = new ObjectRef();
+        var10.element = (T)"";
+        IntRef var7 = new IntRef();
+        var7.element = -2;
+        ObjectRef var9 = new ObjectRef();
+        addDropdown$rebuild(var8, var6, var12, this, var1);
+        this.col.addView((View)var3, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(this.ui, var2, 0, 2, null));
+        this.rows
+            .add(
+                new CatalogPanel.Row(
+                    var1, (View)var3, var2, new CatalogPanel$$ExternalSyntheticLambda22(var3, this, var1, var12, var7, var6, var9, var11, var10, var8)
+                )
+            );
     }
 
-    /* JADX WARN: Type inference failed for: r6v7, types: [T, kotlin.jvm.functions.Function1] */
-    /* JADX WARN: Type inference failed for: r9v11, types: [T, com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda30] */
-    private static final void addDropdown$rebuild(LinearLayout holder, Ref.ObjectRef<Function1<Integer, Unit>> objectRef, final Ref.ObjectRef<List<Pair<String, String>>> objectRef2, final CatalogPanel this$0, final GalaxyApi.Param $p) {
-        holder.removeAllViews();
-        objectRef.element = null;
-        if (objectRef2.element.isEmpty()) {
-            holder.addView(this$0.ui.note("No options available."));
-            return;
-        }
-        final Function1 pick = new Function1() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda28
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit addDropdown$rebuild$lambda$51;
-                addDropdown$rebuild$lambda$51 = CatalogPanel.addDropdown$rebuild$lambda$51(this$0, $p, objectRef2, ((Integer) obj).intValue());
-                return addDropdown$rebuild$lambda$51;
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    private static final void addDropdown$rebuild(
+        LinearLayout var0, ObjectRef<Function1<Integer, Unit>> var1, ObjectRef<List<Pair<String, String>>> var2, CatalogPanel var3, GalaxyApi.Param var4
+    ) {
+        var0.removeAllViews();
+        var1.element = null;
+        if (((List)var2.element).isEmpty()) {
+            var0.addView((View)var3.ui.note("No options available."));
+        } else {
+            CatalogPanel$$ExternalSyntheticLambda28 var5 = new CatalogPanel$$ExternalSyntheticLambda28(var3, var4, var2);
+            if (((List)var2.element).size() <= 4) {
+                CarUi var11 = var3.ui;
+                Iterable var14 = (Iterable)var2.element;
+                var var8 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var14, 10));
+                Iterator var15 = var14.iterator();
+
+                while (var15.hasNext()) {
+                    var8.add((String)((Pair)var15.next()).getSecond());
+                }
+
+                List var9 = var8;
+                Pair var12 = var11.chips(var9, var5);
+                LinearLayout var10 = (LinearLayout)var12.component1();
+                Function1 var13 = (Function1)var12.component2();
+                var0.addView((View)var10);
+                var1.element = (T)var13;
+            } else {
+                TextView var16 = CarUi.button$default(var3.ui, "Choose…", false, new CatalogPanel$$ExternalSyntheticLambda29(var3, var4, var2, var5), 2, null);
+                TextView var7 = var3.value();
+                var7.setGravity(8388611);
+                var7.setTextSize(20.0F);
+                LinearLayout var6 = new LinearLayout((Context)var3.act);
+                var6.setOrientation(0);
+                var6.setGravity(16);
+                var6.addView((View)var7, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
+                var6.addView((View)var16);
+                var0.addView((View)var6);
+                var1.element = (T)(new CatalogPanel$$ExternalSyntheticLambda30(var7, var2, var3, var4));
             }
-        };
-        if (objectRef2.element.size() > 4) {
-            TextView btn = CarUi.button$default(this$0.ui, "Choose…", false, new Function0() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda29
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit addDropdown$rebuild$lambda$55;
-                    addDropdown$rebuild$lambda$55 = CatalogPanel.addDropdown$rebuild$lambda$55(this$0, $p, objectRef2, pick);
-                    return addDropdown$rebuild$lambda$55;
-                }
-            }, 2, null);
-            final TextView $this$addDropdown_u24rebuild_u24lambda_u2456 = this$0.value();
-            $this$addDropdown_u24rebuild_u24lambda_u2456.setGravity(8388611);
-            $this$addDropdown_u24rebuild_u24lambda_u2456.setTextSize(20.0f);
-            LinearLayout rowc = new LinearLayout(this$0.act);
-            rowc.setOrientation(0);
-            rowc.setGravity(16);
-            rowc.addView($this$addDropdown_u24rebuild_u24lambda_u2456, new LinearLayout.LayoutParams(0, -2, 1.0f));
-            rowc.addView(btn);
-            holder.addView(rowc);
-            objectRef.element = new Function1() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda30
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj) {
-                    Unit addDropdown$rebuild$lambda$59;
-                    addDropdown$rebuild$lambda$59 = CatalogPanel.addDropdown$rebuild$lambda$59($this$addDropdown_u24rebuild_u24lambda_u2456, objectRef2, this$0, $p, ((Integer) obj).intValue());
-                    return addDropdown$rebuild$lambda$59;
-                }
-            };
-            return;
         }
-        CarUi carUi = this$0.ui;
-        Iterable $this$map$iv = objectRef2.element;
-        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        for (Object item$iv$iv : $this$map$iv) {
-            Pair it = (Pair) item$iv$iv;
-            destination$iv$iv.add((String) it.getSecond());
-        }
-        Pair<LinearLayout, Function1<Integer, Unit>> chips = carUi.chips((List) destination$iv$iv, pick);
-        LinearLayout bar = chips.component1();
-        Function1<Integer, Unit> r6 = chips.component2();
-        holder.addView(bar);
-        objectRef.element = r6;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1370,67 +1309,75 @@ public final class CatalogPanel extends ScrollView {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r5v3, types: [T, java.util.List] */
-    /* JADX WARN: Type inference failed for: r6v2, types: [T, java.lang.Object, java.lang.String] */
-    public static final Unit addDropdown$lambda$64(LinearLayout $outer, final CatalogPanel this$0, final GalaxyApi.Param $p, final Ref.ObjectRef $opts, Ref.IntRef $paintedIdx, final Ref.ObjectRef $paint, Ref.ObjectRef $paintedFn, TextView $descTv, Ref.ObjectRef $lastKey, final LinearLayout $holder) {
-        CatalogPanelKt.vis($outer, this$0.visible($p));
-        String ep = $p.str("options_endpoint");
-        if (ep != null) {
-            final String replace = new Regex("\\{(\\w+)}").replace(ep, new Function1() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda26
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj) {
-                    CharSequence addDropdown$lambda$64$lambda$62$lambda$60;
-                    addDropdown$lambda$64$lambda$62$lambda$60 = CatalogPanel.addDropdown$lambda$64$lambda$62$lambda$60(this$0, (MatchResult) obj);
-                    return addDropdown$lambda$64$lambda$62$lambda$60;
-                }
-            });
-            if (!Intrinsics.areEqual((Object) replace, $lastKey.element)) {
-                $lastKey.element = replace;
-                List r5 = (List) this$0.optionCache.get(replace);
-                if (r5 != null) {
-                    $opts.element = r5;
-                    addDropdown$rebuild($holder, $paint, $opts, this$0, $p);
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public static final Unit addDropdown$lambda$64(
+        LinearLayout var0,
+        CatalogPanel var1,
+        GalaxyApi.Param var2,
+        ObjectRef var3,
+        IntRef var4,
+        ObjectRef var5,
+        ObjectRef var6,
+        TextView var7,
+        ObjectRef var8,
+        LinearLayout var9
+    ) {
+        CatalogPanelKt.vis((View)var0, var1.visible(var2));
+        String var12 = var2.str("options_endpoint");
+        if (var12 != null) {
+            CharSequence var19 = var12;
+            var12 = new Regex("\\{(\\w+)}").replace(var19, new CatalogPanel$$ExternalSyntheticLambda26(var1));
+            if (!Intrinsics.areEqual(var12, var8.element)) {
+                var8.element = (T)var12;
+                List var16 = var1.optionCache.get(var12);
+                if (var16 != null) {
+                    var3.element = (T)var16;
+                    addDropdown$rebuild(var9, var5, var3, var1, var2);
                 } else {
-                    this$0.api.options(replace, new Function1() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda27
-                        @Override // kotlin.jvm.functions.Function1
-                        public final Object invoke(Object obj) {
-                            Unit addDropdown$lambda$64$lambda$62$lambda$61;
-                            addDropdown$lambda$64$lambda$62$lambda$61 = CatalogPanel.addDropdown$lambda$64$lambda$62$lambda$61(this$0, replace, $opts, $holder, $paint, $p, (List) obj);
-                            return addDropdown$lambda$64$lambda$62$lambda$61;
-                        }
-                    });
+                    var1.api.options(var12, new CatalogPanel$$ExternalSyntheticLambda27(var1, var12, var3, var9, var5, var2));
                 }
             }
         }
-        String cur = this$0.api.string($p.getKey());
-        List $this$indexOfFirst$iv = (List) $opts.element;
-        int index$iv = 0;
-        Iterator it = $this$indexOfFirst$iv.iterator();
+
+        String var17 = var1.api.string(var2.getKey());
+        List var13 = (List)var3.element;
+        int var10 = 0;
+        Iterator var14 = var13.iterator();
+
         while (true) {
-            if (it.hasNext()) {
-                Object item$iv = it.next();
-                Pair it2 = (Pair) item$iv;
-                if (Intrinsics.areEqual(it2.getFirst(), cur) || !(StringsKt.toDoubleOrNull((String) it2.getFirst()) == null || StringsKt.toDoubleOrNull(cur) == null || Math.abs(Double.parseDouble((String) it2.getFirst()) - Double.parseDouble(cur)) >= 1.0E-9d)) {
-                    break;
-                }
-                index$iv++;
-            } else {
-                index$iv = -1;
+            if (!var14.hasNext()) {
+                var10 = -1;
                 break;
             }
+
+            Pair var18 = (Pair)var14.next();
+            boolean var11;
+            if (Intrinsics.areEqual(var18.getFirst(), var17)
+                || StringsKt.toDoubleOrNull((String)var18.getFirst()) != null
+                    && StringsKt.toDoubleOrNull(var17) != null
+                    && Math.abs(Double.parseDouble((String)var18.getFirst()) - Double.parseDouble(var17)) < 1.0E-9) {
+                var11 = true;
+            } else {
+                var11 = false;
+            }
+
+            if (var11) {
+                break;
+            }
+
+            var10++;
         }
-        int idx = index$iv;
-        if (idx != $paintedIdx.element || $paint.element != $paintedFn.element) {
-            $paintedIdx.element = idx;
-            $paintedFn.element = $paint.element;
-            Function1 function1 = (Function1) $paint.element;
-            if (function1 != null) {
-                function1.invoke(Integer.valueOf(idx));
+
+        if (var10 != var4.element || var5.element != var6.element) {
+            var4.element = var10;
+            var6.element = var5.element;
+            Function1 var15 = (Function1)var5.element;
+            if (var15 != null) {
+                var15.invoke(var10);
             }
         }
-        this$0.lock($outer, $descTv, $p);
+
+        var1.lock((View)var0, var7, var2);
         return Unit.INSTANCE;
     }
 
@@ -1442,14 +1389,15 @@ public final class CatalogPanel extends ScrollView {
         return encode;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final Unit addDropdown$lambda$64$lambda$62$lambda$61(CatalogPanel this$0, String $url, Ref.ObjectRef $opts, LinearLayout $holder, Ref.ObjectRef $paint, GalaxyApi.Param $p, List o) {
-        Intrinsics.checkNotNullParameter(o, "o");
-        this$0.optionCache.put($url, o);
-        $opts.element = o;
-        addDropdown$rebuild($holder, $paint, $opts, this$0, $p);
-        this$0.syncAll();
+    /* VF: from Vineflower (jadx: ) */
+    public static final Unit addDropdown$lambda$64$lambda$62$lambda$61(
+        CatalogPanel var0, String var1, ObjectRef var2, LinearLayout var3, ObjectRef var4, GalaxyApi.Param var5, List var6
+    ) {
+        Intrinsics.checkNotNullParameter(var6, "o");
+        var0.optionCache.put(var1, var6);
+        var2.element = (T)var6;
+        addDropdown$rebuild(var3, var4, var2, var0, var5);
+        var0.syncAll();
         return Unit.INSTANCE;
     }
 
@@ -1618,41 +1566,39 @@ public final class CatalogPanel extends ScrollView {
         }));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    public static final Unit buildLongitudinalMode$lambda$75(final CatalogPanel this$0, int i) {
-        Pair pair;
-        String str = "ExperimentalMode";
-        switch (i) {
-            case 0:
-                pair = TuplesKt.to("ExperimentalMode", false);
-                break;
-            case 1:
-                pair = TuplesKt.to(str, true);
-                break;
-            case 2:
-                str = "ConditionalExperimental";
-                pair = TuplesKt.to(str, true);
-                break;
-            default:
-                str = "ConditionalChill";
-                pair = TuplesKt.to(str, true);
-                break;
-        }
-        String key = (String) pair.component1();
-        boolean v = ((Boolean) pair.component2()).booleanValue();
-        if (i <= 1) {
-            GalaxyApi.put$default(this$0.api, "ConditionalExperimental", false, null, null, 12, null);
-            GalaxyApi.put$default(this$0.api, "ConditionalChill", false, null, null, 12, null);
-        }
-        this$0.api.put(key, Boolean.valueOf(v), MapsKt.mapOf(TuplesKt.to("acknowledged", true)), new Function1() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda3
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit buildLongitudinalMode$lambda$75$lambda$74;
-                buildLongitudinalMode$lambda$75$lambda$74 = CatalogPanel.buildLongitudinalMode$lambda$75$lambda$74(this$0, (String) obj);
-                return buildLongitudinalMode$lambda$75$lambda$74;
+    /* VF: from Vineflower (jadx: ) */
+    public static final Unit buildLongitudinalMode$lambda$75(CatalogPanel var0, int var1) {
+        Boolean var4;
+        Boolean var5;
+        Pair var7;
+        label17: {
+            String var3 = "ExperimentalMode";
+            var4 = false;
+            var5 = true;
+            switch (var1) {
+                case 0:
+                    var7 = TuplesKt.to("ExperimentalMode", var4);
+                    break label17;
+                case 1:
+                    break;
+                case 2:
+                    var3 = "ConditionalExperimental";
+                    break;
+                default:
+                    var3 = "ConditionalChill";
             }
-        });
+
+            var7 = TuplesKt.to(var3, var5);
+        }
+
+        String var6 = (String)var7.component1();
+        boolean var2 = (Boolean)var7.component2();
+        if (var1 <= 1) {
+            GalaxyApi.put$default(var0.api, "ConditionalExperimental", var4, null, null, 12, null);
+            GalaxyApi.put$default(var0.api, "ConditionalChill", var4, null, null, 12, null);
+        }
+
+        var0.api.put(var6, var2, MapsKt.mapOf(TuplesKt.to("acknowledged", var5)), new CatalogPanel$$ExternalSyntheticLambda3(var0));
         return Unit.INSTANCE;
     }
 

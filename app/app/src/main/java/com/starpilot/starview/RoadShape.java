@@ -14,6 +14,7 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref;
 import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
+import kotlin.jvm.internal.Ref.ObjectRef;
 
 /* compiled from: RoadShape.kt */
 public final class RoadShape {
@@ -101,31 +102,35 @@ public final class RoadShape {
         return out;
     }
 
-    /* JADX WARN: Type inference failed for: r0v2, types: [T, java.util.HashMap, java.util.HashMap<java.lang.Long, java.util.List<kotlin.Pair<com.starpilot.starview.OsmRoads$Way, java.lang.Integer>>>] */
-    private static final HashMap<Long, List<Pair<OsmRoads.Way, Integer>>> rounded$index(Ref.ObjectRef<HashMap<Long, List<Pair<OsmRoads.Way, Integer>>>> objectRef, List<OsmRoads.Way> list) {
-        Object answer$iv;
-        HashMap<Long, List<Pair<OsmRoads.Way, Integer>>> it = objectRef.element;
-        if (it != null) {
-            return it;
-        }
-        HashMap<Long, List<Pair<OsmRoads.Way, Integer>>> hashMap = new HashMap<>();
-        for (OsmRoads.Way w : list) {
-            int length = w.getE().length;
-            for (int i = 0; i < length; i++) {
-                Map $this$getOrPut$iv = (Map) hashMap;
-                Long valueOf = Long.valueOf(INSTANCE.key(w.getE()[i], w.getN()[i]));
-                Object value$iv = $this$getOrPut$iv.get(valueOf);
-                if (value$iv == null) {
-                    answer$iv = new ArrayList(2);
-                    $this$getOrPut$iv.put(valueOf, answer$iv);
-                } else {
-                    answer$iv = value$iv;
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    private static final HashMap<Long, List<Pair<OsmRoads.Way, Integer>>> rounded$index(
+        ObjectRef<HashMap<Long, List<Pair<OsmRoads.Way, Integer>>>> var0, List<OsmRoads.Way> var1
+    ) {
+        HashMap var4 = (HashMap)var0.element;
+        if (var4 != null) {
+            return var4;
+        } else {
+            var4 = new HashMap();
+
+            for (OsmRoads.Way var6 : var1) {
+                int var2 = 0;
+
+                for (int var3 = var6.getE().length; var2 < var3; var2++) {
+                    Map var7 = var4;
+                    Long var8 = INSTANCE.key(var6.getE()[var2], var6.getN()[var2]);
+                    Object var9 = var7.get(var8);
+                    if (var9 == null) {
+                        var9 = new ArrayList(2);
+                        var7.put(var8, var9);
+                    }
+
+                    ((List)var9).add(TuplesKt.to(var6, var2));
                 }
-                ((List) answer$iv).add(TuplesKt.to(w, Integer.valueOf(i)));
             }
+
+            var0.element = (T)var4;
+            return var4;
         }
-        objectRef.element = hashMap;
-        return hashMap;
     }
 
     private static final double[] rounded$goesOn(OsmRoads.Way w, double $ce, double $cn, double $r, ArrayList<double[]> arrayList, Ref.ObjectRef<HashMap<Long, List<Pair<OsmRoads.Way, Integer>>>> objectRef, List<OsmRoads.Way> list, int end) {

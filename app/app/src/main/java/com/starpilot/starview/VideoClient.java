@@ -29,6 +29,7 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
+import okhttp3.OkHttpClient.Builder;
 
 /* compiled from: VideoClient.kt */
 public final class VideoClient {
@@ -67,13 +68,14 @@ public final class VideoClient {
         }
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public VideoClient(Function1<? super String, Unit> onStatus, Function2<? super Integer, ? super Integer, Unit> onSize) {
-        Intrinsics.checkNotNullParameter(onStatus, "onStatus");
-        Intrinsics.checkNotNullParameter(onSize, "onSize");
-        this.onStatus = onStatus;
-        this.onSize = onSize;
-        this.http = new OkHttpClient.Builder().pingInterval(5L, TimeUnit.SECONDS).readTimeout(0L, TimeUnit.MILLISECONDS).build();
+    /* VF: from Vineflower (jadx: ) */
+    public VideoClient(Function1<? super String, Unit> var1, Function2<? super Integer, ? super Integer, Unit> var2) {
+        super();
+        Intrinsics.checkNotNullParameter(var1, "onStatus");
+        Intrinsics.checkNotNullParameter(var2, "onSize");
+        this.onStatus = var1;
+        this.onSize = var2;
+        this.http = new Builder().pingInterval(5L, TimeUnit.SECONDS).readTimeout(0L, TimeUnit.MILLISECONDS).build();
         this.queue = new LinkedBlockingQueue<>(6);
         this.fpsT0 = System.nanoTime();
         this.needKey = true;

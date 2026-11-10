@@ -21,17 +21,17 @@ public final class Bars extends View {
     private final List<String> topLabels;
     private final List<Float> values;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public Bars(Context ctx, List<Float> values, List<String> labels, int color, List<String> topLabels) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(values, "values");
-        Intrinsics.checkNotNullParameter(labels, "labels");
-        Intrinsics.checkNotNullParameter(topLabels, "topLabels");
-        this.values = values;
-        this.labels = labels;
-        this.color = color;
-        this.topLabels = topLabels;
+    /* VF: from Vineflower (jadx: ) */
+    public Bars(Context var1, List<Float> var2, List<String> var3, int var4, List<String> var5) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "values");
+        Intrinsics.checkNotNullParameter(var3, "labels");
+        Intrinsics.checkNotNullParameter(var5, "topLabels");
+        this.values = var2;
+        this.labels = var3;
+        this.color = var4;
+        this.topLabels = var5;
         this.p = new Paint(1);
     }
 

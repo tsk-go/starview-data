@@ -32,155 +32,247 @@ public final class FastUpdate {
         return s != null && s.optBoolean("running");
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:10:0x0042, code lost:
-    
-        if (r10 == null) goto L14;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:45:0x016c, code lost:
-    
-        if (r0 != null) goto L92;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:7:0x0033, code lost:
-    
-        if (r9 == null) goto L10;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:64:0x01d8  */
-    /* JADX WARN: Removed duplicated region for block: B:70:0x01fa  */
-    /* JADX WARN: Removed duplicated region for block: B:72:0x0201  */
-    /* JADX WARN: Removed duplicated region for block: B:73:0x01fd  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final JSONObject from70(JSONObject r) {
-        String stage;
-        String detail;
-        Pair sub;
-        String str;
-        int intValue;
-        String str2;
-        boolean z;
-        boolean z2;
-        String str3;
-        Intrinsics.checkNotNullParameter(r, "r");
-        JSONObject inst = r.optJSONObject("installed");
-        JSONObject upd = r.optJSONObject("updater");
-        JSONObject ops = r.optJSONObject("operations");
-        JSONObject fast = upd != null ? upd.optJSONObject("fast") : null;
-        String str4 = "";
-        if (fast != null) {
-            JSONObject it = fast;
-            stage = INSTANCE.str(it, "stage");
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+    public final JSONObject from70(JSONObject var1) {
+        String var17 = null; Object var18 = null; String var20 = null; // declarations Vineflower left out
+        Intrinsics.checkNotNullParameter(var1, "r");
+        JSONObject var13 = var1.optJSONObject("installed");
+        JSONObject var11 = var1.optJSONObject("updater");
+        JSONObject var12 = var1.optJSONObject("operations");
+        if (var11 != null) {
+            var1 = var11.optJSONObject("fast");
+        } else {
+            var1 = null;
         }
-        stage = "";
-        if (fast != null) {
-            JSONObject it2 = fast;
-            detail = INSTANCE.str(it2, "detail");
-        }
-        detail = "";
-        JSONObject req = ops != null ? ops.optJSONObject("request") : null;
-        boolean pending = req != null && Intrinsics.areEqual(str(req, "state"), "pending");
-        boolean updating = upd != null && Intrinsics.areEqual(str(upd, "state"), "updating...");
-        JSONObject $this$from70_u24lambda_u248 = new JSONObject();
-        $this$from70_u24lambda_u248.put("running", ((!updating && !pending) || Intrinsics.areEqual(stage, "error") || Intrinsics.areEqual(stage, "rebooting")) ? false : true);
-        $this$from70_u24lambda_u248.put("stage", stage);
-        if (Intrinsics.areEqual(stage, "preparing")) {
-            if (upd == null || (str3 = INSTANCE.str(upd, "state")) == null) {
-                str3 = "";
+
+        String var5;
+        String var9;
+        label196: {
+            var9 = "";
+            if (var1 != null) {
+                String var6 = INSTANCE.str(var1, "stage");
+                var5 = var6;
+                if (var6 != null) {
+                    break label196;
+                }
             }
-            switch (str3.hashCode()) {
-                case 1268693460:
-                    if (str3.equals("downloading...")) {
-                        sub = TuplesKt.to("Full update: downloading", 20);
-                        break;
+
+            var5 = "";
+        }
+
+        String var31;
+        label191: {
+            if (var1 != null) {
+                String var16 = INSTANCE.str(var1, "detail");
+                var31 = var16;
+                if (var16 != null) {
+                    break label191;
+                }
+            }
+
+            var31 = "";
+        }
+
+        JSONObject var7;
+        if (var12 != null) {
+            var7 = var12.optJSONObject("request");
+        } else {
+            var7 = null;
+        }
+
+        int var2;
+        if (var7 != null && Intrinsics.areEqual(this.str(var7, "state"), "pending")) {
+            var2 = 1;
+        } else {
+            var2 = 0;
+        }
+
+        boolean var3;
+        if (var11 != null && Intrinsics.areEqual(this.str(var11, "state"), "updating...")) {
+            var3 = true;
+        } else {
+            var3 = false;
+        }
+
+        JSONObject var14 = new JSONObject();
+        boolean var4;
+        if ((var3 || var2) && !Intrinsics.areEqual(var5, "error") && !Intrinsics.areEqual(var5, "rebooting")) {
+            var4 = true;
+        } else {
+            var4 = false;
+        }
+
+        var14.put("running", var4);
+        var14.put("stage", var5);
+        label166:
+        if (Intrinsics.areEqual(var5, "preparing")) {
+            label164: {
+                if (var11 != null) {
+                    String var8 = INSTANCE.str(var11, "state");
+                    var17 = var8;
+                    if (var8 != null) {
+                        break label164;
                     }
-                    sub = null;
+                }
+
+                var17 = "";
+            }
+
+            switch (var17.hashCode()) {
+                case 1268693460:
+                    if (var17.equals("downloading...")) {
+                        var18 = TuplesKt.to("Full update: downloading", 20);
+                        break label166;
+                    }
                     break;
                 case 1392539220:
-                    if (str3.equals("checking...")) {
-                        sub = TuplesKt.to("Full update: checking", 5);
-                        break;
+                    if (var17.equals("checking...")) {
+                        var18 = TuplesKt.to("Full update: checking", 5);
+                        break label166;
                     }
-                    sub = null;
                     break;
                 case 1941549184:
-                    if (str3.equals("finalizing update...")) {
-                        sub = TuplesKt.to("Full update: finishing (copying it into place)", 70);
-                        break;
+                    if (var17.equals("finalizing update...")) {
+                        var18 = TuplesKt.to("Full update: finishing (copying it into place)", 70);
+                        break label166;
                     }
-                    sub = null;
-                    break;
-                default:
-                    sub = null;
-                    break;
             }
+
+            var18 = null;
         } else {
-            sub = null;
+            var18 = null;
         }
-        if (sub == null || (str = (String) sub.getFirst()) == null) {
-            String str5 = detail;
-            if (str5.length() == 0) {
-                String str6 = stage;
-                if (str6.length() == 0) {
-                    str6 = "starting";
+
+        String var32;
+        label201: {
+            if (var18 != null) {
+                String var10 = (String)var18.getFirst();
+                var32 = var10;
+                if (var10 != null) {
+                    break label201;
                 }
-                str5 = str6;
             }
-            str = str5;
+
+            var32 = var31;
+            if (var32.length() == 0) {
+                var2 = (((boolean)true) ? 1 : 0);
+            } else {
+                var2 = (((boolean)false) ? 1 : 0);
+            }
+
+            if ((var2 != 0)) {
+                var32 = var5;
+                if (var32.length() == 0) {
+                    var2 = (((boolean)true) ? 1 : 0);
+                } else {
+                    var2 = (((boolean)false) ? 1 : 0);
+                }
+
+                if ((var2 != 0)) {
+                    var32 = "starting";
+                }
+
+                var32 = var32;
+            }
+
+            var32 = var32;
         }
-        $this$from70_u24lambda_u248.put("progressLabel", StringsKt.take(str, 60));
-        if (sub != null) {
-            intValue = ((Number) sub.getSecond()).intValue();
+
+        var14.put("progressLabel", StringsKt.take(var32, 60));
+        if (var18 != null) {
+            var2 = ((Number)var18.getSecond()).intValue();
         } else {
-            Integer num = STAGE_PCT.get(stage);
-            intValue = num != null ? num.intValue() : 0;
-        }
-        $this$from70_u24lambda_u248.put("progressPercent", intValue);
-        if (inst != null) {
-            str2 = INSTANCE.str(inst, "commit");
-        }
-        str2 = "";
-        $this$from70_u24lambda_u248.put("localCommit", str2);
-        if (Intrinsics.areEqual(stage, "error")) {
-            String str7 = detail;
-            if (str7.length() == 0) {
-                str7 = "update failed";
-            }
-            str4 = str7;
-        } else if (req != null) {
-            if (INSTANCE.str(req, "error").length() > 0) {
-                str4 = INSTANCE.str(req, "error");
+            Integer var19 = STAGE_PCT.get(var5);
+            if (var19 != null) {
+                var2 = var19;
+            } else {
+                var2 = 0;
             }
         }
-        String err = str4;
-        if (err.length() > 0) {
-            $this$from70_u24lambda_u248.put("lastError", err);
-        }
-        if (upd != null) {
-            z = true;
-            if (upd.optBoolean("targetChangeFound")) {
-                z2 = true;
-                if (z2) {
-                    $this$from70_u24lambda_u248.put("updateAvailable", z);
+
+        label146: {
+            var14.put("progressPercent", var2);
+            if (var13 != null) {
+                var32 = INSTANCE.str(var13, "commit");
+                var20 = var32;
+                if (var32 != null) {
+                    break label146;
                 }
-                if (ops != null && !ops.optBoolean("canFastUpdate", true)) {
-                    if (INSTANCE.str(ops, "reason").length() <= 0) {
-                        $this$from70_u24lambda_u248.put("reason", INSTANCE.str(ops, "reason"));
+            }
+
+            var20 = "";
+        }
+
+        var14.put("localCommit", var20);
+        String var22;
+        if (Intrinsics.areEqual(var5, "error")) {
+            var var21 = var31;
+            boolean var26;
+            if (var21.length() == 0) {
+                var26 = true;
+            } else {
+                var26 = false;
+            }
+
+            if (var26) {
+                var21 = "update failed";
+            }
+
+            var22 = var21;
+        } else {
+            label140: {
+                if (var7 != null) {
+                    boolean var27;
+                    if (INSTANCE.str(var7, "error").length() > 0) {
+                        var27 = true;
+                    } else {
+                        var27 = false;
+                    }
+
+                    if (var27) {
+                        var22 = INSTANCE.str(var7, "error");
+                        break label140;
                     }
                 }
-                return $this$from70_u24lambda_u248;
+
+                var22 = var9;
             }
+        }
+
+        boolean var28;
+        if (var22.length() > 0) {
+            var28 = true;
         } else {
-            z = true;
+            var28 = false;
         }
-        z2 = false;
-        if (z2) {
+
+        if (var28) {
+            var14.put("lastError", var22);
         }
-        if (ops != null) {
-            if (INSTANCE.str(ops, "reason").length() <= 0) {
+
+        if (var11 != null && var11.optBoolean("targetChangeFound")) {
+            var28 = true;
+        } else {
+            var28 = false;
+        }
+
+        if (var28) {
+            var14.put("updateAvailable", true);
+        }
+
+        if (var12 != null && !var12.optBoolean("canFastUpdate", true)) {
+            if (INSTANCE.str(var12, "reason").length() > 0) {
+                var28 = true;
+            } else {
+                var28 = false;
+            }
+
+            if (var28) {
+                var14.put("reason", INSTANCE.str(var12, "reason"));
             }
         }
-        return $this$from70_u24lambda_u248;
+
+        return var14;
     }
 
     public final String summary(JSONObject s) {

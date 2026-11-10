@@ -544,235 +544,232 @@ public final /* data */ class RtkStatus {
         private Companion() {
         }
 
-        /* JADX WARN: Removed duplicated region for block: B:39:0x01b1  */
-        /* JADX WARN: Removed duplicated region for block: B:50:0x01ec  */
-        /* JADX WARN: Removed duplicated region for block: B:57:0x020f  */
-        /* JADX WARN: Removed duplicated region for block: B:62:0x0223  */
-        /* JADX WARN: Removed duplicated region for block: B:67:0x0237  */
-        /* JADX WARN: Removed duplicated region for block: B:70:0x0261  */
-        /* JADX WARN: Removed duplicated region for block: B:78:0x02c4  */
-        /* JADX WARN: Removed duplicated region for block: B:81:0x02aa  */
-        /* JADX WARN: Removed duplicated region for block: B:82:0x0242  */
-        /* JADX WARN: Removed duplicated region for block: B:88:0x01e2  */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public final RtkStatus parse(JSONObject o) {
-            String str;
-            String str2;
-            double d;
-            List emptyList;
-            String str3;
-            boolean z;
-            JSONObject optJSONObject;
-            String str4;
-            double d2;
-            JSONObject it;
-            Integer num;
-            JSONArray a;
-            List emptyList2;
-            String optString;
-            String optString2;
-            Collection destination$iv$iv;
-            if (o == null) {
+        /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+        public final RtkStatus parse(JSONObject var1) {
+        Integer var64 = null; String var66 = null; // declarations Vineflower left out
+            if (var1 == null) {
                 return null;
-            }
-            boolean optBoolean = o.optBoolean("connected");
-            boolean optBoolean2 = o.optBoolean("fresh");
-            String optString3 = o.optString("rtk", "none");
-            Intrinsics.checkNotNullExpressionValue(optString3, "optString(...)");
-            String optString4 = o.optString("fixType", "none");
-            Intrinsics.checkNotNullExpressionValue(optString4, "optString(...)");
-            int optInt = o.optInt("used", 0);
-            int optInt2 = o.optInt("heard", 0);
-            double parse$d = parse$d(o, "lat");
-            double parse$d2 = parse$d(o, "lon");
-            double parse$d3 = parse$d(o, "altM");
-            double parse$d4 = parse$d(o, "hAccM");
-            double parse$d5 = parse$d(o, "speedMs");
-            double parse$d6 = parse$d(o, "headingDeg");
-            Integer valueOf = (!o.has("correctionAgeS") || o.isNull("correctionAgeS")) ? null : Integer.valueOf(o.optInt("correctionAgeS"));
-            Double valueOf2 = Double.valueOf(parse$d(o, "rtcmAgeS"));
-            double it2 = valueOf2.doubleValue();
-            Double d3 = Boolean.valueOf(!Double.isInfinite(it2) && !Double.isNaN(it2)).booleanValue() ? valueOf2 : null;
-            long optLong = o.optLong("rtcmBytes", 0L);
-            String optString5 = o.optString("fusion", "");
-            Intrinsics.checkNotNullExpressionValue(optString5, "optString(...)");
-            String optString6 = o.optString("mount", "");
-            Intrinsics.checkNotNullExpressionValue(optString6, "optString(...)");
-            String optString7 = o.optString("imuInit", "");
-            Intrinsics.checkNotNullExpressionValue(optString7, "optString(...)");
-            String optString8 = o.optString("insInit", "");
-            Intrinsics.checkNotNullExpressionValue(optString8, "optString(...)");
-            String optString9 = o.optString("mountInit", "");
-            Intrinsics.checkNotNullExpressionValue(optString9, "optString(...)");
-            String optString10 = o.optString("speedInit", "");
-            Intrinsics.checkNotNullExpressionValue(optString10, "optString(...)");
-            JSONArray a2 = o.optJSONArray("sensors");
-            if (a2 != null) {
-                str2 = optString5;
-                str = optString7;
-                Iterable $this$mapNotNull$iv = RangesKt.until(0, a2.length());
-                int $i$f$mapNotNull = 0;
-                Collection destination$iv$iv2 = new ArrayList();
-                Iterator<Integer> it3 = $this$mapNotNull$iv.iterator();
-                while (it3.hasNext()) {
-                    int element$iv$iv$iv = ((IntIterator) it3).nextInt();
-                    Iterable $this$mapNotNull$iv2 = $this$mapNotNull$iv;
-                    int $i$f$mapNotNull2 = $i$f$mapNotNull;
-                    double d4 = parse$d3;
-                    RtkSensor parse = RtkSensor.Companion.parse(a2.optJSONObject(element$iv$iv$iv));
-                    if (parse != null) {
-                        destination$iv$iv = destination$iv$iv2;
-                        destination$iv$iv.add(parse);
-                    } else {
-                        destination$iv$iv = destination$iv$iv2;
-                    }
-                    destination$iv$iv2 = destination$iv$iv;
-                    $this$mapNotNull$iv = $this$mapNotNull$iv2;
-                    $i$f$mapNotNull = $i$f$mapNotNull2;
-                    parse$d3 = d4;
-                }
-                d = parse$d3;
-                emptyList = (List) destination$iv$iv2;
             } else {
-                str = optString7;
-                str2 = optString5;
-                d = parse$d3;
-                emptyList = CollectionsKt.emptyList();
-            }
-            String optString11 = o.optString("firmware", "");
-            Intrinsics.checkNotNullExpressionValue(optString11, "optString(...)");
-            String optString12 = o.optString("module", "");
-            Intrinsics.checkNotNullExpressionValue(optString12, "optString(...)");
-            JSONObject optJSONObject2 = o.optJSONObject("speedFeed");
-            if (optJSONObject2 != null) {
-                str3 = optString12;
-                if (optJSONObject2.optBoolean("on")) {
-                    z = true;
-                    optJSONObject = o.optJSONObject("speedFeed");
-                    if (optJSONObject == null) {
-                        str4 = optString11;
-                        Double valueOf3 = Double.valueOf(optJSONObject.optDouble("hz", 0.0d));
-                        double it4 = valueOf3.doubleValue();
-                        if (!((Double.isInfinite(it4) || Double.isNaN(it4)) ? false : true)) {
-                            valueOf3 = null;
-                        }
-                        if (valueOf3 != null) {
-                            d2 = valueOf3.doubleValue();
-                            it = o.optJSONObject("speedFeed");
-                            if (it != null) {
-                                if (!it.has("delayMs")) {
-                                    it = null;
-                                }
-                                if (it != null) {
-                                    num = Integer.valueOf(it.optInt("delayMs"));
-                                    JSONObject optJSONObject3 = o.optJSONObject("action");
-                                    String str5 = (optJSONObject3 != null || (optString2 = optJSONObject3.optString("op", "")) == null) ? "" : optString2;
-                                    JSONObject optJSONObject4 = o.optJSONObject("action");
-                                    String str6 = (optJSONObject4 != null || (optString = optJSONObject4.optString("state", "")) == null) ? "" : optString;
-                                    JSONObject optJSONObject5 = o.optJSONObject("action");
-                                    double optDouble = optJSONObject5 == null ? optJSONObject5.optDouble("ageS", 0.0d) : 0.0d;
-                                    double parse$d7 = parse$d(o, "mountYawDeg");
-                                    double parse$d8 = parse$d(o, "mountPitchDeg");
-                                    double parse$d9 = parse$d(o, "mountRollDeg");
-                                    a = o.optJSONArray("mountErrors");
-                                    if (a == null) {
-                                        int i = 0;
-                                        Iterable $this$map$iv = RangesKt.until(0, a.length());
-                                        Collection destination$iv$iv3 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-                                        Iterator<Integer> it5 = $this$map$iv.iterator();
-                                        while (it5.hasNext()) {
-                                            int item$iv$iv = ((IntIterator) it5).nextInt();
-                                            destination$iv$iv3.add(a.optString(item$iv$iv));
-                                            i = i;
-                                        }
-                                        emptyList2 = (List) destination$iv$iv3;
-                                    } else {
-                                        emptyList2 = CollectionsKt.emptyList();
-                                    }
-                                    RtkCalibration parse2 = RtkCalibration.Companion.parse(o.optJSONObject("calibration"));
-                                    JSONObject optJSONObject6 = o.optJSONObject("mountKept");
-                                    return new RtkStatus(optBoolean, optBoolean2, optString3, optString4, optInt, optInt2, parse$d, parse$d2, d, parse$d4, parse$d5, parse$d6, valueOf, d3, optLong, str2, optString6, str, optString8, optString9, optString10, emptyList, str4, str3, z, d2, num, str5, str6, optDouble, parse$d7, parse$d8, parse$d9, emptyList2, parse2, optJSONObject6 != null ? optJSONObject6.optDouble("yaw", Double.NaN) : Double.NaN, o.optBoolean("mountKeeping"));
-                                }
-                            }
-                            num = null;
-                            JSONObject optJSONObject32 = o.optJSONObject("action");
-                            if (optJSONObject32 != null) {
-                            }
-                            JSONObject optJSONObject42 = o.optJSONObject("action");
-                            if (optJSONObject42 != null) {
-                            }
-                            JSONObject optJSONObject52 = o.optJSONObject("action");
-                            if (optJSONObject52 == null) {
-                            }
-                            double parse$d72 = parse$d(o, "mountYawDeg");
-                            double parse$d82 = parse$d(o, "mountPitchDeg");
-                            double parse$d92 = parse$d(o, "mountRollDeg");
-                            a = o.optJSONArray("mountErrors");
-                            if (a == null) {
-                            }
-                            RtkCalibration parse22 = RtkCalibration.Companion.parse(o.optJSONObject("calibration"));
-                            JSONObject optJSONObject62 = o.optJSONObject("mountKept");
-                            return new RtkStatus(optBoolean, optBoolean2, optString3, optString4, optInt, optInt2, parse$d, parse$d2, d, parse$d4, parse$d5, parse$d6, valueOf, d3, optLong, str2, optString6, str, optString8, optString9, optString10, emptyList, str4, str3, z, d2, num, str5, str6, optDouble, parse$d72, parse$d82, parse$d92, emptyList2, parse22, optJSONObject62 != null ? optJSONObject62.optDouble("yaw", Double.NaN) : Double.NaN, o.optBoolean("mountKeeping"));
-                        }
-                    } else {
-                        str4 = optString11;
-                    }
-                    d2 = 0.0d;
-                    it = o.optJSONObject("speedFeed");
-                    if (it != null) {
-                    }
-                    num = null;
-                    JSONObject optJSONObject322 = o.optJSONObject("action");
-                    if (optJSONObject322 != null) {
-                    }
-                    JSONObject optJSONObject422 = o.optJSONObject("action");
-                    if (optJSONObject422 != null) {
-                    }
-                    JSONObject optJSONObject522 = o.optJSONObject("action");
-                    if (optJSONObject522 == null) {
-                    }
-                    double parse$d722 = parse$d(o, "mountYawDeg");
-                    double parse$d822 = parse$d(o, "mountPitchDeg");
-                    double parse$d922 = parse$d(o, "mountRollDeg");
-                    a = o.optJSONArray("mountErrors");
-                    if (a == null) {
-                    }
-                    RtkCalibration parse222 = RtkCalibration.Companion.parse(o.optJSONObject("calibration"));
-                    JSONObject optJSONObject622 = o.optJSONObject("mountKept");
-                    return new RtkStatus(optBoolean, optBoolean2, optString3, optString4, optInt, optInt2, parse$d, parse$d2, d, parse$d4, parse$d5, parse$d6, valueOf, d3, optLong, str2, optString6, str, optString8, optString9, optString10, emptyList, str4, str3, z, d2, num, str5, str6, optDouble, parse$d722, parse$d822, parse$d922, emptyList2, parse222, optJSONObject622 != null ? optJSONObject622.optDouble("yaw", Double.NaN) : Double.NaN, o.optBoolean("mountKeeping"));
+                boolean var32 = var1.optBoolean("connected");
+                boolean var31 = var1.optBoolean("fresh");
+                String var43 = var1.optString("rtk", "none");
+                Intrinsics.checkNotNullExpressionValue(var43, "optString(...)");
+                String var42 = var1.optString("fixType", "none");
+                Intrinsics.checkNotNullExpressionValue(var42, "optString(...)");
+                int var27 = var1.optInt("used", 0);
+                int var28 = var1.optInt("heard", 0);
+                double var16 = parse$d(var1, "lat");
+                double var10 = parse$d(var1, "lon");
+                double var2 = parse$d(var1, "altM");
+                double var18 = parse$d(var1, "hAccM");
+                double var12 = parse$d(var1, "speedMs");
+                double var14 = parse$d(var1, "headingDeg");
+                Integer var35;
+                if (var1.has("correctionAgeS") && !var1.isNull("correctionAgeS")) {
+                    var35 = var1.optInt("correctionAgeS");
+                } else {
+                    var35 = null;
                 }
-            } else {
-                str3 = optString12;
+
+                Double var36 = parse$d(var1, "rtcmAgeS");
+                double var4 = var36.doubleValue();
+                boolean var29;
+                if (!Double.isInfinite(var4) && !Double.isNaN(var4)) {
+                    var29 = true;
+                } else {
+                    var29 = false;
+                }
+
+                if (!Boolean.valueOf(var29)) {
+                    var36 = null;
+                }
+
+                long var33 = var1.optLong("rtcmBytes", 0L);
+                String var45 = var1.optString("fusion", "");
+                Intrinsics.checkNotNullExpressionValue(var45, "optString(...)");
+                String var46 = var1.optString("mount", "");
+                Intrinsics.checkNotNullExpressionValue(var46, "optString(...)");
+                String var47 = var1.optString("imuInit", "");
+                Intrinsics.checkNotNullExpressionValue(var47, "optString(...)");
+                String var49 = var1.optString("insInit", "");
+                Intrinsics.checkNotNullExpressionValue(var49, "optString(...)");
+                String var44 = var1.optString("mountInit", "");
+                Intrinsics.checkNotNullExpressionValue(var44, "optString(...)");
+                String var48 = var1.optString("speedInit", "");
+                Intrinsics.checkNotNullExpressionValue(var48, "optString(...)");
+                JSONArray var39 = var1.optJSONArray("sensors");
+                List var59;
+                if (var39 != null) {
+                    Iterable var38 = RangesKt.until(0, var39.length());
+                    var29 = false;
+                    var var37 = new ArrayList();
+                    Iterator var40 = var38.iterator();
+
+                    while (var40.hasNext()) {
+                        int var26 = ((IntIterator)var40).nextInt();
+                        RtkSensor var41 = RtkSensor.Companion.parse(var39.optJSONObject(var26));
+                        if (var41 != null) {
+                            var37.add(var41);
+                        }
+                    }
+
+                    var59 = var37;
+                } else {
+                    var59 = CollectionsKt.emptyList();
+                }
+
+                String var50 = var1.optString("firmware", "");
+                Intrinsics.checkNotNullExpressionValue(var50, "optString(...)");
+                String var51 = var1.optString("module", "");
+                Intrinsics.checkNotNullExpressionValue(var51, "optString(...)");
+                JSONObject var60 = var1.optJSONObject("speedFeed");
+                if (var60 != null && var60.optBoolean("on")) {
+                    var29 = true;
+                } else {
+                    var29 = false;
+                }
+
+                label111: {
+                    var60 = var1.optJSONObject("speedFeed");
+                    if (var60 != null) {
+                        Double var62 = var60.optDouble("hz", 0.0);
+                        var4 = var62.doubleValue();
+                        boolean var56;
+                        if (!Double.isInfinite(var4) && !Double.isNaN(var4)) {
+                            var56 = true;
+                        } else {
+                            var56 = false;
+                        }
+
+                        if (!var56) {
+                            var62 = null;
+                        }
+
+                        if (var62 != null) {
+                            var4 = var62;
+                            break label111;
+                        }
+                    }
+
+                    var4 = 0.0;
+                }
+
+                label100: {
+                    var60 = var1.optJSONObject("speedFeed");
+                    if (var60 != null) {
+                        if (!var60.has("delayMs")) {
+                            var60 = null;
+                        }
+
+                        if (var60 != null) {
+                            var64 = var60.optInt("delayMs");
+                            break label100;
+                        }
+                    }
+
+                    var64 = null;
+                }
+
+                label94: {
+                    JSONObject var65 = var1.optJSONObject("action");
+                    if (var65 != null) {
+                        var66 = var65.optString("op", "");
+                        if (var66 != null) {
+                            break label94;
+                        }
+                    }
+
+                    var66 = "";
+                }
+
+                String var68;
+                label89: {
+                    JSONObject var67 = var1.optJSONObject("action");
+                    if (var67 != null) {
+                        var68 = var67.optString("state", "");
+                        if (var68 != null) {
+                            break label89;
+                        }
+                    }
+
+                    var68 = "";
+                }
+
+                JSONObject var69 = var1.optJSONObject("action");
+                double var6;
+                if (var69 != null) {
+                    var6 = var69.optDouble("ageS", 0.0);
+                } else {
+                    var6 = 0.0;
+                }
+
+                double var24 = parse$d(var1, "mountYawDeg");
+                double var20 = parse$d(var1, "mountPitchDeg");
+                double var22 = parse$d(var1, "mountRollDeg");
+                JSONArray var52 = var1.optJSONArray("mountErrors");
+                List var71;
+                if (var52 != null) {
+                    boolean var30 = false;
+                    Iterable var53 = RangesKt.until(0, var52.length());
+                    var var70 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var53, 10));
+                    Iterator var73 = var53.iterator();
+
+                    while (var73.hasNext()) {
+                        var70.add(var52.optString(((IntIterator)var73).nextInt()));
+                    }
+
+                    var71 = var70;
+                } else {
+                    var71 = CollectionsKt.emptyList();
+                }
+
+                RtkCalibration var74 = RtkCalibration.Companion.parse(var1.optJSONObject("calibration"));
+                JSONObject var72 = var1.optJSONObject("mountKept");
+                double var8 = Double.NaN;
+                if (var72 != null) {
+                    var8 = var72.optDouble("yaw", Double.NaN);
+                }
+
+                return new RtkStatus(
+                    var32,
+                    var31,
+                    var43,
+                    var42,
+                    var27,
+                    var28,
+                    var16,
+                    var10,
+                    var2,
+                    var18,
+                    var12,
+                    var14,
+                    var35,
+                    var36,
+                    var33,
+                    var45,
+                    var46,
+                    var47,
+                    var49,
+                    var44,
+                    var48,
+                    var59,
+                    var50,
+                    var51,
+                    var29,
+                    var4,
+                    var64,
+                    var66,
+                    var68,
+                    var6,
+                    var24,
+                    var20,
+                    var22,
+                    var71,
+                    var74,
+                    var8,
+                    var1.optBoolean("mountKeeping")
+                );
             }
-            z = false;
-            optJSONObject = o.optJSONObject("speedFeed");
-            if (optJSONObject == null) {
-            }
-            d2 = 0.0d;
-            it = o.optJSONObject("speedFeed");
-            if (it != null) {
-            }
-            num = null;
-            JSONObject optJSONObject3222 = o.optJSONObject("action");
-            if (optJSONObject3222 != null) {
-            }
-            JSONObject optJSONObject4222 = o.optJSONObject("action");
-            if (optJSONObject4222 != null) {
-            }
-            JSONObject optJSONObject5222 = o.optJSONObject("action");
-            if (optJSONObject5222 == null) {
-            }
-            double parse$d7222 = parse$d(o, "mountYawDeg");
-            double parse$d8222 = parse$d(o, "mountPitchDeg");
-            double parse$d9222 = parse$d(o, "mountRollDeg");
-            a = o.optJSONArray("mountErrors");
-            if (a == null) {
-            }
-            RtkCalibration parse2222 = RtkCalibration.Companion.parse(o.optJSONObject("calibration"));
-            JSONObject optJSONObject6222 = o.optJSONObject("mountKept");
-            return new RtkStatus(optBoolean, optBoolean2, optString3, optString4, optInt, optInt2, parse$d, parse$d2, d, parse$d4, parse$d5, parse$d6, valueOf, d3, optLong, str2, optString6, str, optString8, optString9, optString10, emptyList, str4, str3, z, d2, num, str5, str6, optDouble, parse$d7222, parse$d8222, parse$d9222, emptyList2, parse2222, optJSONObject6222 != null ? optJSONObject6222.optDouble("yaw", Double.NaN) : Double.NaN, o.optBoolean("mountKeeping"));
         }
 
         private static final double parse$d(JSONObject $o, String k) {

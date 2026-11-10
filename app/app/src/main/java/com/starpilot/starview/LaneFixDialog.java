@@ -39,6 +39,10 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref;
 import kotlin.ranges.RangesKt;
+import android.graphics.Paint.Align;
+import android.graphics.drawable.Drawable;
+import android.widget.LinearLayout.LayoutParams;
+import kotlin.jvm.internal.Ref.ObjectRef;
 
 /* compiled from: LaneFixDialog.kt */
 public final class LaneFixDialog {
@@ -130,38 +134,33 @@ public final class LaneFixDialog {
             return str;
         }
 
-        /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-        /* JADX WARN: Code restructure failed: missing block: B:13:0x0023, code lost:
-        
-            if (r0.equals("one") == false) goto L16;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:4:0x0010, code lost:
-        
-            if (r0.equals("divided") == false) goto L16;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:5:0x0026, code lost:
-        
-            r0 = false;
-         */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
+        /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
         public final Boolean getTwoWay() {
-            String str = this.way;
-            switch (str.hashCode()) {
+            String var2 = this.way;
+            switch (var2.hashCode()) {
                 case 110182:
+                    if (!var2.equals("one")) {
+                        return null;
+                    }
                     break;
                 case 115276:
-                    if (str.equals("two")) {
-                        boolean z = true;
-                        return Boolean.valueOf(z);
+                    if (var2.equals("two")) {
+                        boolean var1 = true;
+                        return var1;
                     }
+
                     return null;
                 case 1674318603:
+                    if (!var2.equals("divided")) {
+                        return null;
+                    }
                     break;
                 default:
                     return null;
             }
+
+            boolean var4 = false;
+            return var4;
         }
 
         private static final String text$ex(int n, String k, String side) {
@@ -177,42 +176,54 @@ public final class LaneFixDialog {
             return n + " " + str + " on the " + side;
         }
 
-        /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-        java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterative(DepthRegionTraversal.java:31)
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visit(SwitchOverStringVisitor.java:60)
-         */
+        /* VF: from Vineflower (jadx: ) */
         public final String text() {
-            String str;
-            List e = CollectionsKt.listOfNotNull((Object[]) new String[]{text$ex(this.extraL, getKindLeft(), "left"), text$ex(this.extraR, getKindRight(), "right")});
-            String base = (this.lane > 0 ? new StringBuilder().append("lane ").append(this.lane).append(" of ").append(getTotal()) : new StringBuilder().append(getTotal()).append(" lanes")).toString();
-            String str2 = this.way;
-            switch (str2.hashCode()) {
+            List var5 = CollectionsKt.listOfNotNull(
+                new String[]{text$ex(this.extraL, this.getKindLeft(), "left"), text$ex(this.extraR, this.getKindRight(), "right")}
+            );
+            StringBuilder var3;
+            if (this.lane > 0) {
+                int var2 = this.lane;
+                int var1 = this.getTotal();
+                var3 = new StringBuilder().append("lane ").append(var2).append(" of ").append(var1);
+            } else {
+                int var7 = this.getTotal();
+                var3 = new StringBuilder().append(var7).append(" lanes");
+            }
+
+            String var4 = var3.toString();
+            String var6 = this.way;
+            int var8 = var6.hashCode();
+            String var11 = "";
+            switch (var8) {
                 case 110182:
-                    if (str2.equals("one")) {
-                        str = ", one-way";
-                        break;
+                    if (var6.equals("one")) {
+                        var11 = ", one-way";
                     }
                     break;
                 case 115276:
-                    if (str2.equals("two")) {
-                        str = ", two-way" + (this.otherWay > 0 ? " (" + this.otherWay + " the other way)" : "");
-                        break;
+                    if (var6.equals("two")) {
+                        if (this.otherWay > 0) {
+                            var8 = this.otherWay;
+                            var11 = " (" + var8 + " the other way)";
+                        }
+
+                        var11 = ", two-way" + var11;
                     }
                     break;
                 case 1674318603:
-                    if (str2.equals("divided")) {
-                        str = ", divided highway";
-                        break;
+                    if (var6.equals("divided")) {
+                        var11 = ", divided highway";
                     }
-                    break;
             }
-            String tw = str;
-            return (e.isEmpty() ? base : base + " (" + this.through + " + " + CollectionsKt.joinToString(e, " + ", "", "", -1, "...", null) + ")") + tw;
+
+            if (!var5.isEmpty()) {
+                var8 = this.through;
+                String var12 = CollectionsKt.joinToString(var5, " + ", "", "", -1, "...", null);
+                var4 = var4 + " (" + var8 + " + " + var12 + ")";
+            }
+
+            return var4 + var11;
         }
 
         private static final String sentence$ex$1(int n, String k, String side) {
@@ -335,37 +346,84 @@ public final class LaneFixDialog {
             return (this.types.size() - getEL()) - getER();
         }
 
-        /* JADX WARN: Code restructure failed: missing block: B:6:0x001b, code lost:
-        
-            if (r6 != 0) goto L11;
-         */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public final Result result(boolean remember) {
-            Character kl = (Character) CollectionsKt.firstOrNull((List) this.types);
-            Character ch = null;
-            if (kl != null) {
-                char it = kl.charValue();
-                char it2 = it != 'n' ? (char) 1 : (char) 0;
+        /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+        public final LaneFixDialog.Result result(boolean var1) {
+            int var3;
+            Character var8;
+            Object var9;
+            label62: {
+                var8 = CollectionsKt.firstOrNull(this.types);
+                var9 = null;
+                var3 = 0;
+                if (var8 != null) {
+                    boolean var2;
+                    if (var8 != 'n') {
+                        var2 = true;
+                    } else {
+                        var2 = false;
+                    }
+
+                    if (var2) {
+                        break label62;
+                    }
+                }
+
+                var8 = null;
             }
-            kl = null;
-            Character ch2 = (Character) CollectionsKt.lastOrNull((List) this.types);
-            if (ch2 != null) {
-                char it3 = ch2.charValue();
-                if (it3 != 'n') {
-                    ch = ch2;
+
+            Character var11 = CollectionsKt.lastOrNull(this.types);
+            Character var10 = (Character)var9;
+            if (var11 != null) {
+                boolean var12;
+                if (var11 != 'n') {
+                    var12 = true;
+                } else {
+                    var12 = false;
+                }
+
+                var10 = (Character)var9;
+                if (var12) {
+                    var10 = var11;
                 }
             }
-            Character kr = ch;
-            String kind = kl != null ? result$k(kl) : result$k(kr);
-            String kindR = (kl == null || kr == null || Intrinsics.areEqual(kr, kl)) ? "" : result$k(kr);
-            int through = getThrough();
-            int el = getEL();
-            int er = getER();
-            int size = this.types.size();
-            int i = this.you;
-            return new Result(through, el, er, kind, i >= 0 && i < size ? this.you + 1 : 0, remember, this.way, Intrinsics.areEqual(this.way, "two") ? this.other : 0, kindR);
+
+            if (var8 != null) {
+                var9 = result$k(var8);
+            } else {
+                var9 = result$k(var10);
+            }
+
+            String var16;
+            if (var8 != null && var10 != null && !Intrinsics.areEqual(var10, var8)) {
+                var16 = result$k(var10);
+            } else {
+                var16 = "";
+            }
+
+            int var5 = this.getThrough();
+            int var4 = this.getEL();
+            int var6 = this.getER();
+            int var13 = this.types.size();
+            int var7 = this.you;
+            int var14;
+            if (var7 >= 0 && var7 < var13) {
+                var14 = 1;
+            } else {
+                var14 = 0;
+            }
+
+            if ((var14 != 0)) {
+                var14 = this.you + 1;
+            } else {
+                var14 = 0;
+            }
+
+            String var18 = this.way;
+            if (Intrinsics.areEqual(this.way, "two")) {
+                var3 = this.other;
+            }
+
+            return new LaneFixDialog.Result(var5, var4, var6, (String)var9, (((var14 != 0)) ? 1 : 0), var1, var18, var3, var16);
         }
 
         private static final String result$k(Character c) {
@@ -550,20 +608,20 @@ public final class LaneFixDialog {
         private final ArrayList<Pair<Integer, RectF>> tags;
         private final Paint txt;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public RoadView(Context ctx, Road road, Function0<Unit> changed) {
-            super(ctx);
-            Intrinsics.checkNotNullParameter(ctx, "ctx");
-            Intrinsics.checkNotNullParameter(road, "road");
-            Intrinsics.checkNotNullParameter(changed, "changed");
-            this.road = road;
-            this.changed = changed;
-            this.dn = getResources().getDisplayMetrics().density;
+        /* VF: from Vineflower (jadx: ) */
+        public RoadView(Context var1, LaneFixDialog.Road var2, Function0<Unit> var3) {
+            super(var1);
+            Intrinsics.checkNotNullParameter(var1, "ctx");
+            Intrinsics.checkNotNullParameter(var2, "road");
+            Intrinsics.checkNotNullParameter(var3, "changed");
+            this.road = var2;
+            this.changed = var3;
+            this.dn = this.getResources().getDisplayMetrics().density;
             this.p = new Paint(1);
-            Paint $this$txt_u24lambda_u240 = new Paint(1);
-            $this$txt_u24lambda_u240.setTextAlign(Paint.Align.CENTER);
-            $this$txt_u24lambda_u240.setTypeface(Typeface.DEFAULT_BOLD);
-            this.txt = $this$txt_u24lambda_u240;
+            Paint var4 = new Paint(1);
+            var4.setTextAlign(android.graphics.Paint.Align.CENTER);
+            var4.setTypeface(Typeface.DEFAULT_BOLD);
+            this.txt = var4;
             this.lanes = new ArrayList<>();
             this.tags = new ArrayList<>();
         }
@@ -884,564 +942,264 @@ public final class LaneFixDialog {
         }
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Removed duplicated region for block: B:23:0x0159  */
-    /* JADX WARN: Removed duplicated region for block: B:26:0x01b1  */
-    /* JADX WARN: Removed duplicated region for block: B:29:0x0230  */
-    /* JADX WARN: Removed duplicated region for block: B:32:0x0285  */
-    /* JADX WARN: Removed duplicated region for block: B:39:0x02fb  */
-    /* JADX WARN: Removed duplicated region for block: B:47:0x03ae  */
-    /* JADX WARN: Removed duplicated region for block: B:50:0x03db  */
-    /* JADX WARN: Removed duplicated region for block: B:53:0x0429  */
-    /* JADX WARN: Removed duplicated region for block: B:65:0x04da  */
-    /* JADX WARN: Removed duplicated region for block: B:70:0x05f2  */
-    /* JADX WARN: Removed duplicated region for block: B:73:0x0619  */
-    /* JADX WARN: Removed duplicated region for block: B:76:0x0637  */
-    /* JADX WARN: Removed duplicated region for block: B:79:? A[RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:80:0x05f9  */
-    /* JADX WARN: Removed duplicated region for block: B:84:0x0483  */
-    /* JADX WARN: Removed duplicated region for block: B:87:0x0420  */
-    /* JADX WARN: Removed duplicated region for block: B:88:0x03d1  */
-    /* JADX WARN: Removed duplicated region for block: B:89:0x0393  */
-    /* JADX WARN: Removed duplicated region for block: B:92:0x02ed  */
-    /* JADX WARN: Removed duplicated region for block: B:93:0x0269  */
-    /* JADX WARN: Removed duplicated region for block: B:94:0x01cb  */
-    /* JADX WARN: Removed duplicated region for block: B:95:0x0160  */
-    /* JADX WARN: Type inference failed for: r0v18, types: [T, com.starpilot.starview.LaneFixDialog$RoadView] */
-    /* JADX WARN: Type inference failed for: r1v9, types: [T, com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda9] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void show(final Context ctx, String title, int mapSays, final String street, int preset, boolean rememberDefault, int saved, final Function0<Unit> onForget, final Result last, Bitmap picture, String pictureNote, List<LaneRamps.Ramp> ramps, final Function1<? super String, Unit> onSkip, Result start, final Function1<? super Result, Unit> onSave) {
-        boolean z;
-        final Ref.ObjectRef roadView;
-        RoadView roadView2;
-        int i;
-        LinearLayout left;
-        float d;
-        LinearLayout right;
-        int grey;
-        String str;
-        LinearLayout $this$show_u24lambda_u2428;
-        final Dialog dlg;
-        Ref.ObjectRef paint;
-        LinearLayout $this$show_u24lambda_u2433;
-        LinearLayout $this$show_u24lambda_u2434;
-        LinearLayout bottom;
-        Ref.ObjectRef paint2;
-        Function0 function0;
-        Window window;
-        Window window2;
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(title, "title");
-        Intrinsics.checkNotNullParameter(pictureNote, "pictureNote");
-        Intrinsics.checkNotNullParameter(ramps, "ramps");
-        Intrinsics.checkNotNullParameter(onSave, "onSave");
-        final float d2 = ctx.getResources().getDisplayMetrics().density;
-        final Road road = Road.Companion.of(start == null ? last : start, preset > 0 ? preset : 3);
-        final Dialog $this$show_u24lambda_u240 = new Dialog(ctx);
-        $this$show_u24lambda_u240.requestWindowFeature(1);
-        final int grey2 = Color.rgb(207, 214, 228);
-        final CheckBox $this$show_u24lambda_u246 = new CheckBox(ctx);
-        String str2 = street;
-        if (!(str2 == null || str2.length() == 0)) {
-            if (last != null ? last.getRemember() : rememberDefault) {
-                z = true;
-                $this$show_u24lambda_u246.setChecked(z);
-                String str3 = street;
-                $this$show_u24lambda_u246.setEnabled(!(str3 != null || str3.length() == 0));
-                $this$show_u24lambda_u246.setTextSize(15.0f);
-                $this$show_u24lambda_u246.setTextColor(Color.rgb(170, 178, 194));
-                final TextView $this$show_u24lambda_u247 = show$label(grey2, ctx, d2, "", 22.0f, Color.rgb(111, 227, 161));
-                $this$show_u24lambda_u247.setTypeface(null, 1);
-                final LinearLayout wayRow = new LinearLayout(ctx);
-                final LinearLayout $this$show_u24lambda_u248 = new LinearLayout(ctx);
-                $this$show_u24lambda_u248.setGravity(16);
-                roadView = new Ref.ObjectRef();
-                final Ref.ObjectRef paint3 = new Ref.ObjectRef();
-                paint3.element = new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda9
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit show$lambda$11;
-                        show$lambda$11 = LaneFixDialog.show$lambda$11(wayRow, road, $this$show_u24lambda_u248, $this$show_u24lambda_u246, $this$show_u24lambda_u247, street, paint3, roadView, ctx, d2, grey2);
-                        return show$lambda$11;
-                    }
-                };
-                roadView.element = new RoadView(ctx, road, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda11
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit show$lambda$12;
-                        show$lambda$12 = LaneFixDialog.show$lambda$12(paint);
-                        return show$lambda$12;
-                    }
-                });
-                LinearLayout $this$show_u24lambda_u2421 = new LinearLayout(ctx);
-                $this$show_u24lambda_u2421.addView(show$side(ctx, d2, road, paint3, roadView, grey2, -1));
-                if (roadView.element != 0) {
-                    Intrinsics.throwUninitializedPropertyAccessException("roadView");
-                    roadView2 = null;
-                } else {
-                    roadView2 = (RoadView) roadView.element;
+    /* VF: from Vineflower (jadx: Removed duplicated region;Type inference failed;incorrect) */
+    public final void show(
+        Context var1,
+        String var2,
+        int var3,
+        String var4,
+        int var5,
+        boolean var6,
+        int var7,
+        Function0<Unit> var8,
+        LaneFixDialog.Result var9,
+        Bitmap var10,
+        String var11,
+        List<LaneRamps.Ramp> var12,
+        Function1<? super String, Unit> var13,
+        LaneFixDialog.Result var14,
+        Function1<? super LaneFixDialog.Result, Unit> var15
+    ) {
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "title");
+        Intrinsics.checkNotNullParameter(var11, "pictureNote");
+        Intrinsics.checkNotNullParameter(var12, "ramps");
+        Intrinsics.checkNotNullParameter(var15, "onSave");
+        float var16 = var1.getResources().getDisplayMetrics().density;
+        LaneFixDialog.Road.Companion var20 = LaneFixDialog.Road.Companion;
+        LaneFixDialog.Result var19;
+        if (var14 == null) {
+            var19 = var9;
+        } else {
+            var19 = var14;
+        }
+
+        if (var5 <= 0) {
+            var5 = 3;
+        }
+
+        LaneFixDialog.Road var23 = var20.of(var19, var5);
+        Dialog var63 = new Dialog(var1);
+        var63.requestWindowFeature(1);
+        var5 = Color.rgb(207, 214, 228);
+        CheckBox var21 = new CheckBox(var1);
+        CharSequence var55 = var4;
+        boolean var18;
+        if (var55 != null && var55.length() != 0) {
+            var18 = false;
+        } else {
+            var18 = true;
+        }
+
+        label130: {
+            if (!var18) {
+                if (var9 != null) {
+                    var6 = var9.getRemember();
                 }
-                $this$show_u24lambda_u2421.addView(roadView2, new LinearLayout.LayoutParams(0, -2, 1.0f));
-                $this$show_u24lambda_u2421.addView(show$side(ctx, d2, road, paint3, roadView, grey2, 1));
-                LinearLayout $this$show_u24lambda_u2422 = new LinearLayout(ctx);
-                $this$show_u24lambda_u2422.setOrientation(1);
-                $this$show_u24lambda_u2422.addView(wayRow);
-                $this$show_u24lambda_u2422.addView($this$show_u24lambda_u248);
-                LinearLayout right2 = $this$show_u24lambda_u2422;
-                right2.addView(show$label$default(grey2, ctx, d2, "Lanes going YOUR way. Tap the lane you're in.  + / − add or take away a lane." + (mapSays <= 0 ? "  (map says " + mapSays + ")" : ""), 16.0f, 0, 32, null));
-                right2.addView($this$show_u24lambda_u2421);
-                int i2 = 181;
-                right2.addView(show$label(grey2, ctx, d2, "The tag under an edge lane: normal → EXIT → MERGE (a lane that's only there for a while).", 14.0f, Color.rgb(154, 163, 181)));
-                right2.addView($this$show_u24lambda_u247);
-                right2.addView($this$show_u24lambda_u246);
-                if (saved <= 0) {
-                    i = 0;
-                    right2.addView(show$label(grey2, ctx, d2, "You saved " + saved + " lanes for this stretch before.", 14.0f, Color.rgb(160, 168, 184)));
-                } else {
-                    i = 0;
-                }
-                LinearLayout $this$show_u24lambda_u2423 = new LinearLayout(ctx);
-                $this$show_u24lambda_u2423.setOrientation(1);
-                $this$show_u24lambda_u2423.setPadding(i, i, show$dp(d2, 26), i);
-                if (picture == null) {
-                    ZoomImageView $this$show_u24lambda_u2424 = new ZoomImageView(ctx);
-                    $this$show_u24lambda_u2424.setImageBitmap(picture);
-                    float ratio = picture.getHeight() / Math.max(1, picture.getWidth());
-                    $this$show_u24lambda_u2423.addView($this$show_u24lambda_u2424, new LinearLayout.LayoutParams(show$dp(d2, 560), (int) (show$dp(d2, 560) * ratio)));
-                    if (pictureNote.length() > 0) {
-                        left = $this$show_u24lambda_u2423;
-                        d = d2;
-                        left.addView(show$label(grey2, ctx, d2, pictureNote, 14.0f, Color.rgb(154, 163, 181)));
-                    } else {
-                        left = $this$show_u24lambda_u2423;
-                        d = d2;
-                    }
-                } else {
-                    left = $this$show_u24lambda_u2423;
-                    d = d2;
-                }
-                String str4 = "null cannot be cast to non-null type android.widget.LinearLayout.LayoutParams";
-                if (ramps.isEmpty()) {
-                    for (final LaneRamps.Ramp rp : ramps) {
-                        LinearLayout $this$show_u24lambda_u2425 = new LinearLayout(ctx);
-                        $this$show_u24lambda_u2425.setGravity(16);
-                        int grey3 = grey2;
-                        String str5 = str4;
-                        $this$show_u24lambda_u2425.addView(show$label(grey2, ctx, d, "Map: " + rp.text(), 15.0f, Color.rgb(240, i2, 74)));
-                        TextView $this$show_u24lambda_u2427 = show$chip(ctx, d, "Add it", false, false, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda12
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit show$lambda$26;
-                                show$lambda$26 = LaneFixDialog.show$lambda$26(road, rp, paint3, roadView);
-                                return show$lambda$26;
-                            }
-                        });
-                        ViewGroup.LayoutParams layoutParams = $this$show_u24lambda_u2427.getLayoutParams();
-                        Intrinsics.checkNotNull(layoutParams, str5);
-                        ((LinearLayout.LayoutParams) layoutParams).setMarginStart(show$dp(d, 12));
-                        $this$show_u24lambda_u2425.addView($this$show_u24lambda_u2427);
-                        left.addView($this$show_u24lambda_u2425);
-                        str4 = str5;
-                        right2 = right2;
-                        grey2 = grey3;
-                        i2 = 181;
-                    }
-                    right = right2;
-                    grey = grey2;
-                    str = str4;
-                } else {
-                    right = right2;
-                    grey = grey2;
-                    str = "null cannot be cast to non-null type android.widget.LinearLayout.LayoutParams";
-                }
-                $this$show_u24lambda_u2428 = new LinearLayout(ctx);
-                $this$show_u24lambda_u2428.setPadding(0, show$dp(d, 12), 0, 0);
-                if (last == null) {
-                    dlg = $this$show_u24lambda_u240;
-                    $this$show_u24lambda_u2428.addView(show$chip(ctx, d, "Same as last", true, false, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda13
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit show$lambda$29;
-                            show$lambda$29 = LaneFixDialog.show$lambda$29(last, $this$show_u24lambda_u246, $this$show_u24lambda_u240, onSave);
-                            return show$lambda$29;
-                        }
-                    }));
-                } else {
-                    dlg = $this$show_u24lambda_u240;
-                }
-                if (onSkip == null) {
-                    float f = d;
-                    paint = paint3;
-                    $this$show_u24lambda_u2428.addView(show$chip(ctx, f, "Skip", false, false, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda14
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit show$lambda$30;
-                            show$lambda$30 = LaneFixDialog.show$lambda$30(dlg, onSkip);
-                            return show$lambda$30;
-                        }
-                    }));
-                    $this$show_u24lambda_u2428.addView(show$chip(ctx, f, "Intersection", false, false, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda15
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit show$lambda$31;
-                            show$lambda$31 = LaneFixDialog.show$lambda$31(dlg, onSkip);
-                            return show$lambda$31;
-                        }
-                    }));
-                    $this$show_u24lambda_u2428.addView(show$chip(ctx, f, "Changing lanes", false, false, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda16
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit show$lambda$32;
-                            show$lambda$32 = LaneFixDialog.show$lambda$32(dlg, onSkip);
-                            return show$lambda$32;
-                        }
-                    }));
-                } else {
-                    paint = paint3;
-                }
-                if ($this$show_u24lambda_u2428.getChildCount() > 0) {
-                    left.addView($this$show_u24lambda_u2428);
-                }
-                if (last != null && start == null) {
-                    left.addView(show$label(grey, ctx, d, "Started from your last fix: " + last.text(), 14.0f, Color.rgb(154, 163, 181)));
-                }
-                $this$show_u24lambda_u2433 = new LinearLayout(ctx);
-                if (picture == null && ramps.isEmpty()) {
-                    $this$show_u24lambda_u2433.setOrientation(1);
-                    if (left.getChildCount() > 0) {
-                        $this$show_u24lambda_u2433.addView(left);
-                    }
-                    $this$show_u24lambda_u2433.addView(right);
-                    $this$show_u24lambda_u2434 = new LinearLayout(ctx);
-                    $this$show_u24lambda_u2434.setGravity(16);
-                    $this$show_u24lambda_u2434.setPadding(0, show$dp(d, 14), 0, 0);
-                    if (saved > 0 || onForget == null) {
-                        bottom = $this$show_u24lambda_u2434;
-                    } else {
-                        bottom = $this$show_u24lambda_u2434;
-                        TextView $this$show_u24lambda_u2440 = show$bbtn(ctx, d, "Delete saved count", Color.rgb(48, 54, 66), Color.rgb(255, 150, 150), new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda17
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit show$lambda$39;
-                                show$lambda$39 = LaneFixDialog.show$lambda$39(dlg, onForget);
-                                return show$lambda$39;
-                            }
-                        });
-                        ViewGroup.LayoutParams layoutParams2 = $this$show_u24lambda_u2440.getLayoutParams();
-                        Intrinsics.checkNotNull(layoutParams2, str);
-                        ((LinearLayout.LayoutParams) layoutParams2).setMarginStart(0);
-                        bottom.addView($this$show_u24lambda_u2440);
-                    }
-                    bottom.addView(new View(ctx), new LinearLayout.LayoutParams(0, 1, 1.0f));
-                    bottom.addView(show$bbtn(ctx, d, "Cancel", Color.rgb(48, 54, 66), -1, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda1
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit show$lambda$41;
-                            show$lambda$41 = LaneFixDialog.show$lambda$41(dlg);
-                            return show$lambda$41;
-                        }
-                    }));
-                    bottom.addView(show$bbtn(ctx, d, "Save", Color.rgb(111, 227, 161), -16777216, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda2
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit show$lambda$42;
-                            show$lambda$42 = LaneFixDialog.show$lambda$42(road, $this$show_u24lambda_u246, dlg, onSave);
-                            return show$lambda$42;
-                        }
-                    }));
-                    LinearLayout $this$show_u24lambda_u2445 = new LinearLayout(ctx);
-                    $this$show_u24lambda_u2445.setOrientation(1);
-                    $this$show_u24lambda_u2445.setPadding(show$dp(d, 28), show$dp(d, 20), show$dp(d, 28), show$dp(d, 20));
-                    GradientDrawable $this$show_u24lambda_u2445_u24lambda_u2443 = new GradientDrawable();
-                    $this$show_u24lambda_u2445_u24lambda_u2443.setCornerRadius(22 * d);
-                    $this$show_u24lambda_u2445_u24lambda_u2443.setColor(Color.rgb(27, 31, 39));
-                    $this$show_u24lambda_u2445.setBackground($this$show_u24lambda_u2445_u24lambda_u2443);
-                    TextView $this$show_u24lambda_u2445_u24lambda_u2444 = show$label(grey, ctx, d, title, 24.0f, -1);
-                    $this$show_u24lambda_u2445_u24lambda_u2444.setTypeface(null, 1);
-                    $this$show_u24lambda_u2445.addView($this$show_u24lambda_u2445_u24lambda_u2444);
-                    $this$show_u24lambda_u2445.addView($this$show_u24lambda_u2433);
-                    $this$show_u24lambda_u2445.addView(bottom);
-                    $this$show_u24lambda_u246.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda10
-                        @Override // android.widget.CompoundButton.OnCheckedChangeListener
-                        public final void onCheckedChanged(CompoundButton compoundButton, boolean z2) {
-                            LaneFixDialog.show$lambda$46(compoundButton, z2);
-                        }
-                    });
-                    paint2 = paint;
-                    if (paint2.element != 0) {
-                        Intrinsics.throwUninitializedPropertyAccessException("paint");
-                        function0 = null;
-                    } else {
-                        function0 = (Function0) paint2.element;
-                    }
-                    function0.invoke();
-                    ScrollView $this$show_u24lambda_u2447 = new ScrollView(ctx);
-                    $this$show_u24lambda_u2447.addView($this$show_u24lambda_u2445);
-                    dlg.setContentView($this$show_u24lambda_u2447);
-                    window = dlg.getWindow();
-                    if (window != null) {
-                        window.setBackgroundDrawable(new ColorDrawable(0));
-                        Unit unit = Unit.INSTANCE;
-                    }
-                    dlg.show();
-                    DisplayMetrics dm = ctx.getResources().getDisplayMetrics();
-                    window2 = dlg.getWindow();
-                    if (window2 == null) {
-                        window2.setLayout((int) (dm.widthPixels * 0.96f), -2);
-                        Unit unit2 = Unit.INSTANCE;
-                        return;
-                    }
-                    return;
-                }
-                $this$show_u24lambda_u2433.addView(left, new LinearLayout.LayoutParams(-2, -2));
-                $this$show_u24lambda_u2433.addView(right, new LinearLayout.LayoutParams(0, -2, 1.0f));
-                $this$show_u24lambda_u2434 = new LinearLayout(ctx);
-                $this$show_u24lambda_u2434.setGravity(16);
-                $this$show_u24lambda_u2434.setPadding(0, show$dp(d, 14), 0, 0);
-                if (saved > 0) {
-                }
-                bottom = $this$show_u24lambda_u2434;
-                bottom.addView(new View(ctx), new LinearLayout.LayoutParams(0, 1, 1.0f));
-                bottom.addView(show$bbtn(ctx, d, "Cancel", Color.rgb(48, 54, 66), -1, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda1
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit show$lambda$41;
-                        show$lambda$41 = LaneFixDialog.show$lambda$41(dlg);
-                        return show$lambda$41;
-                    }
-                }));
-                bottom.addView(show$bbtn(ctx, d, "Save", Color.rgb(111, 227, 161), -16777216, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda2
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit show$lambda$42;
-                        show$lambda$42 = LaneFixDialog.show$lambda$42(road, $this$show_u24lambda_u246, dlg, onSave);
-                        return show$lambda$42;
-                    }
-                }));
-                LinearLayout $this$show_u24lambda_u24452 = new LinearLayout(ctx);
-                $this$show_u24lambda_u24452.setOrientation(1);
-                $this$show_u24lambda_u24452.setPadding(show$dp(d, 28), show$dp(d, 20), show$dp(d, 28), show$dp(d, 20));
-                GradientDrawable $this$show_u24lambda_u2445_u24lambda_u24432 = new GradientDrawable();
-                $this$show_u24lambda_u2445_u24lambda_u24432.setCornerRadius(22 * d);
-                $this$show_u24lambda_u2445_u24lambda_u24432.setColor(Color.rgb(27, 31, 39));
-                $this$show_u24lambda_u24452.setBackground($this$show_u24lambda_u2445_u24lambda_u24432);
-                TextView $this$show_u24lambda_u2445_u24lambda_u24442 = show$label(grey, ctx, d, title, 24.0f, -1);
-                $this$show_u24lambda_u2445_u24lambda_u24442.setTypeface(null, 1);
-                $this$show_u24lambda_u24452.addView($this$show_u24lambda_u2445_u24lambda_u24442);
-                $this$show_u24lambda_u24452.addView($this$show_u24lambda_u2433);
-                $this$show_u24lambda_u24452.addView(bottom);
-                $this$show_u24lambda_u246.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda10
-                    @Override // android.widget.CompoundButton.OnCheckedChangeListener
-                    public final void onCheckedChanged(CompoundButton compoundButton, boolean z2) {
-                        LaneFixDialog.show$lambda$46(compoundButton, z2);
-                    }
-                });
-                paint2 = paint;
-                if (paint2.element != 0) {
-                }
-                function0.invoke();
-                ScrollView $this$show_u24lambda_u24472 = new ScrollView(ctx);
-                $this$show_u24lambda_u24472.addView($this$show_u24lambda_u24452);
-                dlg.setContentView($this$show_u24lambda_u24472);
-                window = dlg.getWindow();
-                if (window != null) {
-                }
-                dlg.show();
-                DisplayMetrics dm2 = ctx.getResources().getDisplayMetrics();
-                window2 = dlg.getWindow();
-                if (window2 == null) {
+
+                if (var6) {
+                    var6 = true;
+                    break label130;
                 }
             }
+
+            var6 = false;
         }
-        z = false;
-        $this$show_u24lambda_u246.setChecked(z);
-        String str32 = street;
-        $this$show_u24lambda_u246.setEnabled(!(str32 != null || str32.length() == 0));
-        $this$show_u24lambda_u246.setTextSize(15.0f);
-        $this$show_u24lambda_u246.setTextColor(Color.rgb(170, 178, 194));
-        final TextView $this$show_u24lambda_u2472 = show$label(grey2, ctx, d2, "", 22.0f, Color.rgb(111, 227, 161));
-        $this$show_u24lambda_u2472.setTypeface(null, 1);
-        final LinearLayout wayRow2 = new LinearLayout(ctx);
-        final LinearLayout $this$show_u24lambda_u2482 = new LinearLayout(ctx);
-        $this$show_u24lambda_u2482.setGravity(16);
-        roadView = new Ref.ObjectRef();
-        final Ref.ObjectRef paint32 = new Ref.ObjectRef();
-        paint32.element = new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda9
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit show$lambda$11;
-                show$lambda$11 = LaneFixDialog.show$lambda$11(wayRow2, road, $this$show_u24lambda_u2482, $this$show_u24lambda_u246, $this$show_u24lambda_u2472, street, paint32, roadView, ctx, d2, grey2);
-                return show$lambda$11;
+
+        var21.setChecked(var6);
+        CharSequence var56 = var4;
+        if (var56 != null && var56.length() != 0) {
+            var18 = false;
+        } else {
+            var18 = true;
+        }
+
+        var21.setEnabled(var18 ^ true);
+        var21.setTextSize(15.0F);
+        var21.setTextColor(Color.rgb(170, 178, 194));
+        TextView var25 = show$label(var5, var1, var16, "", 22.0F, Color.rgb(111, 227, 161));
+        var25.setTypeface(null, 1);
+        LinearLayout var28 = new LinearLayout(var1);
+        LinearLayout var27 = new LinearLayout(var1);
+        var27.setGravity(16);
+        ObjectRef var24 = new ObjectRef();
+        ObjectRef var22 = new ObjectRef();
+        var22.element = (T)(new LaneFixDialog$$ExternalSyntheticLambda9(var28, var23, var27, var21, var25, var4, var22, var24, var1, var16, var5));
+        var24.element = (T)(new LaneFixDialog.RoadView(var1, var23, new LaneFixDialog$$ExternalSyntheticLambda11(var22)));
+        LinearLayout var26 = new LinearLayout(var1);
+        var26.addView((View)show$side(var1, var16, var23, var22, var24, var5, -1));
+        LaneFixDialog.RoadView var39;
+        if (var24.element == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("roadView");
+            var39 = null;
+        } else {
+            var39 = (LaneFixDialog.RoadView)var24.element;
+        }
+
+        var26.addView(var39, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
+        var26.addView((View)show$side(var1, var16, var23, var22, var24, var5, 1));
+        LinearLayout var57 = new LinearLayout(var1);
+        var57.setOrientation(1);
+        var57.addView((View)var28);
+        var57.addView((View)var27);
+        if (var3 > 0) {
+            var4 = "  (map says " + var3 + ")";
+        } else {
+            var4 = "";
+        }
+
+        String var66 = "Lanes going YOUR way. Tap the lane you're in.  + / − add or take away a lane." + var4;
+        var57.addView((View)show$label$default(var5, var1, var16, var66, 16.0F, 0, 32, null));
+        var57.addView((View)var26);
+        var57.addView(
+            (View)show$label(
+                var5, var1, var16, "The tag under an edge lane: normal → EXIT → MERGE (a lane that's only there for a while).", 14.0F, Color.rgb(154, 163, 181)
+            )
+        );
+        var57.addView((View)var25);
+        var57.addView((View)var21);
+        if (var7 > 0) {
+            var57.addView((View)show$label(var5, var1, var16, "You saved " + var7 + " lanes for this stretch before.", 14.0F, Color.rgb(160, 168, 184)));
+        }
+
+        LinearLayout var64 = new LinearLayout(var1);
+        var64.setOrientation(1);
+        var64.setPadding(0, 0, show$dp(var16, 26), 0);
+        if (var10 != null) {
+            ZoomImageView var58 = new ZoomImageView(var1);
+            var58.setImageBitmap(var10);
+            float var17 = (float)var10.getHeight() / Math.max(1, var10.getWidth());
+            var64.addView((View)var58, (android.view.ViewGroup.LayoutParams)(new LayoutParams(show$dp(var16, 560), (int)(show$dp(var16, 560) * var17))));
+            boolean var37;
+            if (var11.length() > 0) {
+                var37 = true;
+            } else {
+                var37 = false;
             }
-        };
-        roadView.element = new RoadView(ctx, road, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda11
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit show$lambda$12;
-                show$lambda$12 = LaneFixDialog.show$lambda$12(paint);
-                return show$lambda$12;
-            }
-        });
-        LinearLayout $this$show_u24lambda_u24212 = new LinearLayout(ctx);
-        $this$show_u24lambda_u24212.addView(show$side(ctx, d2, road, paint32, roadView, grey2, -1));
-        if (roadView.element != 0) {
-        }
-        $this$show_u24lambda_u24212.addView(roadView2, new LinearLayout.LayoutParams(0, -2, 1.0f));
-        $this$show_u24lambda_u24212.addView(show$side(ctx, d2, road, paint32, roadView, grey2, 1));
-        LinearLayout $this$show_u24lambda_u24222 = new LinearLayout(ctx);
-        $this$show_u24lambda_u24222.setOrientation(1);
-        $this$show_u24lambda_u24222.addView(wayRow2);
-        $this$show_u24lambda_u24222.addView($this$show_u24lambda_u2482);
-        LinearLayout right22 = $this$show_u24lambda_u24222;
-        right22.addView(show$label$default(grey2, ctx, d2, "Lanes going YOUR way. Tap the lane you're in.  + / − add or take away a lane." + (mapSays <= 0 ? "  (map says " + mapSays + ")" : ""), 16.0f, 0, 32, null));
-        right22.addView($this$show_u24lambda_u24212);
-        int i22 = 181;
-        right22.addView(show$label(grey2, ctx, d2, "The tag under an edge lane: normal → EXIT → MERGE (a lane that's only there for a while).", 14.0f, Color.rgb(154, 163, 181)));
-        right22.addView($this$show_u24lambda_u2472);
-        right22.addView($this$show_u24lambda_u246);
-        if (saved <= 0) {
-        }
-        LinearLayout $this$show_u24lambda_u24232 = new LinearLayout(ctx);
-        $this$show_u24lambda_u24232.setOrientation(1);
-        $this$show_u24lambda_u24232.setPadding(i, i, show$dp(d2, 26), i);
-        if (picture == null) {
-        }
-        String str42 = "null cannot be cast to non-null type android.widget.LinearLayout.LayoutParams";
-        if (ramps.isEmpty()) {
-        }
-        $this$show_u24lambda_u2428 = new LinearLayout(ctx);
-        $this$show_u24lambda_u2428.setPadding(0, show$dp(d, 12), 0, 0);
-        if (last == null) {
-        }
-        if (onSkip == null) {
-        }
-        if ($this$show_u24lambda_u2428.getChildCount() > 0) {
-        }
-        if (last != null) {
-            left.addView(show$label(grey, ctx, d, "Started from your last fix: " + last.text(), 14.0f, Color.rgb(154, 163, 181)));
-        }
-        $this$show_u24lambda_u2433 = new LinearLayout(ctx);
-        if (picture == null) {
-            $this$show_u24lambda_u2433.setOrientation(1);
-            if (left.getChildCount() > 0) {
-            }
-            $this$show_u24lambda_u2433.addView(right);
-            $this$show_u24lambda_u2434 = new LinearLayout(ctx);
-            $this$show_u24lambda_u2434.setGravity(16);
-            $this$show_u24lambda_u2434.setPadding(0, show$dp(d, 14), 0, 0);
-            if (saved > 0) {
-            }
-            bottom = $this$show_u24lambda_u2434;
-            bottom.addView(new View(ctx), new LinearLayout.LayoutParams(0, 1, 1.0f));
-            bottom.addView(show$bbtn(ctx, d, "Cancel", Color.rgb(48, 54, 66), -1, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda1
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit show$lambda$41;
-                    show$lambda$41 = LaneFixDialog.show$lambda$41(dlg);
-                    return show$lambda$41;
-                }
-            }));
-            bottom.addView(show$bbtn(ctx, d, "Save", Color.rgb(111, 227, 161), -16777216, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda2
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit show$lambda$42;
-                    show$lambda$42 = LaneFixDialog.show$lambda$42(road, $this$show_u24lambda_u246, dlg, onSave);
-                    return show$lambda$42;
-                }
-            }));
-            LinearLayout $this$show_u24lambda_u244522 = new LinearLayout(ctx);
-            $this$show_u24lambda_u244522.setOrientation(1);
-            $this$show_u24lambda_u244522.setPadding(show$dp(d, 28), show$dp(d, 20), show$dp(d, 28), show$dp(d, 20));
-            GradientDrawable $this$show_u24lambda_u2445_u24lambda_u244322 = new GradientDrawable();
-            $this$show_u24lambda_u2445_u24lambda_u244322.setCornerRadius(22 * d);
-            $this$show_u24lambda_u2445_u24lambda_u244322.setColor(Color.rgb(27, 31, 39));
-            $this$show_u24lambda_u244522.setBackground($this$show_u24lambda_u2445_u24lambda_u244322);
-            TextView $this$show_u24lambda_u2445_u24lambda_u244422 = show$label(grey, ctx, d, title, 24.0f, -1);
-            $this$show_u24lambda_u2445_u24lambda_u244422.setTypeface(null, 1);
-            $this$show_u24lambda_u244522.addView($this$show_u24lambda_u2445_u24lambda_u244422);
-            $this$show_u24lambda_u244522.addView($this$show_u24lambda_u2433);
-            $this$show_u24lambda_u244522.addView(bottom);
-            $this$show_u24lambda_u246.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda10
-                @Override // android.widget.CompoundButton.OnCheckedChangeListener
-                public final void onCheckedChanged(CompoundButton compoundButton, boolean z2) {
-                    LaneFixDialog.show$lambda$46(compoundButton, z2);
-                }
-            });
-            paint2 = paint;
-            if (paint2.element != 0) {
-            }
-            function0.invoke();
-            ScrollView $this$show_u24lambda_u244722 = new ScrollView(ctx);
-            $this$show_u24lambda_u244722.addView($this$show_u24lambda_u244522);
-            dlg.setContentView($this$show_u24lambda_u244722);
-            window = dlg.getWindow();
-            if (window != null) {
-            }
-            dlg.show();
-            DisplayMetrics dm22 = ctx.getResources().getDisplayMetrics();
-            window2 = dlg.getWindow();
-            if (window2 == null) {
+
+            if (var37) {
+                var64.addView((View)show$label(var5, var1, var16, var11, 14.0F, Color.rgb(154, 163, 181)));
             }
         }
-        $this$show_u24lambda_u2433.addView(left, new LinearLayout.LayoutParams(-2, -2));
-        $this$show_u24lambda_u2433.addView(right, new LinearLayout.LayoutParams(0, -2, 1.0f));
-        $this$show_u24lambda_u2434 = new LinearLayout(ctx);
-        $this$show_u24lambda_u2434.setGravity(16);
-        $this$show_u24lambda_u2434.setPadding(0, show$dp(d, 14), 0, 0);
-        if (saved > 0) {
-        }
-        bottom = $this$show_u24lambda_u2434;
-        bottom.addView(new View(ctx), new LinearLayout.LayoutParams(0, 1, 1.0f));
-        bottom.addView(show$bbtn(ctx, d, "Cancel", Color.rgb(48, 54, 66), -1, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda1
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit show$lambda$41;
-                show$lambda$41 = LaneFixDialog.show$lambda$41(dlg);
-                return show$lambda$41;
+
+        var6 = var12.isEmpty();
+        String var59 = "null cannot be cast to non-null type android.widget.LinearLayout.LayoutParams";
+        LinearLayout var52;
+        if (!var6) {
+            Iterator var65 = var12.iterator();
+            var3 = var5;
+            var52 = var57;
+            var4 = var59;
+
+            while (var65.hasNext()) {
+                LaneRamps.Ramp var67 = (LaneRamps.Ramp)var65.next();
+                LinearLayout var60 = new LinearLayout(var1);
+                var60.setGravity(16);
+                String var69 = var67.text();
+                var60.addView((View)show$label(var3, var1, var16, "Map: " + var69, 15.0F, Color.rgb(240, 181, 74)));
+                TextView var70 = show$chip(var1, var16, "Add it", false, false, new LaneFixDialog$$ExternalSyntheticLambda12(var23, var67, var22, var24));
+                android.view.ViewGroup.LayoutParams var68 = var70.getLayoutParams();
+                Intrinsics.checkNotNull(var68, var4);
+                ((android.widget.LinearLayout.LayoutParams)var68).setMarginStart(show$dp(var16, 12));
+                var60.addView((View)var70);
+                var64.addView((View)var60);
             }
-        }));
-        bottom.addView(show$bbtn(ctx, d, "Save", Color.rgb(111, 227, 161), -16777216, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda2
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit show$lambda$42;
-                show$lambda$42 = LaneFixDialog.show$lambda$42(road, $this$show_u24lambda_u246, dlg, onSave);
-                return show$lambda$42;
-            }
-        }));
-        LinearLayout $this$show_u24lambda_u2445222 = new LinearLayout(ctx);
-        $this$show_u24lambda_u2445222.setOrientation(1);
-        $this$show_u24lambda_u2445222.setPadding(show$dp(d, 28), show$dp(d, 20), show$dp(d, 28), show$dp(d, 20));
-        GradientDrawable $this$show_u24lambda_u2445_u24lambda_u2443222 = new GradientDrawable();
-        $this$show_u24lambda_u2445_u24lambda_u2443222.setCornerRadius(22 * d);
-        $this$show_u24lambda_u2445_u24lambda_u2443222.setColor(Color.rgb(27, 31, 39));
-        $this$show_u24lambda_u2445222.setBackground($this$show_u24lambda_u2445_u24lambda_u2443222);
-        TextView $this$show_u24lambda_u2445_u24lambda_u2444222 = show$label(grey, ctx, d, title, 24.0f, -1);
-        $this$show_u24lambda_u2445_u24lambda_u2444222.setTypeface(null, 1);
-        $this$show_u24lambda_u2445222.addView($this$show_u24lambda_u2445_u24lambda_u2444222);
-        $this$show_u24lambda_u2445222.addView($this$show_u24lambda_u2433);
-        $this$show_u24lambda_u2445222.addView(bottom);
-        $this$show_u24lambda_u246.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda10
-            @Override // android.widget.CompoundButton.OnCheckedChangeListener
-            public final void onCheckedChanged(CompoundButton compoundButton, boolean z2) {
-                LaneFixDialog.show$lambda$46(compoundButton, z2);
-            }
-        });
-        paint2 = paint;
-        if (paint2.element != 0) {
+        } else {
+            var3 = var5;
+            String var61 = "null cannot be cast to non-null type android.widget.LinearLayout.LayoutParams";
+            var52 = var57;
+            var4 = var61;
         }
-        function0.invoke();
-        ScrollView $this$show_u24lambda_u2447222 = new ScrollView(ctx);
-        $this$show_u24lambda_u2447222.addView($this$show_u24lambda_u2445222);
-        dlg.setContentView($this$show_u24lambda_u2447222);
-        window = dlg.getWindow();
-        if (window != null) {
+
+        LinearLayout var62 = new LinearLayout(var1);
+        var62.setPadding(0, show$dp(var16, 12), 0, 0);
+        if (var9 != null) {
+            var62.addView((View)show$chip(var1, var16, "Same as last", true, false, new LaneFixDialog$$ExternalSyntheticLambda13(var9, var21, var63, var15)));
         }
-        dlg.show();
-        DisplayMetrics dm222 = ctx.getResources().getDisplayMetrics();
-        window2 = dlg.getWindow();
-        if (window2 == null) {
+
+        if (var13 != null) {
+            var62.addView((View)show$chip(var1, var16, "Skip", false, false, new LaneFixDialog$$ExternalSyntheticLambda14(var63, var13)));
+            var62.addView((View)show$chip(var1, var16, "Intersection", false, false, new LaneFixDialog$$ExternalSyntheticLambda15(var63, var13)));
+            var62.addView((View)show$chip(var1, var16, "Changing lanes", false, false, new LaneFixDialog$$ExternalSyntheticLambda16(var63, var13)));
+        }
+
+        if (var62.getChildCount() > 0) {
+            var64.addView((View)var62);
+        }
+
+        if (var9 != null && var14 == null) {
+            String var49 = var9.text();
+            var64.addView((View)show$label(var3, var1, var16, "Started from your last fix: " + var49, 14.0F, Color.rgb(154, 163, 181)));
+        }
+
+        LinearLayout var50 = new LinearLayout(var1);
+        if (var10 == null && var12.isEmpty()) {
+            var50.setOrientation(1);
+            if (var64.getChildCount() > 0) {
+                var50.addView((View)var64);
+            }
+
+            var50.addView((View)var52);
+        } else {
+            var50.addView((View)var64, (android.view.ViewGroup.LayoutParams)(new LayoutParams(-2, -2)));
+            var50.addView((View)var52, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
+        }
+
+        LinearLayout var51 = new LinearLayout(var1);
+        var51.setGravity(16);
+        var51.setPadding(0, show$dp(var16, 14), 0, 0);
+        if (var7 > 0 && var8 != null) {
+            TextView var47 = show$bbtn(
+                var1, var16, "Delete saved count", Color.rgb(48, 54, 66), Color.rgb(255, 150, 150), new LaneFixDialog$$ExternalSyntheticLambda17(var63, var8)
+            );
+            android.view.ViewGroup.LayoutParams var53 = var47.getLayoutParams();
+            Intrinsics.checkNotNull(var53, var4);
+            ((android.widget.LinearLayout.LayoutParams)var53).setMarginStart(0);
+            var51.addView((View)var47);
+        }
+
+        var51.addView(new View(var1), (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, 1, 1.0F)));
+        var51.addView((View)show$bbtn(var1, var16, "Cancel", Color.rgb(48, 54, 66), -1, new LaneFixDialog$$ExternalSyntheticLambda1(var63)));
+        var51.addView(
+            (View)show$bbtn(var1, var16, "Save", Color.rgb(111, 227, 161), -16777216, new LaneFixDialog$$ExternalSyntheticLambda2(var23, var21, var63, var15))
+        );
+        LinearLayout var43 = new LinearLayout(var1);
+        var43.setOrientation(1);
+        var43.setPadding(show$dp(var16, 28), show$dp(var16, 20), show$dp(var16, 28), show$dp(var16, 20));
+        GradientDrawable var48 = new GradientDrawable();
+        var48.setCornerRadius(22 * var16);
+        var48.setColor(Color.rgb(27, 31, 39));
+        var43.setBackground((Drawable)var48);
+        TextView var31 = show$label(var3, var1, var16, var2, 24.0F, -1);
+        var31.setTypeface(null, 1);
+        var43.addView((View)var31);
+        var43.addView((View)var50);
+        var43.addView((View)var51);
+        var21.setOnCheckedChangeListener(new LaneFixDialog$$ExternalSyntheticLambda10());
+        Function0 var32;
+        if (var22.element == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("paint");
+            var32 = null;
+        } else {
+            var32 = (Function0)var22.element;
+        }
+
+        var32.invoke();
+        ScrollView var33 = new ScrollView(var1);
+        var33.addView((View)var43);
+        var63.setContentView((View)var33);
+        Window var34 = var63.getWindow();
+        if (var34 != null) {
+            var34.setBackgroundDrawable((Drawable)(new ColorDrawable(0)));
+            Unit var35 = Unit.INSTANCE;
+        }
+
+        var63.show();
+        DisplayMetrics var29 = var1.getResources().getDisplayMetrics();
+        Window var36 = var63.getWindow();
+        if (var36 != null) {
+            var36.setLayout((int)(var29.widthPixels * 0.96F), -2);
+            Unit var30 = Unit.INSTANCE;
         }
     }
 
@@ -1552,57 +1310,72 @@ public final class LaneFixDialog {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final Unit show$lambda$11$lambda$9(Road $road, String $k, Ref.ObjectRef $paint, Ref.ObjectRef $roadView) {
-        Function0 function0;
-        $road.setWay(Intrinsics.areEqual($road.getWay(), $k) ? "" : $k);
-        if (!Intrinsics.areEqual($road.getWay(), "two")) {
-            $road.setOther(0);
+    /* VF: from Vineflower (jadx: ) */
+    public static final Unit show$lambda$11$lambda$9(LaneFixDialog.Road var0, String var1, ObjectRef var2, ObjectRef var3) {
+        if (Intrinsics.areEqual(var0.getWay(), var1)) {
+            var1 = "";
         }
-        RoadView roadView = null;
-        if ($paint.element == 0) {
+
+        var0.setWay(var1);
+        if (!Intrinsics.areEqual(var0.getWay(), "two")) {
+            var0.setOther(0);
+        }
+
+        Function0 var4 = var2.element;
+        Object var7 = null;
+        if (var4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
-            function0 = null;
+            var4 = null;
         } else {
-            function0 = (Function0) $paint.element;
+            var4 = (Function0)var2.element;
         }
-        function0.invoke();
-        if ($roadView.element == 0) {
+
+        var4.invoke();
+        LaneFixDialog.RoadView var6;
+        if (var3.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("roadView");
+            var6 = (LaneFixDialog.RoadView)var7;
         } else {
-            roadView = (RoadView) $roadView.element;
+            var6 = (LaneFixDialog.RoadView)var3.element;
         }
-        roadView.invalidate();
+
+        var6.invalidate();
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final Unit show$lambda$11$lambda$10(Road $road, int $k, Ref.ObjectRef $paint, Ref.ObjectRef $roadView) {
-        Function0 function0;
-        $road.setOther($road.getOther() == $k ? 0 : $k);
-        RoadView roadView = null;
-        if ($paint.element == 0) {
+    /* VF: from Vineflower (jadx: ) */
+    public static final Unit show$lambda$11$lambda$10(LaneFixDialog.Road var0, int var1, ObjectRef var2, ObjectRef var3) {
+        if (var0.getOther() == var1) {
+            var1 = 0;
+        }
+
+        var0.setOther(var1);
+        Function0 var5 = var2.element;
+        Object var4 = null;
+        if (var5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
-            function0 = null;
+            var5 = null;
         } else {
-            function0 = (Function0) $paint.element;
+            var5 = (Function0)var2.element;
         }
-        function0.invoke();
-        if ($roadView.element == 0) {
+
+        var5.invoke();
+        LaneFixDialog.RoadView var7;
+        if (var3.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("roadView");
+            var7 = (LaneFixDialog.RoadView)var4;
         } else {
-            roadView = (RoadView) $roadView.element;
+            var7 = (LaneFixDialog.RoadView)var3.element;
         }
-        roadView.invalidate();
+
+        var7.invalidate();
         return Unit.INSTANCE;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit show$lambda$12(Ref.ObjectRef $paint) {
         Function0 function0;
-        if ($paint.element == 0) {
+        if (!$paint.element) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
             function0 = null;
         } else {
@@ -1635,25 +1408,28 @@ public final class LaneFixDialog {
         return $this$show_u24pm_u24lambda_u2416;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final void show$pm$lambda$16$lambda$14(Function0 $click, Ref.ObjectRef $paint, Ref.ObjectRef $roadView, View it) {
-        Function0 function0;
-        $click.invoke();
-        RoadView roadView = null;
-        if ($paint.element == 0) {
+    /* VF: from Vineflower (jadx: ) */
+    public static final void show$pm$lambda$16$lambda$14(Function0 var0, ObjectRef var1, ObjectRef var2, View var3) {
+        var0.invoke();
+        Function0 var4 = var1.element;
+        Object var7 = null;
+        if (var4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
-            function0 = null;
+            var4 = null;
         } else {
-            function0 = (Function0) $paint.element;
+            var4 = (Function0)var1.element;
         }
-        function0.invoke();
-        if ($roadView.element == 0) {
+
+        var4.invoke();
+        LaneFixDialog.RoadView var6;
+        if (var2.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("roadView");
+            var6 = (LaneFixDialog.RoadView)var7;
         } else {
-            roadView = (RoadView) $roadView.element;
+            var6 = (LaneFixDialog.RoadView)var2.element;
         }
-        roadView.invalidate();
+
+        var6.invalidate();
     }
 
     private static final LinearLayout show$side(Context $ctx, float d, final Road road, Ref.ObjectRef<Function0<Unit>> objectRef, Ref.ObjectRef<RoadView> objectRef2, int grey, final int s) {
@@ -1700,25 +1476,35 @@ public final class LaneFixDialog {
         function1.invoke(r);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final Unit show$lambda$26(Road $road, LaneRamps.Ramp $rp, Ref.ObjectRef $paint, Ref.ObjectRef $roadView) {
-        Function0 function0;
-        $road.addExtra(Intrinsics.areEqual($rp.getKind(), "exit") ? 'x' : 'm', $rp.getSide());
-        RoadView roadView = null;
-        if ($paint.element == 0) {
+    /* VF: from Vineflower (jadx: ) */
+    public static final Unit show$lambda$26(LaneFixDialog.Road var0, LaneRamps.Ramp var1, ObjectRef var2, ObjectRef var3) {
+        char var4;
+        if (Intrinsics.areEqual(var1.getKind(), "exit")) {
+            var4 = 'x';
+        } else {
+            var4 = 'm';
+        }
+
+        var0.addExtra(var4, var1.getSide());
+        Function0 var5 = var2.element;
+        Object var8 = null;
+        if (var5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
-            function0 = null;
+            var5 = null;
         } else {
-            function0 = (Function0) $paint.element;
+            var5 = (Function0)var2.element;
         }
-        function0.invoke();
-        if ($roadView.element == 0) {
+
+        var5.invoke();
+        LaneFixDialog.RoadView var7;
+        if (var3.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("roadView");
+            var7 = (LaneFixDialog.RoadView)var8;
         } else {
-            roadView = (RoadView) $roadView.element;
+            var7 = (LaneFixDialog.RoadView)var3.element;
         }
-        roadView.invalidate();
+
+        var7.invalidate();
         return Unit.INSTANCE;
     }
 

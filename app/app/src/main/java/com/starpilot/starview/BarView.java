@@ -16,13 +16,13 @@ public final class BarView extends View {
     private float fraction;
     private final RectF r;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public BarView(Context ctx) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Paint $this$back_u24lambda_u240 = new Paint(1);
-        $this$back_u24lambda_u240.setColor(Color.rgb(44, 52, 64));
-        this.back = $this$back_u24lambda_u240;
+    /* VF: from Vineflower (jadx: ) */
+    public BarView(Context var1) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Paint var2 = new Paint(1);
+        var2.setColor(Color.rgb(44, 52, 64));
+        this.back = var2;
         this.fill = new Paint(1);
         this.r = new RectF();
     }

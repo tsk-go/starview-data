@@ -29,6 +29,7 @@ import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.graphics.drawable.Drawable;
 
 /* compiled from: Bookmarks.kt */
 public final class BookmarkCard extends LinearLayout {
@@ -47,71 +48,49 @@ public final class BookmarkCard extends LinearLayout {
     private final TextView type;
     private VoiceNote voice;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public BookmarkCard(Context ctx, Function0<Boolean> stopped, Function0<Unit> askMic) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(stopped, "stopped");
-        Intrinsics.checkNotNullParameter(askMic, "askMic");
-        this.stopped = stopped;
-        this.askMic = askMic;
-        this.d = getResources().getDisplayMetrics().density;
+    /* VF: from Vineflower (jadx: ) */
+    public BookmarkCard(Context var1, Function0<Boolean> var2, Function0<Unit> var3) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "stopped");
+        Intrinsics.checkNotNullParameter(var3, "askMic");
+        this.stopped = var2;
+        this.askMic = var3;
+        this.d = this.getResources().getDisplayMetrics().density;
         this.main = new Handler(Looper.getMainLooper());
-        TextView $this$title_u24lambda_u240 = new TextView(ctx);
-        $this$title_u24lambda_u240.setTextColor(-1);
-        $this$title_u24lambda_u240.setTextSize(20.0f);
-        $this$title_u24lambda_u240.setTypeface(Typeface.DEFAULT_BOLD);
-        this.title = $this$title_u24lambda_u240;
-        TextView $this$sub_u24lambda_u241 = new TextView(ctx);
-        $this$sub_u24lambda_u241.setTextColor(Color.rgb(200, 208, 222));
-        $this$sub_u24lambda_u241.setTextSize(15.0f);
-        this.sub = $this$sub_u24lambda_u241;
-        this.talk = new TextView(ctx);
-        this.type = new TextView(ctx);
-        this.close = new TextView(ctx);
-        this.hide = new Runnable() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                BookmarkCard.hide$lambda$2(BookmarkCard.this);
-            }
-        };
-        setOrientation(1);
-        setVisibility(8);
-        setPadding(dp(18), dp(14), dp(18), dp(14));
-        GradientDrawable $this$_init__u24lambda_u243 = new GradientDrawable();
-        $this$_init__u24lambda_u243.setCornerRadius(dp(18));
-        $this$_init__u24lambda_u243.setColor(Color.argb(225, 18, 20, 26));
-        $this$_init__u24lambda_u243.setStroke(dp(2), Color.rgb(255, 196, 0));
-        setBackground($this$_init__u24lambda_u243);
-        addView(this.title);
-        addView(this.sub);
-        LinearLayout row = new LinearLayout(ctx);
-        row.setOrientation(0);
-        row.setPadding(0, dp(10), 0, 0);
-        _init_$pill(this, row, this.talk, "🎤  Hold to talk", Color.rgb(52, 92, 170));
-        _init_$pill(this, row, this.type, "✎  Type", Color.rgb(70, 76, 90));
-        _init_$pill(this, row, this.close, "✕", Color.rgb(70, 76, 90));
-        addView(row);
-        this.talk.setOnTouchListener(new View.OnTouchListener() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda2
-            @Override // android.view.View.OnTouchListener
-            public final boolean onTouch(View view, MotionEvent motionEvent) {
-                boolean _init_$lambda$7;
-                _init_$lambda$7 = BookmarkCard._init_$lambda$7(BookmarkCard.this, view, motionEvent);
-                return _init_$lambda$7;
-            }
-        });
-        this.type.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda3
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                BookmarkCard.this.typeNote();
-            }
-        });
-        this.close.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda4
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                BookmarkCard._init_$lambda$9(BookmarkCard.this, view);
-            }
-        });
+        TextView var5 = new TextView(var1);
+        var5.setTextColor(-1);
+        var5.setTextSize(20.0F);
+        var5.setTypeface(Typeface.DEFAULT_BOLD);
+        this.title = var5;
+        TextView var6 = new TextView(var1);
+        var6.setTextColor(Color.rgb(200, 208, 222));
+        var6.setTextSize(15.0F);
+        this.sub = var6;
+        this.talk = new TextView(var1);
+        this.type = new TextView(var1);
+        this.close = new TextView(var1);
+        this.hide = new BookmarkCard$$ExternalSyntheticLambda1(this);
+        this.setOrientation(1);
+        this.setVisibility(8);
+        this.setPadding(this.dp(18), this.dp(14), this.dp(18), this.dp(14));
+        GradientDrawable var7 = new GradientDrawable();
+        var7.setCornerRadius(this.dp(18));
+        var7.setColor(Color.argb(225, 18, 20, 26));
+        var7.setStroke(this.dp(2), Color.rgb(255, 196, 0));
+        this.setBackground((Drawable)var7);
+        this.addView((View)this.title);
+        this.addView((View)this.sub);
+        LinearLayout var4 = new LinearLayout(var1);
+        var4.setOrientation(0);
+        var4.setPadding(0, this.dp(10), 0, 0);
+        _init_$pill(this, var4, this.talk, "\ud83c\udfa4  Hold to talk", Color.rgb(52, 92, 170));
+        _init_$pill(this, var4, this.type, "✎  Type", Color.rgb(70, 76, 90));
+        _init_$pill(this, var4, this.close, "✕", Color.rgb(70, 76, 90));
+        this.addView((View)var4);
+        this.talk.setOnTouchListener(new BookmarkCard$$ExternalSyntheticLambda2(this));
+        this.type.setOnClickListener(new BookmarkCard$$ExternalSyntheticLambda3(this));
+        this.close.setOnClickListener(new BookmarkCard$$ExternalSyntheticLambda4(this));
     }
 
     private final int dp(int v) {

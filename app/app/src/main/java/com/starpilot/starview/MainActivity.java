@@ -103,6 +103,11 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.app.AlertDialog.Builder;
+import android.view.ViewGroup.LayoutParams;
+import kotlin.jvm.internal.Ref.IntRef;
+import kotlin.jvm.internal.Ref.LongRef;
+import kotlin.jvm.internal.Ref.ObjectRef;
 
 /* compiled from: MainActivity.kt */
 public final class MainActivity extends AppCompatActivity {
@@ -611,89 +616,86 @@ public final class MainActivity extends AppCompatActivity {
         shareIntent(intent);
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-     */
-    /* JADX WARN: Removed duplicated region for block: B:12:0x0032 A[RETURN] */
-    /* JADX WARN: Removed duplicated region for block: B:13:0x0033  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void shareIntent(Intent i) {
-        final String text;
-        if (i == null) {
-            return;
-        }
-        String action = i.getAction();
-        if (action != null) {
-            switch (action.hashCode()) {
-                case -1173264947:
-                    if (action.equals("android.intent.action.SEND")) {
-                        text = i.getStringExtra("android.intent.extra.TEXT");
-                        break;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void shareIntent(Intent var1) {
+        if (var1 != null) {
+            String var5;
+            label31: {
+                var5 = var1.getAction();
+                if (var5 != null) {
+                    switch (var5.hashCode()) {
+                        case -1173264947:
+                            if (var5.equals("android.intent.action.SEND")) {
+                                var5 = var1.getStringExtra("android.intent.extra.TEXT");
+                                break label31;
+                            }
+                            break;
+                        case -1173171990:
+                            if (var5.equals("android.intent.action.VIEW")) {
+                                var5 = var1.getDataString();
+                                break label31;
+                            }
                     }
-                    break;
-                case -1173171990:
-                    if (action.equals("android.intent.action.VIEW")) {
-                        text = i.getDataString();
-                        break;
-                    }
-                    break;
-            }
-            if (text != null) {
-                return;
-            }
-            i.setAction(null);
-            final String subject = i.getStringExtra("android.intent.extra.SUBJECT");
-            if (subject == null) {
-                subject = "";
-            }
-            new Thread(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda99
-                @Override // java.lang.Runnable
-                public final void run() {
-                    MainActivity.shareIntent$lambda$18(text, subject, this);
                 }
-            }).start();
-            return;
-        }
-        text = null;
-        if (text != null) {
-        }
-    }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r1v1, types: [T, com.starpilot.starview.SharedPlace$Place] */
-    /* JADX WARN: Type inference failed for: r3v2, types: [T, com.starpilot.starview.SharedPlace$Place] */
-    public static final void shareIntent$lambda$18(String $text, String $subject, final MainActivity this$0) {
-        String full;
-        String link = SharedPlace.INSTANCE.link($text);
-        if (link == null) {
-            link = StringsKt.startsWith($text, "geo:", false) ? $text : null;
-        }
-        final Ref.ObjectRef place = new Ref.ObjectRef();
-        place.element = SharedPlace.parse$default(SharedPlace.INSTANCE, (!($subject.length() > 0) || StringsKt.contains((CharSequence) $text, (CharSequence) $subject, false)) ? $text : $subject + "\n" + $text, null, 2, null);
-        if (!((SharedPlace.Place) place.element).getHasCoords() && link != null && SharedPlace.INSTANCE.isShort(link) && (full = SharedPlace.INSTANCE.follow(link)) != null) {
-            place.element = SharedPlace.INSTANCE.parse($text, full);
-        }
-        this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda97
-            @Override // java.lang.Runnable
-            public final void run() {
-                MainActivity.shareIntent$lambda$18$lambda$17(this$0, place);
+                var5 = null;
             }
-        });
+
+            if (var5 != null) {
+                var1.setAction(null);
+                String var3 = var1.getStringExtra("android.intent.extra.SUBJECT");
+                String var4 = var3;
+                if (var3 == null) {
+                    var4 = "";
+                }
+
+                new Thread(new MainActivity$$ExternalSyntheticLambda99(var5, var4, this)).start();
+            }
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final void shareIntent$lambda$18$lambda$17(MainActivity this$0, Ref.ObjectRef $place) {
-        this$0.sharedPending = (SharedPlace.Place) $place.element;
-        this$0.useShared();
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public static final void shareIntent$lambda$18(String var0, String var1, MainActivity var2) {
+        String var5 = SharedPlace.INSTANCE.link(var0);
+        String var4 = var5;
+        if (var5 == null) {
+            if (StringsKt.startsWith(var0, "geo:", false)) {
+                var4 = var0;
+            } else {
+                var4 = null;
+            }
+        }
+
+        ObjectRef var9 = new ObjectRef();
+        SharedPlace var6 = SharedPlace.INSTANCE;
+        boolean var3;
+        if (var1.length() > 0) {
+            var3 = true;
+        } else {
+            var3 = false;
+        }
+
+        if (var3 && !StringsKt.contains(var0, var1, false)) {
+            var1 = var1 + "\n" + var0;
+        } else {
+            var1 = var0;
+        }
+
+        var9.element = (T)SharedPlace.parse$default(var6, var1, null, 2, null);
+        if (!((SharedPlace.Place)var9.element).getHasCoords() && var4 != null && SharedPlace.INSTANCE.isShort(var4)) {
+            var1 = SharedPlace.INSTANCE.follow(var4);
+            if (var1 != null) {
+                var9.element = (T)SharedPlace.INSTANCE.parse(var0, var1);
+            }
+        }
+
+        var2.runOnUiThread(new MainActivity$$ExternalSyntheticLambda97(var2, var9));
+    }
+
+    /* VF: from Vineflower (jadx: ) */
+    public static final void shareIntent$lambda$18$lambda$17(MainActivity var0, ObjectRef var1) {
+        var0.sharedPending = (SharedPlace.Place)var1.element;
+        var0.useShared();
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2192,68 +2194,83 @@ public final class MainActivity extends AppCompatActivity {
         sideView2.invalidate();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Removed duplicated region for block: B:26:0x0090  */
-    /* JADX WARN: Removed duplicated region for block: B:28:0x0093  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final void onCreate$lambda$40(final MainActivity this$0, View it) {
-        String str;
-        String str2;
-        String st = Telemetry.pStr$default(this$0.telemetry, "ChestnutState", null, 2, null);
-        String why = Telemetry.Companion.chestnutWhy(Telemetry.pStr$default(this$0.telemetry, "ChestnutWhy", null, 2, null));
-        if (Intrinsics.areEqual(st, "failed") || this$0.egpuFallback) {
-            new AlertDialog.Builder(this$0).setTitle("Big model (eGPU) failed").setMessage("Driving on the small model" + (why.length() > 0 ? " (" + why + ")" : "") + ".\n\nRestart openpilot to reload it? The comma goes offroad and comes back by itself (about 20 s). Do it parked or stopped.").setPositiveButton("Restart", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda26
-                @Override // android.content.DialogInterface.OnClickListener
-                public final void onClick(DialogInterface dialogInterface, int i) {
-                    MainActivity.onCreate$lambda$40$lambda$38(this$0, dialogInterface, i);
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public static final void onCreate$lambda$40(MainActivity var0, View var1) {
+        String var9 = null; // declarations Vineflower left out
+        String var8 = Telemetry.pStr$default(var0.telemetry, "ChestnutState", null, 2, null);
+        String var7 = Telemetry.Companion.chestnutWhy(Telemetry.pStr$default(var0.telemetry, "ChestnutWhy", null, 2, null));
+        boolean var5 = Intrinsics.areEqual(var8, "failed");
+        String var12 = "";
+        boolean var2 = false;
+        boolean var4 = false;
+        boolean var3 = false;
+        if (!var5 && !var0.egpuFallback) {
+            Context var15;
+            label57: {
+                var15 = (Context)var0;
+                switch (var8.hashCode()) {
+                    case -1422950650:
+                        if (var8.equals("active")) {
+                            var9 = "Driving on the big model (eGPU)";
+                            break label57;
+                        }
+                        break;
+                    case -1281977283:
+                        if (var8.equals("failed")) {
+                            var2 = var3;
+                            if (var7.length() > 0) {
+                                var2 = true;
+                            }
+
+                            if (var2) {
+                                var12 = ": " + var7;
+                            }
+
+                            var9 = "Big model (eGPU) failed - driving on the small model" + var12;
+                            break label57;
+                        }
+                        break;
+                    case 336650556:
+                        if (var8.equals("loading")) {
+                            var9 = "Big model (eGPU) loading";
+                            break label57;
+                        }
                 }
-            }).setNegativeButton("Not now", (DialogInterface.OnClickListener) null).show();
-            return;
+
+                Object var10 = var8;
+                if (var10.length() == 0) {
+                    var2 = true;
+                }
+
+                if (var2) {
+                    var10 = "unknown";
+                }
+
+                var9 = "eGPU: " + var10;
+            }
+
+            CharSequence var11 = var9;
+            Toast.makeText(var15, var11, 1).show();
+        } else {
+            android.app.AlertDialog.Builder var6 = new Builder((Context)var0).setTitle("Big model (eGPU) failed");
+            var2 = var4;
+            if (var7.length() > 0) {
+                var2 = true;
+            }
+
+            if (var2) {
+                var12 = " (" + var7 + ")";
+            }
+
+            var6.setMessage(
+                    "Driving on the small model"
+                        + var12
+                        + ".\n\nRestart openpilot to reload it? The comma goes offroad and comes back by itself (about 20 s). Do it parked or stopped."
+                )
+                .setPositiveButton("Restart", new MainActivity$$ExternalSyntheticLambda26(var0))
+                .setNegativeButton("Not now", null)
+                .show();
         }
-        MainActivity mainActivity = this$0;
-        switch (st.hashCode()) {
-            case -1422950650:
-                if (st.equals("active")) {
-                    str2 = "Driving on the big model (eGPU)";
-                    break;
-                }
-                str = st;
-                if (str.length() == 0) {
-                    str = "unknown";
-                }
-                str2 = "eGPU: " + ((Object) str);
-                break;
-            case -1281977283:
-                if (st.equals("failed")) {
-                    str2 = "Big model (eGPU) failed - driving on the small model" + (why.length() > 0 ? ": " + why : "");
-                    break;
-                }
-                str = st;
-                if (str.length() == 0) {
-                }
-                str2 = "eGPU: " + ((Object) str);
-                break;
-            case 336650556:
-                if (st.equals("loading")) {
-                    str2 = "Big model (eGPU) loading";
-                    break;
-                }
-                str = st;
-                if (str.length() == 0) {
-                }
-                str2 = "eGPU: " + ((Object) str);
-                break;
-            default:
-                str = st;
-                if (str.length() == 0) {
-                }
-                str2 = "eGPU: " + ((Object) str);
-                break;
-        }
-        Toast.makeText(mainActivity, str2, 1).show();
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2414,39 +2431,35 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-    /* JADX WARN: Type inference failed for: r2v6, types: [T, java.lang.Boolean] */
-    private static final void onCreate$pushTabletMode(MainActivity this$0, Ref.ObjectRef<Boolean> objectRef) {
-        UiSettings uiSettings = this$0.settings;
-        DataClient dataClient = null;
-        if (uiSettings == null) {
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    private static final void onCreate$pushTabletMode(MainActivity var0, ObjectRef<Boolean> var1) {
+        UiSettings var5 = var0.settings;
+        Object var4 = null;
+        UiSettings var3 = var5;
+        if (var5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("settings");
-            uiSettings = null;
+            var3 = null;
         }
-        boolean on = uiSettings.get("comma_screen_off");
-        if (Intrinsics.areEqual(Boolean.valueOf(on), objectRef.element)) {
-            return;
-        }
-        DataClient dataClient2 = this$0.data;
-        if (dataClient2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("data");
-            dataClient2 = null;
-        }
-        if (dataClient2.getConnected()) {
-            objectRef.element = Boolean.valueOf(on);
-            DataClient dataClient3 = this$0.data;
-            if (dataClient3 == null) {
+
+        boolean var2 = var3.get("comma_screen_off");
+        if (!Intrinsics.areEqual(var2, var1.element)) {
+            DataClient var8 = var0.data;
+            DataClient var7 = var8;
+            if (var8 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("data");
-            } else {
-                dataClient = dataClient3;
+                var7 = null;
             }
-            dataClient.request("tablet_mode", MapsKt.mapOf(TuplesKt.to("on", Boolean.valueOf(on))), new Function1() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda96
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj) {
-                    Unit onCreate$pushTabletMode$lambda$61;
-                    onCreate$pushTabletMode$lambda$61 = MainActivity.onCreate$pushTabletMode$lambda$61((JSONObject) obj);
-                    return onCreate$pushTabletMode$lambda$61;
+
+            if (var7.getConnected()) {
+                var1.element = (T)var2;
+                DataClient var6 = var0.data;
+                if (var6 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("data");
+                    var6 = (DataClient)var4;
                 }
-            });
+
+                var6.request("tablet_mode", MapsKt.mapOf(TuplesKt.to("on", var2)), new MainActivity$$ExternalSyntheticLambda96());
+            }
         }
     }
 
@@ -2802,75 +2815,71 @@ public final class MainActivity extends AppCompatActivity {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:27:0x0098, code lost:
-    
-        return true;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final boolean wireControls$lambda$133(final MainActivity mainActivity, View view, MotionEvent motionEvent) {
-        MiciDistanceView miciDistanceView = null;
-        MiciDistanceView miciDistanceView2 = null;
-        DataClient dataClient = null;
-        switch (motionEvent.getActionMasked()) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final boolean wireControls$lambda$133(MainActivity var0, View var1, MotionEvent var2) {
+        int var3 = var2.getActionMasked();
+        Object var4 = null;
+        Object var5 = null;
+        MiciDistanceView var10 = null;
+        switch (var3) {
             case 0:
-                MiciDistanceView miciDistanceView3 = mainActivity.personality;
-                if (miciDistanceView3 == null) {
+                MiciDistanceView var7 = var0.personality;
+                if (var7 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("personality");
-                } else {
-                    miciDistanceView = miciDistanceView3;
+                    var7 = (MiciDistanceView)var5;
                 }
-                miciDistanceView.setDown(true);
-                view.invalidate();
+
+                var7.setDown(true);
+                var1.invalidate();
                 break;
             case 1:
-                MiciDistanceView miciDistanceView4 = mainActivity.personality;
-                if (miciDistanceView4 == null) {
+                var5 = var0.personality;
+                var10 = (MiciDistanceView)var5;
+                if (var5 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("personality");
-                    miciDistanceView4 = null;
+                    var10 = null;
                 }
-                miciDistanceView4.setDown(false);
-                view.invalidate();
-                final int next = Personality.INSTANCE.next(mainActivity.telemetry.getPersonality());
-                DataClient dataClient2 = mainActivity.data;
-                if (dataClient2 == null) {
+
+                var10.setDown(false);
+                var1.invalidate();
+                var3 = Personality.INSTANCE.next(var0.telemetry.getPersonality());
+                DataClient var12 = var0.data;
+                DataClient var8 = var12;
+                if (var12 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("data");
-                    dataClient2 = null;
+                    var8 = null;
                 }
-                if (!dataClient2.getConnected()) {
-                    Toast.makeText(mainActivity, "Not connected to the comma", 0).show();
-                    break;
+
+                if (!var8.getConnected()) {
+                    Toast.makeText((Context)var0, "Not connected to the comma", 0).show();
                 } else {
-                    DataClient dataClient3 = mainActivity.data;
-                    if (dataClient3 == null) {
+                    DataClient var9 = var0.data;
+                    if (var9 == null) {
                         Intrinsics.throwUninitializedPropertyAccessException("data");
-                    } else {
-                        dataClient = dataClient3;
+                        var9 = (DataClient)var4;
                     }
-                    dataClient.request("param", MapsKt.mapOf(TuplesKt.to("key", "LongitudinalPersonality"), TuplesKt.to("value", Integer.valueOf(next))), new Function1() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda84
-                        @Override // kotlin.jvm.functions.Function1
-                        public final Object invoke(Object obj) {
-                            Unit wireControls$lambda$133$lambda$132;
-                            wireControls$lambda$133$lambda$132 = MainActivity.wireControls$lambda$133$lambda$132(mainActivity, next, (JSONObject) obj);
-                            return wireControls$lambda$133$lambda$132;
-                        }
-                    });
-                    break;
+
+                    var9.request(
+                        "param",
+                        MapsKt.mapOf(new Pair[]{TuplesKt.to("key", "LongitudinalPersonality"), TuplesKt.to("value", var3)}),
+                        new MainActivity$$ExternalSyntheticLambda84(var0, var3)
+                    );
                 }
-            case 3:
-                MiciDistanceView miciDistanceView5 = mainActivity.personality;
-                if (miciDistanceView5 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("personality");
-                } else {
-                    miciDistanceView2 = miciDistanceView5;
-                }
-                miciDistanceView2.setDown(false);
-                view.invalidate();
+            case 2:
+            default:
                 break;
+            case 3:
+                MiciDistanceView var6 = var0.personality;
+                if (var6 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("personality");
+                    var6 = var10;
+                }
+
+                var6.setDown(false);
+                var1.invalidate();
         }
+
+        return true;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2891,57 +2900,55 @@ public final class MainActivity extends AppCompatActivity {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:21:0x005a, code lost:
-    
-        return true;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final boolean wireControls$lambda$134(MainActivity mainActivity, View view, MotionEvent motionEvent) {
-        WheelButton wheelButton = null;
-        WheelButton wheelButton2 = null;
-        DataClient dataClient = null;
-        switch (motionEvent.getActionMasked()) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final boolean wireControls$lambda$134(MainActivity var0, View var1, MotionEvent var2) {
+        int var3 = var2.getActionMasked();
+        Object var4 = null;
+        WheelButton var9 = null;
+        Object var5 = null;
+        switch (var3) {
             case 0:
-                WheelButton wheelButton3 = mainActivity.wheel;
-                if (wheelButton3 == null) {
+                WheelButton var8 = var0.wheel;
+                if (var8 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("wheel");
-                } else {
-                    wheelButton = wheelButton3;
+                    var8 = var9;
                 }
-                wheelButton.setDown(true);
-                view.invalidate();
+
+                var8.setDown(true);
+                var1.invalidate();
                 break;
             case 1:
-                WheelButton wheelButton4 = mainActivity.wheel;
-                if (wheelButton4 == null) {
+                var5 = var0.wheel;
+                var9 = (WheelButton)var5;
+                if (var5 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("wheel");
-                    wheelButton4 = null;
+                    var9 = null;
                 }
-                wheelButton4.setDown(false);
-                view.invalidate();
-                DataClient dataClient2 = mainActivity.data;
-                if (dataClient2 == null) {
+
+                var9.setDown(false);
+                var1.invalidate();
+                DataClient var7 = var0.data;
+                if (var7 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("data");
-                } else {
-                    dataClient = dataClient2;
+                    var7 = (DataClient)var4;
                 }
-                dataClient.control(new JSONObject(MapsKt.mapOf(TuplesKt.to("action", "exp_toggle"))));
+
+                var7.control(new JSONObject(MapsKt.mapOf(TuplesKt.to("action", "exp_toggle"))));
+            case 2:
+            default:
                 break;
             case 3:
-                WheelButton wheelButton5 = mainActivity.wheel;
-                if (wheelButton5 == null) {
+                WheelButton var6 = var0.wheel;
+                if (var6 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("wheel");
-                } else {
-                    wheelButton2 = wheelButton5;
+                    var6 = (WheelButton)var5;
                 }
-                wheelButton2.setDown(false);
-                view.invalidate();
-                break;
+
+                var6.setDown(false);
+                var1.invalidate();
         }
+
+        return true;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2993,45 +3000,49 @@ public final class MainActivity extends AppCompatActivity {
         t.getUi().set("slc_sources_sp7", true ^ t.s("slc_sources_sp7"));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:18:0x0096, code lost:
-    
-        return true;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final boolean wireControls$lambda$136(Ref.LongRef $navDownNs, MainActivity this$0, View view, MotionEvent e) {
-        switch (e.getActionMasked()) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final boolean wireControls$lambda$136(LongRef var0, MainActivity var1, View var2, MotionEvent var3) {
+        switch (var3.getActionMasked()) {
             case 0:
-                $navDownNs.element = System.nanoTime();
+                var0.element = System.nanoTime();
                 break;
             case 1:
-                DataClient dataClient = null;
-                if (Telemetry.navCard$default(this$0.telemetry, 0L, 1, null) != null) {
-                    if (System.nanoTime() - $navDownNs.element < 650000000) {
-                        DataClient dataClient2 = this$0.data;
-                        if (dataClient2 == null) {
+                Telemetry var4 = var1.telemetry;
+                Object var7 = null;
+                Object var8 = null;
+                if (Telemetry.navCard$default(var4, 0L, 1, null) != null) {
+                    if (System.nanoTime() - var0.element >= 650000000L) {
+                        DataClient var5 = var1.data;
+                        if (var5 == null) {
                             Intrinsics.throwUninitializedPropertyAccessException("data");
-                        } else {
-                            dataClient = dataClient2;
+                            var5 = (DataClient)var8;
                         }
-                        dataClient.control(new JSONObject(MapsKt.mapOf(TuplesKt.to("action", "param"), TuplesKt.to("key", "NavInstructionCollapsed"), TuplesKt.to("value", Boolean.valueOf(!this$0.telemetry.mBool("NavInstructionCollapsed", false))), TuplesKt.to("memory", true))));
-                        break;
+
+                        var5.control(new JSONObject(MapsKt.mapOf(TuplesKt.to("action", "nav_cancel"))));
                     } else {
-                        DataClient dataClient3 = this$0.data;
-                        if (dataClient3 == null) {
+                        DataClient var6 = var1.data;
+                        if (var6 == null) {
                             Intrinsics.throwUninitializedPropertyAccessException("data");
-                        } else {
-                            dataClient = dataClient3;
+                            var6 = (DataClient)var7;
                         }
-                        dataClient.control(new JSONObject(MapsKt.mapOf(TuplesKt.to("action", "nav_cancel"))));
-                        break;
+
+                        var6.control(
+                            new JSONObject(
+                                MapsKt.mapOf(
+                                    new Pair[]{
+                                        TuplesKt.to("action", "param"),
+                                        TuplesKt.to("key", "NavInstructionCollapsed"),
+                                        TuplesKt.to("value", var1.telemetry.mBool("NavInstructionCollapsed", false) ^ true),
+                                        TuplesKt.to("memory", true)
+                                    }
+                                )
+                            )
+                        );
                     }
                 }
-                break;
         }
+
+        return true;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -3450,164 +3461,145 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:12:0x0029, code lost:
-    
-        r5 = false;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:18:0x003d  */
-    /* JADX WARN: Removed duplicated region for block: B:20:0x004e  */
-    /* JADX WARN: Removed duplicated region for block: B:23:0x0056  */
-    /* JADX WARN: Removed duplicated region for block: B:33:0x0078  */
-    /* JADX WARN: Removed duplicated region for block: B:44:0x009c  */
-    /* JADX WARN: Removed duplicated region for block: B:54:0x00be  */
-    /* JADX WARN: Removed duplicated region for block: B:65:0x00e1 A[ADDED_TO_REGION] */
-    /* JADX WARN: Removed duplicated region for block: B:67:0x00f6 A[ADDED_TO_REGION] */
-    /* JADX WARN: Removed duplicated region for block: B:74:? A[ADDED_TO_REGION, RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:78:0x0042  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void syncDetector(boolean want) {
-        boolean wantRoad;
-        boolean wantWide;
-        boolean z;
-        if (!want && this.detectorRef == null) {
-            return;
-        }
-        String h = this.host;
-        boolean shownWide = this.telemetry.s("wide_camera");
-        getDetector().setShownWide(shownWide);
-        MaskEditor ed = this.maskEditor;
-        if (want && h != null) {
-            boolean z2 = ed != null ? true : true;
-            if (z2) {
-                wantRoad = true;
-                if (want && h != null) {
-                    if (ed == null) {
-                        z = ed.getWide();
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+    public final void syncDetector(boolean var1) {
+        if (var1 || this.detectorRef != null) {
+            boolean var4;
+            MaskEditor var5;
+            String var8;
+            boolean var10;
+            label134: {
+                var8 = this.host;
+                var4 = this.telemetry.s("wide_camera");
+                this.getDetector().setShownWide(var4);
+                var5 = this.maskEditor;
+                if (var1 && var8 != null) {
+                    if (var5 != null ? !var5.getWide() : this.sceneOn || !var4) {
+                        var10 = true;
                     } else {
-                        z = this.sceneOn || shownWide;
+                        var10 = false;
                     }
-                    if (z) {
-                        wantWide = true;
-                        VideoClient videoClient = null;
-                        if (wantRoad) {
-                            VideoClient videoClient2 = this.detRoad;
-                            if (videoClient2 == null) {
-                                Intrinsics.throwUninitializedPropertyAccessException("detRoad");
-                                videoClient2 = null;
-                            }
-                            if (!videoClient2.getRunning()) {
-                                VideoClient videoClient3 = this.detRoad;
-                                if (videoClient3 == null) {
-                                    Intrinsics.throwUninitializedPropertyAccessException("detRoad");
-                                    videoClient3 = null;
-                                }
-                                Intrinsics.checkNotNull(h);
-                                videoClient3.connect(h, this.port, "road", null);
-                            }
-                        }
-                        if (!wantRoad) {
-                            VideoClient videoClient4 = this.detRoad;
-                            if (videoClient4 == null) {
-                                Intrinsics.throwUninitializedPropertyAccessException("detRoad");
-                                videoClient4 = null;
-                            }
-                            if (videoClient4.getRunning()) {
-                                VideoClient videoClient5 = this.detRoad;
-                                if (videoClient5 == null) {
-                                    Intrinsics.throwUninitializedPropertyAccessException("detRoad");
-                                    videoClient5 = null;
-                                }
-                                videoClient5.close();
-                                getDetector().clearSource(false);
-                            }
-                        }
-                        if (wantWide) {
-                            VideoClient videoClient6 = this.detWide;
-                            if (videoClient6 == null) {
-                                Intrinsics.throwUninitializedPropertyAccessException("detWide");
-                                videoClient6 = null;
-                            }
-                            if (!videoClient6.getRunning()) {
-                                VideoClient videoClient7 = this.detWide;
-                                if (videoClient7 == null) {
-                                    Intrinsics.throwUninitializedPropertyAccessException("detWide");
-                                    videoClient7 = null;
-                                }
-                                Intrinsics.checkNotNull(h);
-                                videoClient7.connect(h, this.port, "wide", null);
-                            }
-                        }
-                        if (!wantWide) {
-                            VideoClient videoClient8 = this.detWide;
-                            if (videoClient8 == null) {
-                                Intrinsics.throwUninitializedPropertyAccessException("detWide");
-                                videoClient8 = null;
-                            }
-                            if (videoClient8.getRunning()) {
-                                VideoClient videoClient9 = this.detWide;
-                                if (videoClient9 == null) {
-                                    Intrinsics.throwUninitializedPropertyAccessException("detWide");
-                                } else {
-                                    videoClient = videoClient9;
-                                }
-                                videoClient.close();
-                                getDetector().clearSource(true);
-                            }
-                        }
-                        if ((!wantRoad || wantWide) && !getDetector().getRunning()) {
-                            getDetector().start();
-                        }
-                        if (wantRoad || wantWide || !getDetector().getRunning()) {
-                            return;
-                        }
-                        getDetector().stop();
-                        return;
+
+                    if (var10) {
+                        var10 = true;
+                        break label134;
                     }
                 }
-                wantWide = false;
-                VideoClient videoClient10 = null;
-                if (wantRoad) {
+
+                var10 = false;
+            }
+
+            boolean var3;
+            label119: {
+                if (var1 && var8 != null) {
+                    if (var5 != null) {
+                        var1 = var5.getWide();
+                    } else if (!this.sceneOn && !var4) {
+                        var1 = false;
+                    } else {
+                        var1 = true;
+                    }
+
+                    if (var1) {
+                        var3 = true;
+                        break label119;
+                    }
                 }
-                if (!wantRoad) {
+
+                var3 = false;
+            }
+
+            Object var6 = null;
+            if (var10) {
+                VideoClient var7 = this.detRoad;
+                VideoClient var11 = var7;
+                if (var7 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("detRoad");
+                    var11 = null;
                 }
-                if (wantWide) {
-                }
-                if (!wantWide) {
-                }
-                if (!wantRoad) {
-                }
-                getDetector().start();
-                if (wantRoad) {
-                    return;
-                } else {
-                    return;
+
+                if (!var11.isRunning()) {
+                    var7 = this.detRoad;
+                    VideoClient var12 = var7;
+                    if (var7 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("detRoad");
+                        var12 = null;
+                    }
+
+                    Intrinsics.checkNotNull(var8);
+                    var12.connect(var8, this.port, "road", null);
                 }
             }
-        }
-        wantRoad = false;
-        if (want) {
-            if (ed == null) {
+
+            if (!var10) {
+                VideoClient var20 = this.detRoad;
+                VideoClient var13 = var20;
+                if (var20 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("detRoad");
+                    var13 = null;
+                }
+
+                if (var13.isRunning()) {
+                    var20 = this.detRoad;
+                    VideoClient var14 = var20;
+                    if (var20 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("detRoad");
+                        var14 = null;
+                    }
+
+                    var14.close();
+                    this.getDetector().clearSource(false);
+                }
             }
-            if (z) {
+
+            if (var3) {
+                VideoClient var22 = this.detWide;
+                VideoClient var15 = var22;
+                if (var22 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("detWide");
+                    var15 = null;
+                }
+
+                if (!var15.isRunning()) {
+                    var22 = this.detWide;
+                    VideoClient var16 = var22;
+                    if (var22 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("detWide");
+                        var16 = null;
+                    }
+
+                    Intrinsics.checkNotNull(var8);
+                    var16.connect(var8, this.port, "wide", null);
+                }
             }
-        }
-        wantWide = false;
-        VideoClient videoClient102 = null;
-        if (wantRoad) {
-        }
-        if (!wantRoad) {
-        }
-        if (wantWide) {
-        }
-        if (!wantWide) {
-        }
-        if (!wantRoad) {
-        }
-        getDetector().start();
-        if (wantRoad) {
+
+            if (!var3) {
+                VideoClient var24 = this.detWide;
+                VideoClient var17 = var24;
+                if (var24 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("detWide");
+                    var17 = null;
+                }
+
+                if (var17.isRunning()) {
+                    VideoClient var18 = this.detWide;
+                    if (var18 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("detWide");
+                        var18 = (VideoClient)var6;
+                    }
+
+                    var18.close();
+                    this.getDetector().clearSource(true);
+                }
+            }
+
+            if ((var10 || var3) && !this.getDetector().isRunning()) {
+                this.getDetector().start();
+            }
+
+            if (!var10 && !var3 && this.getDetector().isRunning()) {
+                this.getDetector().stop();
+            }
         }
     }
 
@@ -3675,453 +3667,406 @@ public final class MainActivity extends AppCompatActivity {
         this.ui.post(this.uiTick);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Removed duplicated region for block: B:101:0x01c7  */
-    /* JADX WARN: Removed duplicated region for block: B:104:0x01d0  */
-    /* JADX WARN: Removed duplicated region for block: B:107:0x01dd  */
-    /* JADX WARN: Removed duplicated region for block: B:110:0x01e6  */
-    /* JADX WARN: Removed duplicated region for block: B:121:0x020e  */
-    /* JADX WARN: Removed duplicated region for block: B:125:0x021b  */
-    /* JADX WARN: Removed duplicated region for block: B:127:0x0221  */
-    /* JADX WARN: Removed duplicated region for block: B:130:0x022b  */
-    /* JADX WARN: Removed duplicated region for block: B:139:0x0241  */
-    /* JADX WARN: Removed duplicated region for block: B:148:0x0257  */
-    /* JADX WARN: Removed duplicated region for block: B:156:0x026c  */
-    /* JADX WARN: Removed duplicated region for block: B:158:0x0273  */
-    /* JADX WARN: Removed duplicated region for block: B:15:0x0036  */
-    /* JADX WARN: Removed duplicated region for block: B:162:0x0276  */
-    /* JADX WARN: Removed duplicated region for block: B:163:0x0270  */
-    /* JADX WARN: Removed duplicated region for block: B:164:0x0223  */
-    /* JADX WARN: Removed duplicated region for block: B:166:0x01ac  */
-    /* JADX WARN: Removed duplicated region for block: B:175:0x017e  */
-    /* JADX WARN: Removed duplicated region for block: B:18:0x0049  */
-    /* JADX WARN: Removed duplicated region for block: B:21:0x0077  */
-    /* JADX WARN: Removed duplicated region for block: B:24:0x0082  */
-    /* JADX WARN: Removed duplicated region for block: B:27:0x008a  */
-    /* JADX WARN: Removed duplicated region for block: B:31:0x00a7  */
-    /* JADX WARN: Removed duplicated region for block: B:40:0x00ba  */
-    /* JADX WARN: Removed duplicated region for block: B:67:0x010b  */
-    /* JADX WARN: Removed duplicated region for block: B:73:0x0136  */
-    /* JADX WARN: Removed duplicated region for block: B:80:0x0149  */
-    /* JADX WARN: Removed duplicated region for block: B:97:0x01a2  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void syncScene(boolean onroad) {
-        boolean z;
-        SceneView sceneView;
-        SceneView sceneView2;
-        Object[] objArr;
-        Detector detector;
-        LaneMarks laneMarks;
-        SceneView sceneView3;
-        SceneView sceneView4;
-        SceneView sceneView5;
-        Detector detector2;
-        TextView textView;
-        TextView textView2;
-        LaneModel laneModel;
-        UiSettings uiSettings;
-        UiSettings uiSettings2;
-        FrameLayout frameLayout;
-        FrameLayout frameLayout2;
-        OverlayView overlayView;
-        TextView textView3 = null;
-        Object[] objArr2 = 0;
-        Object[] objArr3 = 0;
-        if (onroad) {
-            UiSettings uiSettings3 = this.settings;
-            if (uiSettings3 == null) {
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public final void syncScene(boolean var1) {
+        int var3;
+        byte var4;
+        boolean var5;
+        Object var10;
+        label264: {
+            var3 = 1;
+            var4 = 0;
+            var10 = null;
+            if (var1) {
+                UiSettings var8 = this.settings;
+                UiSettings var7 = var8;
+                if (var8 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("settings");
+                    var7 = null;
+                }
+
+                if (var7.get("scene_view")) {
+                    var5 = true;
+                    break label264;
+                }
+            }
+
+            var5 = false;
+        }
+
+        if (var5 && this.scene == null) {
+            SceneView var12 = new SceneView((Context)this, null, 2, null);
+            var12.setT(this.telemetry);
+            UiSettings var53 = this.settings;
+            UiSettings var22 = var53;
+            if (var53 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("settings");
-                uiSettings3 = null;
+                var22 = null;
             }
-            if (uiSettings3.get("scene_view")) {
-                z = true;
-                if (z && this.scene == null) {
-                    SceneView sceneView6 = new SceneView(this, objArr3 == true ? 1 : 0, 2, objArr2 == true ? 1 : 0);
-                    sceneView6.setT(this.telemetry);
-                    uiSettings = this.settings;
-                    if (uiSettings == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("settings");
-                        uiSettings = null;
-                    }
-                    sceneView6.setDistance(uiSettings.getFloat("scene_distance4", 26.0f));
-                    uiSettings2 = this.settings;
-                    if (uiSettings2 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("settings");
-                        uiSettings2 = null;
-                    }
-                    sceneView6.setTiltDeg(uiSettings2.getFloat("scene_tilt4", 17.0f));
-                    sceneView6.setOnViewChanged(new Function2() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda101
-                        @Override // kotlin.jvm.functions.Function2
-                        public final Object invoke(Object obj, Object obj2) {
-                            Unit syncScene$lambda$168$lambda$166;
-                            syncScene$lambda$168$lambda$166 = MainActivity.syncScene$lambda$168$lambda$166(MainActivity.this, ((Float) obj).floatValue(), ((Float) obj2).floatValue());
-                            return syncScene$lambda$168$lambda$166;
-                        }
-                    });
-                    sceneView6.setOnLongPress(new Function0() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda102
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit syncScene$lambda$168$lambda$167;
-                            syncScene$lambda$168$lambda$167 = MainActivity.syncScene$lambda$168$lambda$167(MainActivity.this);
-                            return syncScene$lambda$168$lambda$167;
-                        }
-                    });
-                    sceneView6.setDetector(getDetector());
-                    frameLayout = this.root;
-                    if (frameLayout == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("root");
-                        frameLayout = null;
-                    }
-                    SceneView sceneView7 = sceneView6;
-                    frameLayout2 = this.root;
-                    if (frameLayout2 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("root");
-                        frameLayout2 = null;
-                    }
-                    overlayView = this.overlay;
-                    if (overlayView == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("overlay");
-                        overlayView = null;
-                    }
-                    frameLayout.addView(sceneView7, frameLayout2.indexOfChild(overlayView), new FrameLayout.LayoutParams(-1, -1));
-                    this.scene = sceneView6;
-                }
-                sceneView = this.scene;
-                if (sceneView != null) {
-                    int i = z ? 0 : 8;
-                    if (sceneView.getVisibility() != i) {
-                        sceneView.setVisibility(i);
-                    }
-                }
-                if (z != this.sceneOn) {
-                    this.sceneOn = z;
-                    OverlayView overlayView2 = this.overlay;
-                    if (overlayView2 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("overlay");
-                        overlayView2 = null;
-                    }
-                    overlayView2.setSceneMode(z);
-                    OverlayView overlayView3 = this.overlay;
-                    if (overlayView3 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("overlay");
-                        overlayView3 = null;
-                    }
-                    overlayView3.setLongClickable(!z);
-                    OverlayView overlayView4 = this.overlay;
-                    if (overlayView4 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("overlay");
-                        overlayView4 = null;
-                    }
-                    overlayView4.setClickable(!z);
-                    SurfaceView surfaceView = this.videoView;
-                    if (surfaceView == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("videoView");
-                        surfaceView = null;
-                    }
-                    surfaceView.setVisibility(z ? 4 : 0);
-                    applyRootBg();
-                    OverlayView overlayView5 = this.overlay;
-                    if (overlayView5 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("overlay");
-                        overlayView5 = null;
-                    }
-                    overlayView5.invalidate();
-                }
-                sceneView2 = this.scene;
-                if (sceneView2 != null) {
-                    sceneView2.setNight(this.night);
-                    sceneView2.setAlwaysDark(false);
-                    sceneView2.setUiStatus(UiStatus.Companion.from(this.telemetry));
-                    UiSettings uiSettings4 = this.settings;
-                    if (uiSettings4 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("settings");
-                        uiSettings4 = null;
-                    }
-                    sceneView2.setShowTraffic(uiSettings4.get("scene_cars"));
-                }
-                if (this.sceneOn) {
-                    LayoutSeg layoutSeg = this.layoutSeg;
-                    if (layoutSeg == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                        layoutSeg = null;
-                    }
-                    if (layoutSeg.getHasModel()) {
-                        objArr = true;
-                        if (objArr == true) {
-                            LayoutSeg layoutSeg2 = this.layoutSeg;
-                            if (layoutSeg2 == null) {
-                                Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                                layoutSeg2 = null;
-                            }
-                            layoutSeg2.start();
-                            LayoutSeg layoutSeg3 = this.layoutSeg;
-                            if (layoutSeg3 == null) {
-                                Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                                layoutSeg3 = null;
-                            }
-                            layoutSeg3.setEnabled(true);
-                            Detector detector3 = getDetector();
-                            LayoutSeg layoutSeg4 = this.layoutSeg;
-                            if (layoutSeg4 == null) {
-                                Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                                layoutSeg4 = null;
-                            }
-                            detector3.setLayout(layoutSeg4);
-                            SceneView sceneView8 = this.scene;
-                            if (sceneView8 != null) {
-                                LayoutSeg layoutSeg5 = this.layoutSeg;
-                                if (layoutSeg5 == null) {
-                                    Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                                    layoutSeg5 = null;
-                                }
-                                sceneView8.setLayout(layoutSeg5);
-                            }
-                        } else {
-                            Detector detector4 = this.detectorRef;
-                            if ((detector4 != null ? detector4.getLayout() : null) != null) {
-                                Detector detector5 = this.detectorRef;
-                                if (detector5 != null) {
-                                    detector5.setLayout(null);
-                                }
-                                LayoutSeg layoutSeg6 = this.layoutSeg;
-                                if (layoutSeg6 == null) {
-                                    Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                                    layoutSeg6 = null;
-                                }
-                                layoutSeg6.stop();
-                            }
-                        }
-                        if (!this.sceneOn) {
-                            detector = this.detectorRef;
-                            if (detector != null) {
-                                UiSettings uiSettings5 = this.settings;
-                                if (uiSettings5 == null) {
-                                    Intrinsics.throwUninitializedPropertyAccessException("settings");
-                                    uiSettings5 = null;
-                                }
-                                laneMarks = uiSettings5.get("lane_card") ? this.laneMarks : null;
-                            }
-                            sceneView3 = this.scene;
-                            if (sceneView3 != null) {
-                                sceneView3.setLaneMarks(this.laneMarks);
-                            }
-                            sceneView4 = this.scene;
-                            if (sceneView4 != null) {
-                                sceneView4.setLaneMemory(this.laneTracker.getMemory());
-                            }
-                            sceneView5 = this.scene;
-                            if (sceneView5 != null) {
-                                sceneView5.setCarMemory(this.carMemory);
-                            }
-                            detector2 = this.detectorRef;
-                            if (detector2 != null) {
-                                UiSettings uiSettings6 = this.settings;
-                                if (uiSettings6 == null) {
-                                    Intrinsics.throwUninitializedPropertyAccessException("settings");
-                                    uiSettings6 = null;
-                                }
-                                if (uiSettings6.get("lane_card") && getLaneModel().getHasModel()) {
-                                    laneModel = getLaneModel();
-                                    laneModel.setEnabled(true);
-                                } else {
-                                    laneModel = null;
-                                }
-                                detector2.setLaneModel(laneModel);
-                            }
-                            boolean z2 = !onroad && this.hudEditor == null;
-                            textView = this.sceneBtn;
-                            if (textView == null) {
-                                Intrinsics.throwUninitializedPropertyAccessException("sceneBtn");
-                                textView = null;
-                            }
-                            textView.setVisibility(!z2 ? 0 : 8);
-                            if (this.quickBtn != null) {
-                                TextView textView4 = this.quickBtn;
-                                if (textView4 == null) {
-                                    Intrinsics.throwUninitializedPropertyAccessException("quickBtn");
-                                    textView4 = null;
-                                }
-                                textView4.setVisibility(z2 ? 0 : 8);
-                            }
-                            if (this.micBtn != null) {
-                                ImageView imageView = this.micBtn;
-                                if (imageView == null) {
-                                    Intrinsics.throwUninitializedPropertyAccessException("micBtn");
-                                    imageView = null;
-                                }
-                                imageView.setVisibility(z2 ? 0 : 8);
-                            }
-                            if (this.bookmarkBtn != null) {
-                                ImageView imageView2 = this.bookmarkBtn;
-                                if (imageView2 == null) {
-                                    Intrinsics.throwUninitializedPropertyAccessException("bookmarkBtn");
-                                    imageView2 = null;
-                                }
-                                imageView2.setVisibility(z2 ? 0 : 8);
-                            }
-                            textView2 = this.sceneBtn;
-                            if (textView2 != null) {
-                                Intrinsics.throwUninitializedPropertyAccessException("sceneBtn");
-                            } else {
-                                textView3 = textView2;
-                            }
-                            textView3.setText(!z ? "CAMERA" : "SCENE");
-                        }
-                        detector = getDetector();
-                        laneMarks = this.laneMarks;
-                        detector.setLaneMarks(laneMarks);
-                        sceneView3 = this.scene;
-                        if (sceneView3 != null) {
-                        }
-                        sceneView4 = this.scene;
-                        if (sceneView4 != null) {
-                        }
-                        sceneView5 = this.scene;
-                        if (sceneView5 != null) {
-                        }
-                        detector2 = this.detectorRef;
-                        if (detector2 != null) {
-                        }
-                        boolean z22 = !onroad && this.hudEditor == null;
-                        textView = this.sceneBtn;
-                        if (textView == null) {
-                        }
-                        textView.setVisibility(!z22 ? 0 : 8);
-                        if (this.quickBtn != null) {
-                        }
-                        if (this.micBtn != null) {
-                        }
-                        if (this.bookmarkBtn != null) {
-                        }
-                        textView2 = this.sceneBtn;
-                        if (textView2 != null) {
-                        }
-                        textView3.setText(!z ? "CAMERA" : "SCENE");
-                    }
-                }
-                objArr = false;
-                if (objArr == true) {
-                }
-                if (!this.sceneOn) {
-                }
-                detector.setLaneMarks(laneMarks);
-                sceneView3 = this.scene;
-                if (sceneView3 != null) {
-                }
-                sceneView4 = this.scene;
-                if (sceneView4 != null) {
-                }
-                sceneView5 = this.scene;
-                if (sceneView5 != null) {
-                }
-                detector2 = this.detectorRef;
-                if (detector2 != null) {
-                }
-                boolean z222 = !onroad && this.hudEditor == null;
-                textView = this.sceneBtn;
-                if (textView == null) {
-                }
-                textView.setVisibility(!z222 ? 0 : 8);
-                if (this.quickBtn != null) {
-                }
-                if (this.micBtn != null) {
-                }
-                if (this.bookmarkBtn != null) {
-                }
-                textView2 = this.sceneBtn;
-                if (textView2 != null) {
-                }
-                textView3.setText(!z ? "CAMERA" : "SCENE");
+
+            var12.setDistance(var22.getFloat("scene_distance4", 26.0F));
+            var53 = this.settings;
+            var22 = var53;
+            if (var53 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("settings");
+                var22 = null;
+            }
+
+            var12.setTiltDeg(var22.getFloat("scene_tilt4", 17.0F));
+            var12.setOnViewChanged(new MainActivity$$ExternalSyntheticLambda101(this));
+            var12.setOnLongPress(new MainActivity$$ExternalSyntheticLambda102(this));
+            var12.setDetector(this.getDetector());
+            FrameLayout var55 = this.root;
+            FrameLayout var24 = var55;
+            if (var55 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("root");
+                var24 = null;
+            }
+
+            View var13 = (View)var12;
+            FrameLayout var9 = this.root;
+            FrameLayout var56 = var9;
+            if (var9 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("root");
+                var56 = null;
+            }
+
+            OverlayView var11 = this.overlay;
+            OverlayView var76 = var11;
+            if (var11 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("overlay");
+                var76 = null;
+            }
+
+            var24.addView(var13, var56.indexOfChild(var76), (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
+            this.scene = var12;
+        }
+
+        SceneView var25 = this.scene;
+        if (var25 != null) {
+            byte var2;
+            if (var5) {
+                var2 = 0;
+            } else {
+                var2 = 8;
+            }
+
+            if (var25.getVisibility() != var2) {
+                var25.setVisibility(var2);
             }
         }
-        z = false;
-        if (z) {
-            SceneView sceneView62 = new SceneView(this, objArr3 == true ? 1 : 0, 2, objArr2 == true ? 1 : 0);
-            sceneView62.setT(this.telemetry);
-            uiSettings = this.settings;
-            if (uiSettings == null) {
+
+        if (var5 != this.sceneOn) {
+            this.sceneOn = var5;
+            OverlayView var57 = this.overlay;
+            OverlayView var26 = var57;
+            if (var57 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("overlay");
+                var26 = null;
             }
-            sceneView62.setDistance(uiSettings.getFloat("scene_distance4", 26.0f));
-            uiSettings2 = this.settings;
-            if (uiSettings2 == null) {
+
+            var26.setSceneMode(var5);
+            var57 = this.overlay;
+            OverlayView var27 = var57;
+            if (var57 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("overlay");
+                var27 = null;
             }
-            sceneView62.setTiltDeg(uiSettings2.getFloat("scene_tilt4", 17.0f));
-            sceneView62.setOnViewChanged(new Function2() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda101
-                @Override // kotlin.jvm.functions.Function2
-                public final Object invoke(Object obj, Object obj2) {
-                    Unit syncScene$lambda$168$lambda$166;
-                    syncScene$lambda$168$lambda$166 = MainActivity.syncScene$lambda$168$lambda$166(MainActivity.this, ((Float) obj).floatValue(), ((Float) obj2).floatValue());
-                    return syncScene$lambda$168$lambda$166;
+
+            boolean var6;
+            if (!var5) {
+                var6 = true;
+            } else {
+                var6 = false;
+            }
+
+            var27.setLongClickable(var6);
+            var57 = this.overlay;
+            OverlayView var28 = var57;
+            if (var57 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("overlay");
+                var28 = null;
+            }
+
+            if (!var5) {
+                var6 = true;
+            } else {
+                var6 = false;
+            }
+
+            var28.setClickable(var6);
+            SurfaceView var60 = this.videoView;
+            SurfaceView var29 = var60;
+            if (var60 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("videoView");
+                var29 = null;
+            }
+
+            byte var14;
+            if (var5) {
+                var14 = 4;
+            } else {
+                var14 = 0;
+            }
+
+            var29.setVisibility(var14);
+            this.applyRootBg();
+            var57 = this.overlay;
+            OverlayView var30 = var57;
+            if (var57 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("overlay");
+                var30 = null;
+            }
+
+            var30.invalidate();
+        }
+
+        SceneView var77 = this.scene;
+        if (var77 != null) {
+            var77.setNight(this.night);
+            var77.setAlwaysDark(false);
+            var77.setUiStatus(UiStatus.Companion.from(this.telemetry));
+            UiSettings var62 = this.settings;
+            UiSettings var31 = var62;
+            if (var62 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("settings");
+                var31 = null;
+            }
+
+            var77.setShowTraffic(var31.get("scene_cars"));
+        }
+
+        int var15;
+        label252: {
+            if (this.sceneOn) {
+                LayoutSeg var63 = this.layoutSeg;
+                LayoutSeg var32 = var63;
+                if (var63 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                    var32 = null;
                 }
-            });
-            sceneView62.setOnLongPress(new Function0() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda102
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit syncScene$lambda$168$lambda$167;
-                    syncScene$lambda$168$lambda$167 = MainActivity.syncScene$lambda$168$lambda$167(MainActivity.this);
-                    return syncScene$lambda$168$lambda$167;
+
+                if (var32.getHasModel()) {
+                    var15 = 1;
+                    break label252;
                 }
-            });
-            sceneView62.setDetector(getDetector());
-            frameLayout = this.root;
-            if (frameLayout == null) {
             }
-            SceneView sceneView72 = sceneView62;
-            frameLayout2 = this.root;
-            if (frameLayout2 == null) {
+
+            var15 = 0;
+        }
+
+        if ((var15 != 0)) {
+            LayoutSeg var64 = this.layoutSeg;
+            LayoutSeg var33 = var64;
+            if (var64 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                var33 = null;
             }
-            overlayView = this.overlay;
-            if (overlayView == null) {
+
+            var33.start();
+            var64 = this.layoutSeg;
+            LayoutSeg var34 = var64;
+            if (var64 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                var34 = null;
             }
-            frameLayout.addView(sceneView72, frameLayout2.indexOfChild(overlayView), new FrameLayout.LayoutParams(-1, -1));
-            this.scene = sceneView62;
+
+            var34.setEnabled(true);
+            Detector var78 = this.getDetector();
+            var64 = this.layoutSeg;
+            LayoutSeg var35 = var64;
+            if (var64 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                var35 = null;
+            }
+
+            var78.setLayout(var35);
+            var77 = this.scene;
+            if (var77 != null) {
+                var64 = this.layoutSeg;
+                LayoutSeg var36 = var64;
+                if (var64 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                    var36 = null;
+                }
+
+                var77.setLayout(var36);
+            }
+        } else {
+            Detector var37 = this.detectorRef;
+            LayoutSeg var38;
+            if (var37 != null) {
+                var38 = var37.getLayout();
+            } else {
+                var38 = null;
+            }
+
+            if (var38 != null) {
+                Detector var39 = this.detectorRef;
+                if (var39 != null) {
+                    var39.setLayout(null);
+                }
+
+                LayoutSeg var68 = this.layoutSeg;
+                LayoutSeg var40 = var68;
+                if (var68 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                    var40 = null;
+                }
+
+                var40.stop();
+            }
         }
-        sceneView = this.scene;
-        if (sceneView != null) {
+
+        label245: {
+            LaneMarks var41;
+            Detector var69;
+            if (this.sceneOn) {
+                var69 = this.getDetector();
+                var41 = this.laneMarks;
+            } else {
+                var69 = this.detectorRef;
+                if (var69 == null) {
+                    break label245;
+                }
+
+                UiSettings var80 = this.settings;
+                UiSettings var42 = var80;
+                if (var80 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("settings");
+                    var42 = null;
+                }
+
+                if (var42.get("lane_card")) {
+                    var41 = this.laneMarks;
+                } else {
+                    var41 = null;
+                }
+            }
+
+            var69.setLaneMarks(var41);
         }
-        if (z != this.sceneOn) {
+
+        var25 = this.scene;
+        if (var25 != null) {
+            var25.setLaneMarks(this.laneMarks);
         }
-        sceneView2 = this.scene;
-        if (sceneView2 != null) {
+
+        var25 = this.scene;
+        if (var25 != null) {
+            var25.setLaneMemory(this.laneTracker.getMemory());
         }
-        if (this.sceneOn) {
+
+        var25 = this.scene;
+        if (var25 != null) {
+            var25.setCarMemory(this.carMemory);
         }
-        objArr = false;
-        if (objArr == true) {
+
+        Detector var81 = this.detectorRef;
+        if (var81 != null) {
+            UiSettings var70 = this.settings;
+            UiSettings var46 = var70;
+            if (var70 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("settings");
+                var46 = null;
+            }
+
+            LaneModel var47;
+            if (var46.get("lane_card") && this.getLaneModel().getHasModel()) {
+                var47 = this.getLaneModel();
+                var47.setEnabled(true);
+            } else {
+                var47 = null;
+            }
+
+            var81.setLaneModel(var47);
         }
-        if (!this.sceneOn) {
+
+        if (var1 && this.hudEditor == null) {
+            var15 = (((boolean)(var3 != 0)) ? 1 : 0);
+        } else {
+            var15 = (((boolean)false) ? 1 : 0);
         }
-        detector.setLaneMarks(laneMarks);
-        sceneView3 = this.scene;
-        if (sceneView3 != null) {
+
+        TextView var71 = this.sceneBtn;
+        TextView var48 = var71;
+        if (var71 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sceneBtn");
+            var48 = null;
         }
-        sceneView4 = this.scene;
-        if (sceneView4 != null) {
+
+        if ((var15 != 0)) {
+            var3 = 0;
+        } else {
+            var3 = 8;
         }
-        sceneView5 = this.scene;
-        if (sceneView5 != null) {
-        }
-        detector2 = this.detectorRef;
-        if (detector2 != null) {
-        }
-        boolean z2222 = !onroad && this.hudEditor == null;
-        textView = this.sceneBtn;
-        if (textView == null) {
-        }
-        textView.setVisibility(!z2222 ? 0 : 8);
+
+        var48.setVisibility((((var3 != 0)) ? 1 : 0));
         if (this.quickBtn != null) {
+            var71 = this.quickBtn;
+            TextView var49 = var71;
+            if (var71 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("quickBtn");
+                var49 = null;
+            }
+
+            if ((var15 != 0)) {
+                var3 = 0;
+            } else {
+                var3 = 8;
+            }
+
+            var49.setVisibility((((var3 != 0)) ? 1 : 0));
         }
+
         if (this.micBtn != null) {
+            ImageView var73 = this.micBtn;
+            ImageView var50 = var73;
+            if (var73 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("micBtn");
+                var50 = null;
+            }
+
+            if ((var15 != 0)) {
+                var3 = 0;
+            } else {
+                var3 = 8;
+            }
+
+            var50.setVisibility((((var3 != 0)) ? 1 : 0));
         }
+
         if (this.bookmarkBtn != null) {
+            ImageView var74 = this.bookmarkBtn;
+            ImageView var51 = var74;
+            if (var74 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("bookmarkBtn");
+                var51 = null;
+            }
+
+            if ((var15 != 0)) {
+                var15 = var4;
+            } else {
+                var15 = 8;
+            }
+
+            var51.setVisibility((((var15 != 0)) ? 1 : 0));
         }
-        textView2 = this.sceneBtn;
-        if (textView2 != null) {
+
+        TextView var52 = this.sceneBtn;
+        if (var52 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sceneBtn");
+            var52 = (TextView)var10;
         }
-        textView3.setText(!z ? "CAMERA" : "SCENE");
+
+        String var75;
+        if (var5) {
+            var75 = "CAMERA";
+        } else {
+            var75 = "SCENE";
+        }
+
+        var52.setText(var75);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -4648,191 +4593,252 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:126:0x020c, code lost:
-    
-        if ((r7 - r2.getAtMs() < 3000 && r2.getQL() > 0.85f && r2.getQR() > 0.85f) != false) goto L114;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:51:0x00ed, code lost:
-    
-        if ((r3.getWanted() && r30.getStarted() && r7 - r3.getShowingAtMs() < 3000 && !r29.sceneOn) != false) goto L61;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void ideasTick(Telemetry t) {
-        UiSettings uiSettings;
-        LaneModel laneModel;
-        long now = System.currentTimeMillis();
-        Ideas ideas = Ideas.INSTANCE;
-        UiSettings uiSettings2 = this.settings;
-        if (uiSettings2 == null) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public final void ideasTick(Telemetry var1) {
+        Object var26 = null; Object var34 = null; // declarations Vineflower left out
+        long var8 = System.currentTimeMillis();
+        Ideas var13 = Ideas.INSTANCE;
+        UiSettings var12 = this.settings;
+        if (var12 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("settings");
-            uiSettings = null;
-        } else {
-            uiSettings = uiSettings2;
+            var12 = null;
         }
-        ideas.tick(t, uiSettings, this.detectorRef, now);
-        String chipText = Ideas.INSTANCE.getChip();
-        if (chipText == null || !t.getStarted()) {
-            TextView textView = this.ideasChip;
-            if (textView == null) {
+
+        var13.tick(var1, var12, this.detectorRef, var8);
+        String var14 = Ideas.INSTANCE.getChip();
+        if (var14 != null && var1.getStarted()) {
+            TextView var41 = this.ideasChip;
+            TextView var20 = var41;
+            if (var41 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("ideasChip");
-                textView = null;
+                var20 = null;
             }
-            textView.setVisibility(8);
-        } else {
-            TextView textView2 = this.ideasChip;
-            if (textView2 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("ideasChip");
-                textView2 = null;
-            }
-            if (!Intrinsics.areEqual(textView2.getText(), chipText)) {
-                TextView textView3 = this.ideasChip;
-                if (textView3 == null) {
+
+            if (!Intrinsics.areEqual(var20.getText(), var14)) {
+                TextView var42 = this.ideasChip;
+                TextView var21 = var42;
+                if (var42 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("ideasChip");
-                    textView3 = null;
+                    var21 = null;
                 }
-                textView3.setText(chipText);
+
+                var21.setText(var14);
             }
-            TextView textView4 = this.ideasChip;
-            if (textView4 == null) {
+
+            TextView var43 = this.ideasChip;
+            TextView var22 = var43;
+            if (var43 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("ideasChip");
-                textView4 = null;
+                var22 = null;
             }
-            textView4.setVisibility(0);
-        }
-        long ask = Ideas.INSTANCE.road().getAskWhy();
-        if (ask != 0 && ask != this.ideasWhyShownFor) {
-            this.ideasWhyShownFor = ask;
-            LinearLayout linearLayout = this.ideasWhy;
-            if (linearLayout == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("ideasWhy");
-                linearLayout = null;
-            }
-            linearLayout.setVisibility(0);
-        }
-        LinearLayout linearLayout2 = this.ideasWhy;
-        if (linearLayout2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ideasWhy");
-            linearLayout2 = null;
-        }
-        if (linearLayout2.getVisibility() == 0 && now - this.ideasWhyShownFor > 12000) {
-            LinearLayout linearLayout3 = this.ideasWhy;
-            if (linearLayout3 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("ideasWhy");
-                linearLayout3 = null;
-            }
-            linearLayout3.setVisibility(8);
-            Ideas.INSTANCE.road().answerWhy(this, null);
-        }
-        DayView dv = Ideas.INSTANCE.getMemory().getDayView();
-        Bitmap showing = dv.getShowing();
-        if (showing != null) {
-        }
-        showing = null;
-        Bitmap pic = showing;
-        if (pic != null) {
-            ImageView imageView = this.ideasDay;
-            if (imageView == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("ideasDay");
-                imageView = null;
-            }
-            imageView.setImageBitmap(pic);
-            ImageView imageView2 = this.ideasDay;
-            if (imageView2 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("ideasDay");
-                imageView2 = null;
-            }
-            imageView2.setVisibility(0);
+
+            var22.setVisibility(0);
         } else {
-            ImageView imageView3 = this.ideasDay;
-            if (imageView3 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("ideasDay");
-                imageView3 = null;
+            TextView var40 = this.ideasChip;
+            TextView var19 = var40;
+            if (var40 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("ideasChip");
+                var19 = null;
             }
-            imageView3.setVisibility(8);
+
+            var19.setVisibility(8);
         }
-        if (t.getStarted() && t.getVEgo() > 3.0f) {
-            if (now - this.ideasLabelMs > 20000) {
-                Pair<Integer, Double> laneFromLeft = this.laneTracker.laneFromLeft();
-                int n = laneFromLeft.component1().intValue();
-                double q = laneFromLeft.component2().doubleValue();
-                int m = this.laneTracker.laneCount().component1().intValue();
-                NewIdeas newIdeas = NewIdeas.INSTANCE;
-                UiSettings uiSettings3 = this.settings;
-                if (uiSettings3 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("settings");
-                    uiSettings3 = null;
-                }
-                if (newIdeas.on(uiSettings3, "self_labels") && Intrinsics.areEqual(RtkPosition.INSTANCE.getKind(), "fixed") && q >= 0.9d && n > 0 && m > 0) {
-                    this.ideasLabelMs = now;
-                    LaneShots.request$default(getLaneShots(), "[auto] " + LaneShots.Companion.caption(this.laneTracker, "self-labelled (RTK fixed)", t.getVEgo() * 2.23694f), LaneShots.Why.EVENT, null, 4, null);
+
+        long var10 = Ideas.INSTANCE.road().getAskWhy();
+        if (var10 != 0L && var10 != this.ideasWhyShownFor) {
+            this.ideasWhyShownFor = var10;
+            LinearLayout var44 = this.ideasWhy;
+            LinearLayout var23 = var44;
+            if (var44 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("ideasWhy");
+                var23 = null;
+            }
+
+            var23.setVisibility(0);
+        }
+
+        LinearLayout var45 = this.ideasWhy;
+        LinearLayout var24 = var45;
+        if (var45 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("ideasWhy");
+            var24 = null;
+        }
+
+        if (var24.getVisibility() == 0 && var8 - this.ideasWhyShownFor > 12000L) {
+            LinearLayout var46 = this.ideasWhy;
+            LinearLayout var25 = var46;
+            if (var46 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("ideasWhy");
+                var25 = null;
+            }
+
+            var25.setVisibility(8);
+            Ideas.INSTANCE.road().answerWhy((Context)this, null);
+        }
+
+        label193: {
+            DayView var47 = Ideas.INSTANCE.getMemory().getDayView();
+            var26 = var47.getShowing();
+            if (var26 != null) {
+                boolean var4;
+                if (var47.getWanted() && var1.getStarted() && var8 - var47.getShowingAtMs() < 3000L && !this.sceneOn) {
+                    var4 = true;
                 } else {
-                    NewIdeas newIdeas2 = NewIdeas.INSTANCE;
-                    UiSettings uiSettings4 = this.settings;
-                    if (uiSettings4 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("settings");
-                        uiSettings4 = null;
-                    }
-                    if (newIdeas2.on(uiSettings4, "model_disagree")) {
-                        Detector detector = this.detectorRef;
-                        if (detector != null && (laneModel = detector.getLaneModel()) != null && (it = laneModel.getAnswer()) != null) {
-                        }
-                        LaneModel.Answer it = null;
-                        if (it != null && q >= 0.6d && m > 0) {
-                            if (it.getLeft() != RangesKt.coerceAtMost(this.laneTracker.lanesLeft(), 3) || it.getRight() != RangesKt.coerceAtMost(this.laneTracker.lanesRight(), 3)) {
-                                this.ideasLabelMs = now;
-                                LaneShots.request$default(getLaneShots(), "[disagree] model " + it.getLeft() + "/" + it.getRight() + " vs card " + this.laneTracker.lanesLeft() + "/" + this.laneTracker.lanesRight() + " - " + LaneShots.Companion.caption(this.laneTracker, "model and card disagree", t.getVEgo() * 2.23694f), LaneShots.Why.EVENT, null, 4, null);
+                    var4 = false;
+                }
+
+                if (var4) {
+                    break label193;
+                }
+            }
+
+            var26 = null;
+        }
+
+        if (var26 != null) {
+            ImageView var58 = this.ideasDay;
+            ImageView var48 = var58;
+            if (var58 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("ideasDay");
+                var48 = null;
+            }
+
+            var48.setImageBitmap(var26);
+            ImageView var49 = this.ideasDay;
+            ImageView var27 = var49;
+            if (var49 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("ideasDay");
+                var27 = null;
+            }
+
+            var27.setVisibility(0);
+        } else {
+            ImageView var50 = this.ideasDay;
+            ImageView var28 = var50;
+            if (var50 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("ideasDay");
+                var28 = null;
+            }
+
+            var28.setVisibility(8);
+        }
+
+        if (var1.getStarted() && var1.getVEgo() > 3.0F && var8 - this.ideasLabelMs > 20000L) {
+            Pair var29 = this.laneTracker.laneFromLeft();
+            int var15 = ((Number)var29.component1()).intValue();
+            double var2 = ((Number)var29.component2()).doubleValue();
+            int var5 = this.laneTracker.laneCount().component1().intValue();
+            NewIdeas var59 = NewIdeas.INSTANCE;
+            UiSettings var51 = this.settings;
+            var12 = var51;
+            if (var51 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("settings");
+                var12 = null;
+            }
+
+            if (var59.on(var12, "self_labels") && Intrinsics.areEqual(RtkPosition.INSTANCE.getKind(), "fixed") && var2 >= 0.9 && var15 > 0 && var5 > 0) {
+                this.ideasLabelMs = var8;
+                LaneShots var36 = this.getLaneShots();
+                String var54 = LaneShots.Companion.caption(this.laneTracker, "self-labelled (RTK fixed)", var1.getVEgo() * 2.23694F);
+                LaneShots.request$default(var36, "[auto] " + var54, LaneShots.Why.EVENT, null, 4, null);
+            } else {
+                NewIdeas var60 = NewIdeas.INSTANCE;
+                UiSettings var52 = this.settings;
+                var12 = var52;
+                if (var52 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("settings");
+                    var12 = null;
+                }
+
+                if (var60.on(var12, "model_disagree")) {
+                    label166: {
+                        Detector var32 = this.detectorRef;
+                        if (var32 != null) {
+                            LaneModel var33 = var32.getLaneModel();
+                            if (var33 != null) {
+                                var34 = var33.getAnswer();
+                                if (var34 != null) {
+                                    boolean var16;
+                                    if (var8 - var34.getAtMs() < 3000L && var34.getQL() > 0.85F && var34.getQR() > 0.85F) {
+                                        var16 = true;
+                                    } else {
+                                        var16 = false;
+                                    }
+
+                                    if (var16) {
+                                        break label166;
+                                    }
+                                }
                             }
                         }
+
+                        var34 = null;
+                    }
+
+                    if (var34 != null
+                        && var2 >= 0.6
+                        && var5 > 0
+                        && (
+                            var34.getLeft() != RangesKt.coerceAtMost(this.laneTracker.lanesLeft(), 3)
+                                || var34.getRight() != RangesKt.coerceAtMost(this.laneTracker.lanesRight(), 3)
+                        )) {
+                        this.ideasLabelMs = var8;
+                        LaneShots var53 = this.getLaneShots();
+                        int var7 = var34.getLeft();
+                        var5 = var34.getRight();
+                        int var6 = this.laneTracker.lanesLeft();
+                        var15 = this.laneTracker.lanesRight();
+                        String var35 = LaneShots.Companion.caption(this.laneTracker, "model and card disagree", var1.getVEgo() * 2.23694F);
+                        LaneShots.request$default(
+                            var53, "[disagree] model " + var7 + "/" + var5 + " vs card " + var6 + "/" + var15 + " - " + var35, LaneShots.Why.EVENT, null, 4, null
+                        );
                     }
                 }
             }
         }
-        if (t.getStarted() && !this.ideasWasStarted) {
-            NewIdeas newIdeas3 = NewIdeas.INSTANCE;
-            UiSettings uiSettings5 = this.settings;
-            if (uiSettings5 == null) {
+
+        if (var1.getStarted() && !this.ideasWasStarted) {
+            NewIdeas var61 = NewIdeas.INSTANCE;
+            UiSettings var55 = this.settings;
+            var12 = var55;
+            if (var55 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("settings");
-                uiSettings5 = null;
+                var12 = null;
             }
-            if (newIdeas3.on(uiSettings5, "friends_fleet")) {
-                new Thread(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda33
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        MainActivity.ideasTick$lambda$190(MainActivity.this);
-                    }
-                }).start();
+
+            if (var61.on(var12, "friends_fleet")) {
+                new Thread(new MainActivity$$ExternalSyntheticLambda33(this)).start();
             }
-            NewIdeas newIdeas4 = NewIdeas.INSTANCE;
-            UiSettings uiSettings6 = this.settings;
-            if (uiSettings6 == null) {
+
+            NewIdeas var62 = NewIdeas.INSTANCE;
+            UiSettings var56 = this.settings;
+            var12 = var56;
+            if (var56 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("settings");
-                uiSettings6 = null;
+                var12 = null;
             }
-            if (newIdeas4.on(uiSettings6, "night_school")) {
-                NewIdeas.INSTANCE.importNightModel(this);
+
+            if (var62.on(var12, "night_school")) {
+                NewIdeas.INSTANCE.importNightModel((Context)this);
             }
         }
-        if (!t.getStarted() && this.ideasWasStarted) {
+
+        if (!var1.getStarted() && this.ideasWasStarted) {
             Ideas.INSTANCE.endOfDrive();
-            NewIdeas newIdeas5 = NewIdeas.INSTANCE;
-            UiSettings uiSettings7 = this.settings;
-            if (uiSettings7 == null) {
+            NewIdeas var63 = NewIdeas.INSTANCE;
+            UiSettings var57 = this.settings;
+            var12 = var57;
+            if (var57 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("settings");
-                uiSettings7 = null;
+                var12 = null;
             }
-            if (newIdeas5.on(uiSettings7, "friends_fleet")) {
-                new Thread(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda34
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        MainActivity.ideasTick$lambda$191(MainActivity.this);
-                    }
-                }).start();
+
+            if (var63.on(var12, "friends_fleet")) {
+                new Thread(new MainActivity$$ExternalSyntheticLambda34(this)).start();
             }
         }
-        this.ideasWasStarted = t.getStarted();
+
+        this.ideasWasStarted = var1.getStarted();
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -4865,230 +4871,1199 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:28:0x011d, code lost:
-    
-        if (r10 == null) goto L36;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     public final void bookmarkNow() {
-        String str;
-        String str2;
-        double[] rp;
-        String str3;
-        String str4;
-        String str5;
-        String str6;
-        String roadName;
-        String str7;
-        String name;
-        try {
-            Telemetry t = this.telemetry;
-            long now = System.currentTimeMillis();
-            JSONObject j = new JSONObject();
-            if (RtkPosition.INSTANCE.fast(now)) {
-                str = "turn_signals";
-                str2 = "exit_signals";
-                rp = RtkPosition.INSTANCE.now(now, t.getVEgo());
-            } else {
-                str = "turn_signals";
-                str2 = "exit_signals";
-                rp = null;
-            }
-            j.put("lat", rp != null ? rp[0] : t.getGpsLat()).put("lon", rp != null ? rp[1] : t.getGpsLon());
-            if (rp != null) {
-                str4 = "side";
-                str3 = "";
-                str5 = "RTK " + RtkPosition.INSTANCE.getKind() + " ±" + bookmarkNow$r1(RtkPosition.INSTANCE.getAccM() * 39.37d) + " in";
-            } else {
-                str3 = "";
-                str4 = "side";
-                str5 = "comma GPS";
-            }
-            j.put("position", str5);
-            j.put("speed", Math.round(t.getVEgo() * 2.23694f) + " mph").put("speed_ms", t.getVEgo());
+        String var141 = null; String var144 = null; Object var146 = null; Object var149 = null; Object var154 = null; Object var159 = null; Object var162 = null; ArrayList var173 = null; Object var186 = null; Object var194 = null; Object var197 = null; Object var204 = null; Object var213 = null; String var225 = null; String var229 = null; String var232 = null; String var240 = null; String var247 = null; Object var249 = null; Object var252 = null; Object var277 = null; String var280 = null; ArrayList var283 = null; Object var288 = null; ArrayList var291 = null; Object var294 = null; Object var303 = null; ArrayList var308 = null; Object var313 = null; Pair var322 = null; Object var352 = null; Object var355 = null; Object var358 = null; Object var361 = null; Object var369 = null; Object var372 = null; Object var375 = null; ArrayList var376 = null; Object var377 = null; ArrayList var379 = null; Object var380 = null; String var381 = null; Object var382 = null; Object var383 = null; Object var384 = null; Item var385 = null; Object var389 = null; Object var390 = null; ArrayList var391 = null; Object var392 = null; Object var397 = null; Object var398 = null; Object var399 = null; Object var401 = null; // declarations Vineflower left out
+        long var11;
+        Telemetry var18;
+        JSONObject var19;
+        double[] var131;
+        label724: {
             try {
-                str6 = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-            } catch (Exception e) {
-                str6 = str3;
-            }
-            j.put("app", str6);
-            LaneBrain b = this.laneTracker;
-            LaneBrain.Road road = b.getRoad();
-            if (road != null && (name = road.getName()) != null) {
-                String str8 = name;
-                if (str8.length() == 0) {
-                    str8 = road.getKind();
+                var18 = this.telemetry;
+                var11 = System.currentTimeMillis();
+                var19 = new JSONObject();
+                if (RtkPosition.INSTANCE.fast(var11)) {
+                    var131 = RtkPosition.INSTANCE.now(var11, var18.getVEgo());
+                    break label724;
                 }
-                roadName = str8;
+            } catch (Exception var105) {
+                Context var15 = (Context)this;
+                String var16 = var105.getMessage();
+                Toast.makeText(var15, "Couldn't bookmark: " + var16, 1).show();
+                return;
             }
-            roadName = t.getRoadName();
-            j.put("place", roadName);
-            JSONObject ln = new JSONObject();
-            Pair<Integer, Double> laneFromLeft = b.laneFromLeft();
-            int n = laneFromLeft.component1().intValue();
-            double q = laneFromLeft.component2().doubleValue();
-            Pair<Integer, String> laneCount = b.laneCount();
-            int m = laneCount.component1().intValue();
-            String src = laneCount.component2();
-            String str9 = str4;
-            double d = 100;
-            ln.put("label", b.label()).put("lane_from_left", n).put("sure", bookmarkNow$r1(q * d)).put("lanes", m).put("lanes_from", src);
-            double[] $this$map$iv = b.marg(-1);
-            int m2 = $this$map$iv.length;
-            Collection destination$iv$iv = new ArrayList(m2);
-            int i = 0;
-            for (int length = $this$map$iv.length; i < length; length = length) {
-                double item$iv$iv = $this$map$iv[i];
-                destination$iv$iv.add(Double.valueOf(bookmarkNow$r1(item$iv$iv * d)));
-                i++;
+
+            var131 = null;
+        }
+
+        double var1;
+        if (var131 != null) {
+            var1 = var131[0];
+        } else {
+            try {
+                var1 = var18.getGpsLat();
+            } catch (Exception var104) {
+                Context var132 = (Context)this;
+                String var264 = var104.getMessage();
+                Toast.makeText(var132, "Couldn't bookmark: " + var264, 1).show();
+                return;
             }
-            JSONObject put = ln.put("lanes_left_probabilities", new JSONArray(destination$iv$iv));
-            double[] $this$map$iv2 = b.marg(1);
-            Collection destination$iv$iv2 = new ArrayList($this$map$iv2.length);
-            int $i$f$map = 0;
-            for (int length2 = $this$map$iv2.length; $i$f$map < length2; length2 = length2) {
-                double item$iv$iv2 = $this$map$iv2[$i$f$map];
-                destination$iv$iv2.add(Double.valueOf(bookmarkNow$r1(item$iv$iv2 * d)));
-                $i$f$map++;
+        }
+
+        JSONObject var266;
+        try {
+            var266 = var19.put("lat", var1);
+        } catch (Exception var103) {
+            Context var133 = (Context)this;
+            String var265 = var103.getMessage();
+            Toast.makeText(var133, "Couldn't bookmark: " + var265, 1).show();
+            return;
+        }
+
+        if (var131 != null) {
+            var1 = var131[1];
+        } else {
+            try {
+                var1 = var18.getGpsLon();
+            } catch (Exception var102) {
+                Context var134 = (Context)this;
+                String var267 = var102.getMessage();
+                Toast.makeText(var134, "Couldn't bookmark: " + var267, 1).show();
+                return;
             }
-            put.put("lanes_right_probabilities", new JSONArray(destination$iv$iv2));
-            Iterable $this$map$iv3 = b.getWhy();
-            int $i$f$map2 = 0;
-            Collection destination$iv$iv3 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv3, 10));
-            Iterable $this$mapTo$iv$iv = $this$map$iv3;
-            int $i$f$mapTo = 0;
-            Iterator<LaneBrain.Event> it = $this$mapTo$iv$iv.iterator();
-            while (true) {
-                Iterable $this$map$iv4 = $this$map$iv3;
-                if (!it.hasNext()) {
+        }
+
+        try {
+            var266.put("lon", var1);
+        } catch (Exception var101) {
+            Context var135 = (Context)this;
+            String var268 = var101.getMessage();
+            Toast.makeText(var135, "Couldn't bookmark: " + var268, 1).show();
+            return;
+        }
+
+        String var138;
+        if (var131 != null) {
+            try {
+                String var137 = RtkPosition.INSTANCE.getKind();
+                var1 = bookmarkNow$r1(RtkPosition.INSTANCE.getAccM() * 39.37);
+                StringBuilder var270 = new StringBuilder();
+                var138 = var270.append("RTK ").append(var137).append(" ±").append(var1).append(" in").toString();
+            } catch (Exception var100) {
+                Context var136 = (Context)this;
+                String var269 = var100.getMessage();
+                Toast.makeText(var136, "Couldn't bookmark: " + var269, 1).show();
+                return;
+            }
+        } else {
+            var138 = "comma GPS";
+        }
+
+        try {
+            var19.put("position", var138);
+            int var6 = Math.round(var18.getVEgo() * 2.23694F);
+            StringBuilder var140 = new StringBuilder();
+            var19.put("speed", var140.append(var6).append(" mph").toString()).put("speed_ms", var18.getVEgo());
+        } catch (Exception var99) {
+            Context var139 = (Context)this;
+            String var271 = var99.getMessage();
+            Toast.makeText(var139, "Couldn't bookmark: " + var271, 1).show();
+            return;
+        }
+
+        try {
+            var141 = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
+        } catch (Exception var27) {
+            var141 = "";
+        }
+
+        LaneBrain.Road var17;
+        LaneBrain var20;
+        try {
+            var19.put("app", var141);
+            var20 = this.laneTracker;
+            var17 = var20.getRoad();
+        } catch (Exception var98) {
+            Context var142 = (Context)this;
+            String var272 = var98.getMessage();
+            Toast.makeText(var142, "Couldn't bookmark: " + var272, 1).show();
+            return;
+        }
+
+        label690: {
+            if (var17 != null) {
+                try {
+                    var144 = var17.getName();
+                } catch (Exception var96) {
+                    Context var143 = (Context)this;
+                    String var273 = var96.getMessage();
+                    Toast.makeText(var143, "Couldn't bookmark: " + var273, 1).show();
+                    return;
+                }
+
+                if (var144 != null) {
+                    boolean var111;
+                    label685: {
+                        label684: {
+                            try {
+                                var146 = var144;
+                                if (var146.length() == 0) {
+                                    break label684;
+                                }
+                            } catch (Exception var97) {
+                                Context var145 = (Context)this;
+                                String var274 = var97.getMessage();
+                                Toast.makeText(var145, "Couldn't bookmark: " + var274, 1).show();
+                                return;
+                            }
+
+                            var111 = false;
+                            break label685;
+                        }
+
+                        var111 = true;
+                    }
+
+                    if (var111) {
+                        try {
+                            var146 = var17.getKind();
+                        } catch (Exception var95) {
+                            Context var147 = (Context)this;
+                            String var275 = var95.getMessage();
+                            Toast.makeText(var147, "Couldn't bookmark: " + var275, 1).show();
+                            return;
+                        }
+                    }
+
+                    try {
+                        var277 = var146;
+                    } catch (Exception var94) {
+                        Context var148 = (Context)this;
+                        String var276 = var94.getMessage();
+                        Toast.makeText(var148, "Couldn't bookmark: " + var276, 1).show();
+                        return;
+                    }
+
+                    var149 = var277;
+                    if (var277 != null) {
+                        break label690;
+                    }
+                }
+            }
+
+            try {
+                var149 = var18.getRoadName();
+            } catch (Exception var93) {
+                Context var150 = (Context)this;
+                String var278 = var93.getMessage();
+                Toast.makeText(var150, "Couldn't bookmark: " + var278, 1).show();
+                return;
+            }
+        }
+
+        int var7;
+        JSONObject var21;
+        try {
+            var19.put("place", var149);
+            var21 = new JSONObject();
+            Pair var152 = var20.laneFromLeft();
+            int var112 = ((Number)var152.component1()).intValue();
+            var1 = ((Number)var152.component2()).doubleValue();
+            Pair var153 = var20.laneCount();
+            var7 = ((Number)var153.component1()).intValue();
+            var280 = (String)var153.component2();
+            var154 = var21.put("label", var20.label()).put("lane_from_left", var112);
+        } catch (Exception var92) {
+            Context var151 = (Context)this;
+            String var279 = var92.getMessage();
+            Toast.makeText(var151, "Couldn't bookmark: " + var279, 1).show();
+            return;
+        }
+
+        double var3 = 100;
+
+        try {
+            var154.put("sure", bookmarkNow$r1(var1 * var3)).put("lanes", var7).put("lanes_from", var280);
+            var131 = var20.marg(-1);
+            ArrayList var282 = new ArrayList(var131.length);
+            var283 = var282;
+            var7 = var131.length;
+        } catch (Exception var91) {
+            Context var155 = (Context)this;
+            String var281 = var91.getMessage();
+            Toast.makeText(var155, "Couldn't bookmark: " + var281, 1).show();
+            return;
+        }
+
+        for (int var113 = 0; var113 < var7; var113++) {
+            try {
+                var283.add(bookmarkNow$r1(var131[var113] * var3));
+            } catch (Exception var90) {
+                Context var157 = (Context)this;
+                String var284 = var90.getMessage();
+                Toast.makeText(var157, "Couldn't bookmark: " + var284, 1).show();
+                return;
+            }
+        }
+
+        try {
+            var159 = var283;
+        } catch (Exception var89) {
+            Context var158 = (Context)this;
+            String var285 = var89.getMessage();
+            Toast.makeText(var158, "Couldn't bookmark: " + var285, 1).show();
+            return;
+        }
+
+        ArrayList var395;
+        try {
+            Collection var287 = var159;
+            JSONArray var161 = new JSONArray(var287);
+            var162 = var21.put("lanes_left_probabilities", var161);
+            var288 = var20.marg(1);
+            var395 = new ArrayList(var288.length);
+            var395 = var395;
+            var7 = var288.length;
+        } catch (Exception var88) {
+            Context var160 = (Context)this;
+            String var286 = var88.getMessage();
+            Toast.makeText(var160, "Couldn't bookmark: " + var286, 1).show();
+            return;
+        }
+
+        for (int var114 = 0; var114 < var7; var114++) {
+            try {
+                var395.add(bookmarkNow$r1(var288[var114] * var3));
+            } catch (Exception var87) {
+                Context var163 = (Context)this;
+                String var289 = var87.getMessage();
+                Toast.makeText(var163, "Couldn't bookmark: " + var289, 1).show();
+                return;
+            }
+        }
+
+        try {
+            var291 = var395;
+        } catch (Exception var86) {
+            Context var164 = (Context)this;
+            String var290 = var86.getMessage();
+            Toast.makeText(var164, "Couldn't bookmark: " + var290, 1).show();
+            return;
+        }
+
+        try {
+            Collection var396 = var291;
+            JSONArray var293 = new JSONArray(var396);
+            var162.put("lanes_right_probabilities", var293);
+            var294 = var20.getWhy();
+        } catch (Exception var85) {
+            Context var165 = (Context)this;
+            String var292 = var85.getMessage();
+            Toast.makeText(var165, "Couldn't bookmark: " + var292, 1).show();
+            return;
+        }
+
+        boolean var9 = false;
+
+        ArrayList var23;
+        try {
+            ArrayList var167 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var294, 10));
+            var23 = var167;
+        } catch (Exception var84) {
+            Context var166 = (Context)this;
+            String var295 = var84.getMessage();
+            Toast.makeText(var166, "Couldn't bookmark: " + var295, 1).show();
+            return;
+        }
+
+        Iterable var168 = var294;
+        boolean var8 = false;
+
+        try {
+            var397 = var168.iterator();
+        } catch (Exception var83) {
+            Context var169 = (Context)this;
+            String var296 = var83.getMessage();
+            Toast.makeText(var169, "Couldn't bookmark: " + var296, 1).show();
+            return;
+        }
+
+        while (true) {
+            boolean var10;
+            try {
+                var10 = var397.hasNext();
+            } catch (Exception var81) {
+                Context var170 = (Context)this;
+                String var297 = var81.getMessage();
+                Toast.makeText(var170, "Couldn't bookmark: " + var297, 1).show();
+                break;
+            }
+
+            if (!var10) {
+                try {
+                    var173 = var23;
+                } catch (Exception var80) {
+                    Context var172 = (Context)this;
+                    String var299 = var80.getMessage();
+                    Toast.makeText(var172, "Couldn't bookmark: " + var299, 1).show();
                     break;
                 }
-                Object item$iv$iv3 = it.next();
-                LaneBrain.Event it2 = (LaneBrain.Event) item$iv$iv3;
-                destination$iv$iv3.add(((now - it2.getAtMs()) / 1000) + "s ago: " + it2.getText());
-                $this$map$iv3 = $this$map$iv4;
-                $this$mapTo$iv$iv = $this$mapTo$iv$iv;
-                $i$f$mapTo = $i$f$mapTo;
-                $i$f$map2 = $i$f$map2;
-            }
-            ln.put("why", new JSONArray(destination$iv$iv3));
-            LaneBrain.RoadModel rm = b.getModel();
-            ln.put("road_model", new JSONObject().put("lanes", rm.getLanes()).put("from", rm.getSrc()).put("conf", rm.getConf()).put("extra_left", rm.getExtraL()).put("extra_right", rm.getExtraR()).put("kind_left", rm.getKindL()).put("kind_right", rm.getKindR()).put("tunnel", rm.getTunnel()).put("bridge", rm.getBridge()));
-            LaneBrain.RoadInfo i2 = b.getInfo();
-            if (i2 != null) {
-                ln.put("road_data", new JSONObject().put("hpms_lanes", i2.getHpmsLanes()).put("hpms_name", i2.getHpmsName()).put("hpms_ramp", i2.getHpmsRamp()).put("hpms_sure", i2.getHpmsSure()).put("extra_why", i2.getExtraWhy()).put("route_straight_lanes", i2.getNavStraight()));
-            }
-            if (road != null) {
-                str7 = " mph";
-                ln.put("map_street", new JSONObject().put("id", road.getId()).put("name", road.getName()).put("kind", road.getKind()).put("oneway", road.getOneway()).put("highway", road.getHighway()).put("lanes_tag", road.getLanesOurWay()));
-            } else {
-                str7 = " mph";
-            }
-            Iterable $this$filter$iv = b.getEvents();
-            Collection destination$iv$iv4 = new ArrayList();
-            for (LaneBrain.Event it3 : $this$filter$iv) {
-                LaneBrain.Road road2 = road;
-                if (now - it3.getAtMs() < 120000) {
-                    destination$iv$iv4.add(it3);
+
+                try {
+                    Collection var175 = var173;
+                    JSONArray var301 = new JSONArray(var175);
+                    var21.put("why", var301);
+                    LaneBrain.RoadModel var176 = var20.getModel();
+                    var266 = new JSONObject();
+                    var21.put(
+                        "road_model",
+                        var266.put("lanes", var176.getLanes())
+                            .put("from", var176.getSrc())
+                            .put("conf", var176.getConf())
+                            .put("extra_left", var176.getExtraL())
+                            .put("extra_right", var176.getExtraR())
+                            .put("kind_left", var176.getKindL())
+                            .put("kind_right", var176.getKindR())
+                            .put("tunnel", var176.getTunnel())
+                            .put("bridge", var176.getBridge())
+                    );
+                    var303 = var20.getInfo();
+                } catch (Exception var79) {
+                    Context var174 = (Context)this;
+                    String var300 = var79.getMessage();
+                    Toast.makeText(var174, "Couldn't bookmark: " + var300, 1).show();
+                    break;
                 }
-                road = road2;
-            }
-            Iterable $this$map$iv5 = (List) destination$iv$iv4;
-            int $i$f$map3 = 0;
-            Collection destination$iv$iv5 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv5, 10));
-            Iterable $this$mapTo$iv$iv2 = $this$map$iv5;
-            int $i$f$mapTo2 = 0;
-            for (Object item$iv$iv4 : $this$mapTo$iv$iv2) {
-                LaneBrain.Event it4 = (LaneBrain.Event) item$iv$iv4;
-                destination$iv$iv5.add(((now - it4.getAtMs()) / 1000) + "s ago: " + it4.getText());
-                $this$mapTo$iv$iv2 = $this$mapTo$iv$iv2;
-                $i$f$map3 = $i$f$map3;
-                $this$map$iv5 = $this$map$iv5;
-                $i$f$mapTo2 = $i$f$mapTo2;
-            }
-            ln.put("events_last_2_min", new JSONArray(destination$iv$iv5));
-            ln.put("ahead", this.laneAhead.text(b.getOdo(), false)).put("ahead_stage", this.laneAhead.getStage().name()).put("drive", b.summary());
-            j.put("lane", ln);
-            JSONObject it5 = t.navState();
-            if (it5 != null) {
-                j.put("route", it5);
-            }
-            Pair<Nav.Step, Double> nextLanes = Nav.INSTANCE.nextLanes();
-            if (nextLanes != null) {
-                Nav.Step s = nextLanes.component1();
-                double d2 = nextLanes.component2().doubleValue();
-                JSONObject put2 = new JSONObject().put("at_m", Math.round(d2)).put("type", s.getType()).put("modifier", s.getModifier()).put("text", s.getText());
-                Iterable $this$map$iv6 = s.getLanes();
-                Collection destination$iv$iv6 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv6, 10));
-                for (Object item$iv$iv5 : $this$map$iv6) {
-                    Nav.Lane l = (Nav.Lane) item$iv$iv5;
-                    destination$iv$iv6.add(new JSONObject().put("arrows", new JSONArray((Collection) l.getArrows())).put("ok", l.getOk()).put("use", l.getUse()));
-                    $this$map$iv6 = $this$map$iv6;
-                    s = s;
-                    d2 = d2;
+
+                if (var303 != null) {
+                    try {
+                        JSONObject var178 = new JSONObject();
+                        var21.put(
+                            "road_data",
+                            var178.put("hpms_lanes", var303.getHpmsLanes())
+                                .put("hpms_name", var303.getHpmsName())
+                                .put("hpms_ramp", var303.getHpmsRamp())
+                                .put("hpms_sure", var303.getHpmsSure())
+                                .put("extra_why", var303.getExtraWhy())
+                                .put("route_straight_lanes", var303.getNavStraight())
+                        );
+                    } catch (Exception var78) {
+                        Context var177 = (Context)this;
+                        String var304 = var78.getMessage();
+                        Toast.makeText(var177, "Couldn't bookmark: " + var304, 1).show();
+                        break;
+                    }
                 }
-                j.put("route_next_lanes", put2.put("lanes", new JSONArray(destination$iv$iv6)));
-            }
-            ModelSnapshot md = t.getModel();
-            JSONObject put3 = new JSONObject().put("enabled", t.getEnabled()).put("active", t.getActive()).put("state", t.getOpState()).put("experimental", t.getExperimentalMode());
-            Iterable $this$filter$iv2 = CollectionsKt.listOf((Object[]) new String[]{t.getAlertText1(), t.getAlertText2()});
-            Collection destination$iv$iv7 = new ArrayList();
-            for (Object element$iv$iv : $this$filter$iv2) {
-                Iterable $this$filter$iv3 = $this$filter$iv2;
-                if (((String) element$iv$iv).length() > 0) {
-                    destination$iv$iv7.add(element$iv$iv);
+
+                if (var17 != null) {
+                    try {
+                        JSONObject var180 = new JSONObject();
+                        var21.put(
+                            "map_street",
+                            var180.put("id", var17.getId())
+                                .put("name", var17.getName())
+                                .put("kind", var17.getKind())
+                                .put("oneway", var17.getOneway())
+                                .put("highway", var17.getHighway())
+                                .put("lanes_tag", var17.getLanesOurWay())
+                        );
+                    } catch (Exception var77) {
+                        Context var179 = (Context)this;
+                        String var305 = var77.getMessage();
+                        Toast.makeText(var179, "Couldn't bookmark: " + var305, 1).show();
+                        break;
+                    }
                 }
-                $this$filter$iv2 = $this$filter$iv3;
+
+                try {
+                    Iterable var182 = var20.getEvents();
+                    ArrayList var307 = new ArrayList();
+                    var308 = var307;
+                    var398 = var182.iterator();
+                } catch (Exception var76) {
+                    Context var181 = (Context)this;
+                    String var306 = var76.getMessage();
+                    Toast.makeText(var181, "Couldn't bookmark: " + var306, 1).show();
+                    break;
+                }
+
+                while (true) {
+                    boolean var115;
+                    label595: {
+                        label594: {
+                            try {
+                                if (!var398.hasNext()) {
+                                    break;
+                                }
+
+                                var375 = var398.next();
+                                if (var11 - ((LaneBrain.Event)var375).getAtMs() < 120000L) {
+                                    break label594;
+                                }
+                            } catch (Exception var75) {
+                                Context var183 = (Context)this;
+                                String var309 = var75.getMessage();
+                                Toast.makeText(var183, "Couldn't bookmark: " + var309, 1).show();
+                                return;
+                            }
+
+                            var115 = false;
+                            break label595;
+                        }
+
+                        var115 = true;
+                    }
+
+                    if (var115) {
+                        try {
+                            var308.add(var375);
+                        } catch (Exception var74) {
+                            Context var184 = (Context)this;
+                            String var310 = var74.getMessage();
+                            Toast.makeText(var184, "Couldn't bookmark: " + var310, 1).show();
+                            return;
+                        }
+                    }
+                }
+
+                try {
+                    var186 = var308;
+                } catch (Exception var73) {
+                    Context var185 = (Context)this;
+                    String var311 = var73.getMessage();
+                    Toast.makeText(var185, "Couldn't bookmark: " + var311, 1).show();
+                    break;
+                }
+
+                try {
+                    var313 = var186;
+                } catch (Exception var72) {
+                    Context var187 = (Context)this;
+                    String var312 = var72.getMessage();
+                    Toast.makeText(var187, "Couldn't bookmark: " + var312, 1).show();
+                    break;
+                }
+
+                var9 = false;
+
+                try {
+                    ArrayList var189 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var313, 10));
+                    var376 = var189;
+                } catch (Exception var71) {
+                    Context var188 = (Context)this;
+                    String var314 = var71.getMessage();
+                    Toast.makeText(var188, "Couldn't bookmark: " + var314, 1).show();
+                    break;
+                }
+
+                Iterable var190 = var313;
+                var8 = false;
+
+                try {
+                    var399 = var190.iterator();
+                } catch (Exception var69) {
+                    Context var191 = (Context)this;
+                    String var315 = var69.getMessage();
+                    Toast.makeText(var191, "Couldn't bookmark: " + var315, 1).show();
+                    break;
+                }
+
+                while (true) {
+                    try {
+                        if (!var399.hasNext()) {
+                            break;
+                        }
+
+                        LaneBrain.Event var402 = (LaneBrain.Event)var399.next();
+                        long var130 = (var11 - var402.getAtMs()) / 1000;
+                        String var403 = var402.getText();
+                        StringBuilder var406 = new StringBuilder();
+                        var376.add(var406.append(var130).append("s ago: ").append(var403).toString());
+                    } catch (Exception var70) {
+                        Context var192 = (Context)this;
+                        String var316 = var70.getMessage();
+                        Toast.makeText(var192, "Couldn't bookmark: " + var316, 1).show();
+                        return;
+                    }
+                }
+
+                try {
+                    var194 = var376;
+                } catch (Exception var68) {
+                    Context var193 = (Context)this;
+                    String var317 = var68.getMessage();
+                    Toast.makeText(var193, "Couldn't bookmark: " + var317, 1).show();
+                    break;
+                }
+
+                try {
+                    Collection var196 = var194;
+                    JSONArray var319 = new JSONArray(var196);
+                    var21.put("events_last_2_min", var319);
+                    var21.put("ahead", this.laneAhead.text(var20.getOdo(), false))
+                        .put("ahead_stage", this.laneAhead.getStage().name())
+                        .put("drive", var20.summary());
+                    var19.put("lane", var21);
+                    var197 = var18.navState();
+                } catch (Exception var67) {
+                    Context var195 = (Context)this;
+                    String var318 = var67.getMessage();
+                    Toast.makeText(var195, "Couldn't bookmark: " + var318, 1).show();
+                    break;
+                }
+
+                if (var197 != null) {
+                    try {
+                        var19.put("route", var197);
+                    } catch (Exception var66) {
+                        Context var198 = (Context)this;
+                        String var320 = var66.getMessage();
+                        Toast.makeText(var198, "Couldn't bookmark: " + var320, 1).show();
+                        break;
+                    }
+                }
+
+                try {
+                    var322 = Nav.INSTANCE.nextLanes();
+                } catch (Exception var65) {
+                    Context var199 = (Context)this;
+                    String var321 = var65.getMessage();
+                    Toast.makeText(var199, "Couldn't bookmark: " + var321, 1).show();
+                    break;
+                }
+
+                if (var322 != null) {
+                    try {
+                        Nav.Step var201 = (Nav.Step)var322.component1();
+                        var1 = ((Number)var322.component2()).doubleValue();
+                        var266 = new JSONObject();
+                        var377 = var266.put("at_m", Math.round(var1))
+                            .put("type", var201.getType())
+                            .put("modifier", var201.getModifier())
+                            .put("text", var201.getText());
+                        Iterable var325 = var201.getLanes();
+                        ArrayList var388 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var325, 10));
+                        var391 = var388;
+                        var389 = var325.iterator();
+                    } catch (Exception var63) {
+                        Context var200 = (Context)this;
+                        String var323 = var63.getMessage();
+                        Toast.makeText(var200, "Couldn't bookmark: " + var323, 1).show();
+                        break;
+                    }
+
+                    while (true) {
+                        try {
+                            if (!var389.hasNext()) {
+                                break;
+                            }
+
+                            Nav.Lane var404 = (Nav.Lane)var389.next();
+                            JSONObject var400 = new JSONObject();
+                            JSONArray var407 = new JSONArray(var404.getArrows());
+                            var391.add(var400.put("arrows", var407).put("ok", var404.getOk()).put("use", var404.getUse()));
+                        } catch (Exception var64) {
+                            Context var202 = (Context)this;
+                            String var326 = var64.getMessage();
+                            Toast.makeText(var202, "Couldn't bookmark: " + var326, 1).show();
+                            return;
+                        }
+                    }
+
+                    try {
+                        var204 = var391;
+                    } catch (Exception var62) {
+                        Context var203 = (Context)this;
+                        String var327 = var62.getMessage();
+                        Toast.makeText(var203, "Couldn't bookmark: " + var327, 1).show();
+                        break;
+                    }
+
+                    try {
+                        Collection var206 = var204;
+                        JSONArray var329 = new JSONArray(var206);
+                        var19.put("route_next_lanes", var377.put("lanes", var329));
+                    } catch (Exception var61) {
+                        Context var205 = (Context)this;
+                        String var328 = var61.getMessage();
+                        Toast.makeText(var205, "Couldn't bookmark: " + var328, 1).show();
+                        break;
+                    }
+                }
+
+                try {
+                    var390 = var18.getModel();
+                    JSONObject var208 = new JSONObject();
+                    var266 = var208.put("enabled", var18.getEnabled())
+                        .put("active", var18.getActive())
+                        .put("state", var18.getOpState())
+                        .put("experimental", var18.getExperimentalMode());
+                    Iterable var209 = CollectionsKt.listOf(new String[]{var18.getAlertText1(), var18.getAlertText2()});
+                    ArrayList var378 = new ArrayList();
+                    var379 = var378;
+                    var392 = var209.iterator();
+                } catch (Exception var59) {
+                    Context var207 = (Context)this;
+                    String var330 = var59.getMessage();
+                    Toast.makeText(var207, "Couldn't bookmark: " + var330, 1).show();
+                    break;
+                }
+
+                while (true) {
+                    boolean var116;
+                    label529: {
+                        label528: {
+                            try {
+                                if (!var392.hasNext()) {
+                                    break;
+                                }
+
+                                var401 = var392.next();
+                                if (((String)var401).length() > 0) {
+                                    break label528;
+                                }
+                            } catch (Exception var60) {
+                                Context var210 = (Context)this;
+                                String var332 = var60.getMessage();
+                                Toast.makeText(var210, "Couldn't bookmark: " + var332, 1).show();
+                                return;
+                            }
+
+                            var116 = false;
+                            break label529;
+                        }
+
+                        var116 = true;
+                    }
+
+                    if (var116) {
+                        try {
+                            var379.add(var401);
+                        } catch (Exception var58) {
+                            Context var211 = (Context)this;
+                            String var333 = var58.getMessage();
+                            Toast.makeText(var211, "Couldn't bookmark: " + var333, 1).show();
+                            return;
+                        }
+                    }
+                }
+
+                try {
+                    var213 = var379;
+                } catch (Exception var57) {
+                    Context var212 = (Context)this;
+                    String var334 = var57.getMessage();
+                    Toast.makeText(var212, "Couldn't bookmark: " + var334, 1).show();
+                    break;
+                }
+
+                float var5;
+                label511: {
+                    try {
+                        var266 = var266.put("alert", CollectionsKt.joinToString(var213, " / ", "", "", -1, "...", null));
+                        if (var18.getVCruiseCluster() > 0.0F) {
+                            var5 = var18.getVCruiseCluster();
+                            break label511;
+                        }
+                    } catch (Exception var56) {
+                        Context var214 = (Context)this;
+                        String var335 = var56.getMessage();
+                        Toast.makeText(var214, "Couldn't bookmark: " + var335, 1).show();
+                        break;
+                    }
+
+                    try {
+                        var5 = var18.getVCruise();
+                    } catch (Exception var55) {
+                        Context var215 = (Context)this;
+                        String var337 = var55.getMessage();
+                        Toast.makeText(var215, "Couldn't bookmark: " + var337, 1).show();
+                        break;
+                    }
+                }
+
+                try {
+                    int var117 = Math.round(var5 * 0.621371F);
+                    StringBuilder var217 = new StringBuilder();
+                    var380 = var266.put("set_speed", var217.append(var117).append(" mph").toString());
+                    var8 = var18.getLeadOne().getStatus();
+                } catch (Exception var54) {
+                    Context var216 = (Context)this;
+                    String var338 = var54.getMessage();
+                    Toast.makeText(var216, "Couldn't bookmark: " + var338, 1).show();
+                    break;
+                }
+
+                String var339 = "none";
+                String var220;
+                if (var8) {
+                    try {
+                        var7 = Math.round(var18.getLeadOne().getDRel() * 3.28084F);
+                        int var118 = Math.round(var18.getLeadOne().getVLead() * 2.23694F);
+                        StringBuilder var219 = new StringBuilder();
+                        var220 = var219.append(var7).append(" ft, ").append(var118).append(" mph").toString();
+                    } catch (Exception var53) {
+                        Context var218 = (Context)this;
+                        String var340 = var53.getMessage();
+                        Toast.makeText(var218, "Couldn't bookmark: " + var340, 1).show();
+                        break;
+                    }
+                } else {
+                    var220 = "none";
+                }
+
+                try {
+                    var21 = var380.put("lead", var220);
+                    var8 = var18.getLeftBlinker();
+                } catch (Exception var52) {
+                    Context var221 = (Context)this;
+                    String var341 = var52.getMessage();
+                    Toast.makeText(var221, "Couldn't bookmark: " + var341, 1).show();
+                    break;
+                }
+
+                label490: {
+                    label734: {
+                        var381 = "both";
+                        if (var8) {
+                            try {
+                                if (var18.getRightBlinker()) {
+                                    break label734;
+                                }
+                            } catch (Exception var51) {
+                                Context var222 = (Context)this;
+                                String var342 = var51.getMessage();
+                                Toast.makeText(var222, "Couldn't bookmark: " + var342, 1).show();
+                                break;
+                            }
+                        }
+
+                        label735: {
+                            try {
+                                if (var18.getLeftBlinker()) {
+                                    break label735;
+                                }
+                            } catch (Exception var50) {
+                                Context var223 = (Context)this;
+                                String var343 = var50.getMessage();
+                                Toast.makeText(var223, "Couldn't bookmark: " + var343, 1).show();
+                                break;
+                            }
+
+                            label476: {
+                                try {
+                                    if (var18.getRightBlinker()) {
+                                        break label476;
+                                    }
+                                } catch (Exception var49) {
+                                    Context var224 = (Context)this;
+                                    String var344 = var49.getMessage();
+                                    Toast.makeText(var224, "Couldn't bookmark: " + var344, 1).show();
+                                    break;
+                                }
+
+                                var225 = "off";
+                                break label490;
+                            }
+
+                            var225 = "right";
+                            break label490;
+                        }
+
+                        var225 = "left";
+                        break label490;
+                    }
+
+                    var225 = "both";
+                }
+
+                label469: {
+                    label736: {
+                        try {
+                            var21 = var21.put("blinker", var225);
+                            if (var18.getLeftBlindspot() && var18.getRightBlindspot()) {
+                                break label736;
+                            }
+                        } catch (Exception var48) {
+                            Context var226 = (Context)this;
+                            String var345 = var48.getMessage();
+                            Toast.makeText(var226, "Couldn't bookmark: " + var345, 1).show();
+                            break;
+                        }
+
+                        label737: {
+                            try {
+                                if (var18.getLeftBlindspot()) {
+                                    break label737;
+                                }
+                            } catch (Exception var47) {
+                                Context var227 = (Context)this;
+                                String var346 = var47.getMessage();
+                                Toast.makeText(var227, "Couldn't bookmark: " + var346, 1).show();
+                                break;
+                            }
+
+                            label453: {
+                                try {
+                                    if (var18.getRightBlindspot()) {
+                                        break label453;
+                                    }
+                                } catch (Exception var46) {
+                                    Context var228 = (Context)this;
+                                    String var347 = var46.getMessage();
+                                    Toast.makeText(var228, "Couldn't bookmark: " + var347, 1).show();
+                                    break;
+                                }
+
+                                var229 = "none";
+                                break label469;
+                            }
+
+                            var229 = "right";
+                            break label469;
+                        }
+
+                        var229 = "left";
+                        break label469;
+                    }
+
+                    var229 = var381;
+                }
+
+                try {
+                    var382 = var21.put("blind_spot", var229);
+                } catch (Exception var45) {
+                    Context var230 = (Context)this;
+                    String var348 = var45.getMessage();
+                    Toast.makeText(var230, "Couldn't bookmark: " + var348, 1).show();
+                    break;
+                }
+
+                boolean var119;
+                label443: {
+                    label442: {
+                        if (var390 != null) {
+                            try {
+                                if (var390.getLaneChanging()) {
+                                    break label442;
+                                }
+                            } catch (Exception var44) {
+                                Context var231 = (Context)this;
+                                String var349 = var44.getMessage();
+                                Toast.makeText(var231, "Couldn't bookmark: " + var349, 1).show();
+                                break;
+                            }
+                        }
+
+                        var119 = false;
+                        break label443;
+                    }
+
+                    var119 = true;
+                }
+
+                var232 = var339;
+                label434:
+                if (var119) {
+                    label432: {
+                        try {
+                            if (var390.getLaneChangeDir() < 0) {
+                                break label432;
+                            }
+                        } catch (Exception var43) {
+                            Context var233 = (Context)this;
+                            String var350 = var43.getMessage();
+                            Toast.makeText(var233, "Couldn't bookmark: " + var350, 1).show();
+                            break;
+                        }
+
+                        var232 = "right";
+                        break label434;
+                    }
+
+                    var232 = "left";
+                }
+
+                try {
+                    var19.put(
+                        "openpilot",
+                        var382.put("lane_change", var232)
+                            .put("gas", var18.getGasPressed())
+                            .put("brake", var18.getBrakePressed())
+                            .put("steering_pressed", var18.getSteeringPressed())
+                            .put("steering_angle", bookmarkNow$r1(var18.getSteeringAngleDeg()))
+                    );
+                    var352 = this.laneSuggest;
+                } catch (Exception var42) {
+                    Context var234 = (Context)this;
+                    String var351 = var42.getMessage();
+                    Toast.makeText(var234, "Couldn't bookmark: " + var351, 1).show();
+                    break;
+                }
+
+                LaneSuggestView var235 = var352;
+                if (var352 == null) {
+                    try {
+                        Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                    } catch (Exception var41) {
+                        Context var236 = (Context)this;
+                        String var353 = var41.getMessage();
+                        Toast.makeText(var236, "Couldn't bookmark: " + var353, 1).show();
+                        break;
+                    }
+
+                    var235 = null;
+                }
+
+                label417: {
+                    label738: {
+                        try {
+                            var355 = var235.getLogic();
+                            JSONObject var238 = new JSONObject();
+                            var383 = var238.put("state", var355.getState().name()).put("kind", var355.getKind());
+                            if (var355.getDir() < 0) {
+                                break label738;
+                            }
+                        } catch (Exception var40) {
+                            Context var237 = (Context)this;
+                            String var354 = var40.getMessage();
+                            Toast.makeText(var237, "Couldn't bookmark: " + var354, 1).show();
+                            break;
+                        }
+
+                        label410: {
+                            try {
+                                if (var355.getDir() > 0) {
+                                    break label410;
+                                }
+                            } catch (Exception var39) {
+                                Context var239 = (Context)this;
+                                String var356 = var39.getMessage();
+                                Toast.makeText(var239, "Couldn't bookmark: " + var356, 1).show();
+                                break;
+                            }
+
+                            var240 = "";
+                            break label417;
+                        }
+
+                        var240 = "right";
+                        break label417;
+                    }
+
+                    var240 = "left";
+                }
+
+                try {
+                    var19.put("lane_question", var383.put("side", var240).put("why", var355.getWhy()));
+                    var358 = this.laneSuggest;
+                } catch (Exception var38) {
+                    Context var241 = (Context)this;
+                    String var357 = var38.getMessage();
+                    Toast.makeText(var241, "Couldn't bookmark: " + var357, 1).show();
+                    break;
+                }
+
+                LaneSuggestView var242 = var358;
+                if (var358 == null) {
+                    try {
+                        Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                    } catch (Exception var37) {
+                        Context var243 = (Context)this;
+                        String var359 = var37.getMessage();
+                        Toast.makeText(var243, "Couldn't bookmark: " + var359, 1).show();
+                        break;
+                    }
+
+                    var242 = null;
+                }
+
+                label395: {
+                    label739: {
+                        try {
+                            var361 = var242.getTurn();
+                            JSONObject var245 = new JSONObject();
+                            var384 = var245.put("state", var361.getState().name());
+                            if (var361.getDir() < 0) {
+                                break label739;
+                            }
+                        } catch (Exception var36) {
+                            Context var244 = (Context)this;
+                            String var360 = var36.getMessage();
+                            Toast.makeText(var244, "Couldn't bookmark: " + var360, 1).show();
+                            break;
+                        }
+
+                        label388: {
+                            try {
+                                if (var361.getDir() > 0) {
+                                    break label388;
+                                }
+                            } catch (Exception var35) {
+                                Context var246 = (Context)this;
+                                String var362 = var35.getMessage();
+                                Toast.makeText(var246, "Couldn't bookmark: " + var362, 1).show();
+                                break;
+                            }
+
+                            var247 = "";
+                            break label395;
+                        }
+
+                        var247 = "right";
+                        break label395;
+                    }
+
+                    var247 = "left";
+                }
+
+                label381: {
+                    label380: {
+                        try {
+                            var249 = var384.put("side", var247).put("street", var361.getStreet());
+                            var1 = var361.getDistM();
+                            if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
+                                break label380;
+                            }
+                        } catch (Exception var34) {
+                            Context var248 = (Context)this;
+                            String var363 = var34.getMessage();
+                            Toast.makeText(var248, "Couldn't bookmark: " + var363, 1).show();
+                            break;
+                        }
+
+                        var119 = false;
+                        break label381;
+                    }
+
+                    var119 = true;
+                }
+
+                if (var119) {
+                    try {
+                        var11 = Math.round(var361.getDistM() * 3.28084);
+                    } catch (Exception var33) {
+                        Context var250 = (Context)this;
+                        String var364 = var33.getMessage();
+                        Toast.makeText(var250, "Couldn't bookmark: " + var364, 1).show();
+                        break;
+                    }
+                } else {
+                    var11 = -1L;
+                }
+
+                label365: {
+                    label364: {
+                        try {
+                            var252 = var249.put("ft_to_turn", var11);
+                            if (var361.getHoldSide() != 0) {
+                                break label364;
+                            }
+                        } catch (Exception var32) {
+                            Context var251 = (Context)this;
+                            String var365 = var32.getMessage();
+                            Toast.makeText(var251, "Couldn't bookmark: " + var365, 1).show();
+                            break;
+                        }
+
+                        var8 = false;
+                        break label365;
+                    }
+
+                    var8 = true;
+                }
+
+                try {
+                    var19.put("turn_signal", var252.put("holding", var8).put("not_a_turn_lane", var361.getLaneHold()).put("last", var361.getResult()));
+                    JSONObject var254 = new JSONObject();
+                    var19.put(
+                        "blinker_settings",
+                        var254.put("change_lanes_card", var18.s("lane_suggest"))
+                            .put("automatic_lane_changes", var18.s("lane_auto"))
+                            .put("exit_signals", var18.s("exit_signals"))
+                            .put("turn_signals", var18.s("turn_signals"))
+                            .put("lane_ends_question", var18.s("lane_ends_ask"))
+                    );
+                    JSONArray var255 = new JSONArray(BlinkLog.INSTANCE.recent(15));
+                    var19.put("blinker_log", var255);
+                    Bookmarks var256 = Bookmarks.INSTANCE;
+                    File var367 = new File(this.getFilesDir(), "lane_log.txt");
+                    var19.put("lane_log_tail", var256.tail(var367, 80));
+                    var385 = Bookmarks.INSTANCE.create((Context)this, var19);
+                    LaneShots var257 = this.getLaneShots();
+                    String var368 = LaneShots.Companion.caption(this.laneTracker, "[bookmark]", var18.getVEgo() * 2.23694F);
+                    LaneShots.Why var386 = LaneShots.Why.USER;
+                    File var387 = new File(var385.getDir(), "picture.jpg");
+                    var257.request(var368, var386, var387);
+                    var369 = this.bookmarkCard;
+                } catch (Exception var31) {
+                    Context var253 = (Context)this;
+                    String var366 = var31.getMessage();
+                    Toast.makeText(var253, "Couldn't bookmark: " + var366, 1).show();
+                    break;
+                }
+
+                BookmarkCard var258 = var369;
+                if (var369 == null) {
+                    try {
+                        Intrinsics.throwUninitializedPropertyAccessException("bookmarkCard");
+                    } catch (Exception var30) {
+                        Context var259 = (Context)this;
+                        String var370 = var30.getMessage();
+                        Toast.makeText(var259, "Couldn't bookmark: " + var370, 1).show();
+                        break;
+                    }
+
+                    var258 = null;
+                }
+
+                try {
+                    var258.show(var385);
+                    var372 = this.bookmarkBtn;
+                } catch (Exception var29) {
+                    Context var260 = (Context)this;
+                    String var371 = var29.getMessage();
+                    Toast.makeText(var260, "Couldn't bookmark: " + var371, 1).show();
+                    break;
+                }
+
+                ImageView var261 = var372;
+                if (var372 == null) {
+                    try {
+                        Intrinsics.throwUninitializedPropertyAccessException("bookmarkBtn");
+                    } catch (Exception var28) {
+                        Context var262 = (Context)this;
+                        String var373 = var28.getMessage();
+                        Toast.makeText(var262, "Couldn't bookmark: " + var373, 1).show();
+                        break;
+                    }
+
+                    var261 = null;
+                }
+
+                try {
+                    var261.performHapticFeedback(0);
+                } catch (Exception var26) {
+                    Context var263 = (Context)this;
+                    String var374 = var26.getMessage();
+                    Toast.makeText(var263, "Couldn't bookmark: " + var374, 1).show();
+                }
+                break;
             }
-            String str10 = str7;
-            JSONObject put4 = put3.put("alert", CollectionsKt.joinToString((List) destination$iv$iv7, " / ", "", "", -1, "...", null)).put("set_speed", Math.round((t.getVCruiseCluster() > 0.0f ? t.getVCruiseCluster() : t.getVCruise()) * 0.621371f) + str10).put("lead", t.getLeadOne().getStatus() ? Math.round(t.getLeadOne().getDRel() * 3.28084f) + " ft, " + Math.round(t.getLeadOne().getVLead() * 2.23694f) + str10 : "none");
-            String str11 = "both";
-            JSONObject put5 = put4.put("blinker", (t.getLeftBlinker() && t.getRightBlinker()) ? "both" : t.getLeftBlinker() ? "left" : t.getRightBlinker() ? "right" : "off");
-            if (!t.getLeftBlindspot() || !t.getRightBlindspot()) {
-                str11 = t.getLeftBlindspot() ? "left" : t.getRightBlindspot() ? "right" : "none";
+
+            try {
+                LaneBrain.Event var24 = (LaneBrain.Event)var397.next();
+                long var13 = (var11 - var24.getAtMs()) / 1000;
+                String var25 = var24.getText();
+                StringBuilder var405 = new StringBuilder();
+                var23.add(var405.append(var13).append("s ago: ").append(var25).toString());
+            } catch (Exception var82) {
+                Context var171 = (Context)this;
+                String var298 = var82.getMessage();
+                Toast.makeText(var171, "Couldn't bookmark: " + var298, 1).show();
+                break;
             }
-            j.put("openpilot", put5.put("blind_spot", str11).put("lane_change", md != null && md.getLaneChanging() ? md.getLaneChangeDir() < 0 ? "left" : "right" : "none").put("gas", t.getGasPressed()).put("brake", t.getBrakePressed()).put("steering_pressed", t.getSteeringPressed()).put("steering_angle", bookmarkNow$r1(t.getSteeringAngleDeg())));
-            LaneSuggestView laneSuggestView = this.laneSuggest;
-            if (laneSuggestView == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                laneSuggestView = null;
-            }
-            LaneSuggest lg = laneSuggestView.getLogic();
-            j.put("lane_question", new JSONObject().put("state", lg.getState().name()).put("kind", lg.getKind()).put(str9, lg.getDir() < 0 ? "left" : lg.getDir() > 0 ? "right" : str3).put("why", lg.getWhy()));
-            LaneSuggestView laneSuggestView2 = this.laneSuggest;
-            if (laneSuggestView2 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                laneSuggestView2 = null;
-            }
-            TurnSignal ts = laneSuggestView2.getTurn();
-            JSONObject put6 = new JSONObject().put("state", ts.getState().name()).put(str9, ts.getDir() < 0 ? "left" : ts.getDir() > 0 ? "right" : str3).put("street", ts.getStreet());
-            double distM = ts.getDistM();
-            j.put("turn_signal", put6.put("ft_to_turn", !Double.isInfinite(distM) && !Double.isNaN(distM) ? Math.round(ts.getDistM() * 3.28084d) : -1L).put("holding", ts.getHoldSide() != 0).put("not_a_turn_lane", ts.getLaneHold()).put("last", ts.getResult()));
-            String str12 = str2;
-            JSONObject put7 = new JSONObject().put("change_lanes_card", t.s("lane_suggest")).put("automatic_lane_changes", t.s("lane_auto")).put(str12, t.s(str12));
-            String str13 = str;
-            j.put("blinker_settings", put7.put(str13, t.s(str13)).put("lane_ends_question", t.s("lane_ends_ask")));
-            j.put("blinker_log", new JSONArray((Collection) BlinkLog.INSTANCE.recent(15)));
-            j.put("lane_log_tail", Bookmarks.INSTANCE.tail(new File(getFilesDir(), "lane_log.txt"), 80));
-            Bookmarks.Item item = Bookmarks.INSTANCE.create(this, j);
-            getLaneShots().request(LaneShots.Companion.caption(this.laneTracker, "[bookmark]", t.getVEgo() * 2.23694f), LaneShots.Why.USER, new File(item.getDir(), "picture.jpg"));
-            BookmarkCard bookmarkCard = this.bookmarkCard;
-            if (bookmarkCard == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("bookmarkCard");
-                bookmarkCard = null;
-            }
-            bookmarkCard.show(item);
-            ImageView imageView = this.bookmarkBtn;
-            if (imageView == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("bookmarkBtn");
-                imageView = null;
-            }
-            imageView.performHapticFeedback(0);
-        } catch (Exception e2) {
-            Toast.makeText(this, "Couldn't bookmark: " + e2.getMessage(), 1).show();
         }
     }
 
@@ -5262,97 +6237,83 @@ public final class MainActivity extends AppCompatActivity {
         dataClient.control(new JSONObject(MapsKt.mapOf(TuplesKt.to("action", "param"), TuplesKt.to("key", "LongitudinalPersonality"), TuplesKt.to("value", Integer.valueOf(RangesKt.coerceIn(v, 0, 2))))));
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:11:0x0039, code lost:
-    
-        if (r10.equals("turn_right") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:12:0x0083, code lost:
-    
-        r3 = com.starpilot.starview.Ideas.INSTANCE.getMemory();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:13:0x008d, code lost:
-    
-        if (kotlin.jvm.internal.Intrinsics.areEqual(r10, "turn_left") == false) goto L33;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:14:0x008f, code lost:
-    
-        r4 = -1;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:15:0x0092, code lost:
-    
-        r3.voiceTurn(r4);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:16:0x0099, code lost:
-    
-        if (kotlin.jvm.internal.Intrinsics.areEqual(r10, "turn_left") == false) goto L37;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x009b, code lost:
-    
-        r6 = "left";
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:19:?, code lost:
-    
-        return "Signaling for the next " + r6;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:20:0x0091, code lost:
-    
-        r4 = 1;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:34:0x0080, code lost:
-    
-        if (r10.equals("turn_left") == false) goto L42;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final String voiceNudge(String arg) {
-        NewIdeas newIdeas = NewIdeas.INSTANCE;
-        UiSettings uiSettings = this.settings;
-        if (uiSettings == null) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final String voiceNudge(String var1) {
+        NewIdeas var7 = NewIdeas.INSTANCE;
+        UiSettings var6 = this.settings;
+        UiSettings var5 = var6;
+        if (var6 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("settings");
-            uiSettings = null;
+            var5 = null;
         }
-        if (!newIdeas.on(uiSettings, "voice_nudges")) {
+
+        if (!var7.on(var5, "voice_nudges")) {
             return "Voice nudges are off (Settings > New ideas)";
-        }
-        IdeasMemory mem = Ideas.INSTANCE.getMemory();
-        long now = System.currentTimeMillis();
-        String str = "right";
-        switch (arg.hashCode()) {
-            case -1364013995:
-                if (arg.equals("center")) {
-                    mem.setNudgeOffset(0.0d);
-                    mem.setNudgeUntil(0L);
-                    return "Back to the middle";
-                }
-                return "Didn't catch that";
-            case -124477815:
-                break;
-            case 3317767:
-                if (arg.equals("left")) {
-                    mem.setNudgeOffset(-0.3d);
-                    mem.setNudgeUntil(90000 + now);
-                    return "Moving over left a bit";
-                }
-                return "Didn't catch that";
-            case 3506395:
-                if (arg.equals("room")) {
-                    mem.setRoomUntil(180000 + now);
-                    return "More room for 3 minutes";
-                }
-                return "Didn't catch that";
-            case 108511772:
-                if (arg.equals("right")) {
-                    mem.setNudgeOffset(0.3d);
-                    mem.setNudgeUntil(90000 + now);
-                    return "Moving over right a bit";
-                }
-                return "Didn't catch that";
-            case 441816026:
-                break;
-            default:
-                return "Didn't catch that";
+        } else {
+            IdeasMemory var11 = Ideas.INSTANCE.getMemory();
+            long var3 = System.currentTimeMillis();
+            int var2 = var1.hashCode();
+            String var10 = "right";
+            switch (var2) {
+                case -1364013995:
+                    if (var1.equals("center")) {
+                        var11.setNudgeOffset(0.0);
+                        var11.setNudgeUntil(0L);
+                        return "Back to the middle";
+                    }
+
+                    return "Didn't catch that";
+                case -124477815:
+                    if (!var1.equals("turn_left")) {
+                        return "Didn't catch that";
+                    }
+                    break;
+                case 3317767:
+                    if (var1.equals("left")) {
+                        var11.setNudgeOffset(-0.3);
+                        var11.setNudgeUntil(90000L + var3);
+                        return "Moving over left a bit";
+                    }
+
+                    return "Didn't catch that";
+                case 3506395:
+                    if (var1.equals("room")) {
+                        var11.setRoomUntil(180000L + var3);
+                        return "More room for 3 minutes";
+                    }
+
+                    return "Didn't catch that";
+                case 108511772:
+                    if (var1.equals("right")) {
+                        var11.setNudgeOffset(0.3);
+                        var11.setNudgeUntil(90000L + var3);
+                        return "Moving over right a bit";
+                    }
+
+                    return "Didn't catch that";
+                case 441816026:
+                    if (!var1.equals("turn_right")) {
+                        return "Didn't catch that";
+                    }
+                    break;
+                default:
+                    return "Didn't catch that";
+            }
+
+            IdeasMemory var12 = Ideas.INSTANCE.getMemory();
+            byte var9;
+            if (Intrinsics.areEqual(var1, "turn_left")) {
+                var9 = -1;
+            } else {
+                var9 = 1;
+            }
+
+            var12.voiceTurn(var9);
+            if (Intrinsics.areEqual(var1, "turn_left")) {
+                var10 = "left";
+            }
+
+            return "Signaling for the next " + var10;
         }
     }
 
@@ -5716,130 +6677,122 @@ public final class MainActivity extends AppCompatActivity {
         return Intrinsics.areEqual(uiSettings.getStr("map_side", "left"), "right");
     }
 
-    /* JADX WARN: Type inference failed for: r1v9, types: [com.starpilot.starview.MainActivity$setupMapFrame$2] */
+    /* VF: from Vineflower (jadx: Type inference failed) */
     private final void setupMapFrame() {
-        ViewGroup content = (ViewGroup) findViewById(16908290);
-        FrameLayout frameLayout = this.root;
-        FrameLayout frameLayout2 = null;
-        if (frameLayout == null) {
+        ViewGroup var5 = this.findViewById(16908290);
+        FrameLayout var2 = this.root;
+        Object var3 = null;
+        FrameLayout var1 = var2;
+        if (var2 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("root");
-            frameLayout = null;
+            var1 = null;
         }
-        content.removeView(frameLayout);
-        FrameLayout $this$setupMapFrame_u24lambda_u24213 = new FrameLayout(this);
-        $this$setupMapFrame_u24lambda_u24213.setBackgroundColor(-16777216);
-        this.outer = $this$setupMapFrame_u24lambda_u24213;
-        FrameLayout frameLayout3 = this.outer;
-        if (frameLayout3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("outer");
-            frameLayout3 = null;
-        }
-        FrameLayout frameLayout4 = this.root;
-        if (frameLayout4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("root");
-            frameLayout4 = null;
-        }
-        frameLayout3.addView(frameLayout4, new FrameLayout.LayoutParams(-1, -1));
-        FrameLayout frameLayout5 = this.outer;
-        if (frameLayout5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("outer");
-            frameLayout5 = null;
-        }
-        content.addView(frameLayout5, new FrameLayout.LayoutParams(-1, -1));
-        View r1 = new View(MainActivity.this) { // from class: com.starpilot.starview.MainActivity$setupMapFrame$2
-            private final Paint p = new Paint(1);
 
-            @Override // android.view.View
-            protected void onDraw(Canvas c) {
-                int dp;
-                int dp2;
-                int dp3;
-                int dp4;
-                int dp5;
-                int dp6;
-                int dp7;
-                int dp8;
-                Intrinsics.checkNotNullParameter(c, "c");
-                float w = getWidth();
-                float h = getHeight();
+        var5.removeView((View)var1);
+        var1 = new FrameLayout((Context)this);
+        var1.setBackgroundColor(-16777216);
+        this.outer = var1;
+        var2 = this.outer;
+        var1 = var2;
+        if (var2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("outer");
+            var1 = null;
+        }
+
+        FrameLayout var4 = this.root;
+        var2 = var4;
+        if (var4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("root");
+            var2 = null;
+        }
+
+        var1.addView((View)var2, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
+        var2 = this.outer;
+        var1 = var2;
+        if (var2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("outer");
+            var1 = null;
+        }
+
+        var5.addView((View)var1, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
+        View var9 = new View(this) {
+            private final Paint p;
+            final MainActivity this$0;
+
+            {
+                this.this$0 = var1;
+                this.p = new Paint(1);
+            }
+
+            protected void onDraw(Canvas var1) {
+                Intrinsics.checkNotNullParameter(var1, "c");
+                float var8 = this.getWidth();
+                float var4x = this.getHeight();
                 this.p.setColor(Color.rgb(16, 18, 22));
-                float f = 2;
-                dp = MainActivity.this.dp(3);
-                dp2 = MainActivity.this.dp(3);
-                c.drawRect((w / f) - dp, 0.0f, (w / f) + dp2, h, this.p);
+                float var3x = 2;
+                var1.drawRect(var8 / var3x - this.this$0.dp(3), 0.0F, var8 / var3x + this.this$0.dp(3), var4x, this.p);
                 this.p.setColor(Color.argb(220, 210, 215, 225));
-                dp3 = MainActivity.this.dp(3);
-                float f2 = (w / f) - dp3;
-                dp4 = MainActivity.this.dp(36);
-                float f3 = (h / f) - dp4;
-                dp5 = MainActivity.this.dp(3);
-                float f4 = dp5 + (w / f);
-                dp6 = MainActivity.this.dp(36);
-                float f5 = (h / f) + dp6;
-                dp7 = MainActivity.this.dp(3);
-                float f6 = dp7;
-                dp8 = MainActivity.this.dp(3);
-                c.drawRoundRect(f2, f3, f4, f5, f6, dp8, this.p);
+                float var5x = var8 / var3x;
+                float var2x = this.this$0.dp(3);
+                float var6 = var4x / var3x;
+                float var7 = this.this$0.dp(36);
+                var8 /= var3x;
+                var1.drawRoundRect(
+                    var5x - var2x, var6 - var7, this.this$0.dp(3) + var8, var4x / var3x + this.this$0.dp(36), this.this$0.dp(3), this.this$0.dp(3), this.p
+                );
             }
         };
-        r1.setVisibility(8);
-        r1.setElevation(30.0f);
-        this.divider = r1;
-        FrameLayout frameLayout6 = this.outer;
-        if (frameLayout6 == null) {
+        var9.setVisibility(8);
+        var9.setElevation(30.0F);
+        this.divider = var9;
+        var2 = this.outer;
+        var1 = var2;
+        if (var2 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("outer");
-            frameLayout6 = null;
+            var1 = null;
         }
-        View view = this.divider;
-        if (view == null) {
+
+        View var23 = this.divider;
+        View var19 = var23;
+        if (var23 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("divider");
-            view = null;
+            var19 = null;
         }
-        frameLayout6.addView(view, new FrameLayout.LayoutParams(dp(28), -1));
-        final Ref.IntRef dragW = new Ref.IntRef();
-        final Ref.LongRef lastApply = new Ref.LongRef();
-        View view2 = this.divider;
-        if (view2 == null) {
+
+        var1.addView(var19, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(this.dp(28), -1)));
+        IntRef var24 = new IntRef();
+        LongRef var25 = new LongRef();
+        View var20 = this.divider;
+        View var11 = var20;
+        if (var20 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("divider");
-            view2 = null;
+            var11 = null;
         }
-        view2.setOnTouchListener(new View.OnTouchListener() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda29
-            @Override // android.view.View.OnTouchListener
-            public final boolean onTouch(View view3, MotionEvent motionEvent) {
-                boolean z;
-                z = MainActivity.setupMapFrame$lambda$215(MainActivity.this, dragW, lastApply, view3, motionEvent);
-                return z;
-            }
-        });
-        FrameLayout frameLayout7 = this.outer;
-        if (frameLayout7 == null) {
+
+        var11.setOnTouchListener(new MainActivity$$ExternalSyntheticLambda29(this, var24, var25));
+        var2 = this.outer;
+        var1 = var2;
+        if (var2 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("outer");
-            frameLayout7 = null;
+            var1 = null;
         }
-        frameLayout7.addOnLayoutChangeListener(new View.OnLayoutChangeListener() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda40
-            @Override // android.view.View.OnLayoutChangeListener
-            public final void onLayoutChange(View view3, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
-                MainActivity.setupMapFrame$lambda$216(MainActivity.this, view3, i, i2, i3, i4, i5, i6, i7, i8);
-            }
-        });
-        UiSettings uiSettings = this.settings;
-        if (uiSettings == null) {
+
+        var1.addOnLayoutChangeListener(new MainActivity$$ExternalSyntheticLambda40(this));
+        UiSettings var22 = this.settings;
+        UiSettings var13 = var22;
+        if (var22 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("settings");
-            uiSettings = null;
+            var13 = null;
         }
-        if (uiSettings.get("map_open")) {
-            FrameLayout frameLayout8 = this.outer;
-            if (frameLayout8 == null) {
+
+        if (var13.get("map_open")) {
+            var1 = this.outer;
+            if (var1 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("outer");
-            } else {
-                frameLayout2 = frameLayout8;
+                var1 = (FrameLayout)var3;
             }
-            frameLayout2.post(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda51
-                @Override // java.lang.Runnable
-                public final void run() {
-                    MainActivity.this.openMap();
-                }
-            });
+
+            var1.post(new MainActivity$$ExternalSyntheticLambda51(this));
         }
     }
 
@@ -6118,72 +7071,92 @@ public final class MainActivity extends AppCompatActivity {
         frameLayout.setLayoutParams(lp);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:20:0x0094, code lost:
-    
-        if (r2 == null) goto L30;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void navTick(long now) {
-        DataClient dataClient;
-        DataClient dataClient2;
-        String dest;
-        MapPane pane = this.mapPane;
-        UiSettings uiSettings = null;
-        if (pane == null || !getMapOpen()) {
-            Nav nav = Nav.INSTANCE;
-            DataClient dataClient3 = this.data;
-            if (dataClient3 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("data");
-                dataClient = null;
-            } else {
-                dataClient = dataClient3;
-            }
-            Nav.poll$default(nav, dataClient, false, now, false, 8, null);
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public final void navTick(long var1) {
+        String var19 = null; // declarations Vineflower left out
+        MapPane var9 = this.mapPane;
+        UiSettings var10 = null;
+        if (var9 != null && this.getMapOpen()) {
+            var9.tick(var1);
         } else {
-            pane.tick(now);
+            Nav var11 = Nav.INSTANCE;
+            DataClient var15 = this.data;
+            if (var15 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("data");
+                var15 = null;
+            }
+
+            Nav.poll$default(var11, var15, false, var1, false, 8, null);
         }
-        MapboxRelay mapboxRelay = MapboxRelay.INSTANCE;
-        MainActivity mainActivity = this;
-        DataClient dataClient4 = this.data;
-        if (dataClient4 == null) {
+
+        MapboxRelay var12 = MapboxRelay.INSTANCE;
+        Context var20 = (Context)this;
+        DataClient var16 = this.data;
+        if (var16 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("data");
-            dataClient2 = null;
-        } else {
-            dataClient2 = dataClient4;
+            var16 = null;
         }
-        mapboxRelay.tick(mainActivity, dataClient2, this.host, now);
-        if ((Favorites.INSTANCE.getList().isEmpty() && this.tick % 200 == 0) || this.tick % 2400 == 0) {
-            Favorites favorites = Favorites.INSTANCE;
-            DataClient dataClient5 = this.data;
-            if (dataClient5 == null) {
+
+        var12.tick(var20, var16, this.host, var1);
+        if (Favorites.INSTANCE.getList().isEmpty() && this.tick % 200 == 0 || this.tick % 2400 == 0) {
+            Favorites var24 = Favorites.INSTANCE;
+            DataClient var21 = this.data;
+            DataClient var17 = var21;
+            if (var21 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("data");
-                dataClient5 = null;
+                var17 = null;
             }
-            Favorites.load$default(favorites, dataClient5, null, 2, null);
+
+            Favorites.load$default(var24, var17, null, 2, null);
         }
-        JSONObject it = Nav.INSTANCE.getDestination();
-        if (it != null) {
-            dest = it.optDouble("latitude") + "," + it.optDouble("longitude");
+
+        label61: {
+            JSONObject var18 = Nav.INSTANCE.getDestination();
+            if (var18 != null) {
+                double var5 = var18.optDouble("latitude");
+                double var3 = var18.optDouble("longitude");
+                String var22 = var5 + "," + var3;
+                var19 = var22;
+                if (var22 != null) {
+                    break label61;
+                }
+            }
+
+            var19 = "";
         }
-        dest = "";
-        if (!Intrinsics.areEqual(dest, this.lastNavDest)) {
-            if (dest.length() > 0) {
-                if (!(this.lastNavDest.length() > 0) && Nav.INSTANCE.getLoaded() && !getMapOpen()) {
-                    UiSettings uiSettings2 = this.settings;
-                    if (uiSettings2 == null) {
+
+        if (!Intrinsics.areEqual(var19, this.lastNavDest)) {
+            int var7 = var19.length();
+            boolean var8 = true;
+            boolean var13;
+            if (var7 > 0) {
+                var13 = true;
+            } else {
+                var13 = false;
+            }
+
+            if (var13) {
+                if (this.lastNavDest.length() > 0) {
+                    var13 = var8;
+                } else {
+                    var13 = false;
+                }
+
+                if (!var13 && Nav.INSTANCE.getLoaded() && !this.getMapOpen()) {
+                    UiSettings var23 = this.settings;
+                    if (var23 == null) {
                         Intrinsics.throwUninitializedPropertyAccessException("settings");
                     } else {
-                        uiSettings = uiSettings2;
+                        var10 = var23;
                     }
-                    if (uiSettings.get("map_auto_open")) {
-                        openMap();
+
+                    if (var10.get("map_auto_open")) {
+                        this.openMap();
                     }
                 }
             }
-            this.lastNavDest = dest;
+
+            this.lastNavDest = var19;
         }
     }
 

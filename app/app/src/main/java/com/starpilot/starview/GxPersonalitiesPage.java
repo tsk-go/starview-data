@@ -47,6 +47,10 @@ import kotlin.text.Regex;
 import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.content.Context;
+import android.graphics.Paint.Style;
+import android.graphics.PathEffect;
+import android.graphics.drawable.Drawable;
 
 /* compiled from: GxHome.kt */
 public final class GxPersonalitiesPage extends GxPage {
@@ -80,16 +84,25 @@ public final class GxPersonalitiesPage extends GxPage {
     private boolean recovery;
     private final HashMap<String, Object> vals;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxPersonalitiesPage(Activity act, GxHost gx) {
-        super(act, gx);
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(gx, "gx");
+    /* VF: from Vineflower (jadx: ) */
+    public GxPersonalitiesPage(Activity var1, GxHost var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "gx");
         this.needsOffroad = true;
-        this.profilesIds = CollectionsKt.listOf((Object[]) new String[]{"traffic", "aggressive", "standard", "relaxed"});
-        this.categories = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("acceleration", "Acceleration"), TuplesKt.to("braking", "Braking"), TuplesKt.to("following", "Following")});
-        this.profileKeys = MapsKt.mapOf(TuplesKt.to("traffic", "TrafficPersonalityProfile"), TuplesKt.to("aggressive", "AggressivePersonalityProfile"), TuplesKt.to("standard", "StandardPersonalityProfile"), TuplesKt.to("relaxed", "RelaxedPersonalityProfile"));
-        this.jerkSuffixes = CollectionsKt.listOf((Object[]) new String[]{"Acceleration", "Deceleration", "Danger", "SpeedDecrease", "Speed"});
+        this.profilesIds = CollectionsKt.listOf(new String[]{"traffic", "aggressive", "standard", "relaxed"});
+        this.categories = CollectionsKt.listOf(
+            new Pair[]{TuplesKt.to("acceleration", "Acceleration"), TuplesKt.to("braking", "Braking"), TuplesKt.to("following", "Following")}
+        );
+        this.profileKeys = MapsKt.mapOf(
+            new Pair[]{
+                TuplesKt.to("traffic", "TrafficPersonalityProfile"),
+                TuplesKt.to("aggressive", "AggressivePersonalityProfile"),
+                TuplesKt.to("standard", "StandardPersonalityProfile"),
+                TuplesKt.to("relaxed", "RelaxedPersonalityProfile")
+            }
+        );
+        this.jerkSuffixes = CollectionsKt.listOf(new String[]{"Acceleration", "Deceleration", "Danger", "SpeedDecrease", "Speed"});
         this.vals = new HashMap<>();
         this.meta = MapsKt.emptyMap();
         this.error = "";
@@ -278,65 +291,39 @@ public final class GxPersonalitiesPage extends GxPage {
         }), " +", "+", false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:10:0x001e, code lost:
-    
-        if (r5.equals("") == false) goto L15;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final CharSequence label$lambda$1(String s) {
-        String str;
-        Intrinsics.checkNotNullParameter(s, "s");
-        switch (s.hashCode()) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final CharSequence label$lambda$1(String var0) {
+        Intrinsics.checkNotNullParameter(var0, "s");
+        switch (var0.hashCode()) {
             case -1106578487:
-                if (s.equals("legacy")) {
-                    str = "Previous";
-                    break;
+                if (var0.equals("legacy")) {
+                    String var8 = "Previous";
+                    return var8;
                 }
-                String substring = s.substring(0, 1);
-                Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
-                Locale ROOT = Locale.ROOT;
-                Intrinsics.checkNotNullExpressionValue(ROOT, "ROOT");
-                String upperCase = substring.toUpperCase(ROOT);
-                Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
-                String substring2 = s.substring(1);
-                Intrinsics.checkNotNullExpressionValue(substring2, "substring(...)");
-                str = upperCase + substring2;
                 break;
             case 0:
-                str = "";
+                String var6 = "";
+                if (var0.equals("")) {
+                    return var6;
+                }
                 break;
             case 3444122:
-                if (s.equals("plus")) {
-                    str = "+";
-                    break;
+                if (var0.equals("plus")) {
+                    String var1 = "+";
+                    return var1;
                 }
-                String substring3 = s.substring(0, 1);
-                Intrinsics.checkNotNullExpressionValue(substring3, "substring(...)");
-                Locale ROOT2 = Locale.ROOT;
-                Intrinsics.checkNotNullExpressionValue(ROOT2, "ROOT");
-                String upperCase2 = substring3.toUpperCase(ROOT2);
-                Intrinsics.checkNotNullExpressionValue(upperCase2, "toUpperCase(...)");
-                String substring22 = s.substring(1);
-                Intrinsics.checkNotNullExpressionValue(substring22, "substring(...)");
-                str = upperCase2 + substring22;
-                break;
-            default:
-                String substring32 = s.substring(0, 1);
-                Intrinsics.checkNotNullExpressionValue(substring32, "substring(...)");
-                Locale ROOT22 = Locale.ROOT;
-                Intrinsics.checkNotNullExpressionValue(ROOT22, "ROOT");
-                String upperCase22 = substring32.toUpperCase(ROOT22);
-                Intrinsics.checkNotNullExpressionValue(upperCase22, "toUpperCase(...)");
-                String substring222 = s.substring(1);
-                Intrinsics.checkNotNullExpressionValue(substring222, "substring(...)");
-                str = upperCase22 + substring222;
-                break;
         }
-        return str;
+
+        String var2 = var0.substring(0, 1);
+        Intrinsics.checkNotNullExpressionValue(var2, "substring(...)");
+        Locale var4 = Locale.ROOT;
+        Intrinsics.checkNotNullExpressionValue(var4, "ROOT");
+        String var5 = var2.toUpperCase(var4);
+        Intrinsics.checkNotNullExpressionValue(var5, "toUpperCase(...)");
+        var0 = var0.substring(1);
+        Intrinsics.checkNotNullExpressionValue(var0, "substring(...)");
+        String var7 = var5 + var0;
+        return var7;
     }
 
     private final List<Double> nums(JSONArray a) {
@@ -526,46 +513,57 @@ public final class GxPersonalitiesPage extends GxPage {
         return false;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:27:0x0056 A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:29:? A[LOOP:0: B:14:0x0022->B:29:?, LOOP_END, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private static final boolean validate$finite(JSONArray a) {
-        Iterable $this$all$iv;
-        int it;
-        if (a != null) {
-            Iterable $this$all$iv2 = RangesKt.until(0, a.length());
-            if (!($this$all$iv2 instanceof Collection) || !((Collection) $this$all$iv2).isEmpty()) {
-                Iterator it2 = $this$all$iv2.iterator();
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private static final boolean validate$finite(JSONArray var0) {
+        boolean var5 = false;
+        boolean var4 = var5;
+        if (var0 != null) {
+            Iterable var6 = RangesKt.until(0, var0.length());
+            boolean var9;
+            if (var6 instanceof Collection && ((Collection)var6).isEmpty()) {
+                var9 = true;
+            } else {
+                Iterator var10 = var6.iterator();
+
                 while (true) {
-                    if (it2.hasNext()) {
-                        int element$iv = ((IntIterator) it2).nextInt();
-                        Object v = a.opt(element$iv);
-                        if (v instanceof Number) {
-                            double doubleValue = ((Number) v).doubleValue();
-                            if ((Double.isInfinite(doubleValue) || Double.isNaN(doubleValue)) ? false : true) {
-                                it = 1;
-                                if (it != 0) {
-                                    $this$all$iv = null;
-                                    break;
-                                }
+                    if (!var10.hasNext()) {
+                        var9 = true;
+                        break;
+                    }
+
+                    label40: {
+                        Object var7 = var0.opt(((IntIterator)var10).nextInt());
+                        if (var7 instanceof Number) {
+                            double var1 = ((Number)var7).doubleValue();
+                            if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
+                                var9 = true;
+                            } else {
+                                var9 = false;
+                            }
+
+                            if (var9) {
+                                var9 = true;
+                                break label40;
                             }
                         }
-                        it = 0;
-                        if (it != 0) {
-                        }
-                    } else {
-                        $this$all$iv = 1;
+
+                        var9 = false;
+                    }
+
+                    if (!var9) {
+                        var9 = false;
                         break;
                     }
                 }
-            } else {
-                $this$all$iv = 1;
             }
-            return $this$all$iv != null;
+
+            var4 = var5;
+            if (var9) {
+                var4 = true;
+            }
         }
-        return false;
+
+        return var4;
     }
 
     private final JSONObject validate(JSONObject d) {
@@ -711,42 +709,58 @@ public final class GxPersonalitiesPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:18:0x0063  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit fetchContext$lambda$18$lambda$17$lambda$16(GxPersonalitiesPage this$0, HashMap $m, String $e1, JSONObject $st, boolean $apply, Function1 $then, String e2, String t) {
-        Intrinsics.checkNotNullParameter(t, "t");
-        Boolean on = this$0.roadFlag($m.get("IsOnroad"));
-        Boolean off = null;
-        if (on == null) {
-            on = ($e1 != null || $st == null) ? null : Boolean.valueOf(Intrinsics.areEqual($st.optString("status"), "Driving"));
-        }
-        Boolean roadFlag = $m.containsKey("IsOffroad") ? this$0.roadFlag($m.get("IsOffroad")) : null;
-        if (roadFlag == null) {
-            roadFlag = e2 == null ? this$0.roadFlag(StringsKt.trim((CharSequence) t).toString()) : null;
-            if (roadFlag == null) {
-                if (on != null) {
-                    boolean it = on.booleanValue();
-                    off = Boolean.valueOf(!it);
-                }
-                if ($apply) {
-                    this$0.vals.clear();
-                    this$0.vals.putAll($m);
-                    this$0.vals.put("IsOnroad", on);
-                    this$0.vals.put("IsOffroad", off);
-                    this$0.onroad = on;
-                    this$0.offroad = off;
-                }
-                $then.invoke(true);
-                return Unit.INSTANCE;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public static final Unit fetchContext$lambda$18$lambda$17$lambda$16(
+        GxPersonalitiesPage var0, HashMap var1, String var2, JSONObject var3, boolean var4, Function1 var5, String var6, String var7
+    ) {
+        Intrinsics.checkNotNullParameter(var7, "t");
+        Boolean var11 = var0.roadFlag(var1.get("IsOnroad"));
+        Object var10 = null;
+        Boolean var9 = var11;
+        if (var11 == null) {
+            if (var2 == null && var3 != null) {
+                var9 = Intrinsics.areEqual(var3.optString("status"), "Driving");
+            } else {
+                var9 = null;
             }
         }
-        off = roadFlag;
-        if ($apply) {
+
+        Boolean var13;
+        if (var1.containsKey("IsOffroad")) {
+            var13 = var0.roadFlag(var1.get("IsOffroad"));
+        } else {
+            var13 = null;
         }
-        $then.invoke(true);
+
+        Boolean var12 = var13;
+        if (var13 == null) {
+            Boolean var14;
+            if (var6 == null) {
+                var14 = var0.roadFlag(StringsKt.trim(var7).toString());
+            } else {
+                var14 = null;
+            }
+
+            var12 = var14;
+            if (var14 == null) {
+                var12 = (Boolean)var10;
+                if (var9 != null) {
+                    boolean var8 = var9;
+                    var12 = var8 ^ true;
+                }
+            }
+        }
+
+        if (var4) {
+            var0.vals.clear();
+            var0.vals.putAll(var1);
+            var0.vals.put("IsOnroad", var9);
+            var0.vals.put("IsOffroad", var12);
+            var0.onroad = var9;
+            var0.offroad = var12;
+        }
+
+        var5.invoke(true);
         return Unit.INSTANCE;
     }
 
@@ -779,90 +793,380 @@ public final class GxPersonalitiesPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:55:0x0161, code lost:
-    
-        r3.loadCatalog();
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit load$lambda$23$lambda$22(GxPersonalitiesPage this$0, String $e, JSONObject $d, boolean ok) {
-        Iterable $this$any$iv;
-        this$0.loadPending = false;
-        try {
-        } catch (Exception ex) {
-            String message = ex.getMessage();
-            if (message == null) {
-                message = ex.toString();
-            }
-            this$0.error = message;
-        }
-        if ($e != null || $d == null) {
-            throw new IllegalStateException($e == null ? "bad reply" : $e);
-        }
-        GalaxyApi a = this$0.getApi();
-        if (ok && a != null && !a.getCatalog().isEmpty()) {
-            this$0.acceptData($d);
-            LinkedHashMap m = new LinkedHashMap();
-            for (GalaxyApi.Category cat : a.getCatalog()) {
-                for (GalaxyApi.Param p : cat.getParams()) {
-                    m.put(p.getKey(), p);
-                }
-            }
-            this$0.meta = m;
-            List listOf = CollectionsKt.listOf("CustomPersonalities");
-            Iterable $this$flatMap$iv = this$0.profilesIds;
-            Collection destination$iv$iv = new ArrayList();
-            for (Object element$iv$iv : $this$flatMap$iv) {
-                String p2 = (String) element$iv$iv;
-                List listOf2 = CollectionsKt.listOf(this$0.key(p2));
-                Iterable $this$map$iv = this$0.jerkSuffixes;
-                LinkedHashMap m2 = m;
-                Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-                Iterable $this$mapTo$iv$iv = $this$map$iv;
-                for (Object item$iv$iv : $this$mapTo$iv$iv) {
-                    String it = (String) item$iv$iv;
-                    destination$iv$iv2.add(this$0.label(p2) + "Jerk" + it);
-                    $this$map$iv = $this$map$iv;
-                    $this$mapTo$iv$iv = $this$mapTo$iv$iv;
-                }
-                Iterable list$iv$iv = CollectionsKt.plus((Collection) listOf2, destination$iv$iv2);
-                CollectionsKt.addAll(destination$iv$iv, list$iv$iv);
-                m = m2;
-            }
-            Iterable required = CollectionsKt.plus((Collection) listOf, destination$iv$iv);
-            Iterable $this$any$iv2 = required;
-            if (!($this$any$iv2 instanceof Collection) || !((Collection) $this$any$iv2).isEmpty()) {
-                Iterator it2 = $this$any$iv2.iterator();
-                while (true) {
-                    if (!it2.hasNext()) {
-                        $this$any$iv = null;
-                        break;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit load$lambda$23$lambda$22(GxPersonalitiesPage var0, String var1, JSONObject var2, boolean var3) {
+        LinkedHashMap var40 = null; ArrayList var41 = null; Object var42 = null; Object var43 = null; IllegalStateException var46 = null; Object var54 = null; ArrayList var64 = null; Object var66 = null; Object var75 = null; Object var76 = null; Object var78 = null; // declarations Vineflower left out
+        label230: {
+            label240: {
+                Exception var5;
+                var0.loadPending = false;
+                label227:
+                if (var1 == null && var2 != null) {
+                    try {
+                        var75 = var0.getApi();
+                    } catch (Exception var35) {
+                        var5 = var35;
+                        String var48 = var35.getMessage();
+                        var1 = var48;
+                        if (var48 != null) {
+                            break label240;
+                        }
+                        break label227;
                     }
-                    Object element$iv = it2.next();
-                    String it3 = (String) element$iv;
-                    if (!this$0.meta.containsKey(it3)) {
-                        $this$any$iv = 1;
-                        break;
+
+                    label234: {
+                        if (var3 && var75 != null) {
+                            try {
+                                if (!var75.getCatalog().isEmpty()) {
+                                    break label234;
+                                }
+                            } catch (Exception var34) {
+                                var5 = var34;
+                                String var49 = var34.getMessage();
+                                var1 = var49;
+                                if (var49 != null) {
+                                    break label240;
+                                }
+                                break label227;
+                            }
+                        }
+
+                        if (var75 != null) {
+                            try {
+                                var75.loadCatalog();
+                            } catch (Exception var33) {
+                                var5 = var33;
+                                String var50 = var33.getMessage();
+                                var1 = var50;
+                                if (var50 != null) {
+                                    break label240;
+                                }
+                                break label227;
+                            }
+                        }
+
+                        try {
+                            IllegalStateException var39 = new IllegalStateException("Settings metadata is unavailable. Retrying automatically…");
+                            throw var39;
+                        } catch (Exception var32) {
+                            var5 = var32;
+                            String var51 = var32.getMessage();
+                            var1 = var51;
+                            if (var51 != null) {
+                                break label240;
+                            }
+                            break label227;
+                        }
+                    }
+
+                    try {
+                        var0.acceptData(var2);
+                        var40 = new LinkedHashMap();
+                        var76 = var75.getCatalog().iterator();
+                    } catch (Exception var29) {
+                        var5 = var29;
+                        String var52 = var29.getMessage();
+                        var1 = var52;
+                        if (var52 != null) {
+                            break label240;
+                        }
+                        break label227;
+                    }
+
+                    while (true) {
+                        try {
+                            if (!var76.hasNext()) {
+                                break;
+                            }
+
+                            var54 = ((GalaxyApi.Category)var76.next()).getParams().iterator();
+                        } catch (Exception var31) {
+                            var5 = var31;
+                            String var53 = var31.getMessage();
+                            var1 = var53;
+                            if (var53 != null) {
+                                break label240;
+                            }
+                            break label227;
+                        }
+
+                        while (true) {
+                            try {
+                                if (!var54.hasNext()) {
+                                    break;
+                                }
+
+                                GalaxyApi.Param var6 = (GalaxyApi.Param)var54.next();
+                                var40.put(var6.getKey(), var6);
+                            } catch (Exception var30) {
+                                var5 = var30;
+                                String var55 = var30.getMessage();
+                                var1 = var55;
+                                if (var55 != null) {
+                                    break label240;
+                                }
+                                break label227;
+                            }
+                        }
+                    }
+
+                    ArrayList var7;
+                    Iterator var8;
+                    Collection var79;
+                    try {
+                        var0.meta = var40;
+                        var79 = CollectionsKt.listOf("CustomPersonalities");
+                        Iterable var57 = var0.profilesIds;
+                        ArrayList var77 = new ArrayList();
+                        var7 = var77;
+                        var8 = var57.iterator();
+                    } catch (Exception var26) {
+                        var5 = var26;
+                        String var56 = var26.getMessage();
+                        var1 = var56;
+                        if (var56 != null) {
+                            break label240;
+                        }
+                        break label227;
+                    }
+
+                    while (true) {
+                        Collection var9;
+                        String var10;
+                        ArrayList var11;
+                        try {
+                            if (!var8.hasNext()) {
+                                break;
+                            }
+
+                            var10 = (String)var8.next();
+                            var9 = CollectionsKt.listOf(var0.key(var10));
+                            var78 = var0.jerkSuffixes;
+                            ArrayList var59 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var78, 10));
+                            var11 = var59;
+                        } catch (Exception var27) {
+                            var5 = var27;
+                            String var58 = var27.getMessage();
+                            var1 = var58;
+                            if (var58 != null) {
+                                break label240;
+                            }
+                            break label227;
+                        }
+
+                        Iterable var60 = var78;
+
+                        Iterator var12;
+                        try {
+                            var12 = var60.iterator();
+                        } catch (Exception var25) {
+                            var5 = var25;
+                            String var61 = var25.getMessage();
+                            var1 = var61;
+                            if (var61 != null) {
+                                break label240;
+                            }
+                            break label227;
+                        }
+
+                        while (true) {
+                            try {
+                                if (var12.hasNext()) {
+                                    String var13 = (String)var12.next();
+                                    String var14 = var0.label(var10);
+                                    StringBuilder var15 = new StringBuilder();
+                                    var11.add(var15.append(var14).append("Jerk").append(var13).toString());
+                                    continue;
+                                }
+                            } catch (Exception var28) {
+                                var5 = var28;
+                                String var62 = var28.getMessage();
+                                var1 = var62;
+                                if (var62 != null) {
+                                    break label240;
+                                }
+                                break label227;
+                            }
+
+                            try {
+                                var64 = var11;
+                            } catch (Exception var24) {
+                                var5 = var24;
+                                String var63 = var24.getMessage();
+                                var1 = var63;
+                                if (var63 != null) {
+                                    break label240;
+                                }
+                                break label227;
+                            }
+
+                            try {
+                                var66 = CollectionsKt.plus(var9, var64);
+                            } catch (Exception var23) {
+                                var5 = var23;
+                                String var65 = var23.getMessage();
+                                var1 = var65;
+                                if (var65 != null) {
+                                    break label240;
+                                }
+                                break label227;
+                            }
+
+                            try {
+                                CollectionsKt.addAll(var7, var66);
+                                break;
+                            } catch (Exception var22) {
+                                var5 = var22;
+                                String var67 = var22.getMessage();
+                                var1 = var67;
+                                if (var67 != null) {
+                                    break label240;
+                                }
+                                break label227;
+                            }
+                        }
+                    }
+
+                    try {
+                        var41 = var7;
+                    } catch (Exception var21) {
+                        var5 = var21;
+                        String var68 = var21.getMessage();
+                        var1 = var68;
+                        if (var68 != null) {
+                            break label240;
+                        }
+                        break label227;
+                    }
+
+                    boolean var4;
+                    label154: {
+                        label237: {
+                            try {
+                                var42 = CollectionsKt.plus(var79, var41);
+                                if (var42 instanceof Collection && ((Collection)var42).isEmpty()) {
+                                    break label237;
+                                }
+                            } catch (Exception var20) {
+                                var5 = var20;
+                                String var69 = var20.getMessage();
+                                var1 = var69;
+                                if (var69 != null) {
+                                    break label240;
+                                }
+                                break label227;
+                            }
+
+                            try {
+                                var43 = var42.iterator();
+                            } catch (Exception var18) {
+                                var5 = var18;
+                                String var70 = var18.getMessage();
+                                var1 = var70;
+                                if (var70 != null) {
+                                    break label240;
+                                }
+                                break label227;
+                            }
+
+                            label143: {
+                                try {
+                                    while (var43.hasNext()) {
+                                        String var72 = (String)var43.next();
+                                        if (!var0.meta.containsKey(var72)) {
+                                            break label143;
+                                        }
+                                    }
+                                } catch (Exception var19) {
+                                    var5 = var19;
+                                    String var71 = var19.getMessage();
+                                    var1 = var71;
+                                    if (var71 != null) {
+                                        break label240;
+                                    }
+                                    break label227;
+                                }
+
+                                var4 = false;
+                                break label154;
+                            }
+
+                            var4 = true;
+                            break label154;
+                        }
+
+                        var4 = false;
+                    }
+
+                    if (!var4) {
+                        try {
+                            var0.ready = true;
+                            var0.error = "";
+                            if (var0.recovery) {
+                                var0.notice = "Save could not be confirmed. Showing verified saved state; review it before editing again.";
+                                var0.recovery = false;
+                            }
+                            break label230;
+                        } catch (Exception var16) {
+                            var5 = var16;
+                            String var73 = var16.getMessage();
+                            var1 = var73;
+                            if (var73 != null) {
+                                break label240;
+                            }
+                        }
+                    } else {
+                        try {
+                            IllegalStateException var44 = new IllegalStateException("Personality metadata is incomplete. Retrying automatically…");
+                            throw var44;
+                        } catch (Exception var17) {
+                            var5 = var17;
+                            String var74 = var17.getMessage();
+                            var1 = var74;
+                            if (var74 != null) {
+                                break label240;
+                            }
+                        }
+                    }
+                } else {
+                    label239: {
+                        try {
+                        } catch (Exception var37) {
+                            var5 = var37;
+                            String var45 = var37.getMessage();
+                            var1 = var45;
+                            if (var45 != null) {
+                                break label240;
+                            }
+                            break label239;
+                        }
+
+                        if (var1 == null) {
+                            var1 = "bad reply";
+                        }
+
+                        try {
+                            var46 = new IllegalStateException(var1);
+                            throw var46;
+                        } catch (Exception var36) {
+                            var5 = var36;
+                            String var47 = var36.getMessage();
+                            var1 = var47;
+                            if (var47 != null) {
+                                break label240;
+                            }
+                        }
                     }
                 }
-            } else {
-                $this$any$iv = null;
+
+                var1 = var5.toString();
             }
-            if ($this$any$iv != null) {
-                throw new IllegalStateException("Personality metadata is incomplete. Retrying automatically…");
-            }
-            this$0.ready = true;
-            this$0.error = "";
-            if (this$0.recovery) {
-                this$0.notice = "Save could not be confirmed. Showing verified saved state; review it before editing again.";
-                this$0.recovery = false;
-            }
-            this$0.render();
-            return Unit.INSTANCE;
+
+            var0.error = var1;
         }
-        throw new IllegalStateException("Settings metadata is unavailable. Retrying automatically…");
+
+        var0.render();
+        return Unit.INSTANCE;
     }
 
     private final void refreshContext() {
@@ -916,29 +1220,17 @@ public final class GxPersonalitiesPage extends GxPage {
         }
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void write$default(final GxPersonalitiesPage gxPersonalitiesPage, Function1 function1, Function0 function0, Function1 function12, int i, Object obj) {
-        if ((i & 2) != 0) {
-            function0 = new Function0() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda34
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    boolean write$lambda$26;
-                    write$lambda$26 = GxPersonalitiesPage.write$lambda$26(gxPersonalitiesPage);
-                    return Boolean.valueOf(write$lambda$26);
-                }
-            };
+    /* VF: from Vineflower (jadx: ) */
+    static void write$default(GxPersonalitiesPage var0, Function1 var1, Function0 var2, Function1 var3, int var4, Object var5) {
+        if ((var4 & 2) != 0) {
+            var2 = new GxPersonalitiesPage$$ExternalSyntheticLambda34(var0);
         }
-        if ((i & 4) != 0) {
-            function12 = new Function1() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda35
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj2) {
-                    Unit write$lambda$27;
-                    write$lambda$27 = GxPersonalitiesPage.write$lambda$27(((Boolean) obj2).booleanValue());
-                    return write$lambda$27;
-                }
-            };
+
+        if ((var4 & 4) != 0) {
+            var3 = new GxPersonalitiesPage$$ExternalSyntheticLambda35();
         }
-        gxPersonalitiesPage.write(function1, function0, function12);
+
+        var0.write(var1, (Function0<Boolean>)var2, (Function1<? super Boolean, Unit>)var3);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1340,19 +1632,13 @@ public final class GxPersonalitiesPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void setAdvanced$default(GxPersonalitiesPage gxPersonalitiesPage, GalaxyApi.Param param, String str, Function1 function1, int i, Object obj) {
-        if ((i & 4) != 0) {
-            function1 = new Function1() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda4
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj2) {
-                    Unit advanced$lambda$46;
-                    advanced$lambda$46 = GxPersonalitiesPage.setAdvanced$lambda$46(((Boolean) obj2).booleanValue());
-                    return advanced$lambda$46;
-                }
-            };
+    /* VF: from Vineflower (jadx: ) */
+    static void setAdvanced$default(GxPersonalitiesPage var0, GalaxyApi.Param var1, String var2, Function1 var3, int var4, Object var5) {
+        if ((var4 & 4) != 0) {
+            var3 = new GxPersonalitiesPage$$ExternalSyntheticLambda4();
         }
-        gxPersonalitiesPage.setAdvanced(param, str, function1);
+
+        var0.setAdvanced(var1, var2, (Function1<? super Boolean, Unit>)var3);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2292,47 +2578,49 @@ public final class GxPersonalitiesPage extends GxPage {
         final /* synthetic */ GxPersonalitiesPage this$0;
         private final Paint txt;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public Graph(GxPersonalitiesPage this$0, String profile, String category) {
-            super(this$0.getAct());
-            Intrinsics.checkNotNullParameter(profile, "profile");
-            Intrinsics.checkNotNullParameter(category, "category");
-            this.this$0 = this$0;
-            this.profile = profile;
-            this.category = category;
-            this.k = this.profile + this.category;
-            Paint $this$grid_u24lambda_u240 = new Paint(1);
-            GxPersonalitiesPage gxPersonalitiesPage = this.this$0;
-            $this$grid_u24lambda_u240.setColor(Color.argb(60, 255, 255, 255));
-            $this$grid_u24lambda_u240.setStrokeWidth(gxPersonalitiesPage.getUi().dp(1));
-            this.grid = $this$grid_u24lambda_u240;
-            Paint $this$txt_u24lambda_u241 = new Paint(1);
-            $this$txt_u24lambda_u241.setColor(CarUi.Companion.getDIM());
-            this.txt = $this$txt_u24lambda_u241;
-            Paint $this$refP_u24lambda_u242 = new Paint(1);
-            GxPersonalitiesPage gxPersonalitiesPage2 = this.this$0;
-            $this$refP_u24lambda_u242.setColor(Color.argb(140, 255, 255, 255));
-            $this$refP_u24lambda_u242.setStyle(Paint.Style.STROKE);
-            $this$refP_u24lambda_u242.setStrokeWidth(gxPersonalitiesPage2.getUi().dp(2));
-            $this$refP_u24lambda_u242.setPathEffect(new DashPathEffect(new float[]{gxPersonalitiesPage2.getUi().dp(6), gxPersonalitiesPage2.getUi().dp(6)}, 0.0f));
-            this.refP = $this$refP_u24lambda_u242;
-            Paint $this$lineP_u24lambda_u243 = new Paint(1);
-            GxPersonalitiesPage gxPersonalitiesPage3 = this.this$0;
-            $this$lineP_u24lambda_u243.setColor(CarUi.Companion.getACCENT());
-            $this$lineP_u24lambda_u243.setStyle(Paint.Style.STROKE);
-            $this$lineP_u24lambda_u243.setStrokeWidth(gxPersonalitiesPage3.getUi().dp(3));
-            this.lineP = $this$lineP_u24lambda_u243;
-            Paint $this$dot_u24lambda_u244 = new Paint(1);
-            $this$dot_u24lambda_u244.setColor(CarUi.Companion.getACCENT());
-            this.dot = $this$dot_u24lambda_u244;
-            Paint $this$dotRing_u24lambda_u245 = new Paint(1);
-            GxPersonalitiesPage gxPersonalitiesPage4 = this.this$0;
-            $this$dotRing_u24lambda_u245.setColor(-1);
-            $this$dotRing_u24lambda_u245.setStyle(Paint.Style.STROKE);
-            $this$dotRing_u24lambda_u245.setStrokeWidth(gxPersonalitiesPage4.getUi().dp(1));
-            this.dotRing = $this$dotRing_u24lambda_u245;
-            this.s = 1.0f;
-            setBackground(CarUi.rounded$default(this.this$0.getUi(), Color.rgb(16, 18, 24), 12, null, 4, null));
+        /* VF: from Vineflower (jadx: ) */
+        public Graph(String var1, String var2, String var3) {
+            super((Context)var1.getAct());
+            Intrinsics.checkNotNullParameter(var2, "profile");
+            Intrinsics.checkNotNullParameter(var3, "category");
+            this.this$0 = var1;
+            this.profile = var2;
+            this.category = var3;
+            var2 = this.profile;
+            String var4 = this.category;
+            this.k = var2 + var4;
+            Paint var5 = new Paint(1);
+            GxPersonalitiesPage var12 = this.this$0;
+            var5.setColor(Color.argb(60, 255, 255, 255));
+            var5.setStrokeWidth(var12.getUi().dp(1));
+            this.grid = var5;
+            Paint var6 = new Paint(1);
+            var6.setColor(CarUi.Companion.getDIM());
+            this.txt = var6;
+            Paint var13 = new Paint(1);
+            var1 = this.this$0;
+            var13.setColor(Color.argb(140, 255, 255, 255));
+            var13.setStyle(android.graphics.Paint.Style.STROKE);
+            var13.setStrokeWidth(var1.getUi().dp(2));
+            var13.setPathEffect((PathEffect)(new DashPathEffect(new float[]{var1.getUi().dp(6), var1.getUi().dp(6)}, 0.0F)));
+            this.refP = var13;
+            Paint var14 = new Paint(1);
+            var1 = this.this$0;
+            var14.setColor(CarUi.Companion.getACCENT());
+            var14.setStyle(android.graphics.Paint.Style.STROKE);
+            var14.setStrokeWidth(var1.getUi().dp(3));
+            this.lineP = var14;
+            Paint var9 = new Paint(1);
+            var9.setColor(CarUi.Companion.getACCENT());
+            this.dot = var9;
+            Paint var15 = new Paint(1);
+            var1 = this.this$0;
+            var15.setColor(-1);
+            var15.setStyle(android.graphics.Paint.Style.STROKE);
+            var15.setStrokeWidth(var1.getUi().dp(1));
+            this.dotRing = var15;
+            this.s = 1.0F;
+            this.setBackground((Drawable)CarUi.rounded$default(this.this$0.getUi(), Color.rgb(16, 18, 24), 12, null, 4, null));
         }
 
         public final String getCategory() {

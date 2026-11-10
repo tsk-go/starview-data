@@ -11,6 +11,11 @@ import android.view.ViewParent;
 import android.widget.ImageView;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.ScaleGestureDetector.OnScaleGestureListener;
+import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
+import android.widget.ImageView.ScaleType;
 
 /* compiled from: ZoomImageView.kt */
 public final class ZoomImageView extends ImageView {
@@ -21,58 +26,54 @@ public final class ZoomImageView extends ImageView {
     private final ScaleGestureDetector scaler;
     private float zoom;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public ZoomImageView(Context ctx) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
+    /* VF: from Vineflower (jadx: ) */
+    public ZoomImageView(Context var1) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
         this.m = new Matrix();
         this.base = new Matrix();
-        this.zoom = 1.0f;
-        this.maxZoom = 6.0f;
-        setScaleType(ImageView.ScaleType.MATRIX);
-        this.scaler = new ScaleGestureDetector(ctx, new ScaleGestureDetector.SimpleOnScaleGestureListener() { // from class: com.starpilot.starview.ZoomImageView$scaler$1
-            @Override // android.view.ScaleGestureDetector.SimpleOnScaleGestureListener, android.view.ScaleGestureDetector.OnScaleGestureListener
-            public boolean onScale(ScaleGestureDetector d) {
-                Intrinsics.checkNotNullParameter(d, "d");
-                ZoomImageView.this.zoomBy(d.getScaleFactor(), d.getFocusX(), d.getFocusY());
-                return true;
-            }
-        });
-        this.gestures = new GestureDetector(ctx, new GestureDetector.SimpleOnGestureListener() { // from class: com.starpilot.starview.ZoomImageView$gestures$1
-            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnGestureListener
-            public boolean onDown(MotionEvent e) {
-                Intrinsics.checkNotNullParameter(e, "e");
-                return true;
-            }
+        this.zoom = 1.0F;
+        this.maxZoom = 6.0F;
+        this.setScaleType(ScaleType.MATRIX);
+        this.scaler = new ScaleGestureDetector(var1, (OnScaleGestureListener)(new SimpleOnScaleGestureListener() {
+            final ZoomImageView this$0 = ZoomImageView.this;
 
-            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnGestureListener
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
-                float f;
-                Matrix matrix;
-                Intrinsics.checkNotNullParameter(e2, "e2");
-                f = ZoomImageView.this.zoom;
-                if (f <= 1.01f) {
-                    return false;
+            public boolean onScale(ScaleGestureDetector var1) {
+                Intrinsics.checkNotNullParameter(var1, "d");
+                this.this$0.zoomBy(var1.getScaleFactor(), var1.getFocusX(), var1.getFocusY());
+                return true;
+            }
+        }));
+        this.gestures = new GestureDetector(var1, (OnGestureListener)(new SimpleOnGestureListener() {
+            final ZoomImageView this$0 = ZoomImageView.this;
+
+            public boolean onDoubleTap(MotionEvent var1) {
+                Intrinsics.checkNotNullParameter(var1, "e");
+                if (this.this$0.zoom > 1.01F) {
+                    this.this$0.fit();
+                } else {
+                    this.this$0.zoomBy(2.5F, var1.getX(), var1.getY());
                 }
-                matrix = ZoomImageView.this.m;
-                matrix.postTranslate(-dx, -dy);
-                ZoomImageView.this.clamp();
+
                 return true;
             }
 
-            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnDoubleTapListener
-            public boolean onDoubleTap(MotionEvent e) {
-                float f;
-                Intrinsics.checkNotNullParameter(e, "e");
-                f = ZoomImageView.this.zoom;
-                if (f > 1.01f) {
-                    ZoomImageView.this.fit();
+            public boolean onDown(MotionEvent var1) {
+                Intrinsics.checkNotNullParameter(var1, "e");
+                return true;
+            }
+
+            public boolean onScroll(MotionEvent var1, MotionEvent var2, float var3, float var4) {
+                Intrinsics.checkNotNullParameter(var2, "e2");
+                if (this.this$0.zoom <= 1.01F) {
+                    return false;
+                } else {
+                    this.this$0.m.postTranslate(-var3, -var4);
+                    this.this$0.clamp();
                     return true;
                 }
-                ZoomImageView.this.zoomBy(2.5f, e.getX(), e.getY());
-                return true;
             }
-        });
+        }));
     }
 
     @Override // android.widget.ImageView
@@ -105,63 +106,63 @@ public final class ZoomImageView extends ImageView {
         setImageMatrix(this.m);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:11:0x0063  */
-    /* JADX WARN: Removed duplicated region for block: B:15:0x006f  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     public final void clamp() {
-        float dx;
-        float width;
-        float f;
-        float dx2;
-        float dy;
-        float height;
-        float f2;
-        Drawable d = getDrawable();
-        if (d == null) {
-            return;
-        }
-        RectF r = new RectF(0.0f, 0.0f, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-        this.m.mapRect(r);
-        if (r.width() <= getWidth()) {
-            width = getWidth() / 2.0f;
-            f = r.centerX();
-        } else {
-            float dx3 = r.left;
-            float dx4 = dx3 > 0.0f ? -r.left : 0.0f;
-            if (r.right >= getWidth()) {
-                dx = dx4;
-                dx2 = r.height();
-                if (dx2 > getHeight()) {
-                    height = getHeight() / 2.0f;
-                    f2 = r.centerY();
+        RectF var10 = null; // declarations Vineflower left out
+        Drawable var4 = this.getDrawable();
+        if (var4 != null) {
+            float var3;
+            float var8;
+            label37: {
+                var10 = new RectF(0.0F, 0.0F, var4.getIntrinsicWidth(), var4.getIntrinsicHeight());
+                this.m.mapRect(var10);
+                float var1 = 0.0F;
+                var3 = 0.0F;
+                if (var10.width() <= this.getWidth()) {
+                    var8 = this.getWidth() / 2.0F;
+                    var1 = var10.centerX();
                 } else {
-                    float dy2 = r.top;
-                    float dy3 = dy2 > 0.0f ? -r.top : 0.0f;
-                    if (r.bottom >= getHeight()) {
-                        dy = dy3;
-                        this.m.postTranslate(dx, dy);
-                        setImageMatrix(this.m);
+                    if (var10.left > 0.0F) {
+                        var1 = -var10.left;
                     }
-                    height = getHeight();
-                    f2 = r.bottom;
+
+                    if (!(var10.right < this.getWidth())) {
+                        var8 = var1;
+                        break label37;
+                    }
+
+                    var8 = this.getWidth();
+                    var1 = var10.right;
                 }
-                dy = height - f2;
-                this.m.postTranslate(dx, dy);
-                setImageMatrix(this.m);
+
+                var8 -= var1;
             }
-            width = getWidth();
-            f = r.right;
+
+            float var7;
+            label30: {
+                if (var10.height() <= this.getHeight()) {
+                    var7 = this.getHeight() / 2.0F;
+                    var3 = var10.centerY();
+                } else {
+                    var7 = var3;
+                    if (var10.top > 0.0F) {
+                        var7 = -var10.top;
+                    }
+
+                    if (!(var10.bottom < this.getHeight())) {
+                        break label30;
+                    }
+
+                    var7 = this.getHeight();
+                    var3 = var10.bottom;
+                }
+
+                var7 -= var3;
+            }
+
+            this.m.postTranslate(var8, var7);
+            this.setImageMatrix(this.m);
         }
-        dx = width - f;
-        dx2 = r.height();
-        if (dx2 > getHeight()) {
-        }
-        dy = height - f2;
-        this.m.postTranslate(dx, dy);
-        setImageMatrix(this.m);
     }
 
     /* JADX INFO: Access modifiers changed from: private */

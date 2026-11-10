@@ -52,146 +52,168 @@ public final class SettingsIndex {
         return settingsIndex.summary(list, str);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:131:0x00d4, code lost:
-    
-        if (kotlin.text.StringsKt.endsWith(r13.getLabel(), " Controller", false) != false) goto L35;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:129:? A[LOOP:1: B:20:0x0078->B:129:?, LOOP_END, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:36:0x00e1 A[EDGE_INSN: B:36:0x00e1->B:37:0x00e1 BREAK  A[LOOP:1: B:20:0x0078->B:129:?], SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final Summary summary(List<GalaxyRow> rows, String title) {
-        int i;
-        Object obj;
-        boolean z;
-        Object element$iv;
-        Object obj2;
-        boolean z2;
-        Intrinsics.checkNotNullParameter(rows, "rows");
-        Intrinsics.checkNotNullParameter(title, "title");
-        List<GalaxyRow> $this$filter$iv = rows;
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv) {
-            GalaxyRow it = (GalaxyRow) element$iv$iv;
-            if ((GalaxyRow.Companion.isPipCrop(it) || it.getControl() == GalaxyRow.Control.GROUP || it.getControl() == GalaxyRow.Control.ACTION) ? false : true) {
-                destination$iv$iv.add(element$iv$iv);
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+    public final SettingsIndex.Summary summary(List<GalaxyRow> var1, String var2) {
+        Object var12 = null; Object var19 = null; // declarations Vineflower left out
+        Intrinsics.checkNotNullParameter(var1, "rows");
+        Intrinsics.checkNotNullParameter(var2, "title");
+        Iterable var4 = var1;
+        var var10 = new ArrayList();
+
+        for (Object var4$it : (Iterable) var4) {
+            var4 = (Iterable) var4$it;
+            GalaxyRow var6 = (GalaxyRow)var4;
+            boolean var3;
+            if (!GalaxyRow.Companion.isPipCrop(var6) && var6.getControl() != GalaxyRow.Control.GROUP && var6.getControl() != GalaxyRow.Control.ACTION) {
+                var3 = true;
+            } else {
+                var3 = false;
+            }
+
+            if (var3) {
+                var10.add(var4);
             }
         }
-        List<GalaxyRow> usable = (List) destination$iv$iv;
-        String lowerCase = title.toLowerCase(Locale.ROOT);
-        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-        String t = StringsKt.trim((CharSequence) StringsKt.removeSuffix(lowerCase, (CharSequence) " personality")).toString();
-        Iterator it2 = usable.iterator();
-        while (true) {
-            i = 2;
-            obj = null;
-            if (!it2.hasNext()) {
-                z = false;
-                element$iv = null;
+
+        List var28 = var10;
+        String var11 = var2.toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(var11, "toLowerCase(...)");
+        var2 = StringsKt.trim(StringsKt.removeSuffix(var11, " personality")).toString();
+        Iterator var7 = var28.iterator();
+
+        boolean var22;
+        do {
+            if (!var7.hasNext()) {
+                var12 = null;
                 break;
             }
-            element$iv = it2.next();
-            GalaxyRow it3 = (GalaxyRow) element$iv;
-            if (it3.getControl() == GalaxyRow.Control.SWITCH) {
-                if (new Regex("^(enable|use|allow) ", RegexOption.IGNORE_CASE).containsMatchIn(it3.getLabel())) {
-                    z = false;
-                } else {
-                    if (t.length() > 0) {
-                        String lowerCase2 = it3.getLabel().toLowerCase(Locale.ROOT);
-                        Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
-                        if (Intrinsics.areEqual(lowerCase2, t)) {
-                            z = false;
+
+            label150: {
+                var12 = var7.next();
+                GalaxyRow var32 = (GalaxyRow)var12;
+                if (var32.getControl() == GalaxyRow.Control.SWITCH) {
+                    if (new Regex("^(enable|use|allow) ", RegexOption.IGNORE_CASE).containsMatchIn(var32.getLabel())) {
+                        break label150;
+                    }
+
+                    if (var2.length() > 0) {
+                        var22 = true;
+                    } else {
+                        var22 = false;
+                    }
+
+                    if (var22) {
+                        String var34 = var32.getLabel().toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(var34, "toLowerCase(...)");
+                        if (Intrinsics.areEqual(var34, var2)) {
+                            break label150;
                         }
                     }
-                    z = false;
-                }
-                z2 = true;
-                if (!z2) {
-                    break;
-                }
-            } else {
-                z = false;
-            }
-            z2 = z;
-            if (!z2) {
-            }
-        }
-        GalaxyRow main = (GalaxyRow) element$iv;
-        Boolean on = main != null ? Boolean.valueOf(Intrinsics.areEqual(main.getValue(), "On")) : null;
-        ArrayList parts = new ArrayList();
-        if (main != null) {
-            parts.add(Intrinsics.areEqual((Object) on, (Object) true) ? "On" : "Off");
-        }
-        ArrayList values = new ArrayList();
-        for (GalaxyRow r : usable) {
-            if (values.size() >= i) {
-                i = 2;
-                z = false;
-            } else if (r != main) {
-                boolean numeric = StringsKt.toDoubleOrNull(r.getValue()) != null ? true : z;
-                if (r.getControl() == GalaxyRow.Control.SELECT) {
-                    String it4 = r.getValue();
-                    if (!((StringsKt.isBlank(it4) || it4.length() > 26 || Intrinsics.areEqual(it4, "Selected Profile")) ? false : true)) {
-                        it4 = null;
+
+                    if (StringsKt.endsWith(var32.getLabel(), " Controller", false)) {
+                        break label150;
                     }
-                    if (it4 != null) {
-                        values.add(it4);
-                        i = 2;
-                        obj = null;
-                        z = false;
-                    } else {
-                        i = 2;
-                        obj = null;
-                        z = false;
-                    }
+                }
+
+                var22 = false;
+                continue;
+            }
+
+            var22 = true;
+        } while (!var22);
+
+        GalaxyRow var35 = (GalaxyRow)var12;
+        var2 = "On";
+        Boolean var13;
+        if (var35 != null) {
+            var13 = Intrinsics.areEqual(var35.getValue(), "On");
+        } else {
+            var13 = null;
+        }
+
+        ArrayList var33 = new ArrayList();
+        if (var35 != null) {
+            if (!Intrinsics.areEqual(var13, true)) {
+                var2 = "Off";
+            }
+
+            var33.add(var2);
+        }
+
+        ArrayList var37 = new ArrayList();
+
+        for (GalaxyRow var9 : var28) {
+            if (var37.size() < 2 && var9 != var35) {
+                if (StringsKt.toDoubleOrNull(var9.getValue()) != null) {
+                    var22 = true;
                 } else {
-                    if (r.getControl() != GalaxyRow.Control.SLIDER && (r.getControl() != GalaxyRow.Control.READOUT || !numeric)) {
-                        i = 2;
-                        obj = null;
-                    } else if (r.getUnit().length() > 0) {
-                        values.add(m1162short(r.getLabel()) + " " + r.withUnit(GalaxyRow.shown$default(r, null, 1, null)));
-                        obj = null;
-                        i = 2;
-                        z = false;
+                    var22 = false;
+                }
+
+                if (var9.getControl() == GalaxyRow.Control.SELECT) {
+                    var2 = var9.getValue();
+                    if (!StringsKt.isBlank(var2) && var2.length() <= 26 && !Intrinsics.areEqual(var2, "Selected Profile")) {
+                        var22 = true;
                     } else {
-                        obj = null;
-                        i = 2;
+                        var22 = false;
                     }
-                    z = false;
+
+                    if (!var22) {
+                        var2 = null;
+                    }
+
+                    if (var2 != null) {
+                        var37.add(var2);
+                    }
+                } else if (var9.getControl() == GalaxyRow.Control.SLIDER || var9.getControl() == GalaxyRow.Control.READOUT && var22) {
+                    if (var9.getUnit().length() > 0) {
+                        var22 = true;
+                    } else {
+                        var22 = false;
+                    }
+
+                    if (var22) {
+                        var2 = this.shortLabel(var9.getLabel());
+                        String var38 = var9.withUnit(GalaxyRow.shown$default(var9, null, 1, null));
+                        var37.add(var2 + " " + var38);
+                    }
                 }
             }
         }
-        parts.addAll(values);
-        if (main == null && values.isEmpty()) {
-            List $this$firstOrNull$iv = usable;
-            Iterator it5 = $this$firstOrNull$iv.iterator();
-            while (true) {
-                if (!it5.hasNext()) {
-                    obj2 = null;
-                    break;
+
+        var33.addAll(var37);
+        if (var35 == null && var37.isEmpty()) {
+            label109: {
+                for (Object var29 : var28) {
+                    if (((GalaxyRow)var29).getControl() == GalaxyRow.Control.SWITCH) {
+                        var22 = true;
+                    } else {
+                        var22 = false;
+                    }
+
+                    if (var22) {
+                        var19 = var29;
+                        break label109;
+                    }
                 }
-                Object element$iv2 = it5.next();
-                Iterable $this$firstOrNull$iv2 = $this$firstOrNull$iv;
-                if (((GalaxyRow) element$iv2).getControl() == GalaxyRow.Control.SWITCH) {
-                    obj2 = element$iv2;
-                    break;
-                }
-                $this$firstOrNull$iv = $this$firstOrNull$iv2;
+
+                var19 = null;
             }
-            GalaxyRow it6 = (GalaxyRow) obj2;
-            if (it6 != null) {
-                String label = it6.getLabel();
-                String lowerCase3 = it6.getValue().toLowerCase(Locale.ROOT);
-                Intrinsics.checkNotNullExpressionValue(lowerCase3, "toLowerCase(...)");
-                parts.add(label + " " + lowerCase3);
+
+            GalaxyRow var30 = (GalaxyRow)var19;
+            if (var30 != null) {
+                var2 = var30.getLabel();
+                String var31 = var30.getValue().toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(var31, "toLowerCase(...)");
+                var33.add(var2 + " " + var31);
             }
         }
-        return new Summary(on, CollectionsKt.joinToString(parts, " · ", "", "", -1, "...", null));
+
+        return new SettingsIndex.Summary(var13, CollectionsKt.joinToString(var33, " · ", "", "", -1, "...", null));
     }
 
     /* renamed from: short, reason: not valid java name */
-    public final String m1162short(String label) {
+    public final String shortLabel(String label) {
         Intrinsics.checkNotNullParameter(label, "label");
         String l = label.toLowerCase(Locale.ROOT);
         Intrinsics.checkNotNullExpressionValue(l, "toLowerCase(...)");

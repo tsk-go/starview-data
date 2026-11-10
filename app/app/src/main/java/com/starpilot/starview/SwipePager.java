@@ -28,13 +28,13 @@ public final class SwipePager extends ViewGroup {
     private final int slop;
     private int startScroll;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public SwipePager(Context ctx, int homeIndex) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        this.homeIndex = homeIndex;
+    /* VF: from Vineflower (jadx: ) */
+    public SwipePager(Context var1, int var2) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        this.homeIndex = var2;
         this.index = this.homeIndex;
-        this.slop = ViewConfiguration.get(ctx).getScaledTouchSlop();
+        this.slop = ViewConfiguration.get(var1).getScaledTouchSlop();
     }
 
     public final int getIndex() {
@@ -133,88 +133,104 @@ public final class SwipePager extends ViewGroup {
         this$0.scrollTo(((Integer) animatedValue).intValue(), 0);
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    @Override // android.view.ViewGroup
-    public boolean onInterceptTouchEvent(MotionEvent e) {
-        Intrinsics.checkNotNullParameter(e, "e");
-        switch (e.getActionMasked()) {
+    /* VF: from Vineflower (jadx: ) */
+    public boolean onInterceptTouchEvent(MotionEvent var1) {
+        Intrinsics.checkNotNullParameter(var1, "e");
+        switch (var1.getActionMasked()) {
             case 0:
-                this.downX = e.getX();
-                this.downY = e.getY();
-                this.startScroll = getScrollX();
+                this.downX = var1.getX();
+                this.downY = var1.getY();
+                this.startScroll = this.getScrollX();
                 this.mode = 0;
-                return false;
             case 1:
             default:
-                return false;
+                break;
             case 2:
-                float dx = e.getX() - this.downX;
-                float dy = e.getY() - this.downY;
-                if (this.mode == 0 && Math.abs(dx) > this.slop && Math.abs(dx) > Math.abs(dy)) {
+                float var2 = var1.getX() - this.downX;
+                float var3 = var1.getY() - this.downY;
+                if (this.mode == 0 && Math.abs(var2) > this.slop && Math.abs(var2) > Math.abs(var3)) {
                     this.mode = 1;
-                    ValueAnimator valueAnimator = this.anim;
-                    if (valueAnimator != null) {
-                        valueAnimator.cancel();
+                    ValueAnimator var4 = this.anim;
+                    if (var4 != null) {
+                        var4.cancel();
                     }
+
                     this.anim = null;
                     return true;
                 }
-                if (this.mode == 0 && (-dy) > this.slop * 2 && Math.abs(dy) > Math.abs(dx) * 1.5f && this.index == this.homeIndex) {
+
+                if (this.mode == 0 && -var3 > this.slop * 2 && Math.abs(var3) > Math.abs(var2) * 1.5F && this.index == this.homeIndex) {
                     this.mode = 2;
                     return true;
                 }
-                return false;
         }
+
+        return false;
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    @Override // android.view.View
-    public boolean onTouchEvent(MotionEvent e) {
-        Function0<Unit> function0;
-        Intrinsics.checkNotNullParameter(e, "e");
-        float dx = e.getX() - this.downX;
-        float dy = e.getY() - this.downY;
-        switch (e.getActionMasked()) {
+    /* VF: from Vineflower (jadx: ) */
+    public boolean onTouchEvent(MotionEvent var1) {
+        Intrinsics.checkNotNullParameter(var1, "e");
+        float var3 = var1.getX() - this.downX;
+        float var2 = var1.getY() - this.downY;
+        switch (var1.getActionMasked()) {
             case 0:
-                this.downX = e.getX();
-                this.downY = e.getY();
-                this.startScroll = getScrollX();
+                this.downX = var1.getX();
+                this.downY = var1.getY();
+                this.startScroll = this.getScrollX();
                 this.mode = 0;
                 return true;
             case 1:
             case 3:
                 if (this.mode == 1) {
-                    go$default(this, dx < ((float) (-getWidth())) / 6.0f ? this.index + 1 : dx > ((float) getWidth()) / 6.0f ? this.index - 1 : this.index, false, 2, null);
-                } else if (this.mode == 2 && (-dy) > getHeight() / 8.0f && (function0 = this.onSwipeUp) != null) {
-                    function0.invoke();
+                    int var9;
+                    if (var3 < -this.getWidth() / 6.0F) {
+                        var9 = this.index + 1;
+                    } else if (var3 > this.getWidth() / 6.0F) {
+                        var9 = this.index - 1;
+                    } else {
+                        var9 = this.index;
+                    }
+
+                    go$default(this, var9, false, 2, null);
+                } else if (this.mode == 2 && -var2 > this.getHeight() / 8.0F) {
+                    Function0 var6 = this.onSwipeUp;
+                    if (var6 != null) {
+                        var6.invoke();
+                    }
                 }
+
                 this.mode = 0;
-                return true;
+                break;
             case 2:
                 if (this.mode == 0) {
-                    if (Math.abs(dx) > this.slop && Math.abs(dx) > Math.abs(dy)) {
+                    if (Math.abs(var3) > this.slop && Math.abs(var3) > Math.abs(var2)) {
                         this.mode = 1;
-                        ValueAnimator valueAnimator = this.anim;
-                        if (valueAnimator != null) {
-                            valueAnimator.cancel();
+                        ValueAnimator var5 = this.anim;
+                        if (var5 != null) {
+                            var5.cancel();
                         }
+
                         this.anim = null;
-                    } else if ((-dy) > this.slop * 2 && Math.abs(dy) > Math.abs(dx) * 1.5f && this.index == this.homeIndex) {
+                    } else if (-var2 > this.slop * 2 && Math.abs(var2) > Math.abs(var3) * 1.5F && this.index == this.homeIndex) {
                         this.mode = 2;
                     }
                 } else if (this.mode == 1) {
-                    int max = (getChildCount() - 1) * getWidth();
-                    float x = this.startScroll - dx;
-                    if (x < 0.0f) {
-                        x /= 3.0f;
-                    } else if (x > max) {
-                        x = max + ((x - max) / 3.0f);
+                    int var4 = (this.getChildCount() - 1) * this.getWidth();
+                    var3 = this.startScroll - var3;
+                    if (var3 < 0.0F) {
+                        var2 = var3 / 3.0F;
+                    } else {
+                        var2 = var3;
+                        if (var3 > var4) {
+                            var2 = var4 + (var3 - var4) / 3.0F;
+                        }
                     }
-                    scrollTo((int) x, 0);
+
+                    this.scrollTo((int)var2, 0);
                 }
-                return true;
-            default:
-                return true;
         }
+
+        return true;
     }
 }

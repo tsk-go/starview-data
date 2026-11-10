@@ -440,56 +440,47 @@ public final class LaneSuggest {
         return this.kind;
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterative(DepthRegionTraversal.java:31)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visit(SwitchOverStringVisitor.java:60)
-     */
-    /* JADX WARN: Removed duplicated region for block: B:24:0x005b A[ORIG_RETURN, RETURN] */
-    /* JADX WARN: Removed duplicated region for block: B:5:0x004c A[RETURN, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     public final String getLabel() {
-        String str = this.kind;
-        switch (str.hashCode()) {
+        String var1 = this.kind;
+        switch (var1.hashCode()) {
             case -934396624:
-                return !str.equals("return") ? "" : "BACK";
+                if (var1.equals("return")) {
+                    return "BACK";
+                }
+                break;
             case 3127582:
-                if (str.equals("exit")) {
+                if (var1.equals("exit")) {
                     return "ROUTE";
                 }
                 break;
             case 3433489:
-                if (str.equals("pass")) {
+                if (var1.equals("pass")) {
                     return "PASS";
                 }
                 break;
             case 3556498:
-                if (str.equals("test")) {
+                if (var1.equals("test")) {
                     return "TEST";
                 }
                 break;
             case 103785528:
-                if (str.equals("merge")) {
+                if (var1.equals("merge")) {
                     return "LANE ENDS";
                 }
                 break;
             case 104069929:
-                if (str.equals("model")) {
+                if (var1.equals("model")) {
                     return "MODEL";
                 }
                 break;
             case 108704329:
-                if (!str.equals("route")) {
+                if (var1.equals("route")) {
+                    return "ROUTE";
                 }
-                break;
         }
+
+        return "";
     }
 
     public final int getHomeLeft() {
@@ -555,435 +546,578 @@ public final class LaneSuggest {
         return d < 0 ? "LEFT" : "RIGHT";
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:384:0x073d, code lost:
-    
-        if (r35.getLanesTotal() < 3) goto L419;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:387:0x0756 A[LOOP:1: B:373:0x06f6->B:387:0x0756, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:388:0x0751 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void update(In i) {
-        String str;
-        String str2;
-        boolean z;
-        boolean z2;
-        boolean z3;
-        String str3;
-        Intrinsics.checkNotNullParameter(i, "i");
-        long nowMs = i.getNowMs();
-        float f = 0.5f;
-        float coerceIn = this.lastMs == 0 ? 0.0f : RangesKt.coerceIn((nowMs - this.lastMs) / 1000.0f, 0.0f, 0.5f);
-        this.lastMs = nowMs;
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+    public final void update(LaneSuggest.In var1) {
+        Intrinsics.checkNotNullParameter(var1, "i");
+        long var13 = var1.getNowMs();
+        float var2;
+        if (this.lastMs == 0L) {
+            var2 = 0.0F;
+        } else {
+            var2 = RangesKt.coerceIn((float)(var13 - this.lastMs) / 1000.0F, 0.0F, 0.5F);
+        }
+
+        this.lastMs = var13;
         this.beepNow = false;
-        float[] pred = i.getPred();
-        int[] iArr = {-1, 1};
-        int i2 = 0;
+        float[] var17 = var1.getPred();
+        int var5 = 0;
+
         while (true) {
-            if (i2 >= 2) {
-                break;
-            }
-            int i3 = iArr[i2];
-            int i4 = i3 >= 0 ? 4 : 3;
-            float max = (pred == null || pred.length < 32) ? 0.0f : Math.max(pred[i4 + 8], pred[i4 + 16]);
-            int i5 = i2;
-            float exp = 1.0f - ((float) Math.exp((-coerceIn) / f));
-            float[] fArr = this.ema;
-            int idx = idx(i3);
-            fArr[idx] = fArr[idx] + ((max - this.ema[idx(i3)]) * exp);
-            if (this.ema[idx(i3)] <= 0.6f) {
-                this.highSince[idx(i3)] = 0;
-            } else if (this.highSince[idx(i3)] == 0) {
-                this.highSince[idx(i3)] = nowMs;
-            }
-            i2 = i5 + 1;
-            f = 0.5f;
-        }
-        if (i.getLaneChanging()) {
-            if (i.getLaneChangeDir() != 0) {
-                if (this.lcDir == 0 && i.getLaneChangeDir() < 0 && this.owedRight == 0) {
-                    this.homeLeft = i.getLeftLanes();
-                }
-                this.lcDir = i.getLaneChangeDir();
-            }
-        } else if (this.lcDir != 0) {
-            if (this.lcDir < 0) {
-                if (i.getReturnOn()) {
-                    this.owedRight = Math.min(this.owedRight + 1, 3);
-                    this.owedAt = nowMs;
-                }
-            } else if (this.owedRight > 0) {
-                this.owedRight--;
-            }
-            this.lcDir = 0;
-        }
-        if (this.owedRight > 0 && nowMs - this.owedAt > 180000) {
-            this.owedRight = 0;
-        }
-        if (this.owedRight > 0 && this.homeLeft >= 0 && i.getLeftLanes() >= this.homeLeft && this.lcDir == 0) {
-            this.owedRight = 0;
-        }
-        if (this.owedRight == 0 && this.lcDir == 0) {
-            this.homeLeft = -1;
-        }
-        if (returnCond(i, nowMs)) {
-            if (this.returnSince == 0) {
-                this.returnSince = nowMs;
-            }
-            this.returnLostSince = 0L;
-        } else {
-            this.returnSince = 0L;
-            if (this.returnLostSince == 0) {
-                this.returnLostSince = nowMs;
-            }
-        }
-        if (i.getMergeDir() != 0 && (!Intrinsics.areEqual(this.kind, "merge") || i.getMergeDir() == this.dir)) {
-            this.mergeLostSince = 0L;
-        } else if (this.mergeLostSince == 0) {
-            this.mergeLostSince = nowMs;
-        }
-        if (i.getRouteDir() == 0 || i.getRouteDir() != this.routeSinceDir) {
-            this.routeSinceDir = i.getRouteDir();
-            this.routeSince = i.getRouteDir() != 0 ? nowMs : 0L;
-        } else if (this.routeSince == 0) {
-            this.routeSince = nowMs;
-        }
-        if (i.getRouteDir() != 0 && (!Intrinsics.areEqual(this.kind, "route") || i.getRouteDir() == this.dir)) {
-            this.routeLostSince = 0L;
-        } else if (this.routeLostSince == 0) {
-            this.routeLostSince = nowMs;
-        }
-        if (passCond(i)) {
-            if (this.passSince == 0) {
-                this.passSince = nowMs;
-            }
-            this.passLostSince = 0L;
-        } else {
-            this.passSince = 0L;
-            if (this.passLostSince == 0) {
-                this.passLostSince = nowMs;
-            }
-        }
-        boolean z4 = (!i.getEngaged() || i.getVEgo() < i.getMinLcSpeed() || i.getLaneChanging() || i.getLeftBlinker() || i.getRightBlinker() || i.getBrake() || i.getBusy()) ? false : true;
-        Integer num = null;
-        String str4 = null;
-        String str5 = "pass";
-        switch (WhenMappings.$EnumSwitchMapping$0[this.state.ordinal()]) {
-            case 1:
-            case 2:
-                if (this.state == State.RESULT && nowMs - this.since > 4000) {
-                    this.state = State.IDLE;
-                }
-                if ((this.state == State.IDLE || (this.exitRetryAt != 0 && nowMs >= this.exitRetryAt)) && z4 && exitDue(i, nowMs)) {
-                    if (!Intrinsics.areEqual(i.getExitKey(), this.exitKey)) {
-                        this.exitKey = i.getExitKey();
-                        this.exitTries = 0;
+            int var6 = 3;
+            if (var5 >= 2) {
+                if (var1.getLaneChanging()) {
+                    if (var1.getLaneChangeDir() != 0) {
+                        if (this.lcDir == 0 && var1.getLaneChangeDir() < 0 && this.owedRight == 0) {
+                            this.homeLeft = var1.getLeftLanes();
+                        }
+
+                        this.lcDir = var1.getLaneChangeDir();
                     }
-                    this.exitTries++;
-                    this.exitRetryAt = 0L;
-                    ask(i.getExitDir(), i.getExitWhy(), nowMs, "exit");
-                    this.state = State.SIGNALING;
-                    this.holdSide = this.dir;
-                    this.confirmedBy = "route";
-                    return;
+                } else if (this.lcDir != 0) {
+                    if (this.lcDir < 0) {
+                        if (var1.getReturnOn()) {
+                            this.owedRight = Math.min(this.owedRight + 1, 3);
+                            this.owedAt = var13;
+                        }
+                    } else if (this.owedRight > 0) {
+                        this.owedRight--;
+                    }
+
+                    this.lcDir = 0;
                 }
-                if (this.state == State.IDLE && z4) {
-                    int[] iArr2 = {-1, 1};
-                    int length = iArr2.length;
-                    int i6 = 0;
-                    while (true) {
-                        if (i6 < length) {
-                            int i7 = iArr2[i6];
-                            int[] iArr3 = iArr2;
-                            str = str5;
-                            if (this.highSince[idx(i7)] != 0) {
-                                if (nowMs - this.highSince[idx(i7)] >= 1000 && nowMs >= this.cool[idx(i7)]) {
-                                    if (i7 > 0 && i.getHighway()) {
-                                        break;
-                                    }
-                                    z3 = true;
-                                    if (z3) {
-                                        i6++;
-                                        iArr2 = iArr3;
-                                        str5 = str;
-                                    } else {
-                                        num = Integer.valueOf(i7);
-                                    }
-                                }
-                            }
-                            z3 = false;
-                            if (z3) {
-                            }
-                        } else {
-                            str = str5;
-                        }
-                    }
-                    Integer num2 = num;
-                    if (num2 != null) {
-                        int intValue = num2.intValue();
-                        String lowerCase = side(num2.intValue()).toLowerCase(Locale.ROOT);
-                        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                        str2 = str;
-                        ask(intValue, "the driving model wants to move " + lowerCase, nowMs, "model");
-                        z = false;
-                        z2 = true;
-                    } else {
-                        str2 = str;
-                        if (i.getRouteDir() != 0 && this.routeSince != 0 && nowMs - this.routeSince >= 2000 && nowMs >= this.cool[idx(i.getRouteDir())]) {
-                            ask(i.getRouteDir(), i.getRouteWhy(), nowMs, "route");
-                            z = false;
-                            z2 = true;
-                        } else if (i.getMergeDir() == 0 || nowMs < this.cool[idx(i.getMergeDir())]) {
-                            if (this.passSince == 0 || nowMs - this.passSince < 5000) {
-                                z = false;
-                            } else {
-                                z = false;
-                                if (nowMs >= this.cool[0] && !i.getLeftBsm()) {
-                                    ask(-1, "slower car ahead at " + speed(i.getLeadV(), i.getMetric()) + " - your set speed is " + speed(i.getVSet(), i.getMetric()), nowMs, "pass");
-                                    z2 = true;
-                                }
-                            }
-                            if (this.returnSince == 0 || nowMs - this.returnSince < 3000) {
-                                z2 = true;
-                            } else {
-                                z2 = true;
-                                if (nowMs >= this.cool[1]) {
-                                    ask(1, "you passed - the right lane is clear, move back right", nowMs, "return");
-                                }
-                            }
-                        } else {
-                            ask(i.getMergeDir(), i.getMergeWhy(), nowMs, "merge");
-                            z = false;
-                            z2 = true;
-                        }
-                    }
-                    this.autoAsk = (this.state != State.ASKING || !i.getAuto() || !i.getCommaConfirms() || Intrinsics.areEqual(this.kind, str2) || Intrinsics.areEqual(this.kind, "return") || Intrinsics.areEqual(this.kind, "merge")) ? z : z2;
+
+                if (this.owedRight > 0 && var13 - this.owedAt > 180000L) {
+                    this.owedRight = 0;
                 }
-                Unit unit = Unit.INSTANCE;
-                return;
-            case 3:
-                if (this.test) {
-                    if (nudged(i, nowMs)) {
-                        confirm(nowMs, "nudge");
-                        return;
-                    }
-                    if (nowMs - this.since > 12000) {
-                        this.state = State.IDLE;
-                        this.test = false;
-                        return;
-                    } else {
-                        if (nowMs - this.lastBeep >= 2000) {
-                            this.beepNow = true;
-                            this.lastBeep = nowMs;
-                            return;
-                        }
-                        return;
-                    }
+
+                if (this.owedRight > 0 && this.homeLeft >= 0 && var1.getLeftLanes() >= this.homeLeft && this.lcDir == 0) {
+                    this.owedRight = 0;
                 }
-                if (i.getEngaged() && !i.getLaneChanging() && !i.getBrake()) {
-                    if (!(this.dir < 0 ? i.getRightBlinker() : i.getLeftBlinker())) {
-                        if (this.dir < 0 ? i.getLeftBsm() : i.getRightBsm()) {
-                            this.state = State.WAITING;
-                            if (this.firstWait == 0) {
-                                this.firstWait = nowMs;
-                            }
-                            this.waitSince = this.firstWait;
-                            this.clearSince = 0L;
-                            return;
-                        }
-                        if (nowMs - this.since > 12000) {
-                            this.state = State.IDLE;
-                            this.cool[idx(this.dir)] = 30000 + nowMs;
-                            return;
-                        }
-                        if (Intrinsics.areEqual(this.kind, "pass") && this.passLostSince != 0 && nowMs - this.passLostSince >= 2000) {
-                            this.state = State.IDLE;
-                            this.cool[0] = 20000 + nowMs;
-                            return;
-                        }
-                        if (Intrinsics.areEqual(this.kind, "return") && this.returnLostSince != 0 && nowMs - this.returnLostSince >= 2000) {
-                            this.state = State.IDLE;
-                            this.cool[1] = 20000 + nowMs;
-                            return;
-                        }
-                        if (Intrinsics.areEqual(this.kind, "merge") && this.mergeLostSince != 0 && nowMs - this.mergeLostSince >= 2000) {
-                            this.state = State.IDLE;
-                            this.cool[idx(this.dir)] = 20000 + nowMs;
-                            return;
-                        }
-                        if (routeGone(nowMs)) {
-                            this.state = State.IDLE;
-                            this.cool[idx(this.dir)] = 20000 + nowMs;
-                            return;
-                        }
-                        if (nudged(i, nowMs)) {
-                            confirm(nowMs, "nudge");
-                            return;
-                        }
-                        if (this.autoAsk && nowMs - this.since >= 3000) {
-                            confirm(nowMs, "auto");
-                            return;
-                        }
-                        if (nowMs - this.lastBeep >= 2000) {
-                            this.beepNow = true;
-                            this.lastBeep = nowMs;
-                        }
-                        Unit unit2 = Unit.INSTANCE;
-                        return;
-                    }
+
+                if (this.owedRight == 0 && this.lcDir == 0) {
+                    this.homeLeft = -1;
                 }
-                this.state = State.IDLE;
-                this.cool[idx(this.dir)] = 15000 + nowMs;
-                return;
-            case 4:
-                if (i.getEngaged() && !i.getLaneChanging() && !i.getBrake() && i.getVEgo() >= i.getMinLcSpeed()) {
-                    if (!(this.dir < 0 ? i.getRightBlinker() : i.getLeftBlinker())) {
-                        if (nowMs - this.waitSince > (Intrinsics.areEqual(this.kind, "model") ? 30000L : 60000L)) {
-                            this.state = State.IDLE;
-                            this.cool[idx(this.dir)] = 30000 + nowMs;
-                            return;
-                        }
-                        if (Intrinsics.areEqual(this.kind, "pass") && this.passLostSince != 0 && nowMs - this.passLostSince >= 2000) {
-                            this.state = State.IDLE;
-                            this.cool[0] = 20000 + nowMs;
-                            return;
-                        }
-                        if (Intrinsics.areEqual(this.kind, "return") && this.owedRight == 0) {
-                            this.state = State.IDLE;
-                            return;
-                        }
-                        if (Intrinsics.areEqual(this.kind, "exit") && exitGone(i)) {
-                            this.state = State.IDLE;
-                            this.exitDoneKey = this.exitKey;
-                            return;
-                        }
-                        if (routeGone(nowMs)) {
-                            this.state = State.IDLE;
-                            this.cool[idx(this.dir)] = 20000 + nowMs;
-                            return;
-                        }
-                        if (!this.armed && nudged(i, nowMs)) {
-                            this.armed = true;
-                            this.confirmedBy = "nudge";
-                        }
-                        if (this.dir < 0 ? i.getLeftBsm() : i.getRightBsm()) {
-                            this.clearSince = 0L;
-                        } else {
-                            if (this.clearSince == 0) {
-                                this.clearSince = nowMs;
-                            }
-                            if (nowMs - this.clearSince >= 1000) {
-                                if (this.armed) {
-                                    this.state = State.SIGNALING;
-                                    this.since = nowMs;
-                                    this.holdSide = this.dir;
-                                } else {
-                                    this.state = State.ASKING;
-                                    this.since = nowMs;
-                                    this.lastBeep = 0L;
-                                    this.reasked = true;
-                                }
-                            }
-                        }
-                        Unit unit3 = Unit.INSTANCE;
-                        return;
+
+                if (this.returnCond(var1, var13)) {
+                    if (this.returnSince == 0L) {
+                        this.returnSince = var13;
                     }
-                }
-                this.state = State.IDLE;
-                this.cool[idx(this.dir)] = 15000 + nowMs;
-                return;
-            case 5:
-                if (this.test) {
-                    this.holdSide = this.dir;
-                    if (nowMs - this.since > 8000) {
-                        finish("test done - the blinker was held 8 seconds. openpilot only changes lanes while driving", nowMs);
-                        this.test = false;
-                        return;
-                    }
-                    return;
-                }
-                boolean leftBsm = this.dir < 0 ? i.getLeftBsm() : i.getRightBsm();
-                if (leftBsm && !i.getLaneChanging() && i.getEngaged() && !i.getBrake()) {
-                    this.state = State.WAITING;
-                    if (this.firstWait == 0) {
-                        this.firstWait = nowMs;
-                    }
-                    this.waitSince = this.firstWait;
-                    this.clearSince = 0L;
-                    this.armed = true;
-                    this.holdSide = 0;
-                    return;
-                }
-                if (!i.getEngaged()) {
-                    str4 = "openpilot disengaged - stopped";
-                } else if (i.getBrake()) {
-                    str4 = "brake pressed - stopped";
-                } else if (i.getVEgo() < i.getMinLcSpeed()) {
-                    str4 = "too slow for a lane change - stopped";
+
+                    this.returnLostSince = 0L;
                 } else {
-                    if (this.dir < 0 ? i.getRightBlinker() : i.getLeftBlinker()) {
-                        str4 = "other blinker on - stopped";
-                    } else if (Intrinsics.areEqual(this.kind, "exit") && exitGone(i)) {
-                        this.exitDoneKey = this.exitKey;
-                        str4 = "the exit is behind us - not taken";
-                    } else if (!i.getLaneChanging() && routeGone(nowMs)) {
-                        this.cool[idx(this.dir)] = 20000 + nowMs;
-                        str4 = "already in a lane for the route - stopped";
-                    } else if (!Intrinsics.areEqual(this.kind, "exit") || nowMs - this.since <= 6000) {
-                        if (nowMs - this.since > 8000) {
-                            if (leftBsm) {
-                                String lowerCase2 = side(this.dir).toLowerCase(Locale.ROOT);
-                                Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
-                                str4 = "a car stayed in the " + lowerCase2 + " blind spot - not changed";
-                            } else {
-                                str4 = i.getCommaConfirms() ? "openpilot didn't start it (lane too narrow or lane changes off)" : "openpilot didn't start it (lane too narrow, lane changes off, or it wants a nudge)";
-                            }
-                        }
-                    } else if (this.exitTries < 5) {
-                        this.exitRetryAt = 1500 + nowMs;
-                        str4 = "openpilot hasn't moved over yet - signaling again";
-                    } else {
-                        this.exitDoneKey = this.exitKey;
-                        str4 = "openpilot didn't take the exit - take it yourself";
+                    this.returnSince = 0L;
+                    if (this.returnLostSince == 0L) {
+                        this.returnLostSince = var13;
                     }
                 }
-                String str6 = str4;
-                if (str6 != null) {
-                    finish(str6, nowMs);
+
+                if (var1.getMergeDir() == 0 || Intrinsics.areEqual(this.kind, "merge") && var1.getMergeDir() != this.dir) {
+                    if (this.mergeLostSince == 0L) {
+                        this.mergeLostSince = var13;
+                    }
+                } else {
+                    this.mergeLostSince = 0L;
+                }
+
+                if (var1.getRouteDir() == 0 || var1.getRouteDir() != this.routeSinceDir) {
+                    this.routeSinceDir = var1.getRouteDir();
+                    long var11;
+                    if (var1.getRouteDir() != 0) {
+                        var11 = var13;
+                    } else {
+                        var11 = 0L;
+                    }
+
+                    this.routeSince = var11;
+                } else if (this.routeSince == 0L) {
+                    this.routeSince = var13;
+                }
+
+                if (var1.getRouteDir() == 0 || Intrinsics.areEqual(this.kind, "route") && var1.getRouteDir() != this.dir) {
+                    if (this.routeLostSince == 0L) {
+                        this.routeLostSince = var13;
+                    }
+                } else {
+                    this.routeLostSince = 0L;
+                }
+
+                if (this.passCond(var1)) {
+                    if (this.passSince == 0L) {
+                        this.passSince = var13;
+                    }
+
+                    this.passLostSince = 0L;
+                } else {
+                    this.passSince = 0L;
+                    if (this.passLostSince == 0L) {
+                        this.passLostSince = var13;
+                    }
+                }
+
+                boolean var28;
+                if (var1.getEngaged()
+                    && var1.getVEgo() >= var1.getMinLcSpeed()
+                    && !var1.getLaneChanging()
+                    && !var1.getLeftBlinker()
+                    && !var1.getRightBlinker()
+                    && !var1.getBrake()
+                    && !var1.getBusy()) {
+                    var28 = true;
+                } else {
+                    var28 = false;
+                }
+
+                label552: {
+                    label551: {
+                        LaneSuggest.State var43 = this.state;
+                        var6 = LaneSuggest.WhenMappings.$EnumSwitchMapping$0[var43.ordinal()];
+                        Object var19 = null;
+                        Integer var47 = null;
+                        String var44 = "pass";
+                        switch (var6) {
+                            case 1:
+                            case 2:
+                                if (this.state == LaneSuggest.State.RESULT && var13 - this.since > 4000L) {
+                                    this.state = LaneSuggest.State.IDLE;
+                                }
+
+                                if ((this.state == LaneSuggest.State.IDLE || this.exitRetryAt != 0L && var13 >= this.exitRetryAt) && var28 && this.exitDue(var1, var13)
+                                    )
+                                 {
+                                    if (!Intrinsics.areEqual(var1.getExitKey(), this.exitKey)) {
+                                        this.exitKey = var1.getExitKey();
+                                        this.exitTries = 0;
+                                    }
+
+                                    this.exitTries++;
+                                    this.exitRetryAt = 0L;
+                                    this.ask(var1.getExitDir(), var1.getExitWhy(), var13, "exit");
+                                    this.state = LaneSuggest.State.SIGNALING;
+                                    this.holdSide = this.dir;
+                                    this.confirmedBy = "route";
+                                    return;
+                                }
+
+                                if (this.state == LaneSuggest.State.IDLE && var28) {
+                                    var47 = new int[]{-1, 1};
+                                    int var36 = ((Object[])var47).length;
+                                    var28 = false;
+
+                                    while (true) {
+                                        if (var28 >= var36) {
+                                            var47 = (Integer)var19;
+                                            break;
+                                        }
+
+                                        int var8 = (int)((Object[])var47)[((var28) ? 1 : 0)];
+                                        boolean var35;
+                                        if (this.highSince[this.idx(var8)] == 0L
+                                            || var13 - this.highSince[this.idx(var8)] < 1000L
+                                            || var13 < this.cool[this.idx(var8)]
+                                            || var8 > 0 && var1.getHighway() && var1.getLanesTotal() >= 3) {
+                                            var35 = false;
+                                        } else {
+                                            var35 = true;
+                                        }
+
+                                        if (var35) {
+                                            var47 = var8;
+                                            break;
+                                        }
+
+                                        var28++;
+                                    }
+
+                                    if (var47 != null) {
+                                        var28 = var47;
+                                        String var50 = this.side(var47).toLowerCase(Locale.ROOT);
+                                        Intrinsics.checkNotNullExpressionValue(var50, "toLowerCase(...)");
+                                        this.ask(((var28) ? 1 : 0), "the driving model wants to move " + var50, var13, "model");
+                                    } else if (var1.getRouteDir() != 0
+                                        && this.routeSince != 0L
+                                        && var13 - this.routeSince >= 2000L
+                                        && var13 >= this.cool[this.idx(var1.getRouteDir())]) {
+                                        this.ask(var1.getRouteDir(), var1.getRouteWhy(), var13, "route");
+                                    } else if (var1.getMergeDir() != 0 && var13 >= this.cool[this.idx(var1.getMergeDir())]) {
+                                        this.ask(var1.getMergeDir(), var1.getMergeWhy(), var13, "merge");
+                                    } else if (this.passSince != 0L && var13 - this.passSince >= 5000L && var13 >= this.cool[0] && !var1.getLeftBsm()) {
+                                        String var51 = this.speed(var1.getLeadV(), var1.getMetric());
+                                        var19 = this.speed(var1.getVSet(), var1.getMetric());
+                                        this.ask(-1, "slower car ahead at " + var51 + " - your set speed is " + var19, var13, "pass");
+                                    } else if (this.returnSince != 0L && var13 - this.returnSince >= 3000L && var13 >= this.cool[1]) {
+                                        this.ask(1, "you passed - the right lane is clear, move back right", var13, "return");
+                                    }
+
+                                    boolean var41;
+                                    if (this.state == LaneSuggest.State.ASKING
+                                        && var1.getAuto()
+                                        && var1.getCommaConfirms()
+                                        && !Intrinsics.areEqual(this.kind, var44)
+                                        && !Intrinsics.areEqual(this.kind, "return")
+                                        && !Intrinsics.areEqual(this.kind, "merge")) {
+                                        var41 = true;
+                                    } else {
+                                        var41 = false;
+                                    }
+
+                                    this.autoAsk = var41;
+                                }
+
+                                Unit var27 = Unit.INSTANCE;
+                                break;
+                            case 3:
+                                if (this.test) {
+                                    if (this.nudged(var1, var13)) {
+                                        this.confirm(var13, "nudge");
+                                        return;
+                                    }
+
+                                    if (var13 - this.since > 12000L) {
+                                        this.state = LaneSuggest.State.IDLE;
+                                        this.test = false;
+                                        return;
+                                    }
+
+                                    if (var13 - this.lastBeep >= 2000L) {
+                                        this.beepNow = true;
+                                        this.lastBeep = var13;
+                                    }
+
+                                    return;
+                                }
+
+                                if (!var1.getEngaged() || var1.getLaneChanging() || var1.getBrake()) {
+                                    break label551;
+                                }
+
+                                boolean var39;
+                                if (this.dir < 0) {
+                                    var39 = var1.getRightBlinker();
+                                } else {
+                                    var39 = var1.getLeftBlinker();
+                                }
+
+                                if (var39) {
+                                    break label551;
+                                }
+
+                                if (this.dir < 0) {
+                                    var39 = var1.getLeftBsm();
+                                } else {
+                                    var39 = var1.getRightBsm();
+                                }
+
+                                if (var39) {
+                                    this.state = LaneSuggest.State.WAITING;
+                                    if (this.firstWait == 0L) {
+                                        this.firstWait = var13;
+                                    }
+
+                                    this.waitSince = this.firstWait;
+                                    this.clearSince = 0L;
+                                    return;
+                                }
+
+                                if (var13 - this.since > 12000L) {
+                                    this.state = LaneSuggest.State.IDLE;
+                                    this.cool[this.idx(this.dir)] = 30000 + var13;
+                                    return;
+                                }
+
+                                if (Intrinsics.areEqual(this.kind, "pass") && this.passLostSince != 0L && var13 - this.passLostSince >= 2000L) {
+                                    this.state = LaneSuggest.State.IDLE;
+                                    this.cool[0] = 20000 + var13;
+                                    return;
+                                }
+
+                                if (Intrinsics.areEqual(this.kind, "return") && this.returnLostSince != 0L && var13 - this.returnLostSince >= 2000L) {
+                                    this.state = LaneSuggest.State.IDLE;
+                                    this.cool[1] = 20000 + var13;
+                                    return;
+                                }
+
+                                if (Intrinsics.areEqual(this.kind, "merge") && this.mergeLostSince != 0L && var13 - this.mergeLostSince >= 2000L) {
+                                    this.state = LaneSuggest.State.IDLE;
+                                    this.cool[this.idx(this.dir)] = 20000 + var13;
+                                    return;
+                                }
+
+                                if (this.routeGone(var13)) {
+                                    this.state = LaneSuggest.State.IDLE;
+                                    this.cool[this.idx(this.dir)] = 20000 + var13;
+                                    return;
+                                }
+
+                                if (this.nudged(var1, var13)) {
+                                    this.confirm(var13, "nudge");
+                                    return;
+                                }
+
+                                if (this.autoAsk && var13 - this.since >= 3000L) {
+                                    this.confirm(var13, "auto");
+                                    return;
+                                }
+
+                                if (var13 - this.lastBeep >= 2000L) {
+                                    this.beepNow = true;
+                                    this.lastBeep = var13;
+                                }
+
+                                Unit var26 = Unit.INSTANCE;
+                                break;
+                            case 4:
+                                if (!var1.getEngaged() || var1.getLaneChanging() || var1.getBrake() || var1.getVEgo() < var1.getMinLcSpeed()) {
+                                    break label552;
+                                }
+
+                                boolean var37;
+                                if (this.dir < 0) {
+                                    var37 = var1.getRightBlinker();
+                                } else {
+                                    var37 = var1.getLeftBlinker();
+                                }
+
+                                if (var37) {
+                                    break label552;
+                                }
+
+                                long var15 = this.waitSince;
+                                long var42;
+                                if (Intrinsics.areEqual(this.kind, "model")) {
+                                    var42 = 30000L;
+                                } else {
+                                    var42 = 60000L;
+                                }
+
+                                if (var13 - var15 > var42) {
+                                    this.state = LaneSuggest.State.IDLE;
+                                    this.cool[this.idx(this.dir)] = 30000 + var13;
+                                    return;
+                                }
+
+                                if (Intrinsics.areEqual(this.kind, "pass") && this.passLostSince != 0L && var13 - this.passLostSince >= 2000L) {
+                                    this.state = LaneSuggest.State.IDLE;
+                                    this.cool[0] = 20000 + var13;
+                                    return;
+                                }
+
+                                if (Intrinsics.areEqual(this.kind, "return") && this.owedRight == 0) {
+                                    this.state = LaneSuggest.State.IDLE;
+                                    return;
+                                }
+
+                                if (Intrinsics.areEqual(this.kind, "exit") && this.exitGone(var1)) {
+                                    this.state = LaneSuggest.State.IDLE;
+                                    this.exitDoneKey = this.exitKey;
+                                    return;
+                                }
+
+                                if (this.routeGone(var13)) {
+                                    this.state = LaneSuggest.State.IDLE;
+                                    this.cool[this.idx(this.dir)] = 20000 + var13;
+                                    return;
+                                }
+
+                                if (!this.armed && this.nudged(var1, var13)) {
+                                    this.armed = true;
+                                    this.confirmedBy = "nudge";
+                                }
+
+                                if (this.dir < 0) {
+                                    var37 = var1.getLeftBsm();
+                                } else {
+                                    var37 = var1.getRightBsm();
+                                }
+
+                                if (var37) {
+                                    this.clearSince = 0L;
+                                } else {
+                                    if (this.clearSince == 0L) {
+                                        this.clearSince = var13;
+                                    }
+
+                                    if (var13 - this.clearSince >= 1000L) {
+                                        if (this.armed) {
+                                            this.state = LaneSuggest.State.SIGNALING;
+                                            this.since = var13;
+                                            this.holdSide = this.dir;
+                                        } else {
+                                            this.state = LaneSuggest.State.ASKING;
+                                            this.since = var13;
+                                            this.lastBeep = 0L;
+                                            this.reasked = true;
+                                        }
+                                    }
+                                }
+
+                                Unit var25 = Unit.INSTANCE;
+                                break;
+                            case 5:
+                                if (this.test) {
+                                    this.holdSide = this.dir;
+                                    if (var13 - this.since > 8000L) {
+                                        this.finish("test done - the blinker was held 8 seconds. openpilot only changes lanes while driving", var13);
+                                        this.test = false;
+                                    }
+
+                                    return;
+                                }
+
+                                boolean var9;
+                                if (this.dir < 0) {
+                                    var9 = var1.getLeftBsm();
+                                } else {
+                                    var9 = var1.getRightBsm();
+                                }
+
+                                if (var9 && !var1.getLaneChanging() && var1.getEngaged() && !var1.getBrake()) {
+                                    this.state = LaneSuggest.State.WAITING;
+                                    if (this.firstWait == 0L) {
+                                        this.firstWait = var13;
+                                    }
+
+                                    this.waitSince = this.firstWait;
+                                    this.clearSince = 0L;
+                                    this.armed = true;
+                                    this.holdSide = 0;
+                                    return;
+                                }
+
+                                String var46;
+                                if (!var1.getEngaged()) {
+                                    var46 = "openpilot disengaged - stopped";
+                                } else if (var1.getBrake()) {
+                                    var46 = "brake pressed - stopped";
+                                } else if (var1.getVEgo() < var1.getMinLcSpeed()) {
+                                    var46 = "too slow for a lane change - stopped";
+                                } else {
+                                    boolean var10;
+                                    if (this.dir < 0) {
+                                        var10 = var1.getRightBlinker();
+                                    } else {
+                                        var10 = var1.getLeftBlinker();
+                                    }
+
+                                    if (var10) {
+                                        var46 = "other blinker on - stopped";
+                                    } else if (Intrinsics.areEqual(this.kind, "exit") && this.exitGone(var1)) {
+                                        this.exitDoneKey = this.exitKey;
+                                        var46 = "the exit is behind us - not taken";
+                                    } else if (!var1.getLaneChanging() && this.routeGone(var13)) {
+                                        this.cool[this.idx(this.dir)] = 20000 + var13;
+                                        var46 = "already in a lane for the route - stopped";
+                                    } else if (Intrinsics.areEqual(this.kind, "exit") && var13 - this.since > 6000L) {
+                                        if (this.exitTries < 5) {
+                                            this.exitRetryAt = 1500L + var13;
+                                            var46 = "openpilot hasn't moved over yet - signaling again";
+                                        } else {
+                                            this.exitDoneKey = this.exitKey;
+                                            var46 = "openpilot didn't take the exit - take it yourself";
+                                        }
+                                    } else if (var13 - this.since > 8000L) {
+                                        if (var9) {
+                                            String var45 = this.side(this.dir).toLowerCase(Locale.ROOT);
+                                            Intrinsics.checkNotNullExpressionValue(var45, "toLowerCase(...)");
+                                            var46 = "a car stayed in the " + var45 + " blind spot - not changed";
+                                        } else if (var1.getCommaConfirms()) {
+                                            var46 = "openpilot didn't start it (lane too narrow or lane changes off)";
+                                        } else {
+                                            var46 = "openpilot didn't start it (lane too narrow, lane changes off, or it wants a nudge)";
+                                        }
+                                    } else {
+                                        var46 = var47;
+                                    }
+                                }
+
+                                if (var46 != null) {
+                                    this.finish(var46, var13);
+                                    return;
+                                }
+
+                                this.holdSide = this.dir;
+                                if (var1.getLaneChanging() && var1.getLaneChangeDir() == this.dir) {
+                                    this.state = LaneSuggest.State.CHANGING;
+                                    this.since = var13;
+                                    this.holdSide = 0;
+                                }
+
+                                Unit var24 = Unit.INSTANCE;
+                                break;
+                            case 6:
+                                this.holdSide = 0;
+                                if (!var1.getLaneChanging()) {
+                                    if (Intrinsics.areEqual(this.kind, "exit")) {
+                                        this.exitDoneKey = this.exitKey;
+                                        this.exitRetryAt = 0L;
+                                    }
+
+                                    String var20;
+                                    if (Intrinsics.areEqual(this.kind, "exit")) {
+                                        var20 = "moved over for the exit";
+                                    } else {
+                                        String var21 = this.side(this.dir).toLowerCase(Locale.ROOT);
+                                        Intrinsics.checkNotNullExpressionValue(var21, "toLowerCase(...)");
+                                        var20 = "changed lanes " + var21;
+                                    }
+
+                                    this.finish(var20, var13);
+                                    long[] var22 = this.cool;
+                                    var6 = this.idx(this.dir);
+                                    if (Intrinsics.areEqual(this.kind, "pass")) {
+                                        var28 = (char)45000;
+                                    } else {
+                                        var28 = (char)10000;
+                                    }
+
+                                    var22[var6] = var28 + var13;
+                                } else if (var13 - this.since > 15000L) {
+                                    this.finish("lane change took too long", var13);
+                                }
+
+                                Unit var23 = Unit.INSTANCE;
+                                break;
+                            default:
+                                throw new NoWhenBranchMatchedException();
+                        }
+
+                        return;
+                    }
+
+                    this.state = LaneSuggest.State.IDLE;
+                    this.cool[this.idx(this.dir)] = 15000 + var13;
                     return;
                 }
-                this.holdSide = this.dir;
-                if (i.getLaneChanging() && i.getLaneChangeDir() == this.dir) {
-                    this.state = State.CHANGING;
-                    this.since = nowMs;
-                    this.holdSide = 0;
-                }
-                Unit unit4 = Unit.INSTANCE;
+
+                this.state = LaneSuggest.State.IDLE;
+                this.cool[this.idx(this.dir)] = 15000 + var13;
                 return;
-            case 6:
-                this.holdSide = 0;
-                if (!i.getLaneChanging()) {
-                    if (Intrinsics.areEqual(this.kind, "exit")) {
-                        this.exitDoneKey = this.exitKey;
-                        this.exitRetryAt = 0L;
-                    }
-                    if (Intrinsics.areEqual(this.kind, "exit")) {
-                        str3 = "moved over for the exit";
-                    } else {
-                        String lowerCase3 = side(this.dir).toLowerCase(Locale.ROOT);
-                        Intrinsics.checkNotNullExpressionValue(lowerCase3, "toLowerCase(...)");
-                        str3 = "changed lanes " + lowerCase3;
-                    }
-                    finish(str3, nowMs);
-                    this.cool[idx(this.dir)] = (Intrinsics.areEqual(this.kind, "pass") ? 45000 : 10000) + nowMs;
-                } else if (nowMs - this.since > 15000) {
-                    finish("lane change took too long", nowMs);
+            }
+
+            int var7 = new int[]{-1, 1}[var5];
+            if (var7 >= 0) {
+                var6 = 4;
+            }
+
+            float var3;
+            if (var17 != null && var17.length >= 32) {
+                var3 = Math.max(var17[var6 + 8], var17[var6 + 16]);
+            } else {
+                var3 = 0.0F;
+            }
+
+            float var4 = (float)Math.exp(-var2 / 0.5F);
+            float[] var18 = this.ema;
+            var6 = this.idx(var7);
+            var18[var6] += (var3 - this.ema[this.idx(var7)]) * (1.0F - var4);
+            if (this.ema[this.idx(var7)] > 0.6F) {
+                if (this.highSince[this.idx(var7)] == 0L) {
+                    this.highSince[this.idx(var7)] = var13;
                 }
-                Unit unit5 = Unit.INSTANCE;
-                return;
-            default:
-                throw new NoWhenBranchMatchedException();
+            } else {
+                this.highSince[this.idx(var7)] = 0L;
+            }
+
+            var5++;
         }
     }
 
@@ -1146,155 +1280,119 @@ public final class LaneSuggest {
         private Companion() {
         }
 
-        /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-        /* JADX WARN: Code restructure failed: missing block: B:15:0x0041, code lost:
-        
-            if (r4.equals("right") == false) goto L59;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:16:0x006b, code lost:
-        
-            r6 = 1;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:17:0x0078, code lost:
-        
-            r17 = r20.optDouble("maneuverDistance", Double.NaN);
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:18:0x0084, code lost:
-        
-            if (java.lang.Double.isInfinite(r17) != false) goto L41;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:20:0x008a, code lost:
-        
-            if (java.lang.Double.isNaN(r17) != false) goto L41;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:21:0x008c, code lost:
-        
-            r3 = true;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:22:0x008d, code lost:
-        
-            if (r3 != false) goto L43;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:24:0x0090, code lost:
-        
-            r1 = r20.optString("maneuverPrimaryText");
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:25:0x009a, code lost:
-        
-            if (kotlin.jvm.internal.Intrinsics.areEqual(r2, "off ramp") == false) goto L46;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:26:0x009c, code lost:
-        
-            r7 = "exit";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:27:0x009e, code lost:
-        
-            r3 = r7;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:28:0x009f, code lost:
-        
-            if (r21 == false) goto L49;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:29:0x00a1, code lost:
-        
-            r5 = new java.lang.StringBuilder().append(((int) (r17 / 10)) * 10);
-            r7 = " m";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:30:0x00cc, code lost:
-        
-            r5 = r5.append(r7).toString();
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:31:0x00d6, code lost:
-        
-            if (r6 >= 0) goto L53;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:32:0x00d8, code lost:
-        
-            r9 = "left";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:33:0x00d9, code lost:
-        
-            kotlin.jvm.internal.Intrinsics.checkNotNull(r1);
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:34:0x00e3, code lost:
-        
-            if (kotlin.text.StringsKt.isBlank(r1) != false) goto L56;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:35:0x00e5, code lost:
-        
-            r8 = " - " + r1;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:38:0x00f9, code lost:
-        
-            r8 = "";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:39:0x00b4, code lost:
-        
-            r5 = new java.lang.StringBuilder().append(((int) ((3.28084d * r17) / 50)) * 50);
-            r7 = " ft";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:41:0x0049, code lost:
-        
-            if (r4.equals("left") == false) goto L59;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:42:0x0077, code lost:
-        
-            r6 = -1;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:44:0x0053, code lost:
-        
-            if (r4.equals("slightLeft") == false) goto L59;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:46:0x005d, code lost:
-        
-            if (r4.equals("slightRight") == false) goto L59;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:48:0x0067, code lost:
-        
-            if (r4.equals("sharpRight") == false) goto L59;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:50:0x0073, code lost:
-        
-            if (r4.equals("sharpLeft") == false) goto L59;
-         */
-        /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-        java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-         */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public final Exit exitNeed(JSONObject nav, boolean metric) {
-            if (nav != null) {
-                boolean z = false;
-                if (nav.optBoolean("valid", false)) {
-                    String type = nav.optString("maneuverType");
-                    String mod = nav.optString("maneuverModifier");
-                    String str = "fork";
-                    if ((Intrinsics.areEqual(type, "off ramp") || Intrinsics.areEqual(type, "fork")) && mod != null) {
-                        String str2 = "right";
-                        switch (mod.hashCode()) {
-                            case -1572118767:
-                                break;
-                            case -1485380526:
-                                break;
-                            case -711874727:
-                                break;
-                            case -438788310:
-                                break;
-                            case 3317767:
-                                break;
-                            case 108511772:
-                                break;
-                        }
+        /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+        public final LaneSuggest.Companion.Exit exitNeed(JSONObject var1, boolean var2) {
+            if (var1 != null) {
+                boolean var7 = false;
+                if (var1.optBoolean("valid", false)) {
+                    String var12 = var1.optString("maneuverType");
+                    String var13 = var1.optString("maneuverModifier");
+                    boolean var8 = Intrinsics.areEqual(var12, "off ramp");
+                    String var9 = "fork";
+                    if (!var8 && !Intrinsics.areEqual(var12, "fork")) {
                         return null;
                     }
+
+                    if (var13 != null) {
+                        String var11;
+                        int var17;
+                        label74: {
+                            label73: {
+                                var17 = var13.hashCode();
+                                var11 = "right";
+                                switch (var17) {
+                                    case -1572118767:
+                                        if (!var13.equals("sharpLeft")) {
+                                            return null;
+                                        }
+                                        break;
+                                    case -1485380526:
+                                        if (!var13.equals("sharpRight")) {
+                                            return null;
+                                        }
+                                        break label73;
+                                    case -711874727:
+                                        if (!var13.equals("slightRight")) {
+                                            return null;
+                                        }
+                                        break label73;
+                                    case -438788310:
+                                        if (!var13.equals("slightLeft")) {
+                                            return null;
+                                        }
+                                        break;
+                                    case 3317767:
+                                        if (!var13.equals("left")) {
+                                            return null;
+                                        }
+                                        break;
+                                    case 108511772:
+                                        if (!var13.equals("right")) {
+                                            return null;
+                                        }
+                                        break label73;
+                                    default:
+                                        return null;
+                                }
+
+                                var17 = -1;
+                                break label74;
+                            }
+
+                            var17 = 1;
+                        }
+
+                        double var3 = var1.optDouble("maneuverDistance", Double.NaN);
+                        int var6 = ((var7) ? 1 : 0);
+                        if (!Double.isInfinite(var3)) {
+                            var6 = ((var7) ? 1 : 0);
+                            if (!Double.isNaN(var3)) {
+                                var6 = 1;
+                            }
+                        }
+
+                        if (!var6) {
+                            return null;
+                        }
+
+                        String var14 = var1.optString("maneuverPrimaryText");
+                        String var16 = var9;
+                        if (Intrinsics.areEqual(var12, "off ramp")) {
+                            var16 = "exit";
+                        }
+
+                        StringBuilder var10;
+                        if (var2) {
+                            var6 = (int)(var3 / 10);
+                            var10 = new StringBuilder().append(var6 * 10);
+                            var9 = " m";
+                        } else {
+                            var6 = (int)(3.28084 * var3 / 50);
+                            var10 = new StringBuilder().append(var6 * 50);
+                            var9 = " ft";
+                        }
+
+                        String var15 = var10.append(var9).toString();
+                        var9 = var11;
+                        if (var17 < 0) {
+                            var9 = "left";
+                        }
+
+                        Intrinsics.checkNotNull(var14);
+                        String var22;
+                        if (!StringsKt.isBlank(var14)) {
+                            var22 = " - " + var14;
+                        } else {
+                            var22 = "";
+                        }
+
+                        return new LaneSuggest.Companion.Exit(var17, var3, var16 + " on the " + var9 + " in " + var15 + var22, var12 + "|" + var13 + "|" + var14);
+                    }
+
                     return null;
                 }
             }
+
             return null;
         }
 
@@ -1391,47 +1489,63 @@ public final class LaneSuggest {
             return dir > 0 ? lanes.get((n - 1) - kn) : lanes.get(kn);
         }
 
-        /* JADX WARN: Removed duplicated region for block: B:25:0x0074 A[SYNTHETIC] */
-        /* JADX WARN: Removed duplicated region for block: B:27:? A[LOOP:0: B:14:0x002b->B:27:?, LOOP_END, SYNTHETIC] */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public final boolean arrowToward(Nav.Lane l, int dir) {
-            Iterable $this$any$iv;
-            String a;
-            Intrinsics.checkNotNullParameter(l, "l");
-            if (l.getArrows().isEmpty()) {
-                return true;
-            }
-            Iterable $this$any$iv2 = l.getArrows();
-            if (!($this$any$iv2 instanceof Collection) || !((Collection) $this$any$iv2).isEmpty()) {
-                Iterator it = $this$any$iv2.iterator();
-                while (true) {
-                    if (it.hasNext()) {
-                        Object element$iv = it.next();
-                        String a2 = (String) element$iv;
-                        if (!Intrinsics.areEqual(a2, "none")) {
-                            String str = a2;
-                            if (!(dir > 0 ? StringsKt.contains((CharSequence) str, (CharSequence) "right", false) : StringsKt.contains((CharSequence) str, (CharSequence) "left", false) || StringsKt.contains((CharSequence) a2, (CharSequence) "uturn", false))) {
-                                a = null;
-                                if (a == null) {
-                                    $this$any$iv = 1;
-                                    break;
+        /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+        public final boolean arrowToward(Nav.Lane var1, int var2) {
+            Intrinsics.checkNotNullParameter(var1, "l");
+            boolean var6 = var1.getArrows().isEmpty();
+            boolean var5 = true;
+            boolean var4 = var5;
+            if (!var6) {
+                var var9 = var1.getArrows();
+                boolean var11;
+                if (var9 instanceof Collection && ((Collection)var9).isEmpty()) {
+                    var11 = false;
+                } else {
+                    Iterator var10 = var9.iterator();
+
+                    while (true) {
+                        if (!var10.hasNext()) {
+                            var11 = false;
+                            break;
+                        }
+
+                        boolean var3;
+                        label47: {
+                            String var7 = (String)var10.next();
+                            if (!Intrinsics.areEqual(var7, "none")) {
+                                CharSequence var8 = var7;
+                                if (var2 > 0) {
+                                    var4 = StringsKt.contains(var8, "right", false);
+                                } else if (!StringsKt.contains(var8, "left", false) && !StringsKt.contains(var7, "uturn", false)) {
+                                    var4 = false;
+                                } else {
+                                    var4 = true;
+                                }
+
+                                if (!var4) {
+                                    var3 = false;
+                                    break label47;
                                 }
                             }
+
+                            var3 = true;
                         }
-                        a = 1;
-                        if (a == null) {
+
+                        if (var3) {
+                            var11 = true;
+                            break;
                         }
-                    } else {
-                        $this$any$iv = null;
-                        break;
                     }
                 }
-            } else {
-                $this$any$iv = null;
+
+                if (var11) {
+                    var4 = var5;
+                } else {
+                    var4 = false;
+                }
             }
-            return $this$any$iv != null;
+
+            return var4;
         }
 
         public final boolean notTurnLane(JSONObject nav, LaneBrain brain, Pair<Nav.Step, Double> next) {
@@ -1458,313 +1572,220 @@ public final class LaneSuggest {
             return false;
         }
 
-        /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-        java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-         */
-        public final int routeSoon(JSONObject nav) {
-            String optString;
-            if (nav == null || !nav.optBoolean("valid", false)) {
-                return 0;
-            }
-            String type = nav.optString("maneuverType");
-            if (!Intrinsics.areEqual(type, "off ramp") && !Intrinsics.areEqual(type, "fork") && !Intrinsics.areEqual(type, "turn")) {
-                return 0;
-            }
-            double dist = nav.optDouble("maneuverDistance", Double.NaN);
-            if (!((Double.isInfinite(dist) || Double.isNaN(dist)) ? false : true) || dist > 3200.0d || (optString = nav.optString("maneuverModifier")) == null) {
-                return 0;
-            }
-            switch (optString.hashCode()) {
-                case -1572118767:
-                    if (!optString.equals("sharpLeft")) {
+        /* VF: from Vineflower (jadx: ) */
+        public final int routeSoon(JSONObject var1) {
+            byte var5 = 0;
+            if (var1 != null && var1.optBoolean("valid", false)) {
+                String var6 = var1.optString("maneuverType");
+                if (!Intrinsics.areEqual(var6, "off ramp") && !Intrinsics.areEqual(var6, "fork") && !Intrinsics.areEqual(var6, "turn")) {
+                    return 0;
+                } else {
+                    double var2 = var1.optDouble("maneuverDistance", Double.NaN);
+                    int var4;
+                    if (!Double.isInfinite(var2) && !Double.isNaN(var2)) {
+                        var4 = 1;
+                    } else {
+                        var4 = 0;
                     }
-                    break;
-                case -1485380526:
-                    if (!optString.equals("sharpRight")) {
-                    }
-                    break;
-                case -711874727:
-                    if (!optString.equals("slightRight")) {
-                    }
-                    break;
-                case -438788310:
-                    if (!optString.equals("slightLeft")) {
-                    }
-                    break;
-                case 3317767:
-                    if (!optString.equals("left")) {
-                    }
-                    break;
-                case 108511772:
-                    if (!optString.equals("right")) {
-                    }
-                    break;
-            }
-            return 0;
-        }
 
-        /* JADX WARN: Multi-variable type inference failed */
-        public static /* synthetic */ Pair routeNeed$default(Companion companion, JSONObject jSONObject, LaneBrain laneBrain, boolean z, List list, int i, Object obj) {
-            if ((i & 8) != 0) {
-                list = CollectionsKt.emptyList();
-            }
-            return companion.routeNeed(jSONObject, laneBrain, z, list);
-        }
+                    if (var4 && !(var2 > 3200.0)) {
+                        String var7 = var1.optString("maneuverModifier");
+                        var4 = var5;
+                        if (var7 != null) {
+                            label90: {
+                                switch (var7.hashCode()) {
+                                    case -1572118767:
+                                        if (!var7.equals("sharpLeft")) {
+                                            return var5;
+                                        }
+                                        break;
+                                    case -1485380526:
+                                        if (!var7.equals("sharpRight")) {
+                                            return var5;
+                                        }
+                                        break label90;
+                                    case -711874727:
+                                        if (!var7.equals("slightRight")) {
+                                            return var5;
+                                        }
+                                        break label90;
+                                    case -438788310:
+                                        if (!var7.equals("slightLeft")) {
+                                            return var5;
+                                        }
+                                        break;
+                                    case 3317767:
+                                        if (!var7.equals("left")) {
+                                            return var5;
+                                        }
+                                        break;
+                                    case 108511772:
+                                        if (!var7.equals("right")) {
+                                            return var5;
+                                        }
+                                        break label90;
+                                    default:
+                                        return var5;
+                                }
 
-        /* JADX WARN: Code restructure failed: missing block: B:21:0x0061, code lost:
-        
-            if (r9.equals("right") == false) goto L37;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:22:0x0086, code lost:
-        
-            r1 = 1;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:23:0x0096, code lost:
-        
-            r2 = r1;
-            r13 = r32.optDouble("maneuverDistance", Double.NaN);
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:24:0x00a5, code lost:
-        
-            if (java.lang.Double.isInfinite(r13) != false) goto L44;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:26:0x00ab, code lost:
-        
-            if (java.lang.Double.isNaN(r13) != false) goto L44;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:27:0x00ad, code lost:
-        
-            r1 = true;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:28:0x00b0, code lost:
-        
-            if (r1 == false) goto L92;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:30:0x00b6, code lost:
-        
-            if (r13 > 1600.0d) goto L92;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:32:0x00bf, code lost:
-        
-            if (r13 >= 150.0d) goto L51;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:33:0x00c1, code lost:
-        
-            r1 = 0;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:36:0x00c9, code lost:
-        
-            r1 = r33.sideLanes(r2);
-            r9 = r1.component1().intValue();
-            r20 = r1.component2().doubleValue();
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:37:0x00e3, code lost:
-        
-            if (r9 < 1) goto L89;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:39:0x00ec, code lost:
-        
-            if (r20 >= 0.6d) goto L56;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:40:0x00ee, code lost:
-        
-            r1 = 0;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:43:0x00f7, code lost:
-        
-            r1 = ourLaneAt$default(r31, r35, r33, r2, 0.0d, false, 24, null);
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:44:0x0122, code lost:
-        
-            if (r1 == null) goto L61;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:45:0x0124, code lost:
-        
-            r2 = 1;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:46:0x0129, code lost:
-        
-            if (r1.getOk() != true) goto L62;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:47:0x012b, code lost:
-        
-            r16 = true;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:48:0x0131, code lost:
-        
-            if (r16 == false) goto L66;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:52:0x013c, code lost:
-        
-            if (r34 == false) goto L70;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:53:0x013e, code lost:
-        
-            r1 = new java.lang.StringBuilder().append(((int) (r13 / 100)) / 10.0d);
-            r3 = " km";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:54:0x0151, code lost:
-        
-            r1 = r1.append(r3).toString();
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:56:0x0198, code lost:
-        
-            if (kotlin.jvm.internal.Intrinsics.areEqual(r15, "off ramp") == false) goto L77;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:57:0x019a, code lost:
-        
-            r7 = "exit";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:58:0x01a9, code lost:
-        
-            r3 = r7;
-            r4 = java.lang.Integer.valueOf(r2);
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:59:0x01ae, code lost:
-        
-            if (r2 >= 0) goto L84;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:60:0x01b0, code lost:
-        
-            r6 = "left";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:61:0x01b5, code lost:
-        
-            if (r9 <= r2) goto L87;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:62:0x01b7, code lost:
-        
-            r12 = "s";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:65:0x01b3, code lost:
-        
-            r6 = "right";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:67:0x01a3, code lost:
-        
-            if (kotlin.jvm.internal.Intrinsics.areEqual(r15, "fork") == false) goto L80;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:68:0x01a5, code lost:
-        
-            r7 = "fork";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:69:0x01a7, code lost:
-        
-            r7 = "turn";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:71:0x015e, code lost:
-        
-            if (r13 >= 400.0d) goto L73;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:72:0x0160, code lost:
-        
-            r1 = new java.lang.StringBuilder().append(((int) ((3.28084d * r13) / 50)) * 50);
-            r3 = " ft";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:73:0x0178, code lost:
-        
-            r1 = new java.lang.StringBuilder().append(((int) ((r13 / 1609.34d) * 10)) / 10.0d);
-            r3 = " mi";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:74:0x012f, code lost:
-        
-            r16 = false;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:75:0x012e, code lost:
-        
-            r2 = 1;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:76:0x01f9, code lost:
-        
-            r1 = 0;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:77:0x0205, code lost:
-        
-            r1 = 0;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:78:0x00af, code lost:
-        
-            r1 = false;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:79:0x0090, code lost:
-        
-            r1 = 0;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:83:0x0068, code lost:
-        
-            if (r9.equals("left") == false) goto L37;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:84:0x0095, code lost:
-        
-            r1 = -1;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:86:0x0071, code lost:
-        
-            if (r9.equals("slightLeft") == false) goto L37;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:88:0x007a, code lost:
-        
-            if (r9.equals("slightRight") == false) goto L37;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:90:0x0083, code lost:
-        
-            if (r9.equals("sharpRight") == false) goto L37;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:92:0x008e, code lost:
-        
-            if (r9.equals("sharpLeft") == false) goto L37;
-         */
-        /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-        java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-         */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public final Pair<Integer, String> routeNeed(JSONObject nav, LaneBrain tr, boolean metric, List<Nav.Lane> lanes) {
-            Integer num;
-            Intrinsics.checkNotNullParameter(tr, "tr");
-            Intrinsics.checkNotNullParameter(lanes, "lanes");
-            String str = "";
-            if (nav == null) {
-                num = 0;
-            } else {
-                if (nav.optBoolean("valid", false)) {
-                    String type = nav.optString("maneuverType");
-                    String mod = nav.optString("maneuverModifier");
-                    if (!Intrinsics.areEqual(type, "off ramp") && !Intrinsics.areEqual(type, "fork") && !Intrinsics.areEqual(type, "turn")) {
-                        return TuplesKt.to(0, "");
-                    }
-                    if (mod != null) {
-                        switch (mod.hashCode()) {
-                            case -1572118767:
-                                break;
-                            case -1485380526:
-                                break;
-                            case -711874727:
-                                break;
-                            case -438788310:
-                                break;
-                            case 3317767:
-                                break;
-                            case 108511772:
-                                break;
+                                var4 = -1;
+                                return (((var4 != 0)) ? 1 : 0);
+                            }
+
+                            var4 = 1;
                         }
-                        return TuplesKt.to(0, "");
+
+                        return (((var4 != 0)) ? 1 : 0);
+                    } else {
+                        return 0;
                     }
-                    Integer num2 = 0;
-                    return TuplesKt.to(num2, "");
                 }
-                num = 0;
+            } else {
+                return 0;
             }
-            return TuplesKt.to(num, "");
+        }
+
+        /* VF: from Vineflower (jadx: ) */
+        public static Pair routeNeed$default(LaneSuggest.Companion var0, JSONObject var1, LaneBrain var2, boolean var3, List var4, int var5, Object var6) {
+            if ((var5 & 8) != 0) {
+                var4 = CollectionsKt.emptyList();
+            }
+
+            return var0.routeNeed(var1, var2, var3, var4);
+        }
+
+        /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+        public final Pair<Integer, String> routeNeed(JSONObject var1, LaneBrain var2, boolean var3, List<Nav.Lane> var4) {
+            Intrinsics.checkNotNullParameter(var2, "tr");
+            Intrinsics.checkNotNullParameter(var4, "lanes");
+            String var12 = "";
+            Integer var14 = 0;
+            if (var1 != null && var1.optBoolean("valid", false)) {
+                String var13 = var1.optString("maneuverType");
+                String var15 = var1.optString("maneuverModifier");
+                if (!Intrinsics.areEqual(var13, "off ramp") && !Intrinsics.areEqual(var13, "fork") && !Intrinsics.areEqual(var13, "turn")) {
+                    return TuplesKt.to(var14, "");
+                } else if (var15 != null) {
+                    byte var9;
+                    label112: {
+                        label111: {
+                            switch (var15.hashCode()) {
+                                case -1572118767:
+                                    if (!var15.equals("sharpLeft")) {
+                                        return TuplesKt.to(var14, "");
+                                    }
+                                    break;
+                                case -1485380526:
+                                    if (!var15.equals("sharpRight")) {
+                                        return TuplesKt.to(var14, "");
+                                    }
+                                    break label111;
+                                case -711874727:
+                                    if (!var15.equals("slightRight")) {
+                                        return TuplesKt.to(var14, "");
+                                    }
+                                    break label111;
+                                case -438788310:
+                                    if (!var15.equals("slightLeft")) {
+                                        return TuplesKt.to(var14, "");
+                                    }
+                                    break;
+                                case 3317767:
+                                    if (!var15.equals("left")) {
+                                        return TuplesKt.to(var14, "");
+                                    }
+                                    break;
+                                case 108511772:
+                                    if (!var15.equals("right")) {
+                                        return TuplesKt.to(var14, "");
+                                    }
+                                    break label111;
+                                default:
+                                    return TuplesKt.to(var14, "");
+                            }
+
+                            var9 = -1;
+                            break label112;
+                        }
+
+                        var9 = 1;
+                    }
+
+                    double var5 = var1.optDouble("maneuverDistance", Double.NaN);
+                    int var10;
+                    if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
+                        var10 = 1;
+                    } else {
+                        var10 = 0;
+                    }
+
+                    if (var10 && !(var5 > 1600.0) && !(var5 < 150.0)) {
+                        Pair var16 = var2.sideLanes(var9);
+                        int var11 = ((Number)var16.component1()).intValue();
+                        double var7 = ((Number)var16.component2()).doubleValue();
+                        if (var11 >= 1 && !(var7 < 0.6)) {
+                            Nav.Lane var17 = ourLaneAt$default(this, var4, var2, var9, 0.0, false, 24, null);
+                            if (var17 != null && var17.getOk()) {
+                                var10 = (((boolean)true) ? 1 : 0);
+                            } else {
+                                var10 = (((boolean)false) ? 1 : 0);
+                            }
+
+                            if ((var10 != 0)) {
+                                return TuplesKt.to(var14, "");
+                            } else {
+                                StringBuilder var18;
+                                String var20;
+                                if (var3) {
+                                    var5 = (int)(var5 / 100) / 10.0;
+                                    var18 = new StringBuilder().append(var5);
+                                    var20 = " km";
+                                } else if (var5 < 400.0) {
+                                    var10 = (int)(3.28084 * var5 / 50);
+                                    var18 = new StringBuilder().append(var10 * 50);
+                                    var20 = " ft";
+                                } else {
+                                    var5 = (int)(var5 / 1609.34 * 10) / 10.0;
+                                    var18 = new StringBuilder().append(var5);
+                                    var20 = " mi";
+                                }
+
+                                String var27 = var18.append(var20).toString();
+                                String var19;
+                                if (Intrinsics.areEqual(var13, "off ramp")) {
+                                    var19 = "exit";
+                                } else if (Intrinsics.areEqual(var13, "fork")) {
+                                    var19 = "fork";
+                                } else {
+                                    var19 = "turn";
+                                }
+
+                                String var21;
+                                if (var9 < 0) {
+                                    var21 = "left";
+                                } else {
+                                    var21 = "right";
+                                }
+
+                                String var22 = var12;
+                                if (var11 > 1) {
+                                    var22 = "s";
+                                }
+
+                                return TuplesKt.to(Integer.valueOf(var9), var19 + " on the " + var21 + " in " + var27 + " - " + var11 + " lane" + var22 + " to go");
+                            }
+                        } else {
+                            return TuplesKt.to(var14, "");
+                        }
+                    } else {
+                        return TuplesKt.to(var14, "");
+                    }
+                } else {
+                    return TuplesKt.to(var14, "");
+                }
+            } else {
+                return TuplesKt.to(var14, "");
+            }
         }
     }
 }

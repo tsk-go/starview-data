@@ -44,6 +44,8 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
+import android.graphics.drawable.Drawable;
+import android.widget.LinearLayout.LayoutParams;
 
 /* compiled from: LanePicturesActivity.kt */
 public final class LanePicturesActivity extends AppCompatActivity {
@@ -490,279 +492,346 @@ public final class LanePicturesActivity extends AppCompatActivity {
         show();
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:74:0x0261  */
-    /* JADX WARN: Removed duplicated region for block: B:77:0x0297  */
-    /* JADX WARN: Removed duplicated region for block: B:80:0x02a4  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void listDrives() {
-        int count$iv;
-        String str;
-        String str2;
-        int i;
-        int count$iv2;
-        int count$iv3;
-        Iterator<String> it;
-        String str3;
-        String str4;
-        boolean z;
-        boolean done;
-        int i2;
-        int i3;
-        int i4;
-        int rgb;
-        boolean z2;
-        LinearLayout linearLayout = this.drives;
-        String str5 = "drives";
-        if (linearLayout == null) {
+        boolean var22 = false; // declarations Vineflower left out
+        LinearLayout var7 = this.drives;
+        String var8 = "drives";
+        LinearLayout var6 = var7;
+        if (var7 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("drives");
-            linearLayout = null;
+            var6 = null;
         }
-        linearLayout.removeAllViews();
-        Iterator<String> it2 = driveNames().iterator();
+
+        var6.removeAllViews();
+        Iterator var42 = this.driveNames().iterator();
+
         while (true) {
-            if (!it2.hasNext()) {
-                break;
-            }
-            final String n = it2.next();
-            Iterable $this$filter$iv = this.all;
-            Collection destination$iv$iv = new ArrayList();
-            for (Object element$iv$iv : $this$filter$iv) {
-                LaneShots.Shot it3 = (LaneShots.Shot) element$iv$iv;
-                String drive = it3.getDrive();
-                if (drive.length() == 0) {
-                    drive = "earlier";
-                }
-                if (Intrinsics.areEqual(drive, n)) {
-                    destination$iv$iv.add(element$iv$iv);
-                }
-            }
-            final List list = (List) destination$iv$iv;
-            List $this$filter$iv2 = list;
-            Collection destination$iv$iv2 = new ArrayList();
-            for (Object element$iv$iv2 : $this$filter$iv2) {
-                LaneShots.Shot it4 = (LaneShots.Shot) element$iv$iv2;
-                Integer num = this.marks.get(it4.getName());
-                if ((num != null ? num.intValue() : 0) != 0) {
-                    destination$iv$iv2.add(element$iv$iv2);
-                }
-            }
-            List m = (List) destination$iv$iv2;
-            List $this$count$iv = list;
-            if (($this$count$iv instanceof Collection) && $this$count$iv.isEmpty()) {
-                count$iv2 = 0;
-            } else {
-                count$iv2 = 0;
-                for (Object element$iv : $this$count$iv) {
-                    LaneShots.Shot it5 = (LaneShots.Shot) element$iv;
-                    Integer num2 = this.marks.get(it5.getName());
-                    if ((num2 != null && num2.intValue() == 0) && (count$iv2 = count$iv2 + 1) < 0) {
-                        CollectionsKt.throwCountOverflow();
-                    }
-                }
-            }
-            int skipped = count$iv2;
-            List $this$count$iv2 = m;
-            if (($this$count$iv2 instanceof Collection) && $this$count$iv2.isEmpty()) {
-                it = it2;
-                count$iv3 = 0;
-            } else {
-                count$iv3 = 0;
-                for (Object element$iv2 : $this$count$iv2) {
-                    LaneShots.Shot it6 = (LaneShots.Shot) element$iv2;
-                    Iterator<String> it7 = it2;
-                    Integer num3 = this.marks.get(it6.getName());
-                    Intrinsics.checkNotNull(num3);
-                    if (num3.intValue() > 0) {
-                        count$iv3++;
-                        if (count$iv3 < 0) {
-                            CollectionsKt.throwCountOverflow();
-                        }
-                        it2 = it7;
+            boolean var5 = var42.hasNext();
+            String var46 = "";
+            if (!var5) {
+                Iterable var55 = this.all;
+                var var43 = new ArrayList();
+
+                for (Object var71 : var55) {
+                    LaneShots.Shot var84 = (LaneShots.Shot)var71;
+                    Integer var85 = this.marks.get(var84.getName());
+                    int var25;
+                    if (var85 != null) {
+                        var25 = var85;
                     } else {
-                        it2 = it7;
+                        var25 = 0;
+                    }
+
+                    boolean var26;
+                    if (var25 != 0) {
+                        var26 = true;
+                    } else {
+                        var26 = false;
+                    }
+
+                    if (var26) {
+                        var43.add(var71);
                     }
                 }
-                it = it2;
-            }
-            int ok = count$iv3;
-            LinearLayout linearLayout2 = this.drives;
-            if (linearLayout2 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException(str5);
-                linearLayout2 = null;
-            }
-            TextView $this$listDrives_u24lambda_u2443 = new TextView(this);
-            int size = list.size();
-            int size2 = m.size();
-            if (skipped > 0) {
-                str3 = str5;
-                str4 = " · " + skipped + " skipped";
-            } else {
-                str3 = str5;
-                str4 = "";
-            }
-            $this$listDrives_u24lambda_u2443.setText(n + "\n" + size + " pictures · " + size2 + " marked" + str4 + (m.isEmpty() ? "" : " · " + ((ok * 100) / m.size()) + "% right"));
-            $this$listDrives_u24lambda_u2443.setTextSize(15.0f);
-            $this$listDrives_u24lambda_u2443.setTextColor(Intrinsics.areEqual(n, this.drive) ? -16777216 : -1);
-            $this$listDrives_u24lambda_u2443.setPadding(dp(12), dp(10), dp(12), dp(10));
-            if (!list.isEmpty()) {
-                List $this$all$iv = list;
-                if (!($this$all$iv instanceof Collection) || !$this$all$iv.isEmpty()) {
-                    Iterator it8 = $this$all$iv.iterator();
-                    while (true) {
-                        if (!it8.hasNext()) {
-                            z2 = true;
-                            break;
-                        }
-                        Object element$iv3 = it8.next();
-                        LaneShots.Shot it9 = (LaneShots.Shot) element$iv3;
-                        if (!this.marks.containsKey(it9.getName())) {
-                            z2 = false;
-                            break;
-                        }
+
+                List var86 = var43;
+                Iterable var57 = var86;
+                var var44 = new ArrayList();
+
+                for (Object var72 : var57) {
+                    if (Intrinsics.areEqual(((LaneShots.Shot)var72).getWhy(), "EVERY_30S")) {
+                        var44.add(var72);
                     }
+                }
+
+                List var73 = var44;
+                TextView var59 = this.score;
+                TextView var45 = var59;
+                if (var59 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("score");
+                    var45 = null;
+                }
+
+                CharSequence var52;
+                if (var86.isEmpty()) {
+                    var52 = "nothing marked yet";
                 } else {
-                    z2 = true;
-                }
-                if (z2) {
-                    z = true;
-                    done = z;
-                    if (done) {
-                        $this$listDrives_u24lambda_u2443.setText("✓ " + ((Object) $this$listDrives_u24lambda_u2443.getText()));
+                    var var60 = var86;
+                    int var35;
+                    if (var60 instanceof Collection && ((Collection)var60).isEmpty()) {
+                        var35 = 0;
+                    } else {
+                        int var27 = 0;
+
+                        for (LaneShots.Shot var88 : var60) {
+                            var88 = this.marks.get(var88.getName());
+                            Intrinsics.checkNotNull(var88);
+                            int var33;
+                            if (((Number)var88).intValue() > 0) {
+                                var33 = 1;
+                            } else {
+                                var33 = 0;
+                            }
+
+                            if ((var33 != 0)) {
+                                var33 = var27 + 1;
+                                var27 = (((var33 != 0)) ? 1 : 0);
+                                if (var33 < 0) {
+                                    CollectionsKt.throwCountOverflow();
+                                    var27 = (((var33 != 0)) ? 1 : 0);
+                                }
+                            }
+                        }
+
+                        var35 = var27;
                     }
-                    GradientDrawable $this$listDrives_u24lambda_u2443_u24lambda_u2440 = new GradientDrawable();
-                    $this$listDrives_u24lambda_u2443_u24lambda_u2440.setCornerRadius(10 * getD());
-                    if (Intrinsics.areEqual(n, this.drive)) {
-                        if (done) {
-                            i2 = 64;
-                            i3 = 42;
-                            i4 = 22;
+
+                    int var41 = var86.size();
+                    if (!var73.isEmpty()) {
+                        var var53 = var73;
+                        int var28;
+                        if (var53 instanceof Collection && ((Collection)var53).isEmpty()) {
+                            var28 = 0;
                         } else {
-                            i2 = 34;
-                            i3 = 44;
-                            i4 = 30;
+                            var28 = 0;
+
+                            for (LaneShots.Shot var62 : var53) {
+                                var8 = this.marks.get(var62.getName());
+                                Intrinsics.checkNotNull(var8);
+                                int var38;
+                                if (((Number)var8).intValue() > 0) {
+                                    var38 = 1;
+                                } else {
+                                    var38 = 0;
+                                }
+
+                                if ((var38 != 0)) {
+                                    var38 = var28 + 1;
+                                    var28 = (((var38 != 0)) ? 1 : 0);
+                                    if (var38 < 0) {
+                                        CollectionsKt.throwCountOverflow();
+                                        var28 = (((var38 != 0)) ? 1 : 0);
+                                    }
+                                }
+                            }
                         }
-                        rgb = Color.rgb(i4, i2, i3);
-                    } else {
-                        rgb = Color.rgb(111, 227, 161);
+
+                        int var40 = 100 * var28 / var73.size();
+                        var28 = var73.size();
+                        var46 = "  ·  every-30-s: " + var40 + "% of " + var28;
                     }
-                    $this$listDrives_u24lambda_u2443_u24lambda_u2440.setColor(rgb);
-                    $this$listDrives_u24lambda_u2443.setBackground($this$listDrives_u24lambda_u2443_u24lambda_u2440);
-                    $this$listDrives_u24lambda_u2443.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda9
-                        @Override // android.view.View.OnClickListener
-                        public final void onClick(View view) {
-                            LanePicturesActivity.this.pick(n);
-                        }
-                    });
-                    $this$listDrives_u24lambda_u2443.setOnLongClickListener(new View.OnLongClickListener() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda10
-                        @Override // android.view.View.OnLongClickListener
-                        public final boolean onLongClick(View view) {
-                            boolean listDrives$lambda$43$lambda$42;
-                            listDrives$lambda$43$lambda$42 = LanePicturesActivity.listDrives$lambda$43$lambda$42(LanePicturesActivity.this, n, list, view);
-                            return listDrives$lambda$43$lambda$42;
-                        }
-                    });
-                    LinearLayout.LayoutParams $this$listDrives_u24lambda_u2444 = new LinearLayout.LayoutParams(-1, -2);
-                    $this$listDrives_u24lambda_u2444.bottomMargin = dp(8);
-                    Unit unit = Unit.INSTANCE;
-                    linearLayout2.addView($this$listDrives_u24lambda_u2443, $this$listDrives_u24lambda_u2444);
-                    it2 = it;
-                    str5 = str3;
+
+                    var52 = "all drives: " + var35 + " of " + var41 + " right" + var46;
                 }
+
+                var45.setText(var52);
+                return;
             }
-            z = false;
-            done = z;
-            if (done) {
-            }
-            GradientDrawable $this$listDrives_u24lambda_u2443_u24lambda_u24402 = new GradientDrawable();
-            $this$listDrives_u24lambda_u2443_u24lambda_u24402.setCornerRadius(10 * getD());
-            if (Intrinsics.areEqual(n, this.drive)) {
-            }
-            $this$listDrives_u24lambda_u2443_u24lambda_u24402.setColor(rgb);
-            $this$listDrives_u24lambda_u2443.setBackground($this$listDrives_u24lambda_u2443_u24lambda_u24402);
-            $this$listDrives_u24lambda_u2443.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda9
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    LanePicturesActivity.this.pick(n);
-                }
-            });
-            $this$listDrives_u24lambda_u2443.setOnLongClickListener(new View.OnLongClickListener() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda10
-                @Override // android.view.View.OnLongClickListener
-                public final boolean onLongClick(View view) {
-                    boolean listDrives$lambda$43$lambda$42;
-                    listDrives$lambda$43$lambda$42 = LanePicturesActivity.listDrives$lambda$43$lambda$42(LanePicturesActivity.this, n, list, view);
-                    return listDrives$lambda$43$lambda$42;
-                }
-            });
-            LinearLayout.LayoutParams $this$listDrives_u24lambda_u24442 = new LinearLayout.LayoutParams(-1, -2);
-            $this$listDrives_u24lambda_u24442.bottomMargin = dp(8);
-            Unit unit2 = Unit.INSTANCE;
-            linearLayout2.addView($this$listDrives_u24lambda_u2443, $this$listDrives_u24lambda_u24442);
-            it2 = it;
-            str5 = str3;
-        }
-        Iterable $this$filter$iv3 = this.all;
-        Collection destination$iv$iv3 = new ArrayList();
-        for (Object element$iv$iv3 : $this$filter$iv3) {
-            LaneShots.Shot it10 = (LaneShots.Shot) element$iv$iv3;
-            Integer num4 = this.marks.get(it10.getName());
-            if ((num4 != null ? num4.intValue() : 0) != 0) {
-                destination$iv$iv3.add(element$iv$iv3);
-            }
-        }
-        List marked = (List) destination$iv$iv3;
-        List $this$filter$iv4 = marked;
-        Collection destination$iv$iv4 = new ArrayList();
-        for (Object element$iv$iv4 : $this$filter$iv4) {
-            LaneShots.Shot it11 = (LaneShots.Shot) element$iv$iv4;
-            if (Intrinsics.areEqual(it11.getWhy(), "EVERY_30S")) {
-                destination$iv$iv4.add(element$iv$iv4);
-            }
-        }
-        List fair = (List) destination$iv$iv4;
-        TextView textView = this.score;
-        if (textView == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("score");
-            textView = null;
-        }
-        if (!marked.isEmpty()) {
-            List $this$count$iv3 = marked;
-            if (($this$count$iv3 instanceof Collection) && $this$count$iv3.isEmpty()) {
-                count$iv = 0;
-            } else {
-                count$iv = 0;
-                for (Object element$iv4 : $this$count$iv3) {
-                    LaneShots.Shot it12 = (LaneShots.Shot) element$iv4;
-                    Integer num5 = this.marks.get(it12.getName());
-                    Intrinsics.checkNotNull(num5);
-                    if ((num5.intValue() > 0) && (count$iv = count$iv + 1) < 0) {
-                        CollectionsKt.throwCountOverflow();
-                    }
-                }
-            }
-            int size3 = marked.size();
-            if (!fair.isEmpty()) {
-                List $this$count$iv4 = fair;
-                if (($this$count$iv4 instanceof Collection) && $this$count$iv4.isEmpty()) {
-                    i = 0;
+
+            String var11 = (String)var42.next();
+            Iterable var9 = this.all;
+            var var10 = new ArrayList();
+
+            for (Object var12 : var9) {
+                var9 = ((LaneShots.Shot)var12).getDrive();
+                boolean var1;
+                if (var9.length() == 0) {
+                    var1 = true;
                 } else {
-                    int count$iv4 = 0;
-                    for (Object element$iv5 : $this$count$iv4) {
-                        LaneShots.Shot it13 = (LaneShots.Shot) element$iv5;
-                        Integer num6 = this.marks.get(it13.getName());
-                        Intrinsics.checkNotNull(num6);
-                        if ((num6.intValue() > 0) && (count$iv4 = count$iv4 + 1) < 0) {
+                    var1 = false;
+                }
+
+                if (var1) {
+                    var9 = "earlier";
+                }
+
+                if (Intrinsics.areEqual(var9, var11)) {
+                    var10.add(var12);
+                }
+            }
+
+            List var90 = var10;
+            Iterable var74 = var90;
+            var var65 = new ArrayList();
+
+            for (Object var75 : var74) {
+                LaneShots.Shot var14 = (LaneShots.Shot)var75;
+                Integer var93 = this.marks.get(var14.getName());
+                int var15;
+                if (var93 != null) {
+                    var15 = var93;
+                } else {
+                    var15 = 0;
+                }
+
+                boolean var16;
+                if (var15 != 0) {
+                    var16 = true;
+                } else {
+                    var16 = false;
+                }
+
+                if (var16) {
+                    var65.add(var75);
+                }
+            }
+
+            List var92 = var65;
+            var9 = var90;
+            int var31;
+            if (var9 instanceof Collection && ((Collection)var9).isEmpty()) {
+                var31 = 0;
+            } else {
+                int var17 = 0;
+
+                for (LaneShots.Shot var76 : var9) {
+                    Integer var77 = this.marks.get(var76.getName());
+                    int var2;
+                    if (var77 != null && var77 == 0) {
+                        var2 = 1;
+                    } else {
+                        var2 = 0;
+                    }
+
+                    if ((var2 != 0)) {
+                        var2 = var17 + 1;
+                        var17 = (((var2 != 0)) ? 1 : 0);
+                        if (var2 < 0) {
+                            CollectionsKt.throwCountOverflow();
+                            var17 = (((var2 != 0)) ? 1 : 0);
+                        }
+                    }
+                }
+
+                var31 = var17;
+            }
+
+            var9 = var92;
+            int var18;
+            if (var9 instanceof Collection && ((Collection)var9).isEmpty()) {
+                var18 = 0;
+            } else {
+                var18 = 0;
+
+                for (LaneShots.Shot var78 : var9) {
+                    Object var79 = this.marks.get(var78.getName());
+                    Intrinsics.checkNotNull(var79);
+                    boolean var3;
+                    if (((Number)var79).intValue() > 0) {
+                        var3 = true;
+                    } else {
+                        var3 = false;
+                    }
+
+                    if (var3) {
+                        if (++var18 < 0) {
                             CollectionsKt.throwCountOverflow();
                         }
                     }
-                    i = count$iv4;
                 }
-                str = "  ·  every-30-s: " + ((100 * i) / fair.size()) + "% of " + fair.size();
             }
-            str2 = "all drives: " + count$iv + " of " + size3 + " right" + str;
+
+            LinearLayout var80 = this.drives;
+            LinearLayout var70 = var80;
+            if (var80 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException(var8);
+                var70 = null;
+            }
+
+            TextView var94 = new TextView((Context)this);
+            int var36 = var90.size();
+            int var4 = var92.size();
+            String var81;
+            if (var31 > 0) {
+                var81 = " · " + var31 + " skipped";
+            } else {
+                var81 = "";
+            }
+
+            if (!var92.isEmpty()) {
+                var18 = var18 * 100 / var92.size();
+                var46 = " · " + var18 + "% right";
+            }
+
+            var94.setText(var11 + "\n" + var36 + " pictures · " + var4 + " marked" + var81 + var46);
+            var94.setTextSize(15.0F);
+            if (Intrinsics.areEqual(var11, this.drive)) {
+                var18 = -16777216;
+            } else {
+                var18 = -1;
+            }
+
+            label272: {
+                var94.setTextColor(var18);
+                var94.setPadding(this.dp(12), this.dp(10), this.dp(12), this.dp(10));
+                if (!var90.isEmpty()) {
+                    var var47 = var90;
+                    boolean var21;
+                    if (var47 instanceof Collection && ((Collection)var47).isEmpty()) {
+                        var21 = true;
+                    } else {
+                        Iterator var82 = var47.iterator();
+
+                        while (true) {
+                            if (!var82.hasNext()) {
+                                var21 = true;
+                                break;
+                            }
+
+                            LaneShots.Shot var48 = (LaneShots.Shot)var82.next();
+                            if (!this.marks.containsKey(var48.getName())) {
+                                var21 = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (var21) {
+                        var22 = true;
+                        break label272;
+                    }
+                }
+
+                var22 = false;
+            }
+
+            if (var22) {
+                CharSequence var49 = var94.getText();
+                var94.setText("✓ " + var49);
+            }
+
+            GradientDrawable var50 = new GradientDrawable();
+            var50.setCornerRadius(10 * this.getD());
+            if (Intrinsics.areEqual(var11, this.drive)) {
+                var18 = Color.rgb(111, 227, 161);
+            } else {
+                byte var24;
+                byte var32;
+                byte var37;
+                if (var22) {
+                    var32 = 64;
+                    var37 = 42;
+                    var24 = 22;
+                } else {
+                    var32 = 34;
+                    var37 = 44;
+                    var24 = 30;
+                }
+
+                var18 = Color.rgb(var24, var32, var37);
+            }
+
+            var50.setColor(var18);
+            var94.setBackground((Drawable)var50);
+            var94.setOnClickListener(new LanePicturesActivity$$ExternalSyntheticLambda9(this, var11));
+            var94.setOnLongClickListener(new LanePicturesActivity$$ExternalSyntheticLambda10(this, var11, var90));
+            View var87 = (View)var94;
+            android.widget.LinearLayout.LayoutParams var83 = new LayoutParams(-1, -2);
+            var83.bottomMargin = this.dp(8);
+            Unit var51 = Unit.INSTANCE;
+            var70.addView(var87, (android.view.ViewGroup.LayoutParams)var83);
         }
-        textView.setText(str2);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -771,116 +840,178 @@ public final class LanePicturesActivity extends AppCompatActivity {
         return true;
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-     */
+    /* VF: from Vineflower (jadx: ) */
     private final void show() {
-        Bitmap bitmap;
-        String str;
-        String str2;
-        String str3;
-        if (this.cur.isEmpty()) {
-            return;
-        }
-        LaneShots.Shot s = this.cur.get(this.i);
-        try {
-            InputStream openInputStream = getContentResolver().openInputStream(Uri.parse(s.getUri()));
-            if (openInputStream != null) {
-                InputStream it = openInputStream;
+        String var37 = null; String var47 = null; // declarations Vineflower left out
+        if (!this.cur.isEmpty()) {
+            LaneShots.Shot var9 = this.cur.get(this.i);
+
+            Bitmap var5;
+            label257: {
+                InputStream var4;
                 try {
-                    bitmap = BitmapFactory.decodeStream(it);
-                    CloseableKt.closeFinally(it, null);
-                } finally {
+                    var4 = this.getContentResolver().openInputStream(Uri.parse(var9.getUri()));
+                } catch (Exception var29) {
+                    var5 = null;
+                    break label257;
                 }
+
+                label248:
+                if (var4 != null) {
+                    try {
+                        var4 = var4;
+                    } catch (Exception var28) {
+                        var5 = null;
+                        break label248;
+                    }
+
+                    try {
+                        var5 = BitmapFactory.decodeStream(var4);
+                    } catch (Throwable var27) {
+                        Throwable var39 = var27;
+
+                        try {
+                            throw var39;
+                        } finally {
+                            try {
+                                CloseableKt.closeFinally(var4, var39);
+                            } catch (Exception var25) {
+                                var5 = null;
+                                break label248;
+                            }
+                        }
+                    }
+
+                    try {
+                        CloseableKt.closeFinally(var4, null);
+                    } catch (Exception var24) {
+                        var5 = null;
+                    }
+                } else {
+                    var5 = null;
+                }
+            }
+
+            ZoomImageView var31 = this.img;
+            if (var5 != null) {
+                ZoomImageView var6 = var31;
+                if (var31 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("img");
+                    var6 = null;
+                }
+
+                var6.setImageBitmap(var5);
             } else {
-                bitmap = null;
-            }
-        } catch (Exception e) {
-            bitmap = null;
-        }
-        Bitmap bmp = bitmap;
-        ZoomImageView zoomImageView = this.img;
-        if (bmp != null) {
-            if (zoomImageView == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("img");
-                zoomImageView = null;
-            }
-            zoomImageView.setImageBitmap(bmp);
-        } else {
-            if (zoomImageView == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("img");
-                zoomImageView = null;
-            }
-            zoomImageView.setImageDrawable(null);
-        }
-        TextView textView = this.caption;
-        if (textView == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("caption");
-            textView = null;
-        }
-        textView.setText(s.getCaption());
-        Integer mk = this.marks.get(s.getName());
-        TextView textView2 = this.info;
-        if (textView2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("info");
-            textView2 = null;
-        }
-        int i = this.i + 1;
-        int size = this.cur.size();
-        String why = s.getWhy();
-        String str4 = Intrinsics.areEqual(why, "USER") ? "you tapped" : Intrinsics.areEqual(why, "EVERY_30S") ? "every 30 s" : "lane event";
-        if (mk == null) {
-            str = "  ·  not marked";
-        } else if (mk.intValue() > 0) {
-            str = "  ·  marked RIGHT";
-        } else if (mk.intValue() == 0) {
-            String str5 = this.skipWhy.get(s.getName());
-            if (str5 != null) {
-                switch (str5.hashCode()) {
-                    case 169749129:
-                        if (str5.equals("intersection")) {
-                            str2 = " (intersection)";
-                            break;
-                        }
-                        break;
-                    case 1641332067:
-                        if (str5.equals("lane_change")) {
-                            str2 = " (changing lanes)";
-                            break;
-                        }
-                        break;
+                ZoomImageView var41 = var31;
+                if (var31 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("img");
+                    var41 = null;
                 }
-                str = "  ·  skipped" + str2;
+
+                var41.setImageDrawable(null);
             }
-            str2 = "";
-            str = "  ·  skipped" + str2;
-        } else {
-            str = "  ·  marked WRONG";
-        }
-        String str6 = s.getRamps().length() > 0 ? "  ·  map: " + CollectionsKt.joinToString(LaneRamps.INSTANCE.parse(s.getRamps()), ", ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda18
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                CharSequence show$lambda$50;
-                show$lambda$50 = LanePicturesActivity.show$lambda$50((LaneRamps.Ramp) obj);
-                return show$lambda$50;
+
+            TextView var42 = this.caption;
+            TextView var32 = var42;
+            if (var42 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("caption");
+                var32 = null;
             }
-        }) : "";
-        String it2 = this.fixed.get(s.getName());
-        if (it2 == null || (str3 = "  ·  you fixed it: " + it2) == null) {
-            str3 = "";
+
+            var32.setText(var9.getCaption());
+            Integer var8 = this.marks.get(var9.getName());
+            TextView var33 = this.info;
+            TextView var7 = var33;
+            if (var33 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("info");
+                var7 = null;
+            }
+
+            int var2 = this.i;
+            boolean var1 = true;
+            int var3 = this.cur.size();
+            String var34 = var9.getWhy();
+            String var43;
+            if (Intrinsics.areEqual(var34, "USER")) {
+                var43 = "you tapped";
+            } else if (Intrinsics.areEqual(var34, "EVERY_30S")) {
+                var43 = "every 30 s";
+            } else {
+                var43 = "lane event";
+            }
+
+            String var10 = "";
+            String var35;
+            if (var8 == null) {
+                var35 = "  ·  not marked";
+            } else if (var8 > 0) {
+                var35 = "  ·  marked RIGHT";
+            } else if (var8 == 0) {
+                label229: {
+                    String var36 = this.skipWhy.get(var9.getName());
+                    if (var36 != null) {
+                        switch (var36.hashCode()) {
+                            case 169749129:
+                                if (var36.equals("intersection")) {
+                                    var37 = " (intersection)";
+                                    break label229;
+                                }
+                                break;
+                            case 1641332067:
+                                if (var36.equals("lane_change")) {
+                                    var37 = " (changing lanes)";
+                                    break label229;
+                                }
+                        }
+                    }
+
+                    var37 = "";
+                }
+
+                var35 = "  ·  skipped" + var37;
+            } else {
+                var35 = "  ·  marked WRONG";
+            }
+
+            if (var9.getRamps().length() <= 0) {
+                var1 = false;
+            }
+
+            String var45;
+            if (var1) {
+                String var44 = CollectionsKt.joinToString(LaneRamps.INSTANCE.parse(var9.getRamps()), ", ", "", "", -1, "...", new LanePicturesActivity$$ExternalSyntheticLambda18());
+                var45 = "  ·  map: " + var44;
+            } else {
+                var45 = "";
+            }
+
+            label218: {
+                String var46 = this.fixed.get(var9.getName());
+                if (var46 != null) {
+                    String var11 = "  ·  you fixed it: " + var46;
+                    var47 = var11;
+                    if (var11 != null) {
+                        break label218;
+                    }
+                }
+
+                var47 = "";
+            }
+
+            if (var5 == null) {
+                var10 = "  ·  picture deleted";
+            }
+
+            var7.setText(var2 + 1 + " of " + var3 + "  ·  " + var43 + var35 + var45 + var47 + var10);
+            TextView var40 = this.info;
+            TextView var38 = var40;
+            if (var40 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("info");
+                var38 = null;
+            }
+
+            var38.setVisibility(0);
         }
-        textView2.setText(i + " of " + size + "  ·  " + str4 + str + str6 + str3 + (bmp == null ? "  ·  picture deleted" : ""));
-        TextView textView3 = this.info;
-        if (textView3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("info");
-            textView3 = null;
-        }
-        textView3.setVisibility(0);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1347,77 +1478,95 @@ public final class LanePicturesActivity extends AppCompatActivity {
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:36:0x00cf, code lost:
-    
-        if (r0 == null) goto L29;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final void askDelete$lambda$78(LanePicturesActivity lanePicturesActivity, String str, DialogInterface dialogInterface, int i) {
-        String str2;
-        LaneShots laneShots = lanePicturesActivity.shots;
-        TextView textView = null;
-        if (laneShots == null) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final void askDelete$lambda$78(LanePicturesActivity var0, String var1, DialogInterface var2, int var3) {
+        Object var19 = null; // declarations Vineflower left out
+        LaneShots var6 = var0.shots;
+        Object var5 = null;
+        Object var4 = null;
+        LaneShots var12 = var6;
+        if (var6 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("shots");
-            laneShots = null;
+            var12 = null;
         }
-        int deleteDrive = laneShots.deleteDrive(str);
-        LaneShots laneShots2 = lanePicturesActivity.shots;
-        if (laneShots2 == null) {
+
+        var3 = var12.deleteDrive(var1);
+        var6 = var0.shots;
+        LaneShots var13 = var6;
+        if (var6 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("shots");
-            laneShots2 = null;
+            var13 = null;
         }
-        lanePicturesActivity.all = laneShots2.list();
-        lanePicturesActivity.marks.clear();
-        HashMap<String, Integer> hashMap = lanePicturesActivity.marks;
-        LaneShots laneShots3 = lanePicturesActivity.shots;
-        if (laneShots3 == null) {
+
+        var0.all = var13.list();
+        var0.marks.clear();
+        HashMap var7 = var0.marks;
+        var6 = var0.shots;
+        LaneShots var14 = var6;
+        if (var6 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("shots");
-            laneShots3 = null;
+            var14 = null;
         }
-        hashMap.putAll(laneShots3.verdicts());
-        lanePicturesActivity.fixed.clear();
-        HashMap<String, String> hashMap2 = lanePicturesActivity.fixed;
-        LaneShots laneShots4 = lanePicturesActivity.shots;
-        if (laneShots4 == null) {
+
+        var7.putAll(var14.verdicts());
+        var0.fixed.clear();
+        var7 = var0.fixed;
+        var6 = var0.shots;
+        LaneShots var15 = var6;
+        if (var6 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("shots");
-            laneShots4 = null;
+            var15 = null;
         }
-        hashMap2.putAll(laneShots4.fixes());
-        Toast.makeText(lanePicturesActivity, "Deleted " + deleteDrive + " pictures", 0).show();
-        List<String> driveNames = lanePicturesActivity.driveNames();
-        if (!driveNames.isEmpty()) {
-            if (!Intrinsics.areEqual(str, lanePicturesActivity.drive)) {
-                String str3 = lanePicturesActivity.drive;
-                str2 = driveNames.contains(str3) ? str3 : null;
+
+        var7.putAll(var15.fixes());
+        Toast.makeText((Context)var0, "Deleted " + var3 + " pictures", 0).show();
+        List var24 = var0.driveNames();
+        if (var24.isEmpty()) {
+            var0.drive = "";
+            var0.cur = CollectionsKt.emptyList();
+            ZoomImageView var16 = var0.img;
+            ZoomImageView var8 = var16;
+            if (var16 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("img");
+                var8 = null;
             }
-            str2 = (String) CollectionsKt.first((List) driveNames);
-            lanePicturesActivity.pick(str2);
-            return;
-        }
-        lanePicturesActivity.drive = "";
-        lanePicturesActivity.cur = CollectionsKt.emptyList();
-        ZoomImageView zoomImageView = lanePicturesActivity.img;
-        if (zoomImageView == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("img");
-            zoomImageView = null;
-        }
-        zoomImageView.setImageDrawable(null);
-        TextView textView2 = lanePicturesActivity.caption;
-        if (textView2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("caption");
-            textView2 = null;
-        }
-        textView2.setText("No lane pictures.");
-        TextView textView3 = lanePicturesActivity.info;
-        if (textView3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("info");
+
+            var8.setImageDrawable(null);
+            TextView var17 = var0.caption;
+            TextView var9 = var17;
+            if (var17 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("caption");
+                var9 = null;
+            }
+
+            var9.setText("No lane pictures.");
+            TextView var10 = var0.info;
+            if (var10 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("info");
+                var10 = (TextView)var4;
+            }
+
+            var10.setText("");
+            var0.listDrives();
         } else {
-            textView = textView3;
+            label41: {
+                if (!Intrinsics.areEqual(var1, var0.drive)) {
+                    String var18 = var0.drive;
+                    var1 = (String)var5;
+                    if (var24.contains(var18)) {
+                        var1 = var18;
+                    }
+
+                    var19 = var1;
+                    if (var1 != null) {
+                        break label41;
+                    }
+                }
+
+                var19 = CollectionsKt.first(var24);
+            }
+
+            var0.pick(var19);
         }
-        textView.setText("");
-        lanePicturesActivity.listDrives();
     }
 }

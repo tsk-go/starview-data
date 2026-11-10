@@ -163,86 +163,89 @@ public final class IdeasSense {
         this.shadowAtMs = j;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:13:0x0053, code lost:
-    
-        if (r0 == null) goto L18;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void tick(Telemetry t, UiSettings s, Ideas.Here h, Detector det, long nowMs, List<Ideas.Part> out) {
-        List emptyList;
-        double v;
-        List objs;
-        String str;
-        double v2;
-        List objs2;
-        boolean z;
-        List<Ideas.Part> list;
-        Intrinsics.checkNotNullParameter(t, "t");
-        Intrinsics.checkNotNullParameter(s, "s");
-        Intrinsics.checkNotNullParameter(out, "out");
-        float dt = this.lastMs == 0 ? 0.0f : RangesKt.coerceIn((nowMs - this.lastMs) / 1000.0f, 0.0f, 0.5f);
-        this.lastMs = nowMs;
-        if (det != null && (emptyList = det.getObjects()) != null) {
-            if (!(nowMs - det.getObjectsAtMs() < 800)) {
-                emptyList = null;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public final void tick(Telemetry var1, UiSettings var2, Ideas.Here var3, Detector var4, long var5, List<Ideas.Part> var7) {
+        Intrinsics.checkNotNullParameter(var1, "t");
+        Intrinsics.checkNotNullParameter(var2, "s");
+        Intrinsics.checkNotNullParameter(var7, "out");
+        float var10;
+        if (this.lastMs == 0L) {
+            var10 = 0.0F;
+        } else {
+            var10 = RangesKt.coerceIn((float)(var5 - this.lastMs) / 1000.0F, 0.0F, 0.5F);
+        }
+
+        List var14;
+        label73: {
+            this.lastMs = var5;
+            if (var4 != null) {
+                var14 = var4.getObjects();
+                if (var14 != null) {
+                    boolean var11;
+                    if (var5 - var4.getObjectsAtMs() < 800L) {
+                        var11 = true;
+                    } else {
+                        var11 = false;
+                    }
+
+                    List var13;
+                    if (var11) {
+                        var13 = var14;
+                    } else {
+                        var13 = null;
+                    }
+
+                    var14 = var13;
+                    if (var13 != null) {
+                        break label73;
+                    }
+                }
             }
+
+            var14 = CollectionsKt.emptyList();
         }
-        emptyList = CollectionsKt.emptyList();
-        List objs3 = emptyList;
-        double v3 = t.getVEgo();
-        this.leadLamps.setEnabled(Ideas.INSTANCE.on(s, "lead_blinkers"));
-        if (Ideas.INSTANCE.on(s, "ghosts")) {
-            v = v3;
-            objs = objs3;
-            str = "lead_blinkers";
-            ghosts(objs3, v3, dt, nowMs, out);
-        } else {
-            v = v3;
-            objs = objs3;
-            str = "lead_blinkers";
+
+        double var8 = var1.getVEgo();
+        this.leadLamps.setEnabled(Ideas.INSTANCE.on(var2, "lead_blinkers"));
+        if (Ideas.INSTANCE.on(var2, "ghosts")) {
+            this.ghosts(var14, var8, var10, var5, var7);
         }
-        if (Ideas.INSTANCE.on(s, "dooring")) {
-            v2 = v;
-            dooring(objs, v2, out);
-        } else {
-            v2 = v;
+
+        if (Ideas.INSTANCE.on(var2, "dooring")) {
+            this.dooring(var14, var8, var7);
         }
-        if (Ideas.INSTANCE.on(s, "wheels")) {
-            drift(objs, nowMs);
+
+        if (Ideas.INSTANCE.on(var2, "wheels")) {
+            this.drift(var14, var5);
         } else {
             this.driftText = null;
         }
-        if (Ideas.INSTANCE.on(s, str)) {
-            objs2 = objs;
-            z = true;
-            leadBlinkers(t, v2, nowMs, out);
+
+        if (Ideas.INSTANCE.on(var2, "lead_blinkers")) {
+            this.leadBlinkers(var1, var8, var5, var7);
         } else {
-            objs2 = objs;
-            z = true;
             this.leadSigFrom = Double.NaN;
         }
-        if (Ideas.INSTANCE.on(s, "sirens")) {
-            SirenEar.INSTANCE.want(z);
-            if (nowMs < this.sirenUntil) {
-                list = out;
-                list.add(new Ideas.Part("sirens", null, 0.3d, 0.0d, "Siren nearby - be ready to pull over", 90, 10, null));
-            } else {
-                list = out;
+
+        if (Ideas.INSTANCE.on(var2, "sirens")) {
+            SirenEar.INSTANCE.want(true);
+            if (var5 < this.sirenUntil) {
+                var7.add(new Ideas.Part("sirens", null, 0.3, 0.0, "Siren nearby - be ready to pull over", 90, 10, null));
             }
         } else {
-            list = out;
             SirenEar.INSTANCE.want(false);
         }
-        if (Ideas.INSTANCE.on(s, "shadows") && nowMs - this.shadowAtMs < 2500) {
-            list.add(new Ideas.Part("shadows", null, 0.0d, 0.0d, "Moving shadow at the corner - someone may be coming", 50, 14, null));
+
+        if (Ideas.INSTANCE.on(var2, "shadows") && var5 - this.shadowAtMs < 2500L) {
+            var7.add(new Ideas.Part("shadows", null, 0.0, 0.0, "Moving shadow at the corner - someone may be coming", 50, 14, null));
         }
-        if (Ideas.INSTANCE.on(s, "eyes")) {
-            eyes(t, v2, nowMs, out);
+
+        if (Ideas.INSTANCE.on(var2, "eyes")) {
+            this.eyes(var1, var8, var5, var7);
         }
-        if (Ideas.INSTANCE.on(s, "green_countdown") || Ideas.INSTANCE.on(s, "hybrid")) {
-            Ideas.INSTANCE.getMemory().getLights().see(h, objs2, nowMs);
+
+        if (Ideas.INSTANCE.on(var2, "green_countdown") || Ideas.INSTANCE.on(var2, "hybrid")) {
+            Ideas.INSTANCE.getMemory().getLights().see(var3, var14, var5);
         }
     }
 
@@ -353,46 +356,70 @@ public final class IdeasSense {
         }
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r5v0 */
-    /* JADX WARN: Type inference failed for: r5v1 */
-    /* JADX WARN: Type inference failed for: r5v2 */
-    /* JADX WARN: Type inference failed for: r5v5 */
-    private final void dooring(List<Detector.Obj> objs, double v, List<Ideas.Part> out) {
-        if (v < 3.0d) {
-            return;
-        }
-        for (Detector.Obj c : objs) {
-            if (VEHICLES.contains(Integer.valueOf(c.getCls())) && !c.getMoving()) {
-                float x = c.getX();
-                Iterable $this$any$iv = 1;
-                if (2.0f <= x && x <= 25.0f) {
-                    float abs = Math.abs(c.getCy());
-                    if (1.6f <= abs && abs <= 4.2f) {
-                        List<Detector.Obj> $this$any$iv2 = objs;
-                        if (!($this$any$iv2 instanceof Collection) || !$this$any$iv2.isEmpty()) {
-                            Iterator it = $this$any$iv2.iterator();
-                            while (true) {
-                                if (it.hasNext()) {
-                                    Object element$iv = it.next();
-                                    Detector.Obj p = (Detector.Obj) element$iv;
-                                    if (((p.getCls() != 0 || Math.abs(p.getX() - c.getCx()) >= 3.0f || Math.abs(p.getY()) >= Math.abs(c.getCy()) + 0.3f || Math.abs(p.getY()) <= Math.abs(c.getCy()) - 2.0f) ? null : 1) != null) {
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    private final void dooring(List<Detector.Obj> var1, double var2, List<Ideas.Part> var4) {
+        if (!(var2 < 3.0)) {
+            for (Detector.Obj var11 : var1) {
+                if (VEHICLES.contains(var11.getCls()) && !var11.getMoving()) {
+                    float var7 = var11.getX();
+                    boolean var9 = true;
+                    boolean var8;
+                    if (2.0F <= var7 && var7 <= 25.0F) {
+                        var8 = true;
+                    } else {
+                        var8 = false;
+                    }
+
+                    if (var8) {
+                        var7 = Math.abs(var11.getCy());
+                        if (1.6F <= var7 && var7 <= 4.2F) {
+                            var8 = true;
+                        } else {
+                            var8 = false;
+                        }
+
+                        if (var8) {
+                            var var12 = var1;
+                            if (var12 instanceof Collection && ((Collection)var12).isEmpty()) {
+                                var8 = false;
+                            } else {
+                                Iterator var13 = var12.iterator();
+
+                                while (true) {
+                                    if (!var13.hasNext()) {
+                                        var8 = false;
                                         break;
                                     }
-                                } else {
-                                    $this$any$iv = 0;
-                                    break;
+
+                                    Detector.Obj var19 = (Detector.Obj)var13.next();
+                                    if (var19.getCls() == 0
+                                        && Math.abs(var19.getX() - var11.getCx()) < 3.0F
+                                        && Math.abs(var19.getY()) < Math.abs(var11.getCy()) + 0.3F
+                                        && Math.abs(var19.getY()) > Math.abs(var11.getCy()) - 2.0F) {
+                                        var8 = true;
+                                    } else {
+                                        var8 = false;
+                                    }
+
+                                    if (var8) {
+                                        var8 = var9;
+                                        break;
+                                    }
                                 }
                             }
-                        } else {
-                            $this$any$iv = 0;
+
+                            if (var8) {
+                                double var5 = Math.max(4.4704, var2 - 1.3);
+                                if (var11.getCy() > 0.0F) {
+                                    var2 = -0.3;
+                                } else {
+                                    var2 = 0.3;
+                                }
+
+                                var4.add(new Ideas.Part("dooring", var5, 0.0, var2, "Door zone - giving room", 75, 4, null));
+                                return;
+                            }
                         }
-                        if ($this$any$iv != null) {
-                            out.add(new Ideas.Part("dooring", Double.valueOf(Math.max(4.4704d, v - 1.3d)), 0.0d, c.getCy() > 0.0f ? -0.3d : 0.3d, "Door zone - giving room", 75, 4, null));
-                            return;
-                        }
-                    } else {
-                        continue;
                     }
                 }
             }

@@ -70,6 +70,12 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.content.Context;
+import android.text.InputFilter.LengthFilter;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import kotlin.jvm.internal.Ref.BooleanRef;
+import kotlin.jvm.internal.Ref.ObjectRef;
 
 /* compiled from: GxTheme.kt */
 public final class GxThemePage extends GxPage {
@@ -108,11 +114,11 @@ public final class GxThemePage extends GxPage {
     private LinearLayout turnBox;
     private LinearLayout wheelBox;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxThemePage(Activity act, GxHost gx) {
-        super(act, gx);
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(gx, "gx");
+    /* VF: from Vineflower (jadx: ) */
+    public GxThemePage(Activity var1, GxHost var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "gx");
         this.colors = new LinkedHashMap<>();
         this.files = new HashMap<>();
         this.names = new HashMap<>();
@@ -130,8 +136,22 @@ public final class GxThemePage extends GxPage {
         this.loading = true;
         this.loadError = "";
         this.downloadable = new HashMap<>();
-        resetColors();
-        this.flags.putAll(MapsKt.mapOf(TuplesKt.to("colors", true), TuplesKt.to("distance_icons", false), TuplesKt.to("icons", false), TuplesKt.to("sounds", false), TuplesKt.to("steering_wheel", false), TuplesKt.to("turn_signals", false)));
+        this.resetColors();
+        LinkedHashMap var5 = this.flags;
+        Pair var4 = TuplesKt.to("colors", true);
+        Boolean var3 = false;
+        var5.putAll(
+            MapsKt.mapOf(
+                new Pair[]{
+                    var4,
+                    TuplesKt.to("distance_icons", var3),
+                    TuplesKt.to("icons", var3),
+                    TuplesKt.to("sounds", var3),
+                    TuplesKt.to("steering_wheel", var3),
+                    TuplesKt.to("turn_signals", var3)
+                }
+            )
+        );
     }
 
     private final void setBusy(boolean v) {
@@ -423,64 +443,95 @@ public final class GxThemePage extends GxPage {
         return !(str == null || StringsKt.isBlank(str));
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */
-    private final boolean hasContent(String comp) {
-        Iterable iterable;
-        Iterable iterable2;
-        switch (comp.hashCode()) {
+    /* VF: from Vineflower (jadx: ) */
+    private final boolean hasContent(String var1) {
+        int var2 = var1.hashCode();
+        boolean var4 = true;
+        switch (var2) {
             case -1354842768:
-                if (comp.equals("colors")) {
-                    return true;
+                if (var1.equals("colors")) {
+                    return var4;
                 }
                 break;
             case -896509628:
-                if (comp.equals("sounds")) {
-                    iterable = GxThemeKt.GXTHEME_SOUNDS;
-                    Iterable $this$any$iv = iterable;
-                    if (($this$any$iv instanceof Collection) && ((Collection) $this$any$iv).isEmpty()) {
+                if (var1.equals("sounds")) {
+                    var var8 = GxThemeKt.GXTHEME_SOUNDS;
+                    if (!(var8 instanceof Collection) || !((Collection)var8).isEmpty()) {
+                        Iterator var9 = var8.iterator();
+
+                        while (var9.hasNext()) {
+                            if (this.has((String)var9.next())) {
+                                return var4;
+                            }
+                        }
+
                         return false;
                     }
-                    for (Object element$iv : $this$any$iv) {
-                        String it = (String) element$iv;
-                        if (has(it)) {
-                            return true;
-                        }
-                    }
+
                     return false;
                 }
                 break;
             case -217663920:
-                if (comp.equals("distance_icons")) {
-                    iterable2 = GxThemeKt.GXTHEME_DISTANCE;
-                    Iterable $this$any$iv2 = iterable2;
-                    if (($this$any$iv2 instanceof Collection) && ((Collection) $this$any$iv2).isEmpty()) {
+                if (var1.equals("distance_icons")) {
+                    var var6 = GxThemeKt.GXTHEME_DISTANCE;
+                    if (!(var6 instanceof Collection) || !((Collection)var6).isEmpty()) {
+                        for (String var5 : var6) {
+                            if (this.has("distanceIcons_" + var5)) {
+                                return var4;
+                            }
+                        }
+
                         return false;
                     }
-                    for (Object element$iv2 : $this$any$iv2) {
-                        String it2 = (String) element$iv2;
-                        if (has("distanceIcons_" + it2)) {
-                            return true;
-                        }
-                    }
+
                     return false;
                 }
                 break;
             case 100029210:
-                if (comp.equals("icons")) {
-                    return has("homeButton") || has("settingsButton");
+                if (var1.equals("icons")) {
+                    if (!this.has("homeButton")) {
+                        boolean var15;
+                        if (this.has("settingsButton")) {
+                            var15 = var4;
+                        } else {
+                            var15 = false;
+                        }
+
+                        return var15;
+                    }
+
+                    return var4;
                 }
                 break;
             case 271106313:
-                if (comp.equals("turn_signals")) {
-                    return has("turnSignal") || has("turnSignalBlindspot") || !this.frames.isEmpty() || !StringsKt.isBlank(this.framesName);
+                if (var1.equals("turn_signals")) {
+                    boolean var3 = var4;
+                    if (!this.has("turnSignal")) {
+                        var3 = var4;
+                        if (!this.has("turnSignalBlindspot")) {
+                            if (this.frames.isEmpty()) {
+                                if (!StringsKt.isBlank(this.framesName)) {
+                                    var3 = var4;
+                                } else {
+                                    var3 = false;
+                                }
+
+                                return var3;
+                            }
+
+                            return var4;
+                        }
+                    }
+
+                    return var3;
                 }
                 break;
             case 2119462413:
-                if (comp.equals("steering_wheel")) {
-                    return has("steeringWheel");
+                if (var1.equals("steering_wheel")) {
+                    return this.has("steeringWheel");
                 }
-                break;
         }
+
         return false;
     }
 
@@ -1211,48 +1262,43 @@ public final class GxThemePage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:7:0x0028, code lost:
-    
-        if (r5 == null) goto L9;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void slotRow(final String slot, String label, final boolean image, ViewGroup into) {
-        String str;
-        Bitmap it;
-        GxThemeFile f = this.files.get(slot);
-        GxThemePage gxThemePage = this;
-        String str2 = this.names.get(slot);
-        if (str2 != null) {
-            String str3 = str2;
-            if (StringsKt.isBlank(str3)) {
-                str3 = null;
-            }
-            str = str3;
-        }
-        str = "No file selected";
-        GxPage.Row r = GxPage.row$default(gxThemePage, label, str, into, 0, 8, null);
-        if (image && f != null && (it = thumbOf(f)) != null) {
-            r.add(thumbView(it));
-        }
-        GxPage.Row.button$default(r, "Choose", false, new Function0() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda51
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit slotRow$lambda$59;
-                slotRow$lambda$59 = GxThemePage.slotRow$lambda$59(GxThemePage.this, slot, image);
-                return slotRow$lambda$59;
-            }
-        }, 2, null);
-        if (has(slot)) {
-            GxPage.Row.button$default(r, "Clear", false, new Function0() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda52
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit slotRow$lambda$60;
-                    slotRow$lambda$60 = GxThemePage.slotRow$lambda$60(GxThemePage.this, slot);
-                    return slotRow$lambda$60;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final void slotRow(String var1, String var2, boolean var3, ViewGroup var4) {
+        GxThemeFile var7;
+        GxPage var8;
+        String var12;
+        label27: {
+            var7 = this.files.get(var1);
+            var8 = this;
+            var12 = this.names.get(var1);
+            if (var12 != null) {
+                CharSequence var6 = var12;
+                CharSequence var11 = var6;
+                if (StringsKt.isBlank(var6)) {
+                    var11 = null;
                 }
-            }, 2, null);
+
+                String var13 = (String)var11;
+                var12 = var13;
+                if (var13 != null) {
+                    break label27;
+                }
+            }
+
+            var12 = "No file selected";
+        }
+
+        GxPage.Row var9 = GxPage.row$default(var8, var2, var12, var4, 0, 8, null);
+        if (var3 && var7 != null) {
+            Bitmap var10 = this.thumbOf(var7);
+            if (var10 != null) {
+                var9.add((View)this.thumbView(var10));
+            }
+        }
+
+        GxPage.Row.button$default(var9, "Choose", false, new GxThemePage$$ExternalSyntheticLambda51(this, var1, var3), 2, null);
+        if (this.has(var1)) {
+            GxPage.Row.button$default(var9, "Clear", false, new GxThemePage$$ExternalSyntheticLambda52(this, var1), 2, null);
         }
     }
 
@@ -1646,62 +1692,68 @@ public final class GxThemePage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:16:0x002e, code lost:
-    
-        if (r2 == null) goto L17;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit choose$lambda$83$lambda$82(GxThemePage this$0, String $typed, boolean $image, String $slot, byte[] bytes, String name) {
-        String mime;
-        Intrinsics.checkNotNullParameter(name, "name");
-        if (bytes == null) {
-            this$0.toast("Could not read that file.");
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit choose$lambda$83$lambda$82(GxThemePage var0, String var1, boolean var2, String var3, byte[] var4, String var5) {
+        Intrinsics.checkNotNullParameter(var5, "name");
+        if (var4 == null) {
+            var0.toast("Could not read that file.");
             return Unit.INSTANCE;
-        }
-        if (bytes.length > 5242880) {
-            this$0.toast("That file is too large! Please upload files under 5MB.");
+        } else if (var4.length > 5242880) {
+            var0.toast("That file is too large! Please upload files under 5MB.");
             return Unit.INSTANCE;
-        }
-        if ($typed != null) {
-            String str = $typed;
-            if (StringsKt.isBlank(str)) {
-                str = null;
+        } else {
+            label47: {
+                if (var1 != null) {
+                    CharSequence var6 = var1;
+                    CharSequence var7 = var6;
+                    if (StringsKt.isBlank(var6)) {
+                        var7 = null;
+                    }
+
+                    String var9 = (String)var7;
+                    var1 = var9;
+                    if (var9 != null) {
+                        break label47;
+                    }
+                }
+
+                String var10 = var0.guessMime(var5);
+                var1 = var10;
+                if (var10 == null) {
+                    var1 = "";
+                }
             }
-            mime = str;
-        }
-        mime = this$0.guessMime(name);
-        if (mime == null) {
-            mime = "";
-        }
-        if ($image && !StringsKt.startsWith(mime, "image/", false)) {
-            this$0.toast("Invalid file type! Please upload an image file.");
-            return Unit.INSTANCE;
-        }
-        if (!$image && !StringsKt.startsWith(mime, "audio/", false)) {
-            this$0.toast("Invalid file type! Please upload an audio file.");
-            return Unit.INSTANCE;
-        }
-        String comp = this$0.compOf($slot);
-        if (Intrinsics.areEqual($slot, "__sequential__")) {
-            if (Intrinsics.areEqual(mime, "image/gif")) {
-                this$0.toast("GIFs are not supported for sequential turn signals...");
+
+            if (var2 && !StringsKt.startsWith(var1, "image/", false)) {
+                var0.toast("Invalid file type! Please upload an image file.");
+                return Unit.INSTANCE;
+            } else if (!var2 && !StringsKt.startsWith(var1, "audio/", false)) {
+                var0.toast("Invalid file type! Please upload an audio file.");
+                return Unit.INSTANCE;
+            } else {
+                String var11 = var0.compOf(var3);
+                if (Intrinsics.areEqual(var3, "__sequential__")) {
+                    if (Intrinsics.areEqual(var1, "image/gif")) {
+                        var0.toast("GIFs are not supported for sequential turn signals...");
+                        return Unit.INSTANCE;
+                    }
+
+                    if (!StringsKt.isBlank(var0.framesName)) {
+                        var0.framesName = "";
+                    }
+
+                    var0.frames.add(new GxThemeFile(var0.withExt(var5, var1), var4, var1));
+                } else {
+                    var0.files.put(var3, new GxThemeFile(var0.withExt(var5, var1), var4, var1));
+                    var0.names.put(var3, var5);
+                }
+
+                var0.flags.put(var11, true);
+                var0.changed(var11);
+                var0.renderEditor();
                 return Unit.INSTANCE;
             }
-            if (!StringsKt.isBlank(this$0.framesName)) {
-                this$0.framesName = "";
-            }
-            this$0.frames.add(new GxThemeFile(this$0.withExt(name, mime), bytes, mime));
-        } else {
-            this$0.files.put($slot, new GxThemeFile(this$0.withExt(name, mime), bytes, mime));
-            this$0.names.put($slot, name);
         }
-        this$0.flags.put(comp, true);
-        this$0.changed(comp);
-        this$0.renderEditor();
-        return Unit.INSTANCE;
     }
 
     private final void clearSlot(String slot) {
@@ -1715,71 +1767,65 @@ public final class GxThemePage extends GxPage {
         renderEditor();
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    private final void clearComp(String comp) {
-        List<String> slots;
-        Iterable iterable;
-        this.sources.put(comp, null);
-        switch (comp.hashCode()) {
-            case -1354842768:
-                if (comp.equals("colors")) {
-                    resetColors();
-                    slots = CollectionsKt.emptyList();
-                    break;
-                }
-                slots = CollectionsKt.emptyList();
-                break;
-            case -896509628:
-                if (comp.equals("sounds")) {
-                    slots = GxThemeKt.GXTHEME_SOUNDS;
-                    break;
-                }
-                slots = CollectionsKt.emptyList();
-                break;
-            case -217663920:
-                if (comp.equals("distance_icons")) {
-                    iterable = GxThemeKt.GXTHEME_DISTANCE;
-                    Iterable $this$map$iv = iterable;
-                    Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-                    for (Object item$iv$iv : $this$map$iv) {
-                        String it = (String) item$iv$iv;
-                        destination$iv$iv.add("distanceIcons_" + it);
+    /* VF: from Vineflower (jadx: ) */
+    private final void clearComp(String var1) {
+        var var4 = null; // declarations Vineflower left out
+        label52: {
+            this.sources.put(var1, null);
+            switch (var1.hashCode()) {
+                case -1354842768:
+                    if (var1.equals("colors")) {
+                        this.resetColors();
+                        var4 = CollectionsKt.emptyList();
+                        break label52;
                     }
-                    slots = (List) destination$iv$iv;
                     break;
-                }
-                slots = CollectionsKt.emptyList();
-                break;
-            case 100029210:
-                if (comp.equals("icons")) {
-                    slots = CollectionsKt.listOf((Object[]) new String[]{"homeButton", "settingsButton"});
+                case -896509628:
+                    if (var1.equals("sounds")) {
+                        var4 = GxThemeKt.GXTHEME_SOUNDS;
+                        break label52;
+                    }
                     break;
-                }
-                slots = CollectionsKt.emptyList();
-                break;
-            case 271106313:
-                if (comp.equals("turn_signals")) {
-                    this.frames.clear();
-                    this.framesName = "";
-                    slots = CollectionsKt.listOf((Object[]) new String[]{"turnSignal", "turnSignalBlindspot"});
+                case -217663920:
+                    if (var1.equals("distance_icons")) {
+                        Iterable var2 = GxThemeKt.GXTHEME_DISTANCE;
+                        var var5 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var2, 10));
+
+                        for (String var3 : var2) {
+                            var5.add("distanceIcons_" + var3);
+                        }
+
+                        var4 = var5;
+                        break label52;
+                    }
                     break;
-                }
-                slots = CollectionsKt.emptyList();
-                break;
-            case 2119462413:
-                if (comp.equals("steering_wheel")) {
-                    slots = CollectionsKt.listOf("steeringWheel");
+                case 100029210:
+                    if (var1.equals("icons")) {
+                        var4 = CollectionsKt.listOf(new String[]{"homeButton", "settingsButton"});
+                        break label52;
+                    }
                     break;
-                }
-                slots = CollectionsKt.emptyList();
-                break;
-            default:
-                slots = CollectionsKt.emptyList();
-                break;
+                case 271106313:
+                    if (var1.equals("turn_signals")) {
+                        this.frames.clear();
+                        this.framesName = "";
+                        var4 = CollectionsKt.listOf(new String[]{"turnSignal", "turnSignalBlindspot"});
+                        break label52;
+                    }
+                    break;
+                case 2119462413:
+                    if (var1.equals("steering_wheel")) {
+                        var4 = CollectionsKt.listOf("steeringWheel");
+                        break label52;
+                    }
+            }
+
+            var4 = CollectionsKt.emptyList();
         }
-        for (String s : slots) {
-            this.files.remove(s);
-            this.names.remove(s);
+
+        for (String var6 : var4) {
+            this.files.remove(var6);
+            this.names.remove(var6);
         }
     }
 
@@ -2241,11 +2287,10 @@ public final class GxThemePage extends GxPage {
         throw new IllegalStateException(str5);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final void exportTheme$lambda$102$lambda$101(GxThemePage this$0, Ref.ObjectRef $msg) {
-        this$0.setBusy(false);
-        this$0.toast((String) $msg.element);
+    /* VF: from Vineflower (jadx: ) */
+    public static final void exportTheme$lambda$102$lambda$101(GxThemePage var0, ObjectRef var1) {
+        var0.setBusy(false);
+        var0.toast((String)var1.element);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2522,116 +2567,85 @@ public final class GxThemePage extends GxPage {
         return t.getName() + (t.getUserCreated() ? "  ★" : "");
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:31:0x008f  */
-    /* JADX WARN: Removed duplicated region for block: B:44:0x00e1  */
-    /* JADX WARN: Removed duplicated region for block: B:47:0x00ea  */
-    /* JADX WARN: Removed duplicated region for block: B:50:0x0123 A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:54:0x0053 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void renderAll() {
-        List<String> list;
-        String joinToString$default;
-        LinearLayout linearLayout;
-        String lowerCase;
-        Map map;
-        String str;
-        Iterable $this$filter$iv = this.themes;
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv) {
-            GxThemeEntry it = (GxThemeEntry) element$iv$iv;
-            if (!it.getPseudo()) {
-                destination$iv$iv.add(element$iv$iv);
+        Iterable var3 = this.themes;
+        var var2 = new ArrayList();
+
+        for (Object var3$it : (Iterable) var3) {
+            var3 = (Iterable) var3$it;
+            if (!((GxThemeEntry)var3).getPseudo()) {
+                var2.add(var3);
             }
         }
-        List<GxThemeEntry> list2 = (List) destination$iv$iv;
-        LinearLayout linearLayout2 = null;
-        if (list2.isEmpty()) {
-            LinearLayout linearLayout3 = this.libBox;
-            if (linearLayout3 == null) {
+
+        List var17 = var2;
+        boolean var1 = var17.isEmpty();
+        LinearLayout var9 = null;
+        if (var1) {
+            LinearLayout var22 = this.libBox;
+            if (var22 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("libBox");
             } else {
-                linearLayout2 = linearLayout3;
+                var9 = var22;
             }
-            linearLayout2.addView(empty("No themes yet. Build one above and hit Save Theme."));
-            return;
-        }
-        for (final GxThemeEntry t : list2) {
-            ArrayList chips = new ArrayList();
-            String type = t.getType();
-            if (!Intrinsics.areEqual(type, "holiday")) {
-                str = Intrinsics.areEqual(type, "steering_wheel") ? "Wheel" : "Holiday";
-                list = GxThemeKt.GXTHEME_COMPS;
-                for (String c : list) {
-                    if (Intrinsics.areEqual((Object) t.getLocal().get(c), (Object) true)) {
-                        map = GxThemeKt.GXTHEME_COMP_LABELS;
-                        String str2 = (String) map.get(c);
-                        if (str2 == null) {
-                            str2 = c;
+
+            var9.addView((View)this.empty("No themes yet. Build one above and hit Save Theme."));
+        } else {
+            for (GxThemeEntry var6 : var17) {
+                ArrayList var7;
+                label51: {
+                    var7 = new ArrayList();
+                    String var10 = var6.getType();
+                    String var11;
+                    if (Intrinsics.areEqual(var10, "holiday")) {
+                        var11 = "Holiday";
+                    } else {
+                        if (!Intrinsics.areEqual(var10, "steering_wheel")) {
+                            break label51;
                         }
-                        chips.add(str2);
+
+                        var11 = "Wheel";
+                    }
+
+                    var7.add(var11);
+                }
+
+                for (String var23 : GxThemeKt.GXTHEME_COMPS) {
+                    if (Intrinsics.areEqual(var6.getLocal().get(var23), true)) {
+                        String var18 = (String)GxThemeKt.GXTHEME_COMP_LABELS.get(var23);
+                        String var12 = var18;
+                        if (var18 == null) {
+                            var12 = var23;
+                        }
+
+                        var7.add(var12);
                     }
                 }
-                GxThemePage gxThemePage = this;
-                String titleOf = titleOf(t);
-                joinToString$default = CollectionsKt.joinToString(chips, " · ", "", "", -1, "...", null);
-                if (StringsKt.isBlank(joinToString$default)) {
-                    joinToString$default = null;
+
+                GxPage var26 = this;
+                String var24 = this.titleOf(var6);
+                CharSequence var19 = CollectionsKt.joinToString(var7, " · ", "", "", -1, "...", null);
+                CharSequence var13 = var19;
+                if (StringsKt.isBlank(var19)) {
+                    var13 = null;
                 }
-                String str3 = joinToString$default;
-                linearLayout = this.libBox;
-                if (linearLayout == null) {
+
+                String var25 = (String)var13;
+                LinearLayout var20 = this.libBox;
+                LinearLayout var14 = var20;
+                if (var20 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("libBox");
-                    linearLayout = null;
+                    var14 = null;
                 }
-                GxPage.Row r = GxPage.row$default(gxThemePage, titleOf, str3, linearLayout, 0, 8, null);
-                GxPage.Row.button$default(r, "Load", false, new Function0() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda39
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit renderAll$lambda$115;
-                        renderAll$lambda$115 = GxThemePage.renderAll$lambda$115(GxThemePage.this, t);
-                        return renderAll$lambda$115;
-                    }
-                }, 2, null);
-                lowerCase = t.getType().toLowerCase(Locale.ROOT);
-                Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                if (Intrinsics.areEqual(lowerCase, "holiday")) {
-                    GxPage.Row.button$default(r, "Delete", false, new Function0() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda40
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit renderAll$lambda$116;
-                            renderAll$lambda$116 = GxThemePage.renderAll$lambda$116(GxThemePage.this, t);
-                            return renderAll$lambda$116;
-                        }
-                    }, 2, null);
+
+                GxPage.Row var21 = GxPage.row$default(var26, var24, var25, (ViewGroup)var14, 0, 8, null);
+                GxPage.Row.button$default(var21, "Load", false, new GxThemePage$$ExternalSyntheticLambda39(this, var6), 2, null);
+                String var15 = var6.getType().toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(var15, "toLowerCase(...)");
+                if (!Intrinsics.areEqual(var15, "holiday")) {
+                    GxPage.Row.button$default(var21, "Delete", false, new GxThemePage$$ExternalSyntheticLambda40(this, var6), 2, null);
                 }
-            }
-            chips.add(str);
-            list = GxThemeKt.GXTHEME_COMPS;
-            while (r7.hasNext()) {
-            }
-            GxThemePage gxThemePage2 = this;
-            String titleOf2 = titleOf(t);
-            joinToString$default = CollectionsKt.joinToString(chips, " · ", "", "", -1, "...", null);
-            if (StringsKt.isBlank(joinToString$default)) {
-            }
-            String str32 = joinToString$default;
-            linearLayout = this.libBox;
-            if (linearLayout == null) {
-            }
-            GxPage.Row r2 = GxPage.row$default(gxThemePage2, titleOf2, str32, linearLayout, 0, 8, null);
-            GxPage.Row.button$default(r2, "Load", false, new Function0() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda39
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit renderAll$lambda$115;
-                    renderAll$lambda$115 = GxThemePage.renderAll$lambda$115(GxThemePage.this, t);
-                    return renderAll$lambda$115;
-                }
-            }, 2, null);
-            lowerCase = t.getType().toLowerCase(Locale.ROOT);
-            Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-            if (Intrinsics.areEqual(lowerCase, "holiday")) {
             }
         }
     }
@@ -2648,139 +2662,121 @@ public final class GxThemePage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:46:0x0125  */
-    /* JADX WARN: Removed duplicated region for block: B:60:0x0180  */
-    /* JADX WARN: Removed duplicated region for block: B:63:0x018a  */
-    /* JADX WARN: Removed duplicated region for block: B:85:0x0190  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void renderComp(final String comp) {
-        Map map;
-        String str;
-        String joinToString$default;
-        LinearLayout linearLayout;
-        GxPage.Row r;
-        GxThemeEntry builtin = Intrinsics.areEqual(comp, "turn_signals") ? new GxThemeEntry("None (Stock)", "__stock_none__", "stock_none", false, false, true, 16, null) : new GxThemeEntry("Stock", "__stock__", "stock", false, false, true, 16, null);
-        Iterable $this$filter$iv = this.themes;
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv) {
-            GxThemeEntry t = (GxThemeEntry) element$iv$iv;
-            if (Intrinsics.areEqual(comp, "steering_wheel") ? Intrinsics.areEqual(t.getType(), "steering_wheel") || (Intrinsics.areEqual(t.getType(), "holiday") && Intrinsics.areEqual((Object) t.getHas().get(comp), (Object) true)) : Intrinsics.areEqual((Object) t.getHas().get(comp), (Object) true)) {
-                destination$iv$iv.add(element$iv$iv);
-            }
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void renderComp(String var1) {
+        GxThemeEntry var4;
+        if (Intrinsics.areEqual(var1, "turn_signals")) {
+            var4 = new GxThemeEntry("None (Stock)", "__stock_none__", "stock_none", false, false, true, 16, null);
+        } else {
+            var4 = new GxThemeEntry("Stock", "__stock__", "stock", false, false, true, 16, null);
         }
-        List visible = (List) destination$iv$iv;
-        map = GxThemeKt.GXTHEME_PARAM;
-        String str2 = (String) map.get(comp);
-        if (str2 == null) {
-            str2 = "";
-        }
-        String cur = pStr(str2);
-        for (final GxThemeEntry t2 : CollectionsKt.plus((Collection) CollectionsKt.listOf(builtin), (Iterable) visible)) {
-            boolean local = t2.getBuiltin() || Intrinsics.areEqual((Object) t2.getLocal().get(comp), (Object) true);
-            String value = selectionValue(t2, comp);
-            ArrayList bits = new ArrayList();
-            if (t2.getBuiltin()) {
-                bits.add("Built-in");
-            }
-            String type = t2.getType();
-            if (Intrinsics.areEqual(type, "holiday")) {
-                if (!t2.getPseudo()) {
-                    str = "Holiday";
-                    bits.add(str);
-                }
-                if (!local) {
-                    bits.add(isDownloadable(comp, t2.getName()) ? "Available to download" : "Not on this device");
-                }
-                if (!StringsKt.isBlank(cur) && Intrinsics.areEqual(cur, value) && pBool("CustomThemes")) {
-                    bits.add("In use");
-                }
-                GxThemePage gxThemePage = this;
-                String titleOf = titleOf(t2);
-                joinToString$default = CollectionsKt.joinToString(bits, " · ", "", "", -1, "...", null);
-                LinearLayout linearLayout2 = null;
-                if (StringsKt.isBlank(joinToString$default)) {
-                    joinToString$default = null;
-                }
-                String str3 = joinToString$default;
-                linearLayout = this.libBox;
-                if (linearLayout != null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("libBox");
+
+        Iterable var6 = this.themes;
+        var var5 = new ArrayList();
+
+        for (Object var6$it : (Iterable) var6) {
+            var6 = (Iterable) var6$it;
+            GxThemeEntry var8 = (GxThemeEntry)var6;
+            boolean var3;
+            if (Intrinsics.areEqual(var1, "steering_wheel")) {
+                if (Intrinsics.areEqual(var8.getType(), "steering_wheel")
+                    || Intrinsics.areEqual(var8.getType(), "holiday") && Intrinsics.areEqual(var8.getHas().get(var1), true)) {
+                    var3 = true;
                 } else {
-                    linearLayout2 = linearLayout;
-                }
-                r = GxPage.row$default(gxThemePage, titleOf, str3, linearLayout2, 0, 8, null);
-                if (!local || !isDownloadable(comp, t2.getName())) {
-                    GxPage.Row.button$default(r, "Use", false, new Function0() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda24
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit renderComp$lambda$120;
-                            renderComp$lambda$120 = GxThemePage.renderComp$lambda$120(GxThemePage.this, t2, comp);
-                            return renderComp$lambda$120;
-                        }
-                    }, 2, null);
-                } else {
-                    r.button("Download", true, new Function0() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda23
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit renderComp$lambda$119;
-                            renderComp$lambda$119 = GxThemePage.renderComp$lambda$119(GxThemePage.this, comp, t2);
-                            return renderComp$lambda$119;
-                        }
-                    });
-                }
-                if (!t2.getBuiltin() && !Intrinsics.areEqual(t2.getType(), "holiday") && Intrinsics.areEqual((Object) t2.getLocal().get(comp), (Object) true)) {
-                    GxPage.Row.button$default(r, "Delete", false, new Function0() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda25
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit renderComp$lambda$121;
-                            renderComp$lambda$121 = GxThemePage.renderComp$lambda$121(GxThemePage.this, t2, comp);
-                            return renderComp$lambda$121;
-                        }
-                    }, 2, null);
+                    var3 = false;
                 }
             } else {
-                if (Intrinsics.areEqual(type, "steering_wheel")) {
-                    str = "Wheel";
-                    bits.add(str);
-                }
-                if (!local) {
-                }
-                if (!StringsKt.isBlank(cur)) {
-                    bits.add("In use");
-                }
-                GxThemePage gxThemePage2 = this;
-                String titleOf2 = titleOf(t2);
-                joinToString$default = CollectionsKt.joinToString(bits, " · ", "", "", -1, "...", null);
-                LinearLayout linearLayout22 = null;
-                if (StringsKt.isBlank(joinToString$default)) {
-                }
-                String str32 = joinToString$default;
-                linearLayout = this.libBox;
-                if (linearLayout != null) {
-                }
-                r = GxPage.row$default(gxThemePage2, titleOf2, str32, linearLayout22, 0, 8, null);
-                if (!local) {
-                }
-                GxPage.Row.button$default(r, "Use", false, new Function0() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda24
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit renderComp$lambda$120;
-                        renderComp$lambda$120 = GxThemePage.renderComp$lambda$120(GxThemePage.this, t2, comp);
-                        return renderComp$lambda$120;
+                var3 = Intrinsics.areEqual(var8.getHas().get(var1), true);
+            }
+
+            if (var3) {
+                var5.add(var6);
+            }
+        }
+
+        List var25 = var5;
+        String var23 = (String)GxThemeKt.GXTHEME_PARAM.get(var1);
+        String var19 = var23;
+        if (var23 == null) {
+            var19 = "";
+        }
+
+        String var24 = this.pStr(var19);
+
+        for (GxThemeEntry var26 : CollectionsKt.plus(CollectionsKt.listOf(var4), var25)) {
+            boolean var2;
+            if (!var26.getBuiltin() && !Intrinsics.areEqual(var26.getLocal().get(var1), true)) {
+                var2 = false;
+            } else {
+                var2 = true;
+            }
+
+            String var9 = this.selectionValue(var26, var1);
+            var5 = new ArrayList();
+            if (var26.getBuiltin()) {
+                var5.add("Built-in");
+            }
+
+            label92: {
+                String var13 = var26.getType();
+                String var14;
+                if (Intrinsics.areEqual(var13, "holiday")) {
+                    if (var26.getPseudo()) {
+                        break label92;
                     }
-                }, 2, null);
-                if (!t2.getBuiltin()) {
-                    GxPage.Row.button$default(r, "Delete", false, new Function0() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda25
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit renderComp$lambda$121;
-                            renderComp$lambda$121 = GxThemePage.renderComp$lambda$121(GxThemePage.this, t2, comp);
-                            return renderComp$lambda$121;
-                        }
-                    }, 2, null);
+
+                    var14 = "Holiday";
+                } else {
+                    if (!Intrinsics.areEqual(var13, "steering_wheel")) {
+                        break label92;
+                    }
+
+                    var14 = "Wheel";
                 }
+
+                var5.add(var14);
+            }
+
+            if (!var2) {
+                String var15;
+                if (this.isDownloadable(var1, var26.getName())) {
+                    var15 = "Available to download";
+                } else {
+                    var15 = "Not on this device";
+                }
+
+                var5.add(var15);
+            }
+
+            if (!StringsKt.isBlank(var24) && Intrinsics.areEqual(var24, var9) && this.pBool("CustomThemes")) {
+                var5.add("In use");
+            }
+
+            GxPage var28 = this;
+            String var10 = this.titleOf(var26);
+            var var16 = CollectionsKt.joinToString(var5, " · ", "", "", -1, "...", null);
+            boolean var12 = StringsKt.isBlank(var16);
+            Object var21 = null;
+            if (var12) {
+                var16 = null;
+            }
+
+            String var11 = var16;
+            LinearLayout var17 = this.libBox;
+            if (var17 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("libBox");
+                var17 = (LinearLayout)var21;
+            }
+
+            GxPage.Row var18 = GxPage.row$default(var28, var10, var11, (ViewGroup)var17, 0, 8, null);
+            if (!var2 && this.isDownloadable(var1, var26.getName())) {
+                var18.button("Download", true, new GxThemePage$$ExternalSyntheticLambda23(this, var1, var26));
+            } else {
+                GxPage.Row.button$default(var18, "Use", false, new GxThemePage$$ExternalSyntheticLambda24(this, var26, var1), 2, null);
+            }
+
+            if (!var26.getBuiltin() && !Intrinsics.areEqual(var26.getType(), "holiday") && Intrinsics.areEqual(var26.getLocal().get(var1), true)) {
+                GxPage.Row.button$default(var18, "Delete", false, new GxThemePage$$ExternalSyntheticLambda25(this, var26, var1), 2, null);
             }
         }
     }
@@ -3077,135 +3073,134 @@ public final class GxThemePage extends GxPage {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */
-    public static final Unit loadComponent$lambda$152(final GxThemePage this$0, final String $comp, final GxThemeEntry $t, final String $what, String e, JSONObject data) {
-        JSONObject it;
-        JSONObject so;
-        List<String> list;
-        JSONObject di;
-        List<String> list2;
-        JSONObject sw;
-        if (e != null || data == null) {
-            this$0.setBusy(false);
-            this$0.toast(e == null ? "Failed to load theme asset." : e);
-            this$0.renderEditor();
+    /* VF: from Vineflower (jadx: ) */
+    public static final Unit loadComponent$lambda$152(GxThemePage var0, String var1, GxThemeEntry var2, String var3, String var4, JSONObject var5) {
+        if (var4 == null && var5 != null) {
+            JSONObject var7 = var5.optJSONObject("images");
+            JSONObject var11 = var7;
+            if (var7 == null) {
+                var11 = new JSONObject();
+            }
+
+            ArrayList var9 = new ArrayList();
+            switch (var1.hashCode()) {
+                case -1354842768:
+                    if (var1.equals("colors")) {
+                        JSONObject var19 = var5.optJSONObject("colors");
+                        if (var19 != null) {
+                            var0.setColors(var19);
+                        }
+                    }
+                    break;
+                case -896509628:
+                    if (var1.equals("sounds")) {
+                        JSONObject var18 = var5.optJSONObject("sounds");
+                        if (var18 != null) {
+                            for (String var26 : GxThemeKt.GXTHEME_SOUNDS) {
+                                loadComponent$lambda$152$slot$140(var0, var2, var9, var26, var18.optJSONObject(var26));
+                            }
+                        }
+                    }
+                    break;
+                case -217663920:
+                    if (var1.equals("distance_icons")) {
+                        var7 = var11.optJSONObject("distanceIcons");
+                        if (var7 != null) {
+                            for (String var17 : GxThemeKt.GXTHEME_DISTANCE) {
+                                loadComponent$lambda$152$slot$140(var0, var2, var9, "distanceIcons_" + var17, var7.optJSONObject(var17));
+                            }
+                        }
+                    }
+                    break;
+                case 100029210:
+                    if (var1.equals("icons")) {
+                        loadComponent$lambda$152$slot$140(var0, var2, var9, "homeButton", var11.optJSONObject("homeButton"));
+                        loadComponent$lambda$152$slot$140(var0, var2, var9, "settingsButton", var11.optJSONObject("settingsButton"));
+                    }
+                    break;
+                case 271106313:
+                    if (var1.equals("turn_signals")) {
+                        var0.tsLength = var5.optInt("turnSignalLength", 100);
+                        CharSequence var8 = GxPage.str$default(var0, var5, "turnSignalType", null, 2, null);
+                        var7 = var8;
+                        if (StringsKt.isBlank(var8)) {
+                            var7 = "Single Image";
+                        }
+
+                        var0.tsType = (String)var7;
+                        var8 = GxPage.str$default(var0, var5, "turnSignalStyle", null, 2, null);
+                        var7 = var8;
+                        if (StringsKt.isBlank(var8)) {
+                            var7 = "Static";
+                        }
+
+                        var0.tsStyle = (String)var7;
+                        loadComponent$lambda$152$slot$140(var0, var2, var9, "turnSignal", var11.optJSONObject("turnSignal"));
+                        loadComponent$lambda$152$slot$140(var0, var2, var9, "turnSignalBlindspot", var11.optJSONObject("turnSignalBlindspot"));
+                        JSONArray var14 = var5.optJSONArray("sequentialImages");
+                        List var15;
+                        if (var14 != null) {
+                            var15 = var0.strings(var14);
+                        } else {
+                            var15 = null;
+                        }
+
+                        List var23 = var15;
+                        if (var15 == null) {
+                            var23 = CollectionsKt.emptyList();
+                        }
+
+                        if (!var23.isEmpty()) {
+                            var0.framesName = var2.getName();
+
+                            for (String var24 : var23) {
+                                var9.add(TuplesKt.to("signals/" + var24, new GxThemePage$$ExternalSyntheticLambda14(var0)));
+                            }
+                        }
+                    }
+                    break;
+                case 2119462413:
+                    if (var1.equals("steering_wheel")) {
+                        JSONObject var12 = var11.optJSONObject("steeringWheel");
+                        if (var12 != null) {
+                            String var28 = GxPage.str$default(var0, var12, "path", null, 2, null);
+                            if (!StringsKt.isBlank(var28)) {
+                                var0.names.put("steeringWheel", var2.getName());
+                                CharSequence var22 = GxPage.str$default(var0, var12, "filename", null, 2, null);
+                                Object var13 = var22;
+                                if (StringsKt.isBlank(var22)) {
+                                    var13 = var2.getPath();
+                                }
+
+                                var9.add(TuplesKt.to(var28, new GxThemePage$$ExternalSyntheticLambda13(var0, (String)var13)));
+                            }
+                        }
+                    }
+            }
+
+            Iterable var20 = var9;
+            boolean var6 = false;
+            var var33 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var20, 10));
+
+            for (Pair var35 : var20) {
+                var33.add(var0.assetPath(var2.getPath(), var2.getType(), (String)var35.getFirst()));
+            }
+
+            List var21 = var33;
+            var0.fetchAssets(var21, new GxThemePage$$ExternalSyntheticLambda15(var9, var0, var1, var2, var3));
+            return Unit.INSTANCE;
+        } else {
+            var0.setBusy(false);
+            if (var4 == null) {
+                var1 = "Failed to load theme asset.";
+            } else {
+                var1 = var4;
+            }
+
+            var0.toast(var1);
+            var0.renderEditor();
             return Unit.INSTANCE;
         }
-        JSONObject optJSONObject = data.optJSONObject("images");
-        if (optJSONObject == null) {
-            optJSONObject = new JSONObject();
-        }
-        JSONObject imgs = optJSONObject;
-        final ArrayList jobs = new ArrayList();
-        switch ($comp.hashCode()) {
-            case -1354842768:
-                if ($comp.equals("colors") && (it = data.optJSONObject("colors")) != null) {
-                    this$0.setColors(it);
-                    break;
-                }
-                break;
-            case -896509628:
-                if ($comp.equals("sounds") && (so = data.optJSONObject("sounds")) != null) {
-                    list = GxThemeKt.GXTHEME_SOUNDS;
-                    for (String k : list) {
-                        loadComponent$lambda$152$slot$140(this$0, $t, jobs, k, so.optJSONObject(k));
-                    }
-                    break;
-                }
-                break;
-            case -217663920:
-                if ($comp.equals("distance_icons") && (di = imgs.optJSONObject("distanceIcons")) != null) {
-                    list2 = GxThemeKt.GXTHEME_DISTANCE;
-                    for (String k2 : list2) {
-                        loadComponent$lambda$152$slot$140(this$0, $t, jobs, "distanceIcons_" + k2, di.optJSONObject(k2));
-                    }
-                    break;
-                }
-                break;
-            case 100029210:
-                if ($comp.equals("icons")) {
-                    loadComponent$lambda$152$slot$140(this$0, $t, jobs, "homeButton", imgs.optJSONObject("homeButton"));
-                    loadComponent$lambda$152$slot$140(this$0, $t, jobs, "settingsButton", imgs.optJSONObject("settingsButton"));
-                    break;
-                }
-                break;
-            case 271106313:
-                if ($comp.equals("turn_signals")) {
-                    this$0.tsLength = data.optInt("turnSignalLength", 100);
-                    String str$default = GxPage.str$default(this$0, data, "turnSignalType", null, 2, null);
-                    if (StringsKt.isBlank(str$default)) {
-                        str$default = "Single Image";
-                    }
-                    this$0.tsType = str$default;
-                    String str$default2 = GxPage.str$default(this$0, data, "turnSignalStyle", null, 2, null);
-                    if (StringsKt.isBlank(str$default2)) {
-                        str$default2 = "Static";
-                    }
-                    this$0.tsStyle = str$default2;
-                    loadComponent$lambda$152$slot$140(this$0, $t, jobs, "turnSignal", imgs.optJSONObject("turnSignal"));
-                    loadComponent$lambda$152$slot$140(this$0, $t, jobs, "turnSignalBlindspot", imgs.optJSONObject("turnSignalBlindspot"));
-                    JSONArray optJSONArray = data.optJSONArray("sequentialImages");
-                    List seq = optJSONArray != null ? this$0.strings(optJSONArray) : null;
-                    if (seq == null) {
-                        seq = CollectionsKt.emptyList();
-                    }
-                    if (!seq.isEmpty()) {
-                        this$0.framesName = $t.getName();
-                        for (String img : seq) {
-                            jobs.add(TuplesKt.to("signals/" + img, new Function1() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda14
-                                @Override // kotlin.jvm.functions.Function1
-                                public final Object invoke(Object obj) {
-                                    Unit loadComponent$lambda$152$lambda$149;
-                                    loadComponent$lambda$152$lambda$149 = GxThemePage.loadComponent$lambda$152$lambda$149(this$0, (GxThemeFile) obj);
-                                    return loadComponent$lambda$152$lambda$149;
-                                }
-                            }));
-                        }
-                        break;
-                    }
-                }
-                break;
-            case 2119462413:
-                if ($comp.equals("steering_wheel") && (sw = imgs.optJSONObject("steeringWheel")) != null) {
-                    String p = GxPage.str$default(this$0, sw, "path", null, 2, null);
-                    if (!StringsKt.isBlank(p)) {
-                        this$0.names.put("steeringWheel", $t.getName());
-                        String str$default3 = GxPage.str$default(this$0, sw, "filename", null, 2, null);
-                        if (StringsKt.isBlank(str$default3)) {
-                            str$default3 = $t.getPath();
-                        }
-                        final String fn = str$default3;
-                        jobs.add(TuplesKt.to(p, new Function1() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda13
-                            @Override // kotlin.jvm.functions.Function1
-                            public final Object invoke(Object obj) {
-                                Unit loadComponent$lambda$152$lambda$145$lambda$144;
-                                loadComponent$lambda$152$lambda$145$lambda$144 = GxThemePage.loadComponent$lambda$152$lambda$145$lambda$144(this$0, fn, (GxThemeFile) obj);
-                                return loadComponent$lambda$152$lambda$145$lambda$144;
-                            }
-                        }));
-                        break;
-                    }
-                }
-                break;
-        }
-        ArrayList $this$map$iv = jobs;
-        int $i$f$map = 0;
-        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        for (Object item$iv$iv : $this$map$iv) {
-            destination$iv$iv.add(this$0.assetPath($t.getPath(), $t.getType(), (String) ((Pair) item$iv$iv).getFirst()));
-            $this$map$iv = $this$map$iv;
-            $i$f$map = $i$f$map;
-        }
-        this$0.fetchAssets((List) destination$iv$iv, new Function1() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda15
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit loadComponent$lambda$152$lambda$151;
-                loadComponent$lambda$152$lambda$151 = GxThemePage.loadComponent$lambda$152$lambda$151(jobs, this$0, $comp, $t, $what, (List) obj);
-                return loadComponent$lambda$152$lambda$151;
-            }
-        });
-        return Unit.INSTANCE;
     }
 
     private static final void loadComponent$lambda$152$slot$140(final GxThemePage this$0, GxThemeEntry $t, ArrayList<Pair<String, Function1<GxThemeFile, Unit>>> arrayList, final String slot, JSONObject asset) {
@@ -3451,150 +3446,172 @@ public final class GxThemePage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Type inference failed for: r11v3, types: [T, com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda19] */
-    private final void gxThemeColorDialog(String title, int initial, final Function1<? super Integer, Unit> then) {
-        Function1 function1;
-        final float[] hsv = new float[3];
-        Color.colorToHSV(initial, hsv);
-        LinearLayout $this$gxThemeColorDialog_u24lambda_u24158 = new LinearLayout(getAct());
-        $this$gxThemeColorDialog_u24lambda_u24158.setOrientation(1);
-        $this$gxThemeColorDialog_u24lambda_u24158.setPadding(getUi().dp(24), getUi().dp(12), getUi().dp(24), getUi().dp(4));
-        final View swatch = new View(getAct());
-        LinearLayout.LayoutParams $this$gxThemeColorDialog_u24lambda_u24159 = new LinearLayout.LayoutParams(-1, getUi().dp(84));
-        $this$gxThemeColorDialog_u24lambda_u24159.bottomMargin = getUi().dp(12);
-        Unit unit = Unit.INSTANCE;
-        $this$gxThemeColorDialog_u24lambda_u24158.addView(swatch, $this$gxThemeColorDialog_u24lambda_u24159);
-        final Ref.BooleanRef updating = new Ref.BooleanRef();
-        final EditText $this$gxThemeColorDialog_u24lambda_u24160 = new EditText(getAct());
-        $this$gxThemeColorDialog_u24lambda_u24160.setTextSize(22.0f);
-        $this$gxThemeColorDialog_u24lambda_u24160.setTypeface(Typeface.MONOSPACE);
-        $this$gxThemeColorDialog_u24lambda_u24160.setSingleLine(true);
-        $this$gxThemeColorDialog_u24lambda_u24160.setFilters(new InputFilter.LengthFilter[]{new InputFilter.LengthFilter(7)});
-        $this$gxThemeColorDialog_u24lambda_u24160.setInputType(528385);
-        final ArrayList bars = new ArrayList();
-        ArrayList labels = new ArrayList();
-        final ArrayList strips = new ArrayList();
-        final Ref.ObjectRef paint = new Ref.ObjectRef();
-        Iterator it = CollectionsKt.listOf((Object[]) new String[]{"Hue", "Saturation", "Value"}).iterator();
-        int i = 0;
-        while (it.hasNext()) {
-            final int i2 = i;
-            i++;
-            String name = (String) it.next();
-            TextView $this$gxThemeColorDialog_u24lambda_u24164 = new TextView(getAct());
-            $this$gxThemeColorDialog_u24lambda_u24164.setTextSize(17.0f);
-            Iterator it2 = it;
-            $this$gxThemeColorDialog_u24lambda_u24164.setPadding(0, getUi().dp(8), 0, getUi().dp(4));
-            $this$gxThemeColorDialog_u24lambda_u24158.addView($this$gxThemeColorDialog_u24lambda_u24164);
-            labels.add($this$gxThemeColorDialog_u24lambda_u24164);
-            strips.add(gxThemeColorDialog$strip(this, $this$gxThemeColorDialog_u24lambda_u24158));
-            SeekBar sb = new SeekBar(getAct());
-            sb.setMax(i2 == 0 ? 360 : 100);
-            sb.setMinimumHeight(getUi().dp(48));
-            sb.setThumbTintList(ColorStateList.valueOf(-1));
-            sb.setProgressTintList(ColorStateList.valueOf(0));
-            sb.setProgressBackgroundTintList(ColorStateList.valueOf(0));
-            sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() { // from class: com.starpilot.starview.GxThemePage$gxThemeColorDialog$sb$1$1
-                @Override // android.widget.SeekBar.OnSeekBarChangeListener
-                public void onProgressChanged(SeekBar s, int p, boolean fromUser) {
-                    Function1<Boolean, Unit> function12;
-                    if (fromUser) {
-                        hsv[i2] = i2 == 0 ? RangesKt.coerceAtMost(p, 359.9f) : p / 100.0f;
-                        if (paint.element == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("paint");
-                            function12 = null;
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    private final void gxThemeColorDialog(String var1, int var2, Function1<? super Integer, Unit> var3) {
+        float[] var10 = new float[3];
+        Color.colorToHSV(var2, var10);
+        LinearLayout var9 = new LinearLayout((Context)this.getAct());
+        var9.setOrientation(1);
+        var9.setPadding(this.getUi().dp(24), this.getUi().dp(12), this.getUi().dp(24), this.getUi().dp(4));
+        View var12 = new View((Context)this.getAct());
+        android.widget.LinearLayout.LayoutParams var6 = new LayoutParams(-1, this.getUi().dp(84));
+        var6.bottomMargin = this.getUi().dp(12);
+        Unit var7 = Unit.INSTANCE;
+        var9.addView(var12, (android.view.ViewGroup.LayoutParams)var6);
+        BooleanRef var15 = new BooleanRef();
+        EditText var11 = new EditText((Context)this.getAct());
+        var11.setTextSize(22.0F);
+        var11.setTypeface(Typeface.MONOSPACE);
+        var11.setSingleLine(true);
+        var11.setFilters((InputFilter[])(new LengthFilter[]{new LengthFilter(7)}));
+        var11.setInputType(528385);
+        ArrayList var14 = new ArrayList();
+        ArrayList var23 = new ArrayList();
+        ArrayList var13 = new ArrayList();
+        ObjectRef var26 = new ObjectRef();
+        Iterator var8 = CollectionsKt.listOf(new String[]{"Hue", "Saturation", "Value"}).iterator();
+        var2 = 0;
+
+        while (var8.hasNext()) {
+            int var5 = var2 + 1;
+            String var18 = (String)var8.next();
+            TextView var16 = new TextView((Context)this.getAct());
+            var16.setTextSize(17.0F);
+            var16.setPadding(0, this.getUi().dp(8), 0, this.getUi().dp(4));
+            var9.addView((View)var16);
+            var23.add(var16);
+            var13.add(gxThemeColorDialog$strip(this, var9));
+            SeekBar var17 = new SeekBar((Context)this.getAct());
+            short var21;
+            if (var2 == 0) {
+                var21 = 360;
+            } else {
+                var21 = 100;
+            }
+
+            var17.setMax(var21);
+            var17.setMinimumHeight(this.getUi().dp(48));
+            var17.setThumbTintList(ColorStateList.valueOf(-1));
+            var17.setProgressTintList(ColorStateList.valueOf(0));
+            var17.setProgressBackgroundTintList(ColorStateList.valueOf(0));
+            var17.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+                final float[] $hsv = var10;
+                final int $i = var2;
+                final ObjectRef<Function1<Boolean, Unit>> $paint = var26;
+
+                public void onProgressChanged(SeekBar var1, int var2x, boolean var3x) {
+                    if (var3x) {
+                        float[] var6x = this.$hsv;
+                        int var5x = this.$i;
+                        float var4;
+                        if (this.$i == 0) {
+                            var4 = RangesKt.coerceAtMost(var2x, 359.9F);
                         } else {
-                            function12 = paint.element;
+                            var4 = var2x / 100.0F;
                         }
-                        function12.invoke(false);
+
+                        var6x[var5x] = var4;
+                        Function1 var7x;
+                        if (this.$paint.element == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("paint");
+                            var7x = null;
+                        } else {
+                            var7x = this.$paint.element;
+                        }
+
+                        var7x.invoke(false);
                     }
                 }
 
-                @Override // android.widget.SeekBar.OnSeekBarChangeListener
-                public void onStartTrackingTouch(SeekBar s) {
+                public void onStartTrackingTouch(SeekBar var1) {
                 }
 
-                @Override // android.widget.SeekBar.OnSeekBarChangeListener
-                public void onStopTrackingTouch(SeekBar s) {
+                public void onStopTrackingTouch(SeekBar var1) {
                 }
             });
-            $this$gxThemeColorDialog_u24lambda_u24158.addView(sb, new LinearLayout.LayoutParams(-1, getUi().dp(48)));
-            bars.add(sb);
-            $this$gxThemeColorDialog_u24lambda_u24164.setTag(name);
-            paint = paint;
-            labels = labels;
-            it = it2;
+            var9.addView((View)var17, (android.view.ViewGroup.LayoutParams)(new LayoutParams(-1, this.getUi().dp(48))));
+            var14.add(var17);
+            var16.setTag(var18);
+            var2 = var5;
         }
-        final Ref.ObjectRef paint2 = paint;
-        final ArrayList labels2 = labels;
-        TextView $this$gxThemeColorDialog_u24lambda_u24166 = new TextView(getAct());
-        $this$gxThemeColorDialog_u24lambda_u24166.setText("Hex");
-        $this$gxThemeColorDialog_u24lambda_u24166.setTextSize(17.0f);
-        $this$gxThemeColorDialog_u24lambda_u24166.setPadding(0, getUi().dp(10), 0, 0);
-        $this$gxThemeColorDialog_u24lambda_u24158.addView($this$gxThemeColorDialog_u24lambda_u24166);
-        $this$gxThemeColorDialog_u24lambda_u24158.addView($this$gxThemeColorDialog_u24lambda_u24160);
-        Object obj = strips.get(0);
-        Intrinsics.checkNotNullExpressionValue(obj, "get(...)");
-        View view = (View) obj;
-        int[] it3 = new int[7];
-        for (int i3 = 0; i3 < 7; i3++) {
-            it3[i3] = Color.HSVToColor(new float[]{(i3 * 60.0f) % 360.0f, 1.0f, 1.0f});
+
+        TextView var27 = new TextView((Context)this.getAct());
+        var27.setText("Hex");
+        var27.setTextSize(17.0F);
+        var27.setPadding(0, this.getUi().dp(10), 0, 0);
+        var9.addView((View)var27);
+        var9.addView((View)var11);
+        Object var28 = var13.get(0);
+        Intrinsics.checkNotNullExpressionValue(var28, "get(...)");
+        View var30 = (View)var28;
+        var28 = new int[7];
+
+        for (int var22 = 0; var22 < 7; var22++) {
+            ((Object[])var28)[var22] = Color.HSVToColor(new float[]{var22 * 60.0F % 360.0F, 1.0F, 1.0F});
         }
-        it3[6] = -65536;
-        Unit unit2 = Unit.INSTANCE;
-        gxThemeColorDialog$grad(this, view, it3);
-        paint2.element = new Function1() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda19
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj2) {
-                Unit gxThemeColorDialog$lambda$168;
-                gxThemeColorDialog$lambda$168 = GxThemePage.gxThemeColorDialog$lambda$168(swatch, this, strips, hsv, bars, labels2, updating, $this$gxThemeColorDialog_u24lambda_u24160, ((Boolean) obj2).booleanValue());
-                return gxThemeColorDialog$lambda$168;
-            }
-        };
-        $this$gxThemeColorDialog_u24lambda_u24160.addTextChangedListener(new TextWatcher() { // from class: com.starpilot.starview.GxThemePage$gxThemeColorDialog$6
-            @Override // android.text.TextWatcher
-            public void beforeTextChanged(CharSequence s, int a, int b, int d) {
+
+        ((Object[])var28)[6] = -65536;
+        Unit var31 = Unit.INSTANCE;
+        gxThemeColorDialog$grad(this, var30, (int[])var28);
+        var26.element = (T)(new GxThemePage$$ExternalSyntheticLambda19(var12, this, var13, var10, var14, var23, var15, var11));
+        var11.addTextChangedListener(new TextWatcher() {
+            final float[] $hsv = var10;
+            final ObjectRef<Function1<Boolean, Unit>> $paint = var26;
+            final BooleanRef $updating = var15;
+
+            public void afterTextChanged(Editable var1) {
+                if (!this.$updating.element) {
+                    if (var1 != null) {
+                        String var2x = var1.toString();
+                        if (var2x != null) {
+                            String var3x = StringsKt.trim(var2x).toString();
+                            if (var3x != null) {
+                                String var4 = StringsKt.removePrefix(var3x, "#");
+                                if (var4 != null) {
+                                    if (!new Regex("[0-9a-fA-F]{6}").matches(var4)) {
+                                        return;
+                                    }
+
+                                    Color.colorToHSV(Color.parseColor("#" + var4), this.$hsv);
+                                    Function1 var5;
+                                    if (this.$paint.element == null) {
+                                        Intrinsics.throwUninitializedPropertyAccessException("paint");
+                                        var5 = null;
+                                    } else {
+                                        var5 = this.$paint.element;
+                                    }
+
+                                    var5.invoke(true);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
-            @Override // android.text.TextWatcher
-            public void onTextChanged(CharSequence s, int a, int b, int d) {
+            public void beforeTextChanged(CharSequence var1, int var2x, int var3x, int var4) {
             }
 
-            @Override // android.text.TextWatcher
-            public void afterTextChanged(Editable s) {
-                String obj2;
-                String obj3;
-                String t;
-                Function1<Boolean, Unit> function12;
-                if (updating.element || s == null || (obj2 = s.toString()) == null || (obj3 = StringsKt.trim((CharSequence) obj2).toString()) == null || (t = StringsKt.removePrefix(obj3, (CharSequence) "#")) == null || !new Regex("[0-9a-fA-F]{6}").matches(t)) {
-                    return;
-                }
-                Color.colorToHSV(Color.parseColor("#" + t), hsv);
-                if (paint2.element == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("paint");
-                    function12 = null;
-                } else {
-                    function12 = paint2.element;
-                }
-                function12.invoke(true);
+            public void onTextChanged(CharSequence var1, int var2x, int var3x, int var4) {
             }
         });
-        if (paint2.element == 0) {
+        Function1 var24;
+        if (var26.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
-            function1 = null;
+            var24 = null;
         } else {
-            function1 = (Function1) paint2.element;
+            var24 = (Function1)var26.element;
         }
-        function1.invoke(false);
-        AlertDialog.Builder title2 = new AlertDialog.Builder(getAct()).setTitle(title);
-        ScrollView $this$gxThemeColorDialog_u24lambda_u24169 = new ScrollView(getAct());
-        $this$gxThemeColorDialog_u24lambda_u24169.addView($this$gxThemeColorDialog_u24lambda_u24158);
-        title2.setView($this$gxThemeColorDialog_u24lambda_u24169).setPositiveButton("OK", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda20
-            @Override // android.content.DialogInterface.OnClickListener
-            public final void onClick(DialogInterface dialogInterface, int i4) {
-                GxThemePage.gxThemeColorDialog$lambda$170($this$gxThemeColorDialog_u24lambda_u24160, then, hsv, dialogInterface, i4);
-            }
-        }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
+
+        var24.invoke(false);
+        android.app.AlertDialog.Builder var25 = new android.app.AlertDialog.Builder((Context)this.getAct()).setTitle(var1);
+        ScrollView var19 = new ScrollView((Context)this.getAct());
+        var19.addView((View)var9);
+        var25.setView((View)var19)
+            .setPositiveButton("OK", new GxThemePage$$ExternalSyntheticLambda20(var11, var3, var10))
+            .setNegativeButton("Cancel", null)
+            .show();
     }
 
     private static final View gxThemeColorDialog$strip(GxThemePage this$0, LinearLayout wrap) {

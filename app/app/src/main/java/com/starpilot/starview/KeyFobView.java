@@ -24,6 +24,7 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.widget.LinearLayout.LayoutParams;
 
 /* compiled from: KeyFob.kt */
 public final class KeyFobView extends CardPage {
@@ -36,27 +37,39 @@ public final class KeyFobView extends CardPage {
     private JSONObject status;
     private final SimpleDateFormat timeFmt;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    /* JADX WARN: Type inference failed for: r0v6, types: [com.starpilot.starview.KeyFobView$poll$1] */
-    public KeyFobView(Context ctx, CarUi ui) {
-        super(ctx, ui);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public KeyFobView(Context var1, CarUi var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
         this.timeFmt = new SimpleDateFormat("EEE h:mm:ss a", Locale.US);
         this.events = new JSONArray();
         this.red = Color.rgb(255, 138, 128);
-        this.poll = new Runnable() { // from class: com.starpilot.starview.KeyFobView$poll$1
-            @Override // java.lang.Runnable
+        this.poll = new Runnable() {
+            final KeyFobView this$0 = KeyFobView.this;
+
+            @Override
             public void run() {
-                boolean z;
-                JSONObject jSONObject;
-                z = KeyFobView.this.shown;
-                if (z) {
-                    KeyFobView.this.load();
-                    Handler main = KeyFobView.this.getMain();
-                    KeyFobView$poll$1 keyFobView$poll$1 = this;
-                    jSONObject = KeyFobView.this.status;
-                    main.postDelayed(keyFobView$poll$1, (jSONObject != null ? jSONObject.optInt("learning") : 0) > 0 ? 1500L : 5000L);
+                if (this.this$0.shown) {
+                    this.this$0.load();
+                    Handler var4 = this.this$0.getMain();
+                    Runnable var6 = this;
+                    JSONObject var5 = this.this$0.status;
+                    int var1x;
+                    if (var5 != null) {
+                        var1x = var5.optInt("learning");
+                    } else {
+                        var1x = 0;
+                    }
+
+                    long var2x;
+                    if (var1x > 0) {
+                        var2x = 1500L;
+                    } else {
+                        var2x = 5000L;
+                    }
+
+                    var4.postDelayed(var6, var2x);
                 }
             }
         };
@@ -79,12 +92,13 @@ public final class KeyFobView extends CardPage {
         start();
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void req$default(KeyFobView keyFobView, String str, Map map, Function1 function1, int i, Object obj) {
-        if ((i & 2) != 0) {
-            map = MapsKt.emptyMap();
+    /* VF: from Vineflower (jadx: ) */
+    static void req$default(KeyFobView var0, String var1, Map var2, Function1 var3, int var4, Object var5) {
+        if ((var4 & 2) != 0) {
+            var2 = MapsKt.emptyMap();
         }
-        keyFobView.req(str, map, function1);
+
+        var0.req(var1, var2, var3);
     }
 
     private final void req(String op, Map<String, ? extends Object> extra, Function1<? super JSONObject, Unit> cb) {
@@ -174,325 +188,284 @@ public final class KeyFobView extends CardPage {
         return $this$buttons_u24lambda_u244;
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-     */
-    private final Pair<String, Integer> radioWords(JSONObject s) {
-        String mode = s.optString("mode", "");
-        String optString = s.optString("radio");
-        if (optString != null) {
-            switch (optString.hashCode()) {
+    /* VF: from Vineflower (jadx: ) */
+    private final Pair<String, Integer> radioWords(JSONObject var1) {
+        String var2 = var1.optString("mode", "");
+        String var3 = var1.optString("radio");
+        if (var3 != null) {
+            switch (var3.hashCode()) {
                 case -1775170701:
-                    if (optString.equals("restarting")) {
-                        return TuplesKt.to("The radio stopped - starting it again", Integer.valueOf(CarUi.Companion.getWARN()));
+                    if (var3.equals("restarting")) {
+                        return TuplesKt.to("The radio stopped - starting it again", CarUi.Companion.getWARN());
                     }
                     break;
                 case -1745372787:
-                    if (optString.equals("no rtl_sdr")) {
-                        return TuplesKt.to("The radio tools aren't on the comma (run /data/tools/rtl_build.sh)", Integer.valueOf(CarUi.Companion.getWARN()));
+                    if (var3.equals("no rtl_sdr")) {
+                        return TuplesKt.to("The radio tools aren't on the comma (run /data/tools/rtl_build.sh)", CarUi.Companion.getWARN());
                     }
                     break;
                 case -1218715461:
-                    if (optString.equals("listening")) {
-                        return TuplesKt.to(Intrinsics.areEqual(mode, "off") ? "Listening - hold Lock 2½ s to close the windows" : "Listening - a press locks or unlocks", Integer.valueOf(CarUi.Companion.getACCENT()));
+                    if (var3.equals("listening")) {
+                        String var5;
+                        if (Intrinsics.areEqual(var2, "off")) {
+                            var5 = "Listening - hold Lock 2½ s to close the windows";
+                        } else {
+                            var5 = "Listening - a press locks or unlocks";
+                        }
+
+                        return TuplesKt.to(var5, CarUi.Companion.getACCENT());
                     }
                     break;
                 case 231075644:
-                    if (optString.equals("no dongle")) {
-                        return TuplesKt.to("The radio dongle isn't plugged into the comma", Integer.valueOf(CarUi.Companion.getWARN()));
+                    if (var3.equals("no dongle")) {
+                        return TuplesKt.to("The radio dongle isn't plugged into the comma", CarUi.Companion.getWARN());
                     }
                     break;
                 case 1316806720:
-                    if (optString.equals("starting")) {
-                        return TuplesKt.to("Starting the radio…", Integer.valueOf(CarUi.Companion.getTEXT()));
+                    if (var3.equals("starting")) {
+                        return TuplesKt.to("Starting the radio…", CarUi.Companion.getTEXT());
                     }
                     break;
                 case 1856461213:
-                    if (optString.equals("no fob learned")) {
-                        return TuplesKt.to("No fob learned yet - add one below", Integer.valueOf(CarUi.Companion.getWARN()));
+                    if (var3.equals("no fob learned")) {
+                        return TuplesKt.to("No fob learned yet - add one below", CarUi.Companion.getWARN());
                     }
-                    break;
             }
         }
-        return TuplesKt.to(!s.optBoolean("on") ? "Switched off" : "Resting - it listens with the car on in Park, and for 30 minutes after it's off", Integer.valueOf(CarUi.Companion.getDIM()));
+
+        String var6;
+        if (!var1.optBoolean("on")) {
+            var6 = "Switched off";
+        } else {
+            var6 = "Resting - it listens with the car on in Park, and for 30 minutes after it's off";
+        }
+
+        return TuplesKt.to(var6, CarUi.Companion.getDIM());
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */
-    /* JADX WARN: Removed duplicated region for block: B:48:0x0305  */
-    /* JADX WARN: Removed duplicated region for block: B:50:0x030a  */
-    /* JADX WARN: Removed duplicated region for block: B:53:0x035f  */
-    /* JADX WARN: Removed duplicated region for block: B:56:0x036c  */
-    /* JADX WARN: Removed duplicated region for block: B:59:0x037e  */
-    /* JADX WARN: Removed duplicated region for block: B:62:0x03d1  */
-    /* JADX WARN: Removed duplicated region for block: B:64:0x03d6  */
-    /* JADX WARN: Removed duplicated region for block: B:67:0x03ea  */
-    /* JADX WARN: Removed duplicated region for block: B:68:0x03d3  */
-    /* JADX WARN: Removed duplicated region for block: B:69:0x038c  */
-    /* JADX WARN: Removed duplicated region for block: B:73:0x036e  */
-    /* JADX WARN: Removed duplicated region for block: B:74:0x0362  */
-    /* JADX WARN: Removed duplicated region for block: B:75:0x034b  */
-    /* JADX WARN: Removed duplicated region for block: B:76:0x0307  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void paint() {
-        JSONObject s;
-        LinearLayout fobs;
-        int learning;
-        String what;
-        String words;
-        JSONArray ids;
-        int others;
-        String str;
-        int text;
-        boolean on;
-        int i;
-        getCol().removeAllViews();
-        JSONObject s2 = this.status;
-        LinearLayout head = card();
-        add(head);
-        head.addView(title("Key fob", "key", "device"));
-        if (s2 == null) {
-            KeyFobView keyFobView = this;
-            String str2 = this.err;
-            if (str2 == null) {
-                str2 = "Asking the comma…";
+        String var29 = null; // declarations Vineflower left out
+        this.getCol().removeAllViews();
+        JSONObject var16 = this.status;
+        LinearLayout var12 = this.card();
+        this.add((View)var12);
+        var12.addView(this.title("Key fob", "key", "device"));
+        if (var16 == null) {
+            CardPage var38 = this;
+            String var35 = this.err;
+            String var32 = var35;
+            if (var35 == null) {
+                var32 = "Asking the comma…";
             }
-            head.addView(CardPage.line$default(keyFobView, str2, 0, 0.0f, 6, null));
-            return;
-        }
-        head.addView(CardPage.line$default(this, "Car on, in Park: a press of Lock or Unlock flips the locks (the car ignores its fob while running). Car just turned off (in Park): hold Lock 2½ seconds - the windows close for 15 seconds (a short press stops them). Driving: the radio is off.", 0, 0.0f, 6, null));
-        Pair<String, Integer> radioWords = radioWords(s2);
-        String words2 = radioWords.component1();
-        int color = radioWords.component2().intValue();
-        head.addView(line(words2, color, 18.0f));
-        int others2 = s2.optInt("others");
-        String str3 = "";
-        if (others2 > 0) {
-            head.addView(line("Ignored " + others2 + " signal" + (others2 == 1 ? "" : "s") + " that weren't your fob (other transmitters nearby) since StarView started.", CarUi.Companion.getDIM(), 14.0f));
-        }
-        boolean on2 = s2.optBoolean("on");
-        LinearLayout $this$paint_u24lambda_u249 = new LinearLayout(getContext());
-        $this$paint_u24lambda_u249.setOrientation(0);
-        $this$paint_u24lambda_u249.setGravity(16);
-        $this$paint_u24lambda_u249.setPadding(0, getUi().dp(10), 0, 0);
-        TextView $this$paint_u24lambda_u249_u24lambda_u245 = new TextView($this$paint_u24lambda_u249.getContext());
-        $this$paint_u24lambda_u249_u24lambda_u245.setText("Use the key fob");
-        $this$paint_u24lambda_u249_u24lambda_u245.setTextColor(CarUi.Companion.getTEXT());
-        $this$paint_u24lambda_u249_u24lambda_u245.setTextSize(19.0f);
-        $this$paint_u24lambda_u249_u24lambda_u245.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$paint_u24lambda_u249.addView($this$paint_u24lambda_u249_u24lambda_u245, new LinearLayout.LayoutParams(0, -2, 1.0f));
-        Switch $this$paint_u24lambda_u249_u24lambda_u248 = getUi().bigSwitch();
-        $this$paint_u24lambda_u249_u24lambda_u248.setChecked(on2);
-        $this$paint_u24lambda_u249_u24lambda_u248.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.KeyFobView$$ExternalSyntheticLambda1
-            @Override // android.widget.CompoundButton.OnCheckedChangeListener
-            public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                KeyFobView.paint$lambda$9$lambda$8$lambda$7(KeyFobView.this, compoundButton, z);
-            }
-        });
-        $this$paint_u24lambda_u249.addView($this$paint_u24lambda_u249_u24lambda_u248);
-        head.addView($this$paint_u24lambda_u249);
-        LinearLayout fobs2 = card();
-        add(fobs2);
-        fobs2.addView(title("Fobs", "lock", "device"));
-        JSONArray ids2 = s2.optJSONArray("ids");
-        if (ids2 == null) {
-            ids2 = new JSONArray();
-        }
-        if (ids2.length() == 0) {
-            fobs2.addView(CardPage.line$default(this, "None yet.", 0, 0.0f, 6, null));
-        }
-        int i2 = 0;
-        int length = ids2.length();
-        while (i2 < length) {
-            final String id = ids2.optString(i2);
-            fobs2.addView(line("Fob " + (i2 + 1) + "  ·  " + id, CarUi.Companion.getTEXT(), 17.0f));
-            fobs2.addView(buttons(CarUi.button$default(getUi(), "Forget", false, new Function0() { // from class: com.starpilot.starview.KeyFobView$$ExternalSyntheticLambda2
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit paint$lambda$11;
-                    paint$lambda$11 = KeyFobView.paint$lambda$11(KeyFobView.this, id);
-                    return paint$lambda$11;
-                }
-            }, 2, null)));
-            i2++;
-            head = head;
-        }
-        int learning2 = s2.optInt("learning");
-        if (learning2 > 0) {
-            fobs2.addView(line("Press Lock on the fob twice, a few seconds apart, near the van (" + learning2 + "s left).", CarUi.Companion.getACCENT(), 18.0f));
+
+            var12.addView((View)CardPage.line$default(var38, var32, 0, 0.0F, 6, null));
         } else {
-            View[] viewArr = new View[1];
-            viewArr[0] = getUi().button("Add a fob…", ids2.length() == 0, new Function0() { // from class: com.starpilot.starview.KeyFobView$$ExternalSyntheticLambda3
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit paint$lambda$13;
-                    paint$lambda$13 = KeyFobView.paint$lambda$13(KeyFobView.this);
-                    return paint$lambda$13;
+            var12.addView(
+                (View)CardPage.line$default(
+                    this,
+                    "Car on, in Park: a press of Lock or Unlock flips the locks (the car ignores its fob while running). Car just turned off (in Park): hold Lock 2½ seconds - the windows close for 15 seconds (a short press stops them). Driving: the radio is off.",
+                    0,
+                    0.0F,
+                    6,
+                    null
+                )
+            );
+            Pair var11 = this.radioWords(var16);
+            String var15 = (String)var11.component1();
+            var12.addView((View)this.line(var15, ((Number)var11.component2()).intValue(), 18.0F));
+            int var5 = var16.optInt("others");
+            String var13 = "";
+            if (var5 > 0) {
+                String var26;
+                if (var5 == 1) {
+                    var26 = "";
+                } else {
+                    var26 = "s";
                 }
-            });
-            fobs2.addView(buttons(viewArr));
-        }
-        LinearLayout log = card();
-        add(log);
-        log.addView(title("What it heard", "history", "device"));
-        if (this.events.length() == 0) {
-            log.addView(CardPage.line$default(this, "Nothing yet.", 0, 0.0f, 6, null));
-        }
-        int i3 = 0;
-        int min = Math.min(this.events.length(), 60);
-        while (i3 < min) {
-            JSONObject e = this.events.optJSONObject(i3);
-            if (e == null) {
-                s = s2;
-                learning = learning2;
-                fobs = fobs2;
-                words = words2;
-                ids = ids2;
-                others = others2;
-                str = str3;
-                on = on2;
-                i = min;
-            } else {
-                String did = e.optString("did");
-                if (did != null) {
-                    switch (did.hashCode()) {
-                        case -1097452790:
-                            s = s2;
-                            if (did.equals("locked")) {
-                                what = "Locked";
-                                learning = learning2;
-                                fobs = fobs2;
-                                break;
-                            }
-                            Intrinsics.checkNotNull(did);
-                            if (!(did.length() <= 0)) {
-                                StringBuilder sb = new StringBuilder();
-                                learning = learning2;
-                                char it = did.charAt(0);
-                                fobs = fobs2;
-                                String valueOf = String.valueOf(it);
-                                Intrinsics.checkNotNull(valueOf, "null cannot be cast to non-null type java.lang.String");
-                                String upperCase = valueOf.toUpperCase(Locale.ROOT);
-                                Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
-                                StringBuilder append = sb.append((Object) upperCase);
-                                String substring = did.substring(1);
-                                Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
-                                what = append.append(substring).toString();
-                                break;
-                            } else {
-                                learning = learning2;
-                                fobs = fobs2;
-                                what = did;
-                                break;
-                            }
-                        case -210949405:
-                            s = s2;
-                            if (did.equals("unlocked")) {
-                                what = "Unlocked";
-                                learning = learning2;
-                                fobs = fobs2;
-                                break;
-                            }
-                            Intrinsics.checkNotNull(did);
-                            if (!(did.length() <= 0)) {
-                            }
-                            break;
-                        case 50780643:
-                            s = s2;
-                            if (did.equals("learned")) {
-                                what = "Learned";
-                                learning = learning2;
-                                fobs = fobs2;
-                                break;
-                            }
-                            Intrinsics.checkNotNull(did);
-                            if (!(did.length() <= 0)) {
-                            }
-                            break;
-                        case 1349493379:
-                            s = s2;
-                            if (did.equals("windows")) {
-                                what = "Closed the windows";
-                                learning = learning2;
-                                fobs = fobs2;
-                                break;
-                            }
-                            Intrinsics.checkNotNull(did);
-                            if (!(did.length() <= 0)) {
-                            }
-                            break;
-                        case 2129323981:
-                            if (did.equals("nothing")) {
-                                learning = learning2;
-                                fobs = fobs2;
-                                s = s2;
-                                what = "Nothing";
-                                break;
-                            } else {
-                                s = s2;
-                                Intrinsics.checkNotNull(did);
-                                if (!(did.length() <= 0)) {
-                                }
-                            }
-                            break;
-                    }
-                    String kind = !Intrinsics.areEqual(e.optString("kind"), "hold") ? "Hold" : "Press";
-                    String who = !e.optBoolean("ours") ? str3 : "  ·  not yours";
-                    words = words2;
-                    String why = e.optString("why", str3);
-                    if (Intrinsics.areEqual(did, "nothing")) {
-                        Intrinsics.checkNotNull(did);
-                        ids = ids2;
-                        others = others2;
-                        str = str3;
-                        text = StringsKt.endsWith(did, "failed", false) ? this.red : CarUi.Companion.getTEXT();
-                    } else {
-                        text = CarUi.Companion.getDIM();
-                        ids = ids2;
-                        others = others2;
-                        str = str3;
-                    }
-                    int c = text;
-                    on = on2;
-                    i = min;
-                    String format = this.timeFmt.format(new Date((long) (1000 * e.optDouble("t"))));
-                    Intrinsics.checkNotNull(why);
-                    log.addView(line(format + "  ·  " + kind + who + "  ·  " + what + (!(why.length() <= 0) ? " - " + why : str), c, 15.0f));
-                }
-                s = s2;
-                Intrinsics.checkNotNull(did);
-                if (!(did.length() <= 0)) {
-                }
-                if (!Intrinsics.areEqual(e.optString("kind"), "hold")) {
-                }
-                if (!e.optBoolean("ours")) {
-                }
-                words = words2;
-                String why2 = e.optString("why", str3);
-                if (Intrinsics.areEqual(did, "nothing")) {
-                }
-                int c2 = text;
-                on = on2;
-                i = min;
-                String format2 = this.timeFmt.format(new Date((long) (1000 * e.optDouble("t"))));
-                Intrinsics.checkNotNull(why2);
-                log.addView(line(format2 + "  ·  " + kind + who + "  ·  " + what + (!(why2.length() <= 0) ? " - " + why2 : str), c2, 15.0f));
+
+                var12.addView(
+                    (View)this.line(
+                        "Ignored " + var5 + " signal" + var26 + " that weren't your fob (other transmitters nearby) since StarView started.",
+                        CarUi.Companion.getDIM(),
+                        14.0F
+                    )
+                );
             }
-            i3++;
-            s2 = s;
-            learning2 = learning;
-            words2 = words;
-            fobs2 = fobs;
-            ids2 = ids;
-            others2 = others;
-            str3 = str;
-            on2 = on;
-            min = i;
+
+            boolean var10 = var16.optBoolean("on");
+            LinearLayout var27 = new LinearLayout(this.getContext());
+            var27.setOrientation(0);
+            var27.setGravity(16);
+            var27.setPadding(0, this.getUi().dp(10), 0, 0);
+            TextView var14 = new TextView(var27.getContext());
+            var14.setText("Use the key fob");
+            var14.setTextColor(CarUi.Companion.getTEXT());
+            var14.setTextSize(19.0F);
+            var14.setTypeface(Typeface.DEFAULT_BOLD);
+            var27.addView((View)var14, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
+            Switch var36 = this.getUi().bigSwitch();
+            var36.setChecked(var10);
+            var36.setOnCheckedChangeListener(new KeyFobView$$ExternalSyntheticLambda1(this));
+            var27.addView((View)var36);
+            var12.addView((View)var27);
+            LinearLayout var37 = this.card();
+            this.add((View)var37);
+            var37.addView(this.title("Fobs", "lock", "device"));
+            JSONArray var17 = var16.optJSONArray("ids");
+            JSONArray var28 = var17;
+            if (var17 == null) {
+                var28 = new JSONArray();
+            }
+
+            if (var28.length() == 0) {
+                var37.addView((View)CardPage.line$default(this, "None yet.", 0, 0.0F, 6, null));
+            }
+
+            int var3 = 0;
+
+            for (int var4 = var28.length(); var3 < var4; var3++) {
+                String var39 = var28.optString(var3);
+                var37.addView((View)this.line("Fob " + (var3 + 1) + "  ·  " + var39, CarUi.Companion.getTEXT(), 17.0F));
+                var37.addView(this.buttons(CarUi.button$default(this.getUi(), "Forget", false, new KeyFobView$$ExternalSyntheticLambda2(this, var39), 2, null)));
+            }
+
+            int var6 = var16.optInt("learning");
+            if (var6 > 0) {
+                var37.addView(
+                    (View)this.line("Press Lock on the fob twice, a few seconds apart, near the van (" + var6 + "s left).", CarUi.Companion.getACCENT(), 18.0F)
+                );
+            } else {
+                CarUi var33 = this.getUi();
+                boolean var9;
+                if (var28.length() == 0) {
+                    var9 = true;
+                } else {
+                    var9 = false;
+                }
+
+                var37.addView(this.buttons(var33.button("Add a fob…", var9, new KeyFobView$$ExternalSyntheticLambda3(this))));
+            }
+
+            LinearLayout var20 = this.card();
+            this.add((View)var20);
+            var20.addView(this.title("What it heard", "history", "device"));
+            if (this.events.length() == 0) {
+                var20.addView((View)CardPage.line$default(this, "Nothing yet.", 0, 0.0F, 6, null));
+            }
+
+            int var7 = 0;
+            int var25 = Math.min(this.events.length(), 60);
+
+            for (String var34 = var13; var7 < var25; var7++) {
+                JSONObject var21 = this.events.optJSONObject(var7);
+                if (var21 != null) {
+                    String var19;
+                    label136: {
+                        var19 = var21.optString("did");
+                        if (var19 != null) {
+                            switch (var19.hashCode()) {
+                                case -1097452790:
+                                    if (var19.equals("locked")) {
+                                        var29 = "Locked";
+                                        break label136;
+                                    }
+                                    break;
+                                case -210949405:
+                                    if (var19.equals("unlocked")) {
+                                        var29 = "Unlocked";
+                                        break label136;
+                                    }
+                                    break;
+                                case 50780643:
+                                    if (var19.equals("learned")) {
+                                        var29 = "Learned";
+                                        break label136;
+                                    }
+                                    break;
+                                case 1349493379:
+                                    if (var19.equals("windows")) {
+                                        var29 = "Closed the windows";
+                                        break label136;
+                                    }
+                                    break;
+                                case 2129323981:
+                                    if (var19.equals("nothing")) {
+                                        var29 = "Nothing";
+                                        break label136;
+                                    }
+                            }
+                        }
+
+                        Intrinsics.checkNotNull(var19);
+                        boolean var23;
+                        if (var19.length() > 0) {
+                            var23 = true;
+                        } else {
+                            var23 = false;
+                        }
+
+                        if (var23) {
+                            StringBuilder var30 = new StringBuilder();
+                            String var40 = String.valueOf(var19.charAt(0));
+                            Intrinsics.checkNotNull(var40, "null cannot be cast to non-null type java.lang.String");
+                            String var41 = var40.toUpperCase(Locale.ROOT);
+                            Intrinsics.checkNotNullExpressionValue(var41, "toUpperCase(...)");
+                            StringBuilder var31 = var30.append(var41);
+                            String var42 = var19.substring(1);
+                            Intrinsics.checkNotNullExpressionValue(var42, "substring(...)");
+                            var29 = var31.append(var42).toString();
+                        } else {
+                            var29 = var19;
+                        }
+                    }
+
+                    String var43;
+                    if (Intrinsics.areEqual(var21.optString("kind"), "hold")) {
+                        var43 = "Hold";
+                    } else {
+                        var43 = "Press";
+                    }
+
+                    String var18;
+                    if (var21.optBoolean("ours")) {
+                        var18 = var34;
+                    } else {
+                        var18 = "  ·  not yours";
+                    }
+
+                    String var22 = var21.optString("why", var34);
+                    if (Intrinsics.areEqual(var19, "nothing")) {
+                        var3 = CarUi.Companion.getDIM();
+                    } else {
+                        Intrinsics.checkNotNull(var19);
+                        if (StringsKt.endsWith(var19, "failed", false)) {
+                            var3 = this.red;
+                        } else {
+                            var3 = CarUi.Companion.getTEXT();
+                        }
+                    }
+
+                    SimpleDateFormat var44 = this.timeFmt;
+                    double var1 = var21.optDouble("t");
+                    String var46 = var44.format(new Date((long)(1000 * var1)));
+                    Intrinsics.checkNotNull(var22);
+                    boolean var8;
+                    if (var22.length() > 0) {
+                        var8 = true;
+                    } else {
+                        var8 = false;
+                    }
+
+                    if (var8) {
+                        var19 = " - " + var22;
+                    } else {
+                        var19 = var34;
+                    }
+
+                    var20.addView((View)this.line(var46 + "  ·  " + var43 + var18 + "  ·  " + var29 + var19, var3, 15.0F));
+                }
+            }
         }
     }
 

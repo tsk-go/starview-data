@@ -46,11 +46,11 @@ public final class GxModelLabPage extends GxPage {
     private boolean saving;
     private JSONObject summary;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxModelLabPage(Activity act, GxHost gx) {
-        super(act, gx);
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(gx, "gx");
+    /* VF: from Vineflower (jadx: ) */
+    public GxModelLabPage(Activity var1, GxHost var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "gx");
         this.needsOffroad = true;
         this.loading = true;
         this.error = "";
@@ -221,12 +221,13 @@ public final class GxModelLabPage extends GxPage {
         return this.runtime.optBoolean("active") ? "Pair active" : this.runtime.optBoolean("requested") ? "Pair requested" : "Inactive";
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void refresh$default(GxModelLabPage gxModelLabPage, Function0 function0, int i, Object obj) {
-        if ((i & 1) != 0) {
-            function0 = null;
+    /* VF: from Vineflower (jadx: ) */
+    static void refresh$default(GxModelLabPage var0, Function0 var1, int var2, Object var3) {
+        if ((var2 & 1) != 0) {
+            var1 = null;
         }
-        gxModelLabPage.refresh(function0);
+
+        var0.refresh(var1);
     }
 
     private final void refresh(final Function0<Unit> then) {
@@ -411,38 +412,44 @@ public final class GxModelLabPage extends GxPage {
         }, 8, null);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x0029, code lost:
-    
-        if (r0 == null) goto L16;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit save$lambda$17(GxModelLabPage this$0, String e, JSONObject p) {
-        String str;
-        String optString;
-        this$0.saving = false;
-        if (e != null) {
-            this$0.error = e;
-            this$0.toast(e);
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit save$lambda$17(GxModelLabPage var0, String var1, JSONObject var2) {
+        var0.saving = false;
+        if (var1 != null) {
+            var0.error = var1;
+            var0.toast(var1);
         } else {
-            this$0.dirty = false;
-            if (p != null) {
-                this$0.applyPayload(p);
+            var0.dirty = false;
+            if (var2 != null) {
+                var0.applyPayload(var2);
             }
-            if (p != null && (optString = p.optString("message")) != null) {
-                String str2 = optString;
-                if (StringsKt.isBlank(str2)) {
-                    str2 = null;
+
+            label23: {
+                if (var2 != null) {
+                    var1 = var2.optString("message");
+                    if (var1 != null) {
+                        CharSequence var6 = var1;
+                        CharSequence var4 = var6;
+                        if (StringsKt.isBlank(var6)) {
+                            var4 = null;
+                        }
+
+                        String var7 = (String)var4;
+                        var1 = var7;
+                        if (var7 != null) {
+                            break label23;
+                        }
+                    }
                 }
-                str = str2;
+
+                var1 = "Model Laboratory configuration saved.";
             }
-            str = "Model Laboratory configuration saved.";
-            this$0.message = str;
-            this$0.toast("Model Laboratory saved");
+
+            var0.message = var1;
+            var0.toast("Model Laboratory saved");
         }
-        this$0.render(true);
+
+        var0.render(true);
         return Unit.INSTANCE;
     }
 
@@ -467,43 +474,41 @@ public final class GxModelLabPage extends GxPage {
         }, 8, null);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:12:0x0028, code lost:
-    
-        if (r0 == null) goto L13;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit prepareModel$lambda$20(final GxModelLabPage this$0, String e, JSONObject p) {
-        String str;
-        String optString;
-        if (e != null) {
-            this$0.saving = false;
-            this$0.error = e;
-            this$0.toast(e);
-            this$0.render(true);
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit prepareModel$lambda$20(GxModelLabPage var0, String var1, JSONObject var2) {
+        if (var1 != null) {
+            var0.saving = false;
+            var0.error = var1;
+            var0.toast(var1);
+            var0.render(true);
+            return Unit.INSTANCE;
+        } else {
+            label20: {
+                if (var2 != null) {
+                    var1 = var2.optString("message");
+                    if (var1 != null) {
+                        CharSequence var6 = var1;
+                        CharSequence var4 = var6;
+                        if (StringsKt.isBlank(var6)) {
+                            var4 = null;
+                        }
+
+                        String var7 = (String)var4;
+                        var1 = var7;
+                        if (var7 != null) {
+                            break label20;
+                        }
+                    }
+                }
+
+                var1 = "eGPU variant download queued.";
+            }
+
+            var0.message = var1;
+            var0.toast("eGPU variant download queued");
+            var0.refresh(new GxModelLabPage$$ExternalSyntheticLambda12(var0));
             return Unit.INSTANCE;
         }
-        if (p != null && (optString = p.optString("message")) != null) {
-            String str2 = optString;
-            if (StringsKt.isBlank(str2)) {
-                str2 = null;
-            }
-            str = str2;
-        }
-        str = "eGPU variant download queued.";
-        this$0.message = str;
-        this$0.toast("eGPU variant download queued");
-        this$0.refresh(new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda12
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit prepareModel$lambda$20$lambda$19;
-                prepareModel$lambda$20$lambda$19 = GxModelLabPage.prepareModel$lambda$20$lambda$19(this$0);
-                return prepareModel$lambda$20$lambda$19;
-            }
-        });
-        return Unit.INSTANCE;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -513,40 +518,46 @@ public final class GxModelLabPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:13:0x0030, code lost:
-    
-        if (r4 == null) goto L18;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void deleteModel(final String id) {
-        String str;
-        if (this.saving) {
-            return;
-        }
-        if (id.length() == 0) {
-            return;
-        }
-        JSONObject it = byId(id);
-        if (it != null) {
-            String str2 = null;
-            String gxModelsText$default = GxModelsKt.gxModelsText$default(it, "label", null, 4, null);
-            if (!StringsKt.isBlank(gxModelsText$default)) {
-                str2 = gxModelsText$default;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final void deleteModel(String var1) {
+        if (!this.saving) {
+            boolean var2;
+            if (var1.length() == 0) {
+                var2 = true;
+            } else {
+                var2 = false;
             }
-            str = str2;
-        }
-        str = id;
-        String label = str;
-        confirm("Delete eGPU variant", "Delete the eGPU variant for \"" + label + "\"? The normal on-device model will not be removed.", "Delete", new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda5
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit deleteModel$lambda$25;
-                deleteModel$lambda$25 = GxModelLabPage.deleteModel$lambda$25(GxModelLabPage.this, id);
-                return deleteModel$lambda$25;
+
+            if (!var2) {
+                String var5;
+                label24: {
+                    JSONObject var4 = this.byId(var1);
+                    if (var4 != null) {
+                        CharSequence var3 = null;
+                        CharSequence var6 = GxModelsKt.gxModelsText$default(var4, "label", null, 4, null);
+                        if (!StringsKt.isBlank(var6)) {
+                            var3 = var6;
+                        }
+
+                        String var7 = (String)var3;
+                        var5 = var7;
+                        if (var7 != null) {
+                            break label24;
+                        }
+                    }
+
+                    var5 = var1;
+                }
+
+                this.confirm(
+                    "Delete eGPU variant",
+                    "Delete the eGPU variant for \"" + var5 + "\"? The normal on-device model will not be removed.",
+                    "Delete",
+                    new GxModelLabPage$$ExternalSyntheticLambda5(this, var1)
+                );
+                return;
             }
-        });
+        }
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -570,38 +581,44 @@ public final class GxModelLabPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x0029, code lost:
-    
-        if (r0 == null) goto L16;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit deleteModel$lambda$25$lambda$24(GxModelLabPage this$0, String e, JSONObject p) {
-        String str;
-        String optString;
-        this$0.saving = false;
-        if (e != null) {
-            this$0.error = e;
-            this$0.toast(e);
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit deleteModel$lambda$25$lambda$24(GxModelLabPage var0, String var1, JSONObject var2) {
+        var0.saving = false;
+        if (var1 != null) {
+            var0.error = var1;
+            var0.toast(var1);
         } else {
-            this$0.dirty = false;
-            if (p != null) {
-                this$0.applyPayload(p);
+            var0.dirty = false;
+            if (var2 != null) {
+                var0.applyPayload(var2);
             }
-            if (p != null && (optString = p.optString("message")) != null) {
-                String str2 = optString;
-                if (StringsKt.isBlank(str2)) {
-                    str2 = null;
+
+            label23: {
+                if (var2 != null) {
+                    var1 = var2.optString("message");
+                    if (var1 != null) {
+                        CharSequence var6 = var1;
+                        CharSequence var4 = var6;
+                        if (StringsKt.isBlank(var6)) {
+                            var4 = null;
+                        }
+
+                        String var7 = (String)var4;
+                        var1 = var7;
+                        if (var7 != null) {
+                            break label23;
+                        }
+                    }
                 }
-                str = str2;
+
+                var1 = "eGPU variant deleted.";
             }
-            str = "eGPU variant deleted.";
-            this$0.message = str;
-            this$0.toast("eGPU variant deleted");
+
+            var0.message = var1;
+            var0.toast("eGPU variant deleted");
         }
-        this$0.render(true);
+
+        var0.render(true);
         return Unit.INSTANCE;
     }
 

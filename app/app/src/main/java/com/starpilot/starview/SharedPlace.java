@@ -17,6 +17,7 @@ import kotlin.text.StringsKt;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import kotlin.jvm.internal.Ref.DoubleRef;
 
 /* compiled from: SharedPlace.kt */
 public final class SharedPlace {
@@ -111,131 +112,244 @@ public final class SharedPlace {
         return sharedPlace.parse(str, str2);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:39:0x00c6, code lost:
-    
-        if (r0 == null) goto L125;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:55:0x0188, code lost:
-    
-        if (r11 == false) goto L63;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final Place parse(String text, String fullUrl) {
-        String u;
-        MatchResult it;
-        List<String> groupValues;
-        String str;
-        String it2;
-        Intrinsics.checkNotNullParameter(text, "text");
-        Iterable $this$map$iv = StringsKt.lines(text);
-        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        for (Object item$iv$iv : $this$map$iv) {
-            destination$iv$iv.add(StringsKt.trim((CharSequence) item$iv$iv).toString());
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public final SharedPlace.Place parse(String var1, String var2) {
+        Object var18 = null; Object var64 = null; // declarations Vineflower left out
+        Intrinsics.checkNotNullParameter(var1, "text");
+        Iterable var7 = StringsKt.lines(var1);
+        var var6 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var7, 10));
+        Iterator var48 = var7.iterator();
+
+        while (var48.hasNext()) {
+            var6.add(StringsKt.trim((String & CharSequence)var48.next()).toString());
         }
-        Iterable $this$filter$iv = (List) destination$iv$iv;
-        Collection destination$iv$iv2 = new ArrayList();
-        Iterator it3 = $this$filter$iv.iterator();
+
+        List var44 = var6;
+        var7 = var44;
+        var6 = new ArrayList();
+        Iterator var9 = var7.iterator();
+
         while (true) {
-            if (!it3.hasNext()) {
-                break;
-            }
-            Object element$iv$iv = it3.next();
-            String it4 = (String) element$iv$iv;
-            if ((!(it4.length() > 0) || StringsKt.startsWith(it4, "http", false) || StringsKt.startsWith(it4, "geo:", false)) ? false : true) {
-                destination$iv$iv2.add(element$iv$iv);
-            }
-        }
-        List lines = (List) destination$iv$iv2;
-        String name = (String) CollectionsKt.getOrNull(lines, 0);
-        String url = "";
-        if (name == null) {
-            name = "";
-        }
-        String str2 = (String) CollectionsKt.getOrNull(lines, 1);
-        if (str2 == null) {
-            str2 = "";
-        }
-        String address = str2;
-        if (fullUrl == null) {
-            String it5 = link(text);
-            if (it5 == null) {
-                it5 = StringsKt.trim((CharSequence) text).toString();
-                if (!StringsKt.startsWith(it5, "geo:", false)) {
-                    it5 = null;
+            boolean var5 = var9.hasNext();
+            boolean var4 = true;
+            if (!var5) {
+                List var61 = var6;
+                String var59 = CollectionsKt.getOrNull(var61, 0);
+                String var51 = "";
+                String var46 = var59;
+                if (var59 == null) {
+                    var46 = "";
                 }
-            }
-            url = it5;
-        } else {
-            url = fullUrl;
-        }
-        try {
-            u = URLDecoder.decode(url, "UTF-8");
-        } catch (Exception e) {
-            u = url;
-        }
-        Ref.DoubleRef lat = new Ref.DoubleRef();
-        lat.element = Double.NaN;
-        Ref.DoubleRef lon = new Ref.DoubleRef();
-        lon.element = Double.NaN;
-        Regex regex = new Regex("!3d" + NUM + "!4d" + NUM);
-        Intrinsics.checkNotNull(u);
-        if (!parse$take(lat, lon, regex.find(u, 0))) {
-            MatchResult it6 = (new Regex("^geo:" + NUM + "," + NUM)).find(u, 0);
-            if (it6 != null) {
-                if (Double.parseDouble(it6.getGroupValues().get(1)) == 0.0d) {
-                    boolean z = (Double.parseDouble(it6.getGroupValues().get(2)) > 0.0d ? 1 : (Double.parseDouble(it6.getGroupValues().get(2)) == 0.0d ? 0 : -1)) == 0 ? false : true;
+
+                String var62 = CollectionsKt.getOrNull(var61, 1);
+                var59 = var62;
+                if (var62 == null) {
+                    var59 = "";
                 }
-            }
-            it6 = null;
-            if (!parse$take(lat, lon, it6)) {
-                if (!parse$take(lat, lon, (new Regex("[?&](?:q|ll|query|destination|daddr|sll)=" + NUM + ",\\s*" + NUM)).find(u, 0))) {
-                    if (!parse$take(lat, lon, (new Regex("geo:0,0\\?q=" + NUM + "," + NUM)).find(u, 0))) {
-                        parse$take(lat, lon, (new Regex("@" + NUM + "," + NUM)).find(u, 0));
+
+                if (var2 == null) {
+                    String var63 = this.link(var1);
+                    var2 = var63;
+                    if (var63 == null) {
+                        var1 = StringsKt.trim(var1).toString();
+                        if (!StringsKt.startsWith(var1, "geo:", false)) {
+                            var1 = null;
+                        }
+
+                        var2 = var1;
+                        if (var1 == null) {
+                            var2 = var51;
+                        }
                     }
                 }
-            }
-        }
-        if (name.length() == 0) {
-            MatchResult it7 = (new Regex("/place/([^/@]+)")).find(u, 0);
-            if (it7 != null) {
-                name = StringsKt.replace(it7.getGroupValues().get(1), '+', ' ', false);
-            } else {
-                MatchResult it8 = (new Regex("\\(([^)]+)\\)\\s*$")).find(u, 0);
-                if (it8 != null) {
-                    name = it8.getGroupValues().get(1);
+
+                try {
+                    var64 = URLDecoder.decode(var2, "UTF-8");
+                } catch (Exception var13) {
+                    var64 = var2;
+                }
+
+                DoubleRef var11 = new DoubleRef();
+                var11.element = Double.NaN;
+                DoubleRef var10 = new DoubleRef();
+                var10.element = Double.NaN;
+                String var52 = NUM;
+                var1 = NUM;
+                Regex var16 = new Regex("!3d" + var52 + "!4d" + var1);
+                Intrinsics.checkNotNull(var64);
+                if (!parse$take(var11, var10, var16.find(var64, 0))) {
+                    label150: {
+                        String var53 = NUM;
+                        var1 = NUM;
+                        var18 = (new Regex("^geo:" + var53 + "," + var1)).find(var64, 0);
+                        if (var18 != null) {
+                            boolean var37;
+                            if (Double.parseDouble(var18.getGroupValues().get(1)) == 0.0) {
+                                var37 = true;
+                            } else {
+                                var37 = false;
+                            }
+
+                            label146: {
+                                if (var37) {
+                                    if (Double.parseDouble(var18.getGroupValues().get(2)) == 0.0) {
+                                        var37 = true;
+                                    } else {
+                                        var37 = false;
+                                    }
+
+                                    if (var37) {
+                                        var37 = false;
+                                        break label146;
+                                    }
+                                }
+
+                                var37 = true;
+                            }
+
+                            if (var37) {
+                                break label150;
+                            }
+                        }
+
+                        var18 = null;
+                    }
+
+                    if (!parse$take(var11, var10, var18)) {
+                        String var54 = NUM;
+                        var1 = NUM;
+                        if (!parse$take(
+                            var11, var10, (new Regex("[?&](?:q|ll|query|destination|daddr|sll)=" + var54 + ",\\s*" + var1)).find(var64, 0)
+                        )) {
+                            String var55 = NUM;
+                            var1 = NUM;
+                            if (!parse$take(var11, var10, (new Regex("geo:0,0\\?q=" + var55 + "," + var1)).find(var64, 0))) {
+                                String var56 = NUM;
+                                var1 = NUM;
+                                parse$take(var11, var10, (new Regex("@" + var56 + "," + var1)).find(var64, 0));
+                            }
+                        }
+                    }
+                }
+
+                boolean var40;
+                if (var46.length() == 0) {
+                    var40 = true;
                 } else {
-                    MatchResult find$default = (new Regex("[?&](?:q|query|address|daddr)=([^&]+)")).find(u, 0);
-                    if (find$default != null && (groupValues = find$default.getGroupValues()) != null && (str = groupValues.get(1)) != null && (it2 = StringsKt.replace(str, '+', ' ', false)) != null) {
-                        if (new Regex("^" + NUM + ",\\s*" + NUM + "$").matches(it2)) {
-                            it2 = null;
+                    var40 = false;
+                }
+
+                Object var23;
+                if (var40) {
+                    var23 = (new Regex("/place/([^/@]+)")).find(var64, 0);
+                    if (var23 != null) {
+                        var23 = StringsKt.replace(var23.getGroupValues().get(1), '+', ' ', false);
+                    } else {
+                        var23 = (new Regex("\\(([^)]+)\\)\\s*$")).find(var64, 0);
+                        if (var23 != null) {
+                            var23 = var23.getGroupValues().get(1);
+                        } else {
+                            label134: {
+                                var23 = (new Regex("[?&](?:q|query|address|daddr)=([^&]+)")).find(var64, 0);
+                                if (var23 != null) {
+                                    List var26 = var23.getGroupValues();
+                                    if (var26 != null) {
+                                        String var27 = (String)var26.get(1);
+                                        if (var27 != null) {
+                                            String var57 = StringsKt.replace(var27, '+', ' ', false);
+                                            if (var57 != null) {
+                                                String var12 = NUM;
+                                                String var28 = NUM;
+                                                if (new Regex("^" + var12 + ",\\s*" + var28 + "$").matches(var57)) {
+                                                    var57 = null;
+                                                }
+
+                                                var23 = var46;
+                                                if (var57 != null) {
+                                                    var23 = var57;
+                                                }
+                                                break label134;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                var23 = var46;
+                            }
                         }
-                        if (it2 != null) {
-                            name = it2;
+                    }
+                } else {
+                    var23 = var46;
+                }
+
+                Object var47 = var23;
+                if (StringsKt.startsWith(var2, "geo:", false)) {
+                    if (((CharSequence)var23).length() == 0) {
+                        var40 = true;
+                    } else {
+                        var40 = false;
+                    }
+
+                    var47 = var23;
+                    if (var40) {
+                        MatchResult var32 = (new Regex("[?&]q=([^&(]+)")).find(var64, 0);
+                        var47 = var23;
+                        if (var32 != null) {
+                            var47 = StringsKt.trim(StringsKt.replace(var32.getGroupValues().get(1), '+', ' ', false)).toString();
                         }
                     }
                 }
+
+                Iterable var33 = CollectionsKt.listOf(new String[]{(String)var47, var59});
+                var var29 = new ArrayList();
+
+                for (Object var58 : var33) {
+                    if (((String)var58).length() > 0) {
+                        var40 = true;
+                    } else {
+                        var40 = false;
+                    }
+
+                    if (var40) {
+                        var29.add(var58);
+                    }
+                }
+
+                List var30 = var29;
+                var2 = CollectionsKt.joinToString(var30, ", ", "", "", -1, "...", null);
+                var23 = (CharSequence)var47;
+                if (var23.length() == 0) {
+                    var40 = true;
+                } else {
+                    var40 = false;
+                }
+
+                if (var40) {
+                    var23 = "Shared place";
+                }
+
+                return new SharedPlace.Place((String)var23, var59, var11.element, var10.element, var2);
+            }
+
+            Object var8 = var9.next();
+            String var50 = (String)var8;
+            boolean var3;
+            if (var50.length() > 0) {
+                var3 = true;
+            } else {
+                var3 = false;
+            }
+
+            if (var3 && !StringsKt.startsWith(var50, "http", false) && !StringsKt.startsWith(var50, "geo:", false)) {
+                var3 = var4;
+            } else {
+                var3 = false;
+            }
+
+            if (var3) {
+                var6.add(var8);
             }
         }
-        if (StringsKt.startsWith(url, "geo:", false)) {
-            if ((name.length() == 0) && (it = (new Regex("[?&]q=([^&(]+)")).find(u, 0)) != null) {
-                name = StringsKt.trim((CharSequence) StringsKt.replace(it.getGroupValues().get(1), '+', ' ', false)).toString();
-            }
-        }
-        Iterable $this$filter$iv2 = CollectionsKt.listOf((Object[]) new String[]{name, address});
-        Collection destination$iv$iv3 = new ArrayList();
-        for (Object element$iv$iv2 : $this$filter$iv2) {
-            if (((String) element$iv$iv2).length() > 0) {
-                destination$iv$iv3.add(element$iv$iv2);
-            }
-        }
-        String query = CollectionsKt.joinToString((List) destination$iv$iv3, ", ", "", "", -1, "...", null);
-        String str3 = name;
-        if (str3.length() == 0) {
-            str3 = "Shared place";
-        }
-        return new Place(str3, address, lat.element, lon.element, query);
     }
 
     private static final boolean parse$take(Ref.DoubleRef lat, Ref.DoubleRef lon, MatchResult m) {

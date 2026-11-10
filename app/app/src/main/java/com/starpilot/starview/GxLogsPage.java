@@ -63,6 +63,10 @@ import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import android.content.Context;
+import android.text.TextUtils.TruncateAt;
+import android.view.ViewGroup.LayoutParams;
+import kotlin.jvm.internal.Ref.ObjectRef;
 
 /* compiled from: GxLogs.kt */
 public final class GxLogsPage extends GxPage {
@@ -130,11 +134,11 @@ public final class GxLogsPage extends GxPage {
     private List<? extends JSONObject> tsSnapshot;
     private JSONObject tsVehicle;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxLogsPage(Activity act, GxHost gx) {
-        super(act, gx);
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(gx, "gx");
+    /* VF: from Vineflower (jadx: ) */
+    public GxLogsPage(Activity var1, GxHost var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "gx");
         this.errFiles = CollectionsKt.emptyList();
         this.errLoading = true;
         this.errFilter = "";
@@ -151,8 +155,17 @@ public final class GxLogsPage extends GxPage {
         this.monHistory = CollectionsKt.emptyList();
         this.monProcs = CollectionsKt.emptyList();
         this.monTiles = new HashMap<>();
-        this.monSortCols = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("name", "Process"), TuplesKt.to("pid", "PID"), TuplesKt.to("cpu", "CPU"), TuplesKt.to("memoryMiB", "Memory"), TuplesKt.to("user", "User"), TuplesKt.to("state", "Status")});
-        this.monWeights = new float[]{3.4f, 0.9f, 0.9f, 1.2f, 1.1f, 1.1f};
+        this.monSortCols = CollectionsKt.listOf(
+            new Pair[]{
+                TuplesKt.to("name", "Process"),
+                TuplesKt.to("pid", "PID"),
+                TuplesKt.to("cpu", "CPU"),
+                TuplesKt.to("memoryMiB", "Memory"),
+                TuplesKt.to("user", "User"),
+                TuplesKt.to("state", "Status")
+            }
+        );
+        this.monWeights = new float[]{3.4F, 0.9F, 0.9F, 1.2F, 1.1F, 1.1F};
         this.tsLoading = true;
         this.tsBusySection = "";
         this.tsError = "";
@@ -160,12 +173,7 @@ public final class GxLogsPage extends GxPage {
         this.tsVehicle = new JSONObject();
         this.tsSnapshot = CollectionsKt.emptyList();
         this.tsSections = CollectionsKt.emptyList();
-        this.tsSearchRun = new Runnable() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda5
-            @Override // java.lang.Runnable
-            public final void run() {
-                GxLogsPage.this.tsRender();
-            }
-        };
+        this.tsSearchRun = new GxLogsPage$$ExternalSyntheticLambda5(this);
     }
 
     @Override // com.starpilot.starview.GxPage
@@ -1260,32 +1268,38 @@ public final class GxLogsPage extends GxPage {
         }, 24, null);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r1v26, types: [T, java.lang.String] */
-    /* JADX WARN: Type inference failed for: r1v3, types: [T, java.lang.String] */
-    public static final Unit tmuxRename$lambda$57(final String $old, final GxLogsPage this$0, String input) {
-        Intrinsics.checkNotNullParameter(input, "input");
-        final Ref.ObjectRef newName = new Ref.ObjectRef();
-        newName.element = StringsKt.trim((CharSequence) input).toString();
-        if ((((CharSequence) newName.element).length() == 0) || Intrinsics.areEqual(newName.element, $old)) {
-            return Unit.INSTANCE;
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public static final Unit tmuxRename$lambda$57(String var0, GxLogsPage var1, String var2) {
+        Intrinsics.checkNotNullParameter(var2, "input");
+        ObjectRef var4 = new ObjectRef();
+        var4.element = (T)StringsKt.trim(var2).toString();
+        boolean var3;
+        if (((CharSequence)var4.element).length() == 0) {
+            var3 = true;
+        } else {
+            var3 = false;
         }
-        if (!StringsKt.endsWith((String) newName.element, ".json", false)) {
-            newName.element += ".json";
-        }
-        if (Intrinsics.areEqual(newName.element, $old)) {
-            return Unit.INSTANCE;
-        }
-        GxPage.send$default(this$0, "PUT", "/api/tmux_log/rename/" + this$0.enc($old) + "/" + this$0.enc((String) newName.element), null, 0L, new Function2() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda34
-            @Override // kotlin.jvm.functions.Function2
-            public final Object invoke(Object obj, Object obj2) {
-                Unit tmuxRename$lambda$57$lambda$56;
-                tmuxRename$lambda$57$lambda$56 = GxLogsPage.tmuxRename$lambda$57$lambda$56(this$0, $old, newName, (String) obj, (JSONObject) obj2);
-                return tmuxRename$lambda$57$lambda$56;
+
+        if (!var3 && !Intrinsics.areEqual(var4.element, var0)) {
+            if (!StringsKt.endsWith((String)var4.element, ".json", false)) {
+                Object var7 = var4.element;
+                var4.element = (T)(var7 + ".json");
             }
-        }, 12, null);
-        return Unit.INSTANCE;
+
+            if (Intrinsics.areEqual(var4.element, var0)) {
+                return Unit.INSTANCE;
+            } else {
+                GxPage var6 = var1;
+                var2 = var1.enc(var0);
+                String var5 = var1.enc((String)var4.element);
+                GxPage.send$default(
+                    var6, "PUT", "/api/tmux_log/rename/" + var2 + "/" + var5, null, 0L, new GxLogsPage$$ExternalSyntheticLambda34(var1, var0, var4), 12, null
+                );
+                return Unit.INSTANCE;
+            }
+        } else {
+            return Unit.INSTANCE;
+        }
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2032,45 +2046,37 @@ public final class GxLogsPage extends GxPage {
         }
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterative(DepthRegionTraversal.java:31)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visit(SwitchOverStringVisitor.java:60)
-     */
-    private static final Object monCompare$key(GxLogsPage this$0, GxLogsProc p) {
-        String str = this$0.monSort;
-        switch (str.hashCode()) {
+    /* VF: from Vineflower (jadx: ) */
+    private static final Object monCompare$key(GxLogsPage var0, GxLogsProc var1) {
+        String var2 = var0.monSort;
+        switch (var2.hashCode()) {
             case 98728:
-                if (str.equals("cpu")) {
-                    return p.getCpu();
+                if (var2.equals("cpu")) {
+                    return var1.getCpu();
                 }
                 break;
             case 110987:
-                if (str.equals("pid")) {
-                    return Double.valueOf(p.getPid());
+                if (var2.equals("pid")) {
+                    return (double)var1.getPid();
                 }
                 break;
             case 3373707:
-                if (str.equals("name")) {
-                    return p.getName();
+                if (var2.equals("name")) {
+                    return var1.getName();
                 }
                 break;
             case 3599307:
-                if (str.equals("user")) {
-                    return p.getUser();
+                if (var2.equals("user")) {
+                    return var1.getUser();
                 }
                 break;
             case 1726596453:
-                if (str.equals("memoryMiB")) {
-                    return p.getMem();
+                if (var2.equals("memoryMiB")) {
+                    return var1.getMem();
                 }
-                break;
         }
-        return p.getState();
+
+        return var1.getState();
     }
 
     private final int monCompare(GxLogsProc a, GxLogsProc b) {
@@ -2090,223 +2096,271 @@ public final class GxLogsPage extends GxPage {
         return res != 0 ? res : a.getPid() - b.getPid();
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:30:0x00da, code lost:
-    
-        if (kotlin.text.StringsKt.contains((java.lang.CharSequence) r3, (java.lang.CharSequence) r1, false) != false) goto L30;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:17:0x00e6  */
-    /* JADX WARN: Removed duplicated region for block: B:20:0x00e9 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     private final void monPaintTable() {
-        String q;
-        List rows;
-        String emptyTag;
-        LinearLayout linearLayout;
-        Iterable $this$filter$iv;
-        int $i$f$filter;
-        boolean z;
-        if (this.monTable == null) {
-            return;
-        }
-        String q2 = StringsKt.trim((CharSequence) this.monQuery).toString().toLowerCase(Locale.ROOT);
-        Intrinsics.checkNotNullExpressionValue(q2, "toLowerCase(...)");
-        Iterable $this$filter$iv2 = this.monProcs;
-        int $i$f$filter2 = 0;
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv2) {
-            GxLogsProc p = (GxLogsProc) element$iv$iv;
-            if (!Intrinsics.areEqual(this.monScope, "all")) {
-                if (!(Intrinsics.areEqual(this.monScope, "comma") ? Intrinsics.areEqual(p.getUser(), "comma") : !p.getKernel())) {
-                    $this$filter$iv = $this$filter$iv2;
-                    $i$f$filter = $i$f$filter2;
-                    z = false;
-                    if (!z) {
-                        destination$iv$iv.add(element$iv$iv);
+        if (this.monTable != null) {
+            String var8 = StringsKt.trim(this.monQuery).toString().toLowerCase(Locale.ROOT);
+            Intrinsics.checkNotNullExpressionValue(var8, "toLowerCase(...)");
+            Iterable var6 = this.monProcs;
+            boolean var5 = false;
+            var var7 = new ArrayList();
+
+            for (Object var10 : var6) {
+                int var16;
+                label167: {
+                    label180: {
+                        GxLogsProc var14 = (GxLogsProc)var10;
+                        if (!Intrinsics.areEqual(this.monScope, "all")) {
+                            boolean var4;
+                            if (Intrinsics.areEqual(this.monScope, "comma")) {
+                                var4 = Intrinsics.areEqual(var14.getUser(), "comma");
+                            } else if (!var14.getKernel()) {
+                                var4 = true;
+                            } else {
+                                var4 = false;
+                            }
+
+                            if (!var4) {
+                                break label180;
+                            }
+                        }
+
+                        if (var8.length() == 0) {
+                            var16 = (((boolean)true) ? 1 : 0);
+                        } else {
+                            var16 = (((boolean)false) ? 1 : 0);
+                        }
+
+                        if (!var16) {
+                            String var13 = var14.getName();
+                            String var12 = var14.getFeature();
+                            var16 = var14.getPid();
+                            String var11 = var14.getUser();
+                            String var72 = this.monState(var14.getState());
+                            var11 = (var13 + " " + var12 + " " + var16 + " " + var11 + " " + var72).toLowerCase(Locale.ROOT);
+                            Intrinsics.checkNotNullExpressionValue(var11, "toLowerCase(...)");
+                            if (!StringsKt.contains(var11, var8, false)) {
+                                break label180;
+                            }
+                        }
+
+                        var16 = 1;
+                        break label167;
                     }
-                    $this$filter$iv2 = $this$filter$iv;
-                    $i$f$filter2 = $i$f$filter;
+
+                    var16 = 0;
+                }
+
+                if ((var16 != 0)) {
+                    var7.add(var10);
                 }
             }
-            if (q2.length() == 0) {
-                $this$filter$iv = $this$filter$iv2;
-                $i$f$filter = $i$f$filter2;
+
+            List var23 = var7;
+            List var46 = CollectionsKt.sortedWith(var23, new GxLogsPage$$ExternalSyntheticLambda38(new GxLogsPage$$ExternalSyntheticLambda37(this)));
+            TextView var32 = this.monCountNote;
+            TextView var24 = var32;
+            if (var32 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("monCountNote");
+                var24 = null;
+            }
+
+            int var17 = var46.size();
+            String var33;
+            if (this.optNum(this.monSnap, "cpuPercent") == null) {
+                var33 = "Collecting the first CPU sample…";
             } else {
-                $this$filter$iv = $this$filter$iv2;
-                $i$f$filter = $i$f$filter2;
-                String lowerCase = (p.getName() + " " + p.getFeature() + " " + p.getPid() + " " + p.getUser() + " " + monState(p.getState())).toLowerCase(Locale.ROOT);
-                Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+                var33 = "";
             }
-            z = true;
-            if (!z) {
-            }
-            $this$filter$iv2 = $this$filter$iv;
-            $i$f$filter2 = $i$f$filter;
-        }
-        final Function2 function2 = new Function2() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda37
-            @Override // kotlin.jvm.functions.Function2
-            public final Object invoke(Object obj, Object obj2) {
-                int monPaintTable$lambda$91;
-                monPaintTable$lambda$91 = GxLogsPage.monPaintTable$lambda$91(GxLogsPage.this, (GxLogsProc) obj, (GxLogsProc) obj2);
-                return Integer.valueOf(monPaintTable$lambda$91);
-            }
-        };
-        List<GxLogsProc> rows2 = CollectionsKt.sortedWith((List) destination$iv$iv, new Comparator() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda38
-            @Override // java.util.Comparator
-            public final int compare(Object obj, Object obj2) {
-                int monPaintTable$lambda$92;
-                monPaintTable$lambda$92 = GxLogsPage.monPaintTable$lambda$92(function2, obj, obj2);
-                return monPaintTable$lambda$92;
-            }
-        });
-        TextView textView = this.monCountNote;
-        if (textView == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("monCountNote");
-            textView = null;
-        }
-        textView.setText(rows2.size() + " processes shown. " + (optNum(this.monSnap, "cpuPercent") == null ? "Collecting the first CPU sample…" : ""));
-        String emptyTag2 = "empty";
-        if (rows2.isEmpty()) {
-            LinearLayout linearLayout2 = this.monTable;
-            if (linearLayout2 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("monTable");
-                linearLayout2 = null;
-            }
-            linearLayout2.removeAllViews();
-            LinearLayout linearLayout3 = this.monTable;
-            if (linearLayout3 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("monTable");
-                linearLayout = null;
-            } else {
-                linearLayout = linearLayout3;
-            }
-            TextView $this$monPaintTable_u24lambda_u2493 = empty("No matching processes.");
-            $this$monPaintTable_u24lambda_u2493.setTag("empty");
-            linearLayout.addView($this$monPaintTable_u24lambda_u2493);
-            return;
-        }
-        LinearLayout linearLayout4 = this.monTable;
-        if (linearLayout4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("monTable");
-            linearLayout4 = null;
-        }
-        if (linearLayout4.getChildCount() > 0) {
-            LinearLayout linearLayout5 = this.monTable;
-            if (linearLayout5 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("monTable");
-                linearLayout5 = null;
-            }
-            if (Intrinsics.areEqual(linearLayout5.getChildAt(0).getTag(), "empty")) {
-                LinearLayout linearLayout6 = this.monTable;
-                if (linearLayout6 == null) {
+
+            var24.setText(var17 + " processes shown. " + var33);
+            String var53 = "empty";
+            if (var46.isEmpty()) {
+                LinearLayout var42 = this.monTable;
+                LinearLayout var30 = var42;
+                if (var42 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("monTable");
-                    linearLayout6 = null;
+                    var30 = null;
                 }
-                linearLayout6.removeAllViews();
-            }
-        }
-        while (true) {
-            LinearLayout linearLayout7 = this.monTable;
-            if (linearLayout7 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("monTable");
-                linearLayout7 = null;
-            }
-            if (linearLayout7.getChildCount() <= rows2.size()) {
-                break;
-            }
-            LinearLayout linearLayout8 = this.monTable;
-            if (linearLayout8 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("monTable");
-                linearLayout8 = null;
-            }
-            LinearLayout linearLayout9 = this.monTable;
-            if (linearLayout9 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("monTable");
-                linearLayout9 = null;
-            }
-            linearLayout8.removeViewAt(linearLayout9.getChildCount() - 1);
-        }
-        int i = 0;
-        for (GxLogsProc p2 : rows2) {
-            int i2 = i;
-            i++;
-            LinearLayout linearLayout10 = this.monTable;
-            if (linearLayout10 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("monTable");
-                linearLayout10 = null;
-            }
-            View childAt = linearLayout10.getChildAt(i2);
-            LinearLayout $this$monPaintTable_u24lambda_u2495 = childAt instanceof LinearLayout ? (LinearLayout) childAt : null;
-            if ($this$monPaintTable_u24lambda_u2495 != null) {
-                q = q2;
-                rows = rows2;
-                emptyTag = emptyTag2;
+
+                var30.removeAllViews();
+                LinearLayout var31 = this.monTable;
+                if (var31 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("monTable");
+                    var31 = null;
+                }
+
+                TextView var43 = this.empty("No matching processes.");
+                var43.setTag("empty");
+                var31.addView((View)var43);
+                return;
             } else {
-                $this$monPaintTable_u24lambda_u2495 = new LinearLayout(getAct());
-                $this$monPaintTable_u24lambda_u2495.setOrientation(0);
-                $this$monPaintTable_u24lambda_u2495.setGravity(16);
-                $this$monPaintTable_u24lambda_u2495.setPadding(0, getUi().dp(6), 0, getUi().dp(6));
-                int j = 0;
-                int length = this.monWeights.length;
-                while (j < length) {
-                    TextView $this$monPaintTable_u24lambda_u2495_u24lambda_u2494 = new TextView(getAct());
-                    String q3 = q2;
-                    $this$monPaintTable_u24lambda_u2495_u24lambda_u2494.setTextSize(15.0f);
-                    $this$monPaintTable_u24lambda_u2495_u24lambda_u2494.setTextColor(CarUi.Companion.getTEXT());
-                    if (j == 0) {
-                        $this$monPaintTable_u24lambda_u2495_u24lambda_u2494.setMaxLines(2);
-                        $this$monPaintTable_u24lambda_u2495_u24lambda_u2494.setEllipsize(TextUtils.TruncateAt.END);
-                    } else {
-                        $this$monPaintTable_u24lambda_u2495_u24lambda_u2494.setSingleLine(true);
+                LinearLayout var34 = this.monTable;
+                LinearLayout var25 = var34;
+                if (var34 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("monTable");
+                    var25 = null;
+                }
+
+                if (var25.getChildCount() > 0) {
+                    LinearLayout var35 = this.monTable;
+                    LinearLayout var26 = var35;
+                    if (var35 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("monTable");
+                        var26 = null;
                     }
-                    $this$monPaintTable_u24lambda_u2495_u24lambda_u2494.setPadding(0, 0, getUi().dp(6), 0);
-                    $this$monPaintTable_u24lambda_u2495.addView($this$monPaintTable_u24lambda_u2495_u24lambda_u2494, new LinearLayout.LayoutParams(0, -2, this.monWeights[j]));
-                    j++;
-                    emptyTag2 = emptyTag2;
-                    q2 = q3;
-                    rows2 = rows2;
+
+                    if (Intrinsics.areEqual(var26.getChildAt(0).getTag(), "empty")) {
+                        LinearLayout var36 = this.monTable;
+                        LinearLayout var27 = var36;
+                        if (var36 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("monTable");
+                            var27 = null;
+                        }
+
+                        var27.removeAllViews();
+                    }
                 }
-                q = q2;
-                rows = rows2;
-                emptyTag = emptyTag2;
-                LinearLayout linearLayout11 = this.monTable;
-                if (linearLayout11 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("monTable");
-                    linearLayout11 = null;
+
+                while (true) {
+                    LinearLayout var37 = this.monTable;
+                    LinearLayout var28 = var37;
+                    if (var37 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("monTable");
+                        var28 = null;
+                    }
+
+                    if (var28.getChildCount() <= var46.size()) {
+                        Iterator var70 = var46.iterator();
+                        var17 = 0;
+                        String var40 = var53;
+
+                        while (var70.hasNext()) {
+                            int var2 = var17 + 1;
+                            GxLogsProc var71 = (GxLogsProc)var70.next();
+                            LinearLayout var54 = this.monTable;
+                            LinearLayout var47 = var54;
+                            if (var54 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("monTable");
+                                var47 = null;
+                            }
+
+                            View var48 = var47.getChildAt(var17);
+                            LinearLayout var49;
+                            if (var48 instanceof LinearLayout) {
+                                var49 = (LinearLayout & View)var48;
+                            } else {
+                                var49 = null;
+                            }
+
+                            String var41;
+                            if (var49 != null) {
+                                var41 = var8;
+                                var8 = var40;
+                            } else {
+                                var49 = new LinearLayout((Context)this.getAct());
+                                var49.setOrientation(0);
+                                var49.setGravity(16);
+                                var49.setPadding(0, this.getUi().dp(6), 0, this.getUi().dp(6));
+                                var17 = 0;
+
+                                for (int var3 = this.monWeights.length; var17 < var3; var17++) {
+                                    TextView var55 = new TextView((Context)this.getAct());
+                                    var55.setTextSize(15.0F);
+                                    var55.setTextColor(CarUi.Companion.getTEXT());
+                                    if (var17 == 0) {
+                                        var55.setMaxLines(2);
+                                        var55.setEllipsize(TruncateAt.END);
+                                    } else {
+                                        var55.setSingleLine(true);
+                                    }
+
+                                    var55.setPadding(0, 0, this.getUi().dp(6), 0);
+                                    var49.addView((View)var55, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, this.monWeights[var17])));
+                                }
+
+                                LinearLayout var66 = this.monTable;
+                                LinearLayout var44 = var66;
+                                if (var66 == null) {
+                                    Intrinsics.throwUninitializedPropertyAccessException("monTable");
+                                    var44 = null;
+                                }
+
+                                var44.addView((View)var49);
+                                var8 = var40;
+                                var41 = var8;
+                            }
+
+                            SpannableStringBuilder var58 = new SpannableStringBuilder(var71.getName());
+                            int var20;
+                            if (var71.getFeature().length() > 0) {
+                                var20 = 1;
+                            } else {
+                                var20 = 0;
+                            }
+
+                            if ((var20 != 0)) {
+                                var20 = var58.length();
+                                String var67 = var71.getFeature();
+                                var58.append(" (" + var67 + ")");
+                                var58.setSpan(new ForegroundColorSpan(CarUi.Companion.getACCENT()), (((var20 != 0)) ? 1 : 0), var58.length(), 33);
+                            }
+
+                            View var68 = var49.getChildAt(0);
+                            Intrinsics.checkNotNull(var68, "null cannot be cast to non-null type android.widget.TextView");
+                            ((TextView)var68).setText((CharSequence)var58);
+                            View var59 = var49.getChildAt(1);
+                            Intrinsics.checkNotNull(var59, "null cannot be cast to non-null type android.widget.TextView");
+                            ((TextView)var59).setText(String.valueOf(var71.getPid()));
+                            View var60 = var49.getChildAt(2);
+                            Intrinsics.checkNotNull(var60, "null cannot be cast to non-null type android.widget.TextView");
+                            ((TextView)var60).setText(this.monNumber(var71.getCpu(), "%"));
+                            View var61 = var49.getChildAt(3);
+                            Intrinsics.checkNotNull(var61, "null cannot be cast to non-null type android.widget.TextView");
+                            TextView var62 = (TextView)var61;
+                            String var69 = monNumber$default(this, var71.getMem(), null, 2, null);
+                            var62.setText(var69 + " MiB");
+                            View var63 = var49.getChildAt(4);
+                            Intrinsics.checkNotNull(var63, "null cannot be cast to non-null type android.widget.TextView");
+                            ((TextView)var63).setText(var71.getUser());
+                            View var50 = var49.getChildAt(5);
+                            Intrinsics.checkNotNull(var50, "null cannot be cast to non-null type android.widget.TextView");
+                            TextView var51 = (TextView)var50;
+                            var51.setText(this.monState(var71.getState()));
+                            if (Intrinsics.areEqual(var71.getState(), "R")) {
+                                var20 = CarUi.Companion.getACCENT();
+                            } else if (!Intrinsics.areEqual(var71.getState(), "Z") && !Intrinsics.areEqual(var71.getState(), "D")) {
+                                var20 = CarUi.Companion.getDIM();
+                            } else {
+                                var20 = CarUi.Companion.getWARN();
+                            }
+
+                            var51.setTextColor(var20);
+                            var8 = var41;
+                            var40 = var8;
+                            var17 = var2;
+                        }
+
+                        return;
+                    }
+
+                    LinearLayout var38 = this.monTable;
+                    LinearLayout var29 = var38;
+                    if (var38 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("monTable");
+                        var29 = null;
+                    }
+
+                    LinearLayout var65 = this.monTable;
+                    LinearLayout var39 = var65;
+                    if (var65 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("monTable");
+                        var39 = null;
+                    }
+
+                    var29.removeViewAt(var39.getChildCount() - 1);
                 }
-                linearLayout11.addView($this$monPaintTable_u24lambda_u2495);
             }
-            LinearLayout line = $this$monPaintTable_u24lambda_u2495;
-            SpannableStringBuilder nameText = new SpannableStringBuilder(p2.getName());
-            if (p2.getFeature().length() > 0) {
-                int st = nameText.length();
-                nameText.append((CharSequence) (" (" + p2.getFeature() + ")"));
-                nameText.setSpan(new ForegroundColorSpan(CarUi.Companion.getACCENT()), st, nameText.length(), 33);
-            }
-            View childAt2 = line.getChildAt(0);
-            Intrinsics.checkNotNull(childAt2, "null cannot be cast to non-null type android.widget.TextView");
-            ((TextView) childAt2).setText(nameText);
-            View childAt3 = line.getChildAt(1);
-            Intrinsics.checkNotNull(childAt3, "null cannot be cast to non-null type android.widget.TextView");
-            ((TextView) childAt3).setText(String.valueOf(p2.getPid()));
-            View childAt4 = line.getChildAt(2);
-            Intrinsics.checkNotNull(childAt4, "null cannot be cast to non-null type android.widget.TextView");
-            ((TextView) childAt4).setText(monNumber(p2.getCpu(), "%"));
-            View childAt5 = line.getChildAt(3);
-            Intrinsics.checkNotNull(childAt5, "null cannot be cast to non-null type android.widget.TextView");
-            ((TextView) childAt5).setText(monNumber$default(this, p2.getMem(), null, 2, null) + " MiB");
-            View childAt6 = line.getChildAt(4);
-            Intrinsics.checkNotNull(childAt6, "null cannot be cast to non-null type android.widget.TextView");
-            ((TextView) childAt6).setText(p2.getUser());
-            View childAt7 = line.getChildAt(5);
-            Intrinsics.checkNotNull(childAt7, "null cannot be cast to non-null type android.widget.TextView");
-            TextView $this$monPaintTable_u24lambda_u2496 = (TextView) childAt7;
-            $this$monPaintTable_u24lambda_u2496.setText(monState(p2.getState()));
-            $this$monPaintTable_u24lambda_u2496.setTextColor(Intrinsics.areEqual(p2.getState(), "R") ? CarUi.Companion.getACCENT() : (Intrinsics.areEqual(p2.getState(), "Z") || Intrinsics.areEqual(p2.getState(), "D")) ? CarUi.Companion.getWARN() : CarUi.Companion.getDIM());
-            emptyTag2 = emptyTag;
-            q2 = q;
-            rows2 = rows;
         }
     }
 
@@ -2585,41 +2639,50 @@ public final class GxLogsPage extends GxPage {
         return (optJSONArray == null || (objects = objects(optJSONArray)) == null) ? CollectionsKt.emptyList() : objects;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:19:0x00e6, code lost:
-    
-        if (kotlin.text.StringsKt.contains((java.lang.CharSequence) r3, (java.lang.CharSequence) r1, false) != false) goto L20;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final List<JSONObject> tsVisible(JSONObject s) {
-        Iterable $this$filter$iv;
-        String q = StringsKt.trim((CharSequence) this.tsSearch).toString().toLowerCase(Locale.ROOT);
-        Intrinsics.checkNotNullExpressionValue(q, "toLowerCase(...)");
-        Iterable $this$filter$iv2 = tsItems(s);
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv2) {
-            JSONObject i = (JSONObject) element$iv$iv;
-            boolean z = false;
-            if (!this.tsOnlyChanged || tsChanged(i)) {
-                if (q.length() == 0) {
-                    $this$filter$iv = $this$filter$iv2;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final List<JSONObject> tsVisible(JSONObject var1) {
+        String var5 = StringsKt.trim(this.tsSearch).toString().toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(var5, "toLowerCase(...)");
+        Iterable var4 = this.tsItems(var1);
+        var var7 = new ArrayList();
+
+        for (Object var8 : var4) {
+            boolean var2;
+            JSONObject var12 = (JSONObject)var8;
+            boolean var3 = this.tsOnlyChanged;
+            var2 = false;
+            label32:
+            if (!var3 || this.tsChanged(var12)) {
+                if (var5.length() == 0) {
+                    var2 = true;
                 } else {
-                    $this$filter$iv = $this$filter$iv2;
-                    String lowerCase = (GxPage.str$default(this, s, "title", null, 2, null) + " " + GxPage.str$default(this, i, "key", null, 2, null) + " " + GxPage.str$default(this, i, "label", null, 2, null) + " " + tsFormat(tsVal(i, "value"))).toLowerCase(Locale.ROOT);
-                    Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                    z = false;
+                    var2 = false;
                 }
-                z = true;
-            } else {
-                $this$filter$iv = $this$filter$iv2;
+
+                if (!var2) {
+                    String var10 = GxPage.str$default(this, var1, "title", null, 2, null);
+                    String var11 = GxPage.str$default(this, var12, "key", null, 2, null);
+                    String var9 = GxPage.str$default(this, var12, "label", null, 2, null);
+                    String var17 = this.tsFormat(this.tsVal(var12, "value"));
+                    var9 = (var10 + " " + var11 + " " + var9 + " " + var17).toLowerCase(Locale.ROOT);
+                    Intrinsics.checkNotNullExpressionValue(var9, "toLowerCase(...)");
+                    CharSequence var15 = var9;
+                    CharSequence var16 = var5;
+                    var2 = false;
+                    if (!StringsKt.contains(var15, var16, false)) {
+                        break label32;
+                    }
+                }
+
+                var2 = true;
             }
-            if (z) {
-                destination$iv$iv.add(element$iv$iv);
+
+            if (var2) {
+                var7.add(var8);
             }
-            $this$filter$iv2 = $this$filter$iv;
         }
-        return (List) destination$iv$iv;
+
+        return var7;
     }
 
     private final int tsCountChanged() {
@@ -2643,69 +2706,43 @@ public final class GxLogsPage extends GxPage {
         return i;
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:11:?, code lost:
-    
-        return com.starpilot.starview.CarUi.Companion.getWARN();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:13:0x002b, code lost:
-    
-        if (r0.equals("error") == false) goto L26;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:15:0x0039, code lost:
-    
-        if (r0.equals("warn") == false) goto L26;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x0049, code lost:
-    
-        if (r0.equals("live") != false) goto L25;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:19:?, code lost:
-    
-        return com.starpilot.starview.CarUi.Companion.getACCENT();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:21:0x0052, code lost:
-    
-        if (r0.equals("ok") == false) goto L26;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:4:0x0019, code lost:
-    
-        if (r0.equals("critical") == false) goto L26;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:5:0x002e, code lost:
-    
-        r0 = com.starpilot.starview.GxLogsKt.GXLOGS_RED;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:6:?, code lost:
-    
-        return r0;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:9:0x0022, code lost:
-    
-        if (r0.equals("warning") == false) goto L26;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final int tsSevColor(String sev) {
-        String lowerCase = sev.toLowerCase(Locale.ROOT);
-        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-        switch (lowerCase.hashCode()) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final int tsSevColor(String var1) {
+        var1 = var1.toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
+        switch (var1.hashCode()) {
             case 3548:
+                if (var1.equals("ok")) {
+                    return CarUi.Companion.getACCENT();
+                }
                 break;
             case 3322092:
+                if (var1.equals("live")) {
+                    return CarUi.Companion.getACCENT();
+                }
                 break;
             case 3641990:
+                if (var1.equals("warn")) {
+                    return CarUi.Companion.getWARN();
+                }
                 break;
             case 96784904:
+                if (var1.equals("error")) {
+                    return GxLogsKt.GXLOGS_RED;
+                }
                 break;
             case 1124446108:
+                if (var1.equals("warning")) {
+                    return CarUi.Companion.getWARN();
+                }
                 break;
             case 1952151455:
-                break;
-            default:
-                return CarUi.Companion.getDIM();
+                if (var1.equals("critical")) {
+                    return GxLogsKt.GXLOGS_RED;
+                }
         }
+
+        return CarUi.Companion.getDIM();
     }
 
     private final void tsPaintHead() {
@@ -3023,38 +3060,45 @@ public final class GxLogsPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:16:0x003c, code lost:
-    
-        if (r0 != null) goto L19;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit tsResetSection$lambda$128$lambda$127(GxLogsPage this$0, String $title, String e, JSONObject o) {
-        String str;
-        String str$default;
-        this$0.tsBusySection = "";
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Failed to reset section.";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit tsResetSection$lambda$128$lambda$127(GxLogsPage var0, String var1, String var2, JSONObject var3) {
+        var0.tsBusySection = "";
+        if (var2 != null) {
+            CharSequence var9 = var2;
+            Object var5 = var9;
+            if (StringsKt.isBlank(var9)) {
+                var5 = "Failed to reset section.";
             }
-            this$0.toast(str2);
-            this$0.tsRender();
+
+            var0.toast((String)var5);
+            var0.tsRender();
+            return Unit.INSTANCE;
+        } else {
+            label25: {
+                if (var3 != null) {
+                    var2 = GxPage.str$default(var0, var3, "message", null, 2, null);
+                    if (var2 != null) {
+                        CharSequence var10 = var2;
+                        CharSequence var7 = var10;
+                        if (StringsKt.isBlank(var10)) {
+                            var7 = null;
+                        }
+
+                        var2 = (String)var7;
+                        if (var2 != null) {
+                            var1 = var2;
+                            break label25;
+                        }
+                    }
+                }
+
+                var1 = var1 + " reset.";
+            }
+
+            var0.toast(var1);
+            var0.tsLoad(false);
             return Unit.INSTANCE;
         }
-        if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-            String str3 = str$default;
-            if (StringsKt.isBlank(str3)) {
-                str3 = null;
-            }
-            str = str3;
-        }
-        str = $title + " reset.";
-        this$0.toast(str);
-        this$0.tsLoad(false);
-        return Unit.INSTANCE;
     }
 
     private final void tsCopyReport() {

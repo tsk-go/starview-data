@@ -19,6 +19,7 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt;
 import org.capnproto.SlcPeek;
 import org.json.JSONObject;
+import android.graphics.Paint.Align;
 
 /* compiled from: BigUiViews.kt */
 public final class SlcActionsView extends View {
@@ -30,22 +31,22 @@ public final class SlcActionsView extends View {
     public Telemetry t;
     private final Paint tp;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public SlcActionsView(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
+    /* VF: from Vineflower (jadx: ) */
+    public SlcActionsView(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
         this.pressed = -1;
-        Paint $this$tp_u24lambda_u240 = new Paint(1);
-        $this$tp_u24lambda_u240.setColor(-1);
-        $this$tp_u24lambda_u240.setTextAlign(Paint.Align.CENTER);
-        $this$tp_u24lambda_u240.setTypeface(Typeface.create(Typeface.DEFAULT, 1));
-        this.tp = $this$tp_u24lambda_u240;
-        Paint $this$line_u24lambda_u241 = new Paint(1);
-        $this$line_u24lambda_u241.setColor(Color.argb(170, 155, 178, 173));
-        this.line = $this$line_u24lambda_u241;
-        Paint $this$bg_u24lambda_u242 = new Paint(1);
-        $this$bg_u24lambda_u242.setColor(Color.argb(150, 0, 0, 0));
-        this.bg = $this$bg_u24lambda_u242;
+        Paint var3 = new Paint(1);
+        var3.setColor(-1);
+        var3.setTextAlign(android.graphics.Paint.Align.CENTER);
+        var3.setTypeface(Typeface.create(Typeface.DEFAULT, 1));
+        this.tp = var3;
+        Paint var4 = new Paint(1);
+        var4.setColor(Color.argb(170, 155, 178, 173));
+        this.line = var4;
+        Paint var5 = new Paint(1);
+        var5.setColor(Color.argb(150, 0, 0, 0));
+        this.bg = var5;
     }
 
     public /* synthetic */ SlcActionsView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {
@@ -268,68 +269,71 @@ public final class SlcActionsView extends View {
         }
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:29:0x00cc, code lost:
-    
-        return true;
-     */
-    @Override // android.view.View
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public boolean onTouchEvent(MotionEvent e) {
-        Intrinsics.checkNotNullParameter(e, "e");
-        if (this.t != null) {
-            List cs = controls$default(this, 0L, 1, null);
-            if (!cs.isEmpty()) {
-                List $this$indexOfFirst$iv = boxes(cs.size());
-                int index$iv = 0;
-                Iterator<RectF> it = $this$indexOfFirst$iv.iterator();
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public boolean onTouchEvent(MotionEvent var1) {
+        Intrinsics.checkNotNullParameter(var1, "e");
+        if (this.t == null) {
+            return false;
+        } else {
+            List var3 = controls$default(this, 0L, 1, null);
+            if (var3.isEmpty()) {
+                return false;
+            } else {
+                List var4 = this.boxes(var3.size());
+                int var2 = 0;
+                Iterator var7 = var4.iterator();
+
                 while (true) {
-                    if (it.hasNext()) {
-                        Object item$iv = it.next();
-                        RectF it2 = (RectF) item$iv;
-                        if (it2.contains(e.getX(), e.getY())) {
-                            break;
-                        }
-                        index$iv++;
-                    } else {
-                        index$iv = -1;
+                    if (!var7.hasNext()) {
+                        var2 = -1;
                         break;
                     }
+
+                    if (((RectF)var7.next()).contains(var1.getX(), var1.getY())) {
+                        break;
+                    }
+
+                    var2++;
                 }
-                int i = index$iv;
-                switch (e.getActionMasked()) {
+
+                switch (var1.getActionMasked()) {
                     case 0:
-                        this.pressed = i;
-                        invalidate();
+                        this.pressed = var2;
+                        this.invalidate();
                         break;
                     case 1:
-                        if (i >= 0 && i == this.pressed) {
-                            Control ctl = (Control) cs.get(i);
-                            Function1<? super JSONObject, Unit> function1 = this.send;
-                            if (function1 != null) {
-                                JSONObject put = new JSONObject().put("action", "slc_action").put("kind", ctl.getKind()).put("session", ctl.getSession()).put("decision", ctl.getDecision()).put("presentation", ctl.getPresentation()).put("speed", ctl.getSpeedMps());
-                                Intrinsics.checkNotNullExpressionValue(put, "put(...)");
-                                function1.invoke(put);
+                        if (var2 >= 0 && var2 == this.pressed) {
+                            SlcActionsView.Control var8 = (SlcActionsView.Control)var3.get(var2);
+                            Function1 var6 = this.send;
+                            if (var6 != null) {
+                                JSONObject var5 = new JSONObject()
+                                    .put("action", "slc_action")
+                                    .put("kind", var8.getKind())
+                                    .put("session", var8.getSession())
+                                    .put("decision", var8.getDecision())
+                                    .put("presentation", var8.getPresentation())
+                                    .put("speed", var8.getSpeedMps());
+                                Intrinsics.checkNotNullExpressionValue(var5, "put(...)");
+                                var6.invoke(var5);
                             }
-                            if (!Intrinsics.areEqual(ctl.getKind(), "adopt")) {
+
+                            if (!Intrinsics.areEqual(var8.getKind(), "adopt")) {
                                 this.prompt = null;
                             }
                         }
+
                         this.pressed = -1;
-                        invalidate();
+                        this.invalidate();
+                    case 2:
+                    default:
                         break;
                     case 3:
                         this.pressed = -1;
-                        invalidate();
-                        break;
+                        this.invalidate();
                 }
-            } else {
-                return false;
+
+                return true;
             }
-        } else {
-            return false;
         }
     }
 }

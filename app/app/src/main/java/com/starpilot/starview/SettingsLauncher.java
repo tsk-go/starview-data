@@ -38,6 +38,8 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
+import android.graphics.drawable.Drawable;
+import android.view.ViewGroup.LayoutParams;
 
 /* compiled from: SettingsLauncher.kt */
 public final class SettingsLauncher extends FrameLayout {
@@ -75,75 +77,55 @@ public final class SettingsLauncher extends FrameLayout {
         }
     }
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    /* JADX WARN: Multi-variable type inference failed */
-    public SettingsLauncher(Context ctx, CarUi ui, View home, Function0<? extends List<SettingsIndex.Entry>> allPages, Function1<? super String, Unit> open) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
-        Intrinsics.checkNotNullParameter(home, "home");
-        Intrinsics.checkNotNullParameter(allPages, "allPages");
-        Intrinsics.checkNotNullParameter(open, "open");
-        this.ui = ui;
-        this.home = home;
-        this.allPages = allPages;
-        this.open = open;
-        this.prefs = new UiSettings(ctx);
+    /* VF: from Vineflower (jadx: ) */
+    public SettingsLauncher(Context var1, CarUi var2, View var3, Function0<? extends List<SettingsIndex.Entry>> var4, Function1<? super String, Unit> var5) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
+        Intrinsics.checkNotNullParameter(var3, "home");
+        Intrinsics.checkNotNullParameter(var4, "allPages");
+        Intrinsics.checkNotNullParameter(var5, "open");
+        this.ui = var2;
+        this.home = var3;
+        this.allPages = var4;
+        this.open = var5;
+        this.prefs = new UiSettings(var1);
         this.board = new ShortcutBoard(this.prefs.getStr("settings_shortcuts", "{}"));
-        this.pager = new SwipePager(ctx, 1);
-        LinearLayout $this$dots_u24lambda_u240 = new LinearLayout(ctx);
-        $this$dots_u24lambda_u240.setOrientation(0);
-        $this$dots_u24lambda_u240.setGravity(17);
-        this.dots = $this$dots_u24lambda_u240;
-        LinearLayout $this$drawer_u24lambda_u241 = new LinearLayout(ctx);
-        $this$drawer_u24lambda_u241.setOrientation(1);
-        $this$drawer_u24lambda_u241.setBackground(CarUi.rounded$default(this.ui, CarUi.Companion.getFRAME(), 24, null, 4, null));
-        $this$drawer_u24lambda_u241.setVisibility(8);
-        $this$drawer_u24lambda_u241.setClickable(true);
-        this.drawer = $this$drawer_u24lambda_u241;
-        LinearLayout $this$drawerList_u24lambda_u242 = new LinearLayout(ctx);
-        $this$drawerList_u24lambda_u242.setOrientation(1);
-        this.drawerList = $this$drawerList_u24lambda_u242;
-        ScrollView $this$drawerScroll_u24lambda_u243 = new ScrollView(ctx);
-        $this$drawerScroll_u24lambda_u243.addView(this.drawerList);
-        this.drawerScroll = $this$drawerScroll_u24lambda_u243;
+        this.pager = new SwipePager(var1, 1);
+        LinearLayout var7 = new LinearLayout(var1);
+        var7.setOrientation(0);
+        var7.setGravity(17);
+        this.dots = var7;
+        LinearLayout var8 = new LinearLayout(var1);
+        var8.setOrientation(1);
+        var8.setBackground((Drawable)CarUi.rounded$default(this.ui, CarUi.Companion.getFRAME(), 24, null, 4, null));
+        var8.setVisibility(8);
+        var8.setClickable(true);
+        this.drawer = var8;
+        LinearLayout var9 = new LinearLayout(var1);
+        var9.setOrientation(1);
+        this.drawerList = var9;
+        ScrollView var10 = new ScrollView(var1);
+        var10.addView((View)this.drawerList);
+        this.drawerScroll = var10;
         this.pickFor = -1;
-        LinearLayout $this$_init__u24lambda_u244 = new LinearLayout(ctx);
-        $this$_init__u24lambda_u244.setOrientation(1);
-        $this$_init__u24lambda_u244.addView(this.pager, new LinearLayout.LayoutParams(-1, 0, 1.0f));
-        $this$_init__u24lambda_u244.addView(this.dots, new LinearLayout.LayoutParams(-1, this.ui.dp(30)));
-        TextView $this$_init__u24lambda_u246 = new TextView(ctx);
-        $this$_init__u24lambda_u246.setText("Swipe sideways for your shortcuts  ·  swipe up for every setting");
-        $this$_init__u24lambda_u246.setTextColor(CarUi.Companion.getDIM());
-        $this$_init__u24lambda_u246.setTextSize(14.0f);
-        $this$_init__u24lambda_u246.setGravity(17);
-        $this$_init__u24lambda_u246.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda2
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                SettingsLauncher.this.openDrawer(-1);
-            }
-        });
-        $this$_init__u24lambda_u244.addView($this$_init__u24lambda_u246, new LinearLayout.LayoutParams(-1, -2));
-        addView($this$_init__u24lambda_u244, new FrameLayout.LayoutParams(-1, -1));
-        buildDrawer();
-        addView(this.drawer, new FrameLayout.LayoutParams(-1, -1));
-        this.pager.setOnPage(new Function1() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda3
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit _init_$lambda$7;
-                _init_$lambda$7 = SettingsLauncher._init_$lambda$7(SettingsLauncher.this, ((Integer) obj).intValue());
-                return _init_$lambda$7;
-            }
-        });
-        this.pager.setOnSwipeUp(new Function0() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda4
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit _init_$lambda$8;
-                _init_$lambda$8 = SettingsLauncher._init_$lambda$8(SettingsLauncher.this);
-                return _init_$lambda$8;
-            }
-        });
-        rebuild(RangesKt.coerceAtLeast(lastPage, 0));
+        LinearLayout var11 = new LinearLayout(var1);
+        var11.setOrientation(1);
+        var11.addView((View)this.pager, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F)));
+        var11.addView((View)this.dots, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, this.ui.dp(30))));
+        TextView var6 = new TextView(var1);
+        var6.setText("Swipe sideways for your shortcuts  ·  swipe up for every setting");
+        var6.setTextColor(CarUi.Companion.getDIM());
+        var6.setTextSize(14.0F);
+        var6.setGravity(17);
+        var6.setOnClickListener(new SettingsLauncher$$ExternalSyntheticLambda2(this));
+        var11.addView((View)var6, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
+        this.addView((View)var11, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
+        this.buildDrawer();
+        this.addView((View)this.drawer, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
+        this.pager.setOnPage(new SettingsLauncher$$ExternalSyntheticLambda3(this));
+        this.pager.setOnSwipeUp(new SettingsLauncher$$ExternalSyntheticLambda4(this));
+        this.rebuild(RangesKt.coerceAtLeast(lastPage, 0));
     }
 
     /* JADX INFO: Access modifiers changed from: private */

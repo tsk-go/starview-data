@@ -82,24 +82,19 @@ public final class GxVehiclePage extends GxPage {
         }
     }
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxVehiclePage(Activity act, GxHost gx) {
-        super(act, gx);
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(gx, "gx");
-        this.features = CollectionsKt.listOf((Object[]) new Feature[]{new Feature("doors", "Lock/Unlock Doors", "Send lock or unlock commands remotely to your vehicle.", 1), new Feature("tsk", "Toyota Security Keys", "Manage and apply security keys for secOC protected devices.", 2)});
+    /* VF: from Vineflower (jadx: ) */
+    public GxVehiclePage(Activity var1, GxHost var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "gx");
+        GxVehiclePage.Feature var4 = new GxVehiclePage.Feature("doors", "Lock/Unlock Doors", "Send lock or unlock commands remotely to your vehicle.", 1);
+        GxVehiclePage.Feature var3 = new GxVehiclePage.Feature("tsk", "Toyota Security Keys", "Manage and apply security keys for secOC protected devices.", 2);
+        this.features = CollectionsKt.listOf(new GxVehiclePage.Feature[]{var4, var3});
         this.status = new HashMap<>();
         this.checking = "";
         this.featureValues = new HashMap<>();
         this.gates = new HashMap<>();
-        this.selectTab = new Function1() { // from class: com.starpilot.starview.GxVehiclePage$$ExternalSyntheticLambda9
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit selectTab$lambda$0;
-                selectTab$lambda$0 = GxVehiclePage.selectTab$lambda$0(((Integer) obj).intValue());
-                return selectTab$lambda$0;
-            }
-        };
+        this.selectTab = new GxVehiclePage$$ExternalSyntheticLambda9();
         this.doorBusy = "";
         this.keys = CollectionsKt.emptyList();
     }
@@ -292,42 +287,35 @@ public final class GxVehiclePage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-     */
-    private final void openFeature(final Feature f) {
+    /* VF: from Vineflower (jadx: ) */
+    private final void openFeature(GxVehiclePage.Feature var1) {
+        boolean var2;
         if (this.checking.length() > 0) {
-            return;
+            var2 = true;
+        } else {
+            var2 = false;
         }
-        String str = this.status.get(f.getKey());
-        if (str != null) {
-            switch (str.hashCode()) {
-                case -1335395429:
-                    if (str.equals("denied")) {
-                        toast(notSupported(f));
-                        return;
-                    }
-                    break;
-                case -911343192:
-                    if (str.equals("allowed")) {
-                        this.selectTab.invoke(Integer.valueOf(f.getTab()));
-                        return;
-                    }
-                    break;
+
+        if (!var2) {
+            String var3 = this.status.get(var1.getKey());
+            if (var3 != null) {
+                switch (var3.hashCode()) {
+                    case -1335395429:
+                        if (var3.equals("denied")) {
+                            this.toast(this.notSupported(var1));
+                            return;
+                        }
+                        break;
+                    case -911343192:
+                        if (var3.equals("allowed")) {
+                            this.selectTab.invoke(var1.getTab());
+                            return;
+                        }
+                }
             }
+
+            this.check(var1, new GxVehiclePage$$ExternalSyntheticLambda8(this, var1));
         }
-        check(f, new Function1() { // from class: com.starpilot.starview.GxVehiclePage$$ExternalSyntheticLambda8
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit openFeature$lambda$6;
-                openFeature$lambda$6 = GxVehiclePage.openFeature$lambda$6(GxVehiclePage.this, f, ((Boolean) obj).booleanValue());
-                return openFeature$lambda$6;
-            }
-        });
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -342,50 +330,41 @@ public final class GxVehiclePage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-     */
-    private final void gateFor(final Feature f) {
-        Gate g = this.gates.get(f.getKey());
-        if (g == null) {
-            return;
-        }
-        String str = this.status.get(f.getKey());
-        if (str != null) {
-            switch (str.hashCode()) {
-                case -1335395429:
-                    if (str.equals("denied")) {
-                        g.getText().setText(notSupported(f));
-                        g.getCard().setVisibility(0);
-                        g.getContent().setVisibility(8);
-                        return;
-                    }
-                    break;
-                case -911343192:
-                    if (str.equals("allowed")) {
-                        g.getCard().setVisibility(8);
-                        g.getContent().setVisibility(0);
-                        return;
-                    }
-                    break;
-            }
-        }
-        g.getText().setText("Checking vehicle compatibility...");
-        g.getCard().setVisibility(0);
-        g.getContent().setVisibility(8);
-        if (this.checking.length() == 0) {
-            check(f, new Function1() { // from class: com.starpilot.starview.GxVehiclePage$$ExternalSyntheticLambda19
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj) {
-                    Unit gateFor$lambda$7;
-                    gateFor$lambda$7 = GxVehiclePage.gateFor$lambda$7(GxVehiclePage.this, f, ((Boolean) obj).booleanValue());
-                    return gateFor$lambda$7;
+    /* VF: from Vineflower (jadx: ) */
+    private final void gateFor(GxVehiclePage.Feature var1) {
+        GxVehiclePage.Gate var4 = this.gates.get(var1.getKey());
+        if (var4 != null) {
+            String var3 = this.status.get(var1.getKey());
+            boolean var2 = false;
+            if (var3 != null) {
+                switch (var3.hashCode()) {
+                    case -1335395429:
+                        if (var3.equals("denied")) {
+                            var4.getText().setText(this.notSupported(var1));
+                            var4.getCard().setVisibility(0);
+                            var4.getContent().setVisibility(8);
+                            return;
+                        }
+                        break;
+                    case -911343192:
+                        if (var3.equals("allowed")) {
+                            var4.getCard().setVisibility(8);
+                            var4.getContent().setVisibility(0);
+                            return;
+                        }
                 }
-            });
+            }
+
+            var4.getText().setText("Checking vehicle compatibility...");
+            var4.getCard().setVisibility(0);
+            var4.getContent().setVisibility(8);
+            if (this.checking.length() == 0) {
+                var2 = true;
+            }
+
+            if (var2) {
+                this.check(var1, new GxVehiclePage$$ExternalSyntheticLambda19(this, var1));
+            }
         }
     }
 
@@ -470,36 +449,53 @@ public final class GxVehiclePage extends GxPage {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:21:0x0045, code lost:
-    
-        if (r1 != null) goto L25;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit doorAct$lambda$14(GxVehiclePage this$0, String $action, String e, JSONObject o) {
-        String str;
-        String str$default;
-        this$0.doorBusy = "";
-        this$0.paintDoors();
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = Intrinsics.areEqual($action, "lock") ? "Failed to lock doors." : "Failed to unlock doors.";
-            }
-            this$0.toast(str2);
-        } else {
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str3 = str$default;
-                if (StringsKt.isBlank(str3)) {
-                    str3 = null;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit doorAct$lambda$14(GxVehiclePage var0, String var1, String var2, JSONObject var3) {
+        var0.doorBusy = "";
+        var0.paintDoors();
+        if (var2 != null) {
+            CharSequence var10 = var2;
+            Object var6 = var10;
+            if (StringsKt.isBlank(var10)) {
+                if (Intrinsics.areEqual(var1, "lock")) {
+                    var1 = "Failed to lock doors.";
+                } else {
+                    var1 = "Failed to unlock doors.";
                 }
-                str = str3;
+
+                var6 = var1;
             }
-            str = Intrinsics.areEqual($action, "lock") ? "Doors locked!" : "Doors unlocked!";
-            this$0.toast(str);
+
+            var0.toast((String)var6);
+        } else {
+            label33: {
+                if (var3 != null) {
+                    var2 = GxPage.str$default(var0, var3, "message", null, 2, null);
+                    if (var2 != null) {
+                        CharSequence var11 = var2;
+                        CharSequence var8 = var11;
+                        if (StringsKt.isBlank(var11)) {
+                            var8 = null;
+                        }
+
+                        var2 = (String)var8;
+                        if (var2 != null) {
+                            var1 = var2;
+                            break label33;
+                        }
+                    }
+                }
+
+                if (Intrinsics.areEqual(var1, "lock")) {
+                    var1 = "Doors locked!";
+                } else {
+                    var1 = "Doors unlocked!";
+                }
+            }
+
+            var0.toast(var1);
         }
+
         return Unit.INSTANCE;
     }
 
@@ -679,31 +675,29 @@ public final class GxVehiclePage extends GxPage {
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:18:0x005e A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:21:? A[LOOP:0: B:9:0x001e->B:21:?, LOOP_END, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final boolean editKey$isDup(GxVehiclePage this$0, String origName, String n) {
-        boolean z;
-        Iterable $this$any$iv = this$0.keys;
-        if (($this$any$iv instanceof Collection) && ((Collection) $this$any$iv).isEmpty()) {
-            return false;
-        }
-        for (Object element$iv : $this$any$iv) {
-            JSONObject it = (JSONObject) element$iv;
-            if (Intrinsics.areEqual(GxPage.str$default(this$0, it, "name", null, 2, null), n) && !Intrinsics.areEqual(GxPage.str$default(this$0, it, "name", null, 2, null), origName)) {
-                z = true;
-                if (!z) {
-                    return true;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public static final boolean editKey$isDup(GxVehiclePage var0, String var1, String var2) {
+        var var6 = var0.keys;
+        boolean var5 = var6 instanceof Collection;
+        boolean var4 = false;
+        if (!var5 || !((Collection)var6).isEmpty()) {
+            for (JSONObject var7 : var6) {
+                boolean var3;
+                if (Intrinsics.areEqual(GxPage.str$default(var0, var7, "name", null, 2, null), var2)
+                    && !Intrinsics.areEqual(GxPage.str$default(var0, var7, "name", null, 2, null), var1)) {
+                    var3 = true;
+                } else {
+                    var3 = false;
+                }
+
+                if (var3) {
+                    var4 = true;
+                    break;
                 }
             }
-            z = false;
-            if (!z) {
-            }
         }
-        return false;
+
+        return var4;
     }
 
     /* JADX INFO: Access modifiers changed from: private */

@@ -20,11 +20,11 @@ import org.json.JSONObject;
 
 /* compiled from: JournalPages.kt */
 public final class AlertHistoryView extends CardPage {
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public AlertHistoryView(Context ctx, CarUi ui) {
-        super(ctx, ui);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
+    /* VF: from Vineflower (jadx: ) */
+    public AlertHistoryView(Context var1, CarUi var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
     }
 
     @Override // com.starpilot.starview.CardPage

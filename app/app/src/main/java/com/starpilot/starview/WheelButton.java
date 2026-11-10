@@ -24,12 +24,12 @@ public final class WheelButton extends View {
     private final WheelTint tint;
     private final Bitmap wheel;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public WheelButton(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        this.wheel = BitmapFactory.decodeResource(getResources(), R.drawable.ic_wheel);
-        this.exp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_experimental);
+    /* VF: from Vineflower (jadx: ) */
+    public WheelButton(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        this.wheel = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_wheel);
+        this.exp = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_experimental);
         this.p = new Paint(3);
         this.tint = new WheelTint();
     }

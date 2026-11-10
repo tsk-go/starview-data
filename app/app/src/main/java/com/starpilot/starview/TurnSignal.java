@@ -232,38 +232,47 @@ public final class TurnSignal {
             return RangesKt.coerceIn((Math.max(v, 0.0d) * 12.0d) + 15.0d, 30.0d, 250.0d);
         }
 
-        /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-        java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-         */
-        public final int turnDir(String type, String mod) {
-            Intrinsics.checkNotNullParameter(type, "type");
-            Intrinsics.checkNotNullParameter(mod, "mod");
-            if (!Intrinsics.areEqual(type, "turn")) {
-                return 0;
+        /* VF: from Vineflower (jadx: ) */
+        public final int turnDir(String var1, String var2) {
+            Intrinsics.checkNotNullParameter(var1, "type");
+            Intrinsics.checkNotNullParameter(var2, "mod");
+            boolean var4 = Intrinsics.areEqual(var1, "turn");
+            byte var3 = 0;
+            if (var4) {
+                label39: {
+                    switch (var2.hashCode()) {
+                        case -1572118767:
+                            if (!var2.equals("sharpLeft")) {
+                                return var3;
+                            }
+                            break;
+                        case -1485380526:
+                            if (!var2.equals("sharpRight")) {
+                                return var3;
+                            }
+                            break label39;
+                        case 3317767:
+                            if (!var2.equals("left")) {
+                                return var3;
+                            }
+                            break;
+                        case 108511772:
+                            if (!var2.equals("right")) {
+                                return var3;
+                            }
+                            break label39;
+                        default:
+                            return var3;
+                    }
+
+                    var3 = -1;
+                    return var3;
+                }
+
+                var3 = 1;
             }
-            switch (mod.hashCode()) {
-                case -1572118767:
-                    if (!mod.equals("sharpLeft")) {
-                    }
-                    break;
-                case -1485380526:
-                    if (!mod.equals("sharpRight")) {
-                    }
-                    break;
-                case 3317767:
-                    if (!mod.equals("left")) {
-                    }
-                    break;
-                case 108511772:
-                    if (!mod.equals("right")) {
-                    }
-                    break;
-            }
-            return 0;
+
+            return var3;
         }
 
         public final double lastCrossGap(List<Pair<Double, String>> cross, double turnAheadM, String turnStreet) {

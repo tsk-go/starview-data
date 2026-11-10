@@ -48,6 +48,8 @@ import kotlin.text.Regex;
 import kotlin.text.RegexOption;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
+import android.graphics.Paint.Cap;
+import android.graphics.Paint.Style;
 
 /* compiled from: GalaxyVisuals.kt */
 public final class GalaxyVisuals {
@@ -88,98 +90,270 @@ public final class GalaxyVisuals {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-     */
-    public final Set<Integer> header(Context ctx, CarUi ui, String page, List<GalaxyRow> rows, LinearLayout col, Function2<? super GalaxyRow, ? super String, Unit> write, Function1<? super GalaxyRow, Unit> reset) {
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
-        Intrinsics.checkNotNullParameter(page, "page");
-        Intrinsics.checkNotNullParameter(rows, "rows");
-        Intrinsics.checkNotNullParameter(col, "col");
-        Intrinsics.checkNotNullParameter(write, "write");
-        Intrinsics.checkNotNullParameter(reset, "reset");
-        try {
-            resetFn = reset;
-            switch (page.hashCode()) {
-                case -1067310595:
-                    if (!page.equals("traffic")) {
-                        break;
+    /* VF: from Vineflower (jadx: ) */
+    public final Set<Integer> header(
+        Context var1,
+        CarUi var2,
+        String var3,
+        List<GalaxyRow> var4,
+        LinearLayout var5,
+        Function2<? super GalaxyRow, ? super String, Unit> var6,
+        Function1<? super GalaxyRow, Unit> var7
+    ) {
+        Set var28 = null; Set var30 = null; Object var32 = null; Object var34 = null; Object var36 = null; Set var38 = null; Object var40 = null; Object var41 = null; // declarations Vineflower left out
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
+        Intrinsics.checkNotNullParameter(var3, "page");
+        Intrinsics.checkNotNullParameter(var4, "rows");
+        Intrinsics.checkNotNullParameter(var5, "col");
+        Intrinsics.checkNotNullParameter(var6, "write");
+        Intrinsics.checkNotNullParameter(var7, "reset");
+
+        label214: {
+            label215: {
+                label216: {
+                    label217: {
+                        label218: {
+                            label219: {
+                                label220: {
+                                    label157: {
+                                        label156: {
+                                            label155: {
+                                                label154: {
+                                                    label153: {
+                                                        label152: {
+                                                            try {
+                                                                resetFn = var7;
+                                                                switch (var3.hashCode()) {
+                                                                    case -1067310595:
+                                                                        break label154;
+                                                                    case -896509628:
+                                                                        break label157;
+                                                                    case 113962:
+                                                                        break label220;
+                                                                    case 3314156:
+                                                                        break label219;
+                                                                    case 95027439:
+                                                                        break label218;
+                                                                    case 113097563:
+                                                                        break label217;
+                                                                    case 821741828:
+                                                                        break label156;
+                                                                    case 821741890:
+                                                                        break label155;
+                                                                    case 1090497327:
+                                                                        break label153;
+                                                                    case 1147132932:
+                                                                        break label152;
+                                                                    case 1312628413:
+                                                                        break;
+                                                                    default:
+                                                                        break label214;
+                                                                }
+                                                            } catch (Exception var27) {
+                                                                Log.w("StarView/Visuals", "page " + var3, var27);
+                                                                return SetsKt.emptySet();
+                                                            }
+
+                                                            try {
+                                                                if (!var3.equals("standard")) {
+                                                                    break label214;
+                                                                }
+                                                                break label215;
+                                                            } catch (Exception var26) {
+                                                                Log.w("StarView/Visuals", "page " + var3, var26);
+                                                                return SetsKt.emptySet();
+                                                            }
+                                                        }
+
+                                                        try {
+                                                            if (!var3.equals("aggressive")) {
+                                                                break label214;
+                                                            }
+                                                            break label215;
+                                                        } catch (Exception var25) {
+                                                            Log.w("StarView/Visuals", "page " + var3, var25);
+                                                            return SetsKt.emptySet();
+                                                        }
+                                                    }
+
+                                                    try {
+                                                        if (!var3.equals("relaxed")) {
+                                                            break label214;
+                                                        }
+                                                        break label215;
+                                                    } catch (Exception var24) {
+                                                        Log.w("StarView/Visuals", "page " + var3, var24);
+                                                        return SetsKt.emptySet();
+                                                    }
+                                                }
+
+                                                try {
+                                                    if (!var3.equals("traffic")) {
+                                                        break label214;
+                                                    }
+                                                    break label215;
+                                                } catch (Exception var23) {
+                                                    Log.w("StarView/Visuals", "page " + var3, var23);
+                                                    Set var39 = SetsKt.emptySet();
+                                                    return var39;
+                                                }
+                                            }
+
+                                            try {
+                                                if (!var3.equals("conditional/cem")) {
+                                                    break label214;
+                                                }
+                                                break label216;
+                                            } catch (Exception var17) {
+                                                Log.w("StarView/Visuals", "page " + var3, var17);
+                                                return SetsKt.emptySet();
+                                            }
+                                        }
+
+                                        try {
+                                            if (!var3.equals("conditional/ccm")) {
+                                                break label214;
+                                            }
+                                            break label216;
+                                        } catch (Exception var16) {
+                                            Log.w("StarView/Visuals", "page " + var3, var16);
+                                            return SetsKt.emptySet();
+                                        }
+                                    }
+
+                                    try {
+                                        if (!var3.equals("sounds")) {
+                                            break label214;
+                                        }
+                                    } catch (Exception var22) {
+                                        Log.w("StarView/Visuals", "page " + var3, var22);
+                                        Set var37 = SetsKt.emptySet();
+                                        return var37;
+                                    }
+
+                                    try {
+                                        var38 = this.mixer(var1, var2, var4, var5, var6);
+                                    } catch (Exception var10) {
+                                        Log.w("StarView/Visuals", "page " + var3, var10);
+                                        var38 = SetsKt.emptySet();
+                                    }
+
+                                    return var38;
+                                }
+
+                                try {
+                                    if (!var3.equals("slc")) {
+                                        break label214;
+                                    }
+                                } catch (Exception var21) {
+                                    Log.w("StarView/Visuals", "page " + var3, var21);
+                                    Set var35 = SetsKt.emptySet();
+                                    return var35;
+                                }
+
+                                try {
+                                    this.bands(var1, var2, var4, var5);
+                                    var36 = SetsKt.emptySet();
+                                } catch (Exception var11) {
+                                    Log.w("StarView/Visuals", "page " + var3, var11);
+                                    var36 = SetsKt.emptySet();
+                                }
+
+                                return var36;
+                            }
+
+                            try {
+                                if (!var3.equals("lane")) {
+                                    break label214;
+                                }
+                            } catch (Exception var20) {
+                                Log.w("StarView/Visuals", "page " + var3, var20);
+                                Set var33 = SetsKt.emptySet();
+                                return var33;
+                            }
+
+                            try {
+                                this.lane(var1, var2, var4, var5);
+                                var34 = SetsKt.emptySet();
+                            } catch (Exception var12) {
+                                Log.w("StarView/Visuals", "page " + var3, var12);
+                                var34 = SetsKt.emptySet();
+                            }
+
+                            return var34;
+                        }
+
+                        try {
+                            if (!var3.equals("curve")) {
+                                break label214;
+                            }
+                        } catch (Exception var19) {
+                            Log.w("StarView/Visuals", "page " + var3, var19);
+                            Set var31 = SetsKt.emptySet();
+                            return var31;
+                        }
+
+                        try {
+                            this.curve(var1, var2, var4, var5);
+                            var32 = SetsKt.emptySet();
+                        } catch (Exception var13) {
+                            Log.w("StarView/Visuals", "page " + var3, var13);
+                            var32 = SetsKt.emptySet();
+                        }
+
+                        return var32;
                     }
-                    gap(ctx, ui, page, rows, col);
-                    break;
-                case -896509628:
-                    if (!page.equals("sounds")) {
-                        break;
-                    } else {
-                        break;
+
+                    try {
+                        if (!var3.equals("wheel")) {
+                            break label214;
+                        }
+                    } catch (Exception var18) {
+                        Log.w("StarView/Visuals", "page " + var3, var18);
+                        Set var29 = SetsKt.emptySet();
+                        return var29;
                     }
-                case 113962:
-                    if (!page.equals("slc")) {
-                        break;
-                    } else {
-                        bands(ctx, ui, rows, col);
-                        break;
+
+                    try {
+                        var30 = this.wheel(var1, var2, var4, var5, var6);
+                    } catch (Exception var14) {
+                        Log.w("StarView/Visuals", "page " + var3, var14);
+                        var30 = SetsKt.emptySet();
                     }
-                case 3314156:
-                    if (!page.equals("lane")) {
-                        break;
-                    } else {
-                        lane(ctx, ui, rows, col);
-                        break;
-                    }
-                case 95027439:
-                    if (!page.equals("curve")) {
-                        break;
-                    } else {
-                        curve(ctx, ui, rows, col);
-                        break;
-                    }
-                case 113097563:
-                    if (!page.equals("wheel")) {
-                        break;
-                    } else {
-                        break;
-                    }
-                case 821741828:
-                    if (!page.equals("conditional/ccm")) {
-                        break;
-                    }
-                    break;
-                case 821741890:
-                    if (!page.equals("conditional/cem")) {
-                        break;
-                    }
-                    break;
-                case 1090497327:
-                    if (!page.equals("relaxed")) {
-                        break;
-                    }
-                    gap(ctx, ui, page, rows, col);
-                    break;
-                case 1147132932:
-                    if (!page.equals("aggressive")) {
-                        break;
-                    }
-                    gap(ctx, ui, page, rows, col);
-                    break;
-                case 1312628413:
-                    if (!page.equals("standard")) {
-                        break;
-                    }
-                    gap(ctx, ui, page, rows, col);
-                    break;
+
+                    return var30;
+                }
+
+                try {
+                    var28 = this.conditions(var1, var2, var3, var4, var5, var6);
+                } catch (Exception var15) {
+                    Log.w("StarView/Visuals", "page " + var3, var15);
+                    var28 = SetsKt.emptySet();
+                }
+
+                return var28;
             }
-        } catch (Exception e) {
-            Log.w("StarView/Visuals", "page " + page, e);
-            return SetsKt.emptySet();
+
+            try {
+                this.gap(var1, var2, var3, var4, var5);
+                var40 = SetsKt.emptySet();
+            } catch (Exception var9) {
+                Log.w("StarView/Visuals", "page " + var3, var9);
+                var40 = SetsKt.emptySet();
+            }
+
+            return var40;
         }
-        return SetsKt.emptySet();
+
+        try {
+            var41 = SetsKt.emptySet();
+        } catch (Exception var8) {
+            Log.w("StarView/Visuals", "page " + var3, var8);
+            var41 = SetsKt.emptySet();
+        }
+
+        return var41;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -260,80 +434,80 @@ public final class GalaxyVisuals {
         return (GalaxyRow) element$iv;
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterative(DepthRegionTraversal.java:31)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visit(SwitchOverStringVisitor.java:60)
-     */
-    public final SettingIcons.Icon actionIcon(String action) {
-        Intrinsics.checkNotNullParameter(action, "action");
-        switch (action.hashCode()) {
+    /* VF: from Vineflower (jadx: ) */
+    public final SettingIcons.Icon actionIcon(String var1) {
+        Intrinsics.checkNotNullParameter(var1, "action");
+        switch (var1.hashCode()) {
             case -1925399022:
-                if (action.equals("Adopt speed limit")) {
-                    return new SettingIcons.Icon("sign", "speed", false, 4, null);
+                if (var1.equals("Adopt speed limit")) {
+                    SettingIcons.Icon var3 = new SettingIcons.Icon("sign", "speed", false, 4, null);
+                    return var3;
                 }
                 break;
             case -1899271032:
-                if (action.equals("Switchback Mode")) {
+                if (var1.equals("Switchback Mode")) {
                     return new SettingIcons.Icon("curve", "steer", false, 4, null);
                 }
                 break;
             case -1711209605:
-                if (action.equals("Pause steering")) {
+                if (var1.equals("Pause steering")) {
                     return new SettingIcons.Icon("pause", "steer", false, 4, null);
                 }
                 break;
             case -1166858732:
-                if (action.equals("Cycle personality")) {
+                if (var1.equals("Cycle personality")) {
                     return new SettingIcons.Icon("standard", "person", false, 4, null);
                 }
                 break;
             case -268029695:
-                if (action.equals("Force coast")) {
+                if (var1.equals("Force coast")) {
                     return new SettingIcons.Icon("coast", "speed", false, 4, null);
                 }
                 break;
             case 79183:
-                if (action.equals("Off")) {
+                if (var1.equals("Off")) {
                     return new SettingIcons.Icon("power", "device", false, 4, null);
                 }
                 break;
             case 776643728:
-                if (action.equals("Pause longitudinal")) {
+                if (var1.equals("Pause longitudinal")) {
                     return new SettingIcons.Icon("pause", "speed", false, 4, null);
                 }
                 break;
             case 944116230:
-                if (action.equals("Traffic mode")) {
+                if (var1.equals("Traffic mode")) {
                     return new SettingIcons.Icon("traffic", "person", false, 4, null);
                 }
                 break;
             case 1139431218:
-                if (action.equals("Toggle AOL")) {
+                if (var1.equals("Toggle AOL")) {
                     return new SettingIcons.Icon("aol", "steer", false, 4, null);
                 }
                 break;
             case 1635958837:
-                if (action.equals("Pulse and glide")) {
+                if (var1.equals("Pulse and glide")) {
                     return new SettingIcons.Icon("pulse", "speed", false, 4, null);
                 }
                 break;
             case 1797878756:
-                if (action.equals("Experimental override")) {
+                if (var1.equals("Experimental override")) {
                     return new SettingIcons.Icon("conditional", "speed", false, 4, null);
                 }
                 break;
             case 2070022486:
-                if (action.equals("Bookmark")) {
+                if (var1.equals("Bookmark")) {
                     return new SettingIcons.Icon("bookmark", "display", false, 4, null);
                 }
-                break;
         }
-        return StringsKt.startsWith(action, "Quick Select", false) ? new SettingIcons.Icon("star", "display", false, 4, null) : new SettingIcons.Icon("buttons", "display", false, 4, null);
+
+        SettingIcons.Icon var2;
+        if (StringsKt.startsWith(var1, "Quick Select", false)) {
+            var2 = new SettingIcons.Icon("star", "display", false, 4, null);
+        } else {
+            var2 = new SettingIcons.Icon("buttons", "display", false, 4, null);
+        }
+
+        return var2;
     }
 
     public final Pair<String, String> buttonOf(String label) {
@@ -1246,13 +1420,13 @@ public final class GalaxyVisuals {
         private final RectF r;
         private final double seconds;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public GapView(Context ctx, double seconds, double mph, int color) {
-            super(ctx);
-            Intrinsics.checkNotNullParameter(ctx, "ctx");
-            this.seconds = seconds;
-            this.mph = mph;
-            this.color = color;
+        /* VF: from Vineflower (jadx: ) */
+        public GapView(Context var1, double var2, double var4, int var6) {
+            super(var1);
+            Intrinsics.checkNotNullParameter(var1, "ctx");
+            this.seconds = var2;
+            this.mph = var4;
+            this.color = var6;
             this.p = new Paint(1);
             this.r = new RectF();
         }
@@ -1307,13 +1481,13 @@ public final class GalaxyVisuals {
         private final int color;
         private final Paint p;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public BandsView(Context ctx, List<Triple<String, Double, String>> bands, int color) {
-            super(ctx);
-            Intrinsics.checkNotNullParameter(ctx, "ctx");
-            Intrinsics.checkNotNullParameter(bands, "bands");
-            this.bands = bands;
-            this.color = color;
+        /* VF: from Vineflower (jadx: ) */
+        public BandsView(Context var1, List<Triple<String, Double, String>> var2, int var3) {
+            super(var1);
+            Intrinsics.checkNotNullParameter(var1, "ctx");
+            Intrinsics.checkNotNullParameter(var2, "bands");
+            this.bands = var2;
+            this.color = var3;
             this.p = new Paint(1);
         }
 
@@ -1414,16 +1588,16 @@ public final class GalaxyVisuals {
         private final double frac;
         private final Paint p;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public RingView(Context ctx, double frac, int color) {
-            super(ctx);
-            Intrinsics.checkNotNullParameter(ctx, "ctx");
-            this.frac = frac;
-            this.color = color;
-            Paint $this$p_u24lambda_u240 = new Paint(1);
-            $this$p_u24lambda_u240.setStyle(Paint.Style.STROKE);
-            $this$p_u24lambda_u240.setStrokeCap(Paint.Cap.ROUND);
-            this.p = $this$p_u24lambda_u240;
+        /* VF: from Vineflower (jadx: ) */
+        public RingView(Context var1, double var2, int var4) {
+            super(var1);
+            Intrinsics.checkNotNullParameter(var1, "ctx");
+            this.frac = var2;
+            this.color = var4;
+            Paint var5 = new Paint(1);
+            var5.setStyle(android.graphics.Paint.Style.STROKE);
+            var5.setStrokeCap(android.graphics.Paint.Cap.ROUND);
+            this.p = var5;
         }
 
         @Override // android.view.View
@@ -1455,15 +1629,15 @@ public final class GalaxyVisuals {
         private final double range;
         private final String unit;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public LaneView(Context ctx, double offset, String unit, double range, int color) {
-            super(ctx);
-            Intrinsics.checkNotNullParameter(ctx, "ctx");
-            Intrinsics.checkNotNullParameter(unit, "unit");
-            this.offset = offset;
-            this.unit = unit;
-            this.range = range;
-            this.color = color;
+        /* VF: from Vineflower (jadx: ) */
+        public LaneView(Context var1, double var2, String var4, double var5, int var7) {
+            super(var1);
+            Intrinsics.checkNotNullParameter(var1, "ctx");
+            Intrinsics.checkNotNullParameter(var4, "unit");
+            this.offset = var2;
+            this.unit = var4;
+            this.range = var5;
+            this.color = var7;
             this.p = new Paint(1);
         }
 
@@ -1515,14 +1689,14 @@ public final class GalaxyVisuals {
         private final List<String> positions;
         private String value;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public FaderView(Context ctx, int color, List<String> positions) {
-            super(ctx);
-            Intrinsics.checkNotNullParameter(ctx, "ctx");
-            Intrinsics.checkNotNullParameter(positions, "positions");
-            this.color = color;
-            this.positions = positions;
-            this.value = (String) CollectionsKt.first((List) this.positions);
+        /* VF: from Vineflower (jadx: ) */
+        public FaderView(Context var1, int var2, List<String> var3) {
+            super(var1);
+            Intrinsics.checkNotNullParameter(var1, "ctx");
+            Intrinsics.checkNotNullParameter(var3, "positions");
+            this.color = var2;
+            this.positions = var3;
+            this.value = CollectionsKt.first(this.positions);
             this.p = new Paint(1);
             this.last = Math.max(this.positions.size() - 1, 1);
         }
@@ -1612,56 +1786,55 @@ public final class GalaxyVisuals {
             c.drawCircle(cx, y, 15 * d, this.p);
         }
 
-        /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-        /* JADX WARN: Code restructure failed: missing block: B:23:0x008b, code lost:
-        
-            return true;
-         */
-        @Override // android.view.View
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public boolean onTouchEvent(MotionEvent e) {
-            Intrinsics.checkNotNullParameter(e, "e");
-            if (!isEnabled()) {
+        /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+        public boolean onTouchEvent(MotionEvent var1) {
+            Intrinsics.checkNotNullParameter(var1, "e");
+            if (!this.isEnabled()) {
                 return false;
-            }
-            float d = getResources().getDisplayMetrics().density;
-            float f = 16;
-            float top = f * d;
-            float bot = getHeight() - (f * d);
-            String v = this.positions.get(RangesKt.coerceIn(Math.round(RangesKt.coerceIn((bot - e.getY()) / (bot - top), 0.0f, 1.0f) * this.last), 0, this.positions.size() - 1));
-            switch (e.getActionMasked()) {
-                case 0:
-                    ViewParent parent = getParent();
-                    if (parent != null) {
-                        parent.requestDisallowInterceptTouchEvent(true);
-                    }
-                    this.value = v;
-                    Function1<? super String, Unit> function1 = this.onMove;
-                    if (function1 != null) {
-                        function1.invoke(v);
-                    }
-                    invalidate();
-                    break;
-                case 1:
-                    Function1<? super String, Unit> function12 = this.onCommit;
-                    if (function12 != null) {
-                        function12.invoke(this.value);
-                        break;
-                    }
-                    break;
-                case 2:
-                    if (!Intrinsics.areEqual(v, this.value)) {
-                        this.value = v;
-                        Function1<? super String, Unit> function13 = this.onMove;
-                        if (function13 != null) {
-                            function13.invoke(v);
+            } else {
+                float var2 = this.getResources().getDisplayMetrics().density;
+                float var3 = 16;
+                float var4 = this.getHeight() - var3 * var2;
+                String var5 = this.positions
+                    .get(
+                        RangesKt.coerceIn(
+                            Math.round(RangesKt.coerceIn((var4 - var1.getY()) / (var4 - var3 * var2), 0.0F, 1.0F) * this.last), 0, this.positions.size() - 1
+                        )
+                    );
+                switch (var1.getActionMasked()) {
+                    case 0:
+                        ViewParent var8 = this.getParent();
+                        if (var8 != null) {
+                            var8.requestDisallowInterceptTouchEvent(true);
                         }
-                        invalidate();
+
+                        this.value = var5;
+                        Function1 var9 = this.onMove;
+                        if (var9 != null) {
+                            var9.invoke(var5);
+                        }
+
+                        this.invalidate();
                         break;
-                    }
-                    break;
+                    case 1:
+                        Function1 var7 = this.onCommit;
+                        if (var7 != null) {
+                            var7.invoke(this.value);
+                        }
+                        break;
+                    case 2:
+                        if (!Intrinsics.areEqual(var5, this.value)) {
+                            this.value = var5;
+                            Function1 var6 = this.onMove;
+                            if (var6 != null) {
+                                var6.invoke(var5);
+                            }
+
+                            this.invalidate();
+                        }
+                }
+
+                return true;
             }
         }
     }

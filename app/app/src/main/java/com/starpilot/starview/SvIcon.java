@@ -244,16 +244,16 @@ public final class SvIcon {
             }
         }
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public Chip(Context ctx, String name, String group, State state) {
-            super(ctx);
-            Intrinsics.checkNotNullParameter(ctx, "ctx");
-            Intrinsics.checkNotNullParameter(name, "name");
-            Intrinsics.checkNotNullParameter(group, "group");
-            Intrinsics.checkNotNullParameter(state, "state");
-            this.name = name;
-            this.group = group;
-            this.state = state;
+        /* VF: from Vineflower (jadx: ) */
+        public Chip(Context var1, String var2, String var3, SvIcon.State var4) {
+            super(var1);
+            Intrinsics.checkNotNullParameter(var1, "ctx");
+            Intrinsics.checkNotNullParameter(var2, "name");
+            Intrinsics.checkNotNullParameter(var3, "group");
+            Intrinsics.checkNotNullParameter(var4, "state");
+            this.name = var2;
+            this.group = var3;
+            this.state = var4;
             this.bgPaint = new Paint(1);
             this.r = new RectF();
         }

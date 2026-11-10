@@ -428,108 +428,153 @@ public final class LaneMemory {
         return laneMemory.lanes(i, f, f2);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:25:0x0065 A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:29:0x002b A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:62:0x00fe A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:66:0x00c1 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final Pair<Integer, Boolean> lanes(int side, final float ourLine, float minConf) {
-        Object minElem$iv;
-        Mark it;
-        Mark it2;
-        boolean closed = false;
-        if (!((Float.isInfinite(ourLine) || Float.isNaN(ourLine)) ? false : true)) {
-            return null;
-        }
-        Iterable $this$filter$iv = this.marks;
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv) {
-            Mark it3 = (Mark) element$iv$iv;
-            if (!it3.getEdge() && it3.getConf() >= minConf) {
-                float y = it3.getY();
-                if (side >= 0 ? y > 1.5f + ourLine : y < ourLine - 1.5f) {
-                    it2 = 1;
-                    if (it2 == null) {
-                        destination$iv$iv.add(element$iv$iv);
-                    }
-                }
-            }
-            it2 = null;
-            if (it2 == null) {
-            }
-        }
-        Iterable $this$sortedBy$iv = (List) destination$iv$iv;
-        List<Mark> ls = CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.LaneMemory$lanes$$inlined$sortedBy$1
-            /* JADX WARN: Multi-variable type inference failed */
-            @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
-                LaneMemory.Mark it4 = (LaneMemory.Mark) t;
-                Float valueOf = Float.valueOf(Math.abs(it4.getY() - ourLine));
-                LaneMemory.Mark it5 = (LaneMemory.Mark) t2;
-                return ComparisonsKt.compareValues(valueOf, Float.valueOf(Math.abs(it5.getY() - ourLine)));
-            }
-        });
-        float last = ourLine;
-        int n = 0;
-        for (Mark m : ls) {
-            float gap = Math.abs(m.getY() - last);
-            if (gap >= 2.3f) {
-                if (gap > 4.6f) {
-                    break;
-                }
-                n++;
-                last = m.getY();
-            }
-        }
-        Iterable $this$filter$iv2 = this.marks;
-        Collection destination$iv$iv2 = new ArrayList();
-        for (Object element$iv$iv2 : $this$filter$iv2) {
-            Mark it4 = (Mark) element$iv$iv2;
-            if (it4.getEdge() && it4.getConf() >= 0.35f) {
-                float y2 = it4.getY();
-                if (side >= 0 ? y2 > 0.0f : y2 < 0.0f) {
-                    it = 1;
-                    if (it == null) {
-                        destination$iv$iv2.add(element$iv$iv2);
-                    }
-                }
-            }
-            it = null;
-            if (it == null) {
-            }
-        }
-        Iterable $this$minByOrNull$iv = (List) destination$iv$iv2;
-        Iterator iterator$iv = $this$minByOrNull$iv.iterator();
-        if (iterator$iv.hasNext()) {
-            minElem$iv = iterator$iv.next();
-            if (iterator$iv.hasNext()) {
-                Mark it5 = (Mark) minElem$iv;
-                float minValue$iv = Math.abs(it5.getY());
-                do {
-                    Object e$iv = iterator$iv.next();
-                    Mark it6 = (Mark) e$iv;
-                    float v$iv = Math.abs(it6.getY());
-                    if (Float.compare(minValue$iv, v$iv) > 0) {
-                        minElem$iv = e$iv;
-                        minValue$iv = v$iv;
-                    }
-                } while (iterator$iv.hasNext());
-            }
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public final Pair<Integer, Boolean> lanes(int var1, float var2, float var3) {
+        boolean var8 = Float.isInfinite(var2);
+        boolean var9 = false;
+        boolean var6;
+        if (!var8 && !Float.isNaN(var2)) {
+            var6 = true;
         } else {
-            minElem$iv = null;
+            var6 = false;
         }
-        Mark edge = (Mark) minElem$iv;
-        if (edge != null && Math.abs(edge.getY() - last) < 1.8f) {
-            float y3 = edge.getY();
-            if (side >= 0 ? y3 >= last - 0.3f : y3 <= 0.3f + last) {
-                closed = true;
+
+        if (!var6) {
+            return null;
+        } else {
+            Iterable var11 = this.marks;
+            var var10 = new ArrayList();
+
+            for (Object var13 : var11) {
+                label138: {
+                    LaneMemory.Mark var12 = (LaneMemory.Mark)var13;
+                    if (!var12.getEdge() && var12.getConf() >= var3) {
+                        float var4 = var12.getY();
+                        if (var1 < 0 ? !(var4 < var2 - 1.5F) : !(var4 > 1.5F + var2)) {
+                            var6 = (boolean)false;
+                        } else {
+                            var6 = (boolean)true;
+                        }
+
+                        if (var6) {
+                            var6 = (boolean)true;
+                            break label138;
+                        }
+                    }
+
+                    var6 = (boolean)false;
+                }
+
+                if (var6) {
+                    var10.add(var13);
+                }
             }
+
+            List var25 = var10;
+            List var26 = CollectionsKt.sortedWith(
+                var25,
+                new Comparator() {
+                    final float $ourLine$inlined = var2;
+
+                    @Override
+                    public final int compare(T var1, T var2x) {
+                        return ComparisonsKt.compareValues(
+                            Math.abs(((LaneMemory.Mark)var1).getY() - this.$ourLine$inlined), Math.abs(((LaneMemory.Mark)var2x).getY() - this.$ourLine$inlined)
+                        );
+                    }
+                }
+            );
+            var6 = false;
+
+            for (LaneMemory.Mark var33 : var26) {
+                var3 = Math.abs(var33.getY() - var2);
+                if (!(var3 < 2.3F)) {
+                    if (var3 > 4.6F) {
+                        break;
+                    }
+
+                    var6++;
+                    var2 = var33.getY();
+                }
+            }
+
+            var11 = this.marks;
+            var10 = new ArrayList();
+
+            for (Object var37 : var11) {
+                boolean var23;
+                label109: {
+                    LaneMemory.Mark var39 = (LaneMemory.Mark)var37;
+                    if (var39.getEdge() && var39.getConf() >= 0.35F) {
+                        var3 = var39.getY();
+                        if (var1 < 0 ? !(var3 < 0.0F) : !(var3 > 0.0F)) {
+                            var23 = false;
+                        } else {
+                            var23 = true;
+                        }
+
+                        if (var23) {
+                            var23 = true;
+                            break label109;
+                        }
+                    }
+
+                    var23 = false;
+                }
+
+                if (var23) {
+                    var10.add(var37);
+                }
+            }
+
+            List var29 = var10;
+            Iterator var40 = var29.iterator();
+            Object var30;
+            if (!var40.hasNext()) {
+                var30 = null;
+            } else {
+                var30 = (LaneMemory.Mark)var40.next();
+                if (var40.hasNext()) {
+                    float var19 = Math.abs(var30.getY());
+                    var11 = var30;
+
+                    do {
+                        Object var38 = var40.next();
+                        float var5 = Math.abs(((LaneMemory.Mark)var38).getY());
+                        var30 = var11;
+                        var3 = var19;
+                        if (Float.compare(var19, var5) > 0) {
+                            var30 = (LaneMemory.Mark)var38;
+                            var3 = var5;
+                        }
+
+                        var11 = var30;
+                        var19 = var3;
+                    } while (var40.hasNext());
+                }
+            }
+
+            var30 = var30;
+            var8 = var9;
+            if (var30 != null) {
+                var8 = var9;
+                if (Math.abs(var30.getY() - var2) < 1.8F) {
+                    var3 = var30.getY();
+                    boolean var14;
+                    if (var1 < 0 ? !(var3 <= 0.3F + var2) : !(var3 >= var2 - 0.3F)) {
+                        var14 = false;
+                    } else {
+                        var14 = true;
+                    }
+
+                    var8 = var9;
+                    if (var14) {
+                        var8 = true;
+                    }
+                }
+            }
+
+            return !var6 && !var8 ? null : TuplesKt.to(var6, var8);
         }
-        if (n != 0 || closed) {
-            return TuplesKt.to(Integer.valueOf(n), Boolean.valueOf(closed));
-        }
-        return null;
     }
 }

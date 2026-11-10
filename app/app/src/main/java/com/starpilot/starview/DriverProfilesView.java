@@ -37,11 +37,11 @@ import org.json.JSONObject;
 
 /* compiled from: JournalPages.kt */
 public final class DriverProfilesView extends CardPage {
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public DriverProfilesView(Context ctx, CarUi ui) {
-        super(ctx, ui);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
+    /* VF: from Vineflower (jadx: ) */
+    public DriverProfilesView(Context var1, CarUi var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
     }
 
     private final File getDir() {
@@ -336,7 +336,7 @@ public final class DriverProfilesView extends CardPage {
             SettingsBackup settingsBackup = SettingsBackup.INSTANCE;
             Context context = this$0.getContext();
             Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
-            tab = settingsBackup.m1159import(context, it);
+            tab = settingsBackup.importJson(context, it);
         } else {
             tab = 0;
         }

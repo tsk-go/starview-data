@@ -257,51 +257,63 @@ public final /* data */ class RtkCalibration {
         private Companion() {
         }
 
-        /* JADX WARN: Multi-variable type inference failed */
-        /* JADX WARN: Type inference failed for: r5v8, types: [java.util.List] */
-        public final RtkCalibration parse(JSONObject o) {
-            ArrayList arrayList;
-            JSONArray ev;
-            Iterable $this$mapNotNull$iv;
-            Event event;
-            if (o == null) {
+        /* VF: from Vineflower (jadx: Type inference failed) */
+        public final RtkCalibration parse(JSONObject var1) {
+            if (var1 == null) {
                 return null;
-            }
-            JSONArray ev2 = o.optJSONArray("events");
-            JSONObject d = o.optJSONObject("drive");
-            if (d == null) {
-                d = new JSONObject();
-            }
-            if (ev2 == null) {
-                arrayList = CollectionsKt.emptyList();
             } else {
-                Iterable $this$mapNotNull$iv2 = RangesKt.until(0, ev2.length());
-                Collection destination$iv$iv = new ArrayList();
-                Iterator<Integer> it = $this$mapNotNull$iv2.iterator();
-                while (it.hasNext()) {
-                    int element$iv$iv$iv = ((IntIterator) it).nextInt();
-                    JSONObject it2 = ev2.optJSONObject(element$iv$iv$iv);
-                    if (it2 != null) {
-                        ev = ev2;
-                        $this$mapNotNull$iv = $this$mapNotNull$iv2;
-                        double optDouble = it2.optDouble("agoS", 0.0d);
-                        String optString = it2.optString("k");
-                        Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
-                        event = new Event(optDouble, optString, parse$s(it2, "from"), parse$s(it2, "to"));
-                    } else {
-                        ev = ev2;
-                        $this$mapNotNull$iv = $this$mapNotNull$iv2;
-                        event = null;
-                    }
-                    if (event != null) {
-                        destination$iv$iv.add(event);
-                    }
-                    ev2 = ev;
-                    $this$mapNotNull$iv2 = $this$mapNotNull$iv;
+                JSONArray var14 = var1.optJSONArray("events");
+                JSONObject var13 = var1.optJSONObject("drive");
+                JSONObject var12 = var13;
+                if (var13 == null) {
+                    var12 = new JSONObject();
                 }
-                arrayList = (List) destination$iv$iv;
+
+                List var20;
+                if (var14 == null) {
+                    var20 = CollectionsKt.emptyList();
+                } else {
+                    Iterable var21 = RangesKt.until(0, var14.length());
+                    var var16 = new ArrayList();
+                    Iterator var17 = var21.iterator();
+
+                    while (var17.hasNext()) {
+                        JSONObject var18 = var14.optJSONObject(((IntIterator)var17).nextInt());
+                        RtkCalibration.Event var22;
+                        if (var18 != null) {
+                            double var2 = var18.optDouble("agoS", 0.0);
+                            String var15 = var18.optString("k");
+                            Intrinsics.checkNotNullExpressionValue(var15, "optString(...)");
+                            var22 = new RtkCalibration.Event(var2, var15, parse$s(var18, "from"), parse$s(var18, "to"));
+                        } else {
+                            var22 = null;
+                        }
+
+                        if (var22 != null) {
+                            var16.add(var22);
+                        }
+                    }
+
+                    var20 = var16;
+                }
+
+                int var8 = var12.optInt("sinceAgoS", 0);
+                int var6 = var12.optInt("left", 0);
+                int var9 = var12.optInt("right", 0);
+                int var11 = var12.optInt("leftFast", 0);
+                int var4 = var12.optInt("rightFast", 0);
+                int var10 = var12.optInt("fastS", 0);
+                int var7 = var12.optInt("longestStillS", 0);
+                int var5 = var12.optInt("stillNowS", 0);
+                Integer var19;
+                if (var1.has("speedBadPct")) {
+                    var19 = var1.optInt("speedBadPct");
+                } else {
+                    var19 = null;
+                }
+
+                return new RtkCalibration(var20, var8, var6, var9, var11, var4, var10, var7, var5, var19);
             }
-            return new RtkCalibration(arrayList, d.optInt("sinceAgoS", 0), d.optInt("left", 0), d.optInt("right", 0), d.optInt("leftFast", 0), d.optInt("rightFast", 0), d.optInt("fastS", 0), d.optInt("longestStillS", 0), d.optInt("stillNowS", 0), o.has("speedBadPct") ? Integer.valueOf(o.optInt("speedBadPct")) : null);
         }
 
         private static final String parse$s(JSONObject j, String k) {

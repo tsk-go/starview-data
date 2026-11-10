@@ -337,11 +337,11 @@ public final class NtripCore {
         public static final class Refused extends Answer {
             private final String why;
 
-            /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-            public Refused(String why) {
+            /* VF: from Vineflower (jadx: ) */
+            public Refused(String var1) {
                 super(null);
-                Intrinsics.checkNotNullParameter(why, "why");
-                this.why = why;
+                Intrinsics.checkNotNullParameter(var1, "why");
+                this.why = var1;
             }
 
             public final String getWhy() {

@@ -54,6 +54,7 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref;
 import kotlin.text.Charsets;
 import kotlin.text.StringsKt;
+import android.graphics.Paint.Align;
 
 /* compiled from: LaneShots.kt */
 public final class LaneShots {
@@ -779,203 +780,398 @@ public final class LaneShots {
         return out;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:20:0x00ee A[LOOP:0: B:12:0x009a->B:20:0x00ee, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:21:0x00f1 A[EDGE_INSN: B:21:0x00f1->B:30:0x00f1 BREAK  A[LOOP:0: B:12:0x009a->B:20:0x00ee], SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void sketch(Canvas c, float x0, float w, float h, int m, int n, List<LaneRamps.Ramp> rp) {
-        float f;
-        int i;
-        Paint p = new Paint(1);
-        p.setColor(Color.rgb(28, 32, 40));
-        c.drawRect(x0, 0.0f, x0 + w, h, p);
-        int k = m > 0 ? m : n > 0 ? n + 1 : 0;
-        Paint $this$sketch_u24lambda_u2422 = new Paint(1);
-        $this$sketch_u24lambda_u2422.setColor(Color.rgb(200, 208, 222));
-        float f2 = 20.0f;
-        $this$sketch_u24lambda_u2422.setTextSize(20.0f);
-        $this$sketch_u24lambda_u2422.setTextAlign(Paint.Align.CENTER);
-        if (k <= 0) {
-            float f3 = 2;
-            c.drawText("lane unknown", x0 + (w / f3), h / f3, $this$sketch_u24lambda_u2422);
-            return;
-        }
-        float lw = Math.min(64.0f, (w - 40.0f) / k);
-        float f4 = 2;
-        float left = x0 + ((w - (k * lw)) / f4);
-        p.setColor(Color.rgb(120, 126, 136));
-        c.drawRect(left, 30.0f, left + (k * lw), h - 20.0f, p);
-        if (0 <= k) {
-            int i2 = 0;
-            while (true) {
-                p.setColor(i2 == 0 ? Color.rgb(242, 194, 48) : -1);
-                float x = left + (i2 * lw);
-                if (i2 == 0) {
-                    i = i2;
-                } else if (i2 != k) {
-                    float y = 34.0f;
-                    while (y < h - 24.0f) {
-                        c.drawRect(x - 1.5f, y, x + 1.5f, y + 18.0f, p);
-                        y += 36.0f;
-                        i2 = i2;
-                    }
-                    i = i2;
-                    if (i != k) {
-                        break;
-                    } else {
-                        i2 = i + 1;
-                    }
-                } else {
-                    i = i2;
-                }
-                c.drawRect(x - 2.0f, 30.0f, x + 2.0f, h - 20.0f, p);
-                if (i != k) {
-                }
-            }
-        }
-        if (1 <= n && n <= k) {
-            p.setColor(Color.rgb(55, 138, 221));
-            float cx = left + ((n - 0.5f) * lw);
-            f = f4;
-            c.drawRoundRect(cx - (lw * 0.28f), h - 120.0f, cx + (0.28f * lw), h - 50.0f, 8.0f, 8.0f, p);
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public final void sketch(Canvas var1, float var2, float var3, float var4, int var5, int var6, List<LaneRamps.Ramp> var7) {
+        Paint var18 = new Paint(1);
+        var18.setColor(Color.rgb(28, 32, 40));
+        var1.drawRect(var2, 0.0F, var2 + var3, var4, var18);
+        int var15;
+        if (var5 > 0) {
+            var15 = var5;
+        } else if (var6 > 0) {
+            var15 = var6 + 1;
         } else {
-            f = f4;
+            var15 = 0;
         }
-        for (LaneRamps.Ramp r : rp) {
-            float ex = r.getSide() < 0 ? left - lw : left + (k * lw);
-            if (ex < x0) {
-                f2 = 20.0f;
-            } else if (ex + lw <= x0 + w) {
-                p.setColor(Color.rgb(96, 72, 26));
-                c.drawRect(ex, 30.0f, ex + lw, h - f2, p);
-                p.setColor(Color.rgb(240, 181, 74));
-                c.drawRect(r.getSide() < 0 ? ex - 2.0f : (ex + lw) - 2.0f, 30.0f, r.getSide() < 0 ? ex + 2.0f : ex + lw + 2.0f, h - f2, p);
-                Paint tt = new Paint(1);
-                tt.setColor(Color.rgb(240, 181, 74));
-                tt.setTextSize(15.0f);
-                tt.setTextAlign(Paint.Align.CENTER);
-                tt.setTypeface(Typeface.DEFAULT_BOLD);
-                c.drawText(Intrinsics.areEqual(r.getKind(), "exit") ? "EXIT" : "MERGE", ex + (lw / f), h / f, tt);
-                f2 = 20.0f;
+
+        Paint var17 = new Paint(1);
+        var17.setColor(Color.rgb(200, 208, 222));
+        var17.setTextSize(20.0F);
+        var17.setTextAlign(android.graphics.Paint.Align.CENTER);
+        if (var15 <= 0) {
+            float var28 = 2;
+            var1.drawText("lane unknown", var2 + var3 / var28, var4 / var28, var17);
+        } else {
+            float var11 = Math.min(64.0F, (var3 - 40.0F) / var15);
+            float var8 = var15;
+            float var12 = 2;
+            float var13 = var2 + (var3 - var8 * var11) / var12;
+            var18.setColor(Color.rgb(120, 126, 136));
+            var1.drawRect(var13, 30.0F, var13 + var15 * var11, var4 - 20.0F, var18);
+            if (var15 <= 0) {
+                int var14 = 0;
+
+                while (true) {
+                    int var16;
+                    if (var14 == 0) {
+                        var16 = Color.rgb(242, 194, 48);
+                    } else {
+                        var16 = -1;
+                    }
+
+                    var18.setColor(var16);
+                    float var9 = var13 + var14 * var11;
+                    if (var14 != 0 && var14 != var15) {
+                        for (float var25 = 34.0F; var25 < var4 - 24.0F; var25 += 36.0F) {
+                            var1.drawRect(var9 - 1.5F, var25, var9 + 1.5F, var25 + 18.0F, var18);
+                        }
+                    } else {
+                        var1.drawRect(var9 - 2.0F, 30.0F, var9 + 2.0F, var4 - 20.0F, var18);
+                    }
+
+                    if (var14 == var15) {
+                        break;
+                    }
+
+                    var14++;
+                }
             }
+
+            boolean var30;
+            if (1 <= var6 && var6 <= var15) {
+                var30 = true;
+            } else {
+                var30 = false;
+            }
+
+            if (var30) {
+                var18.setColor(Color.rgb(55, 138, 221));
+                var8 = var13 + (var6 - 0.5F) * var11;
+                var1.drawRoundRect(var8 - var11 * 0.28F, var4 - 120.0F, var8 + 0.28F * var11, var4 - 50.0F, 8.0F, 8.0F, var18);
+            }
+
+            for (LaneRamps.Ramp var21 : var7) {
+                if (var21.getSide() < 0) {
+                    var8 = var13 - var11;
+                } else {
+                    var8 = var13 + var15 * var11;
+                }
+
+                if (!(var8 < var2) && !(var8 + var11 > var2 + var3)) {
+                    var18.setColor(Color.rgb(96, 72, 26));
+                    var1.drawRect(var8, 30.0F, var8 + var11, var4 - 20.0F, var18);
+                    var18.setColor(Color.rgb(240, 181, 74));
+                    float var29;
+                    if (var21.getSide() < 0) {
+                        var29 = var8 - 2.0F;
+                    } else {
+                        var29 = var8 + var11 - 2.0F;
+                    }
+
+                    float var10;
+                    if (var21.getSide() < 0) {
+                        var10 = var8 + 2.0F;
+                    } else {
+                        var10 = var8 + var11 + 2.0F;
+                    }
+
+                    var1.drawRect(var29, 30.0F, var10, var4 - 20.0F, var18);
+                    Paint var20 = new Paint(1);
+                    var20.setColor(Color.rgb(240, 181, 74));
+                    var20.setTextSize(15.0F);
+                    var20.setTextAlign(android.graphics.Paint.Align.CENTER);
+                    var20.setTypeface(Typeface.DEFAULT_BOLD);
+                    String var22;
+                    if (Intrinsics.areEqual(var21.getKind(), "exit")) {
+                        var22 = "EXIT";
+                    } else {
+                        var22 = "MERGE";
+                    }
+
+                    var1.drawText(var22, var8 + var11 / var12, var4 / var12, var20);
+                }
+            }
+
+            StringBuilder var24;
+            if (var5 > 0) {
+                String var23;
+                if (var6 > 0) {
+                    var23 = String.valueOf(var6);
+                } else {
+                    var23 = "?";
+                }
+
+                var24 = new StringBuilder().append("card: lane ").append(var23).append(" of ").append(var5);
+            } else {
+                var24 = new StringBuilder().append("card: lane ").append(var6).append(" of ?");
+            }
+
+            var1.drawText(var24.toString(), var2 + var3 / var12, 22.0F, var17);
         }
-        c.drawText((m > 0 ? new StringBuilder().append("card: lane ").append(n > 0 ? String.valueOf(n) : "?").append(" of ").append(m) : new StringBuilder().append("card: lane ").append(n).append(" of ?")).toString(), x0 + (w / f), 22.0f, $this$sketch_u24lambda_u2422);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Removed duplicated region for block: B:78:0x015c  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final int deleteDrive(String drive) {
-        String str;
-        boolean z;
-        Intrinsics.checkNotNullParameter(drive, "drive");
-        char c = 0;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public final int deleteDrive(String var1) {
+        ArrayList var33 = null; ArrayList var34 = null; String var53 = null; Object var57 = null; Object var61 = null; // declarations Vineflower left out
+        Intrinsics.checkNotNullParameter(var1, "drive");
+
+        List var4;
         try {
-            int i = 1;
-            List readLines$default = FilesKt.readLines(this.index, kotlin.text.Charsets.UTF_8);
-            ArrayList arrayList = new ArrayList();
-            ArrayList arrayList2 = new ArrayList();
-            Iterator it = readLines$default.iterator();
-            while (true) {
-                str = "";
-                if (!it.hasNext()) {
-                    break;
-                }
-                Object next = it.next();
-                String[] strArr = new String[1];
-                strArr[c] = "\t";
-                List split$default = StringsKt.split((CharSequence) next, strArr, false, 0);
-                String str2 = (CharSequence) (5 < split$default.size() ? split$default.get(5) : str);
-                if (str2.length() == 0) {
-                    str2 = "earlier";
-                }
-                if (Intrinsics.areEqual(str2, drive)) {
-                    arrayList.add(next);
-                    c = 0;
-                } else {
-                    arrayList2.add(next);
-                    c = 0;
-                }
-            }
-            Pair pair = new Pair(arrayList, arrayList2);
-            List<String> list = (List) pair.component1();
-            List list2 = (List) pair.component2();
-            for (String str3 : list) {
-                String[] strArr2 = new String[i];
-                strArr2[0] = "\t";
-                List split$default2 = StringsKt.split((CharSequence) str3, strArr2, false, 0);
-                try {
-                    this.ctx.getContentResolver().delete(Uri.parse((String) split$default2.get(i)), null, null);
-                } catch (Exception e) {
-                }
-                String[] strArr3 = new String[2];
-                strArr3[0] = 9 < split$default2.size() ? split$default2.get(9) : "";
-                strArr3[1] = 10 < split$default2.size() ? split$default2.get(10) : "";
-                for (String str4 : CollectionsKt.listOf((Object[]) strArr3)) {
-                    if (str4.length() > 0) {
-                        new File(getCleanDir(), str4).delete();
-                    }
-                }
-                i = 1;
-            }
-            File file = new File(getCleanDir(), drive);
-            if (file.isDirectory()) {
-                String[] list3 = file.list();
-                if (list3 != null) {
-                    if (!(list3.length == 0)) {
-                        z = true;
-                        if (!z) {
-                            file.delete();
-                        }
-                    }
-                }
-                z = false;
-                if (!z) {
-                }
-            }
-            File file2 = this.index;
-            String str5 = str;
-            if (!list2.isEmpty()) {
-                str5 = CollectionsKt.joinToString(list2, "\n", "", "", -1, "...", null) + "\n";
-            }
-            FilesKt.writeText(file2, str5, kotlin.text.Charsets.UTF_8);
-            List list4 = list;
-            ArrayList arrayList3 = new ArrayList(CollectionsKt.collectionSizeOrDefault(list4, 10));
-            Iterator it2 = list4.iterator();
-            while (it2.hasNext()) {
-                arrayList3.add(StringsKt.substringBefore((String) it2.next(), '\t', ((String) it2.next())));
-            }
-            HashSet hashSet = CollectionsKt.toHashSet(arrayList3);
-            try {
-                File file3 = this.reviews;
-                List readLines$default2 = FilesKt.readLines(this.reviews, kotlin.text.Charsets.UTF_8);
-                ArrayList arrayList4 = new ArrayList();
-                for (Object obj : readLines$default2) {
-                    List list5 = readLines$default2;
-                    List list6 = list2;
-                    try {
-                        if (!hashSet.contains(StringsKt.substringBefore((String) obj, '\t', ((String) obj)))) {
-                            arrayList4.add(obj);
-                        }
-                        list2 = list6;
-                        readLines$default2 = list5;
-                    } catch (Exception e2) {
-                    }
-                }
-                String joinToString$default = CollectionsKt.joinToString(arrayList4, "\n", "", "", -1, "...", null);
-                if (!(joinToString$default.length() == 0)) {
-                    joinToString$default = joinToString$default + "\n";
-                }
-                FilesKt.writeText(file3, joinToString$default, kotlin.text.Charsets.UTF_8);
-            } catch (Exception e3) {
-            }
-            return list.size();
-        } catch (Exception e4) {
+            var4 = FilesKt.readLines(this.index, kotlin.text.Charsets.UTF_8);
+        } catch (Exception var14) {
             return 0;
+        }
+
+        Iterable var43 = var4;
+        ArrayList var7 = new ArrayList();
+        ArrayList var6 = new ArrayList();
+        Iterator var8 = var43.iterator();
+
+        while (true) {
+            boolean var3 = var8.hasNext();
+            Iterable var5 = "";
+            if (!var3) {
+                Pair var46 = new Pair<>(var7, var6);
+                List var62 = (List)var46.component1();
+                var4 = (List)var46.component2();
+                Iterator var63 = var62.iterator();
+
+                while (var63.hasNext()) {
+                    List var58 = StringsKt.split((String & CharSequence)var63.next(), new String[]{"\t"}, false, 0);
+
+                    try {
+                        this.ctx.getContentResolver().delete(Uri.parse((String)var58.get(1)), null, null);
+                    } catch (Exception var13) {
+                    }
+
+                    boolean var37;
+                    if (9 < var58.size()) {
+                        var37 = true;
+                    } else {
+                        var37 = false;
+                    }
+
+                    Object var54;
+                    if (var37) {
+                        var54 = var58.get(9);
+                    } else {
+                        var54 = "";
+                    }
+
+                    if (10 < var58.size()) {
+                        var37 = true;
+                    } else {
+                        var37 = false;
+                    }
+
+                    Object var59;
+                    if (var37) {
+                        var59 = var58.get(10);
+                    } else {
+                        var59 = "";
+                    }
+
+                    for (Object var54$it : (Iterable) CollectionsKt.listOf(new String[]{(String)var54, (String)var59})) {
+                        var54 = var54$it;
+                        if (((CharSequence)var54).length() > 0) {
+                            var37 = true;
+                        } else {
+                            var37 = false;
+                        }
+
+                        if (var37) {
+                            new File(this.getCleanDir(), (String)var54).delete();
+                        }
+                    }
+                }
+
+                File var56 = new File(this.getCleanDir(), var1);
+                if (var56.isDirectory()) {
+                    boolean var41;
+                    label231: {
+                        String[] var29 = var56.list();
+                        if (var29 != null) {
+                            if (var29.length == 0) {
+                                var41 = true;
+                            } else {
+                                var41 = false;
+                            }
+
+                            if (!var41) {
+                                var41 = true;
+                                break label231;
+                            }
+                        }
+
+                        var41 = false;
+                    }
+
+                    if (!var41) {
+                        var56.delete();
+                    }
+                }
+
+                File var30 = this.index;
+                if (!var4.isEmpty()) {
+                    var5 = CollectionsKt.joinToString(var4, "\n", "", "", -1, "...", null);
+                    var5 = var5 + "\n";
+                }
+
+                FilesKt.writeText(var30, var5, kotlin.text.Charsets.UTF_8);
+                var5 = var62;
+                var var31 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var5, 10));
+                Iterator var52 = var5.iterator();
+
+                while (var52.hasNext()) {
+                    var31.add(StringsKt.substringBefore((String)var52.next(), '\t', ((String)var52.next())));
+                }
+
+                List var32 = var31;
+                HashSet var64 = CollectionsKt.toHashSet(var32);
+
+                try {
+                    var61 = this.reviews;
+                } catch (Exception var28) {
+                    return var62.size();
+                }
+
+                try {
+                    var57 = FilesKt.readLines(this.reviews, kotlin.text.Charsets.UTF_8);
+                } catch (Exception var27) {
+                    return var62.size();
+                }
+
+                try {
+                } catch (Exception var26) {
+                    return var62.size();
+                }
+
+                try {
+                    var33 = new ArrayList();
+                } catch (Exception var25) {
+                    return var62.size();
+                }
+
+                ArrayList var10;
+                try {
+                    var10 = var33;
+                } catch (Exception var24) {
+                    return var62.size();
+                }
+
+                Iterator var11;
+                try {
+                    var11 = var57.iterator();
+                } catch (Exception var23) {
+                    return var62.size();
+                }
+
+                while (true) {
+                    try {
+                        if (!var11.hasNext()) {
+                            break;
+                        }
+                    } catch (Exception var22) {
+                        return var62.size();
+                    }
+
+                    try {
+                        var4 = (List)var11.next();
+                    } catch (Exception var21) {
+                        return var62.size();
+                    }
+
+                    try {
+                        var53 = (String)var4;
+                    } catch (Exception var20) {
+                        return var62.size();
+                    }
+
+                    try {
+                        if (!var64.contains(StringsKt.substringBefore(var53, '\t', var53))) {
+                            var10.add(var4);
+                        }
+                    } catch (Exception var19) {
+                        return var62.size();
+                    }
+                }
+
+                try {
+                    var34 = var10;
+                } catch (Exception var18) {
+                    return var62.size();
+                }
+
+                try {
+                    var1 = CollectionsKt.joinToString(var34, "\n", "", "", -1, "...", null);
+                } catch (Exception var17) {
+                    return var62.size();
+                }
+
+                boolean var42;
+                label172: {
+                    label171: {
+                        try {
+                            if (var1.length() == 0) {
+                                break label171;
+                            }
+                        } catch (Exception var16) {
+                            return var62.size();
+                        }
+
+                        var42 = false;
+                        break label172;
+                    }
+
+                    var42 = true;
+                }
+
+                if (!var42) {
+                    try {
+                        StringBuilder var49 = new StringBuilder();
+                        var1 = var49.append(var1).append("\n").toString();
+                    } catch (Exception var15) {
+                        return var62.size();
+                    }
+                }
+
+                try {
+                    FilesKt.writeText(var61, var1, kotlin.text.Charsets.UTF_8);
+                } catch (Exception var12) {
+                }
+
+                return var62.size();
+            }
+
+            Object var9 = var8.next();
+            var4 = StringsKt.split((String & CharSequence)var9, new String[]{"\t"}, false, 0);
+            boolean var2;
+            if (5 < var4.size()) {
+                var2 = true;
+            } else {
+                var2 = false;
+            }
+
+            if (var2) {
+                var5 = (Iterable)var4.get(5);
+            }
+
+            var4 = (CharSequence)var5;
+            if (var4.length() == 0) {
+                var2 = true;
+            } else {
+                var2 = false;
+            }
+
+            if (var2) {
+                var4 = "earlier";
+            }
+
+            if (Intrinsics.areEqual(var4, var1)) {
+                var7.add(var9);
+            } else {
+                var6.add(var9);
+            }
         }
     }
 
@@ -1675,32 +1871,60 @@ public final class LaneShots {
         private Companion() {
         }
 
-        /* JADX WARN: Code restructure failed: missing block: B:12:0x006c, code lost:
-        
-            if (r6 == null) goto L16;
-         */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public final String caption(LaneBrain tr, String why, float mph) {
-            String str;
-            Intrinsics.checkNotNullParameter(tr, "tr");
-            Intrinsics.checkNotNullParameter(why, "why");
-            Pair<Integer, Double> laneFromLeft = tr.laneFromLeft();
-            int n = laneFromLeft.component1().intValue();
-            double q = laneFromLeft.component2().doubleValue();
-            String lane = n > 0 ? tr.label() + " (" + ((int) (100 * q)) + "%)" : "Lane ?";
-            LaneBrain.Road it = tr.getRoad();
-            if (it != null) {
-                String name = it.getName();
-                if (name.length() == 0) {
-                    name = it.getKind();
-                }
-                str = name;
+        /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+        public final String caption(LaneBrain var1, String var2, float var3) {
+            Intrinsics.checkNotNullParameter(var1, "tr");
+            Intrinsics.checkNotNullParameter(var2, "why");
+            Pair var7 = var1.laneFromLeft();
+            int var6 = ((Number)var7.component1()).intValue();
+            double var4 = ((Number)var7.component2()).doubleValue();
+            String var17;
+            if (var6 > 0) {
+                String var16 = var1.label();
+                var6 = (int)(100 * var4);
+                var17 = var16 + " (" + var6 + "%)";
+            } else {
+                var17 = "Lane ?";
             }
-            str = "no street";
-            String road = str;
-            return new SimpleDateFormat("HH:mm:ss", Locale.US).format(new Date()) + "   " + lane + "   ·   " + road + "   ·   " + ((int) mph) + " mph\n" + StringsKt.take(why, 110) + (tr.modelFresh() ? "   ·   " + tr.getModelText() : "");
+
+            String var18;
+            label29: {
+                LaneBrain.Road var9 = var1.getRoad();
+                if (var9 != null) {
+                    var18 = var9.getName();
+                    boolean var14;
+                    if (var18.length() == 0) {
+                        var14 = true;
+                    } else {
+                        var14 = false;
+                    }
+
+                    if (var14) {
+                        var18 = var9.getKind();
+                    }
+
+                    String var19 = var18;
+                    var18 = var19;
+                    if (var19 != null) {
+                        break label29;
+                    }
+                }
+
+                var18 = "no street";
+            }
+
+            String var20 = new SimpleDateFormat("HH:mm:ss", Locale.US).format(new Date());
+            var6 = (int)var3;
+            var2 = StringsKt.take(var2, 110);
+            String var11;
+            if (var1.modelFresh()) {
+                String var10 = var1.getModelText();
+                var11 = "   ·   " + var10;
+            } else {
+                var11 = "";
+            }
+
+            return var20 + "   " + var17 + "   ·   " + var18 + "   ·   " + var6 + " mph\n" + var2 + var11;
         }
     }
 }

@@ -18,18 +18,18 @@ public class CardPage extends ScrollView {
     private final Handler main;
     private final CarUi ui;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public CardPage(Context ctx, CarUi ui) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
-        this.ui = ui;
-        LinearLayout $this$col_u24lambda_u240 = new LinearLayout(ctx);
-        $this$col_u24lambda_u240.setOrientation(1);
-        $this$col_u24lambda_u240.setPadding(this.ui.dp(4), this.ui.dp(4), this.ui.dp(4), this.ui.dp(40));
-        this.col = $this$col_u24lambda_u240;
+    /* VF: from Vineflower (jadx: ) */
+    public CardPage(Context var1, CarUi var2) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
+        this.ui = var2;
+        LinearLayout var3 = new LinearLayout(var1);
+        var3.setOrientation(1);
+        var3.setPadding(this.ui.dp(4), this.ui.dp(4), this.ui.dp(4), this.ui.dp(40));
+        this.col = var3;
         this.main = new Handler(Looper.getMainLooper());
-        addView(this.col);
+        this.addView((View)this.col);
     }
 
     protected final CarUi getUi() {

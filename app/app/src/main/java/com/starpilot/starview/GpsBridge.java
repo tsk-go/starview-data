@@ -382,145 +382,404 @@ public final class GpsBridge {
         gpsBridge.push(d, d2, d3, f, f2, f3, f4, f5, f6, z, (i & 1024) != 0 ? false : z2, (i & 2048) != 0 ? false : z3);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:118:0x01ec A[Catch: Exception -> 0x0220, SecurityException -> 0x0222, TryCatch #6 {SecurityException -> 0x0222, Exception -> 0x0220, blocks: (B:55:0x012c, B:57:0x0139, B:58:0x0145, B:60:0x014b, B:67:0x015e, B:69:0x0168, B:75:0x0177, B:76:0x017a, B:78:0x0180, B:84:0x018f, B:85:0x0192, B:87:0x0198, B:93:0x01a7, B:95:0x01aa, B:116:0x01d5, B:118:0x01ec, B:119:0x021d), top: B:54:0x012c }] */
-    /* JADX WARN: Removed duplicated region for block: B:122:0x020c  */
-    /* JADX WARN: Removed duplicated region for block: B:143:0x00b6  */
-    /* JADX WARN: Removed duplicated region for block: B:149:0x0085  */
-    /* JADX WARN: Removed duplicated region for block: B:154:0x0079  */
-    /* JADX WARN: Removed duplicated region for block: B:24:0x0077  */
-    /* JADX WARN: Removed duplicated region for block: B:27:0x0082  */
-    /* JADX WARN: Removed duplicated region for block: B:34:0x00e0 A[ADDED_TO_REGION, RETURN] */
-    /* JADX WARN: Removed duplicated region for block: B:36:0x00e1  */
-    /* JADX WARN: Removed duplicated region for block: B:49:0x0107 A[Catch: Exception -> 0x0224, SecurityException -> 0x0247, TRY_LEAVE, TryCatch #5 {SecurityException -> 0x0247, Exception -> 0x0224, blocks: (B:46:0x00f9, B:47:0x0101, B:49:0x0107), top: B:45:0x00f9 }] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void push(double lat0, double lon0, double alt, float speed, float bearing0, float hAcc0, float vAcc, float bAcc, float sAcc, boolean live, boolean dr, boolean held) {
-        float hAcc;
-        float bearing;
-        Context ctx;
-        LocationManager lm;
-        Iterator<String> it;
-        double[] rtk = RtkPosition.INSTANCE.now(System.currentTimeMillis(), vEgoNow);
-        double lat = rtk != null ? rtk[0] : lat0;
-        double lon = rtk != null ? rtk[1] : lon0;
-        if (rtk != null) {
-            double accM = RtkPosition.INSTANCE.getAccM();
-            hAcc = !Double.isInfinite(accM) && !Double.isNaN(accM) ? RangesKt.coerceAtLeast((float) RtkPosition.INSTANCE.getAccM(), 0.01f) : 1.0f;
-        } else {
-            hAcc = hAcc0;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void push(
+        double var1,
+        double var3,
+        double var5,
+        float var7,
+        float var8,
+        float var9,
+        float var10,
+        float var11,
+        float var12,
+        boolean var13,
+        boolean var14,
+        boolean var15
+    ) {
+        Exception var78 = null; // declarations Vineflower left out
+        double[] var22 = RtkPosition.INSTANCE.now(System.currentTimeMillis(), vEgoNow);
+        if (var22 != null) {
+            var1 = var22[0];
         }
-        if (rtk != null) {
-            double heading = RtkPosition.INSTANCE.getHeading();
-            if ((Double.isInfinite(heading) || Double.isNaN(heading)) ? false : true) {
-                bearing = (float) RtkPosition.INSTANCE.getHeading();
-                usingRtk = rtk == null;
-                outLat = lat;
-                outLon = lon;
-                outKind = !held ? "held" : dr ? "dr" : live ? "live" : "last";
-                outBearing = bearing;
-                if ((!live || dr) && !held && vEgoNow > 1.5f) {
-                    if (Float.isInfinite(bearing) && !Float.isNaN(bearing)) {
-                        float b = turnSentLast;
-                        if (!Float.isNaN(b)) {
-                            turnSentDeg -= (((bearing - b) + 540.0f) % 360.0f) - 180.0f;
-                        }
-                        turnSentLast = bearing;
-                        ctx = app;
-                        if (ctx == null || !enabled(ctx) || (lm = lm()) == null || !setup(lm)) {
-                            return;
-                        }
-                        try {
-                            it = providers().iterator();
-                            while (it.hasNext()) {
-                                String p = it.next();
-                                Location $this$push_u24lambda_u242 = new Location(p);
-                                Iterator<String> it2 = it;
-                                $this$push_u24lambda_u242.setLatitude(lat);
-                                $this$push_u24lambda_u242.setLongitude(lon);
-                                double lat2 = lat;
-                                try {
-                                    $this$push_u24lambda_u242.setAltitude(alt);
-                                    double[] rtk2 = rtk;
-                                    try {
-                                        $this$push_u24lambda_u242.setSpeed(RangesKt.coerceAtLeast(speed, 0.0f));
-                                        if (!Float.isNaN(bearing)) {
-                                            $this$push_u24lambda_u242.setBearing(((bearing % 360.0f) + 360.0f) % 360.0f);
-                                        }
-                                        $this$push_u24lambda_u242.setAccuracy((!(!Float.isInfinite(hAcc) && !Float.isNaN(hAcc)) || hAcc <= 0.0f) ? 5.0f : hAcc);
-                                        if (((Float.isInfinite(vAcc) || Float.isNaN(vAcc)) ? false : true) && vAcc > 0.0f) {
-                                            $this$push_u24lambda_u242.setVerticalAccuracyMeters(vAcc);
-                                        }
-                                        if (((Float.isInfinite(bAcc) || Float.isNaN(bAcc)) ? false : true) && bAcc > 0.0f) {
-                                            $this$push_u24lambda_u242.setBearingAccuracyDegrees(bAcc);
-                                        }
-                                        if (((Float.isInfinite(sAcc) || Float.isNaN(sAcc)) ? false : true) && sAcc > 0.0f) {
-                                            $this$push_u24lambda_u242.setSpeedAccuracyMetersPerSecond(sAcc);
-                                        }
-                                        $this$push_u24lambda_u242.setTime(System.currentTimeMillis());
-                                        $this$push_u24lambda_u242.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
-                                        lm.setTestProviderLocation(p, $this$push_u24lambda_u242);
-                                        rtk = rtk2;
-                                        it = it2;
-                                        lat = lat2;
-                                    } catch (SecurityException e) {
-                                        ready = false;
-                                        status = "not allowed yet: make StarView the mock location app (see below)";
-                                        return;
-                                    } catch (Exception e2) {
-                                        e = e2;
-                                        ready = false;
-                                        Log.w("StarView/Gps", "push: " + e);
-                                        return;
-                                    }
-                                } catch (SecurityException e3) {
-                                    ready = false;
-                                    status = "not allowed yet: make StarView the mock location app (see below)";
-                                    return;
-                                } catch (Exception e4) {
-                                    e = e4;
-                                    ready = false;
-                                    Log.w("StarView/Gps", "push: " + e);
-                                    return;
-                                }
-                            }
-                            lastFixMs = System.currentTimeMillis();
-                            fixes++;
-                            status = !usingRtk ? "sending the RTK receiver's position (" + RtkPosition.INSTANCE.getKind() + ") to this tablet" : held ? "car stopped: holding the position still" : live ? "sending the comma's live GPS to this tablet" : dr ? "GPS gap: sending wheel speed + gyro position (dead reckoning)" : "car off / no live fix: sending the comma's last known position";
-                            return;
-                        } catch (SecurityException e5) {
-                        } catch (Exception e6) {
-                            e = e6;
-                        }
-                    }
-                }
-                turnSentLast = Float.NaN;
-                ctx = app;
-                if (ctx == null) {
-                    return;
-                }
-                it = providers().iterator();
-                while (it.hasNext()) {
-                }
-                lastFixMs = System.currentTimeMillis();
-                fixes++;
-                status = !usingRtk ? "sending the RTK receiver's position (" + RtkPosition.INSTANCE.getKind() + ") to this tablet" : held ? "car stopped: holding the position still" : live ? "sending the comma's live GPS to this tablet" : dr ? "GPS gap: sending wheel speed + gyro position (dead reckoning)" : "car off / no live fix: sending the comma's last known position";
-                return;
+
+        if (var22 != null) {
+            var3 = var22[1];
+        }
+
+        if (var22 != null) {
+            double var16 = RtkPosition.INSTANCE.getAccM();
+            boolean var19;
+            if (!Double.isInfinite(var16) && !Double.isNaN(var16)) {
+                var19 = true;
+            } else {
+                var19 = false;
+            }
+
+            if (var19) {
+                var9 = RangesKt.coerceAtLeast((float)RtkPosition.INSTANCE.getAccM(), 0.01F);
+            } else {
+                var9 = 1.0F;
             }
         }
-        bearing = bearing0;
-        usingRtk = rtk == null;
-        outLat = lat;
-        outLon = lon;
-        outKind = !held ? "held" : dr ? "dr" : live ? "live" : "last";
-        outBearing = bearing;
-        if (!live) {
+
+        if (var22 != null) {
+            double var69 = RtkPosition.INSTANCE.getHeading();
+            boolean var71;
+            if (!Double.isInfinite(var69) && !Double.isNaN(var69)) {
+                var71 = true;
+            } else {
+                var71 = false;
+            }
+
+            if (var71) {
+                var8 = (float)RtkPosition.INSTANCE.getHeading();
+            }
         }
-        if (Float.isInfinite(bearing) && !Float.isNaN(bearing)) {
+
+        boolean var20;
+        if (var22 != null) {
+            var20 = true;
+        } else {
+            var20 = false;
         }
-        turnSentLast = Float.NaN;
-        ctx = app;
-        if (ctx == null) {
+
+        usingRtk = var20;
+        outLat = var1;
+        outLon = var3;
+        String var21;
+        if (var15) {
+            var21 = "held";
+        } else if (var14) {
+            var21 = "dr";
+        } else if (var13) {
+            var21 = "live";
+        } else {
+            var21 = "last";
+        }
+
+        label386: {
+            outKind = var21;
+            outBearing = var8;
+            if ((var13 || var14) && !var15 && vEgoNow > 1.5F) {
+                boolean var72;
+                if (!Float.isInfinite(var8) && !Float.isNaN(var8)) {
+                    var72 = true;
+                } else {
+                    var72 = false;
+                }
+
+                if (var72) {
+                    float var18 = turnSentLast;
+                    if (!Float.isNaN(var18)) {
+                        turnSentDeg -= (var8 - var18 + 540.0F) % 360.0F - 180.0F;
+                    }
+
+                    turnSentLast = var8;
+                    break label386;
+                }
+            }
+
+            turnSentLast = Float.NaN;
+        }
+
+        Context var77 = app;
+        if (var77 != null) {
+            if (this.enabled(var77)) {
+                LocationManager var24 = this.lm();
+                if (var24 != null) {
+                    if (this.setup(var24)) {
+                        label394: {
+                            label378: {
+                                Iterator var23;
+                                try {
+                                    var23 = this.providers().iterator();
+                                } catch (SecurityException var67) {
+                                    break label378;
+                                } catch (Exception var68) {
+                                    var78 = var68;
+                                    break label394;
+                                }
+
+                                Iterator var81 = var23;
+
+                                while (true) {
+                                    try {
+                                        if (!var81.hasNext()) {
+                                            break;
+                                        }
+                                    } catch (SecurityException var55) {
+                                        break label378;
+                                    } catch (Exception var56) {
+                                        var78 = var56;
+                                        break label394;
+                                    }
+
+                                    String var26;
+                                    try {
+                                        var26 = (String)var81.next();
+                                    } catch (SecurityException var53) {
+                                        break label378;
+                                    } catch (Exception var54) {
+                                        var78 = var54;
+                                        break label394;
+                                    }
+
+                                    Location var25;
+                                    try {
+                                    } catch (SecurityException var51) {
+                                        break label378;
+                                    } catch (Exception var52) {
+                                        var78 = var52;
+                                        break label394;
+                                    }
+
+                                    try {
+                                        var25 = new Location(var26);
+                                    } catch (SecurityException var49) {
+                                        break label378;
+                                    } catch (Exception var50) {
+                                        var78 = var50;
+                                        break label394;
+                                    }
+
+                                    try {
+                                        var25.setLatitude(var1);
+                                    } catch (SecurityException var47) {
+                                        break label378;
+                                    } catch (Exception var48) {
+                                        var78 = var48;
+                                        break label394;
+                                    }
+
+                                    try {
+                                        var25.setLongitude(var3);
+                                    } catch (SecurityException var45) {
+                                        break label378;
+                                    } catch (Exception var46) {
+                                        var78 = var46;
+                                        break label394;
+                                    }
+
+                                    try {
+                                        var25.setAltitude(var5);
+                                    } catch (SecurityException var43) {
+                                        break label378;
+                                    } catch (Exception var44) {
+                                        var78 = var44;
+                                        break label394;
+                                    }
+
+                                    try {
+                                        var25.setSpeed(RangesKt.coerceAtLeast(var7, 0.0F));
+                                        if (!Float.isNaN(var8)) {
+                                            var25.setBearing((var8 % 360.0F + 360.0F) % 360.0F);
+                                        }
+                                    } catch (SecurityException var65) {
+                                        break label378;
+                                    } catch (Exception var66) {
+                                        var78 = var66;
+                                        break label394;
+                                    }
+
+                                    boolean var73;
+                                    label317: {
+                                        label316: {
+                                            try {
+                                                if (!Float.isInfinite(var9) && !Float.isNaN(var9)) {
+                                                    break label316;
+                                                }
+                                            } catch (SecurityException var63) {
+                                                break label378;
+                                            } catch (Exception var64) {
+                                                var78 = var64;
+                                                break label394;
+                                            }
+
+                                            var73 = false;
+                                            break label317;
+                                        }
+
+                                        var73 = true;
+                                    }
+
+                                    float var70;
+                                    if (var73 && var9 > 0.0F) {
+                                        var70 = var9;
+                                    } else {
+                                        var70 = 5.0F;
+                                    }
+
+                                    try {
+                                        var25.setAccuracy(var70);
+                                    } catch (SecurityException var41) {
+                                        break label378;
+                                    } catch (Exception var42) {
+                                        var78 = var42;
+                                        break label394;
+                                    }
+
+                                    label301: {
+                                        label300: {
+                                            try {
+                                                if (!Float.isInfinite(var10) && !Float.isNaN(var10)) {
+                                                    break label300;
+                                                }
+                                            } catch (SecurityException var61) {
+                                                break label378;
+                                            } catch (Exception var62) {
+                                                var78 = var62;
+                                                break label394;
+                                            }
+
+                                            var73 = false;
+                                            break label301;
+                                        }
+
+                                        var73 = true;
+                                    }
+
+                                    if (var73 && var10 > 0.0F) {
+                                        try {
+                                            var25.setVerticalAccuracyMeters(var10);
+                                        } catch (SecurityException var39) {
+                                            break label378;
+                                        } catch (Exception var40) {
+                                            var78 = var40;
+                                            break label394;
+                                        }
+                                    }
+
+                                    label290: {
+                                        label289: {
+                                            try {
+                                                if (!Float.isInfinite(var11) && !Float.isNaN(var11)) {
+                                                    break label289;
+                                                }
+                                            } catch (SecurityException var59) {
+                                                break label378;
+                                            } catch (Exception var60) {
+                                                var78 = var60;
+                                                break label394;
+                                            }
+
+                                            var73 = false;
+                                            break label290;
+                                        }
+
+                                        var73 = true;
+                                    }
+
+                                    if (var73 && var11 > 0.0F) {
+                                        try {
+                                            var25.setBearingAccuracyDegrees(var11);
+                                        } catch (SecurityException var37) {
+                                            break label378;
+                                        } catch (Exception var38) {
+                                            var78 = var38;
+                                            break label394;
+                                        }
+                                    }
+
+                                    label279: {
+                                        label278: {
+                                            try {
+                                                if (!Float.isInfinite(var12) && !Float.isNaN(var12)) {
+                                                    break label278;
+                                                }
+                                            } catch (SecurityException var57) {
+                                                break label378;
+                                            } catch (Exception var58) {
+                                                var78 = var58;
+                                                break label394;
+                                            }
+
+                                            var73 = false;
+                                            break label279;
+                                        }
+
+                                        var73 = true;
+                                    }
+
+                                    if (var73 && var12 > 0.0F) {
+                                        try {
+                                            var25.setSpeedAccuracyMetersPerSecond(var12);
+                                        } catch (SecurityException var35) {
+                                            break label378;
+                                        } catch (Exception var36) {
+                                            var78 = var36;
+                                            break label394;
+                                        }
+                                    }
+
+                                    try {
+                                        var25.setTime(System.currentTimeMillis());
+                                        var25.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
+                                    } catch (SecurityException var33) {
+                                        break label378;
+                                    } catch (Exception var34) {
+                                        var78 = var34;
+                                        break label394;
+                                    }
+
+                                    try {
+                                        var24.setTestProviderLocation(var26, var25);
+                                    } catch (SecurityException var31) {
+                                        break label378;
+                                    } catch (Exception var32) {
+                                        var78 = var32;
+                                        break label394;
+                                    }
+                                }
+
+                                label232: {
+                                    try {
+                                        lastFixMs = System.currentTimeMillis();
+                                        fixes++;
+                                        if (usingRtk) {
+                                            var21 = RtkPosition.INSTANCE.getKind();
+                                            StringBuilder var82 = new StringBuilder();
+                                            var21 = var82.append("sending the RTK receiver's position (").append(var21).append(") to this tablet").toString();
+                                            break label232;
+                                        }
+                                    } catch (SecurityException var29) {
+                                        break label378;
+                                    } catch (Exception var30) {
+                                        var78 = var30;
+                                        break label394;
+                                    }
+
+                                    if (var15) {
+                                        var21 = "car stopped: holding the position still";
+                                    } else if (var13) {
+                                        var21 = "sending the comma's live GPS to this tablet";
+                                    } else if (var14) {
+                                        var21 = "GPS gap: sending wheel speed + gyro position (dead reckoning)";
+                                    } else {
+                                        var21 = "car off / no live fix: sending the comma's last known position";
+                                    }
+                                }
+
+                                try {
+                                    status = var21;
+                                    return;
+                                } catch (SecurityException var27) {
+                                } catch (Exception var28) {
+                                    var78 = var28;
+                                    break label394;
+                                }
+                            }
+
+                            ready = false;
+                            status = "not allowed yet: make StarView the mock location app (see below)";
+                            return;
+                        }
+
+                        ready = false;
+                        Log.w("StarView/Gps", "push: " + var78);
+                    }
+                }
+            }
         }
     }
 

@@ -10,23 +10,25 @@ import java.util.List;
 import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
+import android.graphics.Paint.Join;
+import android.graphics.Paint.Style;
 
 /* compiled from: GxLogs.kt */
 final class GxLogsSpark extends View {
     private final Paint paint;
     private List<Double> values;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxLogsSpark(Context ctx) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
+    /* VF: from Vineflower (jadx: ) */
+    public GxLogsSpark(Context var1) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
         this.values = CollectionsKt.emptyList();
-        Paint $this$paint_u24lambda_u240 = new Paint(1);
-        $this$paint_u24lambda_u240.setStyle(Paint.Style.STROKE);
-        $this$paint_u24lambda_u240.setColor(CarUi.Companion.getACCENT());
-        $this$paint_u24lambda_u240.setStrokeWidth(ctx.getResources().getDisplayMetrics().density * 2.5f);
-        $this$paint_u24lambda_u240.setStrokeJoin(Paint.Join.ROUND);
-        this.paint = $this$paint_u24lambda_u240;
+        Paint var2 = new Paint(1);
+        var2.setStyle(android.graphics.Paint.Style.STROKE);
+        var2.setColor(CarUi.Companion.getACCENT());
+        var2.setStrokeWidth(var1.getResources().getDisplayMetrics().density * 2.5F);
+        var2.setStrokeJoin(android.graphics.Paint.Join.ROUND);
+        this.paint = var2;
     }
 
     public final List<Double> getValues() {

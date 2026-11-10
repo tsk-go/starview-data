@@ -37,6 +37,9 @@ import kotlin.ranges.RangesKt;
 import kotlin.sequences.SequencesKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.os.Handler;
+import android.widget.LinearLayout.LayoutParams;
+import java.util.Map.Entry;
 
 /* compiled from: DoorsBelts.kt */
 public final class DoorsBeltsView extends CardPage {
@@ -57,54 +60,60 @@ public final class DoorsBeltsView extends CardPage {
     private String statusErr;
     private final SimpleDateFormat timeFmt;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    /* JADX WARN: Type inference failed for: r0v9, types: [com.starpilot.starview.DoorsBeltsView$poll$1] */
-    public DoorsBeltsView(Context ctx, CarUi ui) {
-        super(ctx, ui);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public DoorsBeltsView(Context var1, CarUi var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
         this.dayFmt = new SimpleDateFormat("EEEE, MMM d", Locale.US);
         this.timeFmt = new SimpleDateFormat("h:mm:ss a", Locale.US);
         this.shortFmt = new SimpleDateFormat("EEE MMM d, h:mm a", Locale.US);
         this.dateFmt = new SimpleDateFormat("MMM d", Locale.US);
         this.red = Color.rgb(255, 138, 128);
-        LearnState st = saved;
-        if (st != null) {
-            if (Intrinsics.areEqual(st.getPhase(), "still")) {
-                st.setPhase("ready");
+        DoorsBeltsView.LearnState var3 = saved;
+        if (var3 != null) {
+            if (Intrinsics.areEqual(var3.getPhase(), "still")) {
+                var3.setPhase("ready");
             }
-            this.learn = new Learn(this, st);
-            getMain().post(new Runnable() { // from class: com.starpilot.starview.DoorsBeltsView$$ExternalSyntheticLambda3
-                @Override // java.lang.Runnable
-                public final void run() {
-                    DoorsBeltsView.lambda$1$lambda$0(DoorsBeltsView.this);
-                }
-            });
+
+            this.learn = new DoorsBeltsView.Learn(this, var3);
+            this.getMain().post(new DoorsBeltsView$$ExternalSyntheticLambda3(this));
         }
-        this.poll = new Runnable() { // from class: com.starpilot.starview.DoorsBeltsView$poll$1
-            @Override // java.lang.Runnable
+
+        this.poll = new Runnable() {
+            final DoorsBeltsView this$0 = DoorsBeltsView.this;
+
+            @Override
             public void run() {
-                boolean z;
-                JSONObject jSONObject;
-                long j;
-                z = DoorsBeltsView.this.shown;
-                if (z) {
-                    long now = System.currentTimeMillis();
-                    if (DoorsBeltsView.this.learn == null) {
-                        j = DoorsBeltsView.this.statusAt;
-                        if (now - j > 30000) {
-                            DoorsBeltsView.this.loadStatus();
+                if (this.this$0.shown) {
+                    long var3x = System.currentTimeMillis();
+                    if (this.this$0.learn == null && var3x - this.this$0.statusAt > 30000L) {
+                        this.this$0.loadStatus();
+                    }
+
+                    JSONObject var5 = this.this$0.status;
+                    boolean var2x = false;
+                    boolean var1x = var2x;
+                    if (var5 != null) {
+                        var1x = var2x;
+                        if (var5.optBoolean("carOn")) {
+                            var1x = true;
                         }
                     }
-                    jSONObject = DoorsBeltsView.this.status;
-                    boolean z2 = false;
-                    if (jSONObject != null && jSONObject.optBoolean("carOn")) {
-                        z2 = true;
+
+                    if (var1x || this.this$0.learn != null) {
+                        this.this$0.loadLive();
                     }
-                    if (z2 || DoorsBeltsView.this.learn != null) {
-                        DoorsBeltsView.this.loadLive();
+
+                    Handler var8 = this.this$0.getMain();
+                    Runnable var6 = this;
+                    if (this.this$0.learn != null) {
+                        var3x = 5000L;
+                    } else {
+                        var3x = 2000L;
                     }
-                    DoorsBeltsView.this.getMain().postDelayed(this, DoorsBeltsView.this.learn != null ? 5000L : 2000L);
+
+                    var8.postDelayed(var6, var3x);
                 }
             }
         };
@@ -119,10 +128,11 @@ public final class DoorsBeltsView extends CardPage {
         private String phase;
         private JSONObject result;
 
-        /* JADX WARN: Multi-variable type inference failed */
-        public LearnState(List<? extends JSONObject> list) {
-            Intrinsics.checkNotNullParameter(list, "list");
-            this.list = list;
+        /* VF: from Vineflower (jadx: ) */
+        public LearnState(List<? extends JSONObject> var1) {
+            super();
+            Intrinsics.checkNotNullParameter(var1, "list");
+            this.list = var1;
             this.phase = "intro";
             this.error = "";
             this.found = new LinkedHashMap<>();
@@ -368,425 +378,483 @@ public final class DoorsBeltsView extends CardPage {
         return $this$buttons_u24lambda_u248;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:107:0x057b  */
-    /* JADX WARN: Removed duplicated region for block: B:116:0x05ec  */
-    /* JADX WARN: Removed duplicated region for block: B:118:0x05f2  */
-    /* JADX WARN: Removed duplicated region for block: B:121:0x05f5  */
-    /* JADX WARN: Removed duplicated region for block: B:123:0x05ee  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void paint() {
-        String str;
-        int count$iv;
-        String str2;
-        String str3;
-        String str4;
-        String str5;
-        String str6;
-        String str7;
-        String day;
-        String day2;
-        String str8;
-        String str9;
-        String str10;
-        LinearLayout fc;
-        int i;
-        String str11;
-        List parts;
-        String str12;
-        String str13;
-        String k;
-        String str14;
-        getCol().removeAllViews();
-        JSONObject s = this.status;
-        LinearLayout head = card();
-        add(head);
-        String str15 = "device";
-        head.addView(title("Doors & belts", "car", "device"));
-        if (s == null) {
-            DoorsBeltsView doorsBeltsView = this;
-            String str16 = this.statusErr;
-            if (str16 == null) {
-                str16 = "Asking the comma…";
+        this.getCol().removeAllViews();
+        JSONObject var18 = this.status;
+        LinearLayout var12 = this.card();
+        this.add((View)var12);
+        String var17 = "device";
+        var12.addView(this.title("Doors & belts", "car", "device"));
+        if (var18 == null) {
+            CardPage var96 = this;
+            String var81 = this.statusErr;
+            String var68 = var81;
+            if (var81 == null) {
+                var68 = "Asking the comma…";
             }
-            head.addView(CardPage.line$default(doorsBeltsView, str16, 0, 0.0f, 6, null));
-            return;
-        }
-        head.addView(CardPage.line$default(this, "The comma checks every door and seat-belt switch after each drive, from the drive's own logs, once the car is off. Nothing extra runs while driving.", 0, 0.0f, 6, null));
-        JSONObject scanning = s.optJSONObject("scanning");
-        int pending = s.optInt("pending");
-        DoorsBeltsView doorsBeltsView2 = this;
-        if (scanning != null) {
-            str = "Checking drives now: " + scanning.optInt("done") + " of " + scanning.optInt("total") + " minutes read";
-        } else if (pending > 0) {
-            str = pending + " minute" + (pending == 1 ? "" : "s") + " of driving to check - it starts a couple of minutes after the car is off";
+
+            var12.addView((View)CardPage.line$default(var96, var68, 0, 0.0F, 6, null));
         } else {
-            str = "Every drive is checked";
-        }
-        head.addView(CardPage.line$default(doorsBeltsView2, str, CarUi.Companion.getTEXT(), 0.0f, 4, null));
-        long learnedAt = s.optLong("learnedAt", 0L);
-        Iterable $this$count$iv = items();
-        if (($this$count$iv instanceof Collection) && ((Collection) $this$count$iv).isEmpty()) {
-            count$iv = 0;
-        } else {
-            count$iv = 0;
-            for (Object element$iv : $this$count$iv) {
-                JSONObject it = (JSONObject) element$iv;
-                JSONObject scanning2 = scanning;
-                int pending2 = pending;
-                Iterable $this$count$iv2 = $this$count$iv;
-                if (Intrinsics.areEqual(it.optString("source"), "learned") || Intrinsics.areEqual(it.optString("source"), "standard")) {
-                    count$iv++;
-                    if (count$iv < 0) {
-                        CollectionsKt.throwCountOverflow();
-                    }
-                    scanning = scanning2;
-                    pending = pending2;
-                    $this$count$iv = $this$count$iv2;
+            var12.addView(
+                (View)CardPage.line$default(
+                    this,
+                    "The comma checks every door and seat-belt switch after each drive, from the drive's own logs, once the car is off. Nothing extra runs while driving.",
+                    0,
+                    0.0F,
+                    6,
+                    null
+                )
+            );
+            JSONObject var11 = var18.optJSONObject("scanning");
+            int var4 = var18.optInt("pending");
+            CardPage var13 = this;
+            String var10;
+            if (var11 != null) {
+                int var3 = var11.optInt("done");
+                int var5 = var11.optInt("total");
+                var10 = "Checking drives now: " + var3 + " of " + var5 + " minutes read";
+            } else if (var4 > 0) {
+                if (var4 == 1) {
+                    var10 = "";
                 } else {
-                    scanning = scanning2;
-                    pending = pending2;
-                    $this$count$iv = $this$count$iv2;
+                    var10 = "s";
                 }
-            }
-        }
-        int known = count$iv;
-        DoorsBeltsView doorsBeltsView3 = this;
-        if (learnedAt > 0) {
-            str2 = "s";
-            str3 = "";
-            str4 = "Watching " + known + " of " + items().size() + " switches · learned " + this.dateFmt.format(new Date(1000 * learnedAt));
-        } else {
-            str2 = "s";
-            str3 = "";
-            str4 = "Watching the 4 doors and the driver's belt. Learn the rest once (car on, in Park, about 5 minutes).";
-        }
-        head.addView(CardPage.line$default(doorsBeltsView3, str4, 0, 0.0f, 6, null));
-        View[] viewArr = new View[1];
-        viewArr[0] = getUi().button(learnedAt > 0 ? "Learn again…" : "Learn…", learnedAt == 0, new Function0() { // from class: com.starpilot.starview.DoorsBeltsView$$ExternalSyntheticLambda0
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit paint$lambda$10;
-                paint$lambda$10 = DoorsBeltsView.paint$lambda$10(DoorsBeltsView.this);
-                return paint$lambda$10;
-            }
-        });
-        head.addView(buttons(viewArr));
-        LinearLayout it2 = card();
-        add(it2);
-        this.nowCard = it2;
-        paintNow();
-        JSONArray drives = s.optJSONArray("drives");
-        if (drives == null) {
-            drives = new JSONArray();
-        }
-        HashMap fast = new HashMap();
-        HashMap fastDrives = new HashMap();
-        HashMap total = new HashMap();
-        int i2 = 0;
-        int length = drives.length();
-        while (true) {
-            str5 = "changes";
-            LinearLayout head2 = head;
-            str6 = "keys(...)";
-            int known2 = known;
-            str7 = "fast";
-            if (i2 >= length) {
-                break;
-            }
-            long learnedAt2 = learnedAt;
-            JSONObject d = drives.getJSONObject(i2);
-            JSONObject f = d.optJSONObject("fast");
-            if (f != null) {
-                Iterator<String> keys = f.keys();
-                Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
-                while (keys.hasNext()) {
-                    Iterator<String> it3 = keys;
-                    String k2 = keys.next();
-                    String str17 = str2;
-                    HashMap hashMap = fast;
-                    Integer num = (Integer) fast.get(k2);
-                    JSONObject f2 = f;
-                    hashMap.put(k2, Integer.valueOf((num != null ? num.intValue() : 0) + f.optInt(k2)));
-                    HashMap hashMap2 = fastDrives;
-                    Integer num2 = (Integer) fastDrives.get(k2);
-                    hashMap2.put(k2, Integer.valueOf((num2 != null ? num2.intValue() : 0) + 1));
-                    str2 = str17;
-                    keys = it3;
-                    f = f2;
-                }
-                str14 = str2;
-                Unit unit = Unit.INSTANCE;
-                Unit unit2 = Unit.INSTANCE;
+
+                var10 = var4 + " minute" + var10 + " of driving to check - it starts a couple of minutes after the car is off";
             } else {
-                str14 = str2;
+                var10 = "Every drive is checked";
             }
-            JSONObject c = d.optJSONObject("changes");
-            if (c != null) {
-                Iterator<String> keys2 = c.keys();
-                Intrinsics.checkNotNullExpressionValue(keys2, "keys(...)");
-                while (keys2.hasNext()) {
-                    String k3 = keys2.next();
-                    HashMap hashMap3 = total;
-                    Integer num3 = (Integer) total.get(k3);
-                    hashMap3.put(k3, Integer.valueOf((num3 != null ? num3.intValue() : 0) + c.optInt(k3)));
-                    c = c;
-                }
-                Unit unit3 = Unit.INSTANCE;
-                Unit unit4 = Unit.INSTANCE;
-            }
-            i2++;
-            head = head2;
-            known = known2;
-            learnedAt = learnedAt2;
-            str2 = str14;
-        }
-        String str18 = str2;
-        LinearLayout fc2 = card();
-        add(fc2);
-        fc2.addView(title("Flickers", "pulse", "device"));
-        if (drives.length() == 0) {
-            fc2.addView(CardPage.line$default(this, "No drive checked yet.", 0, 0.0f, 6, null));
-        } else if (fast.isEmpty()) {
-            fc2.addView(CardPage.line$default(this, "No flicker in the last " + drives.length() + " drive" + (drives.length() == 1 ? str3 : str18) + ": no switch changed twice within 3 seconds.", CarUi.Companion.getACCENT(), 0.0f, 4, null));
-        } else {
-            Iterable entrySet = fast.entrySet();
-            Intrinsics.checkNotNullExpressionValue(entrySet, "<get-entries>(...)");
-            Iterable $this$sortedByDescending$iv = entrySet;
-            Iterator it4 = CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.DoorsBeltsView$paint$$inlined$sortedByDescending$1
-                @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
-                    Map.Entry it5 = (Map.Entry) t2;
-                    Integer num4 = (Integer) it5.getValue();
-                    Map.Entry it6 = (Map.Entry) t;
-                    return ComparisonsKt.compareValues(num4, (Integer) it6.getValue());
-                }
-            }).iterator();
-            while (it4.hasNext()) {
-                Object next = it4.next();
-                Intrinsics.checkNotNullExpressionValue(next, "next(...)");
-                Map.Entry entry = (Map.Entry) next;
-                Object key = entry.getKey();
-                Intrinsics.checkNotNullExpressionValue(key, "component1(...)");
-                String k4 = (String) key;
-                Object value = entry.getValue();
-                Intrinsics.checkNotNullExpressionValue(value, "component2(...)");
-                Integer n = (Integer) value;
-                String nameOf = nameOf(k4);
-                HashMap fast2 = fast;
-                Iterator it5 = it4;
-                String str19 = n.intValue() == 1 ? str3 : str18;
-                Object obj = fastDrives.get(k4);
-                HashMap fastDrives2 = fastDrives;
-                int length2 = drives.length();
-                Integer num4 = (Integer) total.get(k4);
-                fc2.addView(line(nameOf + ": " + n + " quick change" + str19 + " in " + obj + " of the last " + length2 + " drives (" + (num4 != null ? num4.intValue() : n.intValue()) + " changes in all)", CarUi.Companion.getWARN(), 17.0f));
-                fast = fast2;
-                it4 = it5;
-                fastDrives = fastDrives2;
-                total = total;
-            }
-        }
-        LinearLayout dc = card();
-        add(dc);
-        dc.addView(title("Drives", "history", "device"));
-        if (drives.length() == 0) {
-            dc.addView(CardPage.line$default(this, "Each drive shows up here after the car is off.", 0, 0.0f, 6, null));
-        }
-        int i3 = 0;
-        int min = Math.min(drives.length(), 20);
-        while (i3 < min) {
-            JSONObject d2 = drives.getJSONObject(i3);
-            JSONArray drives2 = drives;
-            final JSONObject c2 = d2.optJSONObject(str5);
-            String str20 = str5;
-            JSONObject f3 = d2.optJSONObject(str7);
-            JSONObject m = d2.optJSONObject("moving");
-            if (c2 == null) {
-                str8 = str6;
-                str9 = str7;
-                str10 = str15;
-                fc = fc2;
-                i = min;
-                str11 = str3;
-            } else if (c2.length() == 0) {
-                str8 = str6;
-                str9 = str7;
-                str10 = str15;
-                fc = fc2;
-                i = min;
-                str11 = str3;
+
+            var12.addView((View)CardPage.line$default(var13, var10, CarUi.Companion.getTEXT(), 0.0F, 4, null));
+            long var8 = var18.optLong("learnedAt", 0L);
+            var var57 = this.items();
+            int var30;
+            if (var57 instanceof Collection && ((Collection)var57).isEmpty()) {
+                var30 = 0;
             } else {
-                fc = fc2;
-                Iterator<String> keys3 = c2.keys();
-                Intrinsics.checkNotNullExpressionValue(keys3, str6);
-                Iterable $this$sortedByDescending$iv2 = SequencesKt.toList(SequencesKt.asSequence(keys3));
-                str8 = str6;
-                Iterable $this$map$iv = CollectionsKt.sortedWith($this$sortedByDescending$iv2, new Comparator() { // from class: com.starpilot.starview.DoorsBeltsView$paint$$inlined$sortedByDescending$2
-                    /* JADX WARN: Multi-variable type inference failed */
-                    @Override // java.util.Comparator
-                    public final int compare(T t, T t2) {
-                        String it6 = (String) t2;
-                        String it7 = (String) t;
-                        return ComparisonsKt.compareValues(Integer.valueOf(c2.optInt(it6)), Integer.valueOf(c2.optInt(it7)));
+                var30 = 0;
+
+                for (JSONObject var14 : var57) {
+                    boolean var40;
+                    if (!Intrinsics.areEqual(var14.optString("source"), "learned") && !Intrinsics.areEqual(var14.optString("source"), "standard")) {
+                        var40 = false;
+                    } else {
+                        var40 = true;
                     }
-                });
-                i = min;
-                Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-                Iterable $this$mapTo$iv$iv = $this$map$iv;
-                for (Object item$iv$iv : $this$mapTo$iv$iv) {
-                    Iterable $this$map$iv2 = $this$map$iv;
-                    String k5 = (String) item$iv$iv;
-                    Intrinsics.checkNotNull(k5);
-                    Iterable $this$mapTo$iv$iv2 = $this$mapTo$iv$iv;
-                    String nameOf2 = nameOf(k5);
-                    String str21 = str3;
-                    int optInt = c2.optInt(k5);
-                    String str22 = str7;
-                    JSONObject c3 = c2;
-                    String[] strArr = new String[2];
-                    if (f3 != null) {
-                        Integer valueOf = Integer.valueOf(f3.optInt(k5));
-                        if ((valueOf.intValue() > 0 ? 1 : 0) == 0) {
-                            valueOf = null;
+
+                    if (var40) {
+                        if (++var30 < 0) {
+                            CollectionsKt.throwCountOverflow();
                         }
-                        if (valueOf != null) {
-                            str12 = str15;
-                            str13 = valueOf.intValue() + " quick";
-                            strArr[0] = str13;
-                            if (m != null) {
-                                Integer valueOf2 = Integer.valueOf(m.optInt(k5));
-                                if ((valueOf2.intValue() > 0 ? 1 : 0) == 0) {
-                                    valueOf2 = null;
+                    }
+                }
+            }
+
+            var13 = this;
+            if (var8 > 0L) {
+                var4 = this.items().size();
+                var10 = this.dateFmt.format(new Date(1000 * var8));
+                var10 = "Watching " + var30 + " of " + var4 + " switches · learned " + var10;
+            } else {
+                var10 = "Watching the 4 doors and the driver's belt. Learn the rest once (car on, in Park, about 5 minutes).";
+            }
+
+            String var19 = "";
+            String var69 = "s";
+            var12.addView((View)CardPage.line$default(var13, var10, 0, 0.0F, 6, null));
+            CarUi var93 = this.getUi();
+            if (var8 > 0L) {
+                var10 = "Learn again…";
+            } else {
+                var10 = "Learn…";
+            }
+
+            boolean var7;
+            if (var8 == 0L) {
+                var7 = true;
+            } else {
+                var7 = false;
+            }
+
+            var12.addView(this.buttons(var93.button(var10, var7, new DoorsBeltsView$$ExternalSyntheticLambda0(this))));
+            LinearLayout var61 = this.card();
+            this.add((View)var61);
+            this.nowCard = var61;
+            this.paintNow();
+            JSONArray var62 = var18.optJSONArray("drives");
+            JSONArray var94 = var62;
+            if (var62 == null) {
+                var94 = new JSONArray();
+            }
+
+            HashMap var15 = new HashMap();
+            HashMap var16 = new HashMap();
+            HashMap var20 = new HashMap();
+            var4 = 0;
+            int var6 = var94.length();
+            var10 = var69;
+
+            while (true) {
+                String var24 = "changes";
+                String var21 = "keys(...)";
+                String var22 = "fast";
+                if (var4 >= var6) {
+                    LinearLayout var25 = this.card();
+                    this.add((View)var25);
+                    var25.addView(this.title("Flickers", "pulse", "device"));
+                    if (var94.length() == 0) {
+                        var25.addView((View)CardPage.line$default(this, "No drive checked yet.", 0, 0.0F, 6, null));
+                    } else if (var15.isEmpty()) {
+                        CardPage var70 = this;
+                        var30 = var94.length();
+                        if (var94.length() == 1) {
+                            var10 = "";
+                        }
+
+                        var25.addView(
+                            (View)CardPage.line$default(
+                                var70,
+                                "No flicker in the last " + var30 + " drive" + var10 + ": no switch changed twice within 3 seconds.",
+                                CarUi.Companion.getACCENT(),
+                                0.0F,
+                                4,
+                                null
+                            )
+                        );
+                    } else {
+                        Set var71 = var15.entrySet();
+                        Intrinsics.checkNotNullExpressionValue(var71, "<get-entries>(...)");
+                        Iterator var88 = CollectionsKt.sortedWith(
+                                var71,
+                                new Comparator() {
+                                    @Override
+                                    public final int compare(T var1, T var2) {
+                                        return ComparisonsKt.compareValues(
+                                            (T)((Integer & Comparable)((java.util.Map.Entry)var2).getValue()), (T)((Integer & Comparable)((java.util.Map.Entry)var1).getValue())
+                                        );
+                                    }
                                 }
-                                if (valueOf2 != null) {
-                                    k = valueOf2.intValue() + " moving";
-                                    strArr[1] = k;
-                                    String it6 = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", "", "", -1, "...", null);
-                                    destination$iv$iv.add(nameOf2 + " " + optInt + "×" + ((Object) (it6.length() == 0 ? str21 : " (" + it6 + ")")));
-                                    $this$map$iv = $this$map$iv2;
-                                    $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
-                                    str3 = str21;
-                                    c2 = c3;
-                                    str7 = str22;
-                                    str15 = str12;
-                                }
+                            )
+                            .iterator();
+                        HashMap var72 = var20;
+                        HashMap var99 = var16;
+
+                        while (var88.hasNext()) {
+                            java.util.Map.Entry var103 = (java.util.Map.Entry)var88.next();
+                            Intrinsics.checkNotNullExpressionValue(var103, "next(...)");
+                            var103 = var103;
+                            Integer var126 = (Integer)var103.getKey();
+                            Intrinsics.checkNotNullExpressionValue(var126, "component1(...)");
+                            var126 = (String)var126;
+                            var103 = (java.util.Map.Entry)var103.getValue();
+                            Intrinsics.checkNotNullExpressionValue(var103, "component2(...)");
+                            Integer var26 = (Integer)var103;
+                            String var146 = this.nameOf((String)var126);
+                            String var106;
+                            if (var26 == 1) {
+                                var106 = "";
+                            } else {
+                                var106 = var10;
                             }
-                            k = null;
-                            strArr[1] = k;
-                            String it62 = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", "", "", -1, "...", null);
-                            destination$iv$iv.add(nameOf2 + " " + optInt + "×" + ((Object) (it62.length() == 0 ? str21 : " (" + it62 + ")")));
-                            $this$map$iv = $this$map$iv2;
-                            $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
-                            str3 = str21;
-                            c2 = c3;
-                            str7 = str22;
-                            str15 = str12;
+
+                            Object var27 = var99.get(var126);
+                            var4 = var94.length();
+                            var126 = (Integer)var72.get(var126);
+                            if (var126 != null) {
+                                var30 = var126;
+                            } else {
+                                var30 = var26;
+                            }
+
+                            var25.addView(
+                                (View)this.line(
+                                    var146
+                                        + ": "
+                                        + var26
+                                        + " quick change"
+                                        + var106
+                                        + " in "
+                                        + var27
+                                        + " of the last "
+                                        + var4
+                                        + " drives ("
+                                        + var30
+                                        + " changes in all)",
+                                    CarUi.Companion.getWARN(),
+                                    17.0F
+                                )
+                            );
                         }
                     }
-                    str12 = str15;
-                    str13 = null;
-                    strArr[0] = str13;
-                    if (m != null) {
+
+                    LinearLayout var147 = this.card();
+                    this.add((View)var147);
+                    var147.addView(this.title("Drives", "history", "device"));
+                    if (var94.length() == 0) {
+                        var147.addView((View)CardPage.line$default(this, "Each drive shows up here after the car is off.", 0, 0.0F, 6, null));
                     }
-                    k = null;
-                    strArr[1] = k;
-                    String it622 = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", "", "", -1, "...", null);
-                    destination$iv$iv.add(nameOf2 + " " + optInt + "×" + ((Object) (it622.length() == 0 ? str21 : " (" + it622 + ")")));
-                    $this$map$iv = $this$map$iv2;
-                    $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
-                    str3 = str21;
-                    c2 = c3;
-                    str7 = str22;
-                    str15 = str12;
+
+                    var4 = 0;
+                    var30 = Math.min(var94.length(), 20);
+                    String var73 = var19;
+                    String var101 = var24;
+                    String var89 = var17;
+                    JSONArray var111 = var94;
+                    var10 = var22;
+                    String var107 = var21;
+
+                    while (var4 < var30) {
+                        JSONObject var151 = var111.getJSONObject(var4);
+                        var18 = var151.optJSONObject(var101);
+                        JSONObject var150 = var151.optJSONObject(var10);
+                        JSONObject var153 = var151.optJSONObject("moving");
+                        String var74;
+                        String var90;
+                        List var122;
+                        if (var18 != null && var18.length() != 0) {
+                            Iterator var123 = var18.keys();
+                            Intrinsics.checkNotNullExpressionValue(var123, var107);
+                            Iterable var130 = CollectionsKt.sortedWith(SequencesKt.toList(SequencesKt.asSequence(var123)), new Comparator() {
+                                final JSONObject $c$inlined = var18;
+
+                                @Override
+                                public final int compare(T var1, T var2) {
+                                    var2 = var2;
+                                    Comparable var5 = this.$c$inlined.optInt(var2);
+                                    var1 = var1;
+                                    return ComparisonsKt.compareValues(var5, this.$c$inlined.optInt(var1));
+                                }
+                            });
+                            var var152 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var130, 10));
+
+                            for (Object var22$it : (Iterable) var130) {
+                                var22 = (String) var22$it;
+                                String var29;
+                                label212: {
+                                    Intrinsics.checkNotNull(var22);
+                                    var29 = this.nameOf(var22);
+                                    var6 = var18.optInt(var22);
+                                    if (var150 != null) {
+                                        Integer var135 = var150.optInt(var22);
+                                        int var44 = var135.intValue();
+                                        int var45;
+                                        if (var44 > 0) {
+                                            var45 = 1;
+                                        } else {
+                                            var45 = 0;
+                                        }
+
+                                        if (!var45) {
+                                            var135 = null;
+                                        }
+
+                                        if (var135 != null) {
+                                            var45 = var135.intValue();
+                                            var21 = var45 + " quick";
+                                            break label212;
+                                        }
+                                    }
+
+                                    var21 = null;
+                                }
+
+                                label206: {
+                                    if (var153 != null) {
+                                        Integer var142 = var153.optInt(var22);
+                                        int var47 = var142.intValue();
+                                        int var48;
+                                        if (var47 > 0) {
+                                            var48 = 1;
+                                        } else {
+                                            var48 = 0;
+                                        }
+
+                                        if (!var48) {
+                                            var142 = null;
+                                        }
+
+                                        if (var142 != null) {
+                                            var48 = var142.intValue();
+                                            var22 = var48 + " moving";
+                                            break label206;
+                                        }
+                                    }
+
+                                    var22 = null;
+                                }
+
+                                var21 = CollectionsKt.joinToString(CollectionsKt.listOfNotNull(new String[]{var21, var22}), ", ", "", "", -1, "...", null);
+                                boolean var50;
+                                if (var21.length() == 0) {
+                                    var50 = true;
+                                } else {
+                                    var50 = false;
+                                }
+
+                                if (var50) {
+                                    var21 = var73;
+                                } else {
+                                    var21 = " (" + var21 + ")";
+                                }
+
+                                var152.add(var29 + " " + var6 + "×" + var21);
+                            }
+
+                            var10 = var89;
+                            var122 = var152;
+                            var90 = var73;
+                            var74 = var10;
+                        } else {
+                            var90 = var73;
+                            List var129 = CollectionsKt.listOf("nothing changed");
+                            var10 = var89;
+                            var74 = var10;
+                            var122 = var129;
+                        }
+
+                        String var116 = this.shortFmt.format(new Date(var151.optLong("start") * 1000));
+                        int var51 = var151.optInt("segs");
+                        var147.addView((View)this.line(var116 + " · " + var51 + " min", CarUi.Companion.getTEXT(), 17.0F));
+                        String var117 = CollectionsKt.joinToString(var122, " · ", "", "", -1, "...", null);
+                        String var118 = "      " + var117;
+                        if (var150 != null && var150.length() > 0) {
+                            var51 = CarUi.Companion.getWARN();
+                        } else {
+                            var51 = CarUi.Companion.getDIM();
+                        }
+
+                        var147.addView((View)this.line(var118, var51, 15.0F));
+                        var4++;
+                        var89 = var10;
+                        var10 = var74;
+                        var73 = var90;
+                    }
+
+                    String var100 = var10;
+                    JSONArray var75 = var18.optJSONArray("events");
+                    JSONArray var66 = var75;
+                    if (var75 == null) {
+                        var66 = new JSONArray();
+                    }
+
+                    if (var66.length() > 0) {
+                        LinearLayout var112 = this.card();
+                        this.add((View)var112);
+                        var112.addView(this.title("Every change", "bell", var89));
+                        String var76 = "";
+                        var4 = 0;
+                        var30 = Math.min(var66.length(), 300);
+                        JSONArray var102 = var66;
+
+                        while (var4 < var30) {
+                            var18 = var102.getJSONObject(var4);
+                            double var1 = var18.optDouble("t");
+                            Date var124 = new Date((long)(1000 * var1));
+                            String var108 = this.dayFmt.format(var124);
+                            var10 = var76;
+                            if (!Intrinsics.areEqual(var108, var76)) {
+                                var10 = var108;
+                                CarUi var77 = this.getUi();
+                                Intrinsics.checkNotNull(var108);
+                                var112.addView((View)var77.header(var108));
+                            }
+
+                            String var131 = var18.optString("item");
+                            String var78;
+                            if (var18.optBoolean("moving")) {
+                                int var53 = var18.optInt("mph");
+                                var78 = var53 + " mph";
+                            } else {
+                                var78 = "parked";
+                            }
+
+                            String var109;
+                            if (var18.optBoolean(var100)) {
+                                var109 = "QUICK";
+                            } else {
+                                var109 = null;
+                            }
+
+                            String var79 = CollectionsKt.joinToString(CollectionsKt.listOfNotNull(new String[]{var78, var109}), " · ", "", "", -1, "...", null);
+                            String var110 = this.timeFmt.format(var124);
+                            Intrinsics.checkNotNull(var131);
+                            var19 = this.nameOf(var131);
+                            String var132 = this.word(var131, var18.optBoolean("on"));
+                            String var80 = var110 + "   " + var19 + " " + var132 + "   · " + var79;
+                            int var54;
+                            if (var18.optBoolean(var100)) {
+                                var54 = CarUi.Companion.getWARN();
+                            } else {
+                                var54 = CarUi.Companion.getTEXT();
+                            }
+
+                            var112.addView((View)this.line(var80, var54, 16.0F));
+                            var4++;
+                            var76 = var10;
+                        }
+                    }
+
+                    return;
                 }
-                str9 = str7;
-                str10 = str15;
-                str11 = str3;
-                parts = (List) destination$iv$iv;
-                JSONObject s2 = s;
-                List parts2 = parts;
-                dc.addView(line(this.shortFmt.format(new Date(d2.optLong("start") * 1000)) + " · " + d2.optInt("segs") + " min", CarUi.Companion.getTEXT(), 17.0f));
-                dc.addView(line("      " + CollectionsKt.joinToString(parts2, " · ", "", "", -1, "...", null), (f3 != null || f3.length() <= 0) ? CarUi.Companion.getDIM() : CarUi.Companion.getWARN(), 15.0f));
-                i3++;
-                s = s2;
-                drives = drives2;
-                str5 = str20;
-                fc2 = fc;
-                str6 = str8;
-                min = i;
-                str3 = str11;
-                str7 = str9;
-                str15 = str10;
-            }
-            parts = CollectionsKt.listOf("nothing changed");
-            JSONObject s22 = s;
-            List parts22 = parts;
-            dc.addView(line(this.shortFmt.format(new Date(d2.optLong("start") * 1000)) + " · " + d2.optInt("segs") + " min", CarUi.Companion.getTEXT(), 17.0f));
-            dc.addView(line("      " + CollectionsKt.joinToString(parts22, " · ", "", "", -1, "...", null), (f3 != null || f3.length() <= 0) ? CarUi.Companion.getDIM() : CarUi.Companion.getWARN(), 15.0f));
-            i3++;
-            s = s22;
-            drives = drives2;
-            str5 = str20;
-            fc2 = fc;
-            str6 = str8;
-            min = i;
-            str3 = str11;
-            str7 = str9;
-            str15 = str10;
-        }
-        String str23 = str7;
-        String str24 = str15;
-        JSONObject s3 = s;
-        JSONArray evs = s3.optJSONArray("events");
-        if (evs == null) {
-            evs = new JSONArray();
-        }
-        if (evs.length() > 0) {
-            LinearLayout ec = card();
-            add(ec);
-            ec.addView(title("Every change", "bell", str24));
-            String day3 = "";
-            int i4 = 0;
-            int min2 = Math.min(evs.length(), 300);
-            while (i4 < min2) {
-                JSONObject e = evs.getJSONObject(i4);
-                JSONArray evs2 = evs;
-                JSONObject s4 = s3;
-                Date t = new Date((long) (1000 * e.optDouble("t")));
-                String dd = this.dayFmt.format(t);
-                if (!Intrinsics.areEqual(dd, day3)) {
-                    day3 = dd;
-                    CarUi ui = getUi();
-                    Intrinsics.checkNotNull(dd);
-                    ec.addView(ui.header(dd));
+
+                JSONObject var133 = var94.getJSONObject(var4);
+                JSONObject var82 = var133.optJSONObject("fast");
+                if (var82 != null) {
+                    Iterator var97 = var82.keys();
+                    Intrinsics.checkNotNullExpressionValue(var97, "keys(...)");
+
+                    while (var97.hasNext()) {
+                        var22 = (String)var97.next();
+                        Map var148 = var15;
+                        Integer var23 = (Integer)var15.get(var22);
+                        int var41;
+                        if (var23 != null) {
+                            var41 = var23;
+                        } else {
+                            var41 = 0;
+                        }
+
+                        var148.put(var22, var41 + var82.optInt(var22));
+                        Map var144 = var16;
+                        Integer var149 = (Integer)var16.get(var22);
+                        if (var149 != null) {
+                            var41 = var149;
+                        } else {
+                            var41 = 0;
+                        }
+
+                        var144.put(var22, var41 + 1);
+                    }
+
+                    Unit var83 = Unit.INSTANCE;
+                    Unit var84 = Unit.INSTANCE;
                 }
-                String id = e.optString("item");
-                String[] strArr2 = new String[2];
-                if (e.optBoolean("moving")) {
-                    day = day3;
-                    day2 = e.optInt("mph") + " mph";
-                } else {
-                    day = day3;
-                    day2 = "parked";
+
+                JSONObject var85 = var133.optJSONObject("changes");
+                if (var85 != null) {
+                    Iterator var98 = var85.keys();
+                    Intrinsics.checkNotNullExpressionValue(var98, "keys(...)");
+
+                    while (var98.hasNext()) {
+                        var22 = (String)var98.next();
+                        Map var134 = var20;
+                        Integer var145 = (Integer)var20.get(var22);
+                        int var43;
+                        if (var145 != null) {
+                            var43 = var145;
+                        } else {
+                            var43 = 0;
+                        }
+
+                        var134.put(var22, var43 + var85.optInt(var22));
+                    }
+
+                    Unit var86 = Unit.INSTANCE;
+                    Unit var87 = Unit.INSTANCE;
                 }
-                strArr2[0] = day2;
-                String str25 = str23;
-                strArr2[1] = e.optBoolean(str25) ? "QUICK" : null;
-                String tail = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr2), " · ", "", "", -1, "...", null);
-                String format = this.timeFmt.format(t);
-                Intrinsics.checkNotNull(id);
-                int i5 = min2;
-                LinearLayout dc2 = dc;
-                ec.addView(line(format + "   " + nameOf(id) + " " + word(id, e.optBoolean("on")) + "   · " + tail, e.optBoolean(str25) ? CarUi.Companion.getWARN() : CarUi.Companion.getTEXT(), 16.0f));
-                i4++;
-                str23 = str25;
-                evs = evs2;
-                s3 = s4;
-                day3 = day;
-                min2 = i5;
-                dc = dc2;
+
+                var4++;
             }
         }
     }
@@ -797,111 +865,138 @@ public final class DoorsBeltsView extends CardPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:60:0x0138, code lost:
-    
-        if (r13.equals("null") == false) goto L53;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:61:0x0144, code lost:
-    
-        r10 = "not learned";
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:64:0x0141, code lost:
-    
-        if (r13.equals("") == false) goto L53;
-     */
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r8v0 */
-    /* JADX WARN: Type inference failed for: r8v1 */
-    /* JADX WARN: Type inference failed for: r8v10 */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Code restructure failed;Type inference failed;incorrect) */
     private final void paintNow() {
-        String str;
-        String str2;
-        int dim;
-        String s2;
-        LinearLayout c = this.nowCard;
-        if (c == null) {
-            return;
-        }
-        c.removeAllViews();
-        c.addView(title("Right now", "eye", "device"));
-        JSONObject s = this.status;
-        if (s == null) {
-            return;
-        }
-        JSONObject lv = this.live;
-        if (!s.optBoolean("carOn")) {
-            c.addView(CardPage.line$default(this, "Shows every switch live with the car on and in Park.", 0, 0.0f, 6, null));
-            return;
-        }
-        if (lv == null) {
-            DoorsBeltsView doorsBeltsView = this;
-            String str3 = this.liveErr;
-            if (str3 == null) {
-                str3 = "Reading…";
-            }
-            c.addView(CardPage.line$default(doorsBeltsView, str3, 0, 0.0f, 6, null));
-            return;
-        }
-        JSONObject words = lv.optJSONObject("words");
-        LinearLayout grid = new LinearLayout(getContext());
-        grid.setOrientation(1);
-        for (JSONObject it : items()) {
-            String id = it.optString("id");
-            String w = null;
-            if (words != null) {
-                String s2 = words.optString(id);
-                if (s2 != null && s2.length() > 0 && !Intrinsics.areEqual(s2, "null")) {
-                    w = s2;
+        LinearLayout var6 = this.nowCard;
+        if (var6 != null) {
+            var6.removeAllViews();
+            var6.addView(this.title("Right now", "eye", "device"));
+            JSONObject var3 = this.status;
+            if (var3 != null) {
+                JSONObject var2 = this.live;
+                if (!var3.optBoolean("carOn")) {
+                    var6.addView((View)CardPage.line$default(this, "Shows every switch live with the car on and in Park.", 0, 0.0F, 6, null));
+                } else if (var2 == null) {
+                    CardPage var22 = this;
+                    String var21 = this.liveErr;
+                    String var20 = var21;
+                    if (var21 == null) {
+                        var20 = "Reading…";
+                    }
+
+                    var6.addView((View)CardPage.line$default(var22, var20, 0, 0.0F, 6, null));
+                } else {
+                    JSONObject var7 = var2.optJSONObject("words");
+                    LinearLayout var8 = new LinearLayout(this.getContext());
+                    var8.setOrientation(1);
+
+                    for (JSONObject var10 : this.items()) {
+                        String var5 = var10.optString("id");
+                        CarUi.Companion var14 = null;
+                        String var4 = var14;
+                        if (var7 != null) {
+                            var5 = var7.optString(var5);
+                            var4 = var14;
+                            if (var5 != null) {
+                                boolean var1;
+                                if (var5.length() > 0) {
+                                    var1 = true;
+                                } else {
+                                    var1 = false;
+                                }
+
+                                if (var1 && !Intrinsics.areEqual(var5, "null")) {
+                                    var1 = true;
+                                } else {
+                                    var1 = false;
+                                }
+
+                                var4 = var14;
+                                if (var1) {
+                                    var4 = var5;
+                                }
+                            }
+                        }
+
+                        var14 = var10.optString("source");
+                        LinearLayout var24 = new LinearLayout(this.getContext());
+                        var24.setOrientation(0);
+                        var24.setGravity(16);
+                        var24.setPadding(0, this.getUi().dp(3), 0, this.getUi().dp(3));
+                        TextView var11 = new TextView(var24.getContext());
+                        var11.setText(var10.optString("name"));
+                        var11.setTextColor(CarUi.Companion.getTEXT());
+                        var11.setTextSize(17.0F);
+                        var24.addView((View)var11, (android.view.ViewGroup.LayoutParams)(new LayoutParams(this.getUi().dp(260), -2)));
+                        TextView var25 = new TextView(var24.getContext());
+                        if (var4 != null) {
+                            var14 = var4;
+                        } else {
+                            label82: {
+                                label81: {
+                                    if (var14 != null) {
+                                        switch (var14.hashCode()) {
+                                            case -1282241876:
+                                                if (var14.equals("not on bus")) {
+                                                    var14 = "not on the comma's bus";
+                                                    break label82;
+                                                }
+                                                break;
+                                            case 0:
+                                                if (var14.equals("")) {
+                                                    break label81;
+                                                }
+                                                break;
+                                            case 3392903:
+                                                if (var14.equals("null")) {
+                                                    break label81;
+                                                }
+                                        }
+                                    }
+
+                                    var14 = "–";
+                                    break label82;
+                                }
+
+                                var14 = "not learned";
+                            }
+
+                            var14 = (CharSequence)var14;
+                        }
+
+                        var25.setText((CharSequence)var14);
+                        int var13;
+                        if (Intrinsics.areEqual(var4, "open")) {
+                            var13 = CarUi.Companion.getWARN();
+                        } else if (Intrinsics.areEqual(var4, "buckled")) {
+                            var13 = CarUi.Companion.getACCENT();
+                        } else {
+                            var14 = CarUi.Companion;
+                            if (var4 == null) {
+                                var13 = var14.getDIM();
+                            } else {
+                                var13 = var14.getTEXT();
+                            }
+                        }
+
+                        var25.setTextColor(var13);
+                        var25.setTextSize(17.0F);
+                        Typeface var19;
+                        if (var4 != null) {
+                            var19 = Typeface.DEFAULT_BOLD;
+                        } else {
+                            var19 = Typeface.DEFAULT;
+                        }
+
+                        var25.setTypeface(var19);
+                        var24.addView((View)var25);
+                        var8.addView((View)var24);
+                    }
+
+                    var6.addView((View)var8);
                 }
             }
-            String src = it.optString("source");
-            LinearLayout row = new LinearLayout(getContext());
-            row.setOrientation(0);
-            row.setGravity(16);
-            row.setPadding(0, getUi().dp(3), 0, getUi().dp(3));
-            TextView name = new TextView(row.getContext());
-            name.setText(it.optString("name"));
-            name.setTextColor(CarUi.Companion.getTEXT());
-            name.setTextSize(17.0f);
-            row.addView(name, new LinearLayout.LayoutParams(getUi().dp(260), -2));
-            TextView val = new TextView(row.getContext());
-            String shown;
-            if (w != null) {
-                shown = w;
-            } else if ("not on bus".equals(src)) {
-                shown = "not on the comma's bus";
-            } else if ("".equals(src) || "null".equals(src)) {
-                shown = "not learned";
-            } else {
-                shown = "–";
-            }
-            val.setText(shown);
-            int col;
-            if (Intrinsics.areEqual(w, "open")) {
-                col = CarUi.Companion.getWARN();
-            } else if (Intrinsics.areEqual(w, "buckled")) {
-                col = CarUi.Companion.getACCENT();
-            } else {
-                col = w == null ? CarUi.Companion.getDIM() : CarUi.Companion.getTEXT();
-            }
-            val.setTextColor(col);
-            val.setTextSize(17.0f);
-            val.setTypeface(w != null ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
-            row.addView(val);
-            grid.addView(row);
         }
-        c.addView(grid);
     }
 
     private final void openLearn() {

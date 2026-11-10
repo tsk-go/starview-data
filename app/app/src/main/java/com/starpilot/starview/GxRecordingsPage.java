@@ -73,6 +73,7 @@ import okhttp3.ResponseBody;
 import okio.BufferedSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import kotlin.jvm.internal.Ref.ObjectRef;
 
 /* compiled from: GxRecordings.kt */
 public final class GxRecordingsPage extends GxPage {
@@ -107,24 +108,21 @@ public final class GxRecordingsPage extends GxPage {
     private final HashSet<String> thumbFailed;
     private final ArrayDeque<ThumbJob> thumbQueue;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    /* JADX WARN: Type inference failed for: r0v4, types: [com.starpilot.starview.GxRecordingsPage$thumbCache$1] */
-    public GxRecordingsPage(Activity act, GxHost gx) {
-        super(act, gx);
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(gx, "gx");
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public GxRecordingsPage(Activity var1, GxHost var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "gx");
         this.routes = new ArrayList<>();
         this.routesError = "";
         this.search = "";
         this.screens = new ArrayList<>();
         this.screenError = "";
-        this.thumbCache = new LruCache<String, Bitmap>() { // from class: com.starpilot.starview.GxRecordingsPage$thumbCache$1
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.util.LruCache
-            public int sizeOf(String key, Bitmap value) {
-                Intrinsics.checkNotNullParameter(key, "key");
-                Intrinsics.checkNotNullParameter(value, "value");
-                return value.getByteCount();
+        this.thumbCache = new LruCache<String, Bitmap>() {
+            protected int sizeOf(String var1, Bitmap var2x) {
+                Intrinsics.checkNotNullParameter(var1, "key");
+                Intrinsics.checkNotNullParameter(var2x, "value");
+                return var2x.getByteCount();
             }
         };
         this.thumbFailed = new HashSet<>();
@@ -383,39 +381,27 @@ public final class GxRecordingsPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Type inference failed for: r2v1, types: [T, okhttp3.Call] */
+    /* VF: from Vineflower (jadx: Type inference failed) */
     private final void loadRoutes() {
-        if (this.routesList == null || getHost() == null) {
-            return;
-        }
-        Call call = this.routeCall;
-        if (call != null) {
-            call.cancel();
-        }
-        this.routes.clear();
-        this.routesLoading = true;
-        this.routesError = "";
-        this.routesProgress = 0;
-        this.routesTotal = 0;
-        renderRoutes();
-        final HashSet seen = new HashSet();
-        final Ref.ObjectRef call2 = new Ref.ObjectRef();
-        call2.element = stream("/api/routes", new Function1() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda51
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit loadRoutes$lambda$15;
-                loadRoutes$lambda$15 = GxRecordingsPage.loadRoutes$lambda$15(GxRecordingsPage.this, seen, (JSONObject) obj);
-                return loadRoutes$lambda$15;
+        if (this.routesList != null && this.getHost() != null) {
+            Call var1 = this.routeCall;
+            if (var1 != null) {
+                var1.cancel();
             }
-        }, new Function1() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda52
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit loadRoutes$lambda$16;
-                loadRoutes$lambda$16 = GxRecordingsPage.loadRoutes$lambda$16(GxRecordingsPage.this, call2, (String) obj);
-                return loadRoutes$lambda$16;
-            }
-        });
-        this.routeCall = (Call) call2.element;
+
+            this.routes.clear();
+            this.routesLoading = true;
+            this.routesError = "";
+            this.routesProgress = 0;
+            this.routesTotal = 0;
+            this.renderRoutes();
+            HashSet var2 = new HashSet();
+            ObjectRef var3 = new ObjectRef();
+            var3.element = (T)this.stream(
+                "/api/routes", new GxRecordingsPage$$ExternalSyntheticLambda51(this, var2), new GxRecordingsPage$$ExternalSyntheticLambda52(this, var3)
+            );
+            this.routeCall = (Call)var3.element;
+        }
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -540,399 +526,486 @@ public final class GxRecordingsPage extends GxPage {
         return (ZonedDateTime) (KtCompat.isFailure(m1191constructorimpl3) ? null : m1191constructorimpl3);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:6:0x0046, code lost:
-    
-        if (r4 == null) goto L8;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void normalize(GxRecordingsRoute r) {
-        String str;
-        String displayDate;
-        String gxRecordingsNorm;
-        String gxRecordingsNorm2;
-        List<String> list;
-        String gxRecordingsNorm3;
-        List<String> list2;
-        String it;
-        Instant instant;
-        ZonedDateTime tsDate = parseStarted(r.getTimestamp());
-        ZonedDateTime date = parseStarted(r.getStartedAt());
-        if (date == null) {
-            date = tsDate;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final void normalize(GxRecordingsRoute var1) {
+        String var15 = null; Object var18 = null; // declarations Vineflower left out
+        ZonedDateTime var6 = this.parseStarted(var1.getTimestamp());
+        ZonedDateTime var4 = this.parseStarted(var1.getStartedAt());
+        ZonedDateTime var5 = var4;
+        if (var4 == null) {
+            var5 = var6;
         }
-        if (date != null) {
-            ZonedDateTime it2 = date;
-            str = it2.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)) + " at " + it2.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));
-        }
-        str = "Unknown date";
-        r.setDisplayDate(str);
-        r.setCustomName(r.getIsCustomName() || (r.getTimestamp() != null && tsDate == null));
-        if (r.getIsCustomName()) {
-            displayDate = r.getTimestamp();
-            if (displayDate == null) {
-                displayDate = "";
-            }
-        } else {
-            displayDate = r.getDisplayDate();
-        }
-        r.setDisplayName(displayDate);
-        r.setStartedAtMs((date == null || (instant = date.toInstant()) == null) ? null : Long.valueOf(instant.toEpochMilli()));
-        gxRecordingsNorm = GxRecordingsKt.gxRecordingsNorm(r.getName());
-        Iterable $this$filter$iv = CollectionsKt.listOf(gxRecordingsNorm);
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv) {
-            String it3 = (String) element$iv$iv;
-            if (it3.length() > 0) {
-                destination$iv$iv.add(element$iv$iv);
-            }
-        }
-        r.setIds((List) destination$iv$iv);
-        gxRecordingsNorm2 = GxRecordingsKt.gxRecordingsNorm(r.getIsCustomName() ? r.getDisplayName() : "");
-        Iterable $this$filter$iv2 = CollectionsKt.listOf(gxRecordingsNorm2);
-        Collection destination$iv$iv2 = new ArrayList();
-        for (Object element$iv$iv2 : $this$filter$iv2) {
-            String it4 = (String) element$iv$iv2;
-            if (it4.length() > 0) {
-                destination$iv$iv2.add(element$iv$iv2);
-            }
-        }
-        r.setTitles((List) destination$iv$iv2);
-        if (date == null) {
-            list = CollectionsKt.emptyList();
-        } else {
-            Iterable $this$map$iv = CollectionsKt.listOf((Object[]) new String[]{date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)), date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.US)), date.format(DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US)), date.format(DateTimeFormatter.ofPattern("M/d/yyyy", Locale.US)), date.format(DateTimeFormatter.ofPattern("yyyy-M-d", Locale.US))});
-            Collection destination$iv$iv3 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-            for (Object item$iv$iv : $this$map$iv) {
-                String it5 = (String) item$iv$iv;
-                gxRecordingsNorm3 = GxRecordingsKt.gxRecordingsNorm(it5);
-                destination$iv$iv3.add(gxRecordingsNorm3);
-            }
-            Iterable $this$filter$iv3 = (List) destination$iv$iv3;
-            Collection destination$iv$iv4 = new ArrayList();
-            for (Object element$iv$iv3 : $this$filter$iv3) {
-                String it6 = (String) element$iv$iv3;
-                if (it6.length() > 0) {
-                    destination$iv$iv4.add(element$iv$iv3);
+
+        label141: {
+            if (var5 != null) {
+                String var7 = var5.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG));
+                String var14 = var5.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));
+                var7 = var7 + " at " + var14;
+                var15 = var7;
+                if (var7 != null) {
+                    break label141;
                 }
             }
-            list = (List) destination$iv$iv4;
+
+            var15 = "Unknown date";
         }
-        r.setDates(list);
-        if (date == null) {
-            list2 = CollectionsKt.emptyList();
+
+        var1.setDisplayDate(var15);
+        boolean var3;
+        if (var1.isCustomName() || var1.getTimestamp() != null && var6 == null) {
+            var3 = true;
         } else {
-            Iterable $this$map$iv2 = CollectionsKt.listOf((Object[]) new String[]{date.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)), date.format(DateTimeFormatter.ofPattern("h:mm a", Locale.US)), date.format(DateTimeFormatter.ofPattern("HH:mm", Locale.US))});
-            Collection destination$iv$iv5 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv2, 10));
-            for (Object item$iv$iv2 : $this$map$iv2) {
-                String it7 = (String) item$iv$iv2;
-                it = GxRecordingsKt.gxRecordingsNorm(it7);
-                destination$iv$iv5.add(it);
+            var3 = false;
+        }
+
+        var1.setCustomName(var3);
+        var3 = var1.isCustomName();
+        String var39 = "";
+        String var16;
+        if (var3) {
+            String var50 = var1.getTimestamp();
+            var16 = var50;
+            if (var50 == null) {
+                var16 = "";
             }
-            Iterable $this$filter$iv4 = (List) destination$iv$iv5;
-            Collection destination$iv$iv6 = new ArrayList();
-            for (Object element$iv$iv4 : $this$filter$iv4) {
-                String it8 = (String) element$iv$iv4;
-                if (it8.length() > 0) {
-                    destination$iv$iv6.add(element$iv$iv4);
+        } else {
+            var16 = var1.getDisplayDate();
+        }
+
+        label126: {
+            var1.setDisplayName(var16);
+            if (var5 != null) {
+                Instant var17 = var5.toInstant();
+                if (var17 != null) {
+                    var18 = var17.toEpochMilli();
+                    break label126;
                 }
             }
-            list2 = (List) destination$iv$iv6;
+
+            var18 = null;
         }
-        r.setTimes(list2);
+
+        var1.setStartedAtMs(var18);
+        Iterable var51 = CollectionsKt.listOf(GxRecordingsKt.gxRecordingsNorm(var1.getName()));
+        var var19 = new ArrayList();
+
+        for (Object var8 : var51) {
+            boolean var2;
+            if (((String)var8).length() > 0) {
+                var2 = true;
+            } else {
+                var2 = false;
+            }
+
+            if (var2) {
+                var19.add(var8);
+            }
+        }
+
+        List var20 = var19;
+        var1.setIds(var20);
+        String var21 = var39;
+        if (var1.isCustomName()) {
+            var21 = var1.getDisplayName();
+        }
+
+        Iterable var40 = CollectionsKt.listOf(GxRecordingsKt.gxRecordingsNorm(var21));
+        var var22 = new ArrayList();
+
+        for (Object var53 : var40) {
+            boolean var10;
+            if (((String)var53).length() > 0) {
+                var10 = true;
+            } else {
+                var10 = false;
+            }
+
+            if (var10) {
+                var22.add(var53);
+            }
+        }
+
+        List var23 = var22;
+        var1.setTitles(var23);
+        List var24;
+        if (var5 == null) {
+            var24 = CollectionsKt.emptyList();
+        } else {
+            String var9 = var5.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG));
+            String var54 = var5.format(DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.US));
+            String var56 = var5.format(DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US));
+            String var25 = var5.format(DateTimeFormatter.ofPattern("M/d/yyyy", Locale.US));
+            String var42 = var5.format(DateTimeFormatter.ofPattern("yyyy-M-d", Locale.US));
+            Iterable var43 = CollectionsKt.listOf(new String[]{var9, var54, var56, var25, var42});
+            var var26 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var43, 10));
+            Iterator var44 = var43.iterator();
+
+            while (var44.hasNext()) {
+                var26.add(GxRecordingsKt.gxRecordingsNorm((String)var44.next()));
+            }
+
+            List var27 = var26;
+            Iterable var45 = var27;
+            var var28 = new ArrayList();
+
+            for (Object var46 : var45) {
+                boolean var11;
+                if (((String)var46).length() > 0) {
+                    var11 = true;
+                } else {
+                    var11 = false;
+                }
+
+                if (var11) {
+                    var28.add(var46);
+                }
+            }
+
+            var24 = var28;
+        }
+
+        var1.setDates(var24);
+        List var29;
+        if (var5 == null) {
+            var29 = CollectionsKt.emptyList();
+        } else {
+            String var30 = var5.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT));
+            String var47 = var5.format(DateTimeFormatter.ofPattern("h:mm a", Locale.US));
+            String var34 = var5.format(DateTimeFormatter.ofPattern("HH:mm", Locale.US));
+            Iterable var35 = CollectionsKt.listOf(new String[]{var30, var47, var34});
+            var var31 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var35, 10));
+            Iterator var36 = var35.iterator();
+
+            while (var36.hasNext()) {
+                var31.add(GxRecordingsKt.gxRecordingsNorm((String)var36.next()));
+            }
+
+            List var32 = var31;
+            Iterable var37 = var32;
+            var var33 = new ArrayList();
+
+            for (Object var38 : var37) {
+                boolean var12;
+                if (((String)var38).length() > 0) {
+                    var12 = true;
+                } else {
+                    var12 = false;
+                }
+
+                if (var12) {
+                    var33.add(var38);
+                }
+            }
+
+            var29 = var33;
+        }
+
+        var1.setTimes(var29);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:108:0x02bf, code lost:
-    
-        if (r1 == false) goto L155;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:72:0x01ef, code lost:
-    
-        if (r1 != false) goto L113;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:91:0x027d, code lost:
-    
-        if (r1 == false) goto L141;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:142:0x0222  */
-    /* JADX WARN: Removed duplicated region for block: B:147:0x023d A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:182:0x00cc A[LOOP:8: B:170:0x007a->B:182:0x00cc, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:183:0x00ca A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:46:0x0199  */
-    /* JADX WARN: Removed duplicated region for block: B:81:0x020d  */
-    /* JADX WARN: Removed duplicated region for block: B:85:0x0240  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final boolean matches(GxRecordingsRoute r, String query) {
-        String nq;
-        boolean z;
-        boolean z2;
-        Iterable iterable;
-        boolean z3;
-        boolean z4;
-        boolean z5;
-        Iterable $this$any$iv;
-        Iterator it;
-        boolean z6;
-        boolean z7;
-        boolean z8;
-        boolean z9;
-        boolean z10;
-        boolean z11;
-        boolean z12;
-        String raw = StringsKt.trim((CharSequence) query).toString();
-        nq = GxRecordingsKt.gxRecordingsNorm(query);
-        Iterable $this$filter$iv = StringsKt.split((CharSequence) nq, new String[]{" "}, false, 0);
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv) {
-            String it2 = (String) element$iv$iv;
-            if (it2.length() > 0) {
-                destination$iv$iv.add(element$iv$iv);
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+    private final boolean matches(GxRecordingsRoute var1, String var2) {
+        boolean var23 = false; boolean var25 = false; // declarations Vineflower left out
+        String var10 = StringsKt.trim(var2).toString();
+        var2 = GxRecordingsKt.gxRecordingsNorm(var2);
+        CharSequence var9 = var2;
+        boolean var8 = false;
+        Iterable var11 = StringsKt.split(var9, new String[]{" "}, false, 0);
+        var var33 = new ArrayList();
+
+        for (Object var12 : var11) {
+            boolean var3;
+            if (((String)var12).length() > 0) {
+                var3 = true;
+            } else {
+                var3 = false;
+            }
+
+            if (var3) {
+                var33.add(var12);
             }
         }
-        List tokens = (List) destination$iv$iv;
-        if (tokens.isEmpty()) {
+
+        List var34 = var33;
+        if (var34.isEmpty()) {
             return true;
-        }
-        List $this$any$iv2 = tokens;
-        if (($this$any$iv2 instanceof Collection) && $this$any$iv2.isEmpty()) {
-            z = false;
         } else {
-            Iterator it3 = $this$any$iv2.iterator();
-            while (true) {
-                if (!it3.hasNext()) {
-                    z = false;
-                    break;
+            var11 = var34;
+            boolean var19;
+            if (var11 instanceof Collection && ((Collection)var11).isEmpty()) {
+                var19 = false;
+            } else {
+                Iterator var45 = var11.iterator();
+
+                while (true) {
+                    if (!var45.hasNext()) {
+                        var19 = false;
+                        break;
+                    }
+
+                    label268: {
+                        String var40 = (String)var45.next();
+                        if (var40.length() >= 3) {
+                            var var13 = GxRecordingsKt.GxRecordingsMonths;
+                            if (var13 instanceof Collection && ((Collection)var13).isEmpty()) {
+                                var19 = (boolean)false;
+                            } else {
+                                Iterator var53 = var13.iterator();
+
+                                while (true) {
+                                    if (!var53.hasNext()) {
+                                        var19 = (boolean)false;
+                                        break;
+                                    }
+
+                                    if (StringsKt.startsWith((String)var53.next(), var40, false)) {
+                                        var19 = (boolean)true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (var19) {
+                                var19 = (boolean)true;
+                                break label268;
+                            }
+                        }
+
+                        var19 = (boolean)false;
+                    }
+
+                    if (var19) {
+                        var19 = true;
+                        break;
+                    }
                 }
-                Object element$iv = it3.next();
-                String t = (String) element$iv;
-                if (t.length() >= 3) {
-                    iterable = GxRecordingsKt.GxRecordingsMonths;
-                    Iterable $this$any$iv3 = iterable;
-                    if (!($this$any$iv3 instanceof Collection) || !((Collection) $this$any$iv3).isEmpty()) {
-                        Iterator it4 = $this$any$iv3.iterator();
+            }
+
+            boolean var4;
+            if (!var19
+                && !new Regex("\\d\\s*[/-]\\s*\\d").containsMatchIn(var10)
+                && !new Regex("\\d+(?:st|nd|rd|th)\\b", RegexOption.IGNORE_CASE).containsMatchIn(var10)
+                && !new Regex("^\\d{4}$").matches(var2)) {
+                var4 = false;
+            } else {
+                var4 = true;
+            }
+
+            boolean var5;
+            label243: {
+                if (!new Regex("^\\d{1,2}$").matches(var2) && !new Regex("\\d\\s*:\\s*\\d").containsMatchIn(var10)) {
+                    var11 = var34;
+                    if (var11 instanceof Collection && ((Collection)var11).isEmpty()) {
+                        var19 = (boolean)false;
+                    } else {
+                        Iterator var46 = var11.iterator();
+
                         while (true) {
-                            if (!it4.hasNext()) {
-                                z3 = false;
+                            if (!var46.hasNext()) {
+                                var19 = (boolean)false;
                                 break;
                             }
-                            Object element$iv2 = it4.next();
-                            String it5 = (String) element$iv2;
-                            if (StringsKt.startsWith(it5, t, false)) {
-                                z3 = true;
+
+                            String var42 = (String)var46.next();
+                            if (!Intrinsics.areEqual(var42, "am") && !Intrinsics.areEqual(var42, "pm")) {
+                                var19 = (boolean)false;
+                            } else {
+                                var19 = (boolean)true;
+                            }
+
+                            if (var19) {
+                                var19 = (boolean)true;
                                 break;
                             }
                         }
-                    } else {
-                        z3 = false;
                     }
-                    if (z3) {
-                        z2 = true;
-                        if (!z2) {
-                            z = true;
+
+                    if (!var19) {
+                        var5 = false;
+                        break label243;
+                    }
+                }
+
+                var5 = true;
+            }
+
+            char var31;
+            label221: {
+                label220: {
+                    String var43 = StringsKt.replace(var2, " ", "", false);
+                    boolean var7 = new Regex("^[0-9a-f]+$").matches(var43);
+                    if (!StringsKt.contains(var10, "--", false)) {
+                        if (!var7) {
+                            break label220;
+                        }
+
+                        if (var43.length() < 8) {
+                            if (var43.length() < 4) {
+                                break label220;
+                            }
+
+                            CharSequence var35 = var43;
+                            var19 = false;
+
+                            while (true) {
+                                if (var19 >= var35.length()) {
+                                    var23 = false;
+                                    break;
+                                }
+
+                                if (Character.isDigit(var35.charAt(((var19) ? 1 : 0)))) {
+                                    var23 = true;
+                                    break;
+                                }
+
+                                var19++;
+                            }
+
+                            if (!var23) {
+                                break label220;
+                            }
+
+                            CharSequence var36 = var43;
+                            var19 = false;
+
+                            while (true) {
+                                if (var19 >= var36.length()) {
+                                    var25 = false;
+                                    break;
+                                }
+
+                                var31 = var36.charAt(((var19) ? 1 : 0));
+                                boolean var30;
+                                if ('a' <= var31 && var31 < 'g') {
+                                    var30 = true;
+                                } else {
+                                    var30 = false;
+                                }
+
+                                if (var30) {
+                                    var25 = true;
+                                    break;
+                                }
+
+                                var19++;
+                            }
+
+                            if (!var25) {
+                                break label220;
+                            }
+                        }
+                    }
+
+                    var31 = '\u0001';
+                    break label221;
+                }
+
+                var31 = '\u0000';
+            }
+
+            Regex var37 = new Regex("^\\d{1,2}$");
+            Regex var44 = new Regex("^\\d{4}$");
+            var var47 = var1.getTitles();
+            boolean var26;
+            if (var47 instanceof Collection && ((Collection)var47).isEmpty()) {
+                var26 = false;
+            } else {
+                Iterator var48 = var47.iterator();
+
+                while (true) {
+                    if (!var48.hasNext()) {
+                        var26 = false;
+                        break;
+                    }
+
+                    if (matches$m$default(var2, var34, var37, var44, (String)var48.next(), false, 32, null)) {
+                        var26 = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!var26) {
+                if (var4) {
+                    var47 = var1.getDates();
+                    if (var47 instanceof Collection && ((Collection)var47).isEmpty()) {
+                        var26 = false;
+                    } else {
+                        Iterator var50 = var47.iterator();
+
+                        while (true) {
+                            if (!var50.hasNext()) {
+                                var26 = false;
+                                break;
+                            }
+
+                            if (matches$m(var2, var34, var37, var44, (String)var50.next(), true)) {
+                                var26 = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (var26) {
+                        return true;
+                    }
+                }
+
+                if (var5) {
+                    var47 = var1.getTimes();
+                    if (var47 instanceof Collection && ((Collection)var47).isEmpty()) {
+                        var26 = false;
+                    } else {
+                        Iterator var52 = var47.iterator();
+
+                        while (true) {
+                            if (!var52.hasNext()) {
+                                var26 = false;
+                                break;
+                            }
+
+                            if (matches$m$default(var2, var34, var37, var44, (String)var52.next(), false, 32, null)) {
+                                var26 = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (var26) {
+                        return true;
+                    }
+                }
+
+                if (!var31) {
+                    return var8;
+                }
+
+                var var14 = var1.getIds();
+                if (var14 instanceof Collection && ((Collection)var14).isEmpty()) {
+                    var26 = false;
+                } else {
+                    Iterator var15 = var14.iterator();
+
+                    while (true) {
+                        if (!var15.hasNext()) {
+                            var26 = false;
+                            break;
+                        }
+
+                        if (matches$m$default(var2, var34, var37, var44, (String)var15.next(), false, 32, null)) {
+                            var26 = true;
                             break;
                         }
                     }
                 }
-                z2 = false;
-                if (!z2) {
+
+                if (!var26) {
+                    return var8;
                 }
             }
+
+            return true;
         }
-        boolean hasMonth = z;
-        boolean isDate = hasMonth || new Regex("\\d\\s*[/-]\\s*\\d").containsMatchIn(raw) || new Regex("\\d+(?:st|nd|rd|th)\\b", RegexOption.IGNORE_CASE).containsMatchIn(raw) || new Regex("^\\d{4}$").matches(nq);
-        if (!new Regex("^\\d{1,2}$").matches(nq) && !new Regex("\\d\\s*:\\s*\\d").containsMatchIn(raw)) {
-            List $this$any$iv4 = tokens;
-            if (!($this$any$iv4 instanceof Collection) || !$this$any$iv4.isEmpty()) {
-                Iterator it6 = $this$any$iv4.iterator();
-                while (true) {
-                    if (!it6.hasNext()) {
-                        z12 = false;
-                        break;
-                    }
-                    Object element$iv3 = it6.next();
-                    String it7 = (String) element$iv3;
-                    if (Intrinsics.areEqual(it7, "am") || Intrinsics.areEqual(it7, "pm")) {
-                        z12 = true;
-                        break;
-                    }
-                }
-            } else {
-                z12 = false;
-            }
-            if (!z12) {
-                z4 = false;
-                boolean isTime = z4;
-                String compact = StringsKt.replace(nq, " ", "", false);
-                boolean isHex = new Regex("^[0-9a-f]+$").matches(compact);
-                if (!StringsKt.contains((CharSequence) raw, (CharSequence) "--", false)) {
-                    if (isHex) {
-                        if (compact.length() < 8) {
-                            if (compact.length() >= 4) {
-                                String $this$any$iv5 = compact;
-                                int i = 0;
-                                while (true) {
-                                    if (i >= $this$any$iv5.length()) {
-                                        z10 = false;
-                                        break;
-                                    }
-                                    char element$iv4 = $this$any$iv5.charAt(i);
-                                    if (Character.isDigit(element$iv4)) {
-                                        z10 = true;
-                                        break;
-                                    }
-                                    i++;
-                                }
-                                if (z10) {
-                                    String $this$any$iv6 = compact;
-                                    int i2 = 0;
-                                    while (true) {
-                                        if (i2 >= $this$any$iv6.length()) {
-                                            z11 = false;
-                                            break;
-                                        }
-                                        char element$iv5 = $this$any$iv6.charAt(i2);
-                                        char it8 = ('a' > element$iv5 || element$iv5 >= 'g') ? (char) 0 : (char) 1;
-                                        if (it8 != 0) {
-                                            z11 = true;
-                                            break;
-                                        }
-                                        i2++;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    z5 = false;
-                    boolean isId = z5;
-                    Regex shortNum = new Regex("^\\d{1,2}$");
-                    Regex year = new Regex("^\\d{4}$");
-                    $this$any$iv = r.getTitles();
-                    if (($this$any$iv instanceof Collection) || !((Collection) $this$any$iv).isEmpty()) {
-                        it = $this$any$iv.iterator();
-                        while (true) {
-                            if (!it.hasNext()) {
-                                z6 = false;
-                                break;
-                            }
-                            Object element$iv6 = it.next();
-                            String it9 = (String) element$iv6;
-                            if (matches$m$default(nq, tokens, shortNum, year, it9, false, 32, null)) {
-                                z6 = true;
-                                break;
-                            }
-                        }
-                    } else {
-                        z6 = false;
-                    }
-                    if (!z6) {
-                        if (isDate) {
-                            Iterable $this$any$iv7 = r.getDates();
-                            if (!($this$any$iv7 instanceof Collection) || !((Collection) $this$any$iv7).isEmpty()) {
-                                Iterator it10 = $this$any$iv7.iterator();
-                                while (true) {
-                                    if (!it10.hasNext()) {
-                                        z9 = false;
-                                        break;
-                                    }
-                                    Object element$iv7 = it10.next();
-                                    String it11 = (String) element$iv7;
-                                    if (matches$m(nq, tokens, shortNum, year, it11, true)) {
-                                        z9 = true;
-                                        break;
-                                    }
-                                }
-                            } else {
-                                z9 = false;
-                            }
-                        }
-                        if (isTime) {
-                            Iterable $this$any$iv8 = r.getTimes();
-                            if (!($this$any$iv8 instanceof Collection) || !((Collection) $this$any$iv8).isEmpty()) {
-                                Iterator it12 = $this$any$iv8.iterator();
-                                while (true) {
-                                    if (!it12.hasNext()) {
-                                        z8 = false;
-                                        break;
-                                    }
-                                    Object element$iv8 = it12.next();
-                                    String it13 = (String) element$iv8;
-                                    if (matches$m$default(nq, tokens, shortNum, year, it13, false, 32, null)) {
-                                        z8 = true;
-                                        break;
-                                    }
-                                }
-                            } else {
-                                z8 = false;
-                            }
-                        }
-                        if (!isId) {
-                            return false;
-                        }
-                        Iterable $this$any$iv9 = r.getIds();
-                        if (!($this$any$iv9 instanceof Collection) || !((Collection) $this$any$iv9).isEmpty()) {
-                            Iterator it14 = $this$any$iv9.iterator();
-                            while (true) {
-                                if (!it14.hasNext()) {
-                                    z7 = false;
-                                    break;
-                                }
-                                Object element$iv9 = it14.next();
-                                String it15 = (String) element$iv9;
-                                if (matches$m$default(nq, tokens, shortNum, year, it15, false, 32, null)) {
-                                    z7 = true;
-                                    break;
-                                }
-                            }
-                        } else {
-                            z7 = false;
-                        }
-                        if (!z7) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                z5 = true;
-                boolean isId2 = z5;
-                Regex shortNum2 = new Regex("^\\d{1,2}$");
-                Regex year2 = new Regex("^\\d{4}$");
-                $this$any$iv = r.getTitles();
-                if ($this$any$iv instanceof Collection) {
-                }
-                it = $this$any$iv.iterator();
-                while (true) {
-                    if (!it.hasNext()) {
-                    }
-                }
-                if (!z6) {
-                }
-                return true;
-            }
-        }
-        z4 = true;
-        boolean isTime2 = z4;
-        String compact2 = StringsKt.replace(nq, " ", "", false);
-        boolean isHex2 = new Regex("^[0-9a-f]+$").matches(compact2);
-        if (!StringsKt.contains((CharSequence) raw, (CharSequence) "--", false)) {
-        }
-        z5 = true;
-        boolean isId22 = z5;
-        Regex shortNum22 = new Regex("^\\d{1,2}$");
-        Regex year22 = new Regex("^\\d{4}$");
-        $this$any$iv = r.getTitles();
-        if ($this$any$iv instanceof Collection) {
-        }
-        it = $this$any$iv.iterator();
-        while (true) {
-            if (!it.hasNext()) {
-            }
-        }
-        if (!z6) {
-        }
-        return true;
     }
 
     static /* synthetic */ boolean matches$m$default(String str, List list, Regex regex, Regex regex2, String str2, boolean z, int i, Object obj) {
@@ -942,92 +1015,79 @@ public final class GxRecordingsPage extends GxPage {
         return matches$m(str, list, regex, regex2, str2, z);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:48:0x00e3 A[LOOP:2: B:38:0x00a5->B:48:0x00e3, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:49:0x00e1 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private static final boolean matches$m(String nq, List<String> list, Regex shortNum, Regex year, String v, boolean dateValue) {
-        List st;
-        boolean z;
-        char c;
-        boolean z2;
-        boolean startsWith$default;
-        boolean z3 = false;
-        char c2 = 2;
-        if (StringsKt.contains((CharSequence) v, (CharSequence) nq, false)) {
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private static final boolean matches$m(String var0, List<String> var1, Regex var2, Regex var3, String var4, boolean var5) {
+        CharSequence var11 = var4;
+        CharSequence var13 = var0;
+        boolean var8 = false;
+        byte var7 = 2;
+        boolean var10 = StringsKt.contains(var11, var13, false);
+        boolean var9 = true;
+        if (var10) {
             return true;
-        }
-        Iterable $this$filter$iv = StringsKt.split((CharSequence) v, new String[]{" "}, false, 0);
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv) {
-            String it = (String) element$iv$iv;
-            if (it.length() > 0) {
-                destination$iv$iv.add(element$iv$iv);
-            }
-        }
-        List st2 = (List) destination$iv$iv;
-        List<String> $this$all$iv = list;
-        if (($this$all$iv instanceof Collection) && $this$all$iv.isEmpty()) {
-            return true;
-        }
-        for (Object element$iv : $this$all$iv) {
-            String qt = (String) element$iv;
-            List $this$any$iv = st2;
-            if (($this$any$iv instanceof Collection) && $this$any$iv.isEmpty()) {
-                st = st2;
-                z = z3;
-                z2 = z;
-                c = c2;
-            } else {
-                Iterator it2 = $this$any$iv.iterator();
-                while (true) {
-                    if (!it2.hasNext()) {
-                        st = st2;
-                        z = z3;
-                        c = c2;
-                        z2 = z;
-                        break;
-                    }
-                    Object element$iv2 = it2.next();
-                    String s = (String) element$iv2;
-                    if (dateValue && shortNum.matches(qt)) {
-                        if (year.matches(s)) {
-                            st = st2;
-                            c = 2;
-                            z = false;
-                            startsWith$default = false;
-                            if (startsWith$default) {
-                                z2 = true;
-                                break;
-                            }
-                            c2 = c;
-                            z3 = z;
-                            st2 = st;
-                        }
-                        st = st2;
-                        c = 2;
-                        z = false;
-                        startsWith$default = StringsKt.startsWith(s, qt, false);
-                        if (startsWith$default) {
-                        }
-                    }
-                    st = st2;
-                    c = 2;
-                    z = false;
-                    startsWith$default = StringsKt.startsWith(s, qt, false);
-                    if (startsWith$default) {
-                    }
+        } else {
+            Iterable var18 = StringsKt.split(var4, new String[]{" "}, false, 0);
+            var var14 = new ArrayList();
+
+            for (Object var19 : var18) {
+                boolean var6;
+                if (((String)var19).length() > 0) {
+                    var6 = true;
+                } else {
+                    var6 = false;
+                }
+
+                if (var6) {
+                    var14.add(var19);
                 }
             }
-            if (!z2) {
-                return z;
+
+            List var15 = var14;
+            var var16 = var1;
+            if (var16 instanceof Collection && ((Collection)var16).isEmpty()) {
+                var8 = var9;
+            } else {
+                Iterator var17 = var16.iterator();
+
+                label64:
+                do {
+                    if (!var17.hasNext()) {
+                        var8 = true;
+                        break;
+                    }
+
+                    var4 = (String)var17.next();
+                    var var28 = var15;
+                    if (var28 instanceof Collection && ((Collection)var28).isEmpty()) {
+                        var9 = var8;
+                    } else {
+                        for (String var12 : var28) {
+                            if (var5 && var2.matches(var4) && var3.matches(var12)) {
+                                var8 = false;
+                            } else {
+                                var8 = StringsKt.startsWith(var12, var4, false);
+                            }
+
+                            var9 = false;
+                            byte var21 = 2;
+                            if (var8) {
+                                var10 = true;
+                                var8 = var9;
+                                var9 = var10;
+                                continue label64;
+                            }
+
+                            var21 = 2;
+                            var8 = false;
+                        }
+
+                        var9 = var8;
+                    }
+                } while (var9);
             }
-            c2 = c;
-            z3 = z;
-            st2 = st;
+
+            return var8;
         }
-        return true;
     }
 
     private final List<GxRecordingsRoute> sorted(List<GxRecordingsRoute> list) {
@@ -1278,12 +1338,13 @@ public final class GxRecordingsPage extends GxPage {
         new RoutePlayer(this$0, $r, null, 2, null);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void togglePreserved$default(GxRecordingsPage gxRecordingsPage, GxRecordingsRoute gxRecordingsRoute, Function0 function0, int i, Object obj) {
-        if ((i & 2) != 0) {
-            function0 = null;
+    /* VF: from Vineflower (jadx: ) */
+    static void togglePreserved$default(GxRecordingsPage var0, GxRecordingsRoute var1, Function0 var2, int var3, Object var4) {
+        if ((var3 & 2) != 0) {
+            var2 = null;
         }
-        gxRecordingsPage.togglePreserved(gxRecordingsRoute, function0);
+
+        var0.togglePreserved(var1, var2);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1312,12 +1373,13 @@ public final class GxRecordingsPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void deleteRoute$default(GxRecordingsPage gxRecordingsPage, GxRecordingsRoute gxRecordingsRoute, Function0 function0, int i, Object obj) {
-        if ((i & 2) != 0) {
-            function0 = null;
+    /* VF: from Vineflower (jadx: ) */
+    static void deleteRoute$default(GxRecordingsPage var0, GxRecordingsRoute var1, Function0 var2, int var3, Object var4) {
+        if ((var3 & 2) != 0) {
+            var2 = null;
         }
-        gxRecordingsPage.deleteRoute(gxRecordingsRoute, function0);
+
+        var0.deleteRoute(var1, var2);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1386,40 +1448,49 @@ public final class GxRecordingsPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x0030, code lost:
-    
-        if (r0 != null) goto L18;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit deleteAllRoutes$lambda$64$lambda$63(GxRecordingsPage this$0, String err, JSONObject o) {
-        String str;
-        String str$default;
-        if (err != null) {
-            this$0.toast(Intrinsics.areEqual(err, "bad reply") ? "Failed to delete routes." : err);
-        } else {
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str2 = str$default;
-                if (StringsKt.isBlank(str2)) {
-                    str2 = null;
-                }
-                str = str2;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit deleteAllRoutes$lambda$64$lambda$63(GxRecordingsPage var0, String var1, JSONObject var2) {
+        if (var1 != null) {
+            if (Intrinsics.areEqual(var1, "bad reply")) {
+                var1 = "Failed to delete routes.";
             }
-            str = "Routes deleted!";
-            this$0.toast(str);
-            this$0.loadRoutes();
+
+            var0.toast(var1);
+        } else {
+            label25: {
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "message", null, 2, null);
+                    if (var1 != null) {
+                        CharSequence var6 = var1;
+                        CharSequence var4 = var6;
+                        if (StringsKt.isBlank(var6)) {
+                            var4 = null;
+                        }
+
+                        var1 = (String)var4;
+                        if (var1 != null) {
+                            break label25;
+                        }
+                    }
+                }
+
+                var1 = "Routes deleted!";
+            }
+
+            var0.toast(var1);
+            var0.loadRoutes();
         }
+
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void renameRoute$default(GxRecordingsPage gxRecordingsPage, GxRecordingsRoute gxRecordingsRoute, Function0 function0, int i, Object obj) {
-        if ((i & 2) != 0) {
-            function0 = null;
+    /* VF: from Vineflower (jadx: ) */
+    static void renameRoute$default(GxRecordingsPage var0, GxRecordingsRoute var1, Function0 var2, int var3, Object var4) {
+        if ((var3 & 2) != 0) {
+            var2 = null;
         }
-        gxRecordingsPage.renameRoute(gxRecordingsRoute, function0);
+
+        var0.renameRoute(var1, var2);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1465,37 +1536,39 @@ public final class GxRecordingsPage extends GxPage {
         }, 8, null);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:13:0x0026, code lost:
-    
-        if (r0 != null) goto L14;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit renameRoute$lambda$69$lambda$68(GxRecordingsPage this$0, GxRecordingsRoute $r, String $n, Function0 $then, String err, JSONObject o) {
-        String str;
-        String str$default;
-        if (err != null) {
-            this$0.toast("Rename failed.");
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit renameRoute$lambda$69$lambda$68(
+        GxRecordingsPage var0, GxRecordingsRoute var1, String var2, Function0 var3, String var4, JSONObject var5
+    ) {
+        if (var4 != null) {
+            var0.toast("Rename failed.");
         } else {
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "name", null, 2, null)) != null) {
-                String str2 = str$default;
-                if (StringsKt.isBlank(str2)) {
-                    str2 = null;
+            if (var5 != null) {
+                var4 = GxPage.str$default(var0, var5, "name", null, 2, null);
+                if (var4 != null) {
+                    CharSequence var9 = var4;
+                    CharSequence var7 = var9;
+                    if (StringsKt.isBlank(var9)) {
+                        var7 = null;
+                    }
+
+                    var4 = (String)var7;
+                    if (var4 != null) {
+                        var2 = var4;
+                    }
                 }
-                str = str2;
             }
-            str = $n;
-            $r.setTimestamp(str);
-            $r.setCustomName(true);
-            this$0.normalize($r);
-            this$0.renderRoutes();
-            this$0.toast("Route renamed!");
-            if ($then != null) {
-                $then.invoke();
+
+            var1.setTimestamp(var2);
+            var1.setCustomName(true);
+            var0.normalize(var1);
+            var0.renderRoutes();
+            var0.toast("Route renamed!");
+            if (var3 != null) {
+                var3.invoke();
             }
         }
+
         return Unit.INSTANCE;
     }
 
@@ -1772,37 +1845,27 @@ public final class GxRecordingsPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Type inference failed for: r2v1, types: [T, okhttp3.Call] */
+    /* VF: from Vineflower (jadx: Type inference failed) */
     private final void loadScreens() {
-        if (this.screenList == null || getHost() == null) {
-            return;
-        }
-        Call call = this.screenCall;
-        if (call != null) {
-            call.cancel();
-        }
-        this.screens.clear();
-        this.screenLoading = true;
-        this.screenError = "";
-        renderScreens();
-        final HashSet seen = new HashSet();
-        final Ref.ObjectRef call2 = new Ref.ObjectRef();
-        call2.element = stream("/api/screen_recordings/list", new Function1() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda24
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit loadScreens$lambda$91;
-                loadScreens$lambda$91 = GxRecordingsPage.loadScreens$lambda$91(GxRecordingsPage.this, seen, (JSONObject) obj);
-                return loadScreens$lambda$91;
+        if (this.screenList != null && this.getHost() != null) {
+            Call var1 = this.screenCall;
+            if (var1 != null) {
+                var1.cancel();
             }
-        }, new Function1() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda25
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit loadScreens$lambda$92;
-                loadScreens$lambda$92 = GxRecordingsPage.loadScreens$lambda$92(GxRecordingsPage.this, call2, (String) obj);
-                return loadScreens$lambda$92;
-            }
-        });
-        this.screenCall = (Call) call2.element;
+
+            this.screens.clear();
+            this.screenLoading = true;
+            this.screenError = "";
+            this.renderScreens();
+            HashSet var3 = new HashSet();
+            ObjectRef var2 = new ObjectRef();
+            var2.element = (T)this.stream(
+                "/api/screen_recordings/list",
+                new GxRecordingsPage$$ExternalSyntheticLambda24(this, var3),
+                new GxRecordingsPage$$ExternalSyntheticLambda25(this, var2)
+            );
+            this.screenCall = (Call)var2.element;
+        }
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2038,12 +2101,13 @@ public final class GxRecordingsPage extends GxPage {
         download(screenVideoPath(rec), rec.getFilename(), "video/mp4");
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void renameScreen$default(GxRecordingsPage gxRecordingsPage, GxRecordingsScreen gxRecordingsScreen, Function0 function0, int i, Object obj) {
-        if ((i & 2) != 0) {
-            function0 = null;
+    /* VF: from Vineflower (jadx: ) */
+    static void renameScreen$default(GxRecordingsPage var0, GxRecordingsScreen var1, Function0 var2, int var3, Object var4) {
+        if ((var3 & 2) != 0) {
+            var2 = null;
         }
-        gxRecordingsPage.renameScreen(gxRecordingsScreen, function0);
+
+        var0.renameScreen(var1, var2);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2091,12 +2155,13 @@ public final class GxRecordingsPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void deleteScreen$default(GxRecordingsPage gxRecordingsPage, GxRecordingsScreen gxRecordingsScreen, Function0 function0, int i, Object obj) {
-        if ((i & 2) != 0) {
-            function0 = null;
+    /* VF: from Vineflower (jadx: ) */
+    static void deleteScreen$default(GxRecordingsPage var0, GxRecordingsScreen var1, Function0 var2, int var3, Object var4) {
+        if ((var3 & 2) != 0) {
+            var2 = null;
         }
-        gxRecordingsPage.deleteScreen(gxRecordingsScreen, function0);
+
+        var0.deleteScreen(var1, var2);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2176,32 +2241,40 @@ public final class GxRecordingsPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:18:0x0038, code lost:
-    
-        if (r0 != null) goto L19;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit deleteAllScreens$lambda$109$lambda$108(GxRecordingsPage this$0, String err, JSONObject o) {
-        String str;
-        String str$default;
-        if (err != null) {
-            this$0.toast(Intrinsics.areEqual(err, "bad reply") ? "Delete failed." : err);
-        } else {
-            this$0.screens.clear();
-            this$0.renderScreens();
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str2 = str$default;
-                if (StringsKt.isBlank(str2)) {
-                    str2 = null;
-                }
-                str = str2;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit deleteAllScreens$lambda$109$lambda$108(GxRecordingsPage var0, String var1, JSONObject var2) {
+        if (var1 != null) {
+            if (Intrinsics.areEqual(var1, "bad reply")) {
+                var1 = "Delete failed.";
             }
-            str = "All screen recordings deleted!";
-            this$0.toast(str);
+
+            var0.toast(var1);
+        } else {
+            label25: {
+                var0.screens.clear();
+                var0.renderScreens();
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "message", null, 2, null);
+                    if (var1 != null) {
+                        CharSequence var6 = var1;
+                        CharSequence var4 = var6;
+                        if (StringsKt.isBlank(var6)) {
+                            var4 = null;
+                        }
+
+                        var1 = (String)var4;
+                        if (var1 != null) {
+                            break label25;
+                        }
+                    }
+                }
+
+                var1 = "All screen recordings deleted!";
+            }
+
+            var0.toast(var1);
         }
+
         return Unit.INSTANCE;
     }
 

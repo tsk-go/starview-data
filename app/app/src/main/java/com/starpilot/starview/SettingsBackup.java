@@ -184,13 +184,13 @@ public final class SettingsBackup {
         private final String key;
         private final Object v;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public Put(String key, Object v) {
+        /* VF: from Vineflower (jadx: ) */
+        public Put(String var1, Object var2) {
             super(null);
-            Intrinsics.checkNotNullParameter(key, "key");
-            Intrinsics.checkNotNullParameter(v, "v");
-            this.key = key;
-            this.v = v;
+            Intrinsics.checkNotNullParameter(var1, "key");
+            Intrinsics.checkNotNullParameter(var2, "v");
+            this.key = var1;
+            this.v = var2;
         }
 
         @Override // com.starpilot.starview.SettingsBackup.Op
@@ -204,7 +204,7 @@ public final class SettingsBackup {
     }
 
     /* renamed from: import, reason: not valid java name */
-    public final int m1159import(Context ctx, JSONObject j) {
+    public final int importJson(Context ctx, JSONObject j) {
         Object valueOf;
         JSONObject prefs;
         Intrinsics.checkNotNullParameter(ctx, "ctx");
@@ -596,19 +596,13 @@ public final class SettingsBackup {
         Runtime.getRuntime().exit(0);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void restoreFrom$default(SettingsBackup settingsBackup, Activity activity, Uri uri, Function0 function0, int i, Object obj) {
-        if ((i & 4) != 0) {
-            function0 = new Function0() { // from class: com.starpilot.starview.SettingsBackup$$ExternalSyntheticLambda0
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit unit;
-                    unit = Unit.INSTANCE;
-                    return unit;
-                }
-            };
+    /* VF: from Vineflower (jadx: ) */
+    public static void restoreFrom$default(SettingsBackup var0, Activity var1, Uri var2, Function0 var3, int var4, Object var5) {
+        if ((var4 & 4) != 0) {
+            var3 = new SettingsBackup$$ExternalSyntheticLambda0();
         }
-        settingsBackup.restoreFrom(activity, uri, function0);
+
+        var0.restoreFrom(var1, var2, (Function0<Unit>)var3);
     }
 
     public final void restoreFrom(final Activity act, Uri uri, final Function0<Unit> onCancel) {
@@ -651,7 +645,7 @@ public final class SettingsBackup {
     /* JADX INFO: Access modifiers changed from: private */
     public static final void restoreFrom$lambda$26(Activity $act, JSONObject $j, final Function0 $onCancel, DialogInterface dialogInterface, int i) {
         try {
-            INSTANCE.m1159import($act, $j);
+            INSTANCE.importJson($act, $j);
             INSTANCE.restart($act);
         } catch (Exception e) {
             new AlertDialog.Builder($act).setMessage("Restore failed, nothing was changed: " + e.getMessage()).setPositiveButton("OK", (DialogInterface.OnClickListener) null).setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.starpilot.starview.SettingsBackup$$ExternalSyntheticLambda5

@@ -14,6 +14,7 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
+import android.view.ViewGroup.LayoutParams;
 
 /* compiled from: GalaxyWeb.kt */
 public final class GalaxyWeb extends LinearLayout {
@@ -45,67 +46,57 @@ public final class GalaxyWeb extends LinearLayout {
         }
     }
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GalaxyWeb(Context ctx, CarUi ui, String host, String path, String title, Function0<Boolean> onClose) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
-        Intrinsics.checkNotNullParameter(host, "host");
-        Intrinsics.checkNotNullParameter(path, "path");
-        Intrinsics.checkNotNullParameter(title, "title");
-        Intrinsics.checkNotNullParameter(onClose, "onClose");
-        this.ui = ui;
-        this.host = host;
-        this.path = path;
-        this.onClose = onClose;
-        this.frame = new FrameLayout(ctx);
-        TextView $this$placeholder_u24lambda_u241 = new TextView(ctx);
-        $this$placeholder_u24lambda_u241.setText("Opening…");
-        $this$placeholder_u24lambda_u241.setTextColor(CarUi.Companion.getDIM());
-        $this$placeholder_u24lambda_u241.setTextSize(18.0f);
-        $this$placeholder_u24lambda_u241.setGravity(17);
-        $this$placeholder_u24lambda_u241.setBackgroundColor(CarUi.Companion.getFRAME());
-        this.placeholder = $this$placeholder_u24lambda_u241;
-        setOrientation(1);
-        LinearLayout bar = new LinearLayout(ctx);
-        bar.setOrientation(0);
-        bar.setGravity(16);
-        bar.setPadding(this.ui.dp(4), 0, this.ui.dp(4), this.ui.dp(8));
-        TextView $this$_init__u24lambda_u244 = new TextView(ctx);
-        $this$_init__u24lambda_u244.setText("‹  Back");
-        $this$_init__u24lambda_u244.setTextColor(CarUi.Companion.getACCENT());
-        $this$_init__u24lambda_u244.setTextSize(18.0f);
-        $this$_init__u24lambda_u244.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$_init__u24lambda_u244.setPadding(this.ui.dp(6), this.ui.dp(6), this.ui.dp(16), this.ui.dp(6));
-        $this$_init__u24lambda_u244.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GalaxyWeb$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                GalaxyWeb.lambda$4$lambda$3(GalaxyWeb.this, view);
-            }
-        });
-        bar.addView($this$_init__u24lambda_u244);
-        TextView $this$_init__u24lambda_u245 = new TextView(ctx);
-        $this$_init__u24lambda_u245.setText(title);
-        $this$_init__u24lambda_u245.setTextColor(CarUi.Companion.getTEXT());
-        $this$_init__u24lambda_u245.setTextSize(22.0f);
-        $this$_init__u24lambda_u245.setTypeface(Typeface.DEFAULT_BOLD);
-        bar.addView($this$_init__u24lambda_u245, new LinearLayout.LayoutParams(0, -2, 1.0f));
-        TextView $this$_init__u24lambda_u247 = new TextView(ctx);
-        $this$_init__u24lambda_u247.setText("↻");
-        $this$_init__u24lambda_u247.setTextColor(CarUi.Companion.getDIM());
-        $this$_init__u24lambda_u247.setTextSize(24.0f);
-        $this$_init__u24lambda_u247.setPadding(this.ui.dp(16), 0, this.ui.dp(10), 0);
-        $this$_init__u24lambda_u247.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GalaxyWeb$$ExternalSyntheticLambda2
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                GalaxyWebPool.INSTANCE.reload();
-            }
-        });
-        bar.addView($this$_init__u24lambda_u247);
-        addView(bar);
+    /* VF: from Vineflower (jadx: ) */
+    public GalaxyWeb(Context var1, CarUi var2, String var3, String var4, String var5, Function0<Boolean> var6) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
+        Intrinsics.checkNotNullParameter(var3, "host");
+        Intrinsics.checkNotNullParameter(var4, "path");
+        Intrinsics.checkNotNullParameter(var5, "title");
+        Intrinsics.checkNotNullParameter(var6, "onClose");
+        this.ui = var2;
+        this.host = var3;
+        this.path = var4;
+        this.onClose = var6;
+        this.frame = new FrameLayout(var1);
+        TextView var8 = new TextView(var1);
+        var8.setText("Opening…");
+        var8.setTextColor(CarUi.Companion.getDIM());
+        var8.setTextSize(18.0F);
+        var8.setGravity(17);
+        var8.setBackgroundColor(CarUi.Companion.getFRAME());
+        this.placeholder = var8;
+        this.setOrientation(1);
+        LinearLayout var9 = new LinearLayout(var1);
+        var9.setOrientation(0);
+        var9.setGravity(16);
+        var9.setPadding(this.ui.dp(4), 0, this.ui.dp(4), this.ui.dp(8));
+        TextView var10 = new TextView(var1);
+        var10.setText("‹  Back");
+        var10.setTextColor(CarUi.Companion.getACCENT());
+        var10.setTextSize(18.0F);
+        var10.setTypeface(Typeface.DEFAULT_BOLD);
+        var10.setPadding(this.ui.dp(6), this.ui.dp(6), this.ui.dp(16), this.ui.dp(6));
+        var10.setOnClickListener(new GalaxyWeb$$ExternalSyntheticLambda1(this));
+        var9.addView((View)var10);
+        TextView var11 = new TextView(var1);
+        var11.setText(var5);
+        var11.setTextColor(CarUi.Companion.getTEXT());
+        var11.setTextSize(22.0F);
+        var11.setTypeface(Typeface.DEFAULT_BOLD);
+        var9.addView((View)var11, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
+        TextView var7 = new TextView(var1);
+        var7.setText("↻");
+        var7.setTextColor(CarUi.Companion.getDIM());
+        var7.setTextSize(24.0F);
+        var7.setPadding(this.ui.dp(16), 0, this.ui.dp(10), 0);
+        var7.setOnClickListener(new GalaxyWeb$$ExternalSyntheticLambda2());
+        var9.addView((View)var7);
+        this.addView((View)var9);
         this.frame.setBackgroundColor(CarUi.Companion.getFRAME());
-        addView(this.frame, new LinearLayout.LayoutParams(-1, 0, 1.0f));
-        show();
+        this.addView((View)this.frame, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F)));
+        this.show();
     }
 
     /* JADX INFO: Access modifiers changed from: private */

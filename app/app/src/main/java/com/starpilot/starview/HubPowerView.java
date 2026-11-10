@@ -29,6 +29,8 @@ import kotlin.jvm.internal.StringCompanionObject;
 import kotlin.ranges.RangesKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.widget.LinearLayout.LayoutParams;
+import java.util.Iterator;
 
 /* compiled from: HubPower.kt */
 public final class HubPowerView extends CardPage {
@@ -38,21 +40,20 @@ public final class HubPowerView extends CardPage {
     private JSONObject status;
     private final SimpleDateFormat timeFmt;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    /* JADX WARN: Type inference failed for: r0v3, types: [com.starpilot.starview.HubPowerView$poll$1] */
-    public HubPowerView(Context ctx, CarUi ui) {
-        super(ctx, ui);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public HubPowerView(Context var1, CarUi var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
         this.timeFmt = new SimpleDateFormat("EEE h:mm a", Locale.US);
-        this.poll = new Runnable() { // from class: com.starpilot.starview.HubPowerView$poll$1
-            @Override // java.lang.Runnable
+        this.poll = new Runnable() {
+            final HubPowerView this$0 = HubPowerView.this;
+
+            @Override
             public void run() {
-                boolean z;
-                z = HubPowerView.this.shown;
-                if (z) {
-                    HubPowerView.this.load();
-                    HubPowerView.this.getMain().postDelayed(this, 5000L);
+                if (this.this$0.shown) {
+                    this.this$0.load();
+                    this.this$0.getMain().postDelayed(this, 5000L);
                 }
             }
         };
@@ -74,12 +75,13 @@ public final class HubPowerView extends CardPage {
         start();
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void req$default(HubPowerView hubPowerView, String str, Map map, Function1 function1, int i, Object obj) {
-        if ((i & 2) != 0) {
-            map = MapsKt.emptyMap();
+    /* VF: from Vineflower (jadx: ) */
+    static void req$default(HubPowerView var0, String var1, Map var2, Function1 var3, int var4, Object var5) {
+        if ((var4 & 2) != 0) {
+            var2 = MapsKt.emptyMap();
         }
-        hubPowerView.req(str, map, function1);
+
+        var0.req(var1, var2, var3);
     }
 
     private final void req(String op, Map<String, ? extends Object> extra, Function1<? super JSONObject, Unit> cb) {
@@ -247,234 +249,241 @@ public final class HubPowerView extends CardPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:22:0x0293, code lost:
-    
-        if ((r0.length() > 0) != false) goto L59;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:25:0x02a8  */
-    /* JADX WARN: Removed duplicated region for block: B:44:0x040b  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     private final void paint() {
-        String str;
-        JSONArray ev;
-        int i;
-        int length;
-        JSONObject s;
-        String bat;
-        getCol().removeAllViews();
-        JSONObject s2 = this.status;
-        LinearLayout head = card();
-        add(head);
-        head.addView(title("Power management", "power", "device"));
-        if (s2 == null) {
-            HubPowerView hubPowerView = this;
-            String str2 = this.err;
-            if (str2 == null) {
-                str2 = "Asking the comma…";
+        String var41 = null; // declarations Vineflower left out
+        this.getCol().removeAllViews();
+        JSONObject var8 = this.status;
+        LinearLayout var9 = this.card();
+        this.add((View)var9);
+        var9.addView(this.title("Power management", "power", "device"));
+        if (var8 == null) {
+            CardPage var44 = this;
+            String var39 = this.err;
+            String var38 = var39;
+            if (var39 == null) {
+                var38 = "Asking the comma…";
             }
-            head.addView(CardPage.line$default(hubPowerView, str2, 0, 0.0f, 6, null));
-            return;
-        }
-        head.addView(CardPage.line$default(this, "What keeps running on the car battery after you turn the car off - the comma itself, and the USB hub with everything on it. Only turning the car off counts; going offroad with the car on doesn't.", 0, 0.0f, 6, null));
-        JSONObject c = s2.optJSONObject("comma");
-        LinearLayout cc = card();
-        add(cc);
-        cc.addView(title("Comma", "device", "device"));
-        if (c == null) {
-            cc.addView(CardPage.line$default(this, "Not available on this comma.", 0, 0.0f, 6, null));
+
+            var9.addView((View)CardPage.line$default(var44, var38, 0, 0.0F, 6, null));
         } else {
-            boolean editable = c.optBoolean("editable");
-            boolean enabled = c.optBoolean("enabled");
-            final int hours = c.optInt("hours", 30);
-            final double volts = c.optDouble("volts", 11.8d);
-            if (!c.optBoolean("valid", true)) {
-                cc.addView(line("Galaxy's saved Parked Power can't be read - switch it off to go back to stock.", CarUi.Companion.getWARN(), 15.0f));
-            }
-            cc.addView(switchRow("Parked Power", enabled ? "Your limits below. The comma turns itself off after the time, or sooner if the battery drops to the cutoff." : "Off = stock: the comma stays on up to 30 h after you park and turns off only at 11.8 V.", enabled, editable, new Function1() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda0
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj) {
-                    Unit paint$lambda$15;
-                    paint$lambda$15 = HubPowerView.paint$lambda$15(HubPowerView.this, ((Boolean) obj).booleanValue());
-                    return paint$lambda$15;
-                }
-            }));
-            if (enabled) {
-                cc.addView(stepRow("Maximum parked time", hours + " h", editable, new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda5
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit paint$lambda$16;
-                        paint$lambda$16 = HubPowerView.paint$lambda$16(HubPowerView.this, hours);
-                        return paint$lambda$16;
-                    }
-                }, new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda6
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit paint$lambda$17;
-                        paint$lambda$17 = HubPowerView.paint$lambda$17(HubPowerView.this, hours);
-                        return paint$lambda$17;
-                    }
-                }));
-                StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
-                String format = String.format(Locale.US, "%.1f V", Arrays.copyOf(new Object[]{Double.valueOf(volts)}, 1));
-                Intrinsics.checkNotNullExpressionValue(format, "format(...)");
-                cc.addView(stepRow("Low-voltage cutoff", format, editable, new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda7
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit paint$lambda$18;
-                        paint$lambda$18 = HubPowerView.paint$lambda$18(HubPowerView.this, volts);
-                        return paint$lambda$18;
-                    }
-                }, new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda8
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit paint$lambda$19;
-                        paint$lambda$19 = HubPowerView.paint$lambda$19(HubPowerView.this, volts);
-                        return paint$lambda$19;
-                    }
-                }));
-            }
-            if (!editable) {
-                cc.addView(line("These change with the car parked (openpilot offroad), like in Galaxy.", CarUi.Companion.getDIM(), 14.0f));
-            }
-        }
-        boolean on = s2.optBoolean("on");
-        final int delay = s2.optInt("delay_min", 5);
-        LinearLayout hc = card();
-        add(hc);
-        hc.addView(title("USB hub", "link", "device"));
-        if (s2.optBoolean("can_switch")) {
-            if (!s2.isNull("error")) {
-                String optString = s2.optString("error");
-                Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
-                if (optString.length() > 0) {
-                    str = "Couldn't switch the port: " + s2.optString("error");
-                }
-            }
-            if (!on) {
-                str = "Off: the hub stays on until the comma itself turns off.";
-            } else if (Intrinsics.areEqual(s2.optString("car"), "on")) {
-                str = "Car on - the hub stays on.";
-            } else if (!Intrinsics.areEqual(s2.optString("car"), "off") || s2.isNull("cut_in_s")) {
-                str = Intrinsics.areEqual(s2.optString("port"), "off") ? "The hub is off. It comes back when you start the car (or unlock it / open a door)." : "Turns the hub off " + HubDelay.INSTANCE.text(delay) + " after the car.";
+            var9.addView(
+                (View)CardPage.line$default(
+                    this,
+                    "What keeps running on the car battery after you turn the car off - the comma itself, and the USB hub with everything on it. Only turning the car off counts; going offroad with the car on doesn't.",
+                    0,
+                    0.0F,
+                    6,
+                    null
+                )
+            );
+            JSONObject var7 = var8.optJSONObject("comma");
+            var9 = this.card();
+            this.add((View)var9);
+            var9.addView(this.title("Comma", "device", "device"));
+            if (var7 == null) {
+                var9.addView((View)CardPage.line$default(this, "Not available on this comma.", 0, 0.0F, 6, null));
             } else {
-                str = "Car off - the hub turns off in " + HubDelay.INSTANCE.text(Math.max(1, (s2.optInt("cut_in_s") + 59) / 60)) + ".";
-            }
-        } else {
-            str = "The comma can't switch its USB port - the hub stays on until the comma turns off.";
-        }
-        String state = str;
-        Object obj = "off";
-        hc.addView(switchRow("Turn the hub off after the car", state, on, true, new Function1() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda9
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj2) {
-                Unit paint$lambda$20;
-                paint$lambda$20 = HubPowerView.paint$lambda$20(HubPowerView.this, ((Boolean) obj2).booleanValue());
-                return paint$lambda$20;
-            }
-        }));
-        if (s2.optBoolean("can_switch")) {
-            if (!s2.isNull("error")) {
-                String optString2 = s2.optString("error");
-                Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
-            }
-            if (on) {
-                hc.addView(stepRow("Turn off after", HubDelay.INSTANCE.text(delay), true, new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda10
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit paint$lambda$21;
-                        paint$lambda$21 = HubPowerView.paint$lambda$21(HubPowerView.this, delay);
-                        return paint$lambda$21;
-                    }
-                }, new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda11
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit paint$lambda$22;
-                        paint$lambda$22 = HubPowerView.paint$lambda$22(HubPowerView.this, delay);
-                        return paint$lambda$22;
-                    }
-                }));
-                CarUi ui = getUi();
-                Iterable $this$map$iv = HubDelay.INSTANCE.getPRESETS();
-                int $i$f$map = 0;
-                Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-                for (Object item$iv$iv : $this$map$iv) {
-                    Iterable $this$map$iv2 = $this$map$iv;
-                    int it = ((Number) item$iv$iv).intValue();
-                    destination$iv$iv.add(HubDelay.INSTANCE.text(it));
-                    $this$map$iv = $this$map$iv2;
-                    $i$f$map = $i$f$map;
+                boolean var6 = var7.optBoolean("editable");
+                boolean var5 = var7.optBoolean("enabled");
+                int var3 = var7.optInt("hours", 30);
+                double var1 = var7.optDouble("volts", 11.8);
+                if (!var7.optBoolean("valid", true)) {
+                    var9.addView((View)this.line("Galaxy's saved Parked Power can't be read - switch it off to go back to stock.", CarUi.Companion.getWARN(), 15.0F));
                 }
-                Pair<LinearLayout, Function1<Integer, Unit>> chips = ui.chips((List) destination$iv$iv, new Function1() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda12
-                    @Override // kotlin.jvm.functions.Function1
-                    public final Object invoke(Object obj2) {
-                        Unit paint$lambda$24;
-                        paint$lambda$24 = HubPowerView.paint$lambda$24(HubPowerView.this, ((Integer) obj2).intValue());
-                        return paint$lambda$24;
-                    }
-                });
-                LinearLayout chips2 = chips.component1();
-                Function1 paintChips = chips.component2();
-                paintChips.invoke(Integer.valueOf(HubDelay.INSTANCE.getPRESETS().indexOf(Integer.valueOf(delay))));
-                LinearLayout.LayoutParams $this$paint_u24lambda_u2425 = CarUi.lp$default(getUi(), 0, 4, 1, null);
-                $this$paint_u24lambda_u2425.topMargin = getUi().dp(6);
-                Unit unit = Unit.INSTANCE;
-                hc.addView(chips2, $this$paint_u24lambda_u2425);
-                double cut = s2.optDouble("hub_cutoff_v", 12.0d);
-                if (s2.isNull("battery_v")) {
-                    bat = "";
+
+                String var23;
+                if (var5) {
+                    var23 = "Your limits below. The comma turns itself off after the time, or sooner if the battery drops to the cutoff.";
                 } else {
-                    StringCompanionObject stringCompanionObject2 = StringCompanionObject.INSTANCE;
-                    bat = String.format(Locale.US, " Battery now %.1f V.", Arrays.copyOf(new Object[]{Double.valueOf(s2.optDouble("battery_v"))}, 1));
-                    Intrinsics.checkNotNullExpressionValue(bat, "format(...)");
+                    var23 = "Off = stock: the comma stays on up to 30 h after you park and turns off only at 11.8 V.";
                 }
-                StringCompanionObject stringCompanionObject3 = StringCompanionObject.INSTANCE;
-                String format2 = String.format(Locale.US, "Also off right away if the battery drops below %.1f V - 0.2 V above the comma's own cutoff, so the hub goes first.", Arrays.copyOf(new Object[]{Double.valueOf(cut)}, 1));
-                Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
-                hc.addView(line(format2 + bat, CarUi.Companion.getDIM(), 14.0f));
-                hc.addView(line("The key fob's window closing and StarLock's window close need the hub (the radio dongle and relay box are on it), so after parking they work for as long as the hub is on.", CarUi.Companion.getDIM(), 14.0f));
+
+                var9.addView(this.switchRow("Parked Power", var23, var5, var6, new HubPowerView$$ExternalSyntheticLambda0(this)));
+                if (var5) {
+                    var9.addView(
+                        this.stepRow(
+                            "Maximum parked time",
+                            var3 + " h",
+                            var6,
+                            new HubPowerView$$ExternalSyntheticLambda5(this, var3),
+                            new HubPowerView$$ExternalSyntheticLambda6(this, var3)
+                        )
+                    );
+                    StringCompanionObject var24 = StringCompanionObject.INSTANCE;
+                    String var25 = String.format(Locale.US, "%.1f V", Arrays.copyOf(new Object[]{var1}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var25, "format(...)");
+                    var9.addView(
+                        this.stepRow(
+                            "Low-voltage cutoff",
+                            var25,
+                            var6,
+                            new HubPowerView$$ExternalSyntheticLambda7(this, var1),
+                            new HubPowerView$$ExternalSyntheticLambda8(this, var1)
+                        )
+                    );
+                }
+
+                if (!var6) {
+                    var9.addView((View)this.line("These change with the car parked (openpilot offroad), like in Galaxy.", CarUi.Companion.getDIM(), 14.0F));
+                }
             }
-            LinearLayout log = card();
-            add(log);
-            log.addView(title("Recent", "history", "device"));
-            ev = s2.optJSONArray("events");
-            if (ev != null && ev.length() != 0) {
-                i = 0;
-                length = ev.length();
-                while (i < length) {
-                    JSONObject e = ev.optJSONObject(i);
-                    if (e == null) {
-                        s = s2;
-                    } else {
-                        Object obj2 = obj;
-                        String what = Intrinsics.areEqual(e.optString("what"), obj2) ? "Hub off" : "Hub on";
-                        s = s2;
-                        obj = obj2;
-                        log.addView(line(this.timeFmt.format(new Date((long) (1000 * e.optDouble("t")))) + "  ·  " + what + "  ·  " + e.optString("why"), CarUi.Companion.getTEXT(), 15.0f));
+
+            boolean var21 = var8.optBoolean("on");
+            int var4 = var8.optInt("delay_min", 5);
+            LinearLayout var10 = this.card();
+            this.add((View)var10);
+            var10.addView(this.title("USB hub", "link", "device"));
+            String var26;
+            if (!var8.optBoolean("can_switch")) {
+                var26 = "The comma can't switch its USB port - the hub stays on until the comma turns off.";
+            } else {
+                label122: {
+                    if (!var8.isNull("error")) {
+                        String var27 = var8.optString("error");
+                        Intrinsics.checkNotNullExpressionValue(var27, "optString(...)");
+                        boolean var16;
+                        if (var27.length() > 0) {
+                            var16 = true;
+                        } else {
+                            var16 = false;
+                        }
+
+                        if (var16) {
+                            String var30 = var8.optString("error");
+                            var26 = "Couldn't switch the port: " + var30;
+                            break label122;
+                        }
                     }
-                    i++;
-                    s2 = s;
+
+                    if (!var21) {
+                        var26 = "Off: the hub stays on until the comma itself turns off.";
+                    } else if (Intrinsics.areEqual(var8.optString("car"), "on")) {
+                        var26 = "Car on - the hub stays on.";
+                    } else if (Intrinsics.areEqual(var8.optString("car"), "off") && !var8.isNull("cut_in_s")) {
+                        String var29 = HubDelay.INSTANCE.text(Math.max(1, (var8.optInt("cut_in_s") + 59) / 60));
+                        var26 = "Car off - the hub turns off in " + var29 + ".";
+                    } else if (Intrinsics.areEqual(var8.optString("port"), "off")) {
+                        var26 = "The hub is off. It comes back when you start the car (or unlock it / open a door).";
+                    } else {
+                        String var28 = HubDelay.INSTANCE.text(var4);
+                        var26 = "Turns the hub off " + var28 + " after the car.";
+                    }
                 }
-                return;
             }
-            log.addView(CardPage.line$default(this, "Nothing yet.", 0, 0.0f, 6, null));
-        }
-        hc.addView(line(state, CarUi.Companion.getWARN(), 15.0f));
-        if (on) {
-        }
-        LinearLayout log2 = card();
-        add(log2);
-        log2.addView(title("Recent", "history", "device"));
-        ev = s2.optJSONArray("events");
-        if (ev != null) {
-            i = 0;
-            length = ev.length();
-            while (i < length) {
+
+            label110: {
+                HubPowerView$$ExternalSyntheticLambda9 var11 = new HubPowerView$$ExternalSyntheticLambda9(this);
+                var41 = "off";
+                var10.addView(this.switchRow("Turn the hub off after the car", var26, var21, true, var11));
+                if (var8.optBoolean("can_switch")) {
+                    if (var8.isNull("error")) {
+                        break label110;
+                    }
+
+                    String var45 = var8.optString("error");
+                    Intrinsics.checkNotNullExpressionValue(var45, "optString(...)");
+                    boolean var17;
+                    if (var45.length() > 0) {
+                        var17 = true;
+                    } else {
+                        var17 = false;
+                    }
+
+                    if (!var17) {
+                        break label110;
+                    }
+                }
+
+                var10.addView((View)this.line(var26, CarUi.Companion.getWARN(), 15.0F));
             }
-            return;
+
+            if (var21) {
+                var10.addView(
+                    this.stepRow(
+                        "Turn off after",
+                        HubDelay.INSTANCE.text(var4),
+                        true,
+                        new HubPowerView$$ExternalSyntheticLambda10(this, var4),
+                        new HubPowerView$$ExternalSyntheticLambda11(this, var4)
+                    )
+                );
+                CarUi var46 = this.getUi();
+                Iterable var31 = HubDelay.INSTANCE.getPRESETS();
+                var21 = false;
+                var var13 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var31, 10));
+                Iterator var12 = var31.iterator();
+
+                while (var12.hasNext()) {
+                    int var18 = ((Number)var12.next()).intValue();
+                    var13.add(HubDelay.INSTANCE.text(var18));
+                }
+
+                List var32 = var13;
+                Pair var47 = var46.chips(var32, new HubPowerView$$ExternalSyntheticLambda12(this));
+                LinearLayout var33 = (LinearLayout)var47.component1();
+                ((Function1)var47.component2()).invoke(HubDelay.INSTANCE.getPRESETS().indexOf(var4));
+                View var52 = (View)var33;
+                android.widget.LinearLayout.LayoutParams var48 = CarUi.lp$default(this.getUi(), 0, 4, 1, null);
+                var48.topMargin = this.getUi().dp(6);
+                Unit var34 = Unit.INSTANCE;
+                var10.addView(var52, (android.view.ViewGroup.LayoutParams)var48);
+                double var14 = var8.optDouble("hub_cutoff_v", 12.0);
+                String var35;
+                if (var8.isNull("battery_v")) {
+                    var35 = "";
+                } else {
+                    StringCompanionObject var36 = StringCompanionObject.INSTANCE;
+                    var35 = String.format(Locale.US, " Battery now %.1f V.", Arrays.copyOf(new Object[]{var8.optDouble("battery_v")}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var35, "format(...)");
+                }
+
+                StringCompanionObject var49 = StringCompanionObject.INSTANCE;
+                String var50 = String.format(
+                    Locale.US,
+                    "Also off right away if the battery drops below %.1f V - 0.2 V above the comma's own cutoff, so the hub goes first.",
+                    Arrays.copyOf(new Object[]{var14}, 1)
+                );
+                Intrinsics.checkNotNullExpressionValue(var50, "format(...)");
+                var10.addView((View)this.line(var50 + var35, CarUi.Companion.getDIM(), 14.0F));
+                var10.addView(
+                    (View)this.line(
+                        "The key fob's window closing and StarLock's window close need the hub (the radio dongle and relay box are on it), so after parking they work for as long as the hub is on.",
+                        CarUi.Companion.getDIM(),
+                        14.0F
+                    )
+                );
+            }
+
+            LinearLayout var51 = this.card();
+            this.add((View)var51);
+            var51.addView(this.title("Recent", "history", "device"));
+            JSONArray var43 = var8.optJSONArray("events");
+            if (var43 != null && var43.length() != 0) {
+                int var19 = 0;
+                var4 = var43.length();
+
+                for (String var37 = var41; var19 < var4; var19++) {
+                    JSONObject var53 = var43.optJSONObject(var19);
+                    if (var53 != null) {
+                        String var42;
+                        if (Intrinsics.areEqual(var53.optString("what"), var37)) {
+                            var42 = "Hub off";
+                        } else {
+                            var42 = "Hub on";
+                        }
+
+                        SimpleDateFormat var55 = this.timeFmt;
+                        double var15 = var53.optDouble("t");
+                        String var56 = var55.format(new Date((long)(1000 * var15)));
+                        String var54 = var53.optString("why");
+                        var51.addView((View)this.line(var56 + "  ·  " + var42 + "  ·  " + var54, CarUi.Companion.getTEXT(), 15.0F));
+                    }
+                }
+            } else {
+                var51.addView((View)CardPage.line$default(this, "Nothing yet.", 0, 0.0F, 6, null));
+            }
         }
-        log2.addView(CardPage.line$default(this, "Nothing yet.", 0, 0.0f, 6, null));
     }
 
     /* JADX INFO: Access modifiers changed from: private */

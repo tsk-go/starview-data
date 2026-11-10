@@ -56,6 +56,7 @@ import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import kotlin.jvm.internal.Ref.ObjectRef;
 
 /* compiled from: GxSystem.kt */
 public final class GxSystemPage extends GxPage {
@@ -121,11 +122,11 @@ public final class GxSystemPage extends GxPage {
     private String versionNotice;
     private int versionPage;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxSystemPage(Activity act, GxHost gx) {
-        super(act, gx);
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(gx, "gx");
+    /* VF: from Vineflower (jadx: ) */
+    public GxSystemPage(Activity var1, GxHost var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "gx");
         this.needsOffroad = true;
         this.branches = CollectionsKt.emptyList();
         this.currentBranch = "";
@@ -602,35 +603,45 @@ public final class GxSystemPage extends GxPage {
         return take;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:10:0x002f  */
-    /* JADX WARN: Removed duplicated region for block: B:13:? A[RETURN, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final double pct(Object v) {
-        double n;
-        double doubleValue;
-        String obj;
-        Double d = null;
-        Number number = v instanceof Number ? (Number) v : null;
-        if (number != null) {
-            doubleValue = number.doubleValue();
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final double pct(Object var1) {
+        boolean var6 = var1 instanceof Number;
+        Object var8 = null;
+        Number var7;
+        if (var6) {
+            var7 = (Number)var1;
         } else {
-            if (v != null && (obj = v.toString()) != null) {
-                d = StringsKt.toDoubleOrNull(obj);
-            }
-            if (d == null) {
-                n = 0.0d;
-                if (Double.isNaN(n)) {
-                    return RangesKt.coerceIn(n, 0.0d, 100.0d);
+            var7 = null;
+        }
+
+        double var4 = 0.0;
+        double var2;
+        if (var7 != null) {
+            var2 = var7.doubleValue();
+        } else {
+            Double var11 = (Double)var8;
+            if (var1 != null) {
+                var1 = var1.toString();
+                var11 = (Double)var8;
+                if (var1 != null) {
+                    var11 = StringsKt.toDoubleOrNull(var1);
                 }
-                return 0.0d;
             }
-            doubleValue = d.doubleValue();
+
+            if (var11 != null) {
+                var2 = var11;
+            } else {
+                var2 = 0.0;
+            }
         }
-        n = doubleValue;
-        if (Double.isNaN(n)) {
+
+        if (Double.isNaN(var2)) {
+            var2 = var4;
+        } else {
+            var2 = RangesKt.coerceIn(var2, 0.0, 100.0);
         }
+
+        return var2;
     }
 
     private final void openUrl(String u) {
@@ -733,49 +744,85 @@ public final class GxSystemPage extends GxPage {
         return (Instant) (KtCompat.isFailure(m1191constructorimpl2) ? null : m1191constructorimpl2);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:15:0x0065, code lost:
-    
-        if (r0 != null) goto L22;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:28:0x009f, code lost:
-    
-        if (r0 != null) goto L34;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final String versionTitle(JSONObject c, boolean release) {
-        String str;
-        String str2;
-        String str$default;
-        String str3;
-        String str$default2;
-        String str4 = null;
-        Instant d = parseDate(c != null ? GxPage.str$default(this, c, "date", null, 2, null) : null);
-        String whenS = d != null ? this.dayFmt.format(d) + " · " + this.timeFmt.format(d) : "Unknown date";
-        if (release) {
-            if (c != null && (str$default2 = GxPage.str$default(this, c, "version", null, 2, null)) != null) {
-                String str5 = str$default2;
-                if (!StringsKt.isBlank(str5)) {
-                    str4 = str5;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final String versionTitle(JSONObject var1, boolean var2) {
+        String var11 = null; Object var9 = null; // declarations Vineflower left out
+        CharSequence var4 = null;
+        Object var5 = null;
+        String var3;
+        if (var1 != null) {
+            var3 = GxPage.str$default(this, var1, "date", null, 2, null);
+        } else {
+            var3 = null;
+        }
+
+        Instant var6 = this.parseDate(var3);
+        if (var6 != null) {
+            var3 = this.dayFmt.format(var6);
+            String var18 = this.timeFmt.format(var6);
+            var3 = var3 + " · " + var18;
+        } else {
+            var3 = "Unknown date";
+        }
+
+        String var10;
+        if (var2) {
+            label55: {
+                if (var1 != null) {
+                    String var7 = GxPage.str$default(this, var1, "version", null, 2, null);
+                    if (var7 != null) {
+                        var var8 = var7;
+                        if (StringsKt.isBlank(var8)) {
+                            var8 = (String)var5;
+                        }
+
+                        var9 = var8;
+                        if (var9 != null) {
+                            break label55;
+                        }
+                    }
                 }
-                str3 = str4;
+
+                var9 = "Unnumbered version";
             }
-            str3 = "Unnumbered version";
-            return str3 + " · " + whenS;
-        }
-        if (c != null && (str$default = GxPage.str$default(this, c, "subject", null, 2, null)) != null) {
-            String str6 = str$default;
-            if (!StringsKt.isBlank(str6)) {
-                str4 = str6;
+
+            var10 = var9 + " · " + var3;
+        } else {
+            label48: {
+                if (var1 != null) {
+                    var5 = GxPage.str$default(this, var1, "subject", null, 2, null);
+                    if (var5 != null) {
+                        var5 = (CharSequence)var5;
+                        if (!StringsKt.isBlank((CharSequence)var5)) {
+                            var4 = (CharSequence)var5;
+                        }
+
+                        var4 = (String)var4;
+                        if (var4 != null) {
+                            break label48;
+                        }
+                    }
+                }
+
+                var4 = "Untitled change";
             }
-            str = str4;
+
+            label41: {
+                if (var1 != null) {
+                    var11 = GxPage.str$default(this, var1, "sha", null, 2, null);
+                    if (var11 != null) {
+                        break label41;
+                    }
+                }
+
+                var11 = "";
+            }
+
+            String var12 = StringsKt.take(var11, 10);
+            var10 = var4 + " · " + var3 + " · " + var12;
         }
-        str = "Untitled change";
-        if (c == null || (str2 = GxPage.str$default(this, c, "sha", null, 2, null)) == null) {
-            str2 = "";
-        }
-        return str + " · " + whenS + " · " + StringsKt.take(str2, 10);
+
+        return var10;
     }
 
     private final List<JSONObject> releaseVersions(List<? extends JSONObject> commits) {
@@ -854,18 +901,21 @@ public final class GxSystemPage extends GxPage {
         private final String key;
         private final String label;
 
-        /* JADX WARN: Multi-variable type inference failed */
-        public static /* synthetic */ DayGroup copy$default(DayGroup dayGroup, String str, String str2, ArrayList arrayList, int i, Object obj) {
-            if ((i & 1) != 0) {
-                str = dayGroup.key;
+        /* VF: from Vineflower (jadx: ) */
+        public static GxSystemPage.DayGroup copy$default(GxSystemPage.DayGroup var0, String var1, String var2, ArrayList var3, int var4, Object var5) {
+            if ((var4 & 1) != 0) {
+                var1 = var0.key;
             }
-            if ((i & 2) != 0) {
-                str2 = dayGroup.label;
+
+            if ((var4 & 2) != 0) {
+                var2 = var0.label;
             }
-            if ((i & 4) != 0) {
-                arrayList = dayGroup.commits;
+
+            if ((var4 & 4) != 0) {
+                var3 = var0.commits;
             }
-            return dayGroup.copy(str, str2, arrayList);
+
+            return var0.copy(var1, var2, var3);
         }
 
         /* renamed from: component1, reason: from getter */
@@ -1089,72 +1139,100 @@ public final class GxSystemPage extends GxPage {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:30:0x0092, code lost:
-    
-        if (r4 == null) goto L27;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:44:0x00f0, code lost:
-    
-        if (r4.contains(r16.targetBranch) == false) goto L46;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit loadBranches$lambda$42(final GxSystemPage this$0, String e, Object v) {
-        List emptyList;
-        List list;
-        Iterable strings;
-        JSONObject o = v instanceof JSONObject ? (JSONObject) v : null;
-        JSONArray arr = o != null ? o.optJSONArray("branches") : null;
-        boolean z = true;
-        if (arr != null && (strings = this$0.strings(arr)) != null) {
-            Iterable $this$map$iv = strings;
-            Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-            for (Object item$iv$iv : $this$map$iv) {
-                String it = (String) item$iv$iv;
-                destination$iv$iv.add(StringsKt.trim((CharSequence) it).toString());
-            }
-            Iterable $this$filter$iv = (List) destination$iv$iv;
-            Collection destination$iv$iv2 = new ArrayList();
-            for (Object element$iv$iv : $this$filter$iv) {
-                String it2 = (String) element$iv$iv;
-                if (it2.length() > 0) {
-                    destination$iv$iv2.add(element$iv$iv);
-                }
-            }
-            emptyList = CollectionsKt.distinct((List) destination$iv$iv2);
-        }
-        emptyList = CollectionsKt.emptyList();
-        List list2 = emptyList;
-        if (e == null && !list2.isEmpty()) {
-            this$0.branches = list2;
-            Intrinsics.checkNotNull(o);
-            this$0.currentBranch = StringsKt.trim((CharSequence) GxPage.str$default(this$0, o, "currentBranch", null, 2, null)).toString();
-            this$0.branchListFallback = false;
-            if (this$0.targetBranch.length() == 0) {
-                this$0.targetBranch = this$0.currentBranch;
-                if (this$0.targetBranch.length() > 0) {
-                    list = GxSystemKt.GxSystem_CORE;
-                }
-                z = false;
-                this$0.otherOpen = z;
-            }
-            this$0.isOnroad = o.optBoolean("isOnroad");
-            this$0.branchLoading = false;
-            this$0.paint();
-        } else if (this$0.fastStatus == null) {
-            this$0.loadFastStatus(new Function1() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda17
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj) {
-                    Unit loadBranches$lambda$42$lambda$41;
-                    loadBranches$lambda$42$lambda$41 = GxSystemPage.loadBranches$lambda$42$lambda$41(this$0, (String) obj);
-                    return loadBranches$lambda$42$lambda$41;
-                }
-            });
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit loadBranches$lambda$42(GxSystemPage var0, String var1, Object var2) {
+        List var18 = null; // declarations Vineflower left out
+        boolean var4 = var2 instanceof JSONObject;
+        JSONArray var5 = null;
+        if (var4) {
+            var2 = var2;
         } else {
-            loadBranches$lambda$42$fallback(this$0);
+            var2 = null;
         }
+
+        if (var2 != null) {
+            var5 = var2.optJSONArray("branches");
+        }
+
+        label83: {
+            var4 = true;
+            if (var5 != null) {
+                List var13 = var0.strings(var5);
+                if (var13 != null) {
+                    Iterable var6 = var13;
+                    var var14 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var6, 10));
+                    Iterator var19 = var6.iterator();
+
+                    while (var19.hasNext()) {
+                        var14.add(StringsKt.trim((String & CharSequence)var19.next()).toString());
+                    }
+
+                    List var15 = var14;
+                    var6 = var15;
+                    var var16 = new ArrayList();
+
+                    for (Object var21 : var6) {
+                        boolean var3;
+                        if (((String)var21).length() > 0) {
+                            var3 = true;
+                        } else {
+                            var3 = false;
+                        }
+
+                        if (var3) {
+                            var16.add(var21);
+                        }
+                    }
+
+                    List var17 = var16;
+                    List var22 = CollectionsKt.distinct(var17);
+                    var18 = var22;
+                    if (var22 != null) {
+                        break label83;
+                    }
+                }
+            }
+
+            var18 = CollectionsKt.emptyList();
+        }
+
+        if (var1 == null && !var18.isEmpty()) {
+            var0.branches = var18;
+            GxPage var8 = var0;
+            Intrinsics.checkNotNull(var2);
+            var0.currentBranch = StringsKt.trim(GxPage.str$default(var8, var2, "currentBranch", null, 2, null)).toString();
+            var0.branchListFallback = false;
+            boolean var10;
+            if (var0.targetBranch.length() == 0) {
+                var10 = true;
+            } else {
+                var10 = false;
+            }
+
+            if (var10) {
+                var0.targetBranch = var0.currentBranch;
+                if (var0.targetBranch.length() > 0) {
+                    var10 = true;
+                } else {
+                    var10 = false;
+                }
+
+                if (!var10 || GxSystemKt.GxSystem_CORE.contains(var0.targetBranch)) {
+                    var4 = false;
+                }
+
+                var0.otherOpen = var4;
+            }
+
+            var0.isOnroad = var2.optBoolean("isOnroad");
+            var0.branchLoading = false;
+            var0.paint();
+        } else if (var0.fastStatus == null) {
+            var0.loadFastStatus(new GxSystemPage$$ExternalSyntheticLambda17(var0));
+        } else {
+            loadBranches$lambda$42$fallback(var0);
+        }
+
         return Unit.INSTANCE;
     }
 
@@ -1209,12 +1287,13 @@ public final class GxSystemPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void loadFastStatus$default(GxSystemPage gxSystemPage, Function1 function1, int i, Object obj) {
-        if ((i & 1) != 0) {
-            function1 = null;
+    /* VF: from Vineflower (jadx: ) */
+    static void loadFastStatus$default(GxSystemPage var0, Function1 var1, int var2, Object var3) {
+        if ((var2 & 1) != 0) {
+            var1 = null;
         }
-        gxSystemPage.loadFastStatus(function1);
+
+        var0.loadFastStatus(var1);
     }
 
     private final void loadFastStatus(final Function1<? super String, Unit> then) {
@@ -1229,84 +1308,100 @@ public final class GxSystemPage extends GxPage {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:18:0x007a  */
-    /* JADX WARN: Removed duplicated region for block: B:37:0x00bd  */
-    /* JADX WARN: Removed duplicated region for block: B:44:0x00c2  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit loadFastStatus$lambda$45(GxSystemPage this$0, Function1 $then, String e, Object v) {
-        String str;
-        String str$default;
-        String stage;
-        boolean deviceReturned;
-        this$0.statusInFlight = false;
-        JSONObject st = v instanceof JSONObject ? (JSONObject) v : null;
-        String err = null;
-        if (e == null && st != null && (st.opt("running") instanceof Boolean)) {
-            String stage2 = StringsKt.trim((CharSequence) GxPage.str$default(this$0, st, "stage", null, 2, null)).toString().toLowerCase(Locale.ROOT);
-            Intrinsics.checkNotNullExpressionValue(stage2, "toLowerCase(...)");
-            if (Intrinsics.areEqual(stage2, "rebooting") && !this$0.rebootPending) {
-                this$0.rebootPending = true;
-                this$0.rebootStartedAt = System.currentTimeMillis();
-                String it = this$0.getHost();
-                if (it != null) {
-                    stage = stage2;
-                    GxSystemReboot.INSTANCE.getStartedAt().put(it, Long.valueOf(this$0.rebootStartedAt));
-                    long pendingAge = this$0.rebootStartedAt > 0 ? System.currentTimeMillis() - this$0.rebootStartedAt : 0L;
-                    deviceReturned = (this$0.rebootPending || st.optBoolean("running") || Intrinsics.areEqual(stage, "rebooting") || (!this$0.statusUnavailable && pendingAge < 30000)) ? false : true;
-                    boolean updateFailed = !this$0.rebootPending && Intrinsics.areEqual(stage, "error");
-                    this$0.fastStatus = st;
-                    this$0.statusUnavailable = false;
-                    this$0.isOnroad = st.optBoolean("isOnroad");
-                    if (!deviceReturned) {
-                        clearRebootPending$default(this$0, false, 1, null);
-                    } else if (updateFailed) {
-                        this$0.clearRebootPending(false);
-                    }
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public static final Unit loadFastStatus$lambda$45(GxSystemPage var0, Function1 var1, String var2, Object var3) {
+        var0.statusInFlight = false;
+        if (var3 instanceof JSONObject) {
+            var3 = (JSONObject)var3;
+        } else {
+            var3 = null;
+        }
+
+        Object var10 = null;
+        if (var2 == null && var3 != null && var3.opt("running") instanceof Boolean) {
+            String var11 = StringsKt.trim(GxPage.str$default(var0, var3, "stage", null, 2, null)).toString().toLowerCase(Locale.ROOT);
+            Intrinsics.checkNotNullExpressionValue(var11, "toLowerCase(...)");
+            if (Intrinsics.areEqual(var11, "rebooting") && !var0.rebootPending) {
+                var0.rebootPending = true;
+                var0.rebootStartedAt = System.currentTimeMillis();
+                var2 = var0.getHost();
+                if (var2 != null) {
+                    GxSystemReboot.INSTANCE.getStartedAt().put(var2, var0.rebootStartedAt);
                 }
             }
-            stage = stage2;
-            long pendingAge2 = this$0.rebootStartedAt > 0 ? System.currentTimeMillis() - this$0.rebootStartedAt : 0L;
-            if (this$0.rebootPending) {
+
+            long var8 = var0.rebootStartedAt;
+            long var6 = 0L;
+            if (var8 > 0L) {
+                var6 = System.currentTimeMillis() - var0.rebootStartedAt;
             }
-            if (this$0.rebootPending) {
+
+            boolean var4;
+            if (!var0.rebootPending || var3.optBoolean("running") || Intrinsics.areEqual(var11, "rebooting") || !var0.statusUnavailable && var6 < 30000L) {
+                var4 = false;
+            } else {
+                var4 = true;
             }
-            this$0.fastStatus = st;
-            this$0.statusUnavailable = false;
-            this$0.isOnroad = st.optBoolean("isOnroad");
-            if (!deviceReturned) {
+
+            boolean var5;
+            if (var0.rebootPending && Intrinsics.areEqual(var11, "error")) {
+                var5 = true;
+            } else {
+                var5 = false;
+            }
+
+            var0.fastStatus = var3;
+            var0.statusUnavailable = false;
+            var0.isOnroad = var3.optBoolean("isOnroad");
+            if (var4) {
+                clearRebootPending$default(var0, false, 1, null);
+                var2 = (String)var10;
+            } else {
+                var2 = (String)var10;
+                if (var5) {
+                    var0.clearRebootPending(false);
+                    var2 = (String)var10;
+                }
             }
         } else {
-            if (e == null) {
-                if (st == null || (str$default = GxPage.str$default(this$0, st, "error", null, 2, null)) == null) {
-                    str = null;
-                } else {
-                    String str2 = str$default;
-                    if (StringsKt.isBlank(str2)) {
-                        str2 = null;
+            if (var2 == null) {
+                label82: {
+                    if (var3 != null) {
+                        var2 = GxPage.str$default(var0, var3, "error", null, 2, null);
+                        if (var2 != null) {
+                            CharSequence var17 = var2;
+                            CharSequence var13 = var17;
+                            if (StringsKt.isBlank(var17)) {
+                                var13 = null;
+                            }
+
+                            var3 = (String)var13;
+                            break label82;
+                        }
                     }
-                    str = str2;
+
+                    var3 = null;
                 }
-                if (str == null) {
-                    str = "Update status unavailable.";
+
+                var2 = var3;
+                if (var3 == null) {
+                    var2 = "Update status unavailable.";
                 }
-            } else {
-                str = e;
             }
-            err = str;
-            this$0.statusUnavailable = true;
-            if (this$0.rebootPending) {
-                this$0.rebootOfflineSeen = true;
+
+            var0.statusUnavailable = true;
+            if (var0.rebootPending) {
+                var0.rebootOfflineSeen = true;
             } else {
-                this$0.fastStatus = null;
+                var0.fastStatus = null;
             }
         }
-        this$0.paint();
-        if ($then != null) {
-            $then.invoke(err);
+
+        var0.paint();
+        if (var1 != null) {
+            var1.invoke(var2);
         }
+
         return Unit.INSTANCE;
     }
 
@@ -1336,12 +1431,13 @@ public final class GxSystemPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void loadTailscale$default(GxSystemPage gxSystemPage, Function0 function0, int i, Object obj) {
-        if ((i & 1) != 0) {
-            function0 = null;
+    /* VF: from Vineflower (jadx: ) */
+    static void loadTailscale$default(GxSystemPage var0, Function0 var1, int var2, Object var3) {
+        if ((var2 & 1) != 0) {
+            var1 = null;
         }
-        gxSystemPage.loadTailscale(function0);
+
+        var0.loadTailscale(var1);
     }
 
     private final void loadTailscale(final Function0<Unit> then) {
@@ -1746,95 +1842,109 @@ public final class GxSystemPage extends GxPage {
         textView.setVisibility((!this.checkedForUpdates || getUpdateAvailable() || getUpdateInProgress()) ? 8 : 0);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:17:0x009f  */
-    /* JADX WARN: Removed duplicated region for block: B:20:0x00d7  */
-    /* JADX WARN: Removed duplicated region for block: B:23:0x00a6  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void paintAdv() {
-        boolean blocked;
-        String str;
-        LinearLayout linearLayout;
-        LinearLayout linearLayout2;
         if (!this.advOpen) {
-            LinearLayout linearLayout3 = this.advBox;
-            if (linearLayout3 == null) {
+            LinearLayout var24 = this.advBox;
+            if (var24 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("advBox");
-                linearLayout2 = null;
-            } else {
-                linearLayout2 = linearLayout3;
+                var24 = null;
             }
-            fill(linearLayout2, "closed", new Function1() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda78
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj) {
-                    Unit paintAdv$lambda$65;
-                    paintAdv$lambda$65 = GxSystemPage.paintAdv$lambda$65((LinearLayout) obj);
-                    return paintAdv$lambda$65;
-                }
-            });
-            return;
-        }
-        maybeLoadAgnos();
-        boolean blocked2 = getBranchSwitchBlocked();
-        List<String> list = this.branches;
-        String str2 = this.currentBranch;
-        String str3 = this.targetBranch;
-        Boolean valueOf = Boolean.valueOf(this.otherOpen);
-        String str4 = this.versionMode;
-        String str5 = this.selectedCommit;
-        Integer valueOf2 = Integer.valueOf(this.versionCommits.size());
-        Boolean valueOf3 = Boolean.valueOf(this.versionHasMore);
-        Boolean valueOf4 = Boolean.valueOf(this.versionLoading);
-        String str6 = this.versionError;
-        String str7 = this.versionNotice;
-        Boolean valueOf5 = Boolean.valueOf(this.branchBusy);
-        Boolean valueOf6 = Boolean.valueOf(blocked2);
-        Boolean valueOf7 = Boolean.valueOf(getInstallVersionBlocked());
-        Boolean valueOf8 = Boolean.valueOf(this.branchListFallback);
-        Boolean valueOf9 = Boolean.valueOf(this.pickerOpen);
-        String hashMap = this.expanded.toString();
-        JSONObject jSONObject = this.fastStatus;
-        if (jSONObject != null) {
-            blocked = blocked2;
-            JSONObject optJSONObject = jSONObject.optJSONObject("versionPin");
-            if (optJSONObject != null) {
-                str = optJSONObject.toString();
-                JSONObject jSONObject2 = this.agnosByBranch.get(this.targetBranch);
-                String sig = CollectionsKt.joinToString(CollectionsKt.listOf(list, str2, str3, valueOf, str4, str5, valueOf2, valueOf3, valueOf4, str6, str7, valueOf5, valueOf6, valueOf7, valueOf8, valueOf9, hashMap, str, jSONObject2 == null ? jSONObject2.toString() : null, this.agnosErrByBranch.get(this.targetBranch), this.agnosBusyFor), "|", "", "", -1, "...", null);
-                linearLayout = this.advBox;
-                if (linearLayout == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("advBox");
-                    linearLayout = null;
-                }
-                final boolean blocked3 = blocked;
-                fill(linearLayout, sig, new Function1() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda79
-                    @Override // kotlin.jvm.functions.Function1
-                    public final Object invoke(Object obj) {
-                        Unit paintAdv$lambda$74;
-                        paintAdv$lambda$74 = GxSystemPage.paintAdv$lambda$74(GxSystemPage.this, blocked3, (LinearLayout) obj);
-                        return paintAdv$lambda$74;
-                    }
-                });
-            }
+
+            this.fill(var24, "closed", new GxSystemPage$$ExternalSyntheticLambda78());
         } else {
-            blocked = blocked2;
-        }
-        str = null;
-        JSONObject jSONObject22 = this.agnosByBranch.get(this.targetBranch);
-        String sig2 = CollectionsKt.joinToString(CollectionsKt.listOf(list, str2, str3, valueOf, str4, str5, valueOf2, valueOf3, valueOf4, str6, str7, valueOf5, valueOf6, valueOf7, valueOf8, valueOf9, hashMap, str, jSONObject22 == null ? jSONObject22.toString() : null, this.agnosErrByBranch.get(this.targetBranch), this.agnosBusyFor), "|", "", "", -1, "...", null);
-        linearLayout = this.advBox;
-        if (linearLayout == null) {
-        }
-        final boolean blocked32 = blocked;
-        fill(linearLayout, sig2, new Function1() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda79
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit paintAdv$lambda$74;
-                paintAdv$lambda$74 = GxSystemPage.paintAdv$lambda$74(GxSystemPage.this, blocked32, (LinearLayout) obj);
-                return paintAdv$lambda$74;
+            int var1;
+            boolean var2;
+            boolean var3;
+            boolean var4;
+            boolean var5;
+            boolean var6;
+            boolean var7;
+            boolean var8;
+            boolean var9;
+            String var12;
+            String var13;
+            String var14;
+            String var15;
+            String var16;
+            String var17;
+            String var18;
+            List var19;
+            String var22;
+            label28: {
+                this.maybeLoadAgnos();
+                var6 = this.getBranchSwitchBlocked();
+                var19 = this.branches;
+                var16 = this.currentBranch;
+                var14 = this.targetBranch;
+                var3 = this.otherOpen;
+                var12 = this.versionMode;
+                var17 = this.selectedCommit;
+                var1 = this.versionCommits.size();
+                var2 = this.versionHasMore;
+                var5 = this.versionLoading;
+                var13 = this.versionError;
+                var15 = this.versionNotice;
+                var4 = this.branchBusy;
+                var9 = this.getInstallVersionBlocked();
+                var7 = this.branchListFallback;
+                var8 = this.pickerOpen;
+                var18 = this.expanded.toString();
+                JSONObject var10 = this.fastStatus;
+                if (var10 != null) {
+                    JSONObject var21 = var10.optJSONObject("versionPin");
+                    if (var21 != null) {
+                        var22 = var21.toString();
+                        break label28;
+                    }
+                }
+
+                var22 = null;
             }
-        });
+
+            JSONObject var11 = this.agnosByBranch.get(this.targetBranch);
+            String var25;
+            if (var11 != null) {
+                var25 = var11.toString();
+            } else {
+                var25 = null;
+            }
+
+            Object var20 = this.agnosErrByBranch.get(this.targetBranch);
+            var12 = CollectionsKt.joinToString(CollectionsKt.listOf(
+                    new Object[]{
+                        var19,
+                        var16,
+                        var14,
+                        var3,
+                        var12,
+                        var17,
+                        var1,
+                        var2,
+                        var5,
+                        var13,
+                        var15,
+                        var4,
+                        var6,
+                        var9,
+                        var7,
+                        var8,
+                        var18,
+                        var22,
+                        var25,
+                        var20,
+                        this.agnosBusyFor
+                    }
+                ), "|", "", "", -1, "...", null);
+            LinearLayout var26 = this.advBox;
+            LinearLayout var23 = var26;
+            if (var26 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("advBox");
+                var23 = null;
+            }
+
+            this.fill(var23, var12, new GxSystemPage$$ExternalSyntheticLambda79(this, var6));
+        }
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1843,110 +1953,174 @@ public final class GxSystemPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final Unit paintAdv$lambda$74(final GxSystemPage gxSystemPage, final boolean z, LinearLayout b) {
-        int i;
-        int i2;
-        Intrinsics.checkNotNullParameter(b, "b");
-        gxSystemPage.header("Install a Version", b);
-        gxSystemPage.note("Most people should stay on the latest version. Use this only to install a specific branch or historical version while troubleshooting.", b);
-        String str = gxSystemPage.currentBranch;
-        if (StringsKt.isBlank(str)) {
-            str = "Unknown";
+    /* VF: from Vineflower (jadx: ) */
+    public static final Unit paintAdv$lambda$74(GxSystemPage var0, boolean var1, LinearLayout var2) {
+        Intrinsics.checkNotNullParameter(var2, "b");
+        var0.header("Install a Version", (ViewGroup)var2);
+        var0.note(
+            "Most people should stay on the latest version. Use this only to install a specific branch or historical version while troubleshooting.",
+            (ViewGroup)var2
+        );
+        CharSequence var10 = var0.currentBranch;
+        View var9 = var10;
+        if (StringsKt.isBlank(var10)) {
+            var9 = "Unknown";
         }
-        gxSystemPage.note("Installed branch: " + ((Object) str), b);
-        boolean z2 = false;
-        if (gxSystemPage.otherOpen) {
-            i = 2;
+
+        var0.note("Installed branch: " + var9, (ViewGroup)var2);
+        boolean var6 = var0.otherOpen;
+        boolean var7 = false;
+        byte var5;
+        if (var6) {
+            var5 = 2;
         } else {
-            String str2 = gxSystemPage.targetBranch;
-            i = Intrinsics.areEqual(str2, "StarPilot") ? 0 : Intrinsics.areEqual(str2, "Dom") ? 1 : -1;
-        }
-        gxSystemPage.choice("Target branch", "StarPilot — Stable releases. Recommended for most users.\nDom — Latest features and fixes under development. Updates regularly and may introduce bugs.", CollectionsKt.listOf((Object[]) new String[]{"StarPilot — Release", "Dom — Development", "Other branches…"}), i, b, new Function1() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda72
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit paintAdv$lambda$74$lambda$67;
-                paintAdv$lambda$74$lambda$67 = GxSystemPage.paintAdv$lambda$74$lambda$67(z, gxSystemPage, ((Integer) obj).intValue());
-                return paintAdv$lambda$74$lambda$67;
+            var9 = var0.targetBranch;
+            if (Intrinsics.areEqual(var9, "StarPilot")) {
+                var5 = 0;
+            } else if (Intrinsics.areEqual(var9, "Dom")) {
+                var5 = 1;
+            } else {
+                var5 = -1;
             }
-        });
-        float f = 0.4f;
-        b.getChildAt(b.getChildCount() - 1).setAlpha((z || gxSystemPage.branchBusy) ? 0.4f : 1.0f);
-        if (gxSystemPage.otherOpen) {
-            final List<String> otherBranches = gxSystemPage.getOtherBranches();
-            gxSystemPage.en(GxPage.Row.button$default(gxSystemPage.row("Other branches", "Additional branches from this installation's repository.", b, 1), otherBranches.contains(gxSystemPage.targetBranch) ? gxSystemPage.targetBranch : !otherBranches.isEmpty() ? "Select another branch" : "No other branches available", false, new Function0() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda73
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit paintAdv$lambda$74$lambda$70;
-                    paintAdv$lambda$74$lambda$70 = GxSystemPage.paintAdv$lambda$74$lambda$70(otherBranches, gxSystemPage);
-                    return paintAdv$lambda$74$lambda$70;
-                }
-            }, 2, null), (z || gxSystemPage.branchBusy || otherBranches.isEmpty()) ? false : true);
         }
-        if (gxSystemPage.branchListFallback) {
-            gxSystemPage.note("The full branch list is temporarily unavailable. Standard branches are shown; selecting a version still verifies it with the device.", b);
-        }
-        if ((gxSystemPage.targetBranch.length() > 0) == false) {
-            i2 = 1;
+
+        var0.choice(
+            "Target branch",
+            "StarPilot — Stable releases. Recommended for most users.\nDom — Latest features and fixes under development. Updates regularly and may introduce bugs.",
+            CollectionsKt.listOf(new String[]{"StarPilot — Release", "Dom — Development", "Other branches…"}),
+            var5,
+            (ViewGroup)var2,
+            new GxSystemPage$$ExternalSyntheticLambda72(var1, var0)
+        );
+        var9 = var2.getChildAt(var2.getChildCount() - 1);
+        float var4 = 0.4F;
+        float var3;
+        if (!var1 && !var0.branchBusy) {
+            var3 = 1.0F;
         } else {
-            final boolean contains = gxSystemPage.branches.contains(gxSystemPage.targetBranch);
-            i2 = 1;
-            gxSystemPage.choice("Version", null, CollectionsKt.listOf((Object[]) new String[]{"Latest", "Choose earlier…"}), Intrinsics.areEqual(gxSystemPage.versionMode, "earlier") ? 1 : 0, b, new Function1() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda74
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj) {
-                    Unit paintAdv$lambda$74$lambda$71;
-                    paintAdv$lambda$74$lambda$71 = GxSystemPage.paintAdv$lambda$74$lambda$71(z, gxSystemPage, contains, ((Integer) obj).intValue());
-                    return paintAdv$lambda$74$lambda$71;
-                }
-            });
-            View childAt = b.getChildAt(b.getChildCount() - 1);
-            if (!z && !gxSystemPage.branchBusy && contains) {
-                f = 1.0f;
-            }
-            childAt.setAlpha(f);
-            if (Intrinsics.areEqual(gxSystemPage.versionMode, "earlier")) {
-                gxSystemPage.buildPicker(b, z || gxSystemPage.branchBusy);
-            }
-            if (Intrinsics.areEqual(gxSystemPage.versionMode, "latest") && !Intrinsics.areEqual(gxSystemPage.targetBranch, gxSystemPage.currentBranch) && contains) {
-                gxSystemPage.agnosNote(b);
-            }
-            if (!contains) {
-                gxSystemPage.note("This installed branch is no longer listed by the repository. Select an available target branch to install a version.", b);
-            }
-            Pair<String, ? extends Function0<Unit>>[] pairArr = new Pair[1];
-            pairArr[0] = TuplesKt.to(gxSystemPage.branchBusy ? "Starting installation…" : "Install selected version", new Function0() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda75
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit paintAdv$lambda$74$lambda$72;
-                    paintAdv$lambda$74$lambda$72 = GxSystemPage.paintAdv$lambda$74$lambda$72(gxSystemPage);
-                    return paintAdv$lambda$74$lambda$72;
-                }
-            });
-            gxSystemPage.en(gxSystemPage.buttons(pairArr, b, true).getChildAt(0), !gxSystemPage.getInstallVersionBlocked());
+            var3 = 0.4F;
         }
-        JSONObject jSONObject = gxSystemPage.fastStatus;
-        JSONObject optJSONObject = jSONObject != null ? jSONObject.optJSONObject("versionPin") : null;
-        if (optJSONObject != null) {
-            LinearLayout card = gxSystemPage.card(b);
-            JSONObject jSONObject2 = optJSONObject;
-            gxSystemPage.text("Pinned version: " + GxPage.str$default(gxSystemPage, jSONObject2, "branch", null, 2, null) + " · " + gxSystemPage.shortCommit(GxPage.str$default(gxSystemPage, jSONObject2, "commit", null, 2, null)), card, 15.0f, CarUi.Companion.getTEXT(), true);
-            GxPage.text$default(gxSystemPage, "Automatic updates were paused at installation.", card, 0.0f, 0, false, 28, null);
-            Pair[] pairArr2 = new Pair[i2];
-            pairArr2[0] = TuplesKt.to("Return to Latest", new Function0() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda76
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit paintAdv$lambda$74$lambda$73;
-                    paintAdv$lambda$74$lambda$73 = GxSystemPage.paintAdv$lambda$74$lambda$73(gxSystemPage);
-                    return paintAdv$lambda$74$lambda$73;
-                }
-            });
-            View childAt2 = GxPage.buttons$default(gxSystemPage, pairArr2, card, false, 4, null).getChildAt(0);
-            if (!z && !gxSystemPage.branchBusy && gxSystemPage.branches.contains(GxPage.str$default(gxSystemPage, optJSONObject, "branch", null, 2, null))) {
-                z2 = true;
+
+        var9.setAlpha(var3);
+        if (var0.otherOpen) {
+            List var30 = var0.getOtherBranches();
+            GxPage.Row var11 = var0.row("Other branches", "Additional branches from this installation's repository.", (ViewGroup)var2, 1);
+            String var23;
+            if (var30.contains(var0.targetBranch)) {
+                var23 = var0.targetBranch;
+            } else if (!var30.isEmpty()) {
+                var23 = "Select another branch";
+            } else {
+                var23 = "No other branches available";
             }
-            gxSystemPage.en(childAt2, z2);
+
+            var9 = (View)GxPage.Row.button$default(var11, var23, false, new GxSystemPage$$ExternalSyntheticLambda73(var30, var0), 2, null);
+            if (!var1 && !var0.branchBusy && !var30.isEmpty()) {
+                var6 = true;
+            } else {
+                var6 = false;
+            }
+
+            var0.en(var9, var6);
         }
+
+        if (var0.branchListFallback) {
+            var0.note(
+                "The full branch list is temporarily unavailable. Standard branches are shown; selecting a version still verifies it with the device.",
+                (ViewGroup)var2
+            );
+        }
+
+        boolean var16;
+        if (var0.targetBranch.length() > 0) {
+            var16 = true;
+        } else {
+            var16 = false;
+        }
+
+        if (var16) {
+            boolean var8 = var0.branches.contains(var0.targetBranch);
+            List var31 = CollectionsKt.listOf(new String[]{"Latest", "Choose earlier…"});
+            var16 = Intrinsics.areEqual(var0.versionMode, "earlier");
+            ViewGroup var35 = (ViewGroup)var2;
+            GxSystemPage$$ExternalSyntheticLambda74 var25 = new GxSystemPage$$ExternalSyntheticLambda74(var1, var0, var8);
+            var0.choice("Version", null, var31, ((var16) ? 1 : 0), var35, var25);
+            var9 = var2.getChildAt(var2.getChildCount() - 1);
+            var3 = var4;
+            if (!var1) {
+                var3 = var4;
+                if (!var0.branchBusy) {
+                    if (!var8) {
+                        var3 = var4;
+                    } else {
+                        var3 = 1.0F;
+                    }
+                }
+            }
+
+            var9.setAlpha(var3);
+            if (Intrinsics.areEqual(var0.versionMode, "earlier")) {
+                if (!var1 && !var0.branchBusy) {
+                    var6 = false;
+                } else {
+                    var6 = true;
+                }
+
+                var0.buildPicker(var2, var6);
+            }
+
+            if (Intrinsics.areEqual(var0.versionMode, "latest") && !Intrinsics.areEqual(var0.targetBranch, var0.currentBranch) && var8) {
+                var0.agnosNote(var2);
+            }
+
+            if (!var8) {
+                var0.note("This installed branch is no longer listed by the repository. Select an available target branch to install a version.", (ViewGroup)var2);
+            }
+
+            Pair[] var32 = new Pair[1];
+            String var27;
+            if (var0.branchBusy) {
+                var27 = "Starting installation…";
+            } else {
+                var27 = "Install selected version";
+            }
+
+            var32[0] = TuplesKt.to(var27, new GxSystemPage$$ExternalSyntheticLambda75(var0));
+            var0.en(var0.buttons(var32, (ViewGroup)var2, true).getChildAt(0), var0.getInstallVersionBlocked() ^ true);
+        }
+
+        JSONObject var28 = var0.fastStatus;
+        JSONObject var29;
+        if (var28 != null) {
+            var29 = var28.optJSONObject("versionPin");
+        } else {
+            var29 = null;
+        }
+
+        if (var29 != null) {
+            var2 = var0.card((ViewGroup)var2);
+            String var36 = GxPage.str$default(var0, var29, "branch", null, 2, null);
+            String var33 = var0.shortCommit(GxPage.str$default(var0, var29, "commit", null, 2, null));
+            var0.text("Pinned version: " + var36 + " · " + var33, (ViewGroup)var2, 15.0F, CarUi.Companion.getTEXT(), true);
+            GxPage.text$default(var0, "Automatic updates were paused at installation.", (ViewGroup)var2, 0.0F, 0, false, 28, null);
+            GxPage var37 = var0;
+            Pair var34 = TuplesKt.to("Return to Latest", new GxSystemPage$$ExternalSyntheticLambda76(var0));
+            ViewGroup var13 = (ViewGroup)var2;
+            View var14 = GxPage.buttons$default(var37, new Pair[]{var34}, var13, false, 4, null).getChildAt(0);
+            var6 = var7;
+            if (!var1) {
+                var6 = var7;
+                if (!var0.branchBusy) {
+                    var6 = var7;
+                    if (var0.branches.contains(GxPage.str$default(var0, var29, "branch", null, 2, null))) {
+                        var6 = true;
+                    }
+                }
+            }
+
+            var0.en(var14, var6);
+        }
+
         return Unit.INSTANCE;
     }
 
@@ -2090,194 +2264,298 @@ public final class GxSystemPage extends GxPage {
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:89:0x04c0  */
-    /* JADX WARN: Removed duplicated region for block: B:96:? A[RETURN, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void buildPicker(LinearLayout b, final boolean disabled) {
-        Object element$iv;
-        String str;
-        String str2;
-        boolean z;
-        boolean z2;
-        int i;
-        boolean z3;
-        boolean z4;
-        int i2;
-        boolean release = Intrinsics.areEqual(this.targetBranch, "StarPilot");
-        List choices = versionChoices();
-        List groups = groupVersionHistory(choices);
-        if (this.expanded.isEmpty() && !groups.isEmpty()) {
-            this.expanded.put(groups.get(0).getKey(), true);
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void buildPicker(LinearLayout var1, boolean var2) {
+        boolean var7 = Intrinsics.areEqual(this.targetBranch, "StarPilot");
+        List var11 = this.versionChoices();
+        List var10 = this.groupVersionHistory(var11);
+        boolean var5 = this.expanded.isEmpty();
+        Boolean var13 = true;
+        if (var5 && !var10.isEmpty()) {
+            this.expanded.put(((GxSystemPage.DayGroup)var10.get(0)).getKey(), var13);
         }
-        List $this$firstOrNull$iv = choices;
-        Iterator it = $this$firstOrNull$iv.iterator();
-        while (true) {
-            if (it.hasNext()) {
-                element$iv = it.next();
-                JSONObject it2 = (JSONObject) element$iv;
-                if (Intrinsics.areEqual(GxPage.str$default(this, it2, "sha", null, 2, null), this.selectedCommit)) {
-                    break;
-                }
-            } else {
-                element$iv = null;
+
+        Iterator var9 = var11.iterator();
+
+        Object var8;
+        JSONObject var12;
+        do {
+            if (!var9.hasNext()) {
+                var8 = null;
                 break;
             }
-        }
-        JSONObject selected = (JSONObject) element$iv;
-        if (release) {
-            str = choices.size() + " " + (choices.size() == 1 ? "release" : "releases") + " · " + this.versionCommits.size() + " builds checked";
-        } else {
-            List $this$filter$iv = groups;
-            Collection destination$iv$iv = new ArrayList();
-            for (Object element$iv$iv : $this$filter$iv) {
-                DayGroup it3 = (DayGroup) element$iv$iv;
-                Iterable $this$filter$iv2 = $this$filter$iv;
-                if (!Intrinsics.areEqual(it3.getKey(), "unknown")) {
-                    destination$iv$iv.add(element$iv$iv);
-                }
-                $this$filter$iv = $this$filter$iv2;
-            }
-            List known = (List) destination$iv$iv;
-            if (known.isEmpty()) {
-                str = !this.versionCommits.isEmpty() ? this.versionCommits.size() + " versions loaded" : "No history loaded yet";
+
+            var8 = var9.next();
+            var12 = (JSONObject)var8;
+        } while (!Intrinsics.areEqual(GxPage.str$default(this, var12, "sha", null, 2, null), this.selectedCommit));
+
+        var12 = (JSONObject)var8;
+        String var50;
+        if (var7) {
+            int var4 = var11.size();
+            if (var11.size() == 1) {
+                var8 = "release";
             } else {
-                str = this.versionCommits.size() + " versions · " + ((DayGroup) CollectionsKt.last(known)).getLabel() + (known.size() > 1 ? " – " + ((DayGroup) known.get(0)).getLabel() : "");
+                var8 = "releases";
             }
-        }
-        String range = str;
-        LinearLayout c = card(b);
-        GxPage.text$default(this, "Earlier version", c, 15.0f, CarUi.Companion.getDIM(), false, 16, null);
-        text(selected != null ? versionTitle(selected, release) : "Select an earlier version", c, 21.0f, CarUi.Companion.getTEXT(), true);
-        GxSystemPage gxSystemPage = this;
-        if (this.versionHasMore) {
-            str2 = release ? "Open the picker to load older versions." : "Open the picker to load older days.";
+
+            int var3 = this.versionCommits.size();
+            var50 = var4 + " " + var8 + " · " + var3 + " builds checked";
         } else {
-            if (!this.versionCommits.isEmpty()) {
-                if (this.versionError.length() == 0) {
-                    str2 = "All available history loaded.";
+            var8 = var10;
+            var var14 = new ArrayList();
+
+            for (Object var15 : var8) {
+                if (!Intrinsics.areEqual(((GxSystemPage.DayGroup)var15).getKey(), "unknown")) {
+                    var14.add(var15);
                 }
             }
-            str2 = "Open the picker to browse history.";
+
+            var8 = var14;
+            if (var8.isEmpty()) {
+                if (!this.versionCommits.isEmpty()) {
+                    int var22 = this.versionCommits.size();
+                    var8 = var22 + " versions loaded";
+                } else {
+                    var8 = "No history loaded yet";
+                }
+
+                var50 = (String)var8;
+            } else {
+                int var23 = this.versionCommits.size();
+                String var52 = CollectionsKt.<GxSystemPage.DayGroup>last((List<? extends GxSystemPage.DayGroup>)var8).getLabel();
+                if (var8.size() > 1) {
+                    var8 = ((GxSystemPage.DayGroup)var8.get(0)).getLabel();
+                    var8 = " – " + var8;
+                } else {
+                    var8 = "";
+                }
+
+                var50 = var23 + " versions · " + var52 + var8;
+            }
         }
-        GxPage.text$default(gxSystemPage, range + ". " + str2, c, 0.0f, 0, false, 28, null);
+
+        LinearLayout var66 = this.card((ViewGroup)var1);
+        GxPage.text$default(this, "Earlier version", (ViewGroup)var66, 15.0F, CarUi.Companion.getDIM(), false, 16, null);
+        if (var12 != null) {
+            var8 = this.versionTitle(var12, var7);
+        } else {
+            var8 = "Select an earlier version";
+        }
+
+        this.text((String)var8, (ViewGroup)var66, 21.0F, CarUi.Companion.getTEXT(), true);
+        GxPage var69 = this;
+        var5 = this.versionHasMore;
+        String var65 = "All available history loaded.";
+        if (var5) {
+            if (var7) {
+                var8 = "Open the picker to load older versions.";
+            } else {
+                var8 = "Open the picker to load older days.";
+            }
+        } else {
+            label226: {
+                if (!this.versionCommits.isEmpty()) {
+                    boolean var24;
+                    if (this.versionError.length() == 0) {
+                        var24 = true;
+                    } else {
+                        var24 = false;
+                    }
+
+                    if (var24) {
+                        var8 = "All available history loaded.";
+                        break label226;
+                    }
+                }
+
+                var8 = "Open the picker to browse history.";
+            }
+        }
+
+        GxPage.text$default(var69, var50 + ". " + var8, (ViewGroup)var66, 0.0F, 0, false, 28, null);
+        int var25;
         if (this.versionNotice.length() > 0) {
-            GxPage.text$default(this, this.versionNotice, c, 0.0f, 0, false, 28, null);
-        }
-        GxSystemPage gxSystemPage2 = this;
-        Pair[] pairArr = new Pair[1];
-        pairArr[0] = TuplesKt.to(this.pickerOpen ? "Hide versions" : "Browse versions", new Function0() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda46
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit buildPicker$lambda$79;
-                buildPicker$lambda$79 = GxSystemPage.buildPicker$lambda$79(disabled, this);
-                return buildPicker$lambda$79;
-            }
-        });
-        LinearLayout bar = GxPage.buttons$default(gxSystemPage2, pairArr, c, false, 4, null);
-        en(bar.getChildAt(0), !disabled);
-        if (!this.pickerOpen) {
-            z = false;
-            z2 = true;
-        } else if (disabled) {
-            z = false;
-            z2 = true;
+            var25 = 1;
         } else {
-            LinearLayout hc = card(b);
-            text(release ? "Earlier StarPilot versions" : "Earlier versions by day", hc, 21.0f, CarUi.Companion.getTEXT(), true);
-            GxPage.text$default(this, range, hc, 0.0f, 0, false, 28, null);
-            if (this.versionNotice.length() > 0) {
-                GxPage.text$default(this, this.versionNotice, hc, 0.0f, 0, false, 28, null);
+            var25 = 0;
+        }
+
+        if ((var25 != 0)) {
+            GxPage.text$default(this, this.versionNotice, (ViewGroup)var66, 0.0F, 0, false, 28, null);
+        }
+
+        var69 = this;
+        if (this.pickerOpen) {
+            var8 = "Hide versions";
+        } else {
+            var8 = "Browse versions";
+        }
+
+        var8 = TuplesKt.to(var8, new GxSystemPage$$ExternalSyntheticLambda46(var2, this));
+        ViewGroup var16 = (ViewGroup)var66;
+        this.en(GxPage.buttons$default(var69, new Pair[]{(Pair)var8}, var16, false, 4, null).getChildAt(0), var2 ^ true);
+        if (this.pickerOpen && !var2) {
+            var66 = this.card((ViewGroup)var1);
+            if (var7) {
+                var8 = "Earlier StarPilot versions";
+            } else {
+                var8 = "Earlier versions by day";
             }
-            GxPage.text$default(this, release ? "Each version uses its newest build. Build dates are shown in your local time." : "Expand a day to choose a build. Build dates are shown in your local time.", hc, 0.0f, 0, false, 28, null);
-            if (release) {
-                for (JSONObject cm : choices) {
-                    buildPicker$versionRow(this, release, b, disabled, cm, 0);
+
+            this.text((String)var8, (ViewGroup)var66, 21.0F, CarUi.Companion.getTEXT(), true);
+            GxPage.text$default(this, var50, (ViewGroup)var66, 0.0F, 0, false, 28, null);
+            if (this.versionNotice.length() > 0) {
+                var25 = (((boolean)true) ? 1 : 0);
+            } else {
+                var25 = (((boolean)false) ? 1 : 0);
+            }
+
+            if ((var25 != 0)) {
+                GxPage.text$default(this, this.versionNotice, (ViewGroup)var66, 0.0F, 0, false, 28, null);
+            }
+
+            GxPage var53 = this;
+            if (var7) {
+                var8 = "Each version uses its newest build. Build dates are shown in your local time.";
+            } else {
+                var8 = "Expand a day to choose a build. Build dates are shown in your local time.";
+            }
+
+            GxPage.text$default(var53, (String)var8, (ViewGroup)var66, 0.0F, 0, false, 28, null);
+            if (var7) {
+                var8 = var11.iterator();
+
+                while (var8.hasNext()) {
+                    buildPicker$versionRow(this, var7, var1, var2, (JSONObject)var8.next(), 0);
                 }
             } else {
-                Iterator<DayGroup> it4 = groups.iterator();
-                while (it4.hasNext()) {
-                    final DayGroup g = it4.next();
-                    final boolean open = Intrinsics.areEqual((Object) this.expanded.get(g.getKey()), (Object) true);
-                    GxPage.Row gr = GxPage.row$default(this, g.getLabel() + "  · " + g.getCommits().size() + " " + (g.getCommits().size() == 1 ? "build" : "builds"), null, b, 0, 8, null);
-                    gr.value(open ? "▲" : "▼");
-                    gr.getView().setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda47
-                        @Override // android.view.View.OnClickListener
-                        public final void onClick(View view) {
-                            GxSystemPage.buildPicker$lambda$82(GxSystemPage.this, g, open, view);
-                        }
-                    });
-                    if (open) {
-                        Iterator<JSONObject> it5 = g.getCommits().iterator();
-                        Intrinsics.checkNotNullExpressionValue(it5, "iterator(...)");
-                        while (it5.hasNext()) {
-                            JSONObject next = it5.next();
-                            Intrinsics.checkNotNullExpressionValue(next, "next(...)");
-                            JSONObject cm2 = next;
-                            buildPicker$versionRow(this, release, b, disabled, cm2, 1);
-                            it5 = it5;
-                            gr = gr;
-                            open = open;
-                            g = g;
+                for (GxSystemPage.DayGroup var48 : var10) {
+                    var5 = Intrinsics.areEqual(this.expanded.get(var48.getKey()), var13);
+                    GxPage var58 = this;
+                    String var62 = var48.getLabel();
+                    var25 = var48.getCommits().size();
+                    String var54;
+                    if (var48.getCommits().size() == 1) {
+                        var54 = "build";
+                    } else {
+                        var54 = "builds";
+                    }
+
+                    GxPage.Row var55 = GxPage.row$default(var58, var62 + "  · " + var25 + " " + var54, null, (ViewGroup)var1, 0, 8, null);
+                    String var59;
+                    if (var5) {
+                        var59 = "▲";
+                    } else {
+                        var59 = "▼";
+                    }
+
+                    var55.value(var59);
+                    var55.getView().setOnClickListener(new GxSystemPage$$ExternalSyntheticLambda47(this, var48, var5));
+                    if (var5) {
+                        Iterator var60 = var48.getCommits().iterator();
+                        Intrinsics.checkNotNullExpressionValue(var60, "iterator(...)");
+
+                        while (var60.hasNext()) {
+                            Object var63 = var60.next();
+                            Intrinsics.checkNotNullExpressionValue(var63, "next(...)");
+                            buildPicker$versionRow(this, var7, var1, var2, (JSONObject)var63, 1);
                         }
                     }
                 }
             }
-            LinearLayout f = card(b);
+
+            var8 = this.card((ViewGroup)var1);
+            boolean var29;
             if (this.versionError.length() > 0) {
-                i2 = GxSystemKt.GxSystem_DANGER;
-                GxPage.text$default(this, this.versionError, f, 15.0f, i2, false, 16, null);
+                var29 = true;
+            } else {
+                var29 = false;
             }
+
+            if (var29) {
+                GxPage.text$default(this, this.versionError, (ViewGroup)var8, 15.0F, GxSystemKt.GxSystem_DANGER, false, 16, null);
+            }
+
             if (this.versionLoading) {
-                GxPage.text$default(this, "Loading older history…", f, 0.0f, 0, false, 28, null);
+                GxPage.text$default(this, "Loading older history…", (ViewGroup)var8, 0.0F, 0, false, 28, null);
             }
-            if (!this.versionHasMore) {
-                if (!(this.versionError.length() > 0)) {
-                    if (!this.versionLoading) {
-                        GxPage.text$default(this, this.versionCommits.isEmpty() ? "No history available." : "All available history loaded.", f, 0.0f, 0, false, 28, null);
+
+            label252: {
+                if (!this.versionHasMore) {
+                    if (this.versionError.length() > 0) {
+                        var29 = true;
+                    } else {
+                        var29 = false;
                     }
-                    z4 = false;
-                    z3 = true;
-                    if (!this.versionHasMore) {
-                        if (this.versionError.length() == 0) {
-                            z4 = z3;
+
+                    if (!var29) {
+                        if (!this.versionLoading) {
+                            GxPage var57 = this;
+                            String var20;
+                            if (!this.versionCommits.isEmpty()) {
+                                var20 = var65;
+                            } else {
+                                var20 = "No history available.";
+                            }
+
+                            GxPage.text$default(var57, var20, (ViewGroup)var8, 0.0F, 0, false, 28, null);
                         }
-                        if (z4) {
-                            GxPage.text$default(this, "Keep loading to browse further back.", f, 0.0f, 0, false, 28, null);
-                            return;
-                        }
-                        return;
+                        break label252;
                     }
-                    return;
+                }
+
+                GxPage var56 = this;
+                if (this.versionError.length() > 0) {
+                    var29 = true;
+                } else {
+                    var29 = false;
+                }
+
+                String var17;
+                if (var29) {
+                    var17 = "Retry history";
+                } else if (var7) {
+                    var17 = "Load older versions";
+                } else {
+                    var17 = "Load older days";
+                }
+
+                Pair var18 = TuplesKt.to(var17, new GxSystemPage$$ExternalSyntheticLambda48(var2, this));
+                ViewGroup var61 = (ViewGroup)var8;
+                View var19 = GxPage.buttons$default(var56, new Pair[]{var18}, var61, false, 4, null).getChildAt(0);
+                if (!this.versionLoading && !var2) {
+                    var2 = true;
+                } else {
+                    var2 = false;
+                }
+
+                this.en(var19, var2);
+            }
+
+            var29 = false;
+            if (this.versionHasMore) {
+                if (this.versionError.length() == 0) {
+                    var29 = true;
+                }
+
+                if (var29) {
+                    GxPage.text$default(this, "Keep loading to browse further back.", (ViewGroup)var8, 0.0F, 0, false, 28, null);
                 }
             }
-            GxSystemPage gxSystemPage3 = this;
-            z3 = true;
-            Pair[] pairArr2 = new Pair[1];
-            pairArr2[0] = TuplesKt.to(this.versionError.length() > 0 ? "Retry history" : release ? "Load older versions" : "Load older days", new Function0() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda48
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit buildPicker$lambda$83;
-                    buildPicker$lambda$83 = GxSystemPage.buildPicker$lambda$83(disabled, this);
-                    return buildPicker$lambda$83;
-                }
-            });
-            LinearLayout lb = GxPage.buttons$default(gxSystemPage3, pairArr2, f, false, 4, null);
-            z4 = false;
-            en(lb.getChildAt(0), (this.versionLoading || disabled) ? false : true);
-            if (!this.versionHasMore) {
+        } else {
+            boolean var26 = false;
+            if (this.versionError.length() > 0) {
+                var26 = true;
             }
-        }
-        if (this.versionError.length() > 0) {
-            z = z2;
-        }
-        if (z) {
-            i = GxSystemKt.GxSystem_DANGER;
-            GxPage.text$default(this, this.versionError, c, 15.0f, i, false, 16, null);
-        }
-        if (this.versionLoading) {
-            GxPage.text$default(this, "Loading older history…", c, 0.0f, 0, false, 28, null);
+
+            if (var26) {
+                GxPage.text$default(this, this.versionError, (ViewGroup)var66, 15.0F, GxSystemKt.GxSystem_DANGER, false, 16, null);
+            }
+
+            if (this.versionLoading) {
+                GxPage.text$default(this, "Loading older history…", (ViewGroup)var66, 0.0F, 0, false, 28, null);
+            }
         }
     }
 
@@ -2680,95 +2958,123 @@ public final class GxSystemPage extends GxPage {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:31:0x009a, code lost:
-    
-        if (kotlin.jvm.internal.Intrinsics.areEqual(com.starpilot.starview.GxPage.str$default(r26, r13, "head", null, 2, null), r29) == false) goto L88;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit loadVersions$step$lambda$101(int $gen, GxSystemPage this$0, String $branch, int $page, String $head, int $originalCount, int $scanned, int $budget, String e, Object v) {
-        Regex regex;
-        boolean z;
-        Regex regex2;
-        if ($gen != this$0.versionGen) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit loadVersions$step$lambda$101(
+        int var0, GxSystemPage var1, String var2, int var3, String var4, int var5, int var6, int var7, String var8, Object var9
+    ) {
+        if (var0 != var1.versionGen) {
             return Unit.INSTANCE;
-        }
-        JSONObject d = v instanceof JSONObject ? (JSONObject) v : null;
-        if (e != null) {
-            String str = e;
-            if (StringsKt.isBlank(str)) {
-                str = "Failed to load version history. Try again.";
+        } else {
+            boolean var11 = var9 instanceof JSONObject;
+            Collection var12 = null;
+            if (var11) {
+                var9 = var9;
+            } else {
+                var9 = null;
             }
-            this$0.versionError = str;
-            loadVersions$finish($gen, this$0);
-            return Unit.INSTANCE;
-        }
-        JSONArray arr = d != null ? d.optJSONArray("commits") : null;
-        if (d != null && Intrinsics.areEqual(GxPage.str$default(this$0, d, "branch", null, 2, null), $branch) && d.optInt("page", -1) == $page) {
-            regex = GxSystemKt.GxSystem_SHA;
-            if (regex.matches(GxPage.str$default(this$0, d, "head", null, 2, null))) {
-                if (!($head.length() > 0)) {
+
+            if (var8 != null) {
+                CharSequence var22 = var8;
+                Object var15 = var22;
+                if (StringsKt.isBlank(var22)) {
+                    var15 = "Failed to load version history. Try again.";
                 }
-                if (arr != null) {
-                    Iterable $this$filter$iv = this$0.objects(arr);
-                    Collection destination$iv$iv = new ArrayList();
-                    for (Object element$iv$iv : $this$filter$iv) {
-                        JSONObject it = (JSONObject) element$iv$iv;
-                        regex2 = GxSystemKt.GxSystem_SHA;
-                        Iterable $this$filter$iv2 = $this$filter$iv;
-                        if (regex2.matches(GxPage.str$default(this$0, it, "sha", null, 2, null))) {
-                            destination$iv$iv.add(element$iv$iv);
-                        }
-                        $this$filter$iv = $this$filter$iv2;
+
+                var1.versionError = (String)var15;
+                loadVersions$finish(var0, var1);
+                return Unit.INSTANCE;
+            } else {
+                JSONArray var23 = var12;
+                if (var9 != null) {
+                    var23 = var9.optJSONArray("commits");
+                }
+
+                if (var9 != null
+                    && Intrinsics.areEqual(GxPage.str$default(var1, var9, "branch", null, 2, null), var2)
+                    && var9.optInt("page", -1) == var3
+                    && GxSystemKt.GxSystem_SHA.matches(GxPage.str$default(var1, var9, "head", null, 2, null))) {
+                    boolean var10;
+                    if (var4.length() > 0) {
+                        var10 = true;
+                    } else {
+                        var10 = false;
                     }
-                    List<JSONObject> commits = (List) destination$iv$iv;
-                    if ($page > 1) {
-                        Iterable $this$map$iv = this$0.versionCommits;
-                        Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-                        for (Object item$iv$iv : $this$map$iv) {
-                            JSONObject it2 = (JSONObject) item$iv$iv;
-                            destination$iv$iv2.add(GxPage.str$default(this$0, it2, "sha", null, 2, null));
-                        }
-                        HashSet have = CollectionsKt.toHashSet((List) destination$iv$iv2);
-                        for (JSONObject cm : commits) {
-                            if (have.add(GxPage.str$default(this$0, cm, "sha", null, 2, null))) {
-                                this$0.versionCommits.add(cm);
+
+                    if ((!var10 || Intrinsics.areEqual(GxPage.str$default(var1, var9, "head", null, 2, null), var4)) && var23 != null) {
+                        Iterable var16 = var1.objects(var23);
+                        var12 = new ArrayList();
+
+                        for (Object var13 : var16) {
+                            JSONObject var14 = (JSONObject)var13;
+                            if (GxSystemKt.GxSystem_SHA.matches(GxPage.str$default(var1, var14, "sha", null, 2, null))) {
+                                var12.add(var13);
                             }
                         }
-                    } else {
-                        this$0.versionCommits.clear();
-                        this$0.versionCommits.addAll(commits);
-                    }
-                    if (d.optBoolean("cached")) {
-                        Instant saved = this$0.parseDate(GxPage.str$default(this$0, d, "cachedAt", null, 2, null));
-                        this$0.versionNotice = "Showing saved history" + (saved != null ? " from " + this$0.stampFmt.format(saved) : "") + ". Installation still needs an online check.";
-                        z = true;
-                    } else {
-                        z = true;
-                        if ($page == 1) {
-                            this$0.versionNotice = "";
+
+                        List var25 = (List)var12;
+                        if (var3 > 1) {
+                            Iterable var30 = var1.versionCommits;
+                            var var17 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var30, 10));
+
+                            for (JSONObject var34 : var30) {
+                                var17.add(GxPage.str$default(var1, var34, "sha", null, 2, null));
+                            }
+
+                            List var18 = var17;
+                            HashSet var32 = CollectionsKt.toHashSet(var18);
+
+                            for (JSONObject var35 : var25) {
+                                if (var32.add(GxPage.str$default(var1, var35, "sha", null, 2, null))) {
+                                    var1.versionCommits.add(var35);
+                                }
+                            }
+                        } else {
+                            var1.versionCommits.clear();
+                            var1.versionCommits.addAll(var25);
                         }
+
+                        var11 = var9.optBoolean("cached");
+                        var4 = "";
+                        if (var11) {
+                            Instant var33 = var1.parseDate(GxPage.str$default(var1, var9, "cachedAt", null, 2, null));
+                            if (var33 != null) {
+                                var4 = var1.stampFmt.format(var33);
+                                var4 = " from " + var4;
+                            }
+
+                            var1.versionNotice = "Showing saved history" + var4 + ". Installation still needs an online check.";
+                        } else if (var3 == 1) {
+                            var1.versionNotice = "";
+                        }
+
+                        var1.versionHead = GxPage.str$default(var1, var9, "head", null, 2, null);
+                        var1.versionPage = var3;
+                        if (var9.optBoolean("hasMore") && !var25.isEmpty()) {
+                            var11 = true;
+                        } else {
+                            var11 = false;
+                        }
+
+                        var1.versionHasMore = var11;
+                        if (var1.versionCommits.isEmpty()) {
+                            var1.versionError = "No versions are available for this branch. Choose Latest or another branch.";
+                        }
+
+                        if (var1.versionHasMore && var1.versionChoices().size() <= var5 && var6 + 1 < var7) {
+                            loadVersions$step(var1, var2, var0, var5, var7, var6 + 1, var3 + 1, var1.versionHead);
+                        } else {
+                            loadVersions$finish(var0, var1);
+                        }
+
+                        return Unit.INSTANCE;
                     }
-                    this$0.versionHead = GxPage.str$default(this$0, d, "head", null, 2, null);
-                    this$0.versionPage = $page;
-                    this$0.versionHasMore = (!d.optBoolean("hasMore") || commits.isEmpty()) ? false : z;
-                    if (this$0.versionCommits.isEmpty()) {
-                        this$0.versionError = "No versions are available for this branch. Choose Latest or another branch.";
-                    }
-                    if (this$0.versionHasMore && this$0.versionChoices().size() <= $originalCount && $scanned + 1 < $budget) {
-                        loadVersions$step(this$0, $branch, $gen, $originalCount, $budget, $scanned + 1, $page + 1, this$0.versionHead);
-                    } else {
-                        loadVersions$finish($gen, this$0);
-                    }
-                    return Unit.INSTANCE;
                 }
+
+                var1.versionError = "Version history changed. Choose Latest and try again.";
+                loadVersions$finish(var0, var1);
+                return Unit.INSTANCE;
             }
         }
-        this$0.versionError = "Version history changed. Choose Latest and try again.";
-        loadVersions$finish($gen, this$0);
-        return Unit.INSTANCE;
     }
 
     private final void returnToLatest() {
@@ -2919,40 +3225,48 @@ public final class GxSystemPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x003e, code lost:
-    
-        if (r1 != null) goto L20;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit installSelectedVersion$lambda$109$lambda$108$lambda$107(GxSystemPage this$0, String $version, String $branch, String e, JSONObject o) {
-        String str;
-        String str$default;
-        this$0.branchBusy = false;
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Installation failed.";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit installSelectedVersion$lambda$109$lambda$108$lambda$107(GxSystemPage var0, String var1, String var2, String var3, JSONObject var4) {
+        var0.branchBusy = false;
+        if (var3 != null) {
+            CharSequence var8 = var3;
+            Object var7 = var8;
+            if (StringsKt.isBlank(var8)) {
+                var7 = "Installation failed.";
             }
-            this$0.toast(str2);
-            this$0.paint();
+
+            var0.toast((String)var7);
+            var0.paint();
+            return Unit.INSTANCE;
+        } else {
+            label25: {
+                var0.markRebootPending();
+                if (var4 != null) {
+                    var3 = GxPage.str$default(var0, var4, "message", null, 2, null);
+                    if (var3 != null) {
+                        CharSequence var12 = var3;
+                        CharSequence var10 = var12;
+                        if (StringsKt.isBlank(var12)) {
+                            var10 = null;
+                        }
+
+                        var3 = (String)var10;
+                        if (var3 != null) {
+                            var1 = var3;
+                            break label25;
+                        }
+                    }
+                }
+
+                var1 = StringsKt.substringBefore(var1, "\n", var1);
+                var1 = "Installing " + var1 + " on " + var2 + "...";
+            }
+
+            var0.toast(var1);
+            var0.paint();
+            loadFastStatus$default(var0, null, 1, null);
             return Unit.INSTANCE;
         }
-        this$0.markRebootPending();
-        if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-            String str3 = str$default;
-            if (StringsKt.isBlank(str3)) {
-                str3 = null;
-            }
-            str = str3;
-        }
-        str = "Installing " + StringsKt.substringBefore($version, "\n", $version) + " on " + $branch + "...";
-        this$0.toast(str);
-        this$0.paint();
-        loadFastStatus$default(this$0, null, 1, null);
-        return Unit.INSTANCE;
     }
 
     private final void checkUpdates() {
@@ -2971,50 +3285,57 @@ public final class GxSystemPage extends GxPage {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:26:0x0069, code lost:
-    
-        if (r0 != null) goto L29;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit checkUpdates$lambda$112(GxSystemPage this$0, String err) {
-        String str;
-        String str$default;
-        this$0.busy = "";
-        if (err != null) {
-            this$0.toast("Failed to check for updates.");
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit checkUpdates$lambda$112(GxSystemPage var0, String var1) {
+        var0.busy = "";
+        if (var1 != null) {
+            var0.toast("Failed to check for updates.");
         } else {
-            boolean z = true;
-            this$0.checkedForUpdates = true;
-            JSONObject st = this$0.fastStatus;
-            if (this$0.getUpdateInProgress()) {
-                this$0.toast("An update is already running.");
+            boolean var2 = true;
+            var0.checkedForUpdates = true;
+            JSONObject var4 = var0.fastStatus;
+            if (var0.getUpdateInProgress()) {
+                var0.toast("An update is already running.");
             } else {
-                if (st == null || !st.optBoolean("updateAvailable")) {
-                    z = false;
+                if (var4 == null || !var4.optBoolean("updateAvailable")) {
+                    var2 = false;
                 }
-                if (z) {
-                    String str$default2 = GxPage.str$default(this$0, st, "message", null, 2, null);
-                    if (StringsKt.isBlank(str$default2)) {
-                        str$default2 = "Update available.";
+
+                if (var2) {
+                    CharSequence var3 = GxPage.str$default(var0, var4, "message", null, 2, null);
+                    Object var5 = var3;
+                    if (StringsKt.isBlank(var3)) {
+                        var5 = "Update available.";
                     }
-                    this$0.toast(str$default2);
+
+                    var0.toast((String)var5);
                 } else {
-                    if (st != null && (str$default = GxPage.str$default(this$0, st, "message", null, 2, null)) != null) {
-                        String str2 = str$default;
-                        if (StringsKt.isBlank(str2)) {
-                            str2 = null;
+                    label33: {
+                        if (var4 != null) {
+                            var1 = GxPage.str$default(var0, var4, "message", null, 2, null);
+                            if (var1 != null) {
+                                CharSequence var9 = var1;
+                                CharSequence var7 = var9;
+                                if (StringsKt.isBlank(var9)) {
+                                    var7 = null;
+                                }
+
+                                var1 = (String)var7;
+                                if (var1 != null) {
+                                    break label33;
+                                }
+                            }
                         }
-                        str = str2;
+
+                        var1 = "No update available — you're up to date.";
                     }
-                    str = "No update available — you're up to date.";
-                    this$0.toast(str);
+
+                    var0.toast(var1);
                 }
             }
         }
-        this$0.paint();
+
+        var0.paint();
         return Unit.INSTANCE;
     }
 
@@ -3115,40 +3436,46 @@ public final class GxSystemPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x003f, code lost:
-    
-        if (r1 != null) goto L20;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit runUpdate$lambda$119$lambda$118(GxSystemPage this$0, String e, JSONObject o) {
-        String str;
-        String str$default;
-        this$0.busy = "";
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Update failed.";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit runUpdate$lambda$119$lambda$118(GxSystemPage var0, String var1, JSONObject var2) {
+        var0.busy = "";
+        if (var1 != null) {
+            CharSequence var8 = var1;
+            Object var6 = var8;
+            if (StringsKt.isBlank(var8)) {
+                var6 = "Update failed.";
             }
-            this$0.toast(str2);
-            this$0.paint();
+
+            var0.toast((String)var6);
+            var0.paint();
+            return Unit.INSTANCE;
+        } else {
+            label25: {
+                var0.markRebootPending();
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "message", null, 2, null);
+                    if (var1 != null) {
+                        CharSequence var7 = var1;
+                        CharSequence var4 = var7;
+                        if (StringsKt.isBlank(var7)) {
+                            var4 = null;
+                        }
+
+                        var1 = (String)var4;
+                        if (var1 != null) {
+                            break label25;
+                        }
+                    }
+                }
+
+                var1 = "Update started.";
+            }
+
+            var0.toast(var1);
+            var0.paint();
+            loadFastStatus$default(var0, null, 1, null);
             return Unit.INSTANCE;
         }
-        this$0.markRebootPending();
-        if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-            String str3 = str$default;
-            if (StringsKt.isBlank(str3)) {
-                str3 = null;
-            }
-            str = str3;
-        }
-        str = "Update started.";
-        this$0.toast(str);
-        this$0.paint();
-        loadFastStatus$default(this$0, null, 1, null);
-        return Unit.INSTANCE;
     }
 
     private final void factoryReset() {
@@ -3239,37 +3566,43 @@ public final class GxSystemPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x0034, code lost:
-    
-        if (r0 != null) goto L18;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit saveProfile$lambda$127$lambda$126(GxSystemPage this$0, String $label, String e, JSONObject o) {
-        String str;
-        String str$default;
-        this$0.profileBusy = "";
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Failed to save settings profile.";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit saveProfile$lambda$127$lambda$126(GxSystemPage var0, String var1, String var2, JSONObject var3) {
+        var0.profileBusy = "";
+        if (var2 != null) {
+            CharSequence var6 = var2;
+            Object var4 = var6;
+            if (StringsKt.isBlank(var6)) {
+                var4 = "Failed to save settings profile.";
             }
-            str = str2;
+
+            var1 = (String)var4;
         } else {
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str3 = str$default;
-                if (StringsKt.isBlank(str3)) {
-                    str3 = null;
+            label24: {
+                if (var3 != null) {
+                    var2 = GxPage.str$default(var0, var3, "message", null, 2, null);
+                    if (var2 != null) {
+                        CharSequence var10 = var2;
+                        CharSequence var8 = var10;
+                        if (StringsKt.isBlank(var10)) {
+                            var8 = null;
+                        }
+
+                        var2 = (String)var8;
+                        if (var2 != null) {
+                            var1 = var2;
+                            break label24;
+                        }
+                    }
                 }
-                str = str3;
+
+                var1 = "Saved " + var1 + ".";
             }
-            str = "Saved " + $label + ".";
         }
-        this$0.toast(str);
-        this$0.paint();
-        this$0.loadProfiles();
+
+        var0.toast(var1);
+        var0.paint();
+        var0.loadProfiles();
         return Unit.INSTANCE;
     }
 
@@ -3314,40 +3647,47 @@ public final class GxSystemPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:18:0x0037, code lost:
-    
-        if (r1 != null) goto L19;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit loadProfile$lambda$133$lambda$132(GxSystemPage this$0, String $label, String e, JSONObject o) {
-        String str;
-        String str$default;
-        this$0.profileBusy = "";
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Failed to load settings profile.";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit loadProfile$lambda$133$lambda$132(GxSystemPage var0, String var1, String var2, JSONObject var3) {
+        var0.profileBusy = "";
+        if (var2 != null) {
+            CharSequence var7 = var2;
+            Object var4 = var7;
+            if (StringsKt.isBlank(var7)) {
+                var4 = "Failed to load settings profile.";
             }
-            this$0.toast(str2);
+
+            var0.toast((String)var4);
         } else {
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str3 = str$default;
-                if (StringsKt.isBlank(str3)) {
-                    str3 = null;
+            label27: {
+                if (var3 != null) {
+                    var2 = GxPage.str$default(var0, var3, "message", null, 2, null);
+                    if (var2 != null) {
+                        CharSequence var11 = var2;
+                        CharSequence var9 = var11;
+                        if (StringsKt.isBlank(var11)) {
+                            var9 = null;
+                        }
+
+                        var2 = (String)var9;
+                        if (var2 != null) {
+                            var1 = var2;
+                            break label27;
+                        }
+                    }
                 }
-                str = str3;
+
+                var1 = "Loaded " + var1 + ".";
             }
-            str = "Loaded " + $label + ".";
-            this$0.toast(str);
-            GalaxyApi api = this$0.getApi();
-            if (api != null) {
-                GalaxyApi.refreshValues$default(api, null, 1, null);
+
+            var0.toast(var1);
+            GalaxyApi var6 = var0.getApi();
+            if (var6 != null) {
+                GalaxyApi.refreshValues$default(var6, null, 1, null);
             }
         }
-        this$0.paint();
+
+        var0.paint();
         return Unit.INSTANCE;
     }
 
@@ -3455,10 +3795,9 @@ public final class GxSystemPage extends GxPage {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final void backupToggles$lambda$140$lambda$139(GxSystemPage this$0, Ref.ObjectRef $msg) {
-        this$0.toast((String) $msg.element);
+    /* VF: from Vineflower (jadx: ) */
+    public static final void backupToggles$lambda$140$lambda$139(GxSystemPage var0, ObjectRef var1) {
+        var0.toast((String)var1.element);
     }
 
     private final void restoreToggles() {
@@ -3525,38 +3864,44 @@ public final class GxSystemPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x0033, code lost:
-    
-        if (r1 != null) goto L18;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit restoreToggles$lambda$146$lambda$145$lambda$144(GxSystemPage this$0, String e, JSONObject o) {
-        String str;
-        String str$default;
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Failed to restore toggles.";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit restoreToggles$lambda$146$lambda$145$lambda$144(GxSystemPage var0, String var1, JSONObject var2) {
+        if (var1 != null) {
+            CharSequence var8 = var1;
+            Object var4 = var8;
+            if (StringsKt.isBlank(var8)) {
+                var4 = "Failed to restore toggles.";
             }
-            this$0.toast(str2);
+
+            var0.toast((String)var4);
         } else {
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str3 = str$default;
-                if (StringsKt.isBlank(str3)) {
-                    str3 = null;
+            label27: {
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "message", null, 2, null);
+                    if (var1 != null) {
+                        CharSequence var9 = var1;
+                        CharSequence var6 = var9;
+                        if (StringsKt.isBlank(var9)) {
+                            var6 = null;
+                        }
+
+                        var1 = (String)var6;
+                        if (var1 != null) {
+                            break label27;
+                        }
+                    }
                 }
-                str = str3;
+
+                var1 = "Toggles restored!";
             }
-            str = "Toggles restored!";
-            this$0.toast(str);
-            GalaxyApi api = this$0.getApi();
-            if (api != null) {
-                GalaxyApi.refreshValues$default(api, null, 1, null);
+
+            var0.toast(var1);
+            GalaxyApi var3 = var0.getApi();
+            if (var3 != null) {
+                GalaxyApi.refreshValues$default(var3, null, 1, null);
             }
         }
+
         return Unit.INSTANCE;
     }
 
@@ -3620,34 +3965,39 @@ public final class GxSystemPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:16:0x0030, code lost:
-    
-        if (r0 != null) goto L17;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit deleteAllRoutes$lambda$152$lambda$151(GxSystemPage this$0, String e, JSONObject o) {
-        String str;
-        String str$default;
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Failed to delete driving routes.";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit deleteAllRoutes$lambda$152$lambda$151(GxSystemPage var0, String var1, JSONObject var2) {
+        if (var1 != null) {
+            CharSequence var7 = var1;
+            Object var3 = var7;
+            if (StringsKt.isBlank(var7)) {
+                var3 = "Failed to delete driving routes.";
             }
-            str = str2;
+
+            var1 = (String)var3;
         } else {
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str3 = str$default;
-                if (StringsKt.isBlank(str3)) {
-                    str3 = null;
+            label24: {
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "message", null, 2, null);
+                    if (var1 != null) {
+                        CharSequence var8 = var1;
+                        CharSequence var6 = var8;
+                        if (StringsKt.isBlank(var8)) {
+                            var6 = null;
+                        }
+
+                        var1 = (String)var6;
+                        if (var1 != null) {
+                            break label24;
+                        }
+                    }
                 }
-                str = str3;
+
+                var1 = "All local driving routes deleted.";
             }
-            str = "All local driving routes deleted.";
         }
-        this$0.toast(str);
+
+        var0.toast(var1);
         return Unit.INSTANCE;
     }
 
@@ -3668,54 +4018,57 @@ public final class GxSystemPage extends GxPage {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x0033, code lost:
-    
-        if (r1 != null) goto L18;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit installTailscale$lambda$158(final GxSystemPage this$0, String e, JSONObject o) {
-        String str;
-        String str$default;
-        String str$default2;
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Failed to install Tailscale.";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit installTailscale$lambda$158(GxSystemPage var0, String var1, JSONObject var2) {
+        if (var1 != null) {
+            CharSequence var12 = var1;
+            Object var5 = var12;
+            if (StringsKt.isBlank(var12)) {
+                var5 = "Failed to install Tailscale.";
             }
-            this$0.toast(str2);
+
+            var0.toast((String)var5);
         } else {
-            String str3 = null;
-            if (o != null && (str$default2 = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str4 = str$default2;
-                if (StringsKt.isBlank(str4)) {
-                    str4 = null;
+            Object var3;
+            label35: {
+                var3 = null;
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "message", null, 2, null);
+                    if (var1 != null) {
+                        CharSequence var4 = var1;
+                        CharSequence var7 = var4;
+                        if (StringsKt.isBlank(var4)) {
+                            var7 = null;
+                        }
+
+                        var1 = (String)var7;
+                        if (var1 != null) {
+                            break label35;
+                        }
+                    }
                 }
-                str = str4;
+
+                var1 = "Tailscale setup started.";
             }
-            str = "Tailscale setup started.";
-            this$0.toast(str);
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "auth_url", null, 2, null)) != null) {
-                String str5 = str$default;
-                if (!StringsKt.isBlank(str5)) {
-                    str3 = str5;
-                }
-                String it = str3;
-                if (it != null) {
-                    this$0.openUrl(it);
+
+            var0.toast(var1);
+            if (var2 != null) {
+                var1 = GxPage.str$default(var0, var2, "auth_url", null, 2, null);
+                if (var1 != null) {
+                    var1 = var1;
+                    if (StringsKt.isBlank(var1)) {
+                        var1 = (String)var3;
+                    }
+
+                    var1 = var1;
+                    if (var1 != null) {
+                        var0.openUrl(var1);
+                    }
                 }
             }
         }
-        this$0.loadTailscale(new Function0() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda77
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit installTailscale$lambda$158$lambda$157;
-                installTailscale$lambda$158$lambda$157 = GxSystemPage.installTailscale$lambda$158$lambda$157(this$0);
-                return installTailscale$lambda$158$lambda$157;
-            }
-        });
+
+        var0.loadTailscale(new GxSystemPage$$ExternalSyntheticLambda77(var0));
         return Unit.INSTANCE;
     }
 
@@ -3756,42 +4109,40 @@ public final class GxSystemPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:16:0x0030, code lost:
-    
-        if (r0 != null) goto L17;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit uninstallTailscale$lambda$163$lambda$162(final GxSystemPage this$0, String e, JSONObject o) {
-        String str;
-        String str$default;
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Failed to uninstall Tailscale.";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit uninstallTailscale$lambda$163$lambda$162(GxSystemPage var0, String var1, JSONObject var2) {
+        if (var1 != null) {
+            CharSequence var7 = var1;
+            Object var3 = var7;
+            if (StringsKt.isBlank(var7)) {
+                var3 = "Failed to uninstall Tailscale.";
             }
-            str = str2;
+
+            var1 = (String)var3;
         } else {
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str3 = str$default;
-                if (StringsKt.isBlank(str3)) {
-                    str3 = null;
+            label24: {
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "message", null, 2, null);
+                    if (var1 != null) {
+                        CharSequence var8 = var1;
+                        CharSequence var6 = var8;
+                        if (StringsKt.isBlank(var8)) {
+                            var6 = null;
+                        }
+
+                        var1 = (String)var6;
+                        if (var1 != null) {
+                            break label24;
+                        }
+                    }
                 }
-                str = str3;
+
+                var1 = "Tailscale uninstalled.";
             }
-            str = "Tailscale uninstalled.";
         }
-        this$0.toast(str);
-        this$0.loadTailscale(new Function0() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda62
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit uninstallTailscale$lambda$163$lambda$162$lambda$161;
-                uninstallTailscale$lambda$163$lambda$162$lambda$161 = GxSystemPage.uninstallTailscale$lambda$163$lambda$162$lambda$161(this$0);
-                return uninstallTailscale$lambda$163$lambda$162$lambda$161;
-            }
-        });
+
+        var0.toast(var1);
+        var0.loadTailscale(new GxSystemPage$$ExternalSyntheticLambda62(var0));
         return Unit.INSTANCE;
     }
 

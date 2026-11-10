@@ -63,6 +63,20 @@ import kotlin.math.MathKt;
 import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
+import android.app.AlertDialog.Builder;
+import android.graphics.Paint.Align;
+import android.graphics.Paint.Cap;
+import android.graphics.Paint.Join;
+import android.graphics.Paint.Style;
+import android.graphics.drawable.Drawable;
+import android.text.TextUtils.TruncateAt;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.ScaleGestureDetector.OnScaleGestureListener;
+import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
+import android.view.View.MeasureSpec;
+import android.view.ViewGroup.LayoutParams;
+import kotlin.collections.SetsKt;
 
 /* compiled from: MapPane.kt */
 public final class MapPane extends FrameLayout {
@@ -120,204 +134,142 @@ public final class MapPane extends FrameLayout {
         void openSearch();
     }
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public MapPane(Context ctx, Host host) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(host, "host");
-        this.host = host;
-        this.d = getResources().getDisplayMetrics().density;
-        this.tiles = new MapTiles(ctx, new Function0() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda9
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit tiles$lambda$1;
-                tiles$lambda$1 = MapPane.tiles$lambda$1(MapPane.this);
-                return tiles$lambda$1;
-            }
-        });
-        this.map = new MapCanvas(this, ctx);
-        this.banner = new Banner(this, ctx);
-        this.faster = chip();
-        this.note = new TextView(ctx);
-        this.info = new TextView(ctx);
-        this.bottomBar = new LinearLayout(ctx);
-        this.etaBig = new TextView(ctx);
-        this.etaSmall = new TextView(ctx);
-        this.btnRow = new LinearLayout(ctx);
-        LinearLayout $this$pinRow_u24lambda_u242 = new LinearLayout(ctx);
-        $this$pinRow_u24lambda_u242.setOrientation(0);
-        this.pinRow = $this$pinRow_u24lambda_u242;
-        this.pinScroll = new HorizontalScrollView(ctx);
-        this.side = new LinearLayout(ctx);
-        this.sheet = new FrameLayout(ctx);
+    /* VF: from Vineflower (jadx: ) */
+    public MapPane(Context var1, MapPane.Host var2) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "host");
+        this.host = var2;
+        this.d = this.getResources().getDisplayMetrics().density;
+        this.tiles = new MapTiles(var1, new MapPane$$ExternalSyntheticLambda9(this));
+        this.map = new MapPane.MapCanvas(this, var1);
+        this.banner = new MapPane.Banner(this, var1);
+        this.faster = this.chip();
+        this.note = new TextView(var1);
+        this.info = new TextView(var1);
+        this.bottomBar = new LinearLayout(var1);
+        this.etaBig = new TextView(var1);
+        this.etaSmall = new TextView(var1);
+        this.btnRow = new LinearLayout(var1);
+        LinearLayout var9 = new LinearLayout(var1);
+        var9.setOrientation(0);
+        this.pinRow = var9;
+        this.pinScroll = new HorizontalScrollView(var1);
+        this.side = new LinearLayout(var1);
+        this.sheet = new FrameLayout(var1);
         this.sheetKind = "";
         this.sheetVersion = -1;
         this.lastVersion = -1;
         this.dismissedFaster = "";
         this.lastDest = "";
-        setClipChildren(true);
-        setBackgroundColor(Color.rgb(27, 30, 36));
-        addView(this.map, new FrameLayout.LayoutParams(-1, -1));
-        Banner banner = this.banner;
-        FrameLayout.LayoutParams $this$_init__u24lambda_u243 = new FrameLayout.LayoutParams(-1, dpi(92), 48);
-        $this$_init__u24lambda_u243.setMargins(dpi(10), dpi(10), dpi(10), 0);
-        Unit unit = Unit.INSTANCE;
-        addView(banner, $this$_init__u24lambda_u243);
+        this.setClipChildren(true);
+        this.setBackgroundColor(Color.rgb(27, 30, 36));
+        this.addView(this.map, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
+        View var3 = this.banner;
+        android.widget.FrameLayout.LayoutParams var4 = new android.widget.FrameLayout.LayoutParams(-1, this.dpi(92), 48);
+        var4.setMargins(this.dpi(10), this.dpi(10), this.dpi(10), 0);
+        Unit var10 = Unit.INSTANCE;
+        this.addView(var3, (android.view.ViewGroup.LayoutParams)var4);
         this.banner.setVisibility(8);
-        TextView textView = this.faster;
-        FrameLayout.LayoutParams $this$_init__u24lambda_u244 = new FrameLayout.LayoutParams(-2, -2, 49);
-        $this$_init__u24lambda_u244.topMargin = dpi(110);
-        Unit unit2 = Unit.INSTANCE;
-        addView(textView, $this$_init__u24lambda_u244);
+        var3 = (View)this.faster;
+        var4 = new android.widget.FrameLayout.LayoutParams(-2, -2, 49);
+        var4.topMargin = this.dpi(110);
+        Unit var11 = Unit.INSTANCE;
+        this.addView(var3, (android.view.ViewGroup.LayoutParams)var4);
         this.faster.setVisibility(8);
-        TextView $this$_init__u24lambda_u245 = this.info;
-        $this$_init__u24lambda_u245.setTextColor(-1);
-        $this$_init__u24lambda_u245.setTextSize(14.0f);
-        $this$_init__u24lambda_u245.setPadding(dpi(14), dpi(10), dpi(14), dpi(10));
-        $this$_init__u24lambda_u245.setBackground(card$default(this, -434101200, 14.0f, 0, false, 12, null));
-        $this$_init__u24lambda_u245.setVisibility(8);
-        $this$_init__u24lambda_u245.setMaxLines(4);
-        TextView textView2 = this.info;
-        FrameLayout.LayoutParams $this$_init__u24lambda_u246 = new FrameLayout.LayoutParams(-2, -2, 49);
-        $this$_init__u24lambda_u246.topMargin = dpi(160);
-        $this$_init__u24lambda_u246.setMarginStart(dpi(16));
-        $this$_init__u24lambda_u246.setMarginEnd(dpi(16));
-        Unit unit3 = Unit.INSTANCE;
-        addView(textView2, $this$_init__u24lambda_u246);
-        TextView $this$_init__u24lambda_u247 = this.note;
-        $this$_init__u24lambda_u247.setTextColor(-1);
-        $this$_init__u24lambda_u247.setTextSize(16.0f);
-        $this$_init__u24lambda_u247.setGravity(17);
-        $this$_init__u24lambda_u247.setPadding(dpi(18), dpi(14), dpi(18), dpi(14));
-        $this$_init__u24lambda_u247.setBackground(card$default(this, -434101200, 16.0f, 0, false, 12, null));
-        $this$_init__u24lambda_u247.setVisibility(8);
-        TextView textView3 = this.note;
-        FrameLayout.LayoutParams $this$_init__u24lambda_u248 = new FrameLayout.LayoutParams(-2, -2, 17);
-        $this$_init__u24lambda_u248.setMarginStart(dpi(20));
-        $this$_init__u24lambda_u248.setMarginEnd(dpi(20));
-        Unit unit4 = Unit.INSTANCE;
-        addView(textView3, $this$_init__u24lambda_u248);
+        TextView var12 = this.info;
+        var12.setTextColor(-1);
+        var12.setTextSize(14.0F);
+        var12.setPadding(this.dpi(14), this.dpi(10), this.dpi(14), this.dpi(10));
+        var12.setBackground((Drawable)card$default(this, -434101200, 14.0F, 0, false, 12, null));
+        var12.setVisibility(8);
+        var12.setMaxLines(4);
+        View var13 = (View)this.info;
+        android.widget.FrameLayout.LayoutParams var24 = new android.widget.FrameLayout.LayoutParams(-2, -2, 49);
+        var24.topMargin = this.dpi(160);
+        var24.setMarginStart(this.dpi(16));
+        var24.setMarginEnd(this.dpi(16));
+        Unit var32 = Unit.INSTANCE;
+        this.addView(var13, (android.view.ViewGroup.LayoutParams)var24);
+        TextView var14 = this.note;
+        var14.setTextColor(-1);
+        var14.setTextSize(16.0F);
+        var14.setGravity(17);
+        var14.setPadding(this.dpi(18), this.dpi(14), this.dpi(18), this.dpi(14));
+        var14.setBackground((Drawable)card$default(this, -434101200, 16.0F, 0, false, 12, null));
+        var14.setVisibility(8);
+        var3 = (View)this.note;
+        var4 = new android.widget.FrameLayout.LayoutParams(-2, -2, 17);
+        var4.setMarginStart(this.dpi(20));
+        var4.setMarginEnd(this.dpi(20));
+        Unit var15 = Unit.INSTANCE;
+        this.addView(var3, (android.view.ViewGroup.LayoutParams)var4);
         this.side.setOrientation(1);
-        this.recenter = _init_$sideBtn(this, "◎", new Function0() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda10
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit _init_$lambda$12;
-                _init_$lambda$12 = MapPane._init_$lambda$12(MapPane.this);
-                return _init_$lambda$12;
-            }
-        });
-        _init_$sideBtn(this, "+", new Function0() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda12
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit _init_$lambda$13;
-                _init_$lambda$13 = MapPane._init_$lambda$13(MapPane.this);
-                return _init_$lambda$13;
-            }
-        });
-        _init_$sideBtn(this, "−", new Function0() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda13
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit _init_$lambda$14;
-                _init_$lambda$14 = MapPane._init_$lambda$14(MapPane.this);
-                return _init_$lambda$14;
-            }
-        });
-        this.northBtn = _init_$sideBtn(this, "▲", new Function0() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda14
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit _init_$lambda$15;
-                _init_$lambda$15 = MapPane._init_$lambda$15(MapPane.this);
-                return _init_$lambda$15;
-            }
-        });
-        this.tiltBtn = _init_$sideBtn(this, "3D", new Function0() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda15
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit _init_$lambda$16;
-                _init_$lambda$16 = MapPane._init_$lambda$16(MapPane.this);
-                return _init_$lambda$16;
-            }
-        });
-        this.voiceBtn = _init_$sideBtn(this, "🔊", new Function0() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda16
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit _init_$lambda$17;
-                _init_$lambda$17 = MapPane._init_$lambda$17(MapPane.this);
-                return _init_$lambda$17;
-            }
-        });
-        this.closeBtn = _init_$sideBtn(this, "‹", new Function0() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda17
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit _init_$lambda$18;
-                _init_$lambda$18 = MapPane._init_$lambda$18(MapPane.this);
-                return _init_$lambda$18;
-            }
-        });
-        LinearLayout linearLayout = this.side;
-        FrameLayout.LayoutParams $this$_init__u24lambda_u2419 = new FrameLayout.LayoutParams(-2, -2, 8388629);
-        $this$_init__u24lambda_u2419.setMarginEnd(dpi(10));
-        Unit unit5 = Unit.INSTANCE;
-        addView(linearLayout, $this$_init__u24lambda_u2419);
+        this.recenter = _init_$sideBtn(this, "◎", new MapPane$$ExternalSyntheticLambda10(this));
+        _init_$sideBtn(this, "+", new MapPane$$ExternalSyntheticLambda12(this));
+        _init_$sideBtn(this, "−", new MapPane$$ExternalSyntheticLambda13(this));
+        this.northBtn = _init_$sideBtn(this, "▲", new MapPane$$ExternalSyntheticLambda14(this));
+        this.tiltBtn = _init_$sideBtn(this, "3D", new MapPane$$ExternalSyntheticLambda15(this));
+        this.voiceBtn = _init_$sideBtn(this, "\ud83d\udd0a", new MapPane$$ExternalSyntheticLambda16(this));
+        this.closeBtn = _init_$sideBtn(this, "‹", new MapPane$$ExternalSyntheticLambda17(this));
+        View var34 = (View)this.side;
+        android.widget.FrameLayout.LayoutParams var16 = new android.widget.FrameLayout.LayoutParams(-2, -2, 8388629);
+        var16.setMarginEnd(this.dpi(10));
+        Unit var26 = Unit.INSTANCE;
+        this.addView(var34, (android.view.ViewGroup.LayoutParams)var16);
         this.bottomBar.setOrientation(1);
-        this.bottomBar.setBackground(card$default(this, -350610141, 18.0f, 0, false, 12, null));
-        this.bottomBar.setPadding(dpi(14), dpi(10), dpi(14), dpi(10));
-        LinearLayout etaRow = new LinearLayout(ctx);
-        etaRow.setOrientation(0);
-        etaRow.setGravity(16);
-        TextView $this$_init__u24lambda_u2421 = this.etaBig;
-        $this$_init__u24lambda_u2421.setTextColor(-1);
-        $this$_init__u24lambda_u2421.setTextSize(24.0f);
-        $this$_init__u24lambda_u2421.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$_init__u24lambda_u2421.setMaxLines(1);
-        $this$_init__u24lambda_u2421.setEllipsize(TextUtils.TruncateAt.END);
-        TextView $this$_init__u24lambda_u24212 = this.etaSmall;
-        $this$_init__u24lambda_u24212.setTextColor(Color.argb(200, 255, 255, 255));
-        $this$_init__u24lambda_u24212.setTextSize(15.0f);
-        $this$_init__u24lambda_u24212.setMaxLines(2);
-        $this$_init__u24lambda_u24212.setEllipsize(TextUtils.TruncateAt.END);
-        TextView $this$_init__u24lambda_u2422 = this.etaBig;
-        etaRow.addView($this$_init__u24lambda_u2422, new LinearLayout.LayoutParams(-2, -2));
-        TextView textView4 = this.etaSmall;
-        LinearLayout.LayoutParams $this$_init__u24lambda_u2423 = new LinearLayout.LayoutParams(0, -2, 1.0f);
-        $this$_init__u24lambda_u2423.setMarginStart(dpi(12));
-        Unit unit6 = Unit.INSTANCE;
-        etaRow.addView(textView4, $this$_init__u24lambda_u2423);
-        this.bottomBar.addView(etaRow);
-        this.pinScroll.addView(this.pinRow);
+        this.bottomBar.setBackground((Drawable)card$default(this, -350610141, 18.0F, 0, false, 12, null));
+        this.bottomBar.setPadding(this.dpi(14), this.dpi(10), this.dpi(14), this.dpi(10));
+        LinearLayout var5 = new LinearLayout(var1);
+        var5.setOrientation(0);
+        var5.setGravity(16);
+        TextView var17 = this.etaBig;
+        var17.setTextColor(-1);
+        var17.setTextSize(24.0F);
+        var17.setTypeface(Typeface.DEFAULT_BOLD);
+        var17.setMaxLines(1);
+        var17.setEllipsize(TruncateAt.END);
+        TextView var18 = this.etaSmall;
+        var18.setTextColor(Color.argb(200, 255, 255, 255));
+        var18.setTextSize(15.0F);
+        var18.setMaxLines(2);
+        var18.setEllipsize(TruncateAt.END);
+        var5.addView((View)this.etaBig, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-2, -2)));
+        View var19 = (View)this.etaSmall;
+        android.widget.LinearLayout.LayoutParams var35 = new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F);
+        var35.setMarginStart(this.dpi(12));
+        Unit var27 = Unit.INSTANCE;
+        var5.addView(var19, (android.view.ViewGroup.LayoutParams)var35);
+        this.bottomBar.addView((View)var5);
+        this.pinScroll.addView((View)this.pinRow);
         this.pinScroll.setHorizontalScrollBarEnabled(false);
-        LinearLayout linearLayout2 = this.bottomBar;
-        HorizontalScrollView horizontalScrollView = this.pinScroll;
-        LinearLayout.LayoutParams $this$_init__u24lambda_u2424 = new LinearLayout.LayoutParams(-1, -2);
-        $this$_init__u24lambda_u2424.topMargin = dpi(6);
-        Unit unit7 = Unit.INSTANCE;
-        linearLayout2.addView(horizontalScrollView, $this$_init__u24lambda_u2424);
+        LinearLayout var6 = this.bottomBar;
+        var3 = (View)this.pinScroll;
+        android.widget.LinearLayout.LayoutParams var36 = new android.widget.LinearLayout.LayoutParams(-1, -2);
+        var36.topMargin = this.dpi(6);
+        Unit var20 = Unit.INSTANCE;
+        var6.addView(var3, (android.view.ViewGroup.LayoutParams)var36);
         this.btnRow.setOrientation(0);
-        LinearLayout linearLayout3 = this.bottomBar;
-        LinearLayout linearLayout4 = this.btnRow;
-        LinearLayout.LayoutParams $this$_init__u24lambda_u2425 = new LinearLayout.LayoutParams(-1, dpi(46));
-        $this$_init__u24lambda_u2425.topMargin = dpi(8);
-        Unit unit8 = Unit.INSTANCE;
-        linearLayout3.addView(linearLayout4, $this$_init__u24lambda_u2425);
-        LinearLayout linearLayout5 = this.bottomBar;
-        FrameLayout.LayoutParams $this$_init__u24lambda_u2426 = new FrameLayout.LayoutParams(-1, -2, 80);
-        $this$_init__u24lambda_u2426.setMargins(dpi(10), 0, dpi(10), dpi(10));
-        Unit unit9 = Unit.INSTANCE;
-        addView(linearLayout5, $this$_init__u24lambda_u2426);
+        LinearLayout var29 = this.bottomBar;
+        View var21 = (View)this.btnRow;
+        android.widget.LinearLayout.LayoutParams var7 = new android.widget.LinearLayout.LayoutParams(-1, this.dpi(46));
+        var7.topMargin = this.dpi(8);
+        Unit var37 = Unit.INSTANCE;
+        var29.addView(var21, (android.view.ViewGroup.LayoutParams)var7);
+        View var8 = (View)this.bottomBar;
+        android.widget.FrameLayout.LayoutParams var30 = new android.widget.FrameLayout.LayoutParams(-1, -2, 80);
+        var30.setMargins(this.dpi(10), 0, this.dpi(10), this.dpi(10));
+        Unit var22 = Unit.INSTANCE;
+        this.addView(var8, (android.view.ViewGroup.LayoutParams)var30);
         this.sheet.setVisibility(8);
-        this.sheet.setElevation(dp(8.0f));
-        addView(this.sheet, new FrameLayout.LayoutParams(-1, -2, 80));
-        refreshButtons();
+        this.sheet.setElevation(this.dp(8.0F));
+        this.addView((View)this.sheet, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -2, 80)));
+        this.refreshButtons();
         this.lastKnownRaw = "";
         this.lastKnownLL = new double[]{Double.NaN, Double.NaN};
         this.previewShown = "";
         this.lastButtons = "";
-        this.hideInfo = new Runnable() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda18
-            @Override // java.lang.Runnable
-            public final void run() {
-                MapPane.hideInfo$lambda$63(MapPane.this);
-            }
-        };
+        this.hideInfo = new MapPane$$ExternalSyntheticLambda18(this);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -696,81 +648,114 @@ public final class MapPane extends FrameLayout {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:4:0x003c, code lost:
-    
-        if (r0 == null) goto L6;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     private final void onNav() {
-        String destKey;
-        String id;
-        Iterable $this$any$iv;
-        JSONObject it = Nav.INSTANCE.getDestination();
-        String pid = "";
-        if (it != null) {
-            destKey = it.optString("name") + "|" + it.optDouble("latitude") + "|" + it.optDouble("longitude");
-        }
-        destKey = "";
-        if (!Intrinsics.areEqual(destKey, this.lastDest)) {
-            this.lastDest = destKey;
-            this.dismissedFaster = "";
-            if (destKey.length() == 0) {
-                if (Intrinsics.areEqual(this.sheetKind, "routes") || Intrinsics.areEqual(this.sheetKind, "steps")) {
-                    closeSheet();
+        String var9;
+        String var14;
+        label96: {
+            JSONObject var8 = Nav.INSTANCE.getDestination();
+            var9 = "";
+            if (var8 != null) {
+                String var10 = var8.optString("name");
+                double var3 = var8.optDouble("latitude");
+                double var1 = var8.optDouble("longitude");
+                var10 = var10 + "|" + var3 + "|" + var1;
+                var14 = var10;
+                if (var10 != null) {
+                    break label96;
                 }
+            }
+
+            var14 = "";
+        }
+
+        boolean var7 = Intrinsics.areEqual(var14, this.lastDest);
+        boolean var6 = true;
+        if (!var7) {
+            this.lastDest = var14;
+            this.dismissedFaster = "";
+            boolean var5;
+            if (var14.length() == 0) {
+                var5 = true;
+            } else {
+                var5 = false;
+            }
+
+            if (var5) {
+                if (Intrinsics.areEqual(this.sheetKind, "routes") || Intrinsics.areEqual(this.sheetKind, "steps")) {
+                    this.closeSheet();
+                }
+
                 this.map.follow();
             }
         }
+
         if (this.showRoutesWhenReady && !Nav.INSTANCE.getRoutes().isEmpty()) {
-            Iterable $this$any$iv2 = Nav.INSTANCE.getLines();
-            if (!($this$any$iv2 instanceof Collection) || !((Collection) $this$any$iv2).isEmpty()) {
-                Iterator it2 = $this$any$iv2.iterator();
-                while (true) {
-                    if (it2.hasNext()) {
-                        Object element$iv = it2.next();
-                        if ((((Nav.Line) element$iv) != null ? 1 : null) != null) {
-                            $this$any$iv = 1;
-                            break;
-                        }
-                    } else {
-                        $this$any$iv = null;
-                        break;
-                    }
-                }
+            var var15 = Nav.INSTANCE.getLines();
+            boolean var12;
+            if (var15 instanceof Collection && ((Collection)var15).isEmpty()) {
+                var12 = false;
             } else {
-                $this$any$iv = null;
-            }
-            if ($this$any$iv != null) {
-                this.showRoutesWhenReady = false;
-                openRoutes();
-            }
-        }
-        Nav.Preview preview = Nav.INSTANCE.getPreview();
-        if (preview != null && (id = preview.getId()) != null) {
-            pid = id;
-        }
-        if (Nav.INSTANCE.getInPreview() && !Intrinsics.areEqual(pid, this.previewShown)) {
-            this.previewShown = pid;
-            if (!Intrinsics.areEqual(this.sheetKind, "routes") && !Intrinsics.areEqual(this.sheetKind, "look") && !Intrinsics.areEqual(this.sheetKind, "options")) {
-                openSheet("routes");
-            }
-            if (pid.length() > 0) {
-                post(new Runnable() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda7
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        MapPane.onNav$lambda$37(MapPane.this);
+                label102: {
+                    Iterator var16 = var15.iterator();
+
+                    while (var16.hasNext()) {
+                        if ((Nav.Line)var16.next() != null) {
+                            var12 = true;
+                        } else {
+                            var12 = false;
+                        }
+
+                        if (var12) {
+                            var12 = true;
+                            break label102;
+                        }
                     }
-                });
+
+                    var12 = false;
+                }
+            }
+
+            if (var12) {
+                this.showRoutesWhenReady = false;
+                this.openRoutes();
             }
         }
+
+        Nav.Preview var19 = Nav.INSTANCE.getPreview();
+        var14 = var9;
+        if (var19 != null) {
+            var14 = var19.getId();
+            if (var14 == null) {
+                var14 = var9;
+            }
+        }
+
+        if (Nav.INSTANCE.getInPreview() && !Intrinsics.areEqual(var14, this.previewShown)) {
+            this.previewShown = var14;
+            if (!Intrinsics.areEqual(this.sheetKind, "routes") && !Intrinsics.areEqual(this.sheetKind, "look") && !Intrinsics.areEqual(this.sheetKind, "options")) {
+                this.openSheet("routes");
+            }
+
+            boolean var13;
+            if (var14.length() > 0) {
+                var13 = var6;
+            } else {
+                var13 = false;
+            }
+
+            if (var13) {
+                this.post(new MapPane$$ExternalSyntheticLambda7(this));
+            }
+        }
+
         this.map.linesChanged();
         if (this.sheet.getVisibility() == 0 && this.sheetVersion != Nav.INSTANCE.getVersion()) {
-            fillSheet();
+            this.fillSheet();
         }
-        refreshButtons();
-        refreshBars();
+
+        this.refreshButtons();
+        this.refreshBars();
         this.map.invalidate();
     }
 
@@ -994,233 +979,285 @@ public final class MapPane extends FrameLayout {
         host.navigateTo($title, optString, $p.optDouble("latitude"), $p.optDouble("longitude"));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:105:0x00f0, code lost:
-    
-        if (r2.equals("waitingForLocation") == false) goto L67;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:16:0x009d, code lost:
-    
-        if (r2.equals("routing") == false) goto L67;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x00f3, code lost:
-    
-        r2 = r25.etaBig;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:18:0x00ff, code lost:
-    
-        if (com.starpilot.starview.Nav.INSTANCE.getRoutes().isEmpty() == false) goto L56;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:19:0x0101, code lost:
-    
-        r3 = "Finding routes…";
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:21:0x0119, code lost:
-    
-        r2.setText(r3);
-        r2 = r25.etaSmall;
-        r3 = com.starpilot.starview.Nav.INSTANCE.getDestination();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:22:0x0124, code lost:
-    
-        if (r3 == null) goto L63;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:23:0x0126, code lost:
-    
-        r3 = r3.optString("name");
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:24:0x012d, code lost:
-    
-        if (r3 != null) goto L66;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:25:0x012f, code lost:
-    
-        r3 = "";
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:26:0x0130, code lost:
-    
-        r2.setText(r3);
-        r21 = "arrived";
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:64:0x03a8, code lost:
-    
-        if (kotlin.collections.SetsKt.setOf((java.lang.Object[]) new java.lang.String[]{"routing", "routeUnavailable", r21}).contains(com.starpilot.starview.Nav.INSTANCE.getStatus()) != false) goto L150;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:87:0x012b, code lost:
-    
-        r3 = null;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:88:0x0106, code lost:
-    
-        r3 = com.starpilot.starview.Nav.INSTANCE;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:89:0x0108, code lost:
-    
-        if (r17 == null) goto L59;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:90:0x010a, code lost:
-    
-        r4 = r17.getFirst().doubleValue();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:91:0x0114, code lost:
-    
-        r3 = r3.etaText(r4);
-     */
-    /* JADX WARN: Removed duplicated region for block: B:107:0x013b  */
-    /* JADX WARN: Removed duplicated region for block: B:130:0x022b  */
-    /* JADX WARN: Removed duplicated region for block: B:73:0x03d7  */
-    /* JADX WARN: Removed duplicated region for block: B:76:? A[RETURN, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     public final void refreshBars() {
-        String str;
-        String str2;
-        int i;
-        int i2;
-        int bh;
-        boolean metric = getT().isMetric();
-        String str3 = "";
-        if (!Nav.INSTANCE.getLoaded()) {
-            str = this.host.getData().getConnected() ? "" : "Not connected to the comma";
+        boolean var21 = false; Pair var30 = null; // declarations Vineflower left out
+        boolean var7 = this.getT().isMetric();
+        boolean var8 = Nav.INSTANCE.getLoaded();
+        String var11 = "";
+        String var9;
+        if (!var8) {
+            if (this.host.getData().getConnected()) {
+                var9 = "";
+            } else {
+                var9 = "Not connected to the comma";
+            }
         } else if (!Nav.INSTANCE.getSupported()) {
-            str = "The comma needs the StarView navigation update (patch 9) for the map.";
-        } else if (Nav.INSTANCE.getHasKey()) {
-            str = (Nav.INSTANCE.getEnabled() || !Nav.INSTANCE.getActive()) ? "" : "Navigation is off on the comma (Galaxy › Navigation).";
+            var9 = "The comma needs the StarView navigation update (patch 9) for the map.";
+        } else if (!Nav.INSTANCE.getHasKey()) {
+            var9 = "Add your Mapbox key on the comma first:\nGalaxy › Navigation › App Keys.";
+        } else if (!Nav.INSTANCE.getEnabled() && Nav.INSTANCE.getActive()) {
+            var9 = "Navigation is off on the comma (Galaxy › Navigation).";
         } else {
-            str = "Add your Mapbox key on the comma first:\nGalaxy › Navigation › App Keys.";
+            var9 = "";
         }
-        String msg = str;
-        this.note.setText(msg);
-        this.note.setVisibility(msg.length() == 0 ? 8 : 0);
-        Object obj = null;
-        if (Nav.INSTANCE.getActive()) {
-            Pair rem = Nav.INSTANCE.remaining();
-            String status = Nav.INSTANCE.getStatus();
-            double d = 0.0d;
-            switch (status.hashCode()) {
-                case -2094020847:
-                    break;
-                case -734206867:
-                    if (status.equals("arrived")) {
-                        this.etaBig.setText("Arrived");
-                        TextView textView = this.etaSmall;
-                        JSONObject destination = Nav.INSTANCE.getDestination();
-                        String optString = destination != null ? destination.optString("name") : null;
-                        if (optString == null) {
-                            optString = "";
+
+        this.note.setText(var9);
+        TextView var10 = this.note;
+        int var5;
+        if (var9.length() == 0) {
+            var5 = 1;
+        } else {
+            var5 = 0;
+        }
+
+        if ((var5 != 0)) {
+            var5 = (byte)8;
+        } else {
+            var5 = (byte)0;
+        }
+
+        Object var12;
+        var10.setVisibility((((var5 != 0)) ? 1 : 0));
+        var8 = Nav.INSTANCE.getActive();
+        var12 = null;
+        label214:
+        if (var8) {
+            double var1;
+            label212: {
+                var30 = Nav.INSTANCE.remaining();
+                String var49 = Nav.INSTANCE.getStatus();
+                var5 = var49.hashCode();
+                var1 = 0.0;
+                switch (var5) {
+                    case -2094020847:
+                        if (var49.equals("waitingForLocation")) {
+                            break label212;
                         }
-                        textView.setText(optString);
-                        str2 = "arrived";
                         break;
-                    }
-                    if (rem != null) {
-                        this.etaBig.setText(Nav.INSTANCE.etaText(rem.getFirst().doubleValue()));
-                        Nav.Route r = Nav.INSTANCE.getRoute();
-                        if (r != null) {
-                            double typicalS = r.getTypicalS();
-                            if ((Double.isInfinite(typicalS) || Double.isNaN(typicalS)) ? false : true) {
-                                d = r.getDurationS() - r.getTypicalS();
+                    case -734206867:
+                        if (var49.equals("arrived")) {
+                            this.etaBig.setText("Arrived");
+                            TextView var13 = this.etaSmall;
+                            JSONObject var31 = Nav.INSTANCE.getDestination();
+                            if (var31 != null) {
+                                var9 = var31.optString("name");
+                            } else {
+                                var9 = null;
                             }
+
+                            String var50 = var9;
+                            if (var9 == null) {
+                                var50 = "";
+                            }
+
+                            var13.setText(var50);
+                            break label214;
                         }
-                        double late = d;
-                        str2 = "arrived";
-                        this.etaSmall.setText(Nav.INSTANCE.durationText(rem.getFirst().doubleValue()) + " · " + Nav.distanceText$default(Nav.INSTANCE, rem.getSecond().doubleValue(), metric, false, 4, null) + (late >= 120.0d ? "  ·  +" + Nav.INSTANCE.durationText(late) + " traffic" : "") + (Nav.INSTANCE.getOffRoute() ? "  ·  off the route" : ""));
-                        this.etaSmall.setTextColor(late >= 300.0d ? Color.rgb(255, 138, 128) : Color.argb(200, 255, 255, 255));
                         break;
+                    case -72763833:
+                        if (var49.equals("routeUnavailable")) {
+                            this.etaBig.setText("No route");
+                            this.etaSmall.setText("The comma tries again in 30 s");
+                            break label214;
+                        }
+                        break;
+                    case 1385652422:
+                        if (var49.equals("routing")) {
+                            break label212;
+                        }
+                }
+
+                if (var30 != null) {
+                    this.etaBig.setText(Nav.INSTANCE.etaText(((Number)var30.getFirst()).doubleValue()));
+                    Nav.Route var51 = Nav.INSTANCE.getRoute();
+                    double var3 = var1;
+                    if (var51 != null) {
+                        var3 = var51.getTypicalS();
+                        boolean var19;
+                        if (!Double.isInfinite(var3) && !Double.isNaN(var3)) {
+                            var19 = true;
+                        } else {
+                            var19 = false;
+                        }
+
+                        var3 = var1;
+                        if (var19) {
+                            var3 = var51.getDurationS() - var51.getTypicalS();
+                        }
+                    }
+
+                    TextView var14 = this.etaSmall;
+                    String var64 = Nav.INSTANCE.durationText(((Number)var30.getFirst()).doubleValue());
+                    String var15 = Nav.distanceText$default(Nav.INSTANCE, ((Number)var30.getSecond()).doubleValue(), var7, false, 4, null);
+                    if (var3 >= 120.0) {
+                        var9 = Nav.INSTANCE.durationText(var3);
+                        var9 = "  ·  +" + var9 + " traffic";
                     } else {
-                        str2 = "arrived";
-                        this.etaBig.setText("—");
-                        TextView textView2 = this.etaSmall;
-                        JSONObject destination2 = Nav.INSTANCE.getDestination();
-                        String optString2 = destination2 != null ? destination2.optString("name") : null;
-                        if (optString2 == null) {
-                            optString2 = "";
-                        }
-                        textView2.setText(optString2);
-                        break;
+                        var9 = "";
                     }
-                    break;
-                case -72763833:
-                    if (status.equals("routeUnavailable")) {
-                        this.etaBig.setText("No route");
-                        this.etaSmall.setText("The comma tries again in 30 s");
-                        str2 = "arrived";
-                        break;
+
+                    String var52;
+                    if (Nav.INSTANCE.getOffRoute()) {
+                        var52 = "  ·  off the route";
+                    } else {
+                        var52 = "";
                     }
-                    if (rem != null) {
+
+                    var14.setText(var64 + " · " + var15 + var9 + var52);
+                    TextView var35 = this.etaSmall;
+                    if (var3 >= 300.0) {
+                        var5 = Color.rgb(255, 138, 128);
+                    } else {
+                        var5 = Color.argb(200, 255, 255, 255);
                     }
-                    break;
-                case 1385652422:
-                    break;
-                default:
-                    if (rem != null) {
+
+                    var35.setTextColor(var5);
+                } else {
+                    this.etaBig.setText("—");
+                    TextView var65 = this.etaSmall;
+                    JSONObject var36 = Nav.INSTANCE.getDestination();
+                    if (var36 != null) {
+                        var9 = var36.optString("name");
+                    } else {
+                        var9 = null;
                     }
-                    break;
+
+                    String var53 = var9;
+                    if (var9 == null) {
+                        var53 = "";
+                    }
+
+                    var65.setText(var53);
+                }
+                break label214;
             }
+
+            var10 = this.etaBig;
+            if (Nav.INSTANCE.getRoutes().isEmpty()) {
+                var9 = "Finding routes…";
+            } else {
+                Nav var66 = Nav.INSTANCE;
+                if (var30 != null) {
+                    var1 = ((Number)var30.getFirst()).doubleValue();
+                }
+
+                var9 = var66.etaText(var1);
+            }
+
+            CharSequence var39 = var9;
+            var10.setText(var39);
+            TextView var67 = this.etaSmall;
+            JSONObject var40 = Nav.INSTANCE.getDestination();
+            if (var40 != null) {
+                var9 = var40.optString("name");
+            } else {
+                var9 = null;
+            }
+
+            String var55 = var9;
+            if (var9 == null) {
+                var55 = "";
+            }
+
+            var67.setText(var55);
         } else {
-            str2 = "arrived";
             this.etaBig.setText("");
-            this.etaSmall.setText((Nav.INSTANCE.getLoaded() && Nav.INSTANCE.getSupported() && Nav.INSTANCE.getHasKey()) ? "No destination" : "");
+            var10 = this.etaSmall;
+            CharSequence var42;
+            if (Nav.INSTANCE.getLoaded() && Nav.INSTANCE.getSupported() && Nav.INSTANCE.getHasKey()) {
+                var42 = "No destination";
+            } else {
+                var42 = "";
+            }
+
+            var10.setText(var42);
         }
-        int f = Nav.INSTANCE.faster();
-        Iterable $this$firstOrNull$iv = Nav.INSTANCE.getRoutes();
-        Iterator it = $this$firstOrNull$iv.iterator();
-        while (true) {
-            if (it.hasNext()) {
-                Object element$iv = it.next();
-                Nav.Route it2 = (Nav.Route) element$iv;
-                if (it2.getIndex() == f) {
-                    obj = element$iv;
-                }
+
+        int var6 = Nav.INSTANCE.faster();
+        Iterator var57 = Nav.INSTANCE.getRoutes().iterator();
+
+        do {
+            if (!var57.hasNext()) {
+                var9 = (String)var12;
+                break;
+            }
+
+            var9 = (String)var57.next();
+            if (((Nav.Route)var9).getIndex() == var6) {
+                var21 = true;
+            } else {
+                var21 = false;
+            }
+        } while (!var21);
+
+        Nav.Route var58 = (Nav.Route)var9;
+        var12 = Nav.INSTANCE.getRoute();
+        var9 = var11;
+        if (var58 != null) {
+            var9 = var11;
+            if (var12 != null) {
+                var5 = var58.getIndex();
+                var6 = MathKt.roundToInt(var58.getDurationS() / 60);
+                var9 = var5 + "|" + var6;
             }
         }
-        final Nav.Route fr = (Nav.Route) obj;
-        Nav.Route cur = Nav.INSTANCE.getRoute();
-        if (fr != null && cur != null) {
-            str3 = fr.getIndex() + "|" + MathKt.roundToInt(fr.getDurationS() / 60);
-        }
-        final String fKey = str3;
-        if (fr != null && cur != null && !Intrinsics.areEqual(fKey, this.dismissedFaster) && Intrinsics.areEqual(Nav.INSTANCE.getStatus(), "guiding") && !Intrinsics.areEqual(this.sheetKind, "routes")) {
-            this.faster.setText("Faster route · saves " + Nav.INSTANCE.durationText(cur.getDurationS() - fr.getDurationS()) + "   TAKE IT    ✕");
+
+        if (var58 != null
+            && var12 != null
+            && !Intrinsics.areEqual(var9, this.dismissedFaster)
+            && Intrinsics.areEqual(Nav.INSTANCE.getStatus(), "guiding")
+            && !Intrinsics.areEqual(this.sheetKind, "routes")) {
+            TextView var61 = this.faster;
+            var12 = Nav.INSTANCE.durationText(((Nav.Route)var12).getDurationS() - var58.getDurationS());
+            var61.setText("Faster route · saves " + var12 + "   TAKE IT    ✕");
             this.faster.setVisibility(0);
-            this.faster.setOnTouchListener(new View.OnTouchListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda33
-                @Override // android.view.View.OnTouchListener
-                public final boolean onTouch(View view, MotionEvent motionEvent) {
-                    boolean refreshBars$lambda$54;
-                    refreshBars$lambda$54 = MapPane.refreshBars$lambda$54(MapPane.this, fKey, fr, view, motionEvent);
-                    return refreshBars$lambda$54;
-                }
-            });
-            i = 8;
+            this.faster.setOnTouchListener(new MapPane$$ExternalSyntheticLambda33(this, var9, var58));
         } else {
-            i = 8;
             this.faster.setVisibility(8);
         }
-        this.recenter.setVisibility(this.map.getFollowing() ? i : 0);
-        this.bottomBar.setVisibility(this.sheet.getVisibility() == 0 ? i : 0);
-        Banner banner = this.banner;
-        if (Nav.INSTANCE.getActive() && this.sheet.getVisibility() != 0) {
-            int i3 = getT().navState() == null ? 0 : 0;
-            i2 = i3;
-            banner.setVisibility(i2);
-            bh = dpi((getT().navState() != null || Nav.INSTANCE.nextLanes() == null) ? 92 : 150);
-            if (this.banner.getLayoutParams().height == bh) {
-                Banner banner2 = this.banner;
-                ViewGroup.LayoutParams layoutParams = this.banner.getLayoutParams();
-                Intrinsics.checkNotNull(layoutParams, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
-                FrameLayout.LayoutParams $this$refreshBars_u24lambda_u2455 = (FrameLayout.LayoutParams) layoutParams;
-                $this$refreshBars_u24lambda_u2455.height = bh;
-                banner2.setLayoutParams($this$refreshBars_u24lambda_u2455);
-                return;
-            }
-            return;
+
+        TextView var45 = this.recenter;
+        byte var23;
+        if (this.map.getFollowing()) {
+            var23 = 8;
+        } else {
+            var23 = 0;
         }
-        i2 = i;
-        banner.setVisibility(i2);
-        bh = dpi((getT().navState() != null || Nav.INSTANCE.nextLanes() == null) ? 92 : 150);
-        if (this.banner.getLayoutParams().height == bh) {
+
+        var45.setVisibility(var23);
+        LinearLayout var46 = this.bottomBar;
+        if (this.sheet.getVisibility() == 0) {
+            var23 = (byte)8;
+        } else {
+            var23 = (byte)0;
+        }
+
+        var46.setVisibility(var23);
+        MapPane.Banner var47 = this.banner;
+        if (!Nav.INSTANCE.getActive()
+            || this.sheet.getVisibility() == 0
+            || this.getT().navState() == null && !SetsKt.setOf(new String[]{"routing", "routeUnavailable", "arrived"}).contains(Nav.INSTANCE.getStatus())) {
+            var23 = (byte)8;
+        } else {
+            var23 = (byte)0;
+        }
+
+        var47.setVisibility(var23);
+        if (this.getT().navState() != null && Nav.INSTANCE.nextLanes() != null) {
+            var23 = (short)150;
+        } else {
+            var23 = (short)92;
+        }
+
+        var23 = this.dpi(var23);
+        if (this.banner.getLayoutParams().height != var23) {
+            MapPane.Banner var48 = this.banner;
+            android.view.ViewGroup.LayoutParams var59 = this.banner.getLayoutParams();
+            Intrinsics.checkNotNull(var59, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
+            var var60 = (android.widget.FrameLayout.LayoutParams & android.view.ViewGroup.LayoutParams)var59;
+            var60.height = var23;
+            var48.setLayoutParams((android.view.ViewGroup.LayoutParams)var60);
         }
     }
 
@@ -1415,336 +1452,228 @@ public final class MapPane extends FrameLayout {
         }
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterative(DepthRegionTraversal.java:31)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visit(SwitchOverStringVisitor.java:60)
-     */
-    /* JADX WARN: Removed duplicated region for block: B:102:0x018d  */
-    /* JADX WARN: Removed duplicated region for block: B:15:0x00a6  */
-    /* JADX WARN: Removed duplicated region for block: B:18:0x00ed  */
-    /* JADX WARN: Removed duplicated region for block: B:23:0x01c9  */
-    /* JADX WARN: Removed duplicated region for block: B:46:0x02d0  */
-    /* JADX WARN: Removed duplicated region for block: B:49:0x0333  */
-    /* JADX WARN: Removed duplicated region for block: B:54:0x039c  */
-    /* JADX WARN: Removed duplicated region for block: B:58:0x033e  */
-    /* JADX WARN: Removed duplicated region for block: B:61:0x0349  */
-    /* JADX WARN: Removed duplicated region for block: B:64:0x0354  */
-    /* JADX WARN: Removed duplicated region for block: B:65:0x02d2  */
-    /* JADX WARN: Removed duplicated region for block: B:67:0x0281  */
-    /* JADX WARN: Removed duplicated region for block: B:68:0x028d  */
-    /* JADX WARN: Removed duplicated region for block: B:75:0x01fb  */
-    /* JADX WARN: Removed duplicated region for block: B:76:0x00f7  */
-    /* JADX WARN: Removed duplicated region for block: B:84:0x0147  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void fillSheet() {
-        int i;
-        LinearLayout outer;
-        LinearLayout $this$fillSheet_u24lambda_u2466;
-        boolean preview;
-        String str;
-        String title;
-        String str2;
-        int i2;
-        String str3;
-        int maxH;
+        String var20 = null; ScrollView var41 = null; // declarations Vineflower left out
         this.sheetVersion = Nav.INSTANCE.getVersion();
-        View childAt = this.sheet.getChildAt(0);
-        LinearLayout it = childAt instanceof LinearLayout ? (LinearLayout) childAt : null;
-        if (it != null) {
-            View childAt2 = it.getChildAt(1);
-            ScrollView scrollView = childAt2 instanceof ScrollView ? (ScrollView) childAt2 : null;
-            Integer valueOf = scrollView != null ? Integer.valueOf(scrollView.getScrollY()) : null;
-            if (valueOf != null) {
-                i = valueOf.intValue();
-                final int scrollY = i;
-                this.sheet.removeAllViews();
-                outer = new LinearLayout(getContext());
-                outer.setOrientation(1);
-                outer.setBackground(card$default(this, -233169629, 20.0f, 0, true, 4, null));
-                outer.setPadding(dpi(14), dpi(10), dpi(14), dpi(12));
-                $this$fillSheet_u24lambda_u2466 = new LinearLayout(getContext());
-                $this$fillSheet_u24lambda_u2466.setOrientation(0);
-                $this$fillSheet_u24lambda_u2466.setGravity(16);
-                preview = Nav.INSTANCE.getInPreview();
-                if (Intrinsics.areEqual(this.sheetKind, "look")) {
-                    TextView $this$fillSheet_u24lambda_u2468 = pill$default(this, "‹", false, 2, null);
-                    $this$fillSheet_u24lambda_u2468.setTextSize(20.0f);
-                    $this$fillSheet_u24lambda_u2468.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda26
-                        @Override // android.view.View.OnClickListener
-                        public final void onClick(View view) {
-                            MapPane.this.openSheet("routes");
-                        }
-                    });
-                    LinearLayout.LayoutParams $this$fillSheet_u24lambda_u2469 = new LinearLayout.LayoutParams(dpi(48), dpi(40));
-                    $this$fillSheet_u24lambda_u2469.setMarginEnd(dpi(10));
-                    Unit unit = Unit.INSTANCE;
-                    $this$fillSheet_u24lambda_u2466.addView($this$fillSheet_u24lambda_u2468, $this$fillSheet_u24lambda_u2469);
-                }
-                str = this.sheetKind;
-                switch (str.hashCode()) {
-                    case -925132982:
-                        if (str.equals("routes")) {
-                            if (preview) {
-                                JSONObject previewing = Nav.INSTANCE.getPreviewing();
-                                String optString = previewing != null ? previewing.optString("name") : null;
-                                if (optString == null) {
-                                    optString = "";
-                                }
-                                String str4 = optString;
-                                if (str4.length() == 0) {
-                                    str4 = "there";
-                                }
-                                str2 = "Routes to " + ((Object) str4);
-                            } else {
-                                str2 = "Routes";
-                            }
-                            title = str2;
-                            break;
-                        }
-                        title = "Route options";
-                        break;
-                    case 3327647:
-                        if (str.equals("look")) {
-                            Nav.Route it2 = Nav.INSTANCE.getShownRoute();
-                            if (it2 != null) {
-                                String str5 = Nav.INSTANCE.durationText(it2.getDurationS()) + " · " + Nav.distanceText$default(Nav.INSTANCE, it2.getDistanceM(), getT().isMetric(), false, 4, null);
-                                if (str5 != null) {
-                                    title = str5;
-                                    break;
-                                }
-                            }
-                            title = "Directions";
-                            break;
-                        }
-                        title = "Route options";
-                        break;
-                    case 109761319:
-                        if (str.equals("steps")) {
-                            title = "Directions";
-                            break;
-                        }
-                        title = "Route options";
-                        break;
-                    default:
-                        title = "Route options";
-                        break;
-                }
-                TextView $this$fillSheet_u24lambda_u2472 = label$default(this, title, 20.0f, true, false, 8, null);
-                $this$fillSheet_u24lambda_u2472.setMaxLines(1);
-                $this$fillSheet_u24lambda_u2472.setEllipsize(TextUtils.TruncateAt.END);
-                $this$fillSheet_u24lambda_u2466.addView($this$fillSheet_u24lambda_u2472, new LinearLayout.LayoutParams(0, -2, 1.0f));
-                if (Intrinsics.areEqual(this.sheetKind, "routes")) {
-                    i2 = 40;
+        View var4 = this.sheet.getChildAt(0);
+        LinearLayout var13;
+        if (var4 instanceof LinearLayout) {
+            var13 = (LinearLayout)var4;
+        } else {
+            var13 = null;
+        }
+
+        int var1;
+        label160: {
+            if (var13 != null) {
+                var4 = var13.getChildAt(1);
+                ScrollView var15;
+                if (var4 instanceof ScrollView) {
+                    var15 = (ScrollView)var4;
                 } else {
-                    TextView $this$fillSheet_u24lambda_u2474 = pill$default(this, "Avoid…", false, 2, null);
-                    $this$fillSheet_u24lambda_u2474.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda27
-                        @Override // android.view.View.OnClickListener
-                        public final void onClick(View view) {
-                            MapPane.this.openSheet("options");
-                        }
-                    });
-                    i2 = 40;
-                    LinearLayout.LayoutParams $this$fillSheet_u24lambda_u2475 = new LinearLayout.LayoutParams(-2, dpi(40));
-                    $this$fillSheet_u24lambda_u2475.setMarginEnd(dpi(8));
-                    Unit unit2 = Unit.INSTANCE;
-                    $this$fillSheet_u24lambda_u2466.addView($this$fillSheet_u24lambda_u2474, $this$fillSheet_u24lambda_u2475);
+                    var15 = null;
                 }
-                if (preview && (Intrinsics.areEqual(this.sheetKind, "routes") || Intrinsics.areEqual(this.sheetKind, "look"))) {
-                    TextView $this$fillSheet_u24lambda_u2477 = pill$default(this, "Cancel", false, 2, null);
-                    $this$fillSheet_u24lambda_u2477.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda28
-                        @Override // android.view.View.OnClickListener
-                        public final void onClick(View view) {
-                            MapPane.this.closeSheet();
-                        }
-                    });
-                    LinearLayout.LayoutParams $this$fillSheet_u24lambda_u2478 = new LinearLayout.LayoutParams(-2, dpi(i2));
-                    $this$fillSheet_u24lambda_u2478.setMarginEnd(dpi(8));
-                    Unit unit3 = Unit.INSTANCE;
-                    $this$fillSheet_u24lambda_u2466.addView($this$fillSheet_u24lambda_u2477, $this$fillSheet_u24lambda_u2478);
+
+                Integer var16;
+                if (var15 != null) {
+                    var16 = var15.getScrollY();
+                } else {
+                    var16 = null;
                 }
-                boolean other = (Intrinsics.areEqual(this.sheetKind, "look") || preview || Nav.INSTANCE.getLook() < 0 || Nav.INSTANCE.getLook() == Nav.INSTANCE.getSelected()) ? false : true;
-                Pair pair = (preview || !(Intrinsics.areEqual(this.sheetKind, "routes") || Intrinsics.areEqual(this.sheetKind, "look"))) ? !other ? TuplesKt.to("Use this route", new Function0() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda30
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit fillSheet$lambda$80;
-                        fillSheet$lambda$80 = MapPane.fillSheet$lambda$80(MapPane.this);
-                        return fillSheet$lambda$80;
-                    }
-                }) : (preview && Intrinsics.areEqual(this.sheetKind, "options")) ? TuplesKt.to("Done", new Function0() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda31
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit fillSheet$lambda$81;
-                        fillSheet$lambda$81 = MapPane.fillSheet$lambda$81(MapPane.this);
-                        return fillSheet$lambda$81;
-                    }
-                }) : TuplesKt.to("Done", new Function0() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda32
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit fillSheet$lambda$82;
-                        fillSheet$lambda$82 = MapPane.fillSheet$lambda$82(MapPane.this);
-                        return fillSheet$lambda$82;
-                    }
-                }) : TuplesKt.to("Go", new Function0() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda29
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit fillSheet$lambda$79;
-                        fillSheet$lambda$79 = MapPane.fillSheet$lambda$79(MapPane.this);
-                        return fillSheet$lambda$79;
-                    }
-                });
-                String doneText = (String) pair.component1();
-                final Function0 done = (Function0) pair.component2();
-                TextView $this$fillSheet_u24lambda_u2484 = pill(doneText, true);
-                $this$fillSheet_u24lambda_u2484.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda34
-                    @Override // android.view.View.OnClickListener
-                    public final void onClick(View view) {
-                        done.invoke();
-                    }
-                });
-                $this$fillSheet_u24lambda_u2466.addView($this$fillSheet_u24lambda_u2484, new LinearLayout.LayoutParams(!other ? -2 : dpi(84), dpi(i2)));
-                outer.addView($this$fillSheet_u24lambda_u2466);
-                final ScrollView sv = new ScrollView(getContext());
-                LinearLayout $this$fillSheet_u24lambda_u2485 = new LinearLayout(getContext());
-                $this$fillSheet_u24lambda_u2485.setOrientation(1);
-                sv.addView($this$fillSheet_u24lambda_u2485);
-                LinearLayout.LayoutParams $this$fillSheet_u24lambda_u2486 = new LinearLayout.LayoutParams(-1, -2);
-                $this$fillSheet_u24lambda_u2486.topMargin = dpi(8);
-                Unit unit4 = Unit.INSTANCE;
-                outer.addView(sv, $this$fillSheet_u24lambda_u2486);
-                str3 = this.sheetKind;
-                switch (str3.hashCode()) {
-                    case -925132982:
-                        if (str3.equals("routes")) {
-                            fillRoutes($this$fillSheet_u24lambda_u2485);
-                            break;
-                        }
-                        fillOptions($this$fillSheet_u24lambda_u2485);
-                        break;
-                    case 3327647:
-                        if (str3.equals("look")) {
-                            fillLook($this$fillSheet_u24lambda_u2485);
-                            break;
-                        }
-                        fillOptions($this$fillSheet_u24lambda_u2485);
-                        break;
-                    case 109761319:
-                        if (str3.equals("steps")) {
-                            fillSteps($this$fillSheet_u24lambda_u2485);
-                            break;
-                        }
-                        fillOptions($this$fillSheet_u24lambda_u2485);
-                        break;
-                    default:
-                        fillOptions($this$fillSheet_u24lambda_u2485);
-                        break;
+
+                if (var16 != null) {
+                    var1 = var16;
+                    break label160;
                 }
-                maxH = RangesKt.coerceAtLeast(MathKt.roundToInt(getHeight() * 0.62f), dpi(260));
-                this.sheet.addView(outer, new FrameLayout.LayoutParams(-1, -2));
-                outer.measure(View.MeasureSpec.makeMeasureSpec(RangesKt.coerceAtLeast(getWidth(), 1), 1073741824), View.MeasureSpec.makeMeasureSpec(0, 0));
-                if (outer.getMeasuredHeight() > maxH) {
-                    outer.setLayoutParams(new FrameLayout.LayoutParams(-1, maxH));
-                }
-                sv.post(new Runnable() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda35
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        MapPane.fillSheet$lambda$87(sv, this, scrollY);
-                    }
-                });
-                this.lookFresh = false;
             }
+
+            var1 = 0;
         }
-        i = 0;
-        final int scrollY2 = i;
+
         this.sheet.removeAllViews();
-        outer = new LinearLayout(getContext());
-        outer.setOrientation(1);
-        outer.setBackground(card$default(this, -233169629, 20.0f, 0, true, 4, null));
-        outer.setPadding(dpi(14), dpi(10), dpi(14), dpi(12));
-        $this$fillSheet_u24lambda_u2466 = new LinearLayout(getContext());
-        $this$fillSheet_u24lambda_u2466.setOrientation(0);
-        $this$fillSheet_u24lambda_u2466.setGravity(16);
-        preview = Nav.INSTANCE.getInPreview();
+        LinearLayout var6 = new LinearLayout(this.getContext());
+        var6.setOrientation(1);
+        var6.setBackground((Drawable)card$default(this, -233169629, 20.0F, 0, true, 4, null));
+        var6.setPadding(this.dpi(14), this.dpi(10), this.dpi(14), this.dpi(12));
+        LinearLayout var7 = new LinearLayout(this.getContext());
+        var7.setOrientation(0);
+        var7.setGravity(16);
+        boolean var3 = Nav.INSTANCE.getInPreview();
         if (Intrinsics.areEqual(this.sheetKind, "look")) {
+            TextView var17 = pill$default(this, "‹", false, 2, null);
+            var17.setTextSize(20.0F);
+            var17.setOnClickListener(new MapPane$$ExternalSyntheticLambda26(this));
+            var4 = (View)var17;
+            android.widget.LinearLayout.LayoutParams var8 = new android.widget.LinearLayout.LayoutParams(this.dpi(48), this.dpi(40));
+            var8.setMarginEnd(this.dpi(10));
+            Unit var5 = Unit.INSTANCE;
+            var7.addView(var4, (android.view.ViewGroup.LayoutParams)var8);
         }
-        str = this.sheetKind;
-        switch (str.hashCode()) {
-            case -925132982:
-                break;
-            case 3327647:
-                break;
-            case 109761319:
-                break;
+
+        label153: {
+            String var19 = this.sheetKind;
+            switch (var19.hashCode()) {
+                case -925132982:
+                    if (var19.equals("routes")) {
+                        if (var3) {
+                            JSONObject var22 = Nav.INSTANCE.getPreviewing();
+                            String var23;
+                            if (var22 != null) {
+                                var23 = var22.optString("name");
+                            } else {
+                                var23 = null;
+                            }
+
+                            String var36 = var23;
+                            if (var23 == null) {
+                                var36 = "";
+                            }
+
+                            var4 = var36;
+                            boolean var2;
+                            if (var4.length() == 0) {
+                                var2 = true;
+                            } else {
+                                var2 = false;
+                            }
+
+                            if (var2) {
+                                var4 = "there";
+                            }
+
+                            var20 = "Routes to " + var4;
+                        } else {
+                            var20 = "Routes";
+                        }
+                        break label153;
+                    }
+                    break;
+                case 3327647:
+                    if (var19.equals("look")) {
+                        Nav.Route var34 = Nav.INSTANCE.getShownRoute();
+                        if (var34 != null) {
+                            String var21 = Nav.INSTANCE.durationText(var34.getDurationS());
+                            String var35 = Nav.distanceText$default(Nav.INSTANCE, var34.getDistanceM(), this.getT().isMetric(), false, 4, null);
+                            var20 = var21 + " · " + var35;
+                            if (var20 != null) {
+                                break label153;
+                            }
+                        }
+
+                        var20 = "Directions";
+                        break label153;
+                    }
+                    break;
+                case 109761319:
+                    if (var19.equals("steps")) {
+                        var20 = "Directions";
+                        break label153;
+                    }
+            }
+
+            var20 = "Route options";
         }
-        TextView $this$fillSheet_u24lambda_u24722 = label$default(this, title, 20.0f, true, false, 8, null);
-        $this$fillSheet_u24lambda_u24722.setMaxLines(1);
-        $this$fillSheet_u24lambda_u24722.setEllipsize(TextUtils.TruncateAt.END);
-        $this$fillSheet_u24lambda_u2466.addView($this$fillSheet_u24lambda_u24722, new LinearLayout.LayoutParams(0, -2, 1.0f));
+
+        TextView var25 = label$default(this, var20, 20.0F, true, false, 8, null);
+        var25.setMaxLines(1);
+        var25.setEllipsize(TruncateAt.END);
+        var7.addView((View)var25, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
         if (Intrinsics.areEqual(this.sheetKind, "routes")) {
+            TextView var26 = pill$default(this, "Avoid…", false, 2, null);
+            var26.setOnClickListener(new MapPane$$ExternalSyntheticLambda27(this));
+            var4 = (View)var26;
+            android.widget.LinearLayout.LayoutParams var44 = new android.widget.LinearLayout.LayoutParams(-2, this.dpi(40));
+            var44.setMarginEnd(this.dpi(8));
+            Unit var37 = Unit.INSTANCE;
+            var7.addView(var4, (android.view.ViewGroup.LayoutParams)var44);
         }
-        if (preview) {
-            TextView $this$fillSheet_u24lambda_u24772 = pill$default(this, "Cancel", false, 2, null);
-            $this$fillSheet_u24lambda_u24772.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda28
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    MapPane.this.closeSheet();
-                }
-            });
-            LinearLayout.LayoutParams $this$fillSheet_u24lambda_u24782 = new LinearLayout.LayoutParams(-2, dpi(i2));
-            $this$fillSheet_u24lambda_u24782.setMarginEnd(dpi(8));
-            Unit unit32 = Unit.INSTANCE;
-            $this$fillSheet_u24lambda_u2466.addView($this$fillSheet_u24lambda_u24772, $this$fillSheet_u24lambda_u24782);
+
+        if (var3 && (Intrinsics.areEqual(this.sheetKind, "routes") || Intrinsics.areEqual(this.sheetKind, "look"))) {
+            TextView var28 = pill$default(this, "Cancel", false, 2, null);
+            var28.setOnClickListener(new MapPane$$ExternalSyntheticLambda28(this));
+            var4 = (View)var28;
+            android.widget.LinearLayout.LayoutParams var38 = new android.widget.LinearLayout.LayoutParams(-2, this.dpi(40));
+            var38.setMarginEnd(this.dpi(8));
+            Unit var45 = Unit.INSTANCE;
+            var7.addView(var4, (android.view.ViewGroup.LayoutParams)var38);
         }
-        if (Intrinsics.areEqual(this.sheetKind, "look")) {
+
+        int var10;
+        if (Intrinsics.areEqual(this.sheetKind, "look") && !var3 && Nav.INSTANCE.getLook() >= 0 && Nav.INSTANCE.getLook() != Nav.INSTANCE.getSelected()) {
+            var10 = 1;
+        } else {
+            var10 = 0;
         }
-        if (preview) {
-        }
-        String doneText2 = (String) pair.component1();
-        final Function0 done2 = (Function0) pair.component2();
-        TextView $this$fillSheet_u24lambda_u24842 = pill(doneText2, true);
-        $this$fillSheet_u24lambda_u24842.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda34
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                done2.invoke();
+
+        Pair var30;
+        if (!var3 || !Intrinsics.areEqual(this.sheetKind, "routes") && !Intrinsics.areEqual(this.sheetKind, "look")) {
+            if ((var10 != 0)) {
+                var30 = TuplesKt.to("Use this route", new MapPane$$ExternalSyntheticLambda30(this));
+            } else if (var3 && Intrinsics.areEqual(this.sheetKind, "options")) {
+                var30 = TuplesKt.to("Done", new MapPane$$ExternalSyntheticLambda31(this));
+            } else {
+                var30 = TuplesKt.to("Done", new MapPane$$ExternalSyntheticLambda32(this));
             }
-        });
-        $this$fillSheet_u24lambda_u2466.addView($this$fillSheet_u24lambda_u24842, new LinearLayout.LayoutParams(!other ? -2 : dpi(84), dpi(i2)));
-        outer.addView($this$fillSheet_u24lambda_u2466);
-        final ScrollView sv2 = new ScrollView(getContext());
-        LinearLayout $this$fillSheet_u24lambda_u24852 = new LinearLayout(getContext());
-        $this$fillSheet_u24lambda_u24852.setOrientation(1);
-        sv2.addView($this$fillSheet_u24lambda_u24852);
-        LinearLayout.LayoutParams $this$fillSheet_u24lambda_u24862 = new LinearLayout.LayoutParams(-1, -2);
-        $this$fillSheet_u24lambda_u24862.topMargin = dpi(8);
-        Unit unit42 = Unit.INSTANCE;
-        outer.addView(sv2, $this$fillSheet_u24lambda_u24862);
-        str3 = this.sheetKind;
-        switch (str3.hashCode()) {
-            case -925132982:
-                break;
-            case 3327647:
-                break;
-            case 109761319:
-                break;
+        } else {
+            var30 = TuplesKt.to("Go", new MapPane$$ExternalSyntheticLambda29(this));
         }
-        maxH = RangesKt.coerceAtLeast(MathKt.roundToInt(getHeight() * 0.62f), dpi(260));
-        this.sheet.addView(outer, new FrameLayout.LayoutParams(-1, -2));
-        outer.measure(View.MeasureSpec.makeMeasureSpec(RangesKt.coerceAtLeast(getWidth(), 1), 1073741824), View.MeasureSpec.makeMeasureSpec(0, 0));
-        if (outer.getMeasuredHeight() > maxH) {
+
+        String var39 = (String)var30.component1();
+        Function0 var31 = (Function0)var30.component2();
+        TextView var40 = this.pill(var39, true);
+        var40.setOnClickListener(new MapPane$$ExternalSyntheticLambda34(var31));
+        var4 = (View)var40;
+        if ((var10 != 0)) {
+            var10 = -2;
+        } else {
+            var10 = this.dpi(84);
         }
-        sv2.post(new Runnable() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda35
-            @Override // java.lang.Runnable
-            public final void run() {
-                MapPane.fillSheet$lambda$87(sv2, this, scrollY2);
+
+        label112: {
+            var7.addView(var4, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(var10, this.dpi(40))));
+            var6.addView((View)var7);
+            var41 = new ScrollView(this.getContext());
+            LinearLayout var33 = new LinearLayout(this.getContext());
+            var33.setOrientation(1);
+            var41.addView((View)var33);
+            View var42 = (View)var41;
+            android.widget.LinearLayout.LayoutParams var9 = new android.widget.LinearLayout.LayoutParams(-1, -2);
+            var9.topMargin = this.dpi(8);
+            Unit var46 = Unit.INSTANCE;
+            var6.addView(var42, (android.view.ViewGroup.LayoutParams)var9);
+            String var43 = this.sheetKind;
+            switch (var43.hashCode()) {
+                case -925132982:
+                    if (var43.equals("routes")) {
+                        this.fillRoutes(var33);
+                        break label112;
+                    }
+                    break;
+                case 3327647:
+                    if (var43.equals("look")) {
+                        this.fillLook(var33);
+                        break label112;
+                    }
+                    break;
+                case 109761319:
+                    if (var43.equals("steps")) {
+                        this.fillSteps(var33);
+                        break label112;
+                    }
             }
-        });
+
+            this.fillOptions(var33);
+        }
+
+        var10 = RangesKt.coerceAtLeast(MathKt.roundToInt(this.getHeight() * 0.62F), this.dpi(260));
+        this.sheet.addView((View)var6, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -2)));
+        var6.measure(MeasureSpec.makeMeasureSpec(RangesKt.coerceAtLeast(this.getWidth(), 1), 1073741824), MeasureSpec.makeMeasureSpec(0, 0));
+        if (var6.getMeasuredHeight() > var10) {
+            var6.setLayoutParams((android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, var10)));
+        }
+
+        var41.post(new MapPane$$ExternalSyntheticLambda35(var41, this, var1));
         this.lookFresh = false;
     }
 
@@ -1922,73 +1851,95 @@ public final class MapPane extends FrameLayout {
         this$0.lookAt($r.getIndex());
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:26:0x0103  */
-    /* JADX WARN: Removed duplicated region for block: B:29:0x010e  */
-    /* JADX WARN: Removed duplicated region for block: B:36:0x0144  */
-    /* JADX WARN: Removed duplicated region for block: B:38:0x0147  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void fillLook(LinearLayout col) {
-        String str;
-        double typicalS;
-        Nav.Route r = Nav.INSTANCE.getShownRoute();
-        Nav.Line l = Nav.INSTANCE.getShownLine();
-        if (r == null || l == null) {
-            col.addView(label$default(this, "No directions for this route.", 15.0f, false, false, 12, null));
-            return;
-        }
-        Iterator<T> it = Nav.INSTANCE.getShownRoutes().iterator();
-        if (!it.hasNext()) {
-            throw new NoSuchElementException();
-        }
-        Nav.Route it2 = (Nav.Route) it.next();
-        double durationS = it2.getDurationS();
-        while (it.hasNext()) {
-            Nav.Route it3 = (Nav.Route) it.next();
-            durationS = Math.min(durationS, it3.getDurationS());
-        }
-        double fastest = durationS;
-        ArrayList notes = new ArrayList();
-        notes.add("arrive " + Nav.INSTANCE.etaText(r.getDurationS()));
-        if (r.getDurationS() - fastest < 60.0d) {
-            if (Nav.INSTANCE.getShownRoutes().size() > 1) {
-                str = "fastest";
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void fillLook(LinearLayout var1) {
+        Nav.Route var11 = Nav.INSTANCE.getShownRoute();
+        Nav.Line var9 = Nav.INSTANCE.getShownLine();
+        if (var11 != null && var9 != null) {
+            Iterator var8 = Nav.INSTANCE.getShownRoutes().iterator();
+            if (!var8.hasNext()) {
+                throw new NoSuchElementException();
+            } else {
+                double var2 = ((Nav.Route)var8.next()).getDurationS();
+
+                while (var8.hasNext()) {
+                    var2 = Math.min(var2, ((Nav.Route)var8.next()).getDurationS());
+                }
+
+                boolean var7;
+                ArrayList var10;
+                label62: {
+                    var10 = new ArrayList();
+                    String var15 = Nav.INSTANCE.etaText(var11.getDurationS());
+                    var10.add("arrive " + var15);
+                    double var4 = var11.getDurationS();
+                    var7 = true;
+                    String var17;
+                    if (var4 - var2 >= 60.0) {
+                        String var16 = Nav.INSTANCE.durationText(var11.getDurationS() - var2);
+                        var17 = var16 + " slower";
+                    } else {
+                        if (Nav.INSTANCE.getShownRoutes().size() <= 1) {
+                            break label62;
+                        }
+
+                        var17 = "fastest";
+                    }
+
+                    var10.add(var17);
+                }
+
+                var2 = var11.getTypicalS();
+                int var6;
+                if (!Double.isInfinite(var2) && !Double.isNaN(var2)) {
+                    var6 = 1;
+                } else {
+                    var6 = 0;
+                }
+
+                if (var6 && var11.getDurationS() - var11.getTypicalS() >= 120.0) {
+                    String var18 = Nav.INSTANCE.durationText(var11.getDurationS() - var11.getTypicalS());
+                    var10.add("traffic +" + var18);
+                }
+
+                if (var11.getClasses().contains("toll")) {
+                    var10.add("tolls");
+                }
+
+                if (var11.getIncidents() > 0) {
+                    var6 = var11.getIncidents();
+                    String var19;
+                    if (var11.getIncidents() > 1) {
+                        var19 = "s";
+                    } else {
+                        var19 = "";
+                    }
+
+                    var10.add(var6 + " incident" + var19);
+                }
+
+                boolean var14;
+                if (var11.getVia().length() > 0) {
+                    var14 = var7;
+                } else {
+                    var14 = false;
+                }
+
+                if (var14) {
+                    String var20 = var11.getVia();
+                    var10.add("via " + var20);
+                }
+
+                TextView var21 = label$default(
+                    this, CollectionsKt.joinToString(var10, "  ·  ", "", "", -1, "...", null), 13.0F, false, true, 4, null
+                );
+                var21.setPadding(0, 0, 0, this.dpi(8));
+                var1.addView((View)var21);
+                this.fillSteps(var1, var9, false);
             }
-            typicalS = r.getTypicalS();
-            if ((Double.isInfinite(typicalS) && !Double.isNaN(typicalS)) && r.getDurationS() - r.getTypicalS() >= 120.0d) {
-                notes.add("traffic +" + Nav.INSTANCE.durationText(r.getDurationS() - r.getTypicalS()));
-            }
-            if (r.getClasses().contains("toll")) {
-                notes.add("tolls");
-            }
-            if (r.getIncidents() > 0) {
-                notes.add(r.getIncidents() + " incident" + (r.getIncidents() > 1 ? "s" : ""));
-            }
-            if (r.getVia().length() > 0) {
-                notes.add("via " + r.getVia());
-            }
-            TextView $this$fillLook_u24lambda_u24105 = label$default(this, CollectionsKt.joinToString(notes, "  ·  ", "", "", -1, "...", null), 13.0f, false, true, 4, null);
-            $this$fillLook_u24lambda_u24105.setPadding(0, 0, 0, dpi(8));
-            col.addView($this$fillLook_u24lambda_u24105);
-            fillSteps(col, l, false);
+        } else {
+            var1.addView((View)label$default(this, "No directions for this route.", 15.0F, false, false, 12, null));
         }
-        str = Nav.INSTANCE.durationText(r.getDurationS() - fastest) + " slower";
-        notes.add(str);
-        typicalS = r.getTypicalS();
-        if (Double.isInfinite(typicalS) && !Double.isNaN(typicalS)) {
-            notes.add("traffic +" + Nav.INSTANCE.durationText(r.getDurationS() - r.getTypicalS()));
-        }
-        if (r.getClasses().contains("toll")) {
-        }
-        if (r.getIncidents() > 0) {
-        }
-        if (r.getVia().length() > 0) {
-        }
-        TextView $this$fillLook_u24lambda_u241052 = label$default(this, CollectionsKt.joinToString(notes, "  ·  ", "", "", -1, "...", null), 13.0f, false, true, 4, null);
-        $this$fillLook_u24lambda_u241052.setPadding(0, 0, 0, dpi(8));
-        col.addView($this$fillLook_u24lambda_u241052);
-        fillSteps(col, l, false);
     }
 
     private final void fillSteps(LinearLayout col) {
@@ -2450,184 +2401,192 @@ public final class MapPane extends FrameLayout {
         final /* synthetic */ MapPane this$0;
         private final Paint tp;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public Banner(MapPane this$0, Context ctx) {
-            super(ctx);
-            Intrinsics.checkNotNullParameter(ctx, "ctx");
-            this.this$0 = this$0;
+        /* VF: from Vineflower (jadx: ) */
+        public Banner(Context var1, Context var2) {
+            super(var2);
+            Intrinsics.checkNotNullParameter(var2, "ctx");
+            this.this$0 = var1;
             this.p = new Paint(3);
-            Paint $this$tp_u24lambda_u240 = new Paint(1);
-            $this$tp_u24lambda_u240.setColor(-1);
-            this.tp = $this$tp_u24lambda_u240;
+            Paint var3 = new Paint(1);
+            var3.setColor(-1);
+            this.tp = var3;
         }
 
-        /* JADX WARN: Removed duplicated region for block: B:39:0x025f  */
-        /* JADX WARN: Removed duplicated region for block: B:42:0x027c  */
-        /* JADX WARN: Removed duplicated region for block: B:45:0x02ac  */
-        /* JADX WARN: Removed duplicated region for block: B:48:0x02e3  */
-        /* JADX WARN: Removed duplicated region for block: B:50:0x02a0  */
-        /* JADX WARN: Removed duplicated region for block: B:51:0x0262  */
-        @Override // android.view.View
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        protected void onDraw(Canvas c) {
-            Nav.Step first;
-            String str;
-            Bitmap it;
-            String arrow;
-            String arrow2;
-            Intrinsics.checkNotNullParameter(c, "c");
-            float w = getWidth();
-            float h = getHeight();
+        /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+        protected void onDraw(Canvas var1) {
+        String var24 = null; Nav.Lane var33 = null; // declarations Vineflower left out
+            Intrinsics.checkNotNullParameter(var1, "c");
+            float var2 = this.getWidth();
+            float var7 = this.getHeight();
             this.p.setColor(-266899898);
-            c.drawRoundRect(new RectF(0.0f, 0.0f, w, h), this.this$0.dp(16.0f), this.this$0.dp(16.0f), this.p);
-            JSONObject nav = this.this$0.getT().navState();
-            if (nav == null) {
-                this.tp.setTextSize(this.this$0.dp(22.0f));
+            var1.drawRoundRect(new RectF(0.0F, 0.0F, var2, var7), this.this$0.dp(16.0F), this.this$0.dp(16.0F), this.p);
+            JSONObject var10 = this.this$0.getT().navState();
+            if (var10 == null) {
+                this.tp.setTextSize(this.this$0.dp(22.0F));
                 this.tp.setTypeface(Typeface.DEFAULT_BOLD);
-                String status = Nav.INSTANCE.getStatus();
-                c.drawText(Intrinsics.areEqual(status, "arrived") ? "You have arrived" : Intrinsics.areEqual(status, "routeUnavailable") ? "No route right now" : "Finding the route…", this.this$0.dp(18.0f), (h / 2) + this.this$0.dp(8.0f), this.tp);
-                return;
-            }
-            float top = Math.min(h, this.this$0.dp(92.0f));
-            float pad = this.this$0.dp(12.0f);
-            float f = 2;
-            float ic = top - (f * pad);
-            NavIcons navIcons = NavIcons.INSTANCE;
-            Context context = getContext();
-            Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
-            String optString = nav.optString("maneuverType");
-            Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
-            String optString2 = nav.optString("maneuverModifier");
-            Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
-            Bitmap it2 = navIcons.icon(context, optString, optString2);
-            if (it2 != null) {
-                c.drawBitmap(it2, (Rect) null, new RectF(pad, pad, pad + ic, pad + ic), this.p);
-            }
-            float x = pad + ic + this.this$0.dp(14.0f);
-            this.tp.setTypeface(Typeface.DEFAULT_BOLD);
-            this.tp.setTextSize(this.this$0.dp(26.0f));
-            String dist = Nav.distanceText$default(Nav.INSTANCE, nav.optDouble("maneuverDistance", 0.0d), this.this$0.getT().isMetric(), false, 4, null);
-            c.drawText(dist, x, this.this$0.dp(26.0f) + pad, this.tp);
-            this.tp.setTypeface(Typeface.DEFAULT);
-            this.tp.setTextSize(this.this$0.dp(19.0f));
-            String text = TextUtils.ellipsize(nav.optString("maneuverPrimaryText"), new TextPaint(this.tp), (w - x) - pad, TextUtils.TruncateAt.END).toString();
-            c.drawText(text, x, (top - pad) - this.this$0.dp(6.0f), this.tp);
-            Pair<Nav.Step, Double> nextLanes = Nav.INSTANCE.nextLanes();
-            if (nextLanes == null || (first = nextLanes.getFirst()) == null) {
-                return;
-            }
-            List<Nav.Lane> lanes = first.getLanes();
-            if (lanes != null && h - top >= this.this$0.dp(40.0f)) {
-                this.p.setColor(855638016);
-                c.drawRect(this.this$0.dp(6.0f), top, w - this.this$0.dp(6.0f), h - this.this$0.dp(6.0f), this.p);
-                float cell = Math.min(this.this$0.dp(46.0f), (w - (f * pad)) / lanes.size());
-                float sz = Math.min(cell - this.this$0.dp(6.0f), (h - top) - this.this$0.dp(14.0f));
-                float lx = (w - (lanes.size() * cell)) / f;
-                float lx2 = h - top;
-                float cy = top + (lx2 / f);
-                float lx3 = lx;
-                int i = 0;
-                for (Nav.Lane ln : lanes) {
-                    int i2 = i;
-                    int i3 = i + 1;
-                    if (ln.getOk()) {
-                        if (ln.getUse().length() > 0) {
-                            str = ln.getUse();
-                            String arrow3 = str;
-                            this.p.setAlpha(!ln.getOk() ? 255 : 70);
-                            NavIcons navIcons2 = NavIcons.INSTANCE;
-                            Context context2 = getContext();
-                            Intrinsics.checkNotNullExpressionValue(context2, "getContext(...)");
-                            it = navIcons2.icon(context2, "turn", laneModifier(arrow3));
-                            if (it == null) {
-                                arrow = arrow3;
-                                arrow2 = null;
-                                c.drawBitmap(it, (Rect) null, new RectF(lx3 + ((cell - sz) / f), cy - (sz / f), lx3 + ((cell + sz) / f), cy + (sz / f)), this.p);
-                            } else {
-                                arrow = arrow3;
-                                arrow2 = null;
+                String var26 = Nav.INSTANCE.getStatus();
+                String var27;
+                if (Intrinsics.areEqual(var26, "arrived")) {
+                    var27 = "You have arrived";
+                } else if (Intrinsics.areEqual(var26, "routeUnavailable")) {
+                    var27 = "No route right now";
+                } else {
+                    var27 = "Finding the route…";
+                }
+
+                var1.drawText(var27, this.this$0.dp(18.0F), var7 / 2 + this.this$0.dp(8.0F), this.tp);
+            } else {
+                float var6 = Math.min(var7, this.this$0.dp(92.0F));
+                float var4 = this.this$0.dp(12.0F);
+                float var3 = 2;
+                float var5 = var6 - var3 * var4;
+                NavIcons var11 = NavIcons.INSTANCE;
+                Context var12 = this.getContext();
+                Intrinsics.checkNotNullExpressionValue(var12, "getContext(...)");
+                String var13 = var10.optString("maneuverType");
+                Intrinsics.checkNotNullExpressionValue(var13, "optString(...)");
+                String var14 = var10.optString("maneuverModifier");
+                Intrinsics.checkNotNullExpressionValue(var14, "optString(...)");
+                Bitmap var28 = var11.icon(var12, var13, var14);
+                if (var28 != null) {
+                    var1.drawBitmap(var28, null, new RectF(var4, var4, var4 + var5, var4 + var5), this.p);
+                }
+
+                var5 = var4 + var5 + this.this$0.dp(14.0F);
+                this.tp.setTypeface(Typeface.DEFAULT_BOLD);
+                this.tp.setTextSize(this.this$0.dp(26.0F));
+                var1.drawText(
+                    Nav.distanceText$default(Nav.INSTANCE, var10.optDouble("maneuverDistance", 0.0), this.this$0.getT().isMetric(), false, 4, null),
+                    var5,
+                    this.this$0.dp(26.0F) + var4,
+                    this.tp
+                );
+                this.tp.setTypeface(Typeface.DEFAULT);
+                this.tp.setTextSize(this.this$0.dp(19.0F));
+                var1.drawText(
+                    TextUtils.ellipsize(var10.optString("maneuverPrimaryText"), new TextPaint(this.tp), var2 - var5 - var4, TruncateAt.END).toString(),
+                    var5,
+                    var6 - var4 - this.this$0.dp(6.0F),
+                    this.tp
+                );
+                Pair var21 = Nav.INSTANCE.nextLanes();
+                if (var21 != null) {
+                    Nav.Step var22 = (Nav.Step)var21.getFirst();
+                    if (var22 != null) {
+                        List var23 = var22.getLanes();
+                        if (var23 != null) {
+                            if (var7 - var6 < this.this$0.dp(40.0F)) {
+                                return;
                             }
-                            this.p.setAlpha(255);
-                            if (i2 <= 0) {
-                                this.p.setColor(1442840575);
-                                c.drawRect(lx3 - this.this$0.dp(0.5f), cy - (sz / f), lx3 + this.this$0.dp(0.5f), cy + (sz / f), this.p);
+
+                            this.p.setColor(855638016);
+                            var1.drawRect(this.this$0.dp(6.0F), var6, var2 - this.this$0.dp(6.0F), var7 - this.this$0.dp(6.0F), this.p);
+                            var4 = Math.min(this.this$0.dp(46.0F), (var2 - var3 * var4) / var23.size());
+                            var5 = Math.min(var4 - this.this$0.dp(6.0F), var7 - var6 - this.this$0.dp(14.0F));
+                            var2 = (var2 - var23.size() * var4) / var3;
+                            var6 += (var7 - var6) / var3;
+                            Iterator var32 = var23.iterator();
+
+                            for (int var8 = 0; var32.hasNext(); var8++) {
+                                label59: {
+                                    boolean var9 = true;
+                                    var33 = (Nav.Lane)var32.next();
+                                    if (var33.getOk()) {
+                                        if (var33.getUse().length() <= 0) {
+                                            var9 = false;
+                                        }
+
+                                        if (var9) {
+                                            var24 = var33.getUse();
+                                            break label59;
+                                        }
+                                    }
+
+                                    String var29 = CollectionsKt.firstOrNull(var33.getArrows());
+                                    var24 = var29;
+                                    if (var29 == null) {
+                                        var24 = "straight";
+                                    }
+                                }
+
+                                Paint var30 = this.p;
+                                short var20;
+                                if (var33.getOk()) {
+                                    var20 = 255;
+                                } else {
+                                    var20 = 70;
+                                }
+
+                                var30.setAlpha(var20);
+                                var11 = NavIcons.INSTANCE;
+                                Context var34 = this.getContext();
+                                Intrinsics.checkNotNullExpressionValue(var34, "getContext(...)");
+                                Bitmap var25 = var11.icon(var34, "turn", this.laneModifier(var24));
+                                if (var25 != null) {
+                                    var1.drawBitmap(
+                                        var25, null, new RectF(var2 + (var4 - var5) / var3, var6 - var5 / var3, var2 + (var4 + var5) / var3, var6 + var5 / var3), this.p
+                                    );
+                                }
+
+                                this.p.setAlpha(255);
+                                if (var8 > 0) {
+                                    this.p.setColor(1442840575);
+                                    var1.drawRect(var2 - this.this$0.dp(0.5F), var6 - var5 / var3, var2 + this.this$0.dp(0.5F), var6 + var5 / var3, this.p);
+                                }
+
+                                var2 += var4;
                             }
-                            lx3 += cell;
-                            i = i3;
+
+                            return;
                         }
                     }
-                    str = (String) CollectionsKt.firstOrNull((List) ln.getArrows());
-                    if (str == null) {
-                        str = "straight";
-                    }
-                    String arrow32 = str;
-                    this.p.setAlpha(!ln.getOk() ? 255 : 70);
-                    NavIcons navIcons22 = NavIcons.INSTANCE;
-                    Context context22 = getContext();
-                    Intrinsics.checkNotNullExpressionValue(context22, "getContext(...)");
-                    it = navIcons22.icon(context22, "turn", laneModifier(arrow32));
-                    if (it == null) {
-                    }
-                    this.p.setAlpha(255);
-                    if (i2 <= 0) {
-                    }
-                    lx3 += cell;
-                    i = i3;
                 }
             }
         }
 
-        /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-        /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-        java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterative(DepthRegionTraversal.java:31)
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visit(SwitchOverStringVisitor.java:60)
-         */
-        /* JADX WARN: Removed duplicated region for block: B:25:0x0055 A[ORIG_RETURN, RETURN] */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        private final String laneModifier(String a) {
-            switch (a.hashCode()) {
+        /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+        private final String laneModifier(String var1) {
+            switch (var1.hashCode()) {
                 case -2016367553:
-                    return !a.equals("slight right") ? "straight" : "slightRight";
+                    if (var1.equals("slight right")) {
+                        return "slightRight";
+                    }
+                    break;
                 case -1531469187:
-                    if (a.equals("sharp left")) {
+                    if (var1.equals("sharp left")) {
                         return "sharpLeft";
                     }
                     break;
                 case -757963388:
-                    if (a.equals("slight left")) {
+                    if (var1.equals("slight left")) {
                         return "slightLeft";
                     }
                     break;
                 case -225243546:
-                    if (a.equals("sharp right")) {
+                    if (var1.equals("sharp right")) {
                         return "sharpRight";
                     }
                     break;
                 case 3317767:
-                    if (a.equals("left")) {
-                        return "left";
+                    String var5 = "left";
+                    if (var1.equals("left")) {
+                        return var5;
                     }
                     break;
                 case 108511772:
-                    if (a.equals("right")) {
-                        return "right";
+                    String var4 = "right";
+                    if (var1.equals("right")) {
+                        return var4;
                     }
                     break;
                 case 111623794:
-                    if (a.equals("uturn")) {
-                        return "uturn";
+                    String var2 = "uturn";
+                    if (var1.equals("uturn")) {
+                        return var2;
                     }
-                    break;
             }
+
+            return "straight";
         }
     }
 
@@ -2666,116 +2625,120 @@ public final class MapPane extends FrameLayout {
         private double zoom;
         private double zoomOffset;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public MapCanvas(MapPane this$0, Context ctx) {
-            super(ctx);
-            Intrinsics.checkNotNullParameter(ctx, "ctx");
-            this.this$0 = this$0;
+        /* VF: from Vineflower (jadx: ) */
+        public MapCanvas(Context var1, Context var2) {
+            super(var2);
+            Intrinsics.checkNotNullParameter(var2, "ctx");
+            this.this$0 = var1;
             this.cx = Double.NaN;
             this.cy = Double.NaN;
-            this.zoom = 15.5d;
+            this.zoom = 15.5;
             this.following = true;
-            this.k = RangesKt.coerceIn(this.this$0.d / 1.33f, 1.0f, 1.6f);
+            this.k = RangesKt.coerceIn(this.this$0.d / 1.33F, 1.0F, 1.6F);
             this.tileP = new Paint(2);
-            Paint $this$lineP_u24lambda_u240 = new Paint(1);
-            $this$lineP_u24lambda_u240.setStyle(Paint.Style.STROKE);
-            $this$lineP_u24lambda_u240.setStrokeCap(Paint.Cap.ROUND);
-            $this$lineP_u24lambda_u240.setStrokeJoin(Paint.Join.ROUND);
-            this.lineP = $this$lineP_u24lambda_u240;
+            Paint var3 = new Paint(1);
+            var3.setStyle(android.graphics.Paint.Style.STROKE);
+            var3.setStrokeCap(android.graphics.Paint.Cap.ROUND);
+            var3.setStrokeJoin(android.graphics.Paint.Join.ROUND);
+            this.lineP = var3;
             this.fillP = new Paint(1);
-            Paint $this$textP_u24lambda_u241 = new Paint(1);
-            $this$textP_u24lambda_u241.setColor(-1);
-            $this$textP_u24lambda_u241.setTypeface(Typeface.DEFAULT_BOLD);
-            $this$textP_u24lambda_u241.setTextAlign(Paint.Align.CENTER);
-            this.textP = $this$textP_u24lambda_u241;
+            Paint var4 = new Paint(1);
+            var4.setColor(-1);
+            var4.setTypeface(Typeface.DEFAULT_BOLD);
+            var4.setTextAlign(android.graphics.Paint.Align.CENTER);
+            this.textP = var4;
             this.path = new Path();
             this.m = new Matrix();
             this.inv = new Matrix();
             this.pts = new float[8];
             this.labelAt = new int[0];
             this.tilt = new Matrix();
-            this.scale = new ScaleGestureDetector(ctx, new ScaleGestureDetector.SimpleOnScaleGestureListener() { // from class: com.starpilot.starview.MapPane$MapCanvas$scale$1
-                @Override // android.view.ScaleGestureDetector.SimpleOnScaleGestureListener, android.view.ScaleGestureDetector.OnScaleGestureListener
-                public boolean onScale(ScaleGestureDetector det) {
-                    int i;
-                    int i2;
-                    double d;
-                    Intrinsics.checkNotNullParameter(det, "det");
-                    i = MapPane.MapCanvas.this.twoMode;
-                    if (i != 2) {
-                        i2 = MapPane.MapCanvas.this.twoMode;
-                        if (i2 != 3) {
-                            double dz = Math.log(det.getScaleFactor()) / Math.log(2.0d);
-                            if (MapPane.MapCanvas.this.getFollowing()) {
-                                MapPane.MapCanvas mapCanvas = MapPane.MapCanvas.this;
-                                d = MapPane.MapCanvas.this.zoomOffset;
-                                mapCanvas.zoomOffset = RangesKt.coerceIn(d + dz, -6.0d, 3.0d);
-                            } else {
-                                MapPane.MapCanvas.this.setZoom(RangesKt.coerceIn(MapPane.MapCanvas.this.getZoom() + dz, 3.0d, 18.4d));
-                            }
-                            MapPane.MapCanvas.this.lastTouchMs = System.currentTimeMillis();
-                            MapPane.MapCanvas.this.invalidate();
-                            return true;
-                        }
-                    }
-                    return true;
-                }
-            });
-            this.gestures = new GestureDetector(ctx, new GestureDetector.SimpleOnGestureListener() { // from class: com.starpilot.starview.MapPane$MapCanvas$gestures$1
-                @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnGestureListener
-                public boolean onDown(MotionEvent e) {
-                    Intrinsics.checkNotNullParameter(e, "e");
-                    return true;
-                }
+            this.scale = new ScaleGestureDetector(var2, (OnScaleGestureListener)(new SimpleOnScaleGestureListener() {
+                final MapPane.MapCanvas this$0 = MapPane.MapCanvas.this;
 
-                @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnGestureListener
-                public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
-                    ScaleGestureDetector scaleGestureDetector;
-                    double[] a;
-                    double[] b;
-                    Intrinsics.checkNotNullParameter(e2, "e2");
-                    scaleGestureDetector = MapPane.MapCanvas.this.scale;
-                    if (scaleGestureDetector.isInProgress() || e2.getPointerCount() > 1) {
+                public boolean onScale(ScaleGestureDetector var1) {
+                    Intrinsics.checkNotNullParameter(var1, "det");
+                    if (this.this$0.twoMode != 2 && this.this$0.twoMode != 3) {
+                        double var2x = Math.log(var1.getScaleFactor()) / Math.log(2.0);
+                        if (this.this$0.getFollowing()) {
+                            this.this$0.zoomOffset = RangesKt.coerceIn(this.this$0.zoomOffset + var2x, -6.0, 3.0);
+                        } else {
+                            this.this$0.setZoom(RangesKt.coerceIn(this.this$0.getZoom() + var2x, 3.0, 18.4));
+                        }
+
+                        this.this$0.lastTouchMs = System.currentTimeMillis();
+                        this.this$0.invalidate();
+                        return true;
+                    } else {
                         return true;
                     }
-                    MapPane.MapCanvas.this.unfollow();
-                    MapPane.MapCanvas.this.overviewOn = false;
-                    MapPane.MapCanvas.this.setMatrix();
-                    a = MapPane.MapCanvas.this.toMerc(e2.getX() + dx, e2.getY() + dy);
-                    b = MapPane.MapCanvas.this.toMerc(e2.getX(), e2.getY());
-                    double d = a[0];
-                    if ((Double.isInfinite(d) || Double.isNaN(d)) ? false : true) {
-                        double d2 = b[0];
-                        if ((Double.isInfinite(d2) || Double.isNaN(d2)) ? false : true) {
-                            MapPane.MapCanvas.this.setCx(MapPane.MapCanvas.this.getCx() + (a[0] - b[0]));
-                            MapPane.MapCanvas.this.setCy(MapPane.MapCanvas.this.getCy() + (a[1] - b[1]));
+                }
+            }));
+            this.gestures = new GestureDetector(var2, (OnGestureListener)(new SimpleOnGestureListener() {
+                final MapPane.MapCanvas this$0 = MapPane.MapCanvas.this;
+
+                public boolean onDoubleTap(MotionEvent var1) {
+                    Intrinsics.checkNotNullParameter(var1, "e");
+                    this.this$0.zoomBy(1.0);
+                    return true;
+                }
+
+                public boolean onDown(MotionEvent var1) {
+                    Intrinsics.checkNotNullParameter(var1, "e");
+                    return true;
+                }
+
+                public void onLongPress(MotionEvent var1) {
+                    Intrinsics.checkNotNullParameter(var1, "e");
+                    this.this$0.dropPin(var1.getX(), var1.getY());
+                }
+
+                public boolean onScroll(MotionEvent var1, MotionEvent var2x, float var3x, float var4x) {
+                    Intrinsics.checkNotNullParameter(var2x, "e2");
+                    if (this.this$0.scale.isInProgress()) {
+                        return true;
+                    } else if (var2x.getPointerCount() > 1) {
+                        return true;
+                    } else {
+                        this.this$0.unfollow();
+                        this.this$0.overviewOn = false;
+                        this.this$0.setMatrix();
+                        double[] var8 = this.this$0.toMerc(var2x.getX() + var3x, var2x.getY() + var4x);
+                        double[] var9 = this.this$0.toMerc(var2x.getX(), var2x.getY());
+                        double var5 = var8[0];
+                        boolean var7;
+                        if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
+                            var7 = true;
+                        } else {
+                            var7 = false;
                         }
+
+                        if (var7) {
+                            var5 = var9[0];
+                            if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
+                                var7 = true;
+                            } else {
+                                var7 = false;
+                            }
+
+                            if (var7) {
+                                this.this$0.setCx(this.this$0.getCx() + (var8[0] - var9[0]));
+                                this.this$0.setCy(this.this$0.getCy() + (var8[1] - var9[1]));
+                            }
+                        }
+
+                        this.this$0.lastTouchMs = System.currentTimeMillis();
+                        this.this$0.invalidate();
+                        return true;
                     }
-                    MapPane.MapCanvas.this.lastTouchMs = System.currentTimeMillis();
-                    MapPane.MapCanvas.this.invalidate();
-                    return true;
                 }
 
-                @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnDoubleTapListener
-                public boolean onDoubleTap(MotionEvent e) {
-                    Intrinsics.checkNotNullParameter(e, "e");
-                    MapPane.MapCanvas.this.zoomBy(1.0d);
+                public boolean onSingleTapConfirmed(MotionEvent var1) {
+                    Intrinsics.checkNotNullParameter(var1, "e");
+                    this.this$0.tap(var1.getX(), var1.getY());
                     return true;
                 }
-
-                @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnDoubleTapListener
-                public boolean onSingleTapConfirmed(MotionEvent e) {
-                    Intrinsics.checkNotNullParameter(e, "e");
-                    MapPane.MapCanvas.this.tap(e.getX(), e.getY());
-                    return true;
-                }
-
-                @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnGestureListener
-                public void onLongPress(MotionEvent e) {
-                    Intrinsics.checkNotNullParameter(e, "e");
-                    MapPane.MapCanvas.this.dropPin(e.getX(), e.getY());
-                }
-            });
+            }));
         }
 
         public final float getBearing() {
@@ -4005,40 +3968,49 @@ public final class MapPane extends FrameLayout {
             });
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        /* JADX WARN: Code restructure failed: missing block: B:11:0x001e, code lost:
-        
-            if (r1 == null) goto L14;
-         */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public static final void dropPin$lambda$19$lambda$18(final String $addr, MapCanvas this$0, final double $lat, final double $lon, final MapPane this$1) {
-            String str;
-            String str2;
-            String substringBefore$default;
-            if ($addr != null && (substringBefore$default = StringsKt.substringBefore($addr, ",", $addr)) != null) {
-                String str3 = substringBefore$default;
-                if (str3.length() == 0) {
-                    str3 = null;
+        /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+        public static final void dropPin$lambda$19$lambda$18(String var0, MapPane.MapCanvas var1, double var2, double var4, MapPane var6) {
+            String var12;
+            label27: {
+                if (var0 != null) {
+                    var12 = StringsKt.substringBefore(var0, ",", var0);
+                    if (var12 != null) {
+                        var12 = var12;
+                        boolean var7;
+                        if (var12.length() == 0) {
+                            var7 = true;
+                        } else {
+                            var7 = false;
+                        }
+
+                        if (var7) {
+                            var12 = null;
+                        }
+
+                        String var9 = var12;
+                        var12 = var9;
+                        if (var9 != null) {
+                            break label27;
+                        }
+                    }
                 }
-                str = str3;
+
+                var12 = "Dropped pin";
             }
-            str = "Dropped pin";
-            final String name = str;
-            AlertDialog.Builder title = new AlertDialog.Builder(this$0.getContext()).setTitle("Drive here?");
-            if ($addr == null) {
-                str2 = String.format("%.5f, %.5f", Arrays.copyOf(new Object[]{Double.valueOf($lat), Double.valueOf($lon)}, 2));
-                Intrinsics.checkNotNullExpressionValue(str2, "format(...)");
+
+            android.app.AlertDialog.Builder var13 = new Builder(var1.getContext()).setTitle("Drive here?");
+            String var10;
+            if (var0 == null) {
+                var10 = String.format("%.5f, %.5f", Arrays.copyOf(new Object[]{var2, var4}, 2));
+                Intrinsics.checkNotNullExpressionValue(var10, "format(...)");
             } else {
-                str2 = $addr;
+                var10 = var0;
             }
-            title.setMessage(str2).setPositiveButton("Go", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.MapPane$MapCanvas$$ExternalSyntheticLambda1
-                @Override // android.content.DialogInterface.OnClickListener
-                public final void onClick(DialogInterface dialogInterface, int i) {
-                    MapPane.MapCanvas.dropPin$lambda$19$lambda$18$lambda$17(this$1, name, $addr, $lat, $lon, dialogInterface, i);
-                }
-            }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
+
+            var13.setMessage(var10)
+                .setPositiveButton("Go", new MapPane$MapCanvas$$ExternalSyntheticLambda1(var6, var12, var0, var2, var4))
+                .setNegativeButton("Cancel", null)
+                .show();
         }
 
         /* JADX INFO: Access modifiers changed from: private */

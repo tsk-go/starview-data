@@ -38,6 +38,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okhttp3.OkHttpClient.Builder;
 
 /* compiled from: MapTiles.kt */
 public final class MapTiles {
@@ -64,81 +65,45 @@ public final class MapTiles {
     public static final Companion Companion = new Companion(null);
     private static final Map<String, String> MAPBOX_STYLES = MapsKt.mapOf(TuplesKt.to("light", "mapbox/light-v11"), TuplesKt.to("dark", "mapbox/dark-v11"), TuplesKt.to("trafficLight", "mapbox/navigation-day-v1"), TuplesKt.to("trafficDark", "mapbox/navigation-night-v1"));
 
-    /* JADX WARN: Type inference failed for: r2v6, types: [com.starpilot.starview.MapTiles$mem$1] */
-    public MapTiles(Context ctx, Function0<Unit> onLoaded) {
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(onLoaded, "onLoaded");
-        this.onLoaded = onLoaded;
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public MapTiles(Context var1, Function0<Unit> var2) {
+        super();
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "onLoaded");
+        this.onLoaded = var2;
         this.wanted = SetsKt.emptySet();
         this.lastError = "";
         this.direct = new AtomicInteger();
-        this.dir = new File(ctx.getCacheDir(), "maptiles");
-        this.mem = new LruCache<String, Bitmap>() { // from class: com.starpilot.starview.MapTiles$mem$1
-            /* JADX INFO: Access modifiers changed from: protected */
-            @Override // android.util.LruCache
-            public int sizeOf(String key, Bitmap value) {
-                Intrinsics.checkNotNullParameter(key, "key");
-                Intrinsics.checkNotNullParameter(value, "value");
-                return value.getByteCount();
+        this.dir = new File(var1.getCacheDir(), "maptiles");
+        this.mem = new LruCache<String, Bitmap>() {
+            protected int sizeOf(String var1, Bitmap var2x) {
+                Intrinsics.checkNotNullParameter(var1, "key");
+                Intrinsics.checkNotNullParameter(var2x, "value");
+                return var2x.getByteCount();
             }
         };
         this.pending = ConcurrentHashMap.newKeySet();
         this.failedUntil = new ConcurrentHashMap<>();
         this.madeAt = new ConcurrentHashMap<>();
-        this.http = new OkHttpClient.Builder().addInterceptor(Link.INSTANCE.getAuthInterceptor()).connectTimeout(4L, TimeUnit.SECONDS).readTimeout(10L, TimeUnit.SECONDS).build();
-        this.mapbox = new OkHttpClient.Builder().connectTimeout(3L, TimeUnit.SECONDS).readTimeout(8L, TimeUnit.SECONDS).build();
-        this.pool = new ThreadPoolExecutor(6, 6, 30L, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>() { // from class: com.starpilot.starview.MapTiles$pool$1
-            @Override // java.util.concurrent.LinkedBlockingDeque, java.util.AbstractCollection, java.util.Collection, java.util.concurrent.BlockingDeque, java.util.concurrent.BlockingQueue, java.util.Deque
-            public final /* bridge */ boolean contains(Object element) {
-                if (element == null ? true : element instanceof Runnable) {
-                    return contains((Runnable) element);
-                }
-                return false;
-            }
-
-            public /* bridge */ boolean contains(Runnable p0) {
-                return super.contains((Object) p0);
-            }
-
-            public /* bridge */ int getSize() {
-                return super.size();
-            }
-
-            @Override // java.util.concurrent.LinkedBlockingDeque, java.util.AbstractCollection, java.util.Collection, java.util.concurrent.BlockingDeque, java.util.concurrent.BlockingQueue, java.util.Deque
-            public final /* bridge */ boolean remove(Object element) {
-                if (element == null ? true : element instanceof Runnable) {
-                    return remove((Runnable) element);
-                }
-                return false;
-            }
-
-            public /* bridge */ boolean remove(Runnable p0) {
-                return super.remove((Object) p0);
-            }
-
-            @Override // java.util.concurrent.LinkedBlockingDeque, java.util.AbstractCollection, java.util.Collection, java.util.concurrent.BlockingDeque, java.util.Deque
-            public final /* bridge */ int size() {
-                return getSize();
-            }
-
-            @Override // java.util.concurrent.LinkedBlockingDeque, java.util.Queue, java.util.concurrent.BlockingDeque, java.util.concurrent.BlockingQueue, java.util.Deque
-            public boolean offer(Runnable e) {
-                Intrinsics.checkNotNullParameter(e, "e");
-                return offerFirst(e);
+        this.http = new Builder()
+            .addInterceptor(Link.INSTANCE.getAuthInterceptor())
+            .connectTimeout(4L, TimeUnit.SECONDS)
+            .readTimeout(10L, TimeUnit.SECONDS)
+            .build();
+        this.mapbox = new Builder().connectTimeout(3L, TimeUnit.SECONDS).readTimeout(8L, TimeUnit.SECONDS).build();
+        this.pool = new ThreadPoolExecutor(6, 6, 30L, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>() {
+            public boolean offer(Runnable var1) {
+                Intrinsics.checkNotNullParameter(var1, "e");
+                return this.offerFirst(var1);
             }
         });
-        this.ahead = new ThreadPoolExecutor(2, 2, 30L, TimeUnit.SECONDS, new LinkedBlockingDeque(400));
+        this.ahead = new ThreadPoolExecutor(2, 2, 30L, TimeUnit.SECONDS, new LinkedBlockingDeque<>(400));
         this.pool.allowCoreThreadTimeOut(true);
         this.ahead.allowCoreThreadTimeOut(true);
-        Thread $this$_init__u24lambda_u241 = new Thread(new Runnable() { // from class: com.starpilot.starview.MapTiles$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                MapTiles.this.prune();
-            }
-        });
-        $this$_init__u24lambda_u241.setDaemon(true);
-        $this$_init__u24lambda_u241.setPriority(1);
-        $this$_init__u24lambda_u241.start();
+        Thread var3 = new Thread(new MapTiles$$ExternalSyntheticLambda1(this));
+        var3.setDaemon(true);
+        var3.setPriority(1);
+        var3.start();
     }
 
     public final String getHost() {
@@ -202,26 +167,32 @@ public final class MapTiles {
         return get(Companion.key(style, z, x, y));
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:9:0x003c, code lost:
-    
-        if ((r1 - (r3 != null ? r3.longValue() : 0)) <= 900000) goto L12;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final Bitmap get(String style, int z, int x, int y) {
-        Intrinsics.checkNotNullParameter(style, "style");
-        String k = Companion.key(style, z, x, y);
-        Bitmap m = get(k);
-        if (m != null) {
-            if (StringsKt.startsWith(style, "traffic", false)) {
-                long currentTimeMillis = System.currentTimeMillis();
-                Long l = this.madeAt.get(k);
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public final Bitmap get(String var1, int var2, int var3, int var4) {
+        Intrinsics.checkNotNullParameter(var1, "style");
+        String var11 = Companion.key(var1, var2, var3, var4);
+        Bitmap var9 = (Bitmap)this.mem.get(var11);
+        if (var9 != null) {
+            if (!StringsKt.startsWith(var1, "traffic", false)) {
+                return var9;
             }
-            return m;
+
+            long var7 = System.currentTimeMillis();
+            Long var10 = this.madeAt.get(var11);
+            long var5;
+            if (var10 != null) {
+                var5 = var10;
+            } else {
+                var5 = 0L;
+            }
+
+            if (var7 - var5 <= 900000L) {
+                return var9;
+            }
         }
-        request(style, z, x, y, k);
-        return m;
+
+        this.request(var1, var2, var3, var4, var11);
+        return var9;
     }
 
     private final File file(String style, int z, int x, int y) {

@@ -21,18 +21,18 @@ class GxCamerasSnapView extends View {
     private final RectF rect;
     private float s;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxCamerasSnapView(Context ctx) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        this.density = ctx.getResources().getDisplayMetrics().density;
+    /* VF: from Vineflower (jadx: ) */
+    public GxCamerasSnapView(Context var1) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        this.density = var1.getResources().getDisplayMetrics().density;
         this.placeholder = "Loading camera snapshot...";
         this.rect = new RectF();
-        this.s = 1.0f;
+        this.s = 1.0F;
         this.paint = new Paint(3);
-        Paint $this$bg_u24lambda_u242 = new Paint();
-        $this$bg_u24lambda_u242.setColor(Color.rgb(34, 34, 34));
-        this.bg = $this$bg_u24lambda_u242;
+        Paint var2 = new Paint();
+        var2.setColor(Color.rgb(34, 34, 34));
+        this.bg = var2;
     }
 
     public final float getDensity() {

@@ -24,17 +24,17 @@ public final class Spark extends View {
     private final List<Float> values;
     private final Float warnAt;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public Spark(Context ctx, List<Float> values, float maxV, int color, Float warnAt, List<String> labels) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(values, "values");
-        Intrinsics.checkNotNullParameter(labels, "labels");
-        this.values = values;
-        this.maxV = maxV;
-        this.color = color;
-        this.warnAt = warnAt;
-        this.labels = labels;
+    /* VF: from Vineflower (jadx: ) */
+    public Spark(Context var1, List<Float> var2, float var3, int var4, Float var5, List<String> var6) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "values");
+        Intrinsics.checkNotNullParameter(var6, "labels");
+        this.values = var2;
+        this.maxV = var3;
+        this.color = var4;
+        this.warnAt = var5;
+        this.labels = var6;
         this.p = new Paint(1);
     }
 

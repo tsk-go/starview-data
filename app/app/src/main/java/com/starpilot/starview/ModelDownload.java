@@ -34,10 +34,10 @@ public final class ModelDownload {
 
     /* compiled from: ModelDownload.kt */
     public static final class Missing extends Exception {
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public Missing(String msg) {
-            super(msg);
-            Intrinsics.checkNotNullParameter(msg, "msg");
+        /* VF: from Vineflower (jadx: ) */
+        public Missing(String var1) {
+            super(var1);
+            Intrinsics.checkNotNullParameter(var1, "msg");
         }
     }
 

@@ -45,23 +45,48 @@ public final class VasmGeometry {
         return b >= Math.min(a, c) && b <= Math.max(a, c);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:22:0x0058, code lost:
-    
-        if ((r9 > 0) != (r11 > 0)) goto L30;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final boolean intersects(int[] a, int[] b, int[] c, int[] d) {
-        long abc = orient(a, b, c);
-        long abd = orient(a, b, d);
-        long cda = orient(c, d, a);
-        long cdb = orient(c, d, b);
-        if (!intersects$on(a, c, b) && !intersects$on(a, d, b) && !intersects$on(c, a, d) && !intersects$on(c, b, d)) {
-            if ((abc > 0) != (abd > 0)) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final boolean intersects(int[] var1, int[] var2, int[] var3, int[] var4) {
+        long var11 = this.orient(var1, var2, var3);
+        long var9 = this.orient(var1, var2, var4);
+        long var7 = this.orient(var3, var4, var1);
+        long var13 = this.orient(var3, var4, var2);
+        if (!intersects$on(var1, var3, var2) && !intersects$on(var1, var4, var2) && !intersects$on(var3, var1, var4) && !intersects$on(var3, var2, var4)) {
+            boolean var5;
+            if (var11 > 0L) {
+                var5 = true;
+            } else {
+                var5 = false;
             }
-            return false;
+
+            boolean var6;
+            if (var9 > 0L) {
+                var6 = true;
+            } else {
+                var6 = false;
+            }
+
+            if (var5 == var6) {
+                return false;
+            }
+
+            if (var7 > 0L) {
+                var5 = true;
+            } else {
+                var5 = false;
+            }
+
+            if (var13 > 0L) {
+                var6 = true;
+            } else {
+                var6 = false;
+            }
+
+            if (var5 == var6) {
+                return false;
+            }
         }
+
         return true;
     }
 

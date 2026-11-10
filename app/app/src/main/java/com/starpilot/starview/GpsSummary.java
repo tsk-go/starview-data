@@ -74,281 +74,306 @@ public final class GpsSummary {
         private Companion() {
         }
 
-        /* JADX WARN: Removed duplicated region for block: B:102:0x022d  */
-        /* JADX WARN: Removed duplicated region for block: B:111:0x029b  */
-        /* JADX WARN: Removed duplicated region for block: B:125:0x02c7  */
-        /* JADX WARN: Removed duplicated region for block: B:128:0x02ca A[SYNTHETIC] */
-        /* JADX WARN: Removed duplicated region for block: B:135:0x02d3  */
-        /* JADX WARN: Removed duplicated region for block: B:137:0x02e1  */
-        /* JADX WARN: Removed duplicated region for block: B:147:0x030e  */
-        /* JADX WARN: Removed duplicated region for block: B:151:0x0316  */
-        /* JADX WARN: Removed duplicated region for block: B:154:0x02dd  */
-        /* JADX WARN: Removed duplicated region for block: B:155:0x026d  */
-        /* JADX WARN: Removed duplicated region for block: B:171:0x0216  */
-        /* JADX WARN: Removed duplicated region for block: B:174:0x01cf  */
-        /* JADX WARN: Removed duplicated region for block: B:91:0x01c5  */
-        /* JADX WARN: Removed duplicated region for block: B:94:0x01de  */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public final GpsSummary of(Collection<GpsFixInfo> fixes, List<GnssSat> sats, long satsAtNs, boolean started, long nowNs) {
-            Object maxElem$iv;
-            List emptyList;
-            boolean z;
-            boolean has;
-            float f;
-            int i;
-            float f2;
-            float f3;
-            float f4;
-            long j;
-            boolean z2;
-            int count$iv;
-            Object maxElem$iv2;
-            Intrinsics.checkNotNullParameter(fixes, "fixes");
-            Intrinsics.checkNotNullParameter(sats, "sats");
-            Collection<GpsFixInfo> $this$filter$iv = fixes;
-            Collection destination$iv$iv = new ArrayList();
-            for (Object element$iv$iv : $this$filter$iv) {
-                GpsFixInfo it = (GpsFixInfo) element$iv$iv;
-                if (nowNs - it.getAtNs() < 5000000000L) {
-                    destination$iv$iv.add(element$iv$iv);
+        /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+        public final GpsSummary of(Collection<GpsFixInfo> var1, List<GnssSat> var2, long var3, boolean var5, long var6) {
+            Intrinsics.checkNotNullParameter(var1, "fixes");
+            Intrinsics.checkNotNullParameter(var2, "sats");
+            Iterable var22 = var1;
+            var var27 = new ArrayList();
+
+            for (Object var23 : var22) {
+                boolean var12;
+                if (var6 - ((GpsFixInfo)var23).getAtNs() < 5000000000L) {
+                    var12 = true;
+                } else {
+                    var12 = false;
+                }
+
+                if (var12) {
+                    var27.add(var23);
                 }
             }
-            Iterable fresh = (List) destination$iv$iv;
-            Iterable $this$filter$iv2 = fresh;
-            Collection destination$iv$iv2 = new ArrayList();
-            for (Object element$iv$iv2 : $this$filter$iv2) {
-                GpsFixInfo it2 = (GpsFixInfo) element$iv$iv2;
-                if (Intrinsics.areEqual(it2.getService(), "gpsLocationExternal") && Intrinsics.areEqual(it2.getSource(), "ublox")) {
-                    destination$iv$iv2.add(element$iv$iv2);
+
+            List var24 = var27;
+            var22 = var24;
+            var var28 = new ArrayList();
+
+            for (Object var22$it : (Iterable) var22) {
+                var22 = (Iterable) var22$it;
+                GpsFixInfo var25 = (GpsFixInfo)var22;
+                boolean var44;
+                if (Intrinsics.areEqual(var25.getService(), "gpsLocationExternal") && Intrinsics.areEqual(var25.getSource(), "ublox")) {
+                    var44 = true;
+                } else {
+                    var44 = false;
+                }
+
+                if (var44) {
+                    var28.add(var22);
                 }
             }
-            Iterable $this$maxByOrNull$iv = (List) destination$iv$iv2;
-            Iterator iterator$iv = $this$maxByOrNull$iv.iterator();
-            if (iterator$iv.hasNext()) {
-                maxElem$iv = iterator$iv.next();
-                if (iterator$iv.hasNext()) {
-                    GpsFixInfo it3 = (GpsFixInfo) maxElem$iv;
-                    long maxValue$iv = it3.getAtNs();
+
+            List var29 = var28;
+            Iterator var80 = var29.iterator();
+            Object var30;
+            if (!var80.hasNext()) {
+                var30 = null;
+            } else {
+                var30 = (Collection)var80.next();
+                if (var80.hasNext()) {
+                    long var16 = ((GpsFixInfo)var30).getAtNs();
+                    var22 = var30;
+
                     do {
-                        Object e$iv = iterator$iv.next();
-                        GpsFixInfo it4 = (GpsFixInfo) e$iv;
-                        long v$iv = it4.getAtNs();
-                        if (maxValue$iv < v$iv) {
-                            maxElem$iv = e$iv;
-                            maxValue$iv = v$iv;
+                        Object var66 = var80.next();
+                        long var20 = ((GpsFixInfo)var66).getAtNs();
+                        var30 = var22;
+                        long var18 = var16;
+                        if (var16 < var20) {
+                            var30 = (Collection)var66;
+                            var18 = var20;
                         }
-                    } while (iterator$iv.hasNext());
+
+                        var22 = var30;
+                        var16 = var18;
+                    } while (var80.hasNext());
                 }
-            } else {
-                maxElem$iv = null;
             }
-            GpsFixInfo gpsFixInfo = (GpsFixInfo) maxElem$iv;
-            if (gpsFixInfo == null) {
-                Iterable $this$filter$iv3 = fresh;
-                Collection destination$iv$iv3 = new ArrayList();
-                for (Object element$iv$iv3 : $this$filter$iv3) {
-                    GpsFixInfo it5 = (GpsFixInfo) element$iv$iv3;
-                    if (Intrinsics.areEqual(it5.getService(), "gpsLocation")) {
-                        destination$iv$iv3.add(element$iv$iv3);
+
+            var30 = (GpsFixInfo)var30;
+            GpsFixInfo var61 = (GpsFixInfo)var30;
+            if (var30 == null) {
+                var22 = var24;
+                var30 = new ArrayList();
+
+                for (Object var67 : var22) {
+                    if (Intrinsics.areEqual(((GpsFixInfo)var67).getService(), "gpsLocation")) {
+                        var30.add(var67);
                     }
                 }
-                Iterable $this$maxByOrNull$iv2 = (List) destination$iv$iv3;
-                Iterator iterator$iv2 = $this$maxByOrNull$iv2.iterator();
-                if (iterator$iv2.hasNext()) {
-                    maxElem$iv2 = iterator$iv2.next();
-                    if (iterator$iv2.hasNext()) {
-                        GpsFixInfo it6 = (GpsFixInfo) maxElem$iv2;
-                        long maxValue$iv2 = it6.getAtNs();
+
+                List var33 = (List)var30;
+                Iterator var75 = var33.iterator();
+                if (!var75.hasNext()) {
+                    var30 = null;
+                } else {
+                    var30 = (Collection)var75.next();
+                    if (var75.hasNext()) {
+                        long var55 = ((GpsFixInfo)var30).getAtNs();
+                        var22 = var30;
+
                         do {
-                            Object e$iv2 = iterator$iv2.next();
-                            GpsFixInfo it7 = (GpsFixInfo) e$iv2;
-                            long v$iv2 = it7.getAtNs();
-                            if (maxValue$iv2 < v$iv2) {
-                                maxElem$iv2 = e$iv2;
-                                maxValue$iv2 = v$iv2;
+                            Object var68 = var75.next();
+                            long var56 = ((GpsFixInfo)var68).getAtNs();
+                            var30 = var22;
+                            long var54 = var55;
+                            if (var55 < var56) {
+                                var30 = (Collection)var68;
+                                var54 = var56;
                             }
-                        } while (iterator$iv2.hasNext());
-                    }
-                } else {
-                    maxElem$iv2 = null;
-                }
-                gpsFixInfo = (GpsFixInfo) maxElem$iv2;
-            }
-            GpsFixInfo fix = gpsFixInfo;
-            if (nowNs - satsAtNs < 5000000000L) {
-                List<GnssSat> $this$filter$iv4 = sats;
-                Collection destination$iv$iv4 = new ArrayList();
-                for (Object element$iv$iv4 : $this$filter$iv4) {
-                    GnssSat it8 = (GnssSat) element$iv$iv4;
-                    if (it8.getCno() > 0) {
-                        destination$iv$iv4.add(element$iv$iv4);
+
+                            var22 = var30;
+                            var55 = var54;
+                        } while (var75.hasNext());
                     }
                 }
-                emptyList = (List) destination$iv$iv4;
-            } else {
-                emptyList = CollectionsKt.emptyList();
+
+                var61 = (GpsFixInfo)var30;
             }
-            List live = emptyList;
-            String state = fix != null && fix.getHasFix() ? "fix" : (fix == null && live.isEmpty()) ? !started ? "off" : "waiting" : "searching";
-            if (fix != null && fix.getHasFix()) {
-                z = true;
-                has = z;
-                if (has) {
-                    f = Float.NaN;
-                } else {
-                    Intrinsics.checkNotNull(fix);
-                    f = fix.getHAcc();
-                }
-                int size = live.size();
-                if (live.isEmpty()) {
-                    List $this$count$iv = live;
-                    if (($this$count$iv instanceof Collection) && $this$count$iv.isEmpty()) {
-                        count$iv = 0;
+
+            if (var6 - var3 < 5000000000L) {
+                Iterable var37 = var2;
+                var var35 = new ArrayList();
+
+                for (Object var38 : var37) {
+                    boolean var45;
+                    if (((GnssSat)var38).getCno() > 0) {
+                        var45 = true;
                     } else {
-                        count$iv = 0;
-                        for (Object element$iv : $this$count$iv) {
-                            GnssSat it9 = (GnssSat) element$iv;
-                            if (it9.getUsed() && (count$iv = count$iv + 1) < 0) {
+                        var45 = false;
+                    }
+
+                    if (var45) {
+                        var35.add(var38);
+                    }
+                }
+
+                var2 = var35;
+            } else {
+                var2 = CollectionsKt.emptyList();
+            }
+
+            int var46;
+            if (var61 != null && var61.getHasFix()) {
+                var46 = 1;
+            } else {
+                var46 = 0;
+            }
+
+            String var36;
+            if ((var46 != 0)) {
+                var36 = "fix";
+            } else if (var61 != null || !var2.isEmpty()) {
+                var36 = "searching";
+            } else if (!var5) {
+                var36 = "off";
+            } else {
+                var36 = "waiting";
+            }
+
+            boolean var13;
+            if (var61 != null && var61.getHasFix()) {
+                var13 = true;
+            } else {
+                var13 = false;
+            }
+
+            float var8;
+            if (var13) {
+                Intrinsics.checkNotNull(var61);
+                var8 = var61.getHAcc();
+            } else {
+                var8 = Float.NaN;
+            }
+
+            int var15 = var2.size();
+            if (!var2.isEmpty()) {
+                var var70 = var2;
+                if (var70 instanceof Collection && ((Collection)var70).isEmpty()) {
+                    var46 = 0;
+                } else {
+                    var46 = 0;
+                    Iterator var71 = var70.iterator();
+
+                    while (var71.hasNext()) {
+                        if (((GnssSat)var71.next()).getUsed()) {
+                            int var14 = var46 + 1;
+                            var46 = var14;
+                            if (var14 < 0) {
                                 CollectionsKt.throwCountOverflow();
+                                var46 = var14;
                             }
                         }
                     }
-                    i = count$iv;
-                } else if (has) {
-                    Intrinsics.checkNotNull(fix);
-                    i = fix.getSats();
-                } else {
-                    i = 0;
                 }
-                if (live.isEmpty()) {
-                    List $this$map$iv = live;
-                    Collection destination$iv$iv5 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-                    for (Object item$iv$iv : $this$map$iv) {
-                        GnssSat it10 = (GnssSat) item$iv$iv;
-                        destination$iv$iv5.add(Integer.valueOf(it10.getCno()));
-                    }
-                    f2 = (float) CollectionsKt.averageOfInt((List) destination$iv$iv5);
-                } else {
-                    f2 = Float.NaN;
-                }
-                final Comparator comparator = new Comparator() { // from class: com.starpilot.starview.GpsSummary$Companion$of$$inlined$compareByDescending$1
-                    /* JADX WARN: Multi-variable type inference failed */
-                    @Override // java.util.Comparator
-                    public final int compare(T t, T t2) {
-                        GnssSat it11 = (GnssSat) t2;
-                        Boolean valueOf = Boolean.valueOf(it11.getUsed());
-                        GnssSat it12 = (GnssSat) t;
-                        return ComparisonsKt.compareValues(valueOf, Boolean.valueOf(it12.getUsed()));
-                    }
-                };
-                List sortedWith = CollectionsKt.sortedWith(live, new Comparator() { // from class: com.starpilot.starview.GpsSummary$Companion$of$$inlined$thenByDescending$1
-                    /* JADX WARN: Multi-variable type inference failed */
-                    @Override // java.util.Comparator
-                    public final int compare(T t, T t2) {
-                        int previousCompare = comparator.compare(t, t2);
-                        if (previousCompare != 0) {
-                            return previousCompare;
-                        }
-                        GnssSat it11 = (GnssSat) t2;
-                        Integer valueOf = Integer.valueOf(it11.getCno());
-                        GnssSat it12 = (GnssSat) t;
-                        return ComparisonsKt.compareValues(valueOf, Integer.valueOf(it12.getCno()));
-                    }
-                });
-                List $this$filter$iv5 = live;
-                Collection destination$iv$iv6 = new ArrayList();
-                for (Object element$iv$iv5 : $this$filter$iv5) {
-                    GnssSat it11 = (GnssSat) element$iv$iv5;
-                    int elevation = it11.getElevation();
-                    if (elevation >= 0 && elevation < 91) {
-                        int azimuth = it11.getAzimuth();
-                        if (azimuth >= 0 && azimuth < 361) {
-                            z2 = true;
-                            if (!z2) {
-                                destination$iv$iv6.add(element$iv$iv5);
-                            }
-                        }
-                    }
-                    z2 = false;
-                    if (!z2) {
-                    }
-                }
-                ArrayList arrayList = (List) destination$iv$iv6;
-                if (has) {
-                    f3 = Float.NaN;
-                } else {
-                    Intrinsics.checkNotNull(fix);
-                    f3 = fix.getSpeed();
-                }
-                if (has) {
-                    Intrinsics.checkNotNull(fix);
-                    if (fix.getSpeed() > 1.0f) {
-                        float bearing = fix.getBearing();
-                        if ((Float.isInfinite(bearing) || Float.isNaN(bearing)) ? false : true) {
-                            f4 = fix.getBearing();
-                            if (has) {
-                                Intrinsics.checkNotNull(fix);
-                                j = fix.getUnixMs();
-                            } else {
-                                j = 0;
-                            }
-                            return new GpsSummary(state, f, size, i, f2, sortedWith, arrayList, f3, f4, j);
-                        }
-                    }
-                }
-                f4 = Float.NaN;
-                if (has) {
-                }
-                return new GpsSummary(state, f, size, i, f2, sortedWith, arrayList, f3, f4, j);
+            } else if (var13) {
+                Intrinsics.checkNotNull(var61);
+                var46 = var61.getSats();
+            } else {
+                var46 = 0;
             }
-            z = false;
-            has = z;
-            if (has) {
+
+            float var9;
+            if (!var2.isEmpty()) {
+                Iterable var76 = var2;
+                var var72 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var76, 10));
+                Iterator var77 = var76.iterator();
+
+                while (var77.hasNext()) {
+                    var72.add(((GnssSat)var77.next()).getCno());
+                }
+
+                List var73 = var72;
+                var9 = (float)CollectionsKt.averageOfInt(var73);
+            } else {
+                var9 = Float.NaN;
             }
-            int size2 = live.size();
-            if (live.isEmpty()) {
-            }
-            if (live.isEmpty()) {
-            }
-            final Comparator comparator2 = new Comparator() { // from class: com.starpilot.starview.GpsSummary$Companion$of$$inlined$compareByDescending$1
-                /* JADX WARN: Multi-variable type inference failed */
-                @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
-                    GnssSat it112 = (GnssSat) t2;
-                    Boolean valueOf = Boolean.valueOf(it112.getUsed());
-                    GnssSat it12 = (GnssSat) t;
-                    return ComparisonsKt.compareValues(valueOf, Boolean.valueOf(it12.getUsed()));
+
+            List var74 = CollectionsKt.sortedWith(var2, new Comparator() {
+                final Comparator $this_thenByDescending = new Comparator() {
+                @Override
+                public final int compare(T var1, T var2) {
+                    return ComparisonsKt.compareValues(((GnssSat)var2).getUsed(), ((GnssSat)var1).getUsed());
                 }
             };
-            List sortedWith2 = CollectionsKt.sortedWith(live, new Comparator() { // from class: com.starpilot.starview.GpsSummary$Companion$of$$inlined$thenByDescending$1
-                /* JADX WARN: Multi-variable type inference failed */
-                @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
-                    int previousCompare = comparator2.compare(t, t2);
-                    if (previousCompare != 0) {
-                        return previousCompare;
+
+                @Override
+                public final int compare(T var1, T var2x) {
+                    int var3x = this.$this_thenByDescending.compare(var1, var2x);
+                    if (var3x == 0) {
+                        var3x = ComparisonsKt.compareValues(((GnssSat)var2x).getCno(), ((GnssSat)var1).getCno());
                     }
-                    GnssSat it112 = (GnssSat) t2;
-                    Integer valueOf = Integer.valueOf(it112.getCno());
-                    GnssSat it12 = (GnssSat) t;
-                    return ComparisonsKt.compareValues(valueOf, Integer.valueOf(it12.getCno()));
+
+                    return var3x;
                 }
             });
-            List $this$filter$iv52 = live;
-            Collection destination$iv$iv62 = new ArrayList();
-            while (r13.hasNext()) {
+            Iterable var78 = var2;
+            var var40 = new ArrayList();
+
+            for (Object var79 : var78) {
+                GnssSat var26 = (GnssSat)var79;
+                int var48 = var26.getElevation();
+                int var49;
+                if (var48 >= 0 && var48 < 91) {
+                    var49 = 1;
+                } else {
+                    var49 = 0;
+                }
+
+                label164: {
+                    if ((var49 != 0)) {
+                        var49 = var26.getAzimuth();
+                        boolean var51;
+                        if (var49 >= 0 && var49 < 361) {
+                            var51 = true;
+                        } else {
+                            var51 = false;
+                        }
+
+                        if (var51) {
+                            var49 = (((boolean)true) ? 1 : 0);
+                            break label164;
+                        }
+                    }
+
+                    var49 = (((boolean)false) ? 1 : 0);
+                }
+
+                if ((var49 != 0)) {
+                    var40.add(var79);
+                }
             }
-            ArrayList arrayList2 = (List) destination$iv$iv62;
-            if (has) {
+
+            var2 = var40;
+            float var10;
+            if (var13) {
+                Intrinsics.checkNotNull(var61);
+                var10 = var61.getSpeed();
+            } else {
+                var10 = Float.NaN;
             }
-            if (has) {
+
+            float var43;
+            label151: {
+                if (var13) {
+                    Intrinsics.checkNotNull(var61);
+                    if (var61.getSpeed() > 1.0F) {
+                        var43 = var61.getBearing();
+                        boolean var53;
+                        if (!Float.isInfinite(var43) && !Float.isNaN(var43)) {
+                            var53 = true;
+                        } else {
+                            var53 = false;
+                        }
+
+                        if (var53) {
+                            var43 = var61.getBearing();
+                            break label151;
+                        }
+                    }
+                }
+
+                var43 = Float.NaN;
             }
-            f4 = Float.NaN;
-            if (has) {
+
+            if (var13) {
+                Intrinsics.checkNotNull(var61);
+                var3 = var61.getUnixMs();
+            } else {
+                var3 = 0L;
             }
-            return new GpsSummary(state, f, size2, i, f2, sortedWith2, arrayList2, f3, f4, j);
+
+            return new GpsSummary(var36, var8, var15, (((var46 != 0)) ? 1 : 0), var9, var74, var2, var10, var43, var3);
         }
     }
 

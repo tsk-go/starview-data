@@ -23,6 +23,9 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
+import android.graphics.drawable.Drawable;
+import android.widget.LinearLayout.LayoutParams;
+import java.util.Iterator;
 
 /* compiled from: SettingsHome.kt */
 public final class DrivingMapView extends ScrollView {
@@ -54,48 +57,47 @@ public final class DrivingMapView extends ScrollView {
         }
     }
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    /* JADX WARN: Multi-variable type inference failed */
-    public DrivingMapView(Context ctx, CarUi ui, Function2<? super String, ? super String, Unit> open) {
-        super(ctx);
-        Context ctx2 = ctx;
-        Intrinsics.checkNotNullParameter(ctx2, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
-        Intrinsics.checkNotNullParameter(open, "open");
-        this.ui = ui;
-        this.open = open;
+    /* VF: from Vineflower (jadx: ) */
+    public DrivingMapView(Context var1, CarUi var2, Function2<? super String, ? super String, Unit> var3) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
+        Intrinsics.checkNotNullParameter(var3, "open");
+        this.ui = var2;
+        this.open = var3;
         this.shown = new HashMap<>();
         this.hubTitles = new HashMap<>();
-        LinearLayout cols = new LinearLayout(ctx2);
-        int i = 0;
-        cols.setOrientation(0);
-        int i2 = 4;
-        cols.setPadding(this.ui.dp(4), this.ui.dp(4), this.ui.dp(4), this.ui.dp(40));
-        for (Pair<String, List<Card>> pair : COLUMNS) {
-            String head = pair.component1();
-            List cards = pair.component2();
-            LinearLayout c = new LinearLayout(ctx2);
-            c.setOrientation(1);
-            TextView $this$_init__u24lambda_u242 = this.ui.header(head);
-            $this$_init__u24lambda_u242.setPadding(this.ui.dp(6), this.ui.dp(i2), i, this.ui.dp(8));
-            c.addView($this$_init__u24lambda_u242);
-            for (Card card : cards) {
-                View card2 = card(card);
-                LinearLayout.LayoutParams $this$_init__u24lambda_u243 = new LinearLayout.LayoutParams(-1, -2);
-                $this$_init__u24lambda_u243.bottomMargin = this.ui.dp(10);
-                Unit unit = Unit.INSTANCE;
-                c.addView(card2, $this$_init__u24lambda_u243);
+        LinearLayout var10 = new LinearLayout(var1);
+        var10.setOrientation(0);
+        var10.setPadding(this.ui.dp(4), this.ui.dp(4), this.ui.dp(4), this.ui.dp(40));
+
+        for (Pair var4 : COLUMNS) {
+            String var5 = (String)var4.component1();
+            List var6 = (List)var4.component2();
+            LinearLayout var11 = new LinearLayout(var1);
+            var11.setOrientation(1);
+            TextView var13 = this.ui.header(var5);
+            var13.setPadding(this.ui.dp(6), this.ui.dp(4), 0, this.ui.dp(8));
+            var11.addView((View)var13);
+            Iterator var16 = var6.iterator();
+
+            while (var16.hasNext()) {
+                View var8 = this.card((DrivingMapView.Card)var16.next());
+                android.widget.LinearLayout.LayoutParams var7 = new LayoutParams(-1, -2);
+                var7.bottomMargin = this.ui.dp(10);
+                Unit var14 = Unit.INSTANCE;
+                var11.addView(var8, (android.view.ViewGroup.LayoutParams)var7);
             }
-            LinearLayout.LayoutParams $this$_init__u24lambda_u244 = new LinearLayout.LayoutParams(0, -2, 1.0f);
-            $this$_init__u24lambda_u244.leftMargin = this.ui.dp(6);
-            $this$_init__u24lambda_u244.rightMargin = this.ui.dp(6);
-            Unit unit2 = Unit.INSTANCE;
-            cols.addView(c, $this$_init__u24lambda_u244);
-            ctx2 = ctx;
-            i = 0;
-            i2 = 4;
+
+            View var12 = (View)var11;
+            android.widget.LinearLayout.LayoutParams var15 = new LayoutParams(0, -2, 1.0F);
+            var15.leftMargin = this.ui.dp(6);
+            var15.rightMargin = this.ui.dp(6);
+            Unit var17 = Unit.INSTANCE;
+            var10.addView(var12, (android.view.ViewGroup.LayoutParams)var15);
         }
-        addView(cols);
+
+        this.addView((View)var10);
     }
 
     /* compiled from: SettingsHome.kt */
@@ -195,34 +197,65 @@ public final class DrivingMapView extends ScrollView {
         function2.invoke(page, str);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:13:0x0029, code lost:
-    
-        if (r3 != null) goto L18;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void paint(String page, SettingsIndex.Summary s) {
-        String str;
-        String line;
-        Intrinsics.checkNotNullParameter(page, "page");
-        Shown v = this.shown.get(page);
-        if (v == null) {
-            return;
-        }
-        TextView line2 = v.getLine();
-        if (s != null && (line = s.getLine()) != null) {
-            String str2 = line;
-            if (StringsKt.isBlank(str2)) {
-                str2 = null;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public final void paint(String var1, SettingsIndex.Summary var2) {
+        Intrinsics.checkNotNullParameter(var1, "page");
+        DrivingMapView.Shown var5 = this.shown.get(var1);
+        if (var5 != null) {
+            Object var3;
+            TextView var6;
+            label42: {
+                var6 = var5.getLine();
+                var3 = null;
+                if (var2 != null) {
+                    var1 = var2.getLine();
+                    if (var1 != null) {
+                        CharSequence var4 = var1;
+                        CharSequence var8 = var4;
+                        if (StringsKt.isBlank(var4)) {
+                            var8 = null;
+                        }
+
+                        var1 = (String)var8;
+                        if (var1 != null) {
+                            break label42;
+                        }
+                    }
+                }
+
+                if (var2 == null) {
+                    var1 = "Not available";
+                } else {
+                    var1 = "Open to adjust";
+                }
             }
-            str = str2;
+
+            var6.setText(var1);
+            Boolean var10 = (Boolean)var3;
+            if (var2 != null) {
+                var10 = var2.getOn();
+            }
+
+            LinearLayout var14 = var5.getBox();
+            if (Intrinsics.areEqual(var10, true)) {
+                var3 = this.ui.rounded(Color.rgb(19, 34, 25), 18, Color.rgb(43, 107, 75));
+            } else {
+                var3 = this.ui.rounded(CarUi.Companion.getCARD(), 18, Color.rgb(34, 40, 55));
+            }
+
+            var14.setBackground((Drawable)var3);
+            var3 = var5.getChip();
+            SvIcon.State var11;
+            if (Intrinsics.areEqual(var10, false)) {
+                var11 = SvIcon.State.OFF;
+            } else if (var2 == null) {
+                var11 = SvIcon.State.NA;
+            } else {
+                var11 = SvIcon.State.ON;
+            }
+
+            SvIcon.Chip.set$default((SvIcon.Chip)var3, null, null, var11, 3, null);
         }
-        str = s == null ? "Not available" : "Open to adjust";
-        line2.setText(str);
-        Boolean on = s != null ? s.getOn() : null;
-        v.getBox().setBackground(Intrinsics.areEqual((Object) on, (Object) true) ? this.ui.rounded(Color.rgb(19, 34, 25), 18, Integer.valueOf(Color.rgb(43, 107, 75))) : this.ui.rounded(CarUi.Companion.getCARD(), 18, Integer.valueOf(Color.rgb(34, 40, 55))));
-        SvIcon.Chip.set$default(v.getChip(), null, null, Intrinsics.areEqual((Object) on, (Object) false) ? SvIcon.State.OFF : s == null ? SvIcon.State.NA : SvIcon.State.ON, 3, null);
     }
 
     /* JADX INFO: Access modifiers changed from: private */

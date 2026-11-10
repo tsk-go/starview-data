@@ -298,61 +298,69 @@ public final class RtkTools {
         return label;
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    public final String lastAction(RtkStatus k) {
-        String st;
-        StringBuilder append;
-        String str;
-        if (k == null) {
-            return "";
-        }
-        if (k.getActionOp().length() == 0) {
-            return "";
-        }
-        String actionState = k.getActionState();
-        switch (actionState.hashCode()) {
-            case 3089282:
-                if (actionState.equals("done")) {
-                    st = "done";
-                    break;
+    /* VF: from Vineflower (jadx: ) */
+    public final String lastAction(RtkStatus var1) {
+        if (var1 != null) {
+            int var4;
+            if (var1.getActionOp().length() == 0) {
+                var4 = 1;
+            } else {
+                var4 = 0;
+            }
+
+            if (!var4) {
+                String var11;
+                label40: {
+                    var11 = var1.getActionState();
+                    switch (var11.hashCode()) {
+                        case 3089282:
+                            if (var11.equals("done")) {
+                                var11 = "done";
+                                break label40;
+                            }
+                            break;
+                        case 3526552:
+                            if (var11.equals("sent")) {
+                                var11 = "sent, waiting for the receiver";
+                                break label40;
+                            }
+                            break;
+                        case 144428797:
+                            if (var11.equals("no answer")) {
+                                var11 = "no answer from the receiver";
+                                break label40;
+                            }
+                            break;
+                        case 1085547216:
+                            if (var11.equals("refused")) {
+                                var11 = "the receiver refused it";
+                                break label40;
+                            }
+                    }
+
+                    var11 = var1.getActionState();
                 }
-                st = k.getActionState();
-                break;
-            case 3526552:
-                if (actionState.equals("sent")) {
-                    st = "sent, waiting for the receiver";
-                    break;
+
+                double var2 = var1.getActionAgeS();
+                StringBuilder var6;
+                String var7;
+                if (var2 < 60.0) {
+                    var4 = (int)var2;
+                    var6 = new StringBuilder().append(var4);
+                    var7 = " s ago";
+                } else {
+                    var4 = (int)(var2 / 60);
+                    var6 = new StringBuilder().append(var4);
+                    var7 = " min ago";
                 }
-                st = k.getActionState();
-                break;
-            case 144428797:
-                if (actionState.equals("no answer")) {
-                    st = "no answer from the receiver";
-                    break;
-                }
-                st = k.getActionState();
-                break;
-            case 1085547216:
-                if (actionState.equals("refused")) {
-                    st = "the receiver refused it";
-                    break;
-                }
-                st = k.getActionState();
-                break;
-            default:
-                st = k.getActionState();
-                break;
+
+                String var12 = var6.append(var7).toString();
+                String var8 = this.label(var1.getActionOp());
+                return var8 + ": " + var11 + ", " + var12;
+            }
         }
-        double it = k.getActionAgeS();
-        if (it < 60.0d) {
-            append = new StringBuilder().append((int) it);
-            str = " s ago";
-        } else {
-            append = new StringBuilder().append((int) (it / 60));
-            str = " min ago";
-        }
-        String age = append.append(str).toString();
-        return label(k.getActionOp()) + ": " + st + ", " + age;
+
+        return "";
     }
 
     public final String firmware(RtkStatus k) {
@@ -381,26 +389,26 @@ public final class RtkTools {
         return (v == null || v.intValue() >= 120) ? name : name + ": too old, its IMU may never start (flash HPS 1.30 with u-center)";
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */
-    private final State st(String v) {
-        switch (v.hashCode()) {
+    /* VF: from Vineflower (jadx: ) */
+    private final RtkTools.State st(String var1) {
+        switch (var1.hashCode()) {
             case -400079795:
-                if (v.equals("initializing")) {
-                    return State.NOW;
+                if (var1.equals("initializing")) {
+                    return RtkTools.State.NOW;
                 }
                 break;
             case 109935:
-                if (v.equals("off")) {
-                    return State.OFF;
+                if (var1.equals("off")) {
+                    return RtkTools.State.OFF;
                 }
                 break;
             case 3089282:
-                if (v.equals("done")) {
-                    return State.DONE;
+                if (var1.equals("done")) {
+                    return RtkTools.State.DONE;
                 }
-                break;
         }
-        return State.WAITING;
+
+        return RtkTools.State.WAITING;
     }
 
     public final List<Step> steps(RtkStatus k) {
@@ -447,59 +455,100 @@ public final class RtkTools {
         return CollectionsKt.listOf((Object[]) stepArr);
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */
-    public final float stepProgress(RtkStatus k, String title) {
-        Intrinsics.checkNotNullParameter(k, "k");
-        Intrinsics.checkNotNullParameter(title, "title");
-        switch (title.hashCode()) {
+    /* VF: from Vineflower (jadx: ) */
+    public final float stepProgress(RtkStatus var1, String var2) {
+        Intrinsics.checkNotNullParameter(var1, "k");
+        Intrinsics.checkNotNullParameter(var2, "title");
+        int var5 = var2.hashCode();
+        float var4 = 0.5F;
+        switch (var5) {
             case -1332793732:
-                if (title.equals("Mount alignment")) {
-                    if (k.getMountKept() || (Intrinsics.areEqual(k.getMountInit(), "done") && Intrinsics.areEqual(k.getMount(), "fine"))) {
-                        return 1.0f;
+                if (var2.equals("Mount alignment")) {
+                    if (!var1.getMountKept() && (!Intrinsics.areEqual(var1.getMountInit(), "done") || !Intrinsics.areEqual(var1.getMount(), "fine"))) {
+                        if (Intrinsics.areEqual(var1.getMount(), "coarse")) {
+                            return 0.75F;
+                        } else {
+                            if (!Intrinsics.areEqual(var1.getMount(), "learning heading")) {
+                                float var17;
+                                if (Intrinsics.areEqual(var1.getMount(), "learning roll/pitch")) {
+                                    var17 = 0.25F;
+                                } else {
+                                    var17 = 0.0F;
+                                }
+
+                                return var17;
+                            }
+
+                            return var4;
+                        }
+                    } else {
+                        return 1.0F;
                     }
-                    if (Intrinsics.areEqual(k.getMount(), "coarse")) {
-                        return 0.75f;
-                    }
-                    if (Intrinsics.areEqual(k.getMount(), "learning heading")) {
-                        return 0.5f;
-                    }
-                    return Intrinsics.areEqual(k.getMount(), "learning roll/pitch") ? 0.25f : 0.0f;
                 }
                 break;
             case -169507621:
-                if (title.equals("Car speed")) {
-                    if (!k.getSpeedFeedOn()) {
-                        return 0.0f;
+                if (var2.equals("Car speed")) {
+                    if (!var1.getSpeedFeedOn()) {
+                        return 0.0F;
+                    } else if (Intrinsics.areEqual(var1.getSpeedInit(), "done")) {
+                        return 1.0F;
+                    } else {
+                        float var16;
+                        if (Intrinsics.areEqual(var1.getSpeedInit(), "initializing")) {
+                            var16 = var4;
+                        } else {
+                            var16 = 0.1F;
+                        }
+
+                        return var16;
                     }
-                    if (Intrinsics.areEqual(k.getSpeedInit(), "done")) {
-                        return 1.0f;
-                    }
-                    return Intrinsics.areEqual(k.getSpeedInit(), "initializing") ? 0.5f : 0.1f;
                 }
                 break;
             case -62835281:
-                if (title.equals("Motion sensors")) {
-                    String imuInit = k.getImuInit();
-                    if (Intrinsics.areEqual(imuInit, "done")) {
-                        return 1.0f;
+                if (var2.equals("Motion sensors")) {
+                    String var6 = var1.getImuInit();
+                    if (Intrinsics.areEqual(var6, "done")) {
+                        return 1.0F;
+                    } else {
+                        float var13;
+                        if (Intrinsics.areEqual(var6, "initializing")) {
+                            var13 = var4;
+                        } else {
+                            var13 = 0.0F;
+                        }
+
+                        return var13;
                     }
-                    return Intrinsics.areEqual(imuInit, "initializing") ? 0.5f : 0.0f;
                 }
                 break;
             case 812449097:
-                if (title.equals("Position")) {
-                    String insInit = k.getInsInit();
-                    if (Intrinsics.areEqual(insInit, "done")) {
-                        return 1.0f;
+                if (var2.equals("Position")) {
+                    var2 = var1.getInsInit();
+                    if (Intrinsics.areEqual(var2, "done")) {
+                        return 1.0F;
+                    } else {
+                        float var8;
+                        if (Intrinsics.areEqual(var2, "initializing")) {
+                            var8 = var4;
+                            if (!Intrinsics.areEqual(var1.getMount(), "coarse")) {
+                                if (Intrinsics.areEqual(var1.getMount(), "fine")) {
+                                    var8 = var4;
+                                } else {
+                                    var8 = 0.15F;
+                                }
+
+                                return var8;
+                            }
+                        } else {
+                            var8 = 0.0F;
+                        }
+
+                        return var8;
                     }
-                    if (Intrinsics.areEqual(insInit, "initializing")) {
-                        return (Intrinsics.areEqual(k.getMount(), "coarse") || Intrinsics.areEqual(k.getMount(), "fine")) ? 0.5f : 0.15f;
-                    }
-                    return 0.0f;
                 }
-                break;
         }
-        return 0.0f;
+
+        return 0.0F;
     }
 
     public final float overall(RtkStatus k) {

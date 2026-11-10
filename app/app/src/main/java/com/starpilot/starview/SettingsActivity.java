@@ -114,6 +114,14 @@ import kotlin.random.Random;
 import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
+import android.content.SharedPreferences.Editor;
+import android.graphics.drawable.Drawable;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import androidx.activity.result.contract.ActivityResultContracts.OpenDocument;
+import kotlin.jvm.internal.Ref.BooleanRef;
+import kotlin.jvm.internal.Ref.IntRef;
+import kotlin.jvm.internal.Ref.ObjectRef;
 
 /* compiled from: SettingsActivity.kt */
 public final class SettingsActivity extends AppCompatActivity implements GxHost {
@@ -151,105 +159,97 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     private static final HashMap<String, String> GALAXY_SUB_TITLES = new HashMap<>();
     private static final Map<String, String> GALAXY_TITLES = MapsKt.mapOf(TuplesKt.to("personalities", "Personalities"), TuplesKt.to("slc", "Speed limits"), TuplesKt.to("wheel", "Wheel controls"), TuplesKt.to("sounds", "Sounds & alerts"), TuplesKt.to("data", "Data uploads"), TuplesKt.to("developer", "Developer"), TuplesKt.to("display", "Screen"), TuplesKt.to("appearance", "Driving screen"), TuplesKt.to("pip", "Blind spot camera"), TuplesKt.to("vehicle", "Vehicle"));
 
-    /* JADX WARN: Type inference failed for: r0v13, types: [com.starpilot.starview.SettingsActivity$ticker$1] */
-    /* JADX WARN: Type inference failed for: r0v14, types: [com.starpilot.starview.SettingsActivity$valuePoll$1] */
+    /* VF: from Vineflower (jadx: Type inference failed) */
     public SettingsActivity() {
-        ActivityResultLauncher<String[]> registerForActivityResult = registerForActivityResult(new ActivityResultContracts.OpenDocument(), new ActivityResultCallback() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda148
-            @Override // androidx.activity.result.ActivityResultCallback
-            public final void onActivityResult(Object obj) {
-                SettingsActivity.pickModel$lambda$2(SettingsActivity.this, (Uri) obj);
-            }
-        });
-        Intrinsics.checkNotNullExpressionValue(registerForActivityResult, "registerForActivityResult(...)");
-        this.pickModel = registerForActivityResult;
-        ActivityResultLauncher<String[]> registerForActivityResult2 = registerForActivityResult(new ActivityResultContracts.OpenDocument(), new ActivityResultCallback() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda149
-            @Override // androidx.activity.result.ActivityResultCallback
-            public final void onActivityResult(Object obj) {
-                SettingsActivity.pickAny$lambda$3(SettingsActivity.this, (Uri) obj);
-            }
-        });
-        Intrinsics.checkNotNullExpressionValue(registerForActivityResult2, "registerForActivityResult(...)");
-        this.pickAny = registerForActivityResult2;
+        ActivityResultLauncher var1 = this.registerForActivityResult(new OpenDocument(), new SettingsActivity$$ExternalSyntheticLambda148(this));
+        Intrinsics.checkNotNullExpressionValue(var1, "registerForActivityResult(...)");
+        this.pickModel = var1;
+        var1 = this.registerForActivityResult(new OpenDocument(), new SettingsActivity$$ExternalSyntheticLambda149(this));
+        Intrinsics.checkNotNullExpressionValue(var1, "registerForActivityResult(...)");
+        this.pickAny = var1;
         this.panels = new HashMap<>();
         this.handler = new Handler(Looper.getMainLooper());
         this.areaIndex = -1;
-        this.driveModes = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("default", "Auto"), TuplesKt.to("onroad", "Onroad"), TuplesKt.to("offroad", "Offroad")});
+        this.driveModes = CollectionsKt.listOf(new Pair[]{TuplesKt.to("default", "Auto"), TuplesKt.to("onroad", "Onroad"), TuplesKt.to("offroad", "Offroad")});
         this.buildGroup = "tablet";
-        this.ticker = new Runnable() { // from class: com.starpilot.starview.SettingsActivity$ticker$1
-            @Override // java.lang.Runnable
+        this.ticker = new Runnable() {
+            final SettingsActivity this$0 = SettingsActivity.this;
+
+            @Override
             public void run() {
-                FrameLayout frameLayout;
-                View view;
-                View view2;
-                View view3;
-                View view4;
-                DriveState.OffroadBar offroadBar;
-                Handler handler;
-                View view5;
-                boolean pageNeedsOffroad;
-                TextView textView;
-                frameLayout = SettingsActivity.this.contentHolder;
-                if (frameLayout == null) {
-                    textView = SettingsActivity.this.driveBtn;
-                    if (textView != null) {
-                        SettingsActivity.this.syncDriveState();
-                    }
+                if (this.this$0.contentHolder == null && this.this$0.driveBtn != null) {
+                    this.this$0.syncDriveState();
                 }
-                view = SettingsActivity.this.current;
-                DevicePanel devicePanel = view instanceof DevicePanel ? (DevicePanel) view : null;
-                if (devicePanel != null) {
-                    devicePanel.onTick();
+
+                View var2 = this.this$0.current;
+                boolean var1x = var2 instanceof DevicePanel;
+                Object var3 = null;
+                DevicePanel var5;
+                if (var1x) {
+                    var5 = (DevicePanel)var2;
+                } else {
+                    var5 = null;
                 }
-                view2 = SettingsActivity.this.current;
-                CatalogPanel catalogPanel = view2 instanceof CatalogPanel ? (CatalogPanel) view2 : null;
-                if (catalogPanel != null) {
-                    catalogPanel.onTick();
+
+                if (var5 != null) {
+                    var5.onTick();
                 }
-                view3 = SettingsActivity.this.current;
-                SettingsActivity.ComboPage comboPage = view3 instanceof SettingsActivity.ComboPage ? (SettingsActivity.ComboPage) view3 : null;
-                if (comboPage != null) {
-                    comboPage.tick();
+
+                var2 = this.this$0.current;
+                CatalogPanel var7;
+                if (var2 instanceof CatalogPanel) {
+                    var7 = (CatalogPanel)var2;
+                } else {
+                    var7 = null;
                 }
-                view4 = SettingsActivity.this.current;
-                GxPage gxPage = view4 instanceof GxPage ? (GxPage) view4 : null;
-                if (gxPage != null) {
-                    gxPage.tick();
+
+                if (var7 != null) {
+                    var7.onTick();
                 }
-                offroadBar = SettingsActivity.this.offroadBar;
-                if (offroadBar != null) {
-                    SettingsActivity settingsActivity = SettingsActivity.this;
-                    view5 = SettingsActivity.this.current;
-                    pageNeedsOffroad = settingsActivity.pageNeedsOffroad(view5);
-                    offroadBar.sync(pageNeedsOffroad);
+
+                var2 = this.this$0.current;
+                SettingsActivity.ComboPage var9;
+                if (var2 instanceof SettingsActivity.ComboPage) {
+                    var9 = (SettingsActivity.ComboPage)var2;
+                } else {
+                    var9 = null;
                 }
-                handler = SettingsActivity.this.handler;
-                handler.postDelayed(this, 700L);
+
+                if (var9 != null) {
+                    var9.tick();
+                }
+
+                View var4 = this.this$0.current;
+                GxPage var10 = (GxPage)var3;
+                if (var4 instanceof GxPage) {
+                    var10 = (GxPage)var4;
+                }
+
+                if (var10 != null) {
+                    var10.tick();
+                }
+
+                DriveState.OffroadBar var11 = this.this$0.offroadBar;
+                if (var11 != null) {
+                    var11.sync(this.this$0.pageNeedsOffroad(this.this$0.current));
+                }
+
+                this.this$0.handler.postDelayed(this, 700L);
             }
         };
-        this.valuePoll = new Runnable() { // from class: com.starpilot.starview.SettingsActivity$valuePoll$1
-            /* JADX WARN: Code restructure failed: missing block: B:4:0x0012, code lost:
-            
-                if ((r0 instanceof com.starpilot.starview.SettingsActivity.ComboPage) != false) goto L6;
-             */
-            @Override // java.lang.Runnable
-            /*
-                Code decompiled incorrectly, please refer to instructions dump.
-            */
+        this.valuePoll = new Runnable() {
+            final SettingsActivity this$0 = SettingsActivity.this;
+
+            @Override
             public void run() {
-                View view;
-                GalaxyApi galaxyApi;
-                Handler handler;
-                View view2;
-                view = SettingsActivity.this.current;
-                if (!(view instanceof CatalogPanel)) {
-                    view2 = SettingsActivity.this.current;
+                if (this.this$0.current instanceof CatalogPanel || this.this$0.current instanceof SettingsActivity.ComboPage) {
+                    GalaxyApi var1 = this.this$0.api;
+                    if (var1 != null) {
+                        GalaxyApi.refreshValues$default(var1, null, 1, null);
+                    }
                 }
-                galaxyApi = SettingsActivity.this.api;
-                if (galaxyApi != null) {
-                    GalaxyApi.refreshValues$default(galaxyApi, null, 1, null);
-                }
-                handler = SettingsActivity.this.handler;
-                handler.postDelayed(this, 4000L);
+
+                this.this$0.handler.postDelayed(this, 4000L);
             }
         };
     }
@@ -298,314 +298,280 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             return SettingsActivity.PLACED_PAGES;
         }
 
-        /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-        /* JADX WARN: Code restructure failed: missing block: B:103:0x020b, code lost:
-        
-            if (r18.equals("tablet:ideas") == false) goto L185;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:122:0x0261, code lost:
-        
-            if (r18.equals("tablet:maps") == false) goto L185;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:123:0x031c, code lost:
-        
-            r7 = "map";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:164:0x0318, code lost:
-        
-            if (r18.equals("tablet:nav") == false) goto L185;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:63:0x0183, code lost:
-        
-            if (r1.equals("Road") == false) goto L65;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:64:0x018f, code lost:
-        
-            r12 = "map";
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:66:0x018c, code lost:
-        
-            if (r1.equals("Map") == false) goto L65;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:72:0x01a3, code lost:
-        
-            if (r1.equals("Effects") == false) goto L65;
-         */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public final SettingIcons.Icon railIcon(String page) {
-            String str;
-            Intrinsics.checkNotNullParameter(page, "page");
-            if (Intrinsics.areEqual(page, "drivingmap")) {
-                return new SettingIcons.Icon("gauge2", "speed", false, 4, null);
-            }
-            if (Intrinsics.areEqual(page, "toolshome")) {
-                return new SettingIcons.Icon("widgets", "device", false, 4, null);
-            }
-            if (Intrinsics.areEqual(page, "connections")) {
-                return new SettingIcons.Icon("link", "device", false, 4, null);
-            }
-            if (Intrinsics.areEqual(page, "health")) {
-                return new SettingIcons.Icon("plots", "device", false, 4, null);
-            }
-            if (Intrinsics.areEqual(page, "journal:last")) {
-                return new SettingIcons.Icon("car", "tablet", false, 4, null);
-            }
-            if (Intrinsics.areEqual(page, "journal:trends")) {
-                return new SettingIcons.Icon("plots", "tablet", false, 4, null);
-            }
-            if (Intrinsics.areEqual(page, "journal:alerts")) {
-                return new SettingIcons.Icon("bell", "tablet", false, 4, null);
-            }
-            if (Intrinsics.areEqual(page, "journal:spots")) {
-                return new SettingIcons.Icon("pin", "tablet", false, 4, null);
-            }
-            if (Intrinsics.areEqual(page, "profiles")) {
-                return new SettingIcons.Icon("standard", "person", false, 4, null);
-            }
-            if (StringsKt.startsWith(page, "galaxy:", false)) {
-                return SettingIcons.INSTANCE.forPage(StringsKt.removePrefix(page, (CharSequence) "galaxy:"));
-            }
-            if (Intrinsics.areEqual(page, "quickselect")) {
-                return new SettingIcons.Icon("star", "display", false, 4, null);
-            }
-            if (StringsKt.startsWith(page, "gweb:", false)) {
-                return new SettingIcons.Icon(toolIcon(StringsKt.substringBefore(StringsKt.removePrefix(page, (CharSequence) "gweb:"), "|", (StringsKt.removePrefix(page, (CharSequence) "gweb:")))), "device", false, 4, null);
-            }
-            String str2 = "star";
-            if (StringsKt.startsWith(page, "uigroup:", false)) {
-                String removePrefix = StringsKt.removePrefix(page, (CharSequence) "uigroup:");
-                switch (removePrefix.hashCode()) {
-                    case -169275166:
-                        break;
-                    case 71895:
-                        if (removePrefix.equals("HUD")) {
-                            str2 = "widgets";
-                            str = str2;
-                            break;
+        /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+        public final SettingIcons.Icon railIcon(String var1) {
+            Intrinsics.checkNotNullParameter(var1, "page");
+            SettingIcons.Icon var5;
+            if (Intrinsics.areEqual(var1, "drivingmap")) {
+                var5 = new SettingIcons.Icon("gauge2", "speed", false, 4, null);
+            } else if (Intrinsics.areEqual(var1, "toolshome")) {
+                var5 = new SettingIcons.Icon("widgets", "device", false, 4, null);
+            } else if (Intrinsics.areEqual(var1, "connections")) {
+                var5 = new SettingIcons.Icon("link", "device", false, 4, null);
+            } else if (Intrinsics.areEqual(var1, "health")) {
+                var5 = new SettingIcons.Icon("plots", "device", false, 4, null);
+            } else if (Intrinsics.areEqual(var1, "journal:last")) {
+                var5 = new SettingIcons.Icon("car", "tablet", false, 4, null);
+            } else if (Intrinsics.areEqual(var1, "journal:trends")) {
+                var5 = new SettingIcons.Icon("plots", "tablet", false, 4, null);
+            } else if (Intrinsics.areEqual(var1, "journal:alerts")) {
+                var5 = new SettingIcons.Icon("bell", "tablet", false, 4, null);
+            } else if (Intrinsics.areEqual(var1, "journal:spots")) {
+                var5 = new SettingIcons.Icon("pin", "tablet", false, 4, null);
+            } else if (Intrinsics.areEqual(var1, "profiles")) {
+                var5 = new SettingIcons.Icon("standard", "person", false, 4, null);
+            } else if (StringsKt.startsWith(var1, "galaxy:", false)) {
+                var5 = SettingIcons.INSTANCE.forPage(StringsKt.removePrefix(var1, "galaxy:"));
+            } else if (Intrinsics.areEqual(var1, "quickselect")) {
+                var5 = new SettingIcons.Icon("star", "display", false, 4, null);
+            } else if (StringsKt.startsWith(var1, "gweb:", false)) {
+                var5 = new SettingIcons.Icon(
+                    this.toolIcon(StringsKt.substringBefore(StringsKt.removePrefix(var1, "gweb:"), "|", (StringsKt.removePrefix(var1, "gweb:")))), "device", false, 4, null
+                );
+            } else {
+                boolean var2 = StringsKt.startsWith(var1, "uigroup:", false);
+                String var3 = "star";
+                if (var2) {
+                    label200: {
+                        label199: {
+                            String var4 = StringsKt.removePrefix(var1, "uigroup:");
+                            switch (var4.hashCode()) {
+                                case -169275166:
+                                    var1 = var3;
+                                    if (var4.equals("Effects")) {
+                                        break label200;
+                                    }
+                                    break;
+                                case 71895:
+                                    if (var4.equals("HUD")) {
+                                        var1 = "widgets";
+                                        break label200;
+                                    }
+                                    break;
+                                case 77116:
+                                    if (var4.equals("Map")) {
+                                        break label199;
+                                    }
+                                    break;
+                                case 2552640:
+                                    if (var4.equals("Road")) {
+                                        break label199;
+                                    }
+                                    break;
+                                case 73186279:
+                                    if (var4.equals("Lanes")) {
+                                        var1 = "lane";
+                                        break label200;
+                                    }
+                                    break;
+                                case 2011082565:
+                                    if (var4.equals("Camera")) {
+                                        var1 = "camera";
+                                        break label200;
+                                    }
+                            }
+
+                            var1 = "eye";
+                            break label200;
                         }
-                        str2 = "eye";
-                        str = str2;
-                    case 77116:
-                        break;
-                    case 2552640:
-                        break;
-                    case 73186279:
-                        if (removePrefix.equals("Lanes")) {
-                            str = "lane";
-                            break;
+
+                        var1 = "map";
+                    }
+
+                    var5 = new SettingIcons.Icon(var1, "tablet", false, 4, null);
+                } else {
+                    label187: {
+                        label186: {
+                            switch (var1.hashCode()) {
+                                case -1844774923:
+                                    if (var1.equals("tablet:blinker")) {
+                                        var3 = "blinker";
+                                        break label187;
+                                    }
+                                    break;
+                                case -1680479212:
+                                    if (var1.equals("tablet:braking")) {
+                                        var3 = "decel";
+                                        break label187;
+                                    }
+                                    break;
+                                case -1486773745:
+                                    if (var1.equals("tablet:nav")) {
+                                        break label186;
+                                    }
+                                    break;
+                                case -1486769323:
+                                    if (var1.equals("tablet:rtk")) {
+                                        var3 = "satellite";
+                                        break label187;
+                                    }
+                                    break;
+                                case -1417203926:
+                                    if (var1.equals("tablet:techstream")) {
+                                        var3 = "wrench";
+                                        break label187;
+                                    }
+                                    break;
+                                case -1134666246:
+                                    if (var1.equals("keyfob")) {
+                                        var3 = "key";
+                                        break label187;
+                                    }
+                                    break;
+                                case -1073114497:
+                                    if (var1.equals("native:terminal")) {
+                                        var3 = "terminal";
+                                        break label187;
+                                    }
+                                    break;
+                                case -1023481817:
+                                    if (var1.equals("native:developer")) {
+                                        var3 = "console";
+                                        break label187;
+                                    }
+                                    break;
+                                case -960904562:
+                                    if (var1.equals("activity:sensors")) {
+                                        var3 = "gps";
+                                        break label187;
+                                    }
+                                    break;
+                                case -661461902:
+                                    if (var1.equals("tablet:connection")) {
+                                        var3 = "link";
+                                        break label187;
+                                    }
+                                    break;
+                                case -581968182:
+                                    if (var1.equals("roaddata")) {
+                                        var3 = "lane";
+                                        break label187;
+                                    }
+                                    break;
+                                case 101886580:
+                                    if (var1.equals("tablet:voicestudio")) {
+                                        var3 = "mic";
+                                        break label187;
+                                    }
+                                    break;
+                                case 184405451:
+                                    if (var1.equals("native:network")) {
+                                        var3 = "wifi";
+                                        break label187;
+                                    }
+                                    break;
+                                case 239912240:
+                                    if (var1.equals("hubpower")) {
+                                        var3 = "power";
+                                        break label187;
+                                    }
+                                    break;
+                                case 273892121:
+                                    if (var1.equals("native:device")) {
+                                        var3 = "info";
+                                        break label187;
+                                    }
+                                    break;
+                                case 592569703:
+                                    if (var1.equals("tablet:storage")) {
+                                        var3 = "data";
+                                        break label187;
+                                    }
+                                    break;
+                                case 1154624299:
+                                    if (var1.equals("tablet:maps")) {
+                                        break label186;
+                                    }
+                                    break;
+                                case 1154899769:
+                                    if (var1.equals("tablet:view")) {
+                                        var3 = "camera";
+                                        break label187;
+                                    }
+                                    break;
+                                case 1166998092:
+                                    if (var1.equals("activity:files")) {
+                                        var3 = "folder";
+                                        break label187;
+                                    }
+                                    break;
+                                case 1177077078:
+                                    if (var1.equals("tablet:backup")) {
+                                        var3 = "backup";
+                                        break label187;
+                                    }
+                                    break;
+                                case 1202172345:
+                                    if (var1.equals("doorbelt")) {
+                                        var3 = "car";
+                                        break label187;
+                                    }
+                                    break;
+                                case 1422561657:
+                                    if (!var1.equals("tablet:about")) {
+                                    }
+                                    break;
+                                case 1427464618:
+                                    if (var1.equals("native:software")) {
+                                        var3 = "update";
+                                        break label187;
+                                    }
+                                    break;
+                                case 1429999176:
+                                    if (var1.equals("tablet:ideas")) {
+                                        break label187;
+                                    }
+                                    break;
+                                case 1440277429:
+                                    if (var1.equals("tablet:theme")) {
+                                        var3 = "palette";
+                                        break label187;
+                                    }
+                                    break;
+                                case 1442336542:
+                                    if (var1.equals("tablet:voice")) {
+                                        var3 = "speaker";
+                                        break label187;
+                                    }
+                                    break;
+                                case 1488266044:
+                                    if (var1.equals("native:toggles")) {
+                                        var3 = "toggle";
+                                        break label187;
+                                    }
+                                    break;
+                                case 1694003232:
+                                    if (var1.equals("activity:lanepics")) {
+                                        var3 = "camera";
+                                        break label187;
+                                    }
+                                    break;
+                                case 2037187069:
+                                    if (var1.equals("bookmarks")) {
+                                        var3 = "bookmark";
+                                        break label187;
+                                    }
+                            }
+
+                            var3 = "info";
+                            break label187;
                         }
-                        str2 = "eye";
-                        str = str2;
-                        break;
-                    case 2011082565:
-                        if (removePrefix.equals("Camera")) {
-                            str = "camera";
-                            break;
-                        }
-                        str2 = "eye";
-                        str = str2;
-                        break;
-                    default:
-                        str2 = "eye";
-                        str = str2;
-                        break;
+
+                        var3 = "map";
+                    }
+
+                    if ((!StringsKt.startsWith(var1, "tablet:", false) || Intrinsics.areEqual(var1, "tablet:techstream"))
+                        && !StringsKt.startsWith(var1, "activity:", false)) {
+                        var1 = "device";
+                    } else {
+                        var1 = "tablet";
+                    }
+
+                    var5 = new SettingIcons.Icon(var3, var1, false, 4, null);
                 }
-                return new SettingIcons.Icon(str, "tablet", false, 4, null);
             }
-            switch (page.hashCode()) {
-                case -1844774923:
-                    if (page.equals("tablet:blinker")) {
-                        str2 = "blinker";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case -1680479212:
-                    if (page.equals("tablet:braking")) {
-                        str2 = "decel";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case -1486773745:
-                    break;
-                case -1486769323:
-                    if (page.equals("tablet:rtk")) {
-                        str2 = "satellite";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case -1417203926:
-                    if (page.equals("tablet:techstream")) {
-                        str2 = "wrench";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case -1134666246:
-                    if (page.equals("keyfob")) {
-                        str2 = "key";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case -1073114497:
-                    if (page.equals("native:terminal")) {
-                        str2 = "terminal";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case -1023481817:
-                    if (page.equals("native:developer")) {
-                        str2 = "console";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case -960904562:
-                    if (page.equals("activity:sensors")) {
-                        str2 = "gps";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case -661461902:
-                    if (page.equals("tablet:connection")) {
-                        str2 = "link";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case -581968182:
-                    if (page.equals("roaddata")) {
-                        str2 = "lane";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 101886580:
-                    if (page.equals("tablet:voicestudio")) {
-                        str2 = "mic";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 184405451:
-                    if (page.equals("native:network")) {
-                        str2 = "wifi";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 239912240:
-                    if (page.equals("hubpower")) {
-                        str2 = "power";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 273892121:
-                    if (page.equals("native:device")) {
-                        str2 = "info";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 592569703:
-                    if (page.equals("tablet:storage")) {
-                        str2 = "data";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 1154624299:
-                    break;
-                case 1154899769:
-                    if (page.equals("tablet:view")) {
-                        str2 = "camera";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 1166998092:
-                    if (page.equals("activity:files")) {
-                        str2 = "folder";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 1177077078:
-                    if (page.equals("tablet:backup")) {
-                        str2 = "backup";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 1202172345:
-                    if (page.equals("doorbelt")) {
-                        str2 = "car";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 1422561657:
-                    if (!page.equals("tablet:about")) {
-                    }
-                    str2 = "info";
-                    break;
-                case 1427464618:
-                    if (page.equals("native:software")) {
-                        str2 = "update";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 1429999176:
-                    break;
-                case 1440277429:
-                    if (page.equals("tablet:theme")) {
-                        str2 = "palette";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 1442336542:
-                    if (page.equals("tablet:voice")) {
-                        str2 = "speaker";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 1488266044:
-                    if (page.equals("native:toggles")) {
-                        str2 = "toggle";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 1694003232:
-                    if (page.equals("activity:lanepics")) {
-                        str2 = "camera";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                case 2037187069:
-                    if (page.equals("bookmarks")) {
-                        str2 = "bookmark";
-                        break;
-                    }
-                    str2 = "info";
-                    break;
-                default:
-                    str2 = "info";
-                    break;
-            }
-            return new SettingIcons.Icon(str2, ((!StringsKt.startsWith(page, "tablet:", false) || Intrinsics.areEqual(page, "tablet:techstream")) && !StringsKt.startsWith(page, "activity:", false)) ? "device" : "tablet", false, 4, null);
+
+            return var5;
         }
 
         public final String toolIcon(String path) {
@@ -863,15 +829,16 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         private final String sub;
         private final String title;
 
-        /* JADX WARN: Multi-variable type inference failed */
-        public Area(String title, String sub, int icon, List<? extends Pair<String, ? extends List<Rail>>> rails) {
-            Intrinsics.checkNotNullParameter(title, "title");
-            Intrinsics.checkNotNullParameter(sub, "sub");
-            Intrinsics.checkNotNullParameter(rails, "rails");
-            this.title = title;
-            this.sub = sub;
-            this.icon = icon;
-            this.rails = rails;
+        /* VF: from Vineflower (jadx: ) */
+        public Area(String var1, String var2, int var3, List<? extends Pair<String, ? extends List<SettingsActivity.Rail>>> var4) {
+            super();
+            Intrinsics.checkNotNullParameter(var1, "title");
+            Intrinsics.checkNotNullParameter(var2, "sub");
+            Intrinsics.checkNotNullParameter(var4, "rails");
+            this.title = var1;
+            this.sub = var2;
+            this.icon = var3;
+            this.rails = var4;
         }
 
         public final int getIcon() {
@@ -972,144 +939,177 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         return CollectionsKt.listOf((Object[]) areaArr);
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterative(DepthRegionTraversal.java:31)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visit(SwitchOverStringVisitor.java:60)
-     */
-    private final GalaxySettingsView.Root galaxyRoot(String id) {
-        switch (id.hashCode()) {
+    /* VF: from Vineflower (jadx: ) */
+    private final GalaxySettingsView.Root galaxyRoot(String var1) {
+        switch (var1.hashCode()) {
             case 3357525:
-                if (id.equals("more")) {
-                    return new GalaxySettingsView.Root("More from Galaxy", null, CollectionsKt.listOf(new GalaxySettingsView.Entry.Unplaced(PLACED_PAGES)), "Settings pages Galaxy has that aren't placed in a rail yet - new ones from StarPilot updates show up here.", 2, null);
+                if (var1.equals("more")) {
+                    List var7 = CollectionsKt.listOf(new GalaxySettingsView.Entry.Unplaced(PLACED_PAGES));
+                    return new GalaxySettingsView.Root(
+                        "More from Galaxy",
+                        null,
+                        var7,
+                        "Settings pages Galaxy has that aren't placed in a rail yet - new ones from StarPilot updates show up here.",
+                        2,
+                        null
+                    );
                 }
                 break;
             case 109641799:
-                if (id.equals("speed")) {
-                    return new GalaxySettingsView.Root("Speed & following", null, CollectionsKt.listOf(new GalaxySettingsView.Entry.Hub(CollectionsKt.listOf((Object[]) new String[]{"profiles", "conditional", "curve", "slc"}))), null, 10, null);
+                if (var1.equals("speed")) {
+                    return new GalaxySettingsView.Root(
+                        "Speed & following",
+                        null,
+                        CollectionsKt.listOf(new GalaxySettingsView.Entry.Hub(CollectionsKt.listOf(new String[]{"profiles", "conditional", "curve", "slc"}))),
+                        null,
+                        10,
+                        null
+                    );
                 }
                 break;
             case 342069036:
-                if (id.equals("vehicle")) {
-                    return new GalaxySettingsView.Root("Vehicle", "vehicle", null, "Choosing the car (or Auto) and the Toyota tools are under Car selection & tools below.", 4, null);
+                if (var1.equals("vehicle")) {
+                    return new GalaxySettingsView.Root(
+                        "Vehicle", "vehicle", null, "Choosing the car (or Auto) and the Toyota tools are under Car selection & tools below.", 4, null
+                    );
                 }
                 break;
             case 549364206:
-                if (id.equals("cameras")) {
-                    return new GalaxySettingsView.Root("Cameras & monitoring", null, CollectionsKt.listOf((Object[]) new GalaxySettingsView.Entry[]{new GalaxySettingsView.Entry.Page("Sentry motion monitoring", "Watch for motion while parked: sensitivity and warning time", "sentry"), new GalaxySettingsView.Entry.Web("Sentry events & notifications", "What it caught, and where it sends alerts", "/cameras/events"), new GalaxySettingsView.Entry.Page("V-ASM spot monitoring", "Draw the side windows in the cabin camera, and visual blind-spot warning options", "vasm"), new GalaxySettingsView.Entry.Web("Live cameras", "Cabin and side camera previews", "/cameras")}), null, 10, null);
+                if (var1.equals("cameras")) {
+                    GalaxySettingsView.Entry.Page var4 = new GalaxySettingsView.Entry.Page(
+                        "Sentry motion monitoring", "Watch for motion while parked: sensitivity and warning time", "sentry"
+                    );
+                    GalaxySettingsView.Entry.Web var2 = new GalaxySettingsView.Entry.Web(
+                        "Sentry events & notifications", "What it caught, and where it sends alerts", "/cameras/events"
+                    );
+                    GalaxySettingsView.Entry.Page var3 = new GalaxySettingsView.Entry.Page(
+                        "V-ASM spot monitoring", "Draw the side windows in the cabin camera, and visual blind-spot warning options", "vasm"
+                    );
+                    GalaxySettingsView.Entry.Web var6 = new GalaxySettingsView.Entry.Web("Live cameras", "Cabin and side camera previews", "/cameras");
+                    return new GalaxySettingsView.Root(
+                        "Cameras & monitoring", null, CollectionsKt.listOf(new GalaxySettingsView.Entry[]{var4, var2, var3, var6}), null, 10, null
+                    );
                 }
                 break;
             case 590460812:
-                if (id.equals("personalities")) {
-                    return new GalaxySettingsView.Root("Personalities", null, CollectionsKt.listOf(new GalaxySettingsView.Entry.Hub(CollectionsKt.listOf((Object[]) new String[]{"traffic", "aggressive", "standard", "relaxed"}))), null, 10, null);
+                if (var1.equals("personalities")) {
+                    return new GalaxySettingsView.Root(
+                        "Personalities",
+                        null,
+                        CollectionsKt.listOf(new GalaxySettingsView.Entry.Hub(CollectionsKt.listOf(new String[]{"traffic", "aggressive", "standard", "relaxed"}))),
+                        null,
+                        10,
+                        null
+                    );
                 }
                 break;
             case 1419257969:
-                if (id.equals("steering")) {
-                    return new GalaxySettingsView.Root("Steering", null, CollectionsKt.listOf(new GalaxySettingsView.Entry.Hub(CollectionsKt.listOf((Object[]) new String[]{"lane", "lane_change", "torque", "aol"}))), null, 10, null);
+                if (var1.equals("steering")) {
+                    return new GalaxySettingsView.Root(
+                        "Steering",
+                        null,
+                        CollectionsKt.listOf(new GalaxySettingsView.Entry.Hub(CollectionsKt.listOf(new String[]{"lane", "lane_change", "torque", "aol"}))),
+                        null,
+                        10,
+                        null
+                    );
                 }
-                break;
         }
-        String str = GALAXY_TITLES.get(id);
-        return new GalaxySettingsView.Root((str == null && (str = GALAXY_SUB_TITLES.get(id)) == null) ? id : str, id, null, null, 12, null);
+
+        String var9 = GALAXY_TITLES.get(var1);
+        String var8 = var9;
+        if (var9 == null) {
+            var9 = GALAXY_SUB_TITLES.get(var1);
+            var8 = var9;
+            if (var9 == null) {
+                var8 = var1;
+            }
+        }
+
+        return new GalaxySettingsView.Root(var8, var1, null, null, 12, null);
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterative(DepthRegionTraversal.java:31)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visit(SwitchOverStringVisitor.java:60)
-     */
-    private final GalaxySettingsView.Root galaxyExtras(String id) {
-        GalaxySettingsView.Root r = galaxyRoot(id);
-        switch (id.hashCode()) {
+    /* VF: from Vineflower (jadx: ) */
+    private final GalaxySettingsView.Root galaxyExtras(String var1) {
+        GalaxySettingsView.Root var2 = this.galaxyRoot(var1);
+        switch (var1.hashCode()) {
             case 110999:
-                if (id.equals("pip")) {
-                    return new GalaxySettingsView.Root(r.getTitle(), r.getPage(), CollectionsKt.listOf(new GalaxySettingsView.Entry.Web("Camera crop", "Pick the part of the side camera picture to show", "/cameras/pip")), null, 8, null);
+                if (var1.equals("pip")) {
+                    return new GalaxySettingsView.Root(
+                        var2.getTitle(),
+                        var2.getPage(),
+                        CollectionsKt.listOf(new GalaxySettingsView.Entry.Web("Camera crop", "Pick the part of the side camera picture to show", "/cameras/pip")),
+                        null,
+                        8,
+                        null
+                    );
                 }
                 break;
             case 342069036:
-                if (id.equals("vehicle")) {
-                    return new GalaxySettingsView.Root(r.getTitle(), r.getPage(), CollectionsKt.listOf(new GalaxySettingsView.Entry.Web("Car selection & tools", "Pick the car (or Auto) for the next start, Toyota door and key tools", "/vehicle")), r.getNote());
+                if (var1.equals("vehicle")) {
+                    return new GalaxySettingsView.Root(
+                        var2.getTitle(),
+                        var2.getPage(),
+                        CollectionsKt.listOf(
+                            new GalaxySettingsView.Entry.Web(
+                                "Car selection & tools", "Pick the car (or Auto) for the next start, Toyota door and key tools", "/vehicle"
+                            )
+                        ),
+                        var2.getNote()
+                    );
                 }
                 break;
             case 1796717668:
-                if (id.equals("appearance")) {
-                    return new GalaxySettingsView.Root(r.getTitle(), r.getPage(), CollectionsKt.listOf(new GalaxySettingsView.Entry.Web("Widgets, colors & layout", "Where each widget sits on the comma's screen, colors, path style, clock", "/theme_maker")), null, 8, null);
+                if (var1.equals("appearance")) {
+                    return new GalaxySettingsView.Root(
+                        var2.getTitle(),
+                        var2.getPage(),
+                        CollectionsKt.listOf(
+                            new GalaxySettingsView.Entry.Web(
+                                "Widgets, colors & layout", "Where each widget sits on the comma's screen, colors, path style, clock", "/theme_maker"
+                            )
+                        ),
+                        null,
+                        8,
+                        null
+                    );
                 }
-                break;
         }
-        return r;
+
+        return var2;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:15:0x005c  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final View galaxyPage(String id) {
-        CarUi carUi;
-        Function1 function1;
-        Function1 function12;
-        String h = this.host;
-        if (h == null) {
-            return offline("Not connected to the comma. Connect first, then come back.");
-        }
-        SettingsActivity settingsActivity = this;
-        CarUi carUi2 = this.ui;
-        if (carUi2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi = null;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final View galaxyPage(String var1) {
+        String var3 = this.host;
+        if (var3 == null) {
+            return this.offline("Not connected to the comma. Connect first, then come back.");
         } else {
-            carUi = carUi2;
-        }
-        GalaxySettingsView.Root galaxyExtras = galaxyExtras(id);
-        Function2 function2 = new Function2() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda109
-            @Override // kotlin.jvm.functions.Function2
-            public final Object invoke(Object obj, Object obj2) {
-                Unit galaxyPage$lambda$14;
-                galaxyPage$lambda$14 = SettingsActivity.galaxyPage$lambda$14(SettingsActivity.this, (String) obj, (String) obj2);
-                return galaxyPage$lambda$14;
+            Context var4 = (Context)this;
+            CarUi var2 = this.ui;
+            if (var2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                var2 = null;
             }
-        };
-        if (Intrinsics.areEqual(id, "sounds")) {
-            function12 = new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda112
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj) {
-                    Unit galaxyPage$lambda$15;
-                    galaxyPage$lambda$15 = SettingsActivity.galaxyPage$lambda$15(SettingsActivity.this, (LinearLayout) obj);
-                    return galaxyPage$lambda$15;
-                }
-            };
-        } else {
-            if (!Intrinsics.areEqual(id, "developer")) {
-                function1 = null;
-                GalaxySettingsView galaxySettingsView = new GalaxySettingsView(settingsActivity, carUi, galaxyExtras, function2, function1, null, 32, null);
-                if (Link.INSTANCE.getHost() == null) {
-                    Link.INSTANCE.setHost(h);
-                }
-                return galaxySettingsView;
+
+            GalaxySettingsView.Root var5 = this.galaxyExtras(var1);
+            SettingsActivity$$ExternalSyntheticLambda109 var6 = new SettingsActivity$$ExternalSyntheticLambda109(this);
+            Object var7;
+            if (Intrinsics.areEqual(var1, "sounds")) {
+                var7 = new SettingsActivity$$ExternalSyntheticLambda112(this);
+            } else if (Intrinsics.areEqual(var1, "developer")) {
+                var7 = new SettingsActivity$$ExternalSyntheticLambda113(this);
+            } else {
+                var7 = null;
             }
-            function12 = new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda113
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj) {
-                    Unit galaxyPage$lambda$16;
-                    galaxyPage$lambda$16 = SettingsActivity.galaxyPage$lambda$16(SettingsActivity.this, (LinearLayout) obj);
-                    return galaxyPage$lambda$16;
-                }
-            };
+
+            var7 = new GalaxySettingsView(var4, var2, var5, var6, (Function1)var7, null, 32, null);
+            if (Link.INSTANCE.getHost() == null) {
+                Link.INSTANCE.setHost(var3);
+            }
+
+            return (View)var7;
         }
-        function1 = function12;
-        GalaxySettingsView galaxySettingsView2 = new GalaxySettingsView(settingsActivity, carUi, galaxyExtras, function2, function1, null, 32, null);
-        if (Link.INSTANCE.getHost() == null) {
-        }
-        return galaxySettingsView2;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1195,131 +1195,112 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         super.attachBaseContext(NarrowDensity.INSTANCE.wrap(base, 1000, 0.62f));
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-     */
-    @Override // androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
-    protected void onCreate(Bundle savedInstanceState) {
-        Hpms hpms = Hpms.INSTANCE;
-        Context applicationContext = getApplicationContext();
-        Intrinsics.checkNotNullExpressionValue(applicationContext, "getApplicationContext(...)");
-        hpms.init(applicationContext);
-        super.onCreate(savedInstanceState);
-        DriveJournal.INSTANCE.init(this);
-        CarUi u = new CarUi(this, false, 2, null);
-        u.setAutoIcon(new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda16
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                SettingIcons.Icon onCreate$lambda$21$lambda$20;
-                onCreate$lambda$21$lambda$20 = SettingsActivity.onCreate$lambda$21$lambda$20(SettingsActivity.this, (String) obj);
-                return onCreate$lambda$21$lambda$20;
-            }
-        });
-        this.ui = u;
-        String stringExtra = getIntent().getStringExtra("host");
-        if (stringExtra == null) {
-            stringExtra = Link.INSTANCE.getHost();
+    /* VF: from Vineflower (jadx: ) */
+    @Override
+    protected void onCreate(Bundle var1) {
+        Hpms var4 = Hpms.INSTANCE;
+        Context var3 = this.getApplicationContext();
+        Intrinsics.checkNotNullExpressionValue(var3, "getApplicationContext(...)");
+        var4.init(var3);
+        super.onCreate(var1);
+        DriveJournal.INSTANCE.init((Context)this);
+        CarUi var7 = new CarUi((Context)this, false, 2, null);
+        var7.setAutoIcon(new SettingsActivity$$ExternalSyntheticLambda16(this));
+        this.ui = var7;
+        String var15 = this.getIntent().getStringExtra("host");
+        String var8 = var15;
+        if (var15 == null) {
+            var8 = Link.INSTANCE.getHost();
         }
-        this.host = stringExtra;
-        FrameLayout $this$onCreate_u24lambda_u2422 = new FrameLayout(this);
-        $this$onCreate_u24lambda_u2422.setBackgroundColor(CarUi.Companion.getBG());
-        this.root = $this$onCreate_u24lambda_u2422;
-        FrameLayout frameLayout = this.root;
-        if (frameLayout == null) {
+
+        this.host = var8;
+        FrameLayout var9 = new FrameLayout((Context)this);
+        var9.setBackgroundColor(CarUi.Companion.getBG());
+        this.root = var9;
+        FrameLayout var16 = this.root;
+        FrameLayout var10 = var16;
+        if (var16 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("root");
-            frameLayout = null;
+            var10 = null;
         }
-        setContentView(frameLayout);
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        FrameLayout frameLayout2 = this.root;
-        if (frameLayout2 == null) {
+
+        this.setContentView((View)var10);
+        WindowCompat.setDecorFitsSystemWindows(this.getWindow(), false);
+        FrameLayout var17 = this.root;
+        FrameLayout var11 = var17;
+        if (var17 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("root");
-            frameLayout2 = null;
+            var11 = null;
         }
-        ViewCompat.setOnApplyWindowInsetsListener(frameLayout2, new OnApplyWindowInsetsListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda17
-            @Override // androidx.core.view.OnApplyWindowInsetsListener
-            public final WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat windowInsetsCompat) {
-                WindowInsetsCompat onCreate$lambda$23;
-                onCreate$lambda$23 = SettingsActivity.onCreate$lambda$23(view, windowInsetsCompat);
-                return onCreate$lambda$23;
-            }
-        });
-        String h = this.host;
-        if (h != null) {
-            this.api = GalaxyApi.Companion.get(this, h);
+
+        ViewCompat.setOnApplyWindowInsetsListener((View)var11, new SettingsActivity$$ExternalSyntheticLambda17());
+        String var12 = this.host;
+        if (var12 != null) {
+            this.api = GalaxyApi.Companion.get((Context)this, var12);
             if (Link.INSTANCE.getHost() == null) {
-                Link.INSTANCE.setHost(h);
+                Link.INSTANCE.setHost(var12);
             }
         }
-        final String h2 = this.host;
-        if (h2 != null) {
-            this.handler.postDelayed(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda18
-                @Override // java.lang.Runnable
-                public final void run() {
-                    SettingsActivity.onCreate$lambda$26$lambda$25(SettingsActivity.this, h2);
-                }
-            }, 400L);
+
+        String var13 = this.host;
+        if (var13 != null) {
+            this.handler.postDelayed(new SettingsActivity$$ExternalSyntheticLambda18(this, var13), 400L);
         }
-        if (savedInstanceState != null) {
-            int area = savedInstanceState.getInt("area", -1);
-            String page = savedInstanceState.getString("page");
-            if (area >= 0) {
-                showArea(area, page);
-                return;
-            } else if (page == null || !savedInstanceState.getBoolean("open")) {
-                showHome();
-                return;
+
+        if (var1 != null) {
+            int var2 = var1.getInt("area", -1);
+            String var14 = var1.getString("page");
+            if (var2 >= 0) {
+                this.showArea(var2, var14);
+            } else if (var14 != null && var1.getBoolean("open")) {
+                this.showHome();
+                this.openTarget(var14);
             } else {
-                showHome();
-                openTarget(page);
-                return;
+                this.showHome();
+            }
+        } else {
+            String var5 = this.getIntent().getStringExtra("tab");
+            if (var5 != null) {
+                switch (var5.hashCode()) {
+                    case -1335157162:
+                        if (var5.equals("device")) {
+                            this.showArea(0, null);
+                            return;
+                        }
+                        break;
+                    case -1181248900:
+                        if (var5.equals("terminal")) {
+                            this.showArea(2, "native:terminal");
+                            return;
+                        }
+                        break;
+                    case -1147621473:
+                        if (var5.equals("toggles")) {
+                            this.showArea(0, "native:toggles");
+                            return;
+                        }
+                        break;
+                    case 110545371:
+                        if (var5.equals("tools")) {
+                            this.showArea(4, null);
+                            return;
+                        }
+                        break;
+                    case 1319330215:
+                        if (var5.equals("software")) {
+                            this.showArea(0, "native:software");
+                            return;
+                        }
+                }
+
+                this.showHome();
+                String var6 = this.getIntent().getStringExtra("tab");
+                Intrinsics.checkNotNull(var6);
+                this.openTarget(var6);
+            } else {
+                this.showHome();
             }
         }
-        String stringExtra2 = getIntent().getStringExtra("tab");
-        if (stringExtra2 == null) {
-            showHome();
-            return;
-        }
-        switch (stringExtra2.hashCode()) {
-            case -1335157162:
-                if (stringExtra2.equals("device")) {
-                    showArea(0, null);
-                    return;
-                }
-                break;
-            case -1181248900:
-                if (stringExtra2.equals("terminal")) {
-                    showArea(2, "native:terminal");
-                    return;
-                }
-                break;
-            case -1147621473:
-                if (stringExtra2.equals("toggles")) {
-                    showArea(0, "native:toggles");
-                    return;
-                }
-                break;
-            case 110545371:
-                if (stringExtra2.equals("tools")) {
-                    showArea(4, null);
-                    return;
-                }
-                break;
-            case 1319330215:
-                if (stringExtra2.equals("software")) {
-                    showArea(0, "native:software");
-                    return;
-                }
-                break;
-        }
-        showHome();
-        String stringExtra3 = getIntent().getStringExtra("tab");
-        Intrinsics.checkNotNull(stringExtra3);
-        openTarget(stringExtra3);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1771,85 +1752,82 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         open("galaxy:" + page);
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterative(DepthRegionTraversal.java:31)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visit(SwitchOverStringVisitor.java:60)
-     */
-    /* JADX WARN: Removed duplicated region for block: B:12:0x008c A[RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:21:0x0080 A[RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:36:0x009c A[ORIG_RETURN, RETURN] */
-    /* JADX WARN: Removed duplicated region for block: B:5:0x0074 A[RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:9:0x0099 A[RETURN, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final String galaxyRailFor(String page) {
-        String substringBefore$default = StringsKt.substringBefore(page, '/', page);
-        switch (substringBefore$default.hashCode()) {
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final String galaxyRailFor(String var1) {
+        var1 = StringsKt.substringBefore(var1, '/', var1);
+        switch (var1.hashCode()) {
             case -1067310595:
-                return !substringBefore$default.equals("traffic") ? "drivingmap" : "galaxy:personalities";
+                if (var1.equals("traffic")) {
+                    return "galaxy:personalities";
+                }
+                break;
             case -1002263574:
-                if (substringBefore$default.equals("profiles")) {
+                if (var1.equals("profiles")) {
                     return "galaxy:speed";
                 }
                 break;
             case -905947169:
-                if (substringBefore$default.equals("sentry")) {
+                if (var1.equals("sentry")) {
                     return "galaxy:cameras";
                 }
                 break;
             case -867966454:
-                if (substringBefore$default.equals("torque")) {
+                if (var1.equals("torque")) {
                     return "galaxy:steering";
                 }
                 break;
             case 96766:
-                if (!substringBefore$default.equals("aol")) {
+                if (var1.equals("aol")) {
+                    return "galaxy:steering";
                 }
                 break;
             case 113962:
-                if (!substringBefore$default.equals("slc")) {
+                if (var1.equals("slc")) {
+                    return "galaxy:speed";
                 }
                 break;
             case 3314156:
-                if (!substringBefore$default.equals("lane")) {
+                if (var1.equals("lane")) {
+                    return "galaxy:steering";
                 }
                 break;
             case 3612229:
-                if (!substringBefore$default.equals("vasm")) {
+                if (var1.equals("vasm")) {
+                    return "galaxy:cameras";
                 }
                 break;
             case 95027439:
-                if (!substringBefore$default.equals("curve")) {
+                if (var1.equals("curve")) {
+                    return "galaxy:speed";
                 }
                 break;
             case 1090497327:
-                if (!substringBefore$default.equals("relaxed")) {
+                if (var1.equals("relaxed")) {
+                    return "galaxy:personalities";
                 }
                 break;
             case 1147132932:
-                if (!substringBefore$default.equals("aggressive")) {
+                if (var1.equals("aggressive")) {
+                    return "galaxy:personalities";
                 }
                 break;
             case 1208131206:
-                if (!substringBefore$default.equals("conditional")) {
+                if (var1.equals("conditional")) {
+                    return "galaxy:speed";
                 }
                 break;
             case 1312628413:
-                if (!substringBefore$default.equals("standard")) {
+                if (var1.equals("standard")) {
+                    return "galaxy:personalities";
                 }
                 break;
             case 1641332067:
-                if (!substringBefore$default.equals("lane_change")) {
+                if (var1.equals("lane_change")) {
+                    return "galaxy:steering";
                 }
-                break;
         }
+
+        return "drivingmap";
     }
 
     /* compiled from: SettingsActivity.kt */
@@ -2713,19 +2691,21 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         private final List<View> parts;
         final /* synthetic */ SettingsActivity this$0;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        /* JADX WARN: Multi-variable type inference failed */
-        public ComboPage(SettingsActivity this$0, List<? extends View> parts) {
-            super(this$0);
-            Intrinsics.checkNotNullParameter(parts, "parts");
-            this.this$0 = this$0;
-            this.parts = parts;
-            LinearLayout col = new LinearLayout(getContext());
-            col.setOrientation(1);
-            for (View p : this.parts) {
-                col.addView(p, new LinearLayout.LayoutParams(-1, -2));
+        /* VF: from Vineflower (jadx: ) */
+        public ComboPage(List<? extends View> var1, List var2) {
+            super((Context)var1);
+            Intrinsics.checkNotNullParameter(var2, "parts");
+            this.this$0 = var1;
+            this.parts = var2;
+            LinearLayout var4 = new LinearLayout(this.getContext());
+            var4.setOrientation(1);
+            Iterator var3 = this.parts.iterator();
+
+            while (var3.hasNext()) {
+                var4.addView((View)var3.next(), (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
             }
-            addView(col);
+
+            this.addView((View)var4);
         }
 
         public final List<View> getParts() {
@@ -3079,159 +3059,146 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         return settingsActivity.catalogPage(str, z);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:69:0x01f0  */
-    /* JADX WARN: Removed duplicated region for block: B:72:0x01f3 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final View catalogPage(final String spec, boolean inPanel) {
-        Object element$iv;
-        List<GalaxyApi.Param> list;
-        Iterable $this$filter$iv;
-        int $i$f$filter;
-        boolean z;
-        boolean z2;
-        ArrayList arrayList;
-        GalaxyApi a = this.api;
-        if (a == null) {
-            return offline("Not connected to the comma. Connect first, then come back.");
-        }
-        String name = StringsKt.substringBefore(spec, ":", spec);
-        String filter = StringsKt.substringAfter(spec, ":", "");
-        Iterable $this$firstOrNull$iv = a.getCatalog();
-        Iterator it = $this$firstOrNull$iv.iterator();
-        while (true) {
-            if (!it.hasNext()) {
-                element$iv = null;
-                break;
-            }
-            element$iv = it.next();
-            if (Intrinsics.areEqual(((GalaxyApi.Category) element$iv).getName(), name)) {
-                break;
-            }
-        }
-        GalaxyApi.Category cat = (GalaxyApi.Category) element$iv;
-        if (cat == null) {
-            final View v = offline(a.getCatalog().isEmpty() ? "Loading the settings catalog from the comma…" : "Section \"" + name + "\" not found in this StarPilot version.");
-            this.handler.postDelayed(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda158
-                @Override // java.lang.Runnable
-                public final void run() {
-                    SettingsActivity.catalogPage$lambda$87(SettingsActivity.this, v, spec);
-                }
-            }, 1500L);
-            return v;
-        }
-        List<GalaxyApi.Param> params = cat.getParams();
-        if (filter.length() > 0) {
-            String key = filter.substring(1);
-            Intrinsics.checkNotNullExpressionValue(key, "substring(...)");
-            HashSet sub = new HashSet();
-            ArrayDeque pending = new ArrayDeque(CollectionsKt.listOf(key));
-            sub.add(key);
-            while (!pending.isEmpty()) {
-                String k = (String) pending.removeFirst();
-                for (GalaxyApi.Param p : cat.getParams()) {
-                    if (Intrinsics.areEqual(p.getParentKey(), k) && sub.add(p.getKey())) {
-                        pending.add(p.getKey());
-                    }
-                }
-            }
-            if (StringsKt.startsWith(filter, "+", false)) {
-                Iterable $this$filter$iv2 = cat.getParams();
-                Collection destination$iv$iv = new ArrayList();
-                for (Object element$iv$iv : $this$filter$iv2) {
-                    if (sub.contains(((GalaxyApi.Param) element$iv$iv).getKey())) {
-                        destination$iv$iv.add(element$iv$iv);
-                    }
-                }
-                arrayList = (List) destination$iv$iv;
-            } else {
-                Iterable $this$filter$iv3 = cat.getParams();
-                Collection destination$iv$iv2 = new ArrayList();
-                for (Object element$iv$iv2 : $this$filter$iv3) {
-                    List<GalaxyApi.Param> list2 = params;
-                    Object params2 = ((GalaxyApi.Param) element$iv$iv2).getKey();
-                    if (!sub.contains(params2)) {
-                        destination$iv$iv2.add(element$iv$iv2);
-                    }
-                    params = list2;
-                }
-                arrayList = (List) destination$iv$iv2;
-            }
-            list = arrayList;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final View catalogPage(String var1, boolean var2) {
+        GalaxyApi var8 = this.api;
+        if (var8 == null) {
+            return this.offline("Not connected to the comma. Connect first, then come back.");
         } else {
-            list = params;
-        }
-        Iterable params3 = list;
-        Iterable $this$filter$iv4 = params3;
-        int $i$f$filter2 = 0;
-        Collection destination$iv$iv3 = new ArrayList();
-        for (Object element$iv$iv3 : $this$filter$iv4) {
-            GalaxyApi.Param it2 = (GalaxyApi.Param) element$iv$iv3;
-            if (it2.getParentKey() == null) {
-                Iterable $this$any$iv = list;
-                $this$filter$iv = $this$filter$iv4;
-                if (($this$any$iv instanceof Collection) && ((Collection) $this$any$iv).isEmpty()) {
-                    $i$f$filter = $i$f$filter2;
-                    z2 = false;
+            String var9 = StringsKt.substringBefore(var1, ":", var1);
+            String var7 = StringsKt.substringAfter(var1, ":", "");
+            Iterator var10 = var8.getCatalog().iterator();
+
+            Object var6;
+            do {
+                if (!var10.hasNext()) {
+                    var6 = null;
+                    break;
+                }
+
+                var6 = (View)var10.next();
+            } while (!Intrinsics.areEqual(((GalaxyApi.Category)var6).getName(), var9));
+
+            GalaxyApi.Category var31 = (GalaxyApi.Category)var6;
+            if (var31 == null) {
+                if (var8.getCatalog().isEmpty()) {
+                    var6 = "Loading the settings catalog from the comma…";
                 } else {
-                    Iterator it3 = $this$any$iv.iterator();
-                    while (true) {
-                        if (!it3.hasNext()) {
-                            $i$f$filter = $i$f$filter2;
-                            z2 = false;
-                            break;
-                        }
-                        Object element$iv2 = it3.next();
-                        GalaxyApi.Param c = (GalaxyApi.Param) element$iv2;
-                        Iterator it4 = it3;
-                        $i$f$filter = $i$f$filter2;
-                        if (Intrinsics.areEqual(c.getParentKey(), it2.getKey())) {
-                            z2 = true;
-                            break;
-                        }
-                        it3 = it4;
-                        $i$f$filter2 = $i$f$filter;
-                    }
+                    var6 = "Section \"" + var9 + "\" not found in this StarPilot version.";
                 }
-                if (z2) {
-                    z = true;
-                    if (!z) {
-                        destination$iv$iv3.add(element$iv$iv3);
-                    }
-                    $this$filter$iv4 = $this$filter$iv;
-                    $i$f$filter2 = $i$f$filter;
-                }
+
+                var6 = this.offline((String)var6);
+                this.handler.postDelayed(new SettingsActivity$$ExternalSyntheticLambda158(this, var6, var1), 1500L);
+                return var6;
             } else {
-                $this$filter$iv = $this$filter$iv4;
-                $i$f$filter = $i$f$filter2;
+                List var15 = var31.getParams();
+                boolean var3;
+                if (var7.length() > 0) {
+                    var3 = true;
+                } else {
+                    var3 = false;
+                }
+
+                if (var3) {
+                    String var12 = var7.substring(1);
+                    Intrinsics.checkNotNullExpressionValue(var12, "substring(...)");
+                    HashSet var20 = new HashSet();
+                    ArrayDeque var11 = new ArrayDeque<>(CollectionsKt.listOf(var12));
+                    var20.add(var12);
+
+                    while (!var11.isEmpty()) {
+                        String var14 = (String)var11.removeFirst();
+
+                        for (GalaxyApi.Param var38 : var31.getParams()) {
+                            if (Intrinsics.areEqual(var38.getParentKey(), var14) && var20.add(var38.getKey())) {
+                                var11.add(var38.getKey());
+                            }
+                        }
+                    }
+
+                    if (StringsKt.startsWith(var7, "+", false)) {
+                        Iterable var26 = var31.getParams();
+                        var var16 = new ArrayList();
+
+                        for (Object var27 : var26) {
+                            if (var20.contains(((GalaxyApi.Param)var27).getKey())) {
+                                var16.add(var27);
+                            }
+                        }
+
+                        var15 = var16;
+                    } else {
+                        Iterable var33 = var31.getParams();
+                        var var28 = new ArrayList();
+
+                        for (Object var36 : var33) {
+                            if (!var20.contains(((GalaxyApi.Param)var36).getKey())) {
+                                var28.add(var36);
+                            }
+                        }
+
+                        var15 = var28;
+                    }
+                }
+
+                Iterable var21 = var15;
+                boolean var4 = false;
+                var var35 = new ArrayList();
+
+                for (Object var40 : var21) {
+                    label93: {
+                        GalaxyApi.Param var39 = (GalaxyApi.Param)var40;
+                        boolean var5;
+                        if (var39.getParentKey() == null) {
+                            var var29 = var15;
+                            if (var29 instanceof Collection && ((Collection)var29).isEmpty()) {
+                                var3 = false;
+                            } else {
+                                Iterator var30 = var29.iterator();
+
+                                while (true) {
+                                    if (!var30.hasNext()) {
+                                        var3 = false;
+                                        break;
+                                    }
+
+                                    String var41 = ((GalaxyApi.Param)var30.next()).getParentKey();
+                                    if (Intrinsics.areEqual(var41, var39.getKey())) {
+                                        var3 = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            var5 = var4;
+                            if (var3) {
+                                var3 = true;
+                                break label93;
+                            }
+                        } else {
+                            var5 = var4;
+                        }
+
+                        var3 = false;
+                        var4 = var5;
+                    }
+
+                    if (var3) {
+                        var35.add(var40);
+                    }
+                }
+
+                List var22 = var35;
+                if (var15.size() > 24 && var22.size() >= 2) {
+                    return this.subTabbedCatalog(var8, var15, var22, var9, var2);
+                } else {
+                    CatalogPanel var17 = new CatalogPanel(this, var8, var15, var9, true, new SettingsActivity$$ExternalSyntheticLambda159(this));
+                    FrameLayout var23 = pageBox$default(this, (View)var17, var2, false, 4, null);
+                    var23.setTag(new SettingsActivity$$ExternalSyntheticLambda160(var17, this));
+                    return (View)var23;
+                }
             }
-            z = false;
-            if (!z) {
-            }
-            $this$filter$iv4 = $this$filter$iv;
-            $i$f$filter2 = $i$f$filter;
         }
-        List parents = (List) destination$iv$iv3;
-        if (list.size() > 24 && parents.size() >= 2) {
-            return subTabbedCatalog(a, list, parents, name, inPanel);
-        }
-        final CatalogPanel panel = new CatalogPanel(this, a, list, name, true, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda159
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit catalogPage$lambda$92;
-                catalogPage$lambda$92 = SettingsActivity.catalogPage$lambda$92(SettingsActivity.this, (String) obj);
-                return catalogPage$lambda$92;
-            }
-        });
-        FrameLayout $this$catalogPage_u24lambda_u2494 = pageBox$default(this, panel, inPanel, false, 4, null);
-        $this$catalogPage_u24lambda_u2494.setTag(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda160
-            @Override // java.lang.Runnable
-            public final void run() {
-                SettingsActivity.catalogPage$lambda$94$lambda$93(panel, this);
-            }
-        });
-        return $this$catalogPage_u24lambda_u2494;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -3324,165 +3291,143 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         return settingsActivity.pageBox(view, z, z2);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:37:0x00db, code lost:
-    
-        if (kotlin.text.StringsKt.startsWith(r32, "Longitudinal", false) == false) goto L42;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:17:0x00b3  */
-    /* JADX WARN: Removed duplicated region for block: B:20:0x00b6 A[SYNTHETIC] */
-    /* JADX WARN: Type inference failed for: r0v24, types: [T, kotlin.jvm.functions.Function1] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final View subTabbedCatalog(final GalaxyApi a, List<GalaxyApi.Param> params, List<GalaxyApi.Param> parents, final String name, boolean inPanel) {
-        CarUi carUi;
-        GradientDrawable rounded$default;
-        CarUi carUi2;
-        CarUi carUi3;
-        Iterable $this$filter$iv;
-        boolean z;
-        boolean z2;
-        LinearLayout $this$subTabbedCatalog_u24lambda_u2497 = new LinearLayout(this);
-        $this$subTabbedCatalog_u24lambda_u2497.setOrientation(1);
-        if (inPanel) {
-            rounded$default = null;
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;Type inference failed;incorrect) */
+    private final View subTabbedCatalog(GalaxyApi var1, List<GalaxyApi.Param> var2, List<GalaxyApi.Param> var3, String var4, boolean var5) {
+        LinearLayout var9 = new LinearLayout((Context)this);
+        var9.setOrientation(1);
+        Drawable var7;
+        if (var5) {
+            var7 = null;
         } else {
-            CarUi carUi4 = this.ui;
-            if (carUi4 == null) {
+            CarUi var24 = this.ui;
+            if (var24 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("ui");
-                carUi = null;
-            } else {
-                carUi = carUi4;
+                var24 = null;
             }
-            rounded$default = CarUi.rounded$default(carUi, CarUi.Companion.getSECTION(), 14, null, 4, null);
+
+            var7 = (Drawable)CarUi.rounded$default(var24, CarUi.Companion.getSECTION(), 14, null, 4, null);
         }
-        $this$subTabbedCatalog_u24lambda_u2497.setBackground(rounded$default);
-        final FrameLayout holder = new FrameLayout(this);
-        List<GalaxyApi.Param> $this$filter$iv2 = params;
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv2) {
-            GalaxyApi.Param it = (GalaxyApi.Param) element$iv$iv;
-            if (it.getParentKey() == null) {
-                List<GalaxyApi.Param> $this$none$iv = params;
-                if (($this$none$iv instanceof Collection) && $this$none$iv.isEmpty()) {
-                    $this$filter$iv = $this$filter$iv2;
-                    z2 = true;
+
+        var9.setBackground(var7);
+        FrameLayout var10 = new FrameLayout((Context)this);
+        Iterable var25 = var2;
+        var var11 = new ArrayList();
+
+        for (Object var13 : var25) {
+            boolean var23;
+            label119: {
+                GalaxyApi.Param var8 = (GalaxyApi.Param)var13;
+                Iterable var27;
+                if (var8.getParentKey() == null) {
+                    var var14 = var2;
+                    if (var14 instanceof Collection && ((Collection)var14).isEmpty()) {
+                        var23 = true;
+                    } else {
+                        Iterator var42 = var14.iterator();
+
+                        while (true) {
+                            if (!var42.hasNext()) {
+                                var23 = true;
+                                break;
+                            }
+
+                            String var15 = ((GalaxyApi.Param)var42.next()).getParentKey();
+                            if (Intrinsics.areEqual(var15, var8.getKey())) {
+                                var23 = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    var27 = var25;
+                    if (var23) {
+                        var23 = true;
+                        break label119;
+                    }
                 } else {
-                    Iterator it2 = $this$none$iv.iterator();
-                    while (true) {
-                        if (!it2.hasNext()) {
-                            $this$filter$iv = $this$filter$iv2;
-                            z2 = true;
-                            break;
-                        }
-                        Object element$iv = it2.next();
-                        $this$filter$iv = $this$filter$iv2;
-                        if (Intrinsics.areEqual(((GalaxyApi.Param) element$iv).getParentKey(), it.getKey())) {
-                            z2 = false;
-                            break;
-                        }
-                        $this$filter$iv2 = $this$filter$iv;
-                    }
+                    var27 = var25;
                 }
-                if (z2) {
-                    z = true;
-                    if (!z) {
-                        destination$iv$iv.add(element$iv$iv);
-                    }
-                    $this$filter$iv2 = $this$filter$iv;
-                }
-            } else {
-                $this$filter$iv = $this$filter$iv2;
+
+                var23 = false;
+                var25 = var27;
             }
-            z = false;
-            if (!z) {
+
+            if (var23) {
+                var11.add(var13);
             }
-            $this$filter$iv2 = $this$filter$iv;
         }
-        List leaves = (List) destination$iv$iv;
-        final ArrayList tabs = new ArrayList();
-        if (!leaves.isEmpty()) {
+
+        List var28 = var11;
+        ArrayList var26 = new ArrayList();
+        if (!var28.isEmpty() || StringsKt.startsWith(var4, "Longitudinal", false)) {
+            var26.add(TuplesKt.to("General", var28));
         }
-        tabs.add(TuplesKt.to("General", leaves));
-        Iterator<GalaxyApi.Param> it3 = parents.iterator();
-        while (it3.hasNext()) {
-            GalaxyApi.Param p = it3.next();
-            HashSet sub = new HashSet();
-            ArrayDeque pending = new ArrayDeque(CollectionsKt.listOf(p.getKey()));
-            sub.add(p.getKey());
-            while (!pending.isEmpty()) {
-                String k = (String) pending.removeFirst();
-                for (GalaxyApi.Param c : params) {
-                    if (Intrinsics.areEqual(c.getParentKey(), k) && sub.add(c.getKey())) {
-                        pending.add(c.getKey());
+
+        for (GalaxyApi.Param var35 : var3) {
+            HashSet var29 = new HashSet();
+            ArrayDeque var43 = new ArrayDeque<>(CollectionsKt.listOf(var35.getKey()));
+            var29.add(var35.getKey());
+
+            while (!var43.isEmpty()) {
+                String var46 = (String)var43.removeFirst();
+
+                for (GalaxyApi.Param var38 : var2) {
+                    if (Intrinsics.areEqual(var38.getParentKey(), var46) && var29.add(var38.getKey())) {
+                        var43.add(var38.getKey());
                     }
                 }
             }
-            String k2 = p.getLabel();
-            Collection destination$iv$iv2 = new ArrayList();
-            for (Object element$iv$iv2 : params) {
-                GalaxyApi.Param it4 = (GalaxyApi.Param) element$iv$iv2;
-                Iterator<GalaxyApi.Param> it5 = it3;
-                if (sub.contains(it4.getKey())) {
-                    destination$iv$iv2.add(element$iv$iv2);
+
+            String var33 = var35.getLabel();
+            Iterable var39 = var2;
+            var var36 = new ArrayList();
+
+            for (Object var44 : var39) {
+                if (var29.contains(((GalaxyApi.Param)var44).getKey())) {
+                    var36.add(var44);
                 }
-                it3 = it5;
             }
-            tabs.add(TuplesKt.to(k2, (List) destination$iv$iv2));
-            it3 = it3;
+
+            var28 = var36;
+            var26.add(TuplesKt.to(var33, var28));
         }
-        final HashMap cache = new HashMap();
-        final Ref.IntRef sel = new Ref.IntRef();
-        final Ref.ObjectRef paint = new Ref.ObjectRef();
-        CarUi carUi5 = this.ui;
-        if (carUi5 == null) {
+
+        HashMap var31 = new HashMap();
+        IntRef var37 = new IntRef();
+        ObjectRef var34 = new ObjectRef();
+        CarUi var16 = this.ui;
+        if (var16 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi2 = null;
-        } else {
-            carUi2 = carUi5;
+            var16 = null;
         }
-        ArrayList $this$map$iv = tabs;
-        Collection destination$iv$iv3 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        for (Object item$iv$iv : $this$map$iv) {
-            Pair it6 = (Pair) item$iv$iv;
-            destination$iv$iv3.add((String) it6.getFirst());
-            $this$map$iv = $this$map$iv;
+
+        Iterable var20 = var26;
+        var var41 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var20, 10));
+        Iterator var45 = var20.iterator();
+
+        while (var45.hasNext()) {
+            var41.add((String)((Pair)var45.next()).getFirst());
         }
-        Pair<View, Function1<Integer, Unit>> browserTabs = carUi2.browserTabs((List) destination$iv$iv3, 2, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda95
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit subTabbedCatalog$lambda$104;
-                subTabbedCatalog$lambda$104 = SettingsActivity.subTabbedCatalog$lambda$104(sel, paint, cache, holder, this, a, tabs, name, ((Integer) obj).intValue());
-                return subTabbedCatalog$lambda$104;
-            }
-        });
-        View strip = browserTabs.component1();
-        paint.element = (Function1) browserTabs.component2();
-        if (!inPanel) {
-            CarUi carUi6 = this.ui;
-            if (carUi6 == null) {
+
+        var3 = var41;
+        Pair var17 = var16.browserTabs(var3, 2, new SettingsActivity$$ExternalSyntheticLambda95(var37, var34, var31, var10, this, var1, var26, var4));
+        View var22 = (View)var17.component1();
+        var34.element = (T)((Function1)var17.component2());
+        if (!var5) {
+            CarUi var18 = this.ui;
+            if (var18 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("ui");
-                carUi3 = null;
-            } else {
-                carUi3 = carUi6;
+                var18 = null;
             }
-            strip.setBackground(carUi3.corners(CarUi.Companion.getSECTION(), 14, 14, 0, 0));
+
+            var22.setBackground((Drawable)var18.corners(CarUi.Companion.getSECTION(), 14, 14, 0, 0));
         }
-        $this$subTabbedCatalog_u24lambda_u2497.addView(strip, new LinearLayout.LayoutParams(-1, -2));
-        $this$subTabbedCatalog_u24lambda_u2497.addView(pageBox(holder, true, true));
-        $this$subTabbedCatalog_u24lambda_u2497.post(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda96
-            @Override // java.lang.Runnable
-            public final void run() {
-                SettingsActivity.subTabbedCatalog$lambda$105(sel, paint, cache, holder, this, a, tabs, name);
-            }
-        });
-        $this$subTabbedCatalog_u24lambda_u2497.setTag(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda97
-            @Override // java.lang.Runnable
-            public final void run() {
-                SettingsActivity.subTabbedCatalog$lambda$106(sel, paint, cache, holder, this, a, tabs, name);
-            }
-        });
-        return $this$subTabbedCatalog_u24lambda_u2497;
+
+        var9.addView(var22, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
+        var9.addView((View)this.pageBox((View)var10, true, true));
+        var9.post(new SettingsActivity$$ExternalSyntheticLambda96(var37, var34, var31, var10, this, var1, var26, var4));
+        var9.setTag(new SettingsActivity$$ExternalSyntheticLambda97(var37, var34, var31, var10, this, var1, var26, var4));
+        return (View)var9;
     }
 
     private static final void subTabbedCatalog$select(Ref.IntRef sel, Ref.ObjectRef<Function1<Integer, Unit>> objectRef, HashMap<Integer, CatalogPanel> hashMap, FrameLayout holder, final SettingsActivity this$0, GalaxyApi $a, ArrayList<Pair<String, List<GalaxyApi.Param>>> arrayList, String $name, int i) {
@@ -3549,215 +3494,205 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         subTabbedCatalog$select($sel, $paint, $cache, $holder, this$0, $a, $tabs, $name, $sel.element);
     }
 
-    /* JADX WARN: Type inference failed for: r5v16, types: [T, com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda10] */
+    /* VF: from Vineflower (jadx: Type inference failed) */
     private final View togglesPage() {
-        CarUi carUi;
-        CarUi carUi2;
-        CarUi carUi3;
-        final GalaxyApi a = this.api;
-        if (a == null) {
-            return offline("Not connected to the comma. Connect first, then come back.");
-        }
-        Iterable $this$filter$iv = a.getCatalog();
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv) {
-            GalaxyApi.Category it = (GalaxyApi.Category) element$iv$iv;
-            if (!it.getParams().isEmpty()) {
-                destination$iv$iv.add(element$iv$iv);
-            }
-        }
-        Iterable $this$map$iv = (List) destination$iv$iv;
-        Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        for (Object item$iv$iv : $this$map$iv) {
-            GalaxyApi.Category it2 = (GalaxyApi.Category) item$iv$iv;
-            destination$iv$iv2.add(it2.getName());
-        }
-        final List sections = (List) destination$iv$iv2;
-        if (sections.isEmpty()) {
-            final View v = offline("Loading the settings catalog from the comma…");
-            this.handler.postDelayed(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda7
-                @Override // java.lang.Runnable
-                public final void run() {
-                    SettingsActivity.togglesPage$lambda$109(SettingsActivity.this, v);
+        GalaxyApi var6 = this.api;
+        if (var6 == null) {
+            return this.offline("Not connected to the comma. Connect first, then come back.");
+        } else {
+            Iterable var5 = var6.getCatalog();
+            var var4 = new ArrayList();
+
+            for (Object var7 : var5) {
+                if (!((GalaxyApi.Category)var7).getParams().isEmpty()) {
+                    var4.add(var7);
                 }
-            }, 1500L);
-            return v;
-        }
-        LinearLayout $this$togglesPage_u24lambda_u24110 = new LinearLayout(this);
-        $this$togglesPage_u24lambda_u24110.setOrientation(1);
-        final EditText $this$togglesPage_u24lambda_u24111 = new EditText(this);
-        $this$togglesPage_u24lambda_u24111.setHint("Search settings");
-        $this$togglesPage_u24lambda_u24111.setTextSize(19.0f);
-        $this$togglesPage_u24lambda_u24111.setSingleLine();
-        $this$togglesPage_u24lambda_u24111.setTextColor(CarUi.Companion.getTEXT());
-        $this$togglesPage_u24lambda_u24111.setHintTextColor(CarUi.Companion.getDIM());
-        $this$togglesPage_u24lambda_u24111.setBackground(null);
-        CarUi carUi4 = this.ui;
-        if (carUi4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi4 = null;
-        }
-        int dp = carUi4.dp(20);
-        CarUi carUi5 = this.ui;
-        if (carUi5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi5 = null;
-        }
-        int dp2 = carUi5.dp(12);
-        CarUi carUi6 = this.ui;
-        if (carUi6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi6 = null;
-        }
-        int dp3 = carUi6.dp(8);
-        CarUi carUi7 = this.ui;
-        if (carUi7 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi7 = null;
-        }
-        $this$togglesPage_u24lambda_u24111.setPadding(dp, dp2, dp3, carUi7.dp(12));
-        $this$togglesPage_u24lambda_u24111.setImeOptions(3);
-        final TextView $this$togglesPage_u24lambda_u24113 = new TextView(this);
-        $this$togglesPage_u24lambda_u24113.setText("✕");
-        $this$togglesPage_u24lambda_u24113.setTextSize(17.0f);
-        $this$togglesPage_u24lambda_u24113.setTextColor(CarUi.Companion.getBG());
-        $this$togglesPage_u24lambda_u24113.setGravity(17);
-        $this$togglesPage_u24lambda_u24113.setTypeface(Typeface.DEFAULT_BOLD);
-        CarUi carUi8 = this.ui;
-        if (carUi8 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi = null;
-        } else {
-            carUi = carUi8;
-        }
-        $this$togglesPage_u24lambda_u24113.setBackground(CarUi.rounded$default(carUi, CarUi.Companion.getDIM(), 15, null, 4, null));
-        $this$togglesPage_u24lambda_u24113.setVisibility(8);
-        $this$togglesPage_u24lambda_u24113.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda8
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                SettingsActivity.togglesPage$lambda$113$lambda$112($this$togglesPage_u24lambda_u24111, this, view);
-            }
-        });
-        LinearLayout $this$togglesPage_u24lambda_u24115 = new LinearLayout(this);
-        $this$togglesPage_u24lambda_u24115.setOrientation(0);
-        $this$togglesPage_u24lambda_u24115.setGravity(16);
-        CarUi carUi9 = this.ui;
-        if (carUi9 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi2 = null;
-        } else {
-            carUi2 = carUi9;
-        }
-        $this$togglesPage_u24lambda_u24115.setBackground(CarUi.rounded$default(carUi2, CarUi.Companion.getCARD(), 14, null, 4, null));
-        $this$togglesPage_u24lambda_u24115.addView($this$togglesPage_u24lambda_u24111, new LinearLayout.LayoutParams(0, -2, 1.0f));
-        TextView textView = $this$togglesPage_u24lambda_u24113;
-        CarUi carUi10 = this.ui;
-        if (carUi10 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi10 = null;
-        }
-        int dp4 = carUi10.dp(30);
-        CarUi carUi11 = this.ui;
-        if (carUi11 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi11 = null;
-        }
-        LinearLayout.LayoutParams $this$togglesPage_u24lambda_u24115_u24lambda_u24114 = new LinearLayout.LayoutParams(dp4, carUi11.dp(30));
-        CarUi carUi12 = this.ui;
-        if (carUi12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi12 = null;
-        }
-        $this$togglesPage_u24lambda_u24115_u24lambda_u24114.rightMargin = carUi12.dp(14);
-        Unit unit = Unit.INSTANCE;
-        $this$togglesPage_u24lambda_u24115.addView(textView, $this$togglesPage_u24lambda_u24115_u24lambda_u24114);
-        this.togglesSearch = $this$togglesPage_u24lambda_u24115;
-        setHeaderTool($this$togglesPage_u24lambda_u24115);
-        List $this$map$iv2 = sections;
-        Collection destination$iv$iv3 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv2, 10));
-        for (Object item$iv$iv2 : $this$map$iv2) {
-            String it3 = (String) item$iv$iv2;
-            destination$iv$iv3.add(shortSection(it3));
-        }
-        List labels = CollectionsKt.plus((Collection<? extends String>) destination$iv$iv3, "Language");
-        final List names = CollectionsKt.plus((Collection<? extends String>) sections, "Language");
-        final Ref.ObjectRef select = new Ref.ObjectRef();
-        final Ref.IntRef lastSel = new Ref.IntRef();
-        CarUi carUi13 = this.ui;
-        if (carUi13 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi13 = null;
-        }
-        Pair<View, Function1<Integer, Unit>> browserTabs = carUi13.browserTabs(labels, 1, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda9
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit unit2;
-                unit2 = SettingsActivity.togglesPage$lambda$117(lastSel, $this$togglesPage_u24lambda_u24111, select, ((Integer) obj).intValue());
-                return unit2;
-            }
-        });
-        View strip = browserTabs.component1();
-        final Function1 paint = browserTabs.component2();
-        $this$togglesPage_u24lambda_u24110.addView(strip, new LinearLayout.LayoutParams(-1, -2));
-        final FrameLayout $this$togglesPage_u24lambda_u24118 = new FrameLayout(this);
-        CarUi carUi14 = this.ui;
-        if (carUi14 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi3 = null;
-        } else {
-            carUi3 = carUi14;
-        }
-        $this$togglesPage_u24lambda_u24118.setBackground(carUi3.corners(CarUi.Companion.getSECTION(), 0, 0, 14, 14));
-        $this$togglesPage_u24lambda_u24110.addView($this$togglesPage_u24lambda_u24118, new LinearLayout.LayoutParams(-1, 0, 1.0f));
-        final HashMap cache = new HashMap();
-        select.element = new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda10
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit unit2;
-                unit2 = SettingsActivity.togglesPage$lambda$124(paint, names, cache, sections, this, $this$togglesPage_u24lambda_u24118, ((Integer) obj).intValue());
-                return unit2;
-            }
-        };
-        final Runnable runSearch = new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda12
-            @Override // java.lang.Runnable
-            public final void run() {
-                SettingsActivity.togglesPage$lambda$132($this$togglesPage_u24lambda_u24111, select, lastSel, paint, a, this, $this$togglesPage_u24lambda_u24118);
-            }
-        };
-        $this$togglesPage_u24lambda_u24111.addTextChangedListener(new TextWatcher() { // from class: com.starpilot.starview.SettingsActivity$togglesPage$4
-            @Override // android.text.TextWatcher
-            public void beforeTextChanged(CharSequence s, int st, int c, int a2) {
             }
 
-            @Override // android.text.TextWatcher
-            public void onTextChanged(CharSequence s, int st, int b, int c) {
+            List var16 = var4;
+            var5 = var16;
+            var4 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var5, 10));
+            Iterator var36 = var5.iterator();
+
+            while (var36.hasNext()) {
+                var4.add(((GalaxyApi.Category)var36.next()).getName());
             }
 
-            @Override // android.text.TextWatcher
-            public void afterTextChanged(Editable e) {
-                Handler handler;
-                Handler handler2;
-                Editable editable = e;
-                $this$togglesPage_u24lambda_u24113.setVisibility(editable == null || editable.length() == 0 ? 8 : 0);
-                handler = this.handler;
-                handler.removeCallbacks(runSearch);
-                handler2 = this.handler;
-                handler2.postDelayed(runSearch, 350L);
+            List var49 = var4;
+            if (var49.isEmpty()) {
+                View var33 = this.offline("Loading the settings catalog from the comma…");
+                this.handler.postDelayed(new SettingsActivity$$ExternalSyntheticLambda7(this, var33), 1500L);
+                return var33;
+            } else {
+                LinearLayout var8 = new LinearLayout((Context)this);
+                var8.setOrientation(1);
+                EditText var9 = new EditText((Context)this);
+                var9.setHint("Search settings");
+                var9.setTextSize(19.0F);
+                var9.setSingleLine();
+                var9.setTextColor(CarUi.Companion.getTEXT());
+                var9.setHintTextColor(CarUi.Companion.getDIM());
+                var9.setBackground(null);
+                CarUi var37 = this.ui;
+                CarUi var18 = var37;
+                if (var37 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("ui");
+                    var18 = null;
+                }
+
+                int var2 = var18.dp(20);
+                CarUi var38 = this.ui;
+                CarUi var19 = var38;
+                if (var38 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("ui");
+                    var19 = null;
+                }
+
+                int var3 = var19.dp(12);
+                CarUi var39 = this.ui;
+                CarUi var20 = var39;
+                if (var39 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("ui");
+                    var20 = null;
+                }
+
+                int var1 = var20.dp(8);
+                CarUi var40 = this.ui;
+                CarUi var21 = var40;
+                if (var40 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("ui");
+                    var21 = null;
+                }
+
+                var9.setPadding(var2, var3, var1, var21.dp(12));
+                var9.setImeOptions(3);
+                TextView var10 = new TextView((Context)this);
+                var10.setText("✕");
+                var10.setTextSize(17.0F);
+                var10.setTextColor(CarUi.Companion.getBG());
+                var10.setGravity(17);
+                var10.setTypeface(Typeface.DEFAULT_BOLD);
+                CarUi var22 = this.ui;
+                if (var22 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("ui");
+                    var22 = null;
+                }
+
+                var10.setBackground((Drawable)CarUi.rounded$default(var22, CarUi.Companion.getDIM(), 15, null, 4, null));
+                var10.setVisibility(8);
+                var10.setOnClickListener(new SettingsActivity$$ExternalSyntheticLambda8(var9, this));
+                LinearLayout var11 = new LinearLayout((Context)this);
+                var11.setOrientation(0);
+                var11.setGravity(16);
+                CarUi var23 = this.ui;
+                if (var23 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("ui");
+                    var23 = null;
+                }
+
+                var11.setBackground((Drawable)CarUi.rounded$default(var23, CarUi.Companion.getCARD(), 14, null, 4, null));
+                var11.addView((View)var9, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
+                View var12 = (View)var10;
+                CarUi var41 = this.ui;
+                CarUi var24 = var41;
+                if (var41 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("ui");
+                    var24 = null;
+                }
+
+                var1 = var24.dp(30);
+                CarUi var42 = this.ui;
+                CarUi var25 = var42;
+                if (var42 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("ui");
+                    var25 = null;
+                }
+
+                android.widget.LinearLayout.LayoutParams var13 = new android.widget.LinearLayout.LayoutParams(var1, var25.dp(30));
+                CarUi var43 = this.ui;
+                CarUi var26 = var43;
+                if (var43 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("ui");
+                    var26 = null;
+                }
+
+                var13.rightMargin = var26.dp(14);
+                Unit var27 = Unit.INSTANCE;
+                var11.addView(var12, (android.view.ViewGroup.LayoutParams)var13);
+                this.togglesSearch = (View)var11;
+                this.setHeaderTool((View)var11);
+                var5 = var49;
+                var4 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var5, 10));
+                Iterator var45 = var5.iterator();
+
+                while (var45.hasNext()) {
+                    var4.add(this.shortSection((String)var45.next()));
+                }
+
+                List var29 = var4;
+                List var14 = CollectionsKt.plus(var29, "Language");
+                List var50 = CollectionsKt.plus(var49, "Language");
+                ObjectRef var51 = new ObjectRef();
+                IntRef var52 = new IntRef();
+                CarUi var46 = this.ui;
+                CarUi var30 = var46;
+                if (var46 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("ui");
+                    var30 = null;
+                }
+
+                Pair var47 = var30.browserTabs(var14, 1, new SettingsActivity$$ExternalSyntheticLambda9(var52, var9, var51));
+                View var31 = (View)var47.component1();
+                Function1 var48 = (Function1)var47.component2();
+                var8.addView(var31, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
+                FrameLayout var53 = new FrameLayout((Context)this);
+                CarUi var32 = this.ui;
+                if (var32 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("ui");
+                    var32 = null;
+                }
+
+                var53.setBackground((Drawable)var32.corners(CarUi.Companion.getSECTION(), 0, 0, 14, 14));
+                var8.addView((View)var53, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F)));
+                var51.element = (T)(new SettingsActivity$$ExternalSyntheticLambda10(var48, var50, new HashMap(), var49, this, var53));
+                var9.addTextChangedListener(
+                    new TextWatcher() {
+                        final TextView $clear = var10;
+                        final Runnable $runSearch = new SettingsActivity$$ExternalSyntheticLambda12(var9, var51, var52, var48, var6, SettingsActivity.this, var53);
+                        final SettingsActivity this$0 = SettingsActivity.this;
+
+                        public void afterTextChanged(Editable var1) {
+                            TextView var4x = this.$clear;
+                            CharSequence var5x = (CharSequence)var1;
+                            byte var3x = 0;
+                            boolean var2x;
+                            if (var5x != null && var5x.length() != 0) {
+                                var2x = false;
+                            } else {
+                                var2x = true;
+                            }
+
+                            if (var2x) {
+                                var3x = 8;
+                            }
+
+                            var4x.setVisibility(var3x);
+                            this.this$0.handler.removeCallbacks(this.$runSearch);
+                            this.this$0.handler.postDelayed(this.$runSearch, 350L);
+                        }
+
+                        public void beforeTextChanged(CharSequence var1, int var2x, int var3x, int var4x) {
+                        }
+
+                        public void onTextChanged(CharSequence var1, int var2x, int var3x, int var4x) {
+                        }
+                    }
+                );
+                var8.post(new SettingsActivity$$ExternalSyntheticLambda13(var51));
+                var8.setTag(new SettingsActivity$$ExternalSyntheticLambda14(var53, this));
+                return (View)var8;
             }
-        });
-        $this$togglesPage_u24lambda_u24110.post(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda13
-            @Override // java.lang.Runnable
-            public final void run() {
-                SettingsActivity.togglesPage$lambda$133(select);
-            }
-        });
-        $this$togglesPage_u24lambda_u24110.setTag(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda14
-            @Override // java.lang.Runnable
-            public final void run() {
-                SettingsActivity.togglesPage$lambda$135($this$togglesPage_u24lambda_u24118, this);
-            }
-        });
-        return $this$togglesPage_u24lambda_u24110;
+        }
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -3782,7 +3717,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         Function1 function1;
         $lastSel.element = i;
         $search.setText("");
-        if ($select.element == 0) {
+        if (!$select.element) {
             Intrinsics.throwUninitializedPropertyAccessException("select");
             function1 = null;
         } else {
@@ -3848,28 +3783,27 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final Unit togglesPage$lambda$124(Function1 $paint, List $names, HashMap $cache, List $sections, SettingsActivity this$0, FrameLayout $holder, int i) {
-        View v;
-        $paint.invoke(Integer.valueOf(i));
-        String name = (String) $names.get(i);
-        HashMap $this$getOrPut$iv = $cache;
-        Object obj = $this$getOrPut$iv.get(name);
-        if (obj == 0) {
-            if (Intrinsics.areEqual(name, "Language") && !$sections.contains(name)) {
-                v = togglesPage$inset(this$0, pageBox$default(this$0, this$0.languagePage(), true, false, 4, null));
-                $this$getOrPut$iv.put(name, v);
+    /* VF: from Vineflower (jadx: ) */
+    public static final Unit togglesPage$lambda$124(Function1 var0, List var1, HashMap var2, List var3, SettingsActivity var4, FrameLayout var5, int var6) {
+        var0.invoke(var6);
+        String var7 = (String)var1.get(var6);
+        Map var10 = var2;
+        Object var8 = var10.get(var7);
+        if (var8 == null) {
+            if (Intrinsics.areEqual(var7, "Language") && !var3.contains(var7)) {
+                var8 = togglesPage$inset(var4, (View)pageBox$default(var4, var4.languagePage(), true, false, 4, null));
+            } else {
+                View var9 = var4.catalogPage(var7, true);
+                var8 = var9;
+                if (var9 instanceof FrameLayout) {
+                    var8 = togglesPage$inset(var4, var9);
+                }
             }
-            v = this$0.catalogPage(name, true);
-            if (v instanceof FrameLayout) {
-                v = togglesPage$inset(this$0, v);
-            }
-            $this$getOrPut$iv.put(name, v);
-        } else {
-            v = obj;
+
+            var10.put(var7, var8);
         }
-        togglesPage$showView($holder, this$0, v);
+
+        togglesPage$showView(var5, var4, (View)var8);
         return Unit.INSTANCE;
     }
 
@@ -3886,7 +3820,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
         char c2 = 2;
         if (lowerCase.length() < 2) {
-            if (objectRef.element == 0) {
+            if (!objectRef.element) {
                 Intrinsics.throwUninitializedPropertyAccessException("select");
                 function12 = null;
             } else {
@@ -4041,7 +3975,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void togglesPage$lambda$133(Ref.ObjectRef $select) {
         Function1 function1;
-        if ($select.element == 0) {
+        if (!$select.element) {
             Intrinsics.throwUninitializedPropertyAccessException("select");
             function1 = null;
         } else {
@@ -4142,94 +4076,86 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterative(DepthRegionTraversal.java:31)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visit(SwitchOverStringVisitor.java:60)
-     */
-    private final View gxPage(String id) {
-        switch (id.hashCode()) {
+    /* VF: from Vineflower (jadx: ) */
+    private final View gxPage(String var1) {
+        switch (var1.hashCode()) {
             case -1785238953:
-                if (id.equals("favorites")) {
-                    return new GxFavoritesPage(this, this);
+                if (var1.equals("favorites")) {
+                    return (View)(new GxFavoritesPage(this, this));
                 }
                 break;
             case -1253268720:
-                if (id.equals("galaxy")) {
-                    return new GxGalaxyPage(this, this);
+                if (var1.equals("galaxy")) {
+                    return (View)(new GxGalaxyPage(this, this));
                 }
                 break;
             case -1068799382:
-                if (id.equals("models")) {
-                    return new GxModelsPage(this, this);
+                if (var1.equals("models")) {
+                    return (View)(new GxModelsPage(this, this));
                 }
                 break;
             case -887328209:
-                if (id.equals("system")) {
-                    return new GxSystemPage(this, this);
+                if (var1.equals("system")) {
+                    return (View)(new GxSystemPage(this, this));
                 }
                 break;
             case -862552395:
-                if (id.equals("tuning")) {
-                    return new GxTuningPage(this, this);
+                if (var1.equals("tuning")) {
+                    return (View)(new GxTuningPage(this, this));
                 }
                 break;
             case -619025980:
-                if (id.equals("modellab")) {
-                    return new GxModelLabPage(this, this);
+                if (var1.equals("modellab")) {
+                    return (View)(new GxModelLabPage(this, this));
                 }
                 break;
             case 3208415:
-                if (id.equals("home")) {
-                    return new GxHomePage(this, this);
+                if (var1.equals("home")) {
+                    return (View)(new GxHomePage(this, this));
                 }
                 break;
             case 3327407:
-                if (id.equals("logs")) {
-                    return new GxLogsPage(this, this);
+                if (var1.equals("logs")) {
+                    return (View)(new GxLogsPage(this, this));
                 }
                 break;
             case 110327241:
-                if (id.equals("theme")) {
-                    return new GxThemePage(this, this);
+                if (var1.equals("theme")) {
+                    return (View)(new GxThemePage(this, this));
                 }
                 break;
             case 342069036:
-                if (id.equals("vehicle")) {
-                    return new GxVehiclePage(this, this);
+                if (var1.equals("vehicle")) {
+                    return (View)(new GxVehiclePage(this, this));
                 }
                 break;
             case 549364206:
-                if (id.equals("cameras")) {
-                    return new GxCamerasPage(this, this);
+                if (var1.equals("cameras")) {
+                    return (View)(new GxCamerasPage(this, this));
                 }
                 break;
             case 590460812:
-                if (id.equals("personalities")) {
-                    return new GxPersonalitiesPage(this, this);
+                if (var1.equals("personalities")) {
+                    return (View)(new GxPersonalitiesPage(this, this));
                 }
                 break;
             case 735527074:
-                if (id.equals("recordings")) {
-                    return new GxRecordingsPage(this, this);
+                if (var1.equals("recordings")) {
+                    return (View)(new GxRecordingsPage(this, this));
                 }
                 break;
             case 1862666772:
-                if (id.equals("navigation")) {
-                    return new GxNavigationPage(this, this);
+                if (var1.equals("navigation")) {
+                    return (View)(new GxNavigationPage(this, this));
                 }
                 break;
             case 1968882350:
-                if (id.equals("bluetooth")) {
-                    return new GxBluetoothPage(this, this);
+                if (var1.equals("bluetooth")) {
+                    return (View)(new GxBluetoothPage(this, this));
                 }
-                break;
         }
-        return offline("Unknown page " + id);
+
+        return this.offline("Unknown page " + var1);
     }
 
     private final View offline(String msg) {
@@ -4483,123 +4409,132 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         return TuplesKt.to($this$page_u24lambda_u24148, col);
     }
 
-    /* JADX WARN: Type inference failed for: r7v5, types: [T, kotlin.jvm.functions.Function1] */
-    private final void choiceCard(LinearLayout col, String title, String desc, final List<Pair<String, String>> options, Function0<String> get, final Function1<? super String, Unit> set) {
-        CarUi carUi;
-        CarUi carUi2;
-        Function1 function1;
-        LinearLayout outer = new LinearLayout(this);
-        outer.setOrientation(1);
-        CarUi carUi3 = this.ui;
-        if (carUi3 == null) {
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    private final void choiceCard(
+        LinearLayout var1, String var2, String var3, List<Pair<String, String>> var4, Function0<String> var5, Function1<? super String, Unit> var6
+    ) {
+        LinearLayout var12 = new LinearLayout((Context)this);
+        var12.setOrientation(1);
+        CarUi var10 = this.ui;
+        if (var10 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi = null;
-        } else {
-            carUi = carUi3;
+            var10 = null;
         }
-        outer.setBackground(CarUi.rounded$default(carUi, CarUi.Companion.getCARD(), 0, null, 6, null));
-        CarUi carUi4 = this.ui;
-        if (carUi4 == null) {
+
+        var12.setBackground((Drawable)CarUi.rounded$default(var10, CarUi.Companion.getCARD(), 0, null, 6, null));
+        CarUi var11 = this.ui;
+        var10 = var11;
+        if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi4 = null;
+            var10 = null;
         }
-        int dp = carUi4.dp(20);
-        CarUi carUi5 = this.ui;
-        if (carUi5 == null) {
+
+        int var9 = var10.dp(20);
+        var11 = this.ui;
+        var10 = var11;
+        if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi5 = null;
+            var10 = null;
         }
-        int dp2 = carUi5.dp(14);
-        CarUi carUi6 = this.ui;
-        if (carUi6 == null) {
+
+        int var7 = var10.dp(14);
+        var11 = this.ui;
+        var10 = var11;
+        if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi6 = null;
+            var10 = null;
         }
-        int dp3 = carUi6.dp(18);
-        CarUi carUi7 = this.ui;
-        if (carUi7 == null) {
+
+        int var8 = var10.dp(18);
+        var11 = this.ui;
+        var10 = var11;
+        if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi7 = null;
+            var10 = null;
         }
-        outer.setPadding(dp, dp2, dp3, carUi7.dp(14));
-        CarUi carUi8 = this.ui;
-        if (carUi8 == null) {
+
+        var12.setPadding(var9, var7, var8, var10.dp(14));
+        var10 = this.ui;
+        if (var10 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi2 = null;
-        } else {
-            carUi2 = carUi8;
+            var10 = null;
         }
-        LinearLayout tr = (LinearLayout) CarUi.row$default(carUi2, title, desc, 0, null, null, 28, null).component1();
-        tr.setBackground(null);
-        tr.setPadding(0, 0, 0, 0);
-        tr.setMinimumHeight(0);
-        outer.addView(tr);
-        final Ref.ObjectRef paint = new Ref.ObjectRef();
-        CarUi carUi9 = this.ui;
-        if (carUi9 == null) {
+
+        LinearLayout var13 = (LinearLayout)CarUi.row$default(var10, var2, var3, 0, null, null, 28, null).component1();
+        var13.setBackground(null);
+        var13.setPadding(0, 0, 0, 0);
+        var13.setMinimumHeight(0);
+        var12.addView((View)var13);
+        ObjectRef var33 = new ObjectRef();
+        CarUi var19 = this.ui;
+        CarUi var14 = var19;
+        if (var19 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi9 = null;
+            var14 = null;
         }
-        List<Pair<String, String>> $this$map$iv = options;
-        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        for (Object item$iv$iv : $this$map$iv) {
-            Pair it = (Pair) item$iv$iv;
-            destination$iv$iv.add((String) it.getSecond());
+
+        Iterable var37 = var4;
+        var var20 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var37, 10));
+        Iterator var38 = var37.iterator();
+
+        while (var38.hasNext()) {
+            var20.add((String)((Pair)var38.next()).getSecond());
         }
-        Pair<LinearLayout, Function1<Integer, Unit>> chips = carUi9.chips((List) destination$iv$iv, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda188
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit choiceCard$lambda$151;
-                choiceCard$lambda$151 = SettingsActivity.choiceCard$lambda$151(set, options, paint, ((Integer) obj).intValue());
-                return choiceCard$lambda$151;
-            }
-        });
-        LinearLayout bar = chips.component1();
-        paint.element = (Function1) chips.component2();
-        CarUi carUi10 = this.ui;
-        if (carUi10 == null) {
+
+        List var21 = var20;
+        Pair var15 = var14.chips(var21, new SettingsActivity$$ExternalSyntheticLambda188(var6, var4, var33));
+        LinearLayout var26 = (LinearLayout)var15.component1();
+        var33.element = (T)((Function1)var15.component2());
+        CarUi var22 = this.ui;
+        CarUi var16 = var22;
+        if (var22 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi10 = null;
+            var16 = null;
         }
-        bar.setPadding(0, carUi10.dp(10), 0, 0);
-        outer.addView(bar);
-        if (paint.element == 0) {
+
+        var26.setPadding(0, var16.dp(10), 0, 0);
+        var12.addView((View)var26);
+        Function1 var17;
+        if (var33.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
-            function1 = null;
+            var17 = null;
         } else {
-            function1 = (Function1) paint.element;
+            var17 = (Function1)var33.element;
         }
-        int index$iv = 0;
-        Iterator<Pair<String, String>> it2 = options.iterator();
+
+        var7 = 0;
+        Iterator var23 = var4.iterator();
+
         while (true) {
-            if (it2.hasNext()) {
-                Pair item$iv = it2.next();
-                Pair it3 = item$iv;
-                if (Intrinsics.areEqual(it3.getFirst(), get.invoke())) {
-                    break;
-                } else {
-                    index$iv++;
-                }
-            } else {
-                index$iv = -1;
+            if (!var23.hasNext()) {
+                var7 = -1;
                 break;
             }
+
+            if (Intrinsics.areEqual(((Pair)var23.next()).getFirst(), var5.invoke())) {
+                break;
+            }
+
+            var7++;
         }
-        function1.invoke(Integer.valueOf(index$iv));
-        LinearLayout linearLayout = outer;
-        CarUi carUi11 = this.ui;
-        if (carUi11 == null) {
+
+        var17.invoke(var7);
+        View var25 = (View)var12;
+        CarUi var24 = this.ui;
+        CarUi var18 = var24;
+        if (var24 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi11 = null;
+            var18 = null;
         }
-        col.addView(linearLayout, CarUi.lp$default(carUi11, 0, 0, 3, null));
+
+        var1.addView(var25, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var18, 0, 0, 3, null));
     }
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit choiceCard$lambda$151(Function1 $set, List $options, Ref.ObjectRef $paint, int i) {
         Function1 function1;
         $set.invoke(((Pair) $options.get(i)).getFirst());
-        if ($paint.element == 0) {
+        if (!$paint.element) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
             function1 = null;
         } else {
@@ -5533,116 +5468,129 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         tabletMapsPage$refresh($col, this$0, $date);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:22:0x007a, code lost:
-    
-        if (r7 == null) goto L27;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     private final View tabletConnectionPage() {
-        CarUi carUi;
-        CarUi carUi2;
-        String str;
-        CarUi carUi3;
-        CarUi carUi4;
-        CarUi carUi5;
-        String pStr$default;
-        Pair<ScrollView, LinearLayout> page = page();
-        ScrollView sv = page.component1();
-        LinearLayout col = page.component2();
-        Telemetry t = Link.INSTANCE.getTelemetry();
-        CarUi carUi6 = this.ui;
-        if (carUi6 == null) {
+        String var12 = null; // declarations Vineflower left out
+        Pair var2 = this.page();
+        ScrollView var5 = (ScrollView)var2.component1();
+        LinearLayout var6 = (LinearLayout)var2.component2();
+        Telemetry var7 = Link.INSTANCE.getTelemetry();
+        CarUi var8 = this.ui;
+        if (var8 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi = null;
-        } else {
-            carUi = carUi6;
+            var8 = null;
         }
-        String str2 = this.host;
-        if (str2 == null) {
-            str2 = "not connected";
+
+        String var4 = this.host;
+        String var3 = var4;
+        if (var4 == null) {
+            var3 = "not connected";
         }
-        LinearLayout r1 = (LinearLayout) CarUi.row$default(carUi, "Comma", str2, 0, null, null, 28, null).component1();
-        LinearLayout linearLayout = r1;
-        CarUi carUi7 = this.ui;
-        if (carUi7 == null) {
+
+        var var25 = (View & LinearLayout)CarUi.row$default(var8, "Comma", var3, 0, null, null, 28, null).component1();
+        CarUi var19 = this.ui;
+        CarUi var9 = var19;
+        if (var19 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi7 = null;
+            var9 = null;
         }
-        col.addView(linearLayout, CarUi.lp$default(carUi7, 0, 0, 3, null));
-        CarUi carUi8 = this.ui;
-        if (carUi8 == null) {
+
+        var6.addView(var25, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var9, 0, 0, 3, null));
+        CarUi var20 = this.ui;
+        if (var20 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi2 = null;
-        } else {
-            carUi2 = carUi8;
+            var20 = null;
         }
-        if (t != null && (pStr$default = Telemetry.pStr$default(t, "GalaxyDeviceName", null, 2, null)) != null) {
-            String str3 = pStr$default;
-            if (str3.length() == 0) {
-                str3 = null;
+
+        label58: {
+            if (var7 != null) {
+                String var10 = Telemetry.pStr$default(var7, "GalaxyDeviceName", null, 2, null);
+                if (var10 != null) {
+                    var var11 = var10;
+                    boolean var1;
+                    if (var11.length() == 0) {
+                        var1 = true;
+                    } else {
+                        var1 = false;
+                    }
+
+                    if (var1) {
+                        var11 = null;
+                    }
+
+                    var4 = var11;
+                    var12 = var4;
+                    if (var4 != null) {
+                        break label58;
+                    }
+                }
             }
-            str = str3;
-        }
-        str = "-";
-        if (t != null) {
-            str = t.pStr("DongleId", "-");
-        }
-        LinearLayout r2 = (LinearLayout) CarUi.row$default(carUi2, "Device", str, 0, null, null, 28, null).component1();
-        LinearLayout linearLayout2 = r2;
-        CarUi carUi9 = this.ui;
-        if (carUi9 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi9 = null;
-        }
-        col.addView(linearLayout2, CarUi.lp$default(carUi9, 0, 0, 3, null));
-        CarUi carUi10 = this.ui;
-        if (carUi10 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi3 = null;
-        } else {
-            carUi3 = carUi10;
-        }
-        LinearLayout r3 = (LinearLayout) CarUi.row$default(carUi3, "Link", "USB tether (usb0), Wi-Fi as fallback; moves back to USB by itself when the cable returns. The tablet finds the comma by broadcast on port 8091.", 0, null, null, 28, null).component1();
-        LinearLayout linearLayout3 = r3;
-        CarUi carUi11 = this.ui;
-        if (carUi11 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi11 = null;
-        }
-        col.addView(linearLayout3, CarUi.lp$default(carUi11, 0, 0, 3, null));
-        CarUi carUi12 = this.ui;
-        if (carUi12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi4 = null;
-        } else {
-            carUi4 = carUi12;
-        }
-        LinearLayout r4 = (LinearLayout) CarUi.row$default(carUi4, "Reconnect", "Drop the data link and search for the comma again.", 0, null, null, 28, null).component1();
-        CarUi carUi13 = this.ui;
-        if (carUi13 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi5 = null;
-        } else {
-            carUi5 = carUi13;
-        }
-        r4.addView(CarUi.button$default(carUi5, "Reconnect", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda94
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit tabletConnectionPage$lambda$191;
-                tabletConnectionPage$lambda$191 = SettingsActivity.tabletConnectionPage$lambda$191(SettingsActivity.this);
-                return tabletConnectionPage$lambda$191;
+
+            var12 = "-";
+            if (var7 != null) {
+                var12 = var7.pStr("DongleId", "-");
             }
-        }, 2, null));
-        LinearLayout linearLayout4 = r4;
-        CarUi carUi14 = this.ui;
-        if (carUi14 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi14 = null;
         }
-        col.addView(linearLayout4, CarUi.lp$default(carUi14, 0, 0, 3, null));
-        return sv;
+
+        var var27 = (View & LinearLayout)CarUi.row$default(var20, "Device", var12, 0, null, null, 28, null).component1();
+        CarUi var21 = this.ui;
+        CarUi var13 = var21;
+        if (var21 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("ui");
+            var13 = null;
+        }
+
+        var6.addView(var27, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var13, 0, 0, 3, null));
+        CarUi var14 = this.ui;
+        if (var14 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("ui");
+            var14 = null;
+        }
+
+        var var28 = (View & LinearLayout)CarUi.row$default(
+                var14,
+                "Link",
+                "USB tether (usb0), Wi-Fi as fallback; moves back to USB by itself when the cable returns. The tablet finds the comma by broadcast on port 8091.",
+                0,
+                null,
+                null,
+                28,
+                null
+            )
+            .component1();
+        CarUi var22 = this.ui;
+        CarUi var15 = var22;
+        if (var22 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("ui");
+            var15 = null;
+        }
+
+        var6.addView(var28, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var15, 0, 0, 3, null));
+        CarUi var16 = this.ui;
+        if (var16 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("ui");
+            var16 = null;
+        }
+
+        LinearLayout var23 = (LinearLayout)CarUi.row$default(var16, "Reconnect", "Drop the data link and search for the comma again.", 0, null, null, 28, null)
+            .component1();
+        CarUi var17 = this.ui;
+        if (var17 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("ui");
+            var17 = null;
+        }
+
+        var23.addView((View)CarUi.button$default(var17, "Reconnect", false, new SettingsActivity$$ExternalSyntheticLambda94(this), 2, null));
+        View var29 = (View)var23;
+        CarUi var24 = this.ui;
+        CarUi var18 = var24;
+        if (var24 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("ui");
+            var18 = null;
+        }
+
+        var6.addView(var29, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var18, 0, 0, 3, null));
+        return (View)var5;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -8339,153 +8287,196 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         this$0.toast($n + " places from friends");
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:24:0x009c, code lost:
-    
-        if (r14.equals("spot_settings") == false) goto L109;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:25:0x0287, code lost:
-    
-        r0 = "Cut-in spots: " + com.starpilot.starview.IdeaSpots.INSTANCE.count("cutin") + " - takeover spots: " + com.starpilot.starview.IdeaSpots.INSTANCE.count("takeover") + ".";
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:43:0x0137, code lost:
-    
-        if (r14.equals("green_countdown") == false) goto L109;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:44:0x019c, code lost:
-    
-        r0 = "Lights with a green seen: " + com.starpilot.starview.Ideas.INSTANCE.getMemory().getLights().known() + ".";
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:55:0x0198, code lost:
-    
-        if (r14.equals("hybrid") == false) goto L109;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:83:0x0283, code lost:
-    
-        if (r14.equals("nyc_cutins") == false) goto L109;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final String status(String id) {
-        String it;
-        int count$iv = 0;
-        switch (id.hashCode()) {
-            case -2038685998:
-                if (id.equals("city_potholes")) {
-                    Iterable $this$count$iv = IdeaSpots.INSTANCE.all();
-                    if (!($this$count$iv instanceof Collection) || !((Collection) $this$count$iv).isEmpty()) {
-                        count$iv = 0;
-                        for (Object element$iv : $this$count$iv) {
-                            IdeaSpots.Spot it2 = (IdeaSpots.Spot) element$iv;
-                            if (Intrinsics.areEqual(it2.getSrc(), "nyc311") && (count$iv = count$iv + 1) < 0) {
-                                CollectionsKt.throwCountOverflow();
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final String status(String var1) {
+        String var7;
+        label139: {
+            label138: {
+                label137: {
+                    int var5 = var1.hashCode();
+                    String var6 = "allowed";
+                    var7 = "";
+                    int var3 = 1;
+                    int var4 = 0;
+                    int var2 = 0;
+                    switch (var5) {
+                        case -2038685998:
+                            if (var1.equals("city_potholes")) {
+                                var var14 = IdeaSpots.INSTANCE.all();
+                                if (var14 instanceof Collection && ((Collection)var14).isEmpty()) {
+                                    var2 = var4;
+                                } else {
+                                    Iterator var15 = var14.iterator();
+                                    var2 = 0;
+
+                                    while (var15.hasNext()) {
+                                        if (Intrinsics.areEqual(((IdeaSpots.Spot)var15.next()).getSrc(), "nyc311")) {
+                                            var3 = var2 + 1;
+                                            var2 = var3;
+                                            if (var3 < 0) {
+                                                CollectionsKt.throwCountOverflow();
+                                                var2 = var3;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                var1 = "From 311: " + var2 + " open potholes loaded.";
+                                break label139;
                             }
-                        }
-                    }
-                    it = "From 311: " + count$iv + " open potholes loaded.";
-                    break;
-                }
-                it = "";
-                break;
-            case -1996341101:
-                break;
-            case -1889818619:
-                if (id.equals("speed_bumps")) {
-                    it = "Knows " + (IdeaSpots.INSTANCE.count("bump") + IdeaSpots.INSTANCE.count("rough")) + " it felt, " + IdeaSpots.INSTANCE.count("map_bump") + " from the map.";
-                    break;
-                }
-                it = "";
-                break;
-            case -1664260572:
-                if (id.equals("friends_fleet")) {
-                    Iterable $this$count$iv2 = IdeaSpots.INSTANCE.all();
-                    if (!($this$count$iv2 instanceof Collection) || !((Collection) $this$count$iv2).isEmpty()) {
-                        int count$iv2 = 0;
-                        for (Object element$iv2 : $this$count$iv2) {
-                            IdeaSpots.Spot it3 = (IdeaSpots.Spot) element$iv2;
-                            if (!SetsKt.setOf((Object[]) new String[]{"me", "osm", "nyc311"}).contains(it3.getSrc()) && (count$iv2 = count$iv2 + 1) < 0) {
-                                CollectionsKt.throwCountOverflow();
+                            break;
+                        case -1996341101:
+                            if (var1.equals("nyc_cutins")) {
+                                break label137;
                             }
-                        }
-                        count$iv = count$iv2;
+                            break;
+                        case -1889818619:
+                            if (var1.equals("speed_bumps")) {
+                                var2 = IdeaSpots.INSTANCE.count("bump");
+                                var3 = IdeaSpots.INSTANCE.count("rough");
+                                var4 = IdeaSpots.INSTANCE.count("map_bump");
+                                var1 = "Knows " + (var2 + var3) + " it felt, " + var4 + " from the map.";
+                                break label139;
+                            }
+                            break;
+                        case -1664260572:
+                            if (var1.equals("friends_fleet")) {
+                                var var12 = IdeaSpots.INSTANCE.all();
+                                if (!(var12 instanceof Collection) || !((Collection)var12).isEmpty()) {
+                                    var2 = 0;
+
+                                    for (IdeaSpots.Spot var31 : var12) {
+                                        if (!SetsKt.setOf(new String[]{"me", "osm", "nyc311"}).contains(var31.getSrc())) {
+                                            var3 = var2 + 1;
+                                            var2 = var3;
+                                            if (var3 < 0) {
+                                                CollectionsKt.throwCountOverflow();
+                                                var2 = var3;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                var1 = "From friends: " + var2 + " places.";
+                                break label139;
+                            }
+                            break;
+                        case -1202757124:
+                            if (var1.equals("hybrid")) {
+                                break label138;
+                            }
+                            break;
+                        case -902148466:
+                            if (var1.equals("sirens")) {
+                                if (this.checkSelfPermission("android.permission.RECORD_AUDIO") == 0) {
+                                    var1 = var6;
+                                } else {
+                                    var1 = "not allowed yet";
+                                }
+
+                                var6 = SirenEar.INSTANCE.getStatus();
+                                var1 = "Microphone: " + var1 + " - " + var6 + ".";
+                                break label139;
+                            }
+                            break;
+                        case -891990146:
+                            if (var1.equals("streak")) {
+                                var1 = Ideas.INSTANCE.getMore().streakText(new UiSettings((Context)this));
+                                break label139;
+                            }
+                            break;
+                        case -789415947:
+                            if (var1.equals("green_countdown")) {
+                                break label138;
+                            }
+                            break;
+                        case 3208579:
+                            if (var1.equals("horn")) {
+                                if (this.checkSelfPermission("android.permission.RECORD_AUDIO") != 0) {
+                                    var6 = "not allowed yet";
+                                }
+
+                                var1 = "Microphone: " + var6 + ".";
+                                break label139;
+                            }
+                            break;
+                        case 11067959:
+                            if (var1.equals("double_parked")) {
+                                var2 = IdeaSpots.INSTANCE.count("dpark");
+                                var1 = "Blocked spots seen: " + var2 + ".";
+                                break label139;
+                            }
+                            break;
+                        case 110233717:
+                            if (var1.equals("teach")) {
+                                var2 = Ideas.INSTANCE.getMemory().taughtCount();
+                                if (Ideas.INSTANCE.getMemory().getTeaching() != null) {
+                                    var1 = " - learning now";
+                                } else {
+                                    var1 = "";
+                                }
+
+                                var1 = "Taught paths: " + var2 + var1;
+                                break label139;
+                            }
+                            break;
+                        case 502068928:
+                            if (var1.equals("spot_settings")) {
+                                break label137;
+                            }
+                            break;
+                        case 554390290:
+                            if (var1.equals("carsick")) {
+                                var1 = Ideas.INSTANCE.getMemory().lastComfort();
+                                int var18;
+                                if (var1.length() == 0) {
+                                    var18 = (((boolean)(var3 != 0)) ? 1 : 0);
+                                } else {
+                                    var18 = 0;
+                                }
+
+                                if ((var18 != 0)) {
+                                    var1 = "No score yet.";
+                                }
+
+                                var1 = var1;
+                                break label139;
+                            }
+                            break;
+                        case 631785340:
+                            if (var1.equals("speed_cams")) {
+                                var2 = IdeaSpots.INSTANCE.count("speed_cam");
+                                var1 = "Cameras known: " + var2 + ".";
+                                break label139;
+                            }
+                            break;
+                        case 775364222:
+                            if (var1.equals("potholes")) {
+                                var2 = IdeaSpots.INSTANCE.count("pothole");
+                                var1 = "Knows " + var2 + " potholes.";
+                                break label139;
+                            }
                     }
-                    it = "From friends: " + count$iv + " places.";
-                    break;
+
+                    var1 = "";
+                    break label139;
                 }
-                it = "";
-                break;
-            case -1202757124:
-                break;
-            case -902148466:
-                if (id.equals("sirens")) {
-                    it = "Microphone: " + (checkSelfPermission("android.permission.RECORD_AUDIO") != 0 ? "not allowed yet" : "allowed") + " - " + SirenEar.INSTANCE.getStatus() + ".";
-                    break;
-                }
-                it = "";
-                break;
-            case -891990146:
-                if (id.equals("streak")) {
-                    it = Ideas.INSTANCE.getMore().streakText(new UiSettings(this));
-                    break;
-                }
-                it = "";
-                break;
-            case -789415947:
-                break;
-            case 3208579:
-                if (id.equals("horn")) {
-                    it = "Microphone: " + (checkSelfPermission("android.permission.RECORD_AUDIO") != 0 ? "not allowed yet" : "allowed") + ".";
-                    break;
-                }
-                it = "";
-                break;
-            case 11067959:
-                if (id.equals("double_parked")) {
-                    it = "Blocked spots seen: " + IdeaSpots.INSTANCE.count("dpark") + ".";
-                    break;
-                }
-                it = "";
-                break;
-            case 110233717:
-                if (id.equals("teach")) {
-                    it = "Taught paths: " + Ideas.INSTANCE.getMemory().taughtCount() + (Ideas.INSTANCE.getMemory().getTeaching() != null ? " - learning now" : "");
-                    break;
-                }
-                it = "";
-                break;
-            case 502068928:
-                break;
-            case 554390290:
-                if (id.equals("carsick")) {
-                    String lastComfort = Ideas.INSTANCE.getMemory().lastComfort();
-                    if (lastComfort.length() == 0) {
-                        lastComfort = "No score yet.";
-                    }
-                    it = lastComfort;
-                    break;
-                }
-                it = "";
-                break;
-            case 631785340:
-                if (id.equals("speed_cams")) {
-                    it = "Cameras known: " + IdeaSpots.INSTANCE.count("speed_cam") + ".";
-                    break;
-                }
-                it = "";
-                break;
-            case 775364222:
-                if (id.equals("potholes")) {
-                    it = "Knows " + IdeaSpots.INSTANCE.count("pothole") + " potholes.";
-                    break;
-                }
-                it = "";
-                break;
-            default:
-                it = "";
-                break;
+
+                int var27 = IdeaSpots.INSTANCE.count("cutin");
+                int var23 = IdeaSpots.INSTANCE.count("takeover");
+                var1 = "Cut-in spots: " + var27 + " - takeover spots: " + var23 + ".";
+                break label139;
+            }
+
+            int var21 = Ideas.INSTANCE.getMemory().getLights().known();
+            var1 = "Lights with a green seen: " + var21 + ".";
         }
-        return "\n" + ((Object) (Intrinsics.areEqual(it, "\n") ? "" : it));
+
+        if (Intrinsics.areEqual(var1, "\n")) {
+            var1 = var7;
+        }
+
+        return "\n" + var1;
     }
 
     private final void toast(String msg) {
@@ -9800,224 +9791,224 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r0v4, types: [T, com.starpilot.starview.VoiceStudio$Style] */
-    /* JADX WARN: Type inference failed for: r7v18, types: [T, java.util.List] */
-    /* JADX WARN: Type inference failed for: r8v8, types: [T, com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda220] */
+    /* VF: from Vineflower (jadx: Type inference failed) */
     private final View tabletVoiceStudioPage() {
-        CarUi carUi;
-        CarUi carUi2;
-        CarUi carUi3;
-        Function0 function0;
-        Pair<ScrollView, LinearLayout> page = page();
-        ScrollView component1 = page.component1();
-        LinearLayout component2 = page.component2();
-        final SharedPreferences sharedPreferences = getSharedPreferences("speech", 0);
-        final Ref.ObjectRef objectRef = new Ref.ObjectRef();
-        objectRef.element = new VoiceStudio.Style(sharedPreferences.getFloat("st_expr", 0.667f), sharedPreferences.getFloat("st_rhythm", 0.8f), 1.08f);
-        final Ref.ObjectRef objectRef2 = new Ref.ObjectRef();
-        String string = sharedPreferences.getString("st_filter", "all");
-        objectRef2.element = string != null ? string : "all";
-        final Ref.BooleanRef booleanRef = new Ref.BooleanRef();
-        final AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-        CarUi carUi4 = this.ui;
-        if (carUi4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi4 = null;
+        Pair var1 = this.page();
+        ScrollView var3 = (ScrollView)var1.component1();
+        LinearLayout var7 = (LinearLayout)var1.component2();
+        SharedPreferences var6 = this.getSharedPreferences("speech", 0);
+        ObjectRef var5 = new ObjectRef();
+        var5.element = (T)(new VoiceStudio.Style(var6.getFloat("st_expr", 0.667F), var6.getFloat("st_rhythm", 0.8F), 1.08F));
+        ObjectRef var4 = new ObjectRef();
+        String var2 = "all";
+        String var17 = var6.getString("st_filter", "all");
+        if (var17 == null) {
+            var17 = var2;
         }
-        TextView note = carUi4.note("Pick a voice, download it, ▶ Try it, then \"Make my voice\": the tablet speaks all 60 lane-change phrases in it (about a minute) and the card uses it from then on - with your chime, music, speed and pitch. Voices with many speakers have a speaker slider: each number is a different person.");
-        CarUi carUi5 = this.ui;
-        if (carUi5 == null) {
+
+        var4.element = (T)var17;
+        BooleanRef var9 = new BooleanRef();
+        AtomicBoolean var8 = new AtomicBoolean(false);
+        CarUi var36 = this.ui;
+        CarUi var18 = var36;
+        if (var36 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi5 = null;
+            var18 = null;
         }
-        component2.addView(note, CarUi.lp$default(carUi5, 0, 0, 3, null));
-        CarUi carUi6 = this.ui;
-        if (carUi6 == null) {
+
+        View var10 = (View)var18.note(
+            "Pick a voice, download it, ▶ Try it, then \"Make my voice\": the tablet speaks all 60 lane-change phrases in it (about a minute) and the card uses it from then on - with your chime, music, speed and pitch. Voices with many speakers have a speaker slider: each number is a different person."
+        );
+        CarUi var37 = this.ui;
+        CarUi var19 = var37;
+        if (var37 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi = null;
-        } else {
-            carUi = carUi6;
+            var19 = null;
         }
-        Pair row$default = CarUi.row$default(carUi, "Status", "…", 0, null, null, 28, null);
-        LinearLayout linearLayout = (LinearLayout) row$default.component1();
-        final TextView textView = (TextView) row$default.component2();
-        CarUi carUi7 = this.ui;
-        if (carUi7 == null) {
+
+        var7.addView(var10, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var19, 0, 0, 3, null));
+        CarUi var20 = this.ui;
+        if (var20 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi2 = null;
-        } else {
-            carUi2 = carUi7;
+            var20 = null;
         }
-        final TextView button$default = CarUi.button$default(carUi2, "Stop", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda212
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit tabletVoiceStudioPage$lambda$355;
-                tabletVoiceStudioPage$lambda$355 = SettingsActivity.tabletVoiceStudioPage$lambda$355(atomicBoolean);
-                return tabletVoiceStudioPage$lambda$355;
-            }
-        }, 2, null);
-        button$default.setVisibility(8);
-        linearLayout.addView(button$default);
-        LinearLayout linearLayout2 = linearLayout;
-        CarUi carUi8 = this.ui;
-        if (carUi8 == null) {
+
+        var1 = CarUi.row$default(var20, "Status", "…", 0, null, null, 28, null);
+        LinearLayout var11 = (LinearLayout)var1.component1();
+        TextView var51 = (TextView)var1.component2();
+        CarUi var22 = this.ui;
+        if (var22 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi8 = null;
+            var22 = null;
         }
-        component2.addView(linearLayout2, CarUi.lp$default(carUi8, 0, 0, 3, null));
-        LinearLayout linearLayout3 = new LinearLayout(this);
-        linearLayout3.setOrientation(1);
-        LinearLayout linearLayout4 = linearLayout3;
-        CarUi carUi9 = this.ui;
-        if (carUi9 == null) {
+
+        TextView var14 = CarUi.button$default(var22, "Stop", false, new SettingsActivity$$ExternalSyntheticLambda212(var8), 2, null);
+        var14.setVisibility(8);
+        var11.addView((View)var14);
+        View var12 = (View)var11;
+        CarUi var38 = this.ui;
+        CarUi var23 = var38;
+        if (var38 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi9 = null;
+            var23 = null;
         }
-        component2.addView(linearLayout4, CarUi.lp$default(carUi9, 0, 0, 3, null));
-        final Ref.ObjectRef objectRef3 = new Ref.ObjectRef();
-        CarUi carUi10 = this.ui;
-        if (carUi10 == null) {
+
+        var7.addView(var12, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var23, 0, 0, 3, null));
+        LinearLayout var52 = new LinearLayout((Context)this);
+        var52.setOrientation(1);
+        View var13 = (View)var52;
+        CarUi var39 = this.ui;
+        CarUi var24 = var39;
+        if (var39 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi10 = null;
+            var24 = null;
         }
-        TextView header = carUi10.header("How it speaks");
-        CarUi carUi11 = this.ui;
-        if (carUi11 == null) {
+
+        var7.addView(var13, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var24, 0, 0, 3, null));
+        ObjectRef var53 = new ObjectRef();
+        CarUi var40 = this.ui;
+        CarUi var25 = var40;
+        if (var40 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi11 = null;
+            var25 = null;
         }
-        component2.addView(header, CarUi.lp$default(carUi11, 0, 0, 3, null));
-        slider(component2, "Expressive", 0.1f, 1.2f, 0.05f, ((VoiceStudio.Style) objectRef.element).getExpressive(), new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda214
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                String tabletVoiceStudioPage$lambda$364;
-                tabletVoiceStudioPage$lambda$364 = SettingsActivity.tabletVoiceStudioPage$lambda$364(((Float) obj).floatValue());
-                return tabletVoiceStudioPage$lambda$364;
-            }
-        }, Float.valueOf(0.667f), new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda215
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit tabletVoiceStudioPage$lambda$365;
-                tabletVoiceStudioPage$lambda$365 = SettingsActivity.tabletVoiceStudioPage$lambda$365(objectRef3, sharedPreferences, ((Float) obj).floatValue());
-                return tabletVoiceStudioPage$lambda$365;
-            }
-        }, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda216
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit unit;
-                unit = Unit.INSTANCE;
-                return unit;
-            }
-        });
-        slider(component2, "Rhythm variation", 0.1f, 1.4f, 0.05f, ((VoiceStudio.Style) objectRef.element).getRhythm(), new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda217
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                String tabletVoiceStudioPage$lambda$367;
-                tabletVoiceStudioPage$lambda$367 = SettingsActivity.tabletVoiceStudioPage$lambda$367(((Float) obj).floatValue());
-                return tabletVoiceStudioPage$lambda$367;
-            }
-        }, Float.valueOf(0.8f), new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda218
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit tabletVoiceStudioPage$lambda$368;
-                tabletVoiceStudioPage$lambda$368 = SettingsActivity.tabletVoiceStudioPage$lambda$368(objectRef3, sharedPreferences, ((Float) obj).floatValue());
-                return tabletVoiceStudioPage$lambda$368;
-            }
-        }, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda219
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit unit;
-                unit = Unit.INSTANCE;
-                return unit;
-            }
-        });
-        CarUi carUi12 = this.ui;
-        if (carUi12 == null) {
+
+        View var15 = (View)var25.header("How it speaks");
+        CarUi var41 = this.ui;
+        CarUi var26 = var41;
+        if (var41 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi12 = null;
+            var26 = null;
         }
-        TextView note2 = carUi12.note("These two are baked in when the voice is made - ▶ Try after changing them. Speed, pitch, chime and music are on the Voice alerts page and change any time.");
-        CarUi carUi13 = this.ui;
-        if (carUi13 == null) {
+
+        var7.addView(var15, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var26, 0, 0, 3, null));
+        this.slider(
+            var7,
+            "Expressive",
+            0.1F,
+            1.2F,
+            0.05F,
+            ((VoiceStudio.Style)var5.element).getExpressive(),
+            new SettingsActivity$$ExternalSyntheticLambda214(),
+            0.667F,
+            new SettingsActivity$$ExternalSyntheticLambda215(var5, var6),
+            new SettingsActivity$$ExternalSyntheticLambda216()
+        );
+        this.slider(
+            var7,
+            "Rhythm variation",
+            0.1F,
+            1.4F,
+            0.05F,
+            ((VoiceStudio.Style)var5.element).getRhythm(),
+            new SettingsActivity$$ExternalSyntheticLambda217(),
+            0.8F,
+            new SettingsActivity$$ExternalSyntheticLambda218(var5, var6),
+            new SettingsActivity$$ExternalSyntheticLambda219()
+        );
+        CarUi var42 = this.ui;
+        CarUi var27 = var42;
+        if (var42 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi13 = null;
+            var27 = null;
         }
-        component2.addView(note2, CarUi.lp$default(carUi13, 0, 0, 3, null));
-        CarUi carUi14 = this.ui;
-        if (carUi14 == null) {
+
+        var15 = (View)var27.note(
+            "These two are baked in when the voice is made - ▶ Try after changing them. Speed, pitch, chime and music are on the Voice alerts page and change any time."
+        );
+        CarUi var43 = this.ui;
+        CarUi var28 = var43;
+        if (var43 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi14 = null;
+            var28 = null;
         }
-        TextView header2 = carUi14.header("Voices");
-        CarUi carUi15 = this.ui;
-        if (carUi15 == null) {
+
+        var7.addView(var15, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var28, 0, 0, 3, null));
+        CarUi var44 = this.ui;
+        CarUi var29 = var44;
+        if (var44 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi15 = null;
+            var29 = null;
         }
-        component2.addView(header2, CarUi.lp$default(carUi15, 0, 0, 3, null));
-        LinearLayout linearLayout5 = new LinearLayout(this);
-        linearLayout5.setOrientation(1);
-        LinearLayout linearLayout6 = linearLayout5;
-        CarUi carUi16 = this.ui;
-        if (carUi16 == null) {
+
+        var15 = (View)var29.header("Voices");
+        CarUi var45 = this.ui;
+        CarUi var30 = var45;
+        if (var45 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi16 = null;
+            var30 = null;
         }
-        component2.addView(linearLayout6, CarUi.lp$default(carUi16, 0, 0, 3, null));
-        tabletVoiceStudioPage$fillFilter(linearLayout5, this, objectRef2, sharedPreferences, objectRef3);
-        final LinearLayout linearLayout7 = new LinearLayout(this);
-        linearLayout7.setOrientation(1);
-        LinearLayout linearLayout8 = linearLayout7;
-        CarUi carUi17 = this.ui;
-        if (carUi17 == null) {
+
+        var7.addView(var15, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var30, 0, 0, 3, null));
+        LinearLayout var16 = new LinearLayout((Context)this);
+        var16.setOrientation(1);
+        var15 = (View)var16;
+        CarUi var46 = this.ui;
+        CarUi var31 = var46;
+        if (var46 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi17 = null;
+            var31 = null;
         }
-        component2.addView(linearLayout8, CarUi.lp$default(carUi17, 0, 0, 3, null));
-        final Ref.ObjectRef objectRef4 = new Ref.ObjectRef();
-        objectRef4.element = CollectionsKt.emptyList();
-        final List listOf = CollectionsKt.listOf((Object[]) new String[]{"Exit on the right in half a mile.", "Two lanes to go. Change lanes right?"});
-        objectRef3.element = new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda220
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit tabletVoiceStudioPage$lambda$397;
-                tabletVoiceStudioPage$lambda$397 = SettingsActivity.tabletVoiceStudioPage$lambda$397(linearLayout7, this, objectRef4, sharedPreferences, objectRef2, atomicBoolean, textView, booleanRef, button$default, objectRef3, objectRef, listOf);
-                return tabletVoiceStudioPage$lambda$397;
-            }
-        };
-        View view = new View(this);
-        CarUi carUi18 = this.ui;
-        if (carUi18 == null) {
+
+        var7.addView(var15, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var31, 0, 0, 3, null));
+        tabletVoiceStudioPage$fillFilter(var16, this, var4, var6, var53);
+        LinearLayout var57 = new LinearLayout((Context)this);
+        var57.setOrientation(1);
+        View var58 = (View)var57;
+        CarUi var47 = this.ui;
+        CarUi var32 = var47;
+        if (var47 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi18 = null;
+            var32 = null;
         }
-        linearLayout.addView(view, new LinearLayout.LayoutParams(carUi18.dp(8), 1));
-        CarUi carUi19 = this.ui;
-        if (carUi19 == null) {
+
+        var7.addView(var58, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var32, 0, 0, 3, null));
+        ObjectRef var50 = new ObjectRef();
+        var50.element = (T)CollectionsKt.emptyList();
+        var53.element = (T)(new SettingsActivity$$ExternalSyntheticLambda220(
+            var57,
+            this,
+            var50,
+            var6,
+            var4,
+            var8,
+            var51,
+            var9,
+            var14,
+            var53,
+            var5,
+            CollectionsKt.listOf(new String[]{"Exit on the right in half a mile.", "Two lanes to go. Change lanes right?"})
+        ));
+        View var49 = new View((Context)this);
+        CarUi var48 = this.ui;
+        CarUi var33 = var48;
+        if (var48 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
-            carUi3 = null;
-        } else {
-            carUi3 = carUi19;
+            var33 = null;
         }
-        linearLayout.addView(CarUi.button$default(carUi3, "Refresh list", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda221
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit tabletVoiceStudioPage$lambda$400;
-                tabletVoiceStudioPage$lambda$400 = SettingsActivity.tabletVoiceStudioPage$lambda$400(objectRef3, this, textView, objectRef3);
-                return tabletVoiceStudioPage$lambda$400;
-            }
-        }, 2, null));
-        tabletVoiceStudioPage$fillEngine(linearLayout3, this, textView, objectRef3);
-        if (objectRef3.element == 0) {
+
+        var11.addView(var49, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(var33.dp(8), 1)));
+        CarUi var34 = this.ui;
+        if (var34 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("ui");
+            var34 = null;
+        }
+
+        var11.addView(
+            (View)CarUi.button$default(var34, "Refresh list", false, new SettingsActivity$$ExternalSyntheticLambda221(var50, this, var51, var53), 2, null)
+        );
+        tabletVoiceStudioPage$fillEngine(var52, this, var51, var53);
+        Function0 var35;
+        if (var53.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
-            function0 = null;
+            var35 = null;
         } else {
-            function0 = (Function0) objectRef3.element;
+            var35 = (Function0)var53.element;
         }
-        function0.invoke();
-        tabletVoiceStudioPage$loadCat(objectRef4, this, textView, objectRef3, false);
-        return component1;
+
+        var35.invoke();
+        tabletVoiceStudioPage$loadCat(var50, this, var51, var53, false);
+        return (View)var3;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -10136,7 +10127,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     public static final void tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361$lambda$360(Ref.ObjectRef $fillVoices, LinearLayout $engineBox, SettingsActivity this$0, TextView $status) {
         Function0 function0;
         tabletVoiceStudioPage$fillEngine($engineBox, this$0, $status, $fillVoices);
-        if ($fillVoices.element == 0) {
+        if (!$fillVoices.element) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
             function0 = null;
         } else {
@@ -10152,12 +10143,10 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         return format + (v < 0.45f ? " - flat, calm" : v > 0.85f ? " - lively" : "");
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r0v1, types: [T, com.starpilot.starview.VoiceStudio$Style] */
-    public static final Unit tabletVoiceStudioPage$lambda$365(Ref.ObjectRef $style, SharedPreferences $sp, float it) {
-        $style.element = VoiceStudio.Style.copy$default((VoiceStudio.Style) $style.element, it, 0.0f, 0.0f, 6, null);
-        $sp.edit().putFloat("st_expr", it).apply();
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public static final Unit tabletVoiceStudioPage$lambda$365(ObjectRef var0, SharedPreferences var1, float var2) {
+        var0.element = (T)VoiceStudio.Style.copy$default((VoiceStudio.Style)var0.element, var2, 0.0F, 0.0F, 6, null);
+        var1.edit().putFloat("st_expr", var2).apply();
         return Unit.INSTANCE;
     }
 
@@ -10168,12 +10157,10 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         return format + (v < 0.45f ? " - even, steady" : v > 1.0f ? " - loose" : "");
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r0v1, types: [T, com.starpilot.starview.VoiceStudio$Style] */
-    public static final Unit tabletVoiceStudioPage$lambda$368(Ref.ObjectRef $style, SharedPreferences $sp, float it) {
-        $style.element = VoiceStudio.Style.copy$default((VoiceStudio.Style) $style.element, 0.0f, it, 0.0f, 5, null);
-        $sp.edit().putFloat("st_rhythm", it).apply();
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public static final Unit tabletVoiceStudioPage$lambda$368(ObjectRef var0, SharedPreferences var1, float var2) {
+        var0.element = (T)VoiceStudio.Style.copy$default((VoiceStudio.Style)var0.element, 0.0F, var2, 0.0F, 5, null);
+        var1.edit().putFloat("st_rhythm", var2).apply();
         return Unit.INSTANCE;
     }
 
@@ -10227,20 +10214,22 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         filterBox.addView(linearLayout, carUi2.lp(0, 0));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final Unit tabletVoiceStudioPage$fillFilter$lambda$371(Ref.ObjectRef $filter, String str, SharedPreferences $sp, Ref.ObjectRef $fillVoices, LinearLayout $filterBox, SettingsActivity this$0) {
-        Function0 function0;
-        $filter.element = str;
-        $sp.edit().putString("st_filter", str).apply();
-        tabletVoiceStudioPage$fillFilter($filterBox, this$0, $filter, $sp, $fillVoices);
-        if ($fillVoices.element == 0) {
+    /* VF: from Vineflower (jadx: ) */
+    public static final Unit tabletVoiceStudioPage$fillFilter$lambda$371(
+        ObjectRef var0, String var1, SharedPreferences var2, ObjectRef var3, LinearLayout var4, SettingsActivity var5
+    ) {
+        var0.element = (T)var1;
+        var2.edit().putString("st_filter", var1).apply();
+        tabletVoiceStudioPage$fillFilter(var4, var5, var0, var2, var3);
+        Function0 var6;
+        if (var3.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
-            function0 = null;
+            var6 = null;
         } else {
-            function0 = (Function0) $fillVoices.element;
+            var6 = (Function0)var3.element;
         }
-        function0.invoke();
+
+        var6.invoke();
         return Unit.INSTANCE;
     }
 
@@ -10304,7 +10293,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         if ($err != null && $status != null) {
             $status.setText($err);
         }
-        if ($fillVoices.element == 0) {
+        if (!$fillVoices.element) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
             function0 = null;
         } else {
@@ -10313,368 +10302,374 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         function0.invoke();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:36:0x00ca, code lost:
-    
-        if (r10.equals("US") != false) goto L45;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:37:0x00d6, code lost:
-    
-        r9 = kotlin.jvm.internal.Intrinsics.areEqual(r8.getRegion(), r41.element);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:39:0x00d3, code lost:
-    
-        if (r10.equals("GB") == false) goto L46;
-     */
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */
-    /* JADX WARN: Multi-variable type inference failed */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit tabletVoiceStudioPage$lambda$397(LinearLayout linearLayout, final SettingsActivity settingsActivity, Ref.ObjectRef objectRef, final SharedPreferences sharedPreferences, Ref.ObjectRef objectRef2, final AtomicBoolean atomicBoolean, final TextView textView, final Ref.BooleanRef booleanRef, final TextView textView2, final Ref.ObjectRef objectRef3, final Ref.ObjectRef objectRef4, final List list) {
-        CarUi carUi;
-        final Ref.IntRef intRef;
-        LinearLayout linearLayout2;
-        LinearLayout linearLayout3;
-        CarUi carUi2;
-        ArrayList arrayList;
-        CarUi carUi3;
-        CarUi carUi4;
-        int i;
-        CarUi carUi5;
-        CarUi carUi6;
-        CarUi carUi7;
-        CarUi carUi8;
-        CarUi carUi9;
-        LinearLayout linearLayout4 = linearLayout;
-        linearLayout.removeAllViews();
-        int i2 = 0;
-        if (!VoiceStudio.INSTANCE.engineInstalled(settingsActivity)) {
-            CarUi carUi10 = settingsActivity.ui;
-            if (carUi10 == null) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit tabletVoiceStudioPage$lambda$397(
+        LinearLayout var0,
+        SettingsActivity var1,
+        ObjectRef var2,
+        SharedPreferences var3,
+        ObjectRef var4,
+        AtomicBoolean var5,
+        TextView var6,
+        BooleanRef var7,
+        TextView var8,
+        ObjectRef var9,
+        ObjectRef var10,
+        List var11
+    ) {
+        Object var55 = null; // declarations Vineflower left out
+        var0.removeAllViews();
+        if (!VoiceStudio.INSTANCE.engineInstalled((Context)var1)) {
+            CarUi var43 = var1.ui;
+            CarUi var34 = var43;
+            if (var43 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("ui");
-                carUi10 = null;
+                var34 = null;
             }
-            TextView note = carUi10.note("Install the voice engine first (above).");
-            CarUi carUi11 = settingsActivity.ui;
-            if (carUi11 == null) {
+
+            View var44 = (View)var34.note("Install the voice engine first (above).");
+            CarUi var35 = var1.ui;
+            CarUi var25 = var35;
+            if (var35 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("ui");
-                carUi11 = null;
+                var25 = null;
             }
-            linearLayout4.addView(note, CarUi.lp$default(carUi11, 0, 0, 3, null));
+
+            var0.addView(var44, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var25, 0, 0, 3, null));
             return Unit.INSTANCE;
-        }
-        if (((List) objectRef.element).isEmpty()) {
-            CarUi carUi12 = settingsActivity.ui;
-            if (carUi12 == null) {
+        } else if (((List)var2.element).isEmpty()) {
+            CarUi var41 = var1.ui;
+            CarUi var32 = var41;
+            if (var41 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("ui");
-                carUi12 = null;
+                var32 = null;
             }
-            TextView note2 = carUi12.note("Loading the voice list from Hugging Face…");
-            CarUi carUi13 = settingsActivity.ui;
-            if (carUi13 == null) {
+
+            View var42 = (View)var32.note("Loading the voice list from Hugging Face…");
+            CarUi var33 = var1.ui;
+            CarUi var24 = var33;
+            if (var33 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("ui");
-                carUi13 = null;
+                var24 = null;
             }
-            linearLayout4.addView(note2, CarUi.lp$default(carUi13, 0, 0, 3, null));
+
+            var0.addView(var42, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var24, 0, 0, 3, null));
             return Unit.INSTANCE;
-        }
-        Iterable iterable = (Iterable) objectRef.element;
-        ArrayList arrayList2 = new ArrayList();
-        Iterator it = iterable.iterator();
-        while (true) {
-            int i3 = 1;
-            r9 = true;
-            r9 = true;
-            r9 = true;
-            r9 = true;
-            r9 = true;
-            boolean z = true;
-            if (it.hasNext()) {
-                Object next = it.next();
-                VoiceStudio.Voice voice = (VoiceStudio.Voice) next;
-                String str = (String) objectRef2.element;
-                switch (str.hashCode()) {
-                    case 2267:
-                        break;
-                    case 2718:
-                        break;
-                    case 3195240:
-                        if (str.equals("have")) {
-                            z = VoiceStudio.INSTANCE.downloaded(settingsActivity, voice.getKey());
-                            break;
-                        }
-                        break;
-                    case 3343967:
-                        if (str.equals("many") && voice.getSpeakers() <= 1) {
-                            z = false;
-                            break;
-                        }
-                        break;
-                }
-                if (z) {
-                    arrayList2.add(next);
-                }
-            } else {
-                ArrayList<VoiceStudio.Voice> arrayList3 = arrayList2;
-                for (final VoiceStudio.Voice voice2 : arrayList3) {
-                    boolean downloaded = VoiceStudio.INSTANCE.downloaded(settingsActivity, voice2.getKey());
-                    LinearLayout linearLayout5 = new LinearLayout(settingsActivity);
-                    linearLayout5.setOrientation(i3);
-                    CarUi carUi14 = settingsActivity.ui;
-                    if (carUi14 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("ui");
-                        carUi = null;
-                    } else {
-                        carUi = carUi14;
-                    }
-                    Pair row$default = CarUi.row$default(carUi, voice2.getTitle() + " · " + voice2.getAccent() + " · " + voice2.getQuality(), (voice2.getSpeakers() > i3 ? voice2.getSpeakers() + " speakers · " : "") + tabletVoiceStudioPage$mb$375(voice2.getBytes()) + (downloaded ? " · downloaded" : ""), 0, null, null, 28, null);
-                    LinearLayout linearLayout6 = (LinearLayout) row$default.component1();
-                    Ref.IntRef intRef2 = new Ref.IntRef();
-                    intRef2.element = RangesKt.coerceIn(sharedPreferences.getInt("st_sid_" + voice2.getKey(), i2), i2, Math.max(i2, voice2.getSpeakers() - i3));
-                    if (!downloaded) {
-                        CarUi carUi15 = settingsActivity.ui;
-                        if (carUi15 == null) {
+        } else {
+            Iterable var16 = (Iterable)var2.element;
+            var var26 = new ArrayList();
+            Iterator var17 = var16.iterator();
+
+            while (true) {
+                boolean var15 = var17.hasNext();
+                byte var12 = 1;
+                boolean var14 = true;
+                if (!var15) {
+                    List var27 = var26;
+
+                    for (VoiceStudio.Voice var45 : var27) {
+                        var14 = VoiceStudio.INSTANCE.downloaded((Context)var1, var45.getKey());
+                        LinearLayout var20 = new LinearLayout((Context)var1);
+                        var20.setOrientation(var12);
+                        CarUi var56 = var1.ui;
+                        if (var56 == null) {
                             Intrinsics.throwUninitializedPropertyAccessException("ui");
-                            carUi9 = null;
-                        } else {
-                            carUi9 = carUi15;
+                            var56 = null;
                         }
-                        intRef = intRef2;
-                        linearLayout2 = linearLayout6;
-                        linearLayout3 = linearLayout5;
-                        linearLayout2.addView(CarUi.button$default(carUi9, "Download " + tabletVoiceStudioPage$mb$375(voice2.getBytes()), false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda150
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit tabletVoiceStudioPage$lambda$397$lambda$383;
-                                tabletVoiceStudioPage$lambda$397$lambda$383 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$383(voice, settingsActivity, atomicBoolean, textView, booleanRef, textView2, objectRef3);
-                                return tabletVoiceStudioPage$lambda$397$lambda$383;
+
+                        String var75 = var45.getTitle();
+                        String var82 = var45.getAccent();
+                        String var21 = var45.getQuality();
+                        var21 = var75 + " · " + var82 + " · " + var21;
+                        int var13 = var45.getSpeakers();
+                        var82 = "";
+                        String var76;
+                        if (var13 > var12) {
+                            var13 = var45.getSpeakers();
+                            var76 = var13 + " speakers · ";
+                        } else {
+                            var76 = "";
+                        }
+
+                        String var22 = tabletVoiceStudioPage$mb$375(var45.getBytes());
+                        if (var14) {
+                            var82 = " · downloaded";
+                        }
+
+                        Pair var57 = CarUi.row$default(var56, var21, var76 + var22 + var82, 0, null, null, 28, null);
+                        LinearLayout var77 = (LinearLayout)var57.component1();
+                        TextView var58 = (TextView)var57.component2();
+                        IntRef var84 = new IntRef();
+                        String var59 = var45.getKey();
+                        var84.element = RangesKt.coerceIn(var3.getInt("st_sid_" + var59, 0), 0, Math.max(0, var45.getSpeakers() - var12));
+                        if (!var14) {
+                            CarUi var60 = var1.ui;
+                            if (var60 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                                var60 = null;
                             }
-                        }, 2, null));
-                        arrayList = arrayList3;
-                        i = i3;
-                    } else {
-                        intRef = intRef2;
-                        linearLayout2 = linearLayout6;
-                        linearLayout3 = linearLayout5;
-                        CarUi carUi16 = settingsActivity.ui;
-                        if (carUi16 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("ui");
-                            carUi2 = null;
+
+                            var21 = tabletVoiceStudioPage$mb$375(var45.getBytes());
+                            var77.addView(
+                                (View)CarUi.button$default(
+                                    var60,
+                                    "Download " + var21,
+                                    false,
+                                    new SettingsActivity$$ExternalSyntheticLambda150(var45, var1, var5, var6, var7, var8, var9),
+                                    2,
+                                    null
+                                )
+                            );
                         } else {
-                            carUi2 = carUi16;
-                        }
-                        arrayList = arrayList3;
-                        boolean z2 = i3;
-                        linearLayout2.addView(CarUi.button$default(carUi2, "▶ Try", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda151
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit tabletVoiceStudioPage$lambda$397$lambda$385;
-                                tabletVoiceStudioPage$lambda$397$lambda$385 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$385(voice, intRef, settingsActivity, objectRef4, list, textView, booleanRef, atomicBoolean, textView2, objectRef3);
-                                return tabletVoiceStudioPage$lambda$397$lambda$385;
+                            CarUi var61 = var1.ui;
+                            if (var61 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                                var61 = null;
                             }
-                        }, 2, null));
-                        linearLayout2.addView(tabletVoiceStudioPage$gap$374(settingsActivity));
-                        CarUi carUi17 = settingsActivity.ui;
-                        if (carUi17 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("ui");
-                            carUi3 = null;
-                        } else {
-                            carUi3 = carUi17;
-                        }
-                        linearLayout2.addView(carUi3.button("Make my voice", z2, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda152
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit tabletVoiceStudioPage$lambda$397$lambda$389;
-                                tabletVoiceStudioPage$lambda$397$lambda$389 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$389(voice, intRef, settingsActivity, objectRef4, atomicBoolean, textView, booleanRef, textView2, objectRef3);
-                                return tabletVoiceStudioPage$lambda$397$lambda$389;
+
+                            var77.addView(
+                                (View)CarUi.button$default(
+                                    var61,
+                                    "▶ Try",
+                                    false,
+                                    new SettingsActivity$$ExternalSyntheticLambda151(var45, var84, var1, var10, var11, var6, var7, var5, var8, var9),
+                                    2,
+                                    null
+                                )
+                            );
+                            var77.addView(tabletVoiceStudioPage$gap$374(var1));
+                            CarUi var62 = var1.ui;
+                            if (var62 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                                var62 = null;
                             }
-                        }));
-                        linearLayout2.addView(tabletVoiceStudioPage$gap$374(settingsActivity));
-                        CarUi carUi18 = settingsActivity.ui;
-                        if (carUi18 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("ui");
-                            carUi4 = null;
-                        } else {
-                            carUi4 = carUi18;
-                        }
-                        voice2 = voice2;
-                        linearLayout2.addView(CarUi.button$default(carUi4, "Delete", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda153
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit tabletVoiceStudioPage$lambda$397$lambda$390;
-                                tabletVoiceStudioPage$lambda$397$lambda$390 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$390(settingsActivity, voice2, objectRef3, textView);
-                                return tabletVoiceStudioPage$lambda$397$lambda$390;
+
+                            var77.addView(
+                                (View)var62.button(
+                                    "Make my voice",
+                                    (boolean)(var12 != 0),
+                                    new SettingsActivity$$ExternalSyntheticLambda152(var45, var84, var1, var10, var5, var6, var7, var8, var9)
+                                )
+                            );
+                            var77.addView(tabletVoiceStudioPage$gap$374(var1));
+                            CarUi var63 = var1.ui;
+                            if (var63 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                                var63 = null;
                             }
-                        }, 2, null));
-                        i = z2;
-                    }
-                    LinearLayout linearLayout7 = linearLayout2;
-                    CarUi carUi19 = settingsActivity.ui;
-                    if (carUi19 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("ui");
-                        carUi19 = null;
-                    }
-                    linearLayout3.addView(linearLayout7, carUi19.lp(0, 0));
-                    if (downloaded && voice2.getSpeakers() > i) {
-                        CarUi carUi20 = settingsActivity.ui;
-                        if (carUi20 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("ui");
-                            carUi5 = null;
-                        } else {
-                            carUi5 = carUi20;
+
+                            var77.addView(
+                                (View)CarUi.button$default(var63, "Delete", false, new SettingsActivity$$ExternalSyntheticLambda153(var1, var45, var9, var6), 2, null)
+                            );
                         }
-                        final Ref.IntRef intRef3 = intRef;
-                        Pair row$default2 = CarUi.row$default(carUi5, "Speaker", tabletVoiceStudioPage$lambda$397$who(voice2, intRef3.element), 1, null, null, 24, null);
-                        LinearLayout linearLayout8 = (LinearLayout) row$default2.component1();
-                        final TextView textView3 = (TextView) row$default2.component2();
-                        final SeekBar seekBar = new SeekBar(settingsActivity);
-                        seekBar.setMax(voice2.getSpeakers() - i);
-                        seekBar.setProgress(intRef3.element);
-                        seekBar.setThumbTintList(ColorStateList.valueOf(-1));
-                        seekBar.setProgressTintList(ColorStateList.valueOf(CarUi.Companion.getACCENT()));
-                        final VoiceStudio.Voice voice3 = voice2;
-                        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() { // from class: com.starpilot.starview.SettingsActivity$tabletVoiceStudioPage$7$bar$1$1
-                            @Override // android.widget.SeekBar.OnSeekBarChangeListener
-                            public void onProgressChanged(SeekBar sb, int p, boolean fromUser) {
-                                String tabletVoiceStudioPage$lambda$397$who;
-                                TextView textView4 = textView3;
-                                if (textView4 != null) {
-                                    tabletVoiceStudioPage$lambda$397$who = SettingsActivity.tabletVoiceStudioPage$lambda$397$who(voice3, p);
-                                    textView4.setText(tabletVoiceStudioPage$lambda$397$who);
+
+                        View var90 = (View)var77;
+                        CarUi var78 = var1.ui;
+                        CarUi var64 = var78;
+                        if (var78 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("ui");
+                            var64 = null;
+                        }
+
+                        var20.addView(var90, (android.view.ViewGroup.LayoutParams)var64.lp(0, 0));
+                        if (var14 && var45.getSpeakers() > var12) {
+                            CarUi var65 = var1.ui;
+                            if (var65 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                                var65 = null;
+                            }
+
+                            Pair var66 = CarUi.row$default(var65, "Speaker", tabletVoiceStudioPage$lambda$397$who(var45, var84.element), 1, null, null, 24, null);
+                            LinearLayout var91 = (LinearLayout)var66.component1();
+                            TextView var92 = (TextView)var66.component2();
+                            SeekBar var79 = new SeekBar((Context)var1);
+                            var79.setMax(var45.getSpeakers() - var12);
+                            var79.setProgress(var84.element);
+                            var79.setThumbTintList(ColorStateList.valueOf(-1));
+                            var79.setProgressTintList(ColorStateList.valueOf(CarUi.Companion.getACCENT()));
+                            var79.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+                                final TextView $d2 = var92;
+                                final IntRef $sid = var84;
+                                final SharedPreferences $sp = var3;
+                                final SeekBar $this_apply = var79;
+                                final VoiceStudio.Voice $v = var45;
+
+                                public void onProgressChanged(SeekBar var1, int var2x, boolean var3x) {
+                                    TextView var4x = this.$d2;
+                                    if (var4x != null) {
+                                        var4x.setText(SettingsActivity.tabletVoiceStudioPage$lambda$397$who(this.$v, var2x));
+                                    }
                                 }
+
+                                public void onStartTrackingTouch(SeekBar var1) {
+                                }
+
+                                public void onStopTrackingTouch(SeekBar var1) {
+                                    this.$sid.element = this.$this_apply.getProgress();
+                                    Editor var3x = this.$sp.edit();
+                                    String var2x = this.$v.getKey();
+                                    var3x.putInt("st_sid_" + var2x, this.$sid.element).apply();
+                                }
+                            });
+                            CarUi var67 = var1.ui;
+                            if (var67 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                                var67 = null;
                             }
 
-                            @Override // android.widget.SeekBar.OnSeekBarChangeListener
-                            public void onStartTrackingTouch(SeekBar sb) {
+                            var91.addView(
+                                (View)CarUi.button$default(
+                                    var67, "◀", false, new SettingsActivity$$ExternalSyntheticLambda154(var84, var79, var92, var3, var45), 2, null
+                                )
+                            );
+                            var91.addView(tabletVoiceStudioPage$gap$374(var1));
+                            CarUi var68 = var1.ui;
+                            if (var68 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                                var68 = null;
                             }
 
-                            @Override // android.widget.SeekBar.OnSeekBarChangeListener
-                            public void onStopTrackingTouch(SeekBar sb) {
-                                intRef3.element = seekBar.getProgress();
-                                sharedPreferences.edit().putInt("st_sid_" + voice3.getKey(), intRef3.element).apply();
+                            var91.addView(
+                                (View)CarUi.button$default(
+                                    var68, "▶", false, new SettingsActivity$$ExternalSyntheticLambda156(var84, var45, var79, var92, var3), 2, null
+                                )
+                            );
+                            var91.addView(tabletVoiceStudioPage$gap$374(var1));
+                            CarUi var69 = var1.ui;
+                            if (var69 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                                var69 = null;
                             }
-                        });
-                        CarUi carUi21 = settingsActivity.ui;
-                        if (carUi21 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("ui");
-                            carUi6 = null;
-                        } else {
-                            carUi6 = carUi21;
-                        }
-                        final VoiceStudio.Voice voice4 = voice2;
-                        linearLayout8.addView(CarUi.button$default(carUi6, "◀", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda154
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit tabletVoiceStudioPage$lambda$397$lambda$393;
-                                tabletVoiceStudioPage$lambda$397$lambda$393 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$393(intRef, seekBar, textView3, sharedPreferences, voice4);
-                                return tabletVoiceStudioPage$lambda$397$lambda$393;
+
+                            var91.addView(
+                                (View)CarUi.button$default(
+                                    var69, "\ud83c\udfb2", false, new SettingsActivity$$ExternalSyntheticLambda157(var84, var45, var79, var92, var3), 2, null
+                                )
+                            );
+                            View var85 = (View)var91;
+                            CarUi var70 = var1.ui;
+                            CarUi var46 = var70;
+                            if (var70 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                                var46 = null;
                             }
-                        }, 2, null));
-                        linearLayout8.addView(tabletVoiceStudioPage$gap$374(settingsActivity));
-                        CarUi carUi22 = settingsActivity.ui;
-                        if (carUi22 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("ui");
-                            carUi7 = null;
-                        } else {
-                            carUi7 = carUi22;
-                        }
-                        final VoiceStudio.Voice voice5 = voice2;
-                        linearLayout8.addView(CarUi.button$default(carUi7, "▶", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda156
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit tabletVoiceStudioPage$lambda$397$lambda$394;
-                                tabletVoiceStudioPage$lambda$397$lambda$394 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$394(intRef, voice5, seekBar, textView3, sharedPreferences);
-                                return tabletVoiceStudioPage$lambda$397$lambda$394;
+
+                            var20.addView(var85, (android.view.ViewGroup.LayoutParams)var46.lp(var12, 0));
+                            View var80 = (View)var79;
+                            CarUi var71 = var1.ui;
+                            CarUi var47 = var71;
+                            if (var71 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                                var47 = null;
                             }
-                        }, 2, null));
-                        linearLayout8.addView(tabletVoiceStudioPage$gap$374(settingsActivity));
-                        CarUi carUi23 = settingsActivity.ui;
-                        if (carUi23 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("ui");
-                            carUi8 = null;
-                        } else {
-                            carUi8 = carUi23;
-                        }
-                        final VoiceStudio.Voice voice6 = voice2;
-                        linearLayout8.addView(CarUi.button$default(carUi8, "🎲", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda157
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit tabletVoiceStudioPage$lambda$397$lambda$395;
-                                tabletVoiceStudioPage$lambda$397$lambda$395 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$395(intRef, voice6, seekBar, textView3, sharedPreferences);
-                                return tabletVoiceStudioPage$lambda$397$lambda$395;
+
+                            android.widget.LinearLayout.LayoutParams var86 = new android.widget.LinearLayout.LayoutParams(-1, var47.dp(44));
+                            CarUi var72 = var1.ui;
+                            CarUi var48 = var72;
+                            if (var72 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                                var48 = null;
                             }
-                        }, 2, null));
-                        LinearLayout linearLayout9 = linearLayout8;
-                        CarUi carUi24 = settingsActivity.ui;
-                        CarUi carUi25 = carUi24;
-                        if (carUi24 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("ui");
-                            carUi25 = null;
+
+                            var86.leftMargin = var48.dp(28);
+                            CarUi var73 = var1.ui;
+                            CarUi var49 = var73;
+                            if (var73 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("ui");
+                                var49 = null;
+                            }
+
+                            var86.rightMargin = var49.dp(12);
+                            Unit var50 = Unit.INSTANCE;
+                            var20.addView(var80, (android.view.ViewGroup.LayoutParams)var86);
                         }
-                        linearLayout3.addView(linearLayout9, carUi25.lp(i, 0));
-                        SeekBar seekBar2 = seekBar;
-                        CarUi carUi26 = settingsActivity.ui;
-                        if (carUi26 == null) {
+
+                        View var81 = (View)var20;
+                        CarUi var74 = var1.ui;
+                        CarUi var51 = var74;
+                        if (var74 == null) {
                             Intrinsics.throwUninitializedPropertyAccessException("ui");
-                            carUi26 = null;
+                            var51 = null;
                         }
-                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-1, carUi26.dp(44));
-                        CarUi carUi27 = settingsActivity.ui;
-                        if (carUi27 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("ui");
-                            carUi27 = null;
-                        }
-                        layoutParams.leftMargin = carUi27.dp(28);
-                        CarUi carUi28 = settingsActivity.ui;
-                        if (carUi28 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("ui");
-                            carUi28 = null;
-                        }
-                        layoutParams.rightMargin = carUi28.dp(12);
-                        Unit unit = Unit.INSTANCE;
-                        linearLayout3.addView(seekBar2, layoutParams);
+
+                        var0.addView(var81, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var51, 0, 0, 3, null));
                     }
-                    LinearLayout linearLayout10 = linearLayout3;
-                    CarUi carUi29 = settingsActivity.ui;
-                    if (carUi29 == null) {
+
+                    if (var27.isEmpty()) {
+                        CarUi var36 = var1.ui;
+                        CarUi var28 = var36;
+                        if (var36 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("ui");
+                            var28 = null;
+                        }
+
+                        View var52 = (View)var28.note("Nothing here yet.");
+                        CarUi var37 = var1.ui;
+                        CarUi var29 = var37;
+                        if (var37 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("ui");
+                            var29 = null;
+                        }
+
+                        var0.addView(var52, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var29, 0, 0, 3, null));
+                    }
+
+                    CarUi var38 = var1.ui;
+                    CarUi var30 = var38;
+                    if (var38 == null) {
                         Intrinsics.throwUninitializedPropertyAccessException("ui");
-                        carUi29 = null;
+                        var30 = null;
                     }
-                    linearLayout.addView(linearLayout10, CarUi.lp$default(carUi29, 0, 0, 3, null));
-                    linearLayout4 = linearLayout;
-                    i3 = i;
-                    arrayList3 = arrayList;
-                    i2 = 0;
-                }
-                LinearLayout linearLayout11 = linearLayout4;
-                if (arrayList3.isEmpty()) {
-                    CarUi carUi30 = settingsActivity.ui;
-                    if (carUi30 == null) {
+
+                    String var39 = tabletVoiceStudioPage$mb$375(VoiceStudio.INSTANCE.downloadedBytes((Context)var1));
+                    View var40 = (View)var30.note(
+                        "Downloaded voices use " + var39 + " on the tablet. Voices are Piper voices from rhasspy/piper-voices on Hugging Face."
+                    );
+                    CarUi var31 = var1.ui;
+                    CarUi var23 = var31;
+                    if (var31 == null) {
                         Intrinsics.throwUninitializedPropertyAccessException("ui");
-                        carUi30 = null;
+                        var23 = null;
                     }
-                    TextView note3 = carUi30.note("Nothing here yet.");
-                    CarUi carUi31 = settingsActivity.ui;
-                    if (carUi31 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("ui");
-                        carUi31 = null;
+
+                    var0.addView(var40, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var23, 0, 0, 3, null));
+                    return Unit.INSTANCE;
+                }
+
+                label167: {
+                    var55 = var17.next();
+                    VoiceStudio.Voice var19 = (VoiceStudio.Voice)var55;
+                    String var18 = (String)var4.element;
+                    switch (var18.hashCode()) {
+                        case 2267:
+                            if (!var18.equals("GB")) {
+                                break label167;
+                            }
+                            break;
+                        case 2718:
+                            if (!var18.equals("US")) {
+                                break label167;
+                            }
+                            break;
+                        case 3195240:
+                            if (var18.equals("have")) {
+                                var14 = VoiceStudio.INSTANCE.downloaded((Context)var1, var19.getKey());
+                            }
+                            break label167;
+                        case 3343967:
+                            if (var18.equals("many") && var19.getSpeakers() <= 1) {
+                                var14 = false;
+                            }
+                        default:
+                            break label167;
                     }
-                    linearLayout11.addView(note3, CarUi.lp$default(carUi31, 0, 0, 3, null));
+
+                    var14 = Intrinsics.areEqual(var19.getRegion(), var4.element);
                 }
-                CarUi carUi32 = settingsActivity.ui;
-                if (carUi32 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("ui");
-                    carUi32 = null;
+
+                if (var14) {
+                    var26.add(var55);
                 }
-                TextView note4 = carUi32.note("Downloaded voices use " + tabletVoiceStudioPage$mb$375(VoiceStudio.INSTANCE.downloadedBytes(settingsActivity)) + " on the tablet. Voices are Piper voices from rhasspy/piper-voices on Hugging Face.");
-                CarUi carUi33 = settingsActivity.ui;
-                if (carUi33 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("ui");
-                    carUi33 = null;
-                }
-                linearLayout11.addView(note4, CarUi.lp$default(carUi33, 0, 0, 3, null));
-                return Unit.INSTANCE;
             }
         }
     }
@@ -10735,19 +10730,22 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final String tabletVoiceStudioPage$lambda$397$lambda$385$lambda$384(SettingsActivity this$0, VoiceStudio.Voice $v, Ref.IntRef $sid, Ref.ObjectRef $style, List $tryText, TextView $status) {
-        String str;
-        List clips = VoiceStudio.INSTANCE.say(this$0, $v.getKey(), $sid.element, (VoiceStudio.Style) $style.element, $tryText);
-        AmyVoice.INSTANCE.playClips(AmySynth.Style.ASK, clips);
-        String title = $v.getTitle();
-        if ($v.getSpeakers() > 1) {
-            str = " speaker " + $sid.element;
+    /* VF: from Vineflower (jadx: ) */
+    public static final String tabletVoiceStudioPage$lambda$397$lambda$385$lambda$384(
+        SettingsActivity var0, VoiceStudio.Voice var1, IntRef var2, ObjectRef var3, List var4, TextView var5
+    ) {
+        List var8 = VoiceStudio.INSTANCE.say((Context)var0, var1.getKey(), var2.element, (VoiceStudio.Style)var3.element, var4);
+        AmyVoice.INSTANCE.playClips(AmySynth.Style.ASK, var8);
+        String var9 = var1.getTitle();
+        String var7;
+        if (var1.getSpeakers() > 1) {
+            int var6 = var2.element;
+            var7 = " speaker " + var6;
         } else {
-            str = "";
+            var7 = "";
         }
-        tabletVoiceStudioPage$say(this$0, $status, title + str + " - like it? Make my voice");
+
+        tabletVoiceStudioPage$say(var0, var5, var9 + var7 + " - like it? Make my voice");
         return null;
     }
 
@@ -10772,23 +10770,22 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final String tabletVoiceStudioPage$lambda$397$lambda$389$lambda$388(final SettingsActivity this$0, VoiceStudio.Voice $v, Ref.IntRef $sid, Ref.ObjectRef $style, final String $label, AtomicBoolean $cancel, final TextView $status) {
-        String make = VoiceStudio.INSTANCE.make(this$0, $v, $sid.element, (VoiceStudio.Style) $style.element, $label, $cancel, new Function2() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda86
-            @Override // kotlin.jvm.functions.Function2
-            public final Object invoke(Object obj, Object obj2) {
-                Unit tabletVoiceStudioPage$lambda$397$lambda$389$lambda$388$lambda$386;
-                tabletVoiceStudioPage$lambda$397$lambda$389$lambda$388$lambda$386 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$389$lambda$388$lambda$386($label, this$0, $status, ((Integer) obj).intValue(), ((Integer) obj2).intValue());
-                return tabletVoiceStudioPage$lambda$397$lambda$389$lambda$388$lambda$386;
-            }
-        });
-        if (make == null) {
-            tabletVoiceStudioPage$say(this$0, $status, "\"" + $label + "\" is now the lane-change voice");
+    /* VF: from Vineflower (jadx: ) */
+    public static final String tabletVoiceStudioPage$lambda$397$lambda$389$lambda$388(
+        SettingsActivity var0, VoiceStudio.Voice var1, IntRef var2, ObjectRef var3, String var4, AtomicBoolean var5, TextView var6
+    ) {
+        String var8 = VoiceStudio.INSTANCE
+            .make(
+                (Context)var0, var1, var2.element, (VoiceStudio.Style)var3.element, var4, var5, new SettingsActivity$$ExternalSyntheticLambda86(var4, var0, var6)
+            );
+        String var7 = var8;
+        if (var8 == null) {
+            tabletVoiceStudioPage$say(var0, var6, "\"" + var4 + "\" is now the lane-change voice");
             AmyVoice.INSTANCE.demo();
-            return null;
+            var7 = null;
         }
-        return make;
+
+        return var7;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -10803,7 +10800,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         VoiceStudio.INSTANCE.freeEngine();
         VoiceStudio.INSTANCE.deleteModel(this$0, $v.getKey());
         tabletVoiceStudioPage$say(this$0, $status, $v.getTitle() + ": download deleted (voices you made from it stay)");
-        if ($fillVoices.element == 0) {
+        if (!$fillVoices.element) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
             function0 = null;
         } else {
@@ -10870,27 +10867,25 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         }).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Type inference failed for: r0v3, types: [T, java.util.List] */
-    public static final void tabletVoiceStudioPage$loadCat$lambda$399(Ref.ObjectRef $cat, SettingsActivity this$0, boolean $refresh, TextView $status, final Ref.ObjectRef $fillVoices) {
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public static final void tabletVoiceStudioPage$loadCat$lambda$399(ObjectRef var0, SettingsActivity var1, boolean var2, TextView var3, ObjectRef var4) {
         try {
-            $cat.element = VoiceStudio.INSTANCE.catalog(this$0, $refresh);
-            tabletVoiceStudioPage$say(this$0, $status, ((List) $cat.element).size() + " English voices");
-        } catch (Exception e) {
-            tabletVoiceStudioPage$say(this$0, $status, "Couldn't get the voice list (" + e.getMessage() + ") - is the tablet online?");
+            var0.element = (T)VoiceStudio.INSTANCE.catalog((Context)var1, var2);
+            int var5 = ((List)var0.element).size();
+            StringBuilder var8 = new StringBuilder();
+            tabletVoiceStudioPage$say(var1, var3, var8.append(var5).append(" English voices").toString());
+        } catch (Exception var6) {
+            String var7 = var6.getMessage();
+            tabletVoiceStudioPage$say(var1, var3, "Couldn't get the voice list (" + var7 + ") - is the tablet online?");
         }
-        this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda15
-            @Override // java.lang.Runnable
-            public final void run() {
-                SettingsActivity.tabletVoiceStudioPage$loadCat$lambda$399$lambda$398($fillVoices);
-            }
-        });
+
+        var1.runOnUiThread(new SettingsActivity$$ExternalSyntheticLambda15(var4));
     }
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void tabletVoiceStudioPage$loadCat$lambda$399$lambda$398(Ref.ObjectRef $fillVoices) {
         Function0 function0;
-        if ($fillVoices.element == 0) {
+        if (!$fillVoices.element) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
             function0 = null;
         } else {
