@@ -1,0 +1,60 @@
+ask_left|Change lanes left?
+ask_right|Change lanes right?
+lanes1_left|One lane to go. Change lanes left?
+lanes1_right|One lane to go. Change lanes right?
+lanes2_left|Two lanes to go. Change lanes left?
+lanes2_right|Two lanes to go. Change lanes right?
+lanes3_left|Three lanes to go. Change lanes left?
+lanes3_right|Three lanes to go. Change lanes right?
+lanes4_left|Four lanes to go. Change lanes left?
+lanes4_right|Four lanes to go. Change lanes right?
+exit_left_ft500|Exit on the left in 500 feet.
+fork_left_ft500|Keep left at the fork in 500 feet.
+turn_left_ft500|Left turn in 500 feet.
+exit_left_ft1000|Exit on the left in a thousand feet.
+fork_left_ft1000|Keep left at the fork in a thousand feet.
+turn_left_ft1000|Left turn in a thousand feet.
+exit_left_mi025|Exit on the left in a quarter mile.
+fork_left_mi025|Keep left at the fork in a quarter mile.
+turn_left_mi025|Left turn in a quarter mile.
+exit_left_mi05|Exit on the left in half a mile.
+fork_left_mi05|Keep left at the fork in half a mile.
+turn_left_mi05|Left turn in half a mile.
+exit_left_mi075|Exit on the left in three quarters of a mile.
+fork_left_mi075|Keep left at the fork in three quarters of a mile.
+turn_left_mi075|Left turn in three quarters of a mile.
+exit_left_mi1|Exit on the left in one mile.
+fork_left_mi1|Keep left at the fork in one mile.
+turn_left_mi1|Left turn in one mile.
+exit_right_ft500|Exit on the right in 500 feet.
+fork_right_ft500|Keep right at the fork in 500 feet.
+turn_right_ft500|Right turn in 500 feet.
+exit_right_ft1000|Exit on the right in a thousand feet.
+fork_right_ft1000|Keep right at the fork in a thousand feet.
+turn_right_ft1000|Right turn in a thousand feet.
+exit_right_mi025|Exit on the right in a quarter mile.
+fork_right_mi025|Keep right at the fork in a quarter mile.
+turn_right_mi025|Right turn in a quarter mile.
+exit_right_mi05|Exit on the right in half a mile.
+fork_right_mi05|Keep right at the fork in half a mile.
+turn_right_mi05|Right turn in half a mile.
+exit_right_mi075|Exit on the right in three quarters of a mile.
+fork_right_mi075|Keep right at the fork in three quarters of a mile.
+turn_right_mi075|Right turn in three quarters of a mile.
+exit_right_mi1|Exit on the right in one mile.
+fork_right_mi1|Keep right at the fork in one mile.
+turn_right_mi1|Right turn in one mile.
+sig_left|Signaling left.
+sig_right|Signaling right.
+changing|Changing lanes.
+done|Done.
+stop_disengaged|Open pilot disengaged. Stopped.
+stop_brake|Brake pressed. Stopped.
+stop_blinker|Other blinker on. Stopped.
+stop_bsm_left|Car in the left blind spot. Cancelled.
+stop_bsm_right|Car in the right blind spot. Cancelled.
+stop_nostart|Open pilot didn't start the lane change.
+stop_toolong|The lane change took too long.
+stop_cancelled|Cancelled.
+stop_generic|Stopped.
+test_done|Test done.

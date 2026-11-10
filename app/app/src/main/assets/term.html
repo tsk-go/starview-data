@@ -1,0 +1,637 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="xterm.css">
+<style>
+  html, body { margin:0; padding:0; height:100%; background:#0b0d12; overflow:hidden; }
+  #wrap { position:absolute; inset:0; display:flex; flex-direction:column; }
+  #bar { display:flex; gap:6px; padding:6px 8px; background:#12151c; border-bottom:1px solid #222; flex-wrap:wrap; align-items:center; }
+  #bar button { background:#1d2230; color:#dfe6f3; border:1px solid #2c3446; border-radius:8px; padding:8px 12px; font:14px system-ui, sans-serif; }
+  #bar button.on { background:#167f40; border-color:#1fa354; }
+  #bar .sp { flex:1 }
+  #st { color:#8fa3c7; font:13px system-ui, sans-serif; padding:0 8px; }
+  #term { flex:1; min-height:0; position:relative; touch-action:none; }
+  #term .pane { position:absolute; top:4px; left:6px; right:0; bottom:28px; }
+  #tabs { display:flex; gap:4px; padding:6px 8px 0; background:#0f1218; overflow-x:auto; scrollbar-width:none; }
+  #tabs::-webkit-scrollbar { display:none; }
+  #tabs .tab { display:flex; align-items:center; gap:8px; background:#161a24; color:#aab6cc; border:1px solid #2c3446; border-bottom:none; border-radius:10px 10px 0 0; padding:8px 10px 8px 14px; font:14px system-ui, sans-serif; white-space:nowrap; user-select:none; }
+  #tabs .tab.on { background:#1d2230; color:#fff; border-color:#1fa354; }
+  #tabs .tab .dot { width:8px; height:8px; border-radius:4px; background:#6fe3a1; display:none; }
+  #tabs .tab.unread .dot { display:inline-block; }
+  #tabs .tab .x { color:#8a96ad; font-size:16px; padding:0 4px; }
+  #tabs .tab .x:active { color:#ff8a80; }
+  #tabs .add { background:#167f40; color:#fff; border:none; border-radius:10px 10px 0 0; padding:8px 14px; font:16px system-ui, sans-serif; }
+  #bottom { position:absolute; right:18px; bottom:40px; display:none; background:#167f40; color:#fff; border:none; border-radius:22px; padding:10px 16px; font:15px system-ui, sans-serif; z-index:10; }
+  #bar button.danger { background:#5a1d1d; border-color:#8a2c2c; color:#ffd9d9; }
+  #modal { position:absolute; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:30; }
+  #modal .box { background:#161a24; border:1px solid #2c3446; border-radius:16px; padding:22px 24px; width:min(420px, 86vw); color:#e6ecf7; font:16px system-ui, sans-serif; }
+  #modal h3 { margin:0 0 8px; font-size:19px; }
+  #modal p { margin:0 0 18px; color:#aab6cc; line-height:1.4; }
+  #modal .row { display:flex; gap:10px; justify-content:flex-end; }
+  #modal button { border-radius:10px; padding:10px 18px; font:15px system-ui, sans-serif; border:1px solid #2c3446; background:#1d2230; color:#dfe6f3; }
+  #modal button.go { background:#b3261e; border-color:#d0392f; color:#fff; }
+  #toast { position:absolute; left:50%; top:64px; transform:translateX(-50%); background:#167f40; color:#fff; border-radius:12px; padding:12px 20px; font:16px system-ui, sans-serif; z-index:20; display:none; box-shadow:0 4px 18px rgba(0,0,0,.5); }
+  .xterm .xterm-viewport { background:#0b0d12 !important; }
+  /* 2.54.0 saved commands */
+  #bar button#savedBtn { background:#1b2b47; border-color:#2f4a78; color:#cfe0ff; }
+  #saved { position:absolute; top:0; right:0; bottom:0; width:min(520px, 92vw); background:#12151c; border-left:1px solid #2c3446; z-index:25; display:none; flex-direction:column; font:15px system-ui, sans-serif; color:#e6ecf7; box-shadow:-8px 0 24px rgba(0,0,0,.45); }
+  #saved header { display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid #222837; }
+  #saved header h3 { margin:0; font-size:19px; flex:1; }
+  #saved header button, #saved .add button { background:#1d2230; color:#dfe6f3; border:1px solid #2c3446; border-radius:10px; padding:9px 14px; font:15px system-ui, sans-serif; }
+  #saved .list { flex:1; overflow-y:auto; padding:8px 12px 20px; }
+  #saved .grp { color:#8fa3c7; font-size:12px; letter-spacing:.12em; margin:14px 4px 6px; }
+  #saved .cmd { background:#161a24; border:1px solid #232a38; border-radius:14px; padding:12px 14px; margin-bottom:8px; }
+  #saved .cmd .t { display:flex; align-items:center; gap:8px; font-size:16px; font-weight:600; }
+  #saved .cmd .t .tag { font-size:12px; font-weight:600; padding:3px 8px; border-radius:8px; }
+  .tag.any { background:#163323; color:#6ee7a8; } .tag.parked { background:#3d2e17; color:#ffbe5c; } .tag.restart { background:#3a1717; color:#ff8a8a; }
+  #saved .cmd code { display:block; color:#aab6cc; font:13px ui-monospace, monospace; margin:6px 0 10px; white-space:pre-wrap; word-break:break-all; }
+  #saved .cmd .b { display:flex; gap:8px; }
+  #saved .cmd .b button { flex:1; border-radius:10px; padding:10px; border:1px solid #2c3446; background:#1d2230; color:#dfe6f3; font:15px system-ui, sans-serif; }
+  #saved .cmd .b button.run { background:#167f40; border-color:#1fa354; color:#fff; }
+  #saved .cmd .b button.del { flex:0 0 auto; color:#ff8a8a; }
+  #saved .add { border-top:1px solid #222837; padding:12px 14px; display:flex; flex-direction:column; gap:8px; }
+  /* 2.75.0 files to Downloads */
+  #bar button#dlBtn { background:#1b2b47; border-color:#2f4a78; color:#cfe0ff; }
+  #bar button#dlBtn.on { background:#167f40; border-color:#1fa354; color:#fff; }
+  #dl { position:absolute; top:0; right:0; bottom:0; width:min(520px, 92vw); background:#12151c; border-left:1px solid #2c3446; z-index:25; display:none; flex-direction:column; font:15px system-ui, sans-serif; color:#e6ecf7; box-shadow:-8px 0 24px rgba(0,0,0,.45); }
+  #dl header { display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid #222837; }
+  #dl header h3 { margin:0; font-size:19px; flex:1; }
+  #dl header button { background:#1d2230; color:#dfe6f3; border:1px solid #2c3446; border-radius:10px; padding:9px 14px; font:15px system-ui, sans-serif; }
+  #dl .list { flex:1; overflow-y:auto; padding:8px 12px 20px; }
+  #dl .grp { color:#8fa3c7; font-size:12px; letter-spacing:.12em; margin:14px 4px 6px; }
+  #dl .f { display:flex; align-items:center; gap:10px; background:#161a24; border:1px solid #232a38; border-radius:14px; padding:10px 12px; margin-bottom:8px; }
+  #dl .f .n { flex:1; min-width:0; }
+  #dl .f .n b { display:block; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #dl .f .n small { color:#8fa3c7; font:12px ui-monospace, monospace; word-break:break-all; }
+  #dl .f button { background:#167f40; border:1px solid #1fa354; color:#fff; border-radius:10px; padding:9px 14px; font:15px system-ui, sans-serif; }
+  #dl .none { color:#8fa3c7; padding:6px 4px; }
+  #saved .add input, #saved .add select { background:#0b0d12; color:#e6ecf7; border:1px solid #2c3446; border-radius:10px; padding:10px 12px; font:15px system-ui, sans-serif; }
+</style></head>
+<body>
+<div id="wrap">
+  <div id="tabs"></div>
+  <div id="bar">
+    <button data-k="esc">ESC</button>
+    <button data-k="tab">TAB</button>
+    <button id="ctrl">CTRL</button>
+    <button data-k="cc">^C</button>
+    <button data-k="up">↑</button>
+    <button data-k="down">↓</button>
+    <button data-k="left">←</button>
+    <button data-k="right">→</button>
+    <button data-k="pipe">|</button>
+    <button data-k="tilde">~</button>
+    <button data-k="dash">-</button>
+    <button data-k="slash">/</button>
+    <button id="auto">AUTO</button>
+    <button id="paste">PASTE</button>
+    <button id="copy">COPY</button>
+    <button id="kbd">⌨</button>
+    <button id="pgup">PgUp</button>
+    <button id="pgdn">PgDn</button>
+    <button id="end">⤓ END</button>
+    <button id="fminus">A−</button>
+    <button id="fplus">A+</button>
+    <button id="savedBtn">★ SAVED</button>
+    <button id="clear">CLEAR</button>
+    <button id="newsh">RESTART SHELL</button>
+    <button id="reboot" class="danger">REBOOT</button>
+    <button id="dlBtn">⬇ FILES</button>
+    <span class="sp"></span>
+    <span id="st">connecting…</span>
+    <button id="reconnect">RECONNECT</button>
+  </div>
+  <div id="term"></div>
+  <button id="bottom">⤓ back to bottom</button>
+  <div id="toast"></div>
+  <div id="saved">
+    <header><h3>Saved commands</h3><button id="savedClose">Close</button></header>
+    <div class="list" id="savedList"></div>
+    <div class="add">
+      <input id="addLabel" placeholder="Name (e.g. Memory now)">
+      <input id="addCmd" placeholder="Command" autocapitalize="off" autocomplete="off" spellcheck="false">
+      <div style="display:flex; gap:8px"><select id="addSafe" style="flex:1"><option value="any">Safe anytime</option><option value="parked">Parked only</option><option value="restart">Restarts openpilot</option></select>
+      <button id="addGo">Save</button></div>
+    </div>
+  </div>
+  <div id="dl">
+    <header><h3>Save to the tablet's Downloads</h3><button id="dlClose">Close</button></header>
+    <div class="list" id="dlList"></div>
+  </div>
+  <div id="modal"><div class="box">
+    <h3 id="mtitle"></h3>
+    <p id="mtext"></p>
+    <div class="row"><button id="mcancel">Cancel</button><button id="mgo" class="go"></button></div>
+  </div></div>
+</div>
+<script src="xterm.js"></script>
+<script src="addon-fit.js"></script>
+<script>
+  // Terminal tabs (StarView 2.30.8): several shells side by side, like Termius. Each tab is its own shell session on the
+  // comma (its own ?sid=), kept there when the app closes or the link drops, and reattached automatically - background
+  // tabs stay connected, a dot shows new output. The key bar and the buttons work on the tab in front.
+  let host = decodeURIComponent(location.hash.slice(1)) || '';
+  const st = document.getElementById('st');
+  const termEl = document.getElementById('term'), bottomBtn = document.getElementById('bottom'), tabsEl = document.getElementById('tabs');
+  const enc = new TextEncoder();
+  const MAX_TABS = 8;
+  let tabs = [], active = null, ctrl = false;
+  let fsz = 15; try { fsz = parseInt(localStorage.getItem('termFont') || '15') || 15; } catch (e) {}
+
+  function newSid() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+  function nextName() { for (let n = 1; ; n++) if (!tabs.some((t) => t.name === 'Shell ' + n)) return 'Shell ' + n; }
+  function save() {
+    try {
+      localStorage.setItem('termTabs', JSON.stringify(tabs.map((t) => ({ sid: t.sid, name: t.name }))));
+      localStorage.setItem('termActive', active ? active.sid : '');
+    } catch (e) {}
+  }
+  function send(t, s) { if (t && t.ws && t.ws.readyState === 1) t.ws.send(enc.encode(s)); }
+  function sendResize(t) { if (t && t.ws && t.ws.readyState === 1) t.ws.send(JSON.stringify({ resize: [t.term.cols, t.term.rows] })); }
+  function setStatus(t, s) { t.status = s; if (t === active) st.textContent = s; }
+
+  function makeTab(sid, name) {
+    const el = document.createElement('div'); el.className = 'pane'; termEl.appendChild(el);
+    const term = new Terminal({
+      cursorBlink: true, fontSize: fsz, fontFamily: 'monospace', scrollback: 5000,
+      theme: { background: '#0b0d12', foreground: '#e6ecf7', cursor: '#6fe3a1' }, allowProposedApi: true,
+    });
+    const fit = new FitAddon.FitAddon(); term.loadAddon(fit); term.open(el); try { fit.fit(); } catch (e) {}
+    const t = { sid, name, term, fit, el, ws: null, retry: null, retryMs: 1000, closedByUs: false, status: 'connecting…', unread: false,
+                feed: [], feedT: null, feedWait: 0, feedLast: null, watchFrom: -1, watchT: null,
+                wacc: 0, tmuxBack: 0, askedMouse: 0 };
+    term.onData((d) => {
+      if (ctrl && d.length === 1) {
+        const c = d.toUpperCase().charCodeAt(0);
+        if (c >= 64 && c <= 95) { d = String.fromCharCode(c - 64); }
+        ctrl = false; document.getElementById('ctrl').classList.remove('on');
+      }
+      if (d === '\x03') stopFeed(t);
+      if (t.tmuxBack && /^(q|\r|\x1b|\x03)$/.test(d)) { t.tmuxBack = 0; if (t === active) updBottom(); }
+      send(t, d);
+    });
+    term.onResize(() => sendResize(t));
+    term.onScroll(() => { if (t === active) updBottom(); });
+    term.onWriteParsed && term.onWriteParsed(() => {
+      if (t === active) updBottom();
+      if (t.watchFrom < 0) return;
+      clearTimeout(t.watchT); t.watchT = setTimeout(() => checkDone(t), 400);   // wait for the output to settle
+    });
+    tabs.push(t);
+    el.style.display = 'none';
+    connect(t);
+    return t;
+  }
+
+  function scheduleRetry(t) {
+    if (t.retry || t.closedByUs || document.hidden) return;
+    setStatus(t, 'reconnecting…');
+    t.retry = setTimeout(() => { t.retry = null; connect(t); }, t.retryMs);
+    t.retryMs = Math.min(5000, t.retryMs * 2);
+  }
+  function connect(t) {
+    if (window.StarView) { try { const h = window.StarView.host(); if (h) host = h; } catch (e) {} }
+    // session pass from the app's sign-in (the pairing key itself never reaches this page)
+    let pass = ''; if (window.StarView) { try { pass = window.StarView.session() || ''; } catch (e) {} }
+    if (!host) { setStatus(t, 'no comma host'); scheduleRetry(t); return; }
+    if (t.retry) { clearTimeout(t.retry); t.retry = null; }
+    if (t.ws) { const old = t.ws; t.ws = null; old.onclose = null; try { old.close(); } catch (e) {} }
+    t.closedByUs = false;
+    setStatus(t, 'connecting…');
+    const sock = new WebSocket('ws://' + host + ':8090/term?sid=' + encodeURIComponent(t.sid) + '&s=' + encodeURIComponent(pass));
+    t.ws = sock;
+    sock.binaryType = 'arraybuffer';
+    let opened = false;
+    sock.onopen = () => { opened = true; t.retryMs = 1000; setStatus(t, 'connected · ' + host); sendResize(t); if (t === active) t.term.focus(); };
+    sock.onmessage = (ev) => {
+      if (typeof ev.data === 'string') {
+        try {
+          const j = JSON.parse(ev.data);
+          if (j.error) t.term.writeln('\r\n\x1b[31m' + j.error + '\x1b[0m');
+          if (j.replay !== undefined) { t.term.reset(); t.tmuxBack = 0; t.quietUntil = Date.now() + 2000; }   // the comma resends the recent screen; start clean so nothing doubles (and its old file names aren't new)
+        } catch (e) {}
+        return;
+      }
+      t.term.write(new Uint8Array(ev.data));
+      spotFiles(t, ev.data);
+      if (t !== active && !t.unread) { t.unread = true; renderTabs(); }
+    };
+    sock.onclose = (ev) => {
+      if (t.ws !== sock) return;
+      setStatus(t, 'disconnected' + (ev.reason ? ' (' + ev.reason + ')' : ''));
+      if (!opened && !pass) setStatus(t, 'not paired yet: scan the QR code on the comma (Settings › starview › show qr)');
+      if (!opened && pass && window.StarView) { try { window.StarView.sessionRefused(); } catch (e) {} }  // sign in again next try
+      if (ev.reason === 'shell exited') { t.term.writeln('\r\n\x1b[90m[shell exited — tap RECONNECT for a new one]\x1b[0m'); return; }
+      if (ev.reason === 'taken over') return;
+      scheduleRetry(t);
+    };
+    sock.onerror = () => { setStatus(t, 'error'); };
+  }
+
+  function activate(t) {
+    active = t; t.unread = false;
+    tabs.forEach((x) => { x.el.style.display = x === t ? 'block' : 'none'; });
+    st.textContent = t.status;
+    renderTabs(); save();
+    requestAnimationFrame(() => { refit(); sendResize(t); t.term.focus(); updBottom(); });
+  }
+  function addTab() {
+    if (tabs.length >= MAX_TABS) { toast('At most ' + MAX_TABS + ' shells'); return; }
+    activate(makeTab(newSid(), nextName()));
+  }
+  function closeTab(t) {
+    ask('Close ' + t.name + '?', 'Its shell on the comma ends, with anything running in it (programs started in tmux keep running).', 'Close', () => {
+      t.closedByUs = true;
+      if (t.retry) { clearTimeout(t.retry); t.retry = null; }
+      if (t.ws) { try { if (t.ws.readyState === 1) t.ws.send(JSON.stringify({ kill: true })); } catch (e) {} const w = t.ws; t.ws = null; w.onclose = null; setTimeout(() => { try { w.close(); } catch (e) {} }, 300); }
+      const i = tabs.indexOf(t); tabs.splice(i, 1);
+      try { t.term.dispose(); } catch (e) {} t.el.remove();
+      if (!tabs.length) { activate(makeTab(newSid(), nextName())); return; }
+      if (active === t) activate(tabs[Math.max(0, i - 1)]); else { renderTabs(); save(); }
+    });
+  }
+  function renameTab(t) {
+    let n = null; try { n = prompt('Name for this shell', t.name); } catch (e) {}
+    if (n && n.trim()) { t.name = n.trim().slice(0, 24); renderTabs(); save(); }
+  }
+  function renderTabs() {
+    tabsEl.innerHTML = '';
+    tabs.forEach((t) => {
+      const b = document.createElement('div');
+      b.className = 'tab' + (t === active ? ' on' : '') + (t.unread ? ' unread' : '');
+      const dot = document.createElement('span'); dot.className = 'dot';
+      const label = document.createElement('span'); label.textContent = t.name;
+      const x = document.createElement('span'); x.className = 'x'; x.textContent = '✕';
+      b.append(dot, label, x);
+      // tap: switch; ✕: close; hold: rename
+      let holdT = null, held = false;
+      b.addEventListener('pointerdown', () => { held = false; holdT = setTimeout(() => { held = true; renameTab(t); }, 600); });
+      b.addEventListener('pointerup', () => clearTimeout(holdT));
+      b.addEventListener('pointerleave', () => clearTimeout(holdT));
+      b.addEventListener('click', (e) => {
+        if (held) return;
+        if (e.target === x) { closeTab(t); return; }
+        if (t !== active) activate(t); else t.term.focus();
+      });
+      tabsEl.appendChild(b);
+    });
+    const add = document.createElement('button'); add.className = 'add'; add.textContent = '＋';
+    add.title = 'New shell'; add.addEventListener('click', addTab);
+    tabsEl.appendChild(add);
+  }
+
+  // the app moved to another link (USB came back / dropped): follow it; the shell sessions carry over
+  setInterval(() => {
+    if (!window.StarView || document.hidden) return;
+    let h = ''; try { h = window.StarView.host(); } catch (e) {}
+    if (h && h !== host) tabs.forEach((t) => { if (t.ws && t.ws.readyState === 1) { t.retryMs = 1000; connect(t); } });
+  }, 3000);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) tabs.forEach((t) => { if (!t.closedByUs && (!t.ws || t.ws.readyState > 1)) { t.retryMs = 1000; connect(t); } });
+  });
+  window.addEventListener('resize', () => refit());
+
+  const KEYS = { esc: '\x1b', tab: '\t', cc: '\x03', up: '\x1b[A', down: '\x1b[B', left: '\x1b[D', right: '\x1b[C', pipe: '|', tilde: '~', dash: '-', slash: '/' };
+  document.querySelectorAll('#bar button[data-k]').forEach((b) => {
+    b.addEventListener('click', () => { if (!active) return; if (b.dataset.k === 'cc') stopFeed(active); send(active, KEYS[b.dataset.k]); active.term.focus(); });
+  });
+  document.getElementById('ctrl').addEventListener('click', (e) => { ctrl = !ctrl; e.target.classList.toggle('on', ctrl); if (active) active.term.focus(); });
+  // Multi-line scripts go in one line at a time, each only once the shell shows its prompt for it ("$ " or the "> "
+  // continuation). Handing bash the whole block at once made it redraw the lines over each other on the comma.
+  function readyForLine(t) {
+    const b = t.term.buffer.active; const l = b.getLine(b.baseY + b.cursorY);
+    const before = l ? l.translateToString(false).slice(0, b.cursorX) : '';
+    return /(^> ?$)|([$#] $)/.test(before);
+  }
+  function feeding(t) { return t.feed.length > 0 || t.feedLast !== null; }
+  function feedNext(t) {
+    clearTimeout(t.feedT); t.feedT = null;
+    if (!feeding(t)) return;
+    if (!readyForLine(t) && Date.now() < t.feedWait) { t.feedT = setTimeout(() => feedNext(t), 50); return; }
+    if (t.feed.length) {
+      send(t, t.feed.shift() + '\r');
+      t.feedWait = Date.now() + 20000;       // a slow command in the middle: wait up to 20 s for the next prompt
+    } else { t.term.paste(t.feedLast); t.feedLast = null; }
+    if (feeding(t)) t.feedT = setTimeout(() => feedNext(t), 80); else setStatus(t, 'connected · ' + host);
+  }
+  function stopFeed(t) { t.feed = []; t.feedLast = null; clearTimeout(t.feedT); t.feedT = null; }
+  function pasteRun(t, text) {
+    text = text.replace(/\r\n/g, '\n'); const run = /\n$/.test(text);
+    const body = text.replace(/\n+$/, '');
+    if (!body.includes('\n')) { t.term.paste(body); if (run) send(t, '\r'); return; }
+    t.feed = body.split('\n'); t.feedLast = run ? null : t.feed.pop();
+    setStatus(t, 'pasting ' + body.split('\n').length + ' lines…');
+    t.feedWait = Date.now() + 2000; feedNext(t);
+  }
+  // AUTO (remembered): PASTE also presses Enter, and when the command is done (the prompt is back) its command +
+  // output go straight to the clipboard, with a pop-up - ready to paste into a chat.
+  let auto = false; try { auto = localStorage.getItem('termAuto') === '1'; } catch (e) {}
+  const autoBtn = document.getElementById('auto');
+  function showAuto() { autoBtn.classList.toggle('on', auto); autoBtn.textContent = auto ? 'AUTO ✓' : 'AUTO'; }
+  showAuto();
+  autoBtn.addEventListener('click', () => {
+    auto = !auto; try { localStorage.setItem('termAuto', auto ? '1' : '0'); } catch (e) {} showAuto();
+    toast(auto ? 'AUTO on: PASTE runs the command and copies the result' : 'AUTO off'); if (active) active.term.focus();
+  });
+  let tt = null;
+  function toast(msg) {
+    const el = document.getElementById('toast'); el.textContent = msg; el.style.display = 'block';
+    clearTimeout(tt); tt = setTimeout(() => { el.style.display = 'none'; }, 2600);
+  }
+  const PROMPT = /^\S+@\S+:.*[$#]$/;       // comma@comma-xxxx:/data/log$
+  function startWatch(t) { const b = t.term.buffer.active; t.watchFrom = b.baseY + b.cursorY; }
+  function checkDone(t) {
+    if (t.watchFrom < 0 || feeding(t)) return;
+    const lines = bufferText(t, 5000, t.watchFrom);
+    if (lines.length < 2) return;                          // just the command so far
+    if (!PROMPT.test(lines[lines.length - 1].trimEnd())) return;   // still running
+    lines.pop();
+    t.watchFrom = -1;
+    const text = lines.join('\n');
+    if (window.StarView) window.StarView.setClipboard(text); else navigator.clipboard.writeText(text);
+    const n = lines.length;
+    setStatus(t, 'copied ' + n + ' lines');
+    toast('✓ Result copied (' + n + ' line' + (n === 1 ? '' : 's') + ')' + (t !== active ? ' from ' + t.name : '') + ' - paste it anywhere');
+  }
+  document.getElementById('paste').addEventListener('click', async () => {
+    const t = active; if (!t) return;
+    let text = ''; try { text = await navigator.clipboard.readText(); } catch (e) {} if (!text && window.StarView) text = window.StarView.clipboard() || '';
+    if (text) {
+      if (auto) { startWatch(t); pasteRun(t, text.replace(/\n*$/, '\n')); }
+      else pasteRun(t, text);
+    }
+    t.term.focus();
+  });
+  // screen lines -> text lines: a long line the terminal wrapped onto several rows comes back as ONE line
+  function bufferText(t, maxLines, from) {
+    const b = t.term.buffer.active; const lines = [];
+    const end = b.length; const start = from !== undefined ? Math.max(0, from) : Math.max(0, end - maxLines);
+    for (let i = start; i < end; i++) {
+      const l = b.getLine(i); const txt = l ? l.translateToString(!(b.getLine(i + 1) && b.getLine(i + 1).isWrapped)) : '';
+      if (l && l.isWrapped && lines.length && i > start) lines[lines.length - 1] += txt; else lines.push(txt);
+    }
+    while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
+    return lines;
+  }
+  // COPY: the current selection if there is one, otherwise everything since the previous prompt
+  document.getElementById('copy').addEventListener('click', () => {
+    const t = active; if (!t) return;
+    let text;
+    if (t.term.hasSelection()) text = t.term.getSelection();
+    else {
+      const lines = bufferText(t, 400);
+      let idx = -1;
+      for (let i = lines.length - 2; i >= 0; i--) { if (/\$ \S/.test(lines[i])) { idx = i; break; } }
+      text = (idx >= 0 ? lines.slice(idx) : lines).join('\n');
+    }
+    if (!text) { st.textContent = 'nothing to copy'; return; }
+    if (window.StarView) { window.StarView.setClipboard(text); st.textContent = 'copied ' + text.split('\n').length + ' lines'; }
+    else navigator.clipboard.writeText(text).then(() => { st.textContent = 'copied'; });
+    t.term.clearSelection(); t.term.focus();
+  });
+  // confirm dialog (reboot, close tab, restart shell)
+  const modal = document.getElementById('modal'); let onGo = null;
+  function ask(title, text, go, fn) {
+    document.getElementById('mtitle').textContent = title; document.getElementById('mtext').textContent = text;
+    document.getElementById('mgo').textContent = go; onGo = fn; modal.style.display = 'flex';
+  }
+  function closeModal() { modal.style.display = 'none'; onGo = null; if (active) active.term.focus(); }
+  document.getElementById('mcancel').addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.getElementById('mgo').addEventListener('click', () => { const f = onGo; closeModal(); if (f) f(); });
+  document.getElementById('reboot').addEventListener('click', () => {
+    ask('Reboot the comma?', 'Runs sudo reboot now. openpilot stops and the comma restarts (about a minute). Only while parked.', 'Reboot', () => {
+      const t = active;
+      if (!t || !t.ws || t.ws.readyState !== 1) { toast('Not connected to the comma - wait for "connected", then try again'); return; }
+      stopFeed(t); send(t, '\x03');
+      setTimeout(() => { send(t, 'sudo reboot\r'); toast('Rebooting the comma…'); }, 300);
+    });
+  });
+  document.getElementById('kbd').addEventListener('click', () => { if (active) active.term.focus(); if (window.StarView) window.StarView.showKeyboard(); });
+  document.getElementById('reconnect').addEventListener('click', () => { if (active) { active.retryMs = 1000; connect(active); } });
+  // RESTART SHELL: a fresh shell in this tab (the old one ends; new tabs come from ＋)
+  document.getElementById('newsh').addEventListener('click', () => {
+    const t = active; if (!t) return;
+    ask('Restart ' + t.name + '?', 'Its shell on the comma ends, with anything running in it (programs started in tmux keep running), and a new one starts. For another shell next to it, use ＋.', 'Restart', () => {
+      if (t.ws && t.ws.readyState === 1) t.ws.send(JSON.stringify({ kill: true }));
+      t.sid = newSid(); save();
+      t.term.reset(); setTimeout(() => connect(t), 300);
+    });
+  });
+
+  // ---- scrolling / sizing (touch drag scrolls the history; the bar may wrap, so refit on any size change) ----
+  const refit = () => { const t = active; if (!t) return; const stick = atBottom(); try { t.fit.fit(); } catch (e) {} if (stick) t.term.scrollToBottom(); };
+  new ResizeObserver(refit).observe(termEl);
+  // 2.30.9: a full-screen program (tmux, less, htop) has no history in the terminal itself - tmux keeps it. When the
+  // program takes the mouse (tmux with `mouse on`), a swipe or PgUp/PgDn is sent to it as mouse-wheel turns, which tmux
+  // answers by scrolling its history (copy mode, left again at the bottom). When it doesn't, the comma is asked once to
+  // turn tmux's mouse on (comma's own tmux.conf has it off).
+  const WHEEL_LINES = 5;                 // tmux scrolls 5 lines per wheel turn
+  function fullScreen(t) { return t.term.buffer.active.type === 'alternate'; }
+  function takesMouse(t) { const m = t.term.modes && t.term.modes.mouseTrackingMode; return !!m && m !== 'none'; }
+  function wheel(t, turns) {
+    if (!turns) return;
+    const col = Math.max(1, Math.round(t.term.cols / 2)), row = Math.max(1, Math.round(t.term.rows / 2));
+    const one = '\x1b[<' + (turns < 0 ? 64 : 65) + ';' + col + ';' + row + 'M';
+    send(t, one.repeat(Math.min(2000, Math.abs(turns))));
+    t.tmuxBack = Math.max(0, t.tmuxBack - turns * WHEEL_LINES);
+    if (t === active) updBottom();
+  }
+  function askMouse(t) {
+    if (Date.now() - t.askedMouse < 15000) return;
+    t.askedMouse = Date.now();
+    if (t.ws && t.ws.readyState === 1) t.ws.send(JSON.stringify({ tmux_mouse: true }));
+    setTimeout(() => {
+      if (takesMouse(t) || !fullScreen(t)) { if (t === active) toast('Swipe to scroll back (tmux history)'); return; }
+      if (t === active) toast('To scroll inside tmux, run in another tab:  tmux set -g mouse on');
+    }, 1200);
+  }
+  /** lines > 0 = towards the newest output */
+  function scrollBy(t, lines) {
+    if (!fullScreen(t)) { t.term.scrollLines(lines); updBottom(); return; }
+    if (!takesMouse(t)) { askMouse(t); return; }
+    t.wacc += lines;
+    const turns = Math.trunc(t.wacc / WHEEL_LINES);
+    if (turns) { t.wacc -= turns * WHEEL_LINES; wheel(t, turns); }
+  }
+  function toBottom(t) {
+    if (fullScreen(t)) { if (t.tmuxBack > 0 && takesMouse(t)) wheel(t, Math.ceil(t.tmuxBack / WHEEL_LINES) + 2); t.tmuxBack = 0; t.wacc = 0; }
+    else t.term.scrollToBottom();
+    updBottom();
+  }
+  function atBottom() {
+    if (!active) return true;
+    if (fullScreen(active)) return active.tmuxBack <= 0;
+    const b = active.term.buffer.active; return b.viewportY >= b.baseY;
+  }
+  function updBottom() { bottomBtn.style.display = atBottom() ? 'none' : 'block'; }
+  bottomBtn.addEventListener('click', () => { if (!active) return; toBottom(active); active.term.focus(); });
+  document.getElementById('end').addEventListener('click', () => { if (!active) return; toBottom(active); });
+  document.getElementById('pgup').addEventListener('click', () => { if (!active) return; scrollBy(active, -(active.term.rows - 2)); });
+  document.getElementById('pgdn').addEventListener('click', () => { if (!active) return; scrollBy(active, active.term.rows - 2); });
+  document.getElementById('clear').addEventListener('click', () => { if (!active) return; active.term.clear(); active.term.focus(); });
+  function setFont(n) {
+    fsz = Math.max(9, Math.min(24, n));
+    tabs.forEach((t) => { t.term.options.fontSize = fsz; });
+    try { localStorage.setItem('termFont', String(fsz)); } catch (e) {}
+    refit(); if (active) sendResize(active);
+  }
+  document.getElementById('fminus').addEventListener('click', () => setFont(fsz - 1));
+  document.getElementById('fplus').addEventListener('click', () => setFont(fsz + 1));
+  let ty = null, acc = 0, moved = false;
+  termEl.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { ty = e.touches[0].clientY; acc = 0; moved = false; } }, { passive: true, capture: true });
+  termEl.addEventListener('touchmove', (e) => {
+    if (ty === null || e.touches.length !== 1 || !active) return;
+    const y = e.touches[0].clientY; acc += ty - y; ty = y;
+    const lh = termEl.clientHeight / Math.max(1, active.term.rows);
+    const n = Math.trunc(acc / lh);
+    if (n !== 0) { scrollBy(active, n); acc -= n * lh; moved = true; }
+    e.preventDefault(); e.stopPropagation();
+  }, { passive: false, capture: true });
+  termEl.addEventListener('touchend', () => { if (!moved && active) { active.term.focus(); } ty = null; }, { capture: true });
+
+  // ---- 2.54.0 saved commands: a library of what you run, each marked with when it's safe to run. "Parked only" and
+  // "Restarts openpilot" ask first while the car is on. Kept in the app's settings (included in backups).
+  const SAFE = { any: 'Safe anytime', parked: 'Parked only', restart: 'Restarts openpilot' };
+  const BUILTIN = [
+    { label: 'Memory now', cmd: 'free -m', safe: 'any' },
+    { label: 'Biggest processes', cmd: 'ps -eo rss,pid,args --sort=-rss | head -15', safe: 'any' },
+    { label: 'Disk space', cmd: 'df -h /data', safe: 'any' },
+    { label: 'Temperatures', cmd: 'cat /sys/class/thermal/thermal_zone*/temp | head -8', safe: 'any' },
+    { label: 'Branch and commit', cmd: 'cd /data/openpilot && git branch --show-current && git log -1 --oneline', safe: 'any' },
+    { label: 'openpilot processes (tmux)', cmd: 'tmux a', safe: 'parked' },
+    { label: 'Restart openpilot', cmd: 'sudo systemctl restart comma', safe: 'restart' },
+  ];
+  let cmds = [];
+  function loadCmds() {
+    let s = ''; try { s = window.StarView ? window.StarView.savedCommands() : (localStorage.getItem('termSaved') || ''); } catch (e) {}
+    try { cmds = s ? JSON.parse(s) : BUILTIN.slice(); } catch (e) { cmds = BUILTIN.slice(); }
+    if (!Array.isArray(cmds)) cmds = BUILTIN.slice();
+  }
+  function storeCmds() { const j = JSON.stringify(cmds); try { if (window.StarView) window.StarView.setSavedCommands(j); else localStorage.setItem('termSaved', j); } catch (e) {} }
+  const savedEl = document.getElementById('saved'), savedList = document.getElementById('savedList');
+  function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  function renderCmds() {
+    savedList.innerHTML = '';
+    for (const g of ['any', 'parked', 'restart']) {
+      const list = cmds.filter((c) => (c.safe || 'any') === g); if (!list.length) continue;
+      const h = document.createElement('div'); h.className = 'grp'; h.textContent = SAFE[g].toUpperCase(); savedList.appendChild(h);
+      for (const c of list) {
+        const el = document.createElement('div'); el.className = 'cmd';
+        el.innerHTML = '<div class="t">' + esc(c.label) + ' <span class="tag ' + g + '">' + SAFE[g] + '</span></div><code>' + esc(c.cmd) + '</code>' +
+          '<div class="b"><button class="ins">Insert</button><button class="run">Run</button><button class="del">✕</button></div>';
+        el.querySelector('.ins').onclick = () => use(c, false);
+        el.querySelector('.run').onclick = () => use(c, true);
+        el.querySelector('.del').onclick = () => ask('Remove "' + c.label + '"?', c.cmd, 'Remove', () => { cmds = cmds.filter((x) => x !== c); storeCmds(); renderCmds(); });
+        savedList.appendChild(el);
+      }
+    }
+  }
+  function use(c, run) {
+    const t = active; if (!t) return;
+    const go = () => { savedEl.style.display = 'none'; pasteRun(t, c.cmd + (run ? '\n' : '')); t.term.focus(); };
+    const onroad = window.StarView && window.StarView.onroad && window.StarView.onroad();
+    if (run && onroad && (c.safe === 'parked' || c.safe === 'restart'))
+      ask('The car is on', '"' + c.label + '" is marked ' + SAFE[c.safe].toLowerCase() + '. Run it anyway?', 'Run', go);
+    else go();
+  }
+  document.getElementById('savedBtn').addEventListener('click', () => { loadCmds(); renderCmds(); savedEl.style.display = 'flex'; });
+  document.getElementById('savedClose').addEventListener('click', () => { savedEl.style.display = 'none'; if (active) active.term.focus(); });
+  document.getElementById('addGo').addEventListener('click', () => {
+    const label = document.getElementById('addLabel').value.trim(), cmd = document.getElementById('addCmd').value.trim();
+    if (!label || !cmd) { toast('Give it a name and a command'); return; }
+    cmds.push({ label, cmd, safe: document.getElementById('addSafe').value }); storeCmds(); renderCmds();
+    document.getElementById('addLabel').value = ''; document.getElementById('addCmd').value = '';
+  });
+
+  // ---- 2.75.0: files a command writes, one tap to the tablet's Downloads ----
+  // The output is watched for paths of files on the comma ("saved to /data/tmp/turns.csv"); once the comma confirms the
+  // file is there, the ⬇ button turns green with its name: one tap copies it to Downloads (same copy as Files). Tapped
+  // with nothing new, it lists the files spotted lately and the newest files in /data/tmp. Scripts (.py, .sh) and paths
+  // in the command you typed don't count.
+  const dlBtn = document.getElementById('dlBtn'), dlEl = document.getElementById('dl'), dlList = document.getElementById('dlList');
+  const PATH_RE = /\/(?:data|tmp)\/[A-Za-z0-9._\-\/]*[A-Za-z0-9_\-]\.[A-Za-z0-9]{1,8}(?![A-Za-z0-9_\/])/g;
+  const SKIP_EXT = /\.(py|sh|pyc|so)$/i;
+  let spotted = [];          // [{path, size}] newest first, confirmed on the comma
+  let fresh = null;          // the newest one not saved yet: the green button
+  const asked = new Set();
+  function baseName(p) { return p.slice(p.lastIndexOf('/') + 1); }
+  function showDl() {
+    dlBtn.classList.toggle('on', !!fresh);
+    dlBtn.textContent = fresh ? '⬇ ' + baseName(fresh.path) : '⬇ FILES';
+  }
+  function spotFiles(t, data) {
+    if (!t.dec) { t.dec = new TextDecoder(); t.tail = ''; }
+    const text = t.dec.decode(new Uint8Array(data), { stream: true }).replace(/\x1b\[[0-9;?]*[A-Za-z]/g, '');
+    if (t.quietUntil && Date.now() < t.quietUntil) return;
+    // only what the command printed: the lines that end with a newline, not the prompt line you're typing on
+    t.tail = (t.tail + text).slice(-2000);
+    const nl = t.tail.lastIndexOf('\n');
+    if (nl < 0) return;
+    const done = t.tail.slice(0, nl); t.tail = t.tail.slice(nl + 1);
+    for (const line of done.split('\n')) {
+      if (/^\S+@\S+:.*[$#] /.test(line) || /^> /.test(line)) continue;   // the command line itself, a heredoc being typed
+      for (const m of line.matchAll(PATH_RE)) {
+        const p = m[0];
+        if (SKIP_EXT.test(p) || asked.has(p)) continue;
+        asked.add(p); setTimeout(() => asked.delete(p), 3000);
+        if (window.StarView && window.StarView.checkFile) window.StarView.checkFile(p);
+      }
+    }
+  }
+  // the app answers checkFile only when the file is there
+  window.fileSeen = (path, size) => {
+    spotted = [{ path, size }].concat(spotted.filter((f) => f.path !== path)).slice(0, 8);
+    fresh = { path, size }; showDl();
+  };
+  function saveFile(path) {
+    if (!window.StarView || !window.StarView.saveToDownloads) { toast('Needs the StarView app'); return; }
+    toast('Saving ' + baseName(path) + '…');
+    window.StarView.saveToDownloads(path);
+  }
+  window.dlDone = (path, ok, msg) => {
+    toast(msg);
+    if (ok && fresh && fresh.path === path) { fresh = null; showDl(); }
+  };
+  function fmtSize(n) { return n < 1024 ? n + ' B' : n < 1048576 ? (n / 1024).toFixed(1) + ' KB' : (n / 1048576).toFixed(1) + ' MB'; }
+  function fileRow(f) {
+    const el = document.createElement('div'); el.className = 'f';
+    el.innerHTML = '<div class="n"><b></b><small></small></div><button>Save</button>';
+    el.querySelector('b').textContent = baseName(f.path);
+    el.querySelector('small').textContent = f.path + (f.size !== undefined ? '  ·  ' + fmtSize(f.size) : '');
+    el.querySelector('button').addEventListener('click', () => saveFile(f.path));
+    return el;
+  }
+  window.recentFiles = (json) => {
+    let list = []; try { list = JSON.parse(json); } catch (e) {}
+    const box = document.getElementById('dlRecent'); if (!box) return;
+    box.innerHTML = '';
+    if (!list.length) { box.innerHTML = '<div class="none">Nothing in /data/tmp</div>'; return; }
+    list.forEach((f) => box.appendChild(fileRow(f)));
+  };
+  function openDl() {
+    dlList.innerHTML = '';
+    const g1 = document.createElement('div'); g1.className = 'grp'; g1.textContent = 'FROM THE TERMINAL'; dlList.appendChild(g1);
+    if (!spotted.length) { const n = document.createElement('div'); n.className = 'none'; n.textContent = 'No files named in the output yet'; dlList.appendChild(n); }
+    spotted.forEach((f) => dlList.appendChild(fileRow(f)));
+    const g2 = document.createElement('div'); g2.className = 'grp'; g2.textContent = 'NEWEST IN /data/tmp'; dlList.appendChild(g2);
+    const box = document.createElement('div'); box.id = 'dlRecent'; box.innerHTML = '<div class="none">Looking…</div>'; dlList.appendChild(box);
+    if (window.StarView && window.StarView.listRecent) window.StarView.listRecent('/data/tmp');
+    dlEl.style.display = 'flex';
+  }
+  dlBtn.addEventListener('click', () => { if (fresh) saveFile(fresh.path); else openDl(); });
+  dlBtn.addEventListener('contextmenu', (e) => { e.preventDefault(); openDl(); });     // long press: the list even when green
+  document.getElementById('dlClose').addEventListener('click', () => { dlEl.style.display = 'none'; if (active) active.term.focus(); });
+
+  // ---- start: the tabs from last time (their shells are still on the comma), else the one shell of older versions ----
+  let saved = [];
+  try { saved = JSON.parse(localStorage.getItem('termTabs') || '[]'); } catch (e) {}
+  if (!Array.isArray(saved) || !saved.length) {
+    let old = ''; try { old = localStorage.getItem('termSid') || ''; } catch (e) {}
+    saved = [{ sid: old || newSid(), name: 'Shell 1' }];
+  }
+  saved.slice(0, MAX_TABS).forEach((x) => { if (x && x.sid) makeTab(String(x.sid), String(x.name || nextName())); });
+  let want = ''; try { want = localStorage.getItem('termActive') || ''; } catch (e) {}
+  activate(tabs.find((t) => t.sid === want) || tabs[0]);
+</script>
+</body></html>

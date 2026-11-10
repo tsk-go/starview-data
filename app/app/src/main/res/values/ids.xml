@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <item type="id" name="blinkCard"/>
+  <item type="id" name="clockTv"/>
+  <item type="id" name="curveLabel"/>
+  <item type="id" name="devSidebar"/>
+  <item type="id" name="gpsCard"/>
+  <item type="id" name="laneCard"/>
+  <item type="id" name="laneSuggest"/>
+  <item type="id" name="modeText"/>
+  <item type="id" name="pipLeft"/>
+  <item type="id" name="pipRight"/>
+  <item type="id" name="slcActions"/>
+  <item type="id" name="slowCard"/>
+</resources>
