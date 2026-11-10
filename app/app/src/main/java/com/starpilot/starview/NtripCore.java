@@ -152,11 +152,10 @@ public final class NtripCore {
             return "GET /" + StringsKt.trimStart(StringsKt.trim((CharSequence) mount).toString(), '/') + " HTTP/1.1\r\n" + h + "Ntrip-Version: Ntrip/2.0\r\nUser-Agent: NTRIP StarView/2.70\r\n" + (gga != null ? "Ntrip-GGA: " + gga + "\r\n" : "") + auth + "Connection: close\r\n\r\n";
         }
         String it2 = StringsKt.trim((CharSequence) host).toString();
-        if (!(it2.length() == 0)) {
-            if (port > 0 && port != 80) {
-                str = ":" + port;
-            }
-            str = "Host: " + it2 + str + "\r\n";
+        if (it2.length() == 0) {
+            str = "";
+        } else {
+            str = "Host: " + it2 + ((port <= 0 || port == 80) ? "" : ":" + port) + "\r\n";
         }
         String h2 = str;
         return "GET /" + StringsKt.trimStart(StringsKt.trim((CharSequence) mount).toString(), '/') + " HTTP/1.0\r\n" + h2 + "User-Agent: NTRIP StarView/2.59\r\nAccept: */*\r\n" + auth + "Connection: close\r\n\r\n";

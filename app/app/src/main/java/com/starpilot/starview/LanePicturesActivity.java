@@ -565,10 +565,10 @@ public final class LanePicturesActivity extends AppCompatActivity {
                         int var27 = 0;
 
                         for (LaneShots.Shot var88 : (Iterable<LaneShots.Shot>) var60) {
-                            var88 = this.marks.get(var88.getName());
-                            Intrinsics.checkNotNull(var88);
+                            Integer var88m = this.marks.get(var88.getName());
+                            Intrinsics.checkNotNull(var88m);
                             int var33;
-                            if (((Number)(Object)var88).intValue() > 0) {
+                            if (((Number)(Object)var88m).intValue() > 0) {
                                 var33 = 1;
                             } else {
                                 var33 = 0;
@@ -597,10 +597,10 @@ public final class LanePicturesActivity extends AppCompatActivity {
                             var28 = 0;
 
                             for (LaneShots.Shot var62 : (Iterable<LaneShots.Shot>) var53) {
-                                var8 = this.marks.get(var62.getName());
-                                Intrinsics.checkNotNull(var8);
+                                Integer var8m = this.marks.get(var62.getName());
+                                Intrinsics.checkNotNull(var8m);
                                 int var38;
-                                if (((Number)(Object)var8).intValue() > 0) {
+                                if (((Number)(Object)var8m).intValue() > 0) {
                                     var38 = 1;
                                 } else {
                                     var38 = 0;
@@ -847,49 +847,23 @@ public final class LanePicturesActivity extends AppCompatActivity {
             LaneShots.Shot var9 = this.cur.get(this.i);
 
             Bitmap var5;
-            label257: {
-                InputStream var4;
-                try {
-                    var4 = this.getContentResolver().openInputStream(Uri.parse(var9.getUri()));
-                } catch (Exception var29) {
-                    var5 = null;
-                    break label257;
-                }
-
-                label248:
+            try {
+                InputStream var4 = this.getContentResolver().openInputStream(Uri.parse(var9.getUri()));
                 if (var4 != null) {
-                    try {
-                        var4 = var4;
-                    } catch (Exception var28) {
-                        var5 = null;
-                        break label248;
-                    }
-
+                    Throwable var4c = null;
                     try {
                         var5 = BitmapFactory.decodeStream(var4);
                     } catch (Throwable var27) {
-                        Throwable var39 = var27;
-
-                        try {
-                            throw var39;
-                        } finally {
-                            try {
-                                CloseableKt.closeFinally(var4, var39);
-                            } catch (Exception var25) {
-                                var5 = null;
-                                break label248;
-                            }
-                        }
-                    }
-
-                    try {
-                        CloseableKt.closeFinally(var4, null);
-                    } catch (Exception var24) {
-                        var5 = null;
+                        var4c = var27;
+                        throw var27;
+                    } finally {
+                        CloseableKt.closeFinally(var4, var4c);
                     }
                 } else {
                     var5 = null;
                 }
+            } catch (Exception var29) {
+                var5 = null;
             }
 
             ZoomImageView var31 = this.img;

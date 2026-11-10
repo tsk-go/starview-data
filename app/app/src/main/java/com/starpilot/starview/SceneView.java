@@ -6335,7 +6335,7 @@ public final class SceneView extends SurfaceView {
 
                         Set var179 = this.crossNow.keySet();
                         Intrinsics.checkNotNullExpressionValue(var179, "<get-keys>(...)");
-                        var39 = CollectionsKt.toList(var179);
+                        List var39L = CollectionsKt.toList(var179);
                         var116 = 0;
                         List var190 = var73;
 
@@ -6343,17 +6343,17 @@ public final class SceneView extends SurfaceView {
                             var166 = false;
                             ArrayList var262 = new ArrayList();
 
-                            for (Object var42$it : (List)(Object)var39) {
-                                var42 = (String) var42$it;
-                                Intrinsics.checkNotNullExpressionValue(var42, "next(...)");
-                                var33 = ((Number)(Object)var42).longValue();
+                            for (Object var42$it : var39L) {
+                                Object var42o = var42$it;
+                                Intrinsics.checkNotNullExpressionValue(var42o, "next(...)");
+                                var33 = ((Number)var42o).longValue();
                                 Iterator var252 = var190.iterator();
 
                                 label581: {
                                     while (var252.hasNext()) {
-                                        var42 = (String)var252.next();
+                                        var42o = var252.next();
                                         boolean var27;
-                                        if (((OsmRoads.Way)(Object)var42).getId() == var33) {
+                                        if (((OsmRoads.Way)var42o).getId() == var33) {
                                             var27 = true;
                                         } else {
                                             var27 = false;
@@ -6364,10 +6364,10 @@ public final class SceneView extends SurfaceView {
                                         }
                                     }
 
-                                    var42 = null;
+                                    var42o = null;
                                 }
 
-                                OsmRoads.Way var270 = (OsmRoads.Way)(Object)var42;
+                                OsmRoads.Way var270 = (OsmRoads.Way)var42o;
                                 if (var270 != null) {
                                     List var271 = this.crossNow.get(var33);
                                     if (var271 != null) {
@@ -6397,7 +6397,7 @@ public final class SceneView extends SurfaceView {
                                 }
                             }
 
-                            var39 = var262;
+                            var39L = var262;
                         }
 
                         var73 = var190;
@@ -7219,7 +7219,7 @@ public final class SceneView extends SurfaceView {
                 }
             }
 
-            return ((Pair<Way,Integer>) var32);
+            return ((Pair<OsmRoads.Way,Integer>) var32);
         }
     }
 

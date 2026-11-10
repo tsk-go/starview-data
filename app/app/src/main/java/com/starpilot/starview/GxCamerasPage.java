@@ -1849,13 +1849,13 @@ public final class GxCamerasPage extends GxPage {
             Intrinsics.throwUninitializedPropertyAccessException("vView");
             gxCamerasRegionView2 = null;
         }
-        int ln = gxCamerasRegionView2.getLeft().size();
+        int ln = gxCamerasRegionView2.getLeftList().size();
         GxCamerasRegionView gxCamerasRegionView3 = this.vView;
         if (gxCamerasRegionView3 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("vView");
             gxCamerasRegionView3 = null;
         }
-        int rn = gxCamerasRegionView3.getRight().size();
+        int rn = gxCamerasRegionView3.getRightList().size();
         TextView textView = this.vLeftBtn;
         if (textView == null) {
             Intrinsics.throwUninitializedPropertyAccessException("vLeftBtn");
@@ -2060,14 +2060,14 @@ public final class GxCamerasPage extends GxPage {
                 Intrinsics.throwUninitializedPropertyAccessException("vView");
                 gxCamerasRegionView2 = null;
             }
-            pts = gxCamerasRegionView2.getLeft();
+            pts = gxCamerasRegionView2.getLeftList();
         } else {
             GxCamerasRegionView gxCamerasRegionView3 = this.vView;
             if (gxCamerasRegionView3 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("vView");
                 gxCamerasRegionView3 = null;
             }
-            pts = gxCamerasRegionView3.getRight();
+            pts = gxCamerasRegionView3.getRightList();
         }
         if (pts.size() < 3) {
             vError("Need at least 3 points to define a region.");
@@ -2102,7 +2102,7 @@ public final class GxCamerasPage extends GxPage {
             } else {
                 gxCamerasRegionView2 = gxCamerasRegionView3;
             }
-            pts = gxCamerasRegionView2.getLeft();
+            pts = gxCamerasRegionView2.getLeftList();
         } else {
             GxCamerasRegionView gxCamerasRegionView4 = this.vView;
             if (gxCamerasRegionView4 == null) {
@@ -2110,7 +2110,7 @@ public final class GxCamerasPage extends GxPage {
             } else {
                 gxCamerasRegionView2 = gxCamerasRegionView4;
             }
-            pts = gxCamerasRegionView2.getRight();
+            pts = gxCamerasRegionView2.getRightList();
         }
         if (!pts.isEmpty()) {
             pts.remove(pts.size() - 1);
@@ -2126,14 +2126,14 @@ public final class GxCamerasPage extends GxPage {
                 Intrinsics.throwUninitializedPropertyAccessException("vView");
                 gxCamerasRegionView = null;
             }
-            right = gxCamerasRegionView.getLeft();
+            right = gxCamerasRegionView.getLeftList();
         } else {
             GxCamerasRegionView gxCamerasRegionView2 = this.vView;
             if (gxCamerasRegionView2 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("vView");
                 gxCamerasRegionView2 = null;
             }
-            right = gxCamerasRegionView2.getRight();
+            right = gxCamerasRegionView2.getRightList();
         }
         right.clear();
         GxCamerasRegionView gxCamerasRegionView3 = this.vView;
@@ -2152,13 +2152,13 @@ public final class GxCamerasPage extends GxPage {
             Intrinsics.throwUninitializedPropertyAccessException("vView");
             gxCamerasRegionView = null;
         }
-        gxCamerasRegionView.getLeft().clear();
+        gxCamerasRegionView.getLeftList().clear();
         GxCamerasRegionView gxCamerasRegionView2 = this.vView;
         if (gxCamerasRegionView2 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("vView");
             gxCamerasRegionView2 = null;
         }
-        gxCamerasRegionView2.getRight().clear();
+        gxCamerasRegionView2.getRightList().clear();
         GxCamerasRegionView gxCamerasRegionView3 = this.vView;
         if (gxCamerasRegionView3 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("vView");
@@ -2183,7 +2183,7 @@ public final class GxCamerasPage extends GxPage {
             Intrinsics.throwUninitializedPropertyAccessException("vView");
             v = null;
         }
-        if (v.getLeft().size() < 3 && v.getRight().size() < 3) {
+        if (v.getLeftList().size() < 3 && v.getRightList().size() < 3) {
             vError("Annotate at least one window with 3+ points.");
             return;
         }
@@ -2193,7 +2193,7 @@ public final class GxCamerasPage extends GxPage {
         int nH = bmp2 != null ? bmp2.getHeight() : 1080;
         float cw = v.getCw();
         float ch = v.getCh();
-        JSONObject cfg = new JSONObject().put("width", nW).put("height", nH).put("poly_right", v.getLeft().size() >= 3 ? vSave$scale(cw, nW, nH, ch, v.getLeft()) : new JSONArray()).put("poly_left", v.getRight().size() >= 3 ? vSave$scale(cw, nW, nH, ch, v.getRight()) : new JSONArray());
+        JSONObject cfg = new JSONObject().put("width", nW).put("height", nH).put("poly_right", v.getLeftList().size() >= 3 ? vSave$scale(cw, nW, nH, ch, v.getLeftList()) : new JSONArray()).put("poly_left", v.getRightList().size() >= 3 ? vSave$scale(cw, nW, nH, ch, v.getRightList()) : new JSONArray());
         this.vSaving = true;
         TextView textView2 = this.vMsg;
         if (textView2 == null) {
@@ -2326,7 +2326,7 @@ public final class GxCamerasPage extends GxPage {
                 var5 = null;
             }
 
-            var5.getLeft().clear();
+            var5.getLeftList().clear();
             var4 = var0.vView;
             GxCamerasRegionView var6 = var4;
             if (var4 == null) {
@@ -2334,7 +2334,7 @@ public final class GxCamerasPage extends GxPage {
                 var6 = null;
             }
 
-            var6.getRight().clear();
+            var6.getRightList().clear();
             var4 = var0.vView;
             GxCamerasRegionView var7 = var4;
             if (var4 == null) {
@@ -2407,8 +2407,8 @@ public final class GxCamerasPage extends GxPage {
             v = null;
         }
         JSONObject cfg = this.vConfig;
-        v.getLeft().clear();
-        v.getRight().clear();
+        v.getLeftList().clear();
+        v.getRightList().clear();
         if (cfg == null) {
             this.vConfigExists = false;
             vPaint();
@@ -2440,9 +2440,9 @@ public final class GxCamerasPage extends GxPage {
             intValue2 = num != null ? num.intValue() : 1080;
         }
         float nH = intValue2;
-        vApplyConfig$toCanvas(cw, nW, ch, nH, cfg.optJSONArray("poly_right"), v.getLeft());
-        vApplyConfig$toCanvas(cw, nW, ch, nH, cfg.optJSONArray("poly_left"), v.getRight());
-        this.vConfigExists = (v.getLeft().isEmpty() && v.getRight().isEmpty()) ? false : true;
+        vApplyConfig$toCanvas(cw, nW, ch, nH, cfg.optJSONArray("poly_right"), v.getLeftList());
+        vApplyConfig$toCanvas(cw, nW, ch, nH, cfg.optJSONArray("poly_left"), v.getRightList());
+        this.vConfigExists = (v.getLeftList().isEmpty() && v.getRightList().isEmpty()) ? false : true;
         vPaint();
     }
 

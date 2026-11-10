@@ -95,8 +95,8 @@ public final class VoiceCommands {
                     var3 = (new Regex("^(take|make) (the )?(next )?(left|right)( turn)?$")).find(var1, 0);
                     if (var3 != null) {
                         VoiceCommands.Kind var16 = VoiceCommands.Kind.NUDGE;
-                        var3 = var3.getGroupValues().get(4);
-                        return new VoiceCommands.Cmd(var16, "turn_" + var3);
+                        String var3s = var3.getGroupValues().get(4);
+                        return new VoiceCommands.Cmd(var16, "turn_" + var3s);
                     } else if (new Regex("^(move|go|shift|scoot)( over)?( a (bit|little))?( to the)? (left|right)( a (bit|little))?$").containsMatchIn(var1)) {
                         VoiceCommands.Kind var19 = VoiceCommands.Kind.NUDGE;
                         CharSequence var4 = var1;

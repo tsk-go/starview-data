@@ -345,10 +345,7 @@ public final class VasmEditorCard extends LinearLayout {
             TextView b = (TextView) pair.component1();
             boolean on = ((Boolean) pair.component2()).booleanValue();
             b.setBackground(CarUi.rounded$default(this.ui, on ? Color.rgb(150, 110, 240) : CarUi.Companion.getCARD_ON(), 12, null, 4, null));
-            if (!d) {
-                r4 = 0.45f;
-            }
-            b.setAlpha(r4);
+            b.setAlpha(d ? 1.0f : 0.45f);
         }
         this.undoBtn.setAlpha((d && has) ? 1.0f : 0.45f);
         this.clearBtn.setAlpha(this.undoBtn.getAlpha());
@@ -410,7 +407,7 @@ public final class VasmEditorCard extends LinearLayout {
                 if (!list.isEmpty()) {
                     Path path = new Path();
                     path.moveTo(sx(((int[]) list.get(0))[0]), sy(((int[]) list.get(0))[1]));
-                    for (int[] q : ((int[]) CollectionsKt.drop(list, 1))) {
+                    for (int[] q : (List<int[]>) CollectionsKt.drop(list, 1)) {
                         path.lineTo(sx(q[0]), sy(q[1]));
                     }
                     if (list.size() >= 3) {
@@ -485,6 +482,7 @@ public final class VasmEditorCard extends LinearLayout {
                             list = list2;
                             if (((float) Math.hypot((double) ((float) (it3[c] - pt[c])), (double) ((float) (it3[c2] - pt[c2])))) <= radius) {
                                 i = index$iv;
+                                break;
                             } else {
                                 index$iv++;
                                 list2 = list;
@@ -494,6 +492,7 @@ public final class VasmEditorCard extends LinearLayout {
                         } else {
                             list = list2;
                             i = -1;
+                            break;
                         }
                     }
                     int i2 = i;

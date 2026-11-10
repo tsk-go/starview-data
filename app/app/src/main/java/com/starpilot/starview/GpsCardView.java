@@ -193,7 +193,7 @@ public final class GpsCardView extends View {
                 if (Math.abs(e.getX() - this.downX) < dp(12.0f) && Math.abs(e.getY() - this.downY) < dp(12.0f)) {
                     performClick();
                 }
-                break;
+                return true;
             default:
                 return true;
         }
@@ -228,7 +228,7 @@ public final class GpsCardView extends View {
 
     /* VF: from Vineflower (jadx: ) */
     protected void onDraw(Canvas var1) {
-        Object var73 = null; // declarations Vineflower left out
+        Pair var73 = null; // declarations Vineflower left out
         Intrinsics.checkNotNullParameter(var1, "cv");
         if (this.t != null) {
             float var13 = this.getWidth();

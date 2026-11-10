@@ -1016,7 +1016,6 @@ public final class HudEditor extends FrameLayout {
                         this.before = null;
                         break;
                     }
-                    break;
                 case 2:
                     HudLayout.Item it3 = this.this$0.selected;
                     if (it3 != null && this.mode != 0) {

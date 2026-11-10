@@ -49,9 +49,10 @@ public final class GxHomeKt {
                         break label48;
                     }
                 } else if (var0 instanceof String) {
-                    var0 = StringsKt.trim(var0).toString();
+                    String var0s = StringsKt.trim((CharSequence) var0).toString();
+                    var0 = var0s;
                     boolean var5;
-                    if (var0.length() == 0) {
+                    if (var0s.length() == 0) {
                         var5 = true;
                     } else {
                         var5 = false;

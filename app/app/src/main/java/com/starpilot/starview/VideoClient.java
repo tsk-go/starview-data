@@ -300,240 +300,148 @@ public final class VideoClient {
     }
 
     /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:74:0x01d9 A[Catch: all -> 0x02a2, Exception -> 0x02a7, TryCatch #8 {Exception -> 0x02a7, all -> 0x02a2, blocks: (B:30:0x008f, B:32:0x0095, B:35:0x00a0, B:37:0x00a7, B:38:0x00dd, B:40:0x00e3, B:42:0x00ff, B:44:0x0103, B:47:0x0109, B:49:0x0118, B:55:0x0147, B:57:0x0155, B:58:0x0159, B:60:0x015f, B:62:0x016f, B:70:0x0175, B:71:0x01b2, B:72:0x01d3, B:74:0x01d9, B:76:0x01e1, B:78:0x01e4, B:81:0x020f, B:83:0x0219, B:84:0x021f, B:116:0x017a, B:117:0x0181, B:121:0x0123, B:122:0x0127, B:124:0x012d, B:136:0x0184, B:138:0x0196, B:144:0x01a8), top: B:29:0x008f }] */
-    /* JADX WARN: Removed duplicated region for block: B:83:0x0219 A[Catch: all -> 0x02a2, Exception -> 0x02a7, TryCatch #8 {Exception -> 0x02a7, all -> 0x02a2, blocks: (B:30:0x008f, B:32:0x0095, B:35:0x00a0, B:37:0x00a7, B:38:0x00dd, B:40:0x00e3, B:42:0x00ff, B:44:0x0103, B:47:0x0109, B:49:0x0118, B:55:0x0147, B:57:0x0155, B:58:0x0159, B:60:0x015f, B:62:0x016f, B:70:0x0175, B:71:0x01b2, B:72:0x01d3, B:74:0x01d9, B:76:0x01e1, B:78:0x01e4, B:81:0x020f, B:83:0x0219, B:84:0x021f, B:116:0x017a, B:117:0x0181, B:121:0x0123, B:122:0x0127, B:124:0x012d, B:136:0x0184, B:138:0x0196, B:144:0x01a8), top: B:29:0x008f }] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public final void decodeLoop() {
-        Throwable th;
-        MediaCodec mediaCodec;
-        byte[] findNal$default;
-        List csd;
-        boolean z;
         MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
         MediaCodec c = null;
-        while (this.running) {
-            try {
-                try {
-                    Frame poll = this.queue.poll(200L, TimeUnit.MILLISECONDS);
-                    if (poll == null) {
-                        VideoClient $this$decodeLoop_u24lambda_u243 = this;
-                        if (c != null) {
-                            MediaCodec it = c;
-                            $this$decodeLoop_u24lambda_u243.drain(it, info);
-                        }
-                    } else {
-                        if (c == null || !poll.getKey() || poll.getW() <= 0 || poll.getH() <= 0 || (poll.getW() == this.cfgW && poll.getH() == this.cfgH && poll.getHevc() == this.cfgHevc)) {
-                            mediaCodec = c;
-                        } else {
-                            try {
-                                c.stop();
-                                c.release();
-                            } catch (Exception e) {
-                            }
-                            this.onStatus.invoke("video: new stream " + poll.getW() + "x" + poll.getH());
-                            mediaCodec = null;
-                        }
-                        boolean z2 = true;
-                        if (mediaCodec == null) {
-                            try {
-                                if (poll.getKey()) {
-                                    String mime = poll.getHevc() ? "video/hevc" : "video/avc";
-                                    if (poll.getHevc()) {
-                                        Iterable $this$map$iv = CollectionsKt.listOf(new Integer[]{32, 33, 34});
-                                        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-                                        for (Object item$iv$iv : $this$map$iv) {
-                                            int it2 = ((Number) item$iv$iv).intValue();
-                                            byte[] findNal = findNal(poll.getData(), it2, z2);
-                                            if (findNal == null) {
-                                                findNal = new byte[0];
-                                            }
-                                            destination$iv$iv.add(findNal);
-                                            z2 = true;
-                                        }
-                                        Iterable l = (List) destination$iv$iv;
-                                        Iterable $this$all$iv = l;
-                                        if (!($this$all$iv instanceof Collection) || !((Collection) $this$all$iv).isEmpty()) {
-                                            Iterator it3 = $this$all$iv.iterator();
-                                            while (true) {
-                                                if (!it3.hasNext()) {
-                                                    z = true;
-                                                    break;
-                                                }
-                                                Object element$iv = it3.next();
-                                                byte[] it4 = (byte[]) element$iv;
-                                                if (it4.length == 0) {
-                                                    z = false;
-                                                    break;
-                                                }
-                                            }
-                                        } else {
-                                            z = true;
-                                        }
-                                        if (!z) {
-                                            l = null;
-                                        }
-                                        if (l != null) {
-                                            Iterable $this$reduce$iv = l;
-                                            Iterator iterator$iv = $this$reduce$iv.iterator();
-                                            if (!iterator$iv.hasNext()) {
-                                                throw new UnsupportedOperationException("Empty collection can't be reduced.");
-                                            }
-                                            Object accumulator$iv = iterator$iv.next();
-                                            while (iterator$iv.hasNext()) {
-                                                byte[] b = (byte[]) iterator$iv.next();
-                                                byte[] a = (byte[]) accumulator$iv;
-                                                accumulator$iv = ArraysKt.plus(a, b);
-                                            }
-                                            byte[] bArr = (byte[]) accumulator$iv;
-                                            if (bArr != null) {
-                                                csd = CollectionsKt.listOf(bArr);
-                                                c = MediaCodec.createDecoderByType(mime);
-                                                int i = 0;
-                                                MediaFormat fmt = MediaFormat.createVideoFormat(mime, poll.getW(), poll.getH());
-                                                Intrinsics.checkNotNullExpressionValue(fmt, "createVideoFormat(...)");
-                                                List $this$forEachIndexed$iv = csd;
-                                                int k = 0;
-                                                for (Object item$iv : $this$forEachIndexed$iv) {
-                                                    int index$iv = k + 1;
-                                                    if (k < 0) {
-                                                        CollectionsKt.throwIndexOverflow();
-                                                    }
-                                                    byte[] b2 = (byte[]) item$iv;
-                                                    fmt.setByteBuffer("csd-" + k, ByteBuffer.wrap(b2));
-                                                    k = index$iv;
-                                                    csd = csd;
-                                                    i = i;
-                                                }
-                                                if (Build.VERSION.SDK_INT >= 30) {
-                                                    fmt.setInteger("low-latency", 1);
-                                                }
-                                                fmt.setInteger("max-input-size", 2097152);
-                                                c.configure(fmt, this.surface, (MediaCrypto) null, 0);
-                                                c.start();
-                                                this.cfgW = poll.getW();
-                                                this.cfgH = poll.getH();
-                                                this.cfgHevc = poll.getHevc();
-                                                this.lastW = poll.getW();
-                                                this.lastH = poll.getH();
-                                                this.onSize.invoke(Integer.valueOf(poll.getW()), Integer.valueOf(poll.getH()));
-                                                this.onStatus.invoke("video: decoder " + c.getName() + " " + poll.getW() + "x" + poll.getH());
-                                                this.needKey = false;
-                                            }
-                                        }
-                                    } else {
-                                        byte[] findNal$default2 = findNal$default(this, poll.getData(), 7, false, 4, null);
-                                        if (findNal$default2 != null && (findNal$default = findNal$default(this, poll.getData(), 8, false, 4, null)) != null) {
-                                            csd = CollectionsKt.listOf(new byte[][]{findNal$default2, findNal$default});
-                                            c = MediaCodec.createDecoderByType(mime);
-                                            int i2 = 0;
-                                            MediaFormat fmt2 = MediaFormat.createVideoFormat(mime, poll.getW(), poll.getH());
-                                            Intrinsics.checkNotNullExpressionValue(fmt2, "createVideoFormat(...)");
-                                            List $this$forEachIndexed$iv2 = csd;
-                                            int k2 = 0;
-                                            while (r14.hasNext()) {
-                                            }
-                                            if (Build.VERSION.SDK_INT >= 30) {
-                                            }
-                                            fmt2.setInteger("max-input-size", 2097152);
-                                            c.configure(fmt2, this.surface, (MediaCrypto) null, 0);
-                                            c.start();
-                                            this.cfgW = poll.getW();
-                                            this.cfgH = poll.getH();
-                                            this.cfgHevc = poll.getHevc();
-                                            this.lastW = poll.getW();
-                                            this.lastH = poll.getH();
-                                            this.onSize.invoke(Integer.valueOf(poll.getW()), Integer.valueOf(poll.getH()));
-                                            this.onStatus.invoke("video: decoder " + c.getName() + " " + poll.getW() + "x" + poll.getH());
-                                            this.needKey = false;
-                                        }
-                                    }
-                                }
-                                c = mediaCodec;
-                            } catch (Exception e2) {
-                                e = e2;
-                                c = mediaCodec;
-                                Log.e("StarView/Video", "decoder: " + e);
-                                this.onStatus.invoke("video: decoder error: " + e.getMessage());
-                                try {
-                                    MediaCodec mediaCodec2 = c;
-                                    if (mediaCodec2 != null) {
-                                        mediaCodec2.stop();
-                                    }
-                                    MediaCodec mediaCodec3 = c;
-                                    if (mediaCodec3 != null) {
-                                        mediaCodec3.release();
-                                        return;
-                                    }
-                                    return;
-                                } catch (Exception e3) {
-                                    return;
-                                }
-                            } catch (Throwable th2) {
-                                th = th2;
-                                c = mediaCodec;
-                                try {
-                                    MediaCodec mediaCodec4 = c;
-                                    if (mediaCodec4 != null) {
-                                        mediaCodec4.stop();
-                                    }
-                                    MediaCodec mediaCodec5 = c;
-                                    if (mediaCodec5 == null) {
-                                        throw th;
-                                    }
-                                    mediaCodec5.release();
-                                    throw th;
-                                } catch (Exception e4) {
-                                    throw th;
-                                }
-                            }
-                        } else {
-                            c = mediaCodec;
-                        }
-                        if (!this.needKey || poll.getKey()) {
-                            this.needKey = false;
-                            MediaCodec c2 = c;
-                            int idx = c2.dequeueInputBuffer(50000L);
-                            if (idx < 0) {
-                                this.dropped++;
-                            } else {
-                                ByteBuffer ib = c2.getInputBuffer(idx);
-                                if (ib != null) {
-                                    ib.clear();
-                                    ib.put(poll.getData());
-                                    c2.queueInputBuffer(idx, 0, poll.getData().length, 50000 * poll.getFrameId(), poll.getKey() ? 1 : 0);
-                                    long t0 = System.nanoTime();
-                                    drain(c2, info);
-                                    this.decodeMs = (this.decodeMs * 0.9d) + (((System.nanoTime() - t0) / 1000000.0d) * 0.1d);
-                                    this.frames++;
-                                    this.fpsWin++;
-                                    long now = System.nanoTime();
-                                    if (now - this.fpsT0 > 1000000000) {
-                                        this.fps = (this.fpsWin * 1.0E9d) / (now - this.fpsT0);
-                                        this.fpsWin = 0;
-                                        this.fpsT0 = now;
-                                    }
-                                }
-                            }
-                        }
+        try {
+            while (this.running) {
+                Frame f = this.queue.poll(200L, TimeUnit.MILLISECONDS);
+                if (f == null) {
+                    if (c != null) {
+                        drain(c, info);
                     }
-                } catch (Throwable th3) {
-                    th = th3;
+                    continue;
                 }
-            } catch (Exception e5) {
-                e = e5;
+                if (c != null && f.getKey() && f.getW() > 0 && f.getH() > 0 && (f.getW() != this.cfgW || f.getH() != this.cfgH || f.getHevc() != this.cfgHevc)) {
+                    try {
+                        c.stop();
+                        c.release();
+                    } catch (Exception e) {
+                    }
+                    c = null;
+                    this.onStatus.invoke("video: new stream " + f.getW() + "x" + f.getH());
+                }
+                if (c == null) {
+                    if (!f.getKey()) {
+                        continue;
+                    }
+                    String mime = f.getHevc() ? "video/hevc" : "video/avc";
+                    List csd;
+                    if (f.getHevc()) {
+                        Iterable $this$map$iv = CollectionsKt.listOf(new Integer[]{32, 33, 34});
+                        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+                        for (Object item$iv$iv : $this$map$iv) {
+                            byte[] nal = findNal(f.getData(), ((Number) item$iv$iv).intValue(), true);
+                            if (nal == null) {
+                                nal = new byte[0];
+                            }
+                            destination$iv$iv.add(nal);
+                        }
+                        List l = (List) destination$iv$iv;
+                        boolean all = true;
+                        for (Object o : l) {
+                            if (((byte[]) o).length == 0) {
+                                all = false;
+                                break;
+                            }
+                        }
+                        if (!all) {
+                            continue;
+                        }
+                        Iterator iterator$iv = l.iterator();
+                        if (!iterator$iv.hasNext()) {
+                            throw new UnsupportedOperationException("Empty collection can't be reduced.");
+                        }
+                        Object accumulator$iv = iterator$iv.next();
+                        while (iterator$iv.hasNext()) {
+                            accumulator$iv = ArraysKt.plus((byte[]) accumulator$iv, (byte[]) iterator$iv.next());
+                        }
+                        byte[] joined = (byte[]) accumulator$iv;
+                        if (joined == null) {
+                            continue;
+                        }
+                        csd = CollectionsKt.listOf(joined);
+                    } else {
+                        byte[] sps = findNal$default(this, f.getData(), 7, false, 4, null);
+                        if (sps == null) {
+                            continue;
+                        }
+                        byte[] pps = findNal$default(this, f.getData(), 8, false, 4, null);
+                        if (pps == null) {
+                            continue;
+                        }
+                        csd = CollectionsKt.listOf(new byte[][]{sps, pps});
+                    }
+                    MediaCodec nc = MediaCodec.createDecoderByType(mime);
+                    MediaFormat fmt = MediaFormat.createVideoFormat(mime, f.getW(), f.getH());
+                    Intrinsics.checkNotNullExpressionValue(fmt, "createVideoFormat(...)");
+                    int k = 0;
+                    for (Object item$iv : csd) {
+                        int index$iv = k + 1;
+                        if (k < 0) {
+                            CollectionsKt.throwIndexOverflow();
+                        }
+                        fmt.setByteBuffer("csd-" + k, ByteBuffer.wrap((byte[]) item$iv));
+                        k = index$iv;
+                    }
+                    if (Build.VERSION.SDK_INT >= 30) {
+                        fmt.setInteger("low-latency", 1);
+                    }
+                    fmt.setInteger("max-input-size", 2097152);
+                    nc.configure(fmt, this.surface, (MediaCrypto) null, 0);
+                    nc.start();
+                    c = nc;
+                    this.cfgW = f.getW();
+                    this.cfgH = f.getH();
+                    this.cfgHevc = f.getHevc();
+                    this.lastW = f.getW();
+                    this.lastH = f.getH();
+                    this.onSize.invoke(Integer.valueOf(f.getW()), Integer.valueOf(f.getH()));
+                    this.onStatus.invoke("video: decoder " + nc.getName() + " " + f.getW() + "x" + f.getH());
+                    this.needKey = false;
+                }
+                if (this.needKey && !f.getKey()) {
+                    continue;
+                }
+                this.needKey = false;
+                MediaCodec c2 = c;
+                int idx = c2.dequeueInputBuffer(50000L);
+                if (idx < 0) {
+                    this.dropped++;
+                    continue;
+                }
+                ByteBuffer ib = c2.getInputBuffer(idx);
+                if (ib == null) {
+                    continue;
+                }
+                ib.clear();
+                ib.put(f.getData());
+                c2.queueInputBuffer(idx, 0, f.getData().length, 50000 * f.getFrameId(), f.getKey() ? 1 : 0);
+                long t0 = System.nanoTime();
+                drain(c2, info);
+                this.decodeMs = (this.decodeMs * 0.9d) + (((System.nanoTime() - t0) / 1000000.0d) * 0.1d);
+                this.frames++;
+                this.fpsWin++;
+                long now = System.nanoTime();
+                if (now - this.fpsT0 > 1000000000) {
+                    this.fps = (this.fpsWin * 1.0E9d) / (now - this.fpsT0);
+                    this.fpsWin = 0;
+                    this.fpsT0 = now;
+                }
             }
-        }
-        if (c != null) {
+        } catch (Exception e2) {
+            Log.e("StarView/Video", "decoder: " + e2);
+            this.onStatus.invoke("video: decoder error: " + e2.getMessage());
+        } finally {
             try {
-                c.stop();
-            } catch (Exception e6) {
-                return;
+                if (c != null) {
+                    c.stop();
+                }
+                if (c != null) {
+                    c.release();
+                }
+            } catch (Exception e3) {
             }
-        }
-        if (c != null) {
-            c.release();
         }
     }
 

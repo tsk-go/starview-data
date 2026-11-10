@@ -1050,8 +1050,8 @@ public final class Nav {
         } else {
             destination$iv$iv = CollectionsKt.emptyList();
         }
-        Collection ls = destination$iv$iv;
-        return TuplesKt.to(rs, ls);
+        List ls = (List) destination$iv$iv;
+        return TuplesKt.to((List<Route>) rs, (List<Line>) ls);
     }
 
     private final Function0<Unit> parse(JSONObject j) {
@@ -1731,7 +1731,7 @@ public final class Nav {
     }
 
     public final int currentStep(Line l) {
-        List s;
+        List<Step> s;
         double a = along;
         if (l == null || (s = l.getSteps()) == null) {
             return -1;

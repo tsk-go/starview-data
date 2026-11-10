@@ -39,13 +39,12 @@ final class GxCamerasRegionView extends GxCamerasSnapView {
         this.onClose = new GxCamerasRegionView$$ExternalSyntheticLambda1();
     }
 
-    @Override // android.view.View
-    public final ArrayList<float[]> getLeft() {
+    /* the original's Kotlin getter is getLeft()Ljava/util/ArrayList; - a name Java can't declare next to View.getLeft() */
+    public final ArrayList<float[]> getLeftList() {
         return this.left;
     }
 
-    @Override // android.view.View
-    public final ArrayList<float[]> getRight() {
+    public final ArrayList<float[]> getRightList() {
         return this.right;
     }
 

@@ -234,7 +234,7 @@ public final class SettingsLauncher extends FrameLayout {
         for (final ShortcutBoard.Item s : items) {
             final int i2 = i;
             i++;
-            LinearLayout v = this.ui.iconTile(s.getLabel(), s.getWhere(), s.getIcon(), s.getGroup(), new Function0() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda8
+            LinearLayout v = (LinearLayout) this.ui.iconTile(s.getLabel(), s.getWhere(), s.getIcon(), s.getGroup(), new Function0() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda8
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit shortcutPage$lambda$14;

@@ -151,25 +151,7 @@ public final class LaneSuggestView extends View {
         this.lastState = LaneSuggest.State.IDLE;
         this.lastTurn = TurnSignal.State.IDLE;
         this.crossGap = Double.NaN;
-        this.repeat = new Runnable() {
-            final LaneSuggestView this$0 = LaneSuggestView.this;
-
-            @Override
-            public void run() {
-                if (this.this$0.holding != 0) {
-                    LaneSuggestView var2x = this.this$0;
-                    String var1x;
-                    if (this.this$0.holding < 0) {
-                        var1x = "left";
-                    } else {
-                        var1x = "right";
-                    }
-
-                    var2x.send(var1x, this.this$0.holdWhy);
-                    this.this$0.main.postDelayed(this, 250L);
-                }
-            }
-        };
+        this.repeat = new LaneSuggestView$repeat$1(this);
     }
 
     public /* synthetic */ LaneSuggestView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {
@@ -1066,7 +1048,7 @@ public final class LaneSuggestView extends View {
         float textW;
         StringBuilder append;
         String str;
-        String str2;
+        String str2 = "";
         StringBuilder append2;
         String str3;
         Intrinsics.checkNotNullParameter(c, "c");

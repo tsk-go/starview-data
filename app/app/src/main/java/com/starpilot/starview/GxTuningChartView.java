@@ -39,11 +39,11 @@ final class GxTuningChartView extends View {
     public GxTuningChartView(
         Context var1, List<Pair<String, Integer>> var2, String var3, int var4, double var5, double var7, double var9, List<GxTuningSample> var11
     ) {
+        super(var1);
         Intrinsics.checkNotNullParameter(var1, "ctx");
         Intrinsics.checkNotNullParameter(var2, "series");
         Intrinsics.checkNotNullParameter(var3, "unit");
         Intrinsics.checkNotNullParameter(var11, "samples");
-        super(var1);
         this.series = var2;
         this.unit = var3;
         this.rangeDigits = var4;

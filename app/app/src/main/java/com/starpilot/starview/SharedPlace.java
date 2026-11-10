@@ -114,7 +114,7 @@ public final class SharedPlace {
 
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     public final SharedPlace.Place parse(String var1, String var2) {
-        Object var18 = null; Object var64 = null; // declarations Vineflower left out
+        MatchResult var18 = null; Object var64 = null; // declarations Vineflower left out
         Intrinsics.checkNotNullParameter(var1, "text");
         Iterable var7 = StringsKt.lines(var1);
         var var6 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var7, 10));
@@ -243,16 +243,16 @@ public final class SharedPlace {
                 if (var40) {
                     var23 = (new Regex("/place/([^/@]+)")).find(((CharSequence) var64), 0);
                     if (var23 != null) {
-                        var23 = StringsKt.replace(var23.getGroupValues().get(1), '+', ' ', false);
+                        var23 = StringsKt.replace(((MatchResult) var23).getGroupValues().get(1), '+', ' ', false);
                     } else {
                         var23 = (new Regex("\\(([^)]+)\\)\\s*$")).find(((CharSequence) var64), 0);
                         if (var23 != null) {
-                            var23 = var23.getGroupValues().get(1);
+                            var23 = ((MatchResult) var23).getGroupValues().get(1);
                         } else {
                             label134: {
                                 var23 = (new Regex("[?&](?:q|query|address|daddr)=([^&]+)")).find(((CharSequence) var64), 0);
                                 if (var23 != null) {
-                                    List var26 = var23.getGroupValues();
+                                    List var26 = ((MatchResult) var23).getGroupValues();
                                     if (var26 != null) {
                                         String var27 = (String)var26.get(1);
                                         if (var27 != null) {

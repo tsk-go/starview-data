@@ -130,11 +130,13 @@ final class GxCamerasPipView extends GxCamerasSnapView {
     }
 
     private final float nW() {
-        return getBmp() != null ? r0.getWidth() : 1920;
+        Bitmap b = getBmp();
+        return b != null ? b.getWidth() : 1920;
     }
 
     private final float nH() {
-        return getBmp() != null ? r0.getHeight() : 1080;
+        Bitmap b = getBmp();
+        return b != null ? b.getHeight() : 1080;
     }
 
     @Override // com.starpilot.starview.GxCamerasSnapView

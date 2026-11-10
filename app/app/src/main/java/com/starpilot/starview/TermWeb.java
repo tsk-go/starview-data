@@ -318,65 +318,55 @@ public final class TermWeb {
         */
         public static final void saveToDownloads$lambda$17(String $path, Bridge this$0) {
             Pair pair;
-            String h;
-            Object m1191constructorimpl;
-            String str;
-            String string;
             String name = StringsKt.substringAfterLast($path, '/', $path);
             try {
-                h = Link.INSTANCE.getHost();
+                String h = Link.INSTANCE.getHost();
+                if (h == null) {
+                    throw new RuntimeException("not connected to the comma");
+                }
+                File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                Response r = this$0.getHttp().newCall(new Request.Builder().url("http://" + h + ":8090/fs/get?path=" + Uri.encode($path)).build()).execute();
+                Throwable rCause = null;
+                String saved;
+                try {
+                    if (!r.isSuccessful()) {
+                        ResponseBody body = r.body();
+                        String why = body != null ? body.string() : null;
+                        if (why != null && why.length() == 0) {
+                            why = "HTTP " + r.code();
+                        }
+                        if (why == null) {
+                            why = "HTTP " + r.code();
+                        }
+                        throw new RuntimeException(why);
+                    }
+                    ResponseBody body2 = r.body();
+                    Intrinsics.checkNotNull(body2);
+                    byte[] bytes = body2.bytes();
+                    Object res;
+                    try {
+                        Intrinsics.checkNotNull(dir);
+                        res = KtCompat.resultOf(this$0.writeFile(dir, name, bytes));
+                    } catch (Throwable th) {
+                        res = KtCompat.resultOf(ResultKt.createFailure(th));
+                    }
+                    if (KtCompat.exceptionOrNull(res) != null) {
+                        res = this$0.writeMediaStore(name, bytes);
+                    }
+                    saved = (String) res;
+                } catch (Throwable th2) {
+                    rCause = th2;
+                    throw th2;
+                } finally {
+                    CloseableKt.closeFinally(r, rCause);
+                }
+                pair = TuplesKt.to(true, "Saved to Downloads ✓  " + saved);
             } catch (Exception e) {
                 pair = TuplesKt.to(false, "Couldn't save " + name + ": " + e.getMessage());
             }
-            if (h == null) {
-                throw new RuntimeException("not connected to the comma");
-            }
-            File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            Response execute = this$0.getHttp().newCall(new Request.Builder().url("http://" + h + ":8090/fs/get?path=" + Uri.encode($path)).build()).execute();
-            Throwable execute$c = null;
-            try {
-                Response r = execute;
-                boolean z = true;
-                if (!r.isSuccessful()) {
-                    ResponseBody body = r.body();
-                    if (body != null && (string = body.string()) != null) {
-                        String str2 = string;
-                        if (str2.length() != 0) {
-                            z = false;
-                        }
-                        if (z) {
-                            str2 = "HTTP " + r.code();
-                        }
-                        str = str2;
-                    }
-                    str = "HTTP " + r.code();
-                    throw new RuntimeException(str);
-                }
-                ResponseBody body2 = r.body();
-                Intrinsics.checkNotNull(body2);
-                byte[] bytes = body2.bytes();
-                try {
-                    Result.Companion companion = Result.Companion;
-                    Intrinsics.checkNotNull(dir);
-                    m1191constructorimpl = KtCompat.resultOf(this$0.writeFile(dir, name, bytes));
-                } catch (Throwable th) {
-                    Result.Companion companion2 = Result.Companion;
-                    m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
-                }
-                if (KtCompat.exceptionOrNull(m1191constructorimpl) != null) {
-                    m1191constructorimpl = this$0.writeMediaStore(name, bytes);
-                }
-                String saved = (String) m1191constructorimpl;
-                pair = TuplesKt.to(true, "Saved to Downloads ✓  " + saved);
-                boolean ok = ((Boolean) pair.component1()).booleanValue();
-                String msg = (String) pair.component2();
-                this$0.js("window.dlDone(" + JSONObject.quote($path) + ", " + ok + ", " + JSONObject.quote(msg) + ")");
-            } catch (Throwable execute$t) {
-                execute$c = execute$t;
-                throw execute$t;
-            } finally {
-                CloseableKt.closeFinally(execute, execute$c);
-            }
+            boolean ok = ((Boolean) pair.component1()).booleanValue();
+            String msg = (String) pair.component2();
+            this$0.js("window.dlDone(" + JSONObject.quote($path) + ", " + ok + ", " + JSONObject.quote(msg) + ")");
         }
 
         private final String freeName(File dir, String name) {

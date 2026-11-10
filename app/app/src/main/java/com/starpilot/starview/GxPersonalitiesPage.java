@@ -361,7 +361,7 @@ public final class GxPersonalitiesPage extends GxPage {
         JSONObject jSONObject = this.data;
         Intrinsics.checkNotNull(jSONObject);
         List it = nums(jSONObject.getJSONObject("bounds").getJSONArray(c));
-        return TuplesKt.to(it.get(0), it.get(1));
+        return TuplesKt.to((Double) it.get(0), (Double) it.get(1));
     }
 
     /* JADX INFO: Access modifiers changed from: private */

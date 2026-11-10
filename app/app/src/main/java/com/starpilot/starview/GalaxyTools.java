@@ -59,21 +59,10 @@ public final class GalaxyTools {
         return PLACED_ELSEWHERE;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:21:0x00aa A[Catch: all -> 0x0118, TryCatch #1 {all -> 0x0118, blocks: (B:3:0x0007, B:4:0x0038, B:6:0x003e, B:8:0x0051, B:9:0x0066, B:15:0x0090, B:17:0x0096, B:21:0x00aa, B:38:0x00b8, B:39:0x00d8, B:41:0x00de, B:43:0x00fe), top: B:2:0x0007 }] */
-    /* JADX WARN: Removed duplicated region for block: B:24:0x00ad A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:32:0x0129  */
-    /* JADX WARN: Removed duplicated region for block: B:36:0x012b  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public final List<Tool> parse(String text) {
         Object obj;
-        boolean z;
         Intrinsics.checkNotNullParameter(text, "text");
         try {
-            Result.Companion companion = Result.Companion;
-            GalaxyTools $this$parse_u24lambda_u244 = this;
-            int i = 0;
             JSONArray a = new JSONObject(text).getJSONArray("tools");
             Iterable $this$map$iv = RangesKt.until(0, a.length());
             Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
@@ -82,37 +71,17 @@ public final class GalaxyTools {
                 int item$iv$iv = ((IntIterator) it).nextInt();
                 destination$iv$iv.add(a.getJSONObject(item$iv$iv));
             }
-            Iterable $this$filter$iv = (List) destination$iv$iv;
             Collection destination$iv$iv2 = new ArrayList();
-            for (Object element$iv$iv : $this$filter$iv) {
-                try {
-                    JSONObject it2 = (JSONObject) element$iv$iv;
-                    String optString = it2.optString("path");
-                    Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
-                    GalaxyTools $this$parse_u24lambda_u2442 = $this$parse_u24lambda_u244;
-                    int i2 = i;
-                    if (StringsKt.startsWith(optString, "/", false)) {
-                        String optString2 = it2.optString("name");
-                        Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
-                        if (!StringsKt.isBlank(optString2)) {
-                            z = true;
-                            if (!z) {
-                                destination$iv$iv2.add(element$iv$iv);
-                            }
-                            i = i2;
-                            $this$parse_u24lambda_u244 = $this$parse_u24lambda_u2442;
-                        }
+            for (Object element$iv$iv : (List) destination$iv$iv) {
+                JSONObject it2 = (JSONObject) element$iv$iv;
+                String optString = it2.optString("path");
+                Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
+                if (StringsKt.startsWith(optString, "/", false)) {
+                    String optString2 = it2.optString("name");
+                    Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
+                    if (!StringsKt.isBlank(optString2)) {
+                        destination$iv$iv2.add(element$iv$iv);
                     }
-                    z = false;
-                    if (!z) {
-                    }
-                    i = i2;
-                    $this$parse_u24lambda_u244 = $this$parse_u24lambda_u2442;
-                } catch (Throwable th) {
-                    th = th;
-                    Result.Companion companion2 = Result.Companion;
-                    obj = KtCompat.resultOf(ResultKt.createFailure(th));
-                    return (List) (!KtCompat.isFailure(obj) ? null : obj);
                 }
             }
             Iterable $this$map$iv2 = (List) destination$iv$iv2;
@@ -125,9 +94,7 @@ public final class GalaxyTools {
                 Intrinsics.checkNotNullExpressionValue(optString4, "optString(...)");
                 destination$iv$iv3.add(new Tool(optString3, optString4));
             }
-            Iterable $this$sortedBy$iv = (List) destination$iv$iv3;
-            obj = KtCompat.resultOf(CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.GalaxyTools$parse$lambda$4$$inlined$sortedBy$1
-                /* JADX WARN: Multi-variable type inference failed */
+            obj = KtCompat.resultOf(CollectionsKt.sortedWith((List) destination$iv$iv3, new Comparator() { // from class: com.starpilot.starview.GalaxyTools$parse$lambda$4$$inlined$sortedBy$1
                 @Override // java.util.Comparator
                 public final int compare(Object t, Object t2) {
                     GalaxyTools.Tool it4 = (GalaxyTools.Tool) t;
@@ -139,10 +106,10 @@ public final class GalaxyTools {
                     return ComparisonsKt.compareValues(lowerCase, lowerCase2);
                 }
             }));
-        } catch (Throwable th2) {
-            th = th2;
+        } catch (Throwable th) {
+            obj = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        return (List) (!KtCompat.isFailure(obj) ? null : obj);
+        return (List) (KtCompat.isFailure(obj) ? null : obj);
     }
 
     public final List<Tool> list(Context ctx) {

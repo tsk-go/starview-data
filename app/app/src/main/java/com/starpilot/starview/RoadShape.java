@@ -622,7 +622,7 @@ public final class RoadShape {
                                         }
                                         Object element$iv = it.next();
                                         double[] it2 = (double[]) element$iv;
-                                        Iterable $this$none$iv2 = $this$none$iv;
+                                        ArrayList $this$none$iv2 = $this$none$iv;
                                         int $i$f$none2 = $i$f$none;
                                         if (Math.hypot(it2[c] - px, it2[1] - py) < 5.0d) {
                                             z2 = false;

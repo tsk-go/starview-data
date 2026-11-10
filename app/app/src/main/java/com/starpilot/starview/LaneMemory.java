@@ -530,29 +530,21 @@ public final class LaneMemory {
 
             List var29 = var10;
             Iterator var40 = var29.iterator();
-            Object var30;
-            if (!var40.hasNext()) {
-                var30 = null;
-            } else {
-                LaneMemory.Mark var30ss = (LaneMemory.Mark)var40.next();
+            LaneMemory.Mark var30 = null;
+            if (var40.hasNext()) {
+                LaneMemory.Mark best = (LaneMemory.Mark) var40.next();
                 if (var40.hasNext()) {
-                    float var19 = Math.abs(var30ss.getY());
-                    var11 = ((Iterable) var30ss);
-
+                    float bestV = Math.abs(best.getY());
                     do {
-                        Object var38 = var40.next();
-                        float var5 = Math.abs(((LaneMemory.Mark)var38).getY());
-                        var30 = var11;
-                        var3 = var19;
-                        if (Float.compare(var19, var5) > 0) {
-                            LaneMemory.Mark var30s = (LaneMemory.Mark)var38;
-                            var3 = var5;
+                        LaneMemory.Mark e = (LaneMemory.Mark) var40.next();
+                        float v = Math.abs(e.getY());
+                        if (Float.compare(bestV, v) > 0) {
+                            best = e;
+                            bestV = v;
                         }
-
-                        var11 = ((Iterable) var30);
-                        var19 = var3;
                     } while (var40.hasNext());
                 }
+                var30 = best;
             }
 
             var30 = var30;

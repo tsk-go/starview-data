@@ -227,7 +227,7 @@ public final class TrackMapView extends View {
         double max = Math.max(x1 - x0, 1.0E-7d);
         double d2 = 512;
         double zx = Math.log(width / (max * d2)) / Math.log(2.0d);
-        double zy = Math.log((getHeight() - (r10 * this.d)) / (Math.max(y1 - y0, 1.0E-7d) * d2)) / Math.log(2.0d);
+        double zy = Math.log((getHeight() - (60.0f * this.d)) / (Math.max(y1 - y0, 1.0E-7d) * d2)) / Math.log(2.0d);
         this.zoom = RangesKt.coerceIn(Math.min(zx, zy), 3.0d, 17.5d);
         this.fitted = true;
     }

@@ -59,6 +59,7 @@ public final class SettingsHomeView extends LinearLayout {
         Function1<? super SettingsIndex.Entry, Unit> var5,
         Function1<? super String, Unit> var6
     ) {
+        super(var1);
         Intrinsics.checkNotNullParameter(var1, "ctx");
         Intrinsics.checkNotNullParameter(var2, "ui");
         Intrinsics.checkNotNullParameter(var3, "grid");
