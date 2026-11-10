@@ -276,15 +276,13 @@ public final class ReplayBar extends View {
             if (Intrinsics.areEqual(hit, "speed")) {
                 Replay replay = Replay.INSTANCE;
                 double optDouble = s.optDouble("speed", 1.0d);
-                double d2 = 2.0d;
-                if (!(optDouble == 1.0d)) {
-                    d2 = 4.0d;
-                    if (!(optDouble == 2.0d)) {
-                        d = optDouble == 4.0d ? 0.5d : 1.0d;
-                        Replay.control$default(replay, "speed", d, null, 4, null);
-                    }
+                if (optDouble == 1.0d) {
+                    d = 2.0d;
+                } else if (optDouble == 2.0d) {
+                    d = 4.0d;
+                } else {
+                    d = optDouble == 4.0d ? 0.5d : 1.0d;
                 }
-                d = d2;
                 Replay.control$default(replay, "speed", d, null, 4, null);
             } else {
                 if (!Intrinsics.areEqual(hit, "stop")) {

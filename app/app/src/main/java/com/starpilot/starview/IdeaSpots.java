@@ -353,6 +353,7 @@ public final class IdeaSpots {
                             out2 = out;
                             it2 = it;
                             kinds2 = kinds;
+                            continue;
                         }
                     } else {
                         it = it2;

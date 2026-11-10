@@ -101,14 +101,12 @@ public final class DevicePanel$fastPoll$1 implements Runnable {
             DevicePanel$fastPoll$1 devicePanel$fastPoll$1 = $again;
             FastUpdate fastUpdate = FastUpdate.INSTANCE;
             jSONObject = this$0.fastStatus;
-            if (!fastUpdate.running(jSONObject)) {
-                jSONObject2 = this$0.fastStatus;
-                if (!Intrinsics.areEqual(jSONObject2 != null ? jSONObject2.optString("stage") : null, "rebooting")) {
-                    j = 10000;
-                    handler2.postDelayed(devicePanel$fastPoll$1, j);
-                }
+            jSONObject2 = this$0.fastStatus;
+            if (!fastUpdate.running(jSONObject) && !Intrinsics.areEqual(this$0.fastStatus != null ? this$0.fastStatus.optString("stage") : null, "rebooting")) {
+                j = 10000;
+            } else {
+                j = 1000;
             }
-            j = 1000;
             handler2.postDelayed(devicePanel$fastPoll$1, j);
         }
     }

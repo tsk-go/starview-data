@@ -693,13 +693,7 @@ public final class GxBluetoothPage extends GxPage {
                     }
                 });
                 TextView textView9 = b;
-                if (this.btOffroad) {
-                    if ((this.btBusy.length() == 0) && !isPairing(d2)) {
-                        z = true;
-                        GxVehicleKt.gxVehicleEnable(textView9, z);
-                    }
-                }
-                z = false;
+                z = this.btOffroad && (this.btBusy.length() == 0) && !isPairing(d2);
                 GxVehicleKt.gxVehicleEnable(textView9, z);
             }
         }

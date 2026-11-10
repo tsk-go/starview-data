@@ -1656,6 +1656,8 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                     z2 = true;
                 }
                 if (z2) {
+                    open(t);
+                    return;
                 }
             }
             List $this$indexOfFirst$iv2 = areas();
@@ -7177,8 +7179,9 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                                 if (speedFeedDelayMs != null) {
                                     int it7 = speedFeedDelayMs.intValue();
                                     str4 = ", " + it7 + " ms behind the car";
+                                } else {
+                                    str4 = "";
                                 }
-                                str4 = "";
                                 RtkCalibration calibration = k.getCalibration();
                                 if (calibration != null && (speedBadPct = calibration.getSpeedBadPct()) != null) {
                                     int it8 = speedBadPct.intValue();

@@ -3614,7 +3614,7 @@ public final class MapPane extends FrameLayout {
                             Nav.Line ln3 = it6;
                             i4 = 0;
                             canvas = canvas4;
-                            float[] xy2 = screen(ln3.getMx()[ln3.getSize() / i19], ln3.getMy()[ln3.getSize() / i19], w);
+                            float[] xy2 = screen(ln3.getMx()[ln3.getSize() / 2], ln3.getMy()[ln3.getSize() / 2], w);
                             bubble(c, xy2[0], xy2[1], Nav.INSTANCE.durationText(r4.getDurationS()), -13664019);
                             Unit unit5 = Unit.INSTANCE;
                             Unit unit6 = Unit.INSTANCE;

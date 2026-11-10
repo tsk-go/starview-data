@@ -2420,110 +2420,72 @@ public final class FilesActivity extends AppCompatActivity {
         return base + " (" + i + ")" + ext;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:19:0x00bc, code lost:
-    
-        if (r0 == null) goto L21;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     private final void download(String h, Job j, Function1<? super Long, Unit> progress) {
-        Throwable th;
-        String str;
-        String string;
         File out = new File(j.getDstPath());
         File parentFile = out.getParentFile();
         if (parentFile != null) {
             parentFile.mkdirs();
         }
         File tmp = new File(out.getParentFile(), "." + out.getName() + ".part");
-        Response execute = this.http.newCall(new Request.Builder().url("http://" + h + ":8090/fs/get?path=" + Uri.encode(j.getSrcPath())).build()).execute();
+        Response r = this.http.newCall(new Request.Builder().url("http://" + h + ":8090/fs/get?path=" + Uri.encode(j.getSrcPath())).build()).execute();
+        Throwable rCause = null;
         try {
-            Response r = execute;
             if (!r.isSuccessful()) {
                 ResponseBody body = r.body();
-                if (body != null && (string = body.string()) != null) {
-                    String str2 = string;
-                    if (str2.length() == 0) {
-                        str2 = "HTTP " + r.code();
-                    }
-                    str = str2;
+                String why = body != null ? body.string() : null;
+                if (why != null && why.length() == 0) {
+                    why = "HTTP " + r.code();
                 }
-                str = "HTTP " + r.code();
-                throw new RuntimeException(str);
+                if (why == null) {
+                    why = "HTTP " + r.code();
+                }
+                throw new RuntimeException(why);
             }
+            ResponseBody body2 = r.body();
+            Intrinsics.checkNotNull(body2);
+            InputStream src = body2.byteStream();
+            FileOutputStream os = new FileOutputStream(tmp);
+            Throwable osCause = null;
             try {
-                ResponseBody body2 = r.body();
-                Intrinsics.checkNotNull(body2);
-                InputStream src = body2.byteStream();
-                FileOutputStream fileOutputStream = new FileOutputStream(tmp);
-                try {
-                    FileOutputStream os = fileOutputStream;
-                    byte[] buf = new byte[262144];
-                    long done = 0;
-                    long lastUi = 0;
-                    while (true) {
-                        int it = src.read(buf);
-                        if (it <= 0) {
-                            Unit unit = Unit.INSTANCE;
-                            CloseableKt.closeFinally(fileOutputStream, null);
-                            Unit unit2 = Unit.INSTANCE;
-                            CloseableKt.closeFinally(execute, null);
-                            if (!tmp.renameTo(out)) {
-                                out.delete();
-                                if (!tmp.renameTo(out)) {
-                                    throw new RuntimeException("rename failed: " + out.getPath());
-                                }
-                            }
-                            if (j.getMtime() > 0) {
-                                out.setLastModified(j.getMtime() * 1000);
-                                return;
-                            }
-                            return;
-                        }
-                        if (this.cancel.get()) {
-                            throw new InterruptedException("cancelled");
-                        }
-                        waitIfPaused();
-                        os.write(buf, 0, it);
-                        InputStream src2 = src;
-                        done += it;
-                        try {
-                            if (System.nanoTime() - lastUi > 100000000) {
-                                lastUi = System.nanoTime();
-                                try {
-                                    progress.invoke(Long.valueOf(done));
-                                } catch (Throwable th2) {
-                                    th = th2;
-                                    th = th;
-                                    try {
-                                        throw th;
-                                    } catch (Throwable th3) {
-                                        CloseableKt.closeFinally(fileOutputStream, th);
-                                        throw th3;
-                                    }
-                                }
-                            }
-                            src = src2;
-                        } catch (Throwable th4) {
-                            th = th4;
-                        }
+                byte[] buf = new byte[262144];
+                long done = 0;
+                long lastUi = 0;
+                while (true) {
+                    int it = src.read(buf);
+                    if (it <= 0) {
+                        break;
                     }
-                } catch (Throwable th5) {
-                    th = th5;
+                    if (this.cancel.get()) {
+                        throw new InterruptedException("cancelled");
+                    }
+                    waitIfPaused();
+                    os.write(buf, 0, it);
+                    done += it;
+                    if (System.nanoTime() - lastUi > 100000000) {
+                        lastUi = System.nanoTime();
+                        progress.invoke(Long.valueOf(done));
+                    }
                 }
-            } catch (Throwable th6) {
-                th = th6;
-                Throwable th7 = th;
-                try {
-                    throw th7;
-                } catch (Throwable th8) {
-                    CloseableKt.closeFinally(execute, th7);
-                    throw th8;
-                }
+            } catch (Throwable th) {
+                osCause = th;
+                throw th;
+            } finally {
+                CloseableKt.closeFinally(os, osCause);
             }
-        } catch (Throwable th9) {
-            th = th9;
+        } catch (Throwable th2) {
+            rCause = th2;
+            throw th2;
+        } finally {
+            CloseableKt.closeFinally(r, rCause);
+        }
+        if (!tmp.renameTo(out)) {
+            out.delete();
+            if (!tmp.renameTo(out)) {
+                throw new RuntimeException("rename failed: " + out.getPath());
+            }
+        }
+        if (j.getMtime() > 0) {
+            out.setLastModified(j.getMtime() * 1000);
         }
     }
 
@@ -2778,8 +2740,9 @@ public final class FilesActivity extends AppCompatActivity {
                                 str2 = "HTTP " + r.code();
                             }
                             str = str2;
+                        } else {
+                            str = "HTTP " + r.code();
                         }
-                        str = "HTTP " + r.code();
                         throw new RuntimeException(str);
                     }
                     Unit unit = Unit.INSTANCE;

@@ -1265,7 +1265,7 @@ public final class Detector {
                         try {
                             this.lock.wait(300L);
                         } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
+                            throw KtCompat.sneaky(e);
                         }
                     }
                 }

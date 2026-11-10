@@ -1070,13 +1070,11 @@ public final class GxNavigationPage extends GxPage {
         } else {
             textView2 = textView4;
         }
-        if (!this.searching) {
-            if (this.navError.length() > 0) {
-                dim = CarUi.Companion.getWARN();
-                textView2.setTextColor(dim);
-            }
+        if (!this.searching && this.navError.length() > 0) {
+            dim = CarUi.Companion.getWARN();
+        } else {
+            dim = CarUi.Companion.getDIM();
         }
-        dim = CarUi.Companion.getDIM();
         textView2.setTextColor(dim);
     }
 
