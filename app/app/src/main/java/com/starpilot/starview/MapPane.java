@@ -1212,7 +1212,7 @@ public final class MapPane extends FrameLayout {
             var12 = Nav.INSTANCE.durationText(((Nav.Route)var12).getDurationS() - var58.getDurationS());
             var61.setText("Faster route · saves " + var12 + "   TAKE IT    ✕");
             this.faster.setVisibility(0);
-            this.faster.setOnTouchListener(new MapPane$$ExternalSyntheticLambda33(this, var9, ((Route) var58)));
+            this.faster.setOnTouchListener(new MapPane$$ExternalSyntheticLambda33(this, var9, ((Nav.Route) var58)));
         } else {
             this.faster.setVisibility(8);
         }
@@ -1255,7 +1255,7 @@ public final class MapPane extends FrameLayout {
             MapPane.Banner var48 = this.banner;
             android.view.ViewGroup.LayoutParams var59 = this.banner.getLayoutParams();
             Intrinsics.checkNotNull(var59, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
-            var var60 = (android.widget.FrameLayout.LayoutParams & android.view.ViewGroup.LayoutParams)var59;
+            android.widget.FrameLayout.LayoutParams var60 = (android.widget.FrameLayout.LayoutParams)var59;
             var60.height = var23;
             var48.setLayoutParams((android.view.ViewGroup.LayoutParams)var60);
         }
@@ -1508,7 +1508,7 @@ public final class MapPane extends FrameLayout {
             android.widget.LinearLayout.LayoutParams var8 = new android.widget.LinearLayout.LayoutParams(this.dpi(48), this.dpi(40));
             var8.setMarginEnd(this.dpi(10));
             Unit var5 = Unit.INSTANCE;
-            var7.addView(var4, (android.view.ViewGroup.LayoutParams)var8);
+            var7.addView((View) var4, (android.view.ViewGroup.LayoutParams)var8);
         }
 
         label153: {
@@ -1586,7 +1586,7 @@ public final class MapPane extends FrameLayout {
             android.widget.LinearLayout.LayoutParams var44 = new android.widget.LinearLayout.LayoutParams(-2, this.dpi(40));
             var44.setMarginEnd(this.dpi(8));
             Unit var37 = Unit.INSTANCE;
-            var7.addView(var4, (android.view.ViewGroup.LayoutParams)var44);
+            var7.addView((View) var4, (android.view.ViewGroup.LayoutParams)var44);
         }
 
         if (var3 && (Intrinsics.areEqual(this.sheetKind, "routes") || Intrinsics.areEqual(this.sheetKind, "look"))) {
@@ -1596,7 +1596,7 @@ public final class MapPane extends FrameLayout {
             android.widget.LinearLayout.LayoutParams var38 = new android.widget.LinearLayout.LayoutParams(-2, this.dpi(40));
             var38.setMarginEnd(this.dpi(8));
             Unit var45 = Unit.INSTANCE;
-            var7.addView(var4, (android.view.ViewGroup.LayoutParams)var38);
+            var7.addView((View) var4, (android.view.ViewGroup.LayoutParams)var38);
         }
 
         int var10;
@@ -1631,7 +1631,7 @@ public final class MapPane extends FrameLayout {
         }
 
         label112: {
-            var7.addView(var4, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(var10, this.dpi(40))));
+            var7.addView((View) var4, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(var10, this.dpi(40))));
             var6.addView((View)var7);
             var41 = new ScrollView(this.getContext());
             LinearLayout var33 = new LinearLayout(this.getContext());
@@ -3569,11 +3569,13 @@ public final class MapPane extends FrameLayout {
                     while (true) {
                         if (it5.hasNext()) {
                             Object element$iv = it5.next();
-                            if ((((Nav.Route) element$iv).getIndex() == i16 ? 1 : null) != null) {
+                            if (((Nav.Route) element$iv).getIndex() == i16) {
                                 obj = element$iv;
+                                break;
                             }
                         } else {
                             obj = null;
+                            break;
                         }
                     }
                     Nav.Route r3 = (Nav.Route) obj;
@@ -3888,7 +3890,7 @@ public final class MapPane extends FrameLayout {
                 if (l2 != null && i != Nav.INSTANCE.getShownSelected()) {
                     if (l2.getSize() >= 2) {
                         int step = Math.max(jj, l2.getSize() / 2000);
-                        float[] prev2 = screen(l2.getMx()[r13], l2.getMy()[r13], u);
+                        float[] prev2 = screen(l2.getMx()[0], l2.getMy()[0], u);
                         int j = step;
                         double bd3 = bd2;
                         int best3 = best;
@@ -3897,13 +3899,13 @@ public final class MapPane extends FrameLayout {
                             int jj2 = Math.min(j, l2.getSize() - jj);
                             int j2 = j;
                             float[] p2 = screen(l2.getMx()[jj2], l2.getMy()[jj2], u);
-                            double ex = p2[r13] - prev3[r13];
+                            double ex = p2[0] - prev3[0];
                             double ey = p2[jj] - prev3[jj];
                             double l22 = (ex * ex) + (ey * ey);
                             double d = 0.0d;
                             if (l22 > 0.0d) {
                                 w = u;
-                                double w2 = sx - prev3[r13];
+                                double w2 = sx - prev3[0];
                                 prev = prev3;
                                 d = RangesKt.coerceIn(((w2 * ex) + ((sy - prev3[jj]) * ey)) / l22, 0.0d, 1.0d);
                             } else {
@@ -3911,7 +3913,6 @@ public final class MapPane extends FrameLayout {
                                 prev = prev3;
                             }
                             double w3 = d;
-                            r13 = 0;
                             double dd = Math.hypot((prev[0] + (w3 * ex)) - sx, (prev[1] + (w3 * ey)) - sy);
                             if (dd < bd3) {
                                 bd3 = dd;
@@ -3959,7 +3960,7 @@ public final class MapPane extends FrameLayout {
 
         /* JADX INFO: Access modifiers changed from: private */
         public static final void dropPin$lambda$19(final MapCanvas this$0, final double $lat, final double $lon, final MapPane this$1) {
-            final String addr;
+            String addr;
             Address address;
             String str = null;
             try {
@@ -3971,10 +3972,11 @@ public final class MapPane extends FrameLayout {
             } catch (Exception e) {
                 addr = null;
             }
+            final var addr$f = addr;
             this$0.post(new Runnable() { // from class: com.starpilot.starview.MapPane$MapCanvas$$ExternalSyntheticLambda0
                 @Override // java.lang.Runnable
                 public final void run() {
-                    MapPane.MapCanvas.dropPin$lambda$19$lambda$18(addr, this$0, $lat, $lon, this$1);
+                    MapPane.MapCanvas.dropPin$lambda$19$lambda$18(addr$f, this$0, $lat, $lon, this$1);
                 }
             });
         }

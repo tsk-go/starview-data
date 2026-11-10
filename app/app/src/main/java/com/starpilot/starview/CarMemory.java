@@ -243,7 +243,7 @@ public final class CarMemory {
                 if (it.hasNext()) {
                     Object element$iv = it.next();
                     Car f = (Car) element$iv;
-                    if (((f == c || Math.abs(f.getX() - c.getX()) >= 6.0d || Math.abs(f.getY() - c.getY()) >= 1.5d) ? null : 1) != null) {
+                    if (!(f == c || Math.abs(f.getX() - c.getX()) >= 6.0d || Math.abs(f.getY() - c.getY()) >= 1.5d)) {
                         $this$any$ivB = true;
                         break;
                     }

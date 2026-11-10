@@ -1818,7 +1818,7 @@ public final class Telemetry {
             } else if (var1 instanceof String) {
                 label66: {
                     label67: {
-                        String var6 = StringsKt.trim((String & CharSequence)var1).toString().toLowerCase(Locale.ROOT);
+                        String var6 = StringsKt.trim((String)var1).toString().toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var6, "toLowerCase(...)");
                         switch (var6.hashCode()) {
                             case 0:

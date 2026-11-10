@@ -3371,7 +3371,7 @@ public final class DevicePanel extends ScrollView {
     /* JADX INFO: Access modifiers changed from: private */
     public static final void loadForkFixes$lambda$238(final DevicePanel this$0, String $h, final LinearLayout $box) {
         Object m1191constructorimpl;
-        final List list;
+        List list;
         ResponseBody body;
         try {
             Result.Companion companion = Result.Companion;
@@ -3396,10 +3396,11 @@ public final class DevicePanel extends ScrollView {
         if (md == null || (list = ForkFixes.INSTANCE.parse(md)) == null) {
             list = CollectionsKt.emptyList();
         }
+        final var list$f = list;
         this$0.act.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda158
             @Override // java.lang.Runnable
             public final void run() {
-                DevicePanel.loadForkFixes$lambda$238$lambda$237($box, list, this$0, md);
+                DevicePanel.loadForkFixes$lambda$238$lambda$237($box, list$f, this$0, md);
             }
         });
     }

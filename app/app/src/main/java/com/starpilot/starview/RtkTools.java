@@ -735,7 +735,7 @@ public final class RtkTools {
             if (it.hasNext()) {
                 element$iv = it.next();
                 Step it2 = (Step) element$iv;
-                if (((it2.getState() == State.NOW || it2.getState() == State.WAITING) ? 1 : null) != null) {
+                if ((it2.getState() == State.NOW || it2.getState() == State.WAITING)) {
                     break;
                 }
             } else {

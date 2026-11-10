@@ -1215,7 +1215,7 @@ public final class GxRecordingsPage extends GxPage {
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
             GxRecordingsRoute it3 = (GxRecordingsRoute) element$iv$iv;
-            if ((((!this.preservedOnly || it3.getIsPreserved()) && matches(it3, this.search)) ? 1 : null) != null) {
+            if (((!this.preservedOnly || it3.getIsPreserved()) && matches(it3, this.search))) {
                 destination$iv$iv.add(element$iv$iv);
             }
         }

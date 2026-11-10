@@ -978,7 +978,7 @@ public final class OsmRoads {
         var var10 = new ArrayList();
 
         for (Object var5 : var4) {
-            if (!StringsKt.isBlank((String & CharSequence)var5)) {
+            if (!StringsKt.isBlank((String)var5)) {
                 var10.add(var5);
             }
         }

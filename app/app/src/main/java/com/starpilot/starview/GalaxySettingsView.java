@@ -395,7 +395,7 @@ public final class GalaxySettingsView extends FrameLayout {
                     }
                     Object element$iv = it.next();
                     Entry it2 = (Entry) element$iv;
-                    if ((((it2 instanceof Entry.Hub) || (it2 instanceof Entry.Unplaced)) ? 1 : null) != null) {
+                    if (((it2 instanceof Entry.Hub) || (it2 instanceof Entry.Unplaced))) {
                         z = true;
                         break;
                     }
@@ -572,7 +572,7 @@ public final class GalaxySettingsView extends FrameLayout {
                 }
                 Object element$iv2 = it.next();
                 Entry it2 = (Entry) element$iv2;
-                if ((((it2 instanceof Entry.Hub) && Intrinsics.areEqual(CollectionsKt.toSet(((Entry.Hub) it2).getPages()), SetsKt.setOf(new String[]{"traffic", "aggressive", "standard", "relaxed"}))) ? 1 : null) != null) {
+                if (((it2 instanceof Entry.Hub) && Intrinsics.areEqual(CollectionsKt.toSet(((Entry.Hub) it2).getPages()), SetsKt.setOf(new String[]{"traffic", "aggressive", "standard", "relaxed"})))) {
                     $this$any$ivB = true;
                     break;
                 }

@@ -30,7 +30,7 @@ public final class VasmGeometry {
         }
         for (Object element$iv : $this$any$iv) {
             Pair it = (Pair) element$iv;
-            if (((((Number) it.getFirst()).intValue() == w && ((Number) it.getSecond()).intValue() == h) ? 1 : null) != null) {
+            if ((((Number) it.getFirst()).intValue() == w && ((Number) it.getSecond()).intValue() == h)) {
                 return true;
             }
         }
@@ -111,7 +111,7 @@ public final class VasmGeometry {
                 if (it.hasNext()) {
                     Object element$iv = it.next();
                     int[] it2 = (int[]) element$iv;
-                    if (((it2[0] < 0 || it2[0] > w || it2[1] < 0 || it2[1] > h) ? 1 : null) != null) {
+                    if ((it2[0] < 0 || it2[0] > w || it2[1] < 0 || it2[1] > h)) {
                         $this$any$ivB = true;
                         break;
                     }

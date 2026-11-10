@@ -1288,7 +1288,7 @@ public final class GxBluetoothPage extends GxPage {
                         GxPage.text$default(var86, ((String) var8), (ViewGroup)var81, 17.0F, 0, false, 24, null);
                     }
 
-                    GxVehicleKt.gxVehicleEnable((View & Switch)this.toggle(
+                    GxVehicleKt.gxVehicleEnable((Switch)this.toggle(
                                 "Disconnect controllers when offroad",
                                 "After two minutes offroad, paired controllers disconnect to save battery and reconnect when the car starts. Bluetooth and audio-only devices stay connected.",
                                 this.wcDisconnectOffroad,
@@ -2214,7 +2214,7 @@ public final class GxBluetoothPage extends GxPage {
                                 var var68 = new ArrayList();
 
                                 for (Object var72 : var70) {
-                                    if (!StringsKt.isBlank((String & CharSequence)var72)) {
+                                    if (!StringsKt.isBlank((String)var72)) {
                                         var68.add(var72);
                                     }
                                 }

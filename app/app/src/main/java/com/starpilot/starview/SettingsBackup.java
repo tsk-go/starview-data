@@ -621,7 +621,7 @@ public final class SettingsBackup {
     }
 
     public final void restoreFrom(final Activity act, Uri uri, final Function0<Unit> onCancel) {
-        final JSONObject j;
+        JSONObject j;
         Intrinsics.checkNotNullParameter(act, "act");
         Intrinsics.checkNotNullParameter(uri, "uri");
         Intrinsics.checkNotNullParameter(onCancel, "onCancel");
@@ -639,10 +639,11 @@ public final class SettingsBackup {
             }).show();
             return;
         }
+        final var j$f = j;
         new AlertDialog.Builder(act).setTitle("Restore settings?").setMessage("Backup from " + j.optString("created", "?") + " (StarView " + j.optString("app", "?") + "). Every tablet setting and the driving-screen layout are replaced, then StarView starts again. The comma pairing stays as it is.").setPositiveButton("Restore", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsBackup$$ExternalSyntheticLambda2
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                SettingsBackup.restoreFrom$lambda$26(act, j, onCancel, dialogInterface, i);
+                SettingsBackup.restoreFrom$lambda$26(act, j$f, onCancel, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsBackup$$ExternalSyntheticLambda3
             @Override // android.content.DialogInterface.OnClickListener

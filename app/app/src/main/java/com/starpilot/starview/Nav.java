@@ -914,16 +914,17 @@ public final class Nav {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void poll$lambda$14$lambda$13(final JSONObject $j) {
-        final Function0 parsed;
+        Function0 parsed;
         try {
             parsed = INSTANCE.parse($j);
         } catch (Exception e) {
             parsed = null;
         }
+        final var parsed$f = parsed;
         INSTANCE.getMain().post(new Runnable() { // from class: com.starpilot.starview.Nav$$ExternalSyntheticLambda1
             @Override // java.lang.Runnable
             public final void run() {
-                Nav.poll$lambda$14$lambda$13$lambda$12(parsed, $j);
+                Nav.poll$lambda$14$lambda$13$lambda$12(parsed$f, $j);
             }
         });
     }

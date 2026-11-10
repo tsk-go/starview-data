@@ -1157,7 +1157,7 @@ public final class GxSystemPage extends GxPage {
                     Iterator var19 = var6.iterator();
 
                     while (var19.hasNext()) {
-                        var14.add(StringsKt.trim((String & CharSequence)var19.next()).toString());
+                        var14.add(StringsKt.trim((String)var19.next()).toString());
                     }
 
                     List var15 = var14;

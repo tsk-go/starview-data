@@ -216,7 +216,7 @@ public final class Favorites {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void saveFound$lambda$9(Context $ctx, final String $name, final String $address, final Function1 $then, final DataClient $data, final String $label) {
-        final Address hit;
+        Address hit;
         Address address = null;
         try {
             if (Geocoder.isPresent()) {
@@ -236,10 +236,11 @@ public final class Favorites {
                     }
                 } catch (Exception e) {
                     hit = null;
+                    final var hit$f = hit;
                     INSTANCE.getMain().post(new Runnable() { // from class: com.starpilot.starview.Favorites$$ExternalSyntheticLambda0
                         @Override // java.lang.Runnable
                         public final void run() {
-                            Favorites.saveFound$lambda$9$lambda$8(hit, $then, $data, $name, $address, $label);
+                            Favorites.saveFound$lambda$9$lambda$8(hit$f, $then, $data, $name, $address, $label);
                         }
                     });
                 }

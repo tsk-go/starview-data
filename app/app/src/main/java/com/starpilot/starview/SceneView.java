@@ -3935,7 +3935,7 @@ public final class SceneView extends SurfaceView {
         }
         for (Object element$iv : $this$any$iv) {
             double[] p = (double[]) element$iv;
-            if (((Math.abs(p[0] - cx) >= (p[2] + halfLen) * 0.95d || Math.abs(p[1] - cy) >= 1.7d) ? null : 1) != null) {
+            if (!(Math.abs(p[0] - cx) >= (p[2] + halfLen) * 0.95d || Math.abs(p[1] - cy) >= 1.7d)) {
                 return true;
             }
         }
