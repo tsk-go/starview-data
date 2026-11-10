@@ -1287,11 +1287,12 @@ public final class LaneFixDialog {
             $otherRow.addView(show$label$default($grey, $ctx, $d, "Lanes the other way:  ", 15.0f, 0, 32, null));
             int k2 = 1;
             while (k2 < 5) {
+                final var k2$f = k2;
                 $otherRow.addView(show$chip($ctx, $d, String.valueOf(k2), $road.getOther() == k2, false, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda4
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit show$lambda$11$lambda$10;
-                        show$lambda$11$lambda$10 = LaneFixDialog.show$lambda$11$lambda$10($road, k2, $paint, $roadView);
+                        show$lambda$11$lambda$10 = LaneFixDialog.show$lambda$11$lambda$10($road, k2$f, $paint, $roadView);
                         return show$lambda$11$lambda$10;
                     }
                 }));

@@ -531,10 +531,11 @@ public final class DevicePanel extends ScrollView {
             $this$multi_u24lambda_u2429_u24lambda_u2428.setText(o);
             $this$multi_u24lambda_u2429_u24lambda_u2428.setTextSize(17.0f);
             $this$multi_u24lambda_u2429_u24lambda_u2428.setMinHeight(dp(56));
+            final var index$iv$iv$f = index$iv$iv;
             $this$multi_u24lambda_u2429_u24lambda_u2428.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda170
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
-                    DevicePanel.multi$lambda$29$lambda$28$lambda$27(onSelect, index$iv$iv, view);
+                    DevicePanel.multi$lambda$29$lambda$28$lambda$27(onSelect, index$iv$iv$f, view);
                 }
             });
             destination$iv$iv.add($this$multi_u24lambda_u2429_u24lambda_u2428);

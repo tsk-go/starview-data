@@ -228,7 +228,7 @@ public final class MainActivity extends AppCompatActivity {
     /* renamed from: storageHttp$delegate, reason: from kotlin metadata */
     private final Lazy storageHttp;
     private boolean surfaceReady;
-    private Function0<Unit> tabletModePusher;
+    Function0<Unit> tabletModePusher;
     int tick;
     private final MainActivity$uiTick$1 uiTick;
     private boolean usbProbe;
@@ -1392,11 +1392,12 @@ public final class MainActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
         }
+        final var countsFile$f = countsFile;
         this.laneTracker.setOnCountsChanged(new Function0() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda44
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit onCreate$lambda$58;
-                onCreate$lambda$58 = MainActivity.onCreate$lambda$58(MainActivity.this, countsFile);
+                onCreate$lambda$58 = MainActivity.onCreate$lambda$58(MainActivity.this, countsFile$f);
                 return onCreate$lambda$58;
             }
         });

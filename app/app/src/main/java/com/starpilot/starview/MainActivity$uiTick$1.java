@@ -1,49 +1,103 @@
 package com.starpilot.starview;
 
+import android.app.AlertDialog.Builder;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.GradientDrawable.Orientation;
+import android.media.Image;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Build.VERSION;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.SurfaceHolder.Callback;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ImageView.ScaleType;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts.OpenDocument;
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
-import com.starpilot.starview.Detector;
-import com.starpilot.starview.LaneBrain;
-import com.starpilot.starview.LaneModel;
-import com.starpilot.starview.LaneShots;
-import com.starpilot.starview.LaneSuggest;
-import com.starpilot.starview.Nav;
-import com.starpilot.starview.NudgeLogic;
-import com.starpilot.starview.OsmRoads;
-import com.starpilot.starview.SceneView;
-import com.starpilot.starview.SharedPlace;
-import com.starpilot.starview.TurnSignal;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+import androidx.core.view.WindowInsetsCompat.Type;
+import java.io.File;
+import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
+import kotlin.Lazy;
+import kotlin.LazyKt;
+import kotlin.Metadata;
+import kotlin.NoWhenBranchMatchedException;
 import kotlin.Pair;
+import kotlin.Result;
+import kotlin.ResultKt;
+import kotlin.Triple;
+import kotlin.TuplesKt;
 import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.collections.Grouping;
 import kotlin.collections.GroupingKt;
+import kotlin.collections.MapsKt;
 import kotlin.collections.SetsKt;
 import kotlin.comparisons.ComparisonsKt;
+import kotlin.io.FilesKt;
 import kotlin.jvm.functions.Function0;
-import kotlin.jvm.functions.Function1;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.jvm.internal.Ref.BooleanRef;
+import kotlin.jvm.internal.Ref.FloatRef;
+import kotlin.jvm.internal.Ref.IntRef;
+import kotlin.jvm.internal.Ref.LongRef;
+import kotlin.jvm.internal.Ref.ObjectRef;
 import kotlin.math.MathKt;
 import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
+import okhttp3.OkHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /* compiled from: MainActivity.kt */
+/* recovered from Vineflower's decompilation (jadx's run() lost blocks) */
 public final class MainActivity$uiTick$1 implements Runnable {
     final /* synthetic */ MainActivity this$0;
 
@@ -51,5297 +105,3192 @@ public final class MainActivity$uiTick$1 implements Runnable {
         this.this$0 = $receiver;
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Can't wrap try/catch for region: R(14:459|(3:460|461|(1:463))|465|(1:467)(1:1479)|468|(1:470)(2:1475|(1:1477)(1:1478))|471|(1:473)(1:(1:1473)(1:1474))|474|(3:476|(1:1468)(1:480)|(4:482|483|484|485))|(1:1470)(1:1471)|483|484|485) */
-    /* JADX WARN: Code restructure failed: missing block: B:114:0x02ca, code lost:
-    
-        if ((r0 % 40) == 5) goto L132;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:1297:0x0fe9, code lost:
-    
-        if (r46 != null) goto L835;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:1404:0x11e3, code lost:
-    
-        if (r46 != null) goto L930;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:1520:0x08f4, code lost:
-    
-        if (r7 != false) goto L479;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:164:0x0382, code lost:
-    
-        if (r4.needsCamera(r5) != false) goto L186;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:44:0x0192, code lost:
-    
-        r0 = r118.this$0.tabletModePusher;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:558:0x0e80, code lost:
-    
-        if (r4.beside(-1) != false) goto L759;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:565:0x0ea3, code lost:
-    
-        if (r4.beside(1) != false) goto L768;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:584:0x0f07, code lost:
-    
-        if (r4.getLogic().getState() != com.starpilot.starview.LaneSuggest.State.IDLE) goto L787;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:595:0x13d5, code lost:
-    
-        if (r0.getTurn().getHoldSide() != 0) goto L1003;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:641:0x149e, code lost:
-    
-        if (r4 == false) goto L1055;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:683:0x1578, code lost:
-    
-        if (r5 == false) goto L1099;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:887:0x1c36, code lost:
-    
-        if ((r0 % 1) == 0) goto L1370;
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Removed duplicated region for block: B:1027:0x1f9b  */
-    /* JADX WARN: Removed duplicated region for block: B:102:0x0299  */
-    /* JADX WARN: Removed duplicated region for block: B:105:0x02a0  */
-    /* JADX WARN: Removed duplicated region for block: B:1183:0x27dc  */
-    /* JADX WARN: Removed duplicated region for block: B:1186:0x1c45  */
-    /* JADX WARN: Removed duplicated region for block: B:1188:0x1c22  */
-    /* JADX WARN: Removed duplicated region for block: B:118:0x02d9  */
-    /* JADX WARN: Removed duplicated region for block: B:1219:0x1bef  */
-    /* JADX WARN: Removed duplicated region for block: B:1234:0x193d  */
-    /* JADX WARN: Removed duplicated region for block: B:1237:0x1949  */
-    /* JADX WARN: Removed duplicated region for block: B:1239:0x194b  */
-    /* JADX WARN: Removed duplicated region for block: B:1240:0x1866  */
-    /* JADX WARN: Removed duplicated region for block: B:1241:0x184a  */
-    /* JADX WARN: Removed duplicated region for block: B:1243:0x1809  */
-    /* JADX WARN: Removed duplicated region for block: B:1247:0x16b8  */
-    /* JADX WARN: Removed duplicated region for block: B:1251:0x15ef  */
-    /* JADX WARN: Removed duplicated region for block: B:1252:0x15b1  */
-    /* JADX WARN: Removed duplicated region for block: B:1253:0x14d9  */
-    /* JADX WARN: Removed duplicated region for block: B:1259:0x13df  */
-    /* JADX WARN: Removed duplicated region for block: B:1263:0x0f11  */
-    /* JADX WARN: Removed duplicated region for block: B:1266:0x0f1b  */
-    /* JADX WARN: Removed duplicated region for block: B:1318:0x139a  */
-    /* JADX WARN: Removed duplicated region for block: B:134:0x030f  */
-    /* JADX WARN: Removed duplicated region for block: B:1368:0x1138  */
-    /* JADX WARN: Removed duplicated region for block: B:1370:0x1143  */
-    /* JADX WARN: Removed duplicated region for block: B:1382:0x1170  */
-    /* JADX WARN: Removed duplicated region for block: B:1384:0x117a  */
-    /* JADX WARN: Removed duplicated region for block: B:1391:0x11a1  */
-    /* JADX WARN: Removed duplicated region for block: B:139:0x031e  */
-    /* JADX WARN: Removed duplicated region for block: B:1410:0x1202  */
-    /* JADX WARN: Removed duplicated region for block: B:1413:0x1241  */
-    /* JADX WARN: Removed duplicated region for block: B:1416:0x127a  */
-    /* JADX WARN: Removed duplicated region for block: B:1421:0x12b3  */
-    /* JADX WARN: Removed duplicated region for block: B:1424:0x12c4  */
-    /* JADX WARN: Removed duplicated region for block: B:1429:0x12b6  */
-    /* JADX WARN: Removed duplicated region for block: B:1431:0x121f  */
-    /* JADX WARN: Removed duplicated region for block: B:1435:0x11f6  */
-    /* JADX WARN: Removed duplicated region for block: B:1437:0x1175  */
-    /* JADX WARN: Removed duplicated region for block: B:143:0x032d  */
-    /* JADX WARN: Removed duplicated region for block: B:1440:0x1148  */
-    /* JADX WARN: Removed duplicated region for block: B:1441:0x113f  */
-    /* JADX WARN: Removed duplicated region for block: B:1457:0x13a2  */
-    /* JADX WARN: Removed duplicated region for block: B:1461:0x0e87  */
-    /* JADX WARN: Removed duplicated region for block: B:1462:0x0e63  */
-    /* JADX WARN: Removed duplicated region for block: B:1482:0x0c75  */
-    /* JADX WARN: Removed duplicated region for block: B:1488:0x0b3d  */
-    /* JADX WARN: Removed duplicated region for block: B:148:0x0344 A[ADDED_TO_REGION] */
-    /* JADX WARN: Removed duplicated region for block: B:1491:0x0ad2  */
-    /* JADX WARN: Removed duplicated region for block: B:1511:0x08d9  */
-    /* JADX WARN: Removed duplicated region for block: B:1512:0x082b  */
-    /* JADX WARN: Removed duplicated region for block: B:1515:0x08dd  */
-    /* JADX WARN: Removed duplicated region for block: B:1531:0x091a  */
-    /* JADX WARN: Removed duplicated region for block: B:1537:0x0933  */
-    /* JADX WARN: Removed duplicated region for block: B:153:0x0354  */
-    /* JADX WARN: Removed duplicated region for block: B:156:0x0360  */
-    /* JADX WARN: Removed duplicated region for block: B:1601:0x07e9  */
-    /* JADX WARN: Removed duplicated region for block: B:1602:0x07d2  */
-    /* JADX WARN: Removed duplicated region for block: B:1603:0x07b5  */
-    /* JADX WARN: Removed duplicated region for block: B:1607:0x069a  */
-    /* JADX WARN: Removed duplicated region for block: B:1616:0x052f  */
-    /* JADX WARN: Removed duplicated region for block: B:1622:0x050b  */
-    /* JADX WARN: Removed duplicated region for block: B:1624:0x04f2  */
-    /* JADX WARN: Removed duplicated region for block: B:1626:0x04ad  */
-    /* JADX WARN: Removed duplicated region for block: B:1627:0x047b  */
-    /* JADX WARN: Removed duplicated region for block: B:1629:0x0450  */
-    /* JADX WARN: Removed duplicated region for block: B:1631:0x03fa  */
-    /* JADX WARN: Removed duplicated region for block: B:1637:0x029b  */
-    /* JADX WARN: Removed duplicated region for block: B:1638:0x0267  */
-    /* JADX WARN: Removed duplicated region for block: B:168:0x0394  */
-    /* JADX WARN: Removed duplicated region for block: B:171:0x03a9  */
-    /* JADX WARN: Removed duplicated region for block: B:174:0x03b5  */
-    /* JADX WARN: Removed duplicated region for block: B:177:0x03c2  */
-    /* JADX WARN: Removed duplicated region for block: B:180:0x03e2  */
-    /* JADX WARN: Removed duplicated region for block: B:183:0x03f6  */
-    /* JADX WARN: Removed duplicated region for block: B:186:0x0408  */
-    /* JADX WARN: Removed duplicated region for block: B:191:0x0426  */
-    /* JADX WARN: Removed duplicated region for block: B:194:0x0445  */
-    /* JADX WARN: Removed duplicated region for block: B:196:0x044d  */
-    /* JADX WARN: Removed duplicated region for block: B:199:0x045f  */
-    /* JADX WARN: Removed duplicated region for block: B:204:0x0473  */
-    /* JADX WARN: Removed duplicated region for block: B:206:0x0479  */
-    /* JADX WARN: Removed duplicated region for block: B:209:0x0487  */
-    /* JADX WARN: Removed duplicated region for block: B:212:0x0495  */
-    /* JADX WARN: Removed duplicated region for block: B:215:0x04a8  */
-    /* JADX WARN: Removed duplicated region for block: B:218:0x04b9  */
-    /* JADX WARN: Removed duplicated region for block: B:225:0x04d6  */
-    /* JADX WARN: Removed duplicated region for block: B:227:0x04de  */
-    /* JADX WARN: Removed duplicated region for block: B:233:0x0501  */
-    /* JADX WARN: Removed duplicated region for block: B:235:0x0509  */
-    /* JADX WARN: Removed duplicated region for block: B:238:0x0520  */
-    /* JADX WARN: Removed duplicated region for block: B:241:0x052a  */
-    /* JADX WARN: Removed duplicated region for block: B:244:0x0559  */
-    /* JADX WARN: Removed duplicated region for block: B:247:0x0567  */
-    /* JADX WARN: Removed duplicated region for block: B:252:0x057c  */
-    /* JADX WARN: Removed duplicated region for block: B:255:0x0588  */
-    /* JADX WARN: Removed duplicated region for block: B:260:0x059e  */
-    /* JADX WARN: Removed duplicated region for block: B:263:0x05ac  */
-    /* JADX WARN: Removed duplicated region for block: B:268:0x05c1  */
-    /* JADX WARN: Removed duplicated region for block: B:271:0x05cd  */
-    /* JADX WARN: Removed duplicated region for block: B:276:0x05e3  */
-    /* JADX WARN: Removed duplicated region for block: B:279:0x05ef  */
-    /* JADX WARN: Removed duplicated region for block: B:289:0x0623  */
-    /* JADX WARN: Removed duplicated region for block: B:294:0x064a  */
-    /* JADX WARN: Removed duplicated region for block: B:296:0x0652  */
-    /* JADX WARN: Removed duplicated region for block: B:301:0x0666  */
-    /* JADX WARN: Removed duplicated region for block: B:307:0x0690  */
-    /* JADX WARN: Removed duplicated region for block: B:309:0x0698  */
-    /* JADX WARN: Removed duplicated region for block: B:312:0x06b1  */
-    /* JADX WARN: Removed duplicated region for block: B:315:0x06bd  */
-    /* JADX WARN: Removed duplicated region for block: B:321:0x06d6  */
-    /* JADX WARN: Removed duplicated region for block: B:324:0x06e2  */
-    /* JADX WARN: Removed duplicated region for block: B:330:0x070b  */
-    /* JADX WARN: Removed duplicated region for block: B:333:0x0717  */
-    /* JADX WARN: Removed duplicated region for block: B:339:0x0730  */
-    /* JADX WARN: Removed duplicated region for block: B:342:0x073c  */
-    /* JADX WARN: Removed duplicated region for block: B:348:0x075d  */
-    /* JADX WARN: Removed duplicated region for block: B:351:0x0769  */
-    /* JADX WARN: Removed duplicated region for block: B:356:0x07a5  */
-    /* JADX WARN: Removed duplicated region for block: B:359:0x07b3  */
-    /* JADX WARN: Removed duplicated region for block: B:362:0x07c2  */
-    /* JADX WARN: Removed duplicated region for block: B:365:0x07d0  */
-    /* JADX WARN: Removed duplicated region for block: B:368:0x07e7  */
-    /* JADX WARN: Removed duplicated region for block: B:371:0x07ee  */
-    /* JADX WARN: Removed duplicated region for block: B:380:0x0823  */
-    /* JADX WARN: Removed duplicated region for block: B:382:0x0829  */
-    /* JADX WARN: Removed duplicated region for block: B:385:0x0832  */
-    /* JADX WARN: Removed duplicated region for block: B:396:0x0a64  */
-    /* JADX WARN: Removed duplicated region for block: B:399:0x0a70  */
-    /* JADX WARN: Removed duplicated region for block: B:404:0x0a8e  */
-    /* JADX WARN: Removed duplicated region for block: B:407:0x0a9a  */
-    /* JADX WARN: Removed duplicated region for block: B:412:0x0ab1  */
-    /* JADX WARN: Removed duplicated region for block: B:415:0x0abd  */
-    /* JADX WARN: Removed duplicated region for block: B:419:0x0acb  */
-    /* JADX WARN: Removed duplicated region for block: B:421:0x0adb  */
-    /* JADX WARN: Removed duplicated region for block: B:424:0x0af2  */
-    /* JADX WARN: Removed duplicated region for block: B:427:0x0afe  */
-    /* JADX WARN: Removed duplicated region for block: B:432:0x0b10  */
-    /* JADX WARN: Removed duplicated region for block: B:435:0x0b1f  */
-    /* JADX WARN: Removed duplicated region for block: B:437:0x0b27  */
-    /* JADX WARN: Removed duplicated region for block: B:441:0x0b39  */
-    /* JADX WARN: Removed duplicated region for block: B:444:0x0b4a  */
-    /* JADX WARN: Removed duplicated region for block: B:447:0x0b56  */
-    /* JADX WARN: Removed duplicated region for block: B:451:0x0b66  */
-    /* JADX WARN: Removed duplicated region for block: B:454:0x0b72  */
-    /* JADX WARN: Removed duplicated region for block: B:457:0x0b7f  */
-    /* JADX WARN: Removed duplicated region for block: B:488:0x0ca4  */
-    /* JADX WARN: Removed duplicated region for block: B:496:0x0cca  */
-    /* JADX WARN: Removed duplicated region for block: B:500:0x0cef  */
-    /* JADX WARN: Removed duplicated region for block: B:509:0x0d59  */
-    /* JADX WARN: Removed duplicated region for block: B:514:0x0d7b  */
-    /* JADX WARN: Removed duplicated region for block: B:517:0x0d87  */
-    /* JADX WARN: Removed duplicated region for block: B:522:0x0dae  */
-    /* JADX WARN: Removed duplicated region for block: B:525:0x0dba  */
-    /* JADX WARN: Removed duplicated region for block: B:530:0x0ddc  */
-    /* JADX WARN: Removed duplicated region for block: B:533:0x0dea  */
-    /* JADX WARN: Removed duplicated region for block: B:536:0x0df4  */
-    /* JADX WARN: Removed duplicated region for block: B:541:0x0e0c  */
-    /* JADX WARN: Removed duplicated region for block: B:544:0x0e1a  */
-    /* JADX WARN: Removed duplicated region for block: B:547:0x0e24  */
-    /* JADX WARN: Removed duplicated region for block: B:552:0x0e48  */
-    /* JADX WARN: Removed duplicated region for block: B:555:0x0e6d  */
-    /* JADX WARN: Removed duplicated region for block: B:562:0x0e90  */
-    /* JADX WARN: Removed duplicated region for block: B:569:0x0ebb  */
-    /* JADX WARN: Removed duplicated region for block: B:575:0x0edb  */
-    /* JADX WARN: Removed duplicated region for block: B:588:0x13b5  */
-    /* JADX WARN: Removed duplicated region for block: B:591:0x13c1  */
-    /* JADX WARN: Removed duplicated region for block: B:598:0x13ee  */
-    /* JADX WARN: Removed duplicated region for block: B:601:0x13fc  */
-    /* JADX WARN: Removed duplicated region for block: B:604:0x1406  */
-    /* JADX WARN: Removed duplicated region for block: B:609:0x141d  */
-    /* JADX WARN: Removed duplicated region for block: B:612:0x142b  */
-    /* JADX WARN: Removed duplicated region for block: B:615:0x1435  */
-    /* JADX WARN: Removed duplicated region for block: B:619:0x1443  */
-    /* JADX WARN: Removed duplicated region for block: B:626:0x1462  */
-    /* JADX WARN: Removed duplicated region for block: B:629:0x1470  */
-    /* JADX WARN: Removed duplicated region for block: B:632:0x147a  */
-    /* JADX WARN: Removed duplicated region for block: B:645:0x14b1  */
-    /* JADX WARN: Removed duplicated region for block: B:651:0x14d4  */
-    /* JADX WARN: Removed duplicated region for block: B:654:0x14fc  */
-    /* JADX WARN: Removed duplicated region for block: B:664:0x1527  */
-    /* JADX WARN: Removed duplicated region for block: B:667:0x153a  */
-    /* JADX WARN: Removed duplicated region for block: B:689:0x1588  */
-    /* JADX WARN: Removed duplicated region for block: B:692:0x15a2  */
-    /* JADX WARN: Removed duplicated region for block: B:695:0x15ae  */
-    /* JADX WARN: Removed duplicated region for block: B:698:0x15bd  */
-    /* JADX WARN: Removed duplicated region for block: B:704:0x15e6  */
-    /* JADX WARN: Removed duplicated region for block: B:707:0x15f6  */
-    /* JADX WARN: Removed duplicated region for block: B:721:0x1685  */
-    /* JADX WARN: Removed duplicated region for block: B:724:0x1694  */
-    /* JADX WARN: Removed duplicated region for block: B:727:0x16a7  */
-    /* JADX WARN: Removed duplicated region for block: B:730:0x16b5  */
-    /* JADX WARN: Removed duplicated region for block: B:733:0x16c8  */
-    /* JADX WARN: Removed duplicated region for block: B:736:0x16d4  */
-    /* JADX WARN: Removed duplicated region for block: B:743:0x16f1  */
-    /* JADX WARN: Removed duplicated region for block: B:746:0x16fd  */
-    /* JADX WARN: Removed duplicated region for block: B:753:0x177c  */
-    /* JADX WARN: Removed duplicated region for block: B:756:0x1788  */
-    /* JADX WARN: Removed duplicated region for block: B:75:0x0220  */
-    /* JADX WARN: Removed duplicated region for block: B:761:0x17f7  */
-    /* JADX WARN: Removed duplicated region for block: B:766:0x1816  */
-    /* JADX WARN: Removed duplicated region for block: B:773:0x183b  */
-    /* JADX WARN: Removed duplicated region for block: B:776:0x1857  */
-    /* JADX WARN: Removed duplicated region for block: B:779:0x1873  */
-    /* JADX WARN: Removed duplicated region for block: B:798:0x1966  */
-    /* JADX WARN: Removed duplicated region for block: B:808:0x1992  */
-    /* JADX WARN: Removed duplicated region for block: B:811:0x19b5  */
-    /* JADX WARN: Removed duplicated region for block: B:883:0x1c1d  */
-    /* JADX WARN: Removed duplicated region for block: B:886:0x1c2e  */
-    /* JADX WARN: Removed duplicated region for block: B:890:0x1c56  */
-    /* JADX WARN: Removed duplicated region for block: B:893:0x1c67  */
-    /* JADX WARN: Removed duplicated region for block: B:896:0x1c78  */
-    /* JADX WARN: Removed duplicated region for block: B:899:0x1c89  */
-    /* JADX WARN: Removed duplicated region for block: B:89:0x0253  */
-    /* JADX WARN: Removed duplicated region for block: B:902:0x1c9a  */
-    /* JADX WARN: Removed duplicated region for block: B:905:0x1cab  */
-    /* JADX WARN: Removed duplicated region for block: B:908:0x1cb7  */
-    /* JADX WARN: Removed duplicated region for block: B:916:0x1cda  */
-    /* JADX WARN: Removed duplicated region for block: B:919:0x1ceb  */
-    /* JADX WARN: Removed duplicated region for block: B:922:0x1cfc  */
-    /* JADX WARN: Removed duplicated region for block: B:925:0x1d0d  */
-    /* JADX WARN: Removed duplicated region for block: B:928:0x1d1e  */
-    /* JADX WARN: Removed duplicated region for block: B:931:0x1d2f  */
-    /* JADX WARN: Removed duplicated region for block: B:934:0x1d3b  */
-    /* JADX WARN: Removed duplicated region for block: B:940:0x1d54  */
-    /* JADX WARN: Removed duplicated region for block: B:943:0x1d65  */
-    /* JADX WARN: Removed duplicated region for block: B:946:0x1d76  */
-    /* JADX WARN: Removed duplicated region for block: B:949:0x1d87  */
-    /* JADX WARN: Removed duplicated region for block: B:94:0x026a  */
-    /* JADX WARN: Removed duplicated region for block: B:952:0x1d93  */
-    /* JADX WARN: Removed duplicated region for block: B:99:0x0289  */
-    @Override // java.lang.Runnable
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+
+
+
+
+    public static final CharSequence run$lambda$27$lambda$24(Entry var0) {
+        Intrinsics.checkNotNullParameter(var0, "it");
+        Object var1x = var0.getValue();
+        Object var2 = var0.getKey();
+        return var1x + " " + var2;
+    }
+
+    public static final String run$lambda$5(MainActivity var0, Telemetry var1x) {
+        return LaneShots.Companion.caption(var0.laneTracker, "every 30 s", var1x.getVEgo() * 2.23694F);
+    }
+
+    /* VF: from Vineflower (jadx: Code restructure failed) */
+    @Override
     public void run() {
-        int i;
-        final Telemetry t;
-        DataClient dataClient;
-        LinearLayout linearLayout;
-        TextView stallBanner;
-        TextView stallBanner2;
-        int stall;
-        TextView gpuBanner;
-        TextView gpuBanner2;
-        int i2;
-        int i3;
-        UiSettings uiSettings;
-        TextView textView;
-        boolean z;
-        boolean z2;
-        boolean wantHome;
-        boolean z3;
-        int i4;
-        OffroadHome offroadHome;
-        TextView textView2;
-        boolean z4;
-        boolean wantVideo;
-        boolean z5;
-        boolean z6;
-        UiSettings uiSettings2;
-        OverlayView overlayView;
-        OverlayView overlayView2;
-        long currentTimeMillis;
-        long j;
-        TextView textView3;
-        TextView textView4;
-        TextView textView5;
-        TextView textView6;
-        TextView textView7;
-        boolean isSet;
-        TextView textView8;
-        String str;
-        TextView textView9;
-        TextView textView10;
-        LinearLayout linearLayout2;
-        SlcView slcView;
-        WheelButton wheelButton;
-        MiciDistanceView miciDistanceView;
-        SlcActionsView slcActionsView;
-        long j2;
-        int i5;
-        int i6;
-        Pair pair;
-        Pair cl;
-        TextView textView11;
-        TextView textView12;
-        TextView textView13;
-        TextView textView14;
-        TextView textView15;
-        TextView textView16;
-        DevSidebarView devSidebarView;
-        String str2;
-        int i7;
-        SideView sideView;
-        SideView sideView2;
-        String cnState;
-        boolean usbgpu;
-        boolean show;
-        boolean z7;
-        ImageView imageView;
-        boolean z8;
-        ImageView imageView2;
-        ImageView imageView3;
-        ImageView imageView4;
-        ImageView imageView5;
-        ImageView imageView6;
-        ImageView imageView7;
-        ImageView imageView8;
-        ImageView imageView9;
-        boolean z9;
-        ImageView imageView10;
-        ImageView imageView11;
-        boolean z10;
-        TextView textView17;
-        AetherGaugeView aetherGaugeView;
-        SlcSourcesView slcSourcesView;
-        int i8;
-        NavCardView navCardView;
-        int i9;
-        NavCardView navCardView2;
-        SlowReasonView slowReasonView;
-        int i10;
-        int i11;
-        boolean z11;
-        LaneBrain laneBrain;
-        LaneAhead laneAhead;
-        LaneMapLog laneMapLog;
-        SceneView s;
-        LaneCardView laneCardView;
-        LaneShots laneShots;
-        Detector detector;
-        LaneCardView laneCardView2;
-        BlinkerCardView blinkerCardView;
-        DataClient dataClient2;
-        GpsCardView gpsCardView;
-        DataClient dataClient3;
-        String cnState2;
-        int i12;
-        boolean z12;
-        boolean z13;
-        boolean active;
-        boolean z14;
-        DataClient dataClient4;
-        int i13;
-        int i14;
-        LaneSuggestView laneSuggestView;
-        LaneSuggestView laneSuggestView2;
-        boolean connected;
-        List emptyList;
-        LaneBrain laneBrain2;
-        LaneSuggestView laneSuggestView3;
-        float f;
-        LaneBrain laneBrain3;
-        LaneBrain laneBrain4;
-        boolean z15;
-        int i15;
-        LaneAhead laneAhead2;
-        LaneBrain laneBrain5;
-        UiSettings uiSettings3;
-        LaneBrain laneBrain6;
-        LaneBrain laneBrain7;
-        LaneBrain laneBrain8;
-        LaneSuggest.In in;
-        LaneAhead laneAhead3;
-        LaneBrain laneBrain9;
-        LaneBrain laneBrain10;
-        List<Nav.Lane> emptyList2;
-        String key;
-        String why;
-        TurnSignal.In turnIn;
-        LaneSuggestView laneSuggestView4;
-        LaneSuggestView laneSuggestView5;
-        LaneSuggestView laneSuggestView6;
-        LaneBrain laneBrain11;
-        Nav.Step first;
-        ReplayBar replayBar;
-        DataClient dataClient5;
-        TextView textView18;
-        DataClient dataClient6;
-        int i16;
-        TextView textView19;
-        DataClient dataClient7;
-        int i17;
-        int i18;
-        UiSettings uiSettings4;
-        UiSettings uiSettings5;
-        SharedPlace.Place place;
-        int i19;
-        int i20;
-        TextView textView20;
-        FrameLayout.LayoutParams lp;
-        TextView textView21;
-        int want;
-        NudgeLogic.Result r;
-        NudgeHintView nudgeHintView;
-        NudgeHintView nudgeHintView2;
-        NudgeHintView nudgeHintView3;
-        WeatherView weatherView;
-        TextView textView22;
-        String str3;
-        TextView textView23;
-        long j3;
-        long j4;
-        float f2;
-        long j5;
-        float f3;
-        TextView textView24;
-        boolean z16;
-        boolean showAlert;
-        float f4;
-        float f5;
-        float f6;
-        LinearLayout linearLayout3;
-        View view;
-        long mf;
-        long j6;
-        OverlayView overlayView3;
-        WheelButton wheelButton2;
-        DmView dmView;
-        MiciDistanceView miciDistanceView2;
-        SlcView slcView2;
-        SlcActionsView slcActionsView2;
-        DevSidebarView devSidebarView2;
-        AetherGaugeView aetherGaugeView2;
-        NavCardView navCardView3;
-        SlowReasonView slowReasonView2;
-        LaneCardView laneCardView3;
-        BlinkerCardView blinkerCardView2;
-        GpsCardView gpsCardView2;
-        NudgeHintView nudgeHintView4;
-        WeatherView weatherView2;
-        SlcSourcesView slcSourcesView2;
-        LinearLayout linearLayout4;
-        int i21;
-        Telemetry telemetry;
-        Telemetry telemetry2;
-        Handler handler;
-        DataClient dataClient8;
-        boolean z17;
-        TextView textView25;
-        String str4;
-        String str5;
-        VideoClient videoClient;
-        VideoClient videoClient2;
-        VideoClient videoClient3;
-        VideoClient videoClient4;
-        VideoClient videoClient5;
-        Detector detector2;
-        Telemetry t2;
-        TextView textView26;
-        StringBuilder sb;
-        String str6;
-        String str7;
-        SceneView it;
-        UiSettings uiSettings6;
-        OverlayView overlayView4;
-        String str8;
-        SceneView sceneView;
-        String str9;
-        String str10;
-        VideoClient videoClient6;
-        VideoClient videoClient7;
-        String str11;
-        LayoutSeg layoutSeg;
-        LayoutSeg layoutSeg2;
-        String str12;
-        String format;
-        LayoutSeg layoutSeg3;
-        LayoutSeg layoutSeg4;
-        LayoutSeg layoutSeg5;
-        LayoutSeg layoutSeg6;
-        String str13;
-        LayoutSeg layoutSeg7;
-        LaneMarks laneMarks;
-        int i22;
-        String str14;
-        int i23;
-        int i24;
-        int i25;
-        int rgb;
-        GpsCardView gpsCardView3;
-        int i26;
-        DevSidebarView devSidebarView3;
-        int i27;
-        LinearLayout linearLayout5;
-        LinearLayout linearLayout6;
-        float f7;
-        TextView textView27;
-        TextView textView28;
-        LinearLayout linearLayout7;
-        LinearLayout linearLayout8;
-        int rgb2;
-        View view2;
-        LinearLayout linearLayout9;
-        View view3;
-        View view4;
-        float f8;
-        GradientDrawable gradientDrawable;
-        GradientDrawable gradientDrawable2;
-        LinearLayout linearLayout10;
-        TextView textView29;
-        TextView textView30;
-        TextView textView31;
-        TextView textView32;
-        TextView textView33;
-        TextView textView34;
-        long j7;
-        long j8;
-        long j9;
-        long j10;
-        TextView textView35;
-        DataClient dataClient9;
-        boolean z18;
-        HudEditor hudEditor;
-        MaskEditor maskEditor;
-        boolean z19;
-        DataClient dataClient10;
-        int i28;
-        UiSettings uiSettings7;
-        boolean mapOpen;
-        HudEditor hudEditor2;
-        MaskEditor maskEditor2;
-        boolean z20;
-        boolean mapOpen2;
-        HudEditor hudEditor3;
-        MaskEditor maskEditor3;
-        LaneSuggestView laneSuggestView7;
-        LaneSuggestView laneSuggestView8;
-        LaneSuggestView laneSuggestView9;
-        LaneSuggestView laneSuggestView10;
-        LaneSuggestView laneSuggestView11;
-        LaneSuggestView laneSuggestView12;
-        CarMemory carMemory;
-        CarMemory carMemory2;
-        CarMemory carMemory3;
-        LaneShots laneShots2;
-        boolean z21;
-        LaneShots laneShots3;
-        LaneBrain laneBrain12;
-        LaneBrain laneBrain13;
-        LaneBrain laneBrain14;
-        Detector detector3;
-        LaneModel laneModel;
-        LaneModel.Answer a;
-        LaneBrain laneBrain15;
-        LaneFeed laneFeed;
-        LaneMarks laneMarks2;
-        LaneBrain laneBrain16;
-        double lat;
-        double brg;
-        LaneAhead laneAhead4;
-        LaneBrain laneBrain17;
-        LaneBrain laneBrain18;
-        LaneMapLog laneMapLog2;
-        LaneBrain laneBrain19;
-        LaneBrain laneBrain20;
-        SlowReasonView slowReasonView3;
-        boolean mapOpen3;
-        int i29;
-        int i30;
-        ImageView imageView12;
-        ImageView imageView13;
-        ImageView imageView14;
-        ImageView imageView15;
-        ImageView imageView16;
-        ImageView imageView17;
-        ImageView imageView18;
-        TextView textView36;
-        TextView textView37;
-        TextView textView38;
-        String str15;
-        SlcActionsView slcActionsView3;
-        UiSettings uiSettings8;
-        boolean z22;
-        MaskEditor maskEditor4;
-        UiSettings uiSettings9;
-        boolean z23;
-        boolean z24;
-        boolean z25;
-        boolean z26;
-        int i31;
-        OffroadHome offroadHome2;
-        int i32;
-        int i33;
-        OffroadHome offroadHome3;
-        OffroadHome offroadHome4;
-        LinearLayout linearLayout11;
-        UiSettings uiSettings10;
-        HudEditor hudEditor4;
-        Function0 function0;
-        long j11;
-        long j12;
-        TextView gpuBanner3;
-        TextView gpuBanner4;
-        TextView gpuBanner5;
-        TextView stallBanner3;
-        TextView stallBanner4;
-        i = this.this$0.tick;
-        this.this$0.tick = i + 1;
-        t = this.this$0.telemetry;
-        dataClient = this.this$0.data;
-        if (dataClient == null) {
+        boolean var164 = false; LaneMapLog var312 = null; List var341 = null; String var415 = null; String var454 = null; List var547 = null; String var551 = null; TextView var626 = null; String var639 = null; Object var653 = null; String var667 = null; List var698 = null; String var710 = null; // declarations Vineflower left out
+        int var19 = this.this$0.tick;
+        this.this$0.tick = var19 + 1;
+        Telemetry var58 = this.this$0.telemetry;
+        DataClient var54 = this.this$0.data;
+        DataClient var53 = var54;
+        if (var54 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("data");
-            dataClient = null;
+            var53 = null;
         }
-        boolean connected2 = dataClient.getConnected();
-        this.this$0.saverTick(connected2);
-        linearLayout = this.this$0.connectBar;
-        if (linearLayout == null) {
+
+        boolean var29 = var53.getConnected();
+        this.this$0.saverTick(var29);
+        LinearLayout var461 = this.this$0.connectBar;
+        LinearLayout var242 = var461;
+        if (var461 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("connectBar");
-            linearLayout = null;
+            var242 = null;
         }
-        linearLayout.setVisibility(connected2 ? 8 : 0);
-        Object obj = t.getInfo().get("encStall");
-        Number number = obj instanceof Number ? (Number) obj : null;
-        int stall2 = number != null ? number.intValue() : 0;
-        if (!connected2 || stall2 <= 0) {
-            stallBanner = this.this$0.getStallBanner();
-            if (stallBanner.getVisibility() != 8) {
-                stallBanner2 = this.this$0.getStallBanner();
-                stallBanner2.setVisibility(8);
-            }
+
+        int var107;
+        if (var29) {
+            var107 = 8;
         } else {
-            stallBanner3 = this.this$0.getStallBanner();
-            stallBanner3.setText("Comma video encoder stopped " + stall2 + " s ago: no drive recording, no camera video.\nReboot the comma when parked.");
-            stallBanner4 = this.this$0.getStallBanner();
-            stallBanner4.setVisibility(0);
+            var107 = 0;
         }
-        boolean quiet = connected2 && t.getStarted() && t.pBool("GpuQuiet", false);
-        boolean loadingNow = connected2 && t.getStarted() && (quiet || Intrinsics.areEqual(Telemetry.pStr$default(t, "ChestnutState", null, 2, null), "loading"));
-        if (loadingNow) {
-            long nowMs = System.currentTimeMillis();
-            j11 = this.this$0.gpuLoadSince;
-            if (j11 == 0) {
-                this.this$0.gpuLoadSince = nowMs;
-            }
-            j12 = this.this$0.gpuLoadSince;
-            stall = stall2;
-            long secs = (nowMs - j12) / 1000;
-            gpuBanner3 = this.this$0.getGpuBanner();
-            gpuBanner3.setText("⏳  Big model still loading… " + secs + " s" + (quiet ? "\ncamera video back when it's ready" : ""));
-            gpuBanner4 = this.this$0.getGpuBanner();
-            gpuBanner4.setAlpha((float) ((((Math.cos((nowMs / 1000.0d) * 4.0d) * 0.5d) + 0.5d) * 0.55d) + 0.45d));
-            gpuBanner5 = this.this$0.getGpuBanner();
-            gpuBanner5.setVisibility(0);
+
+        var242.setVisibility(var107);
+        Object var243 = (Number)var58.getInfo().get("encStall");
+        if (var243 instanceof Number) {
+            var243 = var243;
         } else {
-            stall = stall2;
+            var243 = null;
+        }
+
+        if (var243 != null) {
+            var107 = ((Number) var243).intValue();
+        } else {
+            var107 = 0;
+        }
+
+        if (var29 && var107 > 0) {
+            this.this$0
+                .getStallBanner()
+                .setText("Comma video encoder stopped " + var107 + " s ago: no drive recording, no camera video.\nReboot the comma when parked.");
+            this.this$0.getStallBanner().setVisibility(0);
+        } else if (this.this$0.getStallBanner().getVisibility() != 8) {
+            this.this$0.getStallBanner().setVisibility(8);
+        }
+
+        int var109;
+        if (var29 && var58.getStarted() && var58.pBool("GpuQuiet", false)) {
+            var109 = 1;
+        } else {
+            var109 = 0;
+        }
+
+        int var20;
+        if (!var29 || !var58.getStarted() || (var109 == 0) && !Intrinsics.areEqual(Telemetry.pStr$default(var58, "ChestnutState", null, 2, null), "loading")) {
+            var20 = 0;
+        } else {
+            var20 = 1;
+        }
+
+        if ((var20 != 0)) {
+            long var51 = System.currentTimeMillis();
+            if (this.this$0.gpuLoadSince == 0L) {
+                this.this$0.gpuLoadSince = var51;
+            }
+
+            long var49 = (var51 - this.this$0.gpuLoadSince) / 1000;
+            TextView var462 = this.this$0.getGpuBanner();
+            String var245;
+            if ((var109 != 0)) {
+                var245 = "\ncamera video back when it's ready";
+            } else {
+                var245 = "";
+            }
+
+            var462.setText("⏳  Big model still loading… " + var49 + " s" + var245);
+            this.this$0.getGpuBanner().setAlpha((float)((Math.cos(var51 / 1000.0 * 4.0) * 0.5 + 0.5) * 0.55 + 0.45));
+            this.this$0.getGpuBanner().setVisibility(0);
+        } else {
             this.this$0.gpuLoadSince = 0L;
-            gpuBanner = this.this$0.getGpuBanner();
-            if (gpuBanner.getVisibility() != 8) {
-                gpuBanner2 = this.this$0.getGpuBanner();
-                gpuBanner2.setVisibility(8);
+            if (this.this$0.getGpuBanner().getVisibility() != 8) {
+                this.this$0.getGpuBanner().setVisibility(8);
             }
         }
-        i2 = this.this$0.tick;
-        if (i2 % 20 == 0 && function0 != null) {
-            function0.invoke();
-            Unit unit = Unit.INSTANCE;
+
+        if (this.this$0.tick % 20 == 0) {
+            Function0 var246 = this.this$0.tabletModePusher;
+            if (var246 != null) {
+                var246.invoke();
+                Unit var247 = Unit.INSTANCE;
+            }
         }
-        i3 = this.this$0.tick;
-        if (i3 % 100 == 50) {
+
+        if (this.this$0.tick % 100 == 50) {
             this.this$0.checkUsbReturn();
         }
-        if (connected2) {
+
+        if (var29) {
             this.this$0.navTick(System.currentTimeMillis());
         }
-        MainActivity mainActivity = this.this$0;
-        uiSettings = this.this$0.settings;
-        if (uiSettings == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("settings");
-            uiSettings = null;
-        }
-        mainActivity.statsVisible = uiSettings.get("stats");
-        textView = this.this$0.statsTv;
-        if (textView == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("statsTv");
-            textView = null;
-        }
-        z = this.this$0.statsVisible;
-        textView.setVisibility(z ? 0 : 8);
-        if (connected2 && !t.getStarted()) {
-            uiSettings10 = this.this$0.settings;
-            if (uiSettings10 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("settings");
-                uiSettings10 = null;
-            }
-            if (uiSettings10.get("offroad_home")) {
-                hudEditor4 = this.this$0.hudEditor;
-                if (hudEditor4 == null) {
-                    z2 = true;
-                    wantHome = z2;
-                    z3 = this.this$0.homeShown;
-                    if (wantHome != z3) {
-                        this.this$0.homeShown = wantHome;
-                        offroadHome4 = this.this$0.offroadHome;
-                        if (offroadHome4 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("offroadHome");
-                            offroadHome4 = null;
-                        }
-                        offroadHome4.setVisibility(wantHome ? 0 : 8);
-                        linearLayout11 = this.this$0.sidebar;
-                        if (linearLayout11 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("sidebar");
-                            linearLayout11 = null;
-                        }
-                        linearLayout11.setVisibility(wantHome ? 0 : 8);
-                    }
-                    if (wantHome) {
-                        i4 = 2;
-                    } else {
-                        offroadHome3 = this.this$0.offroadHome;
-                        if (offroadHome3 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("offroadHome");
-                            offroadHome3 = null;
-                        }
-                        i4 = 2;
-                        OffroadHome.refresh$default(offroadHome3, t, false, 2, null);
-                    }
-                    if (wantHome) {
-                        i33 = this.this$0.tick;
-                        if (i33 % 600 == 30) {
-                            KeepDrive.INSTANCE.applyPending(this.this$0);
-                        }
-                    }
-                    StorageInfo storageInfo = StorageInfo.INSTANCE;
-                    offroadHome = this.this$0.offroadHome;
-                    if (offroadHome == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("offroadHome");
-                        offroadHome = null;
-                    }
-                    boolean copying = storageInfo.copying(offroadHome.getStorage()) == null;
-                    if (wantHome) {
-                        i31 = this.this$0.tick;
-                        if (i31 % 300 != 5) {
-                            offroadHome2 = this.this$0.offroadHome;
-                            if (offroadHome2 == null) {
-                                Intrinsics.throwUninitializedPropertyAccessException("offroadHome");
-                                offroadHome2 = null;
-                            }
-                            if (offroadHome2.getStorage() == null || copying) {
-                                i32 = this.this$0.tick;
-                            }
-                        }
-                        this.this$0.fetchStorage();
-                    }
-                    textView2 = this.this$0.statusTv;
-                    if (textView2 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("statusTv");
-                        textView2 = null;
-                    }
-                    textView2.setVisibility(((connected2 || !t.getStarted()) && !wantHome) ? 0 : 8);
-                    this.this$0.syncScene(!connected2 && t.getStarted());
-                    if (connected2 && t.getStarted()) {
-                        z25 = this.this$0.sceneOn;
-                        if (!z25) {
-                            z26 = this.this$0.visible;
-                            if (z26) {
-                                z4 = true;
-                                wantVideo = z4;
-                                if (wantVideo) {
-                                    z24 = this.this$0.videoConnected;
-                                    if (!z24) {
-                                        this.this$0.startVideo();
-                                    }
-                                }
-                                if (!wantVideo) {
-                                    z23 = this.this$0.videoConnected;
-                                    if (z23) {
-                                        this.this$0.stopVideo();
-                                    }
-                                }
-                                MainActivity mainActivity2 = this.this$0;
-                                z5 = this.this$0.visible;
-                                if (z5 && connected2 && t.getStarted()) {
-                                    uiSettings8 = this.this$0.settings;
-                                    if (uiSettings8 == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("settings");
-                                        uiSettings8 = null;
-                                    }
-                                    if (!uiSettings8.get("detector_test")) {
-                                        z22 = this.this$0.sceneOn;
-                                        if (!z22) {
-                                            maskEditor4 = this.this$0.maskEditor;
-                                            if (maskEditor4 == null) {
-                                                NewIdeas newIdeas = NewIdeas.INSTANCE;
-                                                uiSettings9 = this.this$0.settings;
-                                                if (uiSettings9 == null) {
-                                                    Intrinsics.throwUninitializedPropertyAccessException("settings");
-                                                    uiSettings9 = null;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    z6 = true;
-                                    mainActivity2.syncDetector(z6);
-                                    OsmRoads osmRoads = OsmRoads.INSTANCE;
-                                    uiSettings2 = this.this$0.settings;
-                                    if (uiSettings2 == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("settings");
-                                        uiSettings2 = null;
-                                    }
-                                    osmRoads.setEnabled(uiSettings2.get("map_roads"));
-                                    overlayView = this.this$0.overlay;
-                                    if (overlayView == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("overlay");
-                                        overlayView = null;
-                                    }
-                                    if (overlayView.updateCalibration()) {
-                                        this.this$0.placeVideo();
-                                    }
-                                    overlayView2 = this.this$0.overlay;
-                                    if (overlayView2 == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("overlay");
-                                        overlayView2 = null;
-                                    }
-                                    overlayView2.setUiStatus(UiStatus.Companion.from(t));
-                                    currentTimeMillis = System.currentTimeMillis();
-                                    j = this.this$0.lastThemeCheck;
-                                    if (currentTimeMillis - j > 15000) {
-                                        this.this$0.lastThemeCheck = System.currentTimeMillis();
-                                        this.this$0.updateTheme();
-                                    }
-                                    boolean metric = t.isMetric();
-                                    float conv = metric ? 3.6f : 2.23694f;
-                                    boolean useWheel = t.tBool("use_wheel_speed", false);
-                                    float v = (!useWheel || t.getVEgoCluster() <= 0.0f) ? t.getVEgo() : t.getVEgoCluster();
-                                    textView3 = this.this$0.speedTv;
-                                    if (textView3 == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("speedTv");
-                                        textView3 = null;
-                                    }
-                                    textView3.setText(String.valueOf(RangesKt.coerceAtLeast(MathKt.roundToInt(v * conv), 0)));
-                                    textView4 = this.this$0.speedUnit;
-                                    if (textView4 == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("speedUnit");
-                                        textView4 = null;
-                                    }
-                                    textView4.setText(metric ? "km/h" : "mph");
-                                    boolean hideSpeed = t.s("show_speed") || !t.getStarted();
-                                    textView5 = this.this$0.speedTv;
-                                    if (textView5 == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("speedTv");
-                                        textView5 = null;
-                                    }
-                                    textView5.setVisibility(hideSpeed ? 4 : 0);
-                                    textView6 = this.this$0.speedUnit;
-                                    if (textView6 == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("speedUnit");
-                                        textView6 = null;
-                                    }
-                                    textView7 = this.this$0.speedTv;
-                                    if (textView7 == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("speedTv");
-                                        textView7 = null;
-                                    }
-                                    textView6.setVisibility(textView7.getVisibility());
-                                    float setMs = t.getVCruiseCluster() > 0.0f ? t.getVCruiseCluster() : t.getVCruise();
-                                    isSet = !t.getCruiseEnabled() && setMs > 0.0f && setMs < 200.0f;
-                                    float offset = t.tFloat("set_speed_offset", 0.0f);
-                                    textView8 = this.this$0.setSpeedTv;
-                                    if (textView8 == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("setSpeedTv");
-                                        textView8 = null;
-                                    }
-                                    if (isSet) {
-                                        str = String.valueOf(MathKt.roundToInt((setMs + offset) * (metric ? 1.0f : 0.621371f)));
-                                    } else {
-                                        str = "–";
-                                    }
-                                    textView8.setText(str);
-                                    textView9 = this.this$0.setSpeedTv;
-                                    if (textView9 == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("setSpeedTv");
-                                        textView9 = null;
-                                    }
-                                    textView9.setTextColor(isSet ? -1 : Color.rgb(114, 114, 114));
-                                    textView10 = this.this$0.maxLabel;
-                                    if (textView10 == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("maxLabel");
-                                        textView10 = null;
-                                    }
-                                    textView10.setTextColor(!isSet ? Color.rgb(166, 166, 166) : (t.getEnabled() && t.getActive()) ? Color.rgb(128, 216, 166) : Color.rgb(145, 155, 149));
-                                    linearLayout2 = this.this$0.maxCard;
-                                    if (linearLayout2 == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("maxCard");
-                                        linearLayout2 = null;
-                                    }
-                                    linearLayout2.setVisibility((t.s("show_max") || !t.getStarted()) ? 4 : 0);
-                                    slcView = this.this$0.slc;
-                                    if (slcView == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("slc");
-                                        slcView = null;
-                                    }
-                                    slcView.setVisibility((t.getStarted() || !t.s("speed_limit")) ? 4 : 0);
-                                    wheelButton = this.this$0.wheel;
-                                    if (wheelButton == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("wheel");
-                                        wheelButton = null;
-                                    }
-                                    wheelButton.setVisibility((t.s("wheel_button") || !t.getStarted()) ? 4 : 0);
-                                    miciDistanceView = this.this$0.personality;
-                                    if (miciDistanceView == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("personality");
-                                        miciDistanceView = null;
-                                    }
-                                    miciDistanceView.setVisibility((t.getStarted() || !t.s("personality_button")) ? 8 : 0);
-                                    slcActionsView = this.this$0.slcActions;
-                                    if (slcActionsView == null) {
-                                        Intrinsics.throwUninitializedPropertyAccessException("slcActions");
-                                        slcActionsView = null;
-                                    }
-                                    if (t.getStarted() || !t.s("speed_limit")) {
-                                        j2 = 0;
-                                    } else {
-                                        slcActionsView3 = this.this$0.slcActions;
-                                        if (slcActionsView3 == null) {
-                                            Intrinsics.throwUninitializedPropertyAccessException("slcActions");
-                                            slcActionsView3 = null;
-                                        }
-                                        j2 = 0;
-                                        if (!SlcActionsView.controls$default(slcActionsView3, 0L, 1, null).isEmpty()) {
-                                            i5 = 0;
-                                            slcActionsView.setVisibility(i5);
-                                            if (t.getStarted() || !t.s("csc_glow")) {
-                                                i6 = i4;
-                                                pair = null;
-                                            } else {
-                                                i6 = i4;
-                                                pair = DrivingMode.curveLabel$default(DrivingMode.INSTANCE, t, 0L, 2, null);
-                                            }
-                                            cl = pair;
-                                            textView11 = this.this$0.curveLabel;
-                                            if (textView11 == null) {
-                                                Intrinsics.throwUninitializedPropertyAccessException("curveLabel");
-                                                textView11 = null;
-                                            }
-                                            textView11.setText((cl != null || (str15 = (String) cl.getFirst()) == null) ? "" : str15);
-                                            if (cl != null) {
-                                                textView38 = this.this$0.curveLabel;
-                                                if (textView38 == null) {
-                                                    Intrinsics.throwUninitializedPropertyAccessException("curveLabel");
-                                                    textView38 = null;
-                                                }
-                                                textView38.setTextColor(((Number) cl.getSecond()).intValue());
-                                                Unit unit2 = Unit.INSTANCE;
-                                                Unit unit3 = Unit.INSTANCE;
-                                            }
-                                            textView12 = this.this$0.curveLabel;
-                                            if (textView12 == null) {
-                                                Intrinsics.throwUninitializedPropertyAccessException("curveLabel");
-                                                textView12 = null;
-                                            }
-                                            textView12.setVisibility(cl == null ? 0 : 8);
-                                            boolean noAlert = Intrinsics.areEqual(t.getAlertSize(), "none");
-                                            textView13 = this.this$0.clockTv;
-                                            if (textView13 == null) {
-                                                Intrinsics.throwUninitializedPropertyAccessException("clockTv");
-                                                textView13 = null;
-                                            }
-                                            textView13.setVisibility((!t.getStarted() && t.s("clock") && noAlert) ? 0 : 8);
-                                            textView14 = this.this$0.clockTv;
-                                            if (textView14 == null) {
-                                                Intrinsics.throwUninitializedPropertyAccessException("clockTv");
-                                                textView14 = null;
-                                            }
-                                            if (textView14.getVisibility() == 0) {
-                                                textView37 = this.this$0.clockTv;
-                                                if (textView37 == null) {
-                                                    Intrinsics.throwUninitializedPropertyAccessException("clockTv");
-                                                    textView37 = null;
-                                                }
-                                                textView37.setText(DrivingMode.clock$default(DrivingMode.INSTANCE, null, t.s("clock_24h"), 1, null));
-                                            }
-                                            textView15 = this.this$0.modeText;
-                                            if (textView15 == null) {
-                                                Intrinsics.throwUninitializedPropertyAccessException("modeText");
-                                                textView15 = null;
-                                            }
-                                            textView15.setVisibility((!t.getStarted() && t.s("mode_text") && noAlert) ? 0 : 8);
-                                            textView16 = this.this$0.modeText;
-                                            if (textView16 == null) {
-                                                Intrinsics.throwUninitializedPropertyAccessException("modeText");
-                                                textView16 = null;
-                                            }
-                                            if (textView16.getVisibility() == 0) {
-                                                textView36 = this.this$0.modeText;
-                                                if (textView36 == null) {
-                                                    Intrinsics.throwUninitializedPropertyAccessException("modeText");
-                                                    textView36 = null;
-                                                }
-                                                textView36.setText(DrivingMode.INSTANCE.describe(t));
-                                            }
-                                            devSidebarView = this.this$0.devSidebar;
-                                            if (devSidebarView == null) {
-                                                Intrinsics.throwUninitializedPropertyAccessException("devSidebar");
-                                                devSidebarView = null;
-                                            }
-                                            devSidebarView.setVisibility((t.getStarted() || !t.s("dev_sidebar")) ? 8 : 0);
-                                            SideCam sideCam = SideCam.INSTANCE;
-                                            str2 = this.this$0.host;
-                                            i7 = this.this$0.port;
-                                            int stall3 = 0;
-                                            SideCam.tick$default(sideCam, t, str2, i7, 0L, 8, null);
-                                            List sides = SideCam.INSTANCE.wanted(t);
-                                            sideView = this.this$0.pipLeft;
-                                            if (sideView == null) {
-                                                Intrinsics.throwUninitializedPropertyAccessException("pipLeft");
-                                                sideView = null;
-                                            }
-                                            sideView.setVisibility(!sides.contains("left") ? 0 : 8);
-                                            sideView2 = this.this$0.pipRight;
-                                            if (sideView2 == null) {
-                                                Intrinsics.throwUninitializedPropertyAccessException("pipRight");
-                                                sideView2 = null;
-                                            }
-                                            sideView2.setVisibility(!sides.contains("right") ? 0 : 8);
-                                            cnState = Telemetry.pStr$default(t, "ChestnutState", null, i6, null);
-                                            if (cnState.length() <= 0) {
-                                                MainActivity mainActivity3 = this.this$0;
-                                                if (!t.getChestnutPresent()) {
-                                                    if (t.getStarted()) {
-                                                        z10 = mainActivity3.egpuSeen;
-                                                    }
-                                                    usbgpu = false;
-                                                    mainActivity3.egpuSeen = usbgpu;
-                                                    show = !t.getStarted() && t.s("egpu_status") && usbgpu && t.pBool("UsbGpuCompiled", false);
-                                                    if (show) {
-                                                        imageView10 = mainActivity3.egpu;
-                                                        if (imageView10 == null) {
-                                                            Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                            imageView11 = null;
-                                                        } else {
-                                                            imageView11 = imageView10;
-                                                        }
-                                                        imageView11.setVisibility(8);
-                                                        mainActivity3.egpuFallback = false;
-                                                    } else {
-                                                        boolean loading = t.pBool("UsbGpuLoading", false);
-                                                        boolean active2 = t.pBool("UsbGpuActive", false);
-                                                        boolean alive = t.getModelSeen() && System.nanoTime() - t.getLastModelRxNs() < 1000000000;
-                                                        boolean bigFailed = !active2 || (t.getModelSeen() && !alive);
-                                                        if (t.getEnabled()) {
-                                                            z9 = mainActivity3.egpuWasEngaged;
-                                                            if (!z9 && !loading && !active2 && t.getModelSeen()) {
-                                                                mainActivity3.egpuFallback = true;
-                                                            }
-                                                        }
-                                                        mainActivity3.egpuWasEngaged = t.getEnabled();
-                                                        z7 = mainActivity3.egpuFallback;
-                                                        mainActivity3.egpuFallback = z7 && bigFailed;
-                                                        imageView = mainActivity3.egpu;
-                                                        if (imageView == null) {
-                                                            Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                            imageView = null;
-                                                        }
-                                                        imageView.setVisibility(0);
-                                                        if (loading) {
-                                                            imageView8 = mainActivity3.egpu;
-                                                            if (imageView8 == null) {
-                                                                Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                imageView8 = null;
-                                                            }
-                                                            imageView8.setImageResource(R.drawable.egpu_loading);
-                                                            imageView9 = mainActivity3.egpu;
-                                                            if (imageView9 == null) {
-                                                                Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                imageView9 = null;
-                                                            }
-                                                            imageView9.setAlpha((float) (((0.5d - (Math.cos((System.nanoTime() / 1.0E9d) * 6.0d) * 0.5d)) * 0.65d) + 0.35d));
-                                                        } else {
-                                                            z8 = mainActivity3.egpuFallback;
-                                                            if (z8) {
-                                                                imageView6 = mainActivity3.egpu;
-                                                                if (imageView6 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                    imageView6 = null;
-                                                                }
-                                                                imageView6.setImageResource(R.drawable.egpu_crossed);
-                                                                imageView7 = mainActivity3.egpu;
-                                                                if (imageView7 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                    imageView7 = null;
-                                                                }
-                                                                imageView7.setAlpha(0.65f);
-                                                            } else if (bigFailed) {
-                                                                imageView4 = mainActivity3.egpu;
-                                                                if (imageView4 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                    imageView4 = null;
-                                                                }
-                                                                imageView4.setImageResource(R.drawable.egpu_orange);
-                                                                imageView5 = mainActivity3.egpu;
-                                                                if (imageView5 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                    imageView5 = null;
-                                                                }
-                                                                imageView5.setAlpha(1.0f);
-                                                            } else {
-                                                                imageView2 = mainActivity3.egpu;
-                                                                if (imageView2 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                    imageView2 = null;
-                                                                }
-                                                                imageView2.setImageResource(R.drawable.egpu_green);
-                                                                imageView3 = mainActivity3.egpu;
-                                                                if (imageView3 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                    imageView3 = null;
-                                                                }
-                                                                imageView3.setAlpha(1.0f);
-                                                            }
-                                                        }
-                                                    }
-                                                    Unit unit4 = Unit.INSTANCE;
-                                                }
-                                                usbgpu = true;
-                                                mainActivity3.egpuSeen = usbgpu;
-                                                if (t.getStarted()) {
-                                                }
-                                                if (show) {
-                                                }
-                                                Unit unit42 = Unit.INSTANCE;
-                                            } else {
-                                                if (t.getStarted() && t.s("egpu_status")) {
-                                                    String[] strArr = new String[3];
-                                                    i29 = 0;
-                                                    strArr[0] = "active";
-                                                    strArr[1] = "loading";
-                                                    strArr[i6] = "failed";
-                                                    if (SetsKt.setOf((Object[]) strArr).contains(cnState)) {
-                                                        i30 = 1;
-                                                        imageView12 = this.this$0.egpu;
-                                                        if (imageView12 == null) {
-                                                            Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                            imageView12 = null;
-                                                        }
-                                                        imageView12.setVisibility(i30 == 0 ? i29 : 8);
-                                                        if (i30 != 0) {
-                                                            if (Intrinsics.areEqual(cnState, "loading")) {
-                                                                imageView17 = this.this$0.egpu;
-                                                                if (imageView17 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                    imageView17 = null;
-                                                                }
-                                                                imageView17.setImageResource(R.drawable.egpu_loading);
-                                                                imageView18 = this.this$0.egpu;
-                                                                if (imageView18 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                    imageView18 = null;
-                                                                }
-                                                                imageView18.setAlpha((float) (((0.5d - (Math.cos((System.nanoTime() / 1.0E9d) * 6.0d) * 0.5d)) * 0.65d) + 0.35d));
-                                                            } else if (Intrinsics.areEqual(cnState, "failed")) {
-                                                                imageView15 = this.this$0.egpu;
-                                                                if (imageView15 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                    imageView15 = null;
-                                                                }
-                                                                imageView15.setImageResource(R.drawable.egpu_orange);
-                                                                imageView16 = this.this$0.egpu;
-                                                                if (imageView16 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                    imageView16 = null;
-                                                                }
-                                                                imageView16.setAlpha(1.0f);
-                                                            } else {
-                                                                imageView13 = this.this$0.egpu;
-                                                                if (imageView13 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                    imageView13 = null;
-                                                                }
-                                                                imageView13.setImageResource(R.drawable.egpu_green);
-                                                                imageView14 = this.this$0.egpu;
-                                                                if (imageView14 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
-                                                                    imageView14 = null;
-                                                                }
-                                                                imageView14.setAlpha(1.0f);
-                                                            }
-                                                        }
-                                                    }
-                                                } else {
-                                                    i29 = 0;
-                                                }
-                                                i30 = i29;
-                                                imageView12 = this.this$0.egpu;
-                                                if (imageView12 == null) {
-                                                }
-                                                imageView12.setVisibility(i30 == 0 ? i29 : 8);
-                                                if (i30 != 0) {
-                                                }
-                                            }
-                                            textView17 = this.this$0.roadName;
-                                            if (textView17 == null) {
-                                                Intrinsics.throwUninitializedPropertyAccessException("roadName");
-                                                textView17 = null;
-                                            }
-                                            textView17.setText((t.getStarted() || !t.s("road_name")) ? "" : t.getRoadName());
-                                            aetherGaugeView = this.this$0.gauge;
-                                            if (aetherGaugeView == null) {
-                                                Intrinsics.throwUninitializedPropertyAccessException("gauge");
-                                                aetherGaugeView = null;
-                                            }
-                                            aetherGaugeView.setVisibility((t.getStarted() || !t.s("aether_gauge")) ? 8 : 0);
-                                            slcSourcesView = this.this$0.slcSources;
-                                            if (slcSourcesView == null) {
-                                                Intrinsics.throwUninitializedPropertyAccessException("slcSources");
-                                                slcSourcesView = null;
-                                            }
-                                            if (t.getStarted() && t.s("speed_limit")) {
-                                                if (!t.getSp7() ? t.s("slc_sources_sp7") : t.pBool("SpeedLimitSources", false)) {
-                                                    i8 = 0;
-                                                    slcSourcesView.setVisibility(i8);
-                                                    Pair card = Telemetry.navCard$default(t, 0L, 1, null);
-                                                    navCardView = this.this$0.navCard;
-                                                    if (navCardView == null) {
-                                                        Intrinsics.throwUninitializedPropertyAccessException("navCard");
-                                                        navCardView = null;
-                                                    }
-                                                    if (t.getStarted() && t.s("nav_card") && card != null) {
-                                                        mapOpen3 = this.this$0.getMapOpen();
-                                                        if (!mapOpen3) {
-                                                            i9 = 0;
-                                                            navCardView.setVisibility(i9);
-                                                            navCardView2 = this.this$0.navCard;
-                                                            if (navCardView2 == null) {
-                                                                Intrinsics.throwUninitializedPropertyAccessException("navCard");
-                                                                navCardView2 = null;
-                                                            }
-                                                            navCardView2.setAlpha(!(card == null && ((Boolean) card.getSecond()).booleanValue()) ? 0.55f : 1.0f);
-                                                            slowReasonView = this.this$0.slowCard;
-                                                            if (slowReasonView == null) {
-                                                                Intrinsics.throwUninitializedPropertyAccessException("slowCard");
-                                                                slowReasonView = null;
-                                                            }
-                                                            if (t.getStarted() && t.s("slow_card")) {
-                                                                slowReasonView3 = this.this$0.slowCard;
-                                                                if (slowReasonView3 == null) {
-                                                                    Intrinsics.throwUninitializedPropertyAccessException("slowCard");
-                                                                    slowReasonView3 = null;
-                                                                }
-                                                                if (slowReasonView3.current() != null) {
-                                                                    i10 = 0;
-                                                                    slowReasonView.setVisibility(i10);
-                                                                    if (t.getStarted()) {
-                                                                        laneFeed = this.this$0.laneFeed;
-                                                                        laneMarks2 = this.this$0.laneMarks;
-                                                                        LaneBrain.Frame f9 = laneFeed.frame(t, laneMarks2, System.currentTimeMillis());
-                                                                        if (f9 != null) {
-                                                                            MainActivity mainActivity4 = this.this$0;
-                                                                            laneBrain16 = mainActivity4.laneTracker;
-                                                                            laneBrain16.update(f9);
-                                                                            long nowL = f9.getNowMs();
-                                                                            try {
-                                                                                laneMapLog2 = mainActivity4.laneMapLog;
-                                                                                if (laneMapLog2 != null) {
-                                                                                    float vEgo = t.getVEgo();
-                                                                                    laneBrain19 = mainActivity4.laneTracker;
-                                                                                    laneBrain20 = mainActivity4.laneTracker;
-                                                                                    laneMapLog2.frame(nowL, vEgo, f9, laneBrain19, laneBrain20.turning(nowL));
-                                                                                    Unit unit5 = Unit.INSTANCE;
-                                                                                }
-                                                                            } catch (Exception e) {
-                                                                            }
-                                                                            double[] rp = RtkPosition.INSTANCE.fast(nowL) ? RtkPosition.INSTANCE.now(nowL, t.getVEgo()) : null;
-                                                                            OsmRoads.Fix fx = OsmRoads.INSTANCE.getLastFix();
-                                                                            if (rp != null) {
-                                                                                i11 = 0;
-                                                                                lat = rp[0];
-                                                                            } else {
-                                                                                i11 = 0;
-                                                                                lat = fx != null ? fx.getLat() : Double.NaN;
-                                                                            }
-                                                                            double la = lat;
-                                                                            double lo = rp != null ? rp[1] : fx != null ? fx.getLon() : Double.NaN;
-                                                                            if (rp != null) {
-                                                                                double heading = RtkPosition.INSTANCE.getHeading();
-                                                                                if (((Double.isInfinite(heading) || Double.isNaN(heading)) ? i11 : 1) != 0) {
-                                                                                    brg = RtkPosition.INSTANCE.getHeading();
-                                                                                    laneAhead4 = mainActivity4.laneAhead;
-                                                                                    laneBrain17 = mainActivity4.laneTracker;
-                                                                                    double odo = laneBrain17.getOdo();
-                                                                                    double radians = 1.5707963267948966d - Math.toRadians(brg);
-                                                                                    float vEgo2 = t.getVEgo();
-                                                                                    laneBrain18 = mainActivity4.laneTracker;
-                                                                                    laneAhead4.update(nowL, odo, la, lo, radians, vEgo2, laneBrain18, f9);
-                                                                                    Unit unit6 = Unit.INSTANCE;
-                                                                                    Unit unit7 = Unit.INSTANCE;
-                                                                                }
-                                                                            }
-                                                                            brg = fx != null ? fx.getBearingDeg() : Double.NaN;
-                                                                            laneAhead4 = mainActivity4.laneAhead;
-                                                                            laneBrain17 = mainActivity4.laneTracker;
-                                                                            double odo2 = laneBrain17.getOdo();
-                                                                            double radians2 = 1.5707963267948966d - Math.toRadians(brg);
-                                                                            float vEgo22 = t.getVEgo();
-                                                                            laneBrain18 = mainActivity4.laneTracker;
-                                                                            laneAhead4.update(nowL, odo2, la, lo, radians2, vEgo22, laneBrain18, f9);
-                                                                            Unit unit62 = Unit.INSTANCE;
-                                                                            Unit unit72 = Unit.INSTANCE;
-                                                                        } else {
-                                                                            i11 = 0;
-                                                                        }
-                                                                    } else {
-                                                                        i11 = 0;
-                                                                        z11 = this.this$0.laneWasStarted;
-                                                                        if (z11) {
-                                                                            laneBrain = this.this$0.laneTracker;
-                                                                            laneBrain.endDrive();
-                                                                            laneAhead = this.this$0.laneAhead;
-                                                                            laneAhead.reset();
-                                                                            laneMapLog = this.this$0.laneMapLog;
-                                                                            if (laneMapLog != null) {
-                                                                                laneMapLog.close();
-                                                                                Unit unit8 = Unit.INSTANCE;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    if (t.getStarted() && detector3 != null && (laneModel = detector3.getLaneModel()) != null && (a = laneModel.getAnswer()) != null) {
-                                                                        MainActivity mainActivity5 = this.this$0;
-                                                                        if (System.currentTimeMillis() - a.getAtMs() < 5000) {
-                                                                            laneBrain15 = mainActivity5.laneTracker;
-                                                                            LaneBrain.modelSaw$default(laneBrain15, a.getPL(), a.getPR(), a.getAtMs(), 0L, 8, null);
-                                                                        }
-                                                                        Unit unit9 = Unit.INSTANCE;
-                                                                        Unit unit10 = Unit.INSTANCE;
-                                                                    }
-                                                                    s = this.this$0.scene;
-                                                                    if (s != null) {
-                                                                        MainActivity mainActivity6 = this.this$0;
-                                                                        laneBrain12 = mainActivity6.laneTracker;
-                                                                        LaneBrain.Road r2 = laneBrain12.getRoad();
-                                                                        laneBrain13 = mainActivity6.laneTracker;
-                                                                        Pair<Integer, Double> laneFromLeft = laneBrain13.laneFromLeft();
-                                                                        int n = laneFromLeft.component1().intValue();
-                                                                        double q = laneFromLeft.component2().doubleValue();
-                                                                        laneBrain14 = mainActivity6.laneTracker;
-                                                                        int m = laneBrain14.laneCount().component1().intValue();
-                                                                        s.setLaneHint((!t.getStarted() || r2 == null || n <= 0) ? null : new SceneView.LaneHint(r2.getId(), n - 1, m, q, Double.NaN, System.nanoTime()));
-                                                                        Unit unit11 = Unit.INSTANCE;
-                                                                        Unit unit12 = Unit.INSTANCE;
-                                                                    }
-                                                                    if (t.getStarted()) {
-                                                                        z21 = this.this$0.laneWasStarted;
-                                                                        if (!z21) {
-                                                                            laneShots3 = this.this$0.getLaneShots();
-                                                                            laneShots3.newDrive();
-                                                                        }
-                                                                    }
-                                                                    this.this$0.laneWasStarted = t.getStarted();
-                                                                    laneCardView = this.this$0.laneCard;
-                                                                    if (laneCardView == null) {
-                                                                        Intrinsics.throwUninitializedPropertyAccessException("laneCard");
-                                                                        laneCardView = null;
-                                                                    }
-                                                                    laneCardView.setVisibility((t.getStarted() || !t.s("lane_card")) ? 8 : i11);
-                                                                    laneShots = this.this$0.getLaneShots();
-                                                                    detector = this.this$0.detectorRef;
-                                                                    laneShots.setDetector(detector);
-                                                                    laneCardView2 = this.this$0.laneCard;
-                                                                    if (laneCardView2 == null) {
-                                                                        Intrinsics.throwUninitializedPropertyAccessException("laneCard");
-                                                                        laneCardView2 = null;
-                                                                    }
-                                                                    if (laneCardView2.getVisibility() == 0 && t.getVEgo() > 3.0f) {
-                                                                        laneShots2 = this.this$0.getLaneShots();
-                                                                        final MainActivity mainActivity7 = this.this$0;
-                                                                        laneShots2.tick(new Function0() { // from class: com.starpilot.starview.MainActivity$uiTick$1$$ExternalSyntheticLambda0
-                                                                            @Override // kotlin.jvm.functions.Function0
-                                                                            public final Object invoke() {
-                                                                                String run$lambda$5;
-                                                                                run$lambda$5 = MainActivity$uiTick$1.run$lambda$5(mainActivity7, t);
-                                                                                return run$lambda$5;
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                    blinkerCardView = this.this$0.blinkCard;
-                                                                    if (blinkerCardView == null) {
-                                                                        Intrinsics.throwUninitializedPropertyAccessException("blinkCard");
-                                                                        blinkerCardView = null;
-                                                                    }
-                                                                    dataClient2 = this.this$0.data;
-                                                                    if (dataClient2 == null) {
-                                                                        Intrinsics.throwUninitializedPropertyAccessException("data");
-                                                                        dataClient2 = null;
-                                                                    }
-                                                                    blinkerCardView.setVisibility((dataClient2.getConnected() || !t.s("blink_card")) ? 8 : i11);
-                                                                    gpsCardView = this.this$0.gpsCard;
-                                                                    if (gpsCardView == null) {
-                                                                        Intrinsics.throwUninitializedPropertyAccessException("gpsCard");
-                                                                        gpsCardView = null;
-                                                                    }
-                                                                    dataClient3 = this.this$0.data;
-                                                                    if (dataClient3 == null) {
-                                                                        Intrinsics.throwUninitializedPropertyAccessException("data");
-                                                                        dataClient3 = null;
-                                                                    }
-                                                                    gpsCardView.setVisibility((dataClient3.getConnected() || !t.s("gps_card")) ? 8 : i11);
-                                                                    boolean laneOn = t.s("lane_suggest");
-                                                                    boolean turnOn = t.s("turn_signals");
-                                                                    if (t.s("car_memory")) {
-                                                                        carMemory3 = this.this$0.carMemory;
-                                                                        cnState2 = cnState;
-                                                                        i12 = i11;
-                                                                        carMemory3.update(t, System.currentTimeMillis(), t.getLeftBlindspot(), t.getRightBlindspot());
-                                                                    } else {
-                                                                        cnState2 = cnState;
-                                                                        i12 = i11;
-                                                                    }
-                                                                    if (!t.getLeftBlindspot()) {
-                                                                        if (t.s("car_memory")) {
-                                                                            carMemory2 = this.this$0.carMemory;
-                                                                        }
-                                                                        z12 = (i12) != 0;
-                                                                        if (!t.getRightBlindspot()) {
-                                                                            if (t.s("car_memory")) {
-                                                                                carMemory = this.this$0.carMemory;
-                                                                            }
-                                                                            z13 = (i12) != 0;
-                                                                            active = Replay.INSTANCE.getActive();
-                                                                            z14 = this.this$0.replayWas;
-                                                                            if (active != z14) {
-                                                                                this.this$0.replayWas = Replay.INSTANCE.getActive();
-                                                                                laneSuggestView12 = this.this$0.laneSuggest;
-                                                                                if (laneSuggestView12 == null) {
-                                                                                    Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                                                                                    laneSuggestView12 = null;
-                                                                                }
-                                                                                laneSuggestView12.stop();
-                                                                            }
-                                                                            if (!t.getStarted()) {
-                                                                                laneSuggestView10 = this.this$0.laneSuggest;
-                                                                                if (laneSuggestView10 == null) {
-                                                                                    Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                                                                                    laneSuggestView10 = null;
-                                                                                }
-                                                                                if (!laneSuggestView10.getLogic().getTest()) {
-                                                                                    laneSuggestView11 = this.this$0.laneSuggest;
-                                                                                    if (laneSuggestView11 == null) {
-                                                                                        Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                                                                                        laneSuggestView11 = null;
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                            dataClient4 = this.this$0.data;
-                                                                            if (dataClient4 == null) {
-                                                                                Intrinsics.throwUninitializedPropertyAccessException("data");
-                                                                                dataClient4 = null;
-                                                                            }
-                                                                            if (!dataClient4.getConnected()) {
-                                                                                i13 = 1065353216;
-                                                                                i14 = i12;
-                                                                                laneSuggestView7 = this.this$0.laneSuggest;
-                                                                                if (laneSuggestView7 == null) {
-                                                                                }
-                                                                                if (laneSuggestView7.getVisibility() == 8) {
-                                                                                }
-                                                                                laneSuggestView8 = this.this$0.laneSuggest;
-                                                                                if (laneSuggestView8 == null) {
-                                                                                }
-                                                                                laneSuggestView8.stop();
-                                                                                replayBar = this.this$0.replayBar;
-                                                                                if (replayBar == null) {
-                                                                                }
-                                                                                dataClient5 = this.this$0.data;
-                                                                                if (dataClient5 == null) {
-                                                                                }
-                                                                                replayBar.setVisibility((dataClient5.getConnected() || !Replay.INSTANCE.getActive()) ? 8 : i14);
-                                                                                textView18 = this.this$0.whereBtn;
-                                                                                if (textView18 == null) {
-                                                                                }
-                                                                                dataClient6 = this.this$0.data;
-                                                                                if (dataClient6 == null) {
-                                                                                }
-                                                                                if (dataClient6.getConnected()) {
-                                                                                }
-                                                                                i16 = 8;
-                                                                                textView18.setVisibility(i16);
-                                                                                textView19 = this.this$0.mapBtn;
-                                                                                if (textView19 == null) {
-                                                                                }
-                                                                                dataClient7 = this.this$0.data;
-                                                                                if (dataClient7 == null) {
-                                                                                }
-                                                                                if (dataClient7.getConnected()) {
-                                                                                }
-                                                                                i17 = 8;
-                                                                                textView19.setVisibility(i17);
-                                                                                i18 = this.this$0.tick;
-                                                                                if (i18 % 40 == 0) {
-                                                                                }
-                                                                                BlinkerTurn blinkerTurn = BlinkerTurn.INSTANCE;
-                                                                                uiSettings4 = this.this$0.settings;
-                                                                                if (uiSettings4 != null) {
-                                                                                }
-                                                                                int i34 = i14;
-                                                                                BlinkerTurn.tick$default(blinkerTurn, t, uiSettings5, 0L, 4, null);
-                                                                                this.this$0.ideasTick(t);
-                                                                                DriveTrack.tick$default(DriveTrack.INSTANCE, t, 0L, 2, null);
-                                                                                place = this.this$0.sharedPending;
-                                                                                if (place != null) {
-                                                                                }
-                                                                                i19 = this.this$0.tick;
-                                                                                if (i19 % 20 == 0) {
-                                                                                }
-                                                                                i20 = this.this$0.tick;
-                                                                                if (i20 % 4 == 0) {
-                                                                                }
-                                                                                textView20 = this.this$0.mapBtn;
-                                                                                if (textView20 == null) {
-                                                                                }
-                                                                                ViewGroup.LayoutParams layoutParams = textView20.getLayoutParams();
-                                                                                Intrinsics.checkNotNull(layoutParams, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
-                                                                                lp = (FrameLayout.LayoutParams) layoutParams;
-                                                                                MainActivity mainActivity8 = this.this$0;
-                                                                                textView21 = mainActivity8.whereBtn;
-                                                                                if (textView21 == null) {
-                                                                                }
-                                                                                want = mainActivity8.dp(textView21.getVisibility() != 0 ? 330 : 160);
-                                                                                if (lp.getMarginStart() != want) {
-                                                                                }
-                                                                                Unit unit13 = Unit.INSTANCE;
-                                                                                MainActivity mainActivity9 = this.this$0;
-                                                                                if (t.getParams().get("NavLanePositioningAllowed") == null) {
-                                                                                }
-                                                                                if (!t.getStarted()) {
-                                                                                }
-                                                                                r = new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0d, 0.0d, null, 30, null);
-                                                                                nudgeHintView = mainActivity9.nudgeHint;
-                                                                                if (nudgeHintView == null) {
-                                                                                }
-                                                                                nudgeHintView.setResult(r);
-                                                                                nudgeHintView2 = mainActivity9.nudgeHint;
-                                                                                if (nudgeHintView2 == null) {
-                                                                                }
-                                                                                nudgeHintView2.setMetric(t.isMetric());
-                                                                                nudgeHintView3 = mainActivity9.nudgeHint;
-                                                                                if (nudgeHintView3 == null) {
-                                                                                }
-                                                                                nudgeHintView3.setVisibility(r.getState() != NudgeLogic.State.NONE ? 8 : 0);
-                                                                                Unit unit14 = Unit.INSTANCE;
-                                                                                weatherView = this.this$0.weather;
-                                                                                if (weatherView == null) {
-                                                                                }
-                                                                                weatherView.setVisibility((t.getStarted() || !t.s("weather") || t.getWeatherId() <= 0) ? 8 : 0);
-                                                                                textView22 = this.this$0.compass;
-                                                                                if (textView22 == null) {
-                                                                                }
-                                                                                if (!t.getStarted()) {
-                                                                                }
-                                                                                textView22.setText(str3);
-                                                                                textView23 = this.this$0.devMetrics;
-                                                                                if (textView23 == null) {
-                                                                                }
-                                                                                textView23.setText((t.getStarted() || !t.s("dev_metrics")) ? "" : "CPU " + MathKt.roundToInt(t.getCpuUsage()) + "%  |  TEMP " + MathKt.roundToInt(t.getCpuTempC()) + "°C  |  RAM " + t.getMemUsage() + "%  |  DISK " + MathKt.roundToInt(t.getFreeSpacePct()) + "% free");
-                                                                                long nowNs = System.nanoTime();
-                                                                                if (t.getStarted()) {
-                                                                                }
-                                                                                if (t.getStarted()) {
-                                                                                }
-                                                                                this.this$0.standstillSinceNs = j3;
-                                                                                j4 = this.this$0.standstillSinceNs;
-                                                                                if (j4 == j3) {
-                                                                                }
-                                                                                float stoppedS = f2;
-                                                                                j5 = this.this$0.onroadSinceNs;
-                                                                                if (j5 == j3) {
-                                                                                }
-                                                                                float onroadS = f3;
-                                                                                if (t.s("stopped_timer")) {
-                                                                                }
-                                                                                textView24 = this.this$0.speedTv;
-                                                                                if (textView24 == null) {
-                                                                                }
-                                                                                z16 = this.this$0.night;
-                                                                                textView24.setTextColor(!z16 ? -1 : Color.rgb(29, 29, 31));
-                                                                                boolean hideNormal = !t.s("alerts");
-                                                                                if (t.getStarted()) {
-                                                                                }
-                                                                                showAlert = false;
-                                                                                MainActivity mainActivity10 = this.this$0;
-                                                                                f4 = this.this$0.alertAlpha;
-                                                                                if (showAlert) {
-                                                                                }
-                                                                                f5 = this.this$0.alertAlpha;
-                                                                                mainActivity10.alertAlpha = f4 + ((stall3 - f5) * 0.35f);
-                                                                                f6 = this.this$0.alertAlpha;
-                                                                                if (f6 > 0.02f) {
-                                                                                }
-                                                                                ModelSnapshot model = t.getModel();
-                                                                                if (model != null) {
-                                                                                }
-                                                                                j6 = this.this$0.lastModelFrame;
-                                                                                if (mf == j6) {
-                                                                                }
-                                                                                this.this$0.lastModelFrame = mf;
-                                                                                overlayView3 = this.this$0.overlay;
-                                                                                if (overlayView3 == null) {
-                                                                                }
-                                                                                overlayView3.invalidate();
-                                                                                wheelButton2 = this.this$0.wheel;
-                                                                                if (wheelButton2 == null) {
-                                                                                }
-                                                                                wheelButton2.invalidate();
-                                                                                dmView = this.this$0.dm;
-                                                                                if (dmView == null) {
-                                                                                }
-                                                                                dmView.invalidate();
-                                                                                miciDistanceView2 = this.this$0.personality;
-                                                                                if (miciDistanceView2 == null) {
-                                                                                }
-                                                                                miciDistanceView2.invalidate();
-                                                                                slcView2 = this.this$0.slc;
-                                                                                if (slcView2 == null) {
-                                                                                }
-                                                                                slcView2.invalidate();
-                                                                                slcActionsView2 = this.this$0.slcActions;
-                                                                                if (slcActionsView2 == null) {
-                                                                                }
-                                                                                slcActionsView2.invalidate();
-                                                                                devSidebarView2 = this.this$0.devSidebar;
-                                                                                if (devSidebarView2 == null) {
-                                                                                }
-                                                                                if (devSidebarView2.getVisibility() == 0) {
-                                                                                }
-                                                                                aetherGaugeView2 = this.this$0.gauge;
-                                                                                if (aetherGaugeView2 == null) {
-                                                                                }
-                                                                                aetherGaugeView2.invalidate();
-                                                                                navCardView3 = this.this$0.navCard;
-                                                                                if (navCardView3 == null) {
-                                                                                }
-                                                                                navCardView3.invalidate();
-                                                                                slowReasonView2 = this.this$0.slowCard;
-                                                                                if (slowReasonView2 == null) {
-                                                                                }
-                                                                                slowReasonView2.invalidate();
-                                                                                laneCardView3 = this.this$0.laneCard;
-                                                                                if (laneCardView3 == null) {
-                                                                                }
-                                                                                laneCardView3.invalidate();
-                                                                                blinkerCardView2 = this.this$0.blinkCard;
-                                                                                if (blinkerCardView2 == null) {
-                                                                                }
-                                                                                blinkerCardView2.invalidate();
-                                                                                gpsCardView2 = this.this$0.gpsCard;
-                                                                                if (gpsCardView2 == null) {
-                                                                                }
-                                                                                if (gpsCardView2.getVisibility() == 0) {
-                                                                                }
-                                                                                nudgeHintView4 = this.this$0.nudgeHint;
-                                                                                if (nudgeHintView4 == null) {
-                                                                                }
-                                                                                nudgeHintView4.invalidate();
-                                                                                weatherView2 = this.this$0.weather;
-                                                                                if (weatherView2 == null) {
-                                                                                }
-                                                                                weatherView2.invalidate();
-                                                                                slcSourcesView2 = this.this$0.slcSources;
-                                                                                if (slcSourcesView2 == null) {
-                                                                                }
-                                                                                slcSourcesView2.invalidate();
-                                                                                linearLayout4 = this.this$0.sidebar;
-                                                                                if (linearLayout4 == null) {
-                                                                                }
-                                                                                if (linearLayout4.getVisibility() == 0) {
-                                                                                }
-                                                                                i21 = this.this$0.tick;
-                                                                                if (i21 % 10 == 0) {
-                                                                                }
-                                                                                this.this$0.applyHud();
-                                                                                GpsBridge gpsBridge = GpsBridge.INSTANCE;
-                                                                                telemetry = this.this$0.telemetry;
-                                                                                String pStr$default = Telemetry.pStr$default(telemetry, "LastGPSPosition", null, 2, null);
-                                                                                telemetry2 = this.this$0.telemetry;
-                                                                                gpsBridge.fallback(pStr$default, telemetry2.getVEgo());
-                                                                                handler = this.this$0.ui;
-                                                                                handler.postDelayed(this, 50L);
-                                                                                return;
-                                                                            }
-                                                                            if (laneOn || turnOn) {
-                                                                                ModelSnapshot md = t.getModel();
-                                                                                long now = System.currentTimeMillis();
-                                                                                JSONObject nav = t.navState();
-                                                                                float minLc = t.tFloat("minimum_lane_change_speed", 8.9f);
-                                                                                laneSuggestView = this.this$0.laneSuggest;
-                                                                                if (laneSuggestView == null) {
-                                                                                    Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                                                                                    laneSuggestView = null;
-                                                                                }
-                                                                                laneSuggestView.setMetric(t.isMetric());
-                                                                                laneSuggestView2 = this.this$0.laneSuggest;
-                                                                                if (laneSuggestView2 == null) {
-                                                                                    Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                                                                                    laneSuggestView2 = null;
-                                                                                }
-                                                                                boolean turnBusy = laneSuggestView2.getTurn().getState() == TurnSignal.State.SIGNALING;
-                                                                                if (nav != null) {
-                                                                                    connected = connected2;
-                                                                                    Double valueOf = Double.valueOf(nav.optDouble("maneuverDistance", Double.NaN));
-                                                                                    double it2 = valueOf.doubleValue();
-                                                                                    if (!((Double.isInfinite(it2) || Double.isNaN(it2)) ? false : true)) {
-                                                                                        valueOf = null;
-                                                                                    }
-                                                                                    if (valueOf != null) {
-                                                                                        double md2 = valueOf.doubleValue();
-                                                                                        Pair it3 = Nav.INSTANCE.nextLanes();
-                                                                                        if (it3 != null) {
-                                                                                            if (!(Math.abs(((Number) it3.getSecond()).doubleValue() - md2) < 200.0d)) {
-                                                                                                it3 = null;
-                                                                                            }
-                                                                                            emptyList = (it3 == null || (first = ((Step) it3.getFirst())) == null) ? null : first.getLanes();
-                                                                                        }
-                                                                                    }
-                                                                                } else {
-                                                                                    connected = connected2;
-                                                                                }
-                                                                                emptyList = CollectionsKt.emptyList();
-                                                                                List navLanes = emptyList;
-                                                                                if (laneOn) {
-                                                                                    LaneSuggest.Companion companion = LaneSuggest.Companion;
-                                                                                    laneBrain2 = this.this$0.laneTracker;
-                                                                                    Pair<Integer, String> routeNeed = companion.routeNeed(nav, laneBrain2, t.isMetric(), navLanes);
-                                                                                    int rDir = routeNeed.component1().intValue();
-                                                                                    String rWhy = routeNeed.component2();
-                                                                                    LaneSuggest.Companion.Exit ex = LaneSuggest.Companion.exitNeed(nav, t.isMetric());
-                                                                                    boolean z27 = t.getEnabled() && t.getActive();
-                                                                                    float vEgo3 = t.getVEgo();
-                                                                                    float[] desirePred = md != null ? md.getDesirePred() : null;
-                                                                                    boolean laneChanging = md != null ? md.getLaneChanging() : false;
-                                                                                    int laneChangeDir = md != null ? md.getLaneChangeDir() : 0;
-                                                                                    boolean leftBlinker = t.getLeftBlinker();
-                                                                                    boolean rightBlinker = t.getRightBlinker();
-                                                                                    boolean brakePressed = t.getBrakePressed();
-                                                                                    boolean steeringPressed = t.getSteeringPressed();
-                                                                                    float steeringTorque = t.getSteeringTorque();
-                                                                                    boolean s2 = t.s("lane_nudge_confirm");
-                                                                                    boolean s3 = t.s("lane_auto");
-                                                                                    laneSuggestView3 = this.this$0.laneSuggest;
-                                                                                    if (laneSuggestView3 == null) {
-                                                                                        Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                                                                                        laneSuggestView3 = null;
-                                                                                    }
-                                                                                    boolean areEqual = Intrinsics.areEqual((Object) laneSuggestView3.getCommaConfirms(), (Object) true);
-                                                                                    boolean s4 = t.s("lane_pass");
-                                                                                    float it4 = t.getVCruiseCluster() > 0.0f ? t.getVCruiseCluster() : t.getVCruise();
-                                                                                    if (t.getCruiseEnabled()) {
-                                                                                        i13 = 1065353216;
-                                                                                        if (1.0f <= it4 && it4 <= 200.0f) {
-                                                                                            f = it4 / 3.6f;
-                                                                                            boolean status = t.getLeadOne().getStatus();
-                                                                                            float dRel = t.getLeadOne().getDRel();
-                                                                                            float vLead = t.getLeadOne().getVLead();
-                                                                                            laneBrain3 = this.this$0.laneTracker;
-                                                                                            Pair<Integer, Double> sideLanes = laneBrain3.sideLanes(-1);
-                                                                                            int n2 = sideLanes.component1().intValue();
-                                                                                            double c = sideLanes.component2().doubleValue();
-                                                                                            int i35 = (n2 >= 0 || c < 0.5d) ? -1 : n2;
-                                                                                            int routeSoon = LaneSuggest.Companion.routeSoon(nav);
-                                                                                            boolean isMetric = t.isMetric();
-                                                                                            boolean s5 = t.s("exit_signals");
-                                                                                            int dir = ex == null ? ex.getDir() : 0;
-                                                                                            double dist = ex == null ? ex.getDist() : Double.NaN;
-                                                                                            String str16 = (ex != null || (why = ex.getWhy()) == null) ? "" : why;
-                                                                                            String str17 = (ex != null || (key = ex.getKey()) == null) ? "" : key;
-                                                                                            laneBrain4 = this.this$0.laneTracker;
-                                                                                            Pair<Integer, Double> sideLanes2 = laneBrain4.sideLanes((ex == null ? ex.getDir() : 0) >= 0 ? 1 : -1);
-                                                                                            int n3 = sideLanes2.component1().intValue();
-                                                                                            double c2 = sideLanes2.component2().doubleValue();
-                                                                                            int i36 = (n3 >= 0 || c2 < 0.5d) ? -1 : n3;
-                                                                                            if (ex == null) {
-                                                                                                LaneSuggest.Companion companion2 = LaneSuggest.Companion;
-                                                                                                laneBrain10 = this.this$0.laneTracker;
-                                                                                                Pair it5 = Nav.INSTANCE.nextLanes();
-                                                                                                if (it5 != null) {
-                                                                                                    double doubleValue = ((Number) it5.getSecond()).doubleValue();
-                                                                                                    if (!(0.0d <= doubleValue && doubleValue <= 800.0d)) {
-                                                                                                        it5 = null;
-                                                                                                    }
-                                                                                                    if (it5 != null) {
-                                                                                                        Nav.Step first2 = ((Step) it5.getFirst());
-                                                                                                        if (first2 != null) {
-                                                                                                            emptyList2 = first2.getLanes();
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                                emptyList2 = CollectionsKt.emptyList();
-                                                                                                if (companion2.inLaneFor(ex, laneBrain10, emptyList2)) {
-                                                                                                    z15 = true;
-                                                                                                    if (t.s("lane_ends_ask")) {
-                                                                                                        laneAhead3 = this.this$0.laneAhead;
-                                                                                                        laneBrain9 = this.this$0.laneTracker;
-                                                                                                        i15 = laneAhead3.need(laneBrain9).getFirst().intValue();
-                                                                                                    } else {
-                                                                                                        i15 = 0;
-                                                                                                    }
-                                                                                                    laneAhead2 = this.this$0.laneAhead;
-                                                                                                    laneBrain5 = this.this$0.laneTracker;
-                                                                                                    String second = laneAhead2.need(laneBrain5).getSecond();
-                                                                                                    uiSettings3 = this.this$0.settings;
-                                                                                                    if (uiSettings3 == null) {
-                                                                                                        Intrinsics.throwUninitializedPropertyAccessException("settings");
-                                                                                                        uiSettings3 = null;
-                                                                                                    }
-                                                                                                    float f10 = (uiSettings3.getFloat("nudge_card_pct", 60.0f) * 100.0f) / 100.0f;
-                                                                                                    boolean s6 = t.s("lane_return");
-                                                                                                    laneBrain6 = this.this$0.laneTracker;
-                                                                                                    Pair<Integer, Double> sideLanes3 = laneBrain6.sideLanes(1);
-                                                                                                    int n4 = sideLanes3.component1().intValue();
-                                                                                                    double c3 = sideLanes3.component2().doubleValue();
-                                                                                                    int i37 = (n4 >= 0 || c3 < 0.5d) ? -1 : n4;
-                                                                                                    boolean status2 = t.getLeadRight().getStatus();
-                                                                                                    float dRel2 = t.getLeadRight().getDRel();
-                                                                                                    float vLead2 = t.getLeadRight().getVLead();
-                                                                                                    laneBrain7 = this.this$0.laneTracker;
-                                                                                                    int it6 = laneBrain7.laneCount().getFirst().intValue();
-                                                                                                    int i38 = it6 > 0 ? it6 : -1;
-                                                                                                    laneBrain8 = this.this$0.laneTracker;
-                                                                                                    LaneBrain.Road road = laneBrain8.getRoad();
-                                                                                                    in = new LaneSuggest.In(now, z27, vEgo3, minLc, desirePred, laneChanging, laneChangeDir, leftBlinker, rightBlinker, z12, z13, brakePressed, rDir, rWhy, steeringPressed, steeringTorque, s2, s3, areEqual, turnBusy, s4, f, status, dRel, vLead, i35, routeSoon, isMetric, s5, dir, dist, str16, str17, i36, z15, i15, second, f10, s6, i37, status2, dRel2, vLead2, i38, road == null && road.getHighway());
-                                                                                                }
-                                                                                            }
-                                                                                            z15 = false;
-                                                                                            if (t.s("lane_ends_ask")) {
-                                                                                            }
-                                                                                            laneAhead2 = this.this$0.laneAhead;
-                                                                                            laneBrain5 = this.this$0.laneTracker;
-                                                                                            String second2 = laneAhead2.need(laneBrain5).getSecond();
-                                                                                            uiSettings3 = this.this$0.settings;
-                                                                                            if (uiSettings3 == null) {
-                                                                                            }
-                                                                                            float f102 = (uiSettings3.getFloat("nudge_card_pct", 60.0f) * 100.0f) / 100.0f;
-                                                                                            boolean s62 = t.s("lane_return");
-                                                                                            laneBrain6 = this.this$0.laneTracker;
-                                                                                            Pair<Integer, Double> sideLanes32 = laneBrain6.sideLanes(1);
-                                                                                            int n42 = sideLanes32.component1().intValue();
-                                                                                            double c32 = sideLanes32.component2().doubleValue();
-                                                                                            if (n42 >= 0) {
-                                                                                            }
-                                                                                            boolean status22 = t.getLeadRight().getStatus();
-                                                                                            float dRel22 = t.getLeadRight().getDRel();
-                                                                                            float vLead22 = t.getLeadRight().getVLead();
-                                                                                            laneBrain7 = this.this$0.laneTracker;
-                                                                                            int it62 = laneBrain7.laneCount().getFirst().intValue();
-                                                                                            if (it62 > 0) {
-                                                                                            }
-                                                                                            laneBrain8 = this.this$0.laneTracker;
-                                                                                            LaneBrain.Road road2 = laneBrain8.getRoad();
-                                                                                            in = new LaneSuggest.In(now, z27, vEgo3, minLc, desirePred, laneChanging, laneChangeDir, leftBlinker, rightBlinker, z12, z13, brakePressed, rDir, rWhy, steeringPressed, steeringTorque, s2, s3, areEqual, turnBusy, s4, f, status, dRel, vLead, i35, routeSoon, isMetric, s5, dir, dist, str16, str17, i36, z15, i15, second2, f102, s62, i37, status22, dRel22, vLead22, i38, road2 == null && road2.getHighway());
-                                                                                        }
-                                                                                    } else {
-                                                                                        i13 = 1065353216;
-                                                                                    }
-                                                                                    f = 0.0f;
-                                                                                    boolean status3 = t.getLeadOne().getStatus();
-                                                                                    float dRel3 = t.getLeadOne().getDRel();
-                                                                                    float vLead3 = t.getLeadOne().getVLead();
-                                                                                    laneBrain3 = this.this$0.laneTracker;
-                                                                                    Pair<Integer, Double> sideLanes4 = laneBrain3.sideLanes(-1);
-                                                                                    int n22 = sideLanes4.component1().intValue();
-                                                                                    double c4 = sideLanes4.component2().doubleValue();
-                                                                                    if (n22 >= 0) {
-                                                                                    }
-                                                                                    int routeSoon2 = LaneSuggest.Companion.routeSoon(nav);
-                                                                                    boolean isMetric2 = t.isMetric();
-                                                                                    boolean s52 = t.s("exit_signals");
-                                                                                    if (ex == null) {
-                                                                                    }
-                                                                                    double dist2 = ex == null ? ex.getDist() : Double.NaN;
-                                                                                    if (ex != null) {
-                                                                                    }
-                                                                                    if (ex != null) {
-                                                                                    }
-                                                                                    laneBrain4 = this.this$0.laneTracker;
-                                                                                    Pair<Integer, Double> sideLanes22 = laneBrain4.sideLanes((ex == null ? ex.getDir() : 0) >= 0 ? 1 : -1);
-                                                                                    int n32 = sideLanes22.component1().intValue();
-                                                                                    double c22 = sideLanes22.component2().doubleValue();
-                                                                                    if (n32 >= 0) {
-                                                                                    }
-                                                                                    if (ex == null) {
-                                                                                    }
-                                                                                    z15 = false;
-                                                                                    if (t.s("lane_ends_ask")) {
-                                                                                    }
-                                                                                    laneAhead2 = this.this$0.laneAhead;
-                                                                                    laneBrain5 = this.this$0.laneTracker;
-                                                                                    String second22 = laneAhead2.need(laneBrain5).getSecond();
-                                                                                    uiSettings3 = this.this$0.settings;
-                                                                                    if (uiSettings3 == null) {
-                                                                                    }
-                                                                                    float f1022 = (uiSettings3.getFloat("nudge_card_pct", 60.0f) * 100.0f) / 100.0f;
-                                                                                    boolean s622 = t.s("lane_return");
-                                                                                    laneBrain6 = this.this$0.laneTracker;
-                                                                                    Pair<Integer, Double> sideLanes322 = laneBrain6.sideLanes(1);
-                                                                                    int n422 = sideLanes322.component1().intValue();
-                                                                                    double c322 = sideLanes322.component2().doubleValue();
-                                                                                    if (n422 >= 0) {
-                                                                                    }
-                                                                                    boolean status222 = t.getLeadRight().getStatus();
-                                                                                    float dRel222 = t.getLeadRight().getDRel();
-                                                                                    float vLead222 = t.getLeadRight().getVLead();
-                                                                                    laneBrain7 = this.this$0.laneTracker;
-                                                                                    int it622 = laneBrain7.laneCount().getFirst().intValue();
-                                                                                    if (it622 > 0) {
-                                                                                    }
-                                                                                    laneBrain8 = this.this$0.laneTracker;
-                                                                                    LaneBrain.Road road22 = laneBrain8.getRoad();
-                                                                                    in = new LaneSuggest.In(now, z27, vEgo3, minLc, desirePred, laneChanging, laneChangeDir, leftBlinker, rightBlinker, z12, z13, brakePressed, rDir, rWhy, steeringPressed, steeringTorque, s2, s3, areEqual, turnBusy, s4, f, status3, dRel3, vLead3, i35, routeSoon2, isMetric2, s52, dir, dist2, str16, str17, i36, z15, i15, second22, f1022, s622, i37, status222, dRel222, vLead222, i38, road22 == null && road22.getHighway());
-                                                                                } else {
-                                                                                    in = null;
-                                                                                    i13 = 1065353216;
-                                                                                }
-                                                                                LaneSuggest.In lane = in;
-                                                                                float poseYawZ = t.getPoseYawZ();
-                                                                                float yawLeft = (!(!Float.isInfinite(poseYawZ) && !Float.isNaN(poseYawZ)) || System.nanoTime() - t.getPoseAtNs() >= 1000000000) ? t.getYawRate() : Odometry.INSTANCE.getGyroSign() * t.getPoseYawZ();
-                                                                                if (!turnOn) {
-                                                                                    i14 = 0;
-                                                                                } else {
-                                                                                    if (t.getStarted()) {
-                                                                                        float vEgo4 = t.getVEgo();
-                                                                                        boolean leftBlinker2 = t.getLeftBlinker();
-                                                                                        boolean rightBlinker2 = t.getRightBlinker();
-                                                                                        i14 = 0;
-                                                                                        boolean tBool = t.tBool("use_turn_desires", false);
-                                                                                        laneSuggestView5 = this.this$0.laneSuggest;
-                                                                                        if (laneSuggestView5 == null) {
-                                                                                            Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                                                                                            laneSuggestView5 = null;
-                                                                                        }
-                                                                                        double crossGapFor = laneSuggestView5.crossGapFor(nav, now);
-                                                                                        laneSuggestView6 = this.this$0.laneSuggest;
-                                                                                        if (laneSuggestView6 == null) {
-                                                                                            Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                                                                                            laneSuggestView6 = null;
-                                                                                        }
-                                                                                        boolean z28 = laneSuggestView6.getLogic().getState() != LaneSuggest.State.IDLE;
-                                                                                        boolean areEqual2 = Intrinsics.areEqual(t.getGear(), "park");
-                                                                                        float steeringAngleDeg = t.getSteeringAngleDeg();
-                                                                                        LaneSuggest.Companion companion3 = LaneSuggest.Companion;
-                                                                                        laneBrain11 = this.this$0.laneTracker;
-                                                                                        turnIn = new TurnSignal.In(now, nav, vEgo4, yawLeft, leftBlinker2, rightBlinker2, minLc, tBool, crossGapFor, z28, areEqual2, steeringAngleDeg, companion3.notTurnLane(nav, laneBrain11, Nav.INSTANCE.nextLanes()));
-                                                                                        laneSuggestView4 = this.this$0.laneSuggest;
-                                                                                        if (laneSuggestView4 == null) {
-                                                                                            Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                                                                                            laneSuggestView4 = null;
-                                                                                        }
-                                                                                        laneSuggestView4.tick(lane, turnIn);
-                                                                                        replayBar = this.this$0.replayBar;
-                                                                                        if (replayBar == null) {
-                                                                                            Intrinsics.throwUninitializedPropertyAccessException("replayBar");
-                                                                                            replayBar = null;
-                                                                                        }
-                                                                                        dataClient5 = this.this$0.data;
-                                                                                        if (dataClient5 == null) {
-                                                                                            Intrinsics.throwUninitializedPropertyAccessException("data");
-                                                                                            dataClient5 = null;
-                                                                                        }
-                                                                                        replayBar.setVisibility((dataClient5.getConnected() || !Replay.INSTANCE.getActive()) ? 8 : i14);
-                                                                                        textView18 = this.this$0.whereBtn;
-                                                                                        if (textView18 == null) {
-                                                                                            Intrinsics.throwUninitializedPropertyAccessException("whereBtn");
-                                                                                            textView18 = null;
-                                                                                        }
-                                                                                        dataClient6 = this.this$0.data;
-                                                                                        if (dataClient6 == null) {
-                                                                                            Intrinsics.throwUninitializedPropertyAccessException("data");
-                                                                                            dataClient6 = null;
-                                                                                        }
-                                                                                        if (dataClient6.getConnected() && t.navState() == null) {
-                                                                                            mapOpen2 = this.this$0.getMapOpen();
-                                                                                            if (!mapOpen2) {
-                                                                                                hudEditor3 = this.this$0.hudEditor;
-                                                                                                if (hudEditor3 == null) {
-                                                                                                    maskEditor3 = this.this$0.maskEditor;
-                                                                                                    if (maskEditor3 == null) {
-                                                                                                        i16 = i14;
-                                                                                                        textView18.setVisibility(i16);
-                                                                                                        textView19 = this.this$0.mapBtn;
-                                                                                                        if (textView19 == null) {
-                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("mapBtn");
-                                                                                                            textView19 = null;
-                                                                                                        }
-                                                                                                        dataClient7 = this.this$0.data;
-                                                                                                        if (dataClient7 == null) {
-                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("data");
-                                                                                                            dataClient7 = null;
-                                                                                                        }
-                                                                                                        if (dataClient7.getConnected()) {
-                                                                                                            mapOpen = this.this$0.getMapOpen();
-                                                                                                            if (!mapOpen) {
-                                                                                                                hudEditor2 = this.this$0.hudEditor;
-                                                                                                                if (hudEditor2 == null) {
-                                                                                                                    maskEditor2 = this.this$0.maskEditor;
-                                                                                                                    if (maskEditor2 == null) {
-                                                                                                                        if (!t.getStarted()) {
-                                                                                                                            z20 = this.this$0.homeShown;
-                                                                                                                        }
-                                                                                                                        i17 = i14;
-                                                                                                                        textView19.setVisibility(i17);
-                                                                                                                        i18 = this.this$0.tick;
-                                                                                                                        if (i18 % 40 == 0) {
-                                                                                                                            NudgeSync nudgeSync = NudgeSync.INSTANCE;
-                                                                                                                            uiSettings7 = this.this$0.settings;
-                                                                                                                            if (uiSettings7 == null) {
-                                                                                                                                Intrinsics.throwUninitializedPropertyAccessException("settings");
-                                                                                                                                uiSettings7 = null;
-                                                                                                                            }
-                                                                                                                            nudgeSync.tick(uiSettings7.getFloat("nudge_lc_pct", 100.0f));
-                                                                                                                        }
-                                                                                                                        BlinkerTurn blinkerTurn2 = BlinkerTurn.INSTANCE;
-                                                                                                                        uiSettings4 = this.this$0.settings;
-                                                                                                                        if (uiSettings4 != null) {
-                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("settings");
-                                                                                                                            uiSettings5 = null;
-                                                                                                                        } else {
-                                                                                                                            uiSettings5 = uiSettings4;
-                                                                                                                        }
-                                                                                                                        int i342 = i14;
-                                                                                                                        BlinkerTurn.tick$default(blinkerTurn2, t, uiSettings5, 0L, 4, null);
-                                                                                                                        this.this$0.ideasTick(t);
-                                                                                                                        DriveTrack.tick$default(DriveTrack.INSTANCE, t, 0L, 2, null);
-                                                                                                                        place = this.this$0.sharedPending;
-                                                                                                                        if (place != null) {
-                                                                                                                            dataClient10 = this.this$0.data;
-                                                                                                                            if (dataClient10 == null) {
-                                                                                                                                Intrinsics.throwUninitializedPropertyAccessException("data");
-                                                                                                                                dataClient10 = null;
-                                                                                                                            }
-                                                                                                                            if (dataClient10.getConnected()) {
-                                                                                                                                i28 = this.this$0.tick;
-                                                                                                                                if (i28 % 20 == 0) {
-                                                                                                                                    this.this$0.useShared();
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                        i19 = this.this$0.tick;
-                                                                                                                        if (i19 % 20 == 0) {
-                                                                                                                            Ntrip.INSTANCE.tick(this.this$0);
-                                                                                                                        }
-                                                                                                                        i20 = this.this$0.tick;
-                                                                                                                        if (i20 % 4 == 0) {
-                                                                                                                            MainActivity mainActivity11 = this.this$0;
-                                                                                                                            dataClient9 = this.this$0.data;
-                                                                                                                            if (dataClient9 == null) {
-                                                                                                                                Intrinsics.throwUninitializedPropertyAccessException("data");
-                                                                                                                                dataClient9 = null;
-                                                                                                                            }
-                                                                                                                            if (dataClient9.getConnected() && !Nav.INSTANCE.getActive() && t.navState() == null) {
-                                                                                                                                hudEditor = this.this$0.hudEditor;
-                                                                                                                                if (hudEditor == null) {
-                                                                                                                                    maskEditor = this.this$0.maskEditor;
-                                                                                                                                    if (maskEditor == null) {
-                                                                                                                                        if (!t.getStarted()) {
-                                                                                                                                            z19 = this.this$0.homeShown;
-                                                                                                                                        }
-                                                                                                                                        z18 = true;
-                                                                                                                                        mainActivity11.syncFavBar(z18);
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                            z18 = (i342) != 0;
-                                                                                                                            mainActivity11.syncFavBar(z18);
-                                                                                                                        }
-                                                                                                                        textView20 = this.this$0.mapBtn;
-                                                                                                                        if (textView20 == null) {
-                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("mapBtn");
-                                                                                                                            textView20 = null;
-                                                                                                                        }
-                                                                                                                        ViewGroup.LayoutParams layoutParams2 = textView20.getLayoutParams();
-                                                                                                                        Intrinsics.checkNotNull(layoutParams2, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
-                                                                                                                        lp = (FrameLayout.LayoutParams) layoutParams2;
-                                                                                                                        MainActivity mainActivity82 = this.this$0;
-                                                                                                                        textView21 = mainActivity82.whereBtn;
-                                                                                                                        if (textView21 == null) {
-                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("whereBtn");
-                                                                                                                            textView21 = null;
-                                                                                                                        }
-                                                                                                                        want = mainActivity82.dp(textView21.getVisibility() != 0 ? 330 : 160);
-                                                                                                                        if (lp.getMarginStart() != want) {
-                                                                                                                            lp.setMarginStart(want);
-                                                                                                                            textView35 = mainActivity82.mapBtn;
-                                                                                                                            if (textView35 == null) {
-                                                                                                                                Intrinsics.throwUninitializedPropertyAccessException("mapBtn");
-                                                                                                                                textView35 = null;
-                                                                                                                            }
-                                                                                                                            textView35.setLayoutParams(lp);
-                                                                                                                        }
-                                                                                                                        Unit unit132 = Unit.INSTANCE;
-                                                                                                                        MainActivity mainActivity92 = this.this$0;
-                                                                                                                        boolean allowed = t.getParams().get("NavLanePositioningAllowed") == null ? t.pBool("NavLanePositioningAllowed", true) : true;
-                                                                                                                        if (!t.getStarted() && t.getActive() && allowed && t.s("nudge_hint")) {
-                                                                                                                            Double doubleOrNull = StringsKt.toDoubleOrNull(Telemetry.pStr$default(t, "LaneDetectionWidth", null, 2, null));
-                                                                                                                            double ldw = doubleOrNull != null ? doubleOrNull.doubleValue() : 0.0d;
-                                                                                                                            r = NudgeLogic.INSTANCE.evaluate(t.navState(), t.getVEgo(), t.getLeftBlinker(), t.getRightBlinker(), t.getLeftBlindspot(), t.getRightBlindspot(), t.getLaneWidthLeft(), t.getLaneWidthRight(), t.isMetric() ? ldw : 0.3048d * ldw);
-                                                                                                                        } else {
-                                                                                                                            r = new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0d, 0.0d, null, 30, null);
-                                                                                                                        }
-                                                                                                                        nudgeHintView = mainActivity92.nudgeHint;
-                                                                                                                        if (nudgeHintView == null) {
-                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("nudgeHint");
-                                                                                                                            nudgeHintView = null;
-                                                                                                                        }
-                                                                                                                        nudgeHintView.setResult(r);
-                                                                                                                        nudgeHintView2 = mainActivity92.nudgeHint;
-                                                                                                                        if (nudgeHintView2 == null) {
-                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("nudgeHint");
-                                                                                                                            nudgeHintView2 = null;
-                                                                                                                        }
-                                                                                                                        nudgeHintView2.setMetric(t.isMetric());
-                                                                                                                        nudgeHintView3 = mainActivity92.nudgeHint;
-                                                                                                                        if (nudgeHintView3 == null) {
-                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("nudgeHint");
-                                                                                                                            nudgeHintView3 = null;
-                                                                                                                        }
-                                                                                                                        nudgeHintView3.setVisibility(r.getState() != NudgeLogic.State.NONE ? 8 : 0);
-                                                                                                                        Unit unit142 = Unit.INSTANCE;
-                                                                                                                        weatherView = this.this$0.weather;
-                                                                                                                        if (weatherView == null) {
-                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("weather");
-                                                                                                                            weatherView = null;
-                                                                                                                        }
-                                                                                                                        weatherView.setVisibility((t.getStarted() || !t.s("weather") || t.getWeatherId() <= 0) ? 8 : 0);
-                                                                                                                        textView22 = this.this$0.compass;
-                                                                                                                        if (textView22 == null) {
-                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("compass");
-                                                                                                                            textView22 = null;
-                                                                                                                        }
-                                                                                                                        if (!t.getStarted() && t.s("compass") && !Float.isNaN(t.getBearingDeg())) {
-                                                                                                                            String[] dirs = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
-                                                                                                                            str3 = "- " + dirs[((int) (((((t.getBearingDeg() + 22.5f) % 360.0f) + 360.0f) % 360.0f) / 45.0f)) % 8] + " -";
-                                                                                                                        }
-                                                                                                                        textView22.setText(str3);
-                                                                                                                        textView23 = this.this$0.devMetrics;
-                                                                                                                        if (textView23 == null) {
-                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("devMetrics");
-                                                                                                                            textView23 = null;
-                                                                                                                        }
-                                                                                                                        textView23.setText((t.getStarted() || !t.s("dev_metrics")) ? "" : "CPU " + MathKt.roundToInt(t.getCpuUsage()) + "%  |  TEMP " + MathKt.roundToInt(t.getCpuTempC()) + "°C  |  RAM " + t.getMemUsage() + "%  |  DISK " + MathKt.roundToInt(t.getFreeSpacePct()) + "% free");
-                                                                                                                        long nowNs2 = System.nanoTime();
-                                                                                                                        if (t.getStarted()) {
-                                                                                                                            j3 = 0;
-                                                                                                                            this.this$0.onroadSinceNs = 0L;
-                                                                                                                        } else {
-                                                                                                                            j10 = this.this$0.onroadSinceNs;
-                                                                                                                            j3 = 0;
-                                                                                                                            if (j10 == 0) {
-                                                                                                                                this.this$0.onroadSinceNs = nowNs2;
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                        if (t.getStarted() || !t.getStandstill()) {
-                                                                                                                            this.this$0.standstillSinceNs = j3;
-                                                                                                                        } else {
-                                                                                                                            j9 = this.this$0.standstillSinceNs;
-                                                                                                                            if (j9 == j3) {
-                                                                                                                                this.this$0.standstillSinceNs = nowNs2;
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                        j4 = this.this$0.standstillSinceNs;
-                                                                                                                        if (j4 == j3) {
-                                                                                                                            j8 = this.this$0.standstillSinceNs;
-                                                                                                                            f2 = (nowNs2 - j8) / 1.0E9f;
-                                                                                                                        } else {
-                                                                                                                            f2 = 0.0f;
-                                                                                                                        }
-                                                                                                                        float stoppedS2 = f2;
-                                                                                                                        j5 = this.this$0.onroadSinceNs;
-                                                                                                                        if (j5 == j3) {
-                                                                                                                            j7 = this.this$0.onroadSinceNs;
-                                                                                                                            f3 = (nowNs2 - j7) / 1.0E9f;
-                                                                                                                        } else {
-                                                                                                                            f3 = 0.0f;
-                                                                                                                        }
-                                                                                                                        float onroadS2 = f3;
-                                                                                                                        if (t.s("stopped_timer") || stoppedS2 < 60.0f || onroadS2 < 60.0f) {
-                                                                                                                            textView24 = this.this$0.speedTv;
-                                                                                                                            if (textView24 == null) {
-                                                                                                                                Intrinsics.throwUninitializedPropertyAccessException("speedTv");
-                                                                                                                                textView24 = null;
-                                                                                                                            }
-                                                                                                                            z16 = this.this$0.night;
-                                                                                                                            textView24.setTextColor(!z16 ? -1 : Color.rgb(29, 29, 31));
-                                                                                                                        } else {
-                                                                                                                            float f11 = 60;
-                                                                                                                            int m2 = (int) (stoppedS2 / f11);
-                                                                                                                            int sec = (int) (stoppedS2 % f11);
-                                                                                                                            textView32 = this.this$0.speedTv;
-                                                                                                                            if (textView32 == null) {
-                                                                                                                                Intrinsics.throwUninitializedPropertyAccessException("speedTv");
-                                                                                                                                textView32 = null;
-                                                                                                                            }
-                                                                                                                            String format2 = String.format("%d:%02d", Arrays.copyOf(new Object[]{Integer.valueOf(m2), Integer.valueOf(sec)}, 2));
-                                                                                                                            Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
-                                                                                                                            textView32.setText(format2);
-                                                                                                                            textView33 = this.this$0.speedUnit;
-                                                                                                                            if (textView33 == null) {
-                                                                                                                                Intrinsics.throwUninitializedPropertyAccessException("speedUnit");
-                                                                                                                                textView33 = null;
-                                                                                                                            }
-                                                                                                                            textView33.setText("stopped");
-                                                                                                                            int col = stoppedS2 < 150.0f ? ColorUtils.blendARGB(Color.rgb(22, 127, 64), Color.rgb(218, 111, 37), (stoppedS2 - 60.0f) / 90.0f) : stoppedS2 < 300.0f ? ColorUtils.blendARGB(Color.rgb(218, 111, 37), Color.rgb(201, 34, 49), (stoppedS2 - 150.0f) / 150.0f) : Color.rgb(201, 34, 49);
-                                                                                                                            textView34 = this.this$0.speedTv;
-                                                                                                                            if (textView34 == null) {
-                                                                                                                                Intrinsics.throwUninitializedPropertyAccessException("speedTv");
-                                                                                                                                textView34 = null;
-                                                                                                                            }
-                                                                                                                            textView34.setTextColor(col);
-                                                                                                                        }
-                                                                                                                        boolean hideNormal2 = !t.s("alerts");
-                                                                                                                        if (t.getStarted()) {
-                                                                                                                            if ((t.getAlertText1().length() > 0) && !Intrinsics.areEqual(t.getAlertSize(), "none") && !hideNormal2) {
-                                                                                                                                showAlert = true;
-                                                                                                                                MainActivity mainActivity102 = this.this$0;
-                                                                                                                                f4 = this.this$0.alertAlpha;
-                                                                                                                                if (showAlert) {
-                                                                                                                                    stall3 = i13;
-                                                                                                                                }
-                                                                                                                                f5 = this.this$0.alertAlpha;
-                                                                                                                                mainActivity102.alertAlpha = f4 + ((stall3 - f5) * 0.35f);
-                                                                                                                                f6 = this.this$0.alertAlpha;
-                                                                                                                                if (f6 > 0.02f) {
-                                                                                                                                    linearLayout5 = this.this$0.alertBox;
-                                                                                                                                    if (linearLayout5 == null) {
-                                                                                                                                        Intrinsics.throwUninitializedPropertyAccessException("alertBox");
-                                                                                                                                        linearLayout5 = null;
-                                                                                                                                    }
-                                                                                                                                    linearLayout5.setVisibility(0);
-                                                                                                                                    linearLayout6 = this.this$0.alertBox;
-                                                                                                                                    if (linearLayout6 == null) {
-                                                                                                                                        Intrinsics.throwUninitializedPropertyAccessException("alertBox");
-                                                                                                                                        linearLayout6 = null;
-                                                                                                                                    }
-                                                                                                                                    f7 = this.this$0.alertAlpha;
-                                                                                                                                    linearLayout6.setAlpha(f7);
-                                                                                                                                    if (showAlert) {
-                                                                                                                                        textView29 = this.this$0.alert1;
-                                                                                                                                        if (textView29 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("alert1");
-                                                                                                                                            textView29 = null;
-                                                                                                                                        }
-                                                                                                                                        textView29.setText(t.getAlertText1());
-                                                                                                                                        textView30 = this.this$0.alert2;
-                                                                                                                                        if (textView30 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("alert2");
-                                                                                                                                            textView30 = null;
-                                                                                                                                        }
-                                                                                                                                        textView30.setText(t.getAlertText2());
-                                                                                                                                        textView31 = this.this$0.alert2;
-                                                                                                                                        if (textView31 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("alert2");
-                                                                                                                                            textView31 = null;
-                                                                                                                                        }
-                                                                                                                                        textView31.setVisibility(t.getAlertText2().length() == 0 ? 8 : 0);
-                                                                                                                                    }
-                                                                                                                                    boolean full = Intrinsics.areEqual(t.getAlertSize(), "full");
-                                                                                                                                    textView27 = this.this$0.alert1;
-                                                                                                                                    if (textView27 == null) {
-                                                                                                                                        Intrinsics.throwUninitializedPropertyAccessException("alert1");
-                                                                                                                                        textView27 = null;
-                                                                                                                                    }
-                                                                                                                                    String alertSize = t.getAlertSize();
-                                                                                                                                    textView27.setTextSize(Intrinsics.areEqual(alertSize, "full") ? 52.0f : Intrinsics.areEqual(alertSize, "mid") ? 36.0f : 26.0f);
-                                                                                                                                    textView28 = this.this$0.alert2;
-                                                                                                                                    if (textView28 == null) {
-                                                                                                                                        Intrinsics.throwUninitializedPropertyAccessException("alert2");
-                                                                                                                                        textView28 = null;
-                                                                                                                                    }
-                                                                                                                                    textView28.setTextSize(full ? 24.0f : 20.0f);
-                                                                                                                                    linearLayout7 = this.this$0.alertBox;
-                                                                                                                                    if (linearLayout7 == null) {
-                                                                                                                                        Intrinsics.throwUninitializedPropertyAccessException("alertBox");
-                                                                                                                                        linearLayout7 = null;
-                                                                                                                                    }
-                                                                                                                                    ViewGroup.LayoutParams layoutParams3 = linearLayout7.getLayoutParams();
-                                                                                                                                    Intrinsics.checkNotNull(layoutParams3, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
-                                                                                                                                    FrameLayout.LayoutParams lp2 = (FrameLayout.LayoutParams) layoutParams3;
-                                                                                                                                    lp2.height = full ? -1 : -2;
-                                                                                                                                    linearLayout8 = this.this$0.alertBox;
-                                                                                                                                    if (linearLayout8 == null) {
-                                                                                                                                        Intrinsics.throwUninitializedPropertyAccessException("alertBox");
-                                                                                                                                        linearLayout8 = null;
-                                                                                                                                    }
-                                                                                                                                    linearLayout8.setLayoutParams(lp2);
-                                                                                                                                    String alertStatus = t.getAlertStatus();
-                                                                                                                                    switch (alertStatus.hashCode()) {
-                                                                                                                                        case -2132360282:
-                                                                                                                                            if (alertStatus.equals("starpilot")) {
-                                                                                                                                                rgb2 = Color.rgb(23, 134, 68);
-                                                                                                                                                break;
-                                                                                                                                            }
-                                                                                                                                            rgb2 = -16777216;
-                                                                                                                                            break;
-                                                                                                                                        case -1874525969:
-                                                                                                                                            if (alertStatus.equals("userprompt")) {
-                                                                                                                                                rgb2 = Color.rgb(255, 115, 0);
-                                                                                                                                                break;
-                                                                                                                                            }
-                                                                                                                                            rgb2 = -16777216;
-                                                                                                                                            break;
-                                                                                                                                        case 1952151455:
-                                                                                                                                            if (!alertStatus.equals("critical")) {
-                                                                                                                                                rgb2 = -16777216;
-                                                                                                                                                break;
-                                                                                                                                            } else {
-                                                                                                                                                rgb2 = Color.rgb(255, 0, 21);
-                                                                                                                                                break;
-                                                                                                                                            }
-                                                                                                                                        default:
-                                                                                                                                            rgb2 = -16777216;
-                                                                                                                                            break;
-                                                                                                                                    }
-                                                                                                                                    int base = rgb2;
-                                                                                                                                    boolean tint = t.s("alert_tint") && !Intrinsics.areEqual(t.getAlertStatus(), "normal");
-                                                                                                                                    if (tint) {
-                                                                                                                                        view3 = this.this$0.alertTint;
-                                                                                                                                        if (view3 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("alertTint");
-                                                                                                                                            view3 = null;
-                                                                                                                                        }
-                                                                                                                                        view3.setVisibility(0);
-                                                                                                                                        view4 = this.this$0.alertTint;
-                                                                                                                                        if (view4 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("alertTint");
-                                                                                                                                            view4 = null;
-                                                                                                                                        }
-                                                                                                                                        f8 = this.this$0.alertAlpha;
-                                                                                                                                        view4.setAlpha(f8);
-                                                                                                                                        gradientDrawable = this.this$0.tintDrawable;
-                                                                                                                                        gradientDrawable.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
-                                                                                                                                        gradientDrawable2 = this.this$0.tintDrawable;
-                                                                                                                                        gradientDrawable2.setColors(full ? new int[]{OverlayView.Companion.withAlpha(base, 230), OverlayView.Companion.withAlpha(base, 230)} : new int[]{OverlayView.Companion.withAlpha(base, 0), OverlayView.Companion.withAlpha(base, 60), OverlayView.Companion.withAlpha(base, 230)});
-                                                                                                                                        linearLayout10 = this.this$0.alertBox;
-                                                                                                                                        if (linearLayout10 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("alertBox");
-                                                                                                                                            linearLayout10 = null;
-                                                                                                                                        }
-                                                                                                                                        linearLayout10.setBackgroundColor(full ? 0 : OverlayView.Companion.withAlpha(base, 120));
-                                                                                                                                    } else {
-                                                                                                                                        view2 = this.this$0.alertTint;
-                                                                                                                                        if (view2 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("alertTint");
-                                                                                                                                            view2 = null;
-                                                                                                                                        }
-                                                                                                                                        view2.setVisibility(8);
-                                                                                                                                        linearLayout9 = this.this$0.alertBox;
-                                                                                                                                        if (linearLayout9 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("alertBox");
-                                                                                                                                            linearLayout9 = null;
-                                                                                                                                        }
-                                                                                                                                        linearLayout9.setBackgroundColor(OverlayView.Companion.withAlpha(base, full ? 230 : 200));
-                                                                                                                                    }
-                                                                                                                                } else {
-                                                                                                                                    linearLayout3 = this.this$0.alertBox;
-                                                                                                                                    if (linearLayout3 == null) {
-                                                                                                                                        Intrinsics.throwUninitializedPropertyAccessException("alertBox");
-                                                                                                                                        linearLayout3 = null;
-                                                                                                                                    }
-                                                                                                                                    linearLayout3.setVisibility(8);
-                                                                                                                                    view = this.this$0.alertTint;
-                                                                                                                                    if (view == null) {
-                                                                                                                                        Intrinsics.throwUninitializedPropertyAccessException("alertTint");
-                                                                                                                                        view = null;
-                                                                                                                                    }
-                                                                                                                                    view.setVisibility(8);
-                                                                                                                                }
-                                                                                                                                ModelSnapshot model2 = t.getModel();
-                                                                                                                                mf = model2 != null ? model2.getFrameId() : -1L;
-                                                                                                                                j6 = this.this$0.lastModelFrame;
-                                                                                                                                if (mf == j6) {
-                                                                                                                                    i27 = this.this$0.tick;
-                                                                                                                                }
-                                                                                                                                this.this$0.lastModelFrame = mf;
-                                                                                                                                overlayView3 = this.this$0.overlay;
-                                                                                                                                if (overlayView3 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("overlay");
-                                                                                                                                    overlayView3 = null;
-                                                                                                                                }
-                                                                                                                                overlayView3.invalidate();
-                                                                                                                                wheelButton2 = this.this$0.wheel;
-                                                                                                                                if (wheelButton2 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("wheel");
-                                                                                                                                    wheelButton2 = null;
-                                                                                                                                }
-                                                                                                                                wheelButton2.invalidate();
-                                                                                                                                dmView = this.this$0.dm;
-                                                                                                                                if (dmView == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("dm");
-                                                                                                                                    dmView = null;
-                                                                                                                                }
-                                                                                                                                dmView.invalidate();
-                                                                                                                                miciDistanceView2 = this.this$0.personality;
-                                                                                                                                if (miciDistanceView2 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("personality");
-                                                                                                                                    miciDistanceView2 = null;
-                                                                                                                                }
-                                                                                                                                miciDistanceView2.invalidate();
-                                                                                                                                slcView2 = this.this$0.slc;
-                                                                                                                                if (slcView2 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("slc");
-                                                                                                                                    slcView2 = null;
-                                                                                                                                }
-                                                                                                                                slcView2.invalidate();
-                                                                                                                                slcActionsView2 = this.this$0.slcActions;
-                                                                                                                                if (slcActionsView2 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("slcActions");
-                                                                                                                                    slcActionsView2 = null;
-                                                                                                                                }
-                                                                                                                                slcActionsView2.invalidate();
-                                                                                                                                devSidebarView2 = this.this$0.devSidebar;
-                                                                                                                                if (devSidebarView2 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("devSidebar");
-                                                                                                                                    devSidebarView2 = null;
-                                                                                                                                }
-                                                                                                                                if (devSidebarView2.getVisibility() == 0) {
-                                                                                                                                    i26 = this.this$0.tick;
-                                                                                                                                    if (i26 % 4 == 0) {
-                                                                                                                                        devSidebarView3 = this.this$0.devSidebar;
-                                                                                                                                        if (devSidebarView3 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("devSidebar");
-                                                                                                                                            devSidebarView3 = null;
-                                                                                                                                        }
-                                                                                                                                        devSidebarView3.invalidate();
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                                aetherGaugeView2 = this.this$0.gauge;
-                                                                                                                                if (aetherGaugeView2 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("gauge");
-                                                                                                                                    aetherGaugeView2 = null;
-                                                                                                                                }
-                                                                                                                                aetherGaugeView2.invalidate();
-                                                                                                                                navCardView3 = this.this$0.navCard;
-                                                                                                                                if (navCardView3 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("navCard");
-                                                                                                                                    navCardView3 = null;
-                                                                                                                                }
-                                                                                                                                navCardView3.invalidate();
-                                                                                                                                slowReasonView2 = this.this$0.slowCard;
-                                                                                                                                if (slowReasonView2 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("slowCard");
-                                                                                                                                    slowReasonView2 = null;
-                                                                                                                                }
-                                                                                                                                slowReasonView2.invalidate();
-                                                                                                                                laneCardView3 = this.this$0.laneCard;
-                                                                                                                                if (laneCardView3 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("laneCard");
-                                                                                                                                    laneCardView3 = null;
-                                                                                                                                }
-                                                                                                                                laneCardView3.invalidate();
-                                                                                                                                blinkerCardView2 = this.this$0.blinkCard;
-                                                                                                                                if (blinkerCardView2 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("blinkCard");
-                                                                                                                                    blinkerCardView2 = null;
-                                                                                                                                }
-                                                                                                                                blinkerCardView2.invalidate();
-                                                                                                                                gpsCardView2 = this.this$0.gpsCard;
-                                                                                                                                if (gpsCardView2 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("gpsCard");
-                                                                                                                                    gpsCardView2 = null;
-                                                                                                                                }
-                                                                                                                                if (gpsCardView2.getVisibility() == 0) {
-                                                                                                                                    gpsCardView3 = this.this$0.gpsCard;
-                                                                                                                                    if (gpsCardView3 == null) {
-                                                                                                                                        Intrinsics.throwUninitializedPropertyAccessException("gpsCard");
-                                                                                                                                        gpsCardView3 = null;
-                                                                                                                                    }
-                                                                                                                                    gpsCardView3.invalidate();
-                                                                                                                                }
-                                                                                                                                nudgeHintView4 = this.this$0.nudgeHint;
-                                                                                                                                if (nudgeHintView4 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("nudgeHint");
-                                                                                                                                    nudgeHintView4 = null;
-                                                                                                                                }
-                                                                                                                                nudgeHintView4.invalidate();
-                                                                                                                                weatherView2 = this.this$0.weather;
-                                                                                                                                if (weatherView2 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("weather");
-                                                                                                                                    weatherView2 = null;
-                                                                                                                                }
-                                                                                                                                weatherView2.invalidate();
-                                                                                                                                slcSourcesView2 = this.this$0.slcSources;
-                                                                                                                                if (slcSourcesView2 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("slcSources");
-                                                                                                                                    slcSourcesView2 = null;
-                                                                                                                                }
-                                                                                                                                slcSourcesView2.invalidate();
-                                                                                                                                linearLayout4 = this.this$0.sidebar;
-                                                                                                                                if (linearLayout4 == null) {
-                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("sidebar");
-                                                                                                                                    linearLayout4 = null;
-                                                                                                                                }
-                                                                                                                                if (linearLayout4.getVisibility() == 0) {
-                                                                                                                                    i22 = this.this$0.tick;
-                                                                                                                                    if (i22 % 5 == 0) {
-                                                                                                                                        TextView textView39 = (TextView) this.this$0.findViewById(R.id.sbName);
-                                                                                                                                        String pStr$default2 = Telemetry.pStr$default(t, "GalaxyDeviceName", null, 2, null);
-                                                                                                                                        if (pStr$default2.length() == 0) {
-                                                                                                                                            pStr$default2 = t.pStr("DongleId", "comma");
-                                                                                                                                        }
-                                                                                                                                        textView39.setText(pStr$default2);
-                                                                                                                                        String bars = StringsKt.repeat("●", RangesKt.coerceIn(t.getNetworkStrength(), 0, 4)) + StringsKt.repeat("○", 4 - RangesKt.coerceIn(t.getNetworkStrength(), 0, 4));
-                                                                                                                                        TextView textView40 = (TextView) this.this$0.findViewById(R.id.sbNet);
-                                                                                                                                        String networkType = t.getNetworkType();
-                                                                                                                                        switch (networkType.hashCode()) {
-                                                                                                                                            case -1419358249:
-                                                                                                                                                if (networkType.equals("ethernet")) {
-                                                                                                                                                    str14 = "ETH";
-                                                                                                                                                    break;
-                                                                                                                                                }
-                                                                                                                                                str14 = "--";
-                                                                                                                                                break;
-                                                                                                                                            case -1364082857:
-                                                                                                                                                if (networkType.equals("cell2g")) {
-                                                                                                                                                    str14 = "2G";
-                                                                                                                                                    break;
-                                                                                                                                                }
-                                                                                                                                                str14 = "--";
-                                                                                                                                                break;
-                                                                                                                                            case -1364082826:
-                                                                                                                                                if (networkType.equals("cell3g")) {
-                                                                                                                                                    str14 = "3G";
-                                                                                                                                                    break;
-                                                                                                                                                }
-                                                                                                                                                str14 = "--";
-                                                                                                                                                break;
-                                                                                                                                            case -1364082795:
-                                                                                                                                                if (networkType.equals("cell4g")) {
-                                                                                                                                                    str14 = "LTE";
-                                                                                                                                                    break;
-                                                                                                                                                }
-                                                                                                                                                str14 = "--";
-                                                                                                                                                break;
-                                                                                                                                            case -1364082764:
-                                                                                                                                                if (networkType.equals("cell5g")) {
-                                                                                                                                                    str14 = "5G";
-                                                                                                                                                    break;
-                                                                                                                                                }
-                                                                                                                                                str14 = "--";
-                                                                                                                                                break;
-                                                                                                                                            case 3649301:
-                                                                                                                                                if (networkType.equals("wifi")) {
-                                                                                                                                                    str14 = "Wi-Fi";
-                                                                                                                                                    break;
-                                                                                                                                                }
-                                                                                                                                                str14 = "--";
-                                                                                                                                                break;
-                                                                                                                                            default:
-                                                                                                                                                str14 = "--";
-                                                                                                                                                break;
-                                                                                                                                        }
-                                                                                                                                        textView40.setText(bars + "  " + str14);
-                                                                                                                                        TextView $this$run_u24lambda_u2419 = (TextView) this.this$0.findViewById(R.id.sbTempV);
-                                                                                                                                        $this$run_u24lambda_u2419.setText(MathKt.roundToInt(t.getMaxTempC()) + "°C");
-                                                                                                                                        String thermalStatus = t.getThermalStatus();
-                                                                                                                                        if (Intrinsics.areEqual(thermalStatus, "green")) {
-                                                                                                                                            rgb = -1;
-                                                                                                                                        } else {
-                                                                                                                                            if (Intrinsics.areEqual(thermalStatus, "yellow")) {
-                                                                                                                                                i23 = 202;
-                                                                                                                                                i24 = 37;
-                                                                                                                                                i25 = 218;
-                                                                                                                                            } else {
-                                                                                                                                                i23 = 34;
-                                                                                                                                                i24 = 49;
-                                                                                                                                                i25 = 201;
-                                                                                                                                            }
-                                                                                                                                            rgb = Color.rgb(i25, i23, i24);
-                                                                                                                                        }
-                                                                                                                                        $this$run_u24lambda_u2419.setTextColor(rgb);
-                                                                                                                                        TextView $this$run_u24lambda_u2420 = (TextView) this.this$0.findViewById(R.id.sbVehV);
-                                                                                                                                        $this$run_u24lambda_u2420.setText(t.getStarted() ? "ONLINE" : "OFFROAD");
-                                                                                                                                        $this$run_u24lambda_u2420.setTextColor(t.getStarted() ? -1 : Color.rgb(166, 166, 166));
-                                                                                                                                        boolean athenaOk = t.getLastAthenaPing() > 0 && (System.currentTimeMillis() / ((long) 1000)) - t.getLastAthenaPing() < 80;
-                                                                                                                                        TextView $this$run_u24lambda_u2421 = (TextView) this.this$0.findViewById(R.id.sbConnV);
-                                                                                                                                        $this$run_u24lambda_u2421.setText(athenaOk ? "ONLINE" : "OFFLINE");
-                                                                                                                                        $this$run_u24lambda_u2421.setTextColor(athenaOk ? -1 : Color.rgb(201, 34, 49));
-                                                                                                                                        boolean fon = DriveState.INSTANCE.forcedOnroad();
-                                                                                                                                        boolean foff = DriveState.INSTANCE.forcedOffroad();
-                                                                                                                                        ((Button) this.this$0.findViewById(R.id.dsDefault)).setAlpha((fon || foff) ? 1056964608 : i13);
-                                                                                                                                        ((Button) this.this$0.findViewById(R.id.dsOnroad)).setAlpha(fon ? i13 : 1056964608);
-                                                                                                                                        ((Button) this.this$0.findViewById(R.id.dsOffroad)).setAlpha(foff ? i13 : 1056964608);
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                                i21 = this.this$0.tick;
-                                                                                                                                if (i21 % 10 == 0) {
-                                                                                                                                    dataClient8 = this.this$0.data;
-                                                                                                                                    if (dataClient8 == null) {
-                                                                                                                                        Intrinsics.throwUninitializedPropertyAccessException("data");
-                                                                                                                                        dataClient8 = null;
-                                                                                                                                    }
-                                                                                                                                    dataClient8.ping();
-                                                                                                                                    z17 = this.this$0.statsVisible;
-                                                                                                                                    if (z17) {
-                                                                                                                                        Collection<Long> values = t.getByteCount().values();
-                                                                                                                                        Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
-                                                                                                                                        long kb = CollectionsKt.sumOfLong(values) / 1024;
-                                                                                                                                        textView25 = this.this$0.statsTv;
-                                                                                                                                        if (textView25 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("statsTv");
-                                                                                                                                            textView25 = null;
-                                                                                                                                        }
-                                                                                                                                        MainActivity mainActivity12 = this.this$0;
-                                                                                                                                        StringBuilder $this$run_u24lambda_u2427 = new StringBuilder();
-                                                                                                                                        str4 = mainActivity12.linkIf;
-                                                                                                                                        if (t.getRttMs() >= 0.0d) {
-                                                                                                                                            str5 = String.format("%.1f", Arrays.copyOf(new Object[]{Double.valueOf(t.getRttMs())}, 1));
-                                                                                                                                            Intrinsics.checkNotNullExpressionValue(str5, "format(...)");
-                                                                                                                                        } else {
-                                                                                                                                            str5 = "–";
-                                                                                                                                        }
-                                                                                                                                        $this$run_u24lambda_u2427.append("link   " + str4 + "  rtt " + str5 + " ms  " + kb + " kB\n");
-                                                                                                                                        $this$run_u24lambda_u2427.append("comma  cpu " + MathKt.roundToInt(t.getCpuUsage()) + "%  " + MathKt.roundToInt(t.getCpuTempC()) + "°C  " + t.getThermalStatus() + "  " + t.getDeviceType() + "/" + t.getSensor() + "\n");
-                                                                                                                                        videoClient = mainActivity12.video;
-                                                                                                                                        if (videoClient == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("video");
-                                                                                                                                            videoClient = null;
-                                                                                                                                        }
-                                                                                                                                        String format3 = String.format("%.1f", Arrays.copyOf(new Object[]{Double.valueOf(videoClient.getFps())}, 1));
-                                                                                                                                        Intrinsics.checkNotNullExpressionValue(format3, "format(...)");
-                                                                                                                                        videoClient2 = mainActivity12.video;
-                                                                                                                                        if (videoClient2 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("video");
-                                                                                                                                            videoClient2 = null;
-                                                                                                                                        }
-                                                                                                                                        int lastW = videoClient2.getLastW();
-                                                                                                                                        videoClient3 = mainActivity12.video;
-                                                                                                                                        if (videoClient3 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("video");
-                                                                                                                                            videoClient3 = null;
-                                                                                                                                        }
-                                                                                                                                        int lastH = videoClient3.getLastH();
-                                                                                                                                        videoClient4 = mainActivity12.video;
-                                                                                                                                        if (videoClient4 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("video");
-                                                                                                                                            videoClient4 = null;
-                                                                                                                                        }
-                                                                                                                                        String format4 = String.format("%.1f", Arrays.copyOf(new Object[]{Double.valueOf(videoClient4.getDecodeMs())}, 1));
-                                                                                                                                        Intrinsics.checkNotNullExpressionValue(format4, "format(...)");
-                                                                                                                                        videoClient5 = mainActivity12.video;
-                                                                                                                                        if (videoClient5 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("video");
-                                                                                                                                            videoClient5 = null;
-                                                                                                                                        }
-                                                                                                                                        TextView textView41 = textView25;
-                                                                                                                                        $this$run_u24lambda_u2427.append("video  " + format3 + " fps  " + lastW + "x" + lastH + "  dec " + format4 + " ms  drop " + videoClient5.getDropped() + "\n");
-                                                                                                                                        detector2 = mainActivity12.detectorRef;
-                                                                                                                                        if (detector2 == null || !detector2.getRunning()) {
-                                                                                                                                            t2 = t;
-                                                                                                                                            textView26 = textView41;
-                                                                                                                                            sb = $this$run_u24lambda_u2427;
-                                                                                                                                            str6 = "settings";
-                                                                                                                                        } else {
-                                                                                                                                            final Iterable $this$groupingBy$iv = detector2.getDets();
-                                                                                                                                            Iterable $this$sortedByDescending$iv = GroupingKt.eachCount(new Grouping<Detector.Det, String>() { // from class: com.starpilot.starview.MainActivity$uiTick$1$run$lambda$27$$inlined$groupingBy$1
-                                                                                                                                                @Override // kotlin.collections.Grouping
-                                                                                                                                                public Iterator<Detector.Det> sourceIterator() {
-                                                                                                                                                    return $this$groupingBy$iv.iterator();
-                                                                                                                                                }
 
-                                                                                                                                                @Override // kotlin.collections.Grouping
-                                                                                                                                                public String keyOf(Detector.Det element) {
-                                                                                                                                                    Detector.Det it7 = element;
-                                                                                                                                                    return it7.getName();
-                                                                                                                                                }
-                                                                                                                                            }).entrySet();
-                                                                                                                                            String counts = CollectionsKt.joinToString(CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.MainActivity$uiTick$1$run$lambda$27$$inlined$sortedByDescending$1
-                                                                                                                                                @Override // java.util.Comparator
-                                                                                                                                                public final int compare(Object t3, Object t4) {
-                                                                                                                                                    Map.Entry it7 = (Map.Entry) t4;
-                                                                                                                                                    Integer num = (Integer) it7.getValue();
-                                                                                                                                                    Map.Entry it8 = (Map.Entry) t3;
-                                                                                                                                                    return ComparisonsKt.compareValues(num, (Integer) it8.getValue());
-                                                                                                                                                }
-                                                                                                                                            }), " ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.MainActivity$uiTick$1$$ExternalSyntheticLambda1
-                                                                                                                                                @Override // kotlin.jvm.functions.Function1
-                                                                                                                                                public final Object invoke(Object obj2) {
-                                                                                                                                                    CharSequence run$lambda$27$lambda$24;
-                                                                                                                                                    run$lambda$27$lambda$24 = MainActivity$uiTick$1.run$lambda$27$lambda$24((Map.Entry) obj2);
-                                                                                                                                                    return run$lambda$27$lambda$24;
-                                                                                                                                                }
-                                                                                                                                            });
-                                                                                                                                            String status4 = detector2.getStatus();
-                                                                                                                                            String accel = detector2.getAccel();
-                                                                                                                                            String format5 = String.format("%.0f", Arrays.copyOf(new Object[]{Double.valueOf(detector2.getInferMs())}, 1));
-                                                                                                                                            Intrinsics.checkNotNullExpressionValue(format5, "format(...)");
-                                                                                                                                            String format6 = String.format("%.0f", Arrays.copyOf(new Object[]{Double.valueOf(detector2.getPrepMs())}, 1));
-                                                                                                                                            Intrinsics.checkNotNullExpressionValue(format6, "format(...)");
-                                                                                                                                            String format7 = String.format("%.1f", Arrays.copyOf(new Object[]{Double.valueOf(detector2.getFps())}, 1));
-                                                                                                                                            Intrinsics.checkNotNullExpressionValue(format7, "format(...)");
-                                                                                                                                            textView26 = textView41;
-                                                                                                                                            String format8 = String.format("%.0f", Arrays.copyOf(new Object[]{Double.valueOf(detector2.getRoadFps())}, 1));
-                                                                                                                                            Intrinsics.checkNotNullExpressionValue(format8, "format(...)");
-                                                                                                                                            sb = $this$run_u24lambda_u2427;
-                                                                                                                                            String format9 = String.format("%.0f", Arrays.copyOf(new Object[]{Double.valueOf(detector2.getWideFps())}, 1));
-                                                                                                                                            Intrinsics.checkNotNullExpressionValue(format9, "format(...)");
-                                                                                                                                            videoClient6 = mainActivity12.detRoad;
-                                                                                                                                            if (videoClient6 == null) {
-                                                                                                                                                Intrinsics.throwUninitializedPropertyAccessException("detRoad");
-                                                                                                                                                videoClient6 = null;
-                                                                                                                                            }
-                                                                                                                                            String str18 = videoClient6.getRunning() ? "road " : "";
-                                                                                                                                            videoClient7 = mainActivity12.detWide;
-                                                                                                                                            if (videoClient7 == null) {
-                                                                                                                                                Intrinsics.throwUninitializedPropertyAccessException("detWide");
-                                                                                                                                                videoClient7 = null;
-                                                                                                                                            }
-                                                                                                                                            if (videoClient7.getRunning()) {
-                                                                                                                                                t2 = t;
-                                                                                                                                                str11 = "wide";
-                                                                                                                                            } else {
-                                                                                                                                                t2 = t;
-                                                                                                                                                str11 = "";
-                                                                                                                                            }
-                                                                                                                                            str6 = "settings";
-                                                                                                                                            $this$run_u24lambda_u2427.append("detect " + status4 + "  " + accel + "  model " + format5 + " ms  prep " + format6 + " ms  " + format7 + " /s (road " + format8 + " wide " + format9 + ")  cams " + str18 + str11 + "\n");
-                                                                                                                                            if (detector2.getLaneMarks() != null) {
-                                                                                                                                                laneMarks = mainActivity12.laneMarks;
-                                                                                                                                                $this$run_u24lambda_u2427.append("lines  " + laneMarks.getDebug() + "\n");
-                                                                                                                                            }
-                                                                                                                                            layoutSeg = mainActivity12.layoutSeg;
-                                                                                                                                            if (layoutSeg == null) {
-                                                                                                                                                Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                                                                                                                                                layoutSeg = null;
-                                                                                                                                            }
-                                                                                                                                            if (layoutSeg.getEnabled()) {
-                                                                                                                                                layoutSeg3 = mainActivity12.layoutSeg;
-                                                                                                                                                if (layoutSeg3 == null) {
-                                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                                                                                                                                                    layoutSeg3 = null;
-                                                                                                                                                }
-                                                                                                                                                String status5 = layoutSeg3.getStatus();
-                                                                                                                                                layoutSeg4 = mainActivity12.layoutSeg;
-                                                                                                                                                if (layoutSeg4 == null) {
-                                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                                                                                                                                                    layoutSeg4 = null;
-                                                                                                                                                }
-                                                                                                                                                String accel2 = layoutSeg4.getAccel();
-                                                                                                                                                layoutSeg5 = mainActivity12.layoutSeg;
-                                                                                                                                                if (layoutSeg5 == null) {
-                                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                                                                                                                                                    layoutSeg5 = null;
-                                                                                                                                                }
-                                                                                                                                                String format10 = String.format("%.0f", Arrays.copyOf(new Object[]{Double.valueOf(layoutSeg5.getMs())}, 1));
-                                                                                                                                                Intrinsics.checkNotNullExpressionValue(format10, "format(...)");
-                                                                                                                                                layoutSeg6 = mainActivity12.layoutSeg;
-                                                                                                                                                if (layoutSeg6 == null) {
-                                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                                                                                                                                                    layoutSeg6 = null;
-                                                                                                                                                }
-                                                                                                                                                if (layoutSeg6.getGpuError().length() > 0) {
-                                                                                                                                                    layoutSeg7 = mainActivity12.layoutSeg;
-                                                                                                                                                    if (layoutSeg7 == null) {
-                                                                                                                                                        Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                                                                                                                                                        layoutSeg7 = null;
-                                                                                                                                                    }
-                                                                                                                                                    str13 = "  gpu error: " + layoutSeg7.getGpuError();
-                                                                                                                                                } else {
-                                                                                                                                                    str13 = "";
-                                                                                                                                                }
-                                                                                                                                                str12 = status5 + " " + accel2 + " " + format10 + " ms" + str13;
-                                                                                                                                            } else {
-                                                                                                                                                layoutSeg2 = mainActivity12.layoutSeg;
-                                                                                                                                                if (layoutSeg2 == null) {
-                                                                                                                                                    Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
-                                                                                                                                                    layoutSeg2 = null;
-                                                                                                                                                }
-                                                                                                                                                str12 = !layoutSeg2.getHasModel() ? "no model" : "off";
-                                                                                                                                            }
-                                                                                                                                            $this$run_u24lambda_u2427.append("layout " + str12 + "\n");
-                                                                                                                                            if (detector2.getOrientError().length() > 0) {
-                                                                                                                                                format = "ERROR " + StringsKt.take(detector2.getOrientError(), 60);
-                                                                                                                                            } else {
-                                                                                                                                                format = String.format("%.1f ms/car", Arrays.copyOf(new Object[]{Double.valueOf(detector2.getOrientMs())}, 1));
-                                                                                                                                                Intrinsics.checkNotNullExpressionValue(format, "format(...)");
-                                                                                                                                            }
-                                                                                                                                            $this$run_u24lambda_u2427.append("orient " + format + "\n");
-                                                                                                                                            double d = 1000;
-                                                                                                                                            String format11 = String.format("%.0f", Arrays.copyOf(new Object[]{Double.valueOf(detector2.getLoadMs() / d)}, 1));
-                                                                                                                                            Intrinsics.checkNotNullExpressionValue(format11, "format(...)");
-                                                                                                                                            String format12 = String.format("%.1f", Arrays.copyOf(new Object[]{Double.valueOf(detector2.getFirstRunMs() / d)}, 1));
-                                                                                                                                            Intrinsics.checkNotNullExpressionValue(format12, "format(...)");
-                                                                                                                                            String str19 = counts;
-                                                                                                                                            if (str19.length() == 0) {
-                                                                                                                                                str19 = "nothing";
-                                                                                                                                            }
-                                                                                                                                            $this$run_u24lambda_u2427.append("  load " + format11 + " s  first run " + format12 + " s  found: " + ((Object) str19) + (detector2.getGpuError().length() > 0 ? "   gpu: " + StringsKt.take(detector2.getGpuError(), 90) : "") + "\n");
-                                                                                                                                        }
-                                                                                                                                        str7 = mainActivity12.lastCrash;
-                                                                                                                                        if (str7.length() > 0) {
-                                                                                                                                            str10 = mainActivity12.lastCrash;
-                                                                                                                                            $this$run_u24lambda_u2427.append("LAST CRASH  " + StringsKt.take(StringsKt.replace(str10, "\n", " | ", false), 300) + "\n");
-                                                                                                                                        }
-                                                                                                                                        it = mainActivity12.scene;
-                                                                                                                                        if (it != null) {
-                                                                                                                                            $this$run_u24lambda_u2427.append("scene  cars " + it.getShownCars() + "  " + (it.getFailure().length() > 0 ? "ERROR " + StringsKt.take(it.getFailure(), 90) : "ok") + "\n");
-                                                                                                                                        }
-                                                                                                                                        uiSettings6 = mainActivity12.settings;
-                                                                                                                                        if (uiSettings6 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException(str6);
-                                                                                                                                            uiSettings6 = null;
-                                                                                                                                        }
-                                                                                                                                        if (uiSettings6.get("map_roads")) {
-                                                                                                                                            String tileStatus = OsmRoads.INSTANCE.getTileStatus();
-                                                                                                                                            sceneView = mainActivity12.scene;
-                                                                                                                                            if (sceneView == null || (str9 = sceneView.getMapStatus()) == null) {
-                                                                                                                                                str9 = "";
-                                                                                                                                            }
-                                                                                                                                            $this$run_u24lambda_u2427.append("map    " + tileStatus + "  " + str9 + "\n");
-                                                                                                                                        }
-                                                                                                                                        String str20 = t2.getCalValid() ? "ok" : "NO";
-                                                                                                                                        String format13 = String.format("%.3f %.3f %.3f", Arrays.copyOf(new Object[]{Float.valueOf(t2.getCalRpy()[0]), Float.valueOf(t2.getCalRpy()[1]), Float.valueOf(t2.getCalRpy()[2])}, 3));
-                                                                                                                                        Intrinsics.checkNotNullExpressionValue(format13, "format(...)");
-                                                                                                                                        String format14 = String.format("%.2f", Arrays.copyOf(new Object[]{Float.valueOf(t2.getCalHeight())}, 1));
-                                                                                                                                        Intrinsics.checkNotNullExpressionValue(format14, "format(...)");
-                                                                                                                                        overlayView4 = mainActivity12.overlay;
-                                                                                                                                        if (overlayView4 == null) {
-                                                                                                                                            Intrinsics.throwUninitializedPropertyAccessException("overlay");
-                                                                                                                                            overlayView4 = null;
-                                                                                                                                        }
-                                                                                                                                        String format15 = String.format("%.2f", Arrays.copyOf(new Object[]{Double.valueOf(overlayView4.getProj().getZoom())}, 1));
-                                                                                                                                        Intrinsics.checkNotNullExpressionValue(format15, "format(...)");
-                                                                                                                                        $this$run_u24lambda_u2427.append("calib  " + str20 + "  rpy " + format13 + "  h " + format14 + "  zoom " + format15 + "\n");
-                                                                                                                                        Long l = t2.getMsgCount().get("modelV2");
-                                                                                                                                        long longValue = l != null ? l.longValue() : 0L;
-                                                                                                                                        Long l2 = t2.getMsgCount().get("carState");
-                                                                                                                                        $this$run_u24lambda_u2427.append("model  " + longValue + "  cs " + (l2 != null ? l2.longValue() : 0L) + "  toggles " + t2.getToggles().size() + "  params " + t2.getParams().size() + "\n");
-                                                                                                                                        if (t2.getLeadOne().getStatus()) {
-                                                                                                                                            str8 = String.format("%.1f m  %.1f m/s", Arrays.copyOf(new Object[]{Float.valueOf(t2.getLeadOne().getDRel()), Float.valueOf(t2.getLeadOne().getVRel())}, 2));
-                                                                                                                                            Intrinsics.checkNotNullExpressionValue(str8, "format(...)");
-                                                                                                                                        } else {
-                                                                                                                                            str8 = "none";
-                                                                                                                                        }
-                                                                                                                                        String format16 = String.format("%.1f", Arrays.copyOf(new Object[]{Float.valueOf(t2.getSteeringAngleDeg())}, 1));
-                                                                                                                                        Intrinsics.checkNotNullExpressionValue(format16, "format(...)");
-                                                                                                                                        String format17 = String.format("%.2f", Arrays.copyOf(new Object[]{Float.valueOf(t2.getOutTorque())}, 1));
-                                                                                                                                        Intrinsics.checkNotNullExpressionValue(format17, "format(...)");
-                                                                                                                                        $this$run_u24lambda_u2427.append("lead   " + str8 + "  steer " + format16 + "°  torque " + format17);
-                                                                                                                                        Unit unit15 = Unit.INSTANCE;
-                                                                                                                                        String sb2 = sb.toString();
-                                                                                                                                        Intrinsics.checkNotNullExpressionValue(sb2, "toString(...)");
-                                                                                                                                        textView26.setText(sb2);
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                                this.this$0.applyHud();
-                                                                                                                                GpsBridge gpsBridge2 = GpsBridge.INSTANCE;
-                                                                                                                                telemetry = this.this$0.telemetry;
-                                                                                                                                String pStr$default3 = Telemetry.pStr$default(telemetry, "LastGPSPosition", null, 2, null);
-                                                                                                                                telemetry2 = this.this$0.telemetry;
-                                                                                                                                gpsBridge2.fallback(pStr$default3, telemetry2.getVEgo());
-                                                                                                                                handler = this.this$0.ui;
-                                                                                                                                handler.postDelayed(this, 50L);
-                                                                                                                                return;
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                        showAlert = false;
-                                                                                                                        MainActivity mainActivity1022 = this.this$0;
-                                                                                                                        f4 = this.this$0.alertAlpha;
-                                                                                                                        if (showAlert) {
-                                                                                                                        }
-                                                                                                                        f5 = this.this$0.alertAlpha;
-                                                                                                                        mainActivity1022.alertAlpha = f4 + ((stall3 - f5) * 0.35f);
-                                                                                                                        f6 = this.this$0.alertAlpha;
-                                                                                                                        if (f6 > 0.02f) {
-                                                                                                                        }
-                                                                                                                        ModelSnapshot model22 = t.getModel();
-                                                                                                                        if (model22 != null) {
-                                                                                                                        }
-                                                                                                                        j6 = this.this$0.lastModelFrame;
-                                                                                                                        if (mf == j6) {
-                                                                                                                        }
-                                                                                                                        this.this$0.lastModelFrame = mf;
-                                                                                                                        overlayView3 = this.this$0.overlay;
-                                                                                                                        if (overlayView3 == null) {
-                                                                                                                        }
-                                                                                                                        overlayView3.invalidate();
-                                                                                                                        wheelButton2 = this.this$0.wheel;
-                                                                                                                        if (wheelButton2 == null) {
-                                                                                                                        }
-                                                                                                                        wheelButton2.invalidate();
-                                                                                                                        dmView = this.this$0.dm;
-                                                                                                                        if (dmView == null) {
-                                                                                                                        }
-                                                                                                                        dmView.invalidate();
-                                                                                                                        miciDistanceView2 = this.this$0.personality;
-                                                                                                                        if (miciDistanceView2 == null) {
-                                                                                                                        }
-                                                                                                                        miciDistanceView2.invalidate();
-                                                                                                                        slcView2 = this.this$0.slc;
-                                                                                                                        if (slcView2 == null) {
-                                                                                                                        }
-                                                                                                                        slcView2.invalidate();
-                                                                                                                        slcActionsView2 = this.this$0.slcActions;
-                                                                                                                        if (slcActionsView2 == null) {
-                                                                                                                        }
-                                                                                                                        slcActionsView2.invalidate();
-                                                                                                                        devSidebarView2 = this.this$0.devSidebar;
-                                                                                                                        if (devSidebarView2 == null) {
-                                                                                                                        }
-                                                                                                                        if (devSidebarView2.getVisibility() == 0) {
-                                                                                                                        }
-                                                                                                                        aetherGaugeView2 = this.this$0.gauge;
-                                                                                                                        if (aetherGaugeView2 == null) {
-                                                                                                                        }
-                                                                                                                        aetherGaugeView2.invalidate();
-                                                                                                                        navCardView3 = this.this$0.navCard;
-                                                                                                                        if (navCardView3 == null) {
-                                                                                                                        }
-                                                                                                                        navCardView3.invalidate();
-                                                                                                                        slowReasonView2 = this.this$0.slowCard;
-                                                                                                                        if (slowReasonView2 == null) {
-                                                                                                                        }
-                                                                                                                        slowReasonView2.invalidate();
-                                                                                                                        laneCardView3 = this.this$0.laneCard;
-                                                                                                                        if (laneCardView3 == null) {
-                                                                                                                        }
-                                                                                                                        laneCardView3.invalidate();
-                                                                                                                        blinkerCardView2 = this.this$0.blinkCard;
-                                                                                                                        if (blinkerCardView2 == null) {
-                                                                                                                        }
-                                                                                                                        blinkerCardView2.invalidate();
-                                                                                                                        gpsCardView2 = this.this$0.gpsCard;
-                                                                                                                        if (gpsCardView2 == null) {
-                                                                                                                        }
-                                                                                                                        if (gpsCardView2.getVisibility() == 0) {
-                                                                                                                        }
-                                                                                                                        nudgeHintView4 = this.this$0.nudgeHint;
-                                                                                                                        if (nudgeHintView4 == null) {
-                                                                                                                        }
-                                                                                                                        nudgeHintView4.invalidate();
-                                                                                                                        weatherView2 = this.this$0.weather;
-                                                                                                                        if (weatherView2 == null) {
-                                                                                                                        }
-                                                                                                                        weatherView2.invalidate();
-                                                                                                                        slcSourcesView2 = this.this$0.slcSources;
-                                                                                                                        if (slcSourcesView2 == null) {
-                                                                                                                        }
-                                                                                                                        slcSourcesView2.invalidate();
-                                                                                                                        linearLayout4 = this.this$0.sidebar;
-                                                                                                                        if (linearLayout4 == null) {
-                                                                                                                        }
-                                                                                                                        if (linearLayout4.getVisibility() == 0) {
-                                                                                                                        }
-                                                                                                                        i21 = this.this$0.tick;
-                                                                                                                        if (i21 % 10 == 0) {
-                                                                                                                        }
-                                                                                                                        this.this$0.applyHud();
-                                                                                                                        GpsBridge gpsBridge22 = GpsBridge.INSTANCE;
-                                                                                                                        telemetry = this.this$0.telemetry;
-                                                                                                                        String pStr$default32 = Telemetry.pStr$default(telemetry, "LastGPSPosition", null, 2, null);
-                                                                                                                        telemetry2 = this.this$0.telemetry;
-                                                                                                                        gpsBridge22.fallback(pStr$default32, telemetry2.getVEgo());
-                                                                                                                        handler = this.this$0.ui;
-                                                                                                                        handler.postDelayed(this, 50L);
-                                                                                                                        return;
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                        i17 = 8;
-                                                                                                        textView19.setVisibility(i17);
-                                                                                                        i18 = this.this$0.tick;
-                                                                                                        if (i18 % 40 == 0) {
-                                                                                                        }
-                                                                                                        BlinkerTurn blinkerTurn22 = BlinkerTurn.INSTANCE;
-                                                                                                        uiSettings4 = this.this$0.settings;
-                                                                                                        if (uiSettings4 != null) {
-                                                                                                        }
-                                                                                                        int i3422 = i14;
-                                                                                                        BlinkerTurn.tick$default(blinkerTurn22, t, uiSettings5, 0L, 4, null);
-                                                                                                        this.this$0.ideasTick(t);
-                                                                                                        DriveTrack.tick$default(DriveTrack.INSTANCE, t, 0L, 2, null);
-                                                                                                        place = this.this$0.sharedPending;
-                                                                                                        if (place != null) {
-                                                                                                        }
-                                                                                                        i19 = this.this$0.tick;
-                                                                                                        if (i19 % 20 == 0) {
-                                                                                                        }
-                                                                                                        i20 = this.this$0.tick;
-                                                                                                        if (i20 % 4 == 0) {
-                                                                                                        }
-                                                                                                        textView20 = this.this$0.mapBtn;
-                                                                                                        if (textView20 == null) {
-                                                                                                        }
-                                                                                                        ViewGroup.LayoutParams layoutParams22 = textView20.getLayoutParams();
-                                                                                                        Intrinsics.checkNotNull(layoutParams22, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
-                                                                                                        lp = (FrameLayout.LayoutParams) layoutParams22;
-                                                                                                        MainActivity mainActivity822 = this.this$0;
-                                                                                                        textView21 = mainActivity822.whereBtn;
-                                                                                                        if (textView21 == null) {
-                                                                                                        }
-                                                                                                        want = mainActivity822.dp(textView21.getVisibility() != 0 ? 330 : 160);
-                                                                                                        if (lp.getMarginStart() != want) {
-                                                                                                        }
-                                                                                                        Unit unit1322 = Unit.INSTANCE;
-                                                                                                        MainActivity mainActivity922 = this.this$0;
-                                                                                                        if (t.getParams().get("NavLanePositioningAllowed") == null) {
-                                                                                                        }
-                                                                                                        if (!t.getStarted()) {
-                                                                                                        }
-                                                                                                        r = new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0d, 0.0d, null, 30, null);
-                                                                                                        nudgeHintView = mainActivity922.nudgeHint;
-                                                                                                        if (nudgeHintView == null) {
-                                                                                                        }
-                                                                                                        nudgeHintView.setResult(r);
-                                                                                                        nudgeHintView2 = mainActivity922.nudgeHint;
-                                                                                                        if (nudgeHintView2 == null) {
-                                                                                                        }
-                                                                                                        nudgeHintView2.setMetric(t.isMetric());
-                                                                                                        nudgeHintView3 = mainActivity922.nudgeHint;
-                                                                                                        if (nudgeHintView3 == null) {
-                                                                                                        }
-                                                                                                        nudgeHintView3.setVisibility(r.getState() != NudgeLogic.State.NONE ? 8 : 0);
-                                                                                                        Unit unit1422 = Unit.INSTANCE;
-                                                                                                        weatherView = this.this$0.weather;
-                                                                                                        if (weatherView == null) {
-                                                                                                        }
-                                                                                                        weatherView.setVisibility((t.getStarted() || !t.s("weather") || t.getWeatherId() <= 0) ? 8 : 0);
-                                                                                                        textView22 = this.this$0.compass;
-                                                                                                        if (textView22 == null) {
-                                                                                                        }
-                                                                                                        if (!t.getStarted()) {
-                                                                                                        }
-                                                                                                        textView22.setText(str3);
-                                                                                                        textView23 = this.this$0.devMetrics;
-                                                                                                        if (textView23 == null) {
-                                                                                                        }
-                                                                                                        textView23.setText((t.getStarted() || !t.s("dev_metrics")) ? "" : "CPU " + MathKt.roundToInt(t.getCpuUsage()) + "%  |  TEMP " + MathKt.roundToInt(t.getCpuTempC()) + "°C  |  RAM " + t.getMemUsage() + "%  |  DISK " + MathKt.roundToInt(t.getFreeSpacePct()) + "% free");
-                                                                                                        long nowNs22 = System.nanoTime();
-                                                                                                        if (t.getStarted()) {
-                                                                                                        }
-                                                                                                        if (t.getStarted()) {
-                                                                                                        }
-                                                                                                        this.this$0.standstillSinceNs = j3;
-                                                                                                        j4 = this.this$0.standstillSinceNs;
-                                                                                                        if (j4 == j3) {
-                                                                                                        }
-                                                                                                        float stoppedS22 = f2;
-                                                                                                        j5 = this.this$0.onroadSinceNs;
-                                                                                                        if (j5 == j3) {
-                                                                                                        }
-                                                                                                        float onroadS22 = f3;
-                                                                                                        if (t.s("stopped_timer")) {
-                                                                                                        }
-                                                                                                        textView24 = this.this$0.speedTv;
-                                                                                                        if (textView24 == null) {
-                                                                                                        }
-                                                                                                        z16 = this.this$0.night;
-                                                                                                        textView24.setTextColor(!z16 ? -1 : Color.rgb(29, 29, 31));
-                                                                                                        boolean hideNormal22 = !t.s("alerts");
-                                                                                                        if (t.getStarted()) {
-                                                                                                        }
-                                                                                                        showAlert = false;
-                                                                                                        MainActivity mainActivity10222 = this.this$0;
-                                                                                                        f4 = this.this$0.alertAlpha;
-                                                                                                        if (showAlert) {
-                                                                                                        }
-                                                                                                        f5 = this.this$0.alertAlpha;
-                                                                                                        mainActivity10222.alertAlpha = f4 + ((stall3 - f5) * 0.35f);
-                                                                                                        f6 = this.this$0.alertAlpha;
-                                                                                                        if (f6 > 0.02f) {
-                                                                                                        }
-                                                                                                        ModelSnapshot model222 = t.getModel();
-                                                                                                        if (model222 != null) {
-                                                                                                        }
-                                                                                                        j6 = this.this$0.lastModelFrame;
-                                                                                                        if (mf == j6) {
-                                                                                                        }
-                                                                                                        this.this$0.lastModelFrame = mf;
-                                                                                                        overlayView3 = this.this$0.overlay;
-                                                                                                        if (overlayView3 == null) {
-                                                                                                        }
-                                                                                                        overlayView3.invalidate();
-                                                                                                        wheelButton2 = this.this$0.wheel;
-                                                                                                        if (wheelButton2 == null) {
-                                                                                                        }
-                                                                                                        wheelButton2.invalidate();
-                                                                                                        dmView = this.this$0.dm;
-                                                                                                        if (dmView == null) {
-                                                                                                        }
-                                                                                                        dmView.invalidate();
-                                                                                                        miciDistanceView2 = this.this$0.personality;
-                                                                                                        if (miciDistanceView2 == null) {
-                                                                                                        }
-                                                                                                        miciDistanceView2.invalidate();
-                                                                                                        slcView2 = this.this$0.slc;
-                                                                                                        if (slcView2 == null) {
-                                                                                                        }
-                                                                                                        slcView2.invalidate();
-                                                                                                        slcActionsView2 = this.this$0.slcActions;
-                                                                                                        if (slcActionsView2 == null) {
-                                                                                                        }
-                                                                                                        slcActionsView2.invalidate();
-                                                                                                        devSidebarView2 = this.this$0.devSidebar;
-                                                                                                        if (devSidebarView2 == null) {
-                                                                                                        }
-                                                                                                        if (devSidebarView2.getVisibility() == 0) {
-                                                                                                        }
-                                                                                                        aetherGaugeView2 = this.this$0.gauge;
-                                                                                                        if (aetherGaugeView2 == null) {
-                                                                                                        }
-                                                                                                        aetherGaugeView2.invalidate();
-                                                                                                        navCardView3 = this.this$0.navCard;
-                                                                                                        if (navCardView3 == null) {
-                                                                                                        }
-                                                                                                        navCardView3.invalidate();
-                                                                                                        slowReasonView2 = this.this$0.slowCard;
-                                                                                                        if (slowReasonView2 == null) {
-                                                                                                        }
-                                                                                                        slowReasonView2.invalidate();
-                                                                                                        laneCardView3 = this.this$0.laneCard;
-                                                                                                        if (laneCardView3 == null) {
-                                                                                                        }
-                                                                                                        laneCardView3.invalidate();
-                                                                                                        blinkerCardView2 = this.this$0.blinkCard;
-                                                                                                        if (blinkerCardView2 == null) {
-                                                                                                        }
-                                                                                                        blinkerCardView2.invalidate();
-                                                                                                        gpsCardView2 = this.this$0.gpsCard;
-                                                                                                        if (gpsCardView2 == null) {
-                                                                                                        }
-                                                                                                        if (gpsCardView2.getVisibility() == 0) {
-                                                                                                        }
-                                                                                                        nudgeHintView4 = this.this$0.nudgeHint;
-                                                                                                        if (nudgeHintView4 == null) {
-                                                                                                        }
-                                                                                                        nudgeHintView4.invalidate();
-                                                                                                        weatherView2 = this.this$0.weather;
-                                                                                                        if (weatherView2 == null) {
-                                                                                                        }
-                                                                                                        weatherView2.invalidate();
-                                                                                                        slcSourcesView2 = this.this$0.slcSources;
-                                                                                                        if (slcSourcesView2 == null) {
-                                                                                                        }
-                                                                                                        slcSourcesView2.invalidate();
-                                                                                                        linearLayout4 = this.this$0.sidebar;
-                                                                                                        if (linearLayout4 == null) {
-                                                                                                        }
-                                                                                                        if (linearLayout4.getVisibility() == 0) {
-                                                                                                        }
-                                                                                                        i21 = this.this$0.tick;
-                                                                                                        if (i21 % 10 == 0) {
-                                                                                                        }
-                                                                                                        this.this$0.applyHud();
-                                                                                                        GpsBridge gpsBridge222 = GpsBridge.INSTANCE;
-                                                                                                        telemetry = this.this$0.telemetry;
-                                                                                                        String pStr$default322 = Telemetry.pStr$default(telemetry, "LastGPSPosition", null, 2, null);
-                                                                                                        telemetry2 = this.this$0.telemetry;
-                                                                                                        gpsBridge222.fallback(pStr$default322, telemetry2.getVEgo());
-                                                                                                        handler = this.this$0.ui;
-                                                                                                        handler.postDelayed(this, 50L);
-                                                                                                        return;
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                        i16 = 8;
-                                                                                        textView18.setVisibility(i16);
-                                                                                        textView19 = this.this$0.mapBtn;
-                                                                                        if (textView19 == null) {
-                                                                                        }
-                                                                                        dataClient7 = this.this$0.data;
-                                                                                        if (dataClient7 == null) {
-                                                                                        }
-                                                                                        if (dataClient7.getConnected()) {
-                                                                                        }
-                                                                                        i17 = 8;
-                                                                                        textView19.setVisibility(i17);
-                                                                                        i18 = this.this$0.tick;
-                                                                                        if (i18 % 40 == 0) {
-                                                                                        }
-                                                                                        BlinkerTurn blinkerTurn222 = BlinkerTurn.INSTANCE;
-                                                                                        uiSettings4 = this.this$0.settings;
-                                                                                        if (uiSettings4 != null) {
-                                                                                        }
-                                                                                        int i34222 = i14;
-                                                                                        BlinkerTurn.tick$default(blinkerTurn222, t, uiSettings5, 0L, 4, null);
-                                                                                        this.this$0.ideasTick(t);
-                                                                                        DriveTrack.tick$default(DriveTrack.INSTANCE, t, 0L, 2, null);
-                                                                                        place = this.this$0.sharedPending;
-                                                                                        if (place != null) {
-                                                                                        }
-                                                                                        i19 = this.this$0.tick;
-                                                                                        if (i19 % 20 == 0) {
-                                                                                        }
-                                                                                        i20 = this.this$0.tick;
-                                                                                        if (i20 % 4 == 0) {
-                                                                                        }
-                                                                                        textView20 = this.this$0.mapBtn;
-                                                                                        if (textView20 == null) {
-                                                                                        }
-                                                                                        ViewGroup.LayoutParams layoutParams222 = textView20.getLayoutParams();
-                                                                                        Intrinsics.checkNotNull(layoutParams222, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
-                                                                                        lp = (FrameLayout.LayoutParams) layoutParams222;
-                                                                                        MainActivity mainActivity8222 = this.this$0;
-                                                                                        textView21 = mainActivity8222.whereBtn;
-                                                                                        if (textView21 == null) {
-                                                                                        }
-                                                                                        want = mainActivity8222.dp(textView21.getVisibility() != 0 ? 330 : 160);
-                                                                                        if (lp.getMarginStart() != want) {
-                                                                                        }
-                                                                                        Unit unit13222 = Unit.INSTANCE;
-                                                                                        MainActivity mainActivity9222 = this.this$0;
-                                                                                        if (t.getParams().get("NavLanePositioningAllowed") == null) {
-                                                                                        }
-                                                                                        if (!t.getStarted()) {
-                                                                                        }
-                                                                                        r = new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0d, 0.0d, null, 30, null);
-                                                                                        nudgeHintView = mainActivity9222.nudgeHint;
-                                                                                        if (nudgeHintView == null) {
-                                                                                        }
-                                                                                        nudgeHintView.setResult(r);
-                                                                                        nudgeHintView2 = mainActivity9222.nudgeHint;
-                                                                                        if (nudgeHintView2 == null) {
-                                                                                        }
-                                                                                        nudgeHintView2.setMetric(t.isMetric());
-                                                                                        nudgeHintView3 = mainActivity9222.nudgeHint;
-                                                                                        if (nudgeHintView3 == null) {
-                                                                                        }
-                                                                                        nudgeHintView3.setVisibility(r.getState() != NudgeLogic.State.NONE ? 8 : 0);
-                                                                                        Unit unit14222 = Unit.INSTANCE;
-                                                                                        weatherView = this.this$0.weather;
-                                                                                        if (weatherView == null) {
-                                                                                        }
-                                                                                        weatherView.setVisibility((t.getStarted() || !t.s("weather") || t.getWeatherId() <= 0) ? 8 : 0);
-                                                                                        textView22 = this.this$0.compass;
-                                                                                        if (textView22 == null) {
-                                                                                        }
-                                                                                        if (!t.getStarted()) {
-                                                                                        }
-                                                                                        textView22.setText(str3);
-                                                                                        textView23 = this.this$0.devMetrics;
-                                                                                        if (textView23 == null) {
-                                                                                        }
-                                                                                        textView23.setText((t.getStarted() || !t.s("dev_metrics")) ? "" : "CPU " + MathKt.roundToInt(t.getCpuUsage()) + "%  |  TEMP " + MathKt.roundToInt(t.getCpuTempC()) + "°C  |  RAM " + t.getMemUsage() + "%  |  DISK " + MathKt.roundToInt(t.getFreeSpacePct()) + "% free");
-                                                                                        long nowNs222 = System.nanoTime();
-                                                                                        if (t.getStarted()) {
-                                                                                        }
-                                                                                        if (t.getStarted()) {
-                                                                                        }
-                                                                                        this.this$0.standstillSinceNs = j3;
-                                                                                        j4 = this.this$0.standstillSinceNs;
-                                                                                        if (j4 == j3) {
-                                                                                        }
-                                                                                        float stoppedS222 = f2;
-                                                                                        j5 = this.this$0.onroadSinceNs;
-                                                                                        if (j5 == j3) {
-                                                                                        }
-                                                                                        float onroadS222 = f3;
-                                                                                        if (t.s("stopped_timer")) {
-                                                                                        }
-                                                                                        textView24 = this.this$0.speedTv;
-                                                                                        if (textView24 == null) {
-                                                                                        }
-                                                                                        z16 = this.this$0.night;
-                                                                                        textView24.setTextColor(!z16 ? -1 : Color.rgb(29, 29, 31));
-                                                                                        boolean hideNormal222 = !t.s("alerts");
-                                                                                        if (t.getStarted()) {
-                                                                                        }
-                                                                                        showAlert = false;
-                                                                                        MainActivity mainActivity102222 = this.this$0;
-                                                                                        f4 = this.this$0.alertAlpha;
-                                                                                        if (showAlert) {
-                                                                                        }
-                                                                                        f5 = this.this$0.alertAlpha;
-                                                                                        mainActivity102222.alertAlpha = f4 + ((stall3 - f5) * 0.35f);
-                                                                                        f6 = this.this$0.alertAlpha;
-                                                                                        if (f6 > 0.02f) {
-                                                                                        }
-                                                                                        ModelSnapshot model2222 = t.getModel();
-                                                                                        if (model2222 != null) {
-                                                                                        }
-                                                                                        j6 = this.this$0.lastModelFrame;
-                                                                                        if (mf == j6) {
-                                                                                        }
-                                                                                        this.this$0.lastModelFrame = mf;
-                                                                                        overlayView3 = this.this$0.overlay;
-                                                                                        if (overlayView3 == null) {
-                                                                                        }
-                                                                                        overlayView3.invalidate();
-                                                                                        wheelButton2 = this.this$0.wheel;
-                                                                                        if (wheelButton2 == null) {
-                                                                                        }
-                                                                                        wheelButton2.invalidate();
-                                                                                        dmView = this.this$0.dm;
-                                                                                        if (dmView == null) {
-                                                                                        }
-                                                                                        dmView.invalidate();
-                                                                                        miciDistanceView2 = this.this$0.personality;
-                                                                                        if (miciDistanceView2 == null) {
-                                                                                        }
-                                                                                        miciDistanceView2.invalidate();
-                                                                                        slcView2 = this.this$0.slc;
-                                                                                        if (slcView2 == null) {
-                                                                                        }
-                                                                                        slcView2.invalidate();
-                                                                                        slcActionsView2 = this.this$0.slcActions;
-                                                                                        if (slcActionsView2 == null) {
-                                                                                        }
-                                                                                        slcActionsView2.invalidate();
-                                                                                        devSidebarView2 = this.this$0.devSidebar;
-                                                                                        if (devSidebarView2 == null) {
-                                                                                        }
-                                                                                        if (devSidebarView2.getVisibility() == 0) {
-                                                                                        }
-                                                                                        aetherGaugeView2 = this.this$0.gauge;
-                                                                                        if (aetherGaugeView2 == null) {
-                                                                                        }
-                                                                                        aetherGaugeView2.invalidate();
-                                                                                        navCardView3 = this.this$0.navCard;
-                                                                                        if (navCardView3 == null) {
-                                                                                        }
-                                                                                        navCardView3.invalidate();
-                                                                                        slowReasonView2 = this.this$0.slowCard;
-                                                                                        if (slowReasonView2 == null) {
-                                                                                        }
-                                                                                        slowReasonView2.invalidate();
-                                                                                        laneCardView3 = this.this$0.laneCard;
-                                                                                        if (laneCardView3 == null) {
-                                                                                        }
-                                                                                        laneCardView3.invalidate();
-                                                                                        blinkerCardView2 = this.this$0.blinkCard;
-                                                                                        if (blinkerCardView2 == null) {
-                                                                                        }
-                                                                                        blinkerCardView2.invalidate();
-                                                                                        gpsCardView2 = this.this$0.gpsCard;
-                                                                                        if (gpsCardView2 == null) {
-                                                                                        }
-                                                                                        if (gpsCardView2.getVisibility() == 0) {
-                                                                                        }
-                                                                                        nudgeHintView4 = this.this$0.nudgeHint;
-                                                                                        if (nudgeHintView4 == null) {
-                                                                                        }
-                                                                                        nudgeHintView4.invalidate();
-                                                                                        weatherView2 = this.this$0.weather;
-                                                                                        if (weatherView2 == null) {
-                                                                                        }
-                                                                                        weatherView2.invalidate();
-                                                                                        slcSourcesView2 = this.this$0.slcSources;
-                                                                                        if (slcSourcesView2 == null) {
-                                                                                        }
-                                                                                        slcSourcesView2.invalidate();
-                                                                                        linearLayout4 = this.this$0.sidebar;
-                                                                                        if (linearLayout4 == null) {
-                                                                                        }
-                                                                                        if (linearLayout4.getVisibility() == 0) {
-                                                                                        }
-                                                                                        i21 = this.this$0.tick;
-                                                                                        if (i21 % 10 == 0) {
-                                                                                        }
-                                                                                        this.this$0.applyHud();
-                                                                                        GpsBridge gpsBridge2222 = GpsBridge.INSTANCE;
-                                                                                        telemetry = this.this$0.telemetry;
-                                                                                        String pStr$default3222 = Telemetry.pStr$default(telemetry, "LastGPSPosition", null, 2, null);
-                                                                                        telemetry2 = this.this$0.telemetry;
-                                                                                        gpsBridge2222.fallback(pStr$default3222, telemetry2.getVEgo());
-                                                                                        handler = this.this$0.ui;
-                                                                                        handler.postDelayed(this, 50L);
-                                                                                        return;
-                                                                                    }
-                                                                                    i14 = 0;
-                                                                                }
-                                                                                turnIn = null;
-                                                                                laneSuggestView4 = this.this$0.laneSuggest;
-                                                                                if (laneSuggestView4 == null) {
-                                                                                }
-                                                                                laneSuggestView4.tick(lane, turnIn);
-                                                                                replayBar = this.this$0.replayBar;
-                                                                                if (replayBar == null) {
-                                                                                }
-                                                                                dataClient5 = this.this$0.data;
-                                                                                if (dataClient5 == null) {
-                                                                                }
-                                                                                replayBar.setVisibility((dataClient5.getConnected() || !Replay.INSTANCE.getActive()) ? 8 : i14);
-                                                                                textView18 = this.this$0.whereBtn;
-                                                                                if (textView18 == null) {
-                                                                                }
-                                                                                dataClient6 = this.this$0.data;
-                                                                                if (dataClient6 == null) {
-                                                                                }
-                                                                                if (dataClient6.getConnected()) {
-                                                                                    mapOpen2 = this.this$0.getMapOpen();
-                                                                                    if (!mapOpen2) {
-                                                                                    }
-                                                                                }
-                                                                                i16 = 8;
-                                                                                textView18.setVisibility(i16);
-                                                                                textView19 = this.this$0.mapBtn;
-                                                                                if (textView19 == null) {
-                                                                                }
-                                                                                dataClient7 = this.this$0.data;
-                                                                                if (dataClient7 == null) {
-                                                                                }
-                                                                                if (dataClient7.getConnected()) {
-                                                                                }
-                                                                                i17 = 8;
-                                                                                textView19.setVisibility(i17);
-                                                                                i18 = this.this$0.tick;
-                                                                                if (i18 % 40 == 0) {
-                                                                                }
-                                                                                BlinkerTurn blinkerTurn2222 = BlinkerTurn.INSTANCE;
-                                                                                uiSettings4 = this.this$0.settings;
-                                                                                if (uiSettings4 != null) {
-                                                                                }
-                                                                                int i342222 = i14;
-                                                                                BlinkerTurn.tick$default(blinkerTurn2222, t, uiSettings5, 0L, 4, null);
-                                                                                this.this$0.ideasTick(t);
-                                                                                DriveTrack.tick$default(DriveTrack.INSTANCE, t, 0L, 2, null);
-                                                                                place = this.this$0.sharedPending;
-                                                                                if (place != null) {
-                                                                                }
-                                                                                i19 = this.this$0.tick;
-                                                                                if (i19 % 20 == 0) {
-                                                                                }
-                                                                                i20 = this.this$0.tick;
-                                                                                if (i20 % 4 == 0) {
-                                                                                }
-                                                                                textView20 = this.this$0.mapBtn;
-                                                                                if (textView20 == null) {
-                                                                                }
-                                                                                ViewGroup.LayoutParams layoutParams2222 = textView20.getLayoutParams();
-                                                                                Intrinsics.checkNotNull(layoutParams2222, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
-                                                                                lp = (FrameLayout.LayoutParams) layoutParams2222;
-                                                                                MainActivity mainActivity82222 = this.this$0;
-                                                                                textView21 = mainActivity82222.whereBtn;
-                                                                                if (textView21 == null) {
-                                                                                }
-                                                                                want = mainActivity82222.dp(textView21.getVisibility() != 0 ? 330 : 160);
-                                                                                if (lp.getMarginStart() != want) {
-                                                                                }
-                                                                                Unit unit132222 = Unit.INSTANCE;
-                                                                                MainActivity mainActivity92222 = this.this$0;
-                                                                                if (t.getParams().get("NavLanePositioningAllowed") == null) {
-                                                                                }
-                                                                                if (!t.getStarted()) {
-                                                                                }
-                                                                                r = new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0d, 0.0d, null, 30, null);
-                                                                                nudgeHintView = mainActivity92222.nudgeHint;
-                                                                                if (nudgeHintView == null) {
-                                                                                }
-                                                                                nudgeHintView.setResult(r);
-                                                                                nudgeHintView2 = mainActivity92222.nudgeHint;
-                                                                                if (nudgeHintView2 == null) {
-                                                                                }
-                                                                                nudgeHintView2.setMetric(t.isMetric());
-                                                                                nudgeHintView3 = mainActivity92222.nudgeHint;
-                                                                                if (nudgeHintView3 == null) {
-                                                                                }
-                                                                                nudgeHintView3.setVisibility(r.getState() != NudgeLogic.State.NONE ? 8 : 0);
-                                                                                Unit unit142222 = Unit.INSTANCE;
-                                                                                weatherView = this.this$0.weather;
-                                                                                if (weatherView == null) {
-                                                                                }
-                                                                                weatherView.setVisibility((t.getStarted() || !t.s("weather") || t.getWeatherId() <= 0) ? 8 : 0);
-                                                                                textView22 = this.this$0.compass;
-                                                                                if (textView22 == null) {
-                                                                                }
-                                                                                if (!t.getStarted()) {
-                                                                                }
-                                                                                textView22.setText(str3);
-                                                                                textView23 = this.this$0.devMetrics;
-                                                                                if (textView23 == null) {
-                                                                                }
-                                                                                textView23.setText((t.getStarted() || !t.s("dev_metrics")) ? "" : "CPU " + MathKt.roundToInt(t.getCpuUsage()) + "%  |  TEMP " + MathKt.roundToInt(t.getCpuTempC()) + "°C  |  RAM " + t.getMemUsage() + "%  |  DISK " + MathKt.roundToInt(t.getFreeSpacePct()) + "% free");
-                                                                                long nowNs2222 = System.nanoTime();
-                                                                                if (t.getStarted()) {
-                                                                                }
-                                                                                if (t.getStarted()) {
-                                                                                }
-                                                                                this.this$0.standstillSinceNs = j3;
-                                                                                j4 = this.this$0.standstillSinceNs;
-                                                                                if (j4 == j3) {
-                                                                                }
-                                                                                float stoppedS2222 = f2;
-                                                                                j5 = this.this$0.onroadSinceNs;
-                                                                                if (j5 == j3) {
-                                                                                }
-                                                                                float onroadS2222 = f3;
-                                                                                if (t.s("stopped_timer")) {
-                                                                                }
-                                                                                textView24 = this.this$0.speedTv;
-                                                                                if (textView24 == null) {
-                                                                                }
-                                                                                z16 = this.this$0.night;
-                                                                                textView24.setTextColor(!z16 ? -1 : Color.rgb(29, 29, 31));
-                                                                                boolean hideNormal2222 = !t.s("alerts");
-                                                                                if (t.getStarted()) {
-                                                                                }
-                                                                                showAlert = false;
-                                                                                MainActivity mainActivity1022222 = this.this$0;
-                                                                                f4 = this.this$0.alertAlpha;
-                                                                                if (showAlert) {
-                                                                                }
-                                                                                f5 = this.this$0.alertAlpha;
-                                                                                mainActivity1022222.alertAlpha = f4 + ((stall3 - f5) * 0.35f);
-                                                                                f6 = this.this$0.alertAlpha;
-                                                                                if (f6 > 0.02f) {
-                                                                                }
-                                                                                ModelSnapshot model22222 = t.getModel();
-                                                                                if (model22222 != null) {
-                                                                                }
-                                                                                j6 = this.this$0.lastModelFrame;
-                                                                                if (mf == j6) {
-                                                                                }
-                                                                                this.this$0.lastModelFrame = mf;
-                                                                                overlayView3 = this.this$0.overlay;
-                                                                                if (overlayView3 == null) {
-                                                                                }
-                                                                                overlayView3.invalidate();
-                                                                                wheelButton2 = this.this$0.wheel;
-                                                                                if (wheelButton2 == null) {
-                                                                                }
-                                                                                wheelButton2.invalidate();
-                                                                                dmView = this.this$0.dm;
-                                                                                if (dmView == null) {
-                                                                                }
-                                                                                dmView.invalidate();
-                                                                                miciDistanceView2 = this.this$0.personality;
-                                                                                if (miciDistanceView2 == null) {
-                                                                                }
-                                                                                miciDistanceView2.invalidate();
-                                                                                slcView2 = this.this$0.slc;
-                                                                                if (slcView2 == null) {
-                                                                                }
-                                                                                slcView2.invalidate();
-                                                                                slcActionsView2 = this.this$0.slcActions;
-                                                                                if (slcActionsView2 == null) {
-                                                                                }
-                                                                                slcActionsView2.invalidate();
-                                                                                devSidebarView2 = this.this$0.devSidebar;
-                                                                                if (devSidebarView2 == null) {
-                                                                                }
-                                                                                if (devSidebarView2.getVisibility() == 0) {
-                                                                                }
-                                                                                aetherGaugeView2 = this.this$0.gauge;
-                                                                                if (aetherGaugeView2 == null) {
-                                                                                }
-                                                                                aetherGaugeView2.invalidate();
-                                                                                navCardView3 = this.this$0.navCard;
-                                                                                if (navCardView3 == null) {
-                                                                                }
-                                                                                navCardView3.invalidate();
-                                                                                slowReasonView2 = this.this$0.slowCard;
-                                                                                if (slowReasonView2 == null) {
-                                                                                }
-                                                                                slowReasonView2.invalidate();
-                                                                                laneCardView3 = this.this$0.laneCard;
-                                                                                if (laneCardView3 == null) {
-                                                                                }
-                                                                                laneCardView3.invalidate();
-                                                                                blinkerCardView2 = this.this$0.blinkCard;
-                                                                                if (blinkerCardView2 == null) {
-                                                                                }
-                                                                                blinkerCardView2.invalidate();
-                                                                                gpsCardView2 = this.this$0.gpsCard;
-                                                                                if (gpsCardView2 == null) {
-                                                                                }
-                                                                                if (gpsCardView2.getVisibility() == 0) {
-                                                                                }
-                                                                                nudgeHintView4 = this.this$0.nudgeHint;
-                                                                                if (nudgeHintView4 == null) {
-                                                                                }
-                                                                                nudgeHintView4.invalidate();
-                                                                                weatherView2 = this.this$0.weather;
-                                                                                if (weatherView2 == null) {
-                                                                                }
-                                                                                weatherView2.invalidate();
-                                                                                slcSourcesView2 = this.this$0.slcSources;
-                                                                                if (slcSourcesView2 == null) {
-                                                                                }
-                                                                                slcSourcesView2.invalidate();
-                                                                                linearLayout4 = this.this$0.sidebar;
-                                                                                if (linearLayout4 == null) {
-                                                                                }
-                                                                                if (linearLayout4.getVisibility() == 0) {
-                                                                                }
-                                                                                i21 = this.this$0.tick;
-                                                                                if (i21 % 10 == 0) {
-                                                                                }
-                                                                                this.this$0.applyHud();
-                                                                                GpsBridge gpsBridge22222 = GpsBridge.INSTANCE;
-                                                                                telemetry = this.this$0.telemetry;
-                                                                                String pStr$default32222 = Telemetry.pStr$default(telemetry, "LastGPSPosition", null, 2, null);
-                                                                                telemetry2 = this.this$0.telemetry;
-                                                                                gpsBridge22222.fallback(pStr$default32222, telemetry2.getVEgo());
-                                                                                handler = this.this$0.ui;
-                                                                                handler.postDelayed(this, 50L);
-                                                                                return;
-                                                                            }
-                                                                            i13 = 1065353216;
-                                                                            i14 = i12;
-                                                                            laneSuggestView7 = this.this$0.laneSuggest;
-                                                                            if (laneSuggestView7 == null) {
-                                                                                Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                                                                                laneSuggestView7 = null;
-                                                                            }
-                                                                            if (laneSuggestView7.getVisibility() == 8) {
-                                                                                laneSuggestView9 = this.this$0.laneSuggest;
-                                                                                if (laneSuggestView9 == null) {
-                                                                                    Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                                                                                    laneSuggestView9 = null;
-                                                                                }
-                                                                            }
-                                                                            laneSuggestView8 = this.this$0.laneSuggest;
-                                                                            if (laneSuggestView8 == null) {
-                                                                                Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
-                                                                                laneSuggestView8 = null;
-                                                                            }
-                                                                            laneSuggestView8.stop();
-                                                                            replayBar = this.this$0.replayBar;
-                                                                            if (replayBar == null) {
-                                                                            }
-                                                                            dataClient5 = this.this$0.data;
-                                                                            if (dataClient5 == null) {
-                                                                            }
-                                                                            replayBar.setVisibility((dataClient5.getConnected() || !Replay.INSTANCE.getActive()) ? 8 : i14);
-                                                                            textView18 = this.this$0.whereBtn;
-                                                                            if (textView18 == null) {
-                                                                            }
-                                                                            dataClient6 = this.this$0.data;
-                                                                            if (dataClient6 == null) {
-                                                                            }
-                                                                            if (dataClient6.getConnected()) {
-                                                                            }
-                                                                            i16 = 8;
-                                                                            textView18.setVisibility(i16);
-                                                                            textView19 = this.this$0.mapBtn;
-                                                                            if (textView19 == null) {
-                                                                            }
-                                                                            dataClient7 = this.this$0.data;
-                                                                            if (dataClient7 == null) {
-                                                                            }
-                                                                            if (dataClient7.getConnected()) {
-                                                                            }
-                                                                            i17 = 8;
-                                                                            textView19.setVisibility(i17);
-                                                                            i18 = this.this$0.tick;
-                                                                            if (i18 % 40 == 0) {
-                                                                            }
-                                                                            BlinkerTurn blinkerTurn22222 = BlinkerTurn.INSTANCE;
-                                                                            uiSettings4 = this.this$0.settings;
-                                                                            if (uiSettings4 != null) {
-                                                                            }
-                                                                            int i3422222 = i14;
-                                                                            BlinkerTurn.tick$default(blinkerTurn22222, t, uiSettings5, 0L, 4, null);
-                                                                            this.this$0.ideasTick(t);
-                                                                            DriveTrack.tick$default(DriveTrack.INSTANCE, t, 0L, 2, null);
-                                                                            place = this.this$0.sharedPending;
-                                                                            if (place != null) {
-                                                                            }
-                                                                            i19 = this.this$0.tick;
-                                                                            if (i19 % 20 == 0) {
-                                                                            }
-                                                                            i20 = this.this$0.tick;
-                                                                            if (i20 % 4 == 0) {
-                                                                            }
-                                                                            textView20 = this.this$0.mapBtn;
-                                                                            if (textView20 == null) {
-                                                                            }
-                                                                            ViewGroup.LayoutParams layoutParams22222 = textView20.getLayoutParams();
-                                                                            Intrinsics.checkNotNull(layoutParams22222, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
-                                                                            lp = (FrameLayout.LayoutParams) layoutParams22222;
-                                                                            MainActivity mainActivity822222 = this.this$0;
-                                                                            textView21 = mainActivity822222.whereBtn;
-                                                                            if (textView21 == null) {
-                                                                            }
-                                                                            want = mainActivity822222.dp(textView21.getVisibility() != 0 ? 330 : 160);
-                                                                            if (lp.getMarginStart() != want) {
-                                                                            }
-                                                                            Unit unit1322222 = Unit.INSTANCE;
-                                                                            MainActivity mainActivity922222 = this.this$0;
-                                                                            if (t.getParams().get("NavLanePositioningAllowed") == null) {
-                                                                            }
-                                                                            if (!t.getStarted()) {
-                                                                            }
-                                                                            r = new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0d, 0.0d, null, 30, null);
-                                                                            nudgeHintView = mainActivity922222.nudgeHint;
-                                                                            if (nudgeHintView == null) {
-                                                                            }
-                                                                            nudgeHintView.setResult(r);
-                                                                            nudgeHintView2 = mainActivity922222.nudgeHint;
-                                                                            if (nudgeHintView2 == null) {
-                                                                            }
-                                                                            nudgeHintView2.setMetric(t.isMetric());
-                                                                            nudgeHintView3 = mainActivity922222.nudgeHint;
-                                                                            if (nudgeHintView3 == null) {
-                                                                            }
-                                                                            nudgeHintView3.setVisibility(r.getState() != NudgeLogic.State.NONE ? 8 : 0);
-                                                                            Unit unit1422222 = Unit.INSTANCE;
-                                                                            weatherView = this.this$0.weather;
-                                                                            if (weatherView == null) {
-                                                                            }
-                                                                            weatherView.setVisibility((t.getStarted() || !t.s("weather") || t.getWeatherId() <= 0) ? 8 : 0);
-                                                                            textView22 = this.this$0.compass;
-                                                                            if (textView22 == null) {
-                                                                            }
-                                                                            if (!t.getStarted()) {
-                                                                            }
-                                                                            textView22.setText(str3);
-                                                                            textView23 = this.this$0.devMetrics;
-                                                                            if (textView23 == null) {
-                                                                            }
-                                                                            textView23.setText((t.getStarted() || !t.s("dev_metrics")) ? "" : "CPU " + MathKt.roundToInt(t.getCpuUsage()) + "%  |  TEMP " + MathKt.roundToInt(t.getCpuTempC()) + "°C  |  RAM " + t.getMemUsage() + "%  |  DISK " + MathKt.roundToInt(t.getFreeSpacePct()) + "% free");
-                                                                            long nowNs22222 = System.nanoTime();
-                                                                            if (t.getStarted()) {
-                                                                            }
-                                                                            if (t.getStarted()) {
-                                                                            }
-                                                                            this.this$0.standstillSinceNs = j3;
-                                                                            j4 = this.this$0.standstillSinceNs;
-                                                                            if (j4 == j3) {
-                                                                            }
-                                                                            float stoppedS22222 = f2;
-                                                                            j5 = this.this$0.onroadSinceNs;
-                                                                            if (j5 == j3) {
-                                                                            }
-                                                                            float onroadS22222 = f3;
-                                                                            if (t.s("stopped_timer")) {
-                                                                            }
-                                                                            textView24 = this.this$0.speedTv;
-                                                                            if (textView24 == null) {
-                                                                            }
-                                                                            z16 = this.this$0.night;
-                                                                            textView24.setTextColor(!z16 ? -1 : Color.rgb(29, 29, 31));
-                                                                            boolean hideNormal22222 = !t.s("alerts");
-                                                                            if (t.getStarted()) {
-                                                                            }
-                                                                            showAlert = false;
-                                                                            MainActivity mainActivity10222222 = this.this$0;
-                                                                            f4 = this.this$0.alertAlpha;
-                                                                            if (showAlert) {
-                                                                            }
-                                                                            f5 = this.this$0.alertAlpha;
-                                                                            mainActivity10222222.alertAlpha = f4 + ((stall3 - f5) * 0.35f);
-                                                                            f6 = this.this$0.alertAlpha;
-                                                                            if (f6 > 0.02f) {
-                                                                            }
-                                                                            ModelSnapshot model222222 = t.getModel();
-                                                                            if (model222222 != null) {
-                                                                            }
-                                                                            j6 = this.this$0.lastModelFrame;
-                                                                            if (mf == j6) {
-                                                                            }
-                                                                            this.this$0.lastModelFrame = mf;
-                                                                            overlayView3 = this.this$0.overlay;
-                                                                            if (overlayView3 == null) {
-                                                                            }
-                                                                            overlayView3.invalidate();
-                                                                            wheelButton2 = this.this$0.wheel;
-                                                                            if (wheelButton2 == null) {
-                                                                            }
-                                                                            wheelButton2.invalidate();
-                                                                            dmView = this.this$0.dm;
-                                                                            if (dmView == null) {
-                                                                            }
-                                                                            dmView.invalidate();
-                                                                            miciDistanceView2 = this.this$0.personality;
-                                                                            if (miciDistanceView2 == null) {
-                                                                            }
-                                                                            miciDistanceView2.invalidate();
-                                                                            slcView2 = this.this$0.slc;
-                                                                            if (slcView2 == null) {
-                                                                            }
-                                                                            slcView2.invalidate();
-                                                                            slcActionsView2 = this.this$0.slcActions;
-                                                                            if (slcActionsView2 == null) {
-                                                                            }
-                                                                            slcActionsView2.invalidate();
-                                                                            devSidebarView2 = this.this$0.devSidebar;
-                                                                            if (devSidebarView2 == null) {
-                                                                            }
-                                                                            if (devSidebarView2.getVisibility() == 0) {
-                                                                            }
-                                                                            aetherGaugeView2 = this.this$0.gauge;
-                                                                            if (aetherGaugeView2 == null) {
-                                                                            }
-                                                                            aetherGaugeView2.invalidate();
-                                                                            navCardView3 = this.this$0.navCard;
-                                                                            if (navCardView3 == null) {
-                                                                            }
-                                                                            navCardView3.invalidate();
-                                                                            slowReasonView2 = this.this$0.slowCard;
-                                                                            if (slowReasonView2 == null) {
-                                                                            }
-                                                                            slowReasonView2.invalidate();
-                                                                            laneCardView3 = this.this$0.laneCard;
-                                                                            if (laneCardView3 == null) {
-                                                                            }
-                                                                            laneCardView3.invalidate();
-                                                                            blinkerCardView2 = this.this$0.blinkCard;
-                                                                            if (blinkerCardView2 == null) {
-                                                                            }
-                                                                            blinkerCardView2.invalidate();
-                                                                            gpsCardView2 = this.this$0.gpsCard;
-                                                                            if (gpsCardView2 == null) {
-                                                                            }
-                                                                            if (gpsCardView2.getVisibility() == 0) {
-                                                                            }
-                                                                            nudgeHintView4 = this.this$0.nudgeHint;
-                                                                            if (nudgeHintView4 == null) {
-                                                                            }
-                                                                            nudgeHintView4.invalidate();
-                                                                            weatherView2 = this.this$0.weather;
-                                                                            if (weatherView2 == null) {
-                                                                            }
-                                                                            weatherView2.invalidate();
-                                                                            slcSourcesView2 = this.this$0.slcSources;
-                                                                            if (slcSourcesView2 == null) {
-                                                                            }
-                                                                            slcSourcesView2.invalidate();
-                                                                            linearLayout4 = this.this$0.sidebar;
-                                                                            if (linearLayout4 == null) {
-                                                                            }
-                                                                            if (linearLayout4.getVisibility() == 0) {
-                                                                            }
-                                                                            i21 = this.this$0.tick;
-                                                                            if (i21 % 10 == 0) {
-                                                                            }
-                                                                            this.this$0.applyHud();
-                                                                            GpsBridge gpsBridge222222 = GpsBridge.INSTANCE;
-                                                                            telemetry = this.this$0.telemetry;
-                                                                            String pStr$default322222 = Telemetry.pStr$default(telemetry, "LastGPSPosition", null, 2, null);
-                                                                            telemetry2 = this.this$0.telemetry;
-                                                                            gpsBridge222222.fallback(pStr$default322222, telemetry2.getVEgo());
-                                                                            handler = this.this$0.ui;
-                                                                            handler.postDelayed(this, 50L);
-                                                                            return;
-                                                                        }
-                                                                        z13 = true;
-                                                                        active = Replay.INSTANCE.getActive();
-                                                                        z14 = this.this$0.replayWas;
-                                                                        if (active != z14) {
-                                                                        }
-                                                                        if (!t.getStarted()) {
-                                                                        }
-                                                                        dataClient4 = this.this$0.data;
-                                                                        if (dataClient4 == null) {
-                                                                        }
-                                                                        if (!dataClient4.getConnected()) {
-                                                                        }
-                                                                    }
-                                                                    z12 = true;
-                                                                    if (!t.getRightBlindspot()) {
-                                                                    }
-                                                                    z13 = true;
-                                                                    active = Replay.INSTANCE.getActive();
-                                                                    z14 = this.this$0.replayWas;
-                                                                    if (active != z14) {
-                                                                    }
-                                                                    if (!t.getStarted()) {
-                                                                    }
-                                                                    dataClient4 = this.this$0.data;
-                                                                    if (dataClient4 == null) {
-                                                                    }
-                                                                    if (!dataClient4.getConnected()) {
-                                                                    }
-                                                                }
-                                                            }
-                                                            i10 = 8;
-                                                            slowReasonView.setVisibility(i10);
-                                                            if (t.getStarted()) {
-                                                            }
-                                                            if (t.getStarted()) {
-                                                                detector3 = this.this$0.detectorRef;
-                                                                MainActivity mainActivity52 = this.this$0;
-                                                                if (System.currentTimeMillis() - a.getAtMs() < 5000) {
-                                                                }
-                                                                Unit unit92 = Unit.INSTANCE;
-                                                                Unit unit102 = Unit.INSTANCE;
-                                                            }
-                                                            s = this.this$0.scene;
-                                                            if (s != null) {
-                                                            }
-                                                            if (t.getStarted()) {
-                                                            }
-                                                            this.this$0.laneWasStarted = t.getStarted();
-                                                            laneCardView = this.this$0.laneCard;
-                                                            if (laneCardView == null) {
-                                                            }
-                                                            laneCardView.setVisibility((t.getStarted() || !t.s("lane_card")) ? 8 : i11);
-                                                            laneShots = this.this$0.getLaneShots();
-                                                            detector = this.this$0.detectorRef;
-                                                            laneShots.setDetector(detector);
-                                                            laneCardView2 = this.this$0.laneCard;
-                                                            if (laneCardView2 == null) {
-                                                            }
-                                                            if (laneCardView2.getVisibility() == 0) {
-                                                                laneShots2 = this.this$0.getLaneShots();
-                                                                final MainActivity mainActivity72 = this.this$0;
-                                                                laneShots2.tick(new Function0() { // from class: com.starpilot.starview.MainActivity$uiTick$1$$ExternalSyntheticLambda0
-                                                                    @Override // kotlin.jvm.functions.Function0
-                                                                    public final Object invoke() {
-                                                                        String run$lambda$5;
-                                                                        run$lambda$5 = MainActivity$uiTick$1.run$lambda$5(mainActivity72, t);
-                                                                        return run$lambda$5;
-                                                                    }
-                                                                });
-                                                            }
-                                                            blinkerCardView = this.this$0.blinkCard;
-                                                            if (blinkerCardView == null) {
-                                                            }
-                                                            dataClient2 = this.this$0.data;
-                                                            if (dataClient2 == null) {
-                                                            }
-                                                            blinkerCardView.setVisibility((dataClient2.getConnected() || !t.s("blink_card")) ? 8 : i11);
-                                                            gpsCardView = this.this$0.gpsCard;
-                                                            if (gpsCardView == null) {
-                                                            }
-                                                            dataClient3 = this.this$0.data;
-                                                            if (dataClient3 == null) {
-                                                            }
-                                                            gpsCardView.setVisibility((dataClient3.getConnected() || !t.s("gps_card")) ? 8 : i11);
-                                                            boolean laneOn2 = t.s("lane_suggest");
-                                                            boolean turnOn2 = t.s("turn_signals");
-                                                            if (t.s("car_memory")) {
-                                                            }
-                                                            if (!t.getLeftBlindspot()) {
-                                                            }
-                                                            z12 = true;
-                                                            if (!t.getRightBlindspot()) {
-                                                            }
-                                                            z13 = true;
-                                                            active = Replay.INSTANCE.getActive();
-                                                            z14 = this.this$0.replayWas;
-                                                            if (active != z14) {
-                                                            }
-                                                            if (!t.getStarted()) {
-                                                            }
-                                                            dataClient4 = this.this$0.data;
-                                                            if (dataClient4 == null) {
-                                                            }
-                                                            if (!dataClient4.getConnected()) {
-                                                            }
-                                                        }
-                                                    }
-                                                    i9 = 8;
-                                                    navCardView.setVisibility(i9);
-                                                    navCardView2 = this.this$0.navCard;
-                                                    if (navCardView2 == null) {
-                                                    }
-                                                    navCardView2.setAlpha(!(card == null && ((Boolean) card.getSecond()).booleanValue()) ? 0.55f : 1.0f);
-                                                    slowReasonView = this.this$0.slowCard;
-                                                    if (slowReasonView == null) {
-                                                    }
-                                                    if (t.getStarted()) {
-                                                        slowReasonView3 = this.this$0.slowCard;
-                                                        if (slowReasonView3 == null) {
-                                                        }
-                                                        if (slowReasonView3.current() != null) {
-                                                        }
-                                                    }
-                                                    i10 = 8;
-                                                    slowReasonView.setVisibility(i10);
-                                                    if (t.getStarted()) {
-                                                    }
-                                                    if (t.getStarted()) {
-                                                    }
-                                                    s = this.this$0.scene;
-                                                    if (s != null) {
-                                                    }
-                                                    if (t.getStarted()) {
-                                                    }
-                                                    this.this$0.laneWasStarted = t.getStarted();
-                                                    laneCardView = this.this$0.laneCard;
-                                                    if (laneCardView == null) {
-                                                    }
-                                                    laneCardView.setVisibility((t.getStarted() || !t.s("lane_card")) ? 8 : i11);
-                                                    laneShots = this.this$0.getLaneShots();
-                                                    detector = this.this$0.detectorRef;
-                                                    laneShots.setDetector(detector);
-                                                    laneCardView2 = this.this$0.laneCard;
-                                                    if (laneCardView2 == null) {
-                                                    }
-                                                    if (laneCardView2.getVisibility() == 0) {
-                                                    }
-                                                    blinkerCardView = this.this$0.blinkCard;
-                                                    if (blinkerCardView == null) {
-                                                    }
-                                                    dataClient2 = this.this$0.data;
-                                                    if (dataClient2 == null) {
-                                                    }
-                                                    blinkerCardView.setVisibility((dataClient2.getConnected() || !t.s("blink_card")) ? 8 : i11);
-                                                    gpsCardView = this.this$0.gpsCard;
-                                                    if (gpsCardView == null) {
-                                                    }
-                                                    dataClient3 = this.this$0.data;
-                                                    if (dataClient3 == null) {
-                                                    }
-                                                    gpsCardView.setVisibility((dataClient3.getConnected() || !t.s("gps_card")) ? 8 : i11);
-                                                    boolean laneOn22 = t.s("lane_suggest");
-                                                    boolean turnOn22 = t.s("turn_signals");
-                                                    if (t.s("car_memory")) {
-                                                    }
-                                                    if (!t.getLeftBlindspot()) {
-                                                    }
-                                                    z12 = true;
-                                                    if (!t.getRightBlindspot()) {
-                                                    }
-                                                    z13 = true;
-                                                    active = Replay.INSTANCE.getActive();
-                                                    z14 = this.this$0.replayWas;
-                                                    if (active != z14) {
-                                                    }
-                                                    if (!t.getStarted()) {
-                                                    }
-                                                    dataClient4 = this.this$0.data;
-                                                    if (dataClient4 == null) {
-                                                    }
-                                                    if (!dataClient4.getConnected()) {
-                                                    }
-                                                }
-                                            }
-                                            i8 = 8;
-                                            slcSourcesView.setVisibility(i8);
-                                            Pair card2 = Telemetry.navCard$default(t, 0L, 1, null);
-                                            navCardView = this.this$0.navCard;
-                                            if (navCardView == null) {
-                                            }
-                                            if (t.getStarted()) {
-                                                mapOpen3 = this.this$0.getMapOpen();
-                                                if (!mapOpen3) {
-                                                }
-                                            }
-                                            i9 = 8;
-                                            navCardView.setVisibility(i9);
-                                            navCardView2 = this.this$0.navCard;
-                                            if (navCardView2 == null) {
-                                            }
-                                            navCardView2.setAlpha(!(card2 == null && ((Boolean) card2.getSecond()).booleanValue()) ? 0.55f : 1.0f);
-                                            slowReasonView = this.this$0.slowCard;
-                                            if (slowReasonView == null) {
-                                            }
-                                            if (t.getStarted()) {
-                                            }
-                                            i10 = 8;
-                                            slowReasonView.setVisibility(i10);
-                                            if (t.getStarted()) {
-                                            }
-                                            if (t.getStarted()) {
-                                            }
-                                            s = this.this$0.scene;
-                                            if (s != null) {
-                                            }
-                                            if (t.getStarted()) {
-                                            }
-                                            this.this$0.laneWasStarted = t.getStarted();
-                                            laneCardView = this.this$0.laneCard;
-                                            if (laneCardView == null) {
-                                            }
-                                            laneCardView.setVisibility((t.getStarted() || !t.s("lane_card")) ? 8 : i11);
-                                            laneShots = this.this$0.getLaneShots();
-                                            detector = this.this$0.detectorRef;
-                                            laneShots.setDetector(detector);
-                                            laneCardView2 = this.this$0.laneCard;
-                                            if (laneCardView2 == null) {
-                                            }
-                                            if (laneCardView2.getVisibility() == 0) {
-                                            }
-                                            blinkerCardView = this.this$0.blinkCard;
-                                            if (blinkerCardView == null) {
-                                            }
-                                            dataClient2 = this.this$0.data;
-                                            if (dataClient2 == null) {
-                                            }
-                                            blinkerCardView.setVisibility((dataClient2.getConnected() || !t.s("blink_card")) ? 8 : i11);
-                                            gpsCardView = this.this$0.gpsCard;
-                                            if (gpsCardView == null) {
-                                            }
-                                            dataClient3 = this.this$0.data;
-                                            if (dataClient3 == null) {
-                                            }
-                                            gpsCardView.setVisibility((dataClient3.getConnected() || !t.s("gps_card")) ? 8 : i11);
-                                            boolean laneOn222 = t.s("lane_suggest");
-                                            boolean turnOn222 = t.s("turn_signals");
-                                            if (t.s("car_memory")) {
-                                            }
-                                            if (!t.getLeftBlindspot()) {
-                                            }
-                                            z12 = true;
-                                            if (!t.getRightBlindspot()) {
-                                            }
-                                            z13 = true;
-                                            active = Replay.INSTANCE.getActive();
-                                            z14 = this.this$0.replayWas;
-                                            if (active != z14) {
-                                            }
-                                            if (!t.getStarted()) {
-                                            }
-                                            dataClient4 = this.this$0.data;
-                                            if (dataClient4 == null) {
-                                            }
-                                            if (!dataClient4.getConnected()) {
-                                            }
-                                        }
-                                    }
-                                    i5 = 8;
-                                    slcActionsView.setVisibility(i5);
-                                    if (t.getStarted()) {
-                                    }
-                                    i6 = i4;
-                                    pair = null;
-                                    cl = pair;
-                                    textView11 = this.this$0.curveLabel;
-                                    if (textView11 == null) {
-                                    }
-                                    textView11.setText((cl != null || (str15 = (String) cl.getFirst()) == null) ? "" : str15);
-                                    if (cl != null) {
-                                    }
-                                    textView12 = this.this$0.curveLabel;
-                                    if (textView12 == null) {
-                                    }
-                                    textView12.setVisibility(cl == null ? 0 : 8);
-                                    boolean noAlert2 = Intrinsics.areEqual(t.getAlertSize(), "none");
-                                    textView13 = this.this$0.clockTv;
-                                    if (textView13 == null) {
-                                    }
-                                    textView13.setVisibility((!t.getStarted() && t.s("clock") && noAlert2) ? 0 : 8);
-                                    textView14 = this.this$0.clockTv;
-                                    if (textView14 == null) {
-                                    }
-                                    if (textView14.getVisibility() == 0) {
-                                    }
-                                    textView15 = this.this$0.modeText;
-                                    if (textView15 == null) {
-                                    }
-                                    textView15.setVisibility((!t.getStarted() && t.s("mode_text") && noAlert2) ? 0 : 8);
-                                    textView16 = this.this$0.modeText;
-                                    if (textView16 == null) {
-                                    }
-                                    if (textView16.getVisibility() == 0) {
-                                    }
-                                    devSidebarView = this.this$0.devSidebar;
-                                    if (devSidebarView == null) {
-                                    }
-                                    devSidebarView.setVisibility((t.getStarted() || !t.s("dev_sidebar")) ? 8 : 0);
-                                    SideCam sideCam2 = SideCam.INSTANCE;
-                                    str2 = this.this$0.host;
-                                    i7 = this.this$0.port;
-                                    int stall32 = 0;
-                                    SideCam.tick$default(sideCam2, t, str2, i7, 0L, 8, null);
-                                    List sides2 = SideCam.INSTANCE.wanted(t);
-                                    sideView = this.this$0.pipLeft;
-                                    if (sideView == null) {
-                                    }
-                                    sideView.setVisibility(!sides2.contains("left") ? 0 : 8);
-                                    sideView2 = this.this$0.pipRight;
-                                    if (sideView2 == null) {
-                                    }
-                                    sideView2.setVisibility(!sides2.contains("right") ? 0 : 8);
-                                    cnState = Telemetry.pStr$default(t, "ChestnutState", null, i6, null);
-                                    if (cnState.length() <= 0) {
-                                    }
-                                    textView17 = this.this$0.roadName;
-                                    if (textView17 == null) {
-                                    }
-                                    textView17.setText((t.getStarted() || !t.s("road_name")) ? "" : t.getRoadName());
-                                    aetherGaugeView = this.this$0.gauge;
-                                    if (aetherGaugeView == null) {
-                                    }
-                                    aetherGaugeView.setVisibility((t.getStarted() || !t.s("aether_gauge")) ? 8 : 0);
-                                    slcSourcesView = this.this$0.slcSources;
-                                    if (slcSourcesView == null) {
-                                    }
-                                    if (t.getStarted()) {
-                                        if (!t.getSp7() ? t.s("slc_sources_sp7") : t.pBool("SpeedLimitSources", false)) {
-                                        }
-                                    }
-                                    i8 = 8;
-                                    slcSourcesView.setVisibility(i8);
-                                    Pair card22 = Telemetry.navCard$default(t, 0L, 1, null);
-                                    navCardView = this.this$0.navCard;
-                                    if (navCardView == null) {
-                                    }
-                                    if (t.getStarted()) {
-                                    }
-                                    i9 = 8;
-                                    navCardView.setVisibility(i9);
-                                    navCardView2 = this.this$0.navCard;
-                                    if (navCardView2 == null) {
-                                    }
-                                    navCardView2.setAlpha(!(card22 == null && ((Boolean) card22.getSecond()).booleanValue()) ? 0.55f : 1.0f);
-                                    slowReasonView = this.this$0.slowCard;
-                                    if (slowReasonView == null) {
-                                    }
-                                    if (t.getStarted()) {
-                                    }
-                                    i10 = 8;
-                                    slowReasonView.setVisibility(i10);
-                                    if (t.getStarted()) {
-                                    }
-                                    if (t.getStarted()) {
-                                    }
-                                    s = this.this$0.scene;
-                                    if (s != null) {
-                                    }
-                                    if (t.getStarted()) {
-                                    }
-                                    this.this$0.laneWasStarted = t.getStarted();
-                                    laneCardView = this.this$0.laneCard;
-                                    if (laneCardView == null) {
-                                    }
-                                    laneCardView.setVisibility((t.getStarted() || !t.s("lane_card")) ? 8 : i11);
-                                    laneShots = this.this$0.getLaneShots();
-                                    detector = this.this$0.detectorRef;
-                                    laneShots.setDetector(detector);
-                                    laneCardView2 = this.this$0.laneCard;
-                                    if (laneCardView2 == null) {
-                                    }
-                                    if (laneCardView2.getVisibility() == 0) {
-                                    }
-                                    blinkerCardView = this.this$0.blinkCard;
-                                    if (blinkerCardView == null) {
-                                    }
-                                    dataClient2 = this.this$0.data;
-                                    if (dataClient2 == null) {
-                                    }
-                                    blinkerCardView.setVisibility((dataClient2.getConnected() || !t.s("blink_card")) ? 8 : i11);
-                                    gpsCardView = this.this$0.gpsCard;
-                                    if (gpsCardView == null) {
-                                    }
-                                    dataClient3 = this.this$0.data;
-                                    if (dataClient3 == null) {
-                                    }
-                                    gpsCardView.setVisibility((dataClient3.getConnected() || !t.s("gps_card")) ? 8 : i11);
-                                    boolean laneOn2222 = t.s("lane_suggest");
-                                    boolean turnOn2222 = t.s("turn_signals");
-                                    if (t.s("car_memory")) {
-                                    }
-                                    if (!t.getLeftBlindspot()) {
-                                    }
-                                    z12 = true;
-                                    if (!t.getRightBlindspot()) {
-                                    }
-                                    z13 = true;
-                                    active = Replay.INSTANCE.getActive();
-                                    z14 = this.this$0.replayWas;
-                                    if (active != z14) {
-                                    }
-                                    if (!t.getStarted()) {
-                                    }
-                                    dataClient4 = this.this$0.data;
-                                    if (dataClient4 == null) {
-                                    }
-                                    if (!dataClient4.getConnected()) {
-                                    }
-                                }
-                                z6 = false;
-                                mainActivity2.syncDetector(z6);
-                                OsmRoads osmRoads2 = OsmRoads.INSTANCE;
-                                uiSettings2 = this.this$0.settings;
-                                if (uiSettings2 == null) {
-                                }
-                                osmRoads2.setEnabled(uiSettings2.get("map_roads"));
-                                overlayView = this.this$0.overlay;
-                                if (overlayView == null) {
-                                }
-                                if (overlayView.updateCalibration()) {
-                                }
-                                overlayView2 = this.this$0.overlay;
-                                if (overlayView2 == null) {
-                                }
-                                overlayView2.setUiStatus(UiStatus.Companion.from(t));
-                                currentTimeMillis = System.currentTimeMillis();
-                                j = this.this$0.lastThemeCheck;
-                                if (currentTimeMillis - j > 15000) {
-                                }
-                                boolean metric2 = t.isMetric();
-                                float conv2 = metric2 ? 3.6f : 2.23694f;
-                                boolean useWheel2 = t.tBool("use_wheel_speed", false);
-                                float v2 = (!useWheel2 || t.getVEgoCluster() <= 0.0f) ? t.getVEgo() : t.getVEgoCluster();
-                                textView3 = this.this$0.speedTv;
-                                if (textView3 == null) {
-                                }
-                                textView3.setText(String.valueOf(RangesKt.coerceAtLeast(MathKt.roundToInt(v2 * conv2), 0)));
-                                textView4 = this.this$0.speedUnit;
-                                if (textView4 == null) {
-                                }
-                                textView4.setText(metric2 ? "km/h" : "mph");
-                                boolean hideSpeed2 = t.s("show_speed") || !t.getStarted();
-                                textView5 = this.this$0.speedTv;
-                                if (textView5 == null) {
-                                }
-                                textView5.setVisibility(hideSpeed2 ? 4 : 0);
-                                textView6 = this.this$0.speedUnit;
-                                if (textView6 == null) {
-                                }
-                                textView7 = this.this$0.speedTv;
-                                if (textView7 == null) {
-                                }
-                                textView6.setVisibility(textView7.getVisibility());
-                                float setMs2 = t.getVCruiseCluster() > 0.0f ? t.getVCruiseCluster() : t.getVCruise();
-                                isSet = !t.getCruiseEnabled() && setMs2 > 0.0f && setMs2 < 200.0f;
-                                float offset2 = t.tFloat("set_speed_offset", 0.0f);
-                                textView8 = this.this$0.setSpeedTv;
-                                if (textView8 == null) {
-                                }
-                                if (isSet) {
-                                }
-                                textView8.setText(str);
-                                textView9 = this.this$0.setSpeedTv;
-                                if (textView9 == null) {
-                                }
-                                textView9.setTextColor(isSet ? -1 : Color.rgb(114, 114, 114));
-                                textView10 = this.this$0.maxLabel;
-                                if (textView10 == null) {
-                                }
-                                textView10.setTextColor(!isSet ? Color.rgb(166, 166, 166) : (t.getEnabled() && t.getActive()) ? Color.rgb(128, 216, 166) : Color.rgb(145, 155, 149));
-                                linearLayout2 = this.this$0.maxCard;
-                                if (linearLayout2 == null) {
-                                }
-                                linearLayout2.setVisibility((t.s("show_max") || !t.getStarted()) ? 4 : 0);
-                                slcView = this.this$0.slc;
-                                if (slcView == null) {
-                                }
-                                slcView.setVisibility((t.getStarted() || !t.s("speed_limit")) ? 4 : 0);
-                                wheelButton = this.this$0.wheel;
-                                if (wheelButton == null) {
-                                }
-                                wheelButton.setVisibility((t.s("wheel_button") || !t.getStarted()) ? 4 : 0);
-                                miciDistanceView = this.this$0.personality;
-                                if (miciDistanceView == null) {
-                                }
-                                miciDistanceView.setVisibility((t.getStarted() || !t.s("personality_button")) ? 8 : 0);
-                                slcActionsView = this.this$0.slcActions;
-                                if (slcActionsView == null) {
-                                }
-                                if (t.getStarted()) {
-                                }
-                                j2 = 0;
-                                i5 = 8;
-                                slcActionsView.setVisibility(i5);
-                                if (t.getStarted()) {
-                                }
-                                i6 = i4;
-                                pair = null;
-                                cl = pair;
-                                textView11 = this.this$0.curveLabel;
-                                if (textView11 == null) {
-                                }
-                                textView11.setText((cl != null || (str15 = (String) cl.getFirst()) == null) ? "" : str15);
-                                if (cl != null) {
-                                }
-                                textView12 = this.this$0.curveLabel;
-                                if (textView12 == null) {
-                                }
-                                textView12.setVisibility(cl == null ? 0 : 8);
-                                boolean noAlert22 = Intrinsics.areEqual(t.getAlertSize(), "none");
-                                textView13 = this.this$0.clockTv;
-                                if (textView13 == null) {
-                                }
-                                textView13.setVisibility((!t.getStarted() && t.s("clock") && noAlert22) ? 0 : 8);
-                                textView14 = this.this$0.clockTv;
-                                if (textView14 == null) {
-                                }
-                                if (textView14.getVisibility() == 0) {
-                                }
-                                textView15 = this.this$0.modeText;
-                                if (textView15 == null) {
-                                }
-                                textView15.setVisibility((!t.getStarted() && t.s("mode_text") && noAlert22) ? 0 : 8);
-                                textView16 = this.this$0.modeText;
-                                if (textView16 == null) {
-                                }
-                                if (textView16.getVisibility() == 0) {
-                                }
-                                devSidebarView = this.this$0.devSidebar;
-                                if (devSidebarView == null) {
-                                }
-                                devSidebarView.setVisibility((t.getStarted() || !t.s("dev_sidebar")) ? 8 : 0);
-                                SideCam sideCam22 = SideCam.INSTANCE;
-                                str2 = this.this$0.host;
-                                i7 = this.this$0.port;
-                                int stall322 = 0;
-                                SideCam.tick$default(sideCam22, t, str2, i7, 0L, 8, null);
-                                List sides22 = SideCam.INSTANCE.wanted(t);
-                                sideView = this.this$0.pipLeft;
-                                if (sideView == null) {
-                                }
-                                sideView.setVisibility(!sides22.contains("left") ? 0 : 8);
-                                sideView2 = this.this$0.pipRight;
-                                if (sideView2 == null) {
-                                }
-                                sideView2.setVisibility(!sides22.contains("right") ? 0 : 8);
-                                cnState = Telemetry.pStr$default(t, "ChestnutState", null, i6, null);
-                                if (cnState.length() <= 0) {
-                                }
-                                textView17 = this.this$0.roadName;
-                                if (textView17 == null) {
-                                }
-                                textView17.setText((t.getStarted() || !t.s("road_name")) ? "" : t.getRoadName());
-                                aetherGaugeView = this.this$0.gauge;
-                                if (aetherGaugeView == null) {
-                                }
-                                aetherGaugeView.setVisibility((t.getStarted() || !t.s("aether_gauge")) ? 8 : 0);
-                                slcSourcesView = this.this$0.slcSources;
-                                if (slcSourcesView == null) {
-                                }
-                                if (t.getStarted()) {
-                                }
-                                i8 = 8;
-                                slcSourcesView.setVisibility(i8);
-                                Pair card222 = Telemetry.navCard$default(t, 0L, 1, null);
-                                navCardView = this.this$0.navCard;
-                                if (navCardView == null) {
-                                }
-                                if (t.getStarted()) {
-                                }
-                                i9 = 8;
-                                navCardView.setVisibility(i9);
-                                navCardView2 = this.this$0.navCard;
-                                if (navCardView2 == null) {
-                                }
-                                navCardView2.setAlpha(!(card222 == null && ((Boolean) card222.getSecond()).booleanValue()) ? 0.55f : 1.0f);
-                                slowReasonView = this.this$0.slowCard;
-                                if (slowReasonView == null) {
-                                }
-                                if (t.getStarted()) {
-                                }
-                                i10 = 8;
-                                slowReasonView.setVisibility(i10);
-                                if (t.getStarted()) {
-                                }
-                                if (t.getStarted()) {
-                                }
-                                s = this.this$0.scene;
-                                if (s != null) {
-                                }
-                                if (t.getStarted()) {
-                                }
-                                this.this$0.laneWasStarted = t.getStarted();
-                                laneCardView = this.this$0.laneCard;
-                                if (laneCardView == null) {
-                                }
-                                laneCardView.setVisibility((t.getStarted() || !t.s("lane_card")) ? 8 : i11);
-                                laneShots = this.this$0.getLaneShots();
-                                detector = this.this$0.detectorRef;
-                                laneShots.setDetector(detector);
-                                laneCardView2 = this.this$0.laneCard;
-                                if (laneCardView2 == null) {
-                                }
-                                if (laneCardView2.getVisibility() == 0) {
-                                }
-                                blinkerCardView = this.this$0.blinkCard;
-                                if (blinkerCardView == null) {
-                                }
-                                dataClient2 = this.this$0.data;
-                                if (dataClient2 == null) {
-                                }
-                                blinkerCardView.setVisibility((dataClient2.getConnected() || !t.s("blink_card")) ? 8 : i11);
-                                gpsCardView = this.this$0.gpsCard;
-                                if (gpsCardView == null) {
-                                }
-                                dataClient3 = this.this$0.data;
-                                if (dataClient3 == null) {
-                                }
-                                gpsCardView.setVisibility((dataClient3.getConnected() || !t.s("gps_card")) ? 8 : i11);
-                                boolean laneOn22222 = t.s("lane_suggest");
-                                boolean turnOn22222 = t.s("turn_signals");
-                                if (t.s("car_memory")) {
-                                }
-                                if (!t.getLeftBlindspot()) {
-                                }
-                                z12 = true;
-                                if (!t.getRightBlindspot()) {
-                                }
-                                z13 = true;
-                                active = Replay.INSTANCE.getActive();
-                                z14 = this.this$0.replayWas;
-                                if (active != z14) {
-                                }
-                                if (!t.getStarted()) {
-                                }
-                                dataClient4 = this.this$0.data;
-                                if (dataClient4 == null) {
-                                }
-                                if (!dataClient4.getConnected()) {
-                                }
-                            }
-                        }
-                    }
-                    z4 = false;
-                    wantVideo = z4;
-                    if (wantVideo) {
-                    }
-                    if (!wantVideo) {
-                    }
-                    MainActivity mainActivity22 = this.this$0;
-                    z5 = this.this$0.visible;
-                    if (z5) {
-                        uiSettings8 = this.this$0.settings;
-                        if (uiSettings8 == null) {
-                        }
-                        if (!uiSettings8.get("detector_test")) {
-                        }
-                        z6 = true;
-                        mainActivity22.syncDetector(z6);
-                        OsmRoads osmRoads22 = OsmRoads.INSTANCE;
-                        uiSettings2 = this.this$0.settings;
-                        if (uiSettings2 == null) {
-                        }
-                        osmRoads22.setEnabled(uiSettings2.get("map_roads"));
-                        overlayView = this.this$0.overlay;
-                        if (overlayView == null) {
-                        }
-                        if (overlayView.updateCalibration()) {
-                        }
-                        overlayView2 = this.this$0.overlay;
-                        if (overlayView2 == null) {
-                        }
-                        overlayView2.setUiStatus(UiStatus.Companion.from(t));
-                        currentTimeMillis = System.currentTimeMillis();
-                        j = this.this$0.lastThemeCheck;
-                        if (currentTimeMillis - j > 15000) {
-                        }
-                        boolean metric22 = t.isMetric();
-                        float conv22 = metric22 ? 3.6f : 2.23694f;
-                        boolean useWheel22 = t.tBool("use_wheel_speed", false);
-                        float v22 = (!useWheel22 || t.getVEgoCluster() <= 0.0f) ? t.getVEgo() : t.getVEgoCluster();
-                        textView3 = this.this$0.speedTv;
-                        if (textView3 == null) {
-                        }
-                        textView3.setText(String.valueOf(RangesKt.coerceAtLeast(MathKt.roundToInt(v22 * conv22), 0)));
-                        textView4 = this.this$0.speedUnit;
-                        if (textView4 == null) {
-                        }
-                        textView4.setText(metric22 ? "km/h" : "mph");
-                        boolean hideSpeed22 = t.s("show_speed") || !t.getStarted();
-                        textView5 = this.this$0.speedTv;
-                        if (textView5 == null) {
-                        }
-                        textView5.setVisibility(hideSpeed22 ? 4 : 0);
-                        textView6 = this.this$0.speedUnit;
-                        if (textView6 == null) {
-                        }
-                        textView7 = this.this$0.speedTv;
-                        if (textView7 == null) {
-                        }
-                        textView6.setVisibility(textView7.getVisibility());
-                        float setMs22 = t.getVCruiseCluster() > 0.0f ? t.getVCruiseCluster() : t.getVCruise();
-                        isSet = !t.getCruiseEnabled() && setMs22 > 0.0f && setMs22 < 200.0f;
-                        float offset22 = t.tFloat("set_speed_offset", 0.0f);
-                        textView8 = this.this$0.setSpeedTv;
-                        if (textView8 == null) {
-                        }
-                        if (isSet) {
-                        }
-                        textView8.setText(str);
-                        textView9 = this.this$0.setSpeedTv;
-                        if (textView9 == null) {
-                        }
-                        textView9.setTextColor(isSet ? -1 : Color.rgb(114, 114, 114));
-                        textView10 = this.this$0.maxLabel;
-                        if (textView10 == null) {
-                        }
-                        textView10.setTextColor(!isSet ? Color.rgb(166, 166, 166) : (t.getEnabled() && t.getActive()) ? Color.rgb(128, 216, 166) : Color.rgb(145, 155, 149));
-                        linearLayout2 = this.this$0.maxCard;
-                        if (linearLayout2 == null) {
-                        }
-                        linearLayout2.setVisibility((t.s("show_max") || !t.getStarted()) ? 4 : 0);
-                        slcView = this.this$0.slc;
-                        if (slcView == null) {
-                        }
-                        slcView.setVisibility((t.getStarted() || !t.s("speed_limit")) ? 4 : 0);
-                        wheelButton = this.this$0.wheel;
-                        if (wheelButton == null) {
-                        }
-                        wheelButton.setVisibility((t.s("wheel_button") || !t.getStarted()) ? 4 : 0);
-                        miciDistanceView = this.this$0.personality;
-                        if (miciDistanceView == null) {
-                        }
-                        miciDistanceView.setVisibility((t.getStarted() || !t.s("personality_button")) ? 8 : 0);
-                        slcActionsView = this.this$0.slcActions;
-                        if (slcActionsView == null) {
-                        }
-                        if (t.getStarted()) {
-                        }
-                        j2 = 0;
-                        i5 = 8;
-                        slcActionsView.setVisibility(i5);
-                        if (t.getStarted()) {
-                        }
-                        i6 = i4;
-                        pair = null;
-                        cl = pair;
-                        textView11 = this.this$0.curveLabel;
-                        if (textView11 == null) {
-                        }
-                        textView11.setText((cl != null || (str15 = (String) cl.getFirst()) == null) ? "" : str15);
-                        if (cl != null) {
-                        }
-                        textView12 = this.this$0.curveLabel;
-                        if (textView12 == null) {
-                        }
-                        textView12.setVisibility(cl == null ? 0 : 8);
-                        boolean noAlert222 = Intrinsics.areEqual(t.getAlertSize(), "none");
-                        textView13 = this.this$0.clockTv;
-                        if (textView13 == null) {
-                        }
-                        textView13.setVisibility((!t.getStarted() && t.s("clock") && noAlert222) ? 0 : 8);
-                        textView14 = this.this$0.clockTv;
-                        if (textView14 == null) {
-                        }
-                        if (textView14.getVisibility() == 0) {
-                        }
-                        textView15 = this.this$0.modeText;
-                        if (textView15 == null) {
-                        }
-                        textView15.setVisibility((!t.getStarted() && t.s("mode_text") && noAlert222) ? 0 : 8);
-                        textView16 = this.this$0.modeText;
-                        if (textView16 == null) {
-                        }
-                        if (textView16.getVisibility() == 0) {
-                        }
-                        devSidebarView = this.this$0.devSidebar;
-                        if (devSidebarView == null) {
-                        }
-                        devSidebarView.setVisibility((t.getStarted() || !t.s("dev_sidebar")) ? 8 : 0);
-                        SideCam sideCam222 = SideCam.INSTANCE;
-                        str2 = this.this$0.host;
-                        i7 = this.this$0.port;
-                        int stall3222 = 0;
-                        SideCam.tick$default(sideCam222, t, str2, i7, 0L, 8, null);
-                        List sides222 = SideCam.INSTANCE.wanted(t);
-                        sideView = this.this$0.pipLeft;
-                        if (sideView == null) {
-                        }
-                        sideView.setVisibility(!sides222.contains("left") ? 0 : 8);
-                        sideView2 = this.this$0.pipRight;
-                        if (sideView2 == null) {
-                        }
-                        sideView2.setVisibility(!sides222.contains("right") ? 0 : 8);
-                        cnState = Telemetry.pStr$default(t, "ChestnutState", null, i6, null);
-                        if (cnState.length() <= 0) {
-                        }
-                        textView17 = this.this$0.roadName;
-                        if (textView17 == null) {
-                        }
-                        textView17.setText((t.getStarted() || !t.s("road_name")) ? "" : t.getRoadName());
-                        aetherGaugeView = this.this$0.gauge;
-                        if (aetherGaugeView == null) {
-                        }
-                        aetherGaugeView.setVisibility((t.getStarted() || !t.s("aether_gauge")) ? 8 : 0);
-                        slcSourcesView = this.this$0.slcSources;
-                        if (slcSourcesView == null) {
-                        }
-                        if (t.getStarted()) {
-                        }
-                        i8 = 8;
-                        slcSourcesView.setVisibility(i8);
-                        Pair card2222 = Telemetry.navCard$default(t, 0L, 1, null);
-                        navCardView = this.this$0.navCard;
-                        if (navCardView == null) {
-                        }
-                        if (t.getStarted()) {
-                        }
-                        i9 = 8;
-                        navCardView.setVisibility(i9);
-                        navCardView2 = this.this$0.navCard;
-                        if (navCardView2 == null) {
-                        }
-                        navCardView2.setAlpha(!(card2222 == null && ((Boolean) card2222.getSecond()).booleanValue()) ? 0.55f : 1.0f);
-                        slowReasonView = this.this$0.slowCard;
-                        if (slowReasonView == null) {
-                        }
-                        if (t.getStarted()) {
-                        }
-                        i10 = 8;
-                        slowReasonView.setVisibility(i10);
-                        if (t.getStarted()) {
-                        }
-                        if (t.getStarted()) {
-                        }
-                        s = this.this$0.scene;
-                        if (s != null) {
-                        }
-                        if (t.getStarted()) {
-                        }
-                        this.this$0.laneWasStarted = t.getStarted();
-                        laneCardView = this.this$0.laneCard;
-                        if (laneCardView == null) {
-                        }
-                        laneCardView.setVisibility((t.getStarted() || !t.s("lane_card")) ? 8 : i11);
-                        laneShots = this.this$0.getLaneShots();
-                        detector = this.this$0.detectorRef;
-                        laneShots.setDetector(detector);
-                        laneCardView2 = this.this$0.laneCard;
-                        if (laneCardView2 == null) {
-                        }
-                        if (laneCardView2.getVisibility() == 0) {
-                        }
-                        blinkerCardView = this.this$0.blinkCard;
-                        if (blinkerCardView == null) {
-                        }
-                        dataClient2 = this.this$0.data;
-                        if (dataClient2 == null) {
-                        }
-                        blinkerCardView.setVisibility((dataClient2.getConnected() || !t.s("blink_card")) ? 8 : i11);
-                        gpsCardView = this.this$0.gpsCard;
-                        if (gpsCardView == null) {
-                        }
-                        dataClient3 = this.this$0.data;
-                        if (dataClient3 == null) {
-                        }
-                        gpsCardView.setVisibility((dataClient3.getConnected() || !t.s("gps_card")) ? 8 : i11);
-                        boolean laneOn222222 = t.s("lane_suggest");
-                        boolean turnOn222222 = t.s("turn_signals");
-                        if (t.s("car_memory")) {
-                        }
-                        if (!t.getLeftBlindspot()) {
-                        }
-                        z12 = true;
-                        if (!t.getRightBlindspot()) {
-                        }
-                        z13 = true;
-                        active = Replay.INSTANCE.getActive();
-                        z14 = this.this$0.replayWas;
-                        if (active != z14) {
-                        }
-                        if (!t.getStarted()) {
-                        }
-                        dataClient4 = this.this$0.data;
-                        if (dataClient4 == null) {
-                        }
-                        if (!dataClient4.getConnected()) {
-                        }
-                    }
-                    z6 = false;
-                    mainActivity22.syncDetector(z6);
-                    OsmRoads osmRoads222 = OsmRoads.INSTANCE;
-                    uiSettings2 = this.this$0.settings;
-                    if (uiSettings2 == null) {
-                    }
-                    osmRoads222.setEnabled(uiSettings2.get("map_roads"));
-                    overlayView = this.this$0.overlay;
-                    if (overlayView == null) {
-                    }
-                    if (overlayView.updateCalibration()) {
-                    }
-                    overlayView2 = this.this$0.overlay;
-                    if (overlayView2 == null) {
-                    }
-                    overlayView2.setUiStatus(UiStatus.Companion.from(t));
-                    currentTimeMillis = System.currentTimeMillis();
-                    j = this.this$0.lastThemeCheck;
-                    if (currentTimeMillis - j > 15000) {
-                    }
-                    boolean metric222 = t.isMetric();
-                    float conv222 = metric222 ? 3.6f : 2.23694f;
-                    boolean useWheel222 = t.tBool("use_wheel_speed", false);
-                    float v222 = (!useWheel222 || t.getVEgoCluster() <= 0.0f) ? t.getVEgo() : t.getVEgoCluster();
-                    textView3 = this.this$0.speedTv;
-                    if (textView3 == null) {
-                    }
-                    textView3.setText(String.valueOf(RangesKt.coerceAtLeast(MathKt.roundToInt(v222 * conv222), 0)));
-                    textView4 = this.this$0.speedUnit;
-                    if (textView4 == null) {
-                    }
-                    textView4.setText(metric222 ? "km/h" : "mph");
-                    boolean hideSpeed222 = t.s("show_speed") || !t.getStarted();
-                    textView5 = this.this$0.speedTv;
-                    if (textView5 == null) {
-                    }
-                    textView5.setVisibility(hideSpeed222 ? 4 : 0);
-                    textView6 = this.this$0.speedUnit;
-                    if (textView6 == null) {
-                    }
-                    textView7 = this.this$0.speedTv;
-                    if (textView7 == null) {
-                    }
-                    textView6.setVisibility(textView7.getVisibility());
-                    float setMs222 = t.getVCruiseCluster() > 0.0f ? t.getVCruiseCluster() : t.getVCruise();
-                    isSet = !t.getCruiseEnabled() && setMs222 > 0.0f && setMs222 < 200.0f;
-                    float offset222 = t.tFloat("set_speed_offset", 0.0f);
-                    textView8 = this.this$0.setSpeedTv;
-                    if (textView8 == null) {
-                    }
-                    if (isSet) {
-                    }
-                    textView8.setText(str);
-                    textView9 = this.this$0.setSpeedTv;
-                    if (textView9 == null) {
-                    }
-                    textView9.setTextColor(isSet ? -1 : Color.rgb(114, 114, 114));
-                    textView10 = this.this$0.maxLabel;
-                    if (textView10 == null) {
-                    }
-                    textView10.setTextColor(!isSet ? Color.rgb(166, 166, 166) : (t.getEnabled() && t.getActive()) ? Color.rgb(128, 216, 166) : Color.rgb(145, 155, 149));
-                    linearLayout2 = this.this$0.maxCard;
-                    if (linearLayout2 == null) {
-                    }
-                    linearLayout2.setVisibility((t.s("show_max") || !t.getStarted()) ? 4 : 0);
-                    slcView = this.this$0.slc;
-                    if (slcView == null) {
-                    }
-                    slcView.setVisibility((t.getStarted() || !t.s("speed_limit")) ? 4 : 0);
-                    wheelButton = this.this$0.wheel;
-                    if (wheelButton == null) {
-                    }
-                    wheelButton.setVisibility((t.s("wheel_button") || !t.getStarted()) ? 4 : 0);
-                    miciDistanceView = this.this$0.personality;
-                    if (miciDistanceView == null) {
-                    }
-                    miciDistanceView.setVisibility((t.getStarted() || !t.s("personality_button")) ? 8 : 0);
-                    slcActionsView = this.this$0.slcActions;
-                    if (slcActionsView == null) {
-                    }
-                    if (t.getStarted()) {
-                    }
-                    j2 = 0;
-                    i5 = 8;
-                    slcActionsView.setVisibility(i5);
-                    if (t.getStarted()) {
-                    }
-                    i6 = i4;
-                    pair = null;
-                    cl = pair;
-                    textView11 = this.this$0.curveLabel;
-                    if (textView11 == null) {
-                    }
-                    textView11.setText((cl != null || (str15 = (String) cl.getFirst()) == null) ? "" : str15);
-                    if (cl != null) {
-                    }
-                    textView12 = this.this$0.curveLabel;
-                    if (textView12 == null) {
-                    }
-                    textView12.setVisibility(cl == null ? 0 : 8);
-                    boolean noAlert2222 = Intrinsics.areEqual(t.getAlertSize(), "none");
-                    textView13 = this.this$0.clockTv;
-                    if (textView13 == null) {
-                    }
-                    textView13.setVisibility((!t.getStarted() && t.s("clock") && noAlert2222) ? 0 : 8);
-                    textView14 = this.this$0.clockTv;
-                    if (textView14 == null) {
-                    }
-                    if (textView14.getVisibility() == 0) {
-                    }
-                    textView15 = this.this$0.modeText;
-                    if (textView15 == null) {
-                    }
-                    textView15.setVisibility((!t.getStarted() && t.s("mode_text") && noAlert2222) ? 0 : 8);
-                    textView16 = this.this$0.modeText;
-                    if (textView16 == null) {
-                    }
-                    if (textView16.getVisibility() == 0) {
-                    }
-                    devSidebarView = this.this$0.devSidebar;
-                    if (devSidebarView == null) {
-                    }
-                    devSidebarView.setVisibility((t.getStarted() || !t.s("dev_sidebar")) ? 8 : 0);
-                    SideCam sideCam2222 = SideCam.INSTANCE;
-                    str2 = this.this$0.host;
-                    i7 = this.this$0.port;
-                    int stall32222 = 0;
-                    SideCam.tick$default(sideCam2222, t, str2, i7, 0L, 8, null);
-                    List sides2222 = SideCam.INSTANCE.wanted(t);
-                    sideView = this.this$0.pipLeft;
-                    if (sideView == null) {
-                    }
-                    sideView.setVisibility(!sides2222.contains("left") ? 0 : 8);
-                    sideView2 = this.this$0.pipRight;
-                    if (sideView2 == null) {
-                    }
-                    sideView2.setVisibility(!sides2222.contains("right") ? 0 : 8);
-                    cnState = Telemetry.pStr$default(t, "ChestnutState", null, i6, null);
-                    if (cnState.length() <= 0) {
-                    }
-                    textView17 = this.this$0.roadName;
-                    if (textView17 == null) {
-                    }
-                    textView17.setText((t.getStarted() || !t.s("road_name")) ? "" : t.getRoadName());
-                    aetherGaugeView = this.this$0.gauge;
-                    if (aetherGaugeView == null) {
-                    }
-                    aetherGaugeView.setVisibility((t.getStarted() || !t.s("aether_gauge")) ? 8 : 0);
-                    slcSourcesView = this.this$0.slcSources;
-                    if (slcSourcesView == null) {
-                    }
-                    if (t.getStarted()) {
-                    }
-                    i8 = 8;
-                    slcSourcesView.setVisibility(i8);
-                    Pair card22222 = Telemetry.navCard$default(t, 0L, 1, null);
-                    navCardView = this.this$0.navCard;
-                    if (navCardView == null) {
-                    }
-                    if (t.getStarted()) {
-                    }
-                    i9 = 8;
-                    navCardView.setVisibility(i9);
-                    navCardView2 = this.this$0.navCard;
-                    if (navCardView2 == null) {
-                    }
-                    navCardView2.setAlpha(!(card22222 == null && ((Boolean) card22222.getSecond()).booleanValue()) ? 0.55f : 1.0f);
-                    slowReasonView = this.this$0.slowCard;
-                    if (slowReasonView == null) {
-                    }
-                    if (t.getStarted()) {
-                    }
-                    i10 = 8;
-                    slowReasonView.setVisibility(i10);
-                    if (t.getStarted()) {
-                    }
-                    if (t.getStarted()) {
-                    }
-                    s = this.this$0.scene;
-                    if (s != null) {
-                    }
-                    if (t.getStarted()) {
-                    }
-                    this.this$0.laneWasStarted = t.getStarted();
-                    laneCardView = this.this$0.laneCard;
-                    if (laneCardView == null) {
-                    }
-                    laneCardView.setVisibility((t.getStarted() || !t.s("lane_card")) ? 8 : i11);
-                    laneShots = this.this$0.getLaneShots();
-                    detector = this.this$0.detectorRef;
-                    laneShots.setDetector(detector);
-                    laneCardView2 = this.this$0.laneCard;
-                    if (laneCardView2 == null) {
-                    }
-                    if (laneCardView2.getVisibility() == 0) {
-                    }
-                    blinkerCardView = this.this$0.blinkCard;
-                    if (blinkerCardView == null) {
-                    }
-                    dataClient2 = this.this$0.data;
-                    if (dataClient2 == null) {
-                    }
-                    blinkerCardView.setVisibility((dataClient2.getConnected() || !t.s("blink_card")) ? 8 : i11);
-                    gpsCardView = this.this$0.gpsCard;
-                    if (gpsCardView == null) {
-                    }
-                    dataClient3 = this.this$0.data;
-                    if (dataClient3 == null) {
-                    }
-                    gpsCardView.setVisibility((dataClient3.getConnected() || !t.s("gps_card")) ? 8 : i11);
-                    boolean laneOn2222222 = t.s("lane_suggest");
-                    boolean turnOn2222222 = t.s("turn_signals");
-                    if (t.s("car_memory")) {
-                    }
-                    if (!t.getLeftBlindspot()) {
-                    }
-                    z12 = true;
-                    if (!t.getRightBlindspot()) {
-                    }
-                    z13 = true;
-                    active = Replay.INSTANCE.getActive();
-                    z14 = this.this$0.replayWas;
-                    if (active != z14) {
-                    }
-                    if (!t.getStarted()) {
-                    }
-                    dataClient4 = this.this$0.data;
-                    if (dataClient4 == null) {
-                    }
-                    if (!dataClient4.getConnected()) {
+        MainActivity var55 = this.this$0;
+        UiSettings var463 = this.this$0.settings;
+        UiSettings var248 = var463;
+        if (var463 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("settings");
+            var248 = null;
+        }
+
+        var55.statsVisible = var248.get("stats");
+        TextView var464 = this.this$0.statsTv;
+        TextView var249 = var464;
+        if (var464 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("statsTv");
+            var249 = null;
+        }
+
+        if (this.this$0.statsVisible) {
+            var109 = 0;
+        } else {
+            var109 = 8;
+        }
+
+        boolean var28;
+        label2294: {
+            var249.setVisibility(var109);
+            if (var29 && !var58.getStarted()) {
+                UiSettings var465 = this.this$0.settings;
+                UiSettings var250 = var465;
+                if (var465 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("settings");
+                    var250 = null;
+                }
+
+                if (var250.get("offroad_home") && this.this$0.hudEditor == null) {
+                    var28 = true;
+                    break label2294;
+                }
+            }
+
+            var28 = false;
+        }
+
+        if (var28 != this.this$0.homeShown) {
+            this.this$0.homeShown = var28;
+            OffroadHome var466 = this.this$0.offroadHome;
+            OffroadHome var251 = var466;
+            if (var466 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("offroadHome");
+                var251 = null;
+            }
+
+            if (var28) {
+                var109 = 0;
+            } else {
+                var109 = 8;
+            }
+
+            var251.setVisibility(var109);
+            LinearLayout var467 = this.this$0.sidebar;
+            LinearLayout var252 = var467;
+            if (var467 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("sidebar");
+                var252 = null;
+            }
+
+            if (var28) {
+                var109 = 0;
+            } else {
+                var109 = 8;
+            }
+
+            var252.setVisibility(var109);
+        }
+
+        if (var28) {
+            OffroadHome var468 = this.this$0.offroadHome;
+            OffroadHome var253 = var468;
+            if (var468 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("offroadHome");
+                var253 = null;
+            }
+
+            OffroadHome.refresh$default(var253, var58, false, 2, null);
+        }
+
+        if (var28 && this.this$0.tick % 600 == 30) {
+            KeepDrive.INSTANCE.applyPending((Context)this.this$0);
+        }
+
+        StorageInfo var632 = StorageInfo.INSTANCE;
+        OffroadHome var469 = this.this$0.offroadHome;
+        OffroadHome var254 = var469;
+        if (var469 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("offroadHome");
+            var254 = null;
+        }
+
+        int var113;
+        if (var632.copying(var254.getStorage()) != null) {
+            var113 = 1;
+        } else {
+            var113 = 0;
+        }
+
+        label2279:
+        if (var28) {
+            if (this.this$0.tick % 300 != 5) {
+                OffroadHome var470 = this.this$0.offroadHome;
+                OffroadHome var255 = var470;
+                if (var470 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("offroadHome");
+                    var255 = null;
+                }
+
+                if (var255.getStorage() != null && (var113 == 0) || this.this$0.tick % 40 != 5) {
+                    break label2279;
+                }
+            }
+
+            this.this$0.fetchStorage();
+        }
+
+        TextView var471 = this.this$0.statusTv;
+        TextView var256 = var471;
+        if (var471 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("statusTv");
+            var256 = null;
+        }
+
+        if ((!var29 || !var58.getStarted()) && !var28) {
+            var113 = 0;
+        } else {
+            var113 = 8;
+        }
+
+        var256.setVisibility(var113);
+        MainActivity var257 = this.this$0;
+        if (var29 && var58.getStarted()) {
+            var28 = true;
+        } else {
+            var28 = false;
+        }
+
+        var257.syncScene(var28);
+        int var115;
+        if (var29 && var58.getStarted() && !this.this$0.sceneOn && this.this$0.visible) {
+            var115 = 1;
+        } else {
+            var115 = 0;
+        }
+
+        if ((var115 != 0) && !this.this$0.videoConnected) {
+            this.this$0.startVideo();
+        }
+
+        if ((var115 == 0) && this.this$0.videoConnected) {
+            this.this$0.stopVideo();
+        }
+
+        label2245: {
+            label2244: {
+                var55 = this.this$0;
+                if (this.this$0.visible && var29 && var58.getStarted()) {
+                    UiSettings var472 = this.this$0.settings;
+                    UiSettings var258 = var472;
+                    if (var472 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("settings");
+                        var258 = null;
+                    }
+
+                    if (var258.get("detector_test") || this.this$0.sceneOn || this.this$0.maskEditor != null) {
+                        break label2244;
+                    }
+
+                    NewIdeas var56 = NewIdeas.INSTANCE;
+                    UiSettings var473 = this.this$0.settings;
+                    UiSettings var259 = var473;
+                    if (var473 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("settings");
+                        var259 = null;
+                    }
+
+                    if (var56.needsCamera(var259)) {
+                        break label2244;
+                    }
+                }
+
+                var28 = false;
+                break label2245;
+            }
+
+            var28 = true;
+        }
+
+        var55.syncDetector(var28);
+        OsmRoads var634 = OsmRoads.INSTANCE;
+        UiSettings var474 = this.this$0.settings;
+        UiSettings var260 = var474;
+        if (var474 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("settings");
+            var260 = null;
+        }
+
+        var634.setEnabled(var260.get("map_roads"));
+        OverlayView var475 = this.this$0.overlay;
+        OverlayView var261 = var475;
+        if (var475 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("overlay");
+            var261 = null;
+        }
+
+        if (var261.updateCalibration()) {
+            this.this$0.placeVideo();
+        }
+
+        OverlayView var476 = this.this$0.overlay;
+        OverlayView var262 = var476;
+        if (var476 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("overlay");
+            var262 = null;
+        }
+
+        var262.setUiStatus(UiStatus.Companion.from(var58));
+        if (System.currentTimeMillis() - this.this$0.lastThemeCheck > 15000L) {
+            this.this$0.lastThemeCheck = System.currentTimeMillis();
+            this.this$0.updateTheme();
+        }
+
+        var28 = var58.isMetric();
+        float var9;
+        if (var28) {
+            var9 = 3.6F;
+        } else {
+            var9 = 2.23694F;
+        }
+
+        float var10;
+        if (!var58.tBool("use_wheel_speed", false) && !(var58.getVEgoCluster() <= 0.0F)) {
+            var10 = var58.getVEgoCluster();
+        } else {
+            var10 = var58.getVEgo();
+        }
+
+        TextView var477 = this.this$0.speedTv;
+        TextView var263 = var477;
+        if (var477 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("speedTv");
+            var263 = null;
+        }
+
+        var263.setText(String.valueOf(RangesKt.coerceAtLeast(MathKt.roundToInt(var10 * var9), 0)));
+        TextView var478 = this.this$0.speedUnit;
+        TextView var264 = var478;
+        if (var478 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("speedUnit");
+            var264 = null;
+        }
+
+        String var479;
+        if (var28) {
+            var479 = "km/h";
+        } else {
+            var479 = "mph";
+        }
+
+        var264.setText(var479);
+        if (var58.s("show_speed") && var58.getStarted()) {
+            var115 = (((boolean)false) ? 1 : 0);
+        } else {
+            var115 = (((boolean)true) ? 1 : 0);
+        }
+
+        TextView var480 = this.this$0.speedTv;
+        TextView var265 = var480;
+        if (var480 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("speedTv");
+            var265 = null;
+        }
+
+        if ((var115 != 0)) {
+            var115 = 4;
+        } else {
+            var115 = 0;
+        }
+
+        var265.setVisibility(var115);
+        TextView var481 = this.this$0.speedUnit;
+        TextView var266 = var481;
+        if (var481 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("speedUnit");
+            var266 = null;
+        }
+
+        TextView var635 = this.this$0.speedTv;
+        TextView var482 = var635;
+        if (var635 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("speedTv");
+            var482 = null;
+        }
+
+        var266.setVisibility(var482.getVisibility());
+        if (var58.getVCruiseCluster() > 0.0F) {
+            var9 = var58.getVCruiseCluster();
+        } else {
+            var9 = var58.getVCruise();
+        }
+
+        int var118;
+        if (var58.getCruiseEnabled() && var9 > 0.0F && var9 < 200.0F) {
+            var118 = 1;
+        } else {
+            var118 = 0;
+        }
+
+        float var11 = var58.tFloat("set_speed_offset", 0.0F);
+        TextView var483 = this.this$0.setSpeedTv;
+        TextView var267 = var483;
+        if (var483 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("setSpeedTv");
+            var267 = null;
+        }
+
+        String var484;
+        if ((var118 != 0)) {
+            if (var28) {
+                var10 = 1.0F;
+            } else {
+                var10 = 0.621371F;
+            }
+
+            var484 = String.valueOf(MathKt.roundToInt((var9 + var11) * var10));
+        } else {
+            var484 = "–";
+        }
+
+        var267.setText(var484);
+        TextView var485 = this.this$0.setSpeedTv;
+        TextView var268 = var485;
+        if (var485 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("setSpeedTv");
+            var268 = null;
+        }
+
+        if ((var118 != 0)) {
+            var20 = -1;
+        } else {
+            var20 = Color.rgb(114, 114, 114);
+        }
+
+        var268.setTextColor(var20);
+        TextView var486 = this.this$0.maxLabel;
+        TextView var269 = var486;
+        if (var486 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("maxLabel");
+            var269 = null;
+        }
+
+        if ((var118 == 0)) {
+            var118 = Color.rgb(166, 166, 166);
+        } else if (var58.getEnabled() && var58.getActive()) {
+            var118 = Color.rgb(128, 216, 166);
+        } else {
+            var118 = Color.rgb(145, 155, 149);
+        }
+
+        var269.setTextColor(var118);
+        LinearLayout var487 = this.this$0.maxCard;
+        LinearLayout var270 = var487;
+        if (var487 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("maxCard");
+            var270 = null;
+        }
+
+        int var120;
+        if (var58.s("show_max") && var58.getStarted()) {
+            var120 = 0;
+        } else {
+            var120 = 4;
+        }
+
+        var270.setVisibility(var120);
+        SlcView var488 = this.this$0.slc;
+        SlcView var271 = var488;
+        if (var488 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("slc");
+            var271 = null;
+        }
+
+        if (var58.getStarted() && var58.s("speed_limit")) {
+            var120 = (byte)0;
+        } else {
+            var120 = (byte)4;
+        }
+
+        var271.setVisibility(var120);
+        WheelButton var489 = this.this$0.wheel;
+        WheelButton var272 = var489;
+        if (var489 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("wheel");
+            var272 = null;
+        }
+
+        if (var58.s("wheel_button") && var58.getStarted()) {
+            var120 = (byte)0;
+        } else {
+            var120 = (byte)4;
+        }
+
+        var272.setVisibility(var120);
+        MiciDistanceView var490 = this.this$0.personality;
+        MiciDistanceView var273 = var490;
+        if (var490 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("personality");
+            var273 = null;
+        }
+
+        if (var58.getStarted() && var58.s("personality_button")) {
+            var120 = (byte)0;
+        } else {
+            var120 = (byte)8;
+        }
+
+        var273.setVisibility(var120);
+        SlcActionsView var491 = this.this$0.slcActions;
+        SlcActionsView var274 = var491;
+        if (var491 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("slcActions");
+            var274 = null;
+        }
+
+        label2156: {
+            if (var58.getStarted() && var58.s("speed_limit")) {
+                SlcActionsView var636 = this.this$0.slcActions;
+                SlcActionsView var492 = var636;
+                if (var636 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("slcActions");
+                    var492 = null;
+                }
+
+                if (!SlcActionsView.controls$default(var492, 0L, 1, null).isEmpty()) {
+                    var120 = (byte)0;
+                    break label2156;
+                }
+            }
+
+            var120 = (byte)8;
+        }
+
+        var274.setVisibility(var120);
+        Pair var275;
+        if (var58.getStarted() && var58.s("csc_glow")) {
+            var275 = DrivingMode.curveLabel$default(DrivingMode.INSTANCE, var58, 0L, 2, null);
+        } else {
+            var275 = null;
+        }
+
+        TextView var637 = this.this$0.curveLabel;
+        TextView var493 = var637;
+        if (var637 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("curveLabel");
+            var493 = null;
+        }
+
+        label2143: {
+            if (var275 != null) {
+                String var638 = (String)var275.getFirst();
+                if (var638 != null) {
+                    var639 = var638;
+                    break label2143;
+                }
+            }
+
+            var639 = "";
+        }
+
+        var493.setText(var639);
+        if (var275 != null) {
+            TextView var640 = this.this$0.curveLabel;
+            TextView var494 = var640;
+            if (var640 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("curveLabel");
+                var494 = null;
+            }
+
+            var494.setTextColor(((Number)var275.getSecond()).intValue());
+            Unit var495 = Unit.INSTANCE;
+            Unit var496 = Unit.INSTANCE;
+        }
+
+        TextView var641 = this.this$0.curveLabel;
+        TextView var497 = var641;
+        if (var641 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("curveLabel");
+            var497 = null;
+        }
+
+        if (var275 != null) {
+            var120 = (byte)0;
+        } else {
+            var120 = (byte)8;
+        }
+
+        var497.setVisibility(var120);
+        var28 = Intrinsics.areEqual(var58.getAlertSize(), "none");
+        TextView var498 = this.this$0.clockTv;
+        TextView var276 = var498;
+        if (var498 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("clockTv");
+            var276 = null;
+        }
+
+        if (var58.getStarted() && var58.s("clock") && var28) {
+            var120 = (byte)0;
+        } else {
+            var120 = (byte)8;
+        }
+
+        var276.setVisibility(var120);
+        TextView var499 = this.this$0.clockTv;
+        TextView var277 = var499;
+        if (var499 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("clockTv");
+            var277 = null;
+        }
+
+        if (var277.getVisibility() == 0) {
+            TextView var500 = this.this$0.clockTv;
+            TextView var278 = var500;
+            if (var500 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("clockTv");
+                var278 = null;
+            }
+
+            var278.setText(DrivingMode.clock$default(DrivingMode.INSTANCE, null, var58.s("clock_24h"), 1, null));
+        }
+
+        TextView var501 = this.this$0.modeText;
+        TextView var279 = var501;
+        if (var501 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("modeText");
+            var279 = null;
+        }
+
+        if (var58.getStarted() && var58.s("mode_text") && var28) {
+            var120 = (byte)0;
+        } else {
+            var120 = (byte)8;
+        }
+
+        var279.setVisibility(var120);
+        TextView var502 = this.this$0.modeText;
+        TextView var280 = var502;
+        if (var502 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("modeText");
+            var280 = null;
+        }
+
+        if (var280.getVisibility() == 0) {
+            TextView var503 = this.this$0.modeText;
+            TextView var281 = var503;
+            if (var503 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("modeText");
+                var281 = null;
+            }
+
+            var281.setText(DrivingMode.INSTANCE.describe(var58));
+        }
+
+        DevSidebarView var504 = this.this$0.devSidebar;
+        DevSidebarView var282 = var504;
+        if (var504 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("devSidebar");
+            var282 = null;
+        }
+
+        if (var58.getStarted() && var58.s("dev_sidebar")) {
+            var120 = (byte)0;
+        } else {
+            var120 = (byte)8;
+        }
+
+        var282.setVisibility(var120);
+        SideCam var505 = SideCam.INSTANCE;
+        String var283 = this.this$0.host;
+        var120 = this.this$0.port;
+        var11 = 0.0F;
+        SideCam.tick$default(var505, var58, var283, var120, 0L, 8, null);
+        List var642 = SideCam.INSTANCE.wanted(var58);
+        SideView var506 = this.this$0.pipLeft;
+        SideView var284 = var506;
+        if (var506 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("pipLeft");
+            var284 = null;
+        }
+
+        byte var130;
+        if (var642.contains("left")) {
+            var130 = 0;
+        } else {
+            var130 = 8;
+        }
+
+        var284.setVisibility(var130);
+        SideView var507 = this.this$0.pipRight;
+        SideView var285 = var507;
+        if (var507 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("pipRight");
+            var285 = null;
+        }
+
+        if (var642.contains("right")) {
+            var130 = 0;
+        } else {
+            var130 = 8;
+        }
+
+        var285.setVisibility(var130);
+        String var643 = Telemetry.pStr$default(var58, "ChestnutState", null, 2, null);
+        int var132;
+        if (var643.length() > 0) {
+            var132 = 1;
+        } else {
+            var132 = 0;
+        }
+
+        if ((var132 != 0)) {
+            label2061: {
+                if (var58.getStarted() && var58.s("egpu_status")) {
+                    String[] var286 = new String[]{"active", "loading", "failed"};
+                    if (SetsKt.setOf(var286).contains(var643)) {
+                        var132 = (((boolean)true) ? 1 : 0);
+                        break label2061;
+                    }
+                }
+
+                var132 = (((boolean)false) ? 1 : 0);
+            }
+
+            ImageView var508 = this.this$0.egpu;
+            ImageView var287 = var508;
+            if (var508 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                var287 = null;
+            }
+
+            byte var187;
+            if ((var132 != 0)) {
+                var187 = 0;
+            } else {
+                var187 = 8;
+            }
+
+            var287.setVisibility(var187);
+            if ((var132 != 0)) {
+                if (Intrinsics.areEqual(var643, "loading")) {
+                    ImageView var509 = this.this$0.egpu;
+                    ImageView var288 = var509;
+                    if (var509 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var288 = null;
+                    }
+
+                    var288.setImageResource(R.drawable.egpu_loading);
+                    ImageView var510 = this.this$0.egpu;
+                    ImageView var289 = var510;
+                    if (var510 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var289 = null;
+                    }
+
+                    var289.setAlpha((float)((0.5 - Math.cos(System.nanoTime() / 1.0E9 * 6.0) * 0.5) * 0.65 + 0.35));
+                } else if (Intrinsics.areEqual(var643, "failed")) {
+                    ImageView var511 = this.this$0.egpu;
+                    ImageView var290 = var511;
+                    if (var511 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var290 = null;
+                    }
+
+                    var290.setImageResource(R.drawable.egpu_orange);
+                    ImageView var512 = this.this$0.egpu;
+                    ImageView var291 = var512;
+                    if (var512 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var291 = null;
+                    }
+
+                    var291.setAlpha(1.0F);
+                } else {
+                    ImageView var513 = this.this$0.egpu;
+                    ImageView var292 = var513;
+                    if (var513 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var292 = null;
+                    }
+
+                    var292.setImageResource(R.drawable.egpu_green);
+                    ImageView var514 = this.this$0.egpu;
+                    ImageView var293 = var514;
+                    if (var514 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var293 = null;
+                    }
+
+                    var293.setAlpha(1.0F);
+                }
+            }
+        } else {
+            var55 = this.this$0;
+            MainActivity$uiTick$1 var294 = this;
+            if (var58.getChestnutPresent() || var58.getStarted() && var55.egpuSeen) {
+                var28 = true;
+            } else {
+                var28 = false;
+            }
+
+            var55.egpuSeen = var28;
+            if (var58.getStarted() && var58.s("egpu_status") && var28 && var58.pBool("UsbGpuCompiled", false)) {
+                var132 = (((boolean)true) ? 1 : 0);
+            } else {
+                var132 = (((boolean)false) ? 1 : 0);
+            }
+
+            if ((var132 == 0)) {
+                ImageView var304 = var55.egpu;
+                if (var304 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                    var304 = null;
+                }
+
+                var304.setVisibility(8);
+                var55.egpuFallback = false;
+            } else {
+                var29 = var58.pBool("UsbGpuLoading", false);
+                var28 = var58.pBool("UsbGpuActive", false);
+                if (var58.getModelSeen() && System.nanoTime() - var58.getLastModelRxNs() < 1000000000L) {
+                    var132 = (((boolean)true) ? 1 : 0);
+                } else {
+                    var132 = (((boolean)false) ? 1 : 0);
+                }
+
+                if (!var28 || var58.getModelSeen() && (var132 == 0)) {
+                    var132 = (((boolean)true) ? 1 : 0);
+                } else {
+                    var132 = (((boolean)false) ? 1 : 0);
+                }
+
+                if (var58.getEnabled() && !var55.egpuWasEngaged && !var29 && !var28 && var58.getModelSeen()) {
+                    var55.egpuFallback = true;
+                }
+
+                var55.egpuWasEngaged = var58.getEnabled();
+                if (var55.egpuFallback && (var132 != 0)) {
+                    var28 = true;
+                } else {
+                    var28 = false;
+                }
+
+                var55.egpuFallback = var28;
+                ImageView var515 = var55.egpu;
+                ImageView var295 = var515;
+                if (var515 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                    var295 = null;
+                }
+
+                var295.setVisibility(0);
+                if (var29) {
+                    ImageView var516 = var55.egpu;
+                    ImageView var296 = var516;
+                    if (var516 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var296 = null;
+                    }
+
+                    var296.setImageResource(R.drawable.egpu_loading);
+                    ImageView var517 = var55.egpu;
+                    ImageView var297 = var517;
+                    if (var517 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var297 = null;
+                    }
+
+                    var297.setAlpha((float)((0.5 - Math.cos(System.nanoTime() / 1.0E9 * 6.0) * 0.5) * 0.65 + 0.35));
+                } else if (var55.egpuFallback) {
+                    ImageView var518 = var55.egpu;
+                    ImageView var298 = var518;
+                    if (var518 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var298 = null;
+                    }
+
+                    var298.setImageResource(R.drawable.egpu_crossed);
+                    ImageView var519 = var55.egpu;
+                    ImageView var299 = var519;
+                    if (var519 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var299 = null;
+                    }
+
+                    var299.setAlpha(0.65F);
+                } else if ((var132 != 0)) {
+                    ImageView var520 = var55.egpu;
+                    ImageView var300 = var520;
+                    if (var520 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var300 = null;
+                    }
+
+                    var300.setImageResource(R.drawable.egpu_orange);
+                    ImageView var521 = var55.egpu;
+                    ImageView var301 = var521;
+                    if (var521 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var301 = null;
+                    }
+
+                    var301.setAlpha(1.0F);
+                } else {
+                    ImageView var522 = var55.egpu;
+                    ImageView var302 = var522;
+                    if (var522 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var302 = null;
+                    }
+
+                    var302.setImageResource(R.drawable.egpu_green);
+                    ImageView var523 = var55.egpu;
+                    ImageView var303 = var523;
+                    if (var523 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("egpu");
+                        var303 = null;
+                    }
+
+                    var303.setAlpha(1.0F);
+                }
+            }
+
+            Unit var305 = Unit.INSTANCE;
+        }
+
+        TextView var524 = this.this$0.roadName;
+        TextView var306 = var524;
+        if (var524 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("roadName");
+            var306 = null;
+        }
+
+        CharSequence var525;
+        if (var58.getStarted() && var58.s("road_name")) {
+            var525 = var58.getRoadName();
+        } else {
+            var525 = "";
+        }
+
+        var306.setText(var525);
+        AetherGaugeView var526 = this.this$0.gauge;
+        AetherGaugeView var307 = var526;
+        if (var526 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("gauge");
+            var307 = null;
+        }
+
+        if (var58.getStarted() && var58.s("aether_gauge")) {
+            var132 = 0;
+        } else {
+            var132 = 8;
+        }
+
+        var307.setVisibility(var132);
+        SlcSourcesView var527 = this.this$0.slcSources;
+        SlcSourcesView var308 = var527;
+        if (var527 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("slcSources");
+            var308 = null;
+        }
+
+        label2042: {
+            if (var58.getStarted() && var58.s("speed_limit")) {
+                if (var58.getSp7()) {
+                    var28 = var58.s("slc_sources_sp7");
+                } else {
+                    var28 = var58.pBool("SpeedLimitSources", false);
+                }
+
+                if (var28) {
+                    var132 = 0;
+                    break label2042;
+                }
+            }
+
+            var132 = 8;
+        }
+
+        var308.setVisibility(var132);
+        Pair var645 = Telemetry.navCard$default(var58, 0L, 1, null);
+        NavCardView var528 = this.this$0.navCard;
+        NavCardView var309 = var528;
+        if (var528 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("navCard");
+            var309 = null;
+        }
+
+        if (var58.getStarted() && var58.s("nav_card") && var645 != null && !this.this$0.getMapOpen()) {
+            var132 = 0;
+        } else {
+            var132 = 8;
+        }
+
+        var309.setVisibility(var132);
+        NavCardView var529 = this.this$0.navCard;
+        NavCardView var310 = var529;
+        if (var529 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("navCard");
+            var310 = null;
+        }
+
+        int var140;
+        if (var645 != null && (Boolean)var645.getSecond()) {
+            var140 = 1;
+        } else {
+            var140 = 0;
+        }
+
+        if ((var140 != 0)) {
+            var9 = 0.55F;
+        } else {
+            var9 = 1.0F;
+        }
+
+        var310.setAlpha(var9);
+        SlowReasonView var530 = this.this$0.slowCard;
+        SlowReasonView var311 = var530;
+        if (var530 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("slowCard");
+            var311 = null;
+        }
+
+        label2020: {
+            if (var58.getStarted() && var58.s("slow_card")) {
+                SlowReasonView var646 = this.this$0.slowCard;
+                SlowReasonView var531 = var646;
+                if (var646 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("slowCard");
+                    var531 = null;
+                }
+
+                if (var531.current() != null) {
+                    var140 = (byte)0;
+                    break label2020;
+                }
+            }
+
+            var140 = (byte)8;
+        }
+
+        var311.setVisibility(var140);
+        if (var58.getStarted()) {
+            LaneBrain.Frame var532 = this.this$0.laneFeed.frame(var58, this.this$0.laneMarks, System.currentTimeMillis());
+            if (var532 != null) {
+                var55 = this.this$0;
+                var55.laneTracker.update(var532);
+                long var234 = var532.getNowMs();
+
+                label2009: {
+                    try {
+                        var312 = var55.laneMapLog;
+                    } catch (Exception var71) {
+                        break label2009;
+                    }
+
+                    if (var312 != null) {
+                        try {
+                            var312.frame(var234, var58.getVEgo(), var532, var55.laneTracker, var55.laneTracker.turning(var234));
+                            Unit var313 = Unit.INSTANCE;
+                        } catch (Exception var70) {
+                        }
+                    }
+                }
+
+                double[] var314;
+                if (RtkPosition.INSTANCE.fast(var234)) {
+                    var314 = RtkPosition.INSTANCE.now(var234, var58.getVEgo());
+                } else {
+                    var314 = null;
+                }
+
+                OsmRoads.Fix var692 = OsmRoads.INSTANCE.getLastFix();
+                double var1x;
+                if (var314 != null) {
+                    var1x = var314[0];
+                } else if (var692 != null) {
+                    var1x = var692.getLat();
+                } else {
+                    var1x = Double.NaN;
+                }
+
+                double var3;
+                if (var314 != null) {
+                    var3 = var314[1];
+                } else if (var692 != null) {
+                    var3 = var692.getLon();
+                } else {
+                    var3 = Double.NaN;
+                }
+
+                double var85;
+                label2004: {
+                    if (var314 != null) {
+                        var85 = RtkPosition.INSTANCE.getHeading();
+                        boolean var142;
+                        if (!Double.isInfinite(var85) && !Double.isNaN(var85)) {
+                            var142 = true;
+                        } else {
+                            var142 = false;
+                        }
+
+                        if (var142) {
+                            var85 = RtkPosition.INSTANCE.getHeading();
+                            break label2004;
+                        }
+                    }
+
+                    if (var692 != null) {
+                        var85 = var692.getBearingDeg();
+                    } else {
+                        var85 = Double.NaN;
+                    }
+                }
+
+                try {
+                    var55.laneAhead
+                        .update(
+                            var234, var55.laneTracker.getOdo(), var1x, var3, (Math.PI / 2) - Math.toRadians(var85), var58.getVEgo(), var55.laneTracker, var532
+                        );
+                } catch (Exception var69) {
+                }
+
+                Unit var315 = Unit.INSTANCE;
+                Unit var316 = Unit.INSTANCE;
+            }
+        } else if (this.this$0.laneWasStarted) {
+            this.this$0.laneTracker.endDrive();
+            this.this$0.laneAhead.reset();
+            LaneMapLog var317 = this.this$0.laneMapLog;
+            if (var317 != null) {
+                var317.close();
+                Unit var318 = Unit.INSTANCE;
+            }
+        }
+
+        if (var58.getStarted()) {
+            Detector var319 = this.this$0.detectorRef;
+            if (var319 != null) {
+                LaneModel var320 = var319.getLaneModel();
+                if (var320 != null) {
+                    LaneModel.Answer var533 = var320.getAnswer();
+                    if (var533 != null) {
+                        MainActivity var321 = this.this$0;
+                        if (System.currentTimeMillis() - var533.getAtMs() < 5000L) {
+                            LaneBrain.modelSaw$default(var321.laneTracker, var533.getPL(), var533.getPR(), var533.getAtMs(), 0L, 8, null);
+                        }
+
+                        Unit var322 = Unit.INSTANCE;
+                        Unit var323 = Unit.INSTANCE;
                     }
                 }
             }
         }
-        z2 = false;
-        wantHome = z2;
-        z3 = this.this$0.homeShown;
-        if (wantHome != z3) {
+
+        SceneView var534 = this.this$0.scene;
+        if (var534 != null) {
+            var55 = this.this$0;
+            LaneBrain.Road var324 = var55.laneTracker.getRoad();
+            Pair var693 = var55.laneTracker.laneFromLeft();
+            var140 = ((Number)var693.component1()).intValue();
+            double var72 = ((Number)var693.component2()).doubleValue();
+            var20 = var55.laneTracker.laneCount().component1().intValue();
+            SceneView.LaneHint var325;
+            if (var58.getStarted() && var324 != null && var140 > 0) {
+                var325 = new SceneView.LaneHint(var324.getId(), var140 - 1, var20, var72, Double.NaN, System.nanoTime());
+            } else {
+                var325 = null;
+            }
+
+            var534.setLaneHint(var325);
+            Unit var326 = Unit.INSTANCE;
+            Unit var327 = Unit.INSTANCE;
         }
-        if (wantHome) {
+
+        if (var58.getStarted() && !this.this$0.laneWasStarted) {
+            this.this$0.getLaneShots().newDrive();
         }
-        if (wantHome) {
+
+        this.this$0.laneWasStarted = var58.getStarted();
+        LaneCardView var535 = this.this$0.laneCard;
+        LaneCardView var328 = var535;
+        if (var535 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("laneCard");
+            var328 = null;
         }
-        StorageInfo storageInfo2 = StorageInfo.INSTANCE;
-        offroadHome = this.this$0.offroadHome;
-        if (offroadHome == null) {
+
+        int var144;
+        if (var58.getStarted() && var58.s("lane_card")) {
+            var144 = 0;
+        } else {
+            var144 = 8;
         }
-        boolean copying2 = storageInfo2.copying(offroadHome.getStorage()) == null;
-        if (wantHome) {
+
+        var328.setVisibility(var144);
+        this.this$0.getLaneShots().setDetector(this.this$0.detectorRef);
+        LaneCardView var536 = this.this$0.laneCard;
+        LaneCardView var329 = var536;
+        if (var536 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("laneCard");
+            var329 = null;
         }
-        textView2 = this.this$0.statusTv;
-        if (textView2 == null) {
+
+        if (var329.getVisibility() == 0 && var58.getVEgo() > 3.0F) {
+            this.this$0.getLaneShots().tick(new MainActivity$uiTick$1$$ExternalSyntheticLambda0(this.this$0, var58));
         }
-        textView2.setVisibility(((connected2 || !t.getStarted()) && !wantHome) ? 0 : 8);
-        this.this$0.syncScene(!connected2 && t.getStarted());
-        if (connected2) {
-            z25 = this.this$0.sceneOn;
-            if (!z25) {
+
+        BlinkerCardView var537 = this.this$0.blinkCard;
+        BlinkerCardView var330 = var537;
+        if (var537 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("blinkCard");
+            var330 = null;
+        }
+
+        DataClient var649 = this.this$0.data;
+        var54 = var649;
+        if (var649 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("data");
+            var54 = null;
+        }
+
+        if (var54.getConnected() && var58.s("blink_card")) {
+            var144 = (byte)0;
+        } else {
+            var144 = (byte)8;
+        }
+
+        var330.setVisibility(var144);
+        GpsCardView var539 = this.this$0.gpsCard;
+        GpsCardView var331 = var539;
+        if (var539 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("gpsCard");
+            var331 = null;
+        }
+
+        DataClient var650 = this.this$0.data;
+        var54 = var650;
+        if (var650 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("data");
+            var54 = null;
+        }
+
+        if (var54.getConnected() && var58.s("gps_card")) {
+            var144 = (byte)0;
+        } else {
+            var144 = (byte)8;
+        }
+
+        var331.setVisibility(var144);
+        boolean var31 = var58.s("lane_suggest");
+        boolean var35 = var58.s("turn_signals");
+        if (var58.s("car_memory")) {
+            this.this$0.carMemory.update(var58, System.currentTimeMillis(), var58.getLeftBlindspot(), var58.getRightBlindspot());
+        }
+
+        if (var58.getLeftBlindspot() || var58.s("car_memory") && this.this$0.carMemory.beside(-1)) {
+            var28 = true;
+        } else {
+            var28 = false;
+        }
+
+        if (var58.getRightBlindspot() || var58.s("car_memory") && this.this$0.carMemory.beside(1)) {
+            var29 = true;
+        } else {
+            var29 = false;
+        }
+
+        if (Replay.INSTANCE.getActive() != this.this$0.replayWas) {
+            this.this$0.replayWas = Replay.INSTANCE.getActive();
+            LaneSuggestView var541 = this.this$0.laneSuggest;
+            LaneSuggestView var332 = var541;
+            if (var541 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                var332 = null;
+            }
+
+            var332.stop();
+        }
+
+        label2348: {
+            label2349: {
+                if (!var58.getStarted()) {
+                    LaneSuggestView var542 = this.this$0.laneSuggest;
+                    LaneSuggestView var333 = var542;
+                    if (var542 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                        var333 = null;
+                    }
+
+                    if (!var333.getLogic().getTest()) {
+                        LaneSuggestView var543 = this.this$0.laneSuggest;
+                        LaneSuggestView var334 = var543;
+                        if (var543 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                            var334 = null;
+                        }
+
+                        if (var334.getLogic().getState() == LaneSuggest.State.IDLE) {
+                            break label2349;
+                        }
+                    }
+                }
+
+                var54 = this.this$0.data;
+                DataClient var335 = var54;
+                if (var54 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("data");
+                    var335 = null;
+                }
+
+                if (var335.getConnected() && (var31 || var35)) {
+                    ModelSnapshot var651 = var58.getModel();
+                    long var235 = System.currentTimeMillis();
+                    JSONObject var59 = var58.navState();
+                    var10 = var58.tFloat("minimum_lane_change_speed", 8.9F);
+                    LaneSuggestView var545 = this.this$0.laneSuggest;
+                    LaneSuggestView var336 = var545;
+                    if (var545 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                        var336 = null;
+                    }
+
+                    var336.setMetric(var58.isMetric());
+                    LaneSuggestView var546 = this.this$0.laneSuggest;
+                    LaneSuggestView var337 = var546;
+                    if (var546 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                        var337 = null;
+                    }
+
+                    boolean var30;
+                    if (var337.getTurn().getState() == TurnSignal.State.SIGNALING) {
+                        var30 = true;
+                    } else {
+                        var30 = false;
+                    }
+
+                    label1911: {
+                        if (var59 != null) {
+                            Double var338 = var59.optDouble("maneuverDistance", Double.NaN);
+                            double var73 = var338.doubleValue();
+                            boolean var147;
+                            if (!Double.isInfinite(var73) && !Double.isNaN(var73)) {
+                                var147 = true;
+                            } else {
+                                var147 = false;
+                            }
+
+                            if (!var147) {
+                                var338 = null;
+                            }
+
+                            if (var338 != null) {
+                                label1901: {
+                                    var73 = var338.doubleValue();
+                                    Pair var339 = Nav.INSTANCE.nextLanes();
+                                    if (var339 != null) {
+                                        if (Math.abs(((Number)var339.getSecond()).doubleValue() - var73) < 200.0) {
+                                            var147 = true;
+                                        } else {
+                                            var147 = false;
+                                        }
+
+                                        if (!var147) {
+                                            var339 = null;
+                                        }
+
+                                        if (var339 != null) {
+                                            Nav.Step var340 = (Nav.Step)var339.getFirst();
+                                            if (var340 != null) {
+                                                var341 = var340.getLanes();
+                                                break label1901;
+                                            }
+                                        }
+                                    }
+
+                                    var341 = null;
+                                }
+
+                                var547 = var341;
+                                if (var341 != null) {
+                                    break label1911;
+                                }
+                            }
+                        }
+
+                        var547 = CollectionsKt.emptyList();
+                    }
+
+                    LaneSuggest.In var344;
+                    if (!var31) {
+                        var344 = null;
+                    } else {
+                        Pair var342 = LaneSuggest.Companion.routeNeed(var59, this.this$0.laneTracker, var58.isMetric(), ((List<Nav.Lane>) var547));
+                        int var26 = ((Number)var342.component1()).intValue();
+                        String var60 = (String)var342.component2();
+                        LaneSuggest.Companion.Exit var61 = LaneSuggest.Companion.exitNeed(var59, var58.isMetric());
+                        if (var58.getEnabled() && var58.getActive()) {
+                            var31 = true;
+                        } else {
+                            var31 = false;
+                        }
+
+                        float var12 = var58.getVEgo();
+                        float[] var343;
+                        if (var651 != null) {
+                            var343 = var651.getDesirePred();
+                        } else {
+                            var343 = null;
+                        }
+
+                        boolean var32;
+                        if (var651 != null) {
+                            var32 = var651.getLaneChanging();
+                        } else {
+                            var32 = false;
+                        }
+
+                        if (var651 != null) {
+                            var144 = var651.getLaneChangeDir();
+                        } else {
+                            var144 = 0;
+                        }
+
+                        boolean var44 = var58.getLeftBlinker();
+                        boolean var43 = var58.getRightBlinker();
+                        boolean var38 = var58.getBrakePressed();
+                        boolean var37 = var58.getSteeringPressed();
+                        float var13 = var58.getSteeringTorque();
+                        boolean var36 = var58.s("lane_nudge_confirm");
+                        boolean var42 = var58.s("lane_auto");
+                        LaneSuggestView var652 = this.this$0.laneSuggest;
+                        LaneSuggestView var548 = var652;
+                        if (var652 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                            var548 = null;
+                        }
+
+                        boolean var45 = Intrinsics.areEqual(var548.getCommaConfirms(), true);
+                        boolean var40 = var58.s("lane_pass");
+                        if (var58.getVCruiseCluster() > 0.0F) {
+                            var9 = var58.getVCruiseCluster();
+                        } else {
+                            var9 = var58.getVCruise();
+                        }
+
+                        label1881: {
+                            if (var58.getCruiseEnabled()) {
+                                boolean var189;
+                                if (1.0F <= var9 && var9 <= 200.0F) {
+                                    var189 = true;
+                                } else {
+                                    var189 = false;
+                                }
+
+                                if (var189) {
+                                    var9 /= 3.6F;
+                                    break label1881;
+                                }
+                            }
+
+                            var9 = 0.0F;
+                        }
+
+                        boolean var46 = var58.getLeadOne().getStatus();
+                        float var14 = var58.getLeadOne().getDRel();
+                        float var18 = var58.getLeadOne().getVLead();
+                        LaneBrain var549 = this.this$0.laneTracker;
+                        int var23 = -1;
+                        Pair var550 = var549.sideLanes(-1);
+                        var20 = ((Number)var550.component1()).intValue();
+                        double var75 = ((Number)var550.component2()).doubleValue();
+                        if (var20 < 0 || !(var75 >= 0.5)) {
+                            var20 = -1;
+                        }
+
+                        int var27 = LaneSuggest.Companion.routeSoon(var59);
+                        boolean var41 = var58.isMetric();
+                        boolean var39 = var58.s("exit_signals");
+                        int var21;
+                        if (var61 != null) {
+                            var21 = var61.getDir();
+                        } else {
+                            var21 = 0;
+                        }
+
+                        if (var61 != null) {
+                            var75 = var61.getDist();
+                        } else {
+                            var75 = Double.NaN;
+                        }
+
+                        label1865: {
+                            if (var61 != null) {
+                                var551 = var61.getWhy();
+                                if (var551 != null) {
+                                    break label1865;
+                                }
+                            }
+
+                            var551 = "";
+                        }
+
+                        label1860: {
+                            if (var61 != null) {
+                                var653 = var61.getKey();
+                                if (var653 != null) {
+                                    break label1860;
+                                }
+                            }
+
+                            var653 = "";
+                        }
+
+                        LaneBrain var694 = this.this$0.laneTracker;
+                        int var22;
+                        if (var61 != null) {
+                            var22 = var61.getDir();
+                        } else {
+                            var22 = 0;
+                        }
+
+                        int var202;
+                        if (var22 < 0) {
+                            var202 = var23;
+                        } else {
+                            var202 = 1;
+                        }
+
+                        Pair var695 = var694.sideLanes(var202);
+                        var202 = ((Number)var695.component1()).intValue();
+                        double var80 = ((Number)var695.component2()).doubleValue();
+                        if (var202 < 0 || !(var80 >= 0.5)) {
+                            var202 = -1;
+                        }
+
+                        boolean var33;
+                        label1849: {
+                            if (var61 != null) {
+                                LaneSuggest.Companion var62;
+                                LaneBrain var63;
+                                label1846: {
+                                    var62 = LaneSuggest.Companion;
+                                    var63 = this.this$0.laneTracker;
+                                    Pair var696 = Nav.INSTANCE.nextLanes();
+                                    if (var696 != null) {
+                                        var80 = ((Number)var696.getSecond()).doubleValue();
+                                        boolean var205;
+                                        if (0.0 <= var80 && var80 <= 800.0) {
+                                            var205 = true;
+                                        } else {
+                                            var205 = false;
+                                        }
+
+                                        if (!var205) {
+                                            var696 = null;
+                                        }
+
+                                        if (var696 != null) {
+                                            Nav.Step var697 = (Nav.Step)var696.getFirst();
+                                            if (var697 != null) {
+                                                List var57 = var697.getLanes();
+                                                var698 = var57;
+                                                if (var57 != null) {
+                                                    break label1846;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    var698 = CollectionsKt.emptyList();
+                                }
+
+                                if (var62.inLaneFor(var61, var63, var698)) {
+                                    var33 = true;
+                                    break label1849;
+                                }
+                            }
+
+                            var33 = false;
+                        }
+
+                        if (var58.s("lane_ends_ask")) {
+                            var23 = this.this$0.laneAhead.need(this.this$0.laneTracker).getFirst().intValue();
+                        } else {
+                            var23 = 0;
+                        }
+
+                        String var719 = this.this$0.laneAhead.need(this.this$0.laneTracker).getSecond();
+                        UiSettings var713 = this.this$0.settings;
+                        UiSettings var699 = var713;
+                        if (var713 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("settings");
+                            var699 = null;
+                        }
+
+                        float var16 = var699.getFloat("nudge_card_pct", 60.0F) * 100.0F / 100.0F;
+                        boolean var47 = var58.s("lane_return");
+                        Pair var700 = this.this$0.laneTracker.sideLanes(1);
+                        int var24 = ((Number)var700.component1()).intValue();
+                        var80 = ((Number)var700.component2()).doubleValue();
+                        if (var24 < 0 || !(var80 >= 0.5)) {
+                            var24 = -1;
+                        }
+
+                        boolean var48 = var58.getLeadRight().getStatus();
+                        float var17 = var58.getLeadRight().getDRel();
+                        float var15 = var58.getLeadRight().getVLead();
+                        int var25 = this.this$0.laneTracker.laneCount().getFirst().intValue();
+                        if (var25 <= 0) {
+                            var25 = -1;
+                        }
+
+                        LaneBrain.Road var701 = this.this$0.laneTracker.getRoad();
+                        boolean var34;
+                        if (var701 != null && var701.getHighway()) {
+                            var34 = true;
+                        } else {
+                            var34 = false;
+                        }
+
+                        var344 = new LaneSuggest.In(
+                            var235,
+                            var31,
+                            var12,
+                            var10,
+                            var343,
+                            var32,
+                            var144,
+                            var44,
+                            var43,
+                            var28,
+                            var29,
+                            var38,
+                            var26,
+                            var60,
+                            var37,
+                            var13,
+                            var36,
+                            var42,
+                            var45,
+                            var30,
+                            var40,
+                            var9,
+                            var46,
+                            var14,
+                            var18,
+                            var20,
+                            var27,
+                            var41,
+                            var39,
+                            var21,
+                            var75,
+                            var551,
+                            ((String) var653),
+                            var202,
+                            var33,
+                            var23,
+                            var719,
+                            var16,
+                            var47,
+                            var24,
+                            var48,
+                            var17,
+                            var15,
+                            var25,
+                            var34
+                        );
+                    }
+
+                    var9 = var58.getPoseYawZ();
+                    boolean var150;
+                    if (!Float.isInfinite(var9) && !Float.isNaN(var9)) {
+                        var150 = true;
+                    } else {
+                        var150 = false;
+                    }
+
+                    if (var150 && System.nanoTime() - var58.getPoseAtNs() < 1000000000L) {
+                        var9 = Odometry.INSTANCE.getGyroSign() * var58.getPoseYawZ();
+                    } else {
+                        var9 = var58.getYawRate();
+                    }
+
+                    TurnSignal.In var552;
+                    if (var35 && var58.getStarted()) {
+                        float var106 = var58.getVEgo();
+                        var30 = var58.getLeftBlinker();
+                        var31 = var58.getRightBlinker();
+                        var29 = var58.tBool("use_turn_desires", false);
+                        LaneSuggestView var654 = this.this$0.laneSuggest;
+                        LaneSuggestView var553 = var654;
+                        if (var654 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                            var553 = null;
+                        }
+
+                        double var77 = var553.crossGapFor(var59, var235);
+                        LaneSuggestView var655 = this.this$0.laneSuggest;
+                        LaneSuggestView var554 = var655;
+                        if (var655 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                            var554 = null;
+                        }
+
+                        if (var554.getLogic().getState() != LaneSuggest.State.IDLE) {
+                            var28 = true;
+                        } else {
+                            var28 = false;
+                        }
+
+                        var552 = new TurnSignal.In(
+                            var235,
+                            var59,
+                            var106,
+                            var9,
+                            var30,
+                            var31,
+                            var10,
+                            var29,
+                            var77,
+                            var28,
+                            Intrinsics.areEqual(var58.getGear(), "park"),
+                            var58.getSteeringAngleDeg(),
+                            LaneSuggest.Companion.notTurnLane(var59, this.this$0.laneTracker, Nav.INSTANCE.nextLanes())
+                        );
+                    } else {
+                        var552 = null;
+                    }
+
+                    LaneSuggestView var702 = this.this$0.laneSuggest;
+                    LaneSuggestView var656 = var702;
+                    if (var702 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                        var656 = null;
+                    }
+
+                    var656.tick(var344, var552);
+                    break label2348;
+                }
+            }
+
+            var28 = false;
+            LaneSuggestView var555 = this.this$0.laneSuggest;
+            LaneSuggestView var345 = var555;
+            if (var555 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                var345 = null;
+            }
+
+            if (var345.getVisibility() == 8) {
+                LaneSuggestView var556 = this.this$0.laneSuggest;
+                LaneSuggestView var346 = var556;
+                if (var556 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                    var346 = null;
+                }
+
+                if (var346.getTurn().getHoldSide() == 0) {
+                    break label2348;
+                }
+            }
+
+            LaneSuggestView var557 = this.this$0.laneSuggest;
+            LaneSuggestView var347 = var557;
+            if (var557 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
+                var347 = null;
+            }
+
+            var347.stop();
+        }
+
+        ReplayBar var558 = this.this$0.replayBar;
+        ReplayBar var348 = var558;
+        if (var558 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("replayBar");
+            var348 = null;
+        }
+
+        DataClient var657 = this.this$0.data;
+        var54 = var657;
+        if (var657 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("data");
+            var54 = null;
+        }
+
+        int var151;
+        if (var54.getConnected() && Replay.INSTANCE.getActive()) {
+            var151 = 0;
+        } else {
+            var151 = 8;
+        }
+
+        var348.setVisibility(var151);
+        TextView var560 = this.this$0.whereBtn;
+        TextView var349 = var560;
+        if (var560 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("whereBtn");
+            var349 = null;
+        }
+
+        DataClient var658 = this.this$0.data;
+        var54 = var658;
+        if (var658 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("data");
+            var54 = null;
+        }
+
+        if (var54.getConnected()
+            && var58.navState() == null
+            && !this.this$0.getMapOpen()
+            && this.this$0.hudEditor == null
+            && this.this$0.maskEditor == null) {
+            var151 = (byte)0;
+        } else {
+            var151 = (byte)8;
+        }
+
+        var349.setVisibility(var151);
+        TextView var562 = this.this$0.mapBtn;
+        TextView var350 = var562;
+        if (var562 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("mapBtn");
+            var350 = null;
+        }
+
+        DataClient var659 = this.this$0.data;
+        var54 = var659;
+        if (var659 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("data");
+            var54 = null;
+        }
+
+        if (!var54.getConnected()
+            || this.this$0.getMapOpen()
+            || this.this$0.hudEditor != null
+            || this.this$0.maskEditor != null
+            || !var58.getStarted() && this.this$0.homeShown) {
+            var151 = (byte)8;
+        } else {
+            var151 = (byte)0;
+        }
+
+        var350.setVisibility(var151);
+        if (this.this$0.tick % 40 == 0) {
+            NudgeSync var660 = NudgeSync.INSTANCE;
+            UiSettings var564 = this.this$0.settings;
+            UiSettings var351 = var564;
+            if (var564 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("settings");
+                var351 = null;
+            }
+
+            var660.tick(var351.getFloat("nudge_lc_pct", 100.0F));
+        }
+
+        BlinkerTurn var565 = BlinkerTurn.INSTANCE;
+        UiSettings var352 = this.this$0.settings;
+        if (var352 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("settings");
+            var352 = null;
+        }
+
+        BlinkerTurn.tick$default(var565, var58, var352, 0L, 4, null);
+        this.this$0.ideasTick(var58);
+        DriveTrack.tick$default(DriveTrack.INSTANCE, var58, 0L, 2, null);
+        if (this.this$0.sharedPending != null) {
+            var54 = this.this$0.data;
+            DataClient var353 = var54;
+            if (var54 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("data");
+                var353 = null;
+            }
+
+            if (var353.getConnected() && this.this$0.tick % 20 == 0) {
+                this.this$0.useShared();
             }
         }
-        z4 = false;
-        wantVideo = z4;
-        if (wantVideo) {
-        }
-        if (!wantVideo) {
-        }
-        MainActivity mainActivity222 = this.this$0;
-        z5 = this.this$0.visible;
-        if (z5) {
-        }
-        z6 = false;
-        mainActivity222.syncDetector(z6);
-        OsmRoads osmRoads2222 = OsmRoads.INSTANCE;
-        uiSettings2 = this.this$0.settings;
-        if (uiSettings2 == null) {
-        }
-        osmRoads2222.setEnabled(uiSettings2.get("map_roads"));
-        overlayView = this.this$0.overlay;
-        if (overlayView == null) {
-        }
-        if (overlayView.updateCalibration()) {
-        }
-        overlayView2 = this.this$0.overlay;
-        if (overlayView2 == null) {
-        }
-        overlayView2.setUiStatus(UiStatus.Companion.from(t));
-        currentTimeMillis = System.currentTimeMillis();
-        j = this.this$0.lastThemeCheck;
-        if (currentTimeMillis - j > 15000) {
-        }
-        boolean metric2222 = t.isMetric();
-        float conv2222 = metric2222 ? 3.6f : 2.23694f;
-        boolean useWheel2222 = t.tBool("use_wheel_speed", false);
-        float v2222 = (!useWheel2222 || t.getVEgoCluster() <= 0.0f) ? t.getVEgo() : t.getVEgoCluster();
-        textView3 = this.this$0.speedTv;
-        if (textView3 == null) {
-        }
-        textView3.setText(String.valueOf(RangesKt.coerceAtLeast(MathKt.roundToInt(v2222 * conv2222), 0)));
-        textView4 = this.this$0.speedUnit;
-        if (textView4 == null) {
-        }
-        textView4.setText(metric2222 ? "km/h" : "mph");
-        boolean hideSpeed2222 = t.s("show_speed") || !t.getStarted();
-        textView5 = this.this$0.speedTv;
-        if (textView5 == null) {
-        }
-        textView5.setVisibility(hideSpeed2222 ? 4 : 0);
-        textView6 = this.this$0.speedUnit;
-        if (textView6 == null) {
-        }
-        textView7 = this.this$0.speedTv;
-        if (textView7 == null) {
-        }
-        textView6.setVisibility(textView7.getVisibility());
-        float setMs2222 = t.getVCruiseCluster() > 0.0f ? t.getVCruiseCluster() : t.getVCruise();
-        isSet = !t.getCruiseEnabled() && setMs2222 > 0.0f && setMs2222 < 200.0f;
-        float offset2222 = t.tFloat("set_speed_offset", 0.0f);
-        textView8 = this.this$0.setSpeedTv;
-        if (textView8 == null) {
-        }
-        if (isSet) {
-        }
-        textView8.setText(str);
-        textView9 = this.this$0.setSpeedTv;
-        if (textView9 == null) {
-        }
-        textView9.setTextColor(isSet ? -1 : Color.rgb(114, 114, 114));
-        textView10 = this.this$0.maxLabel;
-        if (textView10 == null) {
-        }
-        textView10.setTextColor(!isSet ? Color.rgb(166, 166, 166) : (t.getEnabled() && t.getActive()) ? Color.rgb(128, 216, 166) : Color.rgb(145, 155, 149));
-        linearLayout2 = this.this$0.maxCard;
-        if (linearLayout2 == null) {
-        }
-        linearLayout2.setVisibility((t.s("show_max") || !t.getStarted()) ? 4 : 0);
-        slcView = this.this$0.slc;
-        if (slcView == null) {
-        }
-        slcView.setVisibility((t.getStarted() || !t.s("speed_limit")) ? 4 : 0);
-        wheelButton = this.this$0.wheel;
-        if (wheelButton == null) {
-        }
-        wheelButton.setVisibility((t.s("wheel_button") || !t.getStarted()) ? 4 : 0);
-        miciDistanceView = this.this$0.personality;
-        if (miciDistanceView == null) {
-        }
-        miciDistanceView.setVisibility((t.getStarted() || !t.s("personality_button")) ? 8 : 0);
-        slcActionsView = this.this$0.slcActions;
-        if (slcActionsView == null) {
-        }
-        if (t.getStarted()) {
-        }
-        j2 = 0;
-        i5 = 8;
-        slcActionsView.setVisibility(i5);
-        if (t.getStarted()) {
-        }
-        i6 = i4;
-        pair = null;
-        cl = pair;
-        textView11 = this.this$0.curveLabel;
-        if (textView11 == null) {
-        }
-        textView11.setText((cl != null || (str15 = (String) cl.getFirst()) == null) ? "" : str15);
-        if (cl != null) {
-        }
-        textView12 = this.this$0.curveLabel;
-        if (textView12 == null) {
-        }
-        textView12.setVisibility(cl == null ? 0 : 8);
-        boolean noAlert22222 = Intrinsics.areEqual(t.getAlertSize(), "none");
-        textView13 = this.this$0.clockTv;
-        if (textView13 == null) {
-        }
-        textView13.setVisibility((!t.getStarted() && t.s("clock") && noAlert22222) ? 0 : 8);
-        textView14 = this.this$0.clockTv;
-        if (textView14 == null) {
-        }
-        if (textView14.getVisibility() == 0) {
-        }
-        textView15 = this.this$0.modeText;
-        if (textView15 == null) {
-        }
-        textView15.setVisibility((!t.getStarted() && t.s("mode_text") && noAlert22222) ? 0 : 8);
-        textView16 = this.this$0.modeText;
-        if (textView16 == null) {
-        }
-        if (textView16.getVisibility() == 0) {
-        }
-        devSidebarView = this.this$0.devSidebar;
-        if (devSidebarView == null) {
-        }
-        devSidebarView.setVisibility((t.getStarted() || !t.s("dev_sidebar")) ? 8 : 0);
-        SideCam sideCam22222 = SideCam.INSTANCE;
-        str2 = this.this$0.host;
-        i7 = this.this$0.port;
-        int stall322222 = 0;
-        SideCam.tick$default(sideCam22222, t, str2, i7, 0L, 8, null);
-        List sides22222 = SideCam.INSTANCE.wanted(t);
-        sideView = this.this$0.pipLeft;
-        if (sideView == null) {
-        }
-        sideView.setVisibility(!sides22222.contains("left") ? 0 : 8);
-        sideView2 = this.this$0.pipRight;
-        if (sideView2 == null) {
-        }
-        sideView2.setVisibility(!sides22222.contains("right") ? 0 : 8);
-        cnState = Telemetry.pStr$default(t, "ChestnutState", null, i6, null);
-        if (cnState.length() <= 0) {
-        }
-        textView17 = this.this$0.roadName;
-        if (textView17 == null) {
-        }
-        textView17.setText((t.getStarted() || !t.s("road_name")) ? "" : t.getRoadName());
-        aetherGaugeView = this.this$0.gauge;
-        if (aetherGaugeView == null) {
-        }
-        aetherGaugeView.setVisibility((t.getStarted() || !t.s("aether_gauge")) ? 8 : 0);
-        slcSourcesView = this.this$0.slcSources;
-        if (slcSourcesView == null) {
-        }
-        if (t.getStarted()) {
-        }
-        i8 = 8;
-        slcSourcesView.setVisibility(i8);
-        Pair card222222 = Telemetry.navCard$default(t, 0L, 1, null);
-        navCardView = this.this$0.navCard;
-        if (navCardView == null) {
-        }
-        if (t.getStarted()) {
-        }
-        i9 = 8;
-        navCardView.setVisibility(i9);
-        navCardView2 = this.this$0.navCard;
-        if (navCardView2 == null) {
-        }
-        navCardView2.setAlpha(!(card222222 == null && ((Boolean) card222222.getSecond()).booleanValue()) ? 0.55f : 1.0f);
-        slowReasonView = this.this$0.slowCard;
-        if (slowReasonView == null) {
-        }
-        if (t.getStarted()) {
-        }
-        i10 = 8;
-        slowReasonView.setVisibility(i10);
-        if (t.getStarted()) {
-        }
-        if (t.getStarted()) {
-        }
-        s = this.this$0.scene;
-        if (s != null) {
-        }
-        if (t.getStarted()) {
-        }
-        this.this$0.laneWasStarted = t.getStarted();
-        laneCardView = this.this$0.laneCard;
-        if (laneCardView == null) {
-        }
-        laneCardView.setVisibility((t.getStarted() || !t.s("lane_card")) ? 8 : i11);
-        laneShots = this.this$0.getLaneShots();
-        detector = this.this$0.detectorRef;
-        laneShots.setDetector(detector);
-        laneCardView2 = this.this$0.laneCard;
-        if (laneCardView2 == null) {
-        }
-        if (laneCardView2.getVisibility() == 0) {
-        }
-        blinkerCardView = this.this$0.blinkCard;
-        if (blinkerCardView == null) {
-        }
-        dataClient2 = this.this$0.data;
-        if (dataClient2 == null) {
-        }
-        blinkerCardView.setVisibility((dataClient2.getConnected() || !t.s("blink_card")) ? 8 : i11);
-        gpsCardView = this.this$0.gpsCard;
-        if (gpsCardView == null) {
-        }
-        dataClient3 = this.this$0.data;
-        if (dataClient3 == null) {
-        }
-        gpsCardView.setVisibility((dataClient3.getConnected() || !t.s("gps_card")) ? 8 : i11);
-        boolean laneOn22222222 = t.s("lane_suggest");
-        boolean turnOn22222222 = t.s("turn_signals");
-        if (t.s("car_memory")) {
-        }
-        if (!t.getLeftBlindspot()) {
-        }
-        z12 = true;
-        if (!t.getRightBlindspot()) {
-        }
-        z13 = true;
-        active = Replay.INSTANCE.getActive();
-        z14 = this.this$0.replayWas;
-        if (active != z14) {
-        }
-        if (!t.getStarted()) {
-        }
-        dataClient4 = this.this$0.data;
-        if (dataClient4 == null) {
-        }
-        if (!dataClient4.getConnected()) {
-        }
-    }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static final String run$lambda$5(MainActivity this$0, Telemetry $t) {
-        LaneBrain laneBrain;
-        LaneShots.Companion companion = LaneShots.Companion;
-        laneBrain = this$0.laneTracker;
-        return companion.caption(laneBrain, "every 30 s", $t.getVEgo() * 2.23694f);
-    }
+        if (this.this$0.tick % 20 == 0) {
+            Ntrip.INSTANCE.tick((Context)this.this$0);
+        }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static final CharSequence run$lambda$27$lambda$24(Map.Entry it) {
-        Intrinsics.checkNotNullParameter(it, "it");
-        return it.getValue() + " " + it.getKey();
+        if (this.this$0.tick % 4 == 0) {
+            var55 = this.this$0;
+            var54 = this.this$0.data;
+            DataClient var354 = var54;
+            if (var54 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("data");
+                var354 = null;
+            }
+
+            if (!var354.getConnected()
+                || Nav.INSTANCE.getActive()
+                || var58.navState() != null
+                || this.this$0.hudEditor != null
+                || this.this$0.maskEditor != null
+                || !var58.getStarted() && this.this$0.homeShown) {
+                var28 = false;
+            } else {
+                var28 = true;
+            }
+
+            var55.syncFavBar(var28);
+        }
+
+        TextView var568 = this.this$0.mapBtn;
+        TextView var355 = var568;
+        if (var568 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("mapBtn");
+            var355 = null;
+        }
+
+        android.view.ViewGroup.LayoutParams var356 = var355.getLayoutParams();
+        Intrinsics.checkNotNull(var356, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
+        android.widget.FrameLayout.LayoutParams var662 = (android.widget.FrameLayout.LayoutParams)var356;
+        MainActivity var703 = this.this$0;
+        TextView var569 = var703.whereBtn;
+        TextView var357 = var569;
+        if (var569 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("whereBtn");
+            var357 = null;
+        }
+
+        if (var357.getVisibility() == 0) {
+            var151 = (short)330;
+        } else {
+            var151 = (short)160;
+        }
+
+        var151 = var703.dp(var151);
+        if (var662.getMarginStart() != var151) {
+            var662.setMarginStart(var151);
+            TextView var570 = var703.mapBtn;
+            TextView var358 = var570;
+            if (var570 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("mapBtn");
+                var358 = null;
+            }
+
+            var358.setLayoutParams((android.view.ViewGroup.LayoutParams)var662);
+        }
+
+        Unit var359 = Unit.INSTANCE;
+        var703 = this.this$0;
+        MainActivity$uiTick$1 var360 = this;
+        if (var58.getParams().get("NavLanePositioningAllowed") != null) {
+            var28 = var58.pBool("NavLanePositioningAllowed", true);
+        } else {
+            var28 = true;
+        }
+
+        NudgeLogic.Result var361;
+        if (var58.getStarted() && var58.getActive() && var28 && var58.s("nudge_hint")) {
+            Double var362 = StringsKt.toDoubleOrNull(Telemetry.pStr$default(var58, "LaneDetectionWidth", null, 2, null));
+            double var78;
+            if (var362 != null) {
+                var78 = var362;
+            } else {
+                var78 = 0.0;
+            }
+
+            NudgeLogic var363 = NudgeLogic.INSTANCE;
+            JSONObject var571 = var58.navState();
+            double var83 = var58.getVEgo();
+            var31 = var58.getLeftBlinker();
+            var29 = var58.getRightBlinker();
+            boolean var230 = var58.getLeftBlindspot();
+            var28 = var58.getRightBlindspot();
+            double var7 = var58.getLaneWidthLeft();
+            double var86 = var58.getLaneWidthRight();
+            if (!var58.isMetric()) {
+                var78 = 0.3048 * var78;
+            }
+
+            var361 = var363.evaluate(var571, var83, var31, var29, var230, var28, var7, var86, var78);
+        } else {
+            var361 = new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, "");
+        }
+
+        NudgeHintView var663 = var703.nudgeHint;
+        NudgeHintView var572 = var663;
+        if (var663 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("nudgeHint");
+            var572 = null;
+        }
+
+        var572.setResult(var361);
+        NudgeHintView var664 = var703.nudgeHint;
+        NudgeHintView var573 = var664;
+        if (var664 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("nudgeHint");
+            var573 = null;
+        }
+
+        var573.setMetric(var58.isMetric());
+        NudgeHintView var665 = var703.nudgeHint;
+        NudgeHintView var574 = var665;
+        if (var665 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("nudgeHint");
+            var574 = null;
+        }
+
+        int var156;
+        if (var361.getState() == NudgeLogic.State.NONE) {
+            var156 = 8;
+        } else {
+            var156 = 0;
+        }
+
+        var574.setVisibility(var156);
+        Unit var364 = Unit.INSTANCE;
+        WeatherView var575 = this.this$0.weather;
+        WeatherView var365 = var575;
+        if (var575 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("weather");
+            var365 = null;
+        }
+
+        if (var58.getStarted() && var58.s("weather") && var58.getWeatherId() > 0) {
+            var156 = (byte)0;
+        } else {
+            var156 = (byte)8;
+        }
+
+        var365.setVisibility(var156);
+        TextView var576 = this.this$0.compass;
+        TextView var366 = var576;
+        if (var576 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("compass");
+            var366 = null;
+        }
+
+        CharSequence var577;
+        if (var58.getStarted() && var58.s("compass") && !Float.isNaN(var58.getBearingDeg())) {
+            var156 = (int)(((var58.getBearingDeg() + 22.5F) % 360.0F + 360.0F) % 360.0F / 45.0F);
+            String var578 = new String[]{"N", "NE", "E", "SE", "S", "SW", "W", "NW"}[var156 % 8];
+            var577 = "- " + var578 + " -";
+        } else {
+            var577 = "";
+        }
+
+        var366.setText(var577);
+        TextView var579 = this.this$0.devMetrics;
+        TextView var367 = var579;
+        if (var579 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("devMetrics");
+            var367 = null;
+        }
+
+        CharSequence var580;
+        if (var58.getStarted() && var58.s("dev_metrics")) {
+            int var200 = MathKt.roundToInt(var58.getCpuUsage());
+            var156 = MathKt.roundToInt(var58.getCpuTempC());
+            var20 = var58.getMemUsage();
+            int var204 = MathKt.roundToInt(var58.getFreeSpacePct());
+            var580 = "CPU " + var200 + "%  |  TEMP " + var156 + "°C  |  RAM " + var20 + "%  |  DISK " + var204 + "% free";
+        } else {
+            var580 = "";
+        }
+
+        var367.setText(var580);
+        long var236 = System.nanoTime();
+        if (var58.getStarted()) {
+            if (this.this$0.onroadSinceNs == 0L) {
+                this.this$0.onroadSinceNs = var236;
+            }
+        } else {
+            this.this$0.onroadSinceNs = 0L;
+        }
+
+        if (var58.getStarted() && var58.getStandstill()) {
+            if (this.this$0.standstillSinceNs == 0L) {
+                this.this$0.standstillSinceNs = var236;
+            }
+        } else {
+            this.this$0.standstillSinceNs = 0L;
+        }
+
+        if (this.this$0.standstillSinceNs != 0L) {
+            var9 = (float)(var236 - this.this$0.standstillSinceNs) / 1.0E9F;
+        } else {
+            var9 = 0.0F;
+        }
+
+        if (this.this$0.onroadSinceNs != 0L) {
+            var10 = (float)(var236 - this.this$0.onroadSinceNs) / 1.0E9F;
+        } else {
+            var10 = 0.0F;
+        }
+
+        if (var58.s("stopped_timer") && var9 >= 60.0F && var10 >= 60.0F) {
+            var10 = 60;
+            var156 = (int)(var9 / var10);
+            var20 = (int)(var9 % var10);
+            TextView var582 = this.this$0.speedTv;
+            TextView var369 = var582;
+            if (var582 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("speedTv");
+                var369 = null;
+            }
+
+            String var583 = String.format("%d:%02d", Arrays.copyOf(new Object[]{var156, var20}, 2));
+            Intrinsics.checkNotNullExpressionValue(var583, "format(...)");
+            var369.setText(var583);
+            TextView var584 = this.this$0.speedUnit;
+            TextView var370 = var584;
+            if (var584 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("speedUnit");
+                var370 = null;
+            }
+
+            var370.setText("stopped");
+            if (var9 < 150.0F) {
+                var156 = ColorUtils.blendARGB(Color.rgb(22, 127, 64), Color.rgb(218, 111, 37), (var9 - 60.0F) / 90.0F);
+            } else if (var9 < 300.0F) {
+                var156 = ColorUtils.blendARGB(Color.rgb(218, 111, 37), Color.rgb(201, 34, 49), (var9 - 150.0F) / 150.0F);
+            } else {
+                var156 = Color.rgb(201, 34, 49);
+            }
+
+            TextView var585 = this.this$0.speedTv;
+            TextView var371 = var585;
+            if (var585 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("speedTv");
+                var371 = null;
+            }
+
+            var371.setTextColor(var156);
+        } else {
+            TextView var581 = this.this$0.speedTv;
+            TextView var368 = var581;
+            if (var581 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("speedTv");
+                var368 = null;
+            }
+
+            if (this.this$0.night) {
+                var156 = -1;
+            } else {
+                var156 = Color.rgb(29, 29, 31);
+            }
+
+            var368.setTextColor(var156);
+        }
+
+        label1694: {
+            var28 = var58.s("alerts");
+            if (var58.getStarted()) {
+                boolean var163;
+                if (var58.getAlertText1().length() > 0) {
+                    var163 = true;
+                } else {
+                    var163 = false;
+                }
+
+                if (var163 && !Intrinsics.areEqual(var58.getAlertSize(), "none") && !(var28 ^ true)) {
+                    var164 = true;
+                    break label1694;
+                }
+            }
+
+            var164 = false;
+        }
+
+        MainActivity var372 = this.this$0;
+        var10 = this.this$0.alertAlpha;
+        var9 = var11;
+        if (var164) {
+            var9 = 1.0F;
+        }
+
+        var372.alertAlpha = var10 + (var9 - this.this$0.alertAlpha) * 0.35F;
+        if (this.this$0.alertAlpha > 0.02F) {
+            LinearLayout var586 = this.this$0.alertBox;
+            LinearLayout var373 = var586;
+            if (var586 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("alertBox");
+                var373 = null;
+            }
+
+            var373.setVisibility(0);
+            LinearLayout var587 = this.this$0.alertBox;
+            LinearLayout var374 = var587;
+            if (var587 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("alertBox");
+                var374 = null;
+            }
+
+            var374.setAlpha(this.this$0.alertAlpha);
+            if (var164) {
+                TextView var588 = this.this$0.alert1;
+                TextView var375 = var588;
+                if (var588 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("alert1");
+                    var375 = null;
+                }
+
+                var375.setText(var58.getAlertText1());
+                TextView var589 = this.this$0.alert2;
+                TextView var376 = var589;
+                if (var589 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("alert2");
+                    var376 = null;
+                }
+
+                var376.setText(var58.getAlertText2());
+                TextView var590 = this.this$0.alert2;
+                TextView var377 = var590;
+                if (var590 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("alert2");
+                    var377 = null;
+                }
+
+                int var165;
+                if (var58.getAlertText2().length() == 0) {
+                    var165 = 1;
+                } else {
+                    var165 = 0;
+                }
+
+                if ((var165 != 0)) {
+                    var165 = 8;
+                } else {
+                    var165 = 0;
+                }
+
+                var377.setVisibility(var165);
+            }
+
+            var28 = Intrinsics.areEqual(var58.getAlertSize(), "full");
+            TextView var591 = this.this$0.alert1;
+            TextView var378 = var591;
+            if (var591 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("alert1");
+                var378 = null;
+            }
+
+            String var592 = var58.getAlertSize();
+            if (Intrinsics.areEqual(var592, "full")) {
+                var9 = 52.0F;
+            } else if (Intrinsics.areEqual(var592, "mid")) {
+                var9 = 36.0F;
+            } else {
+                var9 = 26.0F;
+            }
+
+            var378.setTextSize(var9);
+            TextView var593 = this.this$0.alert2;
+            TextView var379 = var593;
+            if (var593 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("alert2");
+                var379 = null;
+            }
+
+            if (var28) {
+                var9 = 24.0F;
+            } else {
+                var9 = 20.0F;
+            }
+
+            var379.setTextSize(var9);
+            LinearLayout var594 = this.this$0.alertBox;
+            LinearLayout var380 = var594;
+            if (var594 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("alertBox");
+                var380 = null;
+            }
+
+            android.view.ViewGroup.LayoutParams var381 = var380.getLayoutParams();
+            Intrinsics.checkNotNull(var381, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
+            android.widget.FrameLayout.LayoutParams var666 = (android.widget.FrameLayout.LayoutParams)var381;
+            int var167;
+            if (var28) {
+                var167 = -1;
+            } else {
+                var167 = -2;
+            }
+
+            var666.height = var167;
+            LinearLayout var595 = this.this$0.alertBox;
+            LinearLayout var382 = var595;
+            if (var595 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("alertBox");
+                var382 = null;
+            }
+
+            label1670: {
+                var382.setLayoutParams((android.view.ViewGroup.LayoutParams)var666);
+                String var383 = var58.getAlertStatus();
+                switch (var383.hashCode()) {
+                    case -2132360282:
+                        if (var383.equals("starpilot")) {
+                            var167 = Color.rgb(23, 134, 68);
+                            break label1670;
+                        }
+                        break;
+                    case -1874525969:
+                        if (var383.equals("userprompt")) {
+                            var167 = Color.rgb(255, 115, 0);
+                            break label1670;
+                        }
+                        break;
+                    case 1952151455:
+                        if (var383.equals("critical")) {
+                            var167 = Color.rgb(255, 0, 21);
+                            break label1670;
+                        }
+                }
+
+                var167 = -16777216;
+            }
+
+            int var193;
+            if (var58.s("alert_tint") && !Intrinsics.areEqual(var58.getAlertStatus(), "normal")) {
+                var193 = 1;
+            } else {
+                var193 = 0;
+            }
+
+            if ((var193 != 0)) {
+                View var596 = this.this$0.alertTint;
+                View var384 = var596;
+                if (var596 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("alertTint");
+                    var384 = null;
+                }
+
+                var384.setVisibility(0);
+                View var597 = this.this$0.alertTint;
+                View var385 = var597;
+                if (var597 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("alertTint");
+                    var385 = null;
+                }
+
+                var385.setAlpha(this.this$0.alertAlpha);
+                this.this$0.tintDrawable.setOrientation(Orientation.TOP_BOTTOM);
+                GradientDrawable var598 = this.this$0.tintDrawable;
+                int[] var386;
+                if (var28) {
+                    var386 = new int[]{OverlayView.Companion.withAlpha(var167, 230), OverlayView.Companion.withAlpha(var167, 230)};
+                } else {
+                    var386 = new int[]{
+                        OverlayView.Companion.withAlpha(var167, 0), OverlayView.Companion.withAlpha(var167, 60), OverlayView.Companion.withAlpha(var167, 230)
+                    };
+                }
+
+                var598.setColors(var386);
+                LinearLayout var599 = this.this$0.alertBox;
+                LinearLayout var387 = var599;
+                if (var599 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("alertBox");
+                    var387 = null;
+                }
+
+                if (var28) {
+                    var167 = 0;
+                } else {
+                    var167 = OverlayView.Companion.withAlpha(var167, 120);
+                }
+
+                var387.setBackgroundColor(var167);
+            } else {
+                View var600 = this.this$0.alertTint;
+                View var388 = var600;
+                if (var600 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("alertTint");
+                    var388 = null;
+                }
+
+                var388.setVisibility(8);
+                LinearLayout var601 = this.this$0.alertBox;
+                LinearLayout var389 = var601;
+                if (var601 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("alertBox");
+                    var389 = null;
+                }
+
+                OverlayView.Companion_ var602 = OverlayView.Companion;
+                if (var28) {
+                    var193 = 230;
+                } else {
+                    var193 = 200;
+                }
+
+                var389.setBackgroundColor(var602.withAlpha(var167, var193));
+            }
+        } else {
+            LinearLayout var603 = this.this$0.alertBox;
+            LinearLayout var390 = var603;
+            if (var603 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("alertBox");
+                var390 = null;
+            }
+
+            var390.setVisibility(8);
+            View var604 = this.this$0.alertTint;
+            View var391 = var604;
+            if (var604 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("alertTint");
+                var391 = null;
+            }
+
+            var391.setVisibility(8);
+        }
+
+        ModelSnapshot var392 = var58.getModel();
+        if (var392 != null) {
+            var236 = var392.getFrameId();
+        } else {
+            var236 = -1L;
+        }
+
+        if (var236 != this.this$0.lastModelFrame || this.this$0.tick % 1 == 0) {
+            this.this$0.lastModelFrame = var236;
+            OverlayView var605 = this.this$0.overlay;
+            OverlayView var393 = var605;
+            if (var605 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("overlay");
+                var393 = null;
+            }
+
+            var393.invalidate();
+        }
+
+        WheelButton var606 = this.this$0.wheel;
+        WheelButton var394 = var606;
+        if (var606 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("wheel");
+            var394 = null;
+        }
+
+        var394.invalidate();
+        DmView var607 = this.this$0.dm;
+        DmView var395 = var607;
+        if (var607 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("dm");
+            var395 = null;
+        }
+
+        var395.invalidate();
+        MiciDistanceView var608 = this.this$0.personality;
+        MiciDistanceView var396 = var608;
+        if (var608 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("personality");
+            var396 = null;
+        }
+
+        var396.invalidate();
+        SlcView var609 = this.this$0.slc;
+        SlcView var397 = var609;
+        if (var609 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("slc");
+            var397 = null;
+        }
+
+        var397.invalidate();
+        SlcActionsView var610 = this.this$0.slcActions;
+        SlcActionsView var398 = var610;
+        if (var610 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("slcActions");
+            var398 = null;
+        }
+
+        var398.invalidate();
+        DevSidebarView var611 = this.this$0.devSidebar;
+        DevSidebarView var399 = var611;
+        if (var611 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("devSidebar");
+            var399 = null;
+        }
+
+        if (var399.getVisibility() == 0 && this.this$0.tick % 4 == 0) {
+            DevSidebarView var612 = this.this$0.devSidebar;
+            DevSidebarView var400 = var612;
+            if (var612 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("devSidebar");
+                var400 = null;
+            }
+
+            var400.invalidate();
+        }
+
+        AetherGaugeView var613 = this.this$0.gauge;
+        AetherGaugeView var401 = var613;
+        if (var613 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("gauge");
+            var401 = null;
+        }
+
+        var401.invalidate();
+        NavCardView var614 = this.this$0.navCard;
+        NavCardView var402 = var614;
+        if (var614 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("navCard");
+            var402 = null;
+        }
+
+        var402.invalidate();
+        SlowReasonView var615 = this.this$0.slowCard;
+        SlowReasonView var403 = var615;
+        if (var615 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("slowCard");
+            var403 = null;
+        }
+
+        var403.invalidate();
+        LaneCardView var616 = this.this$0.laneCard;
+        LaneCardView var404 = var616;
+        if (var616 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("laneCard");
+            var404 = null;
+        }
+
+        var404.invalidate();
+        BlinkerCardView var617 = this.this$0.blinkCard;
+        BlinkerCardView var405 = var617;
+        if (var617 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("blinkCard");
+            var405 = null;
+        }
+
+        var405.invalidate();
+        GpsCardView var618 = this.this$0.gpsCard;
+        GpsCardView var406 = var618;
+        if (var618 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("gpsCard");
+            var406 = null;
+        }
+
+        if (var406.getVisibility() == 0) {
+            GpsCardView var619 = this.this$0.gpsCard;
+            GpsCardView var407 = var619;
+            if (var619 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("gpsCard");
+                var407 = null;
+            }
+
+            var407.invalidate();
+        }
+
+        NudgeHintView var620 = this.this$0.nudgeHint;
+        NudgeHintView var408 = var620;
+        if (var620 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("nudgeHint");
+            var408 = null;
+        }
+
+        var408.invalidate();
+        WeatherView var621 = this.this$0.weather;
+        WeatherView var409 = var621;
+        if (var621 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("weather");
+            var409 = null;
+        }
+
+        var409.invalidate();
+        SlcSourcesView var622 = this.this$0.slcSources;
+        SlcSourcesView var410 = var622;
+        if (var622 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("slcSources");
+            var410 = null;
+        }
+
+        var410.invalidate();
+        LinearLayout var623 = this.this$0.sidebar;
+        LinearLayout var411 = var623;
+        if (var623 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sidebar");
+            var411 = null;
+        }
+
+        if (var411.getVisibility() == 0 && this.this$0.tick % 5 == 0) {
+            TextView var624 = this.this$0.findViewById(R.id.sbName);
+            var243 = Telemetry.pStr$default(var58, "GalaxyDeviceName", null, 2, null);
+            int var170;
+            if (((String) var243).length() == 0) {
+                var170 = 1;
+            } else {
+                var170 = 0;
+            }
+
+            if ((var170 != 0)) {
+                var243 = var58.pStr("DongleId", "comma");
+            }
+
+            label1620: {
+                var624.setText((CharSequence)var243);
+                String var625 = StringsKt.repeat("●", RangesKt.coerceIn(var58.getNetworkStrength(), 0, 4));
+                String var413 = StringsKt.repeat("○", 4 - RangesKt.coerceIn(var58.getNetworkStrength(), 0, 4));
+                var667 = var625 + var413;
+                var626 = this.this$0.findViewById(R.id.sbNet);
+                String var414 = var58.getNetworkType();
+                switch (var414.hashCode()) {
+                    case -1419358249:
+                        if (var414.equals("ethernet")) {
+                            var415 = "ETH";
+                            break label1620;
+                        }
+                        break;
+                    case -1364082857:
+                        if (var414.equals("cell2g")) {
+                            var415 = "2G";
+                            break label1620;
+                        }
+                        break;
+                    case -1364082826:
+                        if (var414.equals("cell3g")) {
+                            var415 = "3G";
+                            break label1620;
+                        }
+                        break;
+                    case -1364082795:
+                        if (var414.equals("cell4g")) {
+                            var415 = "LTE";
+                            break label1620;
+                        }
+                        break;
+                    case -1364082764:
+                        if (var414.equals("cell5g")) {
+                            var415 = "5G";
+                            break label1620;
+                        }
+                        break;
+                    case 3649301:
+                        if (var414.equals("wifi")) {
+                            var415 = "Wi-Fi";
+                            break label1620;
+                        }
+                }
+
+                var415 = "--";
+            }
+
+            var626.setText(var667 + "  " + var415);
+            TextView var416 = this.this$0.findViewById(R.id.sbTempV);
+            var170 = MathKt.roundToInt(var58.getMaxTempC());
+            var416.setText(var170 + "°C");
+            String var627 = var58.getThermalStatus();
+            if (Intrinsics.areEqual(var627, "green")) {
+                var170 = -1;
+            } else {
+                short var173;
+                short var195;
+                byte var201;
+                if (Intrinsics.areEqual(var627, "yellow")) {
+                    var173 = 202;
+                    var201 = 37;
+                    var195 = 218;
+                } else {
+                    var173 = 34;
+                    var201 = 49;
+                    var195 = 201;
+                }
+
+                var170 = Color.rgb(var195, var173, var201);
+            }
+
+            var416.setTextColor(var170);
+            TextView var628 = this.this$0.findViewById(R.id.sbVehV);
+            String var417;
+            if (var58.getStarted()) {
+                var417 = "ONLINE";
+            } else {
+                var417 = "OFFROAD";
+            }
+
+            var628.setText(var417);
+            if (var58.getStarted()) {
+                var170 = -1;
+            } else {
+                var170 = Color.rgb(166, 166, 166);
+            }
+
+            var628.setTextColor(var170);
+            int var175;
+            if (var58.getLastAthenaPing() > 0L && System.currentTimeMillis() / 1000 - var58.getLastAthenaPing() < 80L) {
+                var175 = 1;
+            } else {
+                var175 = 0;
+            }
+
+            TextView var629 = this.this$0.findViewById(R.id.sbConnV);
+            String var418;
+            if ((var175 != 0)) {
+                var418 = "ONLINE";
+            } else {
+                var418 = "OFFLINE";
+            }
+
+            var629.setText(var418);
+            if ((var175 != 0)) {
+                var175 = -1;
+            } else {
+                var175 = Color.rgb(201, 34, 49);
+            }
+
+            var629.setTextColor(var175);
+            var29 = DriveState.INSTANCE.forcedOnroad();
+            var28 = DriveState.INSTANCE.forcedOffroad();
+            Button var419 = this.this$0.findViewById(R.id.dsDefault);
+            if (!var29 && !var28) {
+                var9 = 1.0F;
+            } else {
+                var9 = 0.5F;
+            }
+
+            var419.setAlpha(var9);
+            Button var420 = this.this$0.findViewById(R.id.dsOnroad);
+            if (var29) {
+                var9 = 1.0F;
+            } else {
+                var9 = 0.5F;
+            }
+
+            var420.setAlpha(var9);
+            Button var421 = this.this$0.findViewById(R.id.dsOffroad);
+            if (var28) {
+                var9 = 1.0F;
+            } else {
+                var9 = 0.5F;
+            }
+
+            var421.setAlpha(var9);
+        }
+
+        if (this.this$0.tick % 10 == 0) {
+            var54 = this.this$0.data;
+            DataClient var422 = var54;
+            if (var54 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("data");
+                var422 = null;
+            }
+
+            var422.ping();
+            if (this.this$0.statsVisible) {
+                Collection var423 = var58.getByteCount().values();
+                Intrinsics.checkNotNullExpressionValue(var423, "<get-values>(...)");
+                var236 = CollectionsKt.sumOfLong(var423) / 1024;
+                TextView var424 = this.this$0.statsTv;
+                TextView var631 = var424;
+                if (var424 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("statsTv");
+                    var631 = null;
+                }
+
+                MainActivity var715 = this.this$0;
+                StringBuilder var714 = new StringBuilder();
+                String var668 = var715.linkIf;
+                String var425;
+                if (var58.getRttMs() >= 0.0) {
+                    var425 = String.format("%.1f", Arrays.copyOf(new Object[]{var58.getRttMs()}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var425, "format(...)");
+                } else {
+                    var425 = "–";
+                }
+
+                var714.append("link   " + var668 + "  rtt " + var425 + " ms  " + var236 + " kB\n");
+                var20 = MathKt.roundToInt(var58.getCpuUsage());
+                var156 = MathKt.roundToInt(var58.getCpuTempC());
+                String var669 = var58.getThermalStatus();
+                String var705 = var58.getDeviceType();
+                String var426 = var58.getSensor();
+                var714.append("comma  cpu " + var20 + "%  " + var156 + "°C  " + var669 + "  " + var705 + "/" + var426 + "\n");
+                VideoClient var670 = var715.video;
+                VideoClient var427 = var670;
+                if (var670 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("video");
+                    var427 = null;
+                }
+
+                String var706 = String.format("%.1f", Arrays.copyOf(new Object[]{var427.getFps()}, 1));
+                Intrinsics.checkNotNullExpressionValue(var706, "format(...)");
+                VideoClient var671 = var715.video;
+                VideoClient var428 = var671;
+                if (var671 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("video");
+                    var428 = null;
+                }
+
+                var156 = var428.getLastW();
+                VideoClient var672 = var715.video;
+                VideoClient var429 = var672;
+                if (var672 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("video");
+                    var429 = null;
+                }
+
+                var20 = var429.getLastH();
+                VideoClient var673 = var715.video;
+                VideoClient var430 = var673;
+                if (var673 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("video");
+                    var430 = null;
+                }
+
+                String var716 = String.format("%.1f", Arrays.copyOf(new Object[]{var430.getDecodeMs()}, 1));
+                Intrinsics.checkNotNullExpressionValue(var716, "format(...)");
+                VideoClient var674 = var715.video;
+                VideoClient var431 = var674;
+                if (var674 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("video");
+                    var431 = null;
+                }
+
+                var236 = var431.getDropped();
+                var714.append("video  " + var706 + " fps  " + var156 + "x" + var20 + "  dec " + var716 + " ms  drop " + var236 + "\n");
+                Detector var717 = var715.detectorRef;
+                if (var717 != null && var717.isRunning()) {
+                    String var720 = CollectionsKt.joinToString(CollectionsKt.sortedWith(
+                            GroupingKt.eachCount(new Grouping<Detector.Det, String>() {
+                                final Iterable $this_groupingBy = (Iterable) var717.getDets();
+
+                                @Override
+                                public String keyOf(Detector.Det var1) {
+                                    return ((Detector.Det)var1).getName();
+                                }
+
+                                @Override
+                                public Iterator<Detector.Det> sourceIterator() {
+                                    return this.$this_groupingBy.iterator();
+                                }
+                            }).entrySet(),
+                            new Comparator() {
+                                @Override
+                                public final int compare(Object var1, Object var2) {
+                                    return ComparisonsKt.compareValues(
+                                        (Comparable)((java.util.Map.Entry)var2).getValue(), (Comparable)((java.util.Map.Entry)var1).getValue()
+                                    );
+                                }
+                            }
+                        ), " ", "", "", -1, "...", new MainActivity$uiTick$1$$ExternalSyntheticLambda1());
+                    String var64 = var717.getStatus();
+                    String var68 = var717.getAccel();
+                    String var66 = String.format("%.0f", Arrays.copyOf(new Object[]{var717.getInferMs()}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var66, "format(...)");
+                    String var67 = String.format("%.0f", Arrays.copyOf(new Object[]{var717.getPrepMs()}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var67, "format(...)");
+                    String var65 = String.format("%.1f", Arrays.copyOf(new Object[]{var717.getFps()}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var65, "format(...)");
+                    String var725 = String.format("%.0f", Arrays.copyOf(new Object[]{var717.getRoadFps()}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var725, "format(...)");
+                    String var722 = String.format("%.0f", Arrays.copyOf(new Object[]{var717.getWideFps()}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var722, "format(...)");
+                    VideoClient var675 = var715.detRoad;
+                    VideoClient var432 = var675;
+                    if (var675 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("detRoad");
+                        var432 = null;
+                    }
+
+                    String var433;
+                    if (var432.isRunning()) {
+                        var433 = "road ";
+                    } else {
+                        var433 = "";
+                    }
+
+                    VideoClient var707 = var715.detWide;
+                    VideoClient var676 = var707;
+                    if (var707 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("detWide");
+                        var676 = null;
+                    }
+
+                    String var677;
+                    if (var676.isRunning()) {
+                        var677 = "wide";
+                    } else {
+                        var677 = "";
+                    }
+
+                    var714.append(
+                        "detect "
+                            + var64
+                            + "  "
+                            + var68
+                            + "  model "
+                            + var66
+                            + " ms  prep "
+                            + var67
+                            + " ms  "
+                            + var65
+                            + " /s (road "
+                            + var725
+                            + " wide "
+                            + var722
+                            + ")  cams "
+                            + var433
+                            + var677
+                            + "\n"
+                    );
+                    if (var717.getLaneMarks() != null) {
+                        String var434 = var715.laneMarks.getDebug();
+                        var714.append("lines  " + var434 + "\n");
+                    }
+
+                    LayoutSeg var678 = var715.layoutSeg;
+                    LayoutSeg var435 = var678;
+                    if (var678 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                        var435 = null;
+                    }
+
+                    String var443;
+                    if (var435.getEnabled()) {
+                        LayoutSeg var679 = var715.layoutSeg;
+                        LayoutSeg var436 = var679;
+                        if (var679 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                            var436 = null;
+                        }
+
+                        String var708 = var436.getStatus();
+                        LayoutSeg var680 = var715.layoutSeg;
+                        LayoutSeg var437 = var680;
+                        if (var680 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                            var437 = null;
+                        }
+
+                        var722 = var437.getAccel();
+                        LayoutSeg var681 = var715.layoutSeg;
+                        LayoutSeg var438 = var681;
+                        if (var681 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                            var438 = null;
+                        }
+
+                        var725 = String.format("%.0f", Arrays.copyOf(new Object[]{var438.getMs()}, 1));
+                        Intrinsics.checkNotNullExpressionValue(var725, "format(...)");
+                        LayoutSeg var682 = var715.layoutSeg;
+                        LayoutSeg var439 = var682;
+                        if (var682 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                            var439 = null;
+                        }
+
+                        boolean var179;
+                        if (var439.getGpuError().length() > 0) {
+                            var179 = true;
+                        } else {
+                            var179 = false;
+                        }
+
+                        String var442;
+                        if (var179) {
+                            LayoutSeg var683 = var715.layoutSeg;
+                            LayoutSeg var440 = var683;
+                            if (var683 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                                var440 = null;
+                            }
+
+                            String var441 = var440.getGpuError();
+                            var442 = "  gpu error: " + var441;
+                        } else {
+                            var442 = "";
+                        }
+
+                        var443 = var708 + " " + var722 + " " + var725 + " ms" + var442;
+                    } else {
+                        LayoutSeg var684 = var715.layoutSeg;
+                        LayoutSeg var444 = var684;
+                        if (var684 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("layoutSeg");
+                            var444 = null;
+                        }
+
+                        if (!var444.getHasModel()) {
+                            var443 = "no model";
+                        } else {
+                            var443 = "off";
+                        }
+                    }
+
+                    var714.append("layout " + var443 + "\n");
+                    boolean var180;
+                    if (var717.getOrientError().length() > 0) {
+                        var180 = true;
+                    } else {
+                        var180 = false;
+                    }
+
+                    String var446;
+                    if (var180) {
+                        String var445 = StringsKt.take(var717.getOrientError(), 60);
+                        var446 = "ERROR " + var445;
+                    } else {
+                        var446 = String.format("%.1f ms/car", Arrays.copyOf(new Object[]{var717.getOrientMs()}, 1));
+                        Intrinsics.checkNotNullExpressionValue(var446, "format(...)");
+                    }
+
+                    var714.append("orient " + var446 + "\n");
+                    double var79 = var717.getLoadMs();
+                    double var84 = 1000;
+                    String var709 = String.format("%.0f", Arrays.copyOf(new Object[]{var79 / var84}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var709, "format(...)");
+                    var722 = String.format("%.1f", Arrays.copyOf(new Object[]{var717.getFirstRunMs() / var84}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var722, "format(...)");
+                    var243 = var720;
+                    if (((String) var243).length() == 0) {
+                        var180 = true;
+                    } else {
+                        var180 = false;
+                    }
+
+                    if (var180) {
+                        var243 = "nothing";
+                    }
+
+                    if (var717.getGpuError().length() > 0) {
+                        var180 = true;
+                    } else {
+                        var180 = false;
+                    }
+
+                    String var686;
+                    if (var180) {
+                        String var685 = StringsKt.take(var717.getGpuError(), 90);
+                        var686 = "   gpu: " + var685;
+                    } else {
+                        var686 = "";
+                    }
+
+                    var714.append("  load " + var709 + " s  first run " + var722 + " s  found: " + var243 + var686 + "\n");
+                }
+
+                int var183;
+                if (var715.lastCrash.length() > 0) {
+                    var183 = 1;
+                } else {
+                    var183 = 0;
+                }
+
+                if ((var183 != 0)) {
+                    String var448 = StringsKt.take(StringsKt.replace(var715.lastCrash, "\n", " | ", false), 300);
+                    var714.append("LAST CRASH  " + var448 + "\n");
+                }
+
+                SceneView var449 = var715.scene;
+                if (var449 != null) {
+                    var20 = var449.getShownCars();
+                    if (var449.getFailure().length() > 0) {
+                        var183 = (((boolean)true) ? 1 : 0);
+                    } else {
+                        var183 = (((boolean)false) ? 1 : 0);
+                    }
+
+                    String var451;
+                    if ((var183 != 0)) {
+                        String var450 = StringsKt.take(var449.getFailure(), 90);
+                        var451 = "ERROR " + var450;
+                    } else {
+                        var451 = "ok";
+                    }
+
+                    var714.append("scene  cars " + var20 + "  " + var451 + "\n");
+                }
+
+                UiSettings var687 = var715.settings;
+                UiSettings var452 = var687;
+                if (var687 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("settings");
+                    var452 = null;
+                }
+
+                if (var452.get("map_roads")) {
+                    label1576: {
+                        var710 = OsmRoads.INSTANCE.getTileStatus();
+                        SceneView var453 = var715.scene;
+                        if (var453 != null) {
+                            String var688 = var453.getMapStatus();
+                            var454 = var688;
+                            if (var688 != null) {
+                                break label1576;
+                            }
+                        }
+
+                        var454 = "";
+                    }
+
+                    var714.append("map    " + var710 + "  " + var454 + "\n");
+                }
+
+                String var455;
+                if (var58.getCalValid()) {
+                    var455 = "ok";
+                } else {
+                    var455 = "NO";
+                }
+
+                var716 = String.format("%.3f %.3f %.3f", Arrays.copyOf(new Object[]{var58.getCalRpy()[0], var58.getCalRpy()[1], var58.getCalRpy()[2]}, 3));
+                Intrinsics.checkNotNullExpressionValue(var716, "format(...)");
+                String var721 = String.format("%.2f", Arrays.copyOf(new Object[]{var58.getCalHeight()}, 1));
+                Intrinsics.checkNotNullExpressionValue(var721, "format(...)");
+                OverlayView var711 = var715.overlay;
+                OverlayView var689 = var711;
+                if (var711 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("overlay");
+                    var689 = null;
+                }
+
+                String var690 = String.format("%.2f", Arrays.copyOf(new Object[]{var689.getProj().getZoom()}, 1));
+                Intrinsics.checkNotNullExpressionValue(var690, "format(...)");
+                var714.append("calib  " + var455 + "  rpy " + var716 + "  h " + var721 + "  zoom " + var690 + "\n");
+                Long var456 = var58.getMsgCount().get("modelV2");
+                if (var456 != null) {
+                    var236 = var456;
+                } else {
+                    var236 = 0L;
+                }
+
+                Long var457 = var58.getMsgCount().get("carState");
+                long var241;
+                if (var457 != null) {
+                    var241 = var457;
+                } else {
+                    var241 = 0L;
+                }
+
+                var20 = var58.getToggles().size();
+                var183 = var58.getParams().size();
+                var714.append("model  " + var236 + "  cs " + var241 + "  toggles " + var20 + "  params " + var183 + "\n");
+                String var458;
+                if (var58.getLeadOne().getStatus()) {
+                    var458 = String.format("%.1f m  %.1f m/s", Arrays.copyOf(new Object[]{var58.getLeadOne().getDRel(), var58.getLeadOne().getVRel()}, 2));
+                    Intrinsics.checkNotNullExpressionValue(var458, "format(...)");
+                } else {
+                    var458 = "none";
+                }
+
+                String var691 = String.format("%.1f", Arrays.copyOf(new Object[]{var58.getSteeringAngleDeg()}, 1));
+                Intrinsics.checkNotNullExpressionValue(var691, "format(...)");
+                String var712 = String.format("%.2f", Arrays.copyOf(new Object[]{var58.getOutTorque()}, 1));
+                Intrinsics.checkNotNullExpressionValue(var712, "format(...)");
+                var714.append("lead   " + var458 + "  steer " + var691 + "°  torque " + var712);
+                Unit var459 = Unit.INSTANCE;
+                String var460 = var714.toString();
+                Intrinsics.checkNotNullExpressionValue(var460, "toString(...)");
+                var631.setText(var460);
+            }
+        }
+
+        this.this$0.applyHud();
+        GpsBridge.INSTANCE.fallback(Telemetry.pStr$default(this.this$0.telemetry, "LastGPSPosition", null, 2, null), this.this$0.telemetry.getVEgo());
+        this.this$0.ui.postDelayed(this, 50L);
     }
 }

@@ -198,10 +198,11 @@ public final class SettingsLauncher extends FrameLayout {
             $this$paintDots_u24lambda_u2411.setBackground(CarUi.rounded$default(this.ui, i == this.pager.getIndex() ? CarUi.Companion.getTEXT() : CarUi.Companion.getDIM(), 99, null, 4, null));
             $this$paintDots_u24lambda_u2411.setAlpha(i == this.pager.getIndex() ? 1.0f : 0.5f);
             $this$paintDots_u24lambda_u2411.setContentDescription(i == 1 ? "Settings home" : "Shortcut page");
+            final var i$f = i;
             $this$paintDots_u24lambda_u2411.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda11
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
-                    SettingsLauncher.paintDots$lambda$11$lambda$10(SettingsLauncher.this, i, view);
+                    SettingsLauncher.paintDots$lambda$11$lambda$10(SettingsLauncher.this, i$f, view);
                 }
             });
             int i2 = 14;

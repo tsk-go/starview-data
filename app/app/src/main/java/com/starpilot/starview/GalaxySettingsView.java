@@ -653,21 +653,23 @@ public final class GalaxySettingsView extends FrameLayout {
                 }
             } else if (e instanceof Entry.Page) {
                 this.titles.put(((Entry.Page) e).getPage(), ((Entry.Page) e).getLabel());
+                final var e$f1 = e;
                 linkCard$default(this, ((Entry.Page) e).getLabel(), ((Entry.Page) e).getDesc(), true, false, SettingIcons.INSTANCE.forPage(((Entry.Page) e).getPage()), new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda29
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit drawRoot$lambda$16;
-                        drawRoot$lambda$16 = GalaxySettingsView.drawRoot$lambda$16(GalaxySettingsView.this, e);
+                        drawRoot$lambda$16 = GalaxySettingsView.drawRoot$lambda$16(GalaxySettingsView.this, e$f1);
                         return drawRoot$lambda$16;
                     }
                 }, 8, null);
                 count++;
             } else if (e instanceof Entry.Web) {
+                final var e$f = e;
                 linkCard(((Entry.Web) e).getLabel(), ((Entry.Web) e).getDesc(), true, true, webIcon(((Entry.Web) e).getPath()), new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda30
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit drawRoot$lambda$17;
-                        drawRoot$lambda$17 = GalaxySettingsView.drawRoot$lambda$17(GalaxySettingsView.this, e);
+                        drawRoot$lambda$17 = GalaxySettingsView.drawRoot$lambda$17(GalaxySettingsView.this, e$f);
                         return drawRoot$lambda$17;
                     }
                 });
@@ -1689,10 +1691,11 @@ public final class GalaxySettingsView extends FrameLayout {
             this$0.failed(err == null ? "Galaxy didn't accept those regions" : err);
             return Unit.INSTANCE;
         }
+        final var intent$f1 = intent;
         new AlertDialog.Builder(this$0.getContext()).setTitle("Save changes?").setMessage(o.optString("question", "Save the camera window regions?")).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda2
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                GalaxySettingsView.confirm$default(this$0, intent, null, 2, null);
+                GalaxySettingsView.confirm$default(this$0, intent$f1, null, 2, null);
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda3
             @Override // android.content.DialogInterface.OnClickListener
@@ -1754,10 +1757,11 @@ public final class GalaxySettingsView extends FrameLayout {
             this$0.failed(err == null ? "Galaxy didn't accept that" : err);
             return Unit.INSTANCE;
         }
+        final var intent$f = intent;
         new AlertDialog.Builder(this$0.getContext()).setTitle("Confirm").setMessage(o.optString("question", "Apply " + $r.getLabel() + "?")).setPositiveButton("Confirm", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda37
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                GalaxySettingsView.confirm$default(this$0, intent, null, 2, null);
+                GalaxySettingsView.confirm$default(this$0, intent$f, null, 2, null);
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda38
             @Override // android.content.DialogInterface.OnClickListener

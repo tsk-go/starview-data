@@ -2300,7 +2300,7 @@ public final class GxTuningPage extends GxPage {
                 var22.setHintTextColor(CarUi.Companion.getDIM());
                 var22.setInputType(147457);
                 var22.setMinLines(2);
-                ((LinearLayout) var22).setGravity(8388659);
+                ((EditText) var22).setGravity(8388659);
                 var22.setBackground((Drawable)this.getUi().rounded(Color.rgb(6, 8, 11), 12, Color.rgb(50, 55, 66)));
                 var22.setPadding(this.getUi().dp(14), this.getUi().dp(10), this.getUi().dp(14), this.getUi().dp(10));
                 var22.addTextChangedListener(new TextWatcher() {
@@ -2308,6 +2308,7 @@ public final class GxTuningPage extends GxPage {
 
                     public void afterTextChanged(Editable var1) {
                         GxTuningPage var3x;
+                        String var4;
                         label11: {
                             var3x = this.this$0;
                             if (var1 != null) {
@@ -2321,7 +2322,7 @@ public final class GxTuningPage extends GxPage {
                             var4 = "";
                         }
 
-                        var3x.fbNotes = ((String) var4);
+                        var3x.fbNotes = var4;
                     }
 
                     public void beforeTextChanged(CharSequence var1, int var2, int var3x, int var4) {

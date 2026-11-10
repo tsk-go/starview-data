@@ -2907,11 +2907,12 @@ public final class GxLogsPage extends GxPage {
                 LinearLayout bar = titleBar(GxPage.str$default(this, s, "title", null, 2, null), c);
                 String id2 = GxPage.str$default(this, s, "id", null, 2, null);
                 if (s.optBoolean("resettable", z)) {
+                    final var s$f = s;
                     TextView b = CarUi.button$default(getUi(), Intrinsics.areEqual(this.tsBusySection, id2) ? "Resetting..." : "Reset to Default", false, new Function0() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda40
                         @Override // kotlin.jvm.functions.Function0
                         public final Object invoke() {
                             Unit tsRender$lambda$115;
-                            tsRender$lambda$115 = GxLogsPage.tsRender$lambda$115(GxLogsPage.this, s);
+                            tsRender$lambda$115 = GxLogsPage.tsRender$lambda$115(GxLogsPage.this, s$f);
                             return tsRender$lambda$115;
                         }
                     }, 2, null);

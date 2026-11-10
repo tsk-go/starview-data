@@ -3258,6 +3258,8 @@ public final class MapPane extends FrameLayout {
             }
             ArrayList $this$sortByDescending$iv = order2;
             if ($this$sortByDescending$iv.size() > 1) {
+                final var fx2$f = fx2;
+                final var fy2$f = fy2;
                 CollectionsKt.sortWith($this$sortByDescending$iv, new Comparator() { // from class: com.starpilot.starview.MapPane$MapCanvas$onDraw$$inlined$sortByDescending$1
                     /* JADX WARN: Multi-variable type inference failed */
                     @Override // java.util.Comparator
@@ -3265,14 +3267,14 @@ public final class MapPane extends FrameLayout {
                         Pair pair = (Pair) t2;
                         int txr3 = ((Number) pair.component1()).intValue();
                         int ty3 = ((Number) pair.component2()).intValue();
-                        double ddx = (txr3 + 0.5d) - fx2;
-                        double ddy = (ty3 + 0.5d) - fy2;
+                        double ddx = (txr3 + 0.5d) - fx2$f;
+                        double ddy = (ty3 + 0.5d) - fy2$f;
                         Double valueOf = Double.valueOf((ddx * ddx) + (ddy * ddy));
                         Pair pair2 = (Pair) t;
                         int txr4 = ((Number) pair2.component1()).intValue();
                         int ty4 = ((Number) pair2.component2()).intValue();
-                        double ddx2 = (txr4 + 0.5d) - fx2;
-                        double ddy2 = (ty4 + 0.5d) - fy2;
+                        double ddx2 = (txr4 + 0.5d) - fx2$f;
+                        double ddy2 = (ty4 + 0.5d) - fy2$f;
                         return ComparisonsKt.compareValues(valueOf, Double.valueOf((ddx2 * ddx2) + (ddy2 * ddy2)));
                     }
                 });

@@ -471,10 +471,11 @@ public final class LaneMemory {
             }
 
             List var25 = var10;
+            final var var2$f = var2;
             List var26 = CollectionsKt.sortedWith(
                 var25,
                 new Comparator() {
-                    final float $ourLine$inlined = var2;
+                    final float $ourLine$inlined = var2$f;
 
                     @Override
                     public final int compare(Object var1, Object var2x) {

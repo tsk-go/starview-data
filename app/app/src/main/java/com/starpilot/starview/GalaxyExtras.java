@@ -606,11 +606,12 @@ public final class GalaxyExtras {
                 if (opt == null || (str3 = opt.optString("label")) == null) {
                     str3 = "None";
                 }
+                final var i2$f1 = i2;
                 TextView $this$draw_u24lambda_u2411 = CarUi.button$default(carUi2, str3, false, new Function0() { // from class: com.starpilot.starview.GalaxyExtras$QuickSelect$$ExternalSyntheticLambda1
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit draw$lambda$10;
-                        draw$lambda$10 = GalaxyExtras.QuickSelect.draw$lambda$10(edit, QuickSelect.this, i2);
+                        draw$lambda$10 = GalaxyExtras.QuickSelect.draw$lambda$10(edit, QuickSelect.this, i2$f1);
                         return draw$lambda$10;
                     }
                 }, 2, null);
@@ -628,10 +629,11 @@ public final class GalaxyExtras {
                         Switch sw = this.ui.bigSwitch();
                         sw.setChecked(s.optBoolean(field));
                         sw.setEnabled(edit);
+                        final var i2$f = i2;
                         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.GalaxyExtras$QuickSelect$$ExternalSyntheticLambda2
                             @Override // android.widget.CompoundButton.OnCheckedChangeListener
                             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                                GalaxyExtras.QuickSelect.draw$lambda$12(GalaxyExtras.QuickSelect.this, i2, field, compoundButton, z);
+                                GalaxyExtras.QuickSelect.draw$lambda$12(GalaxyExtras.QuickSelect.this, i2$f, field, compoundButton, z);
                             }
                         });
                         sr.addView(sw);
