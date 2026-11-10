@@ -107,7 +107,7 @@ public final class Galaxy7 {
                     if (it.hasNext()) {
                         element$iv = it.next();
                         String it2 = (String) element$iv;
-                        if (StringsKt.startsWith$default(it2, "galaxy_session=", false, 2, (Object) null)) {
+                        if (StringsKt.startsWith(it2, "galaxy_session=", false)) {
                             break;
                         }
                     } else {
@@ -117,7 +117,7 @@ public final class Galaxy7 {
                 }
                 String set = (String) element$iv;
                 if (set != null) {
-                    this.cookie = StringsKt.substringBefore$default(set, ";", (String) null, 2, (Object) null);
+                    this.cookie = StringsKt.substringBefore(set, ";", set);
                 }
                 if (!r.isSuccessful()) {
                     throw new Error(r.code(), "Galaxy sign-in failed (HTTP " + r.code() + ")");
@@ -162,7 +162,7 @@ public final class Galaxy7 {
             Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
             byte[] bytes = jSONObject.getBytes(Charsets.UTF_8);
             Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
-            header.method(method, RequestBody.Companion.create$default(companion, bytes, this.json, 0, 0, 6, (Object) null));
+            header.method(method, RequestBody.Companion.create(bytes, this.json, 0, bytes.length));
         } else {
             b.get();
         }
@@ -183,12 +183,12 @@ public final class Galaxy7 {
             try {
                 Result.Companion companion2 = Result.Companion;
                 Galaxy7 galaxy7 = this;
-                m1191constructorimpl = Result.m1191constructorimpl(new JSONObject(text));
+                m1191constructorimpl = KtCompat.resultOf(new JSONObject(text));
             } catch (Throwable th) {
                 Result.Companion companion3 = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
             }
-            if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+            if (KtCompat.isFailure(m1191constructorimpl)) {
                 m1191constructorimpl = null;
             }
             JSONObject obj = (JSONObject) m1191constructorimpl;
@@ -261,8 +261,8 @@ public final class Galaxy7 {
             Response response = r;
             try {
                 Response it = response;
-                String header$default = Response.header$default(it, "Content-Type", null, 2, null);
-                if (header$default == null || (substringBefore$default = StringsKt.substringBefore$default(header$default, ";", (String) null, 2, (Object) null)) == null || (obj = StringsKt.trim((CharSequence) substringBefore$default).toString()) == null) {
+                String header$default = it.header("Content-Type", null);
+                if (header$default == null || (substringBefore$default = StringsKt.substringBefore(header$default, ";", header$default)) == null || (obj = StringsKt.trim((CharSequence) substringBefore$default).toString()) == null) {
                     type = null;
                 } else {
                     type = obj.toLowerCase(Locale.ROOT);
@@ -277,12 +277,12 @@ public final class Galaxy7 {
                         if (body == null || (str2 = body.string()) == null) {
                             str2 = "";
                         }
-                        m1191constructorimpl = Result.m1191constructorimpl(new JSONObject(str2).optString("error"));
+                        m1191constructorimpl = KtCompat.resultOf(new JSONObject(str2).optString("error"));
                     } catch (Throwable th) {
                         Result.Companion companion2 = Result.Companion;
-                        m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                        m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
                     }
-                    if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+                    if (KtCompat.isFailure(m1191constructorimpl)) {
                         m1191constructorimpl = null;
                     }
                     String str3 = (String) m1191constructorimpl;
@@ -322,7 +322,7 @@ public final class Galaxy7 {
         this$0.main.post(new Runnable() { // from class: com.starpilot.starview.Galaxy7$$ExternalSyntheticLambda5
             @Override // java.lang.Runnable
             public final void run() {
-                Galaxy7.postImage$lambda$12$lambda$11(Function2.this, res);
+                Galaxy7.postImage$lambda$12$lambda$11($done, res);
             }
         });
     }
@@ -335,7 +335,7 @@ public final class Galaxy7 {
         Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
         byte[] bytes = jSONObject.getBytes(Charsets.UTF_8);
         Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
-        Request req = header.post(RequestBody.Companion.create$default(companion, bytes, this$0.json, 0, 0, 6, (Object) null)).build();
+        Request req = header.post(RequestBody.Companion.create(bytes, this$0.json, 0, bytes.length)).build();
         return this$0.getSlow().newCall(req).execute();
     }
 
@@ -390,7 +390,7 @@ public final class Galaxy7 {
         this.io.execute(new Runnable() { // from class: com.starpilot.starview.Galaxy7$$ExternalSyntheticLambda4
             @Override // java.lang.Runnable
             public final void run() {
-                Galaxy7.async$lambda$16(Function0.this, this, done);
+                Galaxy7.async$lambda$16(work, this, done);
             }
         });
     }
@@ -412,7 +412,7 @@ public final class Galaxy7 {
         this$0.main.post(new Runnable() { // from class: com.starpilot.starview.Galaxy7$$ExternalSyntheticLambda0
             @Override // java.lang.Runnable
             public final void run() {
-                Galaxy7.async$lambda$16$lambda$15(Function2.this, res);
+                Galaxy7.async$lambda$16$lambda$15($done, res);
             }
         });
     }

@@ -177,7 +177,7 @@ public final class HubPowerView extends CardPage {
         $this$switchRow_u24lambda_u247_u24lambda_u246.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda3
             @Override // android.widget.CompoundButton.OnCheckedChangeListener
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                HubPowerView.switchRow$lambda$7$lambda$6$lambda$5(Function1.this, compoundButton, z);
+                HubPowerView.switchRow$lambda$7$lambda$6$lambda$5(onFlip, compoundButton, z);
             }
         });
         $this$switchRow_u24lambda_u247.addView($this$switchRow_u24lambda_u247_u24lambda_u246);

@@ -617,7 +617,7 @@ public final class IdeasMore {
                 element$iv = it3.next();
                 IdeaSpots.Seen sp2 = (IdeaSpots.Seen) element$iv;
                 String n = sp2.getSpot().getNote();
-                if (StringsKt.startsWith$default(n, weekend ? "we" : "wd", false, 2, (Object) null)) {
+                if (StringsKt.startsWith(n, weekend ? "we" : "wd", false)) {
                     Integer intOrNull = StringsKt.toIntOrNull(StringsKt.drop(n, 2));
                     if (Math.abs((intOrNull != null ? intOrNull.intValue() : -9) - hour) <= 1) {
                         sp = 1;

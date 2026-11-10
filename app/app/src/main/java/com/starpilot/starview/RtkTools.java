@@ -369,9 +369,9 @@ public final class RtkTools {
                 destination$iv$iv.add(element$iv$iv);
             }
         }
-        String name = CollectionsKt.joinToString$default((List) destination$iv$iv, ", ", null, null, 0, null, null, 62, null);
+        String name = CollectionsKt.joinToString((List) destination$iv$iv, ", ", "", "", -1, "...", null);
         Integer num = null;
-        MatchResult find$default = Regex.find$default(new Regex("HPS (\\d+)\\.(\\d+)"), k.getFirmware(), 0, 2, null);
+        MatchResult find$default = (new Regex("HPS (\\d+)\\.(\\d+)")).find(k.getFirmware(), 0);
         if (find$default != null && (destructured = find$default.getDestructured()) != null) {
             String a = destructured.getMatch().getGroupValues().get(1);
             String b = destructured.getMatch().getGroupValues().get(2);
@@ -719,7 +719,7 @@ public final class RtkTools {
             Intrinsics.checkNotNullExpressionValue(format3, "format(...)");
             parts.add(format3);
         }
-        return CollectionsKt.joinToString$default(parts, ", ", null, null, 0, null, null, 62, null) + (!k.getMountErrors().isEmpty() ? "  (errors: " + CollectionsKt.joinToString$default(k.getMountErrors(), ", ", null, null, 0, null, null, 62, null) + ")" : "");
+        return CollectionsKt.joinToString(parts, ", ", "", "", -1, "...", null) + (!k.getMountErrors().isEmpty() ? "  (errors: " + CollectionsKt.joinToString(k.getMountErrors(), ", ", "", "", -1, "...", null) + ")" : "");
     }
 
     public final String summary(RtkStatus k) {
@@ -779,9 +779,9 @@ public final class RtkTools {
         LinkedHashMap groups = new LinkedHashMap();
         for (RtkSensor s : list) {
             if (!Intrinsics.areEqual(s.getType(), "gyro temperature")) {
-                if (StringsKt.startsWith$default(s.getType(), "gyro", false, 2, (Object) null)) {
+                if (StringsKt.startsWith(s.getType(), "gyro", false)) {
                     g = "Gyro";
-                } else if (StringsKt.startsWith$default(s.getType(), "accel", false, 2, (Object) null)) {
+                } else if (StringsKt.startsWith(s.getType(), "accel", false)) {
                     g = "Accel";
                 } else if (Intrinsics.areEqual(s.getType(), "speed")) {
                     g = "Speed";
@@ -813,14 +813,14 @@ public final class RtkTools {
         }
         Set entrySet = groups.entrySet();
         Intrinsics.checkNotNullExpressionValue(entrySet, "<get-entries>(...)");
-        return CollectionsKt.joinToString$default(entrySet, "  ·  ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.RtkTools$$ExternalSyntheticLambda0
+        return CollectionsKt.joinToString(entrySet, "  ·  ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.RtkTools$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence sensors$lambda$16;
                 sensors$lambda$16 = RtkTools.sensors$lambda$16((Map.Entry) obj);
                 return sensors$lambda$16;
             }
-        }, 30, null);
+        });
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -853,7 +853,7 @@ public final class RtkTools {
             $this$mapNotNull$iv = $this$mapNotNull$iv2;
         }
         List axes = (List) destination$iv$iv;
-        String name = !axes.isEmpty() ? g + " " + CollectionsKt.joinToString$default(axes, "/", null, null, 0, null, null, 62, null) : g;
+        String name = !axes.isEmpty() ? g + " " + CollectionsKt.joinToString(axes, "/", "", "", -1, "...", null) : g;
         Iterable $this$minByOrNull$iv = ss;
         Iterator iterator$iv = $this$minByOrNull$iv.iterator();
         if (iterator$iv.hasNext()) {
@@ -905,6 +905,6 @@ public final class RtkTools {
             CollectionsKt.addAll(destination$iv$iv2, list$iv$iv);
         }
         List faults = CollectionsKt.distinct((List) destination$iv$iv2);
-        return name + " " + hz3 + " Hz: " + (!worst.getReady() ? "not ready" : worst.getCalib()) + (faults.isEmpty() ? "" : " (" + CollectionsKt.joinToString$default(faults, ", ", null, null, 0, null, null, 62, null) + ")");
+        return name + " " + hz3 + " Hz: " + (!worst.getReady() ? "not ready" : worst.getCalib()) + (faults.isEmpty() ? "" : " (" + CollectionsKt.joinToString(faults, ", ", "", "", -1, "...", null) + ")");
     }
 }

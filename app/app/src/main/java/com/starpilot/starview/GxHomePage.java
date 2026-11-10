@@ -750,7 +750,7 @@ public final class GxHomePage extends GxPage {
             str5 = "Analyzing stats";
         }
         tags.add(str5);
-        GxPage.text$default($this$render_u24lambda_u2433, CollectionsKt.joinToString$default(tags, "   ·   ", null, null, 0, null, null, 62, null), c2, 0.0f, 0, false, 28, null);
+        GxPage.text$default($this$render_u24lambda_u2433, CollectionsKt.joinToString(tags, "   ·   ", "", "", -1, "...", null), c2, 0.0f, 0, false, 28, null);
         LinearLayout linearLayout8 = this.body;
         if (linearLayout8 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("body");
@@ -1161,13 +1161,13 @@ public final class GxHomePage extends GxPage {
                 left.addView($this$render_u24lambda_u2471_u24lambda_u2467);
                 $this$render_u24lambda_u2471.setProgress($this$render_u24lambda_u2471.progress(left), engagedValue);
                 TextView $this$render_u24lambda_u2471_u24lambda_u2468 = new TextView($this$render_u24lambda_u2471.getAct());
-                $this$render_u24lambda_u2471_u24lambda_u2468.setText(CollectionsKt.joinToString$default(CollectionsKt.plus((Collection) CollectionsKt.listOf(engaged2), (Iterable) attention), "   ·   ", null, null, 0, null, null, 62, null));
+                $this$render_u24lambda_u2471_u24lambda_u2468.setText(CollectionsKt.joinToString(CollectionsKt.plus((Collection) CollectionsKt.listOf(engaged2), (Iterable) attention), "   ·   ", "", "", -1, "...", null));
                 $this$render_u24lambda_u2471_u24lambda_u2468.setTextSize(15.0f);
                 $this$render_u24lambda_u2471_u24lambda_u2468.setTextColor((!pending || ignored) ? CarUi.Companion.getDIM() : CarUi.Companion.getTEXT());
                 left.addView($this$render_u24lambda_u2471_u24lambda_u2468);
                 line.addView(left, new LinearLayout.LayoutParams(0, -2, 1.0f));
                 if (routeNames.isEmpty()) {
-                    final String key = CollectionsKt.joinToString$default(routeNames, ",", null, null, 0, null, null, 62, null);
+                    final String key = CollectionsKt.joinToString(routeNames, ",", "", "", -1, "...", null);
                     final String action = ignored ? "include" : "ignore";
                     TextView b = CarUi.button$default($this$render_u24lambda_u2471.getUi(), ignored ? "Include drive stats" : "Ignore drive stats", false, new Function0() { // from class: com.starpilot.starview.GxHomePage$$ExternalSyntheticLambda6
                         @Override // kotlin.jvm.functions.Function0
@@ -1240,7 +1240,7 @@ public final class GxHomePage extends GxPage {
             left2.addView($this$render_u24lambda_u2471_u24lambda_u24672);
             $this$render_u24lambda_u2471.setProgress($this$render_u24lambda_u2471.progress(left2), engagedValue);
             TextView $this$render_u24lambda_u2471_u24lambda_u24682 = new TextView($this$render_u24lambda_u2471.getAct());
-            $this$render_u24lambda_u2471_u24lambda_u24682.setText(CollectionsKt.joinToString$default(CollectionsKt.plus((Collection) CollectionsKt.listOf(engaged22), (Iterable) attention2), "   ·   ", null, null, 0, null, null, 62, null));
+            $this$render_u24lambda_u2471_u24lambda_u24682.setText(CollectionsKt.joinToString(CollectionsKt.plus((Collection) CollectionsKt.listOf(engaged22), (Iterable) attention2), "   ·   ", "", "", -1, "...", null));
             $this$render_u24lambda_u2471_u24lambda_u24682.setTextSize(15.0f);
             $this$render_u24lambda_u2471_u24lambda_u24682.setTextColor((!pending || ignored) ? CarUi.Companion.getDIM() : CarUi.Companion.getTEXT());
             left2.addView($this$render_u24lambda_u2471_u24lambda_u24682);
@@ -1440,13 +1440,13 @@ public final class GxHomePage extends GxPage {
     }
 
     private static final void toggleDriveStats$go(final GxHomePage this$0, List<String> list, final String $action) {
-        this$0.togglingKey = CollectionsKt.joinToString$default(list, ",", null, null, 0, null, null, 62, null);
+        this$0.togglingKey = CollectionsKt.joinToString(list, ",", "", "", -1, "...", null);
         this$0.render();
         GxPage.send$default(this$0, "POST", "/api/stats/" + $action + "_drive", new JSONObject().put("routeNames", new JSONArray((Collection) list)), 0L, new Function2() { // from class: com.starpilot.starview.GxHomePage$$ExternalSyntheticLambda9
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit unit;
-                unit = GxHomePage.toggleDriveStats$go$lambda$89(GxHomePage.this, $action, (String) obj, (JSONObject) obj2);
+                unit = GxHomePage.toggleDriveStats$go$lambda$89(this$0, $action, (String) obj, (JSONObject) obj2);
                 return unit;
             }
         }, 8, null);

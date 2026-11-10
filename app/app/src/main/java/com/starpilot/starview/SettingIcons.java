@@ -124,7 +124,7 @@ public final class SettingIcons {
         if (pair != null && (second = pair.getSecond()) != null) {
             return second;
         }
-        Pair<String, String> pair2 = PAGES.get(StringsKt.substringBefore$default(page, '/', (String) null, 2, (Object) null));
+        Pair<String, String> pair2 = PAGES.get(StringsKt.substringBefore(page, '/', page));
         return pair2 != null ? pair2.getSecond() : "device";
     }
 
@@ -132,7 +132,7 @@ public final class SettingIcons {
         Intrinsics.checkNotNullParameter(page, "page");
         Pair it = PAGES.get(page);
         if (it == null) {
-            it = PAGES.get(StringsKt.substringBefore$default(page, '/', (String) null, 2, (Object) null));
+            it = PAGES.get(StringsKt.substringBefore(page, '/', page));
         }
         if (it == null) {
             return new Icon("new", "device", false);

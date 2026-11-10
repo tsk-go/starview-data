@@ -48,7 +48,7 @@ public final class Lights {
             if (it == null) {
                 return null;
             }
-            JSONObject o = new JSONObject(FilesKt.readText$default(it, null, 1, null));
+            JSONObject o = new JSONObject(FilesKt.readText(it, kotlin.text.Charsets.UTF_8));
             Iterator<String> keys = o.keys();
             Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
             while (keys.hasNext()) {
@@ -80,7 +80,7 @@ public final class Lights {
                 }
                 String jSONObject = o.toString();
                 Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
-                FilesKt.writeText$default(f, jSONObject, null, 2, null);
+                FilesKt.writeText(f, jSONObject, kotlin.text.Charsets.UTF_8);
                 this.dirty = false;
             } catch (Exception e) {
             }

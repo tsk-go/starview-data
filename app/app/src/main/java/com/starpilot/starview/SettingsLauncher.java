@@ -625,7 +625,7 @@ public final class SettingsLauncher extends FrameLayout {
             }
             Object element$iv$iv = it2.next();
             SettingsIndex.Entry it3 = (SettingsIndex.Entry) element$iv$iv;
-            String str2 = StringsKt.substringBefore(it3.getWhere(), " · ", it3.getWhere()) + " · " + StringsKt.substringBefore$default(StringsKt.substringAfter$default(it3.getWhere(), " · ", (String) null, 2, (Object) null), " · ", (String) null, 2, (Object) null);
+            String str2 = StringsKt.substringBefore(it3.getWhere(), " · ", it3.getWhere()) + " · " + StringsKt.substringBefore(StringsKt.substringAfter(it3.getWhere(), " · ", it3.getWhere()), " · ", (StringsKt.substringAfter(it3.getWhere(), " · ", it3.getWhere())));
             Object value$iv$iv$iv = destination$iv$iv.get(str2);
             if (value$iv$iv$iv == null) {
                 answer$iv$iv$iv = new ArrayList();
@@ -667,7 +667,7 @@ public final class SettingsLauncher extends FrameLayout {
                 }
                 CarUi carUi = this.ui;
                 String label = e.getLabel();
-                String substringAfter = StringsKt.substringAfter(StringsKt.substringAfter$default(e.getWhere(), " · ", str, 2, str), " · ", "");
+                String substringAfter = StringsKt.substringAfter(StringsKt.substringAfter(e.getWhere(), " · ", e.getWhere()), " · ", "");
                 if (substringAfter.length() == 0) {
                     substringAfter = str;
                 }

@@ -131,7 +131,7 @@ public final class HudEditor extends FrameLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit presets$lambda$10$lambda$4;
-                presets$lambda$10$lambda$4 = HudEditor.presets$lambda$10$lambda$4(HudEditor.this, (String) obj);
+                presets$lambda$10$lambda$4 = HudEditor.presets$lambda$10$lambda$4(this$0, (String) obj);
                 return presets$lambda$10$lambda$4;
             }
         };
@@ -139,7 +139,7 @@ public final class HudEditor extends FrameLayout {
             if (i != 1) {
                 if (i != 2) {
                     if (i >= $saved.size() + 3) {
-                        if (StringsKt.startsWith$default((String) $names.get(i), "Save", false, 2, (Object) null)) {
+                        if (StringsKt.startsWith((String) $names.get(i), "Save", false)) {
                             final EditText $this$presets_u24lambda_u2410_u24lambda_u245 = new EditText(this$0.getContext());
                             $this$presets_u24lambda_u2410_u24lambda_u245.setHint("Name, e.g. Night highway");
                             new AlertDialog.Builder(this$0.getContext()).setTitle("Save layout").setView($this$presets_u24lambda_u2410_u24lambda_u245).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.HudEditor$$ExternalSyntheticLambda14
@@ -155,7 +155,7 @@ public final class HudEditor extends FrameLayout {
                             title.setItems((CharSequence[]) $this$toTypedArray$iv.toArray(new String[0]), new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.HudEditor$$ExternalSyntheticLambda15
                                 @Override // android.content.DialogInterface.OnClickListener
                                 public final void onClick(DialogInterface dialogInterface2, int i2) {
-                                    HudEditor.presets$lambda$10$lambda$9(HudEditor.this, $saved, dialogInterface2, i2);
+                                    HudEditor.presets$lambda$10$lambda$9(this$0, $saved, dialogInterface2, i2);
                                 }
                             }).show();
                             return;
@@ -324,7 +324,7 @@ public final class HudEditor extends FrameLayout {
         new AlertDialog.Builder($ctx).setMessage("Put every widget back where it started and show all of them?").setPositiveButton("Reset", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.HudEditor$$ExternalSyntheticLambda3
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                HudEditor.panel$lambda$17$lambda$16(HudEditor.this, dialogInterface, i);
+                HudEditor.panel$lambda$17$lambda$16(this$0, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         return Unit.INSTANCE;
@@ -525,7 +525,7 @@ public final class HudEditor extends FrameLayout {
         $this$roundBtn_u24lambda_u2436.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.HudEditor$$ExternalSyntheticLambda0
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                onClick.invoke();
             }
         });
         return $this$roundBtn_u24lambda_u2436;

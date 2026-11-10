@@ -692,7 +692,7 @@ public final class GxSystemPage extends GxPage {
             $this$kv_u24lambda_u2420.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda66
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
-                    Function0.this.invoke();
+                    onClick.invoke();
                 }
             });
         }
@@ -710,12 +710,12 @@ public final class GxSystemPage extends GxPage {
         try {
             Result.Companion companion = Result.Companion;
             GxSystemPage gxSystemPage = this;
-            m1191constructorimpl = Result.m1191constructorimpl(OffsetDateTime.parse(s).toInstant());
+            m1191constructorimpl = KtCompat.resultOf(OffsetDateTime.parse(s).toInstant());
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = null;
         }
         Instant instant = (Instant) m1191constructorimpl;
@@ -725,12 +725,12 @@ public final class GxSystemPage extends GxPage {
         try {
             Result.Companion companion3 = Result.Companion;
             GxSystemPage gxSystemPage2 = this;
-            m1191constructorimpl2 = Result.m1191constructorimpl(Instant.parse(s));
+            m1191constructorimpl2 = KtCompat.resultOf(Instant.parse(s));
         } catch (Throwable th2) {
             Result.Companion companion4 = Result.Companion;
-            m1191constructorimpl2 = Result.m1191constructorimpl(ResultKt.createFailure(th2));
+            m1191constructorimpl2 = KtCompat.resultOf(ResultKt.createFailure(th2));
         }
-        return (Instant) (Result.m1197isFailureimpl(m1191constructorimpl2) ? null : m1191constructorimpl2);
+        return (Instant) (KtCompat.isFailure(m1191constructorimpl2) ? null : m1191constructorimpl2);
     }
 
     /* JADX WARN: Code restructure failed: missing block: B:15:0x0065, code lost:
@@ -800,14 +800,14 @@ public final class GxSystemPage extends GxPage {
             @Override // java.util.Comparator
             public final int compare(Object obj, Object obj2) {
                 int releaseVersions$lambda$29;
-                releaseVersions$lambda$29 = GxSystemPage.releaseVersions$lambda$29(Function2.this, obj, obj2);
+                releaseVersions$lambda$29 = GxSystemPage.releaseVersions$lambda$29(function2, obj, obj2);
                 return releaseVersions$lambda$29;
             }
         });
     }
 
     private static final List<Integer> releaseVersions$parts(String v) {
-        Iterable $this$map$iv = StringsKt.split$default((CharSequence) v, new String[]{"."}, false, 0, 6, (Object) null);
+        Iterable $this$map$iv = StringsKt.split((CharSequence) v, new String[]{"."}, false, 0);
         Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
         for (Object item$iv$iv : $this$map$iv) {
             String it = (String) item$iv$iv;
@@ -963,7 +963,7 @@ public final class GxSystemPage extends GxPage {
             @Override // java.util.Comparator
             public final int compare(Object obj, Object obj2) {
                 int groupVersionHistory$lambda$32;
-                groupVersionHistory$lambda$32 = GxSystemPage.groupVersionHistory$lambda$32(Function2.this, obj, obj2);
+                groupVersionHistory$lambda$32 = GxSystemPage.groupVersionHistory$lambda$32(function2, obj, obj2);
                 return groupVersionHistory$lambda$32;
             }
         });
@@ -989,26 +989,26 @@ public final class GxSystemPage extends GxPage {
         String v = StringsKt.trim((CharSequence) remote).toString();
         if (v.length() == 0) {
             String c = StringsKt.trim((CharSequence) commitsUrl).toString();
-            int i = StringsKt.indexOf$default((CharSequence) c, "/commits/", 0, false, 6, (Object) null);
-            if (!StringsKt.startsWith$default(c, "https://github.com/", false, 2, (Object) null) || i <= 0) {
+            int i = StringsKt.indexOf((CharSequence) c, "/commits/", 0, false);
+            if (!StringsKt.startsWith(c, "https://github.com/", false) || i <= 0) {
                 return "";
             }
             String substring = c.substring(0, i);
             Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
             v = substring;
         }
-        if (StringsKt.startsWith$default(v, "git@github.com:", false, 2, (Object) null)) {
-            v = "https://github.com/" + StringsKt.substringAfter$default(v, ":", (String) null, 2, (Object) null);
-        } else if (StringsKt.startsWith$default(v, "ssh://git@github.com/", false, 2, (Object) null)) {
-            v = "https://github.com/" + StringsKt.substringAfter$default(v, "ssh://git@github.com/", (String) null, 2, (Object) null);
-        } else if (StringsKt.startsWith$default(v, "http://github.com/", false, 2, (Object) null)) {
-            v = "https://github.com/" + StringsKt.substringAfter$default(v, "http://github.com/", (String) null, 2, (Object) null);
+        if (StringsKt.startsWith(v, "git@github.com:", false)) {
+            v = "https://github.com/" + StringsKt.substringAfter(v, ":", v);
+        } else if (StringsKt.startsWith(v, "ssh://git@github.com/", false)) {
+            v = "https://github.com/" + StringsKt.substringAfter(v, "ssh://git@github.com/", v);
+        } else if (StringsKt.startsWith(v, "http://github.com/", false)) {
+            v = "https://github.com/" + StringsKt.substringAfter(v, "http://github.com/", v);
         }
-        if (!StringsKt.startsWith$default(v, "https://github.com/", false, 2, (Object) null)) {
+        if (!StringsKt.startsWith(v, "https://github.com/", false)) {
             return "";
         }
         String v2 = StringsKt.trimEnd(v, '/');
-        return StringsKt.endsWith$default(v2, ".git", false, 2, (Object) null) ? StringsKt.dropLast(v2, 4) : v2;
+        return StringsKt.endsWith(v2, ".git", false) ? StringsKt.dropLast(v2, 4) : v2;
     }
 
     private final String remoteCommitUrl() {
@@ -1030,7 +1030,7 @@ public final class GxSystemPage extends GxPage {
             return "";
         }
         String supplied = StringsKt.trim((CharSequence) GxPage.str$default(this, s, "commitsUrl", null, 2, null)).toString();
-        if (StringsKt.startsWith$default(supplied, "https://github.com/", false, 2, (Object) null) && StringsKt.contains$default((CharSequence) supplied, (CharSequence) "/commits/", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(supplied, "https://github.com/", false) && StringsKt.contains((CharSequence) supplied, (CharSequence) "/commits/", false)) {
             return supplied;
         }
         String base = githubRemoteUrl(GxPage.str$default(this, s, "originRemote", null, 2, null), supplied);
@@ -1148,7 +1148,7 @@ public final class GxSystemPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit loadBranches$lambda$42$lambda$41;
-                    loadBranches$lambda$42$lambda$41 = GxSystemPage.loadBranches$lambda$42$lambda$41(GxSystemPage.this, (String) obj);
+                    loadBranches$lambda$42$lambda$41 = GxSystemPage.loadBranches$lambda$42$lambda$41(this$0, (String) obj);
                     return loadBranches$lambda$42$lambda$41;
                 }
             });
@@ -1570,7 +1570,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit paintStatus$lambda$64$lambda$57;
-                paintStatus$lambda$64$lambda$57 = GxSystemPage.paintStatus$lambda$64$lambda$57(GxSystemPage.this, rcu);
+                paintStatus$lambda$64$lambda$57 = GxSystemPage.paintStatus$lambda$64$lambda$57(this$0, rcu);
                 return paintStatus$lambda$64$lambda$57;
             }
         } : null);
@@ -1581,7 +1581,7 @@ public final class GxSystemPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit paintStatus$lambda$64$lambda$58;
-                    paintStatus$lambda$64$lambda$58 = GxSystemPage.paintStatus$lambda$64$lambda$58(GxSystemPage.this, rec);
+                    paintStatus$lambda$64$lambda$58 = GxSystemPage.paintStatus$lambda$64$lambda$58(this$0, rec);
                     return paintStatus$lambda$64$lambda$58;
                 }
             });
@@ -1661,7 +1661,7 @@ public final class GxSystemPage extends GxPage {
             }
             Collection parts = destination$iv$iv;
             if (!parts.isEmpty()) {
-                GxPage.text$default(this$0, "Changed AGNOS partitions: " + CollectionsKt.joinToString$default(parts, ", ", null, null, 0, null, null, 62, null), c, 0.0f, 0, false, 28, null);
+                GxPage.text$default(this$0, "Changed AGNOS partitions: " + CollectionsKt.joinToString(parts, ", ", "", "", -1, "...", null), c, 0.0f, 0, false, 28, null);
             }
         }
         return Unit.INSTANCE;
@@ -1801,7 +1801,7 @@ public final class GxSystemPage extends GxPage {
             if (optJSONObject != null) {
                 str = optJSONObject.toString();
                 JSONObject jSONObject2 = this.agnosByBranch.get(this.targetBranch);
-                String sig = CollectionsKt.joinToString$default(CollectionsKt.listOf(list, str2, str3, valueOf, str4, str5, valueOf2, valueOf3, valueOf4, str6, str7, valueOf5, valueOf6, valueOf7, valueOf8, valueOf9, hashMap, str, jSONObject2 == null ? jSONObject2.toString() : null, this.agnosErrByBranch.get(this.targetBranch), this.agnosBusyFor), "|", null, null, 0, null, null, 62, null);
+                String sig = CollectionsKt.joinToString(CollectionsKt.listOf(list, str2, str3, valueOf, str4, str5, valueOf2, valueOf3, valueOf4, str6, str7, valueOf5, valueOf6, valueOf7, valueOf8, valueOf9, hashMap, str, jSONObject2 == null ? jSONObject2.toString() : null, this.agnosErrByBranch.get(this.targetBranch), this.agnosBusyFor), "|", "", "", -1, "...", null);
                 linearLayout = this.advBox;
                 if (linearLayout == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("advBox");
@@ -1822,7 +1822,7 @@ public final class GxSystemPage extends GxPage {
         }
         str = null;
         JSONObject jSONObject22 = this.agnosByBranch.get(this.targetBranch);
-        String sig2 = CollectionsKt.joinToString$default(CollectionsKt.listOf(list, str2, str3, valueOf, str4, str5, valueOf2, valueOf3, valueOf4, str6, str7, valueOf5, valueOf6, valueOf7, valueOf8, valueOf9, hashMap, str, jSONObject22 == null ? jSONObject22.toString() : null, this.agnosErrByBranch.get(this.targetBranch), this.agnosBusyFor), "|", null, null, 0, null, null, 62, null);
+        String sig2 = CollectionsKt.joinToString(CollectionsKt.listOf(list, str2, str3, valueOf, str4, str5, valueOf2, valueOf3, valueOf4, str6, str7, valueOf5, valueOf6, valueOf7, valueOf8, valueOf9, hashMap, str, jSONObject22 == null ? jSONObject22.toString() : null, this.agnosErrByBranch.get(this.targetBranch), this.agnosBusyFor), "|", "", "", -1, "...", null);
         linearLayout = this.advBox;
         if (linearLayout == null) {
         }
@@ -1919,7 +1919,7 @@ public final class GxSystemPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit paintAdv$lambda$74$lambda$72;
-                    paintAdv$lambda$74$lambda$72 = GxSystemPage.paintAdv$lambda$74$lambda$72(GxSystemPage.this);
+                    paintAdv$lambda$74$lambda$72 = GxSystemPage.paintAdv$lambda$74$lambda$72(gxSystemPage);
                     return paintAdv$lambda$74$lambda$72;
                 }
             });
@@ -1937,7 +1937,7 @@ public final class GxSystemPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit paintAdv$lambda$74$lambda$73;
-                    paintAdv$lambda$74$lambda$73 = GxSystemPage.paintAdv$lambda$74$lambda$73(GxSystemPage.this);
+                    paintAdv$lambda$74$lambda$73 = GxSystemPage.paintAdv$lambda$74$lambda$73(gxSystemPage);
                     return paintAdv$lambda$74$lambda$73;
                 }
             });
@@ -1985,7 +1985,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit paintAdv$lambda$74$lambda$70$lambda$69;
-                paintAdv$lambda$74$lambda$70$lambda$69 = GxSystemPage.paintAdv$lambda$74$lambda$70$lambda$69(GxSystemPage.this, $ob, ((Integer) obj).intValue());
+                paintAdv$lambda$74$lambda$70$lambda$69 = GxSystemPage.paintAdv$lambda$74$lambda$70$lambda$69(this$0, $ob, ((Integer) obj).intValue());
                 return paintAdv$lambda$74$lambda$70$lambda$69;
             }
         });
@@ -2075,7 +2075,7 @@ public final class GxSystemPage extends GxPage {
             }
             Collection parts = destination$iv$iv;
             if (!parts.isEmpty()) {
-                GxPage.text$default(this, "Changed AGNOS partitions: " + CollectionsKt.joinToString$default(parts, ", ", null, null, 0, null, null, 62, null), c, 0.0f, 0, false, 28, null);
+                GxPage.text$default(this, "Changed AGNOS partitions: " + CollectionsKt.joinToString(parts, ", ", "", "", -1, "...", null), c, 0.0f, 0, false, 28, null);
                 return;
             }
             return;
@@ -2375,14 +2375,14 @@ public final class GxSystemPage extends GxPage {
         } else {
             linearLayout2 = linearLayout3;
         }
-        fill(linearLayout2, CollectionsKt.joinToString$default(this.profiles, null, null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda60
+        fill(linearLayout2, CollectionsKt.joinToString(this.profiles, ", ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda60
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence paintProfiles$lambda$85;
                 paintProfiles$lambda$85 = GxSystemPage.paintProfiles$lambda$85((JSONObject) obj);
                 return paintProfiles$lambda$85;
             }
-        }, 31, null) + "|" + this.profileBusy + "|" + this.isOnroad, new Function1() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda61
+        }) + "|" + this.profileBusy + "|" + this.isOnroad, new Function1() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda61
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit paintProfiles$lambda$89;
@@ -2427,7 +2427,7 @@ public final class GxSystemPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit paintProfiles$lambda$89$lambda$87;
-                    paintProfiles$lambda$89$lambda$87 = GxSystemPage.paintProfiles$lambda$89$lambda$87(GxSystemPage.this, p);
+                    paintProfiles$lambda$89$lambda$87 = GxSystemPage.paintProfiles$lambda$89$lambda$87(this$0, p);
                     return paintProfiles$lambda$89$lambda$87;
                 }
             }, 2, null), (this$0.profileBusy.length() == 0) && !this$0.isOnroad);
@@ -2435,7 +2435,7 @@ public final class GxSystemPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit paintProfiles$lambda$89$lambda$88;
-                    paintProfiles$lambda$89$lambda$88 = GxSystemPage.paintProfiles$lambda$89$lambda$88(GxSystemPage.this, p);
+                    paintProfiles$lambda$89$lambda$88 = GxSystemPage.paintProfiles$lambda$89$lambda$88(this$0, p);
                     return paintProfiles$lambda$89$lambda$88;
                 }
             });
@@ -2562,7 +2562,7 @@ public final class GxSystemPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit paintTailscale$lambda$97$lambda$93;
-                    paintTailscale$lambda$97$lambda$93 = GxSystemPage.paintTailscale$lambda$97$lambda$93(GxSystemPage.this);
+                    paintTailscale$lambda$97$lambda$93 = GxSystemPage.paintTailscale$lambda$97$lambda$93(this$0);
                     return paintTailscale$lambda$97$lambda$93;
                 }
             }), true ^ this$0.tsBusy);
@@ -2572,7 +2572,7 @@ public final class GxSystemPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit paintTailscale$lambda$97$lambda$94;
-                    paintTailscale$lambda$97$lambda$94 = GxSystemPage.paintTailscale$lambda$97$lambda$94(GxSystemPage.this);
+                    paintTailscale$lambda$97$lambda$94 = GxSystemPage.paintTailscale$lambda$97$lambda$94(this$0);
                     return paintTailscale$lambda$97$lambda$94;
                 }
             }, 2, null);
@@ -2584,7 +2584,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit paintTailscale$lambda$97$lambda$96;
-                paintTailscale$lambda$97$lambda$96 = GxSystemPage.paintTailscale$lambda$97$lambda$96(GxSystemPage.this);
+                paintTailscale$lambda$97$lambda$96 = GxSystemPage.paintTailscale$lambda$97$lambda$96(this$0);
                 return paintTailscale$lambda$97$lambda$96;
             }
         }, 2, null);
@@ -2846,14 +2846,14 @@ public final class GxSystemPage extends GxPage {
                 }
                 destination$iv$iv = (List) destination$iv$iv2;
             }
-            str = "\n\nAGNOS firmware update included:\n\n" + CollectionsKt.joinToString$default(destination$iv$iv, "\n", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda63
+            str = "\n\nAGNOS firmware update included:\n\n" + CollectionsKt.joinToString(destination$iv$iv, "\n", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda63
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     CharSequence installSelectedVersion$lambda$104;
                     installSelectedVersion$lambda$104 = GxSystemPage.installSelectedVersion$lambda$104((String) obj);
                     return installSelectedVersion$lambda$104;
                 }
-            }, 30, null);
+            });
         } else {
             str = "";
         }
@@ -2885,7 +2885,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit installSelectedVersion$lambda$109$lambda$108;
-                installSelectedVersion$lambda$109$lambda$108 = GxSystemPage.installSelectedVersion$lambda$109$lambda$108(GxSystemPage.this, $branch, $gen, $commit, $version, (String) obj);
+                installSelectedVersion$lambda$109$lambda$108 = GxSystemPage.installSelectedVersion$lambda$109$lambda$108(this$0, $branch, $gen, $commit, $version, (String) obj);
                 return installSelectedVersion$lambda$109$lambda$108;
             }
         });
@@ -2906,7 +2906,7 @@ public final class GxSystemPage extends GxPage {
                     @Override // kotlin.jvm.functions.Function2
                     public final Object invoke(Object obj, Object obj2) {
                         Unit installSelectedVersion$lambda$109$lambda$108$lambda$107;
-                        installSelectedVersion$lambda$109$lambda$108$lambda$107 = GxSystemPage.installSelectedVersion$lambda$109$lambda$108$lambda$107(GxSystemPage.this, $version, $branch, (String) obj, (JSONObject) obj2);
+                        installSelectedVersion$lambda$109$lambda$108$lambda$107 = GxSystemPage.installSelectedVersion$lambda$109$lambda$108$lambda$107(this$0, $version, $branch, (String) obj, (JSONObject) obj2);
                         return installSelectedVersion$lambda$109$lambda$108$lambda$107;
                     }
                 }, 8, null);
@@ -2948,7 +2948,7 @@ public final class GxSystemPage extends GxPage {
             }
             str = str3;
         }
-        str = "Installing " + StringsKt.substringBefore$default($version, "\n", (String) null, 2, (Object) null) + " on " + $branch + "...";
+        str = "Installing " + StringsKt.substringBefore($version, "\n", $version) + " on " + $branch + "...";
         this$0.toast(str);
         this$0.paint();
         loadFastStatus$default(this$0, null, 1, null);
@@ -3108,7 +3108,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit runUpdate$lambda$119$lambda$118;
-                runUpdate$lambda$119$lambda$118 = GxSystemPage.runUpdate$lambda$119$lambda$118(GxSystemPage.this, (String) obj, (JSONObject) obj2);
+                runUpdate$lambda$119$lambda$118 = GxSystemPage.runUpdate$lambda$119$lambda$118(this$0, (String) obj, (JSONObject) obj2);
                 return runUpdate$lambda$119$lambda$118;
             }
         }, 12, null);
@@ -3168,7 +3168,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit factoryReset$lambda$122$lambda$121;
-                factoryReset$lambda$122$lambda$121 = GxSystemPage.factoryReset$lambda$122$lambda$121(GxSystemPage.this, (String) obj, (JSONObject) obj2);
+                factoryReset$lambda$122$lambda$121 = GxSystemPage.factoryReset$lambda$122$lambda$121(this$0, (String) obj, (JSONObject) obj2);
                 return factoryReset$lambda$122$lambda$121;
             }
         }, 12, null);
@@ -3215,7 +3215,7 @@ public final class GxSystemPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit saveProfile$lambda$128;
-                    saveProfile$lambda$128 = GxSystemPage.saveProfile$lambda$128(Function0.this);
+                    saveProfile$lambda$128 = GxSystemPage.saveProfile$lambda$128(go);
                     return saveProfile$lambda$128;
                 }
             });
@@ -3232,7 +3232,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit saveProfile$lambda$127$lambda$126;
-                saveProfile$lambda$127$lambda$126 = GxSystemPage.saveProfile$lambda$127$lambda$126(GxSystemPage.this, $label, (String) obj, (JSONObject) obj2);
+                saveProfile$lambda$127$lambda$126 = GxSystemPage.saveProfile$lambda$127$lambda$126(this$0, $label, (String) obj, (JSONObject) obj2);
                 return saveProfile$lambda$127$lambda$126;
             }
         }, 12, null);
@@ -3307,7 +3307,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit loadProfile$lambda$133$lambda$132;
-                loadProfile$lambda$133$lambda$132 = GxSystemPage.loadProfile$lambda$133$lambda$132(GxSystemPage.this, $label, (String) obj, (JSONObject) obj2);
+                loadProfile$lambda$133$lambda$132 = GxSystemPage.loadProfile$lambda$133$lambda$132(this$0, $label, (String) obj, (JSONObject) obj2);
                 return loadProfile$lambda$133$lambda$132;
             }
         }, 12, null);
@@ -3385,7 +3385,7 @@ public final class GxSystemPage extends GxPage {
         String str4;
         final Ref.ObjectRef objectRef = new Ref.ObjectRef();
         try {
-            execute = GxPage.Companion.client(60L).newCall(new Request.Builder().url(str).post(RequestBody.Companion.create$default(RequestBody.Companion, new byte[0], (MediaType) null, 0, 0, 6, (Object) null)).build()).execute();
+            execute = GxPage.Companion.client(60L).newCall(new Request.Builder().url(str).post(RequestBody.Companion.create(new byte[0], (MediaType) null, 0, 0)).build()).execute();
             try {
                 response = execute;
                 ResponseBody body = response.body();
@@ -3406,12 +3406,12 @@ public final class GxSystemPage extends GxPage {
         if (!response.isSuccessful()) {
             try {
                 Result.Companion companion = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(new JSONObject(new String(bArr, Charsets.UTF_8)).optString("message"));
+                m1191constructorimpl = KtCompat.resultOf(new JSONObject(new String(bArr, Charsets.UTF_8)).optString("message"));
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
             }
-            if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+            if (KtCompat.isFailure(m1191constructorimpl)) {
                 m1191constructorimpl = null;
             }
             String str5 = (String) m1191constructorimpl;
@@ -3448,7 +3448,7 @@ public final class GxSystemPage extends GxPage {
             gxSystemPage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda30
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxSystemPage.backupToggles$lambda$140$lambda$139(GxSystemPage.this, objectRef);
+                    GxSystemPage.backupToggles$lambda$140$lambda$139(gxSystemPage, objectRef);
                 }
             });
         } finally {
@@ -3481,7 +3481,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit restoreToggles$lambda$146$lambda$145;
-                restoreToggles$lambda$146$lambda$145 = GxSystemPage.restoreToggles$lambda$146$lambda$145(GxSystemPage.this, (byte[]) obj, (String) obj2);
+                restoreToggles$lambda$146$lambda$145 = GxSystemPage.restoreToggles$lambda$146$lambda$145(this$0, (byte[]) obj, (String) obj2);
                 return restoreToggles$lambda$146$lambda$145;
             }
         });
@@ -3502,12 +3502,12 @@ public final class GxSystemPage extends GxPage {
         }
         try {
             Result.Companion companion = Result.Companion;
-            data = Result.m1191constructorimpl(new JSONTokener(new String(bytes, Charsets.UTF_8)).nextValue());
+            data = KtCompat.resultOf(new JSONTokener(new String(bytes, Charsets.UTF_8)).nextValue());
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            data = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            data = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(data)) {
+        if (KtCompat.isFailure(data)) {
             data = null;
         }
         if (!(data instanceof JSONObject)) {
@@ -3518,7 +3518,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit restoreToggles$lambda$146$lambda$145$lambda$144;
-                restoreToggles$lambda$146$lambda$145$lambda$144 = GxSystemPage.restoreToggles$lambda$146$lambda$145$lambda$144(GxSystemPage.this, (String) obj, (JSONObject) obj2);
+                restoreToggles$lambda$146$lambda$145$lambda$144 = GxSystemPage.restoreToggles$lambda$146$lambda$145$lambda$144(this$0, (String) obj, (JSONObject) obj2);
                 return restoreToggles$lambda$146$lambda$145$lambda$144;
             }
         });
@@ -3577,7 +3577,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit resetDefault$lambda$148$lambda$147;
-                resetDefault$lambda$148$lambda$147 = GxSystemPage.resetDefault$lambda$148$lambda$147(GxSystemPage.this, (String) obj, (JSONObject) obj2);
+                resetDefault$lambda$148$lambda$147 = GxSystemPage.resetDefault$lambda$148$lambda$147(this$0, (String) obj, (JSONObject) obj2);
                 return resetDefault$lambda$148$lambda$147;
             }
         }, 12, null);
@@ -3613,7 +3613,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit deleteAllRoutes$lambda$152$lambda$151;
-                deleteAllRoutes$lambda$152$lambda$151 = GxSystemPage.deleteAllRoutes$lambda$152$lambda$151(GxSystemPage.this, (String) obj, (JSONObject) obj2);
+                deleteAllRoutes$lambda$152$lambda$151 = GxSystemPage.deleteAllRoutes$lambda$152$lambda$151(this$0, (String) obj, (JSONObject) obj2);
                 return deleteAllRoutes$lambda$152$lambda$151;
             }
         });
@@ -3712,7 +3712,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit installTailscale$lambda$158$lambda$157;
-                installTailscale$lambda$158$lambda$157 = GxSystemPage.installTailscale$lambda$158$lambda$157(GxSystemPage.this);
+                installTailscale$lambda$158$lambda$157 = GxSystemPage.installTailscale$lambda$158$lambda$157(this$0);
                 return installTailscale$lambda$158$lambda$157;
             }
         });
@@ -3749,7 +3749,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit uninstallTailscale$lambda$163$lambda$162;
-                uninstallTailscale$lambda$163$lambda$162 = GxSystemPage.uninstallTailscale$lambda$163$lambda$162(GxSystemPage.this, (String) obj, (JSONObject) obj2);
+                uninstallTailscale$lambda$163$lambda$162 = GxSystemPage.uninstallTailscale$lambda$163$lambda$162(this$0, (String) obj, (JSONObject) obj2);
                 return uninstallTailscale$lambda$163$lambda$162;
             }
         });
@@ -3788,7 +3788,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit uninstallTailscale$lambda$163$lambda$162$lambda$161;
-                uninstallTailscale$lambda$163$lambda$162$lambda$161 = GxSystemPage.uninstallTailscale$lambda$163$lambda$162$lambda$161(GxSystemPage.this);
+                uninstallTailscale$lambda$163$lambda$162$lambda$161 = GxSystemPage.uninstallTailscale$lambda$163$lambda$162$lambda$161(this$0);
                 return uninstallTailscale$lambda$163$lambda$162$lambda$161;
             }
         });

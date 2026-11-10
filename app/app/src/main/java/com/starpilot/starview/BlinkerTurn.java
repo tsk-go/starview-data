@@ -125,7 +125,7 @@ public final class BlinkerTurn {
                 road = road3;
             } else {
                 int i4 = 0;
-                if (StringsKt.startsWith$default(w.getKind(), "motorway", false, 2, (Object) null)) {
+                if (StringsKt.startsWith(w.getKind(), "motorway", false)) {
                     road = road3;
                 } else {
                     List $this$any$iv = road3;

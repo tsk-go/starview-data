@@ -49,13 +49,13 @@ public final class HudPresets {
         try {
             Result.Companion companion = Result.Companion;
             HudPresets hudPresets = this;
-            m1191constructorimpl = Result.m1191constructorimpl(new JSONObject(layout == null ? "{}" : layout));
+            m1191constructorimpl = KtCompat.resultOf(new JSONObject(layout == null ? "{}" : layout));
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
         JSONObject jSONObject = new JSONObject();
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = jSONObject;
         }
         JSONObject o = (JSONObject) m1191constructorimpl;
@@ -87,13 +87,13 @@ public final class HudPresets {
         try {
             Result.Companion companion = Result.Companion;
             HudPresets $this$cockpit_u24lambda_u242 = this;
-            m1191constructorimpl = Result.m1191constructorimpl(new JSONObject($this$cockpit_u24lambda_u242.everything(layout, allKeys)));
+            m1191constructorimpl = KtCompat.resultOf(new JSONObject($this$cockpit_u24lambda_u242.everything(layout, allKeys)));
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
         JSONObject jSONObject = new JSONObject();
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = jSONObject;
         }
         JSONObject o = (JSONObject) m1191constructorimpl;
@@ -130,12 +130,12 @@ public final class HudPresets {
             if (string != null) {
                 str = string;
             }
-            m1191constructorimpl = Result.m1191constructorimpl(new JSONObject(str));
+            m1191constructorimpl = KtCompat.resultOf(new JSONObject(str));
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = null;
         }
         JSONObject o = (JSONObject) m1191constructorimpl;
@@ -166,13 +166,13 @@ public final class HudPresets {
             if (string != null) {
                 str = string;
             }
-            m1191constructorimpl = Result.m1191constructorimpl(new JSONObject(str));
+            m1191constructorimpl = KtCompat.resultOf(new JSONObject(str));
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
         JSONObject jSONObject = new JSONObject();
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = jSONObject;
         }
         JSONObject o = (JSONObject) m1191constructorimpl;
@@ -192,13 +192,13 @@ public final class HudPresets {
             if (string != null) {
                 str = string;
             }
-            m1191constructorimpl = Result.m1191constructorimpl(new JSONObject(str));
+            m1191constructorimpl = KtCompat.resultOf(new JSONObject(str));
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
         JSONObject jSONObject = new JSONObject();
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = jSONObject;
         }
         JSONObject o = (JSONObject) m1191constructorimpl;

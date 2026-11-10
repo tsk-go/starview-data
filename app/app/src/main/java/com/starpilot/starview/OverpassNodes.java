@@ -97,7 +97,7 @@ public class OverpassNodes {
             }
             File file2 = new File(file, str + ".json");
             if (file2.isFile()) {
-                str2 = FilesKt.readText$default(file2, null, 1, null);
+                str2 = FilesKt.readText(file2, kotlin.text.Charsets.UTF_8);
             } else {
                 String str3 = overpassNodes.query;
                 StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
@@ -113,7 +113,7 @@ public class OverpassNodes {
                     Intrinsics.checkNotNull(body);
                     String string = body.string();
                     CloseableKt.closeFinally(execute, null);
-                    FilesKt.writeText$default(file2, string, null, 2, null);
+                    FilesKt.writeText(file2, string, kotlin.text.Charsets.UTF_8);
                     str2 = string;
                 } finally {
                 }

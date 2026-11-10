@@ -51,7 +51,7 @@ public final class LaneModelKt {
                 FileOutputStream fileOutputStream = new FileOutputStream(file2);
                 try {
                     boolean z = false;
-                    ByteStreamsKt.copyTo$default(inputStream2, fileOutputStream, 0, 2, null);
+                    ByteStreamsKt.copyTo(inputStream2, fileOutputStream, 8192);
                     CloseableKt.closeFinally(fileOutputStream, null);
                     CloseableKt.closeFinally(inputStream, null);
                     FileInputStream fileInputStream = new FileInputStream(file2);

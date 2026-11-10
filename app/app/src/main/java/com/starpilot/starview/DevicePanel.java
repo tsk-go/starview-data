@@ -56,17 +56,17 @@ import org.json.JSONObject;
 
 /* compiled from: DevicePanels.kt */
 public final class DevicePanel extends ScrollView {
-    private final Activity act;
+    final Activity act;
     private boolean autoCan;
     private Boolean autoDl;
     private final LinearLayout col;
     private final float d;
     private final int dim;
     private final String e2eDesc;
-    private final Handler fastHandler;
+    final Handler fastHandler;
     private final DevicePanel$fastPoll$1 fastPoll;
-    private boolean fastPolling;
-    private JSONObject fastStatus;
+    boolean fastPolling;
+    JSONObject fastStatus;
     private final String kind;
     private int lastGen;
     private int meteredSel;
@@ -76,7 +76,7 @@ public final class DevicePanel extends ScrollView {
     private final String personalityDesc;
     private int pollTick;
     private boolean scanning;
-    private Boolean seven;
+    Boolean seven;
     private boolean syncing;
     private Switch teth;
     private final ArrayList<Function0<Unit>> updaters;
@@ -415,7 +415,7 @@ public final class DevicePanel extends ScrollView {
         $this$button_u24lambda_u2418.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda39
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                onClick.invoke();
             }
         });
         $this$button_u24lambda_u2418.setMinWidth(dp(130));
@@ -534,7 +534,7 @@ public final class DevicePanel extends ScrollView {
             $this$multi_u24lambda_u2429_u24lambda_u2428.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda170
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
-                    DevicePanel.multi$lambda$29$lambda$28$lambda$27(Function1.this, index$iv$iv, view);
+                    DevicePanel.multi$lambda$29$lambda$28$lambda$27(onSelect, index$iv$iv, view);
                 }
             });
             destination$iv$iv.add($this$multi_u24lambda_u2429_u24lambda_u2428);
@@ -554,7 +554,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit multi$lambda$32;
-                multi$lambda$32 = DevicePanel.multi$lambda$32(Function0.this, enabled, btns);
+                multi$lambda$32 = DevicePanel.multi$lambda$32(selected, enabled, btns);
                 return multi$lambda$32;
             }
         });
@@ -615,7 +615,7 @@ public final class DevicePanel extends ScrollView {
         $this$dual_u24lambda_u2436.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda76
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                onLeft.invoke();
             }
         });
         final Button $this$dual_u24lambda_u2438 = new Button(this.act);
@@ -623,7 +623,7 @@ public final class DevicePanel extends ScrollView {
         $this$dual_u24lambda_u2438.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda78
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                onRight.invoke();
             }
         });
         $this$dual_u24lambda_u2438.setTextColor(Color.rgb(255, 120, 120));
@@ -757,7 +757,7 @@ public final class DevicePanel extends ScrollView {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit call$lambda$42;
-                    call$lambda$42 = DevicePanel.call$lambda$42(Function1.this, this, (JSONObject) obj);
+                    call$lambda$42 = DevicePanel.call$lambda$42(then, this, (JSONObject) obj);
                     return call$lambda$42;
                 }
             });
@@ -803,7 +803,7 @@ public final class DevicePanel extends ScrollView {
         new AlertDialog.Builder(this.act).setMessage(msg).setPositiveButton(yes, new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda173
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                Function0.this.invoke();
+                onYes.invoke();
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }
@@ -849,7 +849,7 @@ public final class DevicePanel extends ScrollView {
         new AlertDialog.Builder(this.act).setTitle(title).setSingleChoiceItems((CharSequence[]) $this$toTypedArray$iv.toArray(new String[0]), idx, new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda142
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                DevicePanel.choose$lambda$46(Function1.this, options, dialogInterface, i);
+                DevicePanel.choose$lambda$46(onPick, options, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }
@@ -1519,7 +1519,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildDevice$lambda$86$lambda$85;
-                buildDevice$lambda$86$lambda$85 = DevicePanel.buildDevice$lambda$86$lambda$85(DevicePanel.this, (JSONObject) obj);
+                buildDevice$lambda$86$lambda$85 = DevicePanel.buildDevice$lambda$86$lambda$85(this$0, (JSONObject) obj);
                 return buildDevice$lambda$86$lambda$85;
             }
         }, 2, null);
@@ -1577,7 +1577,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit buildDevice$lambda$94$lambda$93;
-                buildDevice$lambda$94$lambda$93 = DevicePanel.buildDevice$lambda$94$lambda$93(DevicePanel.this);
+                buildDevice$lambda$94$lambda$93 = DevicePanel.buildDevice$lambda$94$lambda$93(this$0);
                 return buildDevice$lambda$94$lambda$93;
             }
         }, 4, null);
@@ -1616,7 +1616,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit buildDevice$lambda$99$lambda$98;
-                buildDevice$lambda$99$lambda$98 = DevicePanel.buildDevice$lambda$99$lambda$98(DevicePanel.this);
+                buildDevice$lambda$99$lambda$98 = DevicePanel.buildDevice$lambda$99$lambda$98(this$0);
                 return buildDevice$lambda$99$lambda$98;
             }
         }, 4, null);
@@ -1653,7 +1653,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit buildDevice$lambda$104$lambda$103;
-                buildDevice$lambda$104$lambda$103 = DevicePanel.buildDevice$lambda$104$lambda$103(DevicePanel.this);
+                buildDevice$lambda$104$lambda$103 = DevicePanel.buildDevice$lambda$104$lambda$103(this$0);
                 return buildDevice$lambda$104$lambda$103;
             }
         }, 4, null);
@@ -1672,7 +1672,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit buildDevice$lambda$106$lambda$105;
-                buildDevice$lambda$106$lambda$105 = DevicePanel.buildDevice$lambda$106$lambda$105(DevicePanel.this);
+                buildDevice$lambda$106$lambda$105 = DevicePanel.buildDevice$lambda$106$lambda$105(this$0);
                 return buildDevice$lambda$106$lambda$105;
             }
         }, 4, null);
@@ -1725,7 +1725,7 @@ public final class DevicePanel extends ScrollView {
             @Override // android.view.SurfaceHolder.Callback
             public void surfaceCreated(SurfaceHolder holder) {
                 Intrinsics.checkNotNullParameter(holder, "holder");
-                VideoClient.this.connect(h, 8090, "driver", holder.getSurface());
+                vc.connect(h, 8090, "driver", holder.getSurface());
             }
 
             @Override // android.view.SurfaceHolder.Callback
@@ -1736,13 +1736,13 @@ public final class DevicePanel extends ScrollView {
             @Override // android.view.SurfaceHolder.Callback
             public void surfaceDestroyed(SurfaceHolder holder) {
                 Intrinsics.checkNotNullParameter(holder, "holder");
-                VideoClient.this.close();
+                vc.close();
             }
         });
         new AlertDialog.Builder(this.act).setTitle("Driver camera").setView($this$showDriverCamera_u24lambda_u24110).setPositiveButton("Close", (DialogInterface.OnClickListener) null).setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda4
             @Override // android.content.DialogInterface.OnDismissListener
             public final void onDismiss(DialogInterface dialogInterface) {
-                VideoClient.this.close();
+                vc.close();
             }
         }).show();
     }
@@ -1855,7 +1855,7 @@ public final class DevicePanel extends ScrollView {
             String str2 = null;
             strArr[0] = conn ? "connected" : null;
             strArr[1] = (!saved || conn) ? null : "saved";
-            String joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), " · ", null, null, 0, null, null, 62, null);
+            String joinToString$default = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), " · ", "", "", -1, "...", null);
             if (!(joinToString$default.length() == 0)) {
                 str2 = joinToString$default;
             }
@@ -1873,7 +1873,7 @@ public final class DevicePanel extends ScrollView {
                 $this$scan_u24lambda_u24127_u24lambda_u24123.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda6
                     @Override // android.view.View.OnClickListener
                     public final void onClick(View view) {
-                        DevicePanel.scan$lambda$127$lambda$123$lambda$122(DevicePanel.this, ssid, view);
+                        DevicePanel.scan$lambda$127$lambda$123$lambda$122(this$0, ssid, view);
                     }
                 });
                 row.addView($this$scan_u24lambda_u24127_u24lambda_u24123);
@@ -1885,7 +1885,7 @@ public final class DevicePanel extends ScrollView {
                 $this$scan_u24lambda_u24127_u24lambda_u24125.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda7
                     @Override // android.view.View.OnClickListener
                     public final void onClick(View view) {
-                        DevicePanel.scan$lambda$127$lambda$125$lambda$124(DevicePanel.this, ssid, sec, saved, view);
+                        DevicePanel.scan$lambda$127$lambda$125$lambda$124(this$0, ssid, sec, saved, view);
                     }
                 });
                 LinearLayout.LayoutParams $this$scan_u24lambda_u24127_u24lambda_u24126 = new LinearLayout.LayoutParams(-2, -2);
@@ -1911,7 +1911,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit scan$lambda$127$lambda$123$lambda$122$lambda$121;
-                scan$lambda$127$lambda$123$lambda$122$lambda$121 = DevicePanel.scan$lambda$127$lambda$123$lambda$122$lambda$121(DevicePanel.this, $ssid);
+                scan$lambda$127$lambda$123$lambda$122$lambda$121 = DevicePanel.scan$lambda$127$lambda$123$lambda$122$lambda$121(this$0, $ssid);
                 return scan$lambda$127$lambda$123$lambda$122$lambda$121;
             }
         }, 4, null);
@@ -1923,7 +1923,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit scan$lambda$127$lambda$123$lambda$122$lambda$121$lambda$120;
-                scan$lambda$127$lambda$123$lambda$122$lambda$121$lambda$120 = DevicePanel.scan$lambda$127$lambda$123$lambda$122$lambda$121$lambda$120(DevicePanel.this, (JSONObject) obj);
+                scan$lambda$127$lambda$123$lambda$122$lambda$121$lambda$120 = DevicePanel.scan$lambda$127$lambda$123$lambda$122$lambda$121$lambda$120(this$0, (JSONObject) obj);
                 return scan$lambda$127$lambda$123$lambda$122$lambda$121$lambda$120;
             }
         });
@@ -1949,7 +1949,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit connectWifi$go$lambda$129;
-                connectWifi$go$lambda$129 = DevicePanel.connectWifi$go$lambda$129(DevicePanel.this, $ssid, $hidden, (JSONObject) obj);
+                connectWifi$go$lambda$129 = DevicePanel.connectWifi$go$lambda$129(this$0, $ssid, $hidden, (JSONObject) obj);
                 return connectWifi$go$lambda$129;
             }
         });
@@ -1965,7 +1965,7 @@ public final class DevicePanel extends ScrollView {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit connectWifi$go$lambda$129$lambda$128;
-                    connectWifi$go$lambda$129$lambda$128 = DevicePanel.connectWifi$go$lambda$129$lambda$128(DevicePanel.this, $ssid, $hidden, (String) obj);
+                    connectWifi$go$lambda$129$lambda$128 = DevicePanel.connectWifi$go$lambda$129$lambda$128(this$0, $ssid, $hidden, (String) obj);
                     return connectWifi$go$lambda$129$lambda$128;
                 }
             }, 4, null);
@@ -2304,7 +2304,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$139$lambda$138;
-                buildNetwork$lambda$139$lambda$138 = DevicePanel.buildNetwork$lambda$139$lambda$138(DevicePanel.this, (JSONObject) obj);
+                buildNetwork$lambda$139$lambda$138 = DevicePanel.buildNetwork$lambda$139$lambda$138(this$0, (JSONObject) obj);
                 return buildNetwork$lambda$139$lambda$138;
             }
         });
@@ -2362,7 +2362,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$145$lambda$144;
-                buildNetwork$lambda$145$lambda$144 = DevicePanel.buildNetwork$lambda$145$lambda$144(DevicePanel.this, (JSONObject) obj);
+                buildNetwork$lambda$145$lambda$144 = DevicePanel.buildNetwork$lambda$145$lambda$144(this$0, (JSONObject) obj);
                 return buildNetwork$lambda$145$lambda$144;
             }
         });
@@ -2395,14 +2395,14 @@ public final class DevicePanel extends ScrollView {
     public static final String buildNetwork$lambda$149(DevicePanel this$0) {
         JSONObject d = this$0.door();
         final JSONArray downloads = d != null ? d.optJSONArray("downloads") : null;
-        String what = (downloads == null || downloads.length() <= 0) ? "" : CollectionsKt.joinToString$default(RangesKt.until(0, downloads.length()), " and ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda167
+        String what = (downloads == null || downloads.length() <= 0) ? "" : CollectionsKt.joinToString(RangesKt.until(0, downloads.length()), " and ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda167
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence buildNetwork$lambda$149$lambda$148;
                 buildNetwork$lambda$149$lambda$148 = DevicePanel.buildNetwork$lambda$149$lambda$148(downloads, ((Integer) obj).intValue());
                 return buildNetwork$lambda$149$lambda$148;
             }
-        }, 30, null);
+        });
         if (d == null) {
             return "";
         }
@@ -2431,7 +2431,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$151$lambda$150;
-                buildNetwork$lambda$151$lambda$150 = DevicePanel.buildNetwork$lambda$151$lambda$150(DevicePanel.this, (JSONObject) obj);
+                buildNetwork$lambda$151$lambda$150 = DevicePanel.buildNetwork$lambda$151$lambda$150(this$0, (JSONObject) obj);
                 return buildNetwork$lambda$151$lambda$150;
             }
         });
@@ -2463,7 +2463,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$155$lambda$154;
-                buildNetwork$lambda$155$lambda$154 = DevicePanel.buildNetwork$lambda$155$lambda$154(DevicePanel.this, (JSONObject) obj);
+                buildNetwork$lambda$155$lambda$154 = DevicePanel.buildNetwork$lambda$155$lambda$154(this$0, (JSONObject) obj);
                 return buildNetwork$lambda$155$lambda$154;
             }
         });
@@ -2478,7 +2478,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$155$lambda$154$lambda$153;
-                buildNetwork$lambda$155$lambda$154$lambda$153 = DevicePanel.buildNetwork$lambda$155$lambda$154$lambda$153(DevicePanel.this, (JSONObject) obj);
+                buildNetwork$lambda$155$lambda$154$lambda$153 = DevicePanel.buildNetwork$lambda$155$lambda$154$lambda$153(this$0, (JSONObject) obj);
                 return buildNetwork$lambda$155$lambda$154$lambda$153;
             }
         }, 2, null);
@@ -2503,7 +2503,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$159$lambda$158;
-                buildNetwork$lambda$159$lambda$158 = DevicePanel.buildNetwork$lambda$159$lambda$158(DevicePanel.this, (JSONObject) obj);
+                buildNetwork$lambda$159$lambda$158 = DevicePanel.buildNetwork$lambda$159$lambda$158(this$0, (JSONObject) obj);
                 return buildNetwork$lambda$159$lambda$158;
             }
         }, 2, null);
@@ -2519,7 +2519,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$159$lambda$158$lambda$157;
-                buildNetwork$lambda$159$lambda$158$lambda$157 = DevicePanel.buildNetwork$lambda$159$lambda$158$lambda$157(DevicePanel.this, (String) obj);
+                buildNetwork$lambda$159$lambda$158$lambda$157 = DevicePanel.buildNetwork$lambda$159$lambda$158$lambda$157(this$0, (String) obj);
                 return buildNetwork$lambda$159$lambda$158$lambda$157;
             }
         }, 8, null);
@@ -2574,7 +2574,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$168$lambda$167;
-                buildNetwork$lambda$168$lambda$167 = DevicePanel.buildNetwork$lambda$168$lambda$167(DevicePanel.this, (String) obj);
+                buildNetwork$lambda$168$lambda$167 = DevicePanel.buildNetwork$lambda$168$lambda$167(this$0, (String) obj);
                 return buildNetwork$lambda$168$lambda$167;
             }
         }, 24, null);
@@ -2613,7 +2613,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$175$lambda$174;
-                buildNetwork$lambda$175$lambda$174 = DevicePanel.buildNetwork$lambda$175$lambda$174(DevicePanel.this, (JSONObject) obj);
+                buildNetwork$lambda$175$lambda$174 = DevicePanel.buildNetwork$lambda$175$lambda$174(this$0, (JSONObject) obj);
                 return buildNetwork$lambda$175$lambda$174;
             }
         });
@@ -2628,7 +2628,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$175$lambda$174$lambda$173;
-                buildNetwork$lambda$175$lambda$174$lambda$173 = DevicePanel.buildNetwork$lambda$175$lambda$174$lambda$173(DevicePanel.this, (JSONObject) obj);
+                buildNetwork$lambda$175$lambda$174$lambda$173 = DevicePanel.buildNetwork$lambda$175$lambda$174$lambda$173(this$0, (JSONObject) obj);
                 return buildNetwork$lambda$175$lambda$174$lambda$173;
             }
         }, 2, null);
@@ -2653,7 +2653,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$180$lambda$179;
-                buildNetwork$lambda$180$lambda$179 = DevicePanel.buildNetwork$lambda$180$lambda$179(DevicePanel.this, (String) obj);
+                buildNetwork$lambda$180$lambda$179 = DevicePanel.buildNetwork$lambda$180$lambda$179(this$0, (String) obj);
                 return buildNetwork$lambda$180$lambda$179;
             }
         }, 28, null);
@@ -2667,7 +2667,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$180$lambda$179$lambda$178;
-                buildNetwork$lambda$180$lambda$179$lambda$178 = DevicePanel.buildNetwork$lambda$180$lambda$179$lambda$178(DevicePanel.this, ssid, (String) obj);
+                buildNetwork$lambda$180$lambda$179$lambda$178 = DevicePanel.buildNetwork$lambda$180$lambda$179$lambda$178(this$0, ssid, (String) obj);
                 return buildNetwork$lambda$180$lambda$179$lambda$178;
             }
         }, 20, null);
@@ -2682,7 +2682,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$180$lambda$179$lambda$178$lambda$177;
-                buildNetwork$lambda$180$lambda$179$lambda$178$lambda$177 = DevicePanel.buildNetwork$lambda$180$lambda$179$lambda$178$lambda$177(DevicePanel.this, (JSONObject) obj);
+                buildNetwork$lambda$180$lambda$179$lambda$178$lambda$177 = DevicePanel.buildNetwork$lambda$180$lambda$179$lambda$178$lambda$177(this$0, (JSONObject) obj);
                 return buildNetwork$lambda$180$lambda$179$lambda$178$lambda$177;
             }
         });
@@ -2873,7 +2873,7 @@ public final class DevicePanel extends ScrollView {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit buildDeveloper$lambda$190$lambda$189;
-                    buildDeveloper$lambda$190$lambda$189 = DevicePanel.buildDeveloper$lambda$190$lambda$189(DevicePanel.this, (String) obj);
+                    buildDeveloper$lambda$190$lambda$189 = DevicePanel.buildDeveloper$lambda$190$lambda$189(this$0, (String) obj);
                     return buildDeveloper$lambda$190$lambda$189;
                 }
             }, 28, null);
@@ -2889,7 +2889,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildDeveloper$lambda$190$lambda$189$lambda$188;
-                buildDeveloper$lambda$190$lambda$189$lambda$188 = DevicePanel.buildDeveloper$lambda$190$lambda$189$lambda$188(DevicePanel.this, (JSONObject) obj);
+                buildDeveloper$lambda$190$lambda$189$lambda$188 = DevicePanel.buildDeveloper$lambda$190$lambda$189$lambda$188(this$0, (JSONObject) obj);
                 return buildDeveloper$lambda$190$lambda$189$lambda$188;
             }
         });
@@ -2950,7 +2950,7 @@ public final class DevicePanel extends ScrollView {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit buildDeveloper$lambda$198$lambda$197;
-                    buildDeveloper$lambda$198$lambda$197 = DevicePanel.buildDeveloper$lambda$198$lambda$197(DevicePanel.this);
+                    buildDeveloper$lambda$198$lambda$197 = DevicePanel.buildDeveloper$lambda$198$lambda$197(this$0);
                     return buildDeveloper$lambda$198$lambda$197;
                 }
             }, 4, null);
@@ -3247,7 +3247,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit buildSoftware$lambda$217$lambda$216;
-                buildSoftware$lambda$217$lambda$216 = DevicePanel.buildSoftware$lambda$217$lambda$216(DevicePanel.this);
+                buildSoftware$lambda$217$lambda$216 = DevicePanel.buildSoftware$lambda$217$lambda$216(this$0);
                 return buildSoftware$lambda$217$lambda$216;
             }
         }, 4, null);
@@ -3289,7 +3289,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj2, Object obj3) {
                 Unit buildSoftware$lambda$222$lambda$221;
-                buildSoftware$lambda$222$lambda$221 = DevicePanel.buildSoftware$lambda$222$lambda$221(DevicePanel.this, (JSONObject) obj2, (String) obj3);
+                buildSoftware$lambda$222$lambda$221 = DevicePanel.buildSoftware$lambda$222$lambda$221(this$0, (JSONObject) obj2, (String) obj3);
                 return buildSoftware$lambda$222$lambda$221;
             }
         });
@@ -3316,7 +3316,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildSoftware$lambda$226$lambda$225;
-                buildSoftware$lambda$226$lambda$225 = DevicePanel.buildSoftware$lambda$226$lambda$225(DevicePanel.this, (JSONObject) obj);
+                buildSoftware$lambda$226$lambda$225 = DevicePanel.buildSoftware$lambda$226$lambda$225(this$0, (JSONObject) obj);
                 return buildSoftware$lambda$226$lambda$225;
             }
         }, 2, null);
@@ -3376,14 +3376,14 @@ public final class DevicePanel extends ScrollView {
                 Response r = execute;
                 String string = (!r.isSuccessful() || (body = r.body()) == null) ? null : body.string();
                 CloseableKt.closeFinally(execute, null);
-                m1191constructorimpl = Result.m1191constructorimpl(string);
+                m1191constructorimpl = KtCompat.resultOf(string);
             } finally {
             }
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        final String md = (String) (Result.m1197isFailureimpl(m1191constructorimpl) ? null : m1191constructorimpl);
+        final String md = (String) (KtCompat.isFailure(m1191constructorimpl) ? null : m1191constructorimpl);
         if (md == null || (list = ForkFixes.INSTANCE.parse(md)) == null) {
             list = CollectionsKt.emptyList();
         }

@@ -162,10 +162,10 @@ public final class GxModelsPage extends GxPage {
         try {
             Result.Companion companion = Result.Companion;
             this$0.prefs.edit().putString("hardwareFilter", this$0.hardwareFilter).apply();
-            Result.m1191constructorimpl(Unit.INSTANCE);
+            KtCompat.resultOf(Unit.INSTANCE);
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            Result.m1191constructorimpl(ResultKt.createFailure(th));
+            KtCompat.resultOf(ResultKt.createFailure(th));
         }
         this$0.render(true);
         return Unit.INSTANCE;
@@ -194,7 +194,7 @@ public final class GxModelsPage extends GxPage {
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         Unit build$lambda$7$lambda$6;
-                        build$lambda$7$lambda$6 = GxModelsPage.build$lambda$7$lambda$6(GxModelsPage.this, ((Boolean) obj).booleanValue());
+                        build$lambda$7$lambda$6 = GxModelsPage.build$lambda$7$lambda$6(this$0, ((Boolean) obj).booleanValue());
                         return build$lambda$7$lambda$6;
                     }
                 });
@@ -407,7 +407,7 @@ public final class GxModelsPage extends GxPage {
             @Override // java.util.Comparator
             public final int compare(Object obj, Object obj2) {
                 int sorted$lambda$20;
-                sorted$lambda$20 = GxModelsPage.sorted$lambda$20(Function2.this, obj, obj2);
+                sorted$lambda$20 = GxModelsPage.sorted$lambda$20(function2, obj, obj2);
                 return sorted$lambda$20;
             }
         });
@@ -565,7 +565,7 @@ public final class GxModelsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit runAction$lambda$26$lambda$25;
-                runAction$lambda$26$lambda$25 = GxModelsPage.runAction$lambda$26$lambda$25(GxModelsPage.this, $action, $key, $label, ((Boolean) obj).booleanValue());
+                runAction$lambda$26$lambda$25 = GxModelsPage.runAction$lambda$26$lambda$25(this$0, $action, $key, $label, ((Boolean) obj).booleanValue());
                 return runAction$lambda$26$lambda$25;
             }
         });
@@ -633,7 +633,7 @@ public final class GxModelsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit perform$finish$lambda$29;
-                perform$finish$lambda$29 = GxModelsPage.perform$finish$lambda$29(GxModelsPage.this, ((Boolean) obj).booleanValue());
+                perform$finish$lambda$29 = GxModelsPage.perform$finish$lambda$29(this$0, ((Boolean) obj).booleanValue());
                 return perform$finish$lambda$29;
             }
         });
@@ -880,14 +880,14 @@ public final class GxModelsPage extends GxPage {
         if (this.listBox == null) {
             return;
         }
-        String sig = CollectionsKt.joinToString$default(CollectionsKt.listOf(Boolean.valueOf(this.loading), this.error, this.busy, Boolean.valueOf(this.selectionUncertain), this.sortMode, this.userFilter, this.communityFilter, this.hardwareFilter, this.currentModel, this.activeSmallModel, this.activeBigModel, Integer.valueOf(this.sInstalled), Integer.valueOf(this.sMissing), Integer.valueOf(this.sTotal), this.modelToDownload, Boolean.valueOf(this.downloadAll), Boolean.valueOf(this.downloading), Boolean.valueOf(this.cancelling), this.progressText, Boolean.valueOf(this.isOnroad), CollectionsKt.joinToString$default(this.models, "|", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxModelsPage$$ExternalSyntheticLambda27
+        String sig = CollectionsKt.joinToString(CollectionsKt.listOf(Boolean.valueOf(this.loading), this.error, this.busy, Boolean.valueOf(this.selectionUncertain), this.sortMode, this.userFilter, this.communityFilter, this.hardwareFilter, this.currentModel, this.activeSmallModel, this.activeBigModel, Integer.valueOf(this.sInstalled), Integer.valueOf(this.sMissing), Integer.valueOf(this.sTotal), this.modelToDownload, Boolean.valueOf(this.downloadAll), Boolean.valueOf(this.downloading), Boolean.valueOf(this.cancelling), this.progressText, Boolean.valueOf(this.isOnroad), CollectionsKt.joinToString(this.models, "|", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxModelsPage$$ExternalSyntheticLambda27
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence render$lambda$37;
                 render$lambda$37 = GxModelsPage.render$lambda$37((JSONObject) obj);
                 return render$lambda$37;
             }
-        }, 30, null)), "\u0001", null, null, 0, null, null, 62, null);
+        })), "\u0001", "", "", -1, "...", null);
         if (force || !Intrinsics.areEqual(sig, this.lastSig)) {
             this.lastSig = sig;
             renderStatus();
@@ -952,7 +952,7 @@ public final class GxModelsPage extends GxPage {
                 GxPage.text$default(this, "Cancellation requested.", card, 15.0f, CarUi.Companion.getWARN(), false, 16, null);
             }
             ProgressBar progress = progress(card);
-            MatchResult find$default = Regex.find$default(new Regex("(\\d+(?:\\.\\d+)?)\\s*%"), this.progressText, 0, 2, null);
+            MatchResult find$default = (new Regex("(\\d+(?:\\.\\d+)?)\\s*%")).find(this.progressText, 0);
             if (find$default != null && (groupValues = find$default.getGroupValues()) != null && (str = groupValues.get(1)) != null) {
                 d = StringsKt.toDoubleOrNull(str);
             }
@@ -1148,7 +1148,7 @@ public final class GxModelsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit renderControls$lambda$49$lambda$48;
-                renderControls$lambda$49$lambda$48 = GxModelsPage.renderControls$lambda$49$lambda$48(GxModelsPage.this, $big, ((Integer) obj).intValue());
+                renderControls$lambda$49$lambda$48 = GxModelsPage.renderControls$lambda$49$lambda$48(this$0, $big, ((Integer) obj).intValue());
                 return renderControls$lambda$49$lambda$48;
             }
         });
@@ -1241,7 +1241,7 @@ public final class GxModelsPage extends GxPage {
             }
             gxModelsFileSizeText = GxModelsKt.gxModelsFileSizeText(jSONObject);
             arrayList2.add("File size: " + gxModelsFileSizeText);
-            String str4 = (!arrayList.isEmpty() ? CollectionsKt.joinToString$default(arrayList, " · ", null, null, 0, null, null, 62, null) + "\n" : "") + CollectionsKt.joinToString$default(arrayList2, " · ", null, null, 0, null, null, 62, null);
+            String str4 = (!arrayList.isEmpty() ? CollectionsKt.joinToString(arrayList, " · ", "", "", -1, "...", null) + "\n" : "") + CollectionsKt.joinToString(arrayList2, " · ", "", "", -1, "...", null);
             GxModelsPage gxModelsPage = this;
             LinearLayout linearLayout4 = this.listBox;
             if (linearLayout4 == null) {

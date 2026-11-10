@@ -210,12 +210,12 @@ public final class TermWeb {
         public static final void checkFile$lambda$6(Bridge this$0, String $path) {
             try {
                 Result.Companion companion = Result.Companion;
-                String substringBeforeLast$default = StringsKt.substringBeforeLast$default($path, '/', (String) null, 2, (Object) null);
+                String substringBeforeLast$default = StringsKt.substringBeforeLast($path, '/', $path);
                 if (substringBeforeLast$default.length() == 0) {
                     substringBeforeLast$default = "/";
                 }
                 String dir = substringBeforeLast$default;
-                String name = StringsKt.substringAfterLast$default($path, '/', (String) null, 2, (Object) null);
+                String name = StringsKt.substringAfterLast($path, '/', $path);
                 JSONArray a = this$0.list(dir);
                 int i = 0;
                 int length = a.length();
@@ -231,10 +231,10 @@ public final class TermWeb {
                         break;
                     }
                 }
-                Result.m1191constructorimpl(Unit.INSTANCE);
+                KtCompat.resultOf(Unit.INSTANCE);
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                Result.m1191constructorimpl(ResultKt.createFailure(th));
+                KtCompat.resultOf(ResultKt.createFailure(th));
             }
         }
 
@@ -285,10 +285,10 @@ public final class TermWeb {
                     out.put(new JSONObject().put("path", StringsKt.trimEnd(str, '/') + "/" + it2.optString("name")).put("size", it2.optLong("size")));
                     str = $dir;
                 }
-                Result.m1191constructorimpl(Unit.INSTANCE);
+                KtCompat.resultOf(Unit.INSTANCE);
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                Result.m1191constructorimpl(ResultKt.createFailure(th));
+                KtCompat.resultOf(ResultKt.createFailure(th));
             }
             this$0.js("window.recentFiles(" + JSONObject.quote(out.toString()) + ")");
         }
@@ -318,7 +318,7 @@ public final class TermWeb {
             Object m1191constructorimpl;
             String str;
             String string;
-            String name = StringsKt.substringAfterLast$default($path, '/', (String) null, 2, (Object) null);
+            String name = StringsKt.substringAfterLast($path, '/', $path);
             try {
                 h = Link.INSTANCE.getHost();
             } catch (Exception e) {
@@ -353,12 +353,12 @@ public final class TermWeb {
                 try {
                     Result.Companion companion = Result.Companion;
                     Intrinsics.checkNotNull(dir);
-                    m1191constructorimpl = Result.m1191constructorimpl(this$0.writeFile(dir, name, bytes));
+                    m1191constructorimpl = KtCompat.resultOf(this$0.writeFile(dir, name, bytes));
                 } catch (Throwable th) {
                     Result.Companion companion2 = Result.Companion;
-                    m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                    m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
                 }
-                if (Result.m1194exceptionOrNullimpl(m1191constructorimpl) != null) {
+                if (KtCompat.exceptionOrNull(m1191constructorimpl) != null) {
                     m1191constructorimpl = this$0.writeMediaStore(name, bytes);
                 }
                 String saved = (String) m1191constructorimpl;
@@ -375,7 +375,7 @@ public final class TermWeb {
             if (!new File(dir, name).exists()) {
                 return name;
             }
-            Integer valueOf = Integer.valueOf(StringsKt.lastIndexOf$default((CharSequence) name, '.', 0, false, 6, (Object) null));
+            Integer valueOf = Integer.valueOf(StringsKt.lastIndexOf((CharSequence) name, '.', kotlin.text.StringsKt.getLastIndex(((CharSequence) name)), false));
             int it = valueOf.intValue();
             if (!(it > 0)) {
                 valueOf = null;

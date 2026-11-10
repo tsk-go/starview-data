@@ -38,7 +38,7 @@ public final class BlinkLog {
                 if (!it.isFile()) {
                     it = null;
                 }
-                if (it == null || (readLines$default = FilesKt.readLines$default(it, null, 1, null)) == null || (takeLast = CollectionsKt.takeLast(readLines$default, 60)) == null) {
+                if (it == null || (readLines$default = FilesKt.readLines(it, kotlin.text.Charsets.UTF_8)) == null || (takeLast = CollectionsKt.takeLast(readLines$default, 60)) == null) {
                     return;
                 }
                 Iterable $this$forEach$iv = takeLast;
@@ -52,7 +52,7 @@ public final class BlinkLog {
 
     public final synchronized void add(String text) {
         Intrinsics.checkNotNullParameter(text, "text");
-        String line = fmt.format(new Date()) + "  " + ((!Replay.INSTANCE.getActive() || StringsKt.startsWith$default(text, "Drive replay", false, 2, (Object) null)) ? "" : "[replay] ") + text;
+        String line = fmt.format(new Date()) + "  " + ((!Replay.INSTANCE.getActive() || StringsKt.startsWith(text, "Drive replay", false)) ? "" : "[replay] ") + text;
         lines.addLast(line);
         while (lines.size() > 60) {
             lines.removeFirst();
@@ -63,9 +63,9 @@ public final class BlinkLog {
         }
         try {
             if (f.length() > 262144) {
-                FilesKt.writeText$default(f, CollectionsKt.joinToString$default(lines, "\n", null, "\n", 0, null, null, 58, null), null, 2, null);
+                FilesKt.writeText(f, CollectionsKt.joinToString(lines, "\n", "", "\n", -1, "...", null), kotlin.text.Charsets.UTF_8);
             } else {
-                FilesKt.appendText$default(f, line + "\n", null, 2, null);
+                FilesKt.appendText(f, line + "\n", kotlin.text.Charsets.UTF_8);
             }
         } catch (Exception e) {
         }

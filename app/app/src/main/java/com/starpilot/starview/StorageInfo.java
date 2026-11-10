@@ -218,7 +218,7 @@ public final class StorageInfo {
 
     public final String runLine(String out) {
         Intrinsics.checkNotNullParameter(out, "out");
-        if (!StringsKt.startsWith$default(StringsKt.trimStart((CharSequence) out).toString(), "{", false, 2, (Object) null)) {
+        if (!StringsKt.startsWith(StringsKt.trimStart((CharSequence) out).toString(), "{", false)) {
             return out;
         }
         try {

@@ -92,7 +92,7 @@ public final class SharedPlace {
     public final String link(String text) {
         String value;
         Intrinsics.checkNotNullParameter(text, "text");
-        MatchResult find$default = Regex.find$default(new Regex("https?://\\S+"), text, 0, 2, null);
+        MatchResult find$default = (new Regex("https?://\\S+")).find(text, 0);
         if (find$default == null || (value = find$default.getValue()) == null) {
             return null;
         }
@@ -143,7 +143,7 @@ public final class SharedPlace {
             }
             Object element$iv$iv = it3.next();
             String it4 = (String) element$iv$iv;
-            if ((!(it4.length() > 0) || StringsKt.startsWith$default(it4, "http", false, 2, (Object) null) || StringsKt.startsWith$default(it4, "geo:", false, 2, (Object) null)) ? false : true) {
+            if ((!(it4.length() > 0) || StringsKt.startsWith(it4, "http", false) || StringsKt.startsWith(it4, "geo:", false)) ? false : true) {
                 destination$iv$iv2.add(element$iv$iv);
             }
         }
@@ -162,7 +162,7 @@ public final class SharedPlace {
             String it5 = link(text);
             if (it5 == null) {
                 it5 = StringsKt.trim((CharSequence) text).toString();
-                if (!StringsKt.startsWith$default(it5, "geo:", false, 2, (Object) null)) {
+                if (!StringsKt.startsWith(it5, "geo:", false)) {
                     it5 = null;
                 }
             }
@@ -181,8 +181,8 @@ public final class SharedPlace {
         lon.element = Double.NaN;
         Regex regex = new Regex("!3d" + NUM + "!4d" + NUM);
         Intrinsics.checkNotNull(u);
-        if (!parse$take(lat, lon, Regex.find$default(regex, u, 0, 2, null))) {
-            MatchResult it6 = Regex.find$default(new Regex("^geo:" + NUM + "," + NUM), u, 0, 2, null);
+        if (!parse$take(lat, lon, regex.find(u, 0))) {
+            MatchResult it6 = (new Regex("^geo:" + NUM + "," + NUM)).find(u, 0);
             if (it6 != null) {
                 if (Double.parseDouble(it6.getGroupValues().get(1)) == 0.0d) {
                     boolean z = (Double.parseDouble(it6.getGroupValues().get(2)) > 0.0d ? 1 : (Double.parseDouble(it6.getGroupValues().get(2)) == 0.0d ? 0 : -1)) == 0 ? false : true;
@@ -190,24 +190,24 @@ public final class SharedPlace {
             }
             it6 = null;
             if (!parse$take(lat, lon, it6)) {
-                if (!parse$take(lat, lon, Regex.find$default(new Regex("[?&](?:q|ll|query|destination|daddr|sll)=" + NUM + ",\\s*" + NUM), u, 0, 2, null))) {
-                    if (!parse$take(lat, lon, Regex.find$default(new Regex("geo:0,0\\?q=" + NUM + "," + NUM), u, 0, 2, null))) {
-                        parse$take(lat, lon, Regex.find$default(new Regex("@" + NUM + "," + NUM), u, 0, 2, null));
+                if (!parse$take(lat, lon, (new Regex("[?&](?:q|ll|query|destination|daddr|sll)=" + NUM + ",\\s*" + NUM)).find(u, 0))) {
+                    if (!parse$take(lat, lon, (new Regex("geo:0,0\\?q=" + NUM + "," + NUM)).find(u, 0))) {
+                        parse$take(lat, lon, (new Regex("@" + NUM + "," + NUM)).find(u, 0));
                     }
                 }
             }
         }
         if (name.length() == 0) {
-            MatchResult it7 = Regex.find$default(new Regex("/place/([^/@]+)"), u, 0, 2, null);
+            MatchResult it7 = (new Regex("/place/([^/@]+)")).find(u, 0);
             if (it7 != null) {
-                name = StringsKt.replace$default(it7.getGroupValues().get(1), '+', ' ', false, 4, (Object) null);
+                name = StringsKt.replace(it7.getGroupValues().get(1), '+', ' ', false);
             } else {
-                MatchResult it8 = Regex.find$default(new Regex("\\(([^)]+)\\)\\s*$"), u, 0, 2, null);
+                MatchResult it8 = (new Regex("\\(([^)]+)\\)\\s*$")).find(u, 0);
                 if (it8 != null) {
                     name = it8.getGroupValues().get(1);
                 } else {
-                    MatchResult find$default = Regex.find$default(new Regex("[?&](?:q|query|address|daddr)=([^&]+)"), u, 0, 2, null);
-                    if (find$default != null && (groupValues = find$default.getGroupValues()) != null && (str = groupValues.get(1)) != null && (it2 = StringsKt.replace$default(str, '+', ' ', false, 4, (Object) null)) != null) {
+                    MatchResult find$default = (new Regex("[?&](?:q|query|address|daddr)=([^&]+)")).find(u, 0);
+                    if (find$default != null && (groupValues = find$default.getGroupValues()) != null && (str = groupValues.get(1)) != null && (it2 = StringsKt.replace(str, '+', ' ', false)) != null) {
                         if (new Regex("^" + NUM + ",\\s*" + NUM + "$").matches(it2)) {
                             it2 = null;
                         }
@@ -218,9 +218,9 @@ public final class SharedPlace {
                 }
             }
         }
-        if (StringsKt.startsWith$default(url, "geo:", false, 2, (Object) null)) {
-            if ((name.length() == 0) && (it = Regex.find$default(new Regex("[?&]q=([^&(]+)"), u, 0, 2, null)) != null) {
-                name = StringsKt.trim((CharSequence) StringsKt.replace$default(it.getGroupValues().get(1), '+', ' ', false, 4, (Object) null)).toString();
+        if (StringsKt.startsWith(url, "geo:", false)) {
+            if ((name.length() == 0) && (it = (new Regex("[?&]q=([^&(]+)")).find(u, 0)) != null) {
+                name = StringsKt.trim((CharSequence) StringsKt.replace(it.getGroupValues().get(1), '+', ' ', false)).toString();
             }
         }
         Iterable $this$filter$iv2 = CollectionsKt.listOf((Object[]) new String[]{name, address});
@@ -230,7 +230,7 @@ public final class SharedPlace {
                 destination$iv$iv3.add(element$iv$iv2);
             }
         }
-        String query = CollectionsKt.joinToString$default((List) destination$iv$iv3, ", ", null, null, 0, null, null, 62, null);
+        String query = CollectionsKt.joinToString((List) destination$iv$iv3, ", ", "", "", -1, "...", null);
         String str3 = name;
         if (str3.length() == 0) {
             str3 = "Shared place";
@@ -262,18 +262,18 @@ public final class SharedPlace {
                 Response execute = http.newCall(new Request.Builder().url(cur).header("User-Agent", "Mozilla/5.0 (Linux; Android 14) StarView").build()).execute();
                 try {
                     Response r = execute;
-                    String header$default = r.isRedirect() ? Response.header$default(r, "Location", null, 2, null) : null;
+                    String header$default = r.isRedirect() ? r.header("Location", null) : null;
                     CloseableKt.closeFinally(execute, null);
                     String loc = header$default;
                     if (loc != null) {
-                        if (StringsKt.startsWith$default(loc, "http", false, 2, (Object) null)) {
+                        if (StringsKt.startsWith(loc, "http", false)) {
                             uri = loc;
                         } else {
                             uri = new URI(cur).resolve(loc).toString();
                             Intrinsics.checkNotNullExpressionValue(uri, "toString(...)");
                         }
                         cur = uri;
-                        if (!isShort(cur) && (StringsKt.contains$default((CharSequence) cur, (CharSequence) "!3d", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) cur, (CharSequence) "@", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) cur, (CharSequence) "q=", false, 2, (Object) null))) {
+                        if (!isShort(cur) && (StringsKt.contains((CharSequence) cur, (CharSequence) "!3d", false) || StringsKt.contains((CharSequence) cur, (CharSequence) "@", false) || StringsKt.contains((CharSequence) cur, (CharSequence) "q=", false))) {
                             break;
                         }
                         hops = hops2;

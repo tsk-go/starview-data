@@ -130,9 +130,9 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     private String currentPage;
     private TextView driveBtn;
     private final List<Pair<String, String>> driveModes;
-    private final Handler handler;
+    final Handler handler;
     private FrameLayout headerSlot;
-    private String host;
+    String host;
     private SettingsLauncher launcher;
     private DriveState.OffroadBar offroadBar;
     private Function1<? super Uri, Unit> onFilePicked;
@@ -260,7 +260,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             new Thread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda5
                 @Override // java.lang.Runnable
                 public final void run() {
-                    SettingsActivity.pickModel$lambda$2$lambda$1(SettingsActivity.this, uri);
+                    SettingsActivity.pickModel$lambda$2$lambda$1(this$0, uri);
                 }
             }).start();
         }
@@ -272,7 +272,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda181
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.pickModel$lambda$2$lambda$1$lambda$0(SettingsActivity.this, err);
+                SettingsActivity.pickModel$lambda$2$lambda$1$lambda$0(this$0, err);
             }
         });
     }
@@ -364,17 +364,17 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             if (Intrinsics.areEqual(page, "profiles")) {
                 return new SettingIcons.Icon("standard", "person", false, 4, null);
             }
-            if (StringsKt.startsWith$default(page, "galaxy:", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(page, "galaxy:", false)) {
                 return SettingIcons.INSTANCE.forPage(StringsKt.removePrefix(page, (CharSequence) "galaxy:"));
             }
             if (Intrinsics.areEqual(page, "quickselect")) {
                 return new SettingIcons.Icon("star", "display", false, 4, null);
             }
-            if (StringsKt.startsWith$default(page, "gweb:", false, 2, (Object) null)) {
-                return new SettingIcons.Icon(toolIcon(StringsKt.substringBefore$default(StringsKt.removePrefix(page, (CharSequence) "gweb:"), "|", (String) null, 2, (Object) null)), "device", false, 4, null);
+            if (StringsKt.startsWith(page, "gweb:", false)) {
+                return new SettingIcons.Icon(toolIcon(StringsKt.substringBefore(StringsKt.removePrefix(page, (CharSequence) "gweb:"), "|", (StringsKt.removePrefix(page, (CharSequence) "gweb:")))), "device", false, 4, null);
             }
             String str2 = "star";
-            if (StringsKt.startsWith$default(page, "uigroup:", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(page, "uigroup:", false)) {
                 String removePrefix = StringsKt.removePrefix(page, (CharSequence) "uigroup:");
                 switch (removePrefix.hashCode()) {
                     case -169275166:
@@ -605,7 +605,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                     str2 = "info";
                     break;
             }
-            return new SettingIcons.Icon(str2, ((!StringsKt.startsWith$default(page, "tablet:", false, 2, (Object) null) || Intrinsics.areEqual(page, "tablet:techstream")) && !StringsKt.startsWith$default(page, "activity:", false, 2, (Object) null)) ? "device" : "tablet", false, 4, null);
+            return new SettingIcons.Icon(str2, ((!StringsKt.startsWith(page, "tablet:", false) || Intrinsics.areEqual(page, "tablet:techstream")) && !StringsKt.startsWith(page, "activity:", false)) ? "device" : "tablet", false, 4, null);
         }
 
         public final String toolIcon(String path) {
@@ -613,41 +613,41 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             if (Intrinsics.areEqual(path, "/")) {
                 return "info";
             }
-            if (StringsKt.contains$default((CharSequence) path, (CharSequence) "recording", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) path, (CharSequence) "recording", false)) {
                 return "film";
             }
-            if (StringsKt.contains$default((CharSequence) path, (CharSequence) "bluetooth", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) path, (CharSequence) "bluetooth", false)) {
                 return "bluetooth";
             }
-            if (StringsKt.contains$default((CharSequence) path, (CharSequence) "laboratory", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) path, (CharSequence) "laboratory", false)) {
                 return "flask";
             }
-            if (StringsKt.contains$default((CharSequence) path, (CharSequence) "model", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) path, (CharSequence) "model", false)) {
                 return "chip";
             }
-            if (StringsKt.contains$default((CharSequence) path, (CharSequence) "navigation", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) path, (CharSequence) "navigation", false)) {
                 return "map";
             }
-            if (StringsKt.contains$default((CharSequence) path, (CharSequence) "plots", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) path, (CharSequence) "tuning", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) path, (CharSequence) "plots", false) || StringsKt.contains((CharSequence) path, (CharSequence) "tuning", false)) {
                 return "plots";
             }
-            if (StringsKt.contains$default((CharSequence) path, (CharSequence) "logs", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) path, (CharSequence) "logs", false)) {
                 return "console";
             }
-            if (StringsKt.contains$default((CharSequence) path, (CharSequence) "galaxy", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) path, (CharSequence) "galaxy", false)) {
                 return "star";
             }
-            if (StringsKt.contains$default((CharSequence) path, (CharSequence) "android", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) path, (CharSequence) "android", false)) {
                 return "phone";
             }
             String str = "camera";
-            if (!StringsKt.contains$default((CharSequence) path, (CharSequence) "camera", false, 2, (Object) null)) {
-                if (StringsKt.contains$default((CharSequence) path, (CharSequence) "device-pref", false, 2, (Object) null)) {
+            if (!StringsKt.contains((CharSequence) path, (CharSequence) "camera", false)) {
+                if (StringsKt.contains((CharSequence) path, (CharSequence) "device-pref", false)) {
                     return "shuffle";
                 }
                 str = "wrench";
-                if (!StringsKt.contains$default((CharSequence) path, (CharSequence) "system", false, 2, (Object) null)) {
-                    return StringsKt.contains$default((CharSequence) path, (CharSequence) "theme", false, 2, (Object) null) ? "palette" : StringsKt.contains$default((CharSequence) path, (CharSequence) "vehicle", false, 2, (Object) null) ? "car" : "wrench";
+                if (!StringsKt.contains((CharSequence) path, (CharSequence) "system", false)) {
+                    return StringsKt.contains((CharSequence) path, (CharSequence) "theme", false) ? "palette" : StringsKt.contains((CharSequence) path, (CharSequence) "vehicle", false) ? "car" : "wrench";
                 }
             }
             return str;
@@ -685,12 +685,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             Result.Companion companion = Result.Companion;
             SettingsActivity $this$pickFile_u24lambda_u244 = this;
             $this$pickFile_u24lambda_u244.pickAny.launch(mimes);
-            m1191constructorimpl = Result.m1191constructorimpl(Unit.INSTANCE);
+            m1191constructorimpl = KtCompat.resultOf(Unit.INSTANCE);
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1194exceptionOrNullimpl(m1191constructorimpl) != null) {
+        if (KtCompat.exceptionOrNull(m1191constructorimpl) != null) {
             this.onFilePicked = null;
             then.invoke(null);
         }
@@ -771,13 +771,13 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
 
     private final void openRoute(String route) {
         String str;
-        if (StringsKt.contains$default((CharSequence) route, (CharSequence) "favorites", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) route, (CharSequence) "favorites", false)) {
             str = "gx:favorites";
-        } else if (StringsKt.contains$default((CharSequence) route, (CharSequence) "longitudinal", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) route, (CharSequence) "personalit", false, 2, (Object) null)) {
+        } else if (StringsKt.contains((CharSequence) route, (CharSequence) "longitudinal", false) || StringsKt.contains((CharSequence) route, (CharSequence) "personalit", false)) {
             str = "gx:personalities";
-        } else if (StringsKt.contains$default((CharSequence) route, (CharSequence) "model", false, 2, (Object) null)) {
+        } else if (StringsKt.contains((CharSequence) route, (CharSequence) "model", false)) {
             str = "gx:models";
-        } else if (StringsKt.contains$default((CharSequence) route, (CharSequence) "navigation", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) route, (CharSequence) "maps", false, 2, (Object) null)) {
+        } else if (StringsKt.contains((CharSequence) route, (CharSequence) "navigation", false) || StringsKt.contains((CharSequence) route, (CharSequence) "maps", false)) {
             str = "gx:navigation";
         } else {
             str = "gx:home";
@@ -1441,7 +1441,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit showHome$lambda$32;
-                showHome$lambda$32 = SettingsActivity.showHome$lambda$32(SettingsLauncher.this, (SettingsIndex.Entry) obj);
+                showHome$lambda$32 = SettingsActivity.showHome$lambda$32(l, (SettingsIndex.Entry) obj);
                 return showHome$lambda$32;
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda199
@@ -1588,7 +1588,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                     String it3 = r.getPage();
                     Iterator it4 = it;
                     int i3 = i;
-                    if (StringsKt.startsWith$default(it3, "gweb:", false, 2, (Object) null)) {
+                    if (StringsKt.startsWith(it3, "gweb:", false)) {
                         it3 = null;
                     }
                     out.add(new SettingsIndex.Entry(label, "", str, it3 == null ? "tool:" + i2 + "|" + r.getPage() : it3, null, null, r.getSv(), 48, null));
@@ -1606,14 +1606,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     }
 
     private final void openTarget(String t) {
-        if (StringsKt.startsWith$default(t, "area:", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(t, "area:", false)) {
             showArea(Integer.parseInt(StringsKt.removePrefix(t, (CharSequence) "area:")), null);
             return;
         }
-        if (StringsKt.startsWith$default(t, "gsub:", false, 2, (Object) null)) {
-            openSub(StringsKt.substringBefore$default(StringsKt.removePrefix(t, (CharSequence) "gsub:"), "|", (String) null, 2, (Object) null), StringsKt.substringAfter$default(t, "|", (String) null, 2, (Object) null));
-        } else if (StringsKt.startsWith$default(t, "tool:", false, 2, (Object) null)) {
-            showArea(Integer.parseInt(StringsKt.substringBefore$default(StringsKt.removePrefix(t, (CharSequence) "tool:"), "|", (String) null, 2, (Object) null)), StringsKt.substringAfter$default(t, "|", (String) null, 2, (Object) null));
+        if (StringsKt.startsWith(t, "gsub:", false)) {
+            openSub(StringsKt.substringBefore(StringsKt.removePrefix(t, (CharSequence) "gsub:"), "|", (StringsKt.removePrefix(t, (CharSequence) "gsub:"))), StringsKt.substringAfter(t, "|", t));
+        } else if (StringsKt.startsWith(t, "tool:", false)) {
+            showArea(Integer.parseInt(StringsKt.substringBefore(StringsKt.removePrefix(t, (CharSequence) "tool:"), "|", (StringsKt.removePrefix(t, (CharSequence) "tool:")))), StringsKt.substringAfter(t, "|", t));
         } else {
             openPage(t);
         }
@@ -1626,7 +1626,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         boolean z3;
         if (!Intrinsics.areEqual(t, "activity:files")) {
             boolean z4 = false;
-            if (StringsKt.startsWith$default(t, "galaxy:", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(t, "galaxy:", false)) {
                 Iterable $this$none$iv = areas().get(0).getRails();
                 if (!($this$none$iv instanceof Collection) || !((Collection) $this$none$iv).isEmpty()) {
                     Iterator it = $this$none$iv.iterator();
@@ -1790,7 +1790,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         Code decompiled incorrectly, please refer to instructions dump.
     */
     private final String galaxyRailFor(String page) {
-        String substringBefore$default = StringsKt.substringBefore$default(page, '/', (String) null, 2, (Object) null);
+        String substringBefore$default = StringsKt.substringBefore(page, '/', page);
         switch (substringBefore$default.hashCode()) {
             case -1067310595:
                 return !substringBefore$default.equals("traffic") ? "drivingmap" : "galaxy:personalities";
@@ -1986,7 +1986,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         $this$headerBar_u24lambda_u2447.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda91
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                onBack.invoke();
             }
         });
         ImageView imageView = $this$headerBar_u24lambda_u2447;
@@ -2016,7 +2016,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         $this$headerBar_u24lambda_u2449.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda92
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                onBack.invoke();
             }
         });
         bar.addView($this$headerBar_u24lambda_u2449);
@@ -2168,7 +2168,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new AlertDialog.Builder(this$0).setTitle("Drive state").setItems(labels, new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda2
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                SettingsActivity.driveStateSwitch$lambda$59$lambda$58(SettingsActivity.this, dialogInterface, i);
+                SettingsActivity.driveStateSwitch$lambda$59$lambda$58(this$0, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         return Unit.INSTANCE;
@@ -2271,7 +2271,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit confirmRestart$lambda$64$lambda$63;
-                confirmRestart$lambda$64$lambda$63 = SettingsActivity.confirmRestart$lambda$64$lambda$63(SettingsActivity.this, ((Boolean) obj).booleanValue());
+                confirmRestart$lambda$64$lambda$63 = SettingsActivity.confirmRestart$lambda$64$lambda$63(this$0, ((Boolean) obj).booleanValue());
                 return confirmRestart$lambda$64$lambda$63;
             }
         });
@@ -2311,7 +2311,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit confirmDriveState$lambda$67$lambda$66;
-                    confirmDriveState$lambda$67$lambda$66 = SettingsActivity.confirmDriveState$lambda$67$lambda$66(SettingsActivity.this, (JSONObject) obj);
+                    confirmDriveState$lambda$67$lambda$66 = SettingsActivity.confirmDriveState$lambda$67$lambda$66(this$0, (JSONObject) obj);
                     return confirmDriveState$lambda$67$lambda$66;
                 }
             });
@@ -2328,7 +2328,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit confirmDriveState$lambda$67$lambda$66$lambda$65;
-                confirmDriveState$lambda$67$lambda$66$lambda$65 = SettingsActivity.confirmDriveState$lambda$67$lambda$66$lambda$65(SettingsActivity.this);
+                confirmDriveState$lambda$67$lambda$66$lambda$65 = SettingsActivity.confirmDriveState$lambda$67$lambda$66$lambda$65(this$0);
                 return confirmDriveState$lambda$67$lambda$66$lambda$65;
             }
         });
@@ -2771,7 +2771,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             Log.e("StarView/Settings", "page " + page, e);
             StackTraceElement[] stackTrace = e.getStackTrace();
             Intrinsics.checkNotNullExpressionValue(stackTrace, "getStackTrace(...)");
-            return offline("This page failed to build:\n" + e + "\n\n" + CollectionsKt.joinToString$default(ArraysKt.take(stackTrace, 6), "\n", null, null, 0, null, null, 62, null));
+            return offline("This page failed to build:\n" + e + "\n\n" + CollectionsKt.joinToString(ArraysKt.take(stackTrace, 6), "\n", "", "", -1, "...", null));
         }
     }
 
@@ -2923,10 +2923,10 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 }
                 return new DriverProfilesView(settingsActivity13, carUi2);
             }
-            if (StringsKt.startsWith$default(page, "galaxy:", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(page, "galaxy:", false)) {
                 return galaxyPage(StringsKt.removePrefix(page, (CharSequence) "galaxy:"));
             }
-            if (StringsKt.startsWith$default(page, "gweb:", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(page, "gweb:", false)) {
                 String h = this.host;
                 if (h == null) {
                     return offline("Not connected to the comma.");
@@ -2939,7 +2939,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 } else {
                     carUi = carUi16;
                 }
-                return new GalaxyWeb(settingsActivity14, carUi, h, StringsKt.substringBefore$default(StringsKt.removePrefix(page, (CharSequence) "gweb:"), "|", (String) null, 2, (Object) null), StringsKt.substringAfter$default(page, "|", (String) null, 2, (Object) null), new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda193
+                return new GalaxyWeb(settingsActivity14, carUi, h, StringsKt.substringBefore(StringsKt.removePrefix(page, (CharSequence) "gweb:"), "|", (StringsKt.removePrefix(page, (CharSequence) "gweb:"))), StringsKt.substringAfter(page, "|", page), new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda193
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         boolean returnFromWeb;
@@ -2961,19 +2961,19 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 }
                 return new GalaxyExtras.QuickSelect(settingsActivity15, carUi2);
             }
-            if (StringsKt.startsWith$default(page, "cat:", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(page, "cat:", false)) {
                 return catalogPage$default(this, StringsKt.removePrefix(page, (CharSequence) "cat:"), false, 2, null);
             }
-            if (StringsKt.startsWith$default(page, "native:", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(page, "native:", false)) {
                 return Intrinsics.areEqual(page, "native:terminal") ? new View(this) : new DevicePanel(this, StringsKt.removePrefix(page, (CharSequence) "native:"));
             }
-            if (StringsKt.startsWith$default(page, "gx:", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(page, "gx:", false)) {
                 return gxPage(StringsKt.removePrefix(page, (CharSequence) "gx:"));
             }
             if (Intrinsics.areEqual(page, "toggles:all")) {
                 return togglesPage();
             }
-            if (StringsKt.startsWith$default(page, "uigroup:", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(page, "uigroup:", false)) {
                 return uiGroupPage(StringsKt.removePrefix(page, (CharSequence) "uigroup:"));
             }
             if (Intrinsics.areEqual(page, "tablet:theme")) {
@@ -3096,7 +3096,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         if (a == null) {
             return offline("Not connected to the comma. Connect first, then come back.");
         }
-        String name = StringsKt.substringBefore$default(spec, ":", (String) null, 2, (Object) null);
+        String name = StringsKt.substringBefore(spec, ":", spec);
         String filter = StringsKt.substringAfter(spec, ":", "");
         Iterable $this$firstOrNull$iv = a.getCatalog();
         Iterator it = $this$firstOrNull$iv.iterator();
@@ -3136,7 +3136,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                     }
                 }
             }
-            if (StringsKt.startsWith$default(filter, "+", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(filter, "+", false)) {
                 Iterable $this$filter$iv2 = cat.getParams();
                 Collection destination$iv$iv = new ArrayList();
                 for (Object element$iv$iv : $this$filter$iv2) {
@@ -3228,7 +3228,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         $this$catalogPage_u24lambda_u2494.setTag(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda160
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.catalogPage$lambda$94$lambda$93(CatalogPanel.this, this);
+                SettingsActivity.catalogPage$lambda$94$lambda$93(panel, this);
             }
         });
         return $this$catalogPage_u24lambda_u2494;
@@ -3326,7 +3326,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
 
     /* JADX WARN: Code restructure failed: missing block: B:37:0x00db, code lost:
     
-        if (kotlin.text.StringsKt.startsWith$default(r32, "Longitudinal", false, 2, (java.lang.Object) null) == false) goto L42;
+        if (kotlin.text.StringsKt.startsWith(r32, "Longitudinal", false) == false) goto L42;
      */
     /* JADX WARN: Removed duplicated region for block: B:17:0x00b3  */
     /* JADX WARN: Removed duplicated region for block: B:20:0x00b6 A[SYNTHETIC] */
@@ -3452,7 +3452,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit subTabbedCatalog$lambda$104;
-                subTabbedCatalog$lambda$104 = SettingsActivity.subTabbedCatalog$lambda$104(Ref.IntRef.this, paint, cache, holder, this, a, tabs, name, ((Integer) obj).intValue());
+                subTabbedCatalog$lambda$104 = SettingsActivity.subTabbedCatalog$lambda$104(sel, paint, cache, holder, this, a, tabs, name, ((Integer) obj).intValue());
                 return subTabbedCatalog$lambda$104;
             }
         });
@@ -3473,13 +3473,13 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         $this$subTabbedCatalog_u24lambda_u2497.post(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda96
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.subTabbedCatalog$lambda$105(Ref.IntRef.this, paint, cache, holder, this, a, tabs, name);
+                SettingsActivity.subTabbedCatalog$lambda$105(sel, paint, cache, holder, this, a, tabs, name);
             }
         });
         $this$subTabbedCatalog_u24lambda_u2497.setTag(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda97
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.subTabbedCatalog$lambda$106(Ref.IntRef.this, paint, cache, holder, this, a, tabs, name);
+                SettingsActivity.subTabbedCatalog$lambda$106(sel, paint, cache, holder, this, a, tabs, name);
             }
         });
         return $this$subTabbedCatalog_u24lambda_u2497;
@@ -3504,7 +3504,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit subTabbedCatalog$select$lambda$102$lambda$101;
-                    subTabbedCatalog$select$lambda$102$lambda$101 = SettingsActivity.subTabbedCatalog$select$lambda$102$lambda$101(SettingsActivity.this, (String) obj);
+                    subTabbedCatalog$select$lambda$102$lambda$101 = SettingsActivity.subTabbedCatalog$select$lambda$102$lambda$101(this$0, (String) obj);
                     return subTabbedCatalog$select$lambda$102$lambda$101;
                 }
             });
@@ -3692,7 +3692,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit unit2;
-                unit2 = SettingsActivity.togglesPage$lambda$117(Ref.IntRef.this, $this$togglesPage_u24lambda_u24111, select, ((Integer) obj).intValue());
+                unit2 = SettingsActivity.togglesPage$lambda$117(lastSel, $this$togglesPage_u24lambda_u24111, select, ((Integer) obj).intValue());
                 return unit2;
             }
         });
@@ -3714,7 +3714,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit unit2;
-                unit2 = SettingsActivity.togglesPage$lambda$124(Function1.this, names, cache, sections, this, $this$togglesPage_u24lambda_u24118, ((Integer) obj).intValue());
+                unit2 = SettingsActivity.togglesPage$lambda$124(paint, names, cache, sections, this, $this$togglesPage_u24lambda_u24118, ((Integer) obj).intValue());
                 return unit2;
             }
         };
@@ -3748,7 +3748,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         $this$togglesPage_u24lambda_u24110.post(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda13
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.togglesPage$lambda$133(Ref.ObjectRef.this);
+                SettingsActivity.togglesPage$lambda$133(select);
             }
         });
         $this$togglesPage_u24lambda_u24110.setTag(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda14
@@ -3940,7 +3940,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                         List list2 = listOf;
                         list = params;
                         c = 2;
-                        if (StringsKt.contains$default((CharSequence) lowerCase2, (CharSequence) lowerCase, false, 2, (Object) null)) {
+                        if (StringsKt.contains((CharSequence) lowerCase2, (CharSequence) lowerCase, false)) {
                             z = true;
                             break;
                         }
@@ -4001,7 +4001,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj4) {
                         Unit unit;
-                        unit = SettingsActivity.togglesPage$lambda$132$lambda$129(SettingsActivity.this, (String) obj4);
+                        unit = SettingsActivity.togglesPage$lambda$132$lambda$129(settingsActivity2, (String) obj4);
                         return unit;
                     }
                 }));
@@ -4059,22 +4059,22 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     }
 
     private final String shortSection(String n) {
-        if (StringsKt.startsWith$default(n, "Lateral", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(n, "Lateral", false)) {
             return "Lateral (Steering)";
         }
-        if (StringsKt.startsWith$default(n, "Longitudinal", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(n, "Longitudinal", false)) {
             return "Longitudinal";
         }
-        if (StringsKt.startsWith$default(n, "Vision Speed", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(n, "Vision Speed", false)) {
             return "Speed Limits";
         }
-        if (StringsKt.startsWith$default(n, "Visual", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(n, "Visual", false)) {
             return "Visual";
         }
-        if (StringsKt.startsWith$default(n, "Sounds", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(n, "Sounds", false)) {
             return "Sounds";
         }
-        if (StringsKt.startsWith$default(n, "Wheel", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(n, "Wheel", false)) {
             return "Wheel";
         }
         return n;
@@ -4128,7 +4128,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit languagePage$lambda$139$lambda$138;
-                    languagePage$lambda$139$lambda$138 = SettingsActivity.languagePage$lambda$139$lambda$138(SettingsActivity.this, (String) obj);
+                    languagePage$lambda$139$lambda$138 = SettingsActivity.languagePage$lambda$139$lambda$138(this$0, (String) obj);
                     return languagePage$lambda$139$lambda$138;
                 }
             }, 4, null);
@@ -4422,7 +4422,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBackupPage$lambda$144$lambda$143;
-                tabletBackupPage$lambda$144$lambda$143 = SettingsActivity.tabletBackupPage$lambda$144$lambda$143(SettingsActivity.this, (Uri) obj);
+                tabletBackupPage$lambda$144$lambda$143 = SettingsActivity.tabletBackupPage$lambda$144$lambda$143(this$0, (Uri) obj);
                 return tabletBackupPage$lambda$144$lambda$143;
             }
         });
@@ -4550,7 +4550,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit choiceCard$lambda$151;
-                choiceCard$lambda$151 = SettingsActivity.choiceCard$lambda$151(Function1.this, options, paint, ((Integer) obj).intValue());
+                choiceCard$lambda$151 = SettingsActivity.choiceCard$lambda$151(set, options, paint, ((Integer) obj).intValue());
                 return choiceCard$lambda$151;
             }
         });
@@ -4629,7 +4629,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda110
             @Override // android.widget.CompoundButton.OnCheckedChangeListener
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                SettingsActivity.toggleCard$lambda$153(Function1.this, compoundButton, z);
+                SettingsActivity.toggleCard$lambda$153(set, compoundButton, z);
             }
         });
         r.addView(sw);
@@ -4671,14 +4671,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     boolean uiGroupPage$lambda$155;
-                    uiGroupPage$lambda$155 = SettingsActivity.uiGroupPage$lambda$155(UiSettings.this, item);
+                    uiGroupPage$lambda$155 = SettingsActivity.uiGroupPage$lambda$155(s, item);
                     return Boolean.valueOf(uiGroupPage$lambda$155);
                 }
             }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda202
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit uiGroupPage$lambda$156;
-                    uiGroupPage$lambda$156 = SettingsActivity.uiGroupPage$lambda$156(UiSettings.this, item, ((Boolean) obj).booleanValue());
+                    uiGroupPage$lambda$156 = SettingsActivity.uiGroupPage$lambda$156(s, item, ((Boolean) obj).booleanValue());
                     return uiGroupPage$lambda$156;
                 }
             });
@@ -4687,14 +4687,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         float uiGroupPage$lambda$157;
-                        uiGroupPage$lambda$157 = SettingsActivity.uiGroupPage$lambda$157(UiSettings.this);
+                        uiGroupPage$lambda$157 = SettingsActivity.uiGroupPage$lambda$157(s);
                         return Float.valueOf(uiGroupPage$lambda$157);
                     }
                 }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda224
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         Unit uiGroupPage$lambda$158;
-                        uiGroupPage$lambda$158 = SettingsActivity.uiGroupPage$lambda$158(UiSettings.this, ((Float) obj).floatValue());
+                        uiGroupPage$lambda$158 = SettingsActivity.uiGroupPage$lambda$158(s, ((Float) obj).floatValue());
                         return uiGroupPage$lambda$158;
                     }
                 });
@@ -4755,7 +4755,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit stepperCard$lambda$160;
-                stepperCard$lambda$160 = SettingsActivity.stepperCard$lambda$160(Function0.this, step, set, min, max, tv);
+                stepperCard$lambda$160 = SettingsActivity.stepperCard$lambda$160(get, step, set, min, max, tv);
                 return stepperCard$lambda$160;
             }
         }));
@@ -4784,7 +4784,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit stepperCard$lambda$162;
-                stepperCard$lambda$162 = SettingsActivity.stepperCard$lambda$162(Function0.this, step, set, min, max, tv);
+                stepperCard$lambda$162 = SettingsActivity.stepperCard$lambda$162(get, step, set, min, max, tv);
                 return stepperCard$lambda$162;
             }
         }));
@@ -4837,14 +4837,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 String tabletThemePage$lambda$163;
-                tabletThemePage$lambda$163 = SettingsActivity.tabletThemePage$lambda$163(UiSettings.this);
+                tabletThemePage$lambda$163 = SettingsActivity.tabletThemePage$lambda$163(s);
                 return tabletThemePage$lambda$163;
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda56
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletThemePage$lambda$164;
-                tabletThemePage$lambda$164 = SettingsActivity.tabletThemePage$lambda$164(UiSettings.this, (String) obj);
+                tabletThemePage$lambda$164 = SettingsActivity.tabletThemePage$lambda$164(s, (String) obj);
                 return tabletThemePage$lambda$164;
             }
         });
@@ -4899,14 +4899,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     boolean tabletViewPage$lambda$166;
-                    tabletViewPage$lambda$166 = SettingsActivity.tabletViewPage$lambda$166(UiSettings.this, item);
+                    tabletViewPage$lambda$166 = SettingsActivity.tabletViewPage$lambda$166(s, item);
                     return Boolean.valueOf(tabletViewPage$lambda$166);
                 }
             }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda101
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit tabletViewPage$lambda$167;
-                    tabletViewPage$lambda$167 = SettingsActivity.tabletViewPage$lambda$167(UiSettings.this, item, ((Boolean) obj).booleanValue());
+                    tabletViewPage$lambda$167 = SettingsActivity.tabletViewPage$lambda$167(s, item, ((Boolean) obj).booleanValue());
                     return tabletViewPage$lambda$167;
                 }
             });
@@ -5090,7 +5090,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletViewPage$lambda$173$lambda$172;
-                tabletViewPage$lambda$173$lambda$172 = SettingsActivity.tabletViewPage$lambda$173$lambda$172(LaneModel.this, this$0, $vl, (Uri) obj);
+                tabletViewPage$lambda$173$lambda$172 = SettingsActivity.tabletViewPage$lambda$173$lambda$172($lm, this$0, $vl, (Uri) obj);
                 return tabletViewPage$lambda$173$lambda$172;
             }
         };
@@ -5104,7 +5104,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             new Thread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda90
                 @Override // java.lang.Runnable
                 public final void run() {
-                    SettingsActivity.tabletViewPage$lambda$173$lambda$172$lambda$171(LaneModel.this, uri, this$0, $vl);
+                    SettingsActivity.tabletViewPage$lambda$173$lambda$172$lambda$171($lm, uri, this$0, $vl);
                 }
             }).start();
         }
@@ -5156,7 +5156,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             new Thread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda180
                 @Override // java.lang.Runnable
                 public final void run() {
-                    SettingsActivity.tabletViewPage$lambda$177$lambda$176$lambda$175(SettingsActivity.this, uri, $vd);
+                    SettingsActivity.tabletViewPage$lambda$177$lambda$176$lambda$175(this$0, uri, $vd);
                 }
             }).start();
         }
@@ -5408,7 +5408,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit tabletMapsPage$refresh$lambda$184;
-                                tabletMapsPage$refresh$lambda$184 = SettingsActivity.tabletMapsPage$refresh$lambda$184(MapdMaps.State.this);
+                                tabletMapsPage$refresh$lambda$184 = SettingsActivity.tabletMapsPage$refresh$lambda$184(it4);
                                 return tabletMapsPage$refresh$lambda$184;
                             }
                         }, 2, null));
@@ -5422,7 +5422,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit tabletMapsPage$refresh$lambda$185;
-                                tabletMapsPage$refresh$lambda$185 = SettingsActivity.tabletMapsPage$refresh$lambda$185(MapdMaps.State.this);
+                                tabletMapsPage$refresh$lambda$185 = SettingsActivity.tabletMapsPage$refresh$lambda$185(it4);
                                 return tabletMapsPage$refresh$lambda$185;
                             }
                         }));
@@ -5446,7 +5446,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit tabletMapsPage$refresh$lambda$187;
-                                tabletMapsPage$refresh$lambda$187 = SettingsActivity.tabletMapsPage$refresh$lambda$187(SettingsActivity.this, st);
+                                tabletMapsPage$refresh$lambda$187 = SettingsActivity.tabletMapsPage$refresh$lambda$187(this$0, st);
                                 return tabletMapsPage$refresh$lambda$187;
                             }
                         }, 2, null));
@@ -5503,7 +5503,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new AlertDialog.Builder(this$0).setMessage("Delete the " + $st.getName() + " street maps from this tablet?").setPositiveButton("Delete", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda84
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                SettingsActivity.tabletMapsPage$refresh$lambda$187$lambda$186(MapdMaps.State.this, dialogInterface, i);
+                SettingsActivity.tabletMapsPage$refresh$lambda$187$lambda$186($st, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         return Unit.INSTANCE;
@@ -5519,7 +5519,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda206
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.tabletMapsPage$lambda$189$lambda$188(SettingsActivity.this, $col, $date);
+                SettingsActivity.tabletMapsPage$lambda$189$lambda$188(this$0, $col, $date);
             }
         });
         return Unit.INSTANCE;
@@ -5793,7 +5793,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 }
                 TextView textView3 = rld;
                 if (textView3 != null) {
-                    String joinToString$default = CollectionsKt.joinToString$default(Ntrip.INSTANCE.recent(25), "\n", null, null, 0, null, null, 62, null);
+                    String joinToString$default = CollectionsKt.joinToString(Ntrip.INSTANCE.recent(25), "\n", "", "", -1, "...", null);
                     if (joinToString$default.length() == 0) {
                         joinToString$default = "nothing yet";
                     }
@@ -6006,7 +6006,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit tabletRtkPage$field$lambda$198;
-                tabletRtkPage$field$lambda$198 = SettingsActivity.tabletRtkPage$field$lambda$198(SettingsActivity.this, title, password, function0, hint, numeric, function2, d);
+                tabletRtkPage$field$lambda$198 = SettingsActivity.tabletRtkPage$field$lambda$198(this$0, title, password, function0, hint, numeric, function2, d);
                 return tabletRtkPage$field$lambda$198;
             }
         }, 2, null));
@@ -6058,7 +6058,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new AlertDialog.Builder(this$0).setTitle($title).setView($this$tabletRtkPage_u24field_u24lambda_u24198_u24lambda_u24195).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda85
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i2) {
-                SettingsActivity.tabletRtkPage$field$lambda$198$lambda$197(SettingsActivity.this, $set, $this$tabletRtkPage_u24field_u24lambda_u24198_u24lambda_u24195, $d, $value, dialogInterface, i2);
+                SettingsActivity.tabletRtkPage$field$lambda$198$lambda$197(this$0, $set, $this$tabletRtkPage_u24field_u24lambda_u24198_u24lambda_u24195, $d, $value, dialogInterface, i2);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         return Unit.INSTANCE;
@@ -6208,7 +6208,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new AlertDialog.Builder(this$0).setTitle("Mountpoint (nearest first)").setItems((CharSequence[]) $this$toTypedArray$iv.toArray(new String[0]), new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda48
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                SettingsActivity.tabletRtkPage$lambda$212$lambda$211$lambda$210(SettingsActivity.this, list, $rmd, dialogInterface, i);
+                SettingsActivity.tabletRtkPage$lambda$212$lambda$211$lambda$210(this$0, list, $rmd, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         return Unit.INSTANCE;
@@ -6254,7 +6254,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new AlertDialog.Builder(this$0).setTitle("Mountpoint").setView($this$tabletRtkPage_u24lambda_u24216_u24lambda_u24213).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda49
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                SettingsActivity.tabletRtkPage$lambda$216$lambda$215(SettingsActivity.this, $this$tabletRtkPage_u24lambda_u24216_u24lambda_u24213, $rmd, dialogInterface, i);
+                SettingsActivity.tabletRtkPage$lambda$216$lambda$215(this$0, $this$tabletRtkPage_u24lambda_u24216_u24lambda_u24213, $rmd, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         return Unit.INSTANCE;
@@ -6510,7 +6510,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit backupCasterSection$field$226$lambda$225;
-                backupCasterSection$field$226$lambda$225 = SettingsActivity.backupCasterSection$field$226$lambda$225(SettingsActivity.this, title, function0, hint, numeric, function2, d);
+                backupCasterSection$field$226$lambda$225 = SettingsActivity.backupCasterSection$field$226$lambda$225(this$0, title, function0, hint, numeric, function2, d);
                 return backupCasterSection$field$226$lambda$225;
             }
         }, 2, null));
@@ -6556,7 +6556,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new AlertDialog.Builder(this$0).setTitle($title).setView($this$backupCasterSection_u24field_u24226_u24lambda_u24225_u24lambda_u24222).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda77
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                SettingsActivity.backupCasterSection$field$226$lambda$225$lambda$224(Function2.this, $this$backupCasterSection_u24field_u24226_u24lambda_u24225_u24lambda_u24222, $d, $value, this$0, dialogInterface, i);
+                SettingsActivity.backupCasterSection$field$226$lambda$225$lambda$224($set, $this$backupCasterSection_u24field_u24226_u24lambda_u24225_u24lambda_u24222, $d, $value, this$0, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         return Unit.INSTANCE;
@@ -6706,7 +6706,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit rtkFusionSection$send$lambda$242;
-                rtkFusionSection$send$lambda$242 = SettingsActivity.rtkFusionSection$send$lambda$242(SettingsActivity.this, op, function0, (JSONObject) obj);
+                rtkFusionSection$send$lambda$242 = SettingsActivity.rtkFusionSection$send$lambda$242(this$0, op, function0, (JSONObject) obj);
                 return rtkFusionSection$send$lambda$242;
             }
         });
@@ -6963,7 +6963,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda235
             @Override // android.widget.CompoundButton.OnCheckedChangeListener
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                SettingsActivity.rtkFusionSection$lambda$247(Ref.BooleanRef.this, sw, this, compoundButton, z);
+                SettingsActivity.rtkFusionSection$lambda$247(painting, sw, this, compoundButton, z);
             }
         });
         rsp.addView(sw);
@@ -7165,7 +7165,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                     }
                     TextView textView9 = rtld;
                     if (textView9 != null) {
-                        String joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.take(RtkTools.timeline$default(RtkTools.INSTANCE, k, System.currentTimeMillis(), null, 4, null), 12), "\n", null, null, 0, null, null, 62, null);
+                        String joinToString$default = CollectionsKt.joinToString(CollectionsKt.take(RtkTools.timeline$default(RtkTools.INSTANCE, k, System.currentTimeMillis(), null, 4, null), 12), "\n", "", "", -1, "...", null);
                         if (joinToString$default.length() == 0) {
                             joinToString$default = k.getCalibration() == null ? "needs the comma update with the calibration view (patch 32)" : "nothing changed yet";
                         }
@@ -7318,7 +7318,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new AlertDialog.Builder(this$0).setTitle($t.getLabel() + "?").setMessage($t.getWhat()).setPositiveButton($t.getLabel(), new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda187
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                SettingsActivity.rtkFusionSection$lambda$249$lambda$248(RtkTools.Tool.this, this$0, dialogInterface, i);
+                SettingsActivity.rtkFusionSection$lambda$249$lambda$248($t, this$0, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         return Unit.INSTANCE;
@@ -7482,14 +7482,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletNavPage$lambda$254;
-                tabletNavPage$lambda$254 = SettingsActivity.tabletNavPage$lambda$254(UiSettings.this);
+                tabletNavPage$lambda$254 = SettingsActivity.tabletNavPage$lambda$254(s);
                 return Boolean.valueOf(tabletNavPage$lambda$254);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda230
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletNavPage$lambda$255;
-                tabletNavPage$lambda$255 = SettingsActivity.tabletNavPage$lambda$255(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletNavPage$lambda$255 = SettingsActivity.tabletNavPage$lambda$255(s, ((Boolean) obj).booleanValue());
                 return tabletNavPage$lambda$255;
             }
         });
@@ -7497,14 +7497,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletNavPage$lambda$256;
-                tabletNavPage$lambda$256 = SettingsActivity.tabletNavPage$lambda$256(UiSettings.this);
+                tabletNavPage$lambda$256 = SettingsActivity.tabletNavPage$lambda$256(s);
                 return Boolean.valueOf(tabletNavPage$lambda$256);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda232
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletNavPage$lambda$257;
-                tabletNavPage$lambda$257 = SettingsActivity.tabletNavPage$lambda$257(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletNavPage$lambda$257 = SettingsActivity.tabletNavPage$lambda$257(s, ((Boolean) obj).booleanValue());
                 return tabletNavPage$lambda$257;
             }
         });
@@ -7512,14 +7512,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletNavPage$lambda$258;
-                tabletNavPage$lambda$258 = SettingsActivity.tabletNavPage$lambda$258(UiSettings.this);
+                tabletNavPage$lambda$258 = SettingsActivity.tabletNavPage$lambda$258(s);
                 return Boolean.valueOf(tabletNavPage$lambda$258);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda234
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletNavPage$lambda$259;
-                tabletNavPage$lambda$259 = SettingsActivity.tabletNavPage$lambda$259(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletNavPage$lambda$259 = SettingsActivity.tabletNavPage$lambda$259(s, ((Boolean) obj).booleanValue());
                 return tabletNavPage$lambda$259;
             }
         });
@@ -7527,14 +7527,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletNavPage$lambda$260;
-                tabletNavPage$lambda$260 = SettingsActivity.tabletNavPage$lambda$260(UiSettings.this);
+                tabletNavPage$lambda$260 = SettingsActivity.tabletNavPage$lambda$260(s);
                 return Boolean.valueOf(tabletNavPage$lambda$260);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda237
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletNavPage$lambda$261;
-                tabletNavPage$lambda$261 = SettingsActivity.tabletNavPage$lambda$261(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletNavPage$lambda$261 = SettingsActivity.tabletNavPage$lambda$261(s, ((Boolean) obj).booleanValue());
                 return tabletNavPage$lambda$261;
             }
         });
@@ -7569,14 +7569,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     boolean tabletNavPage$lambda$262;
-                    tabletNavPage$lambda$262 = SettingsActivity.tabletNavPage$lambda$262(UiSettings.this, v);
+                    tabletNavPage$lambda$262 = SettingsActivity.tabletNavPage$lambda$262(s, v);
                     return Boolean.valueOf(tabletNavPage$lambda$262);
                 }
             }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda225
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit tabletNavPage$lambda$263;
-                    tabletNavPage$lambda$263 = SettingsActivity.tabletNavPage$lambda$263(UiSettings.this, v, this, ((Boolean) obj).booleanValue());
+                    tabletNavPage$lambda$263 = SettingsActivity.tabletNavPage$lambda$263(s, v, this, ((Boolean) obj).booleanValue());
                     return tabletNavPage$lambda$263;
                 }
             });
@@ -7767,10 +7767,10 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         try {
             Result.Companion companion = Result.Companion;
             this$0.startActivity(new Intent("android.settings.APPLICATION_DEVELOPMENT_SETTINGS"));
-            Result.m1191constructorimpl(Unit.INSTANCE);
+            KtCompat.resultOf(Unit.INSTANCE);
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            Result.m1191constructorimpl(ResultKt.createFailure(th));
+            KtCompat.resultOf(ResultKt.createFailure(th));
         }
         return Unit.INSTANCE;
     }
@@ -7800,7 +7800,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         col.addView(note, CarUi.lp$default(carUi6, 0, 0, 3, null));
         final File f = new File(getFilesDir(), "braking_log.txt");
         if (f.exists()) {
-            Iterable $this$filter$iv = FilesKt.readLines$default(f, null, 1, null);
+            Iterable $this$filter$iv = FilesKt.readLines(f, kotlin.text.Charsets.UTF_8);
             Collection destination$iv$iv = new ArrayList();
             for (Object element$iv$iv : $this$filter$iv) {
                 String it = (String) element$iv$iv;
@@ -7866,7 +7866,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         col.addView(linearLayout, CarUi.lp$default(carUi11, 0, 0, 3, null));
         for (String l : lines) {
             TextView $this$tabletBrakingPage_u24lambda_u24272 = new TextView(this);
-            $this$tabletBrakingPage_u24lambda_u24272.setText(StringsKt.replace$default(l, " | ", "\n", false, 4, (Object) null));
+            $this$tabletBrakingPage_u24lambda_u24272.setText(StringsKt.replace(l, " | ", "\n", false));
             $this$tabletBrakingPage_u24lambda_u24272.setTextColor(CarUi.Companion.getTEXT());
             $this$tabletBrakingPage_u24lambda_u24272.setTextSize(15.0f);
             CarUi carUi12 = this.ui;
@@ -7916,7 +7916,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     public static final Unit tabletBrakingPage$lambda$269(SettingsActivity this$0, List $lines) {
         Object systemService = this$0.getSystemService("clipboard");
         Intrinsics.checkNotNull(systemService, "null cannot be cast to non-null type android.content.ClipboardManager");
-        ((ClipboardManager) systemService).setPrimaryClip(ClipData.newPlainText("StarView braking log", CollectionsKt.joinToString$default($lines, "\n", null, null, 0, null, null, 62, null)));
+        ((ClipboardManager) systemService).setPrimaryClip(ClipData.newPlainText("StarView braking log", CollectionsKt.joinToString($lines, "\n", "", "", -1, "...", null)));
         Toast.makeText(this$0, "Copied", 0).show();
         return Unit.INSTANCE;
     }
@@ -8012,7 +8012,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit slider$lambda$274;
-                    slider$lambda$274 = SettingsActivity.slider$lambda$274(Function1.this, reset, $this$slider_u24lambda_u24273, min, step, d, fmt, onRelease);
+                    slider$lambda$274 = SettingsActivity.slider$lambda$274(set, reset, $this$slider_u24lambda_u24273, min, step, d, fmt, onRelease);
                     return slider$lambda$274;
                 }
             }, 2, null));
@@ -8125,14 +8125,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     boolean newIdeasPage$lambda$277;
-                    newIdeasPage$lambda$277 = SettingsActivity.newIdeasPage$lambda$277(UiSettings.this, idea);
+                    newIdeasPage$lambda$277 = SettingsActivity.newIdeasPage$lambda$277(s, idea);
                     return Boolean.valueOf(newIdeasPage$lambda$277);
                 }
             }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda78
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit newIdeasPage$lambda$278;
-                    newIdeasPage$lambda$278 = SettingsActivity.newIdeasPage$lambda$278(UiSettings.this, idea, this, ((Boolean) obj).booleanValue());
+                    newIdeasPage$lambda$278 = SettingsActivity.newIdeasPage$lambda$278(s, idea, this, ((Boolean) obj).booleanValue());
                     return newIdeasPage$lambda$278;
                 }
             });
@@ -8290,7 +8290,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new Thread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda117
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.newIdeasPage$lambda$286$lambda$285(SettingsActivity.this);
+                SettingsActivity.newIdeasPage$lambda$286$lambda$285(this$0);
             }
         }).start();
         return Unit.INSTANCE;
@@ -8302,7 +8302,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda211
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.newIdeasPage$lambda$286$lambda$285$lambda$284(SettingsActivity.this, n);
+                SettingsActivity.newIdeasPage$lambda$286$lambda$285$lambda$284(this$0, n);
             }
         });
     }
@@ -8317,7 +8317,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new Thread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda245
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.newIdeasPage$lambda$289$lambda$288(SettingsActivity.this);
+                SettingsActivity.newIdeasPage$lambda$289$lambda$288(this$0);
             }
         }).start();
         return Unit.INSTANCE;
@@ -8329,7 +8329,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda89
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.newIdeasPage$lambda$289$lambda$288$lambda$287(SettingsActivity.this, n);
+                SettingsActivity.newIdeasPage$lambda$289$lambda$288$lambda$287(this$0, n);
             }
         });
     }
@@ -8528,14 +8528,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletBlinkerPage$lambda$295;
-                tabletBlinkerPage$lambda$295 = SettingsActivity.tabletBlinkerPage$lambda$295(UiSettings.this);
+                tabletBlinkerPage$lambda$295 = SettingsActivity.tabletBlinkerPage$lambda$295(s);
                 return Boolean.valueOf(tabletBlinkerPage$lambda$295);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda34
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$296;
-                tabletBlinkerPage$lambda$296 = SettingsActivity.tabletBlinkerPage$lambda$296(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletBlinkerPage$lambda$296 = SettingsActivity.tabletBlinkerPage$lambda$296(s, ((Boolean) obj).booleanValue());
                 return tabletBlinkerPage$lambda$296;
             }
         });
@@ -8543,14 +8543,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletBlinkerPage$lambda$297;
-                tabletBlinkerPage$lambda$297 = SettingsActivity.tabletBlinkerPage$lambda$297(UiSettings.this);
+                tabletBlinkerPage$lambda$297 = SettingsActivity.tabletBlinkerPage$lambda$297(s);
                 return Boolean.valueOf(tabletBlinkerPage$lambda$297);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda40
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$298;
-                tabletBlinkerPage$lambda$298 = SettingsActivity.tabletBlinkerPage$lambda$298(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletBlinkerPage$lambda$298 = SettingsActivity.tabletBlinkerPage$lambda$298(s, ((Boolean) obj).booleanValue());
                 return tabletBlinkerPage$lambda$298;
             }
         });
@@ -8558,14 +8558,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletBlinkerPage$lambda$299;
-                tabletBlinkerPage$lambda$299 = SettingsActivity.tabletBlinkerPage$lambda$299(UiSettings.this);
+                tabletBlinkerPage$lambda$299 = SettingsActivity.tabletBlinkerPage$lambda$299(s);
                 return Boolean.valueOf(tabletBlinkerPage$lambda$299);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda42
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$300;
-                tabletBlinkerPage$lambda$300 = SettingsActivity.tabletBlinkerPage$lambda$300(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletBlinkerPage$lambda$300 = SettingsActivity.tabletBlinkerPage$lambda$300(s, ((Boolean) obj).booleanValue());
                 return tabletBlinkerPage$lambda$300;
             }
         });
@@ -8573,14 +8573,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletBlinkerPage$lambda$301;
-                tabletBlinkerPage$lambda$301 = SettingsActivity.tabletBlinkerPage$lambda$301(UiSettings.this);
+                tabletBlinkerPage$lambda$301 = SettingsActivity.tabletBlinkerPage$lambda$301(s);
                 return Boolean.valueOf(tabletBlinkerPage$lambda$301);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda45
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$302;
-                tabletBlinkerPage$lambda$302 = SettingsActivity.tabletBlinkerPage$lambda$302(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletBlinkerPage$lambda$302 = SettingsActivity.tabletBlinkerPage$lambda$302(s, ((Boolean) obj).booleanValue());
                 return tabletBlinkerPage$lambda$302;
             }
         });
@@ -8588,14 +8588,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletBlinkerPage$lambda$303;
-                tabletBlinkerPage$lambda$303 = SettingsActivity.tabletBlinkerPage$lambda$303(UiSettings.this);
+                tabletBlinkerPage$lambda$303 = SettingsActivity.tabletBlinkerPage$lambda$303(s);
                 return Boolean.valueOf(tabletBlinkerPage$lambda$303);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda47
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$304;
-                tabletBlinkerPage$lambda$304 = SettingsActivity.tabletBlinkerPage$lambda$304(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletBlinkerPage$lambda$304 = SettingsActivity.tabletBlinkerPage$lambda$304(s, ((Boolean) obj).booleanValue());
                 return tabletBlinkerPage$lambda$304;
             }
         });
@@ -8603,14 +8603,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletBlinkerPage$lambda$305;
-                tabletBlinkerPage$lambda$305 = SettingsActivity.tabletBlinkerPage$lambda$305(UiSettings.this);
+                tabletBlinkerPage$lambda$305 = SettingsActivity.tabletBlinkerPage$lambda$305(s);
                 return Boolean.valueOf(tabletBlinkerPage$lambda$305);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda24
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$306;
-                tabletBlinkerPage$lambda$306 = SettingsActivity.tabletBlinkerPage$lambda$306(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletBlinkerPage$lambda$306 = SettingsActivity.tabletBlinkerPage$lambda$306(s, ((Boolean) obj).booleanValue());
                 return tabletBlinkerPage$lambda$306;
             }
         });
@@ -8618,14 +8618,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletBlinkerPage$lambda$307;
-                tabletBlinkerPage$lambda$307 = SettingsActivity.tabletBlinkerPage$lambda$307(UiSettings.this);
+                tabletBlinkerPage$lambda$307 = SettingsActivity.tabletBlinkerPage$lambda$307(s);
                 return Boolean.valueOf(tabletBlinkerPage$lambda$307);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda26
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$308;
-                tabletBlinkerPage$lambda$308 = SettingsActivity.tabletBlinkerPage$lambda$308(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletBlinkerPage$lambda$308 = SettingsActivity.tabletBlinkerPage$lambda$308(s, ((Boolean) obj).booleanValue());
                 return tabletBlinkerPage$lambda$308;
             }
         });
@@ -8657,7 +8657,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$309;
-                tabletBlinkerPage$lambda$309 = SettingsActivity.tabletBlinkerPage$lambda$309(UiSettings.this, ((Float) obj).floatValue());
+                tabletBlinkerPage$lambda$309 = SettingsActivity.tabletBlinkerPage$lambda$309(s, ((Float) obj).floatValue());
                 return tabletBlinkerPage$lambda$309;
             }
         }, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda28
@@ -8672,7 +8672,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$311;
-                tabletBlinkerPage$lambda$311 = SettingsActivity.tabletBlinkerPage$lambda$311(UiSettings.this, ((Float) obj).floatValue());
+                tabletBlinkerPage$lambda$311 = SettingsActivity.tabletBlinkerPage$lambda$311(s, ((Float) obj).floatValue());
                 return tabletBlinkerPage$lambda$311;
             }
         }, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda30
@@ -8782,14 +8782,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletBlinkerPage$lambda$318;
-                tabletBlinkerPage$lambda$318 = SettingsActivity.tabletBlinkerPage$lambda$318(UiSettings.this);
+                tabletBlinkerPage$lambda$318 = SettingsActivity.tabletBlinkerPage$lambda$318(s);
                 return Boolean.valueOf(tabletBlinkerPage$lambda$318);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda36
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$319;
-                tabletBlinkerPage$lambda$319 = SettingsActivity.tabletBlinkerPage$lambda$319(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletBlinkerPage$lambda$319 = SettingsActivity.tabletBlinkerPage$lambda$319(s, ((Boolean) obj).booleanValue());
                 return tabletBlinkerPage$lambda$319;
             }
         });
@@ -8808,14 +8808,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletBlinkerPage$lambda$320;
-                tabletBlinkerPage$lambda$320 = SettingsActivity.tabletBlinkerPage$lambda$320(UiSettings.this);
+                tabletBlinkerPage$lambda$320 = SettingsActivity.tabletBlinkerPage$lambda$320(s);
                 return Boolean.valueOf(tabletBlinkerPage$lambda$320);
             }
         }, new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda38
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$321;
-                tabletBlinkerPage$lambda$321 = SettingsActivity.tabletBlinkerPage$lambda$321(UiSettings.this, ((Boolean) obj).booleanValue());
+                tabletBlinkerPage$lambda$321 = SettingsActivity.tabletBlinkerPage$lambda$321(s, ((Boolean) obj).booleanValue());
                 return tabletBlinkerPage$lambda$321;
             }
         });
@@ -8860,7 +8860,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             Intrinsics.throwUninitializedPropertyAccessException("ui");
             carUi26 = null;
         }
-        TextView note6 = carUi26.note(rec.isEmpty() ? "Nothing yet." : CollectionsKt.joinToString$default(rec, "\n", null, null, 0, null, null, 62, null));
+        TextView note6 = carUi26.note(rec.isEmpty() ? "Nothing yet." : CollectionsKt.joinToString(rec, "\n", "", "", -1, "...", null));
         CarUi carUi27 = this.ui;
         if (carUi27 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
@@ -9482,7 +9482,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$340;
-                    tabletVoicePage$fill$lambda$340 = SettingsActivity.tabletVoicePage$fill$lambda$340(AmyVoice.Pack.this, list, settingsActivity, str);
+                    tabletVoicePage$fill$lambda$340 = SettingsActivity.tabletVoicePage$fill$lambda$340(p, list, settingsActivity, str);
                     return tabletVoicePage$fill$lambda$340;
                 }
             }, 2, null));
@@ -9496,7 +9496,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$341;
-                    tabletVoicePage$fill$lambda$341 = SettingsActivity.tabletVoicePage$fill$lambda$341(AmyVoice.Pack.this, list, settingsActivity, str);
+                    tabletVoicePage$fill$lambda$341 = SettingsActivity.tabletVoicePage$fill$lambda$341(p, list, settingsActivity, str);
                     return tabletVoicePage$fill$lambda$341;
                 }
             }));
@@ -9512,7 +9512,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$343;
-                    tabletVoicePage$fill$lambda$343 = SettingsActivity.tabletVoicePage$fill$lambda$343(SettingsActivity.this, p, list, str);
+                    tabletVoicePage$fill$lambda$343 = SettingsActivity.tabletVoicePage$fill$lambda$343(this$0, p, list, str);
                     return tabletVoicePage$fill$lambda$343;
                 }
             }, 2, null));
@@ -9561,7 +9561,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$348;
-                    tabletVoicePage$fill$lambda$348 = SettingsActivity.tabletVoicePage$fill$lambda$348(SettingsActivity.this, list, str);
+                    tabletVoicePage$fill$lambda$348 = SettingsActivity.tabletVoicePage$fill$lambda$348(this$0, list, str);
                     return tabletVoicePage$fill$lambda$348;
                 }
             }));
@@ -9590,7 +9590,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit tabletVoicePage$fill$lambda$349;
-                tabletVoicePage$fill$lambda$349 = SettingsActivity.tabletVoicePage$fill$lambda$349(SettingsActivity.this);
+                tabletVoicePage$fill$lambda$349 = SettingsActivity.tabletVoicePage$fill$lambda$349(this$0);
                 return tabletVoicePage$fill$lambda$349;
             }
         }));
@@ -9707,7 +9707,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new AlertDialog.Builder(this$0).setMessage("Delete the voice \"" + $p.getLabel() + "\"?").setPositiveButton("Delete", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda116
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                SettingsActivity.tabletVoicePage$fill$lambda$343$lambda$342(AmyVoice.Pack.this, $list, this$0, $sampleText, dialogInterface, i);
+                SettingsActivity.tabletVoicePage$fill$lambda$343$lambda$342($p, $list, this$0, $sampleText, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         return Unit.INSTANCE;
@@ -9726,7 +9726,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletVoicePage$fill$lambda$348$lambda$347;
-                tabletVoicePage$fill$lambda$348$lambda$347 = SettingsActivity.tabletVoicePage$fill$lambda$348$lambda$347(SettingsActivity.this, $list, $sampleText, (Uri) obj);
+                tabletVoicePage$fill$lambda$348$lambda$347 = SettingsActivity.tabletVoicePage$fill$lambda$348$lambda$347(this$0, $list, $sampleText, (Uri) obj);
                 return tabletVoicePage$fill$lambda$348$lambda$347;
             }
         });
@@ -9742,7 +9742,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new Thread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda222
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.tabletVoicePage$fill$lambda$348$lambda$347$lambda$346(SettingsActivity.this, uri, $list, $sampleText);
+                SettingsActivity.tabletVoicePage$fill$lambda$348$lambda$347$lambda$346(this$0, uri, $list, $sampleText);
             }
         }).start();
         return Unit.INSTANCE;
@@ -9754,7 +9754,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda243
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.tabletVoicePage$fill$lambda$348$lambda$347$lambda$346$lambda$345(SettingsActivity.this, err, $list, $sampleText);
+                SettingsActivity.tabletVoicePage$fill$lambda$348$lambda$347$lambda$346$lambda$345(this$0, err, $list, $sampleText);
             }
         });
     }
@@ -9899,7 +9899,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletVoiceStudioPage$lambda$365;
-                tabletVoiceStudioPage$lambda$365 = SettingsActivity.tabletVoiceStudioPage$lambda$365(Ref.ObjectRef.this, sharedPreferences, ((Float) obj).floatValue());
+                tabletVoiceStudioPage$lambda$365 = SettingsActivity.tabletVoiceStudioPage$lambda$365(objectRef3, sharedPreferences, ((Float) obj).floatValue());
                 return tabletVoiceStudioPage$lambda$365;
             }
         }, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda216
@@ -9921,7 +9921,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletVoiceStudioPage$lambda$368;
-                tabletVoiceStudioPage$lambda$368 = SettingsActivity.tabletVoiceStudioPage$lambda$368(Ref.ObjectRef.this, sharedPreferences, ((Float) obj).floatValue());
+                tabletVoiceStudioPage$lambda$368 = SettingsActivity.tabletVoiceStudioPage$lambda$368(objectRef3, sharedPreferences, ((Float) obj).floatValue());
                 return tabletVoiceStudioPage$lambda$368;
             }
         }, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda219
@@ -10004,7 +10004,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit tabletVoiceStudioPage$lambda$400;
-                tabletVoiceStudioPage$lambda$400 = SettingsActivity.tabletVoiceStudioPage$lambda$400(Ref.ObjectRef.this, this, textView, objectRef3);
+                tabletVoiceStudioPage$lambda$400 = SettingsActivity.tabletVoiceStudioPage$lambda$400(objectRef3, this, textView, objectRef3);
                 return tabletVoiceStudioPage$lambda$400;
             }
         }, 2, null));
@@ -10064,7 +10064,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoiceStudioPage$fillEngine$lambda$363;
-                    tabletVoiceStudioPage$fillEngine$lambda$363 = SettingsActivity.tabletVoiceStudioPage$fillEngine$lambda$363(SettingsActivity.this, status, objectRef, engineBox);
+                    tabletVoiceStudioPage$fillEngine$lambda$363 = SettingsActivity.tabletVoiceStudioPage$fillEngine$lambda$363(this$0, status, objectRef, engineBox);
                     return tabletVoiceStudioPage$fillEngine$lambda$363;
                 }
             }));
@@ -10084,7 +10084,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362;
-                tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362 = SettingsActivity.tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362(SettingsActivity.this, $status, $fillVoices, $engineBox, (Uri) obj);
+                tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362 = SettingsActivity.tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362(this$0, $status, $fillVoices, $engineBox, (Uri) obj);
                 return tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362;
             }
         });
@@ -10100,7 +10100,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new Thread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda186
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361(SettingsActivity.this, uri, $status, $fillVoices, $engineBox);
+                SettingsActivity.tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361(this$0, uri, $status, $fillVoices, $engineBox);
             }
         }).start();
         return Unit.INSTANCE;
@@ -10112,7 +10112,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361$lambda$359;
-                tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361$lambda$359 = SettingsActivity.tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361$lambda$359(SettingsActivity.this, $status, (String) obj);
+                tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361$lambda$359 = SettingsActivity.tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361$lambda$359(this$0, $status, (String) obj);
                 return tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361$lambda$359;
             }
         });
@@ -10120,7 +10120,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda66
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361$lambda$360(Ref.ObjectRef.this, $engineBox, this$0, $status);
+                SettingsActivity.tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361$lambda$360($fillVoices, $engineBox, this$0, $status);
             }
         });
     }
@@ -10204,7 +10204,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoiceStudioPage$fillFilter$lambda$371;
-                    tabletVoiceStudioPage$fillFilter$lambda$371 = SettingsActivity.tabletVoiceStudioPage$fillFilter$lambda$371(Ref.ObjectRef.this, k, sp, objectRef2, filterBox, this$0);
+                    tabletVoiceStudioPage$fillFilter$lambda$371 = SettingsActivity.tabletVoiceStudioPage$fillFilter$lambda$371(objectRef2, k, sp, objectRef2, filterBox, this$0);
                     return tabletVoiceStudioPage$fillFilter$lambda$371;
                 }
             }));
@@ -10271,7 +10271,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new Thread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda4
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.tabletVoiceStudioPage$job$lambda$377(Function0.this, busy, this$0, stopBtn, status, objectRef);
+                SettingsActivity.tabletVoiceStudioPage$job$lambda$377(function0, busy, this$0, stopBtn, status, objectRef);
             }
         }).start();
     }
@@ -10447,7 +10447,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit tabletVoiceStudioPage$lambda$397$lambda$383;
-                                tabletVoiceStudioPage$lambda$397$lambda$383 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$383(VoiceStudio.Voice.this, settingsActivity, atomicBoolean, textView, booleanRef, textView2, objectRef3);
+                                tabletVoiceStudioPage$lambda$397$lambda$383 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$383(voice, settingsActivity, atomicBoolean, textView, booleanRef, textView2, objectRef3);
                                 return tabletVoiceStudioPage$lambda$397$lambda$383;
                             }
                         }, 2, null));
@@ -10470,7 +10470,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit tabletVoiceStudioPage$lambda$397$lambda$385;
-                                tabletVoiceStudioPage$lambda$397$lambda$385 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$385(VoiceStudio.Voice.this, intRef, settingsActivity, objectRef4, list, textView, booleanRef, atomicBoolean, textView2, objectRef3);
+                                tabletVoiceStudioPage$lambda$397$lambda$385 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$385(voice, intRef, settingsActivity, objectRef4, list, textView, booleanRef, atomicBoolean, textView2, objectRef3);
                                 return tabletVoiceStudioPage$lambda$397$lambda$385;
                             }
                         }, 2, null));
@@ -10486,7 +10486,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit tabletVoiceStudioPage$lambda$397$lambda$389;
-                                tabletVoiceStudioPage$lambda$397$lambda$389 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$389(VoiceStudio.Voice.this, intRef, settingsActivity, objectRef4, atomicBoolean, textView, booleanRef, textView2, objectRef3);
+                                tabletVoiceStudioPage$lambda$397$lambda$389 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$389(voice, intRef, settingsActivity, objectRef4, atomicBoolean, textView, booleanRef, textView2, objectRef3);
                                 return tabletVoiceStudioPage$lambda$397$lambda$389;
                             }
                         }));
@@ -10503,7 +10503,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit tabletVoiceStudioPage$lambda$397$lambda$390;
-                                tabletVoiceStudioPage$lambda$397$lambda$390 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$390(SettingsActivity.this, voice2, objectRef3, textView);
+                                tabletVoiceStudioPage$lambda$397$lambda$390 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$390(settingsActivity, voice2, objectRef3, textView);
                                 return tabletVoiceStudioPage$lambda$397$lambda$390;
                             }
                         }, 2, null));
@@ -10567,7 +10567,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit tabletVoiceStudioPage$lambda$397$lambda$393;
-                                tabletVoiceStudioPage$lambda$397$lambda$393 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$393(Ref.IntRef.this, seekBar, textView3, sharedPreferences, voice4);
+                                tabletVoiceStudioPage$lambda$397$lambda$393 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$393(intRef, seekBar, textView3, sharedPreferences, voice4);
                                 return tabletVoiceStudioPage$lambda$397$lambda$393;
                             }
                         }, 2, null));
@@ -10584,7 +10584,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit tabletVoiceStudioPage$lambda$397$lambda$394;
-                                tabletVoiceStudioPage$lambda$397$lambda$394 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$394(Ref.IntRef.this, voice5, seekBar, textView3, sharedPreferences);
+                                tabletVoiceStudioPage$lambda$397$lambda$394 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$394(intRef, voice5, seekBar, textView3, sharedPreferences);
                                 return tabletVoiceStudioPage$lambda$397$lambda$394;
                             }
                         }, 2, null));
@@ -10601,7 +10601,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit tabletVoiceStudioPage$lambda$397$lambda$395;
-                                tabletVoiceStudioPage$lambda$397$lambda$395 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$395(Ref.IntRef.this, voice6, seekBar, textView3, sharedPreferences);
+                                tabletVoiceStudioPage$lambda$397$lambda$395 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$395(intRef, voice6, seekBar, textView3, sharedPreferences);
                                 return tabletVoiceStudioPage$lambda$397$lambda$395;
                             }
                         }, 2, null));
@@ -10685,7 +10685,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 String tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382;
-                tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382(SettingsActivity.this, $v, $cancel, $status);
+                tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382(this$0, $v, $cancel, $status);
                 return tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382;
             }
         });
@@ -10698,7 +10698,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382$lambda$380;
-                tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382$lambda$380 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382$lambda$380(VoiceStudio.Voice.this, this$0, $status, ((Long) obj).longValue(), ((Long) obj2).longValue());
+                tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382$lambda$380 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382$lambda$380($v, this$0, $status, ((Long) obj).longValue(), ((Long) obj2).longValue());
                 return tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382$lambda$380;
             }
         });
@@ -10728,7 +10728,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 String tabletVoiceStudioPage$lambda$397$lambda$385$lambda$384;
-                tabletVoiceStudioPage$lambda$397$lambda$385$lambda$384 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$385$lambda$384(SettingsActivity.this, $v, $sid, $style, $tryText, $status);
+                tabletVoiceStudioPage$lambda$397$lambda$385$lambda$384 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$385$lambda$384(this$0, $v, $sid, $style, $tryText, $status);
                 return tabletVoiceStudioPage$lambda$397$lambda$385$lambda$384;
             }
         });
@@ -10765,7 +10765,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 String tabletVoiceStudioPage$lambda$397$lambda$389$lambda$388;
-                tabletVoiceStudioPage$lambda$397$lambda$389$lambda$388 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$389$lambda$388(SettingsActivity.this, $v, $sid, $style, label, $cancel, $status);
+                tabletVoiceStudioPage$lambda$397$lambda$389$lambda$388 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$389$lambda$388(this$0, $v, $sid, $style, label, $cancel, $status);
                 return tabletVoiceStudioPage$lambda$397$lambda$389$lambda$388;
             }
         });
@@ -10865,7 +10865,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new Thread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda107
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.tabletVoiceStudioPage$loadCat$lambda$399(Ref.ObjectRef.this, this$0, refresh, status, objectRef2);
+                SettingsActivity.tabletVoiceStudioPage$loadCat$lambda$399(objectRef2, this$0, refresh, status, objectRef2);
             }
         }).start();
     }
@@ -10882,7 +10882,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda15
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.tabletVoiceStudioPage$loadCat$lambda$399$lambda$398(Ref.ObjectRef.this);
+                SettingsActivity.tabletVoiceStudioPage$loadCat$lambda$399$lambda$398($fillVoices);
             }
         });
     }
@@ -10959,7 +10959,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         new Thread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda114
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.techStreamPage$load$lambda$406(SettingsActivity.this, h, w);
+                SettingsActivity.techStreamPage$load$lambda$406(this$0, h, w);
             }
         }).start();
     }
@@ -10987,7 +10987,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         if ($w.getUrl() != null) {
             String url = $w.getUrl();
             Intrinsics.checkNotNull(url);
-            if (!StringsKt.startsWith$default(url, "data:", false, 2, (Object) null)) {
+            if (!StringsKt.startsWith(url, "data:", false)) {
                 return;
             }
         }

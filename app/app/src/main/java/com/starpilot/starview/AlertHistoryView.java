@@ -92,7 +92,7 @@ public final class AlertHistoryView extends CardPage {
                     str = optString3;
                 }
                 strArr[2] = str;
-                String sub = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), " · ", null, null, 0, null, null, 62, null);
+                String sub = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), " · ", "", "", -1, "...", null);
                 c.addView(line("            " + sub, CarUi.Companion.getDIM(), 14.0f));
             }
             return;

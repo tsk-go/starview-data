@@ -210,7 +210,7 @@ public final class TrackMapView extends View {
         this$0.post(new Runnable() { // from class: com.starpilot.starview.TrackMapView$$ExternalSyntheticLambda0
             @Override // java.lang.Runnable
             public final void run() {
-                TrackMapView.this.invalidate();
+                this$0.invalidate();
             }
         });
         return Unit.INSTANCE;

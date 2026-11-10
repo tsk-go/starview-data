@@ -197,7 +197,7 @@ public final class DayView {
         if (list != null) {
             for (String str : list) {
                 Intrinsics.checkNotNull(str);
-                List p = StringsKt.split$default((CharSequence) StringsKt.removeSuffix(str, (CharSequence) ".jpg"), new String[]{"_"}, false, 0, 6, (Object) null);
+                List p = StringsKt.split((CharSequence) StringsKt.removeSuffix(str, (CharSequence) ".jpg"), new String[]{"_"}, false, 0);
                 if (p.size() == 4) {
                     try {
                         $this$loadIndex_u24lambda_u249.add(new double[]{Double.parseDouble((String) p.get(0)), Double.parseDouble((String) p.get(1)), Double.parseDouble((String) p.get(2)), Double.parseDouble((String) p.get(3))});
@@ -229,11 +229,11 @@ public final class DayView {
                 File it2 = (File) t;
                 String name = it2.getName();
                 Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-                String substringAfterLast$default = StringsKt.substringAfterLast$default(name, '_', (String) null, 2, (Object) null);
+                String substringAfterLast$default = StringsKt.substringAfterLast(name, '_', name);
                 File it3 = (File) t2;
                 String name2 = it3.getName();
                 Intrinsics.checkNotNullExpressionValue(name2, "getName(...)");
-                return ComparisonsKt.compareValues(substringAfterLast$default, StringsKt.substringAfterLast$default(name2, '_', (String) null, 2, (Object) null));
+                return ComparisonsKt.compareValues(substringAfterLast$default, StringsKt.substringAfterLast(name2, '_', name2));
             }
         })) {
             if (total < 367001600) {

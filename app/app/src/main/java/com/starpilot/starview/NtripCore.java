@@ -100,8 +100,8 @@ public final class NtripCore {
 
     public final String retime(String gga, long utcMs) {
         Intrinsics.checkNotNullParameter(gga, "gga");
-        String body = StringsKt.substringBefore$default(StringsKt.removePrefix(gga, (CharSequence) "$"), '*', (String) null, 2, (Object) null);
-        List f = CollectionsKt.toMutableList((Collection) StringsKt.split$default((CharSequence) body, new String[]{","}, false, 0, 6, (Object) null));
+        String body = StringsKt.substringBefore(StringsKt.removePrefix(gga, (CharSequence) "$"), '*', (StringsKt.removePrefix(gga, (CharSequence) "$")));
+        List f = CollectionsKt.toMutableList((Collection) StringsKt.split((CharSequence) body, new String[]{","}, false, 0));
         if (f.size() < 2) {
             return null;
         }
@@ -110,7 +110,7 @@ public final class NtripCore {
         String format = String.format(Locale.US, "%02d%02d%05.2f", Arrays.copyOf(new Object[]{Integer.valueOf(c.get(11)), Integer.valueOf(c.get(12)), Double.valueOf(c.get(13) + (c.get(14) / 1000.0d))}, 3));
         Intrinsics.checkNotNullExpressionValue(format, "format(...)");
         f.set(1, format);
-        String b = CollectionsKt.joinToString$default(f, ",", null, null, 0, null, null, 62, null);
+        String b = CollectionsKt.joinToString(f, ",", "", "", -1, "...", null);
         String str = "$" + b + "*%02X";
         Locale locale = Locale.US;
         String $this$fold$iv = b;
@@ -166,7 +166,7 @@ public final class NtripCore {
         String substringAfter$default;
         Intrinsics.checkNotNullParameter(first, "first");
         Intrinsics.checkNotNullParameter(rest, "rest");
-        List lines = StringsKt.split$default((CharSequence) StringsKt.replace$default(rest, "\r", "", false, 4, (Object) null), new char[]{'\n'}, false, 0, 6, (Object) null);
+        List lines = StringsKt.split((CharSequence) StringsKt.replace(rest, "\r", "", false), new char[]{'\n'}, false, 0);
         int i = 0;
         while (i < lines.size() && new Regex("^[A-Za-z0-9-]+:\\s").containsMatchIn((CharSequence) lines.get(i))) {
             i++;
@@ -187,15 +187,15 @@ public final class NtripCore {
             }
         }
         String str = (String) element$iv;
-        String server = (str == null || (substringAfter$default = StringsKt.substringAfter$default(str, ':', (String) null, 2, (Object) null)) == null) ? null : StringsKt.trim((CharSequence) substringAfter$default).toString();
-        String body = StringsKt.trim((CharSequence) new Regex("\\s+").replace(new Regex("<[^>]*>").replace(new Regex("(?s)<(script|style)[^>]*>.*?</\\1>").replace(CollectionsKt.joinToString$default(CollectionsKt.drop(lines, i), " ", null, null, 0, null, null, 62, null), " "), " "), " ")).toString();
+        String server = (str == null || (substringAfter$default = StringsKt.substringAfter(str, ':', str)) == null) ? null : StringsKt.trim((CharSequence) substringAfter$default).toString();
+        String body = StringsKt.trim((CharSequence) new Regex("\\s+").replace(new Regex("<[^>]*>").replace(new Regex("(?s)<(script|style)[^>]*>.*?</\\1>").replace(CollectionsKt.joinToString(CollectionsKt.drop(lines, i), " ", "", "", -1, "...", null), " "), " "), " ")).toString();
         StringBuilder $this$said_u24lambda_u247 = new StringBuilder();
         $this$said_u24lambda_u247.append('\"').append(StringsKt.take(StringsKt.trim((CharSequence) first).toString(), 80)).append('\"');
         String str2 = server;
         if (!(str2 == null || str2.length() == 0)) {
             $this$said_u24lambda_u247.append(", server ").append(StringsKt.take(server, 40));
         }
-        if ((body.length() > 0) && !StringsKt.equals(body, StringsKt.substringAfter$default(StringsKt.trim((CharSequence) first).toString(), ' ', (String) null, 2, (Object) null), true)) {
+        if ((body.length() > 0) && !StringsKt.equals(body, StringsKt.substringAfter(StringsKt.trim((CharSequence) first).toString(), ' ', (StringsKt.trim((CharSequence) first).toString())), true)) {
             $this$said_u24lambda_u247.append(": ").append(StringsKt.take(body, 160));
         }
         String sb = $this$said_u24lambda_u247.toString();
@@ -236,7 +236,7 @@ public final class NtripCore {
                     if (ch == '\n') {
                         String sb = this.size.toString();
                         Intrinsics.checkNotNullExpressionValue(sb, "toString(...)");
-                        String hex = StringsKt.trim((CharSequence) StringsKt.substringBefore$default(sb, ';', (String) null, 2, (Object) null)).toString();
+                        String hex = StringsKt.trim((CharSequence) StringsKt.substringBefore(sb, ';', sb)).toString();
                         this.size.setLength(0);
                         if (hex.length() == 0) {
                             continue;
@@ -385,7 +385,7 @@ public final class NtripCore {
             }
             Object element$iv$iv = it.next();
             Mount it2 = (Mount) element$iv$iv;
-            if (StringsKt.contains((CharSequence) it2.getFormat(), (CharSequence) "RTCM", true) && StringsKt.contains$default((CharSequence) it2.getFormat(), (CharSequence) "3", false, 2, (Object) null) && !skip.contains(it2.getName())) {
+            if (StringsKt.contains((CharSequence) it2.getFormat(), (CharSequence) "RTCM", true) && StringsKt.contains((CharSequence) it2.getFormat(), (CharSequence) "3", false) && !skip.contains(it2.getName())) {
                 z = true;
             }
             if (z) {
@@ -437,22 +437,22 @@ public final class NtripCore {
     public final Answer answer(String line) {
         Intrinsics.checkNotNullParameter(line, "line");
         String l = StringsKt.trim((CharSequence) line).toString();
-        if (StringsKt.startsWith$default(l, "ICY 200", false, 2, (Object) null) || new Regex("^HTTP/1\\.[01] 200").containsMatchIn(l)) {
+        if (StringsKt.startsWith(l, "ICY 200", false) || new Regex("^HTTP/1\\.[01] 200").containsMatchIn(l)) {
             return Answer.Stream.INSTANCE;
         }
-        if (StringsKt.startsWith$default(l, "SOURCETABLE 200", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(l, "SOURCETABLE 200", false)) {
             return Answer.Sourcetable.INSTANCE;
         }
-        if (StringsKt.contains$default((CharSequence) l, (CharSequence) " 401", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) l, (CharSequence) " 401", false)) {
             return new Answer.Refused("login refused: wrong username / password, or the subscription isn't active yet");
         }
-        if (StringsKt.contains$default((CharSequence) l, (CharSequence) " 403", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) l, (CharSequence) " 403", false)) {
             return new Answer.Refused("account not allowed on this mountpoint (or not activated yet)");
         }
-        if (StringsKt.contains$default((CharSequence) l, (CharSequence) " 404", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) l, (CharSequence) " 404", false)) {
             return new Answer.Refused("mountpoint not found");
         }
-        if (StringsKt.contains$default((CharSequence) l, (CharSequence) " 503", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) l, (CharSequence) " 503", false)) {
             return new Answer.Refused("caster busy (503)");
         }
         return l.length() == 0 ? new Answer.Refused("the caster closed the connection") : new Answer.Refused(StringsKt.take(l, 80));
@@ -542,7 +542,7 @@ public final class NtripCore {
     /* JADX INFO: Access modifiers changed from: private */
     public static final boolean sourcetable$lambda$13(String it) {
         Intrinsics.checkNotNullParameter(it, "it");
-        return StringsKt.startsWith$default(it, "STR;", false, 2, (Object) null);
+        return StringsKt.startsWith(it, "STR;", false);
     }
 
     public final List<Mount> sourcetable(String text, final double lat0, final double lon0) {
@@ -615,7 +615,7 @@ public final class NtripCore {
     /* JADX INFO: Access modifiers changed from: private */
     public static final Mount sourcetable$lambda$14(String line) {
         Intrinsics.checkNotNullParameter(line, "line");
-        List f = StringsKt.split$default((CharSequence) line, new String[]{";"}, false, 0, 6, (Object) null);
+        List f = StringsKt.split((CharSequence) line, new String[]{";"}, false, 0);
         if (f.size() >= 12) {
             if (!(((CharSequence) f.get(1)).length() == 0)) {
                 String str = (String) f.get(1);

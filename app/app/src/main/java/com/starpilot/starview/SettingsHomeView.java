@@ -305,7 +305,7 @@ public final class SettingsHomeView extends LinearLayout {
         new AlertDialog.Builder($this_apply.getContext()).setMessage("Clear all " + $past.size() + " searches?").setPositiveButton("Clear", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsHomeView$$ExternalSyntheticLambda9
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                SettingsHomeView.showHistory$lambda$16$lambda$15$lambda$14(SettingsHomeView.this, dialogInterface, i);
+                SettingsHomeView.showHistory$lambda$16$lambda$15$lambda$14(this$0, dialogInterface, i);
             }
         }).setNegativeButton("Keep", (DialogInterface.OnClickListener) null).show();
     }
@@ -365,7 +365,7 @@ public final class SettingsHomeView extends LinearLayout {
                     destination$iv$iv.add(element$iv$iv);
                 }
             }
-            String joinToString$default = CollectionsKt.joinToString$default((List) destination$iv$iv, "  ·  ", null, null, 0, null, null, 62, null);
+            String joinToString$default = CollectionsKt.joinToString((List) destination$iv$iv, "  ·  ", "", "", -1, "...", null);
             SvIcon svIcon = SvIcon.INSTANCE;
             Context context = getContext();
             Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");

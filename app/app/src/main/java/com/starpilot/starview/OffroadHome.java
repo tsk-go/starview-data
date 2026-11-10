@@ -406,7 +406,7 @@ public final class OffroadHome extends FrameLayout {
             $this$lambda_u2453_u24lambda_u2451.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda10
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view3) {
-                    Function0.this.invoke();
+                    f.invoke();
                 }
             });
             TextView textView7 = $this$lambda_u2453_u24lambda_u2451;
@@ -588,7 +588,7 @@ public final class OffroadHome extends FrameLayout {
                 str = "comma " + Math.round(((9 * it2) / 5) + 32) + "°F";
             }
             strArr[1] = str;
-            textView.setText(CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), "   ·   ", null, null, 0, null, null, 62, null));
+            textView.setText(CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), "   ·   ", "", "", -1, "...", null));
         }
     }
 
@@ -893,7 +893,7 @@ public final class OffroadHome extends FrameLayout {
             }
             Map.Entry entry$iv = it.next();
             String it2 = entry$iv.getKey();
-            if (StringsKt.startsWith$default(it2, "Offroad_", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(it2, "Offroad_", false)) {
                 result$iv.put(entry$iv.getKey(), entry$iv.getValue());
             }
         }
@@ -917,7 +917,7 @@ public final class OffroadHome extends FrameLayout {
                 $i$f$mapNotNull = $i$f$mapNotNull2;
                 String optString2 = o.optString("extra");
                 Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
-                String text = StringsKt.replace$default(optString, "%1", optString2, false, 4, (Object) null);
+                String text = StringsKt.replace(optString, "%1", optString2, false);
                 if (StringsKt.isBlank(text)) {
                     $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv3;
                     alert2 = null;
@@ -1045,7 +1045,7 @@ public final class OffroadHome extends FrameLayout {
             if (StringsKt.isBlank(pStr$default)) {
                 pStr$default = Telemetry.pStr$default(t, "Model", null, 2, null);
             }
-            String model = StringsKt.trim((CharSequence) StringsKt.replace$default(StringsKt.replace$default(pStr$default, "_default", "", false, 4, (Object) null), "(Default)", "", false, 4, (Object) null)).toString();
+            String model = StringsKt.trim((CharSequence) StringsKt.replace(StringsKt.replace(pStr$default, "_default", "", false), "(Default)", "", false)).toString();
             SpannableStringBuilder sb = new SpannableStringBuilder();
             sb.append((CharSequence) "StarPilot");
             sb.setSpan(new StyleSpan(1), 0, sb.length(), 0);

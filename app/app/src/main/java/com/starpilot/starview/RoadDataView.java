@@ -65,11 +65,11 @@ public final class RoadDataView extends CardPage {
         if (files.isEmpty()) {
             str = "On the tablet: nothing yet.";
         } else {
-            str = "On the tablet: " + files.size() + " state" + (files.size() == 1 ? "" : "s") + " (" + RoadData.INSTANCE.mb(bytes) + "): " + CollectionsKt.joinToString$default(CollectionsKt.sorted(files.keySet()), " ", null, null, 0, null, null, 62, null);
+            str = "On the tablet: " + files.size() + " state" + (files.size() == 1 ? "" : "s") + " (" + RoadData.INSTANCE.mb(bytes) + "): " + CollectionsKt.joinToString(CollectionsKt.sorted(files.keySet()), " ", "", "", -1, "...", null);
         }
         c.addView(line(str, CarUi.Companion.getTEXT(), 16.0f));
         if (RoadData.INSTANCE.getStatus().length() > 0) {
-            c.addView(line(RoadData.INSTANCE.getStatus(), (StringsKt.startsWith$default(RoadData.INSTANCE.getStatus(), "Couldn't", false, 2, (Object) null) || StringsKt.startsWith$default(RoadData.INSTANCE.getStatus(), "Not on", false, 2, (Object) null)) ? CarUi.Companion.getWARN() : CarUi.Companion.getTEXT(), 15.0f));
+            c.addView(line(RoadData.INSTANCE.getStatus(), (StringsKt.startsWith(RoadData.INSTANCE.getStatus(), "Couldn't", false) || StringsKt.startsWith(RoadData.INSTANCE.getStatus(), "Not on", false)) ? CarUi.Companion.getWARN() : CarUi.Companion.getTEXT(), 15.0f));
         }
         LinearLayout row = new LinearLayout(getContext());
         row.setOrientation(0);
@@ -157,7 +157,7 @@ public final class RoadDataView extends CardPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit paint$lambda$5$lambda$4;
-                paint$lambda$5$lambda$4 = RoadDataView.paint$lambda$5$lambda$4(RoadDataView.this);
+                paint$lambda$5$lambda$4 = RoadDataView.paint$lambda$5$lambda$4(this$0);
                 return paint$lambda$5$lambda$4;
             }
         });
@@ -171,7 +171,7 @@ public final class RoadDataView extends CardPage {
         this$0.getMain().post(new Runnable() { // from class: com.starpilot.starview.RoadDataView$$ExternalSyntheticLambda6
             @Override // java.lang.Runnable
             public final void run() {
-                RoadDataView.this.paint();
+                this$0.paint();
             }
         });
         return Unit.INSTANCE;
@@ -186,7 +186,7 @@ public final class RoadDataView extends CardPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit paint$lambda$10$lambda$9;
-                    paint$lambda$10$lambda$9 = RoadDataView.paint$lambda$10$lambda$9(RoadDataView.this, (Uri) obj);
+                    paint$lambda$10$lambda$9 = RoadDataView.paint$lambda$10$lambda$9(this$0, (Uri) obj);
                     return paint$lambda$10$lambda$9;
                 }
             });
@@ -200,7 +200,7 @@ public final class RoadDataView extends CardPage {
             new Thread(new Runnable() { // from class: com.starpilot.starview.RoadDataView$$ExternalSyntheticLambda0
                 @Override // java.lang.Runnable
                 public final void run() {
-                    RoadDataView.paint$lambda$10$lambda$9$lambda$8(RoadDataView.this, uri);
+                    RoadDataView.paint$lambda$10$lambda$9$lambda$8(this$0, uri);
                 }
             }).start();
         }
@@ -216,7 +216,7 @@ public final class RoadDataView extends CardPage {
         this$0.getMain().post(new Runnable() { // from class: com.starpilot.starview.RoadDataView$$ExternalSyntheticLambda1
             @Override // java.lang.Runnable
             public final void run() {
-                RoadDataView.paint$lambda$10$lambda$9$lambda$8$lambda$7(RoadDataView.this, err);
+                RoadDataView.paint$lambda$10$lambda$9$lambda$8$lambda$7(this$0, err);
             }
         });
     }
@@ -232,7 +232,7 @@ public final class RoadDataView extends CardPage {
         new Thread(new Runnable() { // from class: com.starpilot.starview.RoadDataView$$ExternalSyntheticLambda2
             @Override // java.lang.Runnable
             public final void run() {
-                RoadDataView.paint$lambda$13$lambda$12(RoadDataView.this);
+                RoadDataView.paint$lambda$13$lambda$12(this$0);
             }
         }).start();
         return Unit.INSTANCE;
@@ -247,7 +247,7 @@ public final class RoadDataView extends CardPage {
         this$0.getMain().post(new Runnable() { // from class: com.starpilot.starview.RoadDataView$$ExternalSyntheticLambda4
             @Override // java.lang.Runnable
             public final void run() {
-                RoadDataView.paint$lambda$13$lambda$12$lambda$11(RoadDataView.this, err);
+                RoadDataView.paint$lambda$13$lambda$12$lambda$11(this$0, err);
             }
         });
     }

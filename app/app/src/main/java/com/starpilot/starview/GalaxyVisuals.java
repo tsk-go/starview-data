@@ -193,18 +193,18 @@ public final class GalaxyVisuals {
         Intrinsics.checkNotNullParameter(r, "r");
         AlertDialog.Builder title = new AlertDialog.Builder(ctx).setTitle(r.getLabel());
         String[] strArr = new String[2];
-        String replace$default = StringsKt.replace$default(r.getReason(), "https://firestar.link/discord", "the StarPilot Discord", false, 4, (Object) null);
+        String replace$default = StringsKt.replace(r.getReason(), "https://firestar.link/discord", "the StarPilot Discord", false);
         if (StringsKt.isBlank(replace$default)) {
             replace$default = null;
         }
         strArr[0] = replace$default;
         strArr[1] = "Now: " + r.withUnit(GalaxyRow.shown$default(r, null, 1, null)) + (r.getDefaultValue().length() > 0 ? "   ·   Default: " + r.withUnit(r.shown(r.getDefaultValue())) : "");
-        AlertDialog.Builder b = title.setMessage(CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), "\n\n", null, null, 0, null, null, 62, null)).setNegativeButton("Close", (DialogInterface.OnClickListener) null);
+        AlertDialog.Builder b = title.setMessage(CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), "\n\n", "", "", -1, "...", null)).setNegativeButton("Close", (DialogInterface.OnClickListener) null);
         if (r.getShowDefault() && r.getEditable()) {
             b.setPositiveButton("Set to default", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxyVisuals$$ExternalSyntheticLambda3
                 @Override // android.content.DialogInterface.OnClickListener
                 public final void onClick(DialogInterface dialogInterface, int i) {
-                    GalaxyVisuals.about$lambda$3(GalaxyRow.this, dialogInterface, i);
+                    GalaxyVisuals.about$lambda$3(r, dialogInterface, i);
                 }
             });
         }
@@ -333,12 +333,12 @@ public final class GalaxyVisuals {
                 }
                 break;
         }
-        return StringsKt.startsWith$default(action, "Quick Select", false, 2, (Object) null) ? new SettingIcons.Icon("star", "display", false, 4, null) : new SettingIcons.Icon("buttons", "display", false, 4, null);
+        return StringsKt.startsWith(action, "Quick Select", false) ? new SettingIcons.Icon("star", "display", false, 4, null) : new SettingIcons.Icon("buttons", "display", false, 4, null);
     }
 
     public final Pair<String, String> buttonOf(String label) {
         Intrinsics.checkNotNullParameter(label, "label");
-        MatchResult m = Regex.find$default(new Regex("^(LKAS|Main cruise|Distance|Cancel|MODE|Star)(?: button)?\\s*(short press|press|long press|very long press)?$", RegexOption.IGNORE_CASE), StringsKt.trim((CharSequence) label).toString(), 0, 2, null);
+        MatchResult m = (new Regex("^(LKAS|Main cruise|Distance|Cancel|MODE|Star)(?: button)?\\s*(short press|press|long press|very long press)?$", RegexOption.IGNORE_CASE)).find(StringsKt.trim((CharSequence) label).toString(), 0);
         if (m == null) {
             return null;
         }
@@ -453,7 +453,7 @@ public final class GalaxyVisuals {
                 $this$wheel_u24lambda_u2421.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GalaxyVisuals$$ExternalSyntheticLambda8
                     @Override // android.view.View.OnClickListener
                     public final void onClick(View view) {
-                        GalaxyVisuals.wheel$lambda$21$lambda$20(GalaxyRow.this, ctx, write, view);
+                        GalaxyVisuals.wheel$lambda$21$lambda$20(r2, ctx, write, view);
                     }
                 });
                 LinearLayout.LayoutParams $this$wheel_u24lambda_u2422 = new LinearLayout.LayoutParams(-1, -2);
@@ -505,7 +505,7 @@ public final class GalaxyVisuals {
             title.setSingleChoiceItems((CharSequence[]) thisCollection$iv.toArray(new String[0]), $r.getChoices().indexOf($r.getValue()), new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxyVisuals$$ExternalSyntheticLambda1
                 @Override // android.content.DialogInterface.OnClickListener
                 public final void onClick(DialogInterface dialogInterface, int i) {
-                    GalaxyVisuals.wheel$lambda$21$lambda$20$lambda$18(GalaxyRow.this, $write, dialogInterface, i);
+                    GalaxyVisuals.wheel$lambda$21$lambda$20$lambda$18($r, $write, dialogInterface, i);
                 }
             }).setNeutralButton("About", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxyVisuals$$ExternalSyntheticLambda2
                 @Override // android.content.DialogInterface.OnClickListener
@@ -685,7 +685,7 @@ public final class GalaxyVisuals {
                 $this$mixer_u24lambda_u2442_u24lambda_u2441.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GalaxyVisuals$$ExternalSyntheticLambda7
                     @Override // android.view.View.OnClickListener
                     public final void onClick(View view) {
-                        GalaxyVisuals.mixer$lambda$42$lambda$41$lambda$40(GalaxyRow.this, write, slider, view);
+                        GalaxyVisuals.mixer$lambda$42$lambda$41$lambda$40(r, write, slider, view);
                     }
                 });
                 $this$mixer_u24lambda_u2442.addView($this$mixer_u24lambda_u2442_u24lambda_u2441);
@@ -837,7 +837,7 @@ public final class GalaxyVisuals {
             $this$personalities_u24lambda_u2450.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GalaxyVisuals$$ExternalSyntheticLambda10
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
-                    Function1.this.invoke(p);
+                    open.invoke(p);
                 }
             });
             $this$personalities_u24lambda_u2446.addView($this$personalities_u24lambda_u2450, new LinearLayout.LayoutParams(0, -2, 1.0f));
@@ -914,7 +914,7 @@ public final class GalaxyVisuals {
             strArr[1] = str2;
             String it4 = (String) CollectionsKt.firstOrNull(presets);
             strArr[2] = it4 != null ? "Follow: " + it4 : null;
-            textView.setText(CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), "\n", null, null, 0, null, null, 62, null));
+            textView.setText(CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), "\n", "", "", -1, "...", null));
         }
         return Unit.INSTANCE;
     }
@@ -955,7 +955,7 @@ public final class GalaxyVisuals {
         }
         List on = (List) destination$iv$iv3;
         TextView $this$conditions_u24lambda_u2462 = new TextView(ctx);
-        $this$conditions_u24lambda_u2462.setText((StringsKt.endsWith$default(str, "cem", false, 2, (Object) null) ? "Switches to Experimental for: " : "Switches to Chill for: ") + (on.isEmpty() ? "nothing (all off)" : CollectionsKt.joinToString$default(on, ", ", null, null, 0, null, null, 62, null)));
+        $this$conditions_u24lambda_u2462.setText((StringsKt.endsWith(str, "cem", false) ? "Switches to Experimental for: " : "Switches to Chill for: ") + (on.isEmpty() ? "nothing (all off)" : CollectionsKt.joinToString(on, ", ", "", "", -1, "...", null)));
         $this$conditions_u24lambda_u2462.setTextColor(CarUi.Companion.getTEXT());
         $this$conditions_u24lambda_u2462.setTextSize(19.0f);
         c.addView($this$conditions_u24lambda_u2462);
@@ -996,7 +996,7 @@ public final class GalaxyVisuals {
             $this$conditions_u24lambda_u2468.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GalaxyVisuals$$ExternalSyntheticLambda12
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
-                    GalaxyVisuals.conditions$lambda$68$lambda$66(GalaxyRow.this, write, lit, view);
+                    GalaxyVisuals.conditions$lambda$68$lambda$66(it3, write, lit, view);
                 }
             });
             $this$conditions_u24lambda_u2468.setOnLongClickListener(new View.OnLongClickListener() { // from class: com.starpilot.starview.GalaxyVisuals$$ExternalSyntheticLambda13
@@ -1074,7 +1074,7 @@ public final class GalaxyVisuals {
                 $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv2;
                 $i$f$mapNotNullTo = $i$f$mapNotNullTo2;
                 $this$forEach$iv$iv$iv = $this$forEach$iv$iv$iv2;
-                triple = new Triple(StringsKt.replace$default(StringsKt.replace$default(new Regex(" offset$| and above$", RegexOption.IGNORE_CASE).replace(r.getLabel(), ""), " mph", "", false, 4, (Object) null), " km/h", "", false, 4, (Object) null), Double.valueOf(it3), r.getUnit());
+                triple = new Triple(StringsKt.replace(StringsKt.replace(new Regex(" offset$| and above$", RegexOption.IGNORE_CASE).replace(r.getLabel(), ""), " mph", "", false), " km/h", "", false), Double.valueOf(it3), r.getUnit());
             } else {
                 $i$f$mapNotNull = $i$f$mapNotNull2;
                 $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv2;
@@ -1132,7 +1132,7 @@ public final class GalaxyVisuals {
         strArr[1] = find2 != null ? find2.getValue() : null;
         List src = CollectionsKt.listOfNotNull((Object[]) strArr);
         if (!src.isEmpty()) {
-            String joinToString$default = CollectionsKt.joinToString$default(src, ", then ", null, null, 0, null, null, 62, null);
+            String joinToString$default = CollectionsKt.joinToString(src, ", then ", "", "", -1, "...", null);
             GalaxyRow it7 = find(rows, "^require confirmation");
             if (it7 != null && Intrinsics.areEqual(it7.getValue(), "On")) {
                 str = " · you confirm each new limit";
@@ -1154,7 +1154,7 @@ public final class GalaxyVisuals {
         if (progress == null) {
             return;
         }
-        MatchResult find$default = Regex.find$default(new Regex("(\\d+(?:\\.\\d+)?)\\s*%"), progress.getValue(), 0, 2, null);
+        MatchResult find$default = (new Regex("(\\d+(?:\\.\\d+)?)\\s*%")).find(progress.getValue(), 0);
         if ((find$default == null || (groupValues = find$default.getGroupValues()) == null || (str3 = groupValues.get(1)) == null || (doubleOrNull = StringsKt.toDoubleOrNull(str3)) == null) && (doubleOrNull = StringsKt.toDoubleOrNull(progress.getValue())) == null) {
             return;
         }
@@ -1200,7 +1200,7 @@ public final class GalaxyVisuals {
             str2 = str5;
         }
         strArr[1] = str2;
-        String joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), "\n", null, null, 0, null, null, 62, null);
+        String joinToString$default = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), "\n", "", "", -1, "...", null);
         if (StringsKt.isBlank(joinToString$default)) {
             joinToString$default = "Learns how fast you like to take curves as you drive them.";
         }

@@ -48,14 +48,14 @@ public final class DevicePanel$fastPoll$1 implements Runnable {
                 }
             }
             final DevicePanel devicePanel2 = this.this$0;
-            DataClient.request$default(dc, "software_status", null, new Function1() { // from class: com.starpilot.starview.DevicePanel$fastPoll$1$$ExternalSyntheticLambda0
+            dc.request("software_status", kotlin.collections.MapsKt.emptyMap(), new Function1() { // from class: com.starpilot.starview.DevicePanel$fastPoll$1$$ExternalSyntheticLambda0
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit run$lambda$1;
-                    run$lambda$1 = DevicePanel$fastPoll$1.run$lambda$1(DevicePanel.this, again, (JSONObject) obj);
+                    run$lambda$1 = DevicePanel$fastPoll$1.run$lambda$1(devicePanel2, again, (JSONObject) obj);
                     return run$lambda$1;
                 }
-            }, 2, null);
+            });
         }
     }
 
@@ -87,7 +87,7 @@ public final class DevicePanel$fastPoll$1 implements Runnable {
         } else {
             String optString = $r.optString("error");
             Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
-            if (StringsKt.startsWith$default(optString, "unknown action", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(optString, "unknown action", false)) {
                 this$0.seven = false;
                 handler = this$0.fastHandler;
                 handler.post($again);
@@ -122,12 +122,12 @@ public final class DevicePanel$fastPoll$1 implements Runnable {
             Result.Companion companion = Result.Companion;
             GalaxyApi.Companion companion2 = GalaxyApi.Companion;
             activity = this$1.act;
-            m1191constructorimpl = Result.m1191constructorimpl(new JSONObject(companion2.get(activity, $h).get("/api/update/fast/status")));
+            m1191constructorimpl = KtCompat.resultOf(new JSONObject(companion2.get(activity, $h).get("/api/update/fast/status")));
         } catch (Throwable th) {
             Result.Companion companion3 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = null;
         }
         final JSONObject st = (JSONObject) m1191constructorimpl;

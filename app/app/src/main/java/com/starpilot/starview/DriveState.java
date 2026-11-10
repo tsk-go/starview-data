@@ -78,7 +78,7 @@ public final class DriveState {
                     @Override // kotlin.jvm.functions.Function2
                     public final Object invoke(Object obj, Object obj2) {
                         Unit mode$lambda$1;
-                        mode$lambda$1 = DriveState.mode$lambda$1(Function0.this, (JSONObject) obj, (String) obj2);
+                        mode$lambda$1 = DriveState.mode$lambda$1(onChange, (JSONObject) obj, (String) obj2);
                         return mode$lambda$1;
                     }
                 });
@@ -299,17 +299,17 @@ public final class DriveState {
                 new AlertDialog.Builder(this$0.act).setTitle("Go offroad?").setMessage("openpilot stops all driving processes and will NOT drive until you switch this back off (Auto).").setPositiveButton("Go offroad", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DriveState$OffroadBar$$ExternalSyntheticLambda0
                     @Override // android.content.DialogInterface.OnClickListener
                     public final void onClick(DialogInterface dialogInterface, int i) {
-                        DriveState.OffroadBar.this.send("offroad");
+                        this$0.send("offroad");
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DriveState$OffroadBar$$ExternalSyntheticLambda1
                     @Override // android.content.DialogInterface.OnClickListener
                     public final void onClick(DialogInterface dialogInterface, int i) {
-                        DriveState.OffroadBar.this.sync(true);
+                        this$0.sync(true);
                     }
                 }).setOnCancelListener(new DialogInterface.OnCancelListener() { // from class: com.starpilot.starview.DriveState$OffroadBar$$ExternalSyntheticLambda2
                     @Override // android.content.DialogInterface.OnCancelListener
                     public final void onCancel(DialogInterface dialogInterface) {
-                        DriveState.OffroadBar.this.sync(true);
+                        this$0.sync(true);
                     }
                 }).show();
             } else {

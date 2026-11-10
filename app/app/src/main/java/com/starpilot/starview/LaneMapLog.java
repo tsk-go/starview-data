@@ -398,7 +398,7 @@ public final class LaneMapLog {
     public static final boolean prune$lambda$0(File f) {
         String name = f.getName();
         Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-        return StringsKt.endsWith$default(name, ".lm", false, 2, (Object) null);
+        return StringsKt.endsWith(name, ".lm", false);
     }
 
     public final void close() {
@@ -434,7 +434,7 @@ public final class LaneMapLog {
         public static final boolean summary$lambda$0(File f) {
             String name = f.getName();
             Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-            return StringsKt.endsWith$default(name, ".lm", false, 2, (Object) null);
+            return StringsKt.endsWith(name, ".lm", false);
         }
 
         public final Triple<Integer, Long, Long> summary(Context ctx) {
@@ -536,7 +536,7 @@ public final class LaneMapLog {
                                         th3 = th4;
                                     }
                                     try {
-                                        ByteStreamsKt.copyTo$default(it, z2, 0, 2, null);
+                                        ByteStreamsKt.copyTo(it, z2, 8192);
                                         try {
                                             CloseableKt.closeFinally(fileInputStream, null);
                                             z2.closeEntry();
@@ -591,7 +591,7 @@ public final class LaneMapLog {
         public static final boolean toDownloads$lambda$3(File f) {
             String name = f.getName();
             Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-            return StringsKt.endsWith$default(name, ".lm", false, 2, (Object) null) && f.length() > 10;
+            return StringsKt.endsWith(name, ".lm", false) && f.length() > 10;
         }
     }
 }

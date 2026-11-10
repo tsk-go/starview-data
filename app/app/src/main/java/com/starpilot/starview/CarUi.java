@@ -231,7 +231,7 @@ public final class CarUi {
             textView.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda4
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view2) {
-                    CarUi.browserTabs$lambda$7$lambda$6(Function1.this, i2, view2);
+                    CarUi.browserTabs$lambda$7$lambda$6(onPick, i2, view2);
                 }
             });
             tabs.add(textView);
@@ -486,7 +486,7 @@ public final class CarUi {
         $this$button_u24lambda_u2431.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda3
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                onClick.invoke();
             }
         });
         return $this$button_u24lambda_u2431;
@@ -506,7 +506,7 @@ public final class CarUi {
         $this$stepper_u24lambda_u2433.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda0
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                onClick.invoke();
             }
         });
         return $this$stepper_u24lambda_u2433;
@@ -531,7 +531,7 @@ public final class CarUi {
             $this$chips_u24lambda_u2436.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda1
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
-                    CarUi.chips$lambda$36$lambda$35(Function1.this, i2, view);
+                    CarUi.chips$lambda$36$lambda$35(onPick, i2, view);
                 }
             });
             views.add($this$chips_u24lambda_u2436);
@@ -606,7 +606,7 @@ public final class CarUi {
         $this$tile_u24lambda_u2443.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda6
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                onClick.invoke();
             }
         });
         return $this$tile_u24lambda_u2443;
@@ -643,7 +643,7 @@ public final class CarUi {
         $this$iconTile_u24lambda_u2447.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda7
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                onClick.invoke();
             }
         });
         return TuplesKt.to($this$iconTile_u24lambda_u2447, $this$iconTile_u24lambda_u2444);

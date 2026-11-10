@@ -97,7 +97,7 @@ public final class GxModelLabPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit build$lambda$1$lambda$0;
-                    build$lambda$1$lambda$0 = GxModelLabPage.build$lambda$1$lambda$0(GxModelLabPage.this);
+                    build$lambda$1$lambda$0 = GxModelLabPage.build$lambda$1$lambda$0(this$0);
                     return build$lambda$1$lambda$0;
                 }
             });
@@ -499,7 +499,7 @@ public final class GxModelLabPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit prepareModel$lambda$20$lambda$19;
-                prepareModel$lambda$20$lambda$19 = GxModelLabPage.prepareModel$lambda$20$lambda$19(GxModelLabPage.this);
+                prepareModel$lambda$20$lambda$19 = GxModelLabPage.prepareModel$lambda$20$lambda$19(this$0);
                 return prepareModel$lambda$20$lambda$19;
             }
         });
@@ -563,7 +563,7 @@ public final class GxModelLabPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit deleteModel$lambda$25$lambda$24;
-                deleteModel$lambda$25$lambda$24 = GxModelLabPage.deleteModel$lambda$25$lambda$24(GxModelLabPage.this, (String) obj, (JSONObject) obj2);
+                deleteModel$lambda$25$lambda$24 = GxModelLabPage.deleteModel$lambda$25$lambda$24(this$0, (String) obj, (JSONObject) obj2);
                 return deleteModel$lambda$25$lambda$24;
             }
         }, 8, null);
@@ -616,14 +616,14 @@ public final class GxModelLabPage extends GxPage {
         if (this.runtimeBox == null) {
             return;
         }
-        String sig = CollectionsKt.joinToString$default(CollectionsKt.listOf(Boolean.valueOf(this.loading), Boolean.valueOf(this.saving), this.error, this.message, Boolean.valueOf(this.dirty), Boolean.valueOf(this.chestnutReady), Boolean.valueOf(this.isOnroad), Boolean.valueOf(this.cfgEnabled), this.lateral, this.longitudinal, this.runtime.toString(), this.download.toString(), this.summary.toString(), CollectionsKt.joinToString$default(this.models, "|", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda7
+        String sig = CollectionsKt.joinToString(CollectionsKt.listOf(Boolean.valueOf(this.loading), Boolean.valueOf(this.saving), this.error, this.message, Boolean.valueOf(this.dirty), Boolean.valueOf(this.chestnutReady), Boolean.valueOf(this.isOnroad), Boolean.valueOf(this.cfgEnabled), this.lateral, this.longitudinal, this.runtime.toString(), this.download.toString(), this.summary.toString(), CollectionsKt.joinToString(this.models, "|", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda7
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence render$lambda$26;
                 render$lambda$26 = GxModelLabPage.render$lambda$26((JSONObject) obj);
                 return render$lambda$26;
             }
-        }, 30, null)), "\u0001", null, null, 0, null, null, 62, null);
+        })), "\u0001", "", "", -1, "...", null);
         if (force || !Intrinsics.areEqual(sig, this.lastSig)) {
             this.lastSig = sig;
             renderHead();
@@ -917,7 +917,7 @@ public final class GxModelLabPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit renderPair$lambda$39$lambda$38;
-                renderPair$lambda$39$lambda$38 = GxModelLabPage.renderPair$lambda$39$lambda$38(GxModelLabPage.this, opts, ((Integer) obj).intValue());
+                renderPair$lambda$39$lambda$38 = GxModelLabPage.renderPair$lambda$39$lambda$38(this$0, opts, ((Integer) obj).intValue());
                 return renderPair$lambda$39$lambda$38;
             }
         });
@@ -946,7 +946,7 @@ public final class GxModelLabPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit renderPair$lambda$43$lambda$42;
-                renderPair$lambda$43$lambda$42 = GxModelLabPage.renderPair$lambda$43$lambda$42(GxModelLabPage.this, opts, ((Integer) obj).intValue());
+                renderPair$lambda$43$lambda$42 = GxModelLabPage.renderPair$lambda$43$lambda$42(this$0, opts, ((Integer) obj).intValue());
                 return renderPair$lambda$43$lambda$42;
             }
         });

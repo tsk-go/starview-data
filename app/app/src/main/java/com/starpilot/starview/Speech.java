@@ -145,7 +145,7 @@ public final class Speech {
         tts = new TextToSpeech(context, new TextToSpeech.OnInitListener() { // from class: com.starpilot.starview.Speech$$ExternalSyntheticLambda3
             @Override // android.speech.tts.TextToSpeech.OnInitListener
             public final void onInit(int i) {
-                Speech.init$lambda$1(Function0.this, i);
+                Speech.init$lambda$1(then, i);
             }
         });
     }
@@ -324,7 +324,7 @@ public final class Speech {
             Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
             String name2 = v.getName();
             Intrinsics.checkNotNullExpressionValue(name2, "getName(...)");
-            String id = StringsKt.substringBefore$default(StringsKt.substringAfter(name, "-x-", name2), "-", (String) null, 2, (Object) null);
+            String id = StringsKt.substringBefore(StringsKt.substringAfter(name, "-x-", name2), "-", (StringsKt.substringAfter(name, "-x-", name2)));
             String upperCase = id.toUpperCase(Locale.ROOT);
             Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
             return where + " · " + upperCase + (!v.isNetworkConnectionRequired() ? " · needs internet" : "");
@@ -334,7 +334,7 @@ public final class Speech {
         Intrinsics.checkNotNullExpressionValue(name3, "getName(...)");
         String name22 = v.getName();
         Intrinsics.checkNotNullExpressionValue(name22, "getName(...)");
-        String id2 = StringsKt.substringBefore$default(StringsKt.substringAfter(name3, "-x-", name22), "-", (String) null, 2, (Object) null);
+        String id2 = StringsKt.substringBefore(StringsKt.substringAfter(name3, "-x-", name22), "-", (StringsKt.substringAfter(name3, "-x-", name22)));
         String upperCase2 = id2.toUpperCase(Locale.ROOT);
         Intrinsics.checkNotNullExpressionValue(upperCase2, "toUpperCase(...)");
         return where + " · " + upperCase2 + (!v.isNetworkConnectionRequired() ? " · needs internet" : "");
@@ -397,7 +397,7 @@ public final class Speech {
 
     public final String spoken(String s) {
         Intrinsics.checkNotNullParameter(s, "s");
-        return StringsKt.replace$default(new Regex("(\\d+(?:\\.\\d+)?) km\\b").replace(new Regex("(\\d+) ft\\b").replace(new Regex("(\\d+(?:\\.\\d+)?) mi\\b").replace(s, new Function1() { // from class: com.starpilot.starview.Speech$$ExternalSyntheticLambda4
+        return StringsKt.replace(new Regex("(\\d+(?:\\.\\d+)?) km\\b").replace(new Regex("(\\d+) ft\\b").replace(new Regex("(\\d+(?:\\.\\d+)?) mi\\b").replace(s, new Function1() { // from class: com.starpilot.starview.Speech$$ExternalSyntheticLambda4
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence spoken$lambda$10;
@@ -418,7 +418,7 @@ public final class Speech {
                 spoken$lambda$12 = Speech.spoken$lambda$12((MatchResult) obj);
                 return spoken$lambda$12;
             }
-        }), " - ", ", ", false, 4, (Object) null);
+        }), " - ", ", ", false);
     }
 
     /* JADX INFO: Access modifiers changed from: private */

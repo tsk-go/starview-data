@@ -1331,7 +1331,7 @@ public final class LaneSuggest {
             }
 
             public final String getType() {
-                return StringsKt.substringBefore$default(this.key, "|", (String) null, 2, (Object) null);
+                return StringsKt.substringBefore(this.key, "|", this.key);
             }
         }
 
@@ -1412,7 +1412,7 @@ public final class LaneSuggest {
                         String a2 = (String) element$iv;
                         if (!Intrinsics.areEqual(a2, "none")) {
                             String str = a2;
-                            if (!(dir > 0 ? StringsKt.contains$default((CharSequence) str, (CharSequence) "right", false, 2, (Object) null) : StringsKt.contains$default((CharSequence) str, (CharSequence) "left", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) a2, (CharSequence) "uturn", false, 2, (Object) null))) {
+                            if (!(dir > 0 ? StringsKt.contains((CharSequence) str, (CharSequence) "right", false) : StringsKt.contains((CharSequence) str, (CharSequence) "left", false) || StringsKt.contains((CharSequence) a2, (CharSequence) "uturn", false))) {
                                 a = null;
                                 if (a == null) {
                                     $this$any$iv = 1;

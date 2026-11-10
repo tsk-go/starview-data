@@ -725,12 +725,12 @@ public final class GxTuningPage extends GxPage {
         try {
             Result.Companion companion = Result.Companion;
             GxTuningPage gxTuningPage = this;
-            m1191constructorimpl = Result.m1191constructorimpl(Long.valueOf(OffsetDateTime.parse(obj2).toInstant().toEpochMilli()));
+            m1191constructorimpl = KtCompat.resultOf(Long.valueOf(OffsetDateTime.parse(obj2).toInstant().toEpochMilli()));
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = null;
         }
         Long l = (Long) m1191constructorimpl;
@@ -738,12 +738,12 @@ public final class GxTuningPage extends GxPage {
             try {
                 Result.Companion companion3 = Result.Companion;
                 GxTuningPage gxTuningPage2 = this;
-                m1191constructorimpl2 = Result.m1191constructorimpl(Long.valueOf(Instant.parse(obj2).toEpochMilli()));
+                m1191constructorimpl2 = KtCompat.resultOf(Long.valueOf(Instant.parse(obj2).toEpochMilli()));
             } catch (Throwable th2) {
                 Result.Companion companion4 = Result.Companion;
-                m1191constructorimpl2 = Result.m1191constructorimpl(ResultKt.createFailure(th2));
+                m1191constructorimpl2 = KtCompat.resultOf(ResultKt.createFailure(th2));
             }
-            if (Result.m1197isFailureimpl(m1191constructorimpl2)) {
+            if (KtCompat.isFailure(m1191constructorimpl2)) {
                 m1191constructorimpl2 = null;
             }
             l = (Long) m1191constructorimpl2;
@@ -751,12 +751,12 @@ public final class GxTuningPage extends GxPage {
                 try {
                     Result.Companion companion5 = Result.Companion;
                     GxTuningPage gxTuningPage3 = this;
-                    obj = Result.m1191constructorimpl(Long.valueOf(LocalDateTime.parse(obj2).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
+                    obj = KtCompat.resultOf(Long.valueOf(LocalDateTime.parse(obj2).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
                 } catch (Throwable th3) {
                     Result.Companion companion6 = Result.Companion;
-                    obj = Result.m1191constructorimpl(ResultKt.createFailure(th3));
+                    obj = KtCompat.resultOf(ResultKt.createFailure(th3));
                 }
-                l = (Long) (Result.m1197isFailureimpl(obj) ? null : obj);
+                l = (Long) (KtCompat.isFailure(obj) ? null : obj);
             }
         }
         if (l == null) {
@@ -907,7 +907,7 @@ public final class GxTuningPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit buildLateral$lambda$34$lambda$33;
-                buildLateral$lambda$34$lambda$33 = GxTuningPage.buildLateral$lambda$34$lambda$33(GxTuningPage.this);
+                buildLateral$lambda$34$lambda$33 = GxTuningPage.buildLateral$lambda$34$lambda$33(this$0);
                 return buildLateral$lambda$34$lambda$33;
             }
         });
@@ -1260,7 +1260,7 @@ public final class GxTuningPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit paintTunes$lambda$49$lambda$48;
-                paintTunes$lambda$49$lambda$48 = GxTuningPage.paintTunes$lambda$49$lambda$48(GxTuningPage.this, $t);
+                paintTunes$lambda$49$lambda$48 = GxTuningPage.paintTunes$lambda$49$lambda$48(this$0, $t);
                 return paintTunes$lambda$49$lambda$48;
             }
         });
@@ -1324,7 +1324,7 @@ public final class GxTuningPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit submitTune$lambda$55$lambda$54;
-                submitTune$lambda$55$lambda$54 = GxTuningPage.submitTune$lambda$55$lambda$54(GxTuningPage.this, $t, (String) obj);
+                submitTune$lambda$55$lambda$54 = GxTuningPage.submitTune$lambda$55$lambda$54(this$0, $t, (String) obj);
                 return submitTune$lambda$55$lambda$54;
             }
         }, 28, null);
@@ -1436,7 +1436,7 @@ public final class GxTuningPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit runWith$lambda$61$lambda$60;
-                    runWith$lambda$61$lambda$60 = GxTuningPage.runWith$lambda$61$lambda$60(GxTuningPage.this, $after, o);
+                    runWith$lambda$61$lambda$60 = GxTuningPage.runWith$lambda$61$lambda$60(this$0, $after, o);
                     return runWith$lambda$61$lambda$60;
                 }
             }, 1, null);
@@ -1497,7 +1497,7 @@ public final class GxTuningPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit flmRefresh$lambda$66$lambda$65;
-                flmRefresh$lambda$66$lambda$65 = GxTuningPage.flmRefresh$lambda$66$lambda$65(GxTuningPage.this, ws, e, $then, (String) obj, (JSONObject) obj2);
+                flmRefresh$lambda$66$lambda$65 = GxTuningPage.flmRefresh$lambda$66$lambda$65(this$0, ws, e, $then, (String) obj, (JSONObject) obj2);
                 return flmRefresh$lambda$66$lambda$65;
             }
         });
@@ -1697,14 +1697,14 @@ public final class GxTuningPage extends GxPage {
     }
 
     private final String curveStr(final JSONArray a) {
-        return "[" + CollectionsKt.joinToString$default(RangesKt.until(0, a != null ? a.length() : 0), ", ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda54
+        return "[" + CollectionsKt.joinToString(RangesKt.until(0, a != null ? a.length() : 0), ", ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda54
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence curveStr$lambda$74;
                 curveStr$lambda$74 = GxTuningPage.curveStr$lambda$74(GxTuningPage.this, a, ((Integer) obj).intValue());
                 return curveStr$lambda$74;
             }
-        }, 30, null) + "]";
+        }) + "]";
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1955,7 +1955,7 @@ public final class GxTuningPage extends GxPage {
             String symbol = pair3.component1();
             Object value = pair3.component2();
             if (stockKnobs.has(symbol)) {
-                rows.add(new CmpRow(symbol, CollectionsKt.joinToString$default(CollectionsKt.drop(StringsKt.split$default((CharSequence) symbol, new String[]{"."}, false, 0, 6, (Object) null), 1), ".", null, null, 0, null, null, 62, null), false, stockKnobs.opt(symbol), value));
+                rows.add(new CmpRow(symbol, CollectionsKt.joinToString(CollectionsKt.drop(StringsKt.split((CharSequence) symbol, new String[]{"."}, false, 0), 1), ".", "", "", -1, "...", null), false, stockKnobs.opt(symbol), value));
             }
         }
         return rows;
@@ -2198,7 +2198,7 @@ public final class GxTuningPage extends GxPage {
                 if (StringsKt.isBlank(s4)) {
                     s4 = "finding";
                 }
-                text(StringsKt.replace$default(s4, "_", " ", false, 4, (Object) null), ic, 18.0f, CarUi.Companion.getTEXT(), true);
+                text(StringsKt.replace(s4, "_", " ", false), ic, 18.0f, CarUi.Companion.getTEXT(), true);
                 JSONObject ev = sg.optJSONObject("evidence");
                 if (ev != null && (gxTuningPage.truthy(ev.opt("speedBand")) || gxTuningPage.truthy(ev.opt("directionBias")) || gxTuningPage.truthy(ev.opt("eventCount")))) {
                     GxTuningPage gxTuningPage2 = gxTuningPage;
@@ -2483,7 +2483,7 @@ public final class GxTuningPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit deleteReport$lambda$109$lambda$108;
-                deleteReport$lambda$109$lambda$108 = GxTuningPage.deleteReport$lambda$109$lambda$108(GxTuningPage.this, $id, (JSONObject) obj);
+                deleteReport$lambda$109$lambda$108 = GxTuningPage.deleteReport$lambda$109$lambda$108(this$0, $id, (JSONObject) obj);
                 return deleteReport$lambda$109$lambda$108;
             }
         });
@@ -2579,7 +2579,7 @@ public final class GxTuningPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit saveFeedback$lambda$114$lambda$113;
-                saveFeedback$lambda$114$lambda$113 = GxTuningPage.saveFeedback$lambda$114$lambda$113(GxTuningPage.this);
+                saveFeedback$lambda$114$lambda$113 = GxTuningPage.saveFeedback$lambda$114$lambda$113(this$0);
                 return saveFeedback$lambda$114$lambda$113;
             }
         }, 1, null);
@@ -2669,7 +2669,7 @@ public final class GxTuningPage extends GxPage {
                 }
                 Object next = it2.next();
                 List<String> list = split;
-                if (StringsKt.startsWith$default((String) next, "data:", false, 2, (Object) null)) {
+                if (StringsKt.startsWith((String) next, "data:", false)) {
                     arrayList.add(next);
                 }
                 split = list;
@@ -2678,19 +2678,19 @@ public final class GxTuningPage extends GxPage {
             if (!arrayList2.isEmpty()) {
                 try {
                     Result.Companion companion = Result.Companion;
-                    obj = Result.m1191constructorimpl(new JSONObject(CollectionsKt.joinToString$default(arrayList2, "\n", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda68
+                    obj = KtCompat.resultOf(new JSONObject(CollectionsKt.joinToString(arrayList2, "\n", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda68
                         @Override // kotlin.jvm.functions.Function1
                         public final Object invoke(Object obj2) {
                             CharSequence loadRoutes$lambda$122$lambda$118$lambda$117;
                             loadRoutes$lambda$122$lambda$118$lambda$117 = GxTuningPage.loadRoutes$lambda$122$lambda$118$lambda$117((String) obj2);
                             return loadRoutes$lambda$122$lambda$118$lambda$117;
                         }
-                    }, 30, null)));
+                    })));
                 } catch (Throwable th) {
                     Result.Companion companion2 = Result.Companion;
-                    obj = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                    obj = KtCompat.resultOf(ResultKt.createFailure(th));
                 }
-                JSONObject jSONObject = (JSONObject) (Result.m1197isFailureimpl(obj) ? null : obj);
+                JSONObject jSONObject = (JSONObject) (KtCompat.isFailure(obj) ? null : obj);
                 if (jSONObject != null) {
                     for (JSONObject jSONObject2 : gxTuningPage.objects(gxTuningPage.arr(jSONObject, "routes"))) {
                         String s = gxTuningPage.s(jSONObject2, "name");
@@ -2710,9 +2710,9 @@ public final class GxTuningPage extends GxPage {
                     String s2;
                     String s3;
                     JSONObject it3 = (JSONObject) t2;
-                    s2 = GxTuningPage.this.s(it3, "startedAt");
+                    s2 = gxTuningPage.s(it3, "startedAt");
                     JSONObject it4 = (JSONObject) t;
-                    s3 = GxTuningPage.this.s(it4, "startedAt");
+                    s3 = gxTuningPage.s(it4, "startedAt");
                     return ComparisonsKt.compareValues(s2, s3);
                 }
             });
@@ -3484,12 +3484,12 @@ public final class GxTuningPage extends GxPage {
         try {
             Result.Companion companion = Result.Companion;
             GxTuningPage $this$buildPlots_u24lambda_u24137 = this;
-            m1191constructorimpl = Result.m1191constructorimpl(Boolean.valueOf($this$buildPlots_u24lambda_u24137.getPrefs().getBoolean("plotsShowAdvancedTerms", false)));
+            m1191constructorimpl = KtCompat.resultOf(Boolean.valueOf($this$buildPlots_u24lambda_u24137.getPrefs().getBoolean("plotsShowAdvancedTerms", false)));
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = false;
         }
         this.showAdvanced = ((Boolean) m1191constructorimpl).booleanValue();
@@ -3638,10 +3638,10 @@ public final class GxTuningPage extends GxPage {
             Result.Companion companion = Result.Companion;
             GxTuningPage $this$toggleAdvanced_u24lambda_u24147 = this;
             $this$toggleAdvanced_u24lambda_u24147.getPrefs().edit().putBoolean("plotsShowAdvancedTerms", $this$toggleAdvanced_u24lambda_u24147.showAdvanced).apply();
-            Result.m1191constructorimpl(Unit.INSTANCE);
+            KtCompat.resultOf(Unit.INSTANCE);
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            Result.m1191constructorimpl(ResultKt.createFailure(th));
+            KtCompat.resultOf(ResultKt.createFailure(th));
         }
         paintPlots();
     }
@@ -3719,16 +3719,16 @@ public final class GxTuningPage extends GxPage {
             }
         }
         if (Intrinsics.areEqual(k, "longitudinal")) {
-            if (StringsKt.contains$default((CharSequence) src, (CharSequence) "atarget", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) src, (CharSequence) "atarget", false)) {
                 return "Planner target acceleration + measured acceleration";
             }
-            if (StringsKt.contains$default((CharSequence) src, (CharSequence) "pid sum", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) src, (CharSequence) "pid sum", false)) {
                 return "PID term sum + measured acceleration";
             }
-            if (StringsKt.contains$default((CharSequence) src, (CharSequence) "caroutput", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) src, (CharSequence) "caroutput", false)) {
                 return "Final accel command + measured acceleration";
             }
-            if (StringsKt.contains$default((CharSequence) src, (CharSequence) "livelocationkalman", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) src, (CharSequence) "livelocationkalman", false)) {
                 return "Control output + calibrated acceleration";
             }
             if (Intrinsics.areEqual(src, "controlsstate")) {
@@ -4167,7 +4167,7 @@ public final class GxTuningPage extends GxPage {
     private final boolean isUnused(JSONObject slot) {
         String n = StringsKt.trim((CharSequence) s(slot, "name")).toString().toLowerCase(Locale.ROOT);
         Intrinsics.checkNotNullExpressionValue(n, "toLowerCase(...)");
-        return Intrinsics.areEqual(n, "unused") || StringsKt.startsWith$default(n, "unused ", false, 2, (Object) null);
+        return Intrinsics.areEqual(n, "unused") || StringsKt.startsWith(n, "unused ", false);
     }
 
     private final TreeMap<String, String> variantLabels(JSONObject slot) {
@@ -4725,7 +4725,7 @@ public final class GxTuningPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit paintTg$lambda$182$lambda$181;
-                paintTg$lambda$182$lambda$181 = GxTuningPage.paintTg$lambda$182$lambda$181(GxTuningPage.this, $selectable, ((Integer) obj).intValue());
+                paintTg$lambda$182$lambda$181 = GxTuningPage.paintTg$lambda$182$lambda$181(this$0, $selectable, ((Integer) obj).intValue());
                 return paintTg$lambda$182$lambda$181;
             }
         });
@@ -5317,14 +5317,14 @@ public final class GxTuningPage extends GxPage {
                     Intrinsics.throwUninitializedPropertyAccessException("lonBox");
                     linearLayout29 = null;
                 }
-                notice$default(this, linearLayout29, CollectionsKt.joinToString$default(caveats, "\n", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda43
+                notice$default(this, linearLayout29, CollectionsKt.joinToString(caveats, "\n", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda43
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         CharSequence paintLon$lambda$207;
                         paintLon$lambda$207 = GxTuningPage.paintLon$lambda$207((String) obj);
                         return paintLon$lambda$207;
                     }
-                }, 30, null), 0, "Platform caveats\n", 4, null);
+                }), 0, "Platform caveats\n", 4, null);
             }
             List skipped = strings(arr(d, "skippedManeuvers"));
             if (!skipped.isEmpty()) {
@@ -5333,14 +5333,14 @@ public final class GxTuningPage extends GxPage {
                     Intrinsics.throwUninitializedPropertyAccessException("lonBox");
                     linearLayout30 = null;
                 }
-                notice(linearLayout30, CollectionsKt.joinToString$default(skipped, "\n", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda45
+                notice(linearLayout30, CollectionsKt.joinToString(skipped, "\n", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda45
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         CharSequence paintLon$lambda$208;
                         paintLon$lambda$208 = GxTuningPage.paintLon$lambda$208((String) obj);
                         return paintLon$lambda$208;
                     }
-                }, 30, null), Color.rgb(94, 200, 200), "Expected skips\n");
+                }), Color.rgb(94, 200, 200), "Expected skips\n");
             }
             LinearLayout linearLayout31 = this.lonBox;
             if (linearLayout31 == null) {

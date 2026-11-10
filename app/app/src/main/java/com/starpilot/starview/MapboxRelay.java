@@ -152,10 +152,10 @@ public final class MapboxRelay {
                         Result.Companion companion = Result.Companion;
                         MapboxRelay mapboxRelay = this;
                         c.close();
-                        Result.m1191constructorimpl(Unit.INSTANCE);
+                        KtCompat.resultOf(Unit.INSTANCE);
                     } catch (Throwable th) {
                         Result.Companion companion2 = Result.Companion;
-                        Result.m1191constructorimpl(ResultKt.createFailure(th));
+                        KtCompat.resultOf(ResultKt.createFailure(th));
                     }
                 } else {
                     pool.execute(new Runnable() { // from class: com.starpilot.starview.MapboxRelay$$ExternalSyntheticLambda0
@@ -194,7 +194,7 @@ public final class MapboxRelay {
 
     /* JADX WARN: Code restructure failed: missing block: B:13:0x00a7, code lost:
     
-        r8 = kotlin.text.StringsKt.split$default((java.lang.CharSequence) r7, new java.lang.String[]{" "}, false, 0, 6, (java.lang.Object) null);
+        r8 = kotlin.text.StringsKt.split((java.lang.CharSequence) r7, new java.lang.String[]{" "}, false, 0);
         r9 = (java.lang.String) kotlin.collections.CollectionsKt.getOrNull(r8, 1);
      */
     /* JADX WARN: Code restructure failed: missing block: B:14:0x00c0, code lost:
@@ -207,8 +207,8 @@ public final class MapboxRelay {
      */
     /* JADX WARN: Code restructure failed: missing block: B:16:0x00c4, code lost:
     
-        r13 = kotlin.text.StringsKt.substringBeforeLast$default(r9, ":", r5, 2, r5);
-        r0 = kotlin.text.StringsKt.toIntOrNull(kotlin.text.StringsKt.substringAfterLast$default(r9, ":", r5, 2, r5));
+        r13 = kotlin.text.StringsKt.substringBeforeLast(r9, ":", r9);
+        r0 = kotlin.text.StringsKt.toIntOrNull(kotlin.text.StringsKt.substringAfterLast(r9, ":", r9));
      */
     /* JADX WARN: Code restructure failed: missing block: B:17:0x00de, code lost:
     
@@ -228,7 +228,7 @@ public final class MapboxRelay {
      */
     /* JADX WARN: Code restructure failed: missing block: B:25:0x00f7, code lost:
     
-        if (kotlin.text.StringsKt.endsWith$default(r13, ".mapbox.com", false, 2, (java.lang.Object) r5) == false) goto L46;
+        if (kotlin.text.StringsKt.endsWith(r13, ".mapbox.com", false) == false) goto L46;
      */
     /* JADX WARN: Code restructure failed: missing block: B:26:0x00f9, code lost:
     
@@ -248,7 +248,7 @@ public final class MapboxRelay {
     
         r0 = kotlin.Result.Companion;
         r0 = r18;
-        kotlin.Result.m1191constructorimpl(r5);
+        kotlin.KtCompat.resultOf(r5);
      */
     /* JADX WARN: Code restructure failed: missing block: B:41:0x0117, code lost:
     
@@ -257,7 +257,7 @@ public final class MapboxRelay {
     /* JADX WARN: Code restructure failed: missing block: B:42:0x0118, code lost:
     
         r5 = kotlin.Result.Companion;
-        kotlin.Result.m1191constructorimpl(kotlin.ResultKt.createFailure(r0));
+        kotlin.KtCompat.resultOf(kotlin.ResultKt.createFailure(r0));
      */
     /* JADX WARN: Code restructure failed: missing block: B:43:0x0144, code lost:
     
@@ -281,7 +281,7 @@ public final class MapboxRelay {
         r0 = kotlin.Result.Companion;
         r0 = r18;
         r3.shutdownOutput();
-        kotlin.Result.m1191constructorimpl(kotlin.Unit.INSTANCE);
+        kotlin.KtCompat.resultOf(kotlin.Unit.INSTANCE);
      */
     /* JADX WARN: Code restructure failed: missing block: B:60:0x01a4, code lost:
     
@@ -290,7 +290,7 @@ public final class MapboxRelay {
     /* JADX WARN: Code restructure failed: missing block: B:61:0x01a5, code lost:
     
         r12 = kotlin.Result.Companion;
-        kotlin.Result.m1191constructorimpl(kotlin.ResultKt.createFailure(r0));
+        kotlin.KtCompat.resultOf(kotlin.ResultKt.createFailure(r0));
      */
     /*
         Code decompiled incorrectly, please refer to instructions dump.
@@ -312,19 +312,19 @@ public final class MapboxRelay {
                 try {
                     Result.Companion companion = Result.Companion;
                     MapboxRelay mapboxRelay = this;
-                    Result.m1191constructorimpl(null);
+                    KtCompat.resultOf(null);
                 } catch (Throwable th) {
                     Result.Companion companion2 = Result.Companion;
-                    Result.m1191constructorimpl(ResultKt.createFailure(th));
+                    KtCompat.resultOf(ResultKt.createFailure(th));
                 }
                 try {
                     Result.Companion companion3 = Result.Companion;
                     MapboxRelay mapboxRelay2 = this;
                     c.close();
-                    Result.m1191constructorimpl(Unit.INSTANCE);
+                    KtCompat.resultOf(Unit.INSTANCE);
                 } catch (Throwable th2) {
                     Result.Companion companion4 = Result.Companion;
-                    Result.m1191constructorimpl(ResultKt.createFailure(th2));
+                    KtCompat.resultOf(ResultKt.createFailure(th2));
                 }
                 active.decrementAndGet();
                 return;
@@ -335,19 +335,19 @@ public final class MapboxRelay {
                     try {
                         Result.Companion companion5 = Result.Companion;
                         MapboxRelay mapboxRelay3 = this;
-                        Result.m1191constructorimpl(str);
+                        KtCompat.resultOf(str);
                     } catch (Throwable th3) {
                         Result.Companion companion6 = Result.Companion;
-                        Result.m1191constructorimpl(ResultKt.createFailure(th3));
+                        KtCompat.resultOf(ResultKt.createFailure(th3));
                     }
                     try {
                         Result.Companion companion7 = Result.Companion;
                         MapboxRelay mapboxRelay4 = this;
                         c.close();
-                        Result.m1191constructorimpl(Unit.INSTANCE);
+                        KtCompat.resultOf(Unit.INSTANCE);
                     } catch (Throwable th4) {
                         Result.Companion companion8 = Result.Companion;
-                        Result.m1191constructorimpl(ResultKt.createFailure(th4));
+                        KtCompat.resultOf(ResultKt.createFailure(th4));
                     }
                     active.decrementAndGet();
                     return;
@@ -369,19 +369,19 @@ public final class MapboxRelay {
                 } else {
                     unit2 = null;
                 }
-                Result.m1191constructorimpl(unit2);
+                KtCompat.resultOf(unit2);
             } catch (Throwable th5) {
                 Result.Companion companion10 = Result.Companion;
-                Result.m1191constructorimpl(ResultKt.createFailure(th5));
+                KtCompat.resultOf(ResultKt.createFailure(th5));
             }
             try {
                 Result.Companion companion11 = Result.Companion;
                 c.close();
-                Result.m1191constructorimpl(Unit.INSTANCE);
+                KtCompat.resultOf(Unit.INSTANCE);
             } catch (Throwable th6) {
                 th = th6;
                 Result.Companion companion12 = Result.Companion;
-                Result.m1191constructorimpl(ResultKt.createFailure(th));
+                KtCompat.resultOf(ResultKt.createFailure(th));
                 active.decrementAndGet();
             }
             active.decrementAndGet();
@@ -395,18 +395,18 @@ public final class MapboxRelay {
                 } else {
                     unit = null;
                 }
-                Result.m1191constructorimpl(unit);
+                KtCompat.resultOf(unit);
             } catch (Throwable th8) {
                 Result.Companion companion14 = Result.Companion;
-                Result.m1191constructorimpl(ResultKt.createFailure(th8));
+                KtCompat.resultOf(ResultKt.createFailure(th8));
             }
             try {
                 Result.Companion companion15 = Result.Companion;
                 c.close();
-                Result.m1191constructorimpl(Unit.INSTANCE);
+                KtCompat.resultOf(Unit.INSTANCE);
             } catch (Throwable th9) {
                 Result.Companion companion16 = Result.Companion;
-                Result.m1191constructorimpl(ResultKt.createFailure(th9));
+                KtCompat.resultOf(ResultKt.createFailure(th9));
             }
             active.decrementAndGet();
             throw th7;
@@ -415,10 +415,10 @@ public final class MapboxRelay {
             Result.Companion companion17 = Result.Companion;
             MapboxRelay mapboxRelay5 = this;
             c.close();
-            Result.m1191constructorimpl(Unit.INSTANCE);
+            KtCompat.resultOf(Unit.INSTANCE);
         } catch (Throwable th10) {
             Result.Companion companion18 = Result.Companion;
-            Result.m1191constructorimpl(ResultKt.createFailure(th10));
+            KtCompat.resultOf(ResultKt.createFailure(th10));
         }
         active.decrementAndGet();
         return;
@@ -426,11 +426,11 @@ public final class MapboxRelay {
             Result.Companion companion19 = Result.Companion;
             MapboxRelay mapboxRelay6 = this;
             c.close();
-            Result.m1191constructorimpl(Unit.INSTANCE);
+            KtCompat.resultOf(Unit.INSTANCE);
         } catch (Throwable th11) {
             th = th11;
             Result.Companion companion122 = Result.Companion;
-            Result.m1191constructorimpl(ResultKt.createFailure(th));
+            KtCompat.resultOf(ResultKt.createFailure(th));
             active.decrementAndGet();
         }
         active.decrementAndGet();
@@ -441,15 +441,15 @@ public final class MapboxRelay {
             Result.Companion companion20 = Result.Companion;
             MapboxRelay mapboxRelay7 = this;
             socket.close();
-            Result.m1191constructorimpl(Unit.INSTANCE);
+            KtCompat.resultOf(Unit.INSTANCE);
         } catch (Throwable th12) {
             Result.Companion companion21 = Result.Companion;
-            Result.m1191constructorimpl(ResultKt.createFailure(th12));
+            KtCompat.resultOf(ResultKt.createFailure(th12));
         }
         Result.Companion companion192 = Result.Companion;
         MapboxRelay mapboxRelay62 = this;
         c.close();
-        Result.m1191constructorimpl(Unit.INSTANCE);
+        KtCompat.resultOf(Unit.INSTANCE);
         active.decrementAndGet();
     }
 
@@ -464,10 +464,10 @@ public final class MapboxRelay {
         try {
             Result.Companion companion = Result.Companion;
             $c.shutdownOutput();
-            Result.m1191constructorimpl(Unit.INSTANCE);
+            KtCompat.resultOf(Unit.INSTANCE);
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            Result.m1191constructorimpl(ResultKt.createFailure(th));
+            KtCompat.resultOf(ResultKt.createFailure(th));
         }
     }
 

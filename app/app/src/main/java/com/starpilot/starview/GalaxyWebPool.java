@@ -104,7 +104,7 @@ public final class GalaxyWebPool {
                         str = "";
                     }
                     base = galaxyWebPool.base(str);
-                    return !StringsKt.startsWith$default(r0, base, false, 2, (Object) null);
+                    return !StringsKt.startsWith(r0, base, false);
                 }
 
                 @Override // android.webkit.WebViewClient
@@ -182,7 +182,7 @@ public final class GalaxyWebPool {
         Context ctx = w.getContext();
         String it = URLUtil.guessFileName(url, disposition, mime);
         Intrinsics.checkNotNull(it);
-        if (StringsKt.startsWith$default(it, "downloadfile", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(it, "downloadfile", false)) {
             long currentTimeMillis = System.currentTimeMillis();
             String e2 = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
             if (e2 == null || (e = "." + e2) == null) {
@@ -191,7 +191,7 @@ public final class GalaxyWebPool {
             it = "galaxy-" + currentTimeMillis + e;
         }
         String name = it;
-        if (StringsKt.startsWith$default(url, "blob:", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(url, "blob:", false)) {
             String q = JSONObject.quote(url);
             String n = JSONObject.quote(name);
             w.evaluateJavascript("(function(){fetch(" + q + ").then(r=>r.blob()).then(b=>{var f=new FileReader();f.onload=function(){StarViewSave.save(" + n + ",f.result.split(',')[1]||'')};f.readAsDataURL(b)})})();", null);
@@ -323,7 +323,7 @@ public final class GalaxyWebPool {
 
     /* JADX INFO: Access modifiers changed from: private */
     public final void inject(WebView view) {
-        String css = StringsKt.replace$default(StringsKt.replace$default(getCSS(), "\\", "\\\\", false, 4, (Object) null), "`", "\\`", false, 4, (Object) null);
+        String css = StringsKt.replace(StringsKt.replace(getCSS(), "\\", "\\\\", false), "`", "\\`", false);
         view.evaluateJavascript("(function(){try{localStorage.setItem('galaxy-preview-theme','dark');}catch(e){}\n      var s=document.getElementById('starview-theme');if(!s){s=document.createElement('style');s.id='starview-theme';(document.head||document.documentElement).appendChild(s);}\n      s.textContent=`" + css + "`;})();", null);
     }
 

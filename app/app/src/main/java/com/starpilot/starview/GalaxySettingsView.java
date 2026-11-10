@@ -808,14 +808,14 @@ public final class GalaxySettingsView extends FrameLayout {
             GalaxyRow galaxyRow = (GalaxyRow) CollectionsKt.getOrNull(rows, editorRow);
             it.update(page, galaxyRow != null && galaxyRow.getAvailable());
         }
-        String sig = page.optString("title") + "|" + page.optString("subtitle") + "|" + page.optBoolean("vehicleIdentified") + "|" + CollectionsKt.joinToString$default(rows, "\n", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda10
+        String sig = page.optString("title") + "|" + page.optString("subtitle") + "|" + page.optBoolean("vehicleIdentified") + "|" + CollectionsKt.joinToString(rows, "\n", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda10
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence draw$lambda$26;
                 draw$lambda$26 = GalaxySettingsView.draw$lambda$26((GalaxyRow) obj);
                 return draw$lambda$26;
             }
-        }, 30, null);
+        });
         if (Intrinsics.areEqual(sig, this.lastShown)) {
             return;
         }
@@ -1082,16 +1082,16 @@ public final class GalaxySettingsView extends FrameLayout {
         String str;
         String str2;
         String page;
-        if (!StringsKt.contains$default((CharSequence) path, (CharSequence) "events", false, 2, (Object) null)) {
+        if (!StringsKt.contains((CharSequence) path, (CharSequence) "events", false)) {
             str = "crop";
-            if (!StringsKt.contains$default((CharSequence) path, (CharSequence) "vasm", false, 2, (Object) null) && !StringsKt.contains$default((CharSequence) path, (CharSequence) "pip", false, 2, (Object) null)) {
-                if (StringsKt.contains$default((CharSequence) path, (CharSequence) "theme", false, 2, (Object) null)) {
+            if (!StringsKt.contains((CharSequence) path, (CharSequence) "vasm", false) && !StringsKt.contains((CharSequence) path, (CharSequence) "pip", false)) {
+                if (StringsKt.contains((CharSequence) path, (CharSequence) "theme", false)) {
                     str2 = "palette";
-                } else if (StringsKt.contains$default((CharSequence) path, (CharSequence) "vehicle", false, 2, (Object) null)) {
+                } else if (StringsKt.contains((CharSequence) path, (CharSequence) "vehicle", false)) {
                     str2 = "car";
                 } else {
                     str = "camera";
-                    if (!StringsKt.contains$default((CharSequence) path, (CharSequence) "camera", false, 2, (Object) null)) {
+                    if (!StringsKt.contains((CharSequence) path, (CharSequence) "camera", false)) {
                         str2 = "link";
                     }
                 }
@@ -1113,7 +1113,7 @@ public final class GalaxySettingsView extends FrameLayout {
     }
 
     private final String desc(GalaxyRow r) {
-        String replace$default = StringsKt.replace$default(r.getShownReason(), "https://firestar.link/discord", "the StarPilot Discord", false, 4, (Object) null);
+        String replace$default = StringsKt.replace(r.getShownReason(), "https://firestar.link/discord", "the StarPilot Discord", false);
         if (StringsKt.isBlank(replace$default)) {
             replace$default = null;
         }
@@ -1126,7 +1126,7 @@ public final class GalaxySettingsView extends FrameLayout {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit defaultButton$lambda$40;
-                    defaultButton$lambda$40 = GalaxySettingsView.defaultButton$lambda$40(GalaxyRow.this, this);
+                    defaultButton$lambda$40 = GalaxySettingsView.defaultButton$lambda$40(r, this);
                     return defaultButton$lambda$40;
                 }
             }, 2, null);
@@ -1156,7 +1156,7 @@ public final class GalaxySettingsView extends FrameLayout {
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda6
             @Override // android.widget.CompoundButton.OnCheckedChangeListener
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                GalaxySettingsView.switchRow$lambda$43(GalaxyRow.this, this, compoundButton, z);
+                GalaxySettingsView.switchRow$lambda$43(r, this, compoundButton, z);
             }
         });
         row.addView(sw);
@@ -1206,7 +1206,7 @@ public final class GalaxySettingsView extends FrameLayout {
                         @Override // kotlin.jvm.functions.Function1
                         public final Object invoke(Object obj) {
                             Unit selectRow$lambda$46;
-                            selectRow$lambda$46 = GalaxySettingsView.selectRow$lambda$46(GalaxyRow.this, this, paint, ((Integer) obj).intValue());
+                            selectRow$lambda$46 = GalaxySettingsView.selectRow$lambda$46(r, this, paint, ((Integer) obj).intValue());
                             return selectRow$lambda$46;
                         }
                     });
@@ -1231,7 +1231,7 @@ public final class GalaxySettingsView extends FrameLayout {
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit selectRow$lambda$48;
-                        selectRow$lambda$48 = GalaxySettingsView.selectRow$lambda$48(GalaxyRow.this, this);
+                        selectRow$lambda$48 = GalaxySettingsView.selectRow$lambda$48(r, this);
                         return selectRow$lambda$48;
                     }
                 }, 2, null);
@@ -1273,7 +1273,7 @@ public final class GalaxySettingsView extends FrameLayout {
         title.setSingleChoiceItems((CharSequence[]) $this$toTypedArray$iv.toArray(new String[0]), $r.getChoices().indexOf($r.getValue()), new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda0
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                GalaxySettingsView.selectRow$lambda$48$lambda$47(GalaxyRow.this, this$0, dialogInterface, i);
+                GalaxySettingsView.selectRow$lambda$48$lambda$47($r, this$0, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         return Unit.INSTANCE;
@@ -1353,7 +1353,7 @@ public final class GalaxySettingsView extends FrameLayout {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit sliderRow$lambda$55;
-                sliderRow$lambda$55 = GalaxySettingsView.sliderRow$lambda$55(GalaxyRow.this, this, seekBar, shown$default, bounds, round);
+                sliderRow$lambda$55 = GalaxySettingsView.sliderRow$lambda$55(r, this, seekBar, shown$default, bounds, round);
                 return sliderRow$lambda$55;
             }
         }));
@@ -1366,7 +1366,7 @@ public final class GalaxySettingsView extends FrameLayout {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit sliderRow$lambda$57;
-                sliderRow$lambda$57 = GalaxySettingsView.sliderRow$lambda$57(GalaxyRow.this, this, seekBar, i, shown$default, bounds, round);
+                sliderRow$lambda$57 = GalaxySettingsView.sliderRow$lambda$57(r, this, seekBar, i, shown$default, bounds, round);
                 return sliderRow$lambda$57;
             }
         }));
@@ -1436,7 +1436,7 @@ public final class GalaxySettingsView extends FrameLayout {
             value = null;
         }
         strArr[1] = value;
-        String joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), "\n", null, null, 0, null, null, 62, null);
+        String joinToString$default = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), "\n", "", "", -1, "...", null);
         if (StringsKt.isBlank(joinToString$default)) {
             joinToString$default = null;
         }
@@ -1451,7 +1451,7 @@ public final class GalaxySettingsView extends FrameLayout {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit actionRow$lambda$61;
-                    actionRow$lambda$61 = GalaxySettingsView.actionRow$lambda$61(GalaxyRow.this, this);
+                    actionRow$lambda$61 = GalaxySettingsView.actionRow$lambda$61(r, this);
                     return actionRow$lambda$61;
                 }
             }, 2, null));
@@ -1552,7 +1552,7 @@ public final class GalaxySettingsView extends FrameLayout {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit saveValue$lambda$66$lambda$65;
-                saveValue$lambda$66$lambda$65 = GalaxySettingsView.saveValue$lambda$66$lambda$65(GalaxySettingsView.this, $r);
+                saveValue$lambda$66$lambda$65 = GalaxySettingsView.saveValue$lambda$66$lambda$65(this$0, $r);
                 return saveValue$lambda$66$lambda$65;
             }
         });
@@ -1663,17 +1663,17 @@ public final class GalaxySettingsView extends FrameLayout {
         new AlertDialog.Builder(this$0.getContext()).setTitle("Save changes?").setMessage(o.optString("question", "Save the camera window regions?")).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda2
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                GalaxySettingsView.confirm$default(GalaxySettingsView.this, intent, null, 2, null);
+                GalaxySettingsView.confirm$default(this$0, intent, null, 2, null);
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda3
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                GalaxySettingsView.reviewDraft$lambda$74$lambda$72(GalaxySettingsView.this, dialogInterface, i);
+                GalaxySettingsView.reviewDraft$lambda$74$lambda$72(this$0, dialogInterface, i);
             }
         }).setOnCancelListener(new DialogInterface.OnCancelListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda4
             @Override // android.content.DialogInterface.OnCancelListener
             public final void onCancel(DialogInterface dialogInterface) {
-                GalaxySettingsView.reviewDraft$lambda$74$lambda$73(GalaxySettingsView.this, dialogInterface);
+                GalaxySettingsView.reviewDraft$lambda$74$lambda$73(this$0, dialogInterface);
             }
         }).show();
         return Unit.INSTANCE;
@@ -1728,17 +1728,17 @@ public final class GalaxySettingsView extends FrameLayout {
         new AlertDialog.Builder(this$0.getContext()).setTitle("Confirm").setMessage(o.optString("question", "Apply " + $r.getLabel() + "?")).setPositiveButton("Confirm", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda37
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                GalaxySettingsView.confirm$default(GalaxySettingsView.this, intent, null, 2, null);
+                GalaxySettingsView.confirm$default(this$0, intent, null, 2, null);
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda38
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                GalaxySettingsView.review$lambda$79$lambda$77(GalaxySettingsView.this, dialogInterface, i);
+                GalaxySettingsView.review$lambda$79$lambda$77(this$0, dialogInterface, i);
             }
         }).setOnCancelListener(new DialogInterface.OnCancelListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda1
             @Override // android.content.DialogInterface.OnCancelListener
             public final void onCancel(DialogInterface dialogInterface) {
-                GalaxySettingsView.review$lambda$79$lambda$78(GalaxySettingsView.this, dialogInterface);
+                GalaxySettingsView.review$lambda$79$lambda$78(this$0, dialogInterface);
             }
         }).show();
         return Unit.INSTANCE;

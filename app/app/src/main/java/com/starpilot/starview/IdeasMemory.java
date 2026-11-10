@@ -121,7 +121,7 @@ public final class IdeasMemory {
                 it = null;
             }
             if (it != null) {
-                JSONObject o = new JSONObject(FilesKt.readText$default(it, null, 1, null));
+                JSONObject o = new JSONObject(FilesKt.readText(it, kotlin.text.Charsets.UTF_8));
                 Iterator<String> keys = o.keys();
                 Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
                 while (keys.hasNext()) {
@@ -143,7 +143,7 @@ public final class IdeasMemory {
                 it2 = null;
             }
             if (it2 != null) {
-                JSONArray a2 = new JSONArray(FilesKt.readText$default(it2, null, 1, null));
+                JSONArray a2 = new JSONArray(FilesKt.readText(it2, kotlin.text.Charsets.UTF_8));
                 int length = a2.length();
                 for (int i = 0; i < length; i++) {
                     this.teachPaths.add(a2.getJSONObject(i));
@@ -321,7 +321,7 @@ public final class IdeasMemory {
         if (turned || nowMs - this.turnStartMs > 60000) {
             this.turnSide = 0;
             if (dc != null) {
-                DataClient.request$default(dc, "blink", MapsKt.mapOf(TuplesKt.to("side", "off")), null, 4, null);
+                dc.request("blink", MapsKt.mapOf(TuplesKt.to("side", "off")), null);
                 return;
             }
             return;
@@ -331,7 +331,7 @@ public final class IdeasMemory {
             Pair[] pairArr = new Pair[2];
             pairArr[0] = TuplesKt.to("side", this.turnSide < 0 ? "left" : "right");
             pairArr[1] = TuplesKt.to("why", "turn");
-            DataClient.request$default(dc, "blink", MapsKt.mapOf(pairArr), null, 4, null);
+            dc.request("blink", MapsKt.mapOf(pairArr), null);
         }
     }
 
@@ -447,7 +447,7 @@ public final class IdeasMemory {
             File file2 = new File(file, "teach.json");
             String jSONArray = new JSONArray((Collection) this.teachPaths).toString();
             Intrinsics.checkNotNullExpressionValue(jSONArray, "toString(...)");
-            FilesKt.writeText$default(file2, jSONArray, null, 2, null);
+            FilesKt.writeText(file2, jSONArray, kotlin.text.Charsets.UTF_8);
         } catch (Exception e) {
         }
         return pts.size();
@@ -562,7 +562,7 @@ public final class IdeasMemory {
                 File file2 = new File(file, "lanes.json");
                 String jSONObject = o.toString();
                 Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
-                FilesKt.writeText$default(file2, jSONObject, null, 2, null);
+                FilesKt.writeText(file2, jSONObject, kotlin.text.Charsets.UTF_8);
                 this.lanesDirty = false;
             } catch (Exception e) {
             }
@@ -582,7 +582,7 @@ public final class IdeasMemory {
                     Intrinsics.throwUninitializedPropertyAccessException("dir");
                     file4 = null;
                 }
-                FilesKt.appendText$default(new File(file4, "comfort.csv"), System.currentTimeMillis() + "," + score + "\n", null, 2, null);
+                FilesKt.appendText(new File(file4, "comfort.csv"), System.currentTimeMillis() + "," + score + "\n", kotlin.text.Charsets.UTF_8);
             } catch (Exception e2) {
             }
         }
@@ -599,8 +599,8 @@ public final class IdeasMemory {
                 Intrinsics.throwUninitializedPropertyAccessException("dir");
                 file = null;
             }
-            String str = (String) CollectionsKt.lastOrNull(FilesKt.readLines$default(new File(file, "comfort.csv"), null, 1, null));
-            if (str == null || (split$default = StringsKt.split$default((CharSequence) str, new String[]{","}, false, 0, 6, (Object) null)) == null || (it = (String) CollectionsKt.getOrNull(split$default, 1)) == null) {
+            String str = (String) CollectionsKt.lastOrNull(FilesKt.readLines(new File(file, "comfort.csv"), kotlin.text.Charsets.UTF_8));
+            if (str == null || (split$default = StringsKt.split((CharSequence) str, new String[]{","}, false, 0)) == null || (it = (String) CollectionsKt.getOrNull(split$default, 1)) == null) {
                 return "";
             }
             String str2 = "last drive " + it + "/100";

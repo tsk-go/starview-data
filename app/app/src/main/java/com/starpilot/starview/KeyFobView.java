@@ -137,7 +137,7 @@ public final class KeyFobView extends CardPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit load$lambda$2$lambda$1;
-                    load$lambda$2$lambda$1 = KeyFobView.load$lambda$2$lambda$1(KeyFobView.this, (JSONObject) obj);
+                    load$lambda$2$lambda$1 = KeyFobView.load$lambda$2$lambda$1(this$0, (JSONObject) obj);
                     return load$lambda$2$lambda$1;
                 }
             }, 2, null);
@@ -450,7 +450,7 @@ public final class KeyFobView extends CardPage {
                         ids = ids2;
                         others = others2;
                         str = str3;
-                        text = StringsKt.endsWith$default(did, "failed", false, 2, (Object) null) ? this.red : CarUi.Companion.getTEXT();
+                        text = StringsKt.endsWith(did, "failed", false) ? this.red : CarUi.Companion.getTEXT();
                     } else {
                         text = CarUi.Companion.getDIM();
                         ids = ids2;
@@ -502,7 +502,7 @@ public final class KeyFobView extends CardPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit paint$lambda$9$lambda$8$lambda$7$lambda$6;
-                paint$lambda$9$lambda$8$lambda$7$lambda$6 = KeyFobView.paint$lambda$9$lambda$8$lambda$7$lambda$6(KeyFobView.this, (JSONObject) obj);
+                paint$lambda$9$lambda$8$lambda$7$lambda$6 = KeyFobView.paint$lambda$9$lambda$8$lambda$7$lambda$6(this$0, (JSONObject) obj);
                 return paint$lambda$9$lambda$8$lambda$7$lambda$6;
             }
         });
@@ -528,7 +528,7 @@ public final class KeyFobView extends CardPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit paint$lambda$11$lambda$10;
-                paint$lambda$11$lambda$10 = KeyFobView.paint$lambda$11$lambda$10(KeyFobView.this, (JSONObject) obj);
+                paint$lambda$11$lambda$10 = KeyFobView.paint$lambda$11$lambda$10(this$0, (JSONObject) obj);
                 return paint$lambda$11$lambda$10;
             }
         });
@@ -555,7 +555,7 @@ public final class KeyFobView extends CardPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit paint$lambda$13$lambda$12;
-                paint$lambda$13$lambda$12 = KeyFobView.paint$lambda$13$lambda$12(KeyFobView.this, (JSONObject) obj);
+                paint$lambda$13$lambda$12 = KeyFobView.paint$lambda$13$lambda$12(this$0, (JSONObject) obj);
                 return paint$lambda$13$lambda$12;
             }
         }, 2, null);

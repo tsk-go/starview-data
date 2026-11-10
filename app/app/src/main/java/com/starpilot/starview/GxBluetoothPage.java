@@ -488,14 +488,14 @@ public final class GxBluetoothPage extends GxPage {
                 this.btPromptSig = psig;
                 paintPrompt();
             }
-            String lsig = CollectionsKt.joinToString$default(this.btDevices, null, null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda9
+            String lsig = CollectionsKt.joinToString(this.btDevices, ", ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda9
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     CharSequence btPaint$lambda$10;
                     btPaint$lambda$10 = GxBluetoothPage.btPaint$lambda$10((JSONObject) obj);
                     return btPaint$lambda$10;
                 }
-            }, 31, null) + "|" + this.btSelectedAudio + "|" + this.btPairingAddress + "|" + this.btBusy + "|" + this.btOffroad + "|" + this.btDiscovering + "|" + this.btLoaded;
+            }) + "|" + this.btSelectedAudio + "|" + this.btPairingAddress + "|" + this.btBusy + "|" + this.btOffroad + "|" + this.btDiscovering + "|" + this.btLoaded;
             if (Intrinsics.areEqual(lsig, this.btListSig)) {
                 return;
             }
@@ -722,7 +722,7 @@ public final class GxBluetoothPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit btPaint$lambda$18$lambda$17;
-                btPaint$lambda$18$lambda$17 = GxBluetoothPage.btPaint$lambda$18$lambda$17(GxBluetoothPage.this, $d);
+                btPaint$lambda$18$lambda$17 = GxBluetoothPage.btPaint$lambda$18$lambda$17(this$0, $d);
                 return btPaint$lambda$18$lambda$17;
             }
         });
@@ -1483,7 +1483,7 @@ public final class GxBluetoothPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit wcPaint$lambda$39$lambda$38;
-                wcPaint$lambda$39$lambda$38 = GxBluetoothPage.wcPaint$lambda$39$lambda$38(GxBluetoothPage.this);
+                wcPaint$lambda$39$lambda$38 = GxBluetoothPage.wcPaint$lambda$39$lambda$38(this$0);
                 return wcPaint$lambda$39$lambda$38;
             }
         });
@@ -1551,7 +1551,7 @@ public final class GxBluetoothPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit wcPaint$lambda$58$lambda$57;
-                wcPaint$lambda$58$lambda$57 = GxBluetoothPage.wcPaint$lambda$58$lambda$57(GxBluetoothPage.this, $i, $key, (String) obj);
+                wcPaint$lambda$58$lambda$57 = GxBluetoothPage.wcPaint$lambda$58$lambda$57(this$0, $i, $key, (String) obj);
                 return wcPaint$lambda$58$lambda$57;
             }
         }, 16, null);
@@ -1616,7 +1616,7 @@ public final class GxBluetoothPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit slotCard$lambda$64;
-                    slotCard$lambda$64 = GxBluetoothPage.slotCard$lambda$64(Function0.this);
+                    slotCard$lambda$64 = GxBluetoothPage.slotCard$lambda$64(onLearn);
                     return slotCard$lambda$64;
                 }
             });
@@ -1916,7 +1916,7 @@ public final class GxBluetoothPage extends GxPage {
         $this$pickAction_u24optionButton_u24lambda_u2485.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda11
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                GxBluetoothPage.pickAction$optionButton$lambda$88(Ref.ObjectRef.this, this$0, $i, k, view);
+                GxBluetoothPage.pickAction$optionButton$lambda$88(objectRef, this$0, $i, k, view);
             }
         });
         LinearLayout.LayoutParams $this$pickAction_u24optionButton_u24lambda_u2489 = new LinearLayout.LayoutParams(-1, -2);
@@ -1988,7 +1988,7 @@ public final class GxBluetoothPage extends GxPage {
             strArr[3] = GxPage.str$default(gxBluetoothPage, o, "picker_label", null, 2, null);
             strArr[4] = GxPage.str$default(gxBluetoothPage, o, "picker_description", null, 2, null);
             strArr[5] = gxBluetoothPage.category(o);
-            String hay = CollectionsKt.joinToString$default(CollectionsKt.listOf((Object[]) strArr), " ", null, null, 0, null, null, 62, null).toLowerCase(Locale.ROOT);
+            String hay = CollectionsKt.joinToString(CollectionsKt.listOf((Object[]) strArr), " ", "", "", -1, "...", null).toLowerCase(Locale.ROOT);
             Intrinsics.checkNotNullExpressionValue(hay, str2);
             Iterable $this$all$iv = words;
             if (!($this$all$iv instanceof Collection) || !((Collection) $this$all$iv).isEmpty()) {
@@ -2002,7 +2002,7 @@ public final class GxBluetoothPage extends GxPage {
                         $this$filterTo$iv$iv = $this$filterTo$iv$iv2;
                         Iterable $this$all$iv2 = $this$all$iv;
                         i3 = 0;
-                        if (!StringsKt.contains$default((CharSequence) hay, (CharSequence) it4, false, 2, (Object) null)) {
+                        if (!StringsKt.contains((CharSequence) hay, (CharSequence) it4, false)) {
                             z = false;
                             break;
                         }
@@ -2092,7 +2092,7 @@ public final class GxBluetoothPage extends GxPage {
                                     destination$iv$iv4.add(element$iv$iv4);
                                 }
                             }
-                            results.addView(pickAction$optionButton(this$0, key, objectRef, $i, o2, CollectionsKt.joinToString$default((List) destination$iv$iv4, " · ", null, null, 0, null, null, 62, null)));
+                            results.addView(pickAction$optionButton(this$0, key, objectRef, $i, o2, CollectionsKt.joinToString((List) destination$iv$iv4, " · ", "", "", -1, "...", null)));
                         }
                     }
                     gxBluetoothPage = this$0;

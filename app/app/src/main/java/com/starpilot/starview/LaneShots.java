@@ -498,7 +498,7 @@ public final class LaneShots {
                 this$0.getIo().execute(new Runnable() { // from class: com.starpilot.starview.LaneShots$$ExternalSyntheticLambda1
                     @Override // java.lang.Runnable
                     public final void run() {
-                        LaneShots.request$both$lambda$2$lambda$1(LaneShots.this, c, side, m, n, $caption, $why, now, rd, ans, cl, wd, list, ms, $copyTo);
+                        LaneShots.request$both$lambda$2$lambda$1(this$0, c, side, m, n, $caption, $why, now, rd, ans, cl, wd, list, ms, $copyTo);
                     }
                 });
                 Unit unit = Unit.INSTANCE;
@@ -612,7 +612,7 @@ public final class LaneShots {
                 }
                 out.recycle();
                 src.recycle();
-                String drive = StringsKt.substringAfterLast$default(this.driveFolder, '/', (String) null, 2, (Object) null);
+                String drive = StringsKt.substringAfterLast(this.driveFolder, '/', this.driveFolder);
                 File $this$save_u24lambda_u2414 = new File(getCleanDir(), drive);
                 $this$save_u24lambda_u2414.mkdirs();
                 String base = StringsKt.removeSuffix(name, (CharSequence) ".jpg");
@@ -624,20 +624,20 @@ public final class LaneShots {
                 strArr[1] = uri.toString();
                 strArr[2] = String.valueOf(atMs);
                 strArr[3] = why.name();
-                strArr[4] = StringsKt.replace$default(StringsKt.replace$default(caption, "\n", " | ", false, 4, (Object) null), "\t", " ", false, 4, (Object) null);
+                strArr[4] = StringsKt.replace(StringsKt.replace(caption, "\n", " | ", false), "\t", " ", false);
                 strArr[5] = drive;
                 strArr[6] = String.valueOf(rd != null ? rd.getId() : 0L);
                 if (rd == null || (str = rd.getName()) == null) {
                     str = "";
                 }
-                strArr[7] = StringsKt.replace$default(str, "\t", " ", false, 4, (Object) null);
+                strArr[7] = StringsKt.replace(str, "\t", " ", false);
                 strArr[8] = ans;
                 strArr[9] = roadF;
                 strArr[10] = wideF;
                 strArr[11] = LaneRamps.INSTANCE.codes(rp);
                 strArr[12] = ms;
-                FilesKt.appendText$default(file, CollectionsKt.joinToString$default(CollectionsKt.listOf((Object[]) strArr), "\t", null, null, 0, null, null, 62, null) + "\n", null, 2, null);
-                if (StringsKt.startsWith$default(caption, "[auto]", false, 2, (Object) null)) {
+                FilesKt.appendText(file, CollectionsKt.joinToString(CollectionsKt.listOf((Object[]) strArr), "\t", "", "", -1, "...", null) + "\n", kotlin.text.Charsets.UTF_8);
+                if (StringsKt.startsWith(caption, "[auto]", false)) {
                     mark$default(this, name, 1, null, 4, null);
                 }
             } catch (Exception e2) {
@@ -688,7 +688,7 @@ public final class LaneShots {
         Intrinsics.checkNotNullParameter(src, "src");
         Intrinsics.checkNotNullParameter(caption, "caption");
         Intrinsics.checkNotNullParameter(rp, "rp");
-        List lines = StringsKt.split$default((CharSequence) caption, new String[]{"\n"}, false, 0, 6, (Object) null);
+        List lines = StringsKt.split((CharSequence) caption, new String[]{"\n"}, false, 0);
         int bar = (lines.size() * 26) + 30;
         int h = src.getHeight();
         int rightW4 = sceneBmp != null ? (sceneBmp.getWidth() * h) / sceneBmp.getHeight() : 300;
@@ -876,7 +876,7 @@ public final class LaneShots {
         char c = 0;
         try {
             int i = 1;
-            List readLines$default = FilesKt.readLines$default(this.index, null, 1, null);
+            List readLines$default = FilesKt.readLines(this.index, kotlin.text.Charsets.UTF_8);
             ArrayList arrayList = new ArrayList();
             ArrayList arrayList2 = new ArrayList();
             Iterator it = readLines$default.iterator();
@@ -888,7 +888,7 @@ public final class LaneShots {
                 Object next = it.next();
                 String[] strArr = new String[1];
                 strArr[c] = "\t";
-                List split$default = StringsKt.split$default((CharSequence) next, strArr, false, 0, 6, (Object) null);
+                List split$default = StringsKt.split((CharSequence) next, strArr, false, 0);
                 String str2 = (CharSequence) (5 < split$default.size() ? split$default.get(5) : str);
                 if (str2.length() == 0) {
                     str2 = "earlier";
@@ -907,7 +907,7 @@ public final class LaneShots {
             for (String str3 : list) {
                 String[] strArr2 = new String[i];
                 strArr2[0] = "\t";
-                List split$default2 = StringsKt.split$default((CharSequence) str3, strArr2, false, 0, 6, (Object) null);
+                List split$default2 = StringsKt.split((CharSequence) str3, strArr2, false, 0);
                 try {
                     this.ctx.getContentResolver().delete(Uri.parse((String) split$default2.get(i)), null, null);
                 } catch (Exception e) {
@@ -940,25 +940,25 @@ public final class LaneShots {
             File file2 = this.index;
             String str5 = str;
             if (!list2.isEmpty()) {
-                str5 = CollectionsKt.joinToString$default(list2, "\n", null, null, 0, null, null, 62, null) + "\n";
+                str5 = CollectionsKt.joinToString(list2, "\n", "", "", -1, "...", null) + "\n";
             }
-            FilesKt.writeText$default(file2, str5, null, 2, null);
+            FilesKt.writeText(file2, str5, kotlin.text.Charsets.UTF_8);
             List list4 = list;
             ArrayList arrayList3 = new ArrayList(CollectionsKt.collectionSizeOrDefault(list4, 10));
             Iterator it2 = list4.iterator();
             while (it2.hasNext()) {
-                arrayList3.add(StringsKt.substringBefore$default((String) it2.next(), '\t', (String) null, 2, (Object) null));
+                arrayList3.add(StringsKt.substringBefore((String) it2.next(), '\t', ((String) it2.next())));
             }
             HashSet hashSet = CollectionsKt.toHashSet(arrayList3);
             try {
                 File file3 = this.reviews;
-                List readLines$default2 = FilesKt.readLines$default(this.reviews, null, 1, null);
+                List readLines$default2 = FilesKt.readLines(this.reviews, kotlin.text.Charsets.UTF_8);
                 ArrayList arrayList4 = new ArrayList();
                 for (Object obj : readLines$default2) {
                     List list5 = readLines$default2;
                     List list6 = list2;
                     try {
-                        if (!hashSet.contains(StringsKt.substringBefore$default((String) obj, '\t', (String) null, 2, (Object) null))) {
+                        if (!hashSet.contains(StringsKt.substringBefore((String) obj, '\t', ((String) obj)))) {
                             arrayList4.add(obj);
                         }
                         list2 = list6;
@@ -966,11 +966,11 @@ public final class LaneShots {
                     } catch (Exception e2) {
                     }
                 }
-                String joinToString$default = CollectionsKt.joinToString$default(arrayList4, "\n", null, null, 0, null, null, 62, null);
+                String joinToString$default = CollectionsKt.joinToString(arrayList4, "\n", "", "", -1, "...", null);
                 if (!(joinToString$default.length() == 0)) {
                     joinToString$default = joinToString$default + "\n";
                 }
-                FilesKt.writeText$default(file3, joinToString$default, null, 2, null);
+                FilesKt.writeText(file3, joinToString$default, kotlin.text.Charsets.UTF_8);
             } catch (Exception e3) {
             }
             return list.size();
@@ -983,13 +983,13 @@ public final class LaneShots {
         Shot shot;
         try {
             int i = 1;
-            Iterable $this$mapNotNull$iv = FilesKt.readLines$default(this.index, null, 1, null);
+            Iterable $this$mapNotNull$iv = FilesKt.readLines(this.index, kotlin.text.Charsets.UTF_8);
             Collection destination$iv$iv = new ArrayList();
             for (Object element$iv$iv$iv : $this$mapNotNull$iv) {
                 String ln = (String) element$iv$iv$iv;
                 String[] strArr = new String[i];
                 strArr[0] = "\t";
-                List p = StringsKt.split$default((CharSequence) ln, strArr, false, 0, 6, (Object) null);
+                List p = StringsKt.split((CharSequence) ln, strArr, false, 0);
                 Iterable $this$mapNotNull$iv2 = $this$mapNotNull$iv;
                 if (p.size() >= 5) {
                     String str = (String) p.get(0);
@@ -997,7 +997,7 @@ public final class LaneShots {
                     Long longOrNull = StringsKt.toLongOrNull((String) p.get(2));
                     long longValue = longOrNull != null ? longOrNull.longValue() : 0L;
                     String str3 = (String) p.get(3);
-                    String replace$default = StringsKt.replace$default((String) p.get(4), " | ", "\n", false, 4, (Object) null);
+                    String replace$default = StringsKt.replace((String) p.get(4), " | ", "\n", false);
                     Object obj = "";
                     String str4 = (String) (5 < p.size() ? p.get(5) : "");
                     Long longOrNull2 = StringsKt.toLongOrNull((String) (6 < p.size() ? p.get(6) : "0"));
@@ -1027,10 +1027,10 @@ public final class LaneShots {
     public final Map<String, Integer> verdicts() {
         try {
             HashMap m = new HashMap();
-            Iterable $this$forEach$iv = FilesKt.readLines$default(this.reviews, null, 1, null);
+            Iterable $this$forEach$iv = FilesKt.readLines(this.reviews, kotlin.text.Charsets.UTF_8);
             for (Object element$iv : $this$forEach$iv) {
                 String ln = (String) element$iv;
-                List p = StringsKt.split$default((CharSequence) ln, new String[]{"\t"}, false, 0, 6, (Object) null);
+                List p = StringsKt.split((CharSequence) ln, new String[]{"\t"}, false, 0);
                 if (p.size() >= 2) {
                     HashMap hashMap = m;
                     Object obj = p.get(0);
@@ -1047,10 +1047,10 @@ public final class LaneShots {
     public final Map<String, String> skipReasons() {
         try {
             HashMap m = new HashMap();
-            Iterable $this$forEach$iv = FilesKt.readLines$default(this.reviews, null, 1, null);
+            Iterable $this$forEach$iv = FilesKt.readLines(this.reviews, kotlin.text.Charsets.UTF_8);
             for (Object element$iv : $this$forEach$iv) {
                 String ln = (String) element$iv;
-                List p = StringsKt.split$default((CharSequence) ln, new String[]{"\t"}, false, 0, 6, (Object) null);
+                List p = StringsKt.split((CharSequence) ln, new String[]{"\t"}, false, 0);
                 if (p.size() >= 2) {
                     if (Intrinsics.areEqual(p.get(1), "0")) {
                         m.put(p.get(0), 2 < p.size() ? p.get(2) : "skip");
@@ -1081,11 +1081,11 @@ public final class LaneShots {
             if (v == 0) {
                 if (why.length() > 0) {
                     str = "\t" + why;
-                    FilesKt.appendText$default(file, name + "\t" + v + str + "\n", null, 2, null);
+                    FilesKt.appendText(file, name + "\t" + v + str + "\n", kotlin.text.Charsets.UTF_8);
                 }
             }
             str = "";
-            FilesKt.appendText$default(file, name + "\t" + v + str + "\n", null, 2, null);
+            FilesKt.appendText(file, name + "\t" + v + str + "\n", kotlin.text.Charsets.UTF_8);
         } catch (Exception e) {
         }
     }
@@ -1094,7 +1094,7 @@ public final class LaneShots {
         Intrinsics.checkNotNullParameter(name, "name");
         Intrinsics.checkNotNullParameter(r, "r");
         try {
-            FilesKt.appendText$default(this.reviews, name + "\t-1\t" + r.getThrough() + "\t" + r.getLane() + "\t" + r.getExtraL() + "\t" + r.getExtraR() + "\t" + r.getKind() + "\t" + r.getWay() + "\t" + r.getOtherWay() + "\t" + r.getKindR() + "\n", null, 2, null);
+            FilesKt.appendText(this.reviews, name + "\t-1\t" + r.getThrough() + "\t" + r.getLane() + "\t" + r.getExtraL() + "\t" + r.getExtraR() + "\t" + r.getKind() + "\t" + r.getWay() + "\t" + r.getOtherWay() + "\t" + r.getKindR() + "\n", kotlin.text.Charsets.UTF_8);
         } catch (Exception e) {
         }
     }
@@ -1106,10 +1106,10 @@ public final class LaneShots {
         } catch (Exception e) {
         }
         try {
-            Iterable $this$forEach$iv = FilesKt.readLines$default(this.reviews, null, 1, null);
+            Iterable $this$forEach$iv = FilesKt.readLines(this.reviews, kotlin.text.Charsets.UTF_8);
             for (Object element$iv : $this$forEach$iv) {
                 String ln = (String) element$iv;
-                List p = StringsKt.split$default((CharSequence) ln, new String[]{"\t"}, false, 0, 6, (Object) null);
+                List p = StringsKt.split((CharSequence) ln, new String[]{"\t"}, false, 0);
                 if (p.size() >= 4 && Intrinsics.areEqual(p.get(1), "-1")) {
                     HashMap hashMap = r;
                     Object obj = p.get(0);
@@ -1220,11 +1220,11 @@ public final class LaneShots {
         Intrinsics.checkNotNullParameter(progress, "progress");
         int i2 = 1;
         try {
-            Iterable $this$map$iv = FilesKt.readLines$default(this.index, null, 1, null);
+            Iterable $this$map$iv = FilesKt.readLines(this.index, kotlin.text.Charsets.UTF_8);
             Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
             for (Object item$iv$iv : $this$map$iv) {
                 String it = (String) item$iv$iv;
-                destination$iv$iv.add(StringsKt.split$default((CharSequence) it, new String[]{"\t"}, false, 0, 6, (Object) null));
+                destination$iv$iv.add(StringsKt.split((CharSequence) it, new String[]{"\t"}, false, 0));
             }
             Collection destination$iv$iv2 = new ArrayList();
             for (Object element$iv$iv : (List) destination$iv$iv) {
@@ -1243,7 +1243,7 @@ public final class LaneShots {
         }
         File done = new File(this.ctx.getFilesDir(), "lane_exported.txt");
         try {
-            hashSet = CollectionsKt.toHashSet(FilesKt.readLines$default(done, null, 1, null));
+            hashSet = CollectionsKt.toHashSet(FilesKt.readLines(done, kotlin.text.Charsets.UTF_8));
         } catch (Exception e2) {
             hashSet = new HashSet();
         }
@@ -1251,12 +1251,12 @@ public final class LaneShots {
         HashMap rev2 = new HashMap();
         int i3 = 2;
         try {
-            Iterable $this$forEach$iv2 = FilesKt.readLines$default(this.reviews, null, 1, null);
+            Iterable $this$forEach$iv2 = FilesKt.readLines(this.reviews, kotlin.text.Charsets.UTF_8);
             for (Object element$iv : $this$forEach$iv2) {
                 String ln = (String) element$iv;
                 String[] strArr = new String[i2];
                 strArr[0] = "\t";
-                List p = StringsKt.split$default((CharSequence) ln, strArr, false, 0, 6, (Object) null);
+                List p = StringsKt.split((CharSequence) ln, strArr, false, 0);
                 if (p.size() >= i3) {
                     $this$forEach$iv = $this$forEach$iv2;
                     rev2.put(p.get(0), p);
@@ -1273,7 +1273,7 @@ public final class LaneShots {
         Iterator it3 = rows.iterator();
         while (it3.hasNext()) {
             List p2 = (List) it3.next();
-            List ans = StringsKt.split$default((CharSequence) (8 < p2.size() ? p2.get(8) : "0,0,0"), new String[]{","}, false, 0, 6, (Object) null);
+            List ans = StringsKt.split((CharSequence) (8 < p2.size() ? p2.get(8) : "0,0,0"), new String[]{","}, false, 0);
             Iterator it4 = it3;
             List r0 = (List) rev2.get(p2.get(0));
             if (r0 != null) {
@@ -1338,7 +1338,7 @@ public final class LaneShots {
                     strArr2[21] = str16;
                     strArr2[22] = export$q((String) (!(11 >= p2.size()) ? p2.get(11) : ""));
                     strArr2[23] = export$q((String) (!(12 >= p2.size()) ? p2.get(12) : ""));
-                    csv2.append(CollectionsKt.joinToString$default(CollectionsKt.listOf((Object[]) strArr2), ",", null, null, 0, null, null, 62, null)).append('\n');
+                    csv2.append(CollectionsKt.joinToString(CollectionsKt.listOf((Object[]) strArr2), ",", "", "", -1, "...", null)).append('\n');
                     it3 = it4;
                     rev2 = rev;
                     done = done2;
@@ -1405,7 +1405,7 @@ public final class LaneShots {
             strArr22[21] = str162;
             strArr22[22] = export$q((String) (!(11 >= p2.size()) ? p2.get(11) : ""));
             strArr22[23] = export$q((String) (!(12 >= p2.size()) ? p2.get(12) : ""));
-            csv2.append(CollectionsKt.joinToString$default(CollectionsKt.listOf((Object[]) strArr22), ",", null, null, 0, null, null, 62, null)).append('\n');
+            csv2.append(CollectionsKt.joinToString(CollectionsKt.listOf((Object[]) strArr22), ",", "", "", -1, "...", null)).append('\n');
             it3 = it4;
             rev2 = rev;
             done = done22;
@@ -1637,7 +1637,7 @@ public final class LaneShots {
             if (sent >= files.size()) {
                 try {
                     try {
-                        FilesKt.appendText$default(done3, CollectionsKt.joinToString$default(CollectionsKt.distinct(newDone), str17, null, null, 0, null, null, 62, null) + (newDone.isEmpty() ? "" : str17), null, 2, null);
+                        FilesKt.appendText(done3, CollectionsKt.joinToString(CollectionsKt.distinct(newDone), str17, "", "", -1, "...", null) + (newDone.isEmpty() ? "" : str17), kotlin.text.Charsets.UTF_8);
                     } catch (Exception e9) {
                     }
                 } catch (Exception e10) {
@@ -1656,7 +1656,7 @@ public final class LaneShots {
     }
 
     private static final String export$q(String v) {
-        return "\"" + StringsKt.replace$default(v, "\"", "'", false, 4, (Object) null) + "\"";
+        return "\"" + StringsKt.replace(v, "\"", "'", false) + "\"";
     }
 
     private static final void export$lambda$72$lambda$71$put(ZipOutputStream $z, Ref.LongRef size, String entry, byte[] bytes) {

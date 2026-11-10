@@ -362,12 +362,12 @@ public final class GxLogsPage extends GxPage {
                 if (response.isSuccessful()) {
                     try {
                         Result.Companion companion = Result.Companion;
-                        obj = Result.m1191constructorimpl(new JSONTokener(str3).nextValue());
+                        obj = KtCompat.resultOf(new JSONTokener(str3).nextValue());
                     } catch (Throwable th) {
                         Result.Companion companion2 = Result.Companion;
-                        obj = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                        obj = KtCompat.resultOf(ResultKt.createFailure(th));
                     }
-                    boolean m1197isFailureimpl = Result.m1197isFailureimpl(obj);
+                    boolean m1197isFailureimpl = KtCompat.isFailure(obj);
                     T t = obj;
                     if (m1197isFailureimpl) {
                         t = 0;
@@ -391,7 +391,7 @@ public final class GxLogsPage extends GxPage {
         gxLogsPage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda7
             @Override // java.lang.Runnable
             public final void run() {
-                GxLogsPage.getJsonAccept$lambda$10$lambda$9(Function2.this, objectRef, objectRef2);
+                GxLogsPage.getJsonAccept$lambda$10$lambda$9(function2, objectRef, objectRef2);
             }
         });
     }
@@ -562,7 +562,7 @@ public final class GxLogsPage extends GxPage {
     private final String parseLogDate(String filename) {
         Object m1191constructorimpl;
         Date d;
-        MatchResult m = Regex.find$default(new Regex("(\\d{4})-(\\d{2})-(\\d{2})[T_]?(\\d{2})-?(\\d{2})-?(\\d{2})?"), filename, 0, 2, null);
+        MatchResult m = (new Regex("(\\d{4})-(\\d{2})-(\\d{2})[T_]?(\\d{2})-?(\\d{2})-?(\\d{2})?")).find(filename, 0);
         if (m == null) {
             d = new Date();
         } else {
@@ -582,12 +582,12 @@ public final class GxLogsPage extends GxPage {
                 Integer intOrNull3 = StringsKt.toIntOrNull(g.get(6));
                 $this$parseLogDate_u24lambda_u2424_u24lambda_u2423.set(parseInt, parseInt2, parseInt3, intValue, intValue2, intOrNull3 != null ? intOrNull3.intValue() : 0);
                 $this$parseLogDate_u24lambda_u2424_u24lambda_u2423.set(14, 0);
-                m1191constructorimpl = Result.m1191constructorimpl($this$parseLogDate_u24lambda_u2424_u24lambda_u2423.getTime());
+                m1191constructorimpl = KtCompat.resultOf($this$parseLogDate_u24lambda_u2424_u24lambda_u2423.getTime());
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
             }
-            if (Result.m1194exceptionOrNullimpl(m1191constructorimpl) != null) {
+            if (KtCompat.exceptionOrNull(m1191constructorimpl) != null) {
                 m1191constructorimpl = new Date();
             }
             d = (Date) m1191constructorimpl;
@@ -657,7 +657,7 @@ public final class GxLogsPage extends GxPage {
                 String lowerCase = it.getFilename().toLowerCase(Locale.ROOT);
                 Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
                 String q2 = q;
-                if (StringsKt.contains$default((CharSequence) lowerCase, (CharSequence) q, false, 2, (Object) null)) {
+                if (StringsKt.contains((CharSequence) lowerCase, (CharSequence) q, false)) {
                     destination$iv$iv.add(element$iv$iv);
                 }
                 q = q2;
@@ -800,7 +800,7 @@ public final class GxLogsPage extends GxPage {
         this$0.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda46
             @Override // java.lang.Runnable
             public final void run() {
-                GxLogsPage.errView$lambda$33$lambda$32(GxLogsPage.this);
+                GxLogsPage.errView$lambda$33$lambda$32(this$0);
             }
         });
         return Unit.INSTANCE;
@@ -840,7 +840,7 @@ public final class GxLogsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit errDelete$lambda$36$lambda$35;
-                errDelete$lambda$36$lambda$35 = GxLogsPage.errDelete$lambda$36$lambda$35(GxLogsPage.this, $f, (String) obj, (JSONObject) obj2);
+                errDelete$lambda$36$lambda$35 = GxLogsPage.errDelete$lambda$36$lambda$35(this$0, $f, (String) obj, (JSONObject) obj2);
                 return errDelete$lambda$36$lambda$35;
             }
         }, 12, null);
@@ -887,7 +887,7 @@ public final class GxLogsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit errDeleteAll$lambda$38$lambda$37;
-                errDeleteAll$lambda$38$lambda$37 = GxLogsPage.errDeleteAll$lambda$38$lambda$37(GxLogsPage.this, (String) obj, (JSONObject) obj2);
+                errDeleteAll$lambda$38$lambda$37 = GxLogsPage.errDeleteAll$lambda$38$lambda$37(this$0, (String) obj, (JSONObject) obj2);
                 return errDeleteAll$lambda$38$lambda$37;
             }
         }, 12, null);
@@ -1194,7 +1194,7 @@ public final class GxLogsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit tmuxDelete$lambda$53$lambda$52;
-                tmuxDelete$lambda$53$lambda$52 = GxLogsPage.tmuxDelete$lambda$53$lambda$52(GxLogsPage.this, $name, (String) obj, (JSONObject) obj2);
+                tmuxDelete$lambda$53$lambda$52 = GxLogsPage.tmuxDelete$lambda$53$lambda$52(this$0, $name, (String) obj, (JSONObject) obj2);
                 return tmuxDelete$lambda$53$lambda$52;
             }
         }, 12, null);
@@ -1234,7 +1234,7 @@ public final class GxLogsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit tmuxDeleteAll$lambda$55$lambda$54;
-                tmuxDeleteAll$lambda$55$lambda$54 = GxLogsPage.tmuxDeleteAll$lambda$55$lambda$54(GxLogsPage.this, (String) obj, (JSONObject) obj2);
+                tmuxDeleteAll$lambda$55$lambda$54 = GxLogsPage.tmuxDeleteAll$lambda$55$lambda$54(this$0, (String) obj, (JSONObject) obj2);
                 return tmuxDeleteAll$lambda$55$lambda$54;
             }
         }, 12, null);
@@ -1271,7 +1271,7 @@ public final class GxLogsPage extends GxPage {
         if ((((CharSequence) newName.element).length() == 0) || Intrinsics.areEqual(newName.element, $old)) {
             return Unit.INSTANCE;
         }
-        if (!StringsKt.endsWith$default((String) newName.element, ".json", false, 2, (Object) null)) {
+        if (!StringsKt.endsWith((String) newName.element, ".json", false)) {
             newName.element += ".json";
         }
         if (Intrinsics.areEqual(newName.element, $old)) {
@@ -1281,7 +1281,7 @@ public final class GxLogsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit tmuxRename$lambda$57$lambda$56;
-                tmuxRename$lambda$57$lambda$56 = GxLogsPage.tmuxRename$lambda$57$lambda$56(GxLogsPage.this, $old, newName, (String) obj, (JSONObject) obj2);
+                tmuxRename$lambda$57$lambda$56 = GxLogsPage.tmuxRename$lambda$57$lambda$56(this$0, $old, newName, (String) obj, (JSONObject) obj2);
                 return tmuxRename$lambda$57$lambda$56;
             }
         }, 12, null);
@@ -1689,7 +1689,7 @@ public final class GxLogsPage extends GxPage {
         if (kernel) {
             return "";
         }
-        String n = StringsKt.removePrefix(StringsKt.replace$default(StringsKt.removeSuffix(StringsKt.removePrefix(StringsKt.removePrefix(name, (CharSequence) "/data/openpilot/"), (CharSequence) "./"), (CharSequence) ".py"), "/", ".", false, 4, (Object) null), (CharSequence) "openpilot.");
+        String n = StringsKt.removePrefix(StringsKt.replace(StringsKt.removeSuffix(StringsKt.removePrefix(StringsKt.removePrefix(name, (CharSequence) "/data/openpilot/"), (CharSequence) "./"), (CharSequence) ".py"), "/", ".", false), (CharSequence) "openpilot.");
         map = GxLogsKt.GXLOGS_FEATURES;
         String str = (String) map.get(n);
         return str == null ? "" : str;
@@ -2092,7 +2092,7 @@ public final class GxLogsPage extends GxPage {
 
     /* JADX WARN: Code restructure failed: missing block: B:30:0x00da, code lost:
     
-        if (kotlin.text.StringsKt.contains$default((java.lang.CharSequence) r3, (java.lang.CharSequence) r1, false, 2, (java.lang.Object) null) != false) goto L30;
+        if (kotlin.text.StringsKt.contains((java.lang.CharSequence) r3, (java.lang.CharSequence) r1, false) != false) goto L30;
      */
     /* JADX WARN: Removed duplicated region for block: B:17:0x00e6  */
     /* JADX WARN: Removed duplicated region for block: B:20:0x00e9 A[SYNTHETIC] */
@@ -2156,7 +2156,7 @@ public final class GxLogsPage extends GxPage {
             @Override // java.util.Comparator
             public final int compare(Object obj, Object obj2) {
                 int monPaintTable$lambda$92;
-                monPaintTable$lambda$92 = GxLogsPage.monPaintTable$lambda$92(Function2.this, obj, obj2);
+                monPaintTable$lambda$92 = GxLogsPage.monPaintTable$lambda$92(function2, obj, obj2);
                 return monPaintTable$lambda$92;
             }
         });
@@ -2587,7 +2587,7 @@ public final class GxLogsPage extends GxPage {
 
     /* JADX WARN: Code restructure failed: missing block: B:19:0x00e6, code lost:
     
-        if (kotlin.text.StringsKt.contains$default((java.lang.CharSequence) r3, (java.lang.CharSequence) r1, false, 2, (java.lang.Object) null) != false) goto L20;
+        if (kotlin.text.StringsKt.contains((java.lang.CharSequence) r3, (java.lang.CharSequence) r1, false) != false) goto L20;
      */
     /*
         Code decompiled incorrectly, please refer to instructions dump.
@@ -3016,7 +3016,7 @@ public final class GxLogsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit tsResetSection$lambda$128$lambda$127;
-                tsResetSection$lambda$128$lambda$127 = GxLogsPage.tsResetSection$lambda$128$lambda$127(GxLogsPage.this, $title, (String) obj, (JSONObject) obj2);
+                tsResetSection$lambda$128$lambda$127 = GxLogsPage.tsResetSection$lambda$128$lambda$127(this$0, $title, (String) obj, (JSONObject) obj2);
                 return tsResetSection$lambda$128$lambda$127;
             }
         }, 8, null);
@@ -3113,6 +3113,6 @@ public final class GxLogsPage extends GxPage {
                 }
             }
         }
-        copyText(CollectionsKt.joinToString$default(lines, "\n", null, null, 0, null, null, 62, null), "Troubleshoot report copied to clipboard.");
+        copyText(CollectionsKt.joinToString(lines, "\n", "", "", -1, "...", null), "Troubleshoot report copied to clipboard.");
     }
 }

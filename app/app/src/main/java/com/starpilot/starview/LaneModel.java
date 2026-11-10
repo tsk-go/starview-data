@@ -248,7 +248,7 @@ public final class LaneModel {
     }
 
     public final boolean wants(long nowMs) {
-        return this.enabled && getHasModel() && !this.busy && nowMs - this.lastMs >= 2000 && !StringsKt.startsWith$default(this.status, "error", false, 2, (Object) null);
+        return this.enabled && getHasModel() && !this.busy && nowMs - this.lastMs >= 2000 && !StringsKt.startsWith(this.status, "error", false);
     }
 
     public final void feed(final Bitmap bmp) {

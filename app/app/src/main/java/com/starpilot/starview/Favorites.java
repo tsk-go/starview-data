@@ -132,14 +132,14 @@ public final class Favorites {
             }
             return;
         }
-        DataClient.request$default(data, "nav_list", null, new Function1() { // from class: com.starpilot.starview.Favorites$$ExternalSyntheticLambda6
+        data.request("nav_list", kotlin.collections.MapsKt.emptyMap(), new Function1() { // from class: com.starpilot.starview.Favorites$$ExternalSyntheticLambda6
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit load$lambda$4;
-                load$lambda$4 = Favorites.load$lambda$4(Function0.this, (JSONObject) obj);
+                load$lambda$4 = Favorites.load$lambda$4(then, (JSONObject) obj);
                 return load$lambda$4;
             }
-        }, 2, null);
+        });
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -170,7 +170,7 @@ public final class Favorites {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit save$lambda$5;
-                save$lambda$5 = Favorites.save$lambda$5(Function1.this, (JSONObject) obj);
+                save$lambda$5 = Favorites.save$lambda$5(then, (JSONObject) obj);
                 return save$lambda$5;
             }
         });
@@ -229,7 +229,7 @@ public final class Favorites {
                             destination$iv$iv.add(element$iv$iv);
                         }
                     }
-                    List<Address> fromLocationName = geocoder.getFromLocationName(CollectionsKt.joinToString$default((List) destination$iv$iv, ", ", null, null, 0, null, null, 62, null), 1);
+                    List<Address> fromLocationName = geocoder.getFromLocationName(CollectionsKt.joinToString((List) destination$iv$iv, ", ", "", "", -1, "...", null), 1);
                     if (fromLocationName != null) {
                         address = (Address) CollectionsKt.firstOrNull((List) fromLocationName);
                     }
@@ -318,7 +318,7 @@ public final class Favorites {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit label$lambda$11;
-                    label$lambda$11 = Favorites.label$lambda$11(Function1.this, (JSONObject) obj);
+                    label$lambda$11 = Favorites.label$lambda$11(then, (JSONObject) obj);
                     return label$lambda$11;
                 }
             });
@@ -343,7 +343,7 @@ public final class Favorites {
     }
 
     private final String unsupported(String e) {
-        if (StringsKt.contains$default((CharSequence) e, (CharSequence) "unknown action", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) e, (CharSequence) "unknown action", false)) {
             return "The comma needs the StarView navigation update (patch 10) for saved places";
         }
         String str = e;

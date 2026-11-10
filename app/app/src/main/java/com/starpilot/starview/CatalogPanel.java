@@ -250,7 +250,7 @@ public final class CatalogPanel extends ScrollView {
                 }
                 Object element$iv = it.next();
                 Pair it2 = (Pair) element$iv;
-                if (StringsKt.startsWith$default(p.getKey(), (String) it2.getFirst(), false, 2, (Object) null) && p.getKey().length() > ((String) it2.getFirst()).length() && Character.isUpperCase(p.getKey().charAt(((String) it2.getFirst()).length()))) {
+                if (StringsKt.startsWith(p.getKey(), (String) it2.getFirst(), false) && p.getKey().length() > ((String) it2.getFirst()).length() && Character.isUpperCase(p.getKey().charAt(((String) it2.getFirst()).length()))) {
                     obj = element$iv;
                     break;
                 }
@@ -545,7 +545,7 @@ public final class CatalogPanel extends ScrollView {
                 this.col.addView(r, this.ui.lp(0, this.ui.getFlat() ? 0 : 14));
             }
         }
-        if (StringsKt.startsWith$default(this.sectionName, "Longitudinal", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(this.sectionName, "Longitudinal", false)) {
             buildLongitudinalMode();
         }
         build$tree(this, null);
@@ -564,7 +564,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$15$lambda$14;
-                build$lambda$15$lambda$14 = CatalogPanel.build$lambda$15$lambda$14(CatalogPanel.this, (String) obj);
+                build$lambda$15$lambda$14 = CatalogPanel.build$lambda$15$lambda$14(this$0, (String) obj);
                 return build$lambda$15$lambda$14;
             }
         }, 4, null);
@@ -688,7 +688,7 @@ public final class CatalogPanel extends ScrollView {
                         @Override // kotlin.jvm.functions.Function0
                         public final Object invoke() {
                             Unit addRowUnsafe$lambda$25;
-                            addRowUnsafe$lambda$25 = CatalogPanel.addRowUnsafe$lambda$25(GalaxyApi.Param.this, this);
+                            addRowUnsafe$lambda$25 = CatalogPanel.addRowUnsafe$lambda$25(p, this);
                             return addRowUnsafe$lambda$25;
                         }
                     }, 2, null));
@@ -796,7 +796,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit addRowUnsafe$lambda$25$lambda$23;
-                addRowUnsafe$lambda$25$lambda$23 = CatalogPanel.addRowUnsafe$lambda$25$lambda$23(CatalogPanel.this, $p);
+                addRowUnsafe$lambda$25$lambda$23 = CatalogPanel.addRowUnsafe$lambda$25$lambda$23(this$0, $p);
                 return addRowUnsafe$lambda$25$lambda$23;
             }
         };
@@ -805,7 +805,7 @@ public final class CatalogPanel extends ScrollView {
             new AlertDialog.Builder(this$0.act).setMessage(msg).setPositiveButton("Yes", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda5
                 @Override // android.content.DialogInterface.OnClickListener
                 public final void onClick(DialogInterface dialogInterface, int i) {
-                    Function0.this.invoke();
+                    run.invoke();
                 }
             }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         } else {
@@ -825,7 +825,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit addRowUnsafe$lambda$25$lambda$23$lambda$22;
-                addRowUnsafe$lambda$25$lambda$23$lambda$22 = CatalogPanel.addRowUnsafe$lambda$25$lambda$23$lambda$22(CatalogPanel.this, (String) obj, (JSONObject) obj2);
+                addRowUnsafe$lambda$25$lambda$23$lambda$22 = CatalogPanel.addRowUnsafe$lambda$25$lambda$23$lambda$22(this$0, (String) obj, (JSONObject) obj2);
                 return addRowUnsafe$lambda$25$lambda$23$lambda$22;
             }
         });
@@ -951,7 +951,7 @@ public final class CatalogPanel extends ScrollView {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit addToggle$lambda$31$lambda$29;
-                    addToggle$lambda$31$lambda$29 = CatalogPanel.addToggle$lambda$31$lambda$29(CatalogPanel.this, v, (JSONObject) obj);
+                    addToggle$lambda$31$lambda$29 = CatalogPanel.addToggle$lambda$31$lambda$29(this$0, v, (JSONObject) obj);
                     return addToggle$lambda$31$lambda$29;
                 }
             });
@@ -961,7 +961,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit addToggle$lambda$31$lambda$30;
-                addToggle$lambda$31$lambda$30 = CatalogPanel.addToggle$lambda$31$lambda$30(CatalogPanel.this, (String) obj);
+                addToggle$lambda$31$lambda$30 = CatalogPanel.addToggle$lambda$31$lambda$30(this$0, (String) obj);
                 return addToggle$lambda$31$lambda$30;
             }
         }, 4, null);
@@ -1091,7 +1091,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit addNumeric$write$lambda$34;
-                addNumeric$write$lambda$34 = CatalogPanel.addNumeric$write$lambda$34(CatalogPanel.this, (String) obj);
+                addNumeric$write$lambda$34 = CatalogPanel.addNumeric$write$lambda$34(this$0, (String) obj);
                 return addNumeric$write$lambda$34;
             }
         }, 4, null);
@@ -1256,7 +1256,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit addDropdown$rebuild$lambda$51;
-                addDropdown$rebuild$lambda$51 = CatalogPanel.addDropdown$rebuild$lambda$51(CatalogPanel.this, $p, objectRef2, ((Integer) obj).intValue());
+                addDropdown$rebuild$lambda$51 = CatalogPanel.addDropdown$rebuild$lambda$51(this$0, $p, objectRef2, ((Integer) obj).intValue());
                 return addDropdown$rebuild$lambda$51;
             }
         };
@@ -1265,7 +1265,7 @@ public final class CatalogPanel extends ScrollView {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit addDropdown$rebuild$lambda$55;
-                    addDropdown$rebuild$lambda$55 = CatalogPanel.addDropdown$rebuild$lambda$55(CatalogPanel.this, $p, objectRef2, pick);
+                    addDropdown$rebuild$lambda$55 = CatalogPanel.addDropdown$rebuild$lambda$55(this$0, $p, objectRef2, pick);
                     return addDropdown$rebuild$lambda$55;
                 }
             }, 2, null);
@@ -1314,7 +1314,7 @@ public final class CatalogPanel extends ScrollView {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit addDropdown$rebuild$lambda$51$lambda$50;
-                    addDropdown$rebuild$lambda$51$lambda$50 = CatalogPanel.addDropdown$rebuild$lambda$51$lambda$50(CatalogPanel.this, (String) obj);
+                    addDropdown$rebuild$lambda$51$lambda$50 = CatalogPanel.addDropdown$rebuild$lambda$51$lambda$50(this$0, (String) obj);
                     return addDropdown$rebuild$lambda$51$lambda$50;
                 }
             });
@@ -1344,7 +1344,7 @@ public final class CatalogPanel extends ScrollView {
         title.setItems((CharSequence[]) thisCollection$iv.toArray(new String[0]), new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda31
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                CatalogPanel.addDropdown$rebuild$lambda$55$lambda$54(Function1.this, dialogInterface, i);
+                CatalogPanel.addDropdown$rebuild$lambda$55$lambda$54($pick, dialogInterface, i);
             }
         }).show();
         return Unit.INSTANCE;
@@ -1382,7 +1382,7 @@ public final class CatalogPanel extends ScrollView {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     CharSequence addDropdown$lambda$64$lambda$62$lambda$60;
-                    addDropdown$lambda$64$lambda$62$lambda$60 = CatalogPanel.addDropdown$lambda$64$lambda$62$lambda$60(CatalogPanel.this, (MatchResult) obj);
+                    addDropdown$lambda$64$lambda$62$lambda$60 = CatalogPanel.addDropdown$lambda$64$lambda$62$lambda$60(this$0, (MatchResult) obj);
                     return addDropdown$lambda$64$lambda$62$lambda$60;
                 }
             });
@@ -1397,7 +1397,7 @@ public final class CatalogPanel extends ScrollView {
                         @Override // kotlin.jvm.functions.Function1
                         public final Object invoke(Object obj) {
                             Unit addDropdown$lambda$64$lambda$62$lambda$61;
-                            addDropdown$lambda$64$lambda$62$lambda$61 = CatalogPanel.addDropdown$lambda$64$lambda$62$lambda$61(CatalogPanel.this, replace, $opts, $holder, $paint, $p, (List) obj);
+                            addDropdown$lambda$64$lambda$62$lambda$61 = CatalogPanel.addDropdown$lambda$64$lambda$62$lambda$61(this$0, replace, $opts, $holder, $paint, $p, (List) obj);
                             return addDropdown$lambda$64$lambda$62$lambda$61;
                         }
                     });
@@ -1536,7 +1536,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit addColor$lambda$70$lambda$69$lambda$68;
-                addColor$lambda$70$lambda$69$lambda$68 = CatalogPanel.addColor$lambda$70$lambda$69$lambda$68(CatalogPanel.this, (String) obj);
+                addColor$lambda$70$lambda$69$lambda$68 = CatalogPanel.addColor$lambda$70$lambda$69$lambda$68(this$0, (String) obj);
                 return addColor$lambda$70$lambda$69$lambda$68;
             }
         }, 4, null);
@@ -1612,7 +1612,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit buildLongitudinalMode$lambda$76;
-                buildLongitudinalMode$lambda$76 = CatalogPanel.buildLongitudinalMode$lambda$76(Function1.this, this);
+                buildLongitudinalMode$lambda$76 = CatalogPanel.buildLongitudinalMode$lambda$76(paint, this);
                 return buildLongitudinalMode$lambda$76;
             }
         }));
@@ -1649,7 +1649,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildLongitudinalMode$lambda$75$lambda$74;
-                buildLongitudinalMode$lambda$75$lambda$74 = CatalogPanel.buildLongitudinalMode$lambda$75$lambda$74(CatalogPanel.this, (String) obj);
+                buildLongitudinalMode$lambda$75$lambda$74 = CatalogPanel.buildLongitudinalMode$lambda$75$lambda$74(this$0, (String) obj);
                 return buildLongitudinalMode$lambda$75$lambda$74;
             }
         });

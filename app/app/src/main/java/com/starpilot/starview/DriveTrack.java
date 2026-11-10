@@ -135,7 +135,7 @@ public final class DriveTrack {
         Intrinsics.checkNotNullExpressionValue(text, "toString(...)");
         buf.setLength(0);
         try {
-            FilesKt.appendText$default(f, text, null, 2, null);
+            FilesKt.appendText(f, text, kotlin.text.Charsets.UTF_8);
         } catch (Exception e) {
         }
     }
@@ -167,14 +167,14 @@ public final class DriveTrack {
                 long start = longOrNull.longValue();
                 if (start <= toMs && f.lastModified() >= fromMs) {
                     try {
-                        FilesKt.forEachLine$default(f, null, new Function1() { // from class: com.starpilot.starview.DriveTrack$$ExternalSyntheticLambda1
+                        FilesKt.forEachLine(f, kotlin.text.Charsets.UTF_8, new Function1() { // from class: com.starpilot.starview.DriveTrack$$ExternalSyntheticLambda1
                             @Override // kotlin.jvm.functions.Function1
                             public final Object invoke(Object obj) {
                                 Unit between$lambda$2;
                                 between$lambda$2 = DriveTrack.between$lambda$2(fromMs, toMs, out, (String) obj);
                                 return between$lambda$2;
                             }
-                        }, 1, null);
+                        });
                     } catch (Exception e) {
                     }
                 }
@@ -199,7 +199,7 @@ public final class DriveTrack {
     public static final boolean between$lambda$1(File x) {
         String name = x.getName();
         Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-        return StringsKt.endsWith$default(name, ".csv", false, 2, (Object) null);
+        return StringsKt.endsWith(name, ".csv", false);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -207,7 +207,7 @@ public final class DriveTrack {
         Long longOrNull;
         Intrinsics.checkNotNullParameter(l, "l");
         boolean z = false;
-        List p = StringsKt.split$default((CharSequence) l, new char[]{','}, false, 0, 6, (Object) null);
+        List p = StringsKt.split((CharSequence) l, new char[]{','}, false, 0);
         if (p.size() >= 3 && (longOrNull = StringsKt.toLongOrNull((String) p.get(0))) != null) {
             long t = longOrNull.longValue();
             if ($fromMs <= t && t <= $toMs) {

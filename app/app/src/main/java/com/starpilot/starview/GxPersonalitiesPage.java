@@ -268,14 +268,14 @@ public final class GxPersonalitiesPage extends GxPage {
     }
 
     private final String label(String value) {
-        return StringsKt.replace$default(CollectionsKt.joinToString$default(StringsKt.split$default((CharSequence) value, new String[]{"_"}, false, 0, 6, (Object) null), " ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda24
+        return StringsKt.replace(CollectionsKt.joinToString(StringsKt.split((CharSequence) value, new String[]{"_"}, false, 0), " ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda24
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence label$lambda$1;
                 label$lambda$1 = GxPersonalitiesPage.label$lambda$1((String) obj);
                 return label$lambda$1;
             }
-        }, 30, null), " +", "+", false, 4, (Object) null);
+        }), " +", "+", false);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -424,7 +424,7 @@ public final class GxPersonalitiesPage extends GxPage {
         Intrinsics.checkNotNull(jSONObject2);
         JSONObject optJSONObject3 = jSONObject2.optJSONObject("profiles");
         String sel = (optJSONObject3 == null || (optJSONObject = optJSONObject3.optJSONObject(p)) == null || (optJSONObject2 = optJSONObject.optJSONObject(c)) == null) ? null : optJSONObject2.optString("preset");
-        if (Intrinsics.areEqual(c, "following") && sel != null && StringsKt.startsWith$default(sel, "legacy_", false, 2, (Object) null) && avail.contains(sel)) {
+        if (Intrinsics.areEqual(c, "following") && sel != null && StringsKt.startsWith(sel, "legacy_", false) && avail.contains(sel)) {
             choices.add(0, sel);
         }
         return choices;
@@ -436,7 +436,7 @@ public final class GxPersonalitiesPage extends GxPage {
         for (Object element$iv$iv : $this$filter$iv) {
             GalaxyApi.Param it = (GalaxyApi.Param) element$iv$iv;
             boolean z = false;
-            if (Intrinsics.areEqual(it.getParentKey(), key(profile)) && StringsKt.contains$default((CharSequence) it.getKey(), (CharSequence) "Jerk", false, 2, (Object) null)) {
+            if (Intrinsics.areEqual(it.getParentKey(), key(profile)) && StringsKt.contains((CharSequence) it.getKey(), (CharSequence) "Jerk", false)) {
                 z = true;
             }
             if (z) {
@@ -455,7 +455,7 @@ public final class GxPersonalitiesPage extends GxPage {
         if (v == 100.0d) {
             return "standard";
         }
-        if (!StringsKt.endsWith$default(k, "JerkDanger", false, 2, (Object) null)) {
+        if (!StringsKt.endsWith(k, "JerkDanger", false)) {
             if (v == 50.0d) {
                 return "chill";
             }
@@ -673,7 +673,7 @@ public final class GxPersonalitiesPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit fetchContext$lambda$18;
-                    fetchContext$lambda$18 = GxPersonalitiesPage.fetchContext$lambda$18(Function1.this, a, this, apply, ((Boolean) obj).booleanValue());
+                    fetchContext$lambda$18 = GxPersonalitiesPage.fetchContext$lambda$18(then, a, this, apply, ((Boolean) obj).booleanValue());
                     return fetchContext$lambda$18;
                 }
             });
@@ -691,7 +691,7 @@ public final class GxPersonalitiesPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit fetchContext$lambda$18$lambda$17;
-                fetchContext$lambda$18$lambda$17 = GxPersonalitiesPage.fetchContext$lambda$18$lambda$17(GxPersonalitiesPage.this, m, $apply, $then, (String) obj, (JSONObject) obj2);
+                fetchContext$lambda$18$lambda$17 = GxPersonalitiesPage.fetchContext$lambda$18$lambda$17(this$0, m, $apply, $then, (String) obj, (JSONObject) obj2);
                 return fetchContext$lambda$18$lambda$17;
             }
         });
@@ -704,7 +704,7 @@ public final class GxPersonalitiesPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit fetchContext$lambda$18$lambda$17$lambda$16;
-                fetchContext$lambda$18$lambda$17$lambda$16 = GxPersonalitiesPage.fetchContext$lambda$18$lambda$17$lambda$16(GxPersonalitiesPage.this, $m, e1, st, $apply, $then, (String) obj, (String) obj2);
+                fetchContext$lambda$18$lambda$17$lambda$16 = GxPersonalitiesPage.fetchContext$lambda$18$lambda$17$lambda$16(this$0, $m, e1, st, $apply, $then, (String) obj, (String) obj2);
                 return fetchContext$lambda$18$lambda$17$lambda$16;
             }
         });
@@ -772,7 +772,7 @@ public final class GxPersonalitiesPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit load$lambda$23$lambda$22;
-                load$lambda$23$lambda$22 = GxPersonalitiesPage.load$lambda$23$lambda$22(GxPersonalitiesPage.this, e, d, ((Boolean) obj).booleanValue());
+                load$lambda$23$lambda$22 = GxPersonalitiesPage.load$lambda$23$lambda$22(this$0, e, d, ((Boolean) obj).booleanValue());
                 return load$lambda$23$lambda$22;
             }
         });
@@ -923,7 +923,7 @@ public final class GxPersonalitiesPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     boolean write$lambda$26;
-                    write$lambda$26 = GxPersonalitiesPage.write$lambda$26(GxPersonalitiesPage.this);
+                    write$lambda$26 = GxPersonalitiesPage.write$lambda$26(gxPersonalitiesPage);
                     return Boolean.valueOf(write$lambda$26);
                 }
             };
@@ -981,7 +981,7 @@ public final class GxPersonalitiesPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit write$lambda$31$lambda$30;
-                write$lambda$31$lambda$30 = GxPersonalitiesPage.write$lambda$31$lambda$30(GxPersonalitiesPage.this, $onDone, (String) obj, (JSONObject) obj2);
+                write$lambda$31$lambda$30 = GxPersonalitiesPage.write$lambda$31$lambda$30(this$0, $onDone, (String) obj, (JSONObject) obj2);
                 return write$lambda$31$lambda$30;
             }
         });
@@ -1009,7 +1009,7 @@ public final class GxPersonalitiesPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit write$lambda$31$lambda$30$lambda$29;
-                write$lambda$31$lambda$30$lambda$29 = GxPersonalitiesPage.write$lambda$31$lambda$30$lambda$29(GxPersonalitiesPage.this, $onDone, (String) obj, (JSONObject) obj2);
+                write$lambda$31$lambda$30$lambda$29 = GxPersonalitiesPage.write$lambda$31$lambda$30$lambda$29(this$0, $onDone, (String) obj, (JSONObject) obj2);
                 return write$lambda$31$lambda$30$lambda$29;
             }
         });
@@ -1232,14 +1232,14 @@ public final class GxPersonalitiesPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean saveCurve$lambda$43$lambda$41;
-                saveCurve$lambda$43$lambda$41 = GxPersonalitiesPage.saveCurve$lambda$43$lambda$41(GxPersonalitiesPage.this, $startOn);
+                saveCurve$lambda$43$lambda$41 = GxPersonalitiesPage.saveCurve$lambda$43$lambda$41(this$0, $startOn);
                 return Boolean.valueOf(saveCurve$lambda$43$lambda$41);
             }
         }, new Function1() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda31
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit saveCurve$lambda$43$lambda$42;
-                saveCurve$lambda$43$lambda$42 = GxPersonalitiesPage.saveCurve$lambda$43$lambda$42(GxPersonalitiesPage.this, $p, $c, ((Boolean) obj).booleanValue());
+                saveCurve$lambda$43$lambda$42 = GxPersonalitiesPage.saveCurve$lambda$43$lambda$42(this$0, $p, $c, ((Boolean) obj).booleanValue());
                 return saveCurve$lambda$43$lambda$42;
             }
         });
@@ -1407,14 +1407,14 @@ public final class GxPersonalitiesPage extends GxPage {
                                 @Override // kotlin.jvm.functions.Function1
                                 public final Object invoke(Object obj) {
                                     Unit advanced$lambda$49$lambda$47;
-                                    advanced$lambda$49$lambda$47 = GxPersonalitiesPage.setAdvanced$lambda$49$lambda$47(GxPersonalitiesPage.this, $param, num, (Function2) obj);
+                                    advanced$lambda$49$lambda$47 = GxPersonalitiesPage.setAdvanced$lambda$49$lambda$47(this$0, $param, num, (Function2) obj);
                                     return advanced$lambda$49$lambda$47;
                                 }
                             }, new Function0() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda26
                                 @Override // kotlin.jvm.functions.Function0
                                 public final Object invoke() {
                                     boolean advanced$lambda$49$lambda$48;
-                                    advanced$lambda$49$lambda$48 = GxPersonalitiesPage.setAdvanced$lambda$49$lambda$48(GxPersonalitiesPage.this, $param, $startOn);
+                                    advanced$lambda$49$lambda$48 = GxPersonalitiesPage.setAdvanced$lambda$49$lambda$48(this$0, $param, $startOn);
                                     return Boolean.valueOf(advanced$lambda$49$lambda$48);
                                 }
                             }, $onDone);
@@ -1529,7 +1529,7 @@ public final class GxPersonalitiesPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit nudgeAdvanced$lambda$53$lambda$52;
-                    nudgeAdvanced$lambda$53$lambda$52 = GxPersonalitiesPage.nudgeAdvanced$lambda$53$lambda$52(GxPersonalitiesPage.this, ((Boolean) obj).booleanValue());
+                    nudgeAdvanced$lambda$53$lambda$52 = GxPersonalitiesPage.nudgeAdvanced$lambda$53$lambda$52(this$0, ((Boolean) obj).booleanValue());
                     return nudgeAdvanced$lambda$53$lambda$52;
                 }
             });
@@ -1558,7 +1558,7 @@ public final class GxPersonalitiesPage extends GxPage {
                 break;
             }
             GalaxyApi.Param p = it.next();
-            if (StringsKt.contains$default((CharSequence) p.getKey(), (CharSequence) "Jerk", false, 2, (Object) null) && CollectionsKt.contains(this.profileKeys.values(), p.getParentKey())) {
+            if (StringsKt.contains((CharSequence) p.getKey(), (CharSequence) "Jerk", false) && CollectionsKt.contains(this.profileKeys.values(), p.getParentKey())) {
                 keys.add(p.getKey());
                 for (String n : CollectionsKt.listOf((Object[]) new String[]{"requires_capability", "disabled_when_key_true", "requires_nonempty_key"})) {
                     String it2 = p.str(n);
@@ -1570,14 +1570,14 @@ public final class GxPersonalitiesPage extends GxPage {
         }
         JSONObject jSONObject = this.data;
         String jSONObject2 = jSONObject != null ? jSONObject.toString() : null;
-        String joinToString$default = CollectionsKt.joinToString$default(keys, null, null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda32
+        String joinToString$default = CollectionsKt.joinToString(keys, ", ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda32
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence signature$lambda$55;
                 signature$lambda$55 = GxPersonalitiesPage.signature$lambda$55(GxPersonalitiesPage.this, (String) obj);
                 return signature$lambda$55;
             }
-        }, 31, null);
+        });
         Boolean valueOf = Boolean.valueOf(this.busy);
         Boolean valueOf2 = Boolean.valueOf(this.ready);
         String str = this.error;
@@ -1587,7 +1587,7 @@ public final class GxPersonalitiesPage extends GxPage {
         if (this.contextPending && !this.ready) {
             z = true;
         }
-        return CollectionsKt.joinToString$default(CollectionsKt.listOf(jSONObject2, joinToString$default, valueOf, valueOf2, str, str2, valueOf3, valueOf4, Boolean.valueOf(z), CollectionsKt.sorted(this.advancedOpen), MapsKt.toSortedMap(this.drafts), MapsKt.toSortedMap(this.curveErrors), MapsKt.toSortedMap(this.advancedErrors), CollectionsKt.sorted(this.advancedCustom), Integer.valueOf(this.meta.size())), "|", null, null, 0, null, null, 62, null);
+        return CollectionsKt.joinToString(CollectionsKt.listOf(jSONObject2, joinToString$default, valueOf, valueOf2, str, str2, valueOf3, valueOf4, Boolean.valueOf(z), CollectionsKt.sorted(this.advancedOpen), MapsKt.toSortedMap(this.drafts), MapsKt.toSortedMap(this.curveErrors), MapsKt.toSortedMap(this.advancedErrors), CollectionsKt.sorted(this.advancedCustom), Integer.valueOf(this.meta.size())), "|", "", "", -1, "...", null);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1848,7 +1848,7 @@ public final class GxPersonalitiesPage extends GxPage {
             if (Intrinsics.areEqual(preset(p, cat), "dom_default")) {
                 GxPage.text$default(this, "Using existing Dom default.", c, 0.0f, 0, false, 28, null);
             }
-            if (Intrinsics.areEqual(cat, "following") && StringsKt.startsWith$default(preset(p, cat), "legacy_", false, 2, (Object) null)) {
+            if (Intrinsics.areEqual(cat, "following") && StringsKt.startsWith(preset(p, cat), "legacy_", false)) {
                 GxPage.text$default(this, "Previous fixed following distance retained. Select a preset to use its current curve.", c, 0.0f, 0, false, 28, null);
             }
             sw = sw2;
@@ -2100,7 +2100,7 @@ public final class GxPersonalitiesPage extends GxPage {
                 if (it6 != null) {
                     GxPage.text$default(this, it6, c, 0.0f, CarUi.Companion.getWARN(), false, 20, null);
                 }
-                final List modes = StringsKt.endsWith$default(param.getKey(), "JerkDanger", false, 2, (Object) null) ? CollectionsKt.listOf((Object[]) new String[]{"standard", str2}) : CollectionsKt.listOf((Object[]) new String[]{"chill", "standard", str2});
+                final List modes = StringsKt.endsWith(param.getKey(), "JerkDanger", false) ? CollectionsKt.listOf((Object[]) new String[]{"standard", str2}) : CollectionsKt.listOf((Object[]) new String[]{"chill", "standard", str2});
                 CarUi ui3 = getUi();
                 Iterable $this$map$iv2 = modes;
                 Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv2, 10));
@@ -2174,7 +2174,7 @@ public final class GxPersonalitiesPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit renderProfile$lambda$76$lambda$75;
-                    renderProfile$lambda$76$lambda$75 = GxPersonalitiesPage.renderProfile$lambda$76$lambda$75(GxPersonalitiesPage.this, $p, $cat);
+                    renderProfile$lambda$76$lambda$75 = GxPersonalitiesPage.renderProfile$lambda$76$lambda$75(this$0, $p, $cat);
                     return renderProfile$lambda$76$lambda$75;
                 }
             });
@@ -2216,7 +2216,7 @@ public final class GxPersonalitiesPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit renderProfile$lambda$85$lambda$84;
-                    renderProfile$lambda$85$lambda$84 = GxPersonalitiesPage.renderProfile$lambda$85$lambda$84(GxPersonalitiesPage.this, $param, (String) obj);
+                    renderProfile$lambda$85$lambda$84 = GxPersonalitiesPage.renderProfile$lambda$85$lambda$84(this$0, $param, (String) obj);
                     return renderProfile$lambda$85$lambda$84;
                 }
             }, 16, null);
@@ -2231,7 +2231,7 @@ public final class GxPersonalitiesPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit renderProfile$lambda$85$lambda$84$lambda$83;
-                renderProfile$lambda$85$lambda$84$lambda$83 = GxPersonalitiesPage.renderProfile$lambda$85$lambda$84$lambda$83(GxPersonalitiesPage.this, ((Boolean) obj).booleanValue());
+                renderProfile$lambda$85$lambda$84$lambda$83 = GxPersonalitiesPage.renderProfile$lambda$85$lambda$84$lambda$83(this$0, ((Boolean) obj).booleanValue());
                 return renderProfile$lambda$85$lambda$84$lambda$83;
             }
         });

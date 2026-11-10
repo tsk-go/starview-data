@@ -18,18 +18,18 @@ public final class ForkFixes {
 
     public final List<String> parse(String md) {
         Intrinsics.checkNotNullParameter(md, "md");
-        int start = StringsKt.indexOf$default((CharSequence) md, "# Fork fixes to drop", 0, false, 6, (Object) null);
+        int start = StringsKt.indexOf((CharSequence) md, "# Fork fixes to drop", 0, false);
         if (start < 0) {
             return CollectionsKt.emptyList();
         }
-        int it = StringsKt.indexOf$default((CharSequence) md, "\n# ", start + 1, false, 4, (Object) null);
+        int it = StringsKt.indexOf((CharSequence) md, "\n# ", start + 1, false);
         if (it < 0) {
             it = md.length();
         }
         Regex regex = new Regex("(?m)^\\d+\\. \\*\\*(.+?)\\*\\*");
         String substring = md.substring(start, it);
         Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
-        return SequencesKt.toList(SequencesKt.map(Regex.findAll$default(regex, substring, 0, 2, null), new Function1() { // from class: com.starpilot.starview.ForkFixes$$ExternalSyntheticLambda0
+        return SequencesKt.toList(SequencesKt.map(regex.findAll(substring, 0), new Function1() { // from class: com.starpilot.starview.ForkFixes$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 String parse$lambda$1;

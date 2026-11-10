@@ -83,7 +83,7 @@ public final class TakeoverSpotsView extends CardPage {
             TextView $this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u245 = new TextView($this$refresh_u24lambda_u247_u24lambda_u246.getContext());
             Iterable $this$sortedByDescending$iv = s.getCauses().entrySet();
             List spots2 = spots;
-            String joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.TakeoverSpotsView$refresh$lambda$7$lambda$6$lambda$5$$inlined$sortedByDescending$1
+            String joinToString$default = CollectionsKt.joinToString(CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.TakeoverSpotsView$refresh$lambda$7$lambda$6$lambda$5$$inlined$sortedByDescending$1
                 @Override // java.util.Comparator
                 public final int compare(T t, T t2) {
                     Map.Entry it2 = (Map.Entry) t2;
@@ -91,14 +91,14 @@ public final class TakeoverSpotsView extends CardPage {
                     Map.Entry it3 = (Map.Entry) t;
                     return ComparisonsKt.compareValues(num, (Integer) it3.getValue());
                 }
-            }), " · ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.TakeoverSpotsView$$ExternalSyntheticLambda0
+            }), " · ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.TakeoverSpotsView$$ExternalSyntheticLambda0
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     CharSequence refresh$lambda$7$lambda$6$lambda$5$lambda$4;
                     refresh$lambda$7$lambda$6$lambda$5$lambda$4 = TakeoverSpotsView.refresh$lambda$7$lambda$6$lambda$5$lambda$4((Map.Entry) obj);
                     return refresh$lambda$7$lambda$6$lambda$5$lambda$4;
                 }
-            }, 30, null);
+            });
             simpleDateFormat = JournalPagesKt.dayFmt;
             $this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u245.setText(joinToString$default + "  ·  last " + simpleDateFormat.format(new Date(s.getLastT())));
             $this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u245.setTextColor(CarUi.Companion.getDIM());

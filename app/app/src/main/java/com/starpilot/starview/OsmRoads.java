@@ -189,7 +189,7 @@ public final class OsmRoads {
         }
 
         public final boolean getHighway() {
-            return StringsKt.startsWith$default(this.kind, "motorway", false, 2, (Object) null) || StringsKt.startsWith$default(this.kind, "trunk", false, 2, (Object) null);
+            return StringsKt.startsWith(this.kind, "motorway", false) || StringsKt.startsWith(this.kind, "trunk", false);
         }
 
         public final int getLaneCount() {
@@ -484,7 +484,7 @@ public final class OsmRoads {
         Set<String> keySet = boxWays.keySet();
         Intrinsics.checkNotNullExpressionValue(keySet, "<get-keys>(...)");
         for (String k2 : CollectionsKt.toList(keySet)) {
-            List p = StringsKt.split$default((CharSequence) k2, new char[]{'_'}, false, 0, 6, (Object) null);
+            List p = StringsKt.split((CharSequence) k2, new char[]{'_'}, false, 0);
             double d = 2;
             double cla = (Double.parseDouble((String) p.get(0)) + Double.parseDouble((String) p.get(2))) / d;
             double clo = (Double.parseDouble((String) p.get(1)) + Double.parseDouble((String) p.get(3))) / d;
@@ -679,7 +679,7 @@ public final class OsmRoads {
             File file2 = new File(file, key + ".json");
             try {
                 if (file2.isFile() && file2.length() > 20) {
-                    str = FilesKt.readText$default(file2, null, 1, null);
+                    str = FilesKt.readText(file2, kotlin.text.Charsets.UTF_8);
                     i = 0;
                 } else {
                     tileStatus = "downloading streets…";
@@ -731,7 +731,7 @@ public final class OsmRoads {
                                         String str7 = str5;
                                         i = 0;
                                         try {
-                                            if (StringsKt.startsWith$default(StringsKt.trimStart((CharSequence) string).toString(), "{", false, 2, (Object) null)) {
+                                            if (StringsKt.startsWith(StringsKt.trimStart((CharSequence) string).toString(), "{", false)) {
                                                 str6 = string;
                                                 str5 = str7;
                                                 Unit unit = Unit.INSTANCE;
@@ -779,7 +779,7 @@ public final class OsmRoads {
                         }
                         str = str6;
                         File file3 = new File(file2.getPath() + ".tmp");
-                        FilesKt.writeText$default(file3, str, null, 2, null);
+                        FilesKt.writeText(file3, str, kotlin.text.Charsets.UTF_8);
                         file3.renameTo(file2);
                     } catch (Exception e2) {
                         e = e2;
@@ -1020,7 +1020,7 @@ public final class OsmRoads {
         int intValue = intOrNull != null ? intOrNull.intValue() : 0;
         String optString2 = tags.optString("width");
         Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
-        Float floatOrNull = StringsKt.toFloatOrNull(StringsKt.trim((CharSequence) StringsKt.replace$default(optString2, "m", "", false, 4, (Object) null)).toString());
+        Float floatOrNull = StringsKt.toFloatOrNull(StringsKt.trim((CharSequence) StringsKt.replace(optString2, "m", "", false)).toString());
         String optString3 = tags.optString("parking:both", tags.optString("parking:lane:both", ""));
         Intrinsics.checkNotNullExpressionValue(optString3, "optString(...)");
         return widthOf(kind, oneway, intValue, floatOrNull, optString3);
@@ -1141,7 +1141,7 @@ public final class OsmRoads {
         Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
         String replace = new Regex("[^a-z0-9 ]").replace(lowerCase, " ");
         boolean z = true;
-        Iterable $this$filter$iv = StringsKt.split$default((CharSequence) replace, new char[]{' '}, false, 0, 6, (Object) null);
+        Iterable $this$filter$iv = StringsKt.split((CharSequence) replace, new char[]{' '}, false, 0);
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
             if (!StringsKt.isBlank((String) element$iv$iv)) {

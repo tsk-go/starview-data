@@ -439,7 +439,7 @@ public final class IdeasRoad {
                 File f = new File(ctx.getFilesDir(), "takeover_why.csv");
                 if (!f.exists()) {
                     try {
-                        FilesKt.writeText$default(f, "time,lat,lon,mph,why\n", null, 2, null);
+                        FilesKt.writeText(f, "time,lat,lon,mph,why\n", kotlin.text.Charsets.UTF_8);
                     } catch (Exception e) {
                         return;
                     }
@@ -453,7 +453,7 @@ public final class IdeasRoad {
                         Ideas.Here it = h;
                         obj = Long.valueOf(Math.round(Ideas.INSTANCE.mph(it.getV())));
                     }
-                    FilesKt.appendText$default(f, format + "," + valueOf + "," + valueOf2 + "," + obj + "," + str + "\n", null, 2, null);
+                    FilesKt.appendText(f, format + "," + valueOf + "," + valueOf2 + "," + obj + "," + str + "\n", kotlin.text.Charsets.UTF_8);
                 } catch (Exception e2) {
                 }
             } catch (Exception e3) {

@@ -121,7 +121,7 @@ public final class RoadData {
         Intrinsics.checkNotNullParameter(b, "b");
         SharedPreferences.Editor edit = ctx.getSharedPreferences("road_data", 0).edit();
         String it = StringsKt.trim((CharSequence) b).toString();
-        if (!StringsKt.endsWith$default(it, "/", false, 2, (Object) null)) {
+        if (!StringsKt.endsWith(it, "/", false)) {
             it = it + "/";
         }
         edit.putString("base", it).apply();
@@ -153,14 +153,14 @@ public final class RoadData {
                     CloseableKt.closeFinally(fileInputStream, null);
                     byte[] digest = md.digest();
                     Intrinsics.checkNotNullExpressionValue(digest, "digest(...)");
-                    return ArraysKt.joinToString$default(digest, (CharSequence) "", (CharSequence) null, (CharSequence) null, 0, (CharSequence) null, new Function1() { // from class: com.starpilot.starview.RoadData$$ExternalSyntheticLambda0
+                    return ArraysKt.joinToString(digest, (CharSequence) "", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.RoadData$$ExternalSyntheticLambda0
                         @Override // kotlin.jvm.functions.Function1
                         public final Object invoke(Object obj) {
                             CharSequence sha256$lambda$2;
                             sha256$lambda$2 = RoadData.sha256$lambda$2(((Byte) obj).byteValue());
                             return sha256$lambda$2;
                         }
-                    }, 30, (Object) null);
+                    });
                 }
                 md.update(b, 0, n);
             }
@@ -429,7 +429,7 @@ public final class RoadData {
                 fileOutputStream = new FileOutputStream(tmp);
                 try {
                     FileOutputStream o = fileOutputStream;
-                    ByteStreamsKt.copyTo$default(i, o, 0, 2, null);
+                    ByteStreamsKt.copyTo(i, o, 8192);
                     CloseableKt.closeFinally(fileOutputStream, null);
                     CloseableKt.closeFinally(fileOutputStream, null);
                     try {
@@ -441,7 +441,7 @@ public final class RoadData {
                         tmp.delete();
                         return "Not a StarView road data file.";
                     }
-                    MatchResult find$default = Regex.find$default(new Regex("hpms_([A-Z]{2})\\.bin"), name, 0, 2, null);
+                    MatchResult find$default = (new Regex("hpms_([A-Z]{2})\\.bin")).find(name, 0);
                     if (find$default != null) {
                         List<String> groupValues = find$default.getGroupValues();
                         if (groupValues != null) {

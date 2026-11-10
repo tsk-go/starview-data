@@ -436,14 +436,14 @@ public final class DestinationActivity extends AppCompatActivity {
         this.favorites = places(new JSONArray((Collection) Favorites.INSTANCE.getList()), "name");
         DataClient data = Link.INSTANCE.getData();
         if (data != null) {
-            DataClient.request$default(data, "nav_list", null, new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda4
+            data.request("nav_list", kotlin.collections.MapsKt.emptyMap(), new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda4
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit onCreate$lambda$19;
                     onCreate$lambda$19 = DestinationActivity.onCreate$lambda$19(DestinationActivity.this, (JSONObject) obj);
                     return onCreate$lambda$19;
                 }
-            }, 2, null);
+            });
         }
         render();
         EditText editText5 = this.edit;
@@ -546,7 +546,7 @@ public final class DestinationActivity extends AppCompatActivity {
         $this$chip_u24lambda_u2423.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda21
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                onClick.invoke();
             }
         });
         return $this$chip_u24lambda_u2423;
@@ -617,7 +617,7 @@ public final class DestinationActivity extends AppCompatActivity {
                         }
                         String n = optString;
                         Intrinsics.checkNotNull(n);
-                        List it = StringsKt.split$default((CharSequence) n, new String[]{": "}, false, 2, 2, (Object) null);
+                        List it = StringsKt.split((CharSequence) n, new String[]{": "}, false, 2);
                         Pair pair = it.size() == 2 ? TuplesKt.to(it.get(0), it.get(1)) : TuplesKt.to(n, o.optString("address"));
                         String name0 = (String) pair.component1();
                         String addr = (String) pair.component2();
@@ -711,7 +711,7 @@ public final class DestinationActivity extends AppCompatActivity {
             String e = r.optString("error");
             Intrinsics.checkNotNull(e);
             TextView textView = null;
-            if (StringsKt.contains$default((CharSequence) e, (CharSequence) "new destination search", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) e, (CharSequence) "new destination search", false)) {
                 this$0.searchId = UUID.randomUUID().toString();
             } else {
                 this$0.commaSearch = false;
@@ -815,7 +815,7 @@ public final class DestinationActivity extends AppCompatActivity {
             Intrinsics.throwUninitializedPropertyAccessException("status");
             textView4 = null;
         }
-        String substringAfter$default = StringsKt.substringAfter$default(label, "  ", (String) null, 2, (Object) null);
+        String substringAfter$default = StringsKt.substringAfter(label, "  ", label);
         Locale US = Locale.US;
         Intrinsics.checkNotNullExpressionValue(US, "US");
         String lowerCase = substringAfter$default.toLowerCase(US);
@@ -849,7 +849,7 @@ public final class DestinationActivity extends AppCompatActivity {
                     textView = null;
                 }
                 Intrinsics.checkNotNull(e);
-                if (!StringsKt.contains$default((CharSequence) e, (CharSequence) "unknown action", false, 2, (Object) null)) {
+                if (!StringsKt.contains((CharSequence) e, (CharSequence) "unknown action", false)) {
                     String str2 = e;
                     if (str2.length() == 0) {
                         str2 = "No answer from the comma";
@@ -915,7 +915,7 @@ public final class DestinationActivity extends AppCompatActivity {
                         if (valueOf != null) {
                             doubleValue = valueOf.doubleValue();
                         } else {
-                            dist = DestinationActivity.this.dist(p);
+                            dist = this$0.dist(p);
                             doubleValue = (dist != null ? dist.doubleValue() : 99.0d) * 1609.344d;
                         }
                         Double valueOf2 = Double.valueOf(doubleValue);
@@ -926,7 +926,7 @@ public final class DestinationActivity extends AppCompatActivity {
                         if (d3 != null) {
                             doubleValue2 = d3.doubleValue();
                         } else {
-                            dist2 = DestinationActivity.this.dist(p2);
+                            dist2 = this$0.dist(p2);
                             doubleValue2 = (dist2 != null ? dist2.doubleValue() : 99.0d) * 1609.344d;
                         }
                         return ComparisonsKt.compareValues(valueOf2, Double.valueOf(doubleValue2));
@@ -934,7 +934,7 @@ public final class DestinationActivity extends AppCompatActivity {
                 });
             }
             this$0.results = sortedWith;
-            this$0.resultsTitle = StringsKt.substringAfter$default($label, "  ", (String) null, 2, (Object) null) + (r.optBoolean("alongRoute") ? " along the route" : " nearby");
+            this$0.resultsTitle = StringsKt.substringAfter($label, "  ", $label) + (r.optBoolean("alongRoute") ? " along the route" : " nearby");
             this$0.render();
             return Unit.INSTANCE;
         }
@@ -1042,7 +1042,7 @@ public final class DestinationActivity extends AppCompatActivity {
                         strArr[i] = a.getThoroughfare();
                         i2 = 1;
                         strArr[1] = a.getLocality();
-                        addressLine = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", null, null, 0, null, null, 62, null);
+                        addressLine = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", "", "", -1, "...", null);
                     } else {
                         i2 = 1;
                     }
@@ -1074,7 +1074,7 @@ public final class DestinationActivity extends AppCompatActivity {
                             }
                             if (i3 != 0) {
                                 r3 = r2;
-                                if (!StringsKt.startsWith$default(line, fn, false, 2, (Object) null)) {
+                                if (!StringsKt.startsWith(line, fn, false)) {
                                     name = fn;
                                     destination$iv$iv2.add(new Place(name, line, a.getLatitude(), a.getLongitude(), null, 0.0d, null, false, 240, null));
                                     r2 = r3;
@@ -1088,7 +1088,7 @@ public final class DestinationActivity extends AppCompatActivity {
                             g2 = g;
                             r3 = r2;
                         }
-                        name = StringsKt.substringBefore$default(line, ",", (String) null, 2, (Object) null);
+                        name = StringsKt.substringBefore(line, ",", line);
                         destination$iv$iv2.add(new Place(name, line, a.getLatitude(), a.getLongitude(), null, 0.0d, null, false, 240, null));
                         r2 = r3;
                         g = g2;
@@ -1152,10 +1152,10 @@ public final class DestinationActivity extends AppCompatActivity {
                     Double dist;
                     Double dist2;
                     DestinationActivity.Place it = (DestinationActivity.Place) t;
-                    dist = DestinationActivity.this.dist(it);
+                    dist = this$0.dist(it);
                     Double valueOf = Double.valueOf(dist != null ? dist.doubleValue() : 0.0d);
                     DestinationActivity.Place it2 = (DestinationActivity.Place) t2;
-                    dist2 = DestinationActivity.this.dist(it2);
+                    dist2 = this$0.dist(it2);
                     return ComparisonsKt.compareValues(valueOf, Double.valueOf(dist2 != null ? dist2.doubleValue() : 0.0d));
                 }
             });
@@ -1311,31 +1311,31 @@ public final class DestinationActivity extends AppCompatActivity {
     }
 
     private final String icon(String kind) {
-        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "fuel", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "gas", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) kind, (CharSequence) "fuel", false) || StringsKt.contains((CharSequence) kind, (CharSequence) "gas", false)) {
             return "⛽";
         }
-        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "charging", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) kind, (CharSequence) "charging", false)) {
             return "⚡";
         }
-        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "cafe", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "coffee", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) kind, (CharSequence) "cafe", false) || StringsKt.contains((CharSequence) kind, (CharSequence) "coffee", false)) {
             return "☕";
         }
-        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "fast", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) kind, (CharSequence) "fast", false)) {
             return "🍔";
         }
-        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "restaurant", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "food", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) kind, (CharSequence) "restaurant", false) || StringsKt.contains((CharSequence) kind, (CharSequence) "food", false)) {
             return "🍽";
         }
-        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "parking", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) kind, (CharSequence) "parking", false)) {
             return "🅿";
         }
-        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "grocery", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "shop", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "super", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) kind, (CharSequence) "grocery", false) || StringsKt.contains((CharSequence) kind, (CharSequence) "shop", false) || StringsKt.contains((CharSequence) kind, (CharSequence) "super", false)) {
             return "🛒";
         }
-        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "pharmacy", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "hospital", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "doctor", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) kind, (CharSequence) "pharmacy", false) || StringsKt.contains((CharSequence) kind, (CharSequence) "hospital", false) || StringsKt.contains((CharSequence) kind, (CharSequence) "doctor", false)) {
             return "💊";
         }
-        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "lodging", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "hotel", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) kind, (CharSequence) "lodging", false) || StringsKt.contains((CharSequence) kind, (CharSequence) "hotel", false)) {
             return "🛏";
         }
         if (kind.length() == 0) {
@@ -1502,7 +1502,7 @@ public final class DestinationActivity extends AppCompatActivity {
                 label = null;
                 break;
         }
-        final String ok = "Saved" + (label != null ? " as " + StringsKt.substringAfter$default($opts[i], "as ", (String) null, 2, (Object) null) : "");
+        final String ok = "Saved" + (label != null ? " as " + StringsKt.substringAfter($opts[i], "as ", ($opts[i])) : "");
         double lat = $p.getLat();
         if ((Double.isInfinite(lat) || Double.isNaN(lat)) ? false : true) {
             Favorites.INSTANCE.save($data, $p.getName(), $p.getAddress(), $p.getLat(), $p.getLon(), label, new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda10
@@ -1539,15 +1539,15 @@ public final class DestinationActivity extends AppCompatActivity {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void placeMenu$lambda$79(String[] $opts, UiSettings $s, JSONObject $fav, boolean $pinned, DataClient $data, final DestinationActivity this$0, DialogInterface dialogInterface, int i) {
-        if (!StringsKt.startsWith$default($opts[i], "📌", false, 2, (Object) null)) {
-            if (!StringsKt.startsWith$default($opts[i], "🏠", false, 2, (Object) null)) {
-                if (!StringsKt.startsWith$default($opts[i], "💼", false, 2, (Object) null)) {
-                    if (!StringsKt.startsWith$default($opts[i], "★", false, 2, (Object) null)) {
+        if (!StringsKt.startsWith($opts[i], "📌", false)) {
+            if (!StringsKt.startsWith($opts[i], "🏠", false)) {
+                if (!StringsKt.startsWith($opts[i], "💼", false)) {
+                    if (!StringsKt.startsWith($opts[i], "★", false)) {
                         Favorites.INSTANCE.remove(this$0, $data, $fav, new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda18
                             @Override // kotlin.jvm.functions.Function1
                             public final Object invoke(Object obj) {
                                 Unit placeMenu$lambda$79$lambda$78;
-                                placeMenu$lambda$79$lambda$78 = DestinationActivity.placeMenu$lambda$79$lambda$78(DestinationActivity.this, (String) obj);
+                                placeMenu$lambda$79$lambda$78 = DestinationActivity.placeMenu$lambda$79$lambda$78(this$0, (String) obj);
                                 return placeMenu$lambda$79$lambda$78;
                             }
                         });
@@ -1557,7 +1557,7 @@ public final class DestinationActivity extends AppCompatActivity {
                             @Override // kotlin.jvm.functions.Function1
                             public final Object invoke(Object obj) {
                                 Unit placeMenu$lambda$79$lambda$77;
-                                placeMenu$lambda$79$lambda$77 = DestinationActivity.placeMenu$lambda$79$lambda$77(DestinationActivity.this, (String) obj);
+                                placeMenu$lambda$79$lambda$77 = DestinationActivity.placeMenu$lambda$79$lambda$77(this$0, (String) obj);
                                 return placeMenu$lambda$79$lambda$77;
                             }
                         });
@@ -1568,7 +1568,7 @@ public final class DestinationActivity extends AppCompatActivity {
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         Unit placeMenu$lambda$79$lambda$76;
-                        placeMenu$lambda$79$lambda$76 = DestinationActivity.placeMenu$lambda$79$lambda$76(DestinationActivity.this, (String) obj);
+                        placeMenu$lambda$79$lambda$76 = DestinationActivity.placeMenu$lambda$79$lambda$76(this$0, (String) obj);
                         return placeMenu$lambda$79$lambda$76;
                     }
                 });
@@ -1578,7 +1578,7 @@ public final class DestinationActivity extends AppCompatActivity {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit placeMenu$lambda$79$lambda$75;
-                    placeMenu$lambda$79$lambda$75 = DestinationActivity.placeMenu$lambda$79$lambda$75(DestinationActivity.this, (String) obj);
+                    placeMenu$lambda$79$lambda$75 = DestinationActivity.placeMenu$lambda$79$lambda$75(this$0, (String) obj);
                     return placeMenu$lambda$79$lambda$75;
                 }
             });

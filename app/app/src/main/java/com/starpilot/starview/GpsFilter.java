@@ -391,7 +391,7 @@ public final class GpsFilter {
                         this.ancMs = j;
                         double acc4 = acc;
                         this.ancAcc = acc4;
-                        if (!StringsKt.startsWith$default(this.status, "checking", false, 2, (Object) null) || StringsKt.startsWith$default(this.status, "waiting", false, 2, (Object) null) || StringsKt.startsWith$default(this.status, "ignor", false, 2, (Object) null)) {
+                        if (!StringsKt.startsWith(this.status, "checking", false) || StringsKt.startsWith(this.status, "waiting", false) || StringsKt.startsWith(this.status, "ignor", false)) {
                             this.status = str;
                         }
                         double w = !(Double.isInfinite(yawRate) && !Double.isNaN(yawRate)) ? yawRate : 0.0d;
@@ -527,7 +527,7 @@ public final class GpsFilter {
                 this.ancMs = j;
                 double acc42 = acc;
                 this.ancAcc = acc42;
-                if (!StringsKt.startsWith$default(this.status, "checking", false, 2, (Object) null)) {
+                if (!StringsKt.startsWith(this.status, "checking", false)) {
                 }
                 this.status = str;
                 if (!(Double.isInfinite(yawRate) && !Double.isNaN(yawRate))) {

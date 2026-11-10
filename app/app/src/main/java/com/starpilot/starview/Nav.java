@@ -753,7 +753,7 @@ public final class Nav {
             }
             String e = optString;
             Intrinsics.checkNotNull(e);
-            if (StringsKt.contains$default((CharSequence) e, (CharSequence) "unknown action", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) e, (CharSequence) "unknown action", false)) {
                 previewing = null;
             } else {
                 previewError = e;
@@ -824,7 +824,7 @@ public final class Nav {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit go$lambda$7;
-                    go$lambda$7 = Nav.go$lambda$7(Function1.this, data, (JSONObject) obj);
+                    go$lambda$7 = Nav.go$lambda$7(then, data, (JSONObject) obj);
                     return go$lambda$7;
                 }
             });
@@ -907,7 +907,7 @@ public final class Nav {
             busy = false;
             String e = j.optString("error");
             Intrinsics.checkNotNull(e);
-            if (StringsKt.contains$default((CharSequence) e, (CharSequence) "unknown action", false, 2, (Object) null)) {
+            if (StringsKt.contains((CharSequence) e, (CharSequence) "unknown action", false)) {
                 supported = false;
                 loaded = true;
                 version++;
@@ -949,7 +949,7 @@ public final class Nav {
         INSTANCE.getMain().post(new Runnable() { // from class: com.starpilot.starview.Nav$$ExternalSyntheticLambda1
             @Override // java.lang.Runnable
             public final void run() {
-                Nav.poll$lambda$14$lambda$13$lambda$12(Function0.this, $j);
+                Nav.poll$lambda$14$lambda$13$lambda$12(parsed, $j);
             }
         });
     }
@@ -1458,7 +1458,7 @@ public final class Nav {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit options$lambda$32;
-                options$lambda$32 = Nav.setOptions$lambda$32(DataClient.this, then, (JSONObject) obj);
+                options$lambda$32 = Nav.setOptions$lambda$32(data, then, (JSONObject) obj);
                 return options$lambda$32;
             }
         });
@@ -1508,14 +1508,14 @@ public final class Nav {
 
     public final void cancel(final DataClient data, final Function1<? super String, Unit> then) {
         Intrinsics.checkNotNullParameter(data, "data");
-        DataClient.request$default(data, "nav_cancel", null, new Function1() { // from class: com.starpilot.starview.Nav$$ExternalSyntheticLambda7
+        data.request("nav_cancel", kotlin.collections.MapsKt.emptyMap(), new Function1() { // from class: com.starpilot.starview.Nav$$ExternalSyntheticLambda7
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit cancel$lambda$33;
-                cancel$lambda$33 = Nav.cancel$lambda$33(DataClient.this, then, (JSONObject) obj);
+                cancel$lambda$33 = Nav.cancel$lambda$33(data, then, (JSONObject) obj);
                 return cancel$lambda$33;
             }
-        }, 2, null);
+        });
     }
 
     public final double getAlong() {
@@ -1638,7 +1638,7 @@ public final class Nav {
                             String k3 = fr.getIndex() + "|" + MathKt.roundToInt(fr.getDurationS() / 60);
                             if (!Intrinsics.areEqual(k3, fasterSaid)) {
                                 fasterSaid = k3;
-                                Speech.INSTANCE.speak("A faster route is available. It saves " + StringsKt.replace$default(durationText(cur.getDurationS() - fr.getDurationS()), "min", "minutes", false, 4, (Object) null) + ".", false);
+                                Speech.INSTANCE.speak("A faster route is available. It saves " + StringsKt.replace(durationText(cur.getDurationS() - fr.getDurationS()), "min", "minutes", false) + ".", false);
                                 return;
                             }
                             return;

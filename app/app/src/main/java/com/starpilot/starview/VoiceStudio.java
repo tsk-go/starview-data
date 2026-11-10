@@ -149,7 +149,7 @@ public final class VoiceStudio {
                     String name = e.getName();
                     Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
                     String rel = StringsKt.removePrefix(name, (CharSequence) "voicekit/");
-                    if ((rel.length() == 0) || StringsKt.contains$default((CharSequence) rel, (CharSequence) "..", false, 2, (Object) null)) {
+                    if ((rel.length() == 0) || StringsKt.contains((CharSequence) rel, (CharSequence) "..", false)) {
                         ins = ins2;
                     } else if (e.isDirectory()) {
                         ins = ins2;
@@ -168,7 +168,7 @@ public final class VoiceStudio {
                             FileOutputStream it = fileOutputStream;
                             ins = ins2;
                             try {
-                                ByteStreamsKt.copyTo$default(z, it, 0, 2, null);
+                                ByteStreamsKt.copyTo(z, it, 8192);
                                 try {
                                     CloseableKt.closeFinally(fileOutputStream, null);
                                     n++;
@@ -389,14 +389,14 @@ public final class VoiceStudio {
         }
 
         public final String getTitle() {
-            return CollectionsKt.joinToString$default(StringsKt.split$default((CharSequence) StringsKt.replace$default(this.name, '_', ' ', false, 4, (Object) null), new char[]{' '}, false, 0, 6, (Object) null), " ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.VoiceStudio$Voice$$ExternalSyntheticLambda0
+            return CollectionsKt.joinToString(StringsKt.split((CharSequence) StringsKt.replace(this.name, '_', ' ', false), new char[]{' '}, false, 0), " ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.VoiceStudio$Voice$$ExternalSyntheticLambda0
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     CharSequence _get_title_$lambda$1;
                     _get_title_$lambda$1 = VoiceStudio.Voice._get_title_$lambda$1((String) obj);
                     return _get_title_$lambda$1;
                 }
-            }, 30, null);
+            });
         }
     }
 
@@ -429,13 +429,13 @@ public final class VoiceStudio {
                 }
                 ResponseBody body = r.body();
                 Intrinsics.checkNotNull(body);
-                FilesKt.writeText$default(f, body.string(), null, 2, null);
+                FilesKt.writeText(f, body.string(), kotlin.text.Charsets.UTF_8);
                 Unit unit = Unit.INSTANCE;
                 CloseableKt.closeFinally(execute, null);
             } finally {
             }
         }
-        JSONObject all = new JSONObject(FilesKt.readText$default(f, null, 1, null));
+        JSONObject all = new JSONObject(FilesKt.readText(f, kotlin.text.Charsets.UTF_8));
         ArrayList out = new ArrayList();
         Iterator<String> keys = all.keys();
         Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
@@ -453,11 +453,11 @@ public final class VoiceStudio {
                 while (keys2.hasNext()) {
                     String p = keys2.next();
                     Intrinsics.checkNotNull(p);
-                    if (StringsKt.endsWith$default(p, ".onnx", false, i, (Object) names)) {
+                    if (StringsKt.endsWith(p, ".onnx", false)) {
                         onnx = p;
                         bytes = files.getJSONObject(p).optLong("size_bytes");
                     }
-                    if (StringsKt.endsWith$default(p, ".onnx.json", false, 2, (Object) null)) {
+                    if (StringsKt.endsWith(p, ".onnx.json", false)) {
                         json = p;
                         names = null;
                         i = 2;
@@ -580,7 +580,7 @@ public final class VoiceStudio {
     public final long downloadedBytes(Context c) {
         Intrinsics.checkNotNullParameter(c, "c");
         long j = 0;
-        for (File it : SequencesKt.filter(FilesKt.walk$default(new File(c.getFilesDir(), "piper"), null, 1, null), new Function1() { // from class: com.starpilot.starview.VoiceStudio$$ExternalSyntheticLambda4
+        for (File it : SequencesKt.filter(FilesKt.walk(new File(c.getFilesDir(), "piper"), kotlin.io.FileWalkDirection.TOP_DOWN), new Function1() { // from class: com.starpilot.starview.VoiceStudio$$ExternalSyntheticLambda4
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 boolean downloadedBytes$lambda$10;
@@ -643,8 +643,8 @@ public final class VoiceStudio {
                 }
             }
             FilesKt.appendBytes(part, PiperPrep.INSTANCE.metadataBytes(cfg));
-            FilesKt.writeText$default(new File(mdir, "tokens.txt"), PiperPrep.INSTANCE.tokens(cfg), null, 2, null);
-            FilesKt.writeText$default(new File(mdir, "config.json"), cfgText, null, 2, null);
+            FilesKt.writeText(new File(mdir, "tokens.txt"), PiperPrep.INSTANCE.tokens(cfg), kotlin.text.Charsets.UTF_8);
+            FilesKt.writeText(new File(mdir, "config.json"), cfgText, kotlin.text.Charsets.UTF_8);
             return part.renameTo(new File(mdir, "model.onnx")) ? null : "Couldn't save it";
         } catch (Exception e) {
             part.delete();
@@ -799,7 +799,7 @@ public final class VoiceStudio {
         for (Object element$iv$iv$iv : $this$mapNotNull$iv) {
             String l = (String) element$iv$iv$iv;
             Iterable $this$mapNotNull$iv2 = $this$mapNotNull$iv;
-            List it = StringsKt.split$default((CharSequence) l, new char[]{'|'}, false, 2, 2, (Object) null);
+            List it = StringsKt.split((CharSequence) l, new char[]{'|'}, false, 2);
             List list = it;
             int i = (it.size() != 2 || StringsKt.isBlank((CharSequence) it.get(0))) ? 0 : 1;
             Pair pair = null;
@@ -883,11 +883,11 @@ public final class VoiceStudio {
             }
         }
         File tmp4 = tmp2;
-        FilesKt.writeText$default(new File(tmp4, "label.txt"), label, null, 2, null);
+        FilesKt.writeText(new File(tmp4, "label.txt"), label, kotlin.text.Charsets.UTF_8);
         File file = new File(tmp4, "style.json");
         String jSONObject = new JSONObject().put("voice", v.getKey()).put("speaker", sid).put("expressive", st.getExpressive()).put("rhythm", st.getRhythm()).put("pace", st.getPace()).toString();
         Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
-        FilesKt.writeText$default(file, jSONObject, null, 2, null);
+        FilesKt.writeText(file, jSONObject, kotlin.text.Charsets.UTF_8);
         File dst = new File(c.getFilesDir(), str + id);
         if (!tmp4.renameTo(dst)) {
             FilesKt.deleteRecursively(tmp4);

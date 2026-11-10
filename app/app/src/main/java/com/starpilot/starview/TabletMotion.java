@@ -152,7 +152,7 @@ public final class TabletMotion implements SensorEventListener {
         float[] a = e.values;
         if (!this.gInit) {
             Intrinsics.checkNotNull(a);
-            ArraysKt.copyInto$default(a, this.g, 0, 0, 0, 14, (Object) null);
+            ArraysKt.copyInto(a, this.g, 0, 0, a.length);
             this.gInit = true;
             return;
         }

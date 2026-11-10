@@ -715,7 +715,7 @@ public final class FilesActivity extends AppCompatActivity {
             $this$build_u24small_u24lambda_u2412.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda6
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
-                    Function0.this.invoke();
+                    function0.invoke();
                 }
             });
             LinearLayout.LayoutParams $this$build_u24small_u24lambda_u2414_u24lambda_u2413 = new LinearLayout.LayoutParams(-2, this$0.dp(44));
@@ -855,7 +855,7 @@ public final class FilesActivity extends AppCompatActivity {
                     this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda8
                         @Override // java.lang.Runnable
                         public final void run() {
-                            FilesActivity.Pane.refresh$lambda$32$lambda$30(FilesActivity.Pane.this, es, this$0, free, total);
+                            FilesActivity.Pane.refresh$lambda$32$lambda$30(this$1, es, this$0, free, total);
                         }
                     });
                 } catch (Exception e3) {
@@ -863,7 +863,7 @@ public final class FilesActivity extends AppCompatActivity {
                     this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda9
                         @Override // java.lang.Runnable
                         public final void run() {
-                            FilesActivity.Pane.refresh$lambda$32$lambda$31(FilesActivity.Pane.this, e);
+                            FilesActivity.Pane.refresh$lambda$32$lambda$31(this$1, e);
                         }
                     });
                 }
@@ -935,7 +935,7 @@ public final class FilesActivity extends AppCompatActivity {
                 row.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda10
                     @Override // android.view.View.OnClickListener
                     public final void onClick(View view) {
-                        FilesActivity.Pane.render$lambda$40(FilesActivity.Entry.this, this, view);
+                        FilesActivity.Pane.render$lambda$40(e, FilesActivity.Pane.this, view);
                     }
                 });
                 row.setOnLongClickListener(new View.OnLongClickListener() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda12
@@ -1013,7 +1013,7 @@ public final class FilesActivity extends AppCompatActivity {
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit mkdir$lambda$44$lambda$43;
-                        mkdir$lambda$44$lambda$43 = FilesActivity.Pane.mkdir$lambda$44$lambda$43(FilesActivity.Pane.this);
+                        mkdir$lambda$44$lambda$43 = FilesActivity.Pane.mkdir$lambda$44$lambda$43(this$0);
                         return mkdir$lambda$44$lambda$43;
                     }
                 });
@@ -1040,7 +1040,7 @@ public final class FilesActivity extends AppCompatActivity {
             int size = names.size();
             String str = this.remote ? "the comma" : "the tablet";
             final FilesActivity filesActivity = this.this$0;
-            builder.setTitle("Delete " + size + " item(s) from " + str + "?").setMessage(CollectionsKt.joinToString$default(names, "\n", null, null, 0, null, null, 62, null)).setPositiveButton("Delete", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda17
+            builder.setTitle("Delete " + size + " item(s) from " + str + "?").setMessage(CollectionsKt.joinToString(names, "\n", "", "", -1, "...", null)).setPositiveButton("Delete", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda17
                 @Override // android.content.DialogInterface.OnClickListener
                 public final void onClick(DialogInterface dialogInterface, int i) {
                     FilesActivity.Pane.deleteSelected$lambda$47(FilesActivity.Pane.this, filesActivity, names, dialogInterface, i);
@@ -1086,7 +1086,7 @@ public final class FilesActivity extends AppCompatActivity {
             this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda13
                 @Override // java.lang.Runnable
                 public final void run() {
-                    FilesActivity.Pane.deleteSelected$lambda$47$lambda$46$lambda$45(FilesActivity.Pane.this, err, this$0);
+                    FilesActivity.Pane.deleteSelected$lambda$47$lambda$46$lambda$45(this$1, err, this$0);
                 }
             });
         }
@@ -1156,7 +1156,7 @@ public final class FilesActivity extends AppCompatActivity {
             executorService.execute(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda18
                 @Override // java.lang.Runnable
                 public final void run() {
-                    FilesActivity.Pane.openSelected$lambda$58(FileKinds.Kind.this, this, filesActivity, full, e);
+                    FilesActivity.Pane.openSelected$lambda$58(kind, this, filesActivity, full, e);
                 }
             });
         }
@@ -1250,7 +1250,7 @@ public final class FilesActivity extends AppCompatActivity {
                         this$1.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda15
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.Pane.openSelected$lambda$58$lambda$57(FilesActivity.this, x);
+                                FilesActivity.Pane.openSelected$lambda$58$lambda$57(this$1, x);
                             }
                         });
                     }
@@ -1260,7 +1260,7 @@ public final class FilesActivity extends AppCompatActivity {
                 this$1.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda11
                     @Override // java.lang.Runnable
                     public final void run() {
-                        FilesActivity.Pane.openSelected$lambda$58$lambda$56(FilesActivity.this, this$0, $e, $full, $kind, bytes, truncated);
+                        FilesActivity.Pane.openSelected$lambda$58$lambda$56(this$1, this$0, $e, $full, $kind, bytes, truncated);
                     }
                 });
             } catch (Exception e3) {
@@ -1268,7 +1268,7 @@ public final class FilesActivity extends AppCompatActivity {
                 this$1.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda15
                     @Override // java.lang.Runnable
                     public final void run() {
-                        FilesActivity.Pane.openSelected$lambda$58$lambda$57(FilesActivity.this, x);
+                        FilesActivity.Pane.openSelected$lambda$58$lambda$57(this$1, x);
                     }
                 });
             }
@@ -1322,7 +1322,7 @@ public final class FilesActivity extends AppCompatActivity {
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         Unit goToPathDialog$lambda$61$lambda$60;
-                        goToPathDialog$lambda$61$lambda$60 = FilesActivity.Pane.goToPathDialog$lambda$61$lambda$60(FilesActivity.Pane.this, (String) obj);
+                        goToPathDialog$lambda$61$lambda$60 = FilesActivity.Pane.goToPathDialog$lambda$61$lambda$60(this$0, (String) obj);
                         return goToPathDialog$lambda$61$lambda$60;
                     }
                 });
@@ -1785,14 +1785,14 @@ public final class FilesActivity extends AppCompatActivity {
             this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda27
                 @Override // java.lang.Runnable
                 public final void run() {
-                    Function0.this.invoke();
+                    $then.invoke();
                 }
             });
         } catch (Exception e) {
             this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda28
                 @Override // java.lang.Runnable
                 public final void run() {
-                    FilesActivity.op$lambda$30$lambda$29(FilesActivity.this, $j, e);
+                    FilesActivity.op$lambda$30$lambda$29(this$0, $j, e);
                 }
             });
         }
@@ -2009,7 +2009,7 @@ public final class FilesActivity extends AppCompatActivity {
         List names = CollectionsKt.toList(src.getSelected());
         String srcName = src.getRemote() ? "comma" : "tablet";
         String dstName = dst.getRemote() ? "comma" : "tablet";
-        String listing = CollectionsKt.joinToString$default(CollectionsKt.take(names, 8), "\n", null, null, 0, null, null, 62, null) + (names.size() > 8 ? "\n… and " + (names.size() - 8) + " more" : "");
+        String listing = CollectionsKt.joinToString(CollectionsKt.take(names, 8), "\n", "", "", -1, "...", null) + (names.size() > 8 ? "\n… and " + (names.size() - 8) + " more" : "");
         new AlertDialog.Builder(this).setTitle("Copy " + names.size() + " item(s) " + srcName + " → " + dstName + "?").setMessage("From:  " + srcName + ":" + src.getPath() + "\nTo:      " + dstName + ":" + dst.getPath() + "\n\n" + listing).setPositiveButton("Copy", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda24
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
@@ -2162,14 +2162,14 @@ public final class FilesActivity extends AppCompatActivity {
                                         filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda7
                                             @Override // java.lang.Runnable
                                             public final void run() {
-                                                FilesActivity.this.toast("Cancelled");
+                                                this$0.toast("Cancelled");
                                             }
                                         });
                                         handler = filesActivity.ui;
                                         runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                                             @Override // java.lang.Runnable
                                             public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                                             }
                                         };
                                         handler.post(runnable);
@@ -2181,14 +2181,14 @@ public final class FilesActivity extends AppCompatActivity {
                                         filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda34
                                             @Override // java.lang.Runnable
                                             public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$47(FilesActivity.this, e);
+                                                FilesActivity.startCopy$lambda$51$lambda$47(this$0, e);
                                             }
                                         });
                                         handler = filesActivity.ui;
                                         runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                                             @Override // java.lang.Runnable
                                             public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                                             }
                                         };
                                         handler.post(runnable);
@@ -2200,7 +2200,7 @@ public final class FilesActivity extends AppCompatActivity {
                                         filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                                             @Override // java.lang.Runnable
                                             public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                                             }
                                         });
                                         throw th;
@@ -2233,7 +2233,7 @@ public final class FilesActivity extends AppCompatActivity {
                                                         @Override // kotlin.jvm.functions.Function1
                                                         public final Object invoke(Object obj) {
                                                             Unit startCopy$lambda$51$lambda$36;
-                                                            startCopy$lambda$51$lambda$36 = FilesActivity.startCopy$lambda$51$lambda$36(Ref.ObjectRef.this, (FilesActivity.Clash) obj);
+                                                            startCopy$lambda$51$lambda$36 = FilesActivity.startCopy$lambda$51$lambda$36(applyAll, (FilesActivity.Clash) obj);
                                                             return startCopy$lambda$51$lambda$36;
                                                         }
                                                     });
@@ -2399,7 +2399,7 @@ public final class FilesActivity extends AppCompatActivity {
                                                 filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                                                     @Override // java.lang.Runnable
                                                     public final void run() {
-                                                        FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                                        FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                                                     }
                                                 });
                                                 throw th;
@@ -2412,14 +2412,14 @@ public final class FilesActivity extends AppCompatActivity {
                                             filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda7
                                                 @Override // java.lang.Runnable
                                                 public final void run() {
-                                                    FilesActivity.this.toast("Cancelled");
+                                                    this$0.toast("Cancelled");
                                                 }
                                             });
                                             handler = filesActivity.ui;
                                             runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                                                 @Override // java.lang.Runnable
                                                 public final void run() {
-                                                    FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                                    FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                                                 }
                                             };
                                             handler.post(runnable);
@@ -2432,14 +2432,14 @@ public final class FilesActivity extends AppCompatActivity {
                                             filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda34
                                                 @Override // java.lang.Runnable
                                                 public final void run() {
-                                                    FilesActivity.startCopy$lambda$51$lambda$47(FilesActivity.this, e);
+                                                    FilesActivity.startCopy$lambda$51$lambda$47(this$0, e);
                                                 }
                                             });
                                             handler = filesActivity.ui;
                                             runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                                                 @Override // java.lang.Runnable
                                                 public final void run() {
-                                                    FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                                    FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                                                 }
                                             };
                                             handler.post(runnable);
@@ -2464,14 +2464,14 @@ public final class FilesActivity extends AppCompatActivity {
                                     filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda7
                                         @Override // java.lang.Runnable
                                         public final void run() {
-                                            FilesActivity.this.toast("Cancelled");
+                                            this$0.toast("Cancelled");
                                         }
                                     });
                                     handler = filesActivity.ui;
                                     runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                                         @Override // java.lang.Runnable
                                         public final void run() {
-                                            FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                            FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                                         }
                                     };
                                     handler.post(runnable);
@@ -2484,14 +2484,14 @@ public final class FilesActivity extends AppCompatActivity {
                                     filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda34
                                         @Override // java.lang.Runnable
                                         public final void run() {
-                                            FilesActivity.startCopy$lambda$51$lambda$47(FilesActivity.this, e);
+                                            FilesActivity.startCopy$lambda$51$lambda$47(this$0, e);
                                         }
                                     });
                                     handler = filesActivity.ui;
                                     runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                                         @Override // java.lang.Runnable
                                         public final void run() {
-                                            FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                            FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                                         }
                                     };
                                     handler.post(runnable);
@@ -2504,7 +2504,7 @@ public final class FilesActivity extends AppCompatActivity {
                                     filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                                         @Override // java.lang.Runnable
                                         public final void run() {
-                                            FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                            FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                                         }
                                     });
                                     throw th;
@@ -2546,7 +2546,7 @@ public final class FilesActivity extends AppCompatActivity {
                         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda1
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$39(FilesActivity.this, jobs, latch);
+                                FilesActivity.startCopy$lambda$51$lambda$39(this$0, jobs, latch);
                             }
                         });
                         latch.await();
@@ -2572,14 +2572,14 @@ public final class FilesActivity extends AppCompatActivity {
                                             @Override // kotlin.jvm.functions.Function1
                                             public final Object invoke(Object obj) {
                                                 Unit startCopy$lambda$51$lambda$41;
-                                                startCopy$lambda$51$lambda$41 = FilesActivity.startCopy$lambda$51$lambda$41(Ref.LongRef.this, t0, this$0, label2, total, i6, ((Long) obj).longValue());
+                                                startCopy$lambda$51$lambda$41 = FilesActivity.startCopy$lambda$51$lambda$41(doneBytes, t0, this$0, label2, total, i6, ((Long) obj).longValue());
                                                 return startCopy$lambda$51$lambda$41;
                                             }
                                         };
                                         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda3
                                             @Override // java.lang.Runnable
                                             public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$42(FilesActivity.this, i6);
+                                                FilesActivity.startCopy$lambda$51$lambda$42(this$0, i6);
                                             }
                                         });
                                         try {
@@ -2596,7 +2596,7 @@ public final class FilesActivity extends AppCompatActivity {
                                             this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda5
                                                 @Override // java.lang.Runnable
                                                 public final void run() {
-                                                    FilesActivity.startCopy$lambda$51$lambda$44(FilesActivity.this, i6, msg);
+                                                    FilesActivity.startCopy$lambda$51$lambda$44(this$0, i6, msg);
                                                 }
                                             });
                                         }
@@ -2607,7 +2607,7 @@ public final class FilesActivity extends AppCompatActivity {
                                                     this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda4
                                                         @Override // java.lang.Runnable
                                                         public final void run() {
-                                                            FilesActivity.startCopy$lambda$51$lambda$43(FilesActivity.this, i6);
+                                                            FilesActivity.startCopy$lambda$51$lambda$43(this$0, i6);
                                                         }
                                                     });
                                                     doneBytes.element += j2.getSize();
@@ -2629,7 +2629,7 @@ public final class FilesActivity extends AppCompatActivity {
                                         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda4
                                             @Override // java.lang.Runnable
                                             public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$43(FilesActivity.this, i6);
+                                                FilesActivity.startCopy$lambda$51$lambda$43(this$0, i6);
                                             }
                                         });
                                         doneBytes.element += j2.getSize();
@@ -2647,14 +2647,14 @@ public final class FilesActivity extends AppCompatActivity {
                                         filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda7
                                             @Override // java.lang.Runnable
                                             public final void run() {
-                                                FilesActivity.this.toast("Cancelled");
+                                                this$0.toast("Cancelled");
                                             }
                                         });
                                         handler = filesActivity.ui;
                                         runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                                             @Override // java.lang.Runnable
                                             public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                                             }
                                         };
                                         handler.post(runnable);
@@ -2667,14 +2667,14 @@ public final class FilesActivity extends AppCompatActivity {
                                         filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda34
                                             @Override // java.lang.Runnable
                                             public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$47(FilesActivity.this, e);
+                                                FilesActivity.startCopy$lambda$51$lambda$47(this$0, e);
                                             }
                                         });
                                         handler = filesActivity.ui;
                                         runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                                             @Override // java.lang.Runnable
                                             public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                                             }
                                         };
                                         handler.post(runnable);
@@ -2687,7 +2687,7 @@ public final class FilesActivity extends AppCompatActivity {
                                         filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                                             @Override // java.lang.Runnable
                                             public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                                             }
                                         });
                                         throw th;
@@ -2721,14 +2721,14 @@ public final class FilesActivity extends AppCompatActivity {
                         filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda7
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.this.toast("Cancelled");
+                                this$0.toast("Cancelled");
                             }
                         });
                         handler = filesActivity.ui;
                         runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                             }
                         };
                         handler.post(runnable);
@@ -2741,14 +2741,14 @@ public final class FilesActivity extends AppCompatActivity {
                         filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda34
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$47(FilesActivity.this, e);
+                                FilesActivity.startCopy$lambda$51$lambda$47(this$0, e);
                             }
                         });
                         handler = filesActivity.ui;
                         runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                             }
                         };
                         handler.post(runnable);
@@ -2761,7 +2761,7 @@ public final class FilesActivity extends AppCompatActivity {
                         filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                             }
                         });
                         throw th;
@@ -2770,14 +2770,14 @@ public final class FilesActivity extends AppCompatActivity {
                         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda6
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$45(FilesActivity.this, ok, j, failed);
+                                FilesActivity.startCopy$lambda$51$lambda$45(this$0, ok, j, failed);
                             }
                         });
                         handler = filesActivity.ui;
                         runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, $dst);
+                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, $dst);
                             }
                         };
                     } catch (InterruptedException e20) {
@@ -2786,14 +2786,14 @@ public final class FilesActivity extends AppCompatActivity {
                         filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda7
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.this.toast("Cancelled");
+                                this$0.toast("Cancelled");
                             }
                         });
                         handler = filesActivity.ui;
                         runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                             }
                         };
                         handler.post(runnable);
@@ -2804,14 +2804,14 @@ public final class FilesActivity extends AppCompatActivity {
                         filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda34
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$47(FilesActivity.this, e);
+                                FilesActivity.startCopy$lambda$51$lambda$47(this$0, e);
                             }
                         });
                         handler = filesActivity.ui;
                         runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                             }
                         };
                         handler.post(runnable);
@@ -2822,7 +2822,7 @@ public final class FilesActivity extends AppCompatActivity {
                         filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
                             @Override // java.lang.Runnable
                             public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(FilesActivity.this, pane2, pane);
+                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2, pane);
                             }
                         });
                         throw th;
@@ -2880,7 +2880,7 @@ public final class FilesActivity extends AppCompatActivity {
         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda15
             @Override // java.lang.Runnable
             public final void run() {
-                FilesActivity.startCopy$lambda$51$lambda$41$lambda$40(FilesActivity.this, $label, all, $total, rate, $i, fileDone);
+                FilesActivity.startCopy$lambda$51$lambda$41$lambda$40(this$0, $label, all, $total, rate, $i, fileDone);
             }
         });
         return Unit.INSTANCE;
@@ -2956,7 +2956,7 @@ public final class FilesActivity extends AppCompatActivity {
         Runnable runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda16
             @Override // java.lang.Runnable
             public final void run() {
-                FilesActivity.startCopy$lambda$51$lambda$50$lambda$48(FilesActivity.this);
+                FilesActivity.startCopy$lambda$51$lambda$50$lambda$48(this$0);
             }
         };
         Iterable $this$any$iv = this$0.queueRows;
@@ -2970,7 +2970,7 @@ public final class FilesActivity extends AppCompatActivity {
                 QRow it2 = (QRow) element$iv;
                 CharSequence text = it2.getState().getText();
                 Intrinsics.checkNotNullExpressionValue(text, "getText(...)");
-                if (StringsKt.startsWith$default(text, (CharSequence) "✕", false, 2, (Object) null)) {
+                if (StringsKt.startsWith(text, (CharSequence) "✕", false)) {
                     z = true;
                     break;
                 }
@@ -3043,17 +3043,17 @@ public final class FilesActivity extends AppCompatActivity {
         final AlertDialog dlg = new AlertDialog.Builder(this$0).setTitle("\"" + $name + "\" already exists").setMessage(msg).setView($this$askClash_u24lambda_u2460_u24lambda_u2453).setCancelable(false).setPositiveButton(labels[0], new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda0
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                FilesActivity.askClash$lambda$60$lambda$54(Ref.ObjectRef.this, $this$askClash_u24lambda_u2460_u24lambda_u2452, $setAll, $latch, dialogInterface, i);
+                FilesActivity.askClash$lambda$60$lambda$54($result, $this$askClash_u24lambda_u2460_u24lambda_u2452, $setAll, $latch, dialogInterface, i);
             }
         }).setNeutralButton(labels[1], new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda11
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                FilesActivity.askClash$lambda$60$lambda$55(Ref.ObjectRef.this, $this$askClash_u24lambda_u2460_u24lambda_u2452, $setAll, $latch, dialogInterface, i);
+                FilesActivity.askClash$lambda$60$lambda$55($result, $this$askClash_u24lambda_u2460_u24lambda_u2452, $setAll, $latch, dialogInterface, i);
             }
         }).setNegativeButton(labels[2], new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda22
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                FilesActivity.askClash$lambda$60$lambda$56(Ref.ObjectRef.this, $this$askClash_u24lambda_u2460_u24lambda_u2452, $setAll, $latch, dialogInterface, i);
+                FilesActivity.askClash$lambda$60$lambda$56($result, $this$askClash_u24lambda_u2460_u24lambda_u2452, $setAll, $latch, dialogInterface, i);
             }
         }).show();
         Button $this$askClash_u24lambda_u2460_u24lambda_u2459_u24lambda_u2458 = new Button(this$0);
@@ -3061,7 +3061,7 @@ public final class FilesActivity extends AppCompatActivity {
         $this$askClash_u24lambda_u2460_u24lambda_u2459_u24lambda_u2458.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda29
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                FilesActivity.askClash$lambda$60$lambda$59$lambda$58$lambda$57(Ref.ObjectRef.this, dlg, $latch, view);
+                FilesActivity.askClash$lambda$60$lambda$59$lambda$58$lambda$57($result, dlg, $latch, view);
             }
         });
         $this$askClash_u24lambda_u2460_u24lambda_u2453.addView($this$askClash_u24lambda_u2460_u24lambda_u2459_u24lambda_u2458);
@@ -3110,7 +3110,7 @@ public final class FilesActivity extends AppCompatActivity {
         String str;
         int dot = -1;
         if (!dir) {
-            Integer valueOf = Integer.valueOf(StringsKt.lastIndexOf$default((CharSequence) name, '.', 0, false, 6, (Object) null));
+            Integer valueOf = Integer.valueOf(StringsKt.lastIndexOf((CharSequence) name, '.', kotlin.text.StringsKt.getLastIndex(((CharSequence) name)), false));
             int it = valueOf.intValue();
             if (!(it > 0)) {
                 valueOf = null;
@@ -3364,11 +3364,11 @@ public final class FilesActivity extends AppCompatActivity {
             try {
                 Result.Companion companion = Result.Companion;
                 FilesActivity filesActivity = this;
-                str = StringsKt.startsWith$default(StringsKt.trimStart((CharSequence) str).toString(), "[", false, 2, (Object) null) ? new JSONArray(str).toString(2) : new JSONObject(str).toString(2);
-                Result.m1191constructorimpl(Unit.INSTANCE);
+                str = StringsKt.startsWith(StringsKt.trimStart((CharSequence) str).toString(), "[", false) ? new JSONArray(str).toString(2) : new JSONObject(str).toString(2);
+                KtCompat.resultOf(Unit.INSTANCE);
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                Result.m1191constructorimpl(ResultKt.createFailure(th));
+                KtCompat.resultOf(ResultKt.createFailure(th));
             }
         }
         Object text2 = str;
@@ -3424,7 +3424,7 @@ public final class FilesActivity extends AppCompatActivity {
             new AlertDialog.Builder(this$0).setTitle("Save " + $e.getName() + " on the " + $side + "?").setMessage("The file is replaced with your edit. " + $full).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda17
                 @Override // android.content.DialogInterface.OnClickListener
                 public final void onClick(DialogInterface dialogInterface, int i) {
-                    FilesActivity.showPreview$lambda$78$lambda$77(FilesActivity.this, $pane, $full, $et, $dlg, dialogInterface, i);
+                    FilesActivity.showPreview$lambda$78$lambda$77(this$0, $pane, $full, $et, $dlg, dialogInterface, i);
                 }
             }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         } else {
@@ -3486,7 +3486,7 @@ public final class FilesActivity extends AppCompatActivity {
                 MediaType mediaType = MediaType.Companion.get("application/octet-stream");
                 byte[] bytes = $text.getBytes(Charsets.UTF_8);
                 Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
-                Response execute = okHttpClient.newCall(url.put(RequestBody.Companion.create$default(companion, mediaType, bytes, 0, 0, 12, (Object) null)).build()).execute();
+                Response execute = okHttpClient.newCall(url.put(RequestBody.Companion.create(mediaType, bytes, 0, bytes.length)).build()).execute();
                 try {
                     Response r = execute;
                     if (!r.isSuccessful()) {
@@ -3506,19 +3506,19 @@ public final class FilesActivity extends AppCompatActivity {
                 } finally {
                 }
             } else {
-                FilesKt.writeText$default(new File($full), $text, null, 2, null);
+                FilesKt.writeText(new File($full), $text, kotlin.text.Charsets.UTF_8);
             }
             this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda19
                 @Override // java.lang.Runnable
                 public final void run() {
-                    FilesActivity.saveText$lambda$83$lambda$81(FilesActivity.this, $done, $pane);
+                    FilesActivity.saveText$lambda$83$lambda$81(this$0, $done, $pane);
                 }
             });
         } catch (Exception x) {
             this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda20
                 @Override // java.lang.Runnable
                 public final void run() {
-                    FilesActivity.saveText$lambda$83$lambda$82(FilesActivity.this, x);
+                    FilesActivity.saveText$lambda$83$lambda$82(this$0, x);
                 }
             });
         }
@@ -3714,7 +3714,7 @@ public final class FilesActivity extends AppCompatActivity {
 
     /* JADX INFO: Access modifiers changed from: private */
     public final String join(String a, String b) {
-        return (StringsKt.endsWith$default(a, "/", false, 2, (Object) null) ? new StringBuilder().append(a) : new StringBuilder().append(a).append("/")).append(b).toString();
+        return (StringsKt.endsWith(a, "/", false) ? new StringBuilder().append(a) : new StringBuilder().append(a).append("/")).append(b).toString();
     }
 
     /* JADX INFO: Access modifiers changed from: private */

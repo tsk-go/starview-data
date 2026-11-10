@@ -403,7 +403,7 @@ public final class LaneMemory {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 boolean pruneMarks$lambda$10;
-                pruneMarks$lambda$10 = LaneMemory.pruneMarks$lambda$10(LaneMemory.Mark.this, eR, (LaneMemory.Mark) obj);
+                pruneMarks$lambda$10 = LaneMemory.pruneMarks$lambda$10(eL, eR, (LaneMemory.Mark) obj);
                 return Boolean.valueOf(pruneMarks$lambda$10);
             }
         });
