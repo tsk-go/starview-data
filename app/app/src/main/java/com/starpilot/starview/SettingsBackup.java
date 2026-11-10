@@ -146,6 +146,8 @@ public final class SettingsBackup {
                         }
                         it = it2;
                         put = jSONObject.put("set", new JSONArray(destination$iv$iv));
+                    } else {
+                        continue;
                     }
                     o.put(k, put);
                     it2 = it;
@@ -267,7 +269,7 @@ public final class SettingsBackup {
                             prefs = prefs2;
                             valueOf = CollectionsKt.toSet((List) destination$iv$iv);
                         } else {
-                            i = 0;
+                            continue;
                         }
                         Intrinsics.checkNotNull(valueOf);
                         puts.add(new Put(k, valueOf));
@@ -324,7 +326,6 @@ public final class SettingsBackup {
     }
 
     private final Uri ownRow(Context ctx, String fileName) {
-        Cursor cursor;
         Object m1191constructorimpl;
         Boolean bool;
         SharedPreferences meta = ctx.getSharedPreferences("starview_backup_meta", 0);
@@ -336,7 +337,7 @@ public final class SettingsBackup {
                 Result.Companion companion = Result.Companion;
                 Cursor query = ctx.getContentResolver().query(u, new String[]{"_id"}, null, null, null);
                 if (query != null) {
-                    cursor = query;
+                    Cursor cursor = query;
                     Throwable cursor$c = null;
                     try {
                         Cursor it = cursor;
@@ -367,17 +368,14 @@ public final class SettingsBackup {
         if (query2 == null) {
             return null;
         }
-        cursor = query2;
+        Throwable cCause = null;
         try {
-            Cursor c = cursor;
-            Uri downloadsUri = c.moveToFirst() ? INSTANCE.downloadsUri(c.getLong(0)) : null;
-            CloseableKt.closeFinally(cursor, null);
-            return downloadsUri;
+            return query2.moveToFirst() ? INSTANCE.downloadsUri(query2.getLong(0)) : null;
         } catch (Throwable th2) {
-            try {
-                throw th2;
-            } finally {
-            }
+            cCause = th2;
+            throw th2;
+        } finally {
+            CloseableKt.closeFinally(query2, cCause);
         }
     }
 
@@ -458,24 +456,27 @@ public final class SettingsBackup {
         if (openOutputStream == null) {
             throw new IllegalStateException("can't write " + name);
         }
-        FileInputStream fileInputStream = openOutputStream;
+        OutputStream out = openOutputStream;
+        Throwable outCause = null;
         try {
-            OutputStream out = fileInputStream;
-            fileInputStream = new FileInputStream(src);
-            Throwable fileInputStream$c = null;
+            FileInputStream it = new FileInputStream(src);
+            Throwable itCause = null;
             try {
-                FileInputStream it = fileInputStream;
                 ByteStreamsKt.copyTo(it, out, 8192);
-                ctx.getSharedPreferences("starview_backup_meta", 0).edit().putString("row_" + name, uri.toString()).apply();
-                return "Download/StarView/" + name;
-            } catch (Throwable fileInputStream$t) {
-                fileInputStream$c = fileInputStream$t;
-                throw fileInputStream$t;
+            } catch (Throwable th) {
+                itCause = th;
+                throw th;
             } finally {
-                CloseableKt.closeFinally(fileInputStream, fileInputStream$c);
+                CloseableKt.closeFinally(it, itCause);
             }
+        } catch (Throwable th2) {
+            outCause = th2;
+            throw th2;
         } finally {
+            CloseableKt.closeFinally(out, outCause);
         }
+        ctx.getSharedPreferences("starview_backup_meta", 0).edit().putString("row_" + name, uri.toString()).apply();
+        return "Download/StarView/" + name;
     }
 
     public final String manual(Context ctx) {

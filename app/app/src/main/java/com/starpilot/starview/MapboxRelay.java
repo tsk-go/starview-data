@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -18,9 +19,11 @@ import kotlin.Result;
 import kotlin.ResultKt;
 import kotlin.TuplesKt;
 import kotlin.Unit;
+import kotlin.collections.CollectionsKt;
 import kotlin.collections.MapsKt;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.text.Charsets;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
 
@@ -192,116 +195,9 @@ public final class MapboxRelay {
         return null;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:13:0x00a7, code lost:
-    
-        r8 = kotlin.text.StringsKt.split((java.lang.CharSequence) r7, new java.lang.String[]{" "}, false, 0);
-        r9 = (java.lang.String) kotlin.collections.CollectionsKt.getOrNull(r8, 1);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:14:0x00c0, code lost:
-    
-        if (r9 != null) goto L35;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:15:0x00c2, code lost:
-    
-        r9 = "";
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:16:0x00c4, code lost:
-    
-        r13 = kotlin.text.StringsKt.substringBeforeLast(r9, ":", r9);
-        r0 = kotlin.text.StringsKt.toIntOrNull(kotlin.text.StringsKt.substringAfterLast(r9, ":", r9));
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x00de, code lost:
-    
-        if (kotlin.jvm.internal.Intrinsics.areEqual(kotlin.collections.CollectionsKt.firstOrNull(r8), "CONNECT") == false) goto L46;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:18:0x00e0, code lost:
-    
-        if (r0 != null) goto L39;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:21:0x00e7, code lost:
-    
-        if (r0.intValue() != 443) goto L46;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:23:0x00ef, code lost:
-    
-        if (kotlin.jvm.internal.Intrinsics.areEqual(r13, "mapbox.com") != false) goto L45;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:25:0x00f7, code lost:
-    
-        if (kotlin.text.StringsKt.endsWith(r13, ".mapbox.com", false) == false) goto L46;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:26:0x00f9, code lost:
-    
-        r10 = true;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:28:0x00fc, code lost:
-    
-        if (r10 != false) goto L59;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:29:0x00fe, code lost:
-    
-        r11 = "HTTP/1.1 403 Forbidden\r\nContent-Length: 0\r\n\r\n".getBytes(kotlin.text.Charsets.UTF_8);
-        kotlin.jvm.internal.Intrinsics.checkNotNullExpressionValue(r11, "getBytes(...)");
-        r6.write(r11);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:31:0x010c, code lost:
-    
-        r0 = kotlin.Result.Companion;
-        r0 = r18;
-        kotlin.KtCompat.resultOf(r5);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:41:0x0117, code lost:
-    
-        r0 = move-exception;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:42:0x0118, code lost:
-    
-        r5 = kotlin.Result.Companion;
-        kotlin.KtCompat.resultOf(kotlin.ResultKt.createFailure(r0));
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:43:0x0144, code lost:
-    
-        r12 = new java.net.Socket();
-        r12.connect(new java.net.InetSocketAddress(r13, 443), 8000);
-        r12.setSoTimeout(60000);
-        r3 = r12;
-        r11 = "HTTP/1.1 200 Connection established\r\n\r\n".getBytes(kotlin.text.Charsets.UTF_8);
-        kotlin.jvm.internal.Intrinsics.checkNotNullExpressionValue(r11, "getBytes(...)");
-        r6.write(r11);
-        r6.flush();
-        r19.setSoTimeout(60000);
-        com.starpilot.starview.MapboxRelay.served++;
-        r0 = com.starpilot.starview.MapboxRelay.pool.submit(new com.starpilot.starview.MapboxRelay$$ExternalSyntheticLambda3(r3, r6, r19));
-        r0 = r3.getOutputStream();
-        kotlin.jvm.internal.Intrinsics.checkNotNullExpressionValue(r0, "getOutputStream(...)");
-        pipe(r4, r0);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:45:0x0195, code lost:
-    
-        r0 = kotlin.Result.Companion;
-        r0 = r18;
-        r3.shutdownOutput();
-        kotlin.KtCompat.resultOf(kotlin.Unit.INSTANCE);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:60:0x01a4, code lost:
-    
-        r0 = move-exception;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:61:0x01a5, code lost:
-    
-        r12 = kotlin.Result.Companion;
-        kotlin.KtCompat.resultOf(kotlin.ResultKt.createFailure(r0));
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     private final void serve(final Socket c) {
-        Unit unit;
-        Unit unit2;
-        Future back;
         active.incrementAndGet();
-        final Socket socket = null;
-        String str = null;
+        Socket up = null;
         try {
             c.setSoTimeout(15000);
             InputStream ci = c.getInputStream();
@@ -309,148 +205,83 @@ public final class MapboxRelay {
             Intrinsics.checkNotNull(ci);
             String req = readLine(ci);
             if (req == null) {
-                try {
-                    Result.Companion companion = Result.Companion;
-                    MapboxRelay mapboxRelay = this;
-                    KtCompat.resultOf(null);
-                } catch (Throwable th) {
-                    Result.Companion companion2 = Result.Companion;
-                    KtCompat.resultOf(ResultKt.createFailure(th));
-                }
-                try {
-                    Result.Companion companion3 = Result.Companion;
-                    MapboxRelay mapboxRelay2 = this;
-                    c.close();
-                    KtCompat.resultOf(Unit.INSTANCE);
-                } catch (Throwable th2) {
-                    Result.Companion companion4 = Result.Companion;
-                    KtCompat.resultOf(ResultKt.createFailure(th2));
-                }
-                active.decrementAndGet();
                 return;
             }
             while (true) {
                 String h = readLine(ci);
                 if (h == null) {
-                    try {
-                        Result.Companion companion5 = Result.Companion;
-                        MapboxRelay mapboxRelay3 = this;
-                        KtCompat.resultOf(str);
-                    } catch (Throwable th3) {
-                        Result.Companion companion6 = Result.Companion;
-                        KtCompat.resultOf(ResultKt.createFailure(th3));
-                    }
-                    try {
-                        Result.Companion companion7 = Result.Companion;
-                        MapboxRelay mapboxRelay4 = this;
-                        c.close();
-                        KtCompat.resultOf(Unit.INSTANCE);
-                    } catch (Throwable th4) {
-                        Result.Companion companion8 = Result.Companion;
-                        KtCompat.resultOf(ResultKt.createFailure(th4));
-                    }
-                    active.decrementAndGet();
                     return;
                 }
-                boolean allowed = false;
                 if (h.length() == 0) {
                     break;
-                } else {
-                    str = null;
                 }
             }
-        } catch (Exception e) {
-            try {
-                Result.Companion companion9 = Result.Companion;
-                Socket socket2 = socket;
-                if (socket2 != null) {
-                    socket2.close();
-                    unit2 = Unit.INSTANCE;
-                } else {
-                    unit2 = null;
-                }
-                KtCompat.resultOf(unit2);
-            } catch (Throwable th5) {
-                Result.Companion companion10 = Result.Companion;
-                KtCompat.resultOf(ResultKt.createFailure(th5));
+            List<String> parts = StringsKt.split(req, new String[]{" "}, false, 0);
+            String target = (String) CollectionsKt.getOrNull(parts, 1);
+            if (target == null) {
+                target = "";
             }
+            String host = StringsKt.substringBeforeLast(target, ":", target);
+            Integer port = StringsKt.toIntOrNull(StringsKt.substringAfterLast(target, ":", target));
+            boolean allowed = false;
+            if (Intrinsics.areEqual(CollectionsKt.firstOrNull(parts), "CONNECT") && port != null && port.intValue() == 443 && (Intrinsics.areEqual(host, "mapbox.com") || StringsKt.endsWith(host, ".mapbox.com", false))) {
+                allowed = true;
+            }
+            if (!allowed) {
+                byte[] no = "HTTP/1.1 403 Forbidden\r\nContent-Length: 0\r\n\r\n".getBytes(Charsets.UTF_8);
+                Intrinsics.checkNotNullExpressionValue(no, "getBytes(...)");
+                co.write(no);
+                return;
+            }
+            final Socket s = new Socket();
+            s.connect(new InetSocketAddress(host, 443), 8000);
+            s.setSoTimeout(60000);
+            up = s;
+            byte[] ok = "HTTP/1.1 200 Connection established\r\n\r\n".getBytes(Charsets.UTF_8);
+            Intrinsics.checkNotNullExpressionValue(ok, "getBytes(...)");
+            co.write(ok);
+            co.flush();
+            c.setSoTimeout(60000);
+            served++;
+            Future back = pool.submit(new Runnable() { // from class: com.starpilot.starview.MapboxRelay$$ExternalSyntheticLambda3
+                @Override // java.lang.Runnable
+                public final void run() {
+                    MapboxRelay.serve$lambda$7(s, co, c);
+                }
+            });
+            OutputStream so = s.getOutputStream();
+            Intrinsics.checkNotNullExpressionValue(so, "getOutputStream(...)");
+            pipe(ci, so);
             try {
-                Result.Companion companion11 = Result.Companion;
-                c.close();
+                s.shutdownOutput();
                 KtCompat.resultOf(Unit.INSTANCE);
-            } catch (Throwable th6) {
-                th = th6;
-                Result.Companion companion12 = Result.Companion;
+            } catch (Throwable th) {
                 KtCompat.resultOf(ResultKt.createFailure(th));
-                active.decrementAndGet();
             }
-            active.decrementAndGet();
-        } catch (Throwable th7) {
+            back.get();
+        } catch (Exception e) {
+        } finally {
             try {
-                Result.Companion companion13 = Result.Companion;
-                Socket socket3 = socket;
-                if (socket3 != null) {
-                    socket3.close();
-                    unit = Unit.INSTANCE;
+                Socket u = up;
+                Unit closed;
+                if (u != null) {
+                    u.close();
+                    closed = Unit.INSTANCE;
                 } else {
-                    unit = null;
+                    closed = null;
                 }
-                KtCompat.resultOf(unit);
-            } catch (Throwable th8) {
-                Result.Companion companion14 = Result.Companion;
-                KtCompat.resultOf(ResultKt.createFailure(th8));
+                KtCompat.resultOf(closed);
+            } catch (Throwable th2) {
+                KtCompat.resultOf(ResultKt.createFailure(th2));
             }
             try {
-                Result.Companion companion15 = Result.Companion;
                 c.close();
                 KtCompat.resultOf(Unit.INSTANCE);
-            } catch (Throwable th9) {
-                Result.Companion companion16 = Result.Companion;
-                KtCompat.resultOf(ResultKt.createFailure(th9));
+            } catch (Throwable th3) {
+                KtCompat.resultOf(ResultKt.createFailure(th3));
             }
             active.decrementAndGet();
-            throw th7;
         }
-        try {
-            Result.Companion companion17 = Result.Companion;
-            MapboxRelay mapboxRelay5 = this;
-            c.close();
-            KtCompat.resultOf(Unit.INSTANCE);
-        } catch (Throwable th10) {
-            Result.Companion companion18 = Result.Companion;
-            KtCompat.resultOf(ResultKt.createFailure(th10));
-        }
-        active.decrementAndGet();
-        return;
-        try {
-            Result.Companion companion19 = Result.Companion;
-            MapboxRelay mapboxRelay6 = this;
-            c.close();
-            KtCompat.resultOf(Unit.INSTANCE);
-        } catch (Throwable th11) {
-            th = th11;
-            Result.Companion companion122 = Result.Companion;
-            KtCompat.resultOf(ResultKt.createFailure(th));
-            active.decrementAndGet();
-        }
-        active.decrementAndGet();
-        active.decrementAndGet();
-        return;
-        back.get();
-        try {
-            Result.Companion companion20 = Result.Companion;
-            MapboxRelay mapboxRelay7 = this;
-            socket.close();
-            KtCompat.resultOf(Unit.INSTANCE);
-        } catch (Throwable th12) {
-            Result.Companion companion21 = Result.Companion;
-            KtCompat.resultOf(ResultKt.createFailure(th12));
-        }
-        Result.Companion companion192 = Result.Companion;
-        MapboxRelay mapboxRelay62 = this;
-        c.close();
-        KtCompat.resultOf(Unit.INSTANCE);
-        active.decrementAndGet();
     }
 
     /* JADX INFO: Access modifiers changed from: private */

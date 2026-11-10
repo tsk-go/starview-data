@@ -293,49 +293,31 @@ public final class Bookmarks {
         Intrinsics.checkNotNullParameter(f, "f");
         JSONArray a = new JSONArray();
         try {
+            RandomAccessFile r = new RandomAccessFile(f, "r");
+            Throwable rCause = null;
             try {
-                RandomAccessFile randomAccessFile = new RandomAccessFile(f, "r");
-                try {
-                    RandomAccessFile r = randomAccessFile;
-                    long len = r.length();
-                    long from = Math.max(0L, len - 64000);
-                    r.seek(from);
-                    byte[] b = new byte[(int) (len - from)];
-                    r.readFully(b);
-                    Iterable $this$filter$iv = StringsKt.split((CharSequence) new String(b, Charsets.UTF_8), new String[]{"\n"}, false, 0);
-                    Collection destination$iv$iv = new ArrayList();
-                    for (Object element$iv$iv : $this$filter$iv) {
-                        String it = (String) element$iv$iv;
-                        if (!StringsKt.isBlank(it)) {
-                            destination$iv$iv.add(element$iv$iv);
-                        }
+                long len = r.length();
+                long from = Math.max(0L, len - 64000);
+                r.seek(from);
+                byte[] b = new byte[(int) (len - from)];
+                r.readFully(b);
+                List<String> parts = StringsKt.split((CharSequence) new String(b, Charsets.UTF_8), new String[]{"\n"}, false, 0);
+                ArrayList<String> l = new ArrayList();
+                for (String it : parts) {
+                    if (!StringsKt.isBlank(it)) {
+                        l.add(it);
                     }
-                    List l = (List) destination$iv$iv;
-                    try {
-                        Iterable $this$forEach$iv = CollectionsKt.takeLast(from > 0 ? CollectionsKt.drop(l, 1) : l, n);
-                        for (Object element$iv : $this$forEach$iv) {
-                            String it2 = (String) element$iv;
-                            a.put(it2);
-                            r = r;
-                        }
-                        Unit unit = Unit.INSTANCE;
-                        CloseableKt.closeFinally(randomAccessFile, null);
-                    } catch (Throwable th) {
-                        th = th;
-                        Throwable th2 = th;
-                        try {
-                            throw th2;
-                        } catch (Throwable th3) {
-                            CloseableKt.closeFinally(randomAccessFile, th2);
-                            throw th3;
-                        }
-                    }
-                } catch (Throwable th4) {
-                    th = th4;
                 }
-            } catch (Exception e) {
+                for (String it2 : CollectionsKt.takeLast(from > 0 ? CollectionsKt.drop(l, 1) : l, n)) {
+                    a.put(it2);
+                }
+            } catch (Throwable th) {
+                rCause = th;
+                throw th;
+            } finally {
+                CloseableKt.closeFinally(r, rCause);
             }
-        } catch (Exception e2) {
+        } catch (Exception e) {
         }
         return a;
     }
