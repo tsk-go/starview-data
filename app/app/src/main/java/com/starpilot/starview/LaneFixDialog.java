@@ -423,7 +423,7 @@ public final class LaneFixDialog {
                 var3 = this.other;
             }
 
-            return new LaneFixDialog.Result(var5, var4, var6, (String)var9, (((var14 != 0)) ? 1 : 0), var1, var18, var3, var16);
+            return new LaneFixDialog.Result(var5, var4, var6, (String)var9, var14, var1, var18, var3, var16);
         }
 
         private static final String result$k(Character c) {
@@ -1270,7 +1270,7 @@ public final class LaneFixDialog {
     public static final Unit show$lambda$11(LinearLayout $wayRow, final Road $road, LinearLayout $otherRow, CheckBox $keep, TextView $say, String $street, final Ref.ObjectRef $paint, final Ref.ObjectRef $roadView, Context $ctx, float $d, int $grey) {
         String str;
         $wayRow.removeAllViews();
-        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("one", "One-way"), TuplesKt.to("divided", "Divided highway"), TuplesKt.to("two", "Two-way street")}))) {
+        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("one", "One-way"), TuplesKt.to("divided", "Divided highway"), TuplesKt.to("two", "Two-way street")})) {
             final String k = (String) pair.component1();
             String t = (String) pair.component2();
             $wayRow.addView(show$chip$default($ctx, $d, t, Intrinsics.areEqual($road.getWay(), k), false, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda3
@@ -1375,7 +1375,7 @@ public final class LaneFixDialog {
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit show$lambda$12(Ref.ObjectRef $paint) {
         Function0 function0;
-        if (!$paint.element) {
+        if ($paint.element == 0) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
             function0 = null;
         } else {

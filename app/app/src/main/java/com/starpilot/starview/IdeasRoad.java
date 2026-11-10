@@ -226,7 +226,7 @@ public final class IdeasRoad {
                         var29 = (((boolean)false) ? 1 : 0);
                     }
 
-                    if (!var29) {
+                    if ((var29 == 0)) {
                         break label150;
                     }
                 }
@@ -271,7 +271,7 @@ public final class IdeasRoad {
             }
 
             String var35;
-            if (var29 && var17.size() >= 6) {
+            if ((var29 != 0) && var17.size() >= 6) {
                 var9 = var20.getDRel();
                 boolean var14;
                 if (-3.0F <= var9 && var9 <= 40.0F) {
@@ -328,7 +328,7 @@ public final class IdeasRoad {
             var33 = var32;
         }
 
-        if (var33 != null && var29) {
+        if (var33 != null && (var29 != 0)) {
             this.cutinUntil = 3000L + var4;
             if (Double.isNaN(this.cutinFrom)) {
                 this.cutinFrom = var7;
@@ -343,7 +343,7 @@ public final class IdeasRoad {
                 && var4 - this.leadMs < 400L
                 && this.leadD - var23.getDRel() > 8.0F
                 && var23.getDRel() < 30.0F
-                && var29
+                && (var29 != 0)
                 && var3 != null
                 && !Double.isNaN(var3.getYaw())) {
                 IdeaSpots.record$default(IdeaSpots.INSTANCE, "cutin", var3.getLat(), var3.getLon(), var3.getHdgDeg(), 0.0, null, 0L, 60.0, null, 368, null);
@@ -359,8 +359,8 @@ public final class IdeasRoad {
             var6.add(new Ideas.Part("nyc_cutins", Math.max(4.4704, this.cutinFrom - 1.5), 0.5, 0.0, this.cutinText, 70, 8, null));
         } else {
             this.cutinFrom = Double.NaN;
-            if (var29 && var3 != null && !Double.isNaN(var3.getYaw())) {
-                IdeaSpots.Seen var24 = (IdeaSpots.Seen) CollectionsKt.firstOrNull(
+            if ((var29 != 0) && (var3) != null && !Double.isNaN(var3.getYaw())) {
+                IdeaSpots.Seen var24 = (Seen) CollectionsKt.firstOrNull(
                     IdeaSpots.around$default(
                         IdeaSpots.INSTANCE, var3.getLat(), var3.getLon(), var3.getYaw(), SetsKt.setOf("cutin"), 400.0, 50.0, 25.0, 2, false, 256, null
                     )

@@ -654,7 +654,7 @@ public final class LaneSuggest {
                     }
                 }
 
-                boolean var28;
+                int var28;
                 if (var1.getEngaged()
                     && var1.getVEgo() >= var1.getMinLcSpeed()
                     && !var1.getLaneChanging()
@@ -662,9 +662,9 @@ public final class LaneSuggest {
                     && !var1.getRightBlinker()
                     && !var1.getBrake()
                     && !var1.getBusy()) {
-                    var28 = true;
+                    var28 = 1;
                 } else {
-                    var28 = false;
+                    var28 = 0;
                 }
 
                 label552: {
@@ -681,7 +681,7 @@ public final class LaneSuggest {
                                     this.state = LaneSuggest.State.IDLE;
                                 }
 
-                                if ((this.state == LaneSuggest.State.IDLE || this.exitRetryAt != 0L && var13 >= this.exitRetryAt) && var28 && this.exitDue(var1, var13)
+                                if ((this.state == LaneSuggest.State.IDLE || this.exitRetryAt != 0L && var13 >= this.exitRetryAt) && (var28 != 0) && this.exitDue(var1, var13)
                                     )
                                  {
                                     if (!Intrinsics.areEqual(var1.getExitKey(), this.exitKey)) {
@@ -698,10 +698,10 @@ public final class LaneSuggest {
                                     return;
                                 }
 
-                                if (this.state == LaneSuggest.State.IDLE && var28) {
+                                if (this.state == LaneSuggest.State.IDLE && (var28 != 0)) {
                                     var47 = new int[]{-1, 1};
                                     int var36 = ((Object[])var47).length;
-                                    var28 = false;
+                                    var28 = 0;
 
                                     while (true) {
                                         if (var28 >= var36) {
@@ -709,7 +709,7 @@ public final class LaneSuggest {
                                             break;
                                         }
 
-                                        int var8 = (int)((Object[])var47)[((var28) ? 1 : 0)];
+                                        int var8 = (int)((Object[])var47)[var28];
                                         boolean var35;
                                         if (this.highSince[this.idx(var8)] == 0L
                                             || var13 - this.highSince[this.idx(var8)] < 1000L
@@ -732,7 +732,7 @@ public final class LaneSuggest {
                                         var28 = var47;
                                         String var50 = this.side(var47).toLowerCase(Locale.ROOT);
                                         Intrinsics.checkNotNullExpressionValue(var50, "toLowerCase(...)");
-                                        this.ask(((var28) ? 1 : 0), "the driving model wants to move " + var50, var13, "model");
+                                        this.ask(var28, "the driving model wants to move " + var50, var13, "model");
                                     } else if (var1.getRouteDir() != 0
                                         && this.routeSince != 0L
                                         && var13 - this.routeSince >= 2000L
@@ -1283,7 +1283,7 @@ public final class LaneSuggest {
         /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
         public final LaneSuggest.Companion.Exit exitNeed(JSONObject var1, boolean var2) {
             if (var1 != null) {
-                boolean var7 = false;
+                int var7 = 0;
                 if (var1.optBoolean("valid", false)) {
                     String var12 = var1.optString("maneuverType");
                     String var13 = var1.optString("maneuverModifier");
@@ -1343,15 +1343,15 @@ public final class LaneSuggest {
                         }
 
                         double var3 = var1.optDouble("maneuverDistance", Double.NaN);
-                        int var6 = ((var7) ? 1 : 0);
+                        int var6 = var7;
                         if (!Double.isInfinite(var3)) {
-                            var6 = ((var7) ? 1 : 0);
+                            var6 = var7;
                             if (!Double.isNaN(var3)) {
                                 var6 = 1;
                             }
                         }
 
-                        if (!var6) {
+                        if ((var6 == 0)) {
                             return null;
                         }
 
@@ -1588,7 +1588,7 @@ public final class LaneSuggest {
                         var4 = 0;
                     }
 
-                    if (var4 && !(var2 > 3200.0)) {
+                    if ((var4 != 0) && !(var2 > 3200.0)) {
                         String var7 = var1.optString("maneuverModifier");
                         var4 = var5;
                         if (var7 != null) {
@@ -1629,13 +1629,13 @@ public final class LaneSuggest {
                                 }
 
                                 var4 = -1;
-                                return (((var4 != 0)) ? 1 : 0);
+                                return var4;
                             }
 
                             var4 = 1;
                         }
 
-                        return (((var4 != 0)) ? 1 : 0);
+                        return var4;
                     } else {
                         return 0;
                     }
@@ -1719,7 +1719,7 @@ public final class LaneSuggest {
                         var10 = 0;
                     }
 
-                    if (var10 && !(var5 > 1600.0) && !(var5 < 150.0)) {
+                    if ((var10 != 0) && !(var5 > 1600.0) && !(var5 < 150.0)) {
                         Pair var16 = var2.sideLanes(var9);
                         int var11 = ((Number)var16.component1()).intValue();
                         double var7 = ((Number)var16.component2()).doubleValue();

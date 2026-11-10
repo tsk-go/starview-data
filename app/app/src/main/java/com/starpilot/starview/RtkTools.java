@@ -308,7 +308,7 @@ public final class RtkTools {
                 var4 = 0;
             }
 
-            if (!var4) {
+            if ((var4 == 0)) {
                 String var11;
                 label40: {
                     var11 = var1.getActionState();

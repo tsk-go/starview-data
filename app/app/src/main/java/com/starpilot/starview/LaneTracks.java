@@ -316,15 +316,15 @@ public final class LaneTracks {
                 float[] var23 = var1.getLaneX()[var14];
                 if (var23.length >= 2 && var14 < ((Object[])var1.getLaneY()).length) {
                     var41 = var1.getLaneProb();
-                    boolean var15;
+                    int var15;
                     if (var14 >= 0 && var14 < ((Object[])var41).length) {
-                        var15 = true;
+                        var15 = 1;
                     } else {
-                        var15 = false;
+                        var15 = 0;
                     }
 
                     float var9;
-                    if (var15) {
+                    if ((var15 != 0)) {
                         var9 = (float)((Object[])var41)[var14];
                     } else {
                         var9 = 0.0F;
@@ -334,12 +334,12 @@ public final class LaneTracks {
                         float[] var50 = var1.getLaneY()[var14];
                         var41 = (Object[])var1.getLaneZ();
                         if (var14 >= 0 && var14 < ((Object[])var41).length) {
-                            var15 = (boolean)true;
+                            var15 = (((boolean)true) ? 1 : 0);
                         } else {
-                            var15 = (boolean)false;
+                            var15 = (((boolean)false) ? 1 : 0);
                         }
 
-                        if (var15) {
+                        if ((var15 != 0)) {
                             var41 = ((Object[])var41)[var14];
                         } else {
                             var41 = new float[var23.length];
@@ -387,13 +387,13 @@ public final class LaneTracks {
 
                         Object var55 = (LaneTracks.Line)var50;
                         if (var55 != null && Math.abs(((LaneTracks.Line) var55).getY0() - var6) < 1.5F && ((LaneTracks.Line) var55).getY().length == ((LaneTracks.Line) var41).getY().length) {
-                            var15 = false;
+                            var15 = 0;
 
                             for (int var16 = ((LaneTracks.Line) var55).getY().length; var15 < var16; var15++) {
                                 float[] var62 = ((LaneTracks.Line) var55).getY();
-                                var62[((var15) ? 1 : 0)] += (((LaneTracks.Line) var41).getY()[((var15) ? 1 : 0)] - ((LaneTracks.Line) var55).getY()[((var15) ? 1 : 0)]) * var8;
+                                var62[var15] += (((LaneTracks.Line) var41).getY()[var15] - ((LaneTracks.Line) var55).getY()[var15]) * var8;
                                 float[] var63 = ((LaneTracks.Line) var55).getZ();
-                                var63[((var15) ? 1 : 0)] += (((LaneTracks.Line) var41).getZ()[((var15) ? 1 : 0)] - ((LaneTracks.Line) var55).getZ()[((var15) ? 1 : 0)]) * var8;
+                                var63[var15] += (((LaneTracks.Line) var41).getZ()[var15] - ((LaneTracks.Line) var55).getZ()[var15]) * var8;
                             }
 
                             ((LaneTracks.Line) var55).setX(var23);

@@ -1472,7 +1472,7 @@ public abstract class GxPage extends FrameLayout {
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit choice$lambda$45(Ref.ObjectRef $paint, Function1 $onPick, int i) {
         Function1 function1;
-        if (!$paint.element) {
+        if ($paint.element == 0) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
             function1 = null;
         } else {
@@ -1724,7 +1724,7 @@ public abstract class GxPage extends FrameLayout {
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit tabs$lambda$61(Ref.ObjectRef $selectRef, int i) {
         Function1 function1;
-        if (!$selectRef.element) {
+        if ($selectRef.element == 0) {
             Intrinsics.throwUninitializedPropertyAccessException("selectRef");
             function1 = null;
         } else {
@@ -1920,7 +1920,7 @@ public abstract class GxPage extends FrameLayout {
     public static final void pickMany$lambda$77(Function1 $then, boolean[] $arr, DialogInterface dialogInterface, int i) {
         Iterable $this$filter$iv = ArraysKt.getIndices($arr);
         Collection destination$iv$iv = new ArrayList();
-        for (Integer num : ((Integer) $this$filter$iv)) {
+        for (Integer num : (Iterable<Integer>) $this$filter$iv) {
             int it = num.intValue();
             if ($arr[it]) {
                 destination$iv$iv.add(num);

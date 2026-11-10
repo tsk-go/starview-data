@@ -157,7 +157,7 @@ public final class BlinkerTurn {
                         }
                     }
 
-                    if (!var43) {
+                    if ((var43 == 0)) {
                         int var23 = ((OsmRoads.Way) var52).getE().length;
                         int var22 = 0;
                         var43 = var21;
@@ -184,7 +184,7 @@ public final class BlinkerTurn {
                                 }
 
                                 if (!(var7 > 4.0)) {
-                                    for (int var46 = (((var43 != 0)) ? 1 : 0); var46 < 2; var46++) {
+                                    for (int var46 = var43; var46 < 2; var46++) {
                                         int var26 = new int[]{-1, 1}[var46];
                                         if ((((OsmRoads.Way) var52).getOneway() != 1 || var26 >= 0) && (((OsmRoads.Way) var52).getOneway() != -1 || var26 <= 0)) {
                                             int var25 = var22 + var26;
@@ -192,7 +192,7 @@ public final class BlinkerTurn {
                                             if (var25 >= 0 && var25 < ((OsmRoads.Way) var52).getE().length) {
                                                 var24 = 1;
                                             } else {
-                                                var24 = (((var43 != 0)) ? 1 : 0);
+                                                var24 = var43;
                                             }
 
                                             if (var24 != 0) {
@@ -201,11 +201,11 @@ public final class BlinkerTurn {
                                                 while (true) {
                                                     int var27 = ((OsmRoads.Way) var52).getE().length;
                                                     var25 = var24 + var26;
-                                                    byte var50;
+                                                    int var50;
                                                     if (var25 >= 0 && var25 < var27) {
                                                         var50 = 1;
                                                     } else {
-                                                        var50 = (((var43 != 0)) ? 1 : 0);
+                                                        var50 = var43;
                                                     }
 
                                                     if (var50 == 0

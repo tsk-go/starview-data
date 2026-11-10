@@ -375,7 +375,7 @@ public final class Ntrip {
             var18 = 0;
         }
 
-        if (!var18) {
+        if ((var18 == 0)) {
             var13 = null;
         }
 

@@ -884,7 +884,7 @@ public final class GxThemePage extends GxPage {
         if (!seq.isEmpty()) {
             this$0.framesName = loadDefault$lambda$43$nm(this$0, tn, "turnSignals");
             this$0.frames.clear();
-            for (String img : ((String) seq)) {
+            for (String img : (Iterable<String>) seq) {
                 jobs.add(TuplesKt.to("signals/" + img, new Function1() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda58
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
@@ -1791,7 +1791,7 @@ public final class GxThemePage extends GxPage {
                         Iterable var2 = GxThemeKt.GXTHEME_DISTANCE;
                         var var5 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var2, 10));
 
-                        for (String var3 : ((String) var2)) {
+                        for (String var3 : (Iterable<String>) var2) {
                             var5.add("distanceIcons_" + var3);
                         }
 
@@ -2336,7 +2336,7 @@ public final class GxThemePage extends GxPage {
         map = GxThemeKt.GXTHEME_BUCKET;
         left.element = map.size();
         map2 = GxThemeKt.GXTHEME_BUCKET;
-        for (Map.Entry entry : ((Entry) map2.entrySet())) {
+        for (Map.Entry entry : (Iterable<Map.Entry>) map2.entrySet()) {
             final String c = (String) entry.getKey();
             String key = (String) entry.getValue();
             getText("/api/params?key=" + key, new Function2() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda9
@@ -2592,7 +2592,7 @@ public final class GxThemePage extends GxPage {
 
             var9.addView((View)this.empty("No themes yet. Build one above and hit Save Theme."));
         } else {
-            for (GxThemeEntry var6 : ((GxThemeEntry) var17)) {
+            for (GxThemeEntry var6 : (Iterable<GxThemeEntry>) var17) {
                 ArrayList var7;
                 label51: {
                     var7 = new ArrayList();
@@ -2703,7 +2703,7 @@ public final class GxThemePage extends GxPage {
 
         String var24 = this.pStr(var19);
 
-        for (GxThemeEntry var26 : ((GxThemeEntry) CollectionsKt.plus(CollectionsKt.listOf(var4), var25))) {
+        for (GxThemeEntry var26 : (Iterable<GxThemeEntry>) CollectionsKt.plus(CollectionsKt.listOf(var4), var25)) {
             boolean var2;
             if (!var26.getBuiltin() && !Intrinsics.areEqual(var26.getLocal().get(var1), true)) {
                 var2 = false;
@@ -2859,7 +2859,7 @@ public final class GxThemePage extends GxPage {
                     loadToEditor$lambda$135$slot$126(this$0, jobs, "distanceIcons_" + k, di.optJSONObject(k));
                 }
             }
-            for (String s : ((String) CollectionsKt.listOf((Object[]) new String[]{"homeButton", "settingsButton", "steeringWheel", "turnSignal", "turnSignalBlindspot"}))) {
+            for (String s : (Iterable<String>) CollectionsKt.listOf((Object[]) new String[]{"homeButton", "settingsButton", "steeringWheel", "turnSignal", "turnSignalBlindspot"})) {
                 loadToEditor$lambda$135$slot$126(this$0, jobs, s, imgs.optJSONObject(s));
             }
             JSONObject so = data.optJSONObject("sounds");
@@ -2891,7 +2891,7 @@ public final class GxThemePage extends GxPage {
                 this$0.tsType = "Sequential";
                 this$0.frames.clear();
                 this$0.framesName = "";
-                for (String img : ((String) seq)) {
+                for (String img : (Iterable<String>) seq) {
                     jobs.add(TuplesKt.to("signals/" + img, new Function1() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda4
                         @Override // kotlin.jvm.functions.Function1
                         public final Object invoke(Object obj) {
@@ -3153,7 +3153,7 @@ public final class GxThemePage extends GxPage {
                         if (!var23.isEmpty()) {
                             var0.framesName = var2.getName();
 
-                            for (String var24 : ((String) var23)) {
+                            for (String var24 : (Iterable<String>) var23) {
                                 var9.add(TuplesKt.to("signals/" + var24, new GxThemePage$$ExternalSyntheticLambda14(var0)));
                             }
                         }
@@ -3182,7 +3182,7 @@ public final class GxThemePage extends GxPage {
             boolean var6 = false;
             var var33 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var20, 10));
 
-            for (Pair var35 : ((Pair) var20)) {
+            for (Pair var35 : (Iterable<Pair>) var20) {
                 var33.add(var0.assetPath(var2.getPath(), var2.getType(), (String)var35.getFirst()));
             }
 

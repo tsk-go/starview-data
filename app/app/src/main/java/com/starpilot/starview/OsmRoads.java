@@ -1107,7 +1107,7 @@ public final class OsmRoads {
         Iterable var12 = var11;
         var var20 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var12, 10));
 
-        for (String var13 : ((String) var12)) {
+        for (String var13 : (Iterable<String>) var12) {
             String var18 = ABBR.get(var13);
             if (var18 != null) {
                 var13 = var18;
@@ -1168,7 +1168,7 @@ public final class OsmRoads {
         for (List list : boxWays.values()) {
             Intrinsics.checkNotNullExpressionValue(list, "next(...)");
             List l = list;
-            for (Way w2 : ((Way) l)) {
+            for (Way w2 : (Iterable<Way>) l) {
                 near$take(e, r, n, seen, out, w2);
             }
         }
@@ -1326,7 +1326,7 @@ public final class OsmRoads {
                 var23 = 0;
             }
 
-            if (!var23) {
+            if ((var23 == 0)) {
                 var32 = null;
             }
 
@@ -1364,7 +1364,7 @@ public final class OsmRoads {
                 }
 
                 int var88;
-                if (Math.cos(Math.atan2(var35.getN()[var23 + 1] - var35.getN()[(((var23 != 0)) ? 1 : 0)], var35.getE()[var23 + 1] - var35.getE()[var23]) - var5) >= 0.0) {
+                if (Math.cos(Math.atan2(var35.getN()[var23 + 1] - var35.getN()[var23], var35.getE()[var23 + 1] - var35.getE()[var23]) - var5) >= 0.0) {
                     var88 = 1;
                 } else {
                     var88 = 0;
@@ -1472,7 +1472,7 @@ public final class OsmRoads {
                                         if (var31) {
                                             var62 = var121[1] - var36.getE()[0];
                                         } else {
-                                            var62 = var121[var88 - 1] - var36.getE()[(((var88 != 0)) ? 1 : 0)];
+                                            var62 = var121[var88 - 1] - var36.getE()[var88];
                                         }
 
                                         double[] var122 = var36.getN();
@@ -1480,7 +1480,7 @@ public final class OsmRoads {
                                         if (var31) {
                                             var70 = var122[1] - var36.getN()[0];
                                         } else {
-                                            var70 = var122[var88 - 1] - var36.getN()[(((var88 != 0)) ? 1 : 0)];
+                                            var70 = var122[var88 - 1] - var36.getN()[var88];
                                         }
 
                                         var70 = Math.abs(Math.IEEEremainder(Math.atan2(var70, var62) - var21, Math.PI * 2));
@@ -1525,14 +1525,14 @@ public final class OsmRoads {
 
                 for (int var91 = var38.size(); var23 < var91; var23++) {
                     var9 = var119[var23 - 1];
-                    double var65 = ((Number)var38.get((((var23 != 0)) ? 1 : 0))).doubleValue();
+                    double var65 = ((Number)var38.get(var23)).doubleValue();
                     Object var109 = var38.get(var23 - 1);
                     Intrinsics.checkNotNullExpressionValue(var109, "get(...)");
                     double var58 = ((Number)var109).doubleValue();
-                    var5 = ((Number)var39.get((((var23 != 0)) ? 1 : 0))).doubleValue();
+                    var5 = ((Number)var39.get(var23)).doubleValue();
                     var109 = var39.get(var23 - 1);
                     Intrinsics.checkNotNullExpressionValue(var109, "get(...)");
-                    var119[(((var23 != 0)) ? 1 : 0)] = var9 + Math.hypot(var65 - var58, var5 - ((Number)var109).doubleValue());
+                    var119[var23] = var9 + Math.hypot(var65 - var58, var5 - ((Number)var109).doubleValue());
                 }
 
                 String var113 = var32.getWay().getName();
@@ -1547,7 +1547,7 @@ public final class OsmRoads {
                             var85 = 0;
                         }
 
-                        if (!var85 || !this.sameStreet(var123.getName(), var113)) {
+                        if ((var85 == 0) || !this.sameStreet(var123.getName(), var113)) {
                             var85 = var38.size() - 1;
 
                             for (int var92 = 0; var92 < var85; var92++) {
@@ -1801,7 +1801,7 @@ public final class OsmRoads {
             }
 
             byte var20 = -1;
-            if (var25 && var3 > -0.5) {
+            if ((var25 != 0) && (var3 != 0) > -0.5) {
                 var25 = laneIndex$count(var3);
             } else {
                 var25 = -1;
@@ -1822,7 +1822,7 @@ public final class OsmRoads {
             }
 
             if (var25 >= 0) {
-                var1 = (((var25 != 0)) ? 1 : 0);
+                var1 = var25;
             } else if (var1 < 0) {
                 var1 = -1;
             }

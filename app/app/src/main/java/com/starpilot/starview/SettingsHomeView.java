@@ -271,7 +271,7 @@ public final class SettingsHomeView extends LinearLayout {
             this.results.addView(this.ui.note("What you search for here is kept on the tablet, so it's one tap next time."));
             return;
         }
-        for (final SearchHistory.Item h : ((Item) past)) {
+        for (final SearchHistory.Item h : (Iterable<SearchHistory.Item>) past) {
             CarUi carUi = this.ui;
             String text = h.getText();
             String str = h.getCount() > 1 ? "searched " + h.getCount() + " times" : "searched once";

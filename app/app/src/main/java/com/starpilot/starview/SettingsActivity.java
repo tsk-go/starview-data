@@ -1563,7 +1563,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             Iterator<Pair<String, List<Rail>>> it2 = a.getRails().iterator();
             while (it2.hasNext()) {
                 List rs = it2.next().component2();
-                for (Rail r : ((Rail) rs)) {
+                for (Rail r : (Iterable<Rail>) rs) {
                     String label = r.getLabel();
                     String str = a.getTitle() + " · " + a.getSub();
                     String it3 = r.getPage();
@@ -2447,7 +2447,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 }
                 rail.addView(carUi13.header(section));
             }
-            for (final Rail r : ((Rail) rails)) {
+            for (final Rail r : (Iterable<Rail>) rails) {
                 SettingIcons.Icon ic = r.getSv();
                 CarUi carUi14 = settingsActivity.ui;
                 if (carUi14 == null) {
@@ -3717,7 +3717,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         Function1 function1;
         $lastSel.element = i;
         $search.setText("");
-        if (!$select.element) {
+        if ($select.element == 0) {
             Intrinsics.throwUninitializedPropertyAccessException("select");
             function1 = null;
         } else {
@@ -3820,7 +3820,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
         char c2 = 2;
         if (lowerCase.length() < 2) {
-            if (!objectRef.element) {
+            if (objectRef.element == 0) {
                 Intrinsics.throwUninitializedPropertyAccessException("select");
                 function12 = null;
             } else {
@@ -3975,7 +3975,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void togglesPage$lambda$133(Ref.ObjectRef $select) {
         Function1 function1;
-        if (!$select.element) {
+        if ($select.element == 0) {
             Intrinsics.throwUninitializedPropertyAccessException("select");
             function1 = null;
         } else {
@@ -4534,7 +4534,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     public static final Unit choiceCard$lambda$151(Function1 $set, List $options, Ref.ObjectRef $paint, int i) {
         Function1 function1;
         $set.invoke(((Pair) $options.get(i)).getFirst());
-        if (!$paint.element) {
+        if ($paint.element == 0) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
             function1 = null;
         } else {
@@ -7510,7 +7510,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             carUi12 = null;
         }
         col.addView(note2, CarUi.lp$default(carUi12, 0, 0, 3, null));
-        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "Turn-by-turn directions and alerts"), TuplesKt.to("alerts", "Alerts only"), TuplesKt.to("off", "Off")}))) {
+        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "Turn-by-turn directions and alerts"), TuplesKt.to("alerts", "Alerts only"), TuplesKt.to("off", "Off")})) {
             final String v = (String) pair.component1();
             String title = (String) pair.component2();
             toggleCard(col, title, null, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda238
@@ -9620,7 +9620,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             list.addView(note2, CarUi.lp$default(carUi22, 0, 0, 3, null));
             return;
         }
-        for (final Voice v : (Iterable) (Voice) ((Voice) vs)) {
+        for (final Voice v : (Iterable<Voice>) vs) {
             boolean chosen2 = act == null && Intrinsics.areEqual(v.getName(), Speech.INSTANCE.getVoiceName());
             CarUi carUi23 = settingsActivity.ui;
             if (carUi23 == null) {
@@ -10127,7 +10127,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     public static final void tabletVoiceStudioPage$fillEngine$lambda$363$lambda$362$lambda$361$lambda$360(Ref.ObjectRef $fillVoices, LinearLayout $engineBox, SettingsActivity this$0, TextView $status) {
         Function0 function0;
         tabletVoiceStudioPage$fillEngine($engineBox, this$0, $status, $fillVoices);
-        if (!$fillVoices.element) {
+        if ($fillVoices.element == 0) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
             function0 = null;
         } else {
@@ -10177,7 +10177,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             carUi = carUi4;
         }
         LinearLayout rf = (LinearLayout) CarUi.row$default(carUi, "Show", "Filter the list", 0, null, null, 28, null).component1();
-        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "All"), TuplesKt.to("US", "American"), TuplesKt.to("GB", "British"), TuplesKt.to("many", "Many speakers"), TuplesKt.to("have", "Downloaded")}))) {
+        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "All"), TuplesKt.to("US", "American"), TuplesKt.to("GB", "British"), TuplesKt.to("many", "Many speakers"), TuplesKt.to("have", "Downloaded")})) {
             final String k = (String) pair.component1();
             String lab = (String) pair.component2();
             CarUi carUi5 = this$0.ui;
@@ -10293,7 +10293,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         if ($err != null && $status != null) {
             $status.setText($err);
         }
-        if (!$fillVoices.element) {
+        if ($fillVoices.element == 0) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
             function0 = null;
         } else {
@@ -10367,7 +10367,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 if (!var15) {
                     List var27 = var26;
 
-                    for (VoiceStudio.Voice var45 : (Iterable) (Voice) ((Voice) var27)) {
+                    for (VoiceStudio.Voice var45 : (Iterable<VoiceStudio.Voice>) var27) {
                         var14 = VoiceStudio.INSTANCE.downloaded((Context)var1, var45.getKey());
                         LinearLayout var20 = new LinearLayout((Context)var1);
                         var20.setOrientation(var12);
@@ -10800,7 +10800,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         VoiceStudio.INSTANCE.freeEngine();
         VoiceStudio.INSTANCE.deleteModel(this$0, $v.getKey());
         tabletVoiceStudioPage$say(this$0, $status, $v.getTitle() + ": download deleted (voices you made from it stay)");
-        if (!$fillVoices.element) {
+        if ($fillVoices.element == 0) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
             function0 = null;
         } else {
@@ -10885,7 +10885,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void tabletVoiceStudioPage$loadCat$lambda$399$lambda$398(Ref.ObjectRef $fillVoices) {
         Function0 function0;
-        if (!$fillVoices.element) {
+        if ($fillVoices.element == 0) {
             Intrinsics.throwUninitializedPropertyAccessException("fillVoices");
             function0 = null;
         } else {

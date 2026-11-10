@@ -304,7 +304,7 @@ public final class LaneAhead {
 
                 double var34 = Math.max(183.0, var11 * 8.0);
                 LaneAhead.Stage var28;
-                if (var14 < 61.0 && var37) {
+                if (var14 < 61.0 && (var37 != 0)) {
                     var28 = LaneAhead.Stage.URGENT;
                 } else if (var14 < var34) {
                     var28 = LaneAhead.Stage.PREPARE;
@@ -363,7 +363,7 @@ public final class LaneAhead {
                         var39 = (((boolean)false) ? 1 : 0);
                     }
 
-                    if (var39 && !this.busy) {
+                    if ((var39 != 0) && !this.busy) {
                         if (var3 - this.lastLookOdo < 150.0 && var1 - this.lastLookMs < 20000L) {
                             return;
                         }
@@ -390,7 +390,7 @@ public final class LaneAhead {
 
                         Function3 var24 = this.profileSource;
                         if (var24 != null) {
-                            this.apply(var3, (List<LaneAhead.Sample>)var24.invoke(var5, var7, var9), (((var39 != 0)) ? 1 : 0), var3);
+                            this.apply(var3, (List<LaneAhead.Sample>)var24.invoke(var5, var7, var9), var39, var3);
                             return;
                         }
 
@@ -555,7 +555,7 @@ public final class LaneAhead {
                         var16 = (((boolean)false) ? 1 : 0);
                     }
 
-                    if (var16 && var4.getPL() > 0.4F) {
+                    if ((var16 != 0) && var4.getPL() > 0.4F) {
                         var5 = var4.getEdgeL() - Math.abs(var4.getYL());
                         break label273;
                     }
@@ -581,7 +581,7 @@ public final class LaneAhead {
                         var16 = (((boolean)false) ? 1 : 0);
                     }
 
-                    if (var16 && var4.getPR() > 0.4F) {
+                    if ((var16 != 0) && var4.getPR() > 0.4F) {
                         var7 = var4.getEdgeR() - Math.abs(var4.getYR());
                         break label257;
                     }
@@ -642,7 +642,7 @@ public final class LaneAhead {
                         var16 = (((boolean)false) ? 1 : 0);
                     }
 
-                    if (var16 && var1 < var7 * -0.6 && !(var5 < var7 * -0.3)) {
+                    if ((var16 != 0) && (var1 != 0) < var7 * -0.6 && !(var5 < var7 * -0.3)) {
                         var16 = 1;
                     } else {
                         boolean var38;
@@ -715,7 +715,7 @@ public final class LaneAhead {
                         }
                     }
 
-                    if ((var16 != 0)) {
+                    if (var16 != 0) {
                         if (var16 <= 0) {
                             var1 = var5;
                         }
@@ -733,7 +733,7 @@ public final class LaneAhead {
                             var17 = false;
                         }
 
-                        var18.setSide((((var16 != 0)) ? 1 : 0));
+                        var18.setSide(var16);
                         String var20;
                         if (var17) {
                             var20 = "road edge closing in";
@@ -744,7 +744,7 @@ public final class LaneAhead {
                         var18.setSideWhy(var20);
                         Function2 var22 = this.onEvent;
                         if (var22 != null) {
-                            String var21 = Companion.sideName((((var16 != 0)) ? 1 : 0)).toLowerCase(Locale.ROOT);
+                            String var21 = Companion.sideName(var16).toLowerCase(Locale.ROOT);
                             Intrinsics.checkNotNullExpressionValue(var21, "toLowerCase(...)");
                             String var47 = var18.getSideWhy();
                             var22.invoke("the " + var21 + " lane ends (camera: " + var47 + ")", true);
@@ -845,7 +845,7 @@ public final class LaneAhead {
                     var13 = 0;
                 }
 
-                if (!var13) {
+                if ((var13 == 0)) {
                     var50 = null;
                 }
 
@@ -924,7 +924,7 @@ public final class LaneAhead {
                         var73 = var65;
                         var var76 = new ArrayList();
 
-                        for (OsmRoads.Way var52 : ((Way) var73)) {
+                        for (OsmRoads.Way var52 : (Iterable<OsmRoads.Way>) var73) {
                             label200: {
                                 if (Math.hypot(var52.getE()[0] - var26[0], var52.getN()[0] - var26[1]) < 15.0) {
                                     var13 = 0;
@@ -946,7 +946,7 @@ public final class LaneAhead {
                                     }
 
                                     boolean var15;
-                                    if (!var13) {
+                                    if (var13 == 0) {
                                         var15 = true;
                                     } else {
                                         var15 = false;
@@ -959,13 +959,13 @@ public final class LaneAhead {
                                 }
 
                                 int var48;
-                                if (!var13) {
+                                if (var13 == 0) {
                                     var48 = 1;
                                 } else {
                                     var48 = var52.getE().length - 2;
                                 }
 
-                                double var7 = Math.abs(Math.atan2(var52.getN()[var48] - var52.getN()[(((var13 != 0)) ? 1 : 0)], var52.getE()[var48] - var52.getE()[var13]) - var1);
+                                double var7 = Math.abs(Math.atan2(var52.getN()[var48] - var52.getN()[var13], var52.getE()[var48] - var52.getE()[var13]) - var1);
                                 var5 = var7;
                                 if (var7 > Math.PI) {
                                     var5 = (Math.PI * 2) - var7;

@@ -1301,7 +1301,7 @@ public final class GxTuningPage extends GxPage {
             linearLayout2.addView(empty("No saved tunes yet. Apply a trial, then save it here."));
             return;
         }
-        for (final JSONObject t : (Iterable) (JSONObject) ((JSONObject) list)) {
+        for (final JSONObject t : (Iterable<JSONObject>) list) {
             final boolean active = truthy(t.opt("active"));
             LinearLayout linearLayout4 = this.tunesBox;
             if (linearLayout4 == null) {
@@ -1755,7 +1755,7 @@ public final class GxTuningPage extends GxPage {
             linearLayout2.addView(empty("No reports yet. Analyze routes to generate findings."));
             return;
         }
-        for (JSONObject r : (Iterable) (JSONObject) ((JSONObject) list)) {
+        for (JSONObject r : (Iterable<JSONObject>) list) {
             final String id = s(r, "reportId");
             boolean open = Intrinsics.areEqual(this.loadedReportId, id);
             String fmtDate = fmtDate(r.opt("createdAt"));
@@ -2108,7 +2108,7 @@ public final class GxTuningPage extends GxPage {
         if (!angleControl()) {
             GxPage.text$default(this, "Active trial values are shown in the current column when one is applied.", box, 0.0f, 0, false, 28, null);
         }
-        for (CmpRow r : ((CmpRow) rows)) {
+        for (CmpRow r : (Iterable<CmpRow>) rows) {
             LinearLayout l = new LinearLayout(getAct());
             l.setOrientation(0);
             l.setGravity(16);
@@ -2244,7 +2244,7 @@ public final class GxTuningPage extends GxPage {
                     var3 = 0;
                 }
 
-                if (var3 && var1 > 1.0E9) {
+                if ((var3 != 0) && (var1 != 0) > 1.0E9) {
                     var22 = this.fmtDate(var1);
                 } else {
                     var22 = "";
@@ -2263,7 +2263,7 @@ public final class GxTuningPage extends GxPage {
                 this.paintComparison();
                 var22 = this.pathList();
 
-                for (JSONObject var70 : (JSONObject) (JSONObject) var22) {
+                for (JSONObject var70 : (Iterable) (JSONObject) (JSONObject) var22) {
                     this.sub(this.s(var70, "title"), (ViewGroup)var9);
                     if (!StringsKt.isBlank(this.s(var70, "description"))) {
                         GxPage.text$default(this, this.s(var70, "description"), (ViewGroup)var9, 16.0F, 0, false, 24, null);
@@ -2365,7 +2365,7 @@ public final class GxTuningPage extends GxPage {
                     var7.addView((View)this.empty("No findings for the active path."));
                 }
 
-                for (JSONObject var79 : (Iterable) (JSONObject) ((JSONObject) var33)) {
+                for (JSONObject var79 : (Iterable<JSONObject>) var33) {
                     LinearLayout var75 = this.inner((ViewGroup)var7);
                     CharSequence var53 = this.s(var79, "bucket");
                     var22 = var53;
@@ -2417,7 +2417,7 @@ public final class GxTuningPage extends GxPage {
                     if (var65 != null) {
                         ViewGroup var36 = (ViewGroup)var75;
                         var3 = CarUi.Companion.getTEXT();
-                        this.text("Current vs suggested:", var36, 15.0F, (((var3 != 0)) ? 1 : 0), true).setPadding(0, this.getUi().dp(8), 0, 0);
+                        this.text("Current vs suggested:", var36, 15.0F, var3, true).setPadding(0, this.getUi().dp(8), 0, 0);
                         if (Intrinsics.areEqual(this.s(var65, "type"), "friction_curve")) {
                             ViewGroup var56 = (ViewGroup)var75;
                             String var37 = this.s(var65, "family");
@@ -2550,7 +2550,7 @@ public final class GxTuningPage extends GxPage {
                 linearLayout.addView(empty("No trial profiles for this report."));
                 return;
             }
-            for (final JSONObject p : (Iterable) (JSONObject) ((JSONObject) list)) {
+            for (final JSONObject p : (Iterable<JSONObject>) list) {
                 LinearLayout linearLayout8 = this.profilesBox;
                 if (linearLayout8 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("profilesBox");
@@ -4080,7 +4080,7 @@ public final class GxTuningPage extends GxPage {
                         Iterable var78 = var64;
                         var var86 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var78, 10));
 
-                        for (GxTuningSample var89 : ((GxTuningSample) var78)) {
+                        for (GxTuningSample var89 : (Iterable<GxTuningSample>) var78) {
                             Double var87 = var89.getV().get(var1.getDesiredKey());
                             if (var87 != null) {
                                 var2 = var87;
@@ -4123,7 +4123,7 @@ public final class GxTuningPage extends GxPage {
                                 }
 
                                 var4 = 0.35;
-                                if (!var49) {
+                                if ((var49 == 0)) {
                                     var2 = var1.getWarnError();
                                 } else {
                                     var2 = 0.35;
@@ -4135,7 +4135,7 @@ public final class GxTuningPage extends GxPage {
                                     var49 = (((boolean)false) ? 1 : 0);
                                 }
 
-                                if (!var49) {
+                                if ((var49 == 0)) {
                                     var4 = var1.getGood();
                                 }
 
@@ -4146,7 +4146,7 @@ public final class GxTuningPage extends GxPage {
                                     var49 = (((boolean)false) ? 1 : 0);
                                 }
 
-                                if (!var49) {
+                                if ((var49 == 0)) {
                                     var2 = var1.getSevereError();
                                 } else {
                                     var2 = 0.7;
@@ -4158,7 +4158,7 @@ public final class GxTuningPage extends GxPage {
                                     var49 = (((boolean)false) ? 1 : 0);
                                 }
 
-                                if (!var49) {
+                                if ((var49 == 0)) {
                                     var4 = var1.getFair();
                                 } else {
                                     var4 = 0.55;
@@ -4182,10 +4182,10 @@ public final class GxTuningPage extends GxPage {
 
                                         if ((var58 != 0)) {
                                             var58 = var49 + 1;
-                                            var49 = (((var58 != 0)) ? 1 : 0);
+                                            var49 = var58;
                                             if (var58 < 0) {
                                                 CollectionsKt.throwCountOverflow();
-                                                var49 = (((var58 != 0)) ? 1 : 0);
+                                                var49 = var58;
                                             }
                                         }
                                     }
@@ -4212,10 +4212,10 @@ public final class GxTuningPage extends GxPage {
 
                                         if ((var60 != 0)) {
                                             var60 = var49 + 1;
-                                            var49 = (((var60 != 0)) ? 1 : 0);
+                                            var49 = var60;
                                             if (var60 < 0) {
                                                 CollectionsKt.throwCountOverflow();
-                                                var49 = (((var60 != 0)) ? 1 : 0);
+                                                var49 = var60;
                                             }
                                         }
                                     }
@@ -4387,7 +4387,7 @@ public final class GxTuningPage extends GxPage {
                     }
                     notice$default(this, linearLayout10, s(lv, "lastError"), 0, "Source Error:", 4, null);
                 }
-                for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Your lateral tuning is", computeQuality(this.latQ)), TuplesKt.to("Your longitudinal tuning is", computeQuality(this.lonQ))}))) {
+                for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Your lateral tuning is", computeQuality(this.latQ)), TuplesKt.to("Your longitudinal tuning is", computeQuality(this.lonQ))})) {
                     String base = (String) pair.component1();
                     Quality q = (Quality) pair.component2();
                     if (Intrinsics.areEqual(q.getLabel(), "na")) {
@@ -4939,7 +4939,7 @@ public final class GxTuningPage extends GxPage {
 
                     var7 = this.card((ViewGroup)var6);
 
-                    for (JSONObject var12 : (Iterable) (JSONObject) ((JSONObject) var9)) {
+                    for (JSONObject var12 : (Iterable<JSONObject>) var9) {
                         boolean var2 = Intrinsics.areEqual(this.slotId(var12), this.tgActiveId());
                         TextView var81 = new TextView((Context)this.getAct());
                         String var11 = this.slotId(var12);

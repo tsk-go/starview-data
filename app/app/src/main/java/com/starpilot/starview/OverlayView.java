@@ -394,9 +394,9 @@ public final class OverlayView extends View {
                                     var22 = var26;
                                 }
 
-                                int var25 = (((var22 != 0)) ? 1 : 0);
+                                int var25 = var22;
                                 if (var24) {
-                                    var25 = LaneTracks.Companion.effortColor((((var22 != 0)) ? 1 : 0), this.tracks.getEffort());
+                                    var25 = LaneTracks.Companion.effortColor(var22, this.tracks.getEffort());
                                 }
 
                                 this.fill.setShader(null);
@@ -1064,7 +1064,7 @@ public final class OverlayView extends View {
                 var7 = Color.rgb(255, var13, 0);
             }
 
-            this.stroke.setColor(Companion.withAlpha((((var7 != 0)) ? 1 : 0), 235));
+            this.stroke.setColor(Companion.withAlpha(var7, 235));
             this.stroke.setStrokeWidth(this.dp(9.0F));
             float var6 = 12.7F * var2;
             if (this.torqueSmooth > 0.0F) {

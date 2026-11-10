@@ -279,7 +279,7 @@ public final class HudEditor extends FrameLayout {
         int i3 = 10;
         tabs.setPadding(0, this.ui.dp(14), 0, this.ui.dp(10));
         int i4 = 0;
-        for (String label : ((String) CollectionsKt.listOf((Object[]) new String[]{"Widgets", "Edit widget"}))) {
+        for (String label : (Iterable<String>) CollectionsKt.listOf((Object[]) new String[]{"Widgets", "Edit widget"})) {
             final int i5 = i4;
             i4 += i;
             TextView b = new TextView(ctx);

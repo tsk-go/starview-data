@@ -1709,7 +1709,7 @@ public final class GxBluetoothPage extends GxPage {
             GxPage.text$default(this, "No buttons mapped.", c, 15.0f, CarUi.Companion.getDIM(), false, 16, null);
             return;
         }
-        for (final JSONObject m : (Iterable) (JSONObject) ((JSONObject) ms)) {
+        for (final JSONObject m : (Iterable<JSONObject>) ms) {
             LinearLayout line = new LinearLayout(getAct());
             boolean z = false;
             line.setOrientation(0);
@@ -2207,7 +2207,7 @@ public final class GxBluetoothPage extends GxPage {
                         );
                         var0.addView((View)var66);
                         if (var35 != 0) {
-                            for (JSONObject var46 : (Iterable) (JSONObject) ((JSONObject) var63)) {
+                            for (JSONObject var46 : (Iterable<JSONObject>) var63) {
                                 String[] var67 = new String[]{var20, null};
                                 var67[var10] = GxPage.str$default(var6, var46, "description", null, 2, null);
                                 Iterable var70 = CollectionsKt.listOf(var67);

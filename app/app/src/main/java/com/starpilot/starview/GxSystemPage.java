@@ -2031,20 +2031,20 @@ public final class GxSystemPage extends GxPage {
             );
         }
 
-        boolean var16;
+        int var16;
         if (var0.targetBranch.length() > 0) {
-            var16 = true;
+            var16 = 1;
         } else {
-            var16 = false;
+            var16 = 0;
         }
 
-        if (var16) {
+        if ((var16 != 0)) {
             boolean var8 = var0.branches.contains(var0.targetBranch);
             List var31 = CollectionsKt.listOf(new String[]{"Latest", "Choose earlier…"});
-            var16 = Intrinsics.areEqual(var0.versionMode, "earlier");
+            var16 = ((Intrinsics.areEqual(var0.versionMode, "earlier")) ? 1 : 0);
             ViewGroup var35 = (ViewGroup)var2;
             GxSystemPage$$ExternalSyntheticLambda74 var25 = new GxSystemPage$$ExternalSyntheticLambda74(var1, var0, var8);
-            var0.choice("Version", null, var31, ((var16) ? 1 : 0), var35, var25);
+            var0.choice("Version", null, var31, var16, var35, var25);
             var9 = var2.getChildAt(var2.getChildCount() - 1);
             var3 = var4;
             if (!var1) {
@@ -2430,7 +2430,7 @@ public final class GxSystemPage extends GxPage {
                     buildPicker$versionRow(this, var7, var1, var2, (JSONObject)var8.next(), 0);
                 }
             } else {
-                for (GxSystemPage.DayGroup var48 : ((DayGroup) var10)) {
+                for (GxSystemPage.DayGroup var48 : (Iterable<GxSystemPage.DayGroup>) var10) {
                     var5 = Intrinsics.areEqual(this.expanded.get(var48.getKey()), var13);
                     GxPage var58 = this;
                     String var62 = var48.getLabel();
@@ -3016,14 +3016,14 @@ public final class GxSystemPage extends GxPage {
                             Iterable var30 = var1.versionCommits;
                             var var17 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var30, 10));
 
-                            for (JSONObject var34 : (Iterable) (JSONObject) ((JSONObject) var30)) {
+                            for (JSONObject var34 : (Iterable<JSONObject>) var30) {
                                 var17.add(GxPage.str$default(var1, var34, "sha", null, 2, null));
                             }
 
                             List var18 = var17;
                             HashSet var32 = CollectionsKt.toHashSet(var18);
 
-                            for (JSONObject var35 : (Iterable) (JSONObject) ((JSONObject) var25)) {
+                            for (JSONObject var35 : (Iterable<JSONObject>) var25) {
                                 if (var32.add(GxPage.str$default(var1, var35, "sha", null, 2, null))) {
                                     var1.versionCommits.add(var35);
                                 }

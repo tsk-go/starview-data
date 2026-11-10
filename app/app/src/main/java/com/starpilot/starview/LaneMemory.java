@@ -432,14 +432,14 @@ public final class LaneMemory {
     public final Pair<Integer, Boolean> lanes(int var1, float var2, float var3) {
         boolean var8 = Float.isInfinite(var2);
         boolean var9 = false;
-        boolean var6;
+        int var6;
         if (!var8 && !Float.isNaN(var2)) {
-            var6 = true;
+            var6 = 1;
         } else {
-            var6 = false;
+            var6 = 0;
         }
 
-        if (!var6) {
+        if ((var6 == 0)) {
             return null;
         } else {
             Iterable var11 = this.marks;
@@ -451,21 +451,21 @@ public final class LaneMemory {
                     if (!var12.getEdge() && var12.getConf() >= var3) {
                         float var4 = var12.getY();
                         if (var1 < 0 ? !(var4 < var2 - 1.5F) : !(var4 > 1.5F + var2)) {
-                            var6 = (boolean)false;
+                            var6 = (((boolean)false) ? 1 : 0);
                         } else {
-                            var6 = (boolean)true;
+                            var6 = (((boolean)true) ? 1 : 0);
                         }
 
-                        if (var6) {
-                            var6 = (boolean)true;
+                        if ((var6 != 0)) {
+                            var6 = (((boolean)true) ? 1 : 0);
                             break label138;
                         }
                     }
 
-                    var6 = (boolean)false;
+                    var6 = (((boolean)false) ? 1 : 0);
                 }
 
-                if (var6) {
+                if ((var6 != 0)) {
                     var10.add(var13);
                 }
             }
@@ -484,9 +484,9 @@ public final class LaneMemory {
                     }
                 }
             );
-            var6 = false;
+            var6 = 0;
 
-            for (LaneMemory.Mark var33 : ((Mark) var26)) {
+            for (LaneMemory.Mark var33 : (Iterable<LaneMemory.Mark>) var26) {
                 var3 = Math.abs(var33.getY() - var2);
                 if (!(var3 < 2.3F)) {
                     if (var3 > 4.6F) {
@@ -574,7 +574,7 @@ public final class LaneMemory {
                 }
             }
 
-            return !var6 && !var8 ? null : TuplesKt.to(var6, var8);
+            return var6 == 0 && !var8 ? null : TuplesKt.to(var6, var8);
         }
     }
 }

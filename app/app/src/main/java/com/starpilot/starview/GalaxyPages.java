@@ -186,7 +186,7 @@ public final class GalaxyPages {
                 }
             }
         }
-        for (GalaxyRow r2 : ((GalaxyRow) rows)) {
+        for (GalaxyRow r2 : (Iterable<GalaxyRow>) rows) {
             if (r2.getPage().length() > 0) {
                 String label2 = r2.getLabel();
                 Intrinsics.checkNotNull(t);

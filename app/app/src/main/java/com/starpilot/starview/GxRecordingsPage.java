@@ -731,15 +731,15 @@ public final class GxRecordingsPage extends GxPage {
             return true;
         } else {
             var11 = var34;
-            boolean var19;
+            int var19;
             if (var11 instanceof Collection && ((Collection)var11).isEmpty()) {
-                var19 = false;
+                var19 = 0;
             } else {
                 Iterator var45 = var11.iterator();
 
                 while (true) {
                     if (!var45.hasNext()) {
-                        var19 = false;
+                        var19 = 0;
                         break;
                     }
 
@@ -748,41 +748,41 @@ public final class GxRecordingsPage extends GxPage {
                         if (var40.length() >= 3) {
                             var var13 = GxRecordingsKt.GxRecordingsMonths;
                             if (var13 instanceof Collection && ((Collection)var13).isEmpty()) {
-                                var19 = (boolean)false;
+                                var19 = (((boolean)false) ? 1 : 0);
                             } else {
                                 Iterator var53 = var13.iterator();
 
                                 while (true) {
                                     if (!var53.hasNext()) {
-                                        var19 = (boolean)false;
+                                        var19 = (((boolean)false) ? 1 : 0);
                                         break;
                                     }
 
                                     if (StringsKt.startsWith((String)var53.next(), var40, false)) {
-                                        var19 = (boolean)true;
+                                        var19 = (((boolean)true) ? 1 : 0);
                                         break;
                                     }
                                 }
                             }
 
-                            if (var19) {
-                                var19 = (boolean)true;
+                            if ((var19 != 0)) {
+                                var19 = (((boolean)true) ? 1 : 0);
                                 break label268;
                             }
                         }
 
-                        var19 = (boolean)false;
+                        var19 = (((boolean)false) ? 1 : 0);
                     }
 
-                    if (var19) {
-                        var19 = true;
+                    if ((var19 != 0)) {
+                        var19 = 1;
                         break;
                     }
                 }
             }
 
             boolean var4;
-            if (!var19
+            if ((var19 == 0)
                 && !new Regex("\\d\\s*[/-]\\s*\\d").containsMatchIn(var10)
                 && !new Regex("\\d+(?:st|nd|rd|th)\\b", RegexOption.IGNORE_CASE).containsMatchIn(var10)
                 && !new Regex("^\\d{4}$").matches(var2)) {
@@ -796,31 +796,31 @@ public final class GxRecordingsPage extends GxPage {
                 if (!new Regex("^\\d{1,2}$").matches(var2) && !new Regex("\\d\\s*:\\s*\\d").containsMatchIn(var10)) {
                     var11 = var34;
                     if (var11 instanceof Collection && ((Collection)var11).isEmpty()) {
-                        var19 = (boolean)false;
+                        var19 = (((boolean)false) ? 1 : 0);
                     } else {
                         Iterator var46 = var11.iterator();
 
                         while (true) {
                             if (!var46.hasNext()) {
-                                var19 = (boolean)false;
+                                var19 = (((boolean)false) ? 1 : 0);
                                 break;
                             }
 
                             String var42 = (String)var46.next();
                             if (!Intrinsics.areEqual(var42, "am") && !Intrinsics.areEqual(var42, "pm")) {
-                                var19 = (boolean)false;
+                                var19 = (((boolean)false) ? 1 : 0);
                             } else {
-                                var19 = (boolean)true;
+                                var19 = (((boolean)true) ? 1 : 0);
                             }
 
-                            if (var19) {
-                                var19 = (boolean)true;
+                            if ((var19 != 0)) {
+                                var19 = (((boolean)true) ? 1 : 0);
                                 break;
                             }
                         }
                     }
 
-                    if (!var19) {
+                    if ((var19 == 0)) {
                         var5 = false;
                         break label243;
                     }
@@ -845,7 +845,7 @@ public final class GxRecordingsPage extends GxPage {
                             }
 
                             CharSequence var35 = var43;
-                            var19 = false;
+                            var19 = 0;
 
                             while (true) {
                                 if (var19 >= var35.length()) {
@@ -853,7 +853,7 @@ public final class GxRecordingsPage extends GxPage {
                                     break;
                                 }
 
-                                if (Character.isDigit(var35.charAt(((var19) ? 1 : 0)))) {
+                                if (Character.isDigit(var35.charAt(var19))) {
                                     var23 = true;
                                     break;
                                 }
@@ -866,7 +866,7 @@ public final class GxRecordingsPage extends GxPage {
                             }
 
                             CharSequence var36 = var43;
-                            var19 = false;
+                            var19 = 0;
 
                             while (true) {
                                 if (var19 >= var36.length()) {
@@ -874,7 +874,7 @@ public final class GxRecordingsPage extends GxPage {
                                     break;
                                 }
 
-                                var31 = var36.charAt(((var19) ? 1 : 0));
+                                var31 = var36.charAt(var19);
                                 boolean var30;
                                 if ('a' <= var31 && var31 < 'g') {
                                     var30 = true;
@@ -1061,7 +1061,7 @@ public final class GxRecordingsPage extends GxPage {
                     if (var28 instanceof Collection && ((Collection)var28).isEmpty()) {
                         var9 = var8;
                     } else {
-                        for (String var12 : ((String) var28)) {
+                        for (String var12 : (Iterable<String>) var28) {
                             if (var5 && var2.matches(var4) && var3.matches(var12)) {
                                 var8 = false;
                             } else {
@@ -1223,7 +1223,7 @@ public final class GxRecordingsPage extends GxPage {
         if (visible.isEmpty() && !this.routesLoading) {
             list.addView(empty("No routes found."));
         }
-        for (GxRecordingsRoute r : ((GxRecordingsRoute) CollectionsKt.take(visible, 250))) {
+        for (GxRecordingsRoute r : (Iterable<GxRecordingsRoute>) CollectionsKt.take(visible, 250)) {
             routeRow(r, list, gen);
         }
         if (visible.size() > 250) {
@@ -1657,7 +1657,7 @@ public final class GxRecordingsPage extends GxPage {
                 return openLogs$lambda$82$lambda$79;
             }
         }, 2, null);
-        for (final JSONObject seg : (Iterable) (JSONObject) ((JSONObject) segs)) {
+        for (final JSONObject seg : (Iterable<JSONObject>) segs) {
             final String fn = GxPage.str$default(this$0, seg, "filename", null, 2, null);
             String str2 = "Segment " + seg.optInt("segmentNum");
             gxRecordingsBytes2 = GxRecordingsKt.gxRecordingsBytes(seg.optDouble("bytes", d));
@@ -1877,7 +1877,7 @@ public final class GxRecordingsPage extends GxPage {
             arr = CollectionsKt.emptyList();
         }
         boolean added = false;
-        for (JSONObject j : (Iterable) (JSONObject) ((JSONObject) arr)) {
+        for (JSONObject j : (Iterable<JSONObject>) arr) {
             String fn = GxPage.str$default(this$0, j, "filename", null, 2, null);
             if (!StringsKt.isBlank(fn) && $seen.add(fn)) {
                 this$0.screens.add(new GxRecordingsScreen(fn, GxPage.str$default(this$0, j, "png", null, 2, null), GxPage.str$default(this$0, j, "timestamp", null, 2, null), j.optBoolean("is_custom_name")));
@@ -2434,7 +2434,7 @@ public final class GxRecordingsPage extends GxPage {
                     return _init_$lambda$16;
                 }
             }, 2, null);
-            for (TextView v : (Iterable) (TextView) ((TextView) CollectionsKt.listOf((Object[]) new TextView[]{this.prev, this.segLabel, this.next}))) {
+            for (TextView v : (Iterable<TextView>) CollectionsKt.listOf((Object[]) new TextView[]{this.prev, this.segLabel, this.next})) {
                 this.segBar.addView(v, gap());
             }
             this.segBar.addView(new View(this.this$0.getAct()), new LinearLayout.LayoutParams(this.this$0.getUi().dp(14), 1));

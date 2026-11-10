@@ -145,7 +145,7 @@ public final class DestinationActivity extends AppCompatActivity {
             }
             List list = (List) destination$iv$iv;
             JSONArray out = new JSONArray().put(new JSONObject().put("name", name).put("address", address).put("latitude", lat).put("longitude", lon));
-            for (JSONObject o : (Iterable) (JSONObject) ((JSONObject) CollectionsKt.take(list, 11))) {
+            for (JSONObject o : (Iterable<JSONObject>) CollectionsKt.take(list, 11)) {
                 out.put(o);
             }
             ctx.getSharedPreferences("starview_nav", 0).edit().putString("recents", out.toString()).apply();
@@ -1334,7 +1334,7 @@ public final class DestinationActivity extends AppCompatActivity {
                 }
             }
             textView.setText(str);
-            for (Place p : ((Place) res)) {
+            for (Place p : (Iterable<Place>) res) {
                 row(p);
             }
             return;

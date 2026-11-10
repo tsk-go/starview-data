@@ -849,7 +849,7 @@ public final class GxHomePage extends GxPage {
                 Iterable var152 = (Iterable)var71;
                 var var112 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var152, 10));
 
-                for (JSONObject var201 : (Iterable) (JSONObject) ((JSONObject) var152)) {
+                for (JSONObject var201 : (Iterable<JSONObject>) var152) {
                     var112.add(TuplesKt.to(GxPage.str$default(var294, var201, "label", null, 2, null), GxHomeKt.gxHomeNum(var201.opt("distance"))));
                 }
 

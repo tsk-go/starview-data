@@ -175,7 +175,7 @@ public final class GxModelsKt {
                                 KtCompat.resultOf(ResultKt.createFailure(th5));
                             }
                         }
-                        for (String p2 : ((String) CollectionsKt.listOf((Object[]) new String[]{"MMMM yyyy", "MMM yyyy", "yyyy-MM"}))) {
+                        for (String p2 : (Iterable<String>) CollectionsKt.listOf((Object[]) new String[]{"MMMM yyyy", "MMM yyyy", "yyyy-MM"})) {
                             try {
                                 Result.Companion companion11 = Result.Companion;
                                 return YearMonth.parse(t, DateTimeFormatter.ofPattern(p2, Locale.US)).atDay(i).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();

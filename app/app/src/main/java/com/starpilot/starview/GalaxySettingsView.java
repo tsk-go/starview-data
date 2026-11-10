@@ -613,7 +613,7 @@ public final class GalaxySettingsView extends FrameLayout {
             emptyList = CollectionsKt.emptyList();
         }
         List hubRows = emptyList;
-        for (GalaxyRow r : ((GalaxyRow) hubRows)) {
+        for (GalaxyRow r : (Iterable<GalaxyRow>) hubRows) {
             if (r.getPage().length() > 0) {
                 this.titles.put(r.getPage(), r.getLabel());
             }
@@ -1021,7 +1021,7 @@ public final class GalaxySettingsView extends FrameLayout {
             }
 
             if (var2 > 0) {
-                this.scroll.post(new GalaxySettingsView$$ExternalSyntheticLambda17(this, (((var2 != 0)) ? 1 : 0)));
+                this.scroll.post(new GalaxySettingsView$$ExternalSyntheticLambda17(this, var2));
             }
         }
     }
@@ -1209,17 +1209,17 @@ public final class GalaxySettingsView extends FrameLayout {
     /* VF: from Vineflower (jadx: Removed duplicated region;Type inference failed;incorrect) */
     private final void selectRow(GalaxyRow var1) {
         int var2 = var1.getChoices().size();
-        boolean var7;
+        int var7;
         if (2 <= var2 && var2 < 5) {
-            var7 = true;
+            var7 = 1;
         } else {
-            var7 = false;
+            var7 = 0;
         }
 
         label34: {
-            if (var7) {
+            if ((var7 != 0)) {
                 Iterator var3 = var1.getChoices().iterator();
-                var7 = false;
+                var7 = 0;
 
                 while (var3.hasNext()) {
                     String var4 = (String)var3.next();
@@ -1227,15 +1227,15 @@ public final class GalaxySettingsView extends FrameLayout {
                 }
 
                 if (var7 <= 40) {
-                    var7 = (boolean)true;
+                    var7 = (((boolean)true) ? 1 : 0);
                     break label34;
                 }
             }
 
-            var7 = (boolean)false;
+            var7 = (((boolean)false) ? 1 : 0);
         }
 
-        if (var7) {
+        if ((var7 != 0)) {
             LinearLayout var15 = new LinearLayout(this.getContext());
             var15.setOrientation(1);
             var15.setBackground((Drawable)CarUi.rounded$default(this.ui, CarUi.Companion.getCARD(), 0, null, 6, null));
@@ -1280,7 +1280,7 @@ public final class GalaxySettingsView extends FrameLayout {
     public static final Unit selectRow$lambda$46(GalaxyRow $r, GalaxySettingsView this$0, Ref.ObjectRef $paint, int i) {
         Function1 function1;
         if ($r.getEditable() && !this$0.busy && !Intrinsics.areEqual($r.getChoices().get(i), $r.getValue())) {
-            if (!$paint.element) {
+            if ($paint.element == 0) {
                 Intrinsics.throwUninitializedPropertyAccessException("paint");
                 function1 = null;
             } else {

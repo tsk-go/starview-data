@@ -1530,7 +1530,7 @@ public final class GxCamerasPage extends GxPage {
                     } else {
                         objectRef2.element = BitmapFactory.decodeByteArray(bArr2, 0, bArr2.length);
                     }
-                    if (!objectRef.element) {
+                    if (objectRef.element == 0) {
                         objectRef.element = "Failed to decode image";
                     }
                     Unit unit = Unit.INSTANCE;
@@ -1562,7 +1562,7 @@ public final class GxCamerasPage extends GxPage {
                     }
                     t = "HTTP " + response.code();
                     objectRef.element = t;
-                    if (!objectRef.element && !objectRef2.element) {
+                    if (objectRef.element == 0 && objectRef2.element == 0) {
                         objectRef.element = "Failed to decode image";
                     }
                     Unit unit2 = Unit.INSTANCE;
@@ -1811,7 +1811,7 @@ public final class GxCamerasPage extends GxPage {
         box.addView(gxCamerasRegionView3, $this$buildVasm_u24lambda_u2492);
         note("The preview is mirrored: the LEFT side of the vehicle is always on the LEFT here; the RIGHT side is always on the RIGHT. Trace the visible glass (front and rear side windows), exclude A-pillars, door frames, and interior. Drag a point to move it.", box);
         header("Current Status", box);
-        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("VASMLeftActive", "Left Active"), TuplesKt.to("VASMRightActive", "Right Active"), TuplesKt.to("VASMLeftConfidence", "Left Confidence"), TuplesKt.to("VASMRightConfidence", "Right Confidence")}))) {
+        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("VASMLeftActive", "Left Active"), TuplesKt.to("VASMRightActive", "Right Active"), TuplesKt.to("VASMLeftConfidence", "Left Confidence"), TuplesKt.to("VASMRightConfidence", "Right Confidence")})) {
             String k = (String) pair.component1();
             String label = (String) pair.component2();
             this.vStat.put(k, GxPage.row$default(this, label, null, box, 0, 8, null).value("-"));
@@ -3021,7 +3021,7 @@ public final class GxCamerasPage extends GxPage {
             }
 
             boolean var3;
-            if (!this.pLoading && var2) {
+            if (!this.pLoading && (var2 != 0)) {
                 var3 = true;
             } else {
                 var3 = false;

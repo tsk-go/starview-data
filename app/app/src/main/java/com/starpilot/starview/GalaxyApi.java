@@ -629,7 +629,7 @@ public final class GalaxyApi {
         final Ref.ObjectRef objectRef = new Ref.ObjectRef();
         try {
             JSONObject put = new JSONObject().put("key", str).put("value", obj == null ? JSONObject.NULL : obj);
-            for (Map.Entry entry : ((Entry) map.entrySet())) {
+            for (Map.Entry entry : (Iterable<Map.Entry>) map.entrySet()) {
                 put.put((String) entry.getKey(), entry.getValue());
             }
             Request.Builder url = new Request.Builder().url(galaxyApi.getBase() + "/api/params");
@@ -732,7 +732,7 @@ public final class GalaxyApi {
     /* JADX INFO: Access modifiers changed from: private */
     public static final void put$lambda$24$lambda$23(GalaxyApi this$0, Ref.ObjectRef $err, String $key, Object $value, Function1 $then) {
         this$0.writeGen++;
-        if ($err.element) {
+        if ($err.element != 0) {
             this$0.pending.remove($key);
             refreshValues$default(this$0, null, 1, null);
         } else {
