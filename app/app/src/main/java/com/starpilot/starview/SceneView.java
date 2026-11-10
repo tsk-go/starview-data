@@ -3479,7 +3479,7 @@ public final class SceneView extends SurfaceView {
                 }
 
                 if (var141 != null) {
-                    var92.add(var141.getId());
+                    var92.add(((View) var141).getId());
                 } else if (var21
                     && !var44.getLead()
                     && Math.abs(var44.getVAbs()) < 2.0F
@@ -3489,7 +3489,7 @@ public final class SceneView extends SurfaceView {
                 }
 
                 boolean var22;
-                if (var141 != null && var141.getCls() == 7) {
+                if (var141 != null && ((Detector) var141).getCls() == 7) {
                     var22 = true;
                 } else {
                     var22 = false;
@@ -3499,7 +3499,7 @@ public final class SceneView extends SurfaceView {
                 if (var22) {
                     var114 = var130;
                 } else {
-                    if (var141 != null && var141.getCls() == 5) {
+                    if (var141 != null && ((Detector) var141).getCls() == 5) {
                         var22 = true;
                     } else {
                         var22 = false;
@@ -3513,7 +3513,7 @@ public final class SceneView extends SurfaceView {
                 }
 
                 if (var141 != null) {
-                    var5 = var141.getY();
+                    var5 = ((View) var141).getY();
                 } else {
                     var5 = var44.getY();
                 }
@@ -3541,7 +3541,7 @@ public final class SceneView extends SurfaceView {
 
                     var11 = var44.getX();
                     if (var141 != null) {
-                        var5 = var141.getY();
+                        var5 = ((View) var141).getY();
                     } else {
                         var5 = var44.getY();
                     }
@@ -6890,7 +6890,7 @@ public final class SceneView extends SurfaceView {
                     } else {
                         var29 = (Integer)var28.next();
                         if (var28.hasNext()) {
-                            double var34 = Math.abs(var27[var29.intValue()] - var0.mapCarOff);
+                            double var34 = Math.abs(var27[((Number) var29).intValue()] - var0.mapCarOff);
                             Object var25 = var29;
 
                             do {
@@ -6912,7 +6912,7 @@ public final class SceneView extends SurfaceView {
                     var29 = var29;
                     if (var29 != null) {
                         boolean var42;
-                        if (Math.abs(var27[var29.intValue()] - var0.mapCarOff) < var0.laneW) {
+                        if (Math.abs(var27[((Number) var29).intValue()] - var0.mapCarOff) < var0.laneW) {
                             var42 = true;
                         } else {
                             var42 = false;
@@ -7266,8 +7266,8 @@ public final class SceneView extends SurfaceView {
                         p = p3;
                         n = n2;
                         double k = 1 - bandsFor$ease(this, s[i2]);
-                        c += (ja2.getFirst().doubleValue() - c0) * k;
-                        h += (ja2.getSecond().doubleValue() - h0) * k;
+                        c += (((Number) ja2.getFirst()).doubleValue() - c0) * k;
+                        h += (((Number) ja2.getSecond()).doubleValue() - h0) * k;
                     } else {
                         hs = hs2;
                         p = p3;
@@ -7276,8 +7276,8 @@ public final class SceneView extends SurfaceView {
                     if (jb != null) {
                         ja = ja2;
                         double k2 = 1 - bandsFor$ease(this, total - s[i2]);
-                        c += (jb.getFirst().doubleValue() - c0) * k2;
-                        h += (jb.getSecond().doubleValue() - h0) * k2;
+                        c += (((Number) jb.getFirst()).doubleValue() - c0) * k2;
+                        h += (((Number) jb.getSecond()).doubleValue() - h0) * k2;
                     } else {
                         ja = ja2;
                     }
@@ -7423,8 +7423,8 @@ public final class SceneView extends SurfaceView {
                 Object var27 = var1.get(var31);
                 Intrinsics.checkNotNull(var27);
                 var27 = (Pair)var27;
-                var5 = ((Number)var27.component1()).doubleValue();
-                var9 = ((Number)var27.component2()).doubleValue();
+                var5 = (((Pair) (Number)var27).component1()).doubleValue();
+                var9 = (((Pair) (Number)var27).component2()).doubleValue();
                 boolean var32;
                 if ((var4 != 1 || var19 != 0) && (var4 != 0 || var19 != 1)) {
                     var32 = false;
@@ -7435,8 +7435,8 @@ public final class SceneView extends SurfaceView {
                 var27 = var1.get(var3);
                 Intrinsics.checkNotNull(var27);
                 var27 = (Pair)var27;
-                double var40 = ((Number)var27.component1()).doubleValue();
-                var7 = ((Number)var27.component2()).doubleValue();
+                double var40 = (((Pair) (Number)var27).component1()).doubleValue();
+                var7 = (((Pair) (Number)var27).component2()).doubleValue();
                 if (!var32) {
                     var5 = -var5;
                 }

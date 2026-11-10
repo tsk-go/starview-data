@@ -319,7 +319,7 @@ public final class LaneFixDialog {
                 ListIterator iterator$iv = $this$takeLastWhile$iv.listIterator($this$takeLastWhile$iv.size());
                 while (true) {
                     if (iterator$iv.hasPrevious()) {
-                        char it = iterator$iv.previous().charValue();
+                        char it = ((Character) iterator$iv.previous()).charValue();
                         if (!(it != 'n')) {
                             iterator$iv.next();
                             int expectedSize$iv = $this$takeLastWhile$iv.size() - iterator$iv.nextIndex();
@@ -741,7 +741,7 @@ public final class LaneFixDialog {
                 if (i5 < k2) {
                     RectF r3 = new RectF(x5, 0.0f, x5 + lw, roadH);
                     this.lanes.add(r3);
-                    boolean extra = t.get(i5).charValue() != 'n';
+                    boolean extra = ((Character) t.get(i5)).charValue() != 'n';
                     if (!extra) {
                         r = r3;
                         x = x5;
@@ -801,7 +801,7 @@ public final class LaneFixDialog {
                     boolean onLeft = i5 < this.road.getEL();
                     if (extra) {
                         c3 = 'x';
-                        arrow = (t.get(i5).charValue() != 'x' ? !onLeft : onLeft) ? "↖" : "↗";
+                        arrow = (((Character) t.get(i5)).charValue() != 'x' ? !onLeft : onLeft) ? "↖" : "↗";
                     } else {
                         arrow = "↑";
                         c3 = 'x';
@@ -822,11 +822,11 @@ public final class LaneFixDialog {
                     if (extra) {
                         this.txt.setTextSize(15 * this.dn);
                         this.txt.setColor(Color.rgb(240, 181, 74));
-                        c.drawText(t.get(i5).charValue() == c3 ? "EXIT" : "MERGE", r.centerX(), 24 * this.dn, this.txt);
+                        c.drawText(((Character) t.get(i5)).charValue() == c3 ? "EXIT" : "MERGE", r.centerX(), 24 * this.dn, this.txt);
                     }
                     if (i5 > 0) {
                         x2 = x;
-                        dashed(c, x2, roadH, (t.get(i5).charValue() == t.get(i5 + (-1)).charValue() || (!extra && t.get(i5 + (-1)).charValue() == 'n')) ? Color.rgb(217, 221, 230) : -1);
+                        dashed(c, x2, roadH, (((Character) t.get(i5)).charValue() == ((Character) t.get(i5 + (-1))).charValue() || (!extra && ((Character) t.get(i5 + (-1))).charValue() == 'n')) ? Color.rgb(217, 221, 230) : -1);
                     } else {
                         x2 = x;
                     }
@@ -848,7 +848,7 @@ public final class LaneFixDialog {
                         c.drawRoundRect(tr, this.dn * f19, f19 * this.dn, this.p);
                         this.txt.setTextSize(this.dn * f4);
                         this.txt.setColor(extra ? Color.rgb(240, 181, 74) : Color.rgb(200, 206, 218));
-                        switch (t.get(i5).charValue()) {
+                        switch (((Character) t.get(i5)).charValue()) {
                             case 'm':
                                 str2 = "MERGE ▸";
                                 break;

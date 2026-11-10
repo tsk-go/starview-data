@@ -818,7 +818,7 @@ public final class GxTuningPage extends GxPage {
                         var2 = var6 * 1000;
                     }
 
-                    var1 = var1.format(new Date((long)var2));
+                    var1 = ((String) var1).format(new Date((long)var2));
                     Intrinsics.checkNotNullExpressionValue(var1, "format(...)");
                     return ((String) var1);
                 }
@@ -2263,7 +2263,7 @@ public final class GxTuningPage extends GxPage {
                 this.paintComparison();
                 var22 = this.pathList();
 
-                for (JSONObject var70 : (Iterable) (JSONObject) (JSONObject) var22) {
+                for (JSONObject var70 : (Iterable) (JSONObject) (JSONObject) (JSONObject) (JSONObject) var22) {
                     this.sub(this.s(var70, "title"), (ViewGroup)var9);
                     if (!StringsKt.isBlank(this.s(var70, "description"))) {
                         GxPage.text$default(this, this.s(var70, "description"), (ViewGroup)var9, 16.0F, 0, false, 24, null);

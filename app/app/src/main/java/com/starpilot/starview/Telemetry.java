@@ -2369,19 +2369,19 @@ public final class Telemetry {
                 float[] fl4 = fl(x2);
                 float[][] fArr = new float[nL][];
                 for (int i3 = 0; i3 < nL; i3++) {
-                    PrimitiveList.Float.Reader x3 = ll.get(i3).getX();
+                    PrimitiveList.Float.Reader x3 = ((View) ll.get(i3)).getX();
                     Intrinsics.checkNotNullExpressionValue(x3, "getX(...)");
                     fArr[i3] = fl(x3);
                 }
                 float[][] fArr2 = new float[nL][];
                 for (int i4 = 0; i4 < nL; i4++) {
-                    PrimitiveList.Float.Reader y2 = ll.get(i4).getY();
+                    PrimitiveList.Float.Reader y2 = ((View) ll.get(i4)).getY();
                     Intrinsics.checkNotNullExpressionValue(y2, "getY(...)");
                     fArr2[i4] = fl(y2);
                 }
                 float[][] fArr3 = new float[nL][];
                 for (int i5 = 0; i5 < nL; i5++) {
-                    PrimitiveList.Float.Reader z17 = ll.get(i5).getZ();
+                    PrimitiveList.Float.Reader z17 = ((View) ll.get(i5)).getZ();
                     Intrinsics.checkNotNullExpressionValue(z17, "getZ(...)");
                     fArr3[i5] = fl(z17);
                 }
@@ -2390,19 +2390,19 @@ public final class Telemetry {
                 float[] fl5 = fl(laneLineProbs);
                 float[][] fArr4 = new float[nE][];
                 for (int i6 = 0; i6 < nE; i6++) {
-                    PrimitiveList.Float.Reader x4 = re.get(i6).getX();
+                    PrimitiveList.Float.Reader x4 = ((View) re.get(i6)).getX();
                     Intrinsics.checkNotNullExpressionValue(x4, "getX(...)");
                     fArr4[i6] = fl(x4);
                 }
                 float[][] fArr5 = new float[nE][];
                 for (int i7 = 0; i7 < nE; i7++) {
-                    PrimitiveList.Float.Reader y3 = re.get(i7).getY();
+                    PrimitiveList.Float.Reader y3 = ((View) re.get(i7)).getY();
                     Intrinsics.checkNotNullExpressionValue(y3, "getY(...)");
                     fArr5[i7] = fl(y3);
                 }
                 float[][] fArr6 = new float[nE][];
                 for (int i8 = 0; i8 < nE; i8++) {
-                    PrimitiveList.Float.Reader z18 = re.get(i8).getZ();
+                    PrimitiveList.Float.Reader z18 = ((View) re.get(i8)).getZ();
                     Intrinsics.checkNotNullExpressionValue(z18, "getZ(...)");
                     fArr6[i8] = fl(z18);
                 }

@@ -373,8 +373,8 @@ public final class GpsCardView extends View {
                     var73 = TuplesKt.to(-7829368, "No GPS data");
                 }
 
-                var15 = ((Number)var73.component1()).intValue();
-                String var75 = (String)var73.component2();
+                var15 = (((Pair) (Number)var73).component1()).intValue();
+                String var75 = ((Pair) (String)var73).component2();
                 this.fill.setColor(var15);
                 var1.drawCircle(this.dp(9.0F) + var11, this.dp(26.0F), this.dp(8.0F), this.fill);
                 var1.drawText(var75, this.dp(24.0F) + var11, this.dp(34.0F), this.status);

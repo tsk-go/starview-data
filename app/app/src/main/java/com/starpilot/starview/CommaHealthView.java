@@ -510,6 +510,6 @@ public final class CommaHealthView extends CardPage {
             var10 = "–";
         }
 
-        var21.addView((View)CardPage.line$default(((CardPage) var23), "Network: " + var10, 0, 0.0F, 6, null));
+        ((ViewGroup) var21).addView((View)CardPage.line$default(((CardPage) var23), "Network: " + var10, 0, 0.0F, 6, null));
     }
 }

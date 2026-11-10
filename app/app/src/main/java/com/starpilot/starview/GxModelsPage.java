@@ -1296,13 +1296,13 @@ public final class GxModelsPage extends GxPage {
                                 break;
                             case -1422950650:
                                 if (var4.equals("active")) {
-                                    var33.value("Active model").setTextColor(CarUi.Companion.getACCENT());
+                                    ((String) var33).value("Active model").setTextColor(CarUi.Companion.getACCENT());
                                     break label150;
                                 }
                                 break;
                             case 3035641:
                                 if (var4.equals("busy")) {
-                                    var33.value("Busy").setTextColor(CarUi.Companion.getDIM());
+                                    ((String) var33).value("Busy").setTextColor(CarUi.Companion.getDIM());
                                     break label150;
                                 }
                                 break;

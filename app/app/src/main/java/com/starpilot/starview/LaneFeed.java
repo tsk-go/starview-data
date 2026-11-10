@@ -677,11 +677,11 @@ public final class LaneFeed {
         } catch (Exception e) {
             nl = null;
         }
-        if (nl == null || nl.getSecond().doubleValue() >= 600.0d) {
+        if (nl == null || ((Number) nl.getSecond()).doubleValue() >= 600.0d) {
             kL = kL2;
         } else {
             Nav.Step step = ((Step) nl.component1());
-            double d = nl.component2().doubleValue();
+            double d = ((Number) nl.component2()).doubleValue();
             navDist = d;
             Iterable $this$map$iv = step.getLanes();
             Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));

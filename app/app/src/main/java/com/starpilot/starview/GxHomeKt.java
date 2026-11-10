@@ -51,7 +51,7 @@ public final class GxHomeKt {
                 } else if (var0 instanceof String) {
                     var0 = StringsKt.trim(var0).toString();
                     boolean var5;
-                    if (var0.length() == 0) {
+                    if (((CharSequence) var0).length() == 0) {
                         var5 = true;
                     } else {
                         var5 = false;

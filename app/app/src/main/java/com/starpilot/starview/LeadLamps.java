@@ -41,9 +41,9 @@ public final class LeadLamps {
         }
         Pair bl = blinks(this.l);
         Pair br = blinks(this.r);
-        if (bl.getFirst().intValue() >= 3 && bl.getSecond().floatValue() > br.getSecond().floatValue() * 2.0f) {
+        if (((Number) bl.getFirst()).intValue() >= 3 && ((Number) bl.getSecond()).floatValue() > ((Number) br.getSecond()).floatValue() * 2.0f) {
             i = -1;
-        } else if (br.getFirst().intValue() >= 3 && br.getSecond().floatValue() > bl.getSecond().floatValue() * 2.0f) {
+        } else if (((Number) br.getFirst()).intValue() >= 3 && ((Number) br.getSecond()).floatValue() > ((Number) bl.getSecond()).floatValue() * 2.0f) {
             i = 1;
         }
         int s = i;
@@ -61,8 +61,8 @@ public final class LeadLamps {
         boolean z;
         Pair bl = blinks(this.l);
         Pair br = blinks(this.r);
-        if (bl.getFirst().intValue() < 2) {
-            z = br.getFirst().intValue() >= 2;
+        if (((Number) bl.getFirst()).intValue() < 2) {
+            z = ((Number) br.getFirst()).intValue() >= 2;
         }
         return z;
     }

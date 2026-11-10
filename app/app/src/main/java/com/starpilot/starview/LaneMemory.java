@@ -535,7 +535,7 @@ public final class LaneMemory {
             } else {
                 var30 = (LaneMemory.Mark)var40.next();
                 if (var40.hasNext()) {
-                    float var19 = Math.abs(var30.getY());
+                    float var19 = Math.abs(((View) var30).getY());
                     var11 = ((Iterable) var30);
 
                     do {
@@ -558,8 +558,8 @@ public final class LaneMemory {
             var8 = var9;
             if (var30 != null) {
                 var8 = var9;
-                if (Math.abs(var30.getY() - var2) < 1.8F) {
-                    var3 = var30.getY();
+                if (Math.abs(((View) var30).getY() - var2) < 1.8F) {
+                    var3 = ((View) var30).getY();
                     boolean var14;
                     if (var1 < 0 ? !(var3 <= 0.3F + var2) : !(var3 >= var2 - 0.3F)) {
                         var14 = false;

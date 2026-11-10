@@ -1371,7 +1371,7 @@ public final class GxFavoritesPage extends GxPage {
                 }
             }
 
-            return TuplesKt.to(var20.getName(), var26);
+            return TuplesKt.to(((File) var20).getName(), var26);
         }
     }
 

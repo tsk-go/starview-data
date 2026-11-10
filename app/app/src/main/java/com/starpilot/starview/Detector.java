@@ -1185,7 +1185,7 @@ public final class Detector {
                     Triple item$iv = it3.next();
                     Triple o = item$iv;
                     it = it2;
-                    if (o.getFirst().intValue() == s[1] && o.getSecond().intValue() == s[2]) {
+                    if (((Number) o.getFirst()).intValue() == s[1] && ((Number) o.getSecond()).intValue() == s[2]) {
                         break;
                     }
                     index$iv++;
