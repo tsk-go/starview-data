@@ -16,6 +16,7 @@ import java.util.TimeZone;
 import kotlin.Pair;
 import kotlin.TuplesKt;
 import kotlin.collections.CollectionsKt;
+import kotlin.collections.SetsKt;
 import kotlin.comparisons.ComparisonsKt;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
@@ -369,6 +370,10 @@ public final class NtripCore {
 
         private Answer() {
         }
+    }
+
+    public static /* synthetic */ Mount nearestBase$default(NtripCore ntripCore, List list, double lat, double lon, double maxMiles, Set set, int i, Object obj) {
+        return ntripCore.nearestBase(list, lat, lon, (i & 8) != 0 ? 25.0d : maxMiles, (i & 16) != 0 ? SetsKt.emptySet() : set);
     }
 
     public final Mount nearestBase(List<Mount> list, double lat, double lon, double maxMiles, Set<String> skip) {

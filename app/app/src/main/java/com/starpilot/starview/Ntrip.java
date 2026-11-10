@@ -741,374 +741,211 @@ public final class Ntrip {
         ntrip.stream(config, i, z, role);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:121:0x03fb, code lost:
-    
-        r0 = r57.getBackup();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:8:0x0051, code lost:
-    
-        if (r13 == null) goto L11;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:255:0x0289 A[Catch: all -> 0x0190, TryCatch #2 {all -> 0x0190, blocks: (B:26:0x011a, B:28:0x0129, B:30:0x0132, B:32:0x0140, B:33:0x0146, B:35:0x014f, B:41:0x015e, B:42:0x0180, B:56:0x0215, B:58:0x0219, B:61:0x0230, B:63:0x0234, B:66:0x0242, B:68:0x026b, B:70:0x027c, B:71:0x0296, B:74:0x02a0, B:77:0x02b8, B:83:0x02ce, B:85:0x02e3, B:87:0x02f1, B:89:0x0324, B:91:0x032c, B:93:0x0336, B:95:0x0346, B:97:0x034e, B:98:0x0357, B:100:0x0360, B:102:0x0373, B:104:0x0377, B:108:0x03cf, B:111:0x03d9, B:112:0x03e3, B:114:0x03ec, B:118:0x03f1, B:119:0x03f8, B:121:0x03fb, B:224:0x037f, B:225:0x0381, B:229:0x039b, B:230:0x039c, B:231:0x03be, B:234:0x03c0, B:235:0x03c1, B:244:0x02e0, B:255:0x0289, B:228:0x0383), top: B:25:0x011a, inners: #11 }] */
-    /* JADX WARN: Removed duplicated region for block: B:66:0x0242 A[Catch: all -> 0x0190, TryCatch #2 {all -> 0x0190, blocks: (B:26:0x011a, B:28:0x0129, B:30:0x0132, B:32:0x0140, B:33:0x0146, B:35:0x014f, B:41:0x015e, B:42:0x0180, B:56:0x0215, B:58:0x0219, B:61:0x0230, B:63:0x0234, B:66:0x0242, B:68:0x026b, B:70:0x027c, B:71:0x0296, B:74:0x02a0, B:77:0x02b8, B:83:0x02ce, B:85:0x02e3, B:87:0x02f1, B:89:0x0324, B:91:0x032c, B:93:0x0336, B:95:0x0346, B:97:0x034e, B:98:0x0357, B:100:0x0360, B:102:0x0373, B:104:0x0377, B:108:0x03cf, B:111:0x03d9, B:112:0x03e3, B:114:0x03ec, B:118:0x03f1, B:119:0x03f8, B:121:0x03fb, B:224:0x037f, B:225:0x0381, B:229:0x039b, B:230:0x039c, B:231:0x03be, B:234:0x03c0, B:235:0x03c1, B:244:0x02e0, B:255:0x0289, B:228:0x0383), top: B:25:0x011a, inners: #11 }] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* recovered by hand from the bytecode (jadx lost its structure, Vineflower could not decompile it) */
     private final void stream(Config c, int gen, boolean v2, Role role) {
-        Throwable th;
-        String str;
-        String rest;
-        NtripCore.Dechunker dechunk;
-        boolean noGgaNoted;
-        int i;
-        OutputStream out;
-        String first;
-        int i2;
-        NtripCore.Dechunker dechunk2;
-        InputStream inp;
-        ArrayDeque gaps;
-        long connectedAt;
-        InputStream inp2;
-        long ggaAt;
-        NtripCore.Mount near;
-        String g;
-        long ggaAt2;
-        String str2;
-        Role role2 = role;
-        long connectedAt2 = System.currentTimeMillis();
-        Socket socket2 = new Socket();
+        long connectedAt = System.currentTimeMillis();
+        Socket s = new Socket();
+        Throwable cause = null;
         try {
-            Socket s = socket2;
-            int i3 = 0;
             socket = s;
             s.setKeepAlive(true);
             s.setTcpNoDelay(true);
             s.connect(new InetSocketAddress(c.getHost(), c.getPort()), 10000);
             s.setSoTimeout(15000);
-            OutputStream out2 = s.getOutputStream();
-            InputStream inp3 = s.getInputStream();
-            RtkStatus it = rtk;
-            if (it != null) {
-                try {
-                    str = NtripCore.INSTANCE.gga(it, System.currentTimeMillis());
-                } catch (Throwable th2) {
-                    th = th2;
-                    try {
-                        throw th;
-                    } catch (Throwable th3) {
-                        CloseableKt.closeFinally(socket2, th);
-                        throw th3;
-                    }
-                }
+            OutputStream out = s.getOutputStream();
+            InputStream inp = s.getInputStream();
+            String gga0 = null;
+            RtkStatus st0 = rtk;
+            if (st0 != null) {
+                gga0 = NtripCore.INSTANCE.gga(st0, System.currentTimeMillis());
             }
-            str = lastGga;
-            String gga0 = str;
+            if (gga0 == null) {
+                gga0 = lastGga;
+            }
             byte[] bytes = NtripCore.INSTANCE.request(c.getMount(), c.getUser(), c.getPass(), c.getHost(), c.getPort(), v2, gga0).getBytes(Charsets.UTF_8);
             Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
-            out2.write(bytes);
-            out2.flush();
+            out.write(bytes);
+            out.flush();
             Ntrip ntrip = INSTANCE;
-            Intrinsics.checkNotNull(inp3);
-            String first2 = ntrip.readLine(inp3);
-            NtripCore.Answer a = NtripCore.INSTANCE.answer(first2);
+            Intrinsics.checkNotNull(inp);
+            String first = ntrip.readLine(inp);
+            NtripCore.Answer a = NtripCore.INSTANCE.answer(first);
             if (a instanceof NtripCore.Answer.Refused) {
+                String rest;
                 try {
                     s.setSoTimeout(2000);
-                    rest = INSTANCE.readUpTo(inp3, 2048);
+                    rest = INSTANCE.readUpTo(inp, 2048);
                 } catch (Exception e) {
                     rest = "";
                 }
-                String said = NtripCore.INSTANCE.said(first2, rest);
+                String said = NtripCore.INSTANCE.said(first, rest);
                 if (!Intrinsics.areEqual(said, lastSaid)) {
                     lastSaid = said;
                     INSTANCE.note("caster said " + said);
                 }
                 throw new IllegalStateException(((NtripCore.Answer.Refused) a).getWhy());
             }
-            try {
-                if (Intrinsics.areEqual(a, NtripCore.Answer.Sourcetable.INSTANCE)) {
-                    throw new IllegalStateException("mountpoint \"" + c.getMount() + "\" not found on this caster");
-                }
-                if (!Intrinsics.areEqual(a, NtripCore.Answer.Stream.INSTANCE)) {
-                    throw new NoWhenBranchMatchedException();
-                }
-                NtripCore.Dechunker dechunk3 = null;
-                long checkAt = connectedAt2;
-                try {
-                    if (StringsKt.startsWith(StringsKt.trim((CharSequence) first2).toString(), "HTTP/", false)) {
-                        for (int k = 0; k < 40; k++) {
-                            try {
-                                String h = INSTANCE.readLine(inp3);
-                                if (StringsKt.isBlank(h)) {
-                                    break;
-                                }
-                                if (StringsKt.startsWith(h, "Transfer-Encoding:", true) && StringsKt.contains((CharSequence) h, (CharSequence) "chunked", true)) {
-                                    dechunk3 = new NtripCore.Dechunker();
-                                }
-                                if (StringsKt.startsWith(h, "Content-Type:", true) && StringsKt.contains((CharSequence) h, (CharSequence) "sourcetable", true)) {
-                                    throw new IllegalStateException("mountpoint \"" + c.getMount() + "\" not found on this caster");
-                                }
-                            } catch (Throwable th4) {
-                                th = th4;
-                                throw th;
-                            }
-                        }
-                        dechunk = dechunk3;
-                    } else {
-                        dechunk = null;
-                    }
-                    INSTANCE.note("connected (NTRIP " + (v2 ? "2.0" : "1.0") + ": " + StringsKt.take(StringsKt.trim((CharSequence) first2).toString(), 40) + ")");
-                    s.setSoTimeout(1000);
-                    INSTANCE.setState("connected, waiting for corrections");
-                    long ggaAt3 = 0;
-                    long sendAt = System.currentTimeMillis();
-                    long ggaOkAt = System.currentTimeMillis();
-                    boolean noGgaNoted2 = false;
-                    ByteArrayOutputStream pending = new ByteArrayOutputStream();
-                    byte[] buf = new byte[4096];
-                    long quietSince = System.currentTimeMillis();
-                    boolean stallNoted = false;
-                    ArrayDeque gaps2 = new ArrayDeque();
-                    while (true) {
-                        Socket s2 = s;
-                        if (gen != generation) {
-                            Unit unit = Unit.INSTANCE;
-                            CloseableKt.closeFinally(socket2, null);
-                            return;
-                        }
-                        long now = System.currentTimeMillis();
-                        int i4 = i3;
-                        if (now - ggaAt3 >= 10000) {
-                            RtkStatus st = rtk;
-                            if (st != null) {
-                                noGgaNoted = noGgaNoted2;
-                                i = i4;
-                                g = NtripCore.INSTANCE.gga(st, now);
-                                if (g == null) {
-                                }
-                                if (g == null) {
-                                    first = first2;
-                                    byte[] bytes2 = (g + "\r\n").getBytes(Charsets.UTF_8);
-                                    Intrinsics.checkNotNullExpressionValue(bytes2, "getBytes(...)");
-                                    out2.write(bytes2);
-                                    out2.flush();
-                                    ggaAt2 = now;
-                                    if (st != null) {
-                                        out = out2;
-                                        str2 = NtripCore.INSTANCE.gga(st, now);
-                                    } else {
-                                        out = out2;
-                                        str2 = null;
-                                    }
-                                    if (str2 != null) {
-                                        lastGga = g;
-                                        ggaOkAt = now;
-                                        noGgaNoted = false;
-                                    }
-                                } else {
-                                    out = out2;
-                                    first = first2;
-                                    ggaAt2 = (now - 10000) + 2000;
-                                }
-                                if (now - ggaOkAt > 30000 || noGgaNoted) {
-                                    ggaAt3 = ggaAt2;
-                                } else {
-                                    INSTANCE.note("no fresh position from the receiver for 30 s (sending the last one)");
-                                    noGgaNoted = true;
-                                    ggaAt3 = ggaAt2;
-                                }
-                            } else {
-                                noGgaNoted = noGgaNoted2;
-                                i = i4;
-                            }
-                            String it2 = lastGga;
-                            g = it2 != null ? NtripCore.INSTANCE.retime(it2, now) : null;
-                            if (g == null) {
-                            }
-                            if (now - ggaOkAt > 30000) {
-                            }
-                            ggaAt3 = ggaAt2;
-                        } else {
-                            noGgaNoted = noGgaNoted2;
-                            i = i4;
-                            out = out2;
-                            first = first2;
-                        }
-                        try {
-                            i2 = inp3.read(buf);
-                        } catch (SocketTimeoutException e2) {
-                            i2 = 0;
-                        }
-                        int n = i2;
-                        if (n < 0) {
-                            CloseableKt.closeFinally(socket2, null);
-                            return;
-                        }
-                        if (n > 0) {
-                            NtripCore.Dechunker dc = dechunk;
-                            if (dc != null) {
-                                dc.feed(buf, n, pending);
-                                if (dc.getEnded()) {
-                                    CloseableKt.closeFinally(socket2, null);
-                                    return;
-                                }
-                            } else {
-                                pending.write(buf, 0, n);
-                            }
-                            inp = inp3;
-                            bytesIn += n;
-                            lastDataMs = now;
-                            if (stallNoted) {
-                                dechunk2 = dechunk;
-                                stallNoted = false;
-                                INSTANCE.note("corrections flowing again after " + ((now - quietSince) / 1000) + " s");
-                            } else {
-                                dechunk2 = dechunk;
-                            }
-                            if ((role2 != null ? role.getBackup() : null) == null || !role.getPlan().getOnBackup() || !StringsKt.isBlank(role.getBackup().getMount()) || now - quietSince < 8000) {
-                                gaps = gaps2;
-                            } else {
-                                gaps = gaps2;
-                                gaps.addLast(Long.valueOf(now));
-                                while (!gaps.isEmpty() && now - ((Number) gaps.first()).longValue() > 180000) {
-                                    gaps.removeFirst();
-                                }
-                                if (gaps.size() >= 3) {
-                                    synchronized (badBases) {
-                                        badBases.put(c.getMount(), Long.valueOf(now + 3600000));
-                                        Unit unit2 = Unit.INSTANCE;
-                                    }
-                                    throw new IllegalStateException("base " + c.getMount() + " keeps stalling - trying the next nearest");
-                                }
-                            }
-                            quietSince = now;
-                        } else {
-                            dechunk2 = dechunk;
-                            inp = inp3;
-                            gaps = gaps2;
-                        }
-                        if (now - quietSince > 15000 && !stallNoted) {
-                            INSTANCE.note("no corrections for 15 s - waiting, not hanging up");
-                            stallNoted = true;
-                        }
-                        if (now - quietSince > 90000 && netNow != null) {
-                            throw new IllegalStateException("no corrections for 90 s");
-                        }
-                        Config config = null;
-                        if (config == null || now - checkAt < 10000) {
-                            connectedAt = connectedAt2;
-                            gaps2 = gaps;
-                            inp2 = inp;
-                            ggaAt = ggaAt3;
-                        } else {
-                            try {
-                                RtkStatus k2 = rtk;
-                                if (k2 != null) {
-                                    try {
-                                        gaps2 = gaps;
-                                        if ((Intrinsics.areEqual(k2.getRtk(), "fixed") || Intrinsics.areEqual(k2.getRtk(), "float")) && bytesIn > 0) {
-                                            role2.setLastHelpMs(now);
-                                        }
-                                    } catch (Throwable th5) {
-                                        th = th5;
-                                        throw th;
-                                    }
-                                } else {
-                                    gaps2 = gaps;
-                                }
-                                if (!role.getPlan().getOnBackup() && now - Math.max(connectedAt2, role.getLastHelpMs()) >= role.getPlan().getSwitchMs()) {
-                                    throw new IllegalStateException("no RTK from these corrections for 3 minutes");
-                                }
-                                if (role.getPlan().getOnBackup() && role.getPlan().timeToRetryMain(now)) {
-                                    throw new IllegalStateException("time to try the main caster again");
-                                }
-                                NtripCore.Mount base = role.getBase();
-                                if (role.getPlan().getOnBackup() && StringsKt.isBlank(role.getBackup().getMount()) && base != null && k2 != null && k2.getHasFix()) {
-                                    connectedAt = connectedAt2;
-                                    try {
-                                        checkAt = now;
-                                        if (base.milesFrom(k2.getLat(), k2.getLon()) > 15.0d) {
-                                            near = NtripCore.INSTANCE.nearestBase(mounts, k2.getLat(), k2.getLon(), 25.0d, INSTANCE.skipBases(now));
-                                            if (near == null || Intrinsics.areEqual(near.getName(), base.getName())) {
-                                                inp2 = inp;
-                                                ggaAt = ggaAt3;
-                                            } else {
-                                                inp2 = inp;
-                                                ggaAt = ggaAt3;
-                                                if (near.milesFrom(k2.getLat(), k2.getLon()) < base.milesFrom(k2.getLat(), k2.getLon()) - 5.0d) {
-                                                    throw new IllegalStateException("a nearer base");
-                                                }
-                                            }
-                                        } else {
-                                            inp2 = inp;
-                                            ggaAt = ggaAt3;
-                                        }
-                                    } catch (Throwable th6) {
-                                        th = th6;
-                                        throw th;
-                                    }
-                                } else {
-                                    connectedAt = connectedAt2;
-                                    checkAt = now;
-                                    inp2 = inp;
-                                    ggaAt = ggaAt3;
-                                }
-                            } catch (Throwable th7) {
-                                th = th7;
-                            }
-                        }
-                        if (pending.size() > 0) {
-                            if (now - sendAt < 250 && pending.size() <= 8000) {
-                            }
-                            String b64 = Base64.getEncoder().encodeToString(pending.toByteArray());
-                            pending.reset();
-                            sendAt = now;
-                            DataClient dc2 = Link.INSTANCE.getData();
-                            if (dc2 != null) {
-                                commaGoneNoted = false;
-                                dc2.request("rtk_rtcm", MapsKt.mapOf(TuplesKt.to("b64", b64)), new Function1() { // from class: com.starpilot.starview.Ntrip$$ExternalSyntheticLambda1
-                                    @Override // kotlin.jvm.functions.Function1
-                                    public final Object invoke(Object obj) {
-                                        Unit stream$lambda$16$lambda$15;
-                                        stream$lambda$16$lambda$15 = Ntrip.stream$lambda$16$lambda$15((JSONObject) obj);
-                                        return stream$lambda$16$lambda$15;
-                                    }
-                                });
-                            } else if (!commaGoneNoted) {
-                                commaGoneNoted = true;
-                                INSTANCE.note("comma not connected - corrections not delivered");
-                            }
-                            INSTANCE.setState("receiving corrections (" + NtripCore.INSTANCE.size(bytesIn) + ")");
-                            role2 = role;
-                            inp3 = inp2;
-                            dechunk = dechunk2;
-                            s = s2;
-                            connectedAt2 = connectedAt;
-                            first2 = first;
-                            out2 = out;
-                            noGgaNoted2 = noGgaNoted;
-                            i3 = i;
-                            ggaAt3 = ggaAt;
-                        }
-                        role2 = role;
-                        inp3 = inp2;
-                        dechunk = dechunk2;
-                        s = s2;
-                        connectedAt2 = connectedAt;
-                        first2 = first;
-                        out2 = out;
-                        noGgaNoted2 = noGgaNoted;
-                        i3 = i;
-                        ggaAt3 = ggaAt;
-                    }
-                } catch (Throwable th8) {
-                    th = th8;
-                }
-            } catch (Throwable th9) {
-                th = th9;
+            if (Intrinsics.areEqual(a, NtripCore.Answer.Sourcetable.INSTANCE)) {
+                throw new IllegalStateException("mountpoint \"" + c.getMount() + "\" not found on this caster");
             }
-        } catch (Throwable th10) {
-            th = th10;
+            if (!Intrinsics.areEqual(a, NtripCore.Answer.Stream.INSTANCE)) {
+                throw new NoWhenBranchMatchedException();
+            }
+            NtripCore.Dechunker dechunk = null;
+            long checkAt = connectedAt;
+            if (StringsKt.startsWith(StringsKt.trim((CharSequence) first).toString(), "HTTP/", false)) {
+                for (int k = 0; k < 40; k++) {
+                    String h = INSTANCE.readLine(inp);
+                    if (StringsKt.isBlank(h)) {
+                        break;
+                    }
+                    if (StringsKt.startsWith(h, "Transfer-Encoding:", true) && StringsKt.contains((CharSequence) h, (CharSequence) "chunked", true)) {
+                        dechunk = new NtripCore.Dechunker();
+                    }
+                    if (StringsKt.startsWith(h, "Content-Type:", true) && StringsKt.contains((CharSequence) h, (CharSequence) "sourcetable", true)) {
+                        throw new IllegalStateException("mountpoint \"" + c.getMount() + "\" not found on this caster");
+                    }
+                }
+            }
+            INSTANCE.note("connected (NTRIP " + (v2 ? "2.0" : "1.0") + ": " + StringsKt.take(StringsKt.trim((CharSequence) first).toString(), 40) + ")");
+            s.setSoTimeout(1000);
+            INSTANCE.setState("connected, waiting for corrections");
+            long ggaAt = 0;
+            long sendAt = System.currentTimeMillis();
+            long ggaOkAt = System.currentTimeMillis();
+            boolean noGgaNoted = false;
+            ByteArrayOutputStream pending = new ByteArrayOutputStream();
+            byte[] buf = new byte[4096];
+            long quietSince = System.currentTimeMillis();
+            boolean stallNoted = false;
+            ArrayDeque gaps = new ArrayDeque();
+            while (gen == generation) {
+                long now = System.currentTimeMillis();
+                if (now - ggaAt >= 10000) {
+                    RtkStatus st = rtk;
+                    String g = null;
+                    if (st != null) {
+                        g = NtripCore.INSTANCE.gga(st, now);
+                    }
+                    if (g == null) {
+                        String last = lastGga;
+                        g = last != null ? NtripCore.INSTANCE.retime(last, now) : null;
+                    }
+                    if (g != null) {
+                        byte[] gb = (g + "\r\n").getBytes(Charsets.UTF_8);
+                        Intrinsics.checkNotNullExpressionValue(gb, "getBytes(...)");
+                        out.write(gb);
+                        out.flush();
+                        ggaAt = now;
+                        if ((st != null ? NtripCore.INSTANCE.gga(st, now) : null) != null) {
+                            lastGga = g;
+                            ggaOkAt = now;
+                            noGgaNoted = false;
+                        }
+                    } else {
+                        ggaAt = (now - 10000) + 2000;
+                    }
+                    if (now - ggaOkAt > 30000 && !noGgaNoted) {
+                        INSTANCE.note("no fresh position from the receiver for 30 s (sending the last one)");
+                        noGgaNoted = true;
+                    }
+                }
+                int n;
+                try {
+                    n = inp.read(buf);
+                } catch (SocketTimeoutException e) {
+                    n = 0;
+                }
+                if (n < 0) {
+                    return;
+                }
+                if (n > 0) {
+                    if (dechunk != null) {
+                        dechunk.feed(buf, n, pending);
+                        if (dechunk.getEnded()) {
+                            return;
+                        }
+                    } else {
+                        pending.write(buf, 0, n);
+                    }
+                    bytesIn += n;
+                    lastDataMs = now;
+                    if (stallNoted) {
+                        long gap = (now - quietSince) / 1000;
+                        stallNoted = false;
+                        INSTANCE.note("corrections flowing again after " + gap + " s");
+                    }
+                    Config backup = role != null ? role.getBackup() : null;
+                    if (backup != null && role.getPlan().getOnBackup() && StringsKt.isBlank(role.getBackup().getMount()) && now - quietSince >= 8000) {
+                        gaps.addLast(Long.valueOf(now));
+                        while (!gaps.isEmpty() && now - ((Number) gaps.first()).longValue() > 180000) {
+                            gaps.removeFirst();
+                        }
+                        if (gaps.size() >= 3) {
+                            synchronized (badBases) {
+                                badBases.put(c.getMount(), Long.valueOf(now + 3600000));
+                            }
+                            throw new IllegalStateException("base " + c.getMount() + " keeps stalling - trying the next nearest");
+                        }
+                    }
+                    quietSince = now;
+                }
+                if (now - quietSince > 15000 && !stallNoted) {
+                    INSTANCE.note("no corrections for 15 s - waiting, not hanging up");
+                    stallNoted = true;
+                }
+                if (now - quietSince > 90000 && netNow != null) {
+                    throw new IllegalStateException("no corrections for 90 s");
+                }
+                Config backup2 = role != null ? role.getBackup() : null;
+                if (backup2 != null && now - checkAt >= 10000) {
+                    RtkStatus st = rtk;
+                    if (st != null && ((Intrinsics.areEqual(st.getRtk(), "fixed") || Intrinsics.areEqual(st.getRtk(), "float")) && bytesIn > 0)) {
+                        role.setLastHelpMs(now);
+                    }
+                    if (!role.getPlan().getOnBackup() && now - Math.max(connectedAt, role.getLastHelpMs()) >= role.getPlan().getSwitchMs()) {
+                        throw new IllegalStateException("no RTK from these corrections for 3 minutes");
+                    }
+                    if (role.getPlan().getOnBackup() && role.getPlan().timeToRetryMain(now)) {
+                        throw new IllegalStateException("time to try the main caster again");
+                    }
+                    NtripCore.Mount base = role.getBase();
+                    if (role.getPlan().getOnBackup() && StringsKt.isBlank(role.getBackup().getMount()) && base != null && st != null && st.getHasFix()) {
+                        double lat = st.getLat();
+                        checkAt = now;
+                        if (base.milesFrom(lat, st.getLon()) > 15.0) {
+                            NtripCore.Mount near = NtripCore.nearestBase$default(NtripCore.INSTANCE, mounts, st.getLat(), st.getLon(), 0.0d, INSTANCE.skipBases(now), 8, null);
+                            if (near != null && !Intrinsics.areEqual(near.getName(), base.getName())
+                                    && near.milesFrom(st.getLat(), st.getLon()) < base.milesFrom(st.getLat(), st.getLon()) - 5.0) {
+                                throw new IllegalStateException("a nearer base");
+                            }
+                        }
+                    } else {
+                        checkAt = now;
+                    }
+                }
+                if (pending.size() > 0 && (now - sendAt >= 250 || pending.size() > 8000)) {
+                    String b64 = Base64.getEncoder().encodeToString(pending.toByteArray());
+                    pending.reset();
+                    DataClient dc = Link.INSTANCE.getData();
+                    if (dc == null) {
+                        if (!commaGoneNoted) {
+                            commaGoneNoted = true;
+                            INSTANCE.note("comma not connected - corrections not delivered");
+                        }
+                    } else {
+                        commaGoneNoted = false;
+                        dc.request("rtk_rtcm", MapsKt.mapOf(TuplesKt.to("b64", b64)), (Function1) (Object obj) -> Ntrip.stream$lambda$16$lambda$15((JSONObject) obj));
+                    }
+                    INSTANCE.setState("receiving corrections (" + NtripCore.INSTANCE.size(bytesIn) + ")");
+                    sendAt = now;
+                }
+            }
+        } catch (Throwable th) {
+            cause = th;
+            throw th;
+        } finally {
+            CloseableKt.closeFinally(s, cause);
         }
     }
 
@@ -1122,37 +959,25 @@ public final class Ntrip {
     }
 
     private final List<NtripCore.Mount> fetchMounts(String host, int port, String user, String pass) {
-        String request;
-        Socket socket2 = new Socket();
+        Socket s = new Socket();
+        Throwable cause = null;
         try {
-            Socket s = socket2;
-            try {
-                s.connect(new InetSocketAddress(StringsKt.trim((CharSequence) host).toString(), port), 10000);
-                s.setSoTimeout(10000);
-                OutputStream outputStream = s.getOutputStream();
-                request = NtripCore.INSTANCE.request("", user, pass, host, port, false, null);
-                byte[] bytes = request.getBytes(Charsets.UTF_8);
-                Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
-                outputStream.write(bytes);
-                InputStream inputStream = s.getInputStream();
-                Intrinsics.checkNotNullExpressionValue(inputStream, "getInputStream(...)");
-                String text = new String(ByteStreamsKt.readBytes(inputStream), Charsets.ISO_8859_1);
-                RtkStatus st = rtk;
-                List<NtripCore.Mount> sourcetable = NtripCore.INSTANCE.sourcetable(text, st != null ? st.getLat() : Double.NaN, st != null ? st.getLon() : Double.NaN);
-                CloseableKt.closeFinally(socket2, null);
-                return sourcetable;
-            } catch (Throwable th) {
-                th = th;
-                Throwable th2 = th;
-                try {
-                    throw th2;
-                } catch (Throwable th3) {
-                    CloseableKt.closeFinally(socket2, th2);
-                    throw th3;
-                }
-            }
-        } catch (Throwable th4) {
-            th = th4;
+            s.connect(new InetSocketAddress(StringsKt.trim((CharSequence) host).toString(), port), 10000);
+            s.setSoTimeout(10000);
+            OutputStream outputStream = s.getOutputStream();
+            byte[] bytes = NtripCore.INSTANCE.request("", user, pass, host, port, false, null).getBytes(Charsets.UTF_8);
+            Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
+            outputStream.write(bytes);
+            InputStream inputStream = s.getInputStream();
+            Intrinsics.checkNotNullExpressionValue(inputStream, "getInputStream(...)");
+            String text = new String(ByteStreamsKt.readBytes(inputStream), Charsets.ISO_8859_1);
+            RtkStatus st = rtk;
+            return NtripCore.INSTANCE.sourcetable(text, st != null ? st.getLat() : Double.NaN, st != null ? st.getLon() : Double.NaN);
+        } catch (Throwable th) {
+            cause = th;
+            throw th;
+        } finally {
+            CloseableKt.closeFinally(s, cause);
         }
     }
 
