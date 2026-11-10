@@ -1841,7 +1841,7 @@ public final class MapPane extends FrameLayout {
             }
         }
         int carpool = opts.optInt("carpool", 0);
-        String a = avoided.isEmpty() ? "Avoiding nothing" : "Avoiding " + CollectionsKt.joinToString$default(avoided, ", ", null, null, 0, null, null, 62, null);
+        String a = avoided.isEmpty() ? "Avoiding nothing" : "Avoiding " + CollectionsKt.joinToString(avoided, ", ", "", "", -1, "...", null);
         String cp = carpool > 0 ? " · carpool lanes (" + carpool + "+)" : " · no carpool lanes";
         col.addView(label$default(this, a + cp, 13.0f, false, true, 4, null));
     }
@@ -1999,18 +1999,18 @@ public final class MapPane extends FrameLayout {
                 when = "";
             }
             List<String> names = new ArrayList<>();
-            for (String s : CollectionsKt.listOf(new String[]{step.getRef(), StringsKt.contains$default((CharSequence) step.getText(), (CharSequence) step.getRoad(), false, 2, (Object) null) ? "" : step.getRoad()})) {
+            for (String s : CollectionsKt.listOf(new String[]{step.getRef(), StringsKt.contains((CharSequence) step.getText(), (CharSequence) step.getRoad(), false) ? "" : step.getRoad()})) {
                 if (s.length() > 0) {
                     names.add(s);
                 }
             }
             List<String> parts = new ArrayList<>();
-            for (String s : CollectionsKt.listOf(new String[]{when, CollectionsKt.joinToString$default(names, " · ", null, null, 0, null, null, 62, null)})) {
+            for (String s : CollectionsKt.listOf(new String[]{when, CollectionsKt.joinToString(names, " · ", "", "", -1, "...", null)})) {
                 if (s.length() > 0) {
                     parts.add(s);
                 }
             }
-            text.addView(label$default(this, CollectionsKt.joinToString$default(parts, "   ", null, null, 0, null, null, 62, null), 13.0f, false, true, 4, null));
+            text.addView(label$default(this, CollectionsKt.joinToString(parts, "   ", "", "", -1, "...", null), 13.0f, false, true, 4, null));
             row.addView(text, new LinearLayout.LayoutParams(0, -2, 1.0f));
             row.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda22
                 @Override // android.view.View.OnClickListener

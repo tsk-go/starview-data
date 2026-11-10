@@ -83,7 +83,7 @@ public final class LaneRamps {
         // our road: our way, and the other pieces of the same street of the same kind
         List<OsmRoads.Way> mains = new ArrayList<>();
         for (OsmRoads.Way w : ways) {
-            boolean same = w.getId() == ourId || (!StringsKt.endsWith$default(w.getKind(), "_link", false, 2, (Object) null) && Intrinsics.areEqual(w.getKind(), our.getKind()) && our.getName().length() > 0 && OsmRoads.INSTANCE.sameStreet(w.getName(), our.getName()));
+            boolean same = w.getId() == ourId || (!StringsKt.endsWith(w.getKind(), "_link", false) && Intrinsics.areEqual(w.getKind(), our.getKind()) && our.getName().length() > 0 && OsmRoads.INSTANCE.sameStreet(w.getName(), our.getName()));
             if (same) {
                 mains.add(w);
             }
@@ -93,7 +93,7 @@ public final class LaneRamps {
         double hy = Math.sin(yaw);
         HashMap<Integer, Ramp> best = new HashMap<>();
         for (OsmRoads.Way w : ways) {
-            if (w.getId() == ourId || !StringsKt.endsWith$default(w.getKind(), "_link", false, 2, (Object) null) || w.getE().length < 2) {
+            if (w.getId() == ourId || !StringsKt.endsWith(w.getKind(), "_link", false) || w.getE().length < 2) {
                 continue;
             }
             for (int end = 0; end < 2; end++) {

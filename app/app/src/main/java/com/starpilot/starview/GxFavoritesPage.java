@@ -1577,11 +1577,11 @@ public final class GxFavoritesPage extends GxPage {
             Intrinsics.checkNotNull(cp);
             String cn = cp.component1();
             List<String> path = cp.component2();
-            String hay = CollectionsKt.joinToString$default(CollectionsKt.plus((Collection) CollectionsKt.listOf(new String[]{o.optString("label"), o.optString("key"), o.optString("description"), o.optString("picker_label"), o.optString("picker_description"), cn}), (Iterable) path), " ", null, null, 0, null, null, 62, null).toLowerCase(Locale.ROOT);
+            String hay = CollectionsKt.joinToString(CollectionsKt.plus((Collection) CollectionsKt.listOf(new String[]{o.optString("label"), o.optString("key"), o.optString("description"), o.optString("picker_label"), o.optString("picker_description"), cn}), (Iterable) path), " ", "", "", -1, "...", null).toLowerCase(Locale.ROOT);
             Intrinsics.checkNotNullExpressionValue(hay, "toLowerCase(...)");
             boolean all = true;
             for (String w : q) {
-                if (!StringsKt.contains$default((CharSequence) hay, (CharSequence) w, false, 2, (Object) null)) {
+                if (!StringsKt.contains((CharSequence) hay, (CharSequence) w, false)) {
                     all = false;
                     break;
                 }
@@ -1666,13 +1666,13 @@ public final class GxFavoritesPage extends GxPage {
                     Intrinsics.checkNotNull(pa);
                     Pair<String, ? extends List<String>> pb = map.get(b);
                     Intrinsics.checkNotNull(pb);
-                    return ComparisonsKt.compareValues(CollectionsKt.joinToString$default(pa.getSecond(), "/", null, null, 0, null, null, 62, null), CollectionsKt.joinToString$default(pb.getSecond(), "/", null, null, 0, null, null, 62, null));
+                    return ComparisonsKt.compareValues(CollectionsKt.joinToString(pa.getSecond(), "/", "", "", -1, "...", null), CollectionsKt.joinToString(pb.getSecond(), "/", "", "", -1, "...", null));
                 }
             });
             for (JSONObject o2 : sorted) {
                 Pair<String, ? extends List<String>> cp = map.get(o2);
                 Intrinsics.checkNotNull(cp);
-                chooseControl$item(this$0, list, cur, dlg, $index, o2, CollectionsKt.joinToString$default(CollectionsKt.plus((Collection) CollectionsKt.listOf(cn2), (Iterable) cp.getSecond()), " · ", null, null, 0, null, null, 62, null));
+                chooseControl$item(this$0, list, cur, dlg, $index, o2, CollectionsKt.joinToString(CollectionsKt.plus((Collection) CollectionsKt.listOf(cn2), (Iterable) cp.getSecond()), " · ", "", "", -1, "...", null));
             }
         }
         if (matches.isEmpty()) {
