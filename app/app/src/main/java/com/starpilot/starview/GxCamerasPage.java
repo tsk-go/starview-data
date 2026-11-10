@@ -1449,150 +1449,87 @@ public final class GxCamerasPage extends GxPage {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:67:0x00d0, code lost:
-    
-        if (r0 == null) goto L37;
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Removed duplicated region for block: B:86:0x017b  */
-    /* JADX WARN: Type inference failed for: r0v61, types: [T, android.graphics.Bitmap] */
-    /* JADX WARN: Type inference failed for: r9v2, types: [T, android.graphics.Bitmap] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* recovered by hand from the bytecode (jadx lost its try blocks) */
     public static final void gxCamLoadBitmap$lambda$73(String str, String str2, GxCamerasPage gxCamerasPage, final Function2 function2) {
-        String message;
-        byte[] bArr;
-        Object m1191constructorimpl;
-        T t;
-        Object m1191constructorimpl2;
         final Ref.ObjectRef objectRef = new Ref.ObjectRef();
         final Ref.ObjectRef objectRef2 = new Ref.ObjectRef();
         try {
-        } catch (Exception e) {
-            e = e;
-        }
-        try {
-        } catch (Exception e2) {
-            e = e2;
-            message = e.getMessage();
-            T t2 = message;
-            if (message == null) {
-                t2 = e.toString();
-            }
-            objectRef.element = t2;
-            gxCamerasPage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda65
-                @Override // java.lang.Runnable
-                public final void run() {
-                    GxCamerasPage.gxCamLoadBitmap$lambda$73$lambda$72(function2, objectRef, objectRef2);
-                }
-            });
-        }
-        try {
-            Response execute = GxPage.Companion.client(30L).newCall(new Request.Builder().url("http://" + str + ":8082" + str2).header("Cache-Control", "no-store").build()).execute();
-            Throwable execute$c = null;
+            Response response = GxPage.Companion.client(30L).newCall(new Request.Builder().url("http://" + str + ":8082" + str2).header("Cache-Control", "no-store").build()).execute();
+            Throwable cause = null;
             try {
-                Response response = execute;
-                String header$default = response.header("Content-Type", null);
-                String str3 = "";
-                if (header$default == null) {
-                    header$default = "";
+                String ct = response.header("Content-Type");
+                if (ct == null) {
+                    ct = "";
                 }
-                String str4 = header$default;
+                byte[] bArr;
                 ResponseBody body = response.body();
                 if (body == null || (bArr = body.bytes()) == null) {
                     bArr = new byte[0];
                 }
-                byte[] bArr2 = bArr;
-                if (response.isSuccessful()) {
-                    if (StringsKt.contains((CharSequence) str4, (CharSequence) "json", false)) {
-                        try {
-                            Result.Companion companion = Result.Companion;
-                            m1191constructorimpl2 = KtCompat.resultOf(new JSONObject(new String(bArr2, Charsets.UTF_8)).optString("jpeg"));
-                        } catch (Throwable th) {
-                            Result.Companion companion2 = Result.Companion;
-                            m1191constructorimpl2 = KtCompat.resultOf(ResultKt.createFailure(th));
-                        }
-                        if (KtCompat.isFailure(m1191constructorimpl2)) {
-                            m1191constructorimpl2 = null;
-                        }
-                        String str5 = (String) m1191constructorimpl2;
-                        if (str5 != null) {
-                            str3 = str5;
-                        }
-                        String str6 = str3;
-                        if (StringsKt.isBlank(str6)) {
-                            objectRef.element = "Snapshot missing image data";
-                        } else {
-                            byte[] decode = Base64.decode(str6, 0);
-                            objectRef2.element = BitmapFactory.decodeByteArray(decode, 0, decode.length);
-                        }
-                    } else {
-                        objectRef2.element = BitmapFactory.decodeByteArray(bArr2, 0, bArr2.length);
-                    }
-                    if (objectRef.element == null) {
-                        objectRef.element = "Failed to decode image";
-                    }
-                    Unit unit = Unit.INSTANCE;
-                } else {
+                if (!response.isSuccessful()) {
+                    Object res;
                     try {
-                        Result.Companion companion3 = Result.Companion;
-                        JSONObject jSONObject = new JSONObject(new String(bArr2, Charsets.UTF_8));
+                        Result.Companion companion = Result.Companion;
+                        JSONObject jSONObject = new JSONObject(new String(bArr, Charsets.UTF_8));
                         String optString = jSONObject.optString("error");
                         if (StringsKt.isBlank(optString)) {
                             optString = jSONObject.optString("message");
                         }
-                        m1191constructorimpl = KtCompat.resultOf(optString);
-                    } catch (Throwable th2) {
+                        res = KtCompat.resultOf(optString);
+                    } catch (Throwable th) {
+                        Result.Companion companion2 = Result.Companion;
+                        res = KtCompat.resultOf(ResultKt.createFailure(th));
+                    }
+                    if (KtCompat.isFailure(res)) {
+                        res = null;
+                    }
+                    String s = (String) res;
+                    if (s != null && StringsKt.isBlank(s)) {
+                        s = null;
+                    }
+                    if (s == null) {
+                        s = "HTTP " + response.code();
+                    }
+                    objectRef.element = s;
+                } else if (StringsKt.contains((CharSequence) ct, (CharSequence) "json", false)) {
+                    Object res2;
+                    try {
+                        Result.Companion companion3 = Result.Companion;
+                        res2 = KtCompat.resultOf(new JSONObject(new String(bArr, Charsets.UTF_8)).optString("jpeg"));
+                    } catch (Throwable th) {
                         Result.Companion companion4 = Result.Companion;
-                        m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th2));
+                        res2 = KtCompat.resultOf(ResultKt.createFailure(th));
                     }
-                    if (KtCompat.isFailure(m1191constructorimpl)) {
-                        m1191constructorimpl = null;
+                    if (KtCompat.isFailure(res2)) {
+                        res2 = null;
                     }
-                    String str7 = (String) m1191constructorimpl;
-                    if (str7 != null) {
-                        String str8 = str7;
-                        if (StringsKt.isBlank(str8)) {
-                            str8 = null;
-                        }
-                        String str9 = str8;
-                        t = str9;
+                    String b64 = (String) res2;
+                    if (b64 == null) {
+                        b64 = "";
                     }
-                    t = "HTTP " + response.code();
-                    objectRef.element = t;
-                    if (objectRef.element == null && objectRef2.element == null) {
-                        objectRef.element = "Failed to decode image";
+                    if (StringsKt.isBlank(b64)) {
+                        objectRef.element = "Snapshot missing image data";
+                    } else {
+                        byte[] decode = Base64.decode(b64, 0);
+                        objectRef2.element = BitmapFactory.decodeByteArray(decode, 0, decode.length);
                     }
-                    Unit unit2 = Unit.INSTANCE;
+                } else {
+                    objectRef2.element = BitmapFactory.decodeByteArray(bArr, 0, bArr.length);
                 }
-            } catch (Throwable execute$t) {
-                execute$c = execute$t;
-                throw execute$t;
+                if (objectRef.element == null && objectRef2.element == null) {
+                    objectRef.element = "Failed to decode image";
+                }
+            } catch (Throwable th) {
+                cause = th;
+                throw th;
             } finally {
-                CloseableKt.closeFinally(execute, execute$c);
+                CloseableKt.closeFinally(response, cause);
             }
-        } catch (Exception e3) {
-            e = e3;
-            message = e.getMessage();
-            T t22 = message;
-            if (message == null) {
-            }
-            objectRef.element = t22;
-            gxCamerasPage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda65
-                @Override // java.lang.Runnable
-                public final void run() {
-                    GxCamerasPage.gxCamLoadBitmap$lambda$73$lambda$72(function2, objectRef, objectRef2);
-                }
-            });
+        } catch (Exception e) {
+            String message = e.getMessage();
+            objectRef.element = message == null ? e.toString() : message;
         }
-        gxCamerasPage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda65
-            @Override // java.lang.Runnable
-            public final void run() {
-                GxCamerasPage.gxCamLoadBitmap$lambda$73$lambda$72(function2, objectRef, objectRef2);
-            }
-        });
+        gxCamerasPage.getMain().post(() -> GxCamerasPage.gxCamLoadBitmap$lambda$73$lambda$72(function2, objectRef, objectRef2));
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2625,6 +2562,7 @@ public final class GxCamerasPage extends GxPage {
                 tv.setTextColor(accent);
             } else {
                 Double doubleOrNull = StringsKt.toDoubleOrNull(StringsKt.trim((CharSequence) t).toString());
+                str = null;
                 if (doubleOrNull != null) {
                     double it = doubleOrNull.doubleValue();
                     if (!Double.isInfinite(it) && !Double.isNaN(it)) {
@@ -2636,11 +2574,11 @@ public final class GxCamerasPage extends GxPage {
                         StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
                         String format = String.format(Locale.US, "%.3f", Arrays.copyOf(new Object[]{Double.valueOf(it2)}, 1));
                         Intrinsics.checkNotNullExpressionValue(format, "format(...)");
-                        if (format != null) {
-                            str = format;
-                            tv.setText(str);
-                        }
+                        str = format;
                     }
+                }
+                if (str == null) {
+                    str = "-";
                 }
                 tv.setText(str);
             }
@@ -3207,14 +3145,16 @@ public final class GxCamerasPage extends GxPage {
             Intrinsics.throwUninitializedPropertyAccessException("pView");
             gxCamerasPipView = null;
         }
-        Float valueOf = Float.valueOf(gxCamerasPipView.getBmp() != null ? r0.getWidth() : 1920);
+        Bitmap b0 = gxCamerasPipView.getBmp();
+        Float valueOf = Float.valueOf(b0 != null ? b0.getWidth() : 1920);
         GxCamerasPipView gxCamerasPipView3 = this.pView;
         if (gxCamerasPipView3 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("pView");
         } else {
             gxCamerasPipView2 = gxCamerasPipView3;
         }
-        return TuplesKt.to(valueOf, Float.valueOf(gxCamerasPipView2.getBmp() != null ? r1.getHeight() : 1080));
+        Bitmap b1 = gxCamerasPipView2.getBmp();
+        return TuplesKt.to(valueOf, Float.valueOf(b1 != null ? b1.getHeight() : 1080));
     }
 
     private final void pSave() {
