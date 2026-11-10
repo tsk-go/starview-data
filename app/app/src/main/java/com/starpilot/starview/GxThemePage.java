@@ -1171,7 +1171,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit editColor$lambda$56;
-                editColor$lambda$56 = GxThemePage.editColor$lambda$56(GxThemePage.this, k, ((Integer) obj).intValue());
+                editColor$lambda$56 = GxThemePage.editColor$lambda$56(GxThemePage.this, k, ((Number) obj).intValue());
                 return editColor$lambda$56;
             }
         });
@@ -1258,7 +1258,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit renderTurn$lambda$61;
-                renderTurn$lambda$61 = GxThemePage.renderTurn$lambda$61(GxThemePage.this, ((Integer) obj).intValue());
+                renderTurn$lambda$61 = GxThemePage.renderTurn$lambda$61(GxThemePage.this, ((Number) obj).intValue());
                 return renderTurn$lambda$61;
             }
         });
@@ -1274,7 +1274,7 @@ public final class GxThemePage extends GxPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit renderTurn$lambda$62;
-                    renderTurn$lambda$62 = GxThemePage.renderTurn$lambda$62(GxThemePage.this, ((Integer) obj).intValue());
+                    renderTurn$lambda$62 = GxThemePage.renderTurn$lambda$62(GxThemePage.this, ((Number) obj).intValue());
                     return renderTurn$lambda$62;
                 }
             });
@@ -2460,11 +2460,11 @@ public final class GxThemePage extends GxPage {
 
     /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void renderAll() {
-        Iterable var3 = this.themes;
+        Object var3 = this.themes;
         var var2 = new ArrayList();
 
         for (Object var3$it : (Iterable) var3) {
-            var3 = (Iterable) var3$it;
+            var3 = var3$it;
             if (!((GxThemeEntry)(Object)var3).getPseudo()) {
                 var2.add(var3);
             }
@@ -2562,11 +2562,11 @@ public final class GxThemePage extends GxPage {
             var4 = new GxThemeEntry("Stock", "__stock__", "stock", false, false, true, 16, null);
         }
 
-        Iterable var6 = this.themes;
+        Object var6 = this.themes;
         var var5 = new ArrayList();
 
         for (Object var6$it : (Iterable) var6) {
-            var6 = (Iterable) var6$it;
+            var6 = var6$it;
             GxThemeEntry var8 = (GxThemeEntry)(Object)var6;
             boolean var3;
             if (Intrinsics.areEqual(var1, "steering_wheel")) {
@@ -3436,15 +3436,15 @@ public final class GxThemePage extends GxPage {
         Object var28 = var13.get(0);
         Intrinsics.checkNotNullExpressionValue(var28, "get(...)");
         View var30 = (View)var28;
-        var28 = new int[7];
+        int[] var28i = new int[7];
 
         for (int var22 = 0; var22 < 7; var22++) {
-            ((Object[])var28)[var22] = Color.HSVToColor(new float[]{var22 * 60.0F % 360.0F, 1.0F, 1.0F});
+            var28i[var22] = Color.HSVToColor(new float[]{var22 * 60.0F % 360.0F, 1.0F, 1.0F});
         }
 
-        ((Object[])var28)[6] = -65536;
+        var28i[6] = -65536;
         Unit var31 = Unit.INSTANCE;
-        gxThemeColorDialog$grad(this, var30, (int[])var28);
+        gxThemeColorDialog$grad(this, var30, var28i);
         var26.element = (new GxThemePage$$ExternalSyntheticLambda19(var12, this, var13, var10, var14, var23, var15, var11));
         var11.addTextChangedListener(new TextWatcher() {
             final float[] $hsv = var10;

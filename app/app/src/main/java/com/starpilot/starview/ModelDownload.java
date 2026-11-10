@@ -121,7 +121,7 @@ public final class ModelDownload {
             String sha = ArraysKt.joinToString(digest, (CharSequence) "", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.ModelDownload$$ExternalSyntheticLambda2
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
-                    return ModelDownload.importDetector$lambda$3(((Byte) obj).byteValue());
+                    return ModelDownload.importDetector$lambda$3(((Number) obj).byteValue());
                 }
             });
             if (got == 17995664 && Intrinsics.areEqual(sha, "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587")) {
@@ -235,7 +235,7 @@ public final class ModelDownload {
                 String sha = ArraysKt.joinToString(digest, (CharSequence) "", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.ModelDownload$$ExternalSyntheticLambda1
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
-                        return ModelDownload.ensure$lambda$7$lambda$6(((Byte) obj).byteValue());
+                        return ModelDownload.ensure$lambda$7$lambda$6(((Number) obj).byteValue());
                     }
                 });
                 if (got != 17995664 || !Intrinsics.areEqual(sha, "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587")) {

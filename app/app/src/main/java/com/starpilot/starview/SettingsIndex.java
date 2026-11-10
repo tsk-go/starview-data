@@ -57,11 +57,11 @@ public final class SettingsIndex {
         Object var12 = null; Object var19 = null; // declarations Vineflower left out
         Intrinsics.checkNotNullParameter(var1, "rows");
         Intrinsics.checkNotNullParameter(var2, "title");
-        Iterable var4 = var1;
+        Object var4 = var1;
         var var10 = new ArrayList();
 
         for (Object var4$it : (Iterable) var4) {
-            var4 = (Iterable) var4$it;
+            var4 = var4$it;
             GalaxyRow var6 = (GalaxyRow)(Object)var4;
             boolean var3;
             if (!GalaxyRow.Companion.isPipCrop(((GalaxyRow) var6)) && ((GalaxyRow) var6).getControl() != GalaxyRow.Control.GROUP && ((GalaxyRow) var6).getControl() != GalaxyRow.Control.ACTION) {

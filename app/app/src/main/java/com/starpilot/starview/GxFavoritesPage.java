@@ -1004,7 +1004,7 @@ public final class GxFavoritesPage extends GxPage {
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         String access$gxHomeFmt;
-                        access$gxHomeFmt = GxHomeKt.gxHomeFmt(((Double) obj).doubleValue());
+                        access$gxHomeFmt = GxHomeKt.gxHomeFmt(((Number) obj).doubleValue());
                         return access$gxHomeFmt;
                     }
                 };
@@ -1023,7 +1023,7 @@ public final class GxFavoritesPage extends GxPage {
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         Unit render$lambda$49;
-                        render$lambda$49 = GxFavoritesPage.render$lambda$49(GxFavoritesPage.this, i7, ((Double) obj).doubleValue());
+                        render$lambda$49 = GxFavoritesPage.render$lambda$49(GxFavoritesPage.this, i7, ((Number) obj).doubleValue());
                         return render$lambda$49;
                     }
                 });

@@ -129,14 +129,14 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$0;
-                build$lambda$0 = GxCamerasPage.build$lambda$0(GxCamerasPage.this, ((Integer) obj).intValue());
+                build$lambda$0 = GxCamerasPage.build$lambda$0(GxCamerasPage.this, ((Number) obj).intValue());
                 return build$lambda$0;
             }
         }, new Function2() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda18
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit build$lambda$1;
-                build$lambda$1 = GxCamerasPage.build$lambda$1(GxCamerasPage.this, ((Integer) obj).intValue(), (LinearLayout) obj2);
+                build$lambda$1 = GxCamerasPage.build$lambda$1(GxCamerasPage.this, ((Number) obj).intValue(), (LinearLayout) obj2);
                 return build$lambda$1;
             }
         });
@@ -458,7 +458,7 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit fillSentryConfig$lambda$17;
-                fillSentryConfig$lambda$17 = GxCamerasPage.fillSentryConfig$lambda$17(GxCamerasPage.this, ((Double) obj).doubleValue());
+                fillSentryConfig$lambda$17 = GxCamerasPage.fillSentryConfig$lambda$17(GxCamerasPage.this, ((Number) obj).doubleValue());
                 return fillSentryConfig$lambda$17;
             }
         });
@@ -474,7 +474,7 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit fillSentryConfig$lambda$18;
-                fillSentryConfig$lambda$18 = GxCamerasPage.fillSentryConfig$lambda$18(GxCamerasPage.this, ((Double) obj).doubleValue());
+                fillSentryConfig$lambda$18 = GxCamerasPage.fillSentryConfig$lambda$18(GxCamerasPage.this, ((Number) obj).doubleValue());
                 return fillSentryConfig$lambda$18;
             }
         });
@@ -2734,14 +2734,14 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 String buildPip$lambda$121;
-                buildPip$lambda$121 = GxCamerasPage.buildPip$lambda$121(((Double) obj).doubleValue());
+                buildPip$lambda$121 = GxCamerasPage.buildPip$lambda$121(((Number) obj).doubleValue());
                 return buildPip$lambda$121;
             }
         }, box, new Function1() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda54
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildPip$lambda$122;
-                buildPip$lambda$122 = GxCamerasPage.buildPip$lambda$122(GxCamerasPage.this, ((Double) obj).doubleValue());
+                buildPip$lambda$122 = GxCamerasPage.buildPip$lambda$122(GxCamerasPage.this, ((Number) obj).doubleValue());
                 return buildPip$lambda$122;
             }
         });

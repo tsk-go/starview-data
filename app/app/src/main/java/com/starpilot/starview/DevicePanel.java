@@ -1054,7 +1054,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildToggles$lambda$63;
-                buildToggles$lambda$63 = DevicePanel.buildToggles$lambda$63(DevicePanel.this, ((Integer) obj).intValue());
+                buildToggles$lambda$63 = DevicePanel.buildToggles$lambda$63(DevicePanel.this, ((Number) obj).intValue());
                 return buildToggles$lambda$63;
             }
         });
@@ -1722,7 +1722,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit showDriverCamera$lambda$113;
-                showDriverCamera$lambda$113 = DevicePanel.showDriverCamera$lambda$113(((Integer) obj).intValue(), ((Integer) obj2).intValue());
+                showDriverCamera$lambda$113 = DevicePanel.showDriverCamera$lambda$113(((Number) obj).intValue(), ((Number) obj2).intValue());
                 return showDriverCamera$lambda$113;
             }
         });
@@ -2245,7 +2245,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$175;
-                buildNetwork$lambda$175 = DevicePanel.buildNetwork$lambda$175(DevicePanel.this, ((Integer) obj).intValue());
+                buildNetwork$lambda$175 = DevicePanel.buildNetwork$lambda$175(DevicePanel.this, ((Number) obj).intValue());
                 return buildNetwork$lambda$175;
             }
         });
@@ -2406,7 +2406,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence buildNetwork$lambda$149$lambda$148;
-                buildNetwork$lambda$149$lambda$148 = DevicePanel.buildNetwork$lambda$149$lambda$148(downloads, ((Integer) obj).intValue());
+                buildNetwork$lambda$149$lambda$148 = DevicePanel.buildNetwork$lambda$149$lambda$148(downloads, ((Number) obj).intValue());
                 return buildNetwork$lambda$149$lambda$148;
             }
         });
