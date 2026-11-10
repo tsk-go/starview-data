@@ -442,7 +442,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function3
             public final Object invoke(Object obj, Object obj2, Object obj3) {
                 Unit json$lambda$10;
-                json$lambda$10 = GxPage.json$lambda$10(GxPage.this, then, ((Integer) obj).intValue(), (String) obj2, (String) obj3);
+                json$lambda$10 = GxPage.json$lambda$10(GxPage.this, then, ((Number) obj).intValue(), (String) obj2, (String) obj3);
                 return json$lambda$10;
             }
         });
@@ -512,7 +512,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function3
             public final Object invoke(Object obj, Object obj2, Object obj3) {
                 Unit text$lambda$13;
-                text$lambda$13 = GxPage.getText$lambda$13(then, ((Integer) obj).intValue(), (String) obj2, (String) obj3);
+                text$lambda$13 = GxPage.getText$lambda$13(then, ((Number) obj).intValue(), (String) obj2, (String) obj3);
                 return text$lambda$13;
             }
         }, 12, null);
@@ -1391,7 +1391,7 @@ public abstract class GxPage extends FrameLayout {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj2) {
                     String stepper$lambda$46;
-                    stepper$lambda$46 = GxPage.stepper$lambda$46(((Double) obj2).doubleValue());
+                    stepper$lambda$46 = GxPage.stepper$lambda$46(((Number) obj2).doubleValue());
                     return stepper$lambda$46;
                 }
             } : function1, (i & 128) != 0 ? gxPage.col : viewGroup, function12);
@@ -1443,7 +1443,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit stepper$lambda$50;
-                stepper$lambda$50 = GxPage.stepper$lambda$50(cur, tv, fmt, ((Double) obj).doubleValue());
+                stepper$lambda$50 = GxPage.stepper$lambda$50(cur, tv, fmt, ((Number) obj).doubleValue());
                 return stepper$lambda$50;
             }
         };

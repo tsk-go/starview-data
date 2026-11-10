@@ -592,7 +592,7 @@ public final class CarUi {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit chips$lambda$38;
-                chips$lambda$38 = CarUi.chips$lambda$38(views, CarUi.this, ((Integer) obj).intValue());
+                chips$lambda$38 = CarUi.chips$lambda$38(views, CarUi.this, ((Number) obj).intValue());
                 return chips$lambda$38;
             }
         };

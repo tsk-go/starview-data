@@ -1960,9 +1960,9 @@ public final class Detector {
                     Iterator var72 = var100;
 
                     while (var72.hasNext()) {
-                        var97 = (String)var72.next();
-                        Intrinsics.checkNotNullExpressionValue(var97, var36);
-                        Detector.Track var117 = (Detector.Track)(Object)var97;
+                        Object var97o = var72.next();
+                        Intrinsics.checkNotNullExpressionValue(var97o, var36);
+                        Detector.Track var117 = (Detector.Track)var97o;
                         if (!var29.contains(var117) && var117.getHits() >= this.need(var117.getCls()) && var117.getWeak() < 6) {
                             float var50 = var117.getX1() - var117.getX0();
                             float var46 = var117.getY1();
@@ -2010,9 +2010,9 @@ public final class Detector {
                 Intrinsics.checkNotNullExpressionValue(var73, var82);
 
                 while (var73.hasNext()) {
-                    var21 = (Iterable)var73.next();
-                    Intrinsics.checkNotNullExpressionValue(var21, var36);
-                    Detector.Track var84 = (Detector.Track)(Object)var21;
+                    Object var21o = var73.next();
+                    Intrinsics.checkNotNullExpressionValue(var21o, var36);
+                    Detector.Track var84 = (Detector.Track)var21o;
                     if (!var29.contains(var84)) {
                         var84.setMisses(var84.getMisses() + 1);
                         float var44 = var84.getVx() * var5;
@@ -2319,11 +2319,11 @@ public final class Detector {
                     float var4 = ((Detector.Track)var38).getGx();
 
                     while (true) {
-                        var16 = (Iterable)var49.next();
-                        float var5 = ((Detector.Track)(Object)var16).getGx();
+                        Object var16o = var49.next();
+                        float var5 = ((Detector.Track)var16o).getGx();
                         float var25 = var4;
                         if (Float.compare(var4, var5) > 0) {
-                            var38 = var16;
+                            var38 = var16o;
                             var25 = var5;
                         }
 
@@ -2945,9 +2945,9 @@ public final class Detector {
                             Intrinsics.checkNotNullExpressionValue(var40, "iterator(...)");
 
                             while (var40.hasNext()) {
-                                Detector.Track var153 = (Detector.Track)var40.next();
-                                Intrinsics.checkNotNullExpressionValue(var153, "next(...)");
-                                var153 = ((Detector.Pend)(Object)var153).getTr();
+                                Object var153o = var40.next();
+                                Intrinsics.checkNotNullExpressionValue(var153o, "next(...)");
+                                Detector.Track var153 = ((Detector.Pend)var153o).getTr();
                                 var153.setRowEv(var153.getRowEv() * 0.93F);
                             }
 

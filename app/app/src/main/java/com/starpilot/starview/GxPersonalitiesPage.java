@@ -2121,7 +2121,7 @@ public final class GxPersonalitiesPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj2) {
                     Unit renderProfile$lambda$63;
-                    renderProfile$lambda$63 = GxPersonalitiesPage.renderProfile$lambda$63(GxPersonalitiesPage.this, p, cat, opts, ((Integer) obj2).intValue());
+                    renderProfile$lambda$63 = GxPersonalitiesPage.renderProfile$lambda$63(GxPersonalitiesPage.this, p, cat, opts, ((Number) obj2).intValue());
                     return renderProfile$lambda$63;
                 }
             });
@@ -2399,7 +2399,7 @@ public final class GxPersonalitiesPage extends GxPage {
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj4) {
                         Unit renderProfile$lambda$88;
-                        renderProfile$lambda$88 = GxPersonalitiesPage.renderProfile$lambda$88(GxPersonalitiesPage.this, param, modes, ((Integer) obj4).intValue());
+                        renderProfile$lambda$88 = GxPersonalitiesPage.renderProfile$lambda$88(GxPersonalitiesPage.this, param, modes, ((Number) obj4).intValue());
                         return renderProfile$lambda$88;
                     }
                 });

@@ -918,7 +918,7 @@ public final class GxModelLabPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit renderPair$lambda$39$lambda$38;
-                renderPair$lambda$39$lambda$38 = GxModelLabPage.renderPair$lambda$39$lambda$38(this$0, opts, ((Integer) obj).intValue());
+                renderPair$lambda$39$lambda$38 = GxModelLabPage.renderPair$lambda$39$lambda$38(this$0, opts, ((Number) obj).intValue());
                 return renderPair$lambda$39$lambda$38;
             }
         });
@@ -947,7 +947,7 @@ public final class GxModelLabPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit renderPair$lambda$43$lambda$42;
-                renderPair$lambda$43$lambda$42 = GxModelLabPage.renderPair$lambda$43$lambda$42(this$0, opts, ((Integer) obj).intValue());
+                renderPair$lambda$43$lambda$42 = GxModelLabPage.renderPair$lambda$43$lambda$42(this$0, opts, ((Number) obj).intValue());
                 return renderPair$lambda$43$lambda$42;
             }
         });

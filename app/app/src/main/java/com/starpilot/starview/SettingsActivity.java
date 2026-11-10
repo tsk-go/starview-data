@@ -3073,7 +3073,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                     break;
                 }
 
-                var6 = (View)var10.next();
+                var6 = var10.next();
             } while (!Intrinsics.areEqual(((GalaxyApi.Category)var6).getName(), var9));
 
             GalaxyApi.Category var31 = (GalaxyApi.Category)var6;
@@ -4626,7 +4626,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         Unit uiGroupPage$lambda$158;
-                        uiGroupPage$lambda$158 = SettingsActivity.uiGroupPage$lambda$158(s, ((Float) obj).floatValue());
+                        uiGroupPage$lambda$158 = SettingsActivity.uiGroupPage$lambda$158(s, ((Number) obj).floatValue());
                         return uiGroupPage$lambda$158;
                     }
                 });
@@ -8649,7 +8649,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$309;
-                tabletBlinkerPage$lambda$309 = SettingsActivity.tabletBlinkerPage$lambda$309(s, ((Float) obj).floatValue());
+                tabletBlinkerPage$lambda$309 = SettingsActivity.tabletBlinkerPage$lambda$309(s, ((Number) obj).floatValue());
                 return tabletBlinkerPage$lambda$309;
             }
         }, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda28
@@ -8664,7 +8664,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletBlinkerPage$lambda$311;
-                tabletBlinkerPage$lambda$311 = SettingsActivity.tabletBlinkerPage$lambda$311(s, ((Float) obj).floatValue());
+                tabletBlinkerPage$lambda$311 = SettingsActivity.tabletBlinkerPage$lambda$311(s, ((Number) obj).floatValue());
                 return tabletBlinkerPage$lambda$311;
             }
         }, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda30
@@ -9063,14 +9063,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 String tabletVoicePage$lambda$323;
-                tabletVoicePage$lambda$323 = SettingsActivity.tabletVoicePage$lambda$323(((Float) obj).floatValue());
+                tabletVoicePage$lambda$323 = SettingsActivity.tabletVoicePage$lambda$323(((Number) obj).floatValue());
                 return tabletVoicePage$lambda$323;
             }
         }, Float.valueOf(1.0f), new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda172
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletVoicePage$lambda$324;
-                tabletVoicePage$lambda$324 = SettingsActivity.tabletVoicePage$lambda$324(((Float) obj).floatValue());
+                tabletVoicePage$lambda$324 = SettingsActivity.tabletVoicePage$lambda$324(((Number) obj).floatValue());
                 return tabletVoicePage$lambda$324;
             }
         }, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda173
@@ -9085,14 +9085,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 String tabletVoicePage$lambda$326;
-                tabletVoicePage$lambda$326 = SettingsActivity.tabletVoicePage$lambda$326(((Float) obj).floatValue());
+                tabletVoicePage$lambda$326 = SettingsActivity.tabletVoicePage$lambda$326(((Number) obj).floatValue());
                 return tabletVoicePage$lambda$326;
             }
         }, Float.valueOf(0.0f), new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda175
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletVoicePage$lambda$327;
-                tabletVoicePage$lambda$327 = SettingsActivity.tabletVoicePage$lambda$327(((Float) obj).floatValue());
+                tabletVoicePage$lambda$327 = SettingsActivity.tabletVoicePage$lambda$327(((Number) obj).floatValue());
                 return tabletVoicePage$lambda$327;
             }
         }, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda176
@@ -9107,14 +9107,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 String tabletVoicePage$lambda$329;
-                tabletVoicePage$lambda$329 = SettingsActivity.tabletVoicePage$lambda$329(((Float) obj).floatValue());
+                tabletVoicePage$lambda$329 = SettingsActivity.tabletVoicePage$lambda$329(((Number) obj).floatValue());
                 return tabletVoicePage$lambda$329;
             }
         }, Float.valueOf(1.0f), new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda178
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletVoicePage$lambda$330;
-                tabletVoicePage$lambda$330 = SettingsActivity.tabletVoicePage$lambda$330(((Float) obj).floatValue());
+                tabletVoicePage$lambda$330 = SettingsActivity.tabletVoicePage$lambda$330(((Number) obj).floatValue());
                 return tabletVoicePage$lambda$330;
             }
         }, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda179
@@ -9129,14 +9129,14 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 String tabletVoicePage$lambda$332;
-                tabletVoicePage$lambda$332 = SettingsActivity.tabletVoicePage$lambda$332(((Float) obj).floatValue());
+                tabletVoicePage$lambda$332 = SettingsActivity.tabletVoicePage$lambda$332(((Number) obj).floatValue());
                 return tabletVoicePage$lambda$332;
             }
         }, Float.valueOf(1.0f), new Function1() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda163
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabletVoicePage$lambda$333;
-                tabletVoicePage$lambda$333 = SettingsActivity.tabletVoicePage$lambda$333(((Float) obj).floatValue());
+                tabletVoicePage$lambda$333 = SettingsActivity.tabletVoicePage$lambda$333(((Number) obj).floatValue());
                 return tabletVoicePage$lambda$333;
             }
         }, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda164
@@ -10704,7 +10704,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382$lambda$380;
-                tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382$lambda$380 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382$lambda$380($v, this$0, $status, ((Long) obj).longValue(), ((Long) obj2).longValue());
+                tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382$lambda$380 = SettingsActivity.tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382$lambda$380($v, this$0, $status, ((Number) obj).longValue(), ((Number) obj2).longValue());
                 return tabletVoiceStudioPage$lambda$397$lambda$383$lambda$382$lambda$380;
             }
         });

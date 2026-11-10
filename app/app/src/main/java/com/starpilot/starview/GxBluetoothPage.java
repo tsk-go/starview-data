@@ -142,14 +142,14 @@ public final class GxBluetoothPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$0;
-                build$lambda$0 = GxBluetoothPage.build$lambda$0(GxBluetoothPage.this, ((Integer) obj).intValue());
+                build$lambda$0 = GxBluetoothPage.build$lambda$0(GxBluetoothPage.this, ((Number) obj).intValue());
                 return build$lambda$0;
             }
         }, new Function2() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda17
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit build$lambda$1;
-                build$lambda$1 = GxBluetoothPage.build$lambda$1(GxBluetoothPage.this, ((Integer) obj).intValue(), (LinearLayout) obj2);
+                build$lambda$1 = GxBluetoothPage.build$lambda$1(GxBluetoothPage.this, ((Number) obj).intValue(), (LinearLayout) obj2);
                 return build$lambda$1;
             }
         }, 2, null);
@@ -1254,10 +1254,10 @@ public final class GxBluetoothPage extends GxPage {
                             var9 = this.eventName(var14);
                             StringBuilder var62;
                             if (var14.optBoolean("mapped")) {
-                                var8 = (String)var14.opt("slot");
+                                Object var8s = var14.opt("slot");
                                 Object var34;
-                                if (var8 instanceof Number) {
-                                    var34 = (Number)var8;
+                                if (var8s instanceof Number) {
+                                    var34 = (Number)var8s;
                                 } else {
                                     var34 = null;
                                 }
