@@ -71,7 +71,7 @@ public final class GxGalaxyPage extends GxPage {
             @Override // kotlin.jvm.functions.Function3
             public final Object invoke(Object obj, Object obj2, Object obj3) {
                 Unit loadPair$lambda$2;
-                loadPair$lambda$2 = GxGalaxyPage.loadPair$lambda$2(GxGalaxyPage.this, ((Integer) obj).intValue(), (String) obj2, (String) obj3);
+                loadPair$lambda$2 = GxGalaxyPage.loadPair$lambda$2(GxGalaxyPage.this, ((Number) obj).intValue(), (String) obj2, (String) obj3);
                 return loadPair$lambda$2;
             }
         }, 12, null);

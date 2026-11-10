@@ -2148,7 +2148,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit paintAdv$lambda$74$lambda$70$lambda$69;
-                paintAdv$lambda$74$lambda$70$lambda$69 = GxSystemPage.paintAdv$lambda$74$lambda$70$lambda$69(this$0, $ob, ((Integer) obj).intValue());
+                paintAdv$lambda$74$lambda$70$lambda$69 = GxSystemPage.paintAdv$lambda$74$lambda$70$lambda$69(this$0, $ob, ((Number) obj).intValue());
                 return paintAdv$lambda$74$lambda$70$lambda$69;
             }
         });

@@ -1182,21 +1182,22 @@ public final class MapPane extends FrameLayout {
         int var6 = Nav.INSTANCE.faster();
         Iterator var57 = Nav.INSTANCE.getRoutes().iterator();
 
+        Object var9r;
         do {
             if (!var57.hasNext()) {
-                var9 = (String)var12;
+                var9r = var12;
                 break;
             }
 
-            var9 = (String)var57.next();
-            if (((Nav.Route)(Object)var9).getIndex() == var6) {
+            var9r = var57.next();
+            if (((Nav.Route)var9r).getIndex() == var6) {
                 var21 = true;
             } else {
                 var21 = false;
             }
         } while (!var21);
 
-        Nav.Route var58 = (Nav.Route)(Object)var9;
+        Nav.Route var58 = (Nav.Route)var9r;
         var12 = Nav.INSTANCE.getRoute();
         var9 = var11;
         if (var58 != null) {

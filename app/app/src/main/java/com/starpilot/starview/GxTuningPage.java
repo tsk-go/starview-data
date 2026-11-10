@@ -313,14 +313,14 @@ public final class GxTuningPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$0;
-                build$lambda$0 = GxTuningPage.build$lambda$0(GxTuningPage.this, ((Integer) obj).intValue());
+                build$lambda$0 = GxTuningPage.build$lambda$0(GxTuningPage.this, ((Number) obj).intValue());
                 return build$lambda$0;
             }
         }, new Function2() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda60
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit build$lambda$1;
-                build$lambda$1 = GxTuningPage.build$lambda$1(GxTuningPage.this, ((Integer) obj).intValue(), (LinearLayout) obj2);
+                build$lambda$1 = GxTuningPage.build$lambda$1(GxTuningPage.this, ((Number) obj).intValue(), (LinearLayout) obj2);
                 return build$lambda$1;
             }
         }, 2, null);
@@ -1833,7 +1833,7 @@ public final class GxTuningPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence curveStr$lambda$74;
-                curveStr$lambda$74 = GxTuningPage.curveStr$lambda$74(GxTuningPage.this, a, ((Integer) obj).intValue());
+                curveStr$lambda$74 = GxTuningPage.curveStr$lambda$74(GxTuningPage.this, a, ((Number) obj).intValue());
                 return curveStr$lambda$74;
             }
         }) + "]";
@@ -2827,7 +2827,7 @@ public final class GxTuningPage extends GxPage {
             @Override // kotlin.jvm.functions.Function3
             public final Object invoke(Object obj, Object obj2, Object obj3) {
                 Unit loadRoutes$lambda$122;
-                loadRoutes$lambda$122 = GxTuningPage.loadRoutes$lambda$122(GxTuningPage.this, ((Integer) obj).intValue(), (String) obj2, (String) obj3);
+                loadRoutes$lambda$122 = GxTuningPage.loadRoutes$lambda$122(GxTuningPage.this, ((Number) obj).intValue(), (String) obj2, (String) obj3);
                 return loadRoutes$lambda$122;
             }
         });
@@ -5087,7 +5087,7 @@ public final class GxTuningPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit paintTg$lambda$182$lambda$181;
-                paintTg$lambda$182$lambda$181 = GxTuningPage.paintTg$lambda$182$lambda$181(this$0, $selectable, ((Integer) obj).intValue());
+                paintTg$lambda$182$lambda$181 = GxTuningPage.paintTg$lambda$182$lambda$181(this$0, $selectable, ((Number) obj).intValue());
                 return paintTg$lambda$182$lambda$181;
             }
         });

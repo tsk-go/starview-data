@@ -300,7 +300,7 @@ public final class SideCam {
                 @Override // kotlin.jvm.functions.Function2
                 public final Object invoke(Object obj, Object obj2) {
                     Unit tick$lambda$1;
-                    tick$lambda$1 = SideCam.tick$lambda$1(((Integer) obj).intValue(), ((Integer) obj2).intValue());
+                    tick$lambda$1 = SideCam.tick$lambda$1(((Number) obj).intValue(), ((Number) obj2).intValue());
                     return tick$lambda$1;
                 }
             });

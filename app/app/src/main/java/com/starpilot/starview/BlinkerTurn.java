@@ -85,11 +85,11 @@ public final class BlinkerTurn {
         Intrinsics.checkNotNullParameter(var2, "our");
         double var10 = Math.cos(var7);
         double var14 = Math.sin(var7);
-        Iterable var29 = var1;
+        Object var29 = var1;
         var var28 = new ArrayList();
 
         for (Object var29$it : (Iterable) var29) {
-            var29 = (Iterable) var29$it;
+            var29 = var29$it;
             boolean var41;
             label200: {
                 OsmRoads.Way var30 = (OsmRoads.Way)(Object)var29;

@@ -934,19 +934,10 @@ public final class GxHomePage extends GxPage {
                     var304 = (String)var226.component1();
                     var256 = var219.optJSONObject((String)var226.component2());
                     if (var256 != null) {
-                        var25 = (String)var256.opt("value");
-                        if (var25 != null) {
-                            if (Intrinsics.areEqual(var25, JSONObject.NULL)) {
-                                var25 = null;
-                            }
-
-                            if (var25 != null) {
-                                var27 = var25.toString();
-                                var25 = ((String) var27);
-                                if (var27 != null) {
-                                    break label480;
-                                }
-                            }
+                        Object var25v = var256.opt("value");
+                        if (var25v != null && !Intrinsics.areEqual(var25v, JSONObject.NULL)) {
+                            var25 = var25v.toString();
+                            break label480;
                         }
                     }
 
@@ -955,20 +946,10 @@ public final class GxHomePage extends GxPage {
 
                 label472: {
                     if (var256 != null) {
-                        var29 = (LinearLayout)var256.opt("detail");
-                        if (var29 != null) {
-                            var27 = var29;
-                            if (Intrinsics.areEqual(var29, JSONObject.NULL)) {
-                                var27 = null;
-                            }
-
-                            if (var27 != null) {
-                                String var258 = var27.toString();
-                                var27 = var258;
-                                if (var258 != null) {
-                                    break label472;
-                                }
-                            }
+                        Object var29d = var256.opt("detail");
+                        if (var29d != null && !Intrinsics.areEqual(var29d, JSONObject.NULL)) {
+                            var27 = var29d.toString();
+                            break label472;
                         }
                     }
 

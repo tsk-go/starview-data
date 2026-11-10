@@ -183,14 +183,14 @@ public final class GxLogsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$0;
-                build$lambda$0 = GxLogsPage.build$lambda$0(GxLogsPage.this, ((Integer) obj).intValue());
+                build$lambda$0 = GxLogsPage.build$lambda$0(GxLogsPage.this, ((Number) obj).intValue());
                 return build$lambda$0;
             }
         }, new Function2() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda2
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit build$lambda$1;
-                build$lambda$1 = GxLogsPage.build$lambda$1(GxLogsPage.this, ((Integer) obj).intValue(), (LinearLayout) obj2);
+                build$lambda$1 = GxLogsPage.build$lambda$1(GxLogsPage.this, ((Number) obj).intValue(), (LinearLayout) obj2);
                 return build$lambda$1;
             }
         });
@@ -1512,7 +1512,7 @@ public final class GxLogsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildMonitor$lambda$69;
-                buildMonitor$lambda$69 = GxLogsPage.buildMonitor$lambda$69(GxLogsPage.this, scopes, ((Integer) obj).intValue());
+                buildMonitor$lambda$69 = GxLogsPage.buildMonitor$lambda$69(GxLogsPage.this, scopes, ((Number) obj).intValue());
                 return buildMonitor$lambda$69;
             }
         });

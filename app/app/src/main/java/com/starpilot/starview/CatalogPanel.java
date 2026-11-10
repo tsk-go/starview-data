@@ -1533,7 +1533,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildLongitudinalMode$lambda$75;
-                buildLongitudinalMode$lambda$75 = CatalogPanel.buildLongitudinalMode$lambda$75(CatalogPanel.this, ((Integer) obj).intValue());
+                buildLongitudinalMode$lambda$75 = CatalogPanel.buildLongitudinalMode$lambda$75(CatalogPanel.this, ((Number) obj).intValue());
                 return buildLongitudinalMode$lambda$75;
             }
         });

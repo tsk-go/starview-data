@@ -1469,7 +1469,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit onCreate$lambda$71;
-                onCreate$lambda$71 = MainActivity.onCreate$lambda$71(MainActivity.this, ((Integer) obj).intValue(), ((Integer) obj2).intValue());
+                onCreate$lambda$71 = MainActivity.onCreate$lambda$71(MainActivity.this, ((Number) obj).intValue(), ((Number) obj2).intValue());
                 return onCreate$lambda$71;
             }
         });
@@ -1500,7 +1500,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit onCreate$lambda$75;
-                onCreate$lambda$75 = MainActivity.onCreate$lambda$75(((Integer) obj).intValue(), ((Integer) obj2).intValue());
+                onCreate$lambda$75 = MainActivity.onCreate$lambda$75(((Number) obj).intValue(), ((Number) obj2).intValue());
                 return onCreate$lambda$75;
             }
         });
@@ -1525,7 +1525,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit onCreate$lambda$79;
-                onCreate$lambda$79 = MainActivity.onCreate$lambda$79(((Integer) obj).intValue(), ((Integer) obj2).intValue());
+                onCreate$lambda$79 = MainActivity.onCreate$lambda$79(((Number) obj).intValue(), ((Number) obj2).intValue());
                 return onCreate$lambda$79;
             }
         });

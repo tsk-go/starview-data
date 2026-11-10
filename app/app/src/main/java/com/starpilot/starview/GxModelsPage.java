@@ -117,7 +117,7 @@ public final class GxModelsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$1;
-                build$lambda$1 = GxModelsPage.build$lambda$1(GxModelsPage.this, ((Integer) obj).intValue());
+                build$lambda$1 = GxModelsPage.build$lambda$1(GxModelsPage.this, ((Number) obj).intValue());
                 return build$lambda$1;
             }
         }, 16, null);
@@ -126,7 +126,7 @@ public final class GxModelsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$3;
-                build$lambda$3 = GxModelsPage.build$lambda$3(GxModelsPage.this, listOf, ((Integer) obj).intValue());
+                build$lambda$3 = GxModelsPage.build$lambda$3(GxModelsPage.this, listOf, ((Number) obj).intValue());
                 return build$lambda$3;
             }
         }, 16, null);
@@ -135,7 +135,7 @@ public final class GxModelsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$4;
-                build$lambda$4 = GxModelsPage.build$lambda$4(GxModelsPage.this, listOf2, ((Integer) obj).intValue());
+                build$lambda$4 = GxModelsPage.build$lambda$4(GxModelsPage.this, listOf2, ((Number) obj).intValue());
                 return build$lambda$4;
             }
         }, 16, null);
@@ -143,7 +143,7 @@ public final class GxModelsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$5;
-                build$lambda$5 = GxModelsPage.build$lambda$5(GxModelsPage.this, listOf2, ((Integer) obj).intValue());
+                build$lambda$5 = GxModelsPage.build$lambda$5(GxModelsPage.this, listOf2, ((Number) obj).intValue());
                 return build$lambda$5;
             }
         }, 16, null);
@@ -1124,7 +1124,7 @@ public final class GxModelsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit renderControls$lambda$45$lambda$44;
-                renderControls$lambda$45$lambda$44 = GxModelsPage.renderControls$lambda$45$lambda$44($small, this$0, ((Integer) obj).intValue());
+                renderControls$lambda$45$lambda$44 = GxModelsPage.renderControls$lambda$45$lambda$44($small, this$0, ((Number) obj).intValue());
                 return renderControls$lambda$45$lambda$44;
             }
         });
@@ -1168,7 +1168,7 @@ public final class GxModelsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit renderControls$lambda$49$lambda$48;
-                renderControls$lambda$49$lambda$48 = GxModelsPage.renderControls$lambda$49$lambda$48(this$0, $big, ((Integer) obj).intValue());
+                renderControls$lambda$49$lambda$48 = GxModelsPage.renderControls$lambda$49$lambda$48(this$0, $big, ((Number) obj).intValue());
                 return renderControls$lambda$49$lambda$48;
             }
         });

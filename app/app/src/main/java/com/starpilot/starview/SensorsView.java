@@ -206,10 +206,10 @@ public final class SensorsView extends View {
                 if (this.anchor == null) {
                     Collection var23 = var1.getGpsFixes().values();
                     Intrinsics.checkNotNullExpressionValue(var23, "<get-values>(...)");
-                    Iterable var44 = var23;
+                    Object var44 = var23;
                     var var24 = new ArrayList();
 
-                    for (Object var52 : var44) {
+                    for (Object var52 : (Iterable) var44) {
                         GpsFixInfo var45 = (GpsFixInfo)var52;
                         if (Intrinsics.areEqual(var45.getService(), "gpsLocationExternal")
                             && var45.getHasFix()
@@ -237,8 +237,8 @@ public final class SensorsView extends View {
                             int var13 = Intrinsics.areEqual(((GpsFixInfo)var27).getSource(), "ublox") ? 0 : 1;
 
                             while (true) {
-                                var44 = (Iterable)var53.next();
-                                int var14 = Intrinsics.areEqual(((GpsFixInfo)(Object)var44).getSource(), "ublox") ? 0 : 1;
+                                var44 = var53.next();
+                                int var14 = Intrinsics.areEqual(((GpsFixInfo)var44).getSource(), "ublox") ? 0 : 1;
                                 var12 = var13;
                                 if (var13 > var14) {
                                     var27 = var44;
@@ -315,7 +315,7 @@ public final class SensorsView extends View {
                         this.lastAdd.put(((String) var18), var2);
                         Map var22 = this.trails;
                         String var54 = var51.getSource();
-                        var18 = (String)var22.get(var54);
+                        var18 = var22.get(var54);
                         if (var18 == null) {
                             var18 = new ArrayList();
                             var22.put(var54, var18);
@@ -549,9 +549,9 @@ public final class SensorsView extends View {
                                     Iterator var30 = this.trails.keySet().iterator();
 
                                     for (var8 += var12 * var9; var30.hasNext(); var8 += this.d * var15) {
-                                        var23 = (Collection)var30.next();
-                                        Intrinsics.checkNotNullExpressionValue(var23, "next(...)");
-                                        String var73 = (String)(Object)var23;
+                                        Object var23k = var30.next();
+                                        Intrinsics.checkNotNullExpressionValue(var23k, "next(...)");
+                                        String var73 = (String)var23k;
                                         Paint var83 = this.fill;
                                         Integer var88 = this.colors.get(var73);
                                         if (var88 != null) {
