@@ -80,18 +80,8 @@ public final class CatalogPanel extends ScrollView {
     private static final List<String> SPEED_RANGES_IMP = CollectionsKt.listOf(new String[]{"0–24", "25–34", "35–44", "45–54", "55–64", "65–74", "75–99"});
     private static final List<String> SPEED_RANGES_MET = CollectionsKt.listOf(new String[]{"0–29", "30–49", "50–59", "60–79", "80–99", "100–119", "120–140"});
 
-    /* JADX WARN: Illegal instructions before constructor call */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public /* synthetic */ CatalogPanel(Activity activity, GalaxyApi galaxyApi, List list, String str, boolean z, Function1 function1, int i, DefaultConstructorMarker defaultConstructorMarker) {
-        this(activity, galaxyApi, list, str, r5, function1);
-        boolean z2;
-        if ((i & 16) == 0) {
-            z2 = z;
-        } else {
-            z2 = false;
-        }
+        this(activity, galaxyApi, list, str, (i & 16) != 0 ? false : z, function1);
     }
 
     /* VF: from Vineflower (jadx: ) */

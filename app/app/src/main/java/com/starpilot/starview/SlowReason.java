@@ -103,18 +103,8 @@ public final class SlowReason {
             this.trackingLead = trackingLead;
         }
 
-        /* JADX WARN: Illegal instructions before constructor call */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
         public /* synthetic */ In(boolean z, float f, float f2, float f3, boolean z2, boolean z3, String str, boolean z4, Lead lead, Lead lead2, boolean z5, boolean z6, float f4, boolean z7, boolean z8, float f5, boolean z9, float f6, float f7, float f8, String str2, float f9, float f10, boolean z10, boolean z11, boolean z12, boolean z13, int i, DefaultConstructorMarker defaultConstructorMarker) {
-            this(z, f, f2, f3, z2, z3, str, z4, lead, lead2, z5, z6, f4, z7, z8, f5, z9, f6, f7, f8, str2, f9, f10, z10, z11, z12, r28);
-            boolean z14;
-            if ((i & 67108864) == 0) {
-                z14 = z13;
-            } else {
-                z14 = false;
-            }
+            this(z, f, f2, f3, z2, z3, str, z4, lead, lead2, z5, z6, f4, z7, z8, f5, z9, f6, f7, f8, str2, f9, f10, z10, z11, z12, (i & 67108864) != 0 ? false : z13);
         }
 
         public final float getATarget() {

@@ -25,25 +25,15 @@ public final class GalaxyWeb extends LinearLayout {
     private final TextView placeholder;
     private final CarUi ui;
 
-    /* JADX WARN: Illegal instructions before constructor call */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public /* synthetic */ GalaxyWeb(Context context, CarUi carUi, String str, String str2, String str3, Function0 function0, int i, DefaultConstructorMarker defaultConstructorMarker) {
-        this(context, carUi, str, str2, str3, r6);
-        Function0 function02;
-        if ((i & 32) == 0) {
-            function02 = function0;
-        } else {
-            function02 = new Function0() { // from class: com.starpilot.starview.GalaxyWeb$$ExternalSyntheticLambda0
+        this(context, carUi, str, str2, str3, (i & 32) != 0 ? new Function0() { // from class: com.starpilot.starview.GalaxyWeb$$ExternalSyntheticLambda0
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     boolean _init_$lambda$0;
                     _init_$lambda$0 = GalaxyWeb._init_$lambda$0();
                     return Boolean.valueOf(_init_$lambda$0);
                 }
-            };
-        }
+            } : function0);
     }
 
     /* VF: from Vineflower (jadx: ) */

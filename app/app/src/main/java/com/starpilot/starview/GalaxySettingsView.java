@@ -109,24 +109,8 @@ public final class GalaxySettingsView extends FrameLayout {
         }
     }
 
-    /* JADX WARN: Illegal instructions before constructor call */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public /* synthetic */ GalaxySettingsView(Context context, CarUi carUi, Root root, Function2 function2, Function1 function1, Function2 function22, int i, DefaultConstructorMarker defaultConstructorMarker) {
-        this(context, carUi, root, function2, r7, r8);
-        Function1 function12;
-        Function2 function23;
-        if ((i & 16) == 0) {
-            function12 = function1;
-        } else {
-            function12 = null;
-        }
-        if ((i & 32) == 0) {
-            function23 = function22;
-        } else {
-            function23 = null;
-        }
+        this(context, carUi, root, function2, (i & 16) != 0 ? null : function1, (i & 32) != 0 ? null : function22);
     }
 
     /* compiled from: GalaxySettingsView.kt */

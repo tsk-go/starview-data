@@ -46,19 +46,8 @@ public final class SettingsHomeView extends LinearLayout {
     private final ScrollView resultsScroll;
     private final CarUi ui;
 
-    /* JADX WARN: Illegal instructions before constructor call */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public /* synthetic */ SettingsHomeView(Context context, CarUi carUi, View view, Function0 function0, Function1 function1, Function1 function12, int i, DefaultConstructorMarker defaultConstructorMarker) {
-        this(context, carUi, view, function0, r5, function12);
-        super(var1);
-        Function1 function13;
-        if ((i & 16) == 0) {
-            function13 = function1;
-        } else {
-            function13 = null;
-        }
+        this(context, carUi, view, function0, (i & 16) != 0 ? null : function1, function12);
     }
 
     /* VF: from Vineflower (jadx: ) */
