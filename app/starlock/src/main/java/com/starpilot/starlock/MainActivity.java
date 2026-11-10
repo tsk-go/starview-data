@@ -922,6 +922,13 @@ public final class MainActivity extends Activity {
             textView6 = null;
         }
         logBox.addView(textView6);
+        LinearLayout updates = onCreate$group(this, $this$onCreate_u24lambda_u2441, openers, muted4, d, rowText, "Updates", new Function0() {
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                return "From GitHub";
+            }
+        });
+        updates.addView(AppUpdateKt.appUpdateViews(this, d, muted4));
         TextView $this$onCreate_u24lambda_u24116 = new TextView(this);
         try {
             Result.Companion companion3 = Result.Companion;

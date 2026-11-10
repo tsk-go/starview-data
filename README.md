@@ -21,6 +21,7 @@ or new code.
 - **StarLock** (the phone's Lock / Unlock, `app/starlock`): recovered the same way from StarLock 2.19 and released as
   `starlock-v<versionName>` (`StarLock-<versionName>.apk`) by the same workflow, signed with the same key. Its library
   dex files rebuild byte-identical to 2.19's; only the app's own code differs (decompiled, then checked against 2.19).
+  From 2.19.1 it updates itself the same way: Updates › Check for updates.
 - **Local build:** `cd app && ./gradlew :app:assembleDebug :starlock:assembleDebug` (needs the Android SDK in
   `local.properties` or `ANDROID_HOME`).
 
