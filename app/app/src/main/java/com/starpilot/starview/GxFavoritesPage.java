@@ -1234,8 +1234,8 @@ public final class GxFavoritesPage extends GxPage {
                 break;
             }
 
-            var20 = (GalaxyApi.Category)var7.previous();
-            var var8 = var20.getParams();
+            GalaxyApi.Category var20ss = (GalaxyApi.Category)var7.previous();
+            var var8 = var20ss.getParams();
             if (var8 instanceof Collection && ((Collection)var8).isEmpty()) {
                 var2 = false;
             } else {
@@ -1265,8 +1265,8 @@ public final class GxFavoritesPage extends GxPage {
                         break;
                     }
 
-                    var20 = (GalaxyApi.Category)var24.previous();
-                    var var28 = var20.getParams();
+                    GalaxyApi.Category var20s = (GalaxyApi.Category)var24.previous();
+                    var var28 = var20s.getParams();
                     if (var28 instanceof Collection && ((Collection)var28).isEmpty()) {
                         var2 = false;
                     } else {
