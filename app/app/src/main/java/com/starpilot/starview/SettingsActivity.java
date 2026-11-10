@@ -2451,10 +2451,11 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 LinearLayout col2 = col;
                 FrameLayout holder2 = holder;
                 final TextView v = carUi14.railItem(r.getLabel(), ic.getName(), ic.getGroup());
+                final var settingsActivity$f3 = settingsActivity;
                 v.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda210
                     @Override // android.view.View.OnClickListener
                     public final void onClick(View view2) {
-                        SettingsActivity.showArea$lambda$75(items, settingsActivity, v, r, view2);
+                        SettingsActivity.showArea$lambda$75(items, settingsActivity$f3, v, r, view2);
                     }
                 });
                 items.add(TuplesKt.to(v, r));
@@ -5248,11 +5249,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             } else {
                 carUi5 = carUi16;
             }
+            final var mine2$f = mine2;
             rs.addView(CarUi.button$default(carUi5, "Update all", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda201
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletMapsPage$refresh$lambda$182;
-                    tabletMapsPage$refresh$lambda$182 = SettingsActivity.tabletMapsPage$refresh$lambda$182(mine2);
+                    tabletMapsPage$refresh$lambda$182 = SettingsActivity.tabletMapsPage$refresh$lambda$182(mine2$f);
                     return tabletMapsPage$refresh$lambda$182;
                 }
             }, 2, null));
@@ -9462,11 +9464,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             } else {
                 carUi6 = carUi9;
             }
+            final var settingsActivity$f2 = settingsActivity;
             r.addView(CarUi.button$default(carUi6, "▶ Play", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda123
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$340;
-                    tabletVoicePage$fill$lambda$340 = SettingsActivity.tabletVoicePage$fill$lambda$340(p, list, settingsActivity, str);
+                    tabletVoicePage$fill$lambda$340 = SettingsActivity.tabletVoicePage$fill$lambda$340(p, list, settingsActivity$f2, str);
                     return tabletVoicePage$fill$lambda$340;
                 }
             }, 2, null));
@@ -9476,11 +9479,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 Intrinsics.throwUninitializedPropertyAccessException("ui");
                 carUi10 = null;
             }
+            final var settingsActivity$f1 = settingsActivity;
             r.addView(carUi10.button(chosen ? "In use" : "Use", chosen, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda124
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$341;
-                    tabletVoicePage$fill$lambda$341 = SettingsActivity.tabletVoicePage$fill$lambda$341(p, list, settingsActivity, str);
+                    tabletVoicePage$fill$lambda$341 = SettingsActivity.tabletVoicePage$fill$lambda$341(p, list, settingsActivity$f1, str);
                     return tabletVoicePage$fill$lambda$341;
                 }
             }));
@@ -9492,11 +9496,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             } else {
                 carUi7 = carUi11;
             }
+            final var str$f2 = str;
             r.addView(CarUi.button$default(carUi7, "Delete", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda125
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$343;
-                    tabletVoicePage$fill$lambda$343 = SettingsActivity.tabletVoicePage$fill$lambda$343(this$0, p, list, str);
+                    tabletVoicePage$fill$lambda$343 = SettingsActivity.tabletVoicePage$fill$lambda$343(this$0, p, list, str$f2);
                     return tabletVoicePage$fill$lambda$343;
                 }
             }, 2, null));
@@ -9541,11 +9546,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 Intrinsics.throwUninitializedPropertyAccessException("ui");
                 carUi14 = null;
             }
+            final var str$f1 = str;
             ra.addView(carUi14.button("Install…", packs.isEmpty(), new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda126
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$348;
-                    tabletVoicePage$fill$lambda$348 = SettingsActivity.tabletVoicePage$fill$lambda$348(this$0, list, str);
+                    tabletVoicePage$fill$lambda$348 = SettingsActivity.tabletVoicePage$fill$lambda$348(this$0, list, str$f1);
                     return tabletVoicePage$fill$lambda$348;
                 }
             }));
@@ -9632,11 +9638,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             } else {
                 carUi3 = carUi24;
             }
+            final var str$f = str;
             r2.addView(CarUi.button$default(carUi3, "▶ Play", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda128
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$350;
-                    tabletVoicePage$fill$lambda$350 = SettingsActivity.tabletVoicePage$fill$lambda$350(v, str);
+                    tabletVoicePage$fill$lambda$350 = SettingsActivity.tabletVoicePage$fill$lambda$350(v, str$f);
                     return tabletVoicePage$fill$lambda$350;
                 }
             }, 2, null));
@@ -9647,11 +9654,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 carUi25 = null;
             }
             LinearLayout rs2 = rs;
+            final var settingsActivity$f = settingsActivity;
             r2.addView(carUi25.button(chosen2 ? "In use" : "Use", chosen2, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda129
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$351;
-                    tabletVoicePage$fill$lambda$351 = SettingsActivity.tabletVoicePage$fill$lambda$351(v, list, settingsActivity, str);
+                    tabletVoicePage$fill$lambda$351 = SettingsActivity.tabletVoicePage$fill$lambda$351(v, list, settingsActivity$f, str);
                     return tabletVoicePage$fill$lambda$351;
                 }
             }));

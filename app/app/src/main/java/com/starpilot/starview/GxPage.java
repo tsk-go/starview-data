@@ -789,10 +789,11 @@ public abstract class GxPage extends FrameLayout {
         if (str2 == null && (str2 = uri.getLastPathSegment()) == null) {
             str2 = "file";
         }
+        final var str2$f = str2;
         gxPage.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda24
             @Override // java.lang.Runnable
             public final void run() {
-                GxPage.readUri$lambda$24$lambda$23(gxPage, function2, bArr2, str2);
+                GxPage.readUri$lambda$24$lambda$23(gxPage, function2, bArr2, str2$f);
             }
         });
     }

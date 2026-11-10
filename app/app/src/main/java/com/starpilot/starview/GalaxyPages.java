@@ -68,10 +68,11 @@ public final class GalaxyPages {
                 h = null;
             }
             if (h != null) {
+                final var h$f = h;
                 main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyPages$$ExternalSyntheticLambda2
                     @Override // java.lang.Runnable
                     public final void run() {
-                        GalaxyPages.get$lambda$2$lambda$1(done, h);
+                        GalaxyPages.get$lambda$2$lambda$1(done, h$f);
                     }
                 });
                 return;

@@ -615,8 +615,9 @@ public final class DoorsBeltsView extends CardPage {
                         if (var18 != null && var18.length() != 0) {
                             Iterator var123 = var18.keys();
                             Intrinsics.checkNotNullExpressionValue(var123, var107);
+                            final var var18$f = var18;
                             Iterable var130 = CollectionsKt.sortedWith(SequencesKt.toList(SequencesKt.asSequence(var123)), new Comparator() {
-                                final JSONObject $c$inlined = var18;
+                                final JSONObject $c$inlined = var18$f;
 
                                 @Override
                                 public final int compare(Object var1, Object var2) {

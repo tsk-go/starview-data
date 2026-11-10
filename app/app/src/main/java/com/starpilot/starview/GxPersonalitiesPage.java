@@ -2093,10 +2093,11 @@ public final class GxPersonalitiesPage extends GxPage {
         Switch sw = getUi().bigSwitch();
         sw.setChecked(enabled(this.vals.get(pk)));
         sw.setEnabled(!paramLocked(pk));
+        final var pk$f = pk;
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda0
             @Override // android.widget.CompoundButton.OnCheckedChangeListener
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z2) {
-                GxPersonalitiesPage.renderProfile$lambda$61(GxPersonalitiesPage.this, pk, compoundButton, z2);
+                GxPersonalitiesPage.renderProfile$lambda$61(GxPersonalitiesPage.this, pk$f, compoundButton, z2);
             }
         });
         top2.addView(sw);
@@ -2142,11 +2143,12 @@ public final class GxPersonalitiesPage extends GxPage {
         }
         Object obj2 = "following";
         boolean open2 = this.advancedOpen.contains(p);
+        final var open2$f = open2;
         TextView adv = CarUi.button$default(getUi(), open2 ? "Advanced  ▲" : "Advanced  ▼", false, new Function0() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda22
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit renderProfile$lambda$64;
-                renderProfile$lambda$64 = GxPersonalitiesPage.renderProfile$lambda$64(open2, GxPersonalitiesPage.this, p);
+                renderProfile$lambda$64 = GxPersonalitiesPage.renderProfile$lambda$64(open2$f, GxPersonalitiesPage.this, p);
                 return renderProfile$lambda$64;
             }
         }, 2, null);

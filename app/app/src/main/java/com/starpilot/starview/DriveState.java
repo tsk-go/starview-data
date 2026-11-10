@@ -201,11 +201,12 @@ public final class DriveState {
         }
         final Handler main = new Handler(Looper.getMainLooper());
         restarting = true;
+        final var back$f = back;
         d.request("drive_state", MapsKt.mapOf(TuplesKt.to("mode", "offroad")), new Function1() { // from class: com.starpilot.starview.DriveState$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit restart$lambda$4;
-                restart$lambda$4 = DriveState.restart$lambda$4(act, main, then, back, (JSONObject) obj);
+                restart$lambda$4 = DriveState.restart$lambda$4(act, main, then, back$f, (JSONObject) obj);
                 return restart$lambda$4;
             }
         });

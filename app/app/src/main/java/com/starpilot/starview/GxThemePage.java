@@ -3494,9 +3494,10 @@ public final class GxThemePage extends GxPage {
             var17.setThumbTintList(ColorStateList.valueOf(-1));
             var17.setProgressTintList(ColorStateList.valueOf(0));
             var17.setProgressBackgroundTintList(ColorStateList.valueOf(0));
+            final var var2$f = var2;
             var17.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
                 final float[] $hsv = var10;
-                final int $i = var2;
+                final int $i = var2$f;
                 final ObjectRef<Function1<Boolean, Unit>> $paint = var26;
 
                 public void onProgressChanged(SeekBar var1, int var2x, boolean var3x) {
