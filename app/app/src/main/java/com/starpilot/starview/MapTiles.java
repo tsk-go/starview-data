@@ -257,6 +257,7 @@ public final class MapTiles {
         }
         try {
             Response execute = this.mapbox.newCall(new Request.Builder().url("https://api.mapbox.com/styles/v1/" + id + "/tiles/512/" + z + "/" + x + "/" + y + "?access_token=" + key).build()).execute();
+            Throwable execute$c = null;
             try {
                 Response r = execute;
                 if (r.code() != 401 && r.code() != 403 && r.code() != 429) {
@@ -265,14 +266,16 @@ public final class MapTiles {
                     } else {
                         this.direct.incrementAndGet();
                     }
-                    CloseableKt.closeFinally(execute, null);
                     return bArr;
                 }
                 this.directDownUntil = System.currentTimeMillis() + 300000;
                 bArr = null;
-                CloseableKt.closeFinally(execute, null);
                 return bArr;
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         } catch (IOException e) {
             this.directDownUntil = System.currentTimeMillis() + 60000;
@@ -338,13 +341,13 @@ public final class MapTiles {
                 }
                 try {
                     Response execute = $this$load_u24lambda_u248.http.newCall(new Request.Builder().url("http://" + h + ":8090/nav/tile/" + style + "/" + z + "/" + x + "/" + y + ".png").build()).execute();
+                    Throwable execute$c = null;
                     try {
                         Response r = execute;
                         if (r.isSuccessful()) {
                             ResponseBody body = r.body();
                             if (body != null) {
                                 bytes = body.bytes();
-                                CloseableKt.closeFinally(execute, null);
                                 fromMapbox = bytes;
                             }
                         } else {
@@ -355,9 +358,12 @@ public final class MapTiles {
                             $this$load_u24lambda_u248.lastError = str;
                         }
                         bytes = null;
-                        CloseableKt.closeFinally(execute, null);
                         fromMapbox = bytes;
+                    } catch (Throwable execute$t) {
+                        execute$c = execute$t;
+                        throw execute$t;
                     } finally {
+                        CloseableKt.closeFinally(execute, execute$c);
                     }
                 } catch (Exception e2) {
                     e = e2;

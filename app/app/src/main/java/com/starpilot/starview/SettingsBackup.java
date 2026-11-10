@@ -337,11 +337,15 @@ public final class SettingsBackup {
                 Cursor query = ctx.getContentResolver().query(u, new String[]{"_id"}, null, null, null);
                 if (query != null) {
                     cursor = query;
+                    Throwable cursor$c = null;
                     try {
                         Cursor it = cursor;
                         bool = Boolean.valueOf(it.moveToFirst());
-                        CloseableKt.closeFinally(cursor, null);
+                    } catch (Throwable cursor$t) {
+                        cursor$c = cursor$t;
+                        throw cursor$t;
                     } finally {
+                        CloseableKt.closeFinally(cursor, cursor$c);
                     }
                 } else {
                     bool = null;
@@ -414,14 +418,18 @@ public final class SettingsBackup {
             throw new IllegalStateException("can't write " + fileName);
         }
         OutputStream outputStream = openOutputStream;
+        Throwable outputStream$c = null;
         try {
             OutputStream it = outputStream;
             it.write(bytes);
             Unit unit2 = Unit.INSTANCE;
-            CloseableKt.closeFinally(outputStream, null);
             ctx.getSharedPreferences("starview_backup_meta", 0).edit().putString("row_" + fileName, uri.toString()).apply();
             return "Download/StarView/" + fileName;
+        } catch (Throwable outputStream$t) {
+            outputStream$c = outputStream$t;
+            throw outputStream$t;
         } finally {
+            CloseableKt.closeFinally(outputStream, outputStream$c);
         }
     }
 
@@ -454,14 +462,17 @@ public final class SettingsBackup {
         try {
             OutputStream out = fileInputStream;
             fileInputStream = new FileInputStream(src);
+            Throwable fileInputStream$c = null;
             try {
                 FileInputStream it = fileInputStream;
                 ByteStreamsKt.copyTo(it, out, 8192);
-                CloseableKt.closeFinally(fileInputStream, null);
-                CloseableKt.closeFinally(fileInputStream, null);
                 ctx.getSharedPreferences("starview_backup_meta", 0).edit().putString("row_" + name, uri.toString()).apply();
                 return "Download/StarView/" + name;
+            } catch (Throwable fileInputStream$t) {
+                fileInputStream$c = fileInputStream$t;
+                throw fileInputStream$t;
             } finally {
+                CloseableKt.closeFinally(fileInputStream, fileInputStream$c);
             }
         } finally {
         }
@@ -536,6 +547,7 @@ public final class SettingsBackup {
         Cursor query = ctx.getContentResolver().query(MediaStore.Downloads.EXTERNAL_CONTENT_URI, new String[]{"_id", "_display_name"}, "relative_path=?", new String[]{"Download/StarView/"}, null);
         if (query != null) {
             Cursor cursor = query;
+            Throwable cursor$c = null;
             try {
                 Cursor c = cursor;
                 while (c.moveToNext()) {
@@ -545,8 +557,11 @@ public final class SettingsBackup {
                     }
                 }
                 Unit unit = Unit.INSTANCE;
-                CloseableKt.closeFinally(cursor, null);
+            } catch (Throwable cursor$t) {
+                cursor$c = cursor$t;
+                throw cursor$t;
             } finally {
+                CloseableKt.closeFinally(cursor, cursor$c);
             }
         }
         ArrayList $this$map$iv = found;
@@ -665,12 +680,16 @@ public final class SettingsBackup {
             throw new IllegalStateException("can't read the file");
         }
         InputStream inputStream = openInputStream;
+        Throwable inputStream$c = null;
         try {
             InputStream it = inputStream;
             String str = new String(ByteStreamsKt.readBytes(it), Charsets.UTF_8);
-            CloseableKt.closeFinally(inputStream, null);
             return new JSONObject(str);
+        } catch (Throwable inputStream$t) {
+            inputStream$c = inputStream$t;
+            throw inputStream$t;
         } finally {
+            CloseableKt.closeFinally(inputStream, inputStream$c);
         }
     }
 }

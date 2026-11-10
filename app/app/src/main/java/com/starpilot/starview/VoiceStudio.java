@@ -133,6 +133,7 @@ public final class VoiceStudio {
                 return "Couldn't open that file";
             }
             InputStream inputStream = openInputStream;
+            Throwable inputStream$c = null;
             try {
                 InputStream ins2 = inputStream;
                 ZipInputStream zipInputStream = new ZipInputStream(ins2 instanceof BufferedInputStream ? (BufferedInputStream) ins2 : new BufferedInputStream(ins2, 8192));
@@ -203,7 +204,6 @@ public final class VoiceStudio {
                 Unit unit = Unit.INSTANCE;
                 CloseableKt.closeFinally(zipInputStream, null);
                 Unit unit2 = Unit.INSTANCE;
-                CloseableKt.closeFinally(inputStream, null);
                 if (!new File(tmp, "lib/libsherpa-onnx-jni.so").isFile() || !new File(tmp, "espeak-ng-data/phontab").isFile()) {
                     FilesKt.deleteRecursively(tmp);
                     return "That zip isn't StarView-Voice-engine.zip";
@@ -213,7 +213,11 @@ public final class VoiceStudio {
                     return null;
                 }
                 return "Couldn't save it";
+            } catch (Throwable inputStream$t) {
+                inputStream$c = inputStream$t;
+                throw inputStream$t;
             } finally {
+                CloseableKt.closeFinally(inputStream, inputStream$c);
             }
         } catch (Exception e2) {
             FilesKt.deleteRecursively(tmp);
@@ -388,6 +392,7 @@ public final class VoiceStudio {
                 parentFile.mkdirs();
             }
             Response execute = getHttp().newCall(new Request.Builder().url("https://huggingface.co/rhasspy/piper-voices/resolve/main/voices.json").build()).execute();
+            Throwable execute$c = null;
             try {
                 Response r = execute;
                 if (!r.isSuccessful()) {
@@ -397,8 +402,11 @@ public final class VoiceStudio {
                 Intrinsics.checkNotNull(body);
                 FilesKt.writeText(f, body.string(), kotlin.text.Charsets.UTF_8);
                 Unit unit = Unit.INSTANCE;
-                CloseableKt.closeFinally(execute, null);
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         }
         JSONObject all = new JSONObject(FilesKt.readText(f, kotlin.text.Charsets.UTF_8));

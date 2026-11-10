@@ -2236,14 +2236,18 @@ public final class GxThemePage extends GxPage {
             OutputStream openOutputStream = gxThemePage.getAct().getContentResolver().openOutputStream(insert);
             if (openOutputStream != null) {
                 OutputStream outputStream = openOutputStream;
+                Throwable outputStream$c = null;
                 try {
                     OutputStream outputStream2 = outputStream;
                     ResponseBody body = response.body();
                     if (body != null && (byteStream = body.byteStream()) != null) {
                         Long.valueOf(ByteStreamsKt.copyTo(byteStream, outputStream2, 8192));
                     }
-                    CloseableKt.closeFinally(outputStream, null);
+                } catch (Throwable outputStream$t) {
+                    outputStream$c = outputStream$t;
+                    throw outputStream$t;
                 } finally {
+                    CloseableKt.closeFinally(outputStream, outputStream$c);
                 }
             }
             CloseableKt.closeFinally(execute, null);

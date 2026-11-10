@@ -88,6 +88,7 @@ public final class City311 {
             String where = "descriptor='Pothole' AND status='Open' AND created_date>'" + since + "' AND latitude between " + s + " and " + (s + 0.01d) + " AND longitude between " + w + " and " + (0.01d + w);
             HttpUrl url = new HttpUrl.Builder().scheme("https").host("data.cityofnewyork.us").addPathSegments("resource/erm2-nwe9.json").addQueryParameter("$select", "latitude,longitude").addQueryParameter("$where", where).addQueryParameter("$limit", "500").build();
             Response execute = INSTANCE.getHttp().newCall(new Request.Builder().url(url).build()).execute();
+            Throwable execute$c = null;
             try {
                 Response r = execute;
                 if (!r.isSuccessful()) {
@@ -96,7 +97,6 @@ public final class City311 {
                 ResponseBody body = r.body();
                 Intrinsics.checkNotNull(body);
                 String body2 = body.string();
-                CloseableKt.closeFinally(execute, null);
                 JSONArray a = new JSONArray(body2);
                 int length = a.length();
                 for (int i = 0; i < length; i++) {
@@ -107,7 +107,11 @@ public final class City311 {
                         IdeaSpots.INSTANCE.record("pothole", la, lo, Double.NaN, Double.NaN, "NYC 311", System.currentTimeMillis(), 8.0d, "nyc311");
                     }
                 }
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         } catch (Exception e2) {
             done.remove($k);

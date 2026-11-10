@@ -1860,6 +1860,7 @@ public final class SceneView extends SurfaceView {
 
     private final ByteBuffer readAsset(String name) {
         InputStream open = getContext().getAssets().open(name);
+        Throwable open$c = null;
         try {
             InputStream s = open;
             Intrinsics.checkNotNull(s);
@@ -1868,9 +1869,12 @@ public final class SceneView extends SurfaceView {
             ByteBuffer it = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder()).put(bytes);
             it.flip();
             Intrinsics.checkNotNullExpressionValue(it, "also(...)");
-            CloseableKt.closeFinally(open, null);
             return it;
+        } catch (Throwable open$t) {
+            open$c = open$t;
+            throw open$t;
         } finally {
+            CloseableKt.closeFinally(open, open$c);
         }
     }
 

@@ -143,6 +143,7 @@ public final class RoadData {
     private final String sha256(File f) {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         FileInputStream fileInputStream = new FileInputStream(f);
+        Throwable fileInputStream$c = null;
         try {
             FileInputStream i = fileInputStream;
             byte[] b = new byte[65536];
@@ -150,7 +151,6 @@ public final class RoadData {
                 int n = i.read(b);
                 if (n < 0) {
                     Unit unit = Unit.INSTANCE;
-                    CloseableKt.closeFinally(fileInputStream, null);
                     byte[] digest = md.digest();
                     Intrinsics.checkNotNullExpressionValue(digest, "digest(...)");
                     return ArraysKt.joinToString(digest, (CharSequence) "", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.RoadData$$ExternalSyntheticLambda0
@@ -164,7 +164,11 @@ public final class RoadData {
                 }
                 md.update(b, 0, n);
             }
+        } catch (Throwable fileInputStream$t) {
+            fileInputStream$c = fileInputStream$t;
+            throw fileInputStream$t;
         } finally {
+            CloseableKt.closeFinally(fileInputStream, fileInputStream$c);
         }
     }
 
@@ -327,6 +331,7 @@ public final class RoadData {
             try {
                 InputStream i2 = inputStream;
                 inputStream = new FileOutputStream(part);
+                Throwable inputStream$c = null;
                 try {
                     FileOutputStream o = inputStream;
                     byte[] b = new byte[65536];
@@ -348,9 +353,7 @@ public final class RoadData {
                         }
                     }
                     Unit unit = Unit.INSTANCE;
-                    CloseableKt.closeFinally(inputStream, null);
                     Unit unit2 = Unit.INSTANCE;
-                    CloseableKt.closeFinally(inputStream, null);
                     if (stop) {
                         part.delete();
                         status = "Stopped.";
@@ -368,7 +371,11 @@ public final class RoadData {
                     i = 1;
                     it4 = it;
                     context = $ctx;
+                } catch (Throwable inputStream$t) {
+                    inputStream$c = inputStream$t;
+                    throw inputStream$t;
                 } finally {
+                    CloseableKt.closeFinally(inputStream, inputStream$c);
                 }
             } finally {
             }
@@ -427,11 +434,10 @@ public final class RoadData {
             try {
                 InputStream i = fileOutputStream;
                 fileOutputStream = new FileOutputStream(tmp);
+                Throwable fileOutputStream$c = null;
                 try {
                     FileOutputStream o = fileOutputStream;
                     ByteStreamsKt.copyTo(i, o, 8192);
-                    CloseableKt.closeFinally(fileOutputStream, null);
-                    CloseableKt.closeFinally(fileOutputStream, null);
                     try {
                         p = new Hpms.Pack(tmp);
                     } catch (Exception e) {
@@ -459,7 +465,11 @@ public final class RoadData {
                         }
                     }
                     str2 = STATES.get(Integer.valueOf(p.getState()));
+                } catch (Throwable fileOutputStream$t) {
+                    fileOutputStream$c = fileOutputStream$t;
+                    throw fileOutputStream$t;
                 } finally {
+                    CloseableKt.closeFinally(fileOutputStream, fileOutputStream$c);
                 }
             } finally {
             }

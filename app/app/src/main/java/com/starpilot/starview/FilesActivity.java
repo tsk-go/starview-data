@@ -1637,6 +1637,7 @@ public final class FilesActivity extends AppCompatActivity {
         String jSONObject = j.toString();
         Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
         Response execute = okHttpClient.newCall(url.post(companion.create(mediaType, jSONObject)).build()).execute();
+        Throwable execute$c = null;
         try {
             Response r = execute;
             ResponseBody body2 = r.body();
@@ -1657,9 +1658,12 @@ public final class FilesActivity extends AppCompatActivity {
                 throw new RuntimeException(res.optString("error", "HTTP " + r.code()));
             }
             Intrinsics.checkNotNull(res);
-            CloseableKt.closeFinally(execute, null);
             return res;
+        } catch (Throwable execute$t) {
+            execute$c = execute$t;
+            throw execute$t;
         } finally {
+            CloseableKt.closeFinally(execute, execute$c);
         }
     }
 
@@ -2763,6 +2767,7 @@ public final class FilesActivity extends AppCompatActivity {
                 byte[] bytes = $text.getBytes(Charsets.UTF_8);
                 Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
                 Response execute = okHttpClient.newCall(url.put(RequestBody.Companion.create(mediaType, bytes, 0, bytes.length)).build()).execute();
+                Throwable execute$c = null;
                 try {
                     Response r = execute;
                     if (!r.isSuccessful()) {
@@ -2778,8 +2783,11 @@ public final class FilesActivity extends AppCompatActivity {
                         throw new RuntimeException(str);
                     }
                     Unit unit = Unit.INSTANCE;
-                    CloseableKt.closeFinally(execute, null);
+                } catch (Throwable execute$t) {
+                    execute$c = execute$t;
+                    throw execute$t;
                 } finally {
+                    CloseableKt.closeFinally(execute, execute$c);
                 }
             } else {
                 FilesKt.writeText(new File($full), $text, kotlin.text.Charsets.UTF_8);

@@ -1002,6 +1002,7 @@ public final class Ntrip {
         String request;
         try {
             Socket socket2 = new Socket();
+            Throwable socket2$c = null;
             try {
                 Socket s = socket2;
                 s.connect(new InetSocketAddress(StringsKt.trim((CharSequence) $host).toString(), $port), 10000);
@@ -1031,8 +1032,11 @@ public final class Ntrip {
                         $done.invoke(list, null);
                     }
                 });
-                CloseableKt.closeFinally(socket2, null);
+            } catch (Throwable socket2$t) {
+                socket2$c = socket2$t;
+                throw socket2$t;
             } finally {
+                CloseableKt.closeFinally(socket2, socket2$c);
             }
         } catch (Exception e) {
             $main.post(new Runnable() { // from class: com.starpilot.starview.Ntrip$$ExternalSyntheticLambda3

@@ -1105,10 +1105,14 @@ public final class LanePicturesActivity extends AppCompatActivity {
                 InputStream openInputStream = getContentResolver().openInputStream(Uri.parse(s.getUri()));
                 if (openInputStream != null) {
                     InputStream it2 = openInputStream;
+                    Throwable it2$c = null;
                     try {
                         bitmap2 = BitmapFactory.decodeStream(it2);
-                        CloseableKt.closeFinally(it2, null);
+                    } catch (Throwable it2$t) {
+                        it2$c = it2$t;
+                        throw it2$t;
                     } finally {
+                        CloseableKt.closeFinally(it2, it2$c);
                     }
                 } else {
                     bitmap2 = null;

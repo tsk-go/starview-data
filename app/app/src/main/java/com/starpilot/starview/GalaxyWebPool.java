@@ -237,12 +237,16 @@ public final class GalaxyWebPool {
                 OutputStream openOutputStream = this.ctx.getContentResolver().openOutputStream(uri);
                 if (openOutputStream != null) {
                     OutputStream outputStream = openOutputStream;
+                    Throwable outputStream$c = null;
                     try {
                         OutputStream it = outputStream;
                         it.write(bytes);
                         Unit unit = Unit.INSTANCE;
-                        CloseableKt.closeFinally(outputStream, null);
+                    } catch (Throwable outputStream$t) {
+                        outputStream$c = outputStream$t;
+                        throw outputStream$t;
                     } finally {
+                        CloseableKt.closeFinally(outputStream, outputStream$c);
                     }
                 }
                 new Handler(Looper.getMainLooper()).post(new Runnable() { // from class: com.starpilot.starview.GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda0

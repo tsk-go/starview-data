@@ -174,6 +174,7 @@ public final class TermWeb {
                 throw new RuntimeException("not connected");
             }
             Response execute = getHttp().newCall(new Request.Builder().url("http://" + h + ":8090/fs/list?path=" + Uri.encode(dir)).build()).execute();
+            Throwable execute$c = null;
             try {
                 Response r = execute;
                 ResponseBody body2 = r.body();
@@ -183,7 +184,6 @@ public final class TermWeb {
                 if (r.isSuccessful()) {
                     JSONArray jSONArray = new JSONObject(body).getJSONArray("entries");
                     Intrinsics.checkNotNullExpressionValue(jSONArray, "getJSONArray(...)");
-                    CloseableKt.closeFinally(execute, null);
                     return jSONArray;
                 }
                 String str = body;
@@ -191,7 +191,11 @@ public final class TermWeb {
                     str = "HTTP " + r.code();
                 }
                 throw new RuntimeException(str);
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         }
 
@@ -329,6 +333,7 @@ public final class TermWeb {
             }
             File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             Response execute = this$0.getHttp().newCall(new Request.Builder().url("http://" + h + ":8090/fs/get?path=" + Uri.encode($path)).build()).execute();
+            Throwable execute$c = null;
             try {
                 Response r = execute;
                 boolean z = true;
@@ -362,12 +367,15 @@ public final class TermWeb {
                     m1191constructorimpl = this$0.writeMediaStore(name, bytes);
                 }
                 String saved = (String) m1191constructorimpl;
-                CloseableKt.closeFinally(execute, null);
                 pair = TuplesKt.to(true, "Saved to Downloads ✓  " + saved);
                 boolean ok = ((Boolean) pair.component1()).booleanValue();
                 String msg = (String) pair.component2();
                 this$0.js("window.dlDone(" + JSONObject.quote($path) + ", " + ok + ", " + JSONObject.quote(msg) + ")");
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         }
 
@@ -415,13 +423,17 @@ public final class TermWeb {
             OutputStream openOutputStream = this.ctx.getContentResolver().openOutputStream(uri);
             Intrinsics.checkNotNull(openOutputStream);
             OutputStream outputStream = openOutputStream;
+            Throwable outputStream$c = null;
             try {
                 OutputStream it = outputStream;
                 it.write(bytes);
                 Unit unit = Unit.INSTANCE;
-                CloseableKt.closeFinally(outputStream, null);
                 return name;
+            } catch (Throwable outputStream$t) {
+                outputStream$c = outputStream$t;
+                throw outputStream$t;
             } finally {
+                CloseableKt.closeFinally(outputStream, outputStream$c);
             }
         }
 

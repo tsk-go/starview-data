@@ -274,10 +274,13 @@ public final class LaneModel {
     public static final void feed$lambda$1(LaneModel this$0, Bitmap $bmp) {
         try {
             this$0.run($bmp);
+        } catch (Throwable e) {
+            Log.w("StarView/LaneModel", "run: " + e);
+            String m = e.getMessage();
+            this$0.status = "error: " + (m != null ? StringsKt.take(m, 80) : null);
         } finally {
-            try {
-            } finally {
-            }
+            $bmp.recycle();
+            this$0.busy = false;
         }
     }
 

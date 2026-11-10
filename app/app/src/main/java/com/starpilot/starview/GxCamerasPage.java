@@ -1491,6 +1491,7 @@ public final class GxCamerasPage extends GxPage {
         }
         try {
             Response execute = GxPage.Companion.client(30L).newCall(new Request.Builder().url("http://" + str + ":8082" + str2).header("Cache-Control", "no-store").build()).execute();
+            Throwable execute$c = null;
             try {
                 Response response = execute;
                 String header$default = response.header("Content-Type", null);
@@ -1534,7 +1535,6 @@ public final class GxCamerasPage extends GxPage {
                         objectRef.element = "Failed to decode image";
                     }
                     Unit unit = Unit.INSTANCE;
-                    CloseableKt.closeFinally(execute, null);
                 } else {
                     try {
                         Result.Companion companion3 = Result.Companion;
@@ -1566,9 +1566,12 @@ public final class GxCamerasPage extends GxPage {
                         objectRef.element = "Failed to decode image";
                     }
                     Unit unit2 = Unit.INSTANCE;
-                    CloseableKt.closeFinally(execute, null);
                 }
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         } catch (Exception e3) {
             e = e3;
