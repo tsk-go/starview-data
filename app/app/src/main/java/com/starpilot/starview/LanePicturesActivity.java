@@ -564,7 +564,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
                     } else {
                         int var27 = 0;
 
-                        for (LaneShots.Shot var88 : ((Shot) var60)) {
+                        for (LaneShots.Shot var88 : (Iterable<LaneShots.Shot>) var60) {
                             var88 = this.marks.get(var88.getName());
                             Intrinsics.checkNotNull(var88);
                             int var33;
@@ -576,10 +576,10 @@ public final class LanePicturesActivity extends AppCompatActivity {
 
                             if ((var33 != 0)) {
                                 var33 = var27 + 1;
-                                var27 = (((var33 != 0)) ? 1 : 0);
+                                var27 = var33;
                                 if (var33 < 0) {
                                     CollectionsKt.throwCountOverflow();
-                                    var27 = (((var33 != 0)) ? 1 : 0);
+                                    var27 = var33;
                                 }
                             }
                         }
@@ -596,7 +596,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
                         } else {
                             var28 = 0;
 
-                            for (LaneShots.Shot var62 : ((Shot) var53)) {
+                            for (LaneShots.Shot var62 : (Iterable<LaneShots.Shot>) var53) {
                                 var8 = this.marks.get(var62.getName());
                                 Intrinsics.checkNotNull(var8);
                                 int var38;
@@ -608,10 +608,10 @@ public final class LanePicturesActivity extends AppCompatActivity {
 
                                 if ((var38 != 0)) {
                                     var38 = var28 + 1;
-                                    var28 = (((var38 != 0)) ? 1 : 0);
+                                    var28 = var38;
                                     if (var38 < 0) {
                                         CollectionsKt.throwCountOverflow();
-                                        var28 = (((var38 != 0)) ? 1 : 0);
+                                        var28 = var38;
                                     }
                                 }
                             }
@@ -685,7 +685,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
             } else {
                 int var17 = 0;
 
-                for (LaneShots.Shot var76 : ((Shot) var9)) {
+                for (LaneShots.Shot var76 : (Iterable<LaneShots.Shot>) var9) {
                     Integer var77 = this.marks.get(var76.getName());
                     int var2;
                     if (var77 != null && var77 == 0) {
@@ -696,10 +696,10 @@ public final class LanePicturesActivity extends AppCompatActivity {
 
                     if ((var2 != 0)) {
                         var2 = var17 + 1;
-                        var17 = (((var2 != 0)) ? 1 : 0);
+                        var17 = var2;
                         if (var2 < 0) {
                             CollectionsKt.throwCountOverflow();
-                            var17 = (((var2 != 0)) ? 1 : 0);
+                            var17 = var2;
                         }
                     }
                 }
@@ -714,7 +714,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
             } else {
                 var18 = 0;
 
-                for (LaneShots.Shot var78 : ((Shot) var9)) {
+                for (LaneShots.Shot var78 : (Iterable<LaneShots.Shot>) var9) {
                     Object var79 = this.marks.get(var78.getName());
                     Intrinsics.checkNotNull(var79);
                     boolean var3;

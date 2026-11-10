@@ -55,20 +55,20 @@ public final class LaneFeed {
             float var9 = var1.getPoseYawZ();
             boolean var27 = Float.isInfinite(var9);
             int var22 = 0;
-            boolean var21;
+            int var21;
             if (!var27 && !Float.isNaN(var9)) {
-                var21 = true;
+                var21 = 1;
             } else {
-                var21 = false;
+                var21 = 0;
             }
 
-            if (var21 && System.nanoTime() - var1.getPoseAtNs() < 500000000L) {
-                var21 = (boolean)true;
+            if ((var21 != 0) && System.nanoTime() - var1.getPoseAtNs() < 500000000L) {
+                var21 = (((boolean)true) ? 1 : 0);
             } else {
-                var21 = (boolean)false;
+                var21 = (((boolean)false) ? 1 : 0);
             }
 
-            if (var21) {
+            if ((var21 != 0)) {
                 var9 = var1.getPoseYawZ() * Odometry.INSTANCE.getGyroSign();
             } else {
                 if (var1.getSteerRatioLive() > 5.0F) {
@@ -92,12 +92,12 @@ public final class LaneFeed {
                 this.pendingEntry = 0;
                 if (var2 != null) {
                     if (System.nanoTime() - var2.getLastNs() < 1000000000L) {
-                        var21 = (boolean)true;
+                        var21 = (((boolean)true) ? 1 : 0);
                     } else {
-                        var21 = (boolean)false;
+                        var21 = (((boolean)false) ? 1 : 0);
                     }
 
-                    if (!var21) {
+                    if ((var21 == 0)) {
                         var2 = null;
                     }
 
@@ -134,7 +134,7 @@ public final class LaneFeed {
                 Lead[] var40 = new Lead[2];
                 var40[var22] = var1.getLeadLeft();
                 Lead var68 = var1.getLeadRight();
-                var21 = true;
+                var21 = 1;
                 var40[1] = var68;
 
                 for (Lead var69 : CollectionsKt.listOf(var40)) {
@@ -148,30 +148,30 @@ public final class LaneFeed {
                 var32 = var63;
             } else {
                 var42 = var35;
-                var21 = true;
+                var21 = 1;
             }
 
             LaneFeed.Rtk var70 = this.rtkOffset(var3, var1.getVEgo());
             float var16 = var1.getVEgo();
-            float var14 = frame$lineAt(var37, ((var21) ? 1 : 0), 3.0F);
+            float var14 = frame$lineAt(var37, var21, 3.0F);
             float var15 = frame$lineAt(var37, 2, 3.0F);
             float[] var64 = var37.getLaneProb();
             if (var21 < var64.length) {
-                var22 = ((var21) ? 1 : 0);
+                var22 = var21;
             } else {
                 var22 = (byte)0;
             }
 
             float var10;
             if (var22 != 0) {
-                var10 = var64[((var21) ? 1 : 0)];
+                var10 = var64[var21];
             } else {
                 var10 = 0.0F;
             }
 
             float[] var65 = var37.getLaneProb();
             if (2 < var65.length) {
-                var22 = ((var21) ? 1 : 0);
+                var22 = var21;
             } else {
                 var22 = (byte)0;
             }
@@ -184,7 +184,7 @@ public final class LaneFeed {
             }
 
             float var18 = frame$edge(var37, 0);
-            float var20 = frame$edge(var37, ((var21) ? 1 : 0));
+            float var20 = frame$edge(var37, var21);
             LaneMarks.Mark var66;
             if (var34 != null) {
                 var66 = ArraysKt.getOrNull(var34, var21);
@@ -207,7 +207,7 @@ public final class LaneFeed {
             }
 
             if (!var37.getLaneChanging() || !var37.getLaneChangeFinishing()) {
-                var21 = false;
+                var21 = 0;
             }
 
             int var57 = var32.element;
@@ -280,7 +280,7 @@ public final class LaneFeed {
                 var38,
                 var25,
                 var22,
-                (boolean)var21,
+                (boolean)(var21 != 0),
                 var57,
                 var26,
                 var27,

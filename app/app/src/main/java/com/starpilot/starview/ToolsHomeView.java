@@ -54,7 +54,7 @@ public final class ToolsHomeView extends ScrollView {
         Iterable var11 = this.tools;
         var var18 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var11, 10));
 
-        for (GalaxyTools.Tool var8 : ((Tool) var11)) {
+        for (GalaxyTools.Tool var8 : (Iterable<GalaxyTools.Tool>) var11) {
             String var9 = var8.getName();
             String var25 = var8.getPath();
             String var6 = var8.getName();

@@ -507,7 +507,7 @@ public final class FilesActivity extends AppCompatActivity {
             for (Map.Entry var4 : this.sortBtns.entrySet()) {
                 String var5 = (String)var4.getKey();
                 TextView var7 = (TextView)var4.getValue();
-                byte var3 = ((Intrinsics.areEqual(var5, this.sortKey)) ? 1 : 0);
+                int var3 = ((Intrinsics.areEqual(var5, this.sortKey)) ? 1 : 0);
                 int var2;
                 if (var5.length() > 0) {
                     var2 = 1;
@@ -635,7 +635,7 @@ public final class FilesActivity extends AppCompatActivity {
             $this$build_u24lambda_u2423.setTextSize(12.0f);
             $this$build_u24lambda_u2423.setPadding(0, 0, filesActivity4.dp(8), 0);
             sortBar.addView($this$build_u24lambda_u2423);
-            for (final String k : ((String) CollectionsKt.listOf((Object[]) new String[]{"name", "size", "date", "type"}))) {
+            for (final String k : (Iterable<String>) CollectionsKt.listOf((Object[]) new String[]{"name", "size", "date", "type"})) {
                 TextView $this$build_u24lambda_u2425 = new TextView(this.this$0);
                 FilesActivity filesActivity5 = this.this$0;
                 $this$build_u24lambda_u2425.setTextSize(f);
@@ -1046,7 +1046,7 @@ public final class FilesActivity extends AppCompatActivity {
         public static final void deleteSelected$lambda$47$lambda$46(List var0, FilesActivity var1, FilesActivity.Pane var2) {
             ObjectRef var3 = new ObjectRef();
 
-            for (String var4 : ((String) var0)) {
+            for (String var4 : (Iterable<String>) var0) {
                 try {
                     JSONObject var5 = new JSONObject();
                     JSONObject var8 = var5.put("op", "delete").put("path", var1.join(var2.path, var4));
@@ -1064,7 +1064,7 @@ public final class FilesActivity extends AppCompatActivity {
         public static final void deleteSelected$lambda$47$lambda$46$lambda$45(Pane this$0, Ref.ObjectRef $err, FilesActivity this$1) {
             this$0.selected.clear();
             this$0.refresh();
-            if ($err.element) {
+            if ($err.element != 0) {
                 this$1.toast("delete: " + $err.element);
             }
         }
@@ -3550,78 +3550,84 @@ public final class FilesActivity extends AppCompatActivity {
         }
     }
 
-    private final void buildQueue(List<Job> jobs) {
-        LinearLayout linearLayout;
-        LinearLayout linearLayout2 = this.queueList;
-        if (linearLayout2 == null) {
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    private final void buildQueue(List<FilesActivity.Job> var1) {
+        LinearLayout var4 = this.queueList;
+        LinearLayout var3 = var4;
+        if (var4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("queueList");
-            linearLayout2 = null;
+            var3 = null;
         }
-        linearLayout2.removeAllViews();
+
+        var3.removeAllViews();
         this.queueRows.clear();
-        int i = 0;
-        for (Job j : jobs) {
-            int i2 = i;
-            int i3 = i + 1;
-            if (i2 >= 300) {
-                LinearLayout linearLayout3 = this.queueList;
-                if (linearLayout3 == null) {
+        Iterator var5 = var1.iterator();
+
+        for (int var2 = 0; var5.hasNext(); var2++) {
+            FilesActivity.Job var6 = (FilesActivity.Job)var5.next();
+            if (var2 >= 300) {
+                var3 = this.queueList;
+                if (var3 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("queueList");
-                    linearLayout = null;
-                } else {
-                    linearLayout = linearLayout3;
+                    var3 = null;
                 }
-                TextView textView = new TextView(this);
-                textView.setText("… and " + (jobs.size() - 300) + " more files");
-                textView.setTextColor(this.dim);
-                textView.setTextSize(12.0f);
-                textView.setPadding(dp(6), dp(4), 0, dp(4));
-                linearLayout.addView(textView);
-                return;
+
+                TextView var23 = new TextView((Context)this);
+                var2 = var1.size();
+                var23.setText("… and " + (var2 - 300) + " more files");
+                var23.setTextColor(this.dim);
+                var23.setTextSize(12.0F);
+                var23.setPadding(this.dp(6), this.dp(4), 0, this.dp(4));
+                var3.addView((View)var23);
+                break;
             }
-            FileKinds fileKinds = FileKinds.INSTANCE;
-            String name = new File(j.getSrcPath()).getName();
-            Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-            FileKinds.Kind kind = fileKinds.of(name, false);
-            LinearLayout linearLayout4 = new LinearLayout(this);
-            linearLayout4.setOrientation(0);
-            linearLayout4.setGravity(16);
-            linearLayout4.setPadding(dp(6), dp(4), dp(6), dp(4));
-            View $this$buildQueue_u24lambda_u2486 = new View(this);
-            $this$buildQueue_u24lambda_u2486.setBackground(SvIcon.drawable$default(SvIcon.INSTANCE, kind.getIcon(), kind.getColor(), 0, 4, null));
-            LinearLayout.LayoutParams $this$buildQueue_u24lambda_u2487 = new LinearLayout.LayoutParams(dp(18), dp(18));
-            $this$buildQueue_u24lambda_u2487.rightMargin = dp(8);
-            Unit unit = Unit.INSTANCE;
-            linearLayout4.addView($this$buildQueue_u24lambda_u2486, $this$buildQueue_u24lambda_u2487);
-            TextView $this$buildQueue_u24lambda_u2488 = new TextView(this);
-            $this$buildQueue_u24lambda_u2488.setText(new File(j.getSrcPath()).getName());
-            $this$buildQueue_u24lambda_u2488.setTextColor(-1);
-            $this$buildQueue_u24lambda_u2488.setTextSize(13.0f);
-            $this$buildQueue_u24lambda_u2488.setMaxLines(1);
-            $this$buildQueue_u24lambda_u2488.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-            linearLayout4.addView($this$buildQueue_u24lambda_u2488, new LinearLayout.LayoutParams(0, -2, 1.0f));
-            ProgressBar progressBar = new ProgressBar(this, null, 16842872);
-            progressBar.setMax(1000);
-            progressBar.setProgress(0);
-            LinearLayout.LayoutParams $this$buildQueue_u24lambda_u2490 = new LinearLayout.LayoutParams(dp(140), -2);
-            $this$buildQueue_u24lambda_u2490.leftMargin = dp(10);
-            $this$buildQueue_u24lambda_u2490.rightMargin = dp(10);
-            Unit unit2 = Unit.INSTANCE;
-            linearLayout4.addView(progressBar, $this$buildQueue_u24lambda_u2490);
-            TextView $this$buildQueue_u24lambda_u2491 = new TextView(this);
-            $this$buildQueue_u24lambda_u2491.setText("waiting · " + fmtSize(j.getSize()));
-            $this$buildQueue_u24lambda_u2491.setTextColor(this.dim);
-            $this$buildQueue_u24lambda_u2491.setTextSize(12.0f);
-            $this$buildQueue_u24lambda_u2491.setMinWidth(dp(120));
-            linearLayout4.addView($this$buildQueue_u24lambda_u2491);
-            LinearLayout linearLayout5 = this.queueList;
-            if (linearLayout5 == null) {
+
+            FileKinds var18 = FileKinds.INSTANCE;
+            String var11 = new File(var6.getSrcPath()).getName();
+            Intrinsics.checkNotNullExpressionValue(var11, "getName(...)");
+            FileKinds.Kind var19 = var18.of(var11, false);
+            LinearLayout var7 = new LinearLayout((Context)this);
+            var7.setOrientation(0);
+            var7.setGravity(16);
+            var7.setPadding(this.dp(6), this.dp(4), this.dp(6), this.dp(4));
+            View var12 = new View((Context)this);
+            var12.setBackground(SvIcon.drawable$default(SvIcon.INSTANCE, var19.getIcon(), var19.getColor(), 0, 4, null));
+            android.widget.LinearLayout.LayoutParams var20 = new LayoutParams(this.dp(18), this.dp(18));
+            var20.rightMargin = this.dp(8);
+            Unit var8 = Unit.INSTANCE;
+            var7.addView(var12, (android.view.ViewGroup.LayoutParams)var20);
+            TextView var13 = new TextView((Context)this);
+            var13.setText(new File(var6.getSrcPath()).getName());
+            var13.setTextColor(-1);
+            var13.setTextSize(13.0F);
+            var13.setMaxLines(1);
+            var13.setEllipsize(TruncateAt.MIDDLE);
+            var7.addView((View)var13, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
+            ProgressBar var24 = new ProgressBar((Context)this, null, 16842872);
+            var24.setMax(1000);
+            var24.setProgress(0);
+            View var21 = (View)var24;
+            android.widget.LinearLayout.LayoutParams var14 = new LayoutParams(this.dp(140), -2);
+            var14.leftMargin = this.dp(10);
+            var14.rightMargin = this.dp(10);
+            Unit var9 = Unit.INSTANCE;
+            var7.addView(var21, (android.view.ViewGroup.LayoutParams)var14);
+            TextView var25 = new TextView((Context)this);
+            String var15 = this.fmtSize(var6.getSize());
+            var25.setText("waiting · " + var15);
+            var25.setTextColor(this.dim);
+            var25.setTextSize(12.0F);
+            var25.setMinWidth(this.dp(120));
+            var7.addView((View)var25);
+            var4 = this.queueList;
+            var3 = var4;
+            if (var4 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("queueList");
-                linearLayout5 = null;
+                var3 = null;
             }
-            linearLayout5.addView(linearLayout4);
-            this.queueRows.add(new QRow(this, j, linearLayout4, $this$buildQueue_u24lambda_u2491, progressBar));
-            i = i3;
+
+            var3.addView((View)var7);
+            this.queueRows.add(new FilesActivity.QRow(this, var6, var7, var25, var24));
         }
     }
 

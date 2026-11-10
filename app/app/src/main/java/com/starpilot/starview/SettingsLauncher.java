@@ -618,7 +618,7 @@ public final class SettingsLauncher extends FrameLayout {
             List list$iv$iv = (List) answer$iv$iv$iv;
             list$iv$iv.add(element$iv$iv);
         }
-        for (Map.Entry entry : ((Entry) destination$iv$iv.entrySet())) {
+        for (Map.Entry entry : (Iterable<Map.Entry>) destination$iv$iv.entrySet()) {
             String where = (String) entry.getKey();
             Iterable group = (List) entry.getValue();
             LinearLayout linearLayout2 = this.drawerList;

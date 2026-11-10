@@ -2131,7 +2131,7 @@ public final class GxLogsPage extends GxPage {
                             var16 = (((boolean)false) ? 1 : 0);
                         }
 
-                        if (!var16) {
+                        if ((var16 == 0)) {
                             String var13 = var14.getName();
                             String var12 = var14.getFeature();
                             var16 = var14.getPid();
@@ -2303,7 +2303,7 @@ public final class GxLogsPage extends GxPage {
                                 var20 = var58.length();
                                 String var67 = var71.getFeature();
                                 var58.append(" (" + var67 + ")");
-                                var58.setSpan(new ForegroundColorSpan(CarUi.Companion.getACCENT()), (((var20 != 0)) ? 1 : 0), var58.length(), 33);
+                                var58.setSpan(new ForegroundColorSpan(CarUi.Companion.getACCENT()), var20, var58.length(), 33);
                             }
 
                             View var68 = var49.getChildAt(0);
@@ -3137,7 +3137,7 @@ public final class GxLogsPage extends GxPage {
             if (!items.isEmpty()) {
                 lines.add("");
                 lines.add(GxPage.str$default(this, s, "title", null, 2, null));
-                for (JSONObject i : (Iterable) (JSONObject) ((JSONObject) items)) {
+                for (JSONObject i : (Iterable<JSONObject>) items) {
                     String learned = tsFormatLearned(tsVal(i, "learnedValue"));
                     String str$default = GxPage.str$default(this, i, "label", null, 2, null);
                     String tsFormat = tsFormat(tsVal(i, "value"));

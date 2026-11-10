@@ -55,7 +55,7 @@ public final class RoadDataView extends CardPage {
         getCol().removeAllViews();
         Map files = Hpms.INSTANCE.files();
         long j = 0;
-        for (File it : (Iterable) (File) ((File) files.values())) {
+        for (File it : (Iterable<File>) files.values()) {
             j += it.length();
         }
         long bytes = j;

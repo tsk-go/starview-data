@@ -247,29 +247,29 @@ public final class GpsFilter {
     ) {
         Intrinsics.checkNotNullParameter(var11, "src");
         Intrinsics.checkNotNullParameter(var12, "odo");
-        boolean var28;
+        int var28;
         if (!Double.isInfinite(var3) && !Double.isNaN(var3)) {
-            var28 = true;
+            var28 = 1;
         } else {
-            var28 = false;
+            var28 = 0;
         }
 
-        if (var28) {
+        if ((var28 != 0)) {
             if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
-                var28 = (boolean)true;
+                var28 = (((boolean)true) ? 1 : 0);
             } else {
-                var28 = (boolean)false;
+                var28 = (((boolean)false) ? 1 : 0);
             }
 
-            if (var28 && (!(Math.abs(var3) < 1.0E-6) || !(Math.abs(var5) < 1.0E-6))) {
+            if ((var28 != 0) && (!(Math.abs(var3) < 1.0E-6) || !(Math.abs(var5) < 1.0E-6))) {
                 if (!Float.isInfinite(var7) && !Float.isNaN(var7)) {
-                    var28 = (boolean)true;
+                    var28 = (((boolean)true) ? 1 : 0);
                 } else {
-                    var28 = (boolean)false;
+                    var28 = (((boolean)false) ? 1 : 0);
                 }
 
                 double var16;
-                if (var28 && var7 > 0.0F) {
+                if ((var28 != 0) && (var7 != 0) > 0.0F) {
                     var16 = var7;
                 } else {
                     var16 = 10.0;
@@ -312,7 +312,7 @@ public final class GpsFilter {
 
                         double var26 = Math.hypot(var32[0] - var41[0], var32[1] - var41[1]);
                         if (var26 <= var22 + var18 * (var24 - var20)) {
-                            var28 = (boolean)true;
+                            var28 = (((boolean)true) ? 1 : 0);
                             break label246;
                         }
 
@@ -323,11 +323,11 @@ public final class GpsFilter {
                         this.status = var11;
                     }
 
-                    var28 = (boolean)false;
+                    var28 = (((boolean)false) ? 1 : 0);
                 }
 
-                if (var28) {
-                    boolean var71 = false;
+                if ((var28 != 0)) {
+                    int var71 = 0;
                     var28 = var71;
                 } else {
                     label236: {
@@ -344,21 +344,21 @@ public final class GpsFilter {
                             }
 
                             if (Math.hypot(var32[0] - (var43[0] + var33[0]), var32[1] - (var43[1] + var33[1])) <= var56 * var16 + 15.0 + var53) {
-                                var28 = (boolean)true;
+                                var28 = (((boolean)true) ? 1 : 0);
                             } else {
-                                var28 = (boolean)false;
+                                var28 = (((boolean)false) ? 1 : 0);
                             }
 
-                            if (var28) {
-                                var28 = (boolean)true;
+                            if ((var28 != 0)) {
+                                var28 = (((boolean)true) ? 1 : 0);
                                 break label236;
                             }
                         }
 
-                        var28 = (boolean)false;
+                        var28 = (((boolean)false) ? 1 : 0);
                     }
 
-                    if (!var28) {
+                    if ((var28 == 0)) {
                         this.cand = var32;
                         double[] var44 = Arrays.copyOf(var12, var12.length);
                         Intrinsics.checkNotNullExpressionValue(var44, "copyOf(...)");
@@ -401,7 +401,7 @@ public final class GpsFilter {
                         this.holdW = 0.0;
                     }
 
-                    var28 = (boolean)true;
+                    var28 = (((boolean)true) ? 1 : 0);
                 }
 
                 this.cand = null;
@@ -495,7 +495,7 @@ public final class GpsFilter {
                     var7 = var9;
                 }
 
-                if (this.fOK && !var28 && !Double.isNaN(this.phi)) {
+                if (this.fOK && (var28 == 0) && !Double.isNaN(this.phi)) {
                     this.advance(var12);
                     if (var16 <= 5.0) {
                         var14 = 0.35;

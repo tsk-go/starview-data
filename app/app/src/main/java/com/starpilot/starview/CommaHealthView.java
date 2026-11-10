@@ -183,7 +183,7 @@ public final class CommaHealthView extends CardPage {
                     var10 = (((boolean)false) ? 1 : 0);
                 }
 
-                if (!var10) {
+                if ((var10 == 0)) {
                     var51 = null;
                 }
 
@@ -275,7 +275,7 @@ public final class CommaHealthView extends CardPage {
                     var32,
                     var64,
                     100.0F,
-                    (((var10 != 0)) ? 1 : 0),
+                    var10,
                     90.0F,
                     CollectionsKt.listOf(
                         new String[]{JournalPagesKt.timeFmt.format(new Date(CollectionsKt.<HealthHistory.Point>first(var66).getTMs())), "now"}
@@ -332,7 +332,7 @@ public final class CommaHealthView extends CardPage {
             var40 = var57.optDouble("memoryMiB", 1.0);
         }
 
-        for (JSONObject var74 : (Iterable) (JSONObject) ((JSONObject) var23)) {
+        for (JSONObject var74 : (Iterable<JSONObject>) var23) {
             double var7 = var74.optDouble(var37, 0.0);
             LinearLayout var70 = this.procs;
             LinearLayout var69 = new LinearLayout(this.getContext());
@@ -356,7 +356,7 @@ public final class CommaHealthView extends CardPage {
                 var10 = Color.rgb(127, 180, 255);
             }
 
-            var72.setBackground((Drawable)CarUi.rounded$default(var77, (((var10 != 0)) ? 1 : 0), 6, null, 4, null));
+            var72.setBackground((Drawable)CarUi.rounded$default(var77, var10, 6, null, 4, null));
             var76.addView(
                 var72,
                 (android.view.ViewGroup.LayoutParams)(

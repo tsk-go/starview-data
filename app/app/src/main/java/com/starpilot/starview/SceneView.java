@@ -1945,7 +1945,7 @@ public final class SceneView extends SurfaceView {
         VertexBuffer vb = attribute.build(engine);
         Intrinsics.checkNotNullExpressionValue(vb, "build(...)");
         ByteBuffer v = ByteBuffer.allocateDirect(48).order(ByteOrder.nativeOrder());
-        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(-400.0f), valueOf), TuplesKt.to(valueOf, valueOf), TuplesKt.to(valueOf, Float.valueOf(-400.0f)), TuplesKt.to(Float.valueOf(-400.0f), Float.valueOf(-400.0f))}))) {
+        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(-400.0f), valueOf), TuplesKt.to(valueOf, valueOf), TuplesKt.to(valueOf, Float.valueOf(-400.0f)), TuplesKt.to(Float.valueOf(-400.0f), Float.valueOf(-400.0f))})) {
             float x = ((Number) pair.component1()).floatValue();
             float z = ((Number) pair.component2()).floatValue();
             v.putFloat(x);
@@ -2232,7 +2232,7 @@ public final class SceneView extends SurfaceView {
         }
         this.layoutVb = attribute.build(engine4);
         ByteBuffer v = ByteBuffer.allocateDirect(80).order(ByteOrder.nativeOrder());
-        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(this.XMIN), Float.valueOf(-20.0f)), TuplesKt.to(Float.valueOf(this.XMIN), Float.valueOf(20.0f)), TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(20.0f)), TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(-20.0f))}))) {
+        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(this.XMIN), Float.valueOf(-20.0f)), TuplesKt.to(Float.valueOf(this.XMIN), Float.valueOf(20.0f)), TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(20.0f)), TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(-20.0f))})) {
             float x = ((Number) pair.component1()).floatValue();
             float y = ((Number) pair.component2()).floatValue();
             v.putFloat(y);
@@ -3044,7 +3044,7 @@ public final class SceneView extends SurfaceView {
                 var24 = false;
                 var var32 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var89, 10));
 
-                for (CarMemory.Car var34 : ((Car) var89)) {
+                for (CarMemory.Car var34 : (Iterable<CarMemory.Car>) var89) {
                     Traffic.Vehicle var33 = new Traffic.Vehicle(-1000000L - var34.getId());
                     var33.setX(var34.getX());
                     var33.setY(var34.getY());
@@ -3070,7 +3070,7 @@ public final class SceneView extends SurfaceView {
             }
 
             List var38;
-            if (var26 && var21 && this.showTraffic) {
+            if (var26 && (var21 != 0) && this.showTraffic) {
                 Intrinsics.checkNotNull(var39);
                 var38 = var39.getObjects();
             } else {
@@ -3096,7 +3096,7 @@ public final class SceneView extends SurfaceView {
                 }
             }
 
-            for (Detector.Obj var99 : ((Obj) var38)) {
+            for (Detector.Obj var99 : (Iterable<Detector.Obj>) var38) {
                 if (updateScene$vehicle(var99.getCls()) && var99.getVelValid() && var99.getVx() < -3.0F) {
                     this.oncomingSeenMs = var1;
                 }
@@ -3139,7 +3139,7 @@ public final class SceneView extends SurfaceView {
                 var20 = 0;
             }
 
-            if (!var20 && var1 - this.oncomingSeenMs >= 60000L) {
+            if ((var20 == 0) && var1 - this.oncomingSeenMs >= 60000L) {
                 var24 = false;
             } else {
                 var24 = true;
@@ -3208,7 +3208,7 @@ public final class SceneView extends SurfaceView {
                                                         var21 = (((boolean)false) ? 1 : 0);
                                                     }
 
-                                                    if (!var21) {
+                                                    if ((var21 == 0)) {
                                                         break label421;
                                                     }
                                                 }
@@ -3455,7 +3455,7 @@ public final class SceneView extends SurfaceView {
                         }
                     }
 
-                    var109.shownCars = (((var21 != 0)) ? 1 : 0);
+                    var109.shownCars = var21;
                     return;
                 }
 
@@ -4749,7 +4749,7 @@ public final class SceneView extends SurfaceView {
                             var85 = Color.rgb(163, 169, 178);
                         }
 
-                        int var104 = (((var85 != 0)) ? 1 : 0);
+                        int var104 = var85;
                         short var23;
                         int var24;
                         short var91;
@@ -4804,8 +4804,8 @@ public final class SceneView extends SurfaceView {
 
                         byte var26 = 1;
                         SceneView$$ExternalSyntheticLambda11 var43 = new SceneView$$ExternalSyntheticLambda11(var2, var54);
-                        var22 = Companion.withAlpha((((var85 != 0)) ? 1 : 0), 255);
-                        this.fillBetween(var54, var140, var147, (((var22 != 0)) ? 1 : 0), 0.02F, var43);
+                        var22 = Companion.withAlpha(var85, 255);
+                        this.fillBetween(var54, var140, var147, var22, 0.02F, var43);
                         var24 = 0;
                         var116 = var29;
 
@@ -4825,7 +4825,7 @@ public final class SceneView extends SurfaceView {
                                 var137 = var24;
                                 var22 = var104;
                                 var152 = var54;
-                                var116 = (((var22 != 0)) ? 1 : 0);
+                                var116 = var22;
                                 var24 = var116;
                             } else {
                                 float[] var151 = var54;
@@ -4903,7 +4903,7 @@ public final class SceneView extends SurfaceView {
                                     var24 = var116;
                                     var147 = var147;
                                     var140 = var140;
-                                    var116 = (((var22 != 0)) ? 1 : 0);
+                                    var116 = var22;
                                     var152 = var151;
                                     var22 = var28;
                                     var137 = var104;
@@ -5015,7 +5015,7 @@ public final class SceneView extends SurfaceView {
                             ribbon$default(this, var152, var58, null, 0.035, Companion.withAlpha(var36, 255), 0, 0, 0.055F, var43, 96, null);
                             var29 = var137 + 1;
                             var54 = var152;
-                            var104 = (((var22 != 0)) ? 1 : 0);
+                            var104 = var22;
                             var22 = var116;
                             var24 = var29;
                             var116 = var24;
@@ -5027,7 +5027,7 @@ public final class SceneView extends SurfaceView {
                     return;
                 }
 
-                if ((var85 != 0)) {
+                if (var85 != 0) {
                     var10 = 1.0;
                 }
 
@@ -5035,7 +5035,7 @@ public final class SceneView extends SurfaceView {
 
                 for (double var6 = -8.0; var6 <= 30.0; var6++) {
                     double var8 = Math.max(0.0, var6);
-                    double var12 = cleanRoad$edgeAt(this, var44, var28, (((var85 != 0)) ? 1 : 0), var8);
+                    double var12 = cleanRoad$edgeAt(this, var44, var28, var85, var8);
                     double var14 = -1.0;
 
                     for (double var73 = 0.0; var73 <= 9.0; var73 += 0.5) {
@@ -5078,7 +5078,7 @@ public final class SceneView extends SurfaceView {
                         double var74 = ((Number)var146.component1()).doubleValue();
                         double var77 = ((Number)var146.component2()).doubleValue();
                         if (!(var74 < -15.0) && !(var74 > 40.0)) {
-                            var77 = (var77 - cleanRoad$edgeAt(this, var44, var28, (((var85 != 0)) ? 1 : 0), Math.max(0.0, var74))) * var10;
+                            var77 = (var77 - cleanRoad$edgeAt(this, var44, var28, var85, Math.max(0.0, var74))) * var10;
                             boolean var102;
                             if (-0.5 <= var77 && var77 <= 9.0) {
                                 var102 = true;
@@ -5096,33 +5096,33 @@ public final class SceneView extends SurfaceView {
 
                 if (var49.size() < 4) {
                     int[] var52 = this.curbHold;
-                    var52[(((var85 != 0)) ? 1 : 0)]++;
-                    if (this.curbHold[(((var85 != 0)) ? 1 : 0)] > 200 && var2 >= 0.5F) {
-                        this.curbFit[(((var85 != 0)) ? 1 : 0)] = false;
+                    var52[var85]++;
+                    if (this.curbHold[var85] > 200 && var2 >= 0.5F) {
+                        this.curbFit[var85] = false;
                         double[] var53 = this.curbOffS;
-                        var53[(((var85 != 0)) ? 1 : 0)] *= 0.995;
+                        var53[var85] *= 0.995;
                     }
                 } else {
                     CollectionsKt.sort(var49);
                     Object var50 = var49.get(var49.size() / 2);
                     Intrinsics.checkNotNullExpressionValue(var50, "get(...)");
                     double var70 = ((Number)var50).doubleValue();
-                    if (var2 >= 0.5F || !this.curbFit[(((var85 != 0)) ? 1 : 0)]) {
-                        double var75 = var70 - this.curbOffS[(((var85 != 0)) ? 1 : 0)];
-                        if (!this.curbFit[(((var85 != 0)) ? 1 : 0)]) {
-                            this.curbOffS[(((var85 != 0)) ? 1 : 0)] = var70;
+                    if (var2 >= 0.5F || !this.curbFit[var85]) {
+                        double var75 = var70 - this.curbOffS[var85];
+                        if (!this.curbFit[var85]) {
+                            this.curbOffS[var85] = var70;
                         } else if (Math.abs(var75) > 0.4) {
                             var50 = this.curbOffS;
-                            ((Object[])var50)[(((var85 != 0)) ? 1 : 0)] += RangesKt.coerceIn(var75, -0.025, 0.025);
+                            ((Object[])var50)[var85] += RangesKt.coerceIn(var75, -0.025, 0.025);
                         }
                     }
 
-                    this.curbHold[(((var85 != 0)) ? 1 : 0)] = 0;
-                    this.curbFit[(((var85 != 0)) ? 1 : 0)] = true;
+                    this.curbHold[var85] = 0;
+                    this.curbFit[var85] = true;
                 }
 
                 for (int var103 = 0; var103 < var28; var103++) {
-                    this.curbS[(((var85 != 0)) ? 1 : 0)][var103] = this.edgeF[var85][var103] + this.curbOffS[var85] * var10;
+                    this.curbS[var85][var103] = this.edgeF[var85][var103] + this.curbOffS[var85] * var10;
                 }
 
                 var85++;
@@ -5289,25 +5289,25 @@ public final class SceneView extends SurfaceView {
                 var4 = 1.0;
             }
 
-            boolean var43;
+            int var43;
             if (this.edgeS[var12].length == 0) {
-                var43 = true;
+                var43 = 1;
             } else {
-                var43 = false;
+                var43 = 0;
             }
 
             double var2;
             label194: {
-                if (!var43 && this.lastEdgeX.length == this.edgeS[var12].length) {
+                if ((var43 == 0) && this.lastEdgeX.length == this.edgeS[var12].length) {
                     float[] var61 = var1.getEdgeStd();
                     if (var12 >= 0 && var12 < var61.length) {
-                        var43 = (boolean)true;
+                        var43 = (((boolean)true) ? 1 : 0);
                     } else {
-                        var43 = (boolean)false;
+                        var43 = (((boolean)false) ? 1 : 0);
                     }
 
                     float var10;
-                    if (var43) {
+                    if ((var43 != 0)) {
                         var10 = var61[var12];
                     } else {
                         var10 = 9.0F;
@@ -5315,16 +5315,16 @@ public final class SceneView extends SurfaceView {
 
                     if (var10 < 1.0F) {
                         ArrayList var62 = new ArrayList();
-                        var43 = false;
+                        var43 = 0;
 
                         for (int var13 = this.lastEdgeX.length; var43 < var13; var43++) {
-                            var10 = this.lastEdgeX[((var43) ? 1 : 0)];
+                            var10 = this.lastEdgeX[var43];
                             if (!(var10 < 3.0F)) {
                                 if (var10 > 15.0F) {
                                     break;
                                 }
 
-                                var62.add(this.edgeS[var12][((var43) ? 1 : 0)] * var4);
+                                var62.add(this.edgeS[var12][var43] * var4);
                             }
                         }
 
@@ -5360,18 +5360,18 @@ public final class SceneView extends SurfaceView {
             }
 
             boolean var53 = false;
-            boolean var14 = false;
-            boolean var47;
+            int var14 = 0;
+            int var47;
             if (!Double.isInfinite(var2) && !Double.isNaN(var2)) {
-                var47 = true;
+                var47 = 1;
             } else {
-                var47 = false;
+                var47 = 0;
             }
 
             String var19 = "format(...)";
             String var20 = "%.1f";
             String var66;
-            if (!var47) {
+            if ((var47 == 0)) {
                 var66 = "format(...)";
                 var19 = "%.1f";
             } else {
@@ -5397,7 +5397,7 @@ public final class SceneView extends SurfaceView {
                             }
 
                             if (var53 && (!var67.getVelValid() || Math.abs(var67.getVx()) < 1.5F)) {
-                                var47 = (boolean)true;
+                                var47 = (((boolean)true) ? 1 : 0);
                             }
                         }
                     }
@@ -5419,7 +5419,7 @@ public final class SceneView extends SurfaceView {
                         }
 
                         if (var53 && var4 * var8 < var2 + 1.5) {
-                            var47 = (boolean)true;
+                            var47 = (((boolean)true) ? 1 : 0);
                         }
                     }
                 }
@@ -5427,7 +5427,7 @@ public final class SceneView extends SurfaceView {
                 curbs$lower(var23, var12, var2);
                 StringBuilder var80;
                 StringBuilder var84;
-                if (!var47) {
+                if ((var47 == 0)) {
                     curbs$lower(var23, var12, var2 - 0.5);
                     curbs$upper(var17, var12, 0.6 + var2);
                     var84 = var22[var12];
@@ -5482,16 +5482,16 @@ public final class SceneView extends SurfaceView {
 
             ArrayList var72 = new ArrayList();
 
-            for (Detector.Obj var87 : ((Obj) var58)) {
+            for (Detector.Obj var87 : (Iterable<Detector.Obj>) var58) {
                 if (var87.getCls() == 0) {
                     float var41 = var87.getCx();
                     if (0.0F <= var41 && var41 <= 30.0F) {
-                        var47 = (boolean)true;
+                        var47 = (((boolean)true) ? 1 : 0);
                     } else {
-                        var47 = (boolean)false;
+                        var47 = (((boolean)false) ? 1 : 0);
                     }
 
-                    if (var47 && (!var87.getVelValid() || Math.abs(var87.getVy()) < 0.6F)) {
+                    if ((var47 != 0) && (!var87.getVelValid() || Math.abs(var87.getVy()) < 0.6F)) {
                         double var35 = var87.getCy() * var4;
                         if (var35 > 1.5 && (Double.isNaN(var2) || var35 > var2 - 0.3)) {
                             var72.add(var35);
@@ -5503,12 +5503,12 @@ public final class SceneView extends SurfaceView {
             if (!var72.isEmpty()) {
                 CollectionsKt.sort(var72);
                 if (var72.size() >= 2) {
-                    var47 = true;
+                    var47 = 1;
                 } else {
-                    var47 = false;
+                    var47 = 0;
                 }
 
-                var2 = (Double)var72.get(((var47) ? 1 : 0)) - 0.2;
+                var2 = (Double)var72.get(var47) - 0.2;
                 curbs$upper(var17, var12, var2);
                 StringBuilder var73 = var22[var12];
                 var19 = String.format(var19, Arrays.copyOf(new Object[]{var2 + 0.2}, 1));
@@ -5796,7 +5796,7 @@ public final class SceneView extends SurfaceView {
                     var109 = 0;
                 }
 
-                if (var2 > 2.0F && var109) {
+                if (var2 > 2.0F && (var109 != 0)) {
                     double var7 = var50.getDir();
                     if (var50.getWay().getOneway() == 0) {
                         var98 = Math.PI;
@@ -5902,7 +5902,7 @@ public final class SceneView extends SurfaceView {
                         var24 = false;
                     }
 
-                    if (var24 && (var109 || var98 > var3)) {
+                    if (var24 && ((var109 != 0) || (var98 != 0) > var3)) {
                         var98 = RangesKt.coerceIn(var3 + (var98 - var3) * 0.05, var50.getWay().getWidth() - 3.0, var50.getWay().getWidth() + 5.0);
                         this.learnedW.put(var50.getWay().getId(), var98);
                         var3 = var98;
@@ -5964,7 +5964,7 @@ public final class SceneView extends SurfaceView {
                             var98 = var50.getWay().getLanesWidth();
                         }
 
-                        var98 = var62.laneCenter(var98, var25, (((var109 != 0)) ? 1 : 0), var37);
+                        var98 = var62.laneCenter(var98, var25, var109, var37);
                         var61 = TuplesKt.to(var98, var98);
                     }
                 }
@@ -6201,7 +6201,7 @@ public final class SceneView extends SurfaceView {
 
             HashSet var198 = new HashSet();
             if (var223 != null) {
-                for (OsmRoads.Way var202 : ((Way) var73)) {
+                for (OsmRoads.Way var202 : (Iterable<OsmRoads.Way>) var73) {
                     if (var202.getId() != var223.getId()) {
                         if (!Intrinsics.areEqual(var202.getKind(), var223.getKind())) {
                             continue;
@@ -6213,7 +6213,7 @@ public final class SceneView extends SurfaceView {
                             var116 = (((boolean)false) ? 1 : 0);
                         }
 
-                        if (!var116 || !OsmRoads.INSTANCE.sameStreet(var202.getName(), var223.getName())) {
+                        if ((var116 == 0) || !OsmRoads.INSTANCE.sameStreet(var202.getName(), var223.getName())) {
                             continue;
                         }
                     }
@@ -6256,7 +6256,7 @@ public final class SceneView extends SurfaceView {
                         if (!var198.contains(var52.getId())) {
                             ArrayList var250 = new ArrayList();
 
-                            for (OsmRoads.Way var55 : ((Way) var227)) {
+                            for (OsmRoads.Way var55 : (Iterable<OsmRoads.Way>) var227) {
                                 Map var53 = this.crossCache;
                                 StringBuilder var237;
                                 if (var52.getId() < var55.getId()) {
@@ -6313,7 +6313,7 @@ public final class SceneView extends SurfaceView {
 
                                         var116 = ((Number)var251.next()).intValue();
                                         Map var205 = var245;
-                                        Long var266 = drawMapRoads$k(var261.getE()[(((var116 != 0)) ? 1 : 0)], var261.getN()[var116]);
+                                        Long var266 = drawMapRoads$k(var261.getE()[var116], var261.getN()[var116]);
                                         var186 = (String)var205.get(var266);
                                         if (var186 == null) {
                                             var186 = new ArrayList(2);
@@ -6377,7 +6377,7 @@ public final class SceneView extends SurfaceView {
                                                 var191 = CollectionsKt.emptyList();
                                             }
 
-                                            for (OsmRoads.Way var268 : ((Way) var191)) {
+                                            for (OsmRoads.Way var268 : (Iterable<OsmRoads.Way>) var191) {
                                                 if (var268.getId() != var33
                                                     && !this.crossNow.containsKey(var268.getId())
                                                     && StringsKt.endsWith(var268.getKind(), "_link", false)
@@ -6498,9 +6498,9 @@ public final class SceneView extends SurfaceView {
                 var137 = 1;
             }
 
-            short var28;
-            short var124;
-            short var142;
+            int var28;
+            int var124;
+            int var142;
             if ((var137 != 0)) {
                 var124 = 51;
                 var28 = 60;
@@ -6518,7 +6518,7 @@ public final class SceneView extends SurfaceView {
                 var124 = Color.rgb(246, 247, 249);
             }
 
-            short var29;
+            int var29;
             if ((var137 != 0)) {
                 var142 = (short)75;
                 var29 = 86;
@@ -6700,7 +6700,7 @@ public final class SceneView extends SurfaceView {
                                     this.curN,
                                     drawMapRoads$mid(this, var256),
                                     drawMapRoads$half(this, var256) + 0.45,
-                                    (((var137 != 0)) ? 1 : 0),
+                                    var137,
                                     0.06F,
                                     this.MAP_R,
                                     var265,
@@ -7145,23 +7145,23 @@ public final class SceneView extends SurfaceView {
                     && var26.getE().length >= var28
                     && this.laneMapped(var26) == this.laneMapped(var1)
                     && var26.getHighway() == var1.getHighway()) {
-                    boolean var29;
+                    int var29;
                     if (var1.getName().length() > 0) {
-                        var29 = true;
+                        var29 = 1;
                     } else {
-                        var29 = false;
+                        var29 = 0;
                     }
 
                     boolean var25;
                     label88: {
-                        if (!var29) {
+                        if ((var29 == 0)) {
                             if (var26.getName().length() > 0) {
-                                var29 = (boolean)true;
+                                var29 = (((boolean)true) ? 1 : 0);
                             } else {
-                                var29 = (boolean)false;
+                                var29 = (((boolean)false) ? 1 : 0);
                             }
 
-                            if (!var29) {
+                            if ((var29 == 0)) {
                                 var25 = Intrinsics.areEqual(var26.getKind(), var1.getKind());
                                 break label88;
                             }
@@ -7171,16 +7171,16 @@ public final class SceneView extends SurfaceView {
                     }
 
                     if (var25) {
-                        var29 = false;
+                        var29 = 0;
 
                         while (var29 < 2) {
-                            if (!var29) {
+                            if (var29 == 0) {
                                 var23 = 0;
                             } else {
                                 var23 = var26.getE().length - 1;
                             }
 
-                            if (!var29) {
+                            if (var29 == 0) {
                                 var24 = 1;
                             } else {
                                 var24 = var26.getE().length - 2;
@@ -7905,7 +7905,7 @@ public final class SceneView extends SurfaceView {
                 }
 
                 short var15;
-                short var16;
+                int var16;
                 if ((var13 != 0)) {
                     var15 = 174;
                     var13 = 43;
@@ -7957,23 +7957,23 @@ public final class SceneView extends SurfaceView {
                                 var66 = 1;
                             }
 
-                            boolean var94;
+                            int var94;
                             if (!var27 || var41 != var36 || var129 == null || var16 != 2 && var16 != 3 || var129.getYellow() && !var129.getDouble() && var16 == 2) {
-                                var94 = false;
+                                var94 = 0;
                             } else {
-                                var94 = true;
+                                var94 = 1;
                             }
 
                             if ((var66 != 0)) {
                                 var66 = Color.rgb(0, 176, 220);
-                            } else if (!var94 && (var129 == null || var16 == 0 || !var129.getYellow())) {
+                            } else if ((var94 == 0) && (var129 == null || var16 == 0 || !var129.getYellow())) {
                                 var66 = var14;
                             } else {
                                 var66 = var24;
                             }
 
                             if (var41 == var37 && var33 == LaneTracks.PathState.ENGAGED) {
-                                var66 = LaneTracks.Companion.effortColor((((var66 != 0)) ? 1 : 0), var124.tracks.getEffort());
+                                var66 = LaneTracks.Companion.effortColor(var66, var124.tracks.getEffort());
                             }
 
                             short var19;
@@ -7984,16 +7984,16 @@ public final class SceneView extends SurfaceView {
                             }
 
                             int var21 = RangesKt.coerceIn((int)(var19 * ((LaneTracks.Line) var41).getAlpha()), 0, 255);
-                            int var25 = Companion.withAlpha((((var66 != 0)) ? 1 : 0), var21);
-                            boolean var68;
-                            if (var94 || var129 != null && var16 != 0 && var129.getDouble()) {
-                                var68 = true;
+                            int var25 = Companion.withAlpha(var66, var21);
+                            int var68;
+                            if ((var94 != 0) || (var129) != null && var16 != 0 && var129.getDouble()) {
+                                var68 = 1;
                             } else {
-                                var68 = false;
+                                var68 = 0;
                             }
 
                             label556: {
-                                if (!var94 && !var68) {
+                                if ((var94 == 0) && (var68 == 0)) {
                                     if (var16 == 0) {
                                         break label556;
                                     }
@@ -8008,7 +8008,7 @@ public final class SceneView extends SurfaceView {
                             }
 
                             float[] var130;
-                            if (var68) {
+                            if ((var68 != 0)) {
                                 var130 = new float[]{-0.11F, 0.11F};
                             } else {
                                 var130 = new float[]{0.0F};
@@ -8034,17 +8034,17 @@ public final class SceneView extends SurfaceView {
                             float[] var154 = new float[230];
                             SceneView var131 = var124;
                             var8 = Math.max(0.0F, var39[0]);
-                            var94 = true;
-                            var68 = false;
+                            var94 = 1;
+                            var68 = 0;
 
                             for (float[] var132 = var39; var8 <= Math.min(110.0F, ArraysKt.last(var132)) && var68 < 230; var8 += 0.5F) {
-                                while (var94 < var132.length - 1 && var132[((var94) ? 1 : 0)] < var8) {
+                                while (var94 < var132.length - 1 && var132[var94] < var8) {
                                     var94++;
                                 }
 
-                                float var9 = RangesKt.coerceIn((var8 - var132[var94 - 1]) / Math.max(0.01F, var132[((var94) ? 1 : 0)] - var132[var94 - 1]), 0.0F, 1.0F);
-                                var44[((var68) ? 1 : 0)] = var8;
-                                var154[((var68) ? 1 : 0)] = var42[var94 - 1] + (var42[((var94) ? 1 : 0)] - var42[var94 - 1]) * var9;
+                                float var9 = RangesKt.coerceIn((var8 - var132[var94 - 1]) / Math.max(0.01F, var132[var94] - var132[var94 - 1]), 0.0F, 1.0F);
+                                var44[var68] = var8;
+                                var154[var68] = var42[var94 - 1] + (var42[var94] - var42[var94 - 1]) * var9;
                                 var68++;
                             }
 
@@ -8061,7 +8061,7 @@ public final class SceneView extends SurfaceView {
 
                                 for (float[] var155 = var42; var20 < var22; var20++) {
                                     var8 = var40[var20];
-                                    var42 = new float[((var68) ? 1 : 0)];
+                                    var42 = new float[var68];
 
                                     for (int var97 = 0; var97 < var68; var97++) {
                                         var42[var97] = var125[var97] + var8;

@@ -653,7 +653,7 @@ public final class LaneSuggestView extends View {
                     break;
                 default:
                     var37 = "ask_";
-                    if (this.lastState == LaneSuggest.State.ASKING && var6) {
+                    if (this.lastState == LaneSuggest.State.ASKING && (var6 != 0)) {
                         AmyVoice.INSTANCE.stop();
                     }
 
@@ -835,7 +835,7 @@ public final class LaneSuggestView extends View {
             && !this.logic.getAutoAsk()
             && !this.repeated
             && var11 - this.askedAt > 7000L
-            && (!var6 || !AmyVoice.INSTANCE.busy(var11))) {
+            && ((var6 == 0) || !AmyVoice.INSTANCE.busy(var11))) {
             this.repeated = true;
             this.say("Change lanes " + var79 + "?", AmySynth.Style.SHORT, CollectionsKt.listOf(var14 + var79), var11);
         }
@@ -850,7 +850,7 @@ public final class LaneSuggestView extends View {
             }
         }
 
-        if (var6 && AmyVoice.INSTANCE.busy(var11)) {
+        if ((var6 != 0) && AmyVoice.INSTANCE.busy(var11)) {
             this.lastSpoke = var11;
         }
 
@@ -880,7 +880,7 @@ public final class LaneSuggestView extends View {
             this.main.removeCallbacks(this.repeat);
             if (var78 != 0) {
                 this.repeat.run();
-            } else if ((var6 != 0)) {
+            } else if (var6 != 0) {
                 this.send("off", "");
             }
         }

@@ -157,7 +157,7 @@ public final class OffroadHome extends FrameLayout {
         Iterable var22 = CollectionsKt.listOf(new Pair[]{TuplesKt.to("Aggressive", 0), TuplesKt.to("Standard", 1), TuplesKt.to("Relaxed", 2)});
         var var48 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var22, 10));
 
-        for (Pair var8 : ((Pair) var22)) {
+        for (Pair var8 : (Iterable<Pair>) var22) {
             String var7 = (String)var8.component1();
             int var3 = ((Number)var8.component2()).intValue();
             TextView var109 = tv$default(this, 19.0F, 0, true, 2, null);
@@ -659,7 +659,7 @@ public final class OffroadHome extends FrameLayout {
             TextView $this$view_u24lambda_u247_u24lambda_u243 = OffroadHome.tv$default(offroadHome, 16.0f, Color.rgb(150, 160, 180), false, 4, null);
             $this$view_u24lambda_u247_u24lambda_u243.setText("hours");
             Unit unit2 = Unit.INSTANCE;
-            for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(textView, $this$view_u24lambda_u247_u24lambda_u242), TuplesKt.to(this.dist, this.distUnit), TuplesKt.to(textView2, $this$view_u24lambda_u247_u24lambda_u243)}))) {
+            for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(textView, $this$view_u24lambda_u247_u24lambda_u242), TuplesKt.to(this.dist, this.distUnit), TuplesKt.to(textView2, $this$view_u24lambda_u247_u24lambda_u243)})) {
                 TextView v = (TextView) pair.component1();
                 TextView unit3 = (TextView) pair.component2();
                 LinearLayout $this$view_u24lambda_u247_u24lambda_u245 = new LinearLayout($this$view_u24lambda_u247.getContext());
@@ -852,7 +852,7 @@ public final class OffroadHome extends FrameLayout {
         int $i$f$mapNotNull2 = 0;
         Collection destination$iv$iv = new ArrayList();
         Map $this$mapNotNullTo$iv$iv3 = $this$mapNotNull$iv2;
-        for (Map.Entry element$iv$iv$iv : ((Entry) $this$mapNotNullTo$iv$iv3.entrySet())) {
+        for (Map.Entry element$iv$iv$iv : (Iterable<Map.Entry>) $this$mapNotNullTo$iv$iv3.entrySet()) {
             Object v = element$iv$iv$iv.getValue();
             JSONObject o = jobj(v);
             if (o == null) {
@@ -974,7 +974,7 @@ public final class OffroadHome extends FrameLayout {
             List var14 = this.alerts(var1);
             boolean var9 = var1.pBool("UpdateAvailable", false);
             TextView var12 = this.updateBtn;
-            byte var7;
+            int var7;
             if (var9) {
                 var7 = 0;
             } else {
@@ -1071,7 +1071,7 @@ public final class OffroadHome extends FrameLayout {
                 var43 = (byte)8;
             }
 
-            ((LinearLayout) var65).setVisibility((((var43 != 0)) ? 1 : 0));
+            ((LinearLayout) var65).setVisibility(var43);
             var65 = this.detailContent;
             if (this.state == OffroadHome.State.HOME) {
                 var43 = (byte)8;
@@ -1079,7 +1079,7 @@ public final class OffroadHome extends FrameLayout {
                 var43 = (byte)0;
             }
 
-            ((LinearLayout) var65).setVisibility((((var43 != 0)) ? 1 : 0));
+            ((LinearLayout) var65).setVisibility(var43);
             OffroadHome.State var71 = this.state;
             switch (OffroadHome.WhenMappings.$EnumSwitchMapping$0[var71.ordinal()]) {
                 case 1:
@@ -1113,14 +1113,14 @@ public final class OffroadHome extends FrameLayout {
                             var3 = 1609.344;
                         }
 
-                        var93.set((((var43 != 0)) ? 1 : 0), var5 / var3, this.num(var108, "StarPilotSeconds") / 3600.0, var2);
+                        var93.set(var43, var5 / var3, this.num(var108, "StarPilotSeconds") / 3600.0, var2);
                     } else {
                         this.allTime.set(0, 0.0, 0.0, var2);
                     }
 
                     OffroadHome.StatBlock var94 = this.pastWeek;
                     var43 = (int)this.num(var76, "routes");
-                    var94.set((((var43 != 0)) ? 1 : 0), refresh$cloudDist(this, var2, 1.609344, var76), this.num(var76, "minutes") / 60.0, var2);
+                    var94.set(var43, refresh$cloudDist(this, var2, 1.609344, var76), this.num(var76, "minutes") / 60.0, var2);
                     var13 = this.statsNote;
                     String var109 = "";
                     CharSequence var77;
@@ -1431,7 +1431,7 @@ public final class OffroadHome extends FrameLayout {
                     var72.setText(var19);
                     this.detailBody.removeAllViews();
 
-                    for (OffroadHome.Alert var89 : ((Alert) var14)) {
+                    for (OffroadHome.Alert var89 : (Iterable<OffroadHome.Alert>) var14) {
                         LinearLayout var20 = this.detailBody;
                         TextView var106 = tv$default(this, 21.0F, -1, false, 4, null);
                         var106.setText(var89.getText());
@@ -1443,7 +1443,7 @@ public final class OffroadHome extends FrameLayout {
                             var43 = Color.rgb(44, 48, 60);
                         }
 
-                        var106.setBackground((Drawable)this.rounded((((var43 != 0)) ? 1 : 0), 16));
+                        var106.setBackground((Drawable)this.rounded(var43, 16));
                         View var110 = (View)var106;
                         android.widget.LinearLayout.LayoutParams var90 = new android.widget.LinearLayout.LayoutParams(-1, -2);
                         var90.bottomMargin = this.dp(12);

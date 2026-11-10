@@ -148,7 +148,7 @@ public final class SlcView extends View {
             }
 
             String var14 = null;
-            if (var8 && !(var4 <= 0.0F)) {
+            if ((var8 != 0) && !(var4 <= 0.0F)) {
                 float var18;
                 label101: {
                     if (var12) {
@@ -159,7 +159,7 @@ public final class SlcView extends View {
                             var8 = (((boolean)false) ? 1 : 0);
                         }
 
-                        if (var8 && var1.adjustedMps > 0.0F) {
+                        if ((var8 != 0) && var1.adjustedMps > 0.0F) {
                             var18 = var1.adjustedMps;
                             break label101;
                         }
@@ -179,7 +179,7 @@ public final class SlcView extends View {
                             var8 = (((boolean)false) ? 1 : 0);
                         }
 
-                        if (var8 && var1.pendingMps > 0.0F && !var1.autoAdoptionPending) {
+                        if ((var8 != 0) && var1.pendingMps > 0.0F && !var1.autoAdoptionPending) {
                             var2 = true;
                             break label90;
                         }
@@ -233,7 +233,7 @@ public final class SlcView extends View {
                     Intrinsics.checkNotNullExpressionValue(var14, "format(...)");
                 }
 
-                return new SlcView.Shown(var13, String.valueOf(var23), var14, (((var8 != 0)) ? 1 : 0), var1.driverOverride, var2);
+                return new SlcView.Shown(var13, String.valueOf(var23), var14, var8, var1.driverOverride, var2);
             } else {
                 return null;
             }
@@ -378,7 +378,7 @@ public final class SlcView extends View {
             i = HudViewsKt.dp(this, 3.0f);
             dp7 = HudViewsKt.dp(this, 4.5f);
             dp8 = HudViewsKt.dp(this, 2.5f);
-            for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(dp7), Integer.valueOf(Color.argb(220, 6, 14, 10))), TuplesKt.to(Float.valueOf(dp8), Integer.valueOf(Color.argb(240, 197, 163, 255)))}))) {
+            for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(dp7), Integer.valueOf(Color.argb(220, 6, 14, 10))), TuplesKt.to(Float.valueOf(dp8), Integer.valueOf(Color.argb(240, 197, 163, 255)))})) {
                 float sw = ((Number) pair.component1()).floatValue();
                 int col = ((Number) pair.component2()).intValue();
                 this.p.setStyle(Paint.Style.STROKE);

@@ -103,7 +103,7 @@ public final class Lights {
                         var24 = 0;
                     }
 
-                    if (var24 && !(Math.abs(var34.getY()) > 12.0F)) {
+                    if ((var24 != 0) && !(Math.abs(var34.getY()) > 12.0F)) {
                         double var9 = var34.getX();
                         double var7 = Math.cos(var1.getYaw());
                         double var11 = var34.getY();

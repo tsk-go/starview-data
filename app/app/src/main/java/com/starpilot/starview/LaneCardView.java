@@ -357,7 +357,7 @@ public final class LaneCardView extends View {
                         var94.setStrokeWidth(this.d * 2.0F);
                         Paint var133 = this.box;
                         PathEffect var95;
-                        if (var24 && !var50) {
+                        if (var24 && (var50 == 0)) {
                             var95 = (PathEffect)(new DashPathEffect(new float[]{this.d * 4.0F, this.d * 3.0F}, 0.0F));
                         } else {
                             var95 = null;
@@ -676,7 +676,7 @@ public final class LaneCardView extends View {
                 var25 = false;
             }
 
-            onDraw$button(this, var1, var111, (((var63 != 0)) ? 1 : 0), "✓", var25);
+            onDraw$button(this, var1, var111, var63, "✓", var25);
             RectF var112 = this.noR;
             var63 = Color.rgb(200, 52, 52);
             if (this.pressed == -1) {
@@ -685,7 +685,7 @@ public final class LaneCardView extends View {
                 var25 = false;
             }
 
-            onDraw$button(this, var1, var112, (((var63 != 0)) ? 1 : 0), "✗", var25);
+            onDraw$button(this, var1, var112, var63, "✗", var25);
             var20 = this.nRight + this.nWrong;
             long var26 = System.currentTimeMillis();
             var9 = this.fixR.left - var8 - this.d * 8.0F;
@@ -698,9 +698,9 @@ public final class LaneCardView extends View {
                 }
             }
 
-            if (var26 - this.flashMs >= 2500L && !var70) {
+            if (var26 - this.flashMs >= 2500L && (var70 == 0)) {
                 String var114;
-                if (!var20) {
+                if (var20 == 0) {
                     var114 = "is the lane right? tap ✓ or ✗ (stopped / passenger)";
                 } else {
                     var77 = this.nRight;
@@ -710,7 +710,7 @@ public final class LaneCardView extends View {
 
                 CharSequence var126 = var114;
                 TextPaint var115;
-                if (!var20) {
+                if (var20 == 0) {
                     var115 = this.dim;
                 } else {
                     var115 = this.stat;
@@ -719,7 +719,7 @@ public final class LaneCardView extends View {
                 var29 = TextUtils.ellipsize(var126, var115, var9, TruncateAt.END).toString();
                 var9 = this.d;
                 TextPaint var116;
-                if (!var20) {
+                if (var20 == 0) {
                     var116 = this.dim;
                 } else {
                     var116 = this.stat;

@@ -1964,22 +1964,22 @@ public final class GxNavigationPage extends GxPage {
 
                 var6 = this.card((ViewGroup)var4);
                 var var19 = GxPage.str$default(this, var7, "name", null, 2, null);
-                boolean var1;
+                int var1;
                 if (var19.length() == 0) {
-                    var1 = true;
+                    var1 = 1;
                 } else {
-                    var1 = false;
+                    var1 = 0;
                 }
 
-                if (var1) {
+                if ((var1 != 0)) {
                     var var20 = this.getQuery();
                     if (var20.length() == 0) {
-                        var1 = (boolean)true;
+                        var1 = (((boolean)true) ? 1 : 0);
                     } else {
-                        var1 = (boolean)false;
+                        var1 = (((boolean)false) ? 1 : 0);
                     }
 
-                    if (var1) {
+                    if ((var1 != 0)) {
                         var20 = var36;
                     }
 
@@ -1989,12 +1989,12 @@ public final class GxNavigationPage extends GxPage {
                 this.text(var19, (ViewGroup)var6, 24.0F, CarUi.Companion.getTEXT(), true);
                 String var21 = GxPage.str$default(this, var7, "place_name", null, 2, null);
                 if (var21.length() > 0) {
-                    var1 = (boolean)true;
+                    var1 = (((boolean)true) ? 1 : 0);
                 } else {
-                    var1 = (boolean)false;
+                    var1 = (((boolean)false) ? 1 : 0);
                 }
 
-                if (var1 && !StringsKt.equals(var21, GxPage.str$default(this, var7, "name", null, 2, null), true)) {
+                if ((var1 != 0) && !StringsKt.equals(var21, GxPage.str$default(this, var7, "name", null, 2, null), true)) {
                     GxPage.text$default(this, var21, (ViewGroup)var6, 0.0F, 0, false, 28, null);
                 }
 
@@ -2009,9 +2009,9 @@ public final class GxNavigationPage extends GxPage {
                 }
 
                 if (this.favoriteOf(var7) != null) {
-                    var1 = (boolean)true;
+                    var1 = (((boolean)true) ? 1 : 0);
                 } else {
-                    var1 = (boolean)false;
+                    var1 = (((boolean)false) ? 1 : 0);
                 }
 
                 ArrayList var38 = new ArrayList();
@@ -2029,7 +2029,7 @@ public final class GxNavigationPage extends GxPage {
                 }
 
                 String var24;
-                if (var1) {
+                if ((var1 != 0)) {
                     var24 = "Remove from favorites";
                 } else {
                     var24 = "Add to favorites";
@@ -2074,7 +2074,7 @@ public final class GxNavigationPage extends GxPage {
                     boolean var15 = false;
                     var var45 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var39, 10));
                     boolean var3 = false;
-                    var1 = false;
+                    var1 = 0;
 
                     for (Object var48 : var39) {
                         if (var1 < 0) {
@@ -2109,7 +2109,7 @@ public final class GxNavigationPage extends GxPage {
                     if (var33 != null) {
                         var1 = var33;
                     } else {
-                        var1 = false;
+                        var1 = 0;
                     }
 
                     String var34;
@@ -2125,7 +2125,7 @@ public final class GxNavigationPage extends GxPage {
                         var5 = null;
                     }
 
-                    this.choice("Choose a route", var34, var44, ((var1) ? 1 : 0), (ViewGroup)var5, new GxNavigationPage$$ExternalSyntheticLambda67(this));
+                    this.choice("Choose a route", var34, var44, var1, (ViewGroup)var5, new GxNavigationPage$$ExternalSyntheticLambda67(this));
                 }
             }
         }
@@ -2555,7 +2555,7 @@ public final class GxNavigationPage extends GxPage {
 
                     this.header("Recent destinations", (ViewGroup)var2);
 
-                    for (JSONObject var33 : (Iterable) (JSONObject) ((JSONObject) var32)) {
+                    for (JSONObject var33 : (Iterable<JSONObject>) var32) {
                         GxPage var39 = this;
                         var var23 = GxPage.str$default(this, var33, "name", null, 2, null);
                         boolean var12;
@@ -3096,7 +3096,7 @@ public final class GxNavigationPage extends GxPage {
                 var5 = 0;
             }
 
-            var11.setVisibility((((var5 != 0)) ? 1 : 0));
+            var11.setVisibility(var5);
             JSONObject var14 = this.mapsStatus;
             JSONObject var13 = this.mapsProgress;
             var11 = this.vDownloader;
@@ -3124,7 +3124,7 @@ public final class GxNavigationPage extends GxPage {
                 var48 = var49;
             }
 
-            var12.setText(var48);
+            ((TextView) var12).setText(var48);
             var12 = this.vSaved;
             var11 = ((TextView) var12);
             if (var12 == null) {
@@ -3149,7 +3149,7 @@ public final class GxNavigationPage extends GxPage {
                 var22 = 0;
             }
 
-            if (!var22) {
+            if ((var22 == 0)) {
                 var51 = null;
             }
 
@@ -3177,7 +3177,7 @@ public final class GxNavigationPage extends GxPage {
             }
 
             CharSequence var55 = var53;
-            var12.setText(var55);
+            ((TextView) var12).setText(var55);
             var11 = this.vLastUpdate;
             if (var11 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("vLastUpdate");
@@ -3185,7 +3185,7 @@ public final class GxNavigationPage extends GxPage {
             }
 
             var12 = GxPage.str$default(this, var14, "lastUpdate", null, 2, null);
-            if (var12.length() == 0) {
+            if (((TextView) var12).length() == 0) {
                 var22 = (((boolean)true) ? 1 : 0);
             } else {
                 var22 = (((boolean)false) ? 1 : 0);
@@ -3224,7 +3224,7 @@ public final class GxNavigationPage extends GxPage {
                 var22 = 8;
             }
 
-            var11.setVisibility((((var22 != 0)) ? 1 : 0));
+            var11.setVisibility(var22);
             var12 = this.nSelDirty;
             var11 = ((TextView) var12);
             if (var12 == null) {
@@ -3238,7 +3238,7 @@ public final class GxNavigationPage extends GxPage {
                 var22 = 8;
             }
 
-            var11.setVisibility((((var22 != 0)) ? 1 : 0));
+            var11.setVisibility(var22);
             var12 = this.nSchDirty;
             var11 = ((TextView) var12);
             if (var12 == null) {
@@ -3252,7 +3252,7 @@ public final class GxNavigationPage extends GxPage {
                 var22 = 8;
             }
 
-            var11.setVisibility((((var22 != 0)) ? 1 : 0));
+            var11.setVisibility(var22);
             int var27;
             if (!this.mapsLoadingStatus && !this.mapsActionBusy && !this.isOnroad() && !this.isDownloading() && !this.selectedDraft.isEmpty()) {
                 var27 = 1;
@@ -3300,9 +3300,9 @@ public final class GxNavigationPage extends GxPage {
                     var63 = "Download Maps";
                 }
 
-                var12.setText(var63);
+                ((TextView) var12).setText(var63);
                 boolean var8;
-                if (!var27 && !var6) {
+                if ((var27 == 0) && (var6 == 0)) {
                     var8 = false;
                 } else {
                     var8 = true;
@@ -3419,7 +3419,7 @@ public final class GxNavigationPage extends GxPage {
                 var6 = (byte)8;
             }
 
-            var80.setVisibility((((var6 != 0)) ? 1 : 0));
+            var80.setVisibility(var6);
             if ((var27 != 0)) {
                 Double var81 = var13.optDouble("percent", 0.0);
                 double var3 = var81.doubleValue();
@@ -3429,7 +3429,7 @@ public final class GxNavigationPage extends GxPage {
                     var27 = (((boolean)false) ? 1 : 0);
                 }
 
-                if (!var27) {
+                if ((var27 == 0)) {
                     var81 = null;
                 }
 
@@ -3458,7 +3458,7 @@ public final class GxNavigationPage extends GxPage {
                 }
 
                 long var9 = Math.round(var3);
-                var12.setText(var83 + "  ·  " + var9 + "%");
+                ((TextView) var12).setText(var83 + "  ·  " + var9 + "%");
                 ProgressBar var127 = this.progBar;
                 ProgressBar var84 = var127;
                 if (var127 == null) {
@@ -3563,7 +3563,7 @@ public final class GxNavigationPage extends GxPage {
                     var31 = 0;
                 }
 
-                var11.setVisibility((((var31 != 0)) ? 1 : 0));
+                var11.setVisibility(var31);
             }
 
             Function1 var91 = this.paintSchedule;
@@ -3661,7 +3661,7 @@ public final class GxNavigationPage extends GxPage {
                 Iterable var147 = this.selectedDraft;
                 var var15 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var147, 10));
 
-                for (String var157 : ((String) var147)) {
+                for (String var157 : (Iterable<String>) var147) {
                     String var148 = this.tokenLabels.get(var157);
                     if (var148 == null) {
                         var148 = var157;
@@ -3709,7 +3709,7 @@ public final class GxNavigationPage extends GxPage {
 
             var12 = GxPage.str$default(this, var14, "scheduleLabel", null, 2, null);
             int var35;
-            if (var12.length() == 0) {
+            if (((TextView) var12).length() == 0) {
                 var35 = 1;
             } else {
                 var35 = 0;
@@ -3818,7 +3818,7 @@ public final class GxNavigationPage extends GxPage {
                     Iterable var9 = var10;
                     boolean var3 = false;
 
-                    for (JSONObject var16 : (Iterable) (JSONObject) ((JSONObject) var10)) {
+                    for (JSONObject var16 : (Iterable<JSONObject>) var10) {
                         List var39;
                         label130: {
                             JSONArray var38 = var16.optJSONArray("regions");
@@ -3985,7 +3985,7 @@ public final class GxNavigationPage extends GxPage {
                                 ViewGroup var49 = (ViewGroup)var72;
                                 GxPage.buttons$default(var75, new Pair[]{var68, var78}, var49, false, 4, null);
 
-                                for (JSONObject var61 : (Iterable) (JSONObject) ((JSONObject) var73)) {
+                                for (JSONObject var61 : (Iterable<JSONObject>) var73) {
                                     String var74 = GxPage.str$default(this, var61, "token", null, 2, null);
                                     String var77 = GxPage.str$default(this, var61, "label", null, 2, null);
                                     var var62 = GxPage.str$default(this, var61, "code", null, 2, null);
@@ -4015,7 +4015,7 @@ public final class GxNavigationPage extends GxPage {
                     }
                 }
 
-                if (!var1) {
+                if ((var1 == 0)) {
                     var5 = this.catalogBox;
                     if (var5 == null) {
                         Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
@@ -5166,7 +5166,7 @@ public final class GxNavigationPage extends GxPage {
             var23 = 8;
         }
 
-        var10.setVisibility((((var23 != 0)) ? 1 : 0));
+        var10.setVisibility(var23);
         var11 = this.sReason;
         var10 = ((TextView) var11);
         if (var11 == null) {

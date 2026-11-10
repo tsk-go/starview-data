@@ -568,7 +568,7 @@ public final class GalaxyVisuals {
         int i2 = 12;
         FlowRow grid = new FlowRow(ctx, ui.dp(12), ui.dp(12));
         int w = ui.dp(330);
-        for (Map.Entry entry : ((Entry) byButton.entrySet())) {
+        for (Map.Entry entry : (Iterable<Map.Entry>) byButton.entrySet()) {
             String b2 = (String) entry.getKey();
             List<Pair> list = (List) entry.getValue();
             LinearLayout c = card(ctx, ui);

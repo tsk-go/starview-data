@@ -1863,33 +1863,33 @@ public final class LaneBrain {
         LaneMarks.Mark var7 = var1.getLeftMark();
         LaneMarks.Mark var6 = var1.getRightMark();
         if (var7 != null && var7.getKind() != 0) {
-            boolean var5;
+            int var5;
             if (!var7.getYellow() || var7.getKind() != 3 && var7.getKind() != 2) {
-                var5 = false;
+                var5 = 0;
             } else {
-                var5 = true;
+                var5 = 1;
             }
 
             LaneBrain.Vote var8 = this.vYellow;
-            if (var5) {
-                var5 = true;
+            if ((var5 != 0)) {
+                var5 = 1;
             } else {
-                var5 = false;
+                var5 = 0;
             }
 
-            Integer var24 = this.vote(var8, ((var5) ? 1 : 0), var2, 1000L);
+            Integer var24 = this.vote(var8, var5, var2, 1000L);
             if (var24 != null && var24 == 1) {
                 this.see(-1, 0, 0.9, var2, "yellow line on the left");
             }
 
             var8 = this.vDashL;
             if (!var7.getYellow() && var7.getKind() == 2) {
-                var5 = true;
+                var5 = 1;
             } else {
-                var5 = false;
+                var5 = 0;
             }
 
-            Integer var20 = this.vote(var8, ((var5) ? 1 : 0), var2, 1500L);
+            Integer var20 = this.vote(var8, var5, var2, 1500L);
             if (var20 != null && var20 == 1) {
                 this.atLeast(-1, 1, 0.6, var2, "dashed line on the left");
             }
@@ -1910,48 +1910,48 @@ public final class LaneBrain {
             }
 
             LaneBrain.Road var23 = this.road;
-            boolean var15;
+            int var15;
             if (var23 != null && var23.getHighway()) {
-                var15 = true;
+                var15 = 1;
             } else {
-                var15 = false;
+                var15 = 0;
             }
 
             label97: {
-                if (var15 && this.solidMeansEdge() && !var6.getYellow() && !var6.getDouble() && var6.getKind() == 3) {
+                if ((var15 != 0) && this.solidMeansEdge() && !var6.getYellow() && !var6.getDouble() && var6.getKind() == 3) {
                     float var4 = var1.getEdgeR();
                     if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
-                        var15 = (boolean)true;
+                        var15 = (((boolean)true) ? 1 : 0);
                     } else {
-                        var15 = (boolean)false;
+                        var15 = (((boolean)false) ? 1 : 0);
                     }
 
-                    if (var15) {
+                    if ((var15 != 0)) {
                         var4 = var1.getYR();
                         if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
-                            var15 = (boolean)true;
+                            var15 = (((boolean)true) ? 1 : 0);
                         } else {
-                            var15 = (boolean)false;
+                            var15 = (((boolean)false) ? 1 : 0);
                         }
 
-                        if (var15 && var1.getEdgeR() - Math.abs(var1.getYR()) < 1.6F) {
-                            var15 = (boolean)true;
+                        if ((var15 != 0) && var1.getEdgeR() - Math.abs(var1.getYR()) < 1.6F) {
+                            var15 = (((boolean)true) ? 1 : 0);
                             break label97;
                         }
                     }
                 }
 
-                var15 = (boolean)false;
+                var15 = (((boolean)false) ? 1 : 0);
             }
 
             LaneBrain.Vote var9 = this.vSolidR;
-            if (var15) {
-                var15 = true;
+            if ((var15 != 0)) {
+                var15 = 1;
             } else {
-                var15 = false;
+                var15 = 0;
             }
 
-            Integer var10 = this.vote(var9, ((var15) ? 1 : 0), var2, 1500L);
+            Integer var10 = this.vote(var9, var15, var2, 1500L);
             if (var10 != null && var10 == 1) {
                 this.see(1, 0, 0.75, var2, "solid edge line, road edge past it");
             }
@@ -2009,14 +2009,14 @@ public final class LaneBrain {
         LaneBrain var0, long var1, int var3, LaneBrain.Vote var4, float var5, float var6, float var7, float var8, float var9
     ) {
         if (!(var5 < 0.5F)) {
-            boolean var12;
+            int var12;
             if (!Float.isInfinite(var7) && !Float.isNaN(var7)) {
-                var12 = true;
+                var12 = 1;
             } else {
-                var12 = false;
+                var12 = 0;
             }
 
-            if (var12) {
+            if ((var12 != 0)) {
                 label122: {
                     var5 = Math.abs(var6);
                     var6 = Math.abs(var8);
@@ -2044,7 +2044,7 @@ public final class LaneBrain {
                                 }
 
                                 if (!var19 || var9 - var6 > -0.3F) {
-                                    var12 = true;
+                                    var12 = 1;
                                     break label122;
                                 }
                             }
@@ -2066,10 +2066,10 @@ public final class LaneBrain {
                         return;
                     }
 
-                    var12 = false;
+                    var12 = 0;
                 }
 
-                Integer var13 = var0.vote(var4, ((var12) ? 1 : 0), var1, 1500L);
+                Integer var13 = var0.vote(var4, var12, var1, 1500L);
                 if (var13 != null && var13 == 0) {
                     double var10;
                     if (var0.solidMeansEdge()) {
@@ -2137,7 +2137,7 @@ public final class LaneBrain {
                 var15 = (((boolean)false) ? 1 : 0);
             }
 
-            if (var15 && !(var8 < 0.3F)) {
+            if ((var15 != 0) && !(var8 < 0.3F)) {
                 var6 -= Math.abs(var7);
                 if (var6 < -0.5F) {
                     return;
@@ -2151,7 +2151,7 @@ public final class LaneBrain {
                             var15 = (((boolean)false) ? 1 : 0);
                         }
 
-                        if (!var15 || !(var10 >= 0.3F)) {
+                        if ((var15 == 0) || !(var10 >= 0.3F)) {
                             var15 = (((boolean)true) ? 1 : 0);
                             break label116;
                         }
@@ -2203,10 +2203,10 @@ public final class LaneBrain {
                             var20 = "";
                         }
 
-                        var0.see(var4, (((var15 != 0)) ? 1 : 0), var11 * 0.75, var2, var23 + " road edge " + var15 + " lane" + var20 + " away");
+                        var0.see(var4, var15, var11 * 0.75, var2, var23 + " road edge " + var15 + " lane" + var20 + " away");
                     } else {
                         String var21 = Companion.sideName(var4);
-                        var0.seeRange(var4, (((var15 != 0)) ? 1 : 0), var16, var11, var2, var21 + " road edge " + var15 + "-" + var16 + " lanes away (shoulder width unknown)");
+                        var0.seeRange(var4, var15, var16, var11, var2, var21 + " road edge " + var15 + "-" + var16 + " lanes away (shoulder width unknown)");
                     }
                 }
 
@@ -2608,7 +2608,7 @@ public final class LaneBrain {
         this.camLog.clear();
         this.roadChangeMs = 0L;
         this.rtkDoubtMs = 0L;
-        for (Vote v : ((Vote) CollectionsKt.listOf((Object[]) new Vote[]{this.vYellow, this.vDashL, this.vDashR, this.vSolidR, this.vOuterL, this.vOuterR, this.vEdgeL, this.vEdgeR}))) {
+        for (Vote v : (Iterable<Vote>) CollectionsKt.listOf((Object[]) new Vote[]{this.vYellow, this.vDashL, this.vDashR, this.vSolidR, this.vOuterL, this.vOuterR, this.vEdgeL, this.vEdgeR})) {
             v.clear();
         }
         this.carsL.clear();

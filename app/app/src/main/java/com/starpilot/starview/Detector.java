@@ -2017,7 +2017,7 @@ public final class Detector {
                     }
                 }
 
-                for (Detector.Det var37 : ((Det) var27)) {
+                for (Detector.Det var37 : (Iterable<Detector.Det>) var27) {
                     if (!var28.contains(var37)) {
                         long var17 = (long)(this.nextId++);
                         Detector.Track var85 = new Detector.Track(var17, var37.getCls());
@@ -2085,7 +2085,7 @@ public final class Detector {
                 });
                 var89 = new ArrayList();
 
-                for (Detector.Track var103 : ((Track) var86)) {
+                for (Detector.Track var103 : (Iterable<Detector.Track>) var86) {
                     Iterator var113 = var89.iterator();
 
                     boolean var62;
@@ -2157,7 +2157,7 @@ public final class Detector {
                 Iterable var40 = var78;
                 var89 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var40, 10));
 
-                for (Detector.Track var105 : ((Track) var40)) {
+                for (Detector.Track var105 : (Iterable<Detector.Track>) var40) {
                     var89.add(
                         new Detector.Det(this.vehicleCls(var105), var105.getScore(), var105.getX0(), var105.getY0(), var105.getX1(), var105.getY1(), var105.getId())
                     );
@@ -3216,7 +3216,7 @@ public final class Detector {
                                         var107 = 1;
                                     }
 
-                                    if (this.isVehicle(var18) && !var107 && var158.getMisses() == 0) {
+                                    if (this.isVehicle(var18) && (var107 == 0) && var158.getMisses() == 0) {
                                         var62 = var31.offAxis(var10, (var158.getY0() + var158.getY1()) / 2.0F);
                                         if (var31.getFisheye() && var62 > 0.05F) {
                                             var62 /= (float)Math.sin(var62);
@@ -3238,10 +3238,10 @@ public final class Detector {
 
                                         float[] var171 = var158.getHVotes();
                                         var107 = var162.getAlongBin();
-                                        var171[(((var107 != 0)) ? 1 : 0)]++;
+                                        var171[var107]++;
                                         var171 = var158.getHVotes();
                                         var107 = var162.getAcrossBin();
-                                        var171[(((var107 != 0)) ? 1 : 0)] += var162.getAcrossW();
+                                        var171[var107] += var162.getAcrossW();
                                         if (this.useOrient && var18 != 5 && var84 >= 16.0F) {
                                             var32.add(new Detector.OCand(var158, this.atan2(var8, var6), var62));
                                         }

@@ -181,7 +181,7 @@ public final class ConnectionsView extends ScrollView {
     public final void refresh() {
         RtkStatus var19 = null; // declarations Vineflower left out
         DataClient var7 = Link.INSTANCE.getData();
-        boolean var2 = true;
+        int var2 = 1;
         int var1;
         if (var7 != null && var7.getConnected()) {
             var1 = 1;
@@ -212,7 +212,7 @@ public final class ConnectionsView extends ScrollView {
 
         this.set("link", var11, var3);
         if (var7 != null && var7.getConnected()) {
-            var1 = ((var2) ? 1 : 0);
+            var1 = var2;
         } else {
             var1 = (((boolean)false) ? 1 : 0);
         }

@@ -1218,7 +1218,7 @@ public final class GxModelsPage extends GxPage {
                     var1 = false;
                 }
 
-                for (JSONObject var8 : (Iterable) (JSONObject) ((JSONObject) var14)) {
+                for (JSONObject var8 : (Iterable<JSONObject>) var14) {
                     String var30 = GxModelsKt.gxModelsText$default(var8, "value", null, 4, null);
                     CharSequence var6 = GxModelsKt.gxModelsText(var8, "label", var30);
                     var4 = var6;

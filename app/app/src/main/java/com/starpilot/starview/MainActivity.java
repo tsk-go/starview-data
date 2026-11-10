@@ -2789,7 +2789,7 @@ public final class MainActivity extends AppCompatActivity {
                 MainActivity.wireControls$lambda$144(MainActivity.this, view);
             }
         });
-        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Integer.valueOf(R.id.dsDefault), "default"), TuplesKt.to(Integer.valueOf(R.id.dsOnroad), "onroad"), TuplesKt.to(Integer.valueOf(R.id.dsOffroad), "offroad")}))) {
+        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Integer.valueOf(R.id.dsDefault), "default"), TuplesKt.to(Integer.valueOf(R.id.dsOnroad), "onroad"), TuplesKt.to(Integer.valueOf(R.id.dsOffroad), "offroad")})) {
             int id = ((Number) pair.component1()).intValue();
             final String mode = (String) pair.component2();
             ((Button) findViewById(id)).setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda83
@@ -4001,7 +4001,7 @@ public final class MainActivity extends AppCompatActivity {
             var3 = 8;
         }
 
-        var48.setVisibility((((var3 != 0)) ? 1 : 0));
+        var48.setVisibility(var3);
         if (this.quickBtn != null) {
             var71 = this.quickBtn;
             TextView var49 = var71;
@@ -4016,7 +4016,7 @@ public final class MainActivity extends AppCompatActivity {
                 var3 = 8;
             }
 
-            var49.setVisibility((((var3 != 0)) ? 1 : 0));
+            var49.setVisibility(var3);
         }
 
         if (this.micBtn != null) {
@@ -4033,7 +4033,7 @@ public final class MainActivity extends AppCompatActivity {
                 var3 = 8;
             }
 
-            var50.setVisibility((((var3 != 0)) ? 1 : 0));
+            var50.setVisibility(var3);
         }
 
         if (this.bookmarkBtn != null) {
@@ -4050,7 +4050,7 @@ public final class MainActivity extends AppCompatActivity {
                 var15 = 8;
             }
 
-            var51.setVisibility((((var15 != 0)) ? 1 : 0));
+            var51.setVisibility(var15);
         }
 
         TextView var52 = this.sceneBtn;
@@ -7475,7 +7475,7 @@ public final class MainActivity extends AppCompatActivity {
             textView4 = null;
         }
         textViewArr[2] = textView4;
-        for (TextView tv : (Iterable) (TextView) ((TextView) CollectionsKt.listOf((Object[]) textViewArr))) {
+        for (TextView tv : (Iterable<TextView>) CollectionsKt.listOf((Object[]) textViewArr)) {
             tv.setTextColor(fg);
             tv.setShadowLayer(n ? 12.0f : 0.0f, 0.0f, 0.0f, -16777216);
         }
@@ -7493,7 +7493,7 @@ public final class MainActivity extends AppCompatActivity {
                 textView6 = null;
             }
             textViewArr2[1] = textView6;
-            for (TextView tv2 : (Iterable) (TextView) ((TextView) CollectionsKt.listOf((Object[]) textViewArr2))) {
+            for (TextView tv2 : (Iterable<TextView>) CollectionsKt.listOf((Object[]) textViewArr2)) {
                 tv2.setTextColor(fg);
                 tv2.setShadowLayer(n ? 2.0f : 0.0f, 2.0f, 2.0f, Color.argb(170, 0, 0, 0));
             }

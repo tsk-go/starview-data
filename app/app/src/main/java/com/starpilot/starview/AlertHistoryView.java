@@ -67,7 +67,7 @@ public final class AlertHistoryView extends CardPage {
             LinearLayout c = card();
             add(c);
             c.addView(title("All alerts", "history", "sound"));
-            for (JSONObject a : (Iterable) (JSONObject) ((JSONObject) CollectionsKt.take(alerts, 300))) {
+            for (JSONObject a : (Iterable<JSONObject>) CollectionsKt.take(alerts, 300)) {
                 String dd = new SimpleDateFormat("EEEE, MMM d", Locale.US).format(new Date(a.optLong("t")));
                 if (!Intrinsics.areEqual(dd, day)) {
                     day = dd;

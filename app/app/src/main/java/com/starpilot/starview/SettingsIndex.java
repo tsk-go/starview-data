@@ -142,7 +142,7 @@ public final class SettingsIndex {
 
         ArrayList var37 = new ArrayList();
 
-        for (GalaxyRow var9 : ((GalaxyRow) var28)) {
+        for (GalaxyRow var9 : (Iterable<GalaxyRow>) var28) {
             if (var37.size() < 2 && var9 != var35) {
                 if (StringsKt.toDoubleOrNull(var9.getValue()) != null) {
                     var22 = true;

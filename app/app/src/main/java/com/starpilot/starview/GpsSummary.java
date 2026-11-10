@@ -373,7 +373,7 @@ public final class GpsSummary {
                 var3 = 0L;
             }
 
-            return new GpsSummary(var36, var8, var15, (((var46 != 0)) ? 1 : 0), var9, var74, var2, var10, var43, var3);
+            return new GpsSummary(var36, var8, var15, var46, var9, var74, var2, var10, var43, var3);
         }
     }
 

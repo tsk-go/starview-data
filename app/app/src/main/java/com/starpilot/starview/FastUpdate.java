@@ -96,7 +96,7 @@ public final class FastUpdate {
 
         JSONObject var14 = new JSONObject();
         boolean var4;
-        if ((var3 || var2) && !Intrinsics.areEqual(var5, "error") && !Intrinsics.areEqual(var5, "rebooting")) {
+        if (((var3 != 0) || (var2 != 0)) && !Intrinsics.areEqual(var5, "error") && !Intrinsics.areEqual(var5, "rebooting")) {
             var4 = true;
         } else {
             var4 = false;

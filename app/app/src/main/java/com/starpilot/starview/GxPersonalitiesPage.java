@@ -1846,7 +1846,7 @@ public final class GxPersonalitiesPage extends GxPage {
             GalaxyApi.Param p = it.next();
             if (StringsKt.contains((CharSequence) p.getKey(), (CharSequence) "Jerk", false) && CollectionsKt.contains(this.profileKeys.values(), p.getParentKey())) {
                 keys.add(p.getKey());
-                for (String n : ((String) CollectionsKt.listOf((Object[]) new String[]{"requires_capability", "disabled_when_key_true", "requires_nonempty_key"}))) {
+                for (String n : (Iterable<String>) CollectionsKt.listOf((Object[]) new String[]{"requires_capability", "disabled_when_key_true", "requires_nonempty_key"})) {
                     String it2 = p.str(n);
                     if (it2 != null) {
                         keys.add(it2);
