@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lock">Lock</string>
+    <string name="unlock">Unlock</string>
+</resources>

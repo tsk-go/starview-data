@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+  <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+  <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+  <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
+  <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" />
+  <uses-permission android:name="android.permission.VIBRATE" />
+  <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+  <!-- Shizuku: switches the phone's hotspot / Bluetooth for the comma (Hotspot.kt) -->
+  <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+
+  <application
+    android:icon="@mipmap/ic_launcher"
+    android:label="StarLock"
+    android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+    android:usesCleartextTraffic="true">
+    <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:screenOrientation="portrait">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+      </intent-filter>
+      <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
+    </activity>
+    <activity android:name=".ShortcutActivity" android:exported="true" android:excludeFromRecents="true" android:noHistory="true"
+      android:taskAffinity="" android:theme="@android:style/Theme.Translucent.NoTitleBar">
+      <intent-filter>
+        <action android:name="com.starpilot.starlock.LOCK" />
+        <action android:name="com.starpilot.starlock.UNLOCK" />
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+    <activity android:name=".AutoLockActivity" android:exported="false" android:screenOrientation="portrait" />
+    <activity android:name=".SignalTestActivity" android:exported="false" android:screenOrientation="portrait" />
+    <service android:name=".DoorService" android:exported="false" />
+    <provider android:name="rikka.shizuku.ShizukuProvider" android:authorities="${applicationId}.shizuku" android:enabled="true"
+      android:exported="true" android:multiprocess="false" android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <service android:name=".LockTile" android:exported="true" android:icon="@drawable/ic_lock" android:label="StarLock"
+      android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+      <intent-filter>
+        <action android:name="android.service.quicksettings.action.QS_TILE" />
+      </intent-filter>
+      <meta-data android:name="android.service.quicksettings.TOGGLEABLE_TILE" android:value="true" />
+    </service>
+    <service android:name=".KeeperService" android:exported="false" android:foregroundServiceType="connectedDevice" />
+    <receiver android:name=".BootReceiver" android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+      </intent-filter>
+    </receiver>
+    <meta-data android:name="moe.shizuku.client.V3_SUPPORT" android:value="true" />
+  </application>
+</manifest>

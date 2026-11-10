@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut android:icon="@drawable/ic_lock" android:enabled="true" android:shortcutId="lock" android:shortcutShortLabel="@string/lock" android:shortcutLongLabel="@string/lock">
+        <intent android:targetPackage="com.starpilot.starlock" android:action="com.starpilot.starlock.LOCK" android:targetClass="com.starpilot.starlock.ShortcutActivity" />
+    </shortcut>
+    <shortcut android:icon="@drawable/ic_unlock" android:enabled="true" android:shortcutId="unlock" android:shortcutShortLabel="@string/unlock" android:shortcutLongLabel="@string/unlock">
+        <intent android:targetPackage="com.starpilot.starlock" android:action="com.starpilot.starlock.UNLOCK" android:targetClass="com.starpilot.starlock.ShortcutActivity" />
+    </shortcut>
+</shortcuts>
