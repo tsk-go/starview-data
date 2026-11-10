@@ -6,12 +6,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Paint.Align;
-import android.graphics.Paint.Style;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,565 +23,503 @@ import kotlin.collections.CollectionsKt;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.jvm.internal.Ref.FloatRef;
-import kotlin.jvm.internal.Ref.ObjectRef;
+import kotlin.jvm.internal.Ref;
 import kotlin.ranges.RangesKt;
 
+/* compiled from: MaskEditor.kt */
 public final class MaskEditor extends View {
-   private final Path all;
-   private final LinearLayout bar;
-   private final ArrayList<Float> cur;
-   private final float d;
-   private final Detector det;
-   private float downX;
-   private float downY;
-   private int dragP;
-   private int dragV;
-   private final Paint fill;
-   private Bitmap img;
-   private final Paint line;
-   private boolean moved;
-   private final Function1<Boolean, Unit> onCamera;
-   private final Function0<Unit> onDone;
-   private final Function1<Integer, Unit> paintCam;
-   private final Function1<Integer, Unit> paintMode;
-   private final Path path;
-   private final RectF pic;
-   private final Runnable poll;
-   private ArrayList<float[]> polys;
-   private final LinearLayout row;
-   private int sel;
-   private final Paint text;
-   private final CarUi ui;
-   private boolean wide;
+    private final Path all;
+    private final LinearLayout bar;
+    private final ArrayList<Float> cur;
+    private final float d;
+    private final Detector det;
+    private float downX;
+    private float downY;
+    private int dragP;
+    private int dragV;
+    private final Paint fill;
+    private Bitmap img;
+    private final Paint line;
+    private boolean moved;
+    private final Function1<Boolean, Unit> onCamera;
+    private final Function0<Unit> onDone;
+    private final Function1<Integer, Unit> paintCam;
+    private final Function1<Integer, Unit> paintMode;
+    private final Path path;
+    private final RectF pic;
+    private final MaskEditor$poll$1 poll;
+    private ArrayList<float[]> polys;
+    private final LinearLayout row;
+    private int sel;
+    private final Paint text;
+    private final CarUi ui;
+    private boolean wide;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$8q4AZ24QdFtUahqEcARPS3IRYGE(MaskEditor var0) {
-      return _init_$lambda$7(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Nswj9WHyfdElaIWZJ2Yo3TTp9wY(MaskEditor var0) {
-      return _init_$lambda$5(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$aQbqzgZb4NtrtRLgd6dt2MxxFzU(MaskEditor var0) {
-      return _init_$lambda$6(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$lwquJjQvRtLi7IoDij7AcwU6f24(MaskEditor var0) {
-      return _init_$lambda$8(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$pFd_l_YbOH__2XiRxcCBSkQ6IK4/* $VF was: $r8$lambda$pFd_l_YbOH__2XiRxcCBSkQ6IK4*/(MaskEditor var0, int var1) {
-      return _init_$lambda$9(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$uv9Du3qhzCE6fdl4tn6cF2bFFeg(MaskEditor var0, int var1) {
-      return _init_$lambda$4(var0, var1);
-   }
-
-   public MaskEditor(Context var1, Detector var2, boolean var3, Function1<? super Boolean, Unit> var4, Function0<Unit> var5) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "det");
-      Intrinsics.checkNotNullParameter(var4, "onCamera");
-      Intrinsics.checkNotNullParameter(var5, "onDone");
-      super(var1);
-      this.det = var2;
-      this.wide = var3;
-      this.onCamera = var4;
-      this.onDone = var5;
-      this.ui = new CarUi(var1, false, 2, null);
-      this.d = var1.getResources().getDisplayMetrics().density;
-      this.polys = new ArrayList<>(DetMasks.INSTANCE.get(this.wide));
-      this.cur = new ArrayList<>();
-      this.sel = -1;
-      this.dragP = -2;
-      this.dragV = -1;
-      this.pic = new RectF();
-      this.fill = new Paint(1);
-      Paint var9 = new Paint(1);
-      var9.setStyle(Style.STROKE);
-      var9.setStrokeWidth(3 * this.d);
-      this.line = var9;
-      Paint var10 = new Paint(1);
-      var10.setColor(-1);
-      var10.setTextSize(17 * this.d);
-      var10.setTextAlign(Align.CENTER);
-      this.text = var10;
-      this.path = new Path();
-      this.all = new Path();
-      LinearLayout var11 = new LinearLayout(var1);
-      var11.setOrientation(1);
-      var11.setGravity(1);
-      var11.setPadding(this.ui.dp(12), this.ui.dp(12), this.ui.dp(12), this.ui.dp(8));
-      this.bar = var11;
-      LinearLayout var12 = new LinearLayout(var1);
-      var12.setOrientation(0);
-      this.row = var12;
-      this.poll = new Runnable() {
-
-         @Override
-         public void run() {
-            Bitmap var2x = MaskEditor.this.det.getSnap();
-            if (var2x != null && MaskEditor.this.det.getSnapWide() == MaskEditor.this.getWide()) {
-               MaskEditor.this.img = var2x;
-               MaskEditor.this.invalidate();
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r6v15, types: [com.starpilot.starview.MaskEditor$poll$1] */
+    public MaskEditor(Context ctx, Detector det, boolean z, Function1<? super Boolean, Unit> onCamera, Function0<Unit> onDone) {
+        super(ctx);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(det, "det");
+        Intrinsics.checkNotNullParameter(onCamera, "onCamera");
+        Intrinsics.checkNotNullParameter(onDone, "onDone");
+        this.det = det;
+        this.wide = z;
+        this.onCamera = onCamera;
+        this.onDone = onDone;
+        this.ui = new CarUi(ctx, false, 2, null);
+        this.d = ctx.getResources().getDisplayMetrics().density;
+        this.polys = new ArrayList<>(DetMasks.INSTANCE.get(this.wide));
+        this.cur = new ArrayList<>();
+        this.sel = -1;
+        this.dragP = -2;
+        this.dragV = -1;
+        this.pic = new RectF();
+        this.fill = new Paint(1);
+        Paint paint = new Paint(1);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(3 * this.d);
+        this.line = paint;
+        Paint paint2 = new Paint(1);
+        paint2.setColor(-1);
+        paint2.setTextSize(17 * this.d);
+        paint2.setTextAlign(Paint.Align.CENTER);
+        this.text = paint2;
+        this.path = new Path();
+        this.all = new Path();
+        LinearLayout linearLayout = new LinearLayout(ctx);
+        linearLayout.setOrientation(1);
+        linearLayout.setGravity(1);
+        linearLayout.setPadding(this.ui.dp(12), this.ui.dp(12), this.ui.dp(12), this.ui.dp(8));
+        this.bar = linearLayout;
+        LinearLayout linearLayout2 = new LinearLayout(ctx);
+        linearLayout2.setOrientation(0);
+        this.row = linearLayout2;
+        this.poll = new Runnable() { // from class: com.starpilot.starview.MaskEditor$poll$1
+            @Override // java.lang.Runnable
+            public void run() {
+                Detector detector;
+                Detector detector2;
+                Detector detector3;
+                detector = MaskEditor.this.det;
+                Bitmap s = detector.getSnap();
+                if (s != null) {
+                    detector3 = MaskEditor.this.det;
+                    if (detector3.getSnapWide() == MaskEditor.this.getWide()) {
+                        MaskEditor.this.img = s;
+                        MaskEditor.this.invalidate();
+                    }
+                }
+                detector2 = MaskEditor.this.det;
+                detector2.setSnapWant(MaskEditor.this.getWide() ? 2 : 1);
+                MaskEditor.this.postDelayed(this, 1000L);
             }
+        };
+        setBackgroundColor(Color.rgb(11, 13, 18));
+        Pair<LinearLayout, Function1<Integer, Unit>> chips = this.ui.chips(CollectionsKt.listOf((Object[]) new String[]{"Road camera", "Wide camera"}), new Function1() { // from class: com.starpilot.starview.MaskEditor$$ExternalSyntheticLambda0
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit _init_$lambda$4;
+                _init_$lambda$4 = MaskEditor._init_$lambda$4(MaskEditor.this, ((Integer) obj).intValue());
+                return _init_$lambda$4;
+            }
+        });
+        LinearLayout component1 = chips.component1();
+        Function1<Integer, Unit> component2 = chips.component2();
+        this.paintCam = component2;
+        component2.invoke(Integer.valueOf(this.wide ? 1 : 0));
+        this.bar.addView(this.row, new LinearLayout.LayoutParams(-2, -2));
+        this.row.addView(component1, new LinearLayout.LayoutParams(this.ui.dp(400), -2));
+        for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Finish area", new Function0() { // from class: com.starpilot.starview.MaskEditor$$ExternalSyntheticLambda1
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit _init_$lambda$5;
+                _init_$lambda$5 = MaskEditor._init_$lambda$5(MaskEditor.this);
+                return _init_$lambda$5;
+            }
+        }), TuplesKt.to("Undo corner", new Function0() { // from class: com.starpilot.starview.MaskEditor$$ExternalSyntheticLambda2
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit _init_$lambda$6;
+                _init_$lambda$6 = MaskEditor._init_$lambda$6(MaskEditor.this);
+                return _init_$lambda$6;
+            }
+        }), TuplesKt.to("Delete area", new Function0() { // from class: com.starpilot.starview.MaskEditor$$ExternalSyntheticLambda3
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit _init_$lambda$7;
+                _init_$lambda$7 = MaskEditor._init_$lambda$7(MaskEditor.this);
+                return _init_$lambda$7;
+            }
+        })})) {
+            String str = (String) pair.component1();
+            Function0 function0 = (Function0) pair.component2();
+            this.row.addView(new View(ctx), new LinearLayout.LayoutParams(this.ui.dp(10), 1));
+            this.row.addView(CarUi.button$default(this.ui, str, false, function0, 2, null));
+        }
+        this.row.addView(new View(ctx), new LinearLayout.LayoutParams(this.ui.dp(10), 1));
+        this.row.addView(this.ui.button("Done", true, new Function0() { // from class: com.starpilot.starview.MaskEditor$$ExternalSyntheticLambda4
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit _init_$lambda$8;
+                _init_$lambda$8 = MaskEditor._init_$lambda$8(MaskEditor.this);
+                return _init_$lambda$8;
+            }
+        }));
+        Pair<LinearLayout, Function1<Integer, Unit>> chips2 = this.ui.chips(CollectionsKt.listOf((Object[]) new String[]{"Ignore inside the areas", "Only look inside the areas"}), new Function1() { // from class: com.starpilot.starview.MaskEditor$$ExternalSyntheticLambda5
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit _init_$lambda$9;
+                _init_$lambda$9 = MaskEditor._init_$lambda$9(MaskEditor.this, ((Integer) obj).intValue());
+                return _init_$lambda$9;
+            }
+        });
+        LinearLayout component12 = chips2.component1();
+        Function1<Integer, Unit> component22 = chips2.component2();
+        this.paintMode = component22;
+        component22.invoke(Integer.valueOf(DetMasks.INSTANCE.keep(this.wide) ? 1 : 0));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(this.ui.dp(620), -2);
+        layoutParams.topMargin = this.ui.dp(8);
+        Unit unit = Unit.INSTANCE;
+        this.bar.addView(component12, layoutParams);
+    }
 
-            Detector var3x = MaskEditor.this.det;
-            byte var1x;
-            if (MaskEditor.this.getWide()) {
-               var1x = 2;
+    public final boolean getWide() {
+        return this.wide;
+    }
+
+    public final void setWide(boolean z) {
+        this.wide = z;
+    }
+
+    private final void outline(Path into, float[] p) {
+        int length = p.length / 2;
+        for (int v = 0; v < length; v++) {
+            if (v == 0) {
+                into.moveTo(sx(p[0]), sy(p[1]));
             } else {
-               var1x = 1;
+                into.lineTo(sx(p[v * 2]), sy(p[(v * 2) + 1]));
             }
+        }
+        into.close();
+    }
 
-            var3x.setSnapWant(var1x);
-            MaskEditor.this.postDelayed(this, 1000L);
-         }
-      };
-      this.setBackgroundColor(Color.rgb(11, 13, 18));
-      Pair var17 = this.ui.chips(CollectionsKt.listOf(new String[]{"Road camera", "Wide camera"}), new MaskEditor$$ExternalSyntheticLambda0(this));
-      LinearLayout var13 = (LinearLayout)var17.component1();
-      var4 = (Function1)var17.component2();
-      this.paintCam = var4;
-      var4.invoke(Integer.valueOf(this.wide));
-      this.bar.addView((View)this.row, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(-2, -2)));
-      this.row.addView((View)var13, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(this.ui.dp(400), -2)));
+    public final LinearLayout getBar() {
+        return this.bar;
+    }
 
-      for (Pair var21 : CollectionsKt.listOf(
-         new Pair[]{
-            TuplesKt.to("Finish area", new MaskEditor$$ExternalSyntheticLambda1(this)),
-            TuplesKt.to("Undo corner", new MaskEditor$$ExternalSyntheticLambda2(this)),
-            TuplesKt.to("Delete area", new MaskEditor$$ExternalSyntheticLambda3(this))
-         }
-      )) {
-         String var14 = (String)var21.component1();
-         var5 = (Function0)var21.component2();
-         this.row.addView(new View(var1), (LayoutParams)(new android.widget.LinearLayout.LayoutParams(this.ui.dp(10), 1)));
-         this.row.addView((View)CarUi.button$default(this.ui, var14, false, var5, 2, null));
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit _init_$lambda$4(MaskEditor this$0, int i) {
+        this$0.camera(i == 1);
+        return Unit.INSTANCE;
+    }
 
-      this.row.addView(new View(var1), (LayoutParams)(new android.widget.LinearLayout.LayoutParams(this.ui.dp(10), 1)));
-      this.row.addView((View)this.ui.button("Done", true, new MaskEditor$$ExternalSyntheticLambda4(this)));
-      Pair var6 = this.ui
-         .chips(CollectionsKt.listOf(new String[]{"Ignore inside the areas", "Only look inside the areas"}), new MaskEditor$$ExternalSyntheticLambda5(this));
-      LinearLayout var15 = (LinearLayout)var6.component1();
-      Function1 var7 = (Function1)var6.component2();
-      this.paintMode = var7;
-      var7.invoke(Integer.valueOf(DetMasks.INSTANCE.keep(this.wide)));
-      LinearLayout var8 = this.bar;
-      View var20 = (View)var15;
-      android.widget.LinearLayout.LayoutParams var16 = new android.widget.LinearLayout.LayoutParams(this.ui.dp(620), -2);
-      var16.topMargin = this.ui.dp(8);
-      Unit var23 = Unit.INSTANCE;
-      var8.addView(var20, (LayoutParams)var16);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit _init_$lambda$5(MaskEditor this$0) {
+        this$0.close();
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit _init_$lambda$4(MaskEditor var0, int var1) {
-      boolean var2 = true;
-      if (var1 != 1) {
-         var2 = false;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit _init_$lambda$6(MaskEditor this$0) {
+        if (!this$0.cur.isEmpty()) {
+            this$0.cur.remove(this$0.cur.size() - 1);
+            this$0.cur.remove(this$0.cur.size() - 1);
+            this$0.invalidate();
+        }
+        return Unit.INSTANCE;
+    }
 
-      var0.camera(var2);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit _init_$lambda$5(MaskEditor var0) {
-      var0.close();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit _init_$lambda$6(MaskEditor var0) {
-      if (!var0.cur.isEmpty()) {
-         var0.cur.remove(var0.cur.size() - 1);
-         var0.cur.remove(var0.cur.size() - 1);
-         var0.invalidate();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit _init_$lambda$7(MaskEditor var0) {
-      if (!var0.cur.isEmpty()) {
-         var0.cur.clear();
-      } else {
-         int var3 = var0.polys.size();
-         int var4 = var0.sel;
-         boolean var2 = false;
-         boolean var1 = var2;
-         if (var4 >= 0) {
-            var1 = var2;
-            if (var4 < var3) {
-               var1 = true;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit _init_$lambda$7(MaskEditor this$0) {
+        if (this$0.cur.isEmpty()) {
+            int size = this$0.polys.size();
+            int i = this$0.sel;
+            boolean z = false;
+            if (i >= 0 && i < size) {
+                z = true;
             }
-         }
+            if (z) {
+                this$0.polys.remove(this$0.sel);
+                this$0.sel = -1;
+                this$0.save();
+            }
+        } else {
+            this$0.cur.clear();
+        }
+        this$0.invalidate();
+        return Unit.INSTANCE;
+    }
 
-         if (var1) {
-            var0.polys.remove(var0.sel);
-            var0.sel = -1;
-            var0.save();
-         }
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit _init_$lambda$8(MaskEditor this$0) {
+        this$0.close();
+        this$0.onDone.invoke();
+        return Unit.INSTANCE;
+    }
 
-      var0.invalidate();
-      return Unit.INSTANCE;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit _init_$lambda$9(MaskEditor this$0, int i) {
+        DetMasks.INSTANCE.setKeep(this$0.wide, i == 1);
+        this$0.paintMode.invoke(Integer.valueOf(i));
+        this$0.invalidate();
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit _init_$lambda$8(MaskEditor var0) {
-      var0.close();
-      var0.onDone.invoke();
-      return Unit.INSTANCE;
-   }
+    @Override // android.view.View
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        post(this.poll);
+    }
 
-   private static final Unit _init_$lambda$9(MaskEditor var0, int var1) {
-      DetMasks var4 = DetMasks.INSTANCE;
-      boolean var3 = var0.wide;
-      boolean var2 = true;
-      if (var1 != 1) {
-         var2 = false;
-      }
+    @Override // android.view.View
+    protected void onDetachedFromWindow() {
+        removeCallbacks(this.poll);
+        this.det.setSnapWant(0);
+        super.onDetachedFromWindow();
+    }
 
-      var4.setKeep(var3, var2);
-      var0.paintMode.invoke(var1);
-      var0.invalidate();
-      return Unit.INSTANCE;
-   }
+    private final void camera(boolean w) {
+        if (w == this.wide) {
+            return;
+        }
+        close();
+        this.wide = w;
+        this.polys = new ArrayList<>(DetMasks.INSTANCE.get(w));
+        this.sel = -1;
+        this.img = null;
+        this.paintCam.invoke(Integer.valueOf(w ? 1 : 0));
+        this.paintMode.invoke(Integer.valueOf(DetMasks.INSTANCE.keep(w) ? 1 : 0));
+        this.onCamera.invoke(Boolean.valueOf(w));
+        invalidate();
+    }
 
-   private final void camera(boolean var1) {
-      if (var1 != this.wide) {
-         this.close();
-         this.wide = (boolean)var1;
-         this.polys = new ArrayList<>(DetMasks.INSTANCE.get((boolean)var1));
-         this.sel = -1;
-         this.img = null;
-         this.paintCam.invoke(Integer.valueOf(var1));
-         this.paintMode.invoke(Integer.valueOf(DetMasks.INSTANCE.keep((boolean)var1)));
-         this.onCamera.invoke(Boolean.valueOf((boolean)var1));
-         this.invalidate();
-      }
-   }
+    private final void save() {
+        DetMasks.INSTANCE.set(this.wide, this.polys);
+    }
 
-   private final void close() {
-      if (this.cur.size() >= 6) {
-         this.polys.add(CollectionsKt.toFloatArray(this.cur));
-         this.sel = this.polys.size() - 1;
-         this.save();
-      }
+    private final void close() {
+        if (this.cur.size() >= 6) {
+            this.polys.add(CollectionsKt.toFloatArray(this.cur));
+            this.sel = this.polys.size() - 1;
+            save();
+        }
+        this.cur.clear();
+        invalidate();
+    }
 
-      this.cur.clear();
-      this.invalidate();
-   }
+    private final float fx(float x) {
+        return RangesKt.coerceIn((x - this.pic.left) / this.pic.width(), 0.0f, 1.0f);
+    }
 
-   private final Pair<Integer, Integer> corner(float var1, float var2) {
-      ObjectRef var4 = new ObjectRef();
-      FloatRef var5 = new FloatRef();
-      var5.element = 30 * this.d;
-      corner$look(this, var1, var2, var5, var4, -1, this.cur);
-      Iterator var6 = this.polys.iterator();
+    private final float fy(float y) {
+        return RangesKt.coerceIn((y - this.pic.top) / this.pic.height(), 0.0f, 1.0f);
+    }
 
-      for (int var3 = 0; var6.hasNext(); var3++) {
-         float[] var7 = (float[])var6.next();
-         Intrinsics.checkNotNull(var7);
-         corner$look(this, var1, var2, var5, var4, var3, ArraysKt.toList(var7));
-      }
+    private final float sx(float f) {
+        return this.pic.left + (this.pic.width() * f);
+    }
 
-      return (Pair<Integer, Integer>)var4.element;
-   }
+    private final float sy(float f) {
+        return this.pic.top + (this.pic.height() * f);
+    }
 
-   private static final void corner$look(
-      MaskEditor var0, float var1, float var2, FloatRef var3, ObjectRef<Pair<Integer, Integer>> var4, int var5, List<Float> var6
-   ) {
-      int var8 = 0;
+    /* JADX WARN: Multi-variable type inference failed */
+    private final Pair<Integer, Integer> corner(float x, float y) {
+        Ref.ObjectRef best = new Ref.ObjectRef();
+        Ref.FloatRef bd = new Ref.FloatRef();
+        bd.element = 30 * this.d;
+        corner$look(this, x, y, bd, best, -1, this.cur);
+        int i = 0;
+        for (float[] p : this.polys) {
+            int i2 = i;
+            Intrinsics.checkNotNull(p);
+            corner$look(this, x, y, bd, best, i2, ArraysKt.toList(p));
+            i++;
+        }
+        return (Pair) best.element;
+    }
 
-      for (int var9 = var6.size() / 2; var8 < var9; var8++) {
-         float var7 = (float)Math.hypot(
-            var0.sx(((Number)var6.get(var8 * 2)).floatValue()) - var1, var0.sy(((Number)var6.get(var8 * 2 + 1)).floatValue()) - var2
-         );
-         if (var7 < var3.element) {
-            var3.element = var7;
-            var4.element = (T)TuplesKt.<Integer, Integer>to(var5, var8);
-         }
-      }
-   }
+    /* JADX WARN: Type inference failed for: r3v3, types: [T, kotlin.Pair] */
+    private static final void corner$look(MaskEditor this$0, float $x, float $y, Ref.FloatRef bd, Ref.ObjectRef<Pair<Integer, Integer>> objectRef, int pi, List<Float> list) {
+        int size = list.size() / 2;
+        for (int v = 0; v < size; v++) {
+            float dd = (float) Math.hypot(this$0.sx(list.get(v * 2).floatValue()) - $x, this$0.sy(list.get((v * 2) + 1).floatValue()) - $y);
+            if (dd < bd.element) {
+                bd.element = dd;
+                objectRef.element = TuplesKt.to(Integer.valueOf(pi), Integer.valueOf(v));
+            }
+        }
+    }
 
-   private final float fx(float var1) {
-      return RangesKt.coerceIn((var1 - this.pic.left) / this.pic.width(), 0.0F, 1.0F);
-   }
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    @Override // android.view.View
+    public boolean onTouchEvent(MotionEvent e) {
+        int i;
+        Intrinsics.checkNotNullParameter(e, "e");
+        switch (e.getActionMasked()) {
+            case 0:
+                this.downX = e.getX();
+                this.downY = e.getY();
+                this.moved = false;
+                Pair c = corner(e.getX(), e.getY());
+                this.dragP = c != null ? c.getFirst().intValue() : -2;
+                this.dragV = c != null ? c.getSecond().intValue() : -1;
+                return true;
+            case 1:
+                if (this.moved) {
+                    if (this.dragP >= 0) {
+                        save();
+                    }
+                    return true;
+                }
+                if (this.img == null || !this.pic.contains(e.getX(), e.getY())) {
+                    return true;
+                }
+                if (this.dragP == -1 && this.dragV == 0 && this.cur.size() >= 6) {
+                    close();
+                    return true;
+                }
+                if (this.cur.isEmpty()) {
+                    List $this$indexOfLast$iv = this.polys;
+                    ListIterator iterator$iv = $this$indexOfLast$iv.listIterator($this$indexOfLast$iv.size());
+                    while (true) {
+                        if (iterator$iv.hasPrevious()) {
+                            float[] it = iterator$iv.previous();
+                            DetMasks detMasks = DetMasks.INSTANCE;
+                            Intrinsics.checkNotNull(it);
+                            if (detMasks.inside(it, fx(e.getX()), fy(e.getY()))) {
+                                i = iterator$iv.nextIndex();
+                            }
+                        } else {
+                            i = -1;
+                        }
+                    }
+                    int hit = i;
+                    if (hit >= 0) {
+                        this.sel = hit;
+                        invalidate();
+                        return true;
+                    }
+                }
+                if (this.cur.size() < 200) {
+                    this.cur.add(Float.valueOf(fx(e.getX())));
+                    this.cur.add(Float.valueOf(fy(e.getY())));
+                    this.sel = -1;
+                    invalidate();
+                }
+                return true;
+            case 2:
+                if (((float) Math.hypot(e.getX() - this.downX, e.getY() - this.downY)) > 8 * this.d) {
+                    this.moved = true;
+                }
+                if (this.moved && this.dragP > -2) {
+                    if (this.dragP == -1) {
+                        this.cur.set(this.dragV * 2, Float.valueOf(fx(e.getX())));
+                        this.cur.set((this.dragV * 2) + 1, Float.valueOf(fy(e.getY())));
+                    } else {
+                        this.polys.get(this.dragP)[this.dragV * 2] = fx(e.getX());
+                        this.polys.get(this.dragP)[(this.dragV * 2) + 1] = fy(e.getY());
+                    }
+                    invalidate();
+                }
+                return true;
+            default:
+                return true;
+        }
+    }
 
-   private final float fy(float var1) {
-      return RangesKt.coerceIn((var1 - this.pic.top) / this.pic.height(), 0.0F, 1.0F);
-   }
-
-   private final void outline(Path var1, float[] var2) {
-      int var3 = 0;
-
-      for (int var4 = var2.length / 2; var3 < var4; var3++) {
-         if (var3 == 0) {
-            var1.moveTo(this.sx(var2[0]), this.sy(var2[1]));
-         } else {
-            var1.lineTo(this.sx(var2[var3 * 2]), this.sy(var2[var3 * 2 + 1]));
-         }
-      }
-
-      var1.close();
-   }
-
-   private final void save() {
-      DetMasks.INSTANCE.set(this.wide, this.polys);
-   }
-
-   private final float sx(float var1) {
-      return this.pic.left + this.pic.width() * var1;
-   }
-
-   private final float sy(float var1) {
-      return this.pic.top + this.pic.height() * var1;
-   }
-
-   public final LinearLayout getBar() {
-      return this.bar;
-   }
-
-   public final boolean getWide() {
-      return this.wide;
-   }
-
-   protected void onAttachedToWindow() {
-      super.onAttachedToWindow();
-      this.post(this.poll);
-   }
-
-   protected void onDetachedFromWindow() {
-      this.removeCallbacks(this.poll);
-      this.det.setSnapWant(0);
-      super.onDetachedFromWindow();
-   }
-
-   protected void onDraw(Canvas var1) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      float var4 = this.bar.getHeight() + 8 * this.d;
-      Bitmap var13 = this.img;
-      if (var13 == null) {
-         String var30;
-         if (this.wide) {
-            var30 = "wide";
-         } else {
-            var30 = "road";
-         }
-
-         var1.drawText("Waiting for the " + var30 + " camera… (it streams while the car is on)", this.getWidth() / 2.0F, this.getHeight() / 2.0F, this.text);
-      } else {
-         float var7 = Math.min((float)this.getWidth() / var13.getWidth(), (this.getHeight() - var4 - 40 * this.d) / var13.getHeight());
-         float var6 = var13.getWidth() * var7;
-         float var2 = var13.getHeight();
-         RectF var12 = this.pic;
-         float var5 = this.getWidth();
-         float var3 = 2;
-         var12.set((var5 - var6) / var3, var4, (this.getWidth() + var6) / var3, var4 + var2 * var7);
-         var1.drawBitmap(var13, null, this.pic, null);
-         boolean var11 = DetMasks.INSTANCE.keep(this.wide);
-         this.fill.setColor(Color.argb(170, 114, 114, 114));
-         if (var11 && !this.polys.isEmpty()) {
+    @Override // android.view.View
+    protected void onDraw(Canvas c) {
+        String str;
+        Intrinsics.checkNotNullParameter(c, "c");
+        float top = this.bar.getHeight() + (8 * this.d);
+        Bitmap b = this.img;
+        if (b == null) {
+            c.drawText("Waiting for the " + (this.wide ? "wide" : "road") + " camera… (it streams while the car is on)", getWidth() / 2.0f, getHeight() / 2.0f, this.text);
+            return;
+        }
+        float s = Math.min(getWidth() / b.getWidth(), ((getHeight() - top) - (40 * this.d)) / b.getHeight());
+        float w = b.getWidth() * s;
+        float h = b.getHeight() * s;
+        float f = 2;
+        this.pic.set((getWidth() - w) / f, top, (getWidth() + w) / f, top + h);
+        c.drawBitmap(b, (Rect) null, this.pic, (Paint) null);
+        boolean keep = DetMasks.INSTANCE.keep(this.wide);
+        int v = 170;
+        int i = 114;
+        this.fill.setColor(Color.argb(170, 114, 114, 114));
+        if (keep && !this.polys.isEmpty()) {
             this.all.rewind();
-            Iterator var14 = this.polys.iterator();
-            Intrinsics.checkNotNullExpressionValue(var14, "iterator(...)");
-
-            while (var14.hasNext()) {
-               float[] var31 = (float[])var14.next();
-               Path var23 = this.all;
-               Intrinsics.checkNotNull(var31);
-               this.outline(var23, var31);
+            Iterator<float[]> it = this.polys.iterator();
+            Intrinsics.checkNotNullExpressionValue(it, "iterator(...)");
+            while (it.hasNext()) {
+                float[] p = it.next();
+                Path path = this.all;
+                Intrinsics.checkNotNull(p);
+                outline(path, p);
             }
-
-            var1.save();
-            var1.clipOutPath(this.all);
-            var1.drawRect(this.pic, this.fill);
-            var1.restore();
-         }
-
-         Iterator var24 = this.polys.iterator();
-         int var8 = 0;
-
-         while (var24.hasNext()) {
-            int var10 = var8 + 1;
-            float[] var32 = (float[])var24.next();
+            c.save();
+            c.clipOutPath(this.all);
+            c.drawRect(this.pic, this.fill);
+            c.restore();
+        }
+        Iterator it2 = this.polys.iterator();
+        int i2 = 0;
+        while (it2.hasNext()) {
+            int i3 = i2;
+            i2++;
+            float[] p2 = (float[]) it2.next();
             this.path.rewind();
-            Path var33 = this.path;
-            Intrinsics.checkNotNull(var32);
-            this.outline(var33, var32);
-            if (!var11) {
-               this.fill.setColor(Color.argb(170, 114, 114, 114));
-               var1.drawPath(this.path, this.fill);
+            Path path2 = this.path;
+            Intrinsics.checkNotNull(p2);
+            outline(path2, p2);
+            if (!keep) {
+                this.fill.setColor(Color.argb(v, i, i, i));
+                c.drawPath(this.path, this.fill);
             }
-
-            Paint var34 = this.line;
-            if (var8 == this.sel) {
-               var8 = CarUi.Companion.getACCENT();
-            } else {
-               var8 = Color.argb(200, 255, 255, 255);
-            }
-
-            var34.setColor(var8);
-            var1.drawPath(this.path, this.line);
+            this.line.setColor(i3 == this.sel ? CarUi.Companion.getACCENT() : Color.argb(200, 255, 255, 255));
+            c.drawPath(this.path, this.line);
             this.fill.setColor(this.line.getColor());
-            int var9 = 0;
-
-            for (int var19 = var32.length / 2; var9 < var19; var9++) {
-               var1.drawCircle(this.sx(var32[var9 * 2]), this.sy(var32[var9 * 2 + 1]), 7 * this.d, this.fill);
+            int v2 = 0;
+            for (int length = p2.length / 2; v2 < length; length = length) {
+                c.drawCircle(sx(p2[v2 * 2]), sy(p2[(v2 * 2) + 1]), 7 * this.d, this.fill);
+                v2++;
+                it2 = it2;
             }
-
-            var8 = var10;
-         }
-
-         if (!this.cur.isEmpty()) {
+            v = 170;
+            i = 114;
+        }
+        if (!this.cur.isEmpty()) {
             this.line.setColor(CarUi.Companion.getACCENT());
             this.fill.setColor(CarUi.Companion.getACCENT());
-            int var22 = this.cur.size() / 2;
-
-            for (int var20 = 0; var20 < var22; var20++) {
-               Object var25 = this.cur.get(var20 * 2);
-               Intrinsics.checkNotNullExpressionValue(var25, "get(...)");
-               var3 = this.sx(((Number)var25).floatValue());
-               var25 = this.cur.get(var20 * 2 + 1);
-               Intrinsics.checkNotNullExpressionValue(var25, "get(...)");
-               var2 = this.sy(((Number)var25).floatValue());
-               byte var21;
-               if (var20 == 0) {
-                  var21 = 11;
-               } else {
-                  var21 = 7;
-               }
-
-               var1.drawCircle(var3, var2, var21 * this.d, this.fill);
-               if (var20 > 0) {
-                  var25 = this.cur.get(var20 * 2 - 2);
-                  Intrinsics.checkNotNullExpressionValue(var25, "get(...)");
-                  var4 = this.sx(((Number)var25).floatValue());
-                  var25 = this.cur.get(var20 * 2 - 1);
-                  Intrinsics.checkNotNullExpressionValue(var25, "get(...)");
-                  var1.drawLine(var4, this.sy(((Number)var25).floatValue()), var3, var2, this.line);
-               }
+            int size = this.cur.size() / 2;
+            int v3 = 0;
+            while (v3 < size) {
+                Float f2 = this.cur.get(v3 * 2);
+                Intrinsics.checkNotNullExpressionValue(f2, "get(...)");
+                float x = sx(f2.floatValue());
+                Float f3 = this.cur.get((v3 * 2) + 1);
+                Intrinsics.checkNotNullExpressionValue(f3, "get(...)");
+                float y = sy(f3.floatValue());
+                c.drawCircle(x, y, (v3 == 0 ? 11 : 7) * this.d, this.fill);
+                if (v3 > 0) {
+                    Float f4 = this.cur.get((v3 * 2) - 2);
+                    Intrinsics.checkNotNullExpressionValue(f4, "get(...)");
+                    float sx = sx(f4.floatValue());
+                    Float f5 = this.cur.get((v3 * 2) - 1);
+                    Intrinsics.checkNotNullExpressionValue(f5, "get(...)");
+                    c.drawLine(sx, sy(f5.floatValue()), x, y, this.line);
+                }
+                v3++;
             }
-         }
-
-         String var29;
-         if (!this.cur.isEmpty()) {
-            var29 = "Tap to add corners. Tap the first corner or Finish area to close it.";
-         } else if (var11) {
-            var29 = "Draw around what the detector should look at (the road through the windshield). Grey = ignored.";
-         } else {
-            var29 = "Draw around what the detector should ignore (hood, dash, mirror mount, reflections). Grey = ignored.";
-         }
-
-         var1.drawText(var29, this.getWidth() / 2.0F, this.pic.bottom + 28 * this.d, this.text);
-      }
-   }
-
-   public boolean onTouchEvent(MotionEvent var1) {
-      Intrinsics.checkNotNullParameter(var1, "e");
-      int var4 = var1.getActionMasked();
-      int var2 = -2;
-      byte var3 = -1;
-      switch (var4) {
-         case 0:
-            this.downX = var1.getX();
-            this.downY = var1.getY();
-            this.moved = false;
-            Pair var8 = this.corner(var1.getX(), var1.getY());
-            if (var8 != null) {
-               var2 = ((Number)var8.getFirst()).intValue();
-            }
-
-            this.dragP = var2;
-            var2 = var3;
-            if (var8 != null) {
-               var2 = ((Number)var8.getSecond()).intValue();
-            }
-
-            this.dragV = var2;
-            break;
-         case 1:
-            if (this.moved) {
-               if (this.dragP >= 0) {
-                  this.save();
-               }
-
-               return true;
-            }
-
-            if (this.img == null || !this.pic.contains(var1.getX(), var1.getY())) {
-               return true;
-            }
-
-            if (this.dragP == -1 && this.dragV == 0 && this.cur.size() >= 6) {
-               this.close();
-               return true;
-            }
-
-            if (this.cur.isEmpty()) {
-               List var5 = this.polys;
-               ListIterator var6 = var5.listIterator(var5.size());
-
-               while (true) {
-                  if (var6.hasPrevious()) {
-                     float[] var11 = (float[])var6.previous();
-                     DetMasks var7 = DetMasks.INSTANCE;
-                     Intrinsics.checkNotNull(var11);
-                     if (!var7.inside(var11, this.fx(var1.getX()), this.fy(var1.getY()))) {
-                        continue;
-                     }
-
-                     var2 = var6.nextIndex();
-                     break;
-                  }
-
-                  var2 = -1;
-                  break;
-               }
-
-               if (var2 >= 0) {
-                  this.sel = var2;
-                  this.invalidate();
-                  return true;
-               }
-            }
-
-            if (this.cur.size() < 200) {
-               this.cur.add(this.fx(var1.getX()));
-               this.cur.add(this.fy(var1.getY()));
-               this.sel = -1;
-               this.invalidate();
-            }
-            break;
-         case 2:
-            if ((float)Math.hypot(var1.getX() - this.downX, var1.getY() - this.downY) > 8 * this.d) {
-               this.moved = true;
-            }
-
-            if (this.moved && this.dragP > -2) {
-               if (this.dragP == -1) {
-                  this.cur.set(this.dragV * 2, this.fx(var1.getX()));
-                  this.cur.set(this.dragV * 2 + 1, this.fy(var1.getY()));
-               } else {
-                  this.polys.get(this.dragP)[this.dragV * 2] = this.fx(var1.getX());
-                  this.polys.get(this.dragP)[this.dragV * 2 + 1] = this.fy(var1.getY());
-               }
-
-               this.invalidate();
-            }
-      }
-
-      return true;
-   }
-
-   public final void setWide(boolean var1) {
-      this.wide = var1;
-   }
+        }
+        if (this.cur.isEmpty()) {
+            str = keep ? "Draw around what the detector should look at (the road through the windshield). Grey = ignored." : "Draw around what the detector should ignore (hood, dash, mirror mount, reflections). Grey = ignored.";
+        } else {
+            str = "Tap to add corners. Tap the first corner or Finish area to close it.";
+        }
+        c.drawText(str, getWidth() / 2.0f, this.pic.bottom + (28 * this.d), this.text);
+    }
 }

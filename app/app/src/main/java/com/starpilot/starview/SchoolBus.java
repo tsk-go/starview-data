@@ -3,29 +3,23 @@ package com.starpilot.starview;
 import java.util.HashMap;
 import kotlin.collections.SetsKt;
 
+/* compiled from: IdeasMore.kt */
 public final class SchoolBus {
-   private final LeadLamps lamps = new LeadLamps();
-   private final HashMap<Long, Float> yellow = new HashMap<>();
+    private final LeadLamps lamps = new LeadLamps();
+    private final HashMap<Long, Float> yellow = new HashMap<>();
 
-   public final void feed(long var1, long var3, float var5, float var6, float var7, float var8) {
-      Float var10 = this.yellow.get(var1);
-      float var9;
-      if (var10 != null) {
-         var9 = var10;
-      } else {
-         var9 = var6;
-      }
-
-      var6 = var9 * 0.8F + 0.2F * var6;
-      this.yellow.put(var1, var6);
-      if (this.yellow.size() > 20) {
-         this.yellow.keySet().retainAll(SetsKt.setOf(var1));
-      }
-
-      this.lamps.feed(var1, var3, var7, var8);
-      if (var6 > 0.3F && this.lamps.anyBlink(var3)) {
-         Ideas.INSTANCE.getMore().setBusAtMs(var3);
-         Ideas.INSTANCE.getMore().setBusX(var5);
-      }
-   }
+    public final void feed(long id, long nowMs, float x, float yellowFrac, float redL, float redR) {
+        Float f = this.yellow.get(Long.valueOf(id));
+        float y = ((f != null ? f.floatValue() : yellowFrac) * 0.8f) + (0.2f * yellowFrac);
+        this.yellow.put(Long.valueOf(id), Float.valueOf(y));
+        if (this.yellow.size() > 20) {
+            this.yellow.keySet().retainAll(SetsKt.setOf(Long.valueOf(id)));
+        }
+        this.lamps.feed(id, nowMs, redL, redR);
+        if (y <= 0.3f || !this.lamps.anyBlink(nowMs)) {
+            return;
+        }
+        Ideas.INSTANCE.getMore().setBusAtMs(nowMs);
+        Ideas.INSTANCE.getMore().setBusX(x);
+    }
 }

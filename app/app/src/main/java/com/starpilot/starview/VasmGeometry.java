@@ -11,231 +11,153 @@ import kotlin.jvm.internal.Intrinsics;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: GalaxyVasm.kt */
 public final class VasmGeometry {
-   private static final List<Pair<Integer, Integer>> FORMATS = CollectionsKt.listOf(new Pair[]{TuplesKt.to(1928, 1208), TuplesKt.to(1344, 760)});
-   public static final VasmGeometry INSTANCE = new VasmGeometry();
+    public static final VasmGeometry INSTANCE = new VasmGeometry();
+    private static final List<Pair<Integer, Integer>> FORMATS = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(1928, 1208), TuplesKt.to(1344, 760)});
 
-   private VasmGeometry() {
-   }
+    private VasmGeometry() {
+    }
 
-   private final boolean between(int var1, int var2, int var3) {
-      boolean var4;
-      if (var2 >= Math.min(var1, var3) && var2 <= Math.max(var1, var3)) {
-         var4 = true;
-      } else {
-         var4 = false;
-      }
+    public final List<Pair<Integer, Integer>> getFORMATS() {
+        return FORMATS;
+    }
 
-      return var4;
-   }
-
-   private static final JSONArray draft$arr(List<int[]> var0) {
-      JSONArray var1 = new JSONArray();
-
-      for (int[] var2 : var0) {
-         var1.put(new JSONArray().put(var2[0]).put(var2[1]));
-      }
-
-      return var1;
-   }
-
-   private final boolean intersects(int[] var1, int[] var2, int[] var3, int[] var4) {
-      long var11 = this.orient(var1, var2, var3);
-      long var9 = this.orient(var1, var2, var4);
-      long var7 = this.orient(var3, var4, var1);
-      long var13 = this.orient(var3, var4, var2);
-      if (!intersects$on(var1, var3, var2) && !intersects$on(var1, var4, var2) && !intersects$on(var3, var1, var4) && !intersects$on(var3, var2, var4)) {
-         boolean var5;
-         if (var11 > 0L) {
-            var5 = true;
-         } else {
-            var5 = false;
-         }
-
-         boolean var6;
-         if (var9 > 0L) {
-            var6 = true;
-         } else {
-            var6 = false;
-         }
-
-         if (var5 == var6) {
+    public final boolean supported(int w, int h) {
+        Iterable $this$any$iv = FORMATS;
+        if (($this$any$iv instanceof Collection) && ((Collection) $this$any$iv).isEmpty()) {
             return false;
-         }
+        }
+        for (Object element$iv : $this$any$iv) {
+            Pair it = (Pair) element$iv;
+            if (((((Number) it.getFirst()).intValue() == w && ((Number) it.getSecond()).intValue() == h) ? 1 : null) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-         if (var7 > 0L) {
-            var5 = true;
-         } else {
-            var5 = false;
-         }
+    private final long orient(int[] a, int[] b, int[] c) {
+        return ((b[0] - a[0]) * (c[1] - a[1])) - ((b[1] - a[1]) * (c[0] - a[0]));
+    }
 
-         if (var13 > 0L) {
-            var6 = true;
-         } else {
-            var6 = false;
-         }
+    private final boolean between(int a, int b, int c) {
+        return b >= Math.min(a, c) && b <= Math.max(a, c);
+    }
 
-         if (var5 == var6) {
+    /* JADX WARN: Code restructure failed: missing block: B:22:0x0058, code lost:
+    
+        if ((r9 > 0) != (r11 > 0)) goto L30;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final boolean intersects(int[] a, int[] b, int[] c, int[] d) {
+        long abc = orient(a, b, c);
+        long abd = orient(a, b, d);
+        long cda = orient(c, d, a);
+        long cdb = orient(c, d, b);
+        if (!intersects$on(a, c, b) && !intersects$on(a, d, b) && !intersects$on(c, a, d) && !intersects$on(c, b, d)) {
+            if ((abc > 0) != (abd > 0)) {
+            }
             return false;
-         }
-      }
+        }
+        return true;
+    }
 
-      return true;
-   }
+    private static final boolean intersects$on(int[] p, int[] q, int[] r) {
+        return INSTANCE.orient(p, q, r) == 0 && INSTANCE.between(p[0], q[0], r[0]) && INSTANCE.between(p[1], q[1], r[1]);
+    }
 
-   private static final boolean intersects$on(int[] var0, int[] var1, int[] var2) {
-      long var5 = INSTANCE.orient(var0, var1, var2);
-      boolean var4 = false;
-      boolean var3 = var4;
-      if (var5 == 0L) {
-         var3 = var4;
-         if (INSTANCE.between(var0[0], var1[0], var2[0])) {
-            var3 = var4;
-            if (INSTANCE.between(var0[1], var1[1], var2[1])) {
-               var3 = true;
-            }
-         }
-      }
-
-      return var3;
-   }
-
-   private final long orient(int[] var1, int[] var2, int[] var3) {
-      return (long)(var2[0] - var1[0]) * (var3[1] - var1[1]) - (long)(var2[1] - var1[1]) * (var3[0] - var1[0]);
-   }
-
-   public final JSONObject draft(int var1, int var2, List<int[]> var3, List<int[]> var4) {
-      Intrinsics.checkNotNullParameter(var3, "cameraLeft");
-      Intrinsics.checkNotNullParameter(var4, "cameraRight");
-      if (!this.supported(var1, var2)) {
-         return null;
-      } else if (var3.isEmpty() && var4.isEmpty()) {
-         return null;
-      } else if (!var3.isEmpty() && !this.validPolygon(var3, var1, var2)) {
-         return null;
-      } else {
-         return !var4.isEmpty() && !this.validPolygon(var4, var1, var2)
-            ? null
-            : new JSONObject().put("version", 1).put("width", var1).put("height", var2).put("poly_left", draft$arr(var3)).put("poly_right", draft$arr(var4));
-      }
-   }
-
-   public final List<Pair<Integer, Integer>> getFORMATS() {
-      return FORMATS;
-   }
-
-   public final boolean supported(int var1, int var2) {
-      var var6 = FORMATS;
-      boolean var5 = var6 instanceof Collection;
-      boolean var4 = false;
-      if (!var5 || !((Collection)var6).isEmpty()) {
-         for (Pair var8 : var6) {
-            boolean var3;
-            if (((Number)var8.getFirst()).intValue() == var1 && ((Number)var8.getSecond()).intValue() == var2) {
-               var3 = true;
-            } else {
-               var3 = false;
-            }
-
-            if (var3) {
-               var4 = true;
-               break;
-            }
-         }
-      }
-
-      return var4;
-   }
-
-   public final boolean validPolygon(List<int[]> var1, int var2, int var3) {
-      Intrinsics.checkNotNullParameter(var1, "pts");
-      int var6 = var1.size();
-      boolean var13;
-      if (3 <= var6 && var6 < 33) {
-         var13 = 1;
-      } else {
-         var13 = 0;
-      }
-
-      if (!var13) {
-         return false;
-      } else {
-         var var8 = var1;
-         if (var8 instanceof Collection && ((Collection)var8).isEmpty()) {
-            var13 = (boolean)0;
-         } else {
-            Iterator var21 = var8.iterator();
-
+    public final boolean validPolygon(List<int[]> pts, int w, int h) {
+        Iterable $this$any$iv;
+        Intrinsics.checkNotNullParameter(pts, "pts");
+        int size = pts.size();
+        char c = 0;
+        char c2 = 1;
+        if (!(3 <= size && size < 33)) {
+            return false;
+        }
+        List<int[]> $this$any$iv2 = pts;
+        if (!($this$any$iv2 instanceof Collection) || !$this$any$iv2.isEmpty()) {
+            Iterator it = $this$any$iv2.iterator();
             while (true) {
-               if (!var21.hasNext()) {
-                  var13 = (boolean)0;
-                  break;
-               }
-
-               int[] var9 = (int[])var21.next();
-               if (var9[0] >= 0 && var9[0] <= var2 && var9[1] >= 0 && var9[1] <= var3) {
-                  var13 = (boolean)0;
-               } else {
-                  var13 = (boolean)1;
-               }
-
-               if (var13) {
-                  var13 = (boolean)1;
-                  break;
-               }
+                if (it.hasNext()) {
+                    Object element$iv = it.next();
+                    int[] it2 = (int[]) element$iv;
+                    if (((it2[0] < 0 || it2[0] > w || it2[1] < 0 || it2[1] > h) ? 1 : null) != null) {
+                        $this$any$iv = 1;
+                        break;
+                    }
+                } else {
+                    $this$any$iv = null;
+                    break;
+                }
             }
-         }
-
-         if (var13) {
+        } else {
+            $this$any$iv = null;
+        }
+        if ($this$any$iv != null) {
             return false;
-         } else {
-            Iterable var25 = var1;
-            var var22 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var25, 10));
-
-            for (int[] var26 : var25) {
-               int var7 = var26[0];
-               var13 = var26[1];
-               var22.add(var7 + "," + var13);
+        }
+        List<int[]> $this$map$iv = pts;
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            int[] it3 = (int[]) item$iv$iv;
+            destination$iv$iv.add(it3[0] + "," + it3[c2]);
+            c2 = 1;
+        }
+        if (CollectionsKt.toSet((List) destination$iv$iv).size() != pts.size()) {
+            return false;
+        }
+        double area = 0.0d;
+        int i = 0;
+        int size2 = pts.size();
+        while (i < size2) {
+            int[] a = pts.get(i);
+            int[] b = pts.get((i + 1) % pts.size());
+            area += (a[c] * b[1]) - (b[c] * a[1]);
+            i++;
+            c = 0;
+        }
+        if (Math.abs(area) <= w * 1.0E-9d * h) {
+            return false;
+        }
+        int size3 = pts.size();
+        for (int i2 = 0; i2 < size3; i2++) {
+            int size4 = pts.size();
+            for (int j = i2 + 2; j < size4; j++) {
+                if ((i2 != 0 || j != pts.size() - 1) && intersects(pts.get(i2), pts.get((i2 + 1) % pts.size()), pts.get(j), pts.get((j + 1) % pts.size()))) {
+                    return false;
+                }
             }
+        }
+        return true;
+    }
 
-            List var23 = var22;
-            if (CollectionsKt.toSet(var23).size() != var1.size()) {
-               return false;
-            } else {
-               double var4 = 0.0;
-               var13 = 0;
+    public final JSONObject draft(int w, int h, List<int[]> cameraLeft, List<int[]> cameraRight) {
+        Intrinsics.checkNotNullParameter(cameraLeft, "cameraLeft");
+        Intrinsics.checkNotNullParameter(cameraRight, "cameraRight");
+        if (!supported(w, h)) {
+            return null;
+        }
+        if (cameraLeft.isEmpty() && cameraRight.isEmpty()) {
+            return null;
+        }
+        if (!cameraLeft.isEmpty() && !validPolygon(cameraLeft, w, h)) {
+            return null;
+        }
+        if (cameraRight.isEmpty() || validPolygon(cameraRight, w, h)) {
+            return new JSONObject().put("version", 1).put("width", w).put("height", h).put("poly_left", draft$arr(cameraLeft)).put("poly_right", draft$arr(cameraRight));
+        }
+        return null;
+    }
 
-               for (int var19 = var1.size(); var13 < var19; var13++) {
-                  int[] var24 = (int[])var1.get(var13);
-                  int[] var27 = (int[])var1.get((var13 + 1) % var1.size());
-                  var4 += (double)var24[0] * var27[1] - (double)var27[0] * var24[1];
-               }
-
-               if (Math.abs(var4) <= var2 * 1.0E-9 * var3) {
-                  return false;
-               } else {
-                  var2 = 0;
-
-                  for (int var18 = var1.size(); var2 < var18; var2++) {
-                     var3 = var2 + 2;
-
-                     for (int var20 = var1.size(); var3 < var20; var3++) {
-                        if ((var2 != 0 || var3 != var1.size() - 1)
-                           && this.intersects(
-                              (int[])var1.get(var2),
-                              (int[])var1.get((var2 + 1) % var1.size()),
-                              (int[])var1.get(var3),
-                              (int[])var1.get((var3 + 1) % var1.size())
-                           )) {
-                           return false;
-                        }
-                     }
-                  }
-
-                  return true;
-               }
-            }
-         }
-      }
-   }
+    private static final JSONArray draft$arr(List<int[]> list) {
+        JSONArray $this$draft_u24arr_u24lambda_u243 = new JSONArray();
+        for (int[] q : list) {
+            $this$draft_u24arr_u24lambda_u243.put(new JSONArray().put(q[0]).put(q[1]));
+        }
+        return $this$draft_u24arr_u24lambda_u243;
+    }
 }

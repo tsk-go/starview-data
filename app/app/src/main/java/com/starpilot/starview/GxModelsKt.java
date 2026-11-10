@@ -10,12 +10,12 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import kotlin.Result;
 import kotlin.ResultKt;
-import kotlin.Result.Companion;
 import kotlin.collections.CollectionsKt;
 import kotlin.collections.IntIterator;
 import kotlin.jvm.internal.Intrinsics;
@@ -25,345 +25,235 @@ import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: GxModels.kt */
 public final class GxModelsKt {
-   // $VF: synthetic method
-   public static final void access$gxModelsEnable(View var0, boolean var1) {
-      gxModelsEnable(var0, var1);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final String gxModelsHardwareLabel(JSONObject m) {
+        Object v = m.opt("requiresGpu");
+        return Intrinsics.areEqual(v, (Object) true) ? "GPU · External" : Intrinsics.areEqual(v, (Object) false) ? "Comma · On-device" : "Hardware unknown";
+    }
 
-   // $VF: synthetic method
-   public static final String access$gxModelsFileSizeText(JSONObject var0) {
-      return gxModelsFileSizeText(var0);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean gxModelsMatchesHardware(JSONObject m, String filter) {
+        if (Intrinsics.areEqual(filter, "gpu")) {
+            return Intrinsics.areEqual(m.opt("requiresGpu"), (Object) true);
+        }
+        if (Intrinsics.areEqual(filter, "comma")) {
+            return Intrinsics.areEqual(m.opt("requiresGpu"), (Object) false);
+        }
+        return true;
+    }
 
-   // $VF: synthetic method
-   public static final String access$gxModelsHardwareLabel(JSONObject var0) {
-      return gxModelsHardwareLabel(var0);
-   }
+    private static final Double gxModelsSafeBytes(JSONObject m, String k) {
+        Object opt = m.opt(k);
+        Number v = opt instanceof Number ? (Number) opt : null;
+        if (v == null) {
+            return null;
+        }
+        double d = v.doubleValue();
+        if (d <= 0.0d) {
+            return null;
+        }
+        if (!(d == Math.floor(d)) || d > 9.007199254740991E15d) {
+            return null;
+        }
+        return Double.valueOf(d);
+    }
 
-   // $VF: synthetic method
-   public static final boolean access$gxModelsMatchesHardware(JSONObject var0, String var1) {
-      return gxModelsMatchesHardware(var0, var1);
-   }
+    private static final String gxModelsFormatBytes(double v) {
+        String format;
+        if (v >= 1.0E9d) {
+            StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
+            format = String.format(Locale.US, "%.2f GB", Arrays.copyOf(new Object[]{Double.valueOf(v / 1.0E9d)}, 1));
+        } else {
+            StringCompanionObject stringCompanionObject2 = StringCompanionObject.INSTANCE;
+            format = String.format(Locale.US, "%.1f MB", Arrays.copyOf(new Object[]{Double.valueOf(v / 1000000.0d)}, 1));
+        }
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        return format;
+    }
 
-   // $VF: synthetic method
-   public static final int access$gxModelsNatCompare(String var0, String var1) {
-      return gxModelsNatCompare(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static final List access$gxModelsObjects(JSONArray var0) {
-      return gxModelsObjects(var0);
-   }
-
-   // $VF: synthetic method
-   public static final long access$gxModelsReleasedTs(String var0) {
-      return gxModelsReleasedTs(var0);
-   }
-
-   // $VF: synthetic method
-   public static final String access$gxModelsText(JSONObject var0, String var1, String var2) {
-      return gxModelsText(var0, var1, var2);
-   }
-
-   private static final void gxModelsEnable(View var0, boolean var1) {
-      var0.setEnabled(var1);
-      var0.setClickable(var1);
-      float var2;
-      if (var1) {
-         var2 = 1.0F;
-      } else {
-         var2 = 0.4F;
-      }
-
-      var0.setAlpha(var2);
-   }
-
-   private static final String gxModelsFileSizeText(JSONObject var0) {
-      Double var4 = gxModelsSafeBytes(var0, "fileSizeBytes");
-      Double var5 = gxModelsSafeBytes(var0, "declaredSizeBytes");
-      Double var3 = gxModelsSafeBytes(var0, "downloadedBytes");
-      if (var0.optBoolean("partial") || Intrinsics.areEqual(var0.optString("sizeStatus"), "partial")) {
-         label39: {
-            var11 = "unknown";
-            if (var3 != null) {
-               String var9 = gxModelsFormatBytes(var3.doubleValue());
-               var8 = var9;
-               if (var9 != null) {
-                  break label39;
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:22:0x0089, code lost:
+    
+        if (r4 == null) goto L25;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final String gxModelsFileSizeText(JSONObject m) {
+        String str;
+        Double installed = gxModelsSafeBytes(m, "fileSizeBytes");
+        Double declared = gxModelsSafeBytes(m, "declaredSizeBytes");
+        Double downloaded = gxModelsSafeBytes(m, "downloadedBytes");
+        if (m.optBoolean("partial") || Intrinsics.areEqual(m.optString("sizeStatus"), "partial")) {
+            String str2 = "unknown";
+            if (downloaded != null) {
+                double it = downloaded.doubleValue();
+                str = gxModelsFormatBytes(it);
             }
-
-            var8 = "unknown";
-         }
-
-         String var10 = var11;
-         if (var5 != null) {
-            double var1 = var5.doubleValue();
-            var10 = gxModelsFormatBytes(var1);
-            if (var10 == null) {
-               var10 = var11;
+            str = "unknown";
+            if (declared != null) {
+                double it2 = declared.doubleValue();
+                String gxModelsFormatBytes = gxModelsFormatBytes(it2);
+                if (gxModelsFormatBytes != null) {
+                    str2 = gxModelsFormatBytes;
+                }
             }
-         }
+            return "Partial: " + str + " / " + str2;
+        }
+        if (installed != null && declared != null && !Intrinsics.areEqual(installed, declared)) {
+            return gxModelsFormatBytes(installed.doubleValue()) + " · size mismatch";
+        }
+        if (installed != null) {
+            return gxModelsFormatBytes(installed.doubleValue());
+        }
+        if (declared == null) {
+            return "Unavailable";
+        }
+        return gxModelsFormatBytes(declared.doubleValue()) + " · declared";
+    }
 
-         return "Partial: " + var8 + " / " + var10;
-      } else if (var4 != null && var5 != null && !Intrinsics.areEqual(var4, var5)) {
-         String var7 = gxModelsFormatBytes(var4);
-         return var7 + " · size mismatch";
-      } else if (var4 != null) {
-         return gxModelsFormatBytes(var4);
-      } else if (var5 != null) {
-         String var6 = gxModelsFormatBytes(var5);
-         return var6 + " · declared";
-      } else {
-         return "Unavailable";
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final String gxModelsText(JSONObject o, String k, String def) {
+        if (o == null || !o.has(k) || o.isNull(k)) {
+            return def;
+        }
+        String optString = o.optString(k, def);
+        Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
+        return optString;
+    }
 
-   private static final String gxModelsFormatBytes(double var0) {
-      String var3;
-      if (var0 >= 1.0E9) {
-         StringCompanionObject var2 = StringCompanionObject.INSTANCE;
-         var3 = String.format(Locale.US, "%.2f GB", Arrays.copyOf(new Object[]{var0 / 1.0E9}, 1));
-      } else {
-         StringCompanionObject var4 = StringCompanionObject.INSTANCE;
-         var3 = String.format(Locale.US, "%.1f MB", Arrays.copyOf(new Object[]{var0 / 1000000.0}, 1));
-      }
+    static /* synthetic */ String gxModelsText$default(JSONObject jSONObject, String str, String str2, int i, Object obj) {
+        if ((i & 4) != 0) {
+            str2 = "";
+        }
+        return gxModelsText(jSONObject, str, str2);
+    }
 
-      Intrinsics.checkNotNullExpressionValue(var3, "format(...)");
-      return var3;
-   }
-
-   private static final String gxModelsHardwareLabel(JSONObject var0) {
-      String var1 = (String)var0.opt("requiresGpu");
-      if (Intrinsics.areEqual(var1, true)) {
-         var1 = "GPU · External";
-      } else if (Intrinsics.areEqual(var1, false)) {
-         var1 = "Comma · On-device";
-      } else {
-         var1 = "Hardware unknown";
-      }
-
-      return var1;
-   }
-
-   private static final boolean gxModelsMatchesHardware(JSONObject var0, String var1) {
-      boolean var3 = Intrinsics.areEqual(var1, "gpu");
-      boolean var2 = true;
-      if (var3) {
-         var2 = Intrinsics.areEqual(var0.opt("requiresGpu"), true);
-      } else if (Intrinsics.areEqual(var1, "comma")) {
-         var2 = Intrinsics.areEqual(var0.opt("requiresGpu"), false);
-      }
-
-      return var2;
-   }
-
-   private static final int gxModelsNatCompare(String var0, String var1) {
-      int var4 = 0;
-      int var5 = 0;
-
-      while (var4 < var0.length() && var5 < var1.length()) {
-         char var2 = var0.charAt(var4);
-         char var3 = var1.charAt(var5);
-         if (Character.isDigit(var2) && Character.isDigit(var3)) {
-            int var11 = var4;
-
-            while (var11 < var0.length() && Character.isDigit(var0.charAt(var11))) {
-               var11++;
-            }
-
-            int var7 = var5;
-
-            while (var7 < var1.length() && Character.isDigit(var1.charAt(var7))) {
-               var7++;
-            }
-
-            String var8 = var0.substring(var4, var11);
-            Intrinsics.checkNotNullExpressionValue(var8, "substring(...)");
-            var8 = StringsKt.trimStart(var8, new char[]{'0'});
-            String var9 = var1.substring(var5, var7);
-            Intrinsics.checkNotNullExpressionValue(var9, "substring(...)");
-            var9 = StringsKt.trimStart(var9, new char[]{'0'});
-            if (var8.length() != var9.length()) {
-               return var8.length() - var9.length();
-            }
-
-            var4 = var8.compareTo(var9);
-            if (var4 != 0) {
-               return var4;
-            }
-
-            var4 = var11;
-            var5 = var7;
-         } else {
-            int var6 = Intrinsics.compare(Character.toLowerCase(var2), Character.toLowerCase(var3));
-            if (var6 != 0) {
-               return var6;
-            }
-
-            var4++;
-            var5++;
-         }
-      }
-
-      return var0.length() - var4 - (var1.length() - var5);
-   }
-
-   private static final List<JSONObject> gxModelsObjects(JSONArray var0) {
-      List var4;
-      if (var0 == null) {
-         var4 = CollectionsKt.emptyList();
-      } else {
-         Iterable var2 = RangesKt.until(0, var0.length());
-         var var1 = new ArrayList();
-         Iterator var3 = var2.iterator();
-
-         while (var3.hasNext()) {
-            JSONObject var5 = var0.optJSONObject(((IntIterator)var3).nextInt());
-            if (var5 != null) {
-               var1.add(var5);
-            }
-         }
-
-         var4 = var1;
-      }
-
-      return var4;
-   }
-
-   // $VF: Could not inline inconsistent finally blocks
-   // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-   private static final long gxModelsReleasedTs(String var0) {
-      var0 = StringsKt.trim(var0).toString();
-      boolean var1;
-      if (var0.length() == 0) {
-         var1 = true;
-      } else {
-         var1 = false;
-      }
-
-      if (var1) {
-         return 0L;
-      } else {
-         try {
-            Companion var55 = Result.Companion;
-            return Instant.parse(var0).toEpochMilli();
-         } catch (Throwable var48) {
-            Companion var5 = Result.Companion;
-            KtCompat.resultOf(ResultKt.createFailure(var48));
-
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final long gxModelsReleasedTs(String s) {
+        String t = StringsKt.trim((CharSequence) s).toString();
+        int i = 1;
+        if (t.length() == 0) {
+            return 0L;
+        }
+        try {
+            Result.Companion companion = Result.Companion;
+            return Instant.parse(t).toEpochMilli();
+        } catch (Throwable th) {
+            Result.Companion companion2 = Result.Companion;
+            Result.m1191constructorimpl(ResultKt.createFailure(th));
             try {
-               Companion var54 = Result.Companion;
-               return OffsetDateTime.parse(var0).toInstant().toEpochMilli();
-            } catch (Throwable var47) {
-               Companion var4 = Result.Companion;
-               KtCompat.resultOf(ResultKt.createFailure(var47));
-
-               try {
-                  var4 = Result.Companion;
-                  return LocalDateTime.parse(var0).toInstant(ZoneOffset.UTC).toEpochMilli();
-               } catch (Throwable var46) {
-                  var5 = Result.Companion;
-                  KtCompat.resultOf(ResultKt.createFailure(var46));
-
-                  try {
-                     var4 = Result.Companion;
-                     return LocalDate.parse(StringsKt.take(var0, 10)).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
-                  } catch (Throwable var45) {
-                     var5 = Result.Companion;
-                     KtCompat.resultOf(ResultKt.createFailure(var45));
-
-                     for (String var58 : CollectionsKt.listOf(
-                        new String[]{"yyyy/MM/dd", "MM/dd/yyyy", "M/d/yyyy", "MMMM d, yyyy", "MMM d, yyyy", "d MMMM yyyy", "d MMM yyyy"}
-                     )) {
-                        try {
-                           Companion var6 = Result.Companion;
-                           return LocalDate.parse(var0, DateTimeFormatter.ofPattern(var58, Locale.US)).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
-                        } catch (Throwable var44) {
-                           var5 = Result.Companion;
-                           KtCompat.resultOf(ResultKt.createFailure(var44));
-                           continue;
+                Result.Companion companion3 = Result.Companion;
+                return OffsetDateTime.parse(t).toInstant().toEpochMilli();
+            } catch (Throwable th2) {
+                Result.Companion companion4 = Result.Companion;
+                Result.m1191constructorimpl(ResultKt.createFailure(th2));
+                try {
+                    Result.Companion companion5 = Result.Companion;
+                    return LocalDateTime.parse(t).toInstant(ZoneOffset.UTC).toEpochMilli();
+                } catch (Throwable th3) {
+                    Result.Companion companion6 = Result.Companion;
+                    Result.m1191constructorimpl(ResultKt.createFailure(th3));
+                    try {
+                        Result.Companion companion7 = Result.Companion;
+                        return LocalDate.parse(StringsKt.take(t, 10)).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+                    } catch (Throwable th4) {
+                        Result.Companion companion8 = Result.Companion;
+                        Result.m1191constructorimpl(ResultKt.createFailure(th4));
+                        Iterator it = CollectionsKt.listOf((Object[]) new String[]{"yyyy/MM/dd", "MM/dd/yyyy", "M/d/yyyy", "MMMM d, yyyy", "MMM d, yyyy", "d MMMM yyyy", "d MMM yyyy"}).iterator();
+                        while (it.hasNext()) {
+                            String p = (String) it.next();
+                            try {
+                                Result.Companion companion9 = Result.Companion;
+                                return LocalDate.parse(t, DateTimeFormatter.ofPattern(p, Locale.US)).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+                            } catch (Throwable th5) {
+                                Result.Companion companion10 = Result.Companion;
+                                Result.m1191constructorimpl(ResultKt.createFailure(th5));
+                            }
                         }
-                     }
-
-                     for (String var61 : CollectionsKt.listOf(new String[]{"MMMM yyyy", "MMM yyyy", "yyyy-MM"})) {
-                        try {
-                           var5 = Result.Companion;
-                           return YearMonth.parse(var0, DateTimeFormatter.ofPattern(var61, Locale.US))
-                              .atDay(1)
-                              .atStartOfDay(ZoneOffset.UTC)
-                              .toInstant()
-                              .toEpochMilli();
-                        } catch (Throwable var43) {
-                           Companion var62 = Result.Companion;
-                           KtCompat.resultOf(ResultKt.createFailure(var43));
-                           continue;
+                        for (String p2 : CollectionsKt.listOf((Object[]) new String[]{"MMMM yyyy", "MMM yyyy", "yyyy-MM"})) {
+                            try {
+                                Result.Companion companion11 = Result.Companion;
+                                return YearMonth.parse(t, DateTimeFormatter.ofPattern(p2, Locale.US)).atDay(i).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+                            } catch (Throwable th6) {
+                                Result.Companion companion12 = Result.Companion;
+                                Result.m1191constructorimpl(ResultKt.createFailure(th6));
+                            }
                         }
-                     }
-
-                     return 0L;
-                  }
-               }
+                        return 0L;
+                    }
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   private static final Double gxModelsSafeBytes(JSONObject var0, String var1) {
-      Number var6 = (Number)var0.opt(var1);
-      boolean var5 = var6 instanceof Number;
-      Object var9 = null;
-      if (var5) {
-         var6 = var6;
-      } else {
-         var6 = null;
-      }
-
-      if (var6 == null) {
-         return null;
-      } else {
-         double var2 = var6.doubleValue();
-         Double var8 = (Double)var9;
-         if (var2 > 0.0) {
-            boolean var4;
-            if (var2 == Math.floor(var2)) {
-               var4 = true;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final int gxModelsNatCompare(String a, String b) {
+        int i = 0;
+        int j = 0;
+        while (i < a.length() && j < b.length()) {
+            char ca = a.charAt(i);
+            char cb = b.charAt(j);
+            if (Character.isDigit(ca) && Character.isDigit(cb)) {
+                int ie = i;
+                while (ie < a.length() && Character.isDigit(a.charAt(ie))) {
+                    ie++;
+                }
+                int je = j;
+                while (je < b.length() && Character.isDigit(b.charAt(je))) {
+                    je++;
+                }
+                String substring = a.substring(i, ie);
+                Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
+                String na = StringsKt.trimStart(substring, '0');
+                String substring2 = b.substring(j, je);
+                Intrinsics.checkNotNullExpressionValue(substring2, "substring(...)");
+                String nb = StringsKt.trimStart(substring2, '0');
+                if (na.length() != nb.length()) {
+                    return na.length() - nb.length();
+                }
+                int c = na.compareTo(nb);
+                if (c != 0) {
+                    return c;
+                }
+                i = ie;
+                j = je;
             } else {
-               var4 = false;
+                int c2 = Intrinsics.compare((int) Character.toLowerCase(ca), (int) Character.toLowerCase(cb));
+                if (c2 != 0) {
+                    return c2;
+                }
+                i++;
+                j++;
             }
+        }
+        return (a.length() - i) - (b.length() - j);
+    }
 
-            var8 = (Double)var9;
-            if (var4) {
-               var8 = (Double)var9;
-               if (var2 <= 9.007199254740991E15) {
-                  var8 = var2;
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void gxModelsEnable(View v, boolean enabled) {
+        v.setEnabled(enabled);
+        v.setClickable(enabled);
+        v.setAlpha(enabled ? 1.0f : 0.4f);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final List<JSONObject> gxModelsObjects(JSONArray $this$gxModelsObjects) {
+        if ($this$gxModelsObjects == null) {
+            return CollectionsKt.emptyList();
+        }
+        Iterable $this$mapNotNull$iv = RangesKt.until(0, $this$gxModelsObjects.length());
+        Collection destination$iv$iv = new ArrayList();
+        Iterator<Integer> it = $this$mapNotNull$iv.iterator();
+        while (it.hasNext()) {
+            int element$iv$iv$iv = ((IntIterator) it).nextInt();
+            JSONObject optJSONObject = $this$gxModelsObjects.optJSONObject(element$iv$iv$iv);
+            if (optJSONObject != null) {
+                destination$iv$iv.add(optJSONObject);
             }
-         }
-
-         return var8;
-      }
-   }
-
-   private static final String gxModelsText(JSONObject var0, String var1, String var2) {
-      String var3;
-      if (var0 != null && var0.has(var1) && !var0.isNull(var1)) {
-         var3 = var0.optString(var1, var2);
-         Intrinsics.checkNotNullExpressionValue(var3, "optString(...)");
-      } else {
-         var3 = var2;
-      }
-
-      return var3;
-   }
-
-   // $VF: synthetic method
-   static String gxModelsText$default(JSONObject var0, String var1, String var2, int var3, Object var4) {
-      if ((var3 & 4) != 0) {
-         var2 = "";
-      }
-
-      return gxModelsText(var0, var1, var2);
-   }
+        }
+        return (List) destination$iv$iv;
+    }
 }

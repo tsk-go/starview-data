@@ -3,188 +3,184 @@ package com.starpilot.starview;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.RectF;
-import android.graphics.Matrix.ScaleToFit;
 import android.graphics.drawable.Drawable;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ViewParent;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.ScaleGestureDetector.OnScaleGestureListener;
-import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 
+/* compiled from: ZoomImageView.kt */
 public final class ZoomImageView extends ImageView {
-   private Matrix base;
-   private final GestureDetector gestures;
-   private final Matrix m;
-   private final float maxZoom;
-   private final ScaleGestureDetector scaler;
-   private float zoom;
+    private Matrix base;
+    private final GestureDetector gestures;
+    private final Matrix m;
+    private final float maxZoom;
+    private final ScaleGestureDetector scaler;
+    private float zoom;
 
-   // $VF: synthetic method
-   public static void $r8$lambda$hdQ_PoqNZhS22rl1bS4ChM2Zds8(ZoomImageView var0) {
-      setImageDrawable$lambda$0(var0);
-   }
-
-   public ZoomImageView(Context var1) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      super(var1);
-      this.m = new Matrix();
-      this.base = new Matrix();
-      this.zoom = 1.0F;
-      this.maxZoom = 6.0F;
-      this.setScaleType(ScaleType.MATRIX);
-      this.scaler = new ScaleGestureDetector(var1, (OnScaleGestureListener)(new SimpleOnScaleGestureListener() {
-
-         public boolean onScale(ScaleGestureDetector var1) {
-            Intrinsics.checkNotNullParameter(var1, "d");
-            ZoomImageView.this.zoomBy(var1.getScaleFactor(), var1.getFocusX(), var1.getFocusY());
-            return true;
-         }
-      }));
-      this.gestures = new GestureDetector(var1, (OnGestureListener)(new SimpleOnGestureListener() {
-
-         public boolean onDoubleTap(MotionEvent var1) {
-            Intrinsics.checkNotNullParameter(var1, "e");
-            if (ZoomImageView.this.zoom > 1.01F) {
-               ZoomImageView.this.fit();
-            } else {
-               ZoomImageView.this.zoomBy(2.5F, var1.getX(), var1.getY());
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public ZoomImageView(Context ctx) {
+        super(ctx);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        this.m = new Matrix();
+        this.base = new Matrix();
+        this.zoom = 1.0f;
+        this.maxZoom = 6.0f;
+        setScaleType(ImageView.ScaleType.MATRIX);
+        this.scaler = new ScaleGestureDetector(ctx, new ScaleGestureDetector.SimpleOnScaleGestureListener() { // from class: com.starpilot.starview.ZoomImageView$scaler$1
+            @Override // android.view.ScaleGestureDetector.SimpleOnScaleGestureListener, android.view.ScaleGestureDetector.OnScaleGestureListener
+            public boolean onScale(ScaleGestureDetector d) {
+                Intrinsics.checkNotNullParameter(d, "d");
+                ZoomImageView.this.zoomBy(d.getScaleFactor(), d.getFocusX(), d.getFocusY());
+                return true;
+            }
+        });
+        this.gestures = new GestureDetector(ctx, new GestureDetector.SimpleOnGestureListener() { // from class: com.starpilot.starview.ZoomImageView$gestures$1
+            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnGestureListener
+            public boolean onDown(MotionEvent e) {
+                Intrinsics.checkNotNullParameter(e, "e");
+                return true;
             }
 
-            return true;
-         }
-
-         public boolean onDown(MotionEvent var1) {
-            Intrinsics.checkNotNullParameter(var1, "e");
-            return true;
-         }
-
-         public boolean onScroll(MotionEvent var1, MotionEvent var2, float var3, float var4) {
-            Intrinsics.checkNotNullParameter(var2, "e2");
-            if (ZoomImageView.this.zoom <= 1.01F) {
-               return false;
-            } else {
-               ZoomImageView.this.m.postTranslate(-var3, -var4);
-               ZoomImageView.this.clamp();
-               return true;
-            }
-         }
-      }));
-   }
-
-   private final void clamp() {
-      Drawable var4 = this.getDrawable();
-      if (var4 != null) {
-         float var3;
-         float var8;
-         label37: {
-            var10 = new RectF(0.0F, 0.0F, var4.getIntrinsicWidth(), var4.getIntrinsicHeight());
-            this.m.mapRect(var10);
-            float var1 = 0.0F;
-            var3 = 0.0F;
-            if (var10.width() <= this.getWidth()) {
-               var8 = this.getWidth() / 2.0F;
-               var1 = var10.centerX();
-            } else {
-               if (var10.left > 0.0F) {
-                  var1 = -var10.left;
-               }
-
-               if (!(var10.right < this.getWidth())) {
-                  var8 = var1;
-                  break label37;
-               }
-
-               var8 = this.getWidth();
-               var1 = var10.right;
+            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnGestureListener
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
+                float f;
+                Matrix matrix;
+                Intrinsics.checkNotNullParameter(e2, "e2");
+                f = ZoomImageView.this.zoom;
+                if (f <= 1.01f) {
+                    return false;
+                }
+                matrix = ZoomImageView.this.m;
+                matrix.postTranslate(-dx, -dy);
+                ZoomImageView.this.clamp();
+                return true;
             }
 
-            var8 -= var1;
-         }
-
-         float var7;
-         label30: {
-            if (var10.height() <= this.getHeight()) {
-               var7 = this.getHeight() / 2.0F;
-               var3 = var10.centerY();
-            } else {
-               var7 = var3;
-               if (var10.top > 0.0F) {
-                  var7 = -var10.top;
-               }
-
-               if (!(var10.bottom < this.getHeight())) {
-                  break label30;
-               }
-
-               var7 = this.getHeight();
-               var3 = var10.bottom;
+            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnDoubleTapListener
+            public boolean onDoubleTap(MotionEvent e) {
+                float f;
+                Intrinsics.checkNotNullParameter(e, "e");
+                f = ZoomImageView.this.zoom;
+                if (f > 1.01f) {
+                    ZoomImageView.this.fit();
+                    return true;
+                }
+                ZoomImageView.this.zoomBy(2.5f, e.getX(), e.getY());
+                return true;
             }
+        });
+    }
 
-            var7 -= var3;
-         }
+    @Override // android.widget.ImageView
+    public void setImageDrawable(Drawable drawable) {
+        super.setImageDrawable(drawable);
+        post(new Runnable() { // from class: com.starpilot.starview.ZoomImageView$$ExternalSyntheticLambda0
+            @Override // java.lang.Runnable
+            public final void run() {
+                ZoomImageView.this.fit();
+            }
+        });
+    }
 
-         this.m.postTranslate(var8, var7);
-         this.setImageMatrix(this.m);
-      }
-   }
+    @Override // android.view.View
+    protected void onSizeChanged(int w, int h, int ow, int oh) {
+        super.onSizeChanged(w, h, ow, oh);
+        fit();
+    }
 
-   private static final void setImageDrawable$lambda$0(ZoomImageView var0) {
-      var0.fit();
-   }
+    public final void fit() {
+        Drawable d = getDrawable();
+        if (d == null || getWidth() == 0 || getHeight() == 0) {
+            return;
+        }
+        Matrix $this$fit_u24lambda_u241 = new Matrix();
+        $this$fit_u24lambda_u241.setRectToRect(new RectF(0.0f, 0.0f, d.getIntrinsicWidth(), d.getIntrinsicHeight()), new RectF(0.0f, 0.0f, getWidth(), getHeight()), Matrix.ScaleToFit.CENTER);
+        this.base = $this$fit_u24lambda_u241;
+        this.m.set(this.base);
+        this.zoom = 1.0f;
+        setImageMatrix(this.m);
+    }
 
-   private final void zoomBy(float var1, float var2, float var3) {
-      var1 = RangesKt.coerceIn(this.zoom * var1, 1.0F, this.maxZoom) / this.zoom;
-      this.zoom *= var1;
-      this.m.postScale(var1, var1, var2, var3);
-      this.clamp();
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Removed duplicated region for block: B:11:0x0063  */
+    /* JADX WARN: Removed duplicated region for block: B:15:0x006f  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final void clamp() {
+        float dx;
+        float width;
+        float f;
+        float dx2;
+        float dy;
+        float height;
+        float f2;
+        Drawable d = getDrawable();
+        if (d == null) {
+            return;
+        }
+        RectF r = new RectF(0.0f, 0.0f, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+        this.m.mapRect(r);
+        if (r.width() <= getWidth()) {
+            width = getWidth() / 2.0f;
+            f = r.centerX();
+        } else {
+            float dx3 = r.left;
+            float dx4 = dx3 > 0.0f ? -r.left : 0.0f;
+            if (r.right >= getWidth()) {
+                dx = dx4;
+                dx2 = r.height();
+                if (dx2 > getHeight()) {
+                    height = getHeight() / 2.0f;
+                    f2 = r.centerY();
+                } else {
+                    float dy2 = r.top;
+                    float dy3 = dy2 > 0.0f ? -r.top : 0.0f;
+                    if (r.bottom >= getHeight()) {
+                        dy = dy3;
+                        this.m.postTranslate(dx, dy);
+                        setImageMatrix(this.m);
+                    }
+                    height = getHeight();
+                    f2 = r.bottom;
+                }
+                dy = height - f2;
+                this.m.postTranslate(dx, dy);
+                setImageMatrix(this.m);
+            }
+            width = getWidth();
+            f = r.right;
+        }
+        dx = width - f;
+        dx2 = r.height();
+        if (dx2 > getHeight()) {
+        }
+        dy = height - f2;
+        this.m.postTranslate(dx, dy);
+        setImageMatrix(this.m);
+    }
 
-   public final void fit() {
-      Drawable var2 = this.getDrawable();
-      if (var2 != null) {
-         if (this.getWidth() != 0 && this.getHeight() != 0) {
-            Matrix var1 = new Matrix();
-            var1.setRectToRect(
-               new RectF(0.0F, 0.0F, var2.getIntrinsicWidth(), var2.getIntrinsicHeight()),
-               new RectF(0.0F, 0.0F, this.getWidth(), this.getHeight()),
-               ScaleToFit.CENTER
-            );
-            this.base = var1;
-            this.m.set(this.base);
-            this.zoom = 1.0F;
-            this.setImageMatrix(this.m);
-         }
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void zoomBy(float f0, float fx, float fy) {
+        float f = RangesKt.coerceIn(this.zoom * f0, 1.0f, this.maxZoom) / this.zoom;
+        this.zoom *= f;
+        this.m.postScale(f, f, fx, fy);
+        clamp();
+    }
 
-   protected void onSizeChanged(int var1, int var2, int var3, int var4) {
-      super.onSizeChanged(var1, var2, var3, var4);
-      this.fit();
-   }
-
-   public boolean onTouchEvent(MotionEvent var1) {
-      Intrinsics.checkNotNullParameter(var1, "e");
-      this.scaler.onTouchEvent(var1);
-      this.gestures.onTouchEvent(var1);
-      if (this.zoom > 1.01F) {
-         ViewParent var2 = this.getParent();
-         if (var2 != null) {
-            var2.requestDisallowInterceptTouchEvent(true);
-         }
-      }
-
-      return true;
-   }
-
-   public void setImageDrawable(Drawable var1) {
-      super.setImageDrawable(var1);
-      this.post(new ZoomImageView$$ExternalSyntheticLambda0(this));
-   }
+    @Override // android.view.View
+    public boolean onTouchEvent(MotionEvent e) {
+        ViewParent parent;
+        Intrinsics.checkNotNullParameter(e, "e");
+        this.scaler.onTouchEvent(e);
+        this.gestures.onTouchEvent(e);
+        if (this.zoom > 1.01f && (parent = getParent()) != null) {
+            parent.requestDisallowInterceptTouchEvent(true);
+        }
+        return true;
+    }
 }

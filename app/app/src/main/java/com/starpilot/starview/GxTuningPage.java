@@ -1,11 +1,9 @@
 package com.starpilot.starview;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
@@ -18,7 +16,8 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
+import com.starpilot.starview.CarUi;
+import com.starpilot.starview.GxPage;
 import java.text.DateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -39,7 +38,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 import kotlin.Lazy;
 import kotlin.LazyKt;
 import kotlin.Pair;
@@ -52,6 +50,8 @@ import kotlin.collections.CollectionsKt;
 import kotlin.comparisons.ComparisonsKt;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
+import kotlin.jvm.functions.Function2;
+import kotlin.jvm.functions.Function3;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.StringCompanionObject;
 import kotlin.ranges.RangesKt;
@@ -61,7107 +61,5329 @@ import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: GxTuning.kt */
 public final class GxTuningPage extends GxPage {
-   private JSONObject activeTrial;
-   private LinearLayout advancedBox;
-   private TextView bAdvanced;
-   private TextView bAnalyze;
-   private TextView bKeep;
-   private TextView bPause;
-   private TextView bRefresh;
-   private TextView bRevert;
-   private TextView bSave;
-   private TextView bSaveCurrent;
-   private TextView bStop;
-   private boolean busy;
-   private final int cActual;
-   private final int cD;
-   private final int cDesired;
-   private final int cF;
-   private final int cI;
-   private final int cP;
-   private String carFp;
-   private final ArrayList<GxTuningPage.ChartViews> chartViews;
-   private final List<GxTuningPage.ChartCfg> charts;
-   private LinearLayout comparisonBox;
-   private final DateFormat dateFmt;
-   private final LinkedHashSet<String> fbAccepted;
-   private final LinkedHashSet<String> fbIgnored;
-   private String fbNotes;
-   private boolean flmBuilt;
-   private String flmError;
-   private boolean flmFetching;
-   private boolean flmLoading;
-   private LinearLayout flmNotices;
-   private LinearLayout flmStatusBox;
-   private boolean isOnroad;
-   private boolean laneCentering;
-   private String lastStatusReportId;
-   private double lastTs;
-   private LinearLayout latBox;
-   private Pair<? extends TextView, ? extends TextView> latBtns;
-   private boolean latBusy;
-   private JSONObject latData;
-   private boolean latFetching;
-   private boolean latLoading;
-   private final GxTuningPage.QualityCfg latQ;
-   private JSONObject live;
-   private String loadedReportId;
-   private boolean loadingRoutes;
-   private LinearLayout lonBox;
-   private Pair<? extends TextView, ? extends TextView> lonBtns;
-   private boolean lonBusy;
-   private JSONObject lonData;
-   private String lonError;
-   private boolean lonFetching;
-   private boolean lonLoading;
-   private final GxTuningPage.QualityCfg lonQ;
-   private boolean manBuilt;
-   private final int maxRoutes;
-   private final int maxSegments;
-   private final boolean needsOffroad;
-   private boolean plotsBuilt;
-   private String plotsError;
-   private boolean plotsFetching;
-   private boolean plotsLoading;
-   private boolean plotsPaused;
-   private LinearLayout plotsStatus;
-   private final Lazy prefs$delegate;
-   private LinearLayout profilesBox;
-   private JSONObject report;
-   private LinearLayout reportBox;
-   private boolean reportLoading;
-   private JSONArray reports;
-   private LinearLayout reportsBox;
-   private final HashMap<String, LinearLayout> routeBoxes;
-   private final HashMap<String, Switch> routeSwitches;
-   private final ArrayList<JSONObject> routes;
-   private LinearLayout routesBox;
-   private LinearLayout routesHead;
-   private final List<String> sampleKeys;
-   private final ArrayList<GxTuningSample> samples;
-   private JSONArray savedTunes;
-   private final HashMap<String, Pair<String, String>> segmentRanges;
-   private final LinkedHashSet<String> selectedRoutes;
-   private boolean showAdvanced;
-   private JSONObject statusData;
-   private int tab;
-   private LinearLayout tgBox;
-   private boolean tgBuilt;
-   private boolean tgBusy;
-   private JSONObject tgData;
-   private String tgError;
-   private boolean tgFetching;
-   private boolean tgLoading;
-   private String tgSelected;
-   private LinearLayout tunesBox;
-   private JSONObject wsStatus;
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$_095B9lzlyzzRczjtJTuw6h__uc/* $VF was: $r8$lambda$_095B9lzlyzzRczjtJTuw6h__uc*/(GxTuningPage var0, int var1, LinearLayout var2) {
-      return build$lambda$1(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Pair $r8$lambda$_J97tp_gRd3xFE6SMniqWsqX_vA/* $VF was: $r8$lambda$_J97tp_gRd3xFE6SMniqWsqX_vA*/(JSONObject var0, String var1) {
-      return entries$lambda$7(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$_cfrJCD7Htw__Cw4PfHMh87Do50/* $VF was: $r8$lambda$_cfrJCD7Htw__Cw4PfHMh87Do50*/(GxTuningPage var0, List var1, int var2) {
-      return paintTg$lambda$182$lambda$181(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static SharedPreferences $r8$lambda$0HOVRMoG_Yn8s3Md6LtNcngPHhk(Activity var0) {
-      return prefs_delegate$lambda$136(var0);
-   }
-
-   // $VF: synthetic method
-   public static CharSequence $r8$lambda$3cwkG0vcyVfcE8yUzaYoBQk0K6o(String var0) {
-      return paintLon$lambda$207(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$43ybfNcywqGAo6dOIODbCkyy0IM(GxTuningPage var0, JSONObject var1) {
-      return submitTune$lambda$55(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$5DfWssyEX_fj4tTPFgzY4ZjUeBk/* $VF was: $r8$lambda$5DfWssyEX_fj4tTPFgzY4ZjUeBk*/(GxTuningPage var0, String var1) {
-      return renderReport$lambda$92(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$5dc54ls5CJAYcvY5Aer2WW_ExoE(GxTuningPage var0) {
-      return buildLateral$lambda$34$lambda$33(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$6h5hTrDJgEJ6rNLavzDMeN1w9JE(GxTuningPage var0) {
-      return buildLateral$lambda$35(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$6pao_rzuX9XkC1gFEhHUcw3zZdU(GxTuningPage var0, JSONObject var1) {
-      return selectPath$lambda$107(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$75h2PI2noYknNIgriBS_hQHo6Pc/* $VF was: $r8$lambda$75h2PI2noYknNIgriBS_hQHo6Pc*/(GxTuningPage var0) {
-      return buildManeuvers$lambda$187(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$7YPpwVKrOSVX25BCsyzfbmhv54k(boolean var0, GxTuningPage var1, String var2, String var3, JSONObject var4) {
-      return manRun$lambda$197(var0, var1, var2, var3, var4);
-   }
-
-   // $VF: synthetic method
-   public static CharSequence $r8$lambda$91V4j21Vri3NxCxLgtm65JpW6SM(String var0) {
-      return paintLon$lambda$208(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$9VMlUYs_cGiKCYLk7QGG5dsRnbs(GxTuningPage var0, String var1) {
-      return renderReport$lambda$101(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$A6_kgMps0Zv9W9j9aQt3yV_IiXg/* $VF was: $r8$lambda$A6_kgMps0Zv9W9j9aQt3yV_IiXg*/(GxTuningPage var0) {
-      return saveFeedback$lambda$114$lambda$113(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$AUi3GlLdLaYyJLJ78YAa9CAmMPM(GxTuningPage var0) {
-      return build$lambda$4(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Au_TbCggUu7vXH5BMHZxzrTOLPY/* $VF was: $r8$lambda$Au_TbCggUu7vXH5BMHZxzrTOLPY*/(GxTuningPage var0, String var1) {
-      return saveCurrent$lambda$58(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$BqJ13_7_vtuZZD05cOhKA9m04ug(GxTuningPage var0) {
-      return paintRoutesHead$lambda$126(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$CD4b_wdQRtQ5r2RdaqX5SoWvWOY/* $VF was: $r8$lambda$CD4b_wdQRtQ5r2RdaqX5SoWvWOY*/(
-      GxTuningPage var0, String var1, JSONObject var2
-   ) {
-      return saveFeedback$lambda$114(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$H2x8INIAaSlJh7zo1G1rMHjbN0s(boolean var0, GxTuningPage var1, String var2, JSONObject var3) {
-      return manLoad$lambda$193(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$H3oR1_tTmM5DM20PxBfHgmxqLhQ(GxTuningPage var0, String var1, String var2, String var3, JSONObject var4) {
-      return tgSelectMode$lambda$170(var0, var1, var2, var3, var4);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$JPCowy6uX9LdjfhptW3QrPKV8lg(GxTuningPage var0) {
-      return paintRoutesHead$lambda$127(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$JRmEGTc8GjC_SouKKmBLinlUi9U/* $VF was: $r8$lambda$JRmEGTc8GjC_SouKKmBLinlUi9U*/(GxTuningPage var0) {
-      return buildManeuvers$lambda$188(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$JUIPptTxqf5cWndjRa5uoTx6vGs(GxTuningPage var0, String var1) {
-      return paintTg$lambda$184(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Jqlg1oe7MMVPTTAkCDu9ApSsKIM(GxTuningPage var0) {
-      return paintRoutesHead$lambda$125(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$MS6YTIygHC8XvLXX8KhrszA0ZBE(GxTuningPage var0) {
-      return buildLateral$lambda$31(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$N_kDruxdA1yvLQB0IfsJ7BqF1xQ/* $VF was: $r8$lambda$N_kDruxdA1yvLQB0IfsJ7BqF1xQ*/(GxTuningPage var0, int var1) {
-      return build$lambda$0(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$O20lQ3YMpAbeDUAbx2_MBZ8qt0E(GxTuningPage var0) {
-      return buildLateral$lambda$37(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$OdRMkgkhcxkri3ifjHW1Tnr5DUY(GxTuningPage var0, boolean var1, JSONObject var2) {
-      return paintTunes$lambda$49(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$QnE3SjrrYOQbXsZxmsq5NB6VN0Y(GxTuningPage var0, String var1, JSONObject var2) {
-      return loadReport$lambda$68(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$SIv8QCL5kZ0Cr7iCdPqwqtY9_rw(GxTuningPage var0, List var1) {
-      return paintTg$lambda$182(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$SKFkJEhOR1bc_73bQAsTzF6LKBQ/* $VF was: $r8$lambda$SKFkJEhOR1bc_73bQAsTzF6LKBQ*/(GxTuningPage var0, String var1) {
-      return renderRoute$lambda$132(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$XHbAm4XNDj6AEqzmak3_lz7OHaU(GxTuningPage var0, String var1, JSONObject var2) {
-      return plotsLoad$lambda$148(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$YABdhQniDs_tWbKTevaZEY4nAOU(GxTuningPage var0) {
-      return buildManeuvers$lambda$191(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$YOM3DCHnXIkHKC_yoQT47bhmno8(GxTuningPage var0) {
-      return buildPlots$lambda$142(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Z7ufjAp_PAu6wgGqUOMX5NExnB8/* $VF was: $r8$lambda$Z7ufjAp_PAu6wgGqUOMX5NExnB8*/(
-      GxTuningPage var0, Function0 var1, String var2, JSONObject var3
-   ) {
-      return flmRefresh$lambda$66(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$ZeVlQqiNsCqx5LuC5Nikk9y1jrs(GxTuningPage var0, String var1, boolean var2) {
-      return renderRoute$lambda$130(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$aNW_9qkmWxE2z3E8Swc6NJf7epo/* $VF was: $r8$lambda$aNW_9qkmWxE2z3E8Swc6NJf7epo*/(GxTuningPage var0, JSONObject var1) {
-      return paintTunes$lambda$49$lambda$48(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$ax7fNH5NyrPys_FhJW1HCtzHBx0(GxTuningPage var0) {
-      return buildLateral$lambda$30(var0);
-   }
-
-   // $VF: synthetic method
-   public static CharSequence $r8$lambda$fcQjdrU_ogl_dwDqZdg_qArpFkU/* $VF was: $r8$lambda$fcQjdrU_ogl_dwDqZdg_qArpFkU*/(String var0) {
-      return loadRoutes$lambda$122$lambda$118$lambda$117(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$gvjtywXZCb9ePjV3lV8It_QAPng(GxTuningPage var0) {
-      return buildPlots$lambda$138(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$hIkGwWtXjdiJrwjLMpxBv216qz8(GxTuningPage var0, JSONObject var1, String var2) {
-      return submitTune$lambda$55$lambda$54(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$k4aFXRbq7tUWfgy2xeXY8IEk50g(GxTuningPage var0) {
-      return buildLateral$lambda$36(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$kBxOVh5__vYT7_xypN3f6ybsx2U(GxTuningPage var0) {
-      return paintRoutesHead$lambda$128(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$lUHR6vlPeK2YhFblND_Edqu88_8/* $VF was: $r8$lambda$lUHR6vlPeK2YhFblND_Edqu88_8*/(
-      GxTuningPage var0, String var1, boolean var2, String var3, String var4, String var5
-   ) {
-      return editRange$lambda$135(var0, var1, var2, var3, var4, var5);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$m_MxRxtxOIi2lJG19sSyPplJQyc(GxTuningPage var0) {
-      return buildPlots$lambda$140(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$n0zIdJzWQlyGmf63Yw6fqkxQ89U(GxTuningPage var0) {
-      return renderReport$lambda$95(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$nMBVDQTUphIbg2k3PcUbl4FbOd8(GxTuningPage var0, String var1, JSONObject var2) {
-      return deleteReport$lambda$109$lambda$108(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$nMQ_wBod1ZP10oESibodwgm7tNM(GxTuningPage var0) {
-      return buildManeuvers$lambda$190(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$o0HLteyu7BBudEtftkhmp08s0dU(GxTuningPage var0, int var1, String var2, String var3) {
-      return loadRoutes$lambda$122(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$ojyZBqTxVEOj6JC_51hr6h6VVbI/* $VF was: $r8$lambda$ojyZBqTxVEOj6JC_51hr6h6VVbI*/(
-      GxTuningPage var0, Function1 var1, JSONObject var2
-   ) {
-      return runWith$lambda$61$lambda$60(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$pJBFHYlbEPpOlpPvGCiz7y6RIpE(GxTuningPage var0, String var1) {
-      return renderRoute$lambda$134(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$prSAb39gNbh9_tEwOojQ_jZK6dw/* $VF was: $r8$lambda$prSAb39gNbh9_tEwOojQ_jZK6dw*/(GxTuningPage var0, JSONObject var1) {
-      return paintTunes$lambda$51(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$qA_BK9lACxFW3pNlNrhbFtU4kyY(GxTuningPage var0) {
-      return build$lambda$2(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$qAxMDKdGoiuiH4_2aKdJIEOHnkk/* $VF was: $r8$lambda$qAxMDKdGoiuiH4_2aKdJIEOHnkk*/(GxTuningPage var0, String var1) {
-      return deleteReport$lambda$109(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$q_tloXYLKCVIQmjtlhx___bvYvY/* $VF was: $r8$lambda$q_tloXYLKCVIQmjtlhx___bvYvY*/(GxTuningPage var0) {
-      return buildPlots$lambda$139(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$rGU3H8x0a15n6bhvOUhDbhOQyGY(GxTuningPage var0, JSONObject var1) {
-      return paintTunes$lambda$46(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$rgR_D3cRkBd3uADZC0LJvq2T26k/* $VF was: $r8$lambda$rgR_D3cRkBd3uADZC0LJvq2T26k*/(GxTuningPage var0, JSONObject var1) {
-      return renderReport$lambda$88(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$rmt21IKa6XrRXKO9nIE35PGqgts(GxTuningPage var0) {
-      return buildLateral$lambda$32(var0);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$rsTrR_E_cxFvPsq76OcHVSkTd9U/* $VF was: $r8$lambda$rsTrR_E_cxFvPsq76OcHVSkTd9U*/(GxTuningPage var0, String var1, View var2) {
-      paintReports$lambda$72(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$s1EjFdjEIDXEQidgs4mjR4KlgI0(GxTuningPage var0, String var1, String var2) {
-      return renameSavedTune$lambda$53(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$sDyOjmjH_M8oyH_0_CDFOunm_VA/* $VF was: $r8$lambda$sDyOjmjH_M8oyH_0_CDFOunm_VA*/(GxTuningPage var0) {
-      return buildLateral$lambda$34(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$sMUhNEEEx7PhzvWiBHuSZa_2D7M(GxTuningPage var0, JSONObject var1) {
-      return paintProfiles$lambda$104(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$sYsGsxcEwqO5lqPblALu8Zm4WKo(GxTuningPage var0, String var1, JSONObject var2) {
-      return tgLoad$lambda$165(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$tI4XzUv3DVbE_H0XtSFvK1ZMHTE(GxTuningPage var0, JSONObject var1) {
-      return analyze$lambda$115(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static CharSequence $r8$lambda$uF6SvDW7nnfbG3YDvp8kFTOU6_o(GxTuningPage var0, JSONArray var1, int var2) {
-      return curveStr$lambda$74(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$wM98WGFxLU5DH5_NzzFXGKOIgnM/* $VF was: $r8$lambda$wM98WGFxLU5DH5_NzzFXGKOIgnM*/(GxTuningPage var0, String var1) {
-      return renderReport$lambda$102(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$wO73Pvsf8QJdfDsj4YUolonYMKo(GxTuningPage var0, JSONObject var1, String var2, Function0 var3, String var4, JSONObject var5) {
-      return flmRefresh$lambda$66$lambda$65(var0, var1, var2, var3, var4, var5);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$wXss6tys_SfJLHwzyBEWSb6HUqc(GxTuningPage var0, boolean var1, JSONObject var2) {
-      return paintTunes$lambda$45(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$wd1uaPKYwhveiAfdHO0HL73pZ10(GxTuningPage var0) {
-      return build$lambda$5(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$wpDVghXEnPNQaZhxSO8PNWy_U8E/* $VF was: $r8$lambda$wpDVghXEnPNQaZhxSO8PNWy_U8E*/(
-      GxTuningPage var0, Function1 var1, String var2, String var3, JSONObject var4
-   ) {
-      return runWith$lambda$61(var0, var1, var2, var3, var4);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$wrIfOZVdETGZVnw_T9Ma1Lmx9Ho/* $VF was: $r8$lambda$wrIfOZVdETGZVnw_T9Ma1Lmx9Ho*/(GxTuningPage var0) {
-      return build$lambda$3(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$x7IrKT_1UMFYLuyDWvAAhrD_WVg/* $VF was: $r8$lambda$x7IrKT_1UMFYLuyDWvAAhrD_WVg*/(GxTuningPage var0, String var1) {
-      return paintReports$lambda$71(var0, var1);
-   }
-
-   public GxTuningPage(Activity var1, GxHost var2) {
-      Intrinsics.checkNotNullParameter(var1, "act");
-      Intrinsics.checkNotNullParameter(var2, "gx");
-      super(var1, var2);
-      this.needsOffroad = true;
-      this.dateFmt = DateFormat.getDateTimeInstance(2, 3);
-      this.maxRoutes = 250;
-      this.maxSegments = 5;
-      this.flmLoading = true;
-      this.flmError = "";
-      this.reports = new JSONArray();
-      this.savedTunes = new JSONArray();
-      this.carFp = "";
-      this.wsStatus = new JSONObject();
-      this.routes = new ArrayList<>();
-      this.selectedRoutes = new LinkedHashSet<>();
-      this.segmentRanges = new HashMap<>();
-      this.loadedReportId = "";
-      this.lastStatusReportId = "";
-      this.fbAccepted = new LinkedHashSet<>();
-      this.fbIgnored = new LinkedHashSet<>();
-      this.fbNotes = "";
-      this.routeBoxes = new HashMap<>();
-      this.routeSwitches = new HashMap<>();
-      this.cDesired = Color.parseColor("#7aa2f7");
-      this.cActual = Color.parseColor("#9ece6a");
-      this.cP = Color.parseColor("#5ec8c8");
-      this.cI = Color.parseColor("#d4a060");
-      this.cD = Color.parseColor("#e05577");
-      this.cF = Color.parseColor("#bb9af7");
-      GxTuningPage.ChartCfg var5 = new GxTuningPage.ChartCfg(
-         "lateral",
-         false,
-         "Lateral Response",
-         "m/s²",
-         2,
-         2,
-         1.5,
-         1.25,
-         10.0,
-         "lateral",
-         "lateralSource",
-         CollectionsKt.listOf(
-            new Triple[]{new Triple<>("desiredLateralAccel", "Target", this.cDesired), new Triple<>("actualLateralAccel", "Measured", this.cActual)}
-         )
-      );
-      GxTuningPage.ChartCfg var6 = new GxTuningPage.ChartCfg(
-         "longitudinal",
-         false,
-         "Longitudinal Response",
-         "m/s²",
-         2,
-         2,
-         1.5,
-         1.25,
-         10.0,
-         "longitudinal",
-         "longitudinalSource",
-         CollectionsKt.listOf(
-            new Triple[]{new Triple<>("desiredLongitudinalAccel", "Target", this.cDesired), new Triple<>("actualLongitudinalAccel", "Measured", this.cActual)}
-         )
-      );
-      GxTuningPage.ChartCfg var4 = new GxTuningPage.ChartCfg(
-         "lateralTerms",
-         true,
-         "Lateral Controller Terms",
-         "",
-         3,
-         3,
-         0.15,
-         1.35,
-         1000.0,
-         "lateralterms",
-         "lateralTermsSource",
-         CollectionsKt.listOf(
-            new Triple[]{
-               new Triple<>("lateralP", "P", this.cP),
-               new Triple<>("lateralI", "I", this.cI),
-               new Triple<>("lateralD", "D", this.cD),
-               new Triple<>("lateralF", "F", this.cF)
+    private JSONObject activeTrial;
+    private LinearLayout advancedBox;
+    private TextView bAdvanced;
+    private TextView bAnalyze;
+    private TextView bKeep;
+    private TextView bPause;
+    private TextView bRefresh;
+    private TextView bRevert;
+    private TextView bSave;
+    private TextView bSaveCurrent;
+    private TextView bStop;
+    private boolean busy;
+    private final int cActual;
+    private final int cD;
+    private final int cDesired;
+    private final int cF;
+    private final int cI;
+    private final int cP;
+    private String carFp;
+    private final ArrayList<ChartViews> chartViews;
+    private final List<ChartCfg> charts;
+    private LinearLayout comparisonBox;
+    private final DateFormat dateFmt;
+    private final LinkedHashSet<String> fbAccepted;
+    private final LinkedHashSet<String> fbIgnored;
+    private String fbNotes;
+    private boolean flmBuilt;
+    private String flmError;
+    private boolean flmFetching;
+    private boolean flmLoading;
+    private LinearLayout flmNotices;
+    private LinearLayout flmStatusBox;
+    private boolean isOnroad;
+    private boolean laneCentering;
+    private String lastStatusReportId;
+    private double lastTs;
+    private LinearLayout latBox;
+    private Pair<? extends TextView, ? extends TextView> latBtns;
+    private boolean latBusy;
+    private JSONObject latData;
+    private boolean latFetching;
+    private boolean latLoading;
+    private final QualityCfg latQ;
+    private JSONObject live;
+    private String loadedReportId;
+    private boolean loadingRoutes;
+    private LinearLayout lonBox;
+    private Pair<? extends TextView, ? extends TextView> lonBtns;
+    private boolean lonBusy;
+    private JSONObject lonData;
+    private String lonError;
+    private boolean lonFetching;
+    private boolean lonLoading;
+    private final QualityCfg lonQ;
+    private boolean manBuilt;
+    private final int maxRoutes;
+    private final int maxSegments;
+    private final boolean needsOffroad;
+    private boolean plotsBuilt;
+    private String plotsError;
+    private boolean plotsFetching;
+    private boolean plotsLoading;
+    private boolean plotsPaused;
+    private LinearLayout plotsStatus;
+
+    /* renamed from: prefs$delegate, reason: from kotlin metadata */
+    private final Lazy prefs;
+    private LinearLayout profilesBox;
+    private JSONObject report;
+    private LinearLayout reportBox;
+    private boolean reportLoading;
+    private JSONArray reports;
+    private LinearLayout reportsBox;
+    private final HashMap<String, LinearLayout> routeBoxes;
+    private final HashMap<String, Switch> routeSwitches;
+    private final ArrayList<JSONObject> routes;
+    private LinearLayout routesBox;
+    private LinearLayout routesHead;
+    private final List<String> sampleKeys;
+    private final ArrayList<GxTuningSample> samples;
+    private JSONArray savedTunes;
+    private final HashMap<String, Pair<String, String>> segmentRanges;
+    private final LinkedHashSet<String> selectedRoutes;
+    private boolean showAdvanced;
+    private JSONObject statusData;
+    private int tab;
+    private LinearLayout tgBox;
+    private boolean tgBuilt;
+    private boolean tgBusy;
+    private JSONObject tgData;
+    private String tgError;
+    private boolean tgFetching;
+    private boolean tgLoading;
+    private String tgSelected;
+    private LinearLayout tunesBox;
+    private JSONObject wsStatus;
+
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public GxTuningPage(final Activity act, GxHost gx) {
+        super(act, gx);
+        Intrinsics.checkNotNullParameter(act, "act");
+        Intrinsics.checkNotNullParameter(gx, "gx");
+        this.needsOffroad = true;
+        this.dateFmt = DateFormat.getDateTimeInstance(2, 3);
+        this.maxRoutes = 250;
+        this.maxSegments = 5;
+        this.flmLoading = true;
+        this.flmError = "";
+        this.reports = new JSONArray();
+        this.savedTunes = new JSONArray();
+        this.carFp = "";
+        this.wsStatus = new JSONObject();
+        this.routes = new ArrayList<>();
+        this.selectedRoutes = new LinkedHashSet<>();
+        this.segmentRanges = new HashMap<>();
+        this.loadedReportId = "";
+        this.lastStatusReportId = "";
+        this.fbAccepted = new LinkedHashSet<>();
+        this.fbIgnored = new LinkedHashSet<>();
+        this.fbNotes = "";
+        this.routeBoxes = new HashMap<>();
+        this.routeSwitches = new HashMap<>();
+        this.cDesired = Color.parseColor("#7aa2f7");
+        this.cActual = Color.parseColor("#9ece6a");
+        this.cP = Color.parseColor("#5ec8c8");
+        this.cI = Color.parseColor("#d4a060");
+        this.cD = Color.parseColor("#e05577");
+        this.cF = Color.parseColor("#bb9af7");
+        this.charts = CollectionsKt.listOf((Object[]) new ChartCfg[]{new ChartCfg("lateral", false, "Lateral Response", "m/s²", 2, 2, 1.5d, 1.25d, 10.0d, "lateral", "lateralSource", CollectionsKt.listOf((Object[]) new Triple[]{new Triple("desiredLateralAccel", "Target", Integer.valueOf(this.cDesired)), new Triple("actualLateralAccel", "Measured", Integer.valueOf(this.cActual))})), new ChartCfg("longitudinal", false, "Longitudinal Response", "m/s²", 2, 2, 1.5d, 1.25d, 10.0d, "longitudinal", "longitudinalSource", CollectionsKt.listOf((Object[]) new Triple[]{new Triple("desiredLongitudinalAccel", "Target", Integer.valueOf(this.cDesired)), new Triple("actualLongitudinalAccel", "Measured", Integer.valueOf(this.cActual))})), new ChartCfg("lateralTerms", true, "Lateral Controller Terms", "", 3, 3, 0.15d, 1.35d, 1000.0d, "lateralterms", "lateralTermsSource", CollectionsKt.listOf((Object[]) new Triple[]{new Triple("lateralP", "P", Integer.valueOf(this.cP)), new Triple("lateralI", "I", Integer.valueOf(this.cI)), new Triple("lateralD", "D", Integer.valueOf(this.cD)), new Triple("lateralF", "F", Integer.valueOf(this.cF))})), new ChartCfg("longitudinalTerms", true, "Longitudinal Accel Cmd Terms", "", 3, 3, 0.15d, 1.35d, 1000.0d, "longitudinalterms", "longitudinalTermsSource", CollectionsKt.listOf((Object[]) new Triple[]{new Triple("longitudinalUpAccelCmd", "Up", Integer.valueOf(this.cP)), new Triple("longitudinalUiAccelCmd", "Ui", Integer.valueOf(this.cI)), new Triple("longitudinalUfAccelCmd", "Uf", Integer.valueOf(this.cF))}))});
+        this.latQ = new QualityCfg("desiredLateralAccel", "actualLateralAccel", 0.5d, 0.008d, true, 0.5d, 0.01d, false, 0.0d, 0.0d, 0.15d, 0.3d, 0.5d);
+        this.lonQ = new QualityCfg("desiredLongitudinalAccel", "actualLongitudinalAccel", 0.0d, 0.05d, true, 1.5d, 0.04d, true, 0.5d, 0.9d, 0.32d, 0.52d, 0.78d);
+        this.sampleKeys = CollectionsKt.listOf((Object[]) new String[]{"speed", "desiredLateralAccel", "actualLateralAccel", "desiredLongitudinalAccel", "actualLongitudinalAccel", "lateralP", "lateralI", "lateralD", "lateralF", "longitudinalUpAccelCmd", "longitudinalUiAccelCmd", "longitudinalUfAccelCmd"});
+        this.samples = new ArrayList<>();
+        this.plotsLoading = true;
+        this.plotsError = "";
+        this.prefs = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda12
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                SharedPreferences prefs_delegate$lambda$136;
+                prefs_delegate$lambda$136 = GxTuningPage.prefs_delegate$lambda$136(act);
+                return prefs_delegate$lambda$136;
             }
-         )
-      );
-      GxTuningPage.ChartCfg var3 = new GxTuningPage.ChartCfg(
-         "longitudinalTerms",
-         true,
-         "Longitudinal Accel Cmd Terms",
-         "",
-         3,
-         3,
-         0.15,
-         1.35,
-         1000.0,
-         "longitudinalterms",
-         "longitudinalTermsSource",
-         CollectionsKt.listOf(
-            new Triple[]{
-               new Triple<>("longitudinalUpAccelCmd", "Up", this.cP),
-               new Triple<>("longitudinalUiAccelCmd", "Ui", this.cI),
-               new Triple<>("longitudinalUfAccelCmd", "Uf", this.cF)
+        });
+        this.chartViews = new ArrayList<>();
+        this.tgLoading = true;
+        this.tgError = "";
+        this.tgSelected = "";
+        this.latLoading = true;
+        this.lonLoading = true;
+        this.lonError = "";
+    }
+
+    @Override // com.starpilot.starview.GxPage
+    public boolean getNeedsOffroad() {
+        return this.needsOffroad;
+    }
+
+    @Override // com.starpilot.starview.GxPage
+    public void build() {
+        GxPage.header$default(this, "Tuning, Plots & Testing", null, 2, null);
+        GxPage.tabs$default(this, CollectionsKt.listOf((Object[]) new String[]{"Lateral Tuning", "Plots", "Testing Ground", "Maneuvers"}), 0, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda59
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit build$lambda$0;
+                build$lambda$0 = GxTuningPage.build$lambda$0(GxTuningPage.this, ((Integer) obj).intValue());
+                return build$lambda$0;
             }
-         )
-      );
-      this.charts = CollectionsKt.listOf(new GxTuningPage.ChartCfg[]{var5, var6, var4, var3});
-      this.latQ = new GxTuningPage.QualityCfg("desiredLateralAccel", "actualLateralAccel", 0.5, 0.008, true, 0.5, 0.01, false, 0.0, 0.0, 0.15, 0.3, 0.5);
-      this.lonQ = new GxTuningPage.QualityCfg(
-         "desiredLongitudinalAccel", "actualLongitudinalAccel", 0.0, 0.05, true, 1.5, 0.04, true, 0.5, 0.9, 0.32, 0.52, 0.78
-      );
-      this.sampleKeys = CollectionsKt.listOf(
-         new String[]{
-            "speed",
-            "desiredLateralAccel",
-            "actualLateralAccel",
-            "desiredLongitudinalAccel",
-            "actualLongitudinalAccel",
-            "lateralP",
-            "lateralI",
-            "lateralD",
-            "lateralF",
-            "longitudinalUpAccelCmd",
-            "longitudinalUiAccelCmd",
-            "longitudinalUfAccelCmd"
-         }
-      );
-      this.samples = new ArrayList<>();
-      this.plotsLoading = true;
-      this.plotsError = "";
-      this.prefs$delegate = LazyKt.lazy(new GxTuningPage$$ExternalSyntheticLambda12(var1));
-      this.chartViews = new ArrayList<>();
-      this.tgLoading = true;
-      this.tgError = "";
-      this.tgSelected = "";
-      this.latLoading = true;
-      this.lonLoading = true;
-      this.lonError = "";
-   }
-
-   private final String activePathKey() {
-      JSONObject var3 = this.report;
-      if (var3 != null) {
-         CharSequence var2 = this.s(var3, "selectedPathKey");
-         Object var1 = var2;
-         if (StringsKt.isBlank(var2)) {
-            var1 = this.s(var3, "primaryPathKey");
-         }
-
-         String var5 = (String)var1;
-         if (var5 != null) {
-            return var5;
-         }
-      }
-
-      return "";
-   }
-
-   private final void afterSelectionChange() {
-      boolean var2;
-      if (this.selectedSegmentCount() >= this.maxSegments) {
-         var2 = true;
-      } else {
-         var2 = false;
-      }
-
-      for (Entry var6 : this.routeSwitches.entrySet()) {
-         String var5 = (String)var6.getKey();
-         Switch var7 = (Switch)var6.getValue();
-         boolean var3;
-         if (!this.selectedRoutes.contains(var5) && var2) {
-            var3 = false;
-         } else {
-            var3 = true;
-         }
-
-         var7.setEnabled(var3);
-         float var1;
-         if (var3) {
-            var1 = 1.0F;
-         } else {
-            var1 = 0.4F;
-         }
-
-         var7.setAlpha(var1);
-      }
-
-      this.paintRoutesHead();
-      this.paintActions();
-   }
-
-   private final void analyze() {
-      if (this.canAnalyze() && !this.busy) {
-         JSONObject var4 = new JSONObject();
-         Iterator var5 = this.selectedRoutes.iterator();
-         Intrinsics.checkNotNullExpressionValue(var5, "iterator(...)");
-
-         while (var5.hasNext()) {
-            Pair var1 = (Pair)var5.next();
-            Intrinsics.checkNotNullExpressionValue(var1, "next(...)");
-            String var6 = (String)var1;
-            Pair var2 = this.segmentRanges.get(var6);
-            var1 = var2;
-            if (var2 == null) {
-               var1 = TuplesKt.to("", "");
+        }, new Function2() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda60
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit build$lambda$1;
+                build$lambda$1 = GxTuningPage.build$lambda$1(GxTuningPage.this, ((Integer) obj).intValue(), (LinearLayout) obj2);
+                return build$lambda$1;
             }
-
-            String var3 = (String)var1.component1();
-            String var11 = (String)var1.component2();
-            if (!StringsKt.isBlank(var3) || !StringsKt.isBlank(var11)) {
-               JSONObject var7 = new JSONObject();
-               if (StringsKt.isBlank(var3)) {
-                  var1 = (Pair)JSONObject.NULL;
-               } else {
-                  var1 = var3;
-               }
-
-               JSONObject var12 = var7.put("start", var1);
-               if (StringsKt.isBlank(var11)) {
-                  var1 = (Pair)JSONObject.NULL;
-               } else {
-                  var1 = var11;
-               }
-
-               var4.put(var6, var12.put("end", var1));
+        }, 2, null);
+        every(4000L, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda61
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit build$lambda$2;
+                build$lambda$2 = GxTuningPage.build$lambda$2(GxTuningPage.this);
+                return build$lambda$2;
             }
-         }
-
-         this.runWith(
-            "POST",
-            "/api/flm/analyze",
-            new JSONObject().put("routes", new JSONArray(CollectionsKt.toList(this.selectedRoutes))).put("segmentRanges", var4),
-            "FLM analysis started.",
-            new GxTuningPage$$ExternalSyntheticLambda5(this)
-         );
-      }
-   }
-
-   private static final Unit analyze$lambda$115(GxTuningPage var0, JSONObject var1) {
-      if (var1 != null && !var0.selectedRoutes.isEmpty()) {
-         var0.selectedRoutes.clear();
-         var0.segmentRanges.clear();
-         var0.renderRoutesAll();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final boolean angleControl() {
-      JSONObject var1 = this.report;
-      if (var1 != null) {
-         var1 = var1.optJSONObject("car");
-         if (var1 != null) {
-            String var4 = this.s(var1, "controlPath");
-            return Intrinsics.areEqual(var4, "angle");
-         }
-      }
-
-      Object var3 = null;
-      return Intrinsics.areEqual(var3, "angle");
-   }
-
-   private final void applyTrial(String var1) {
-      JSONObject var2 = this.report;
-      if (var2 != null) {
-         String var3 = this.s(var2, "reportId");
-         if (!StringsKt.isBlank(var3) && this.canApplyTrial()) {
-            runWith$default(
-               this, "POST", "/api/flm/trials/apply", new JSONObject().put("reportId", var3).put("profileId", var1), "Trial profile applied.", null, 16, null
-            );
-         }
-      }
-   }
-
-   private final JSONArray arr(JSONObject var1, String var2) {
-      if (var1 != null) {
-         JSONArray var4 = var1.optJSONArray(var2);
-         if (var4 != null) {
-            return var4;
-         }
-      }
-
-      return new JSONArray();
-   }
-
-   private final void autoOpenReport() {
-      String var1 = this.s(this.status(), "reportId");
-      if (!StringsKt.isBlank(var1) && !Intrinsics.areEqual(var1, this.lastStatusReportId)) {
-         this.lastStatusReportId = var1;
-         this.loadReport(var1);
-      } else {
-         label22: {
-            JSONObject var3 = this.reports.optJSONObject(0);
-            if (var3 != null) {
-               String var2 = this.s(var3, "reportId");
-               var1 = var2;
-               if (var2 != null) {
-                  break label22;
-               }
+        });
+        every(1000L, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda62
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit build$lambda$3;
+                build$lambda$3 = GxTuningPage.build$lambda$3(GxTuningPage.this);
+                return build$lambda$3;
             }
-
-            var1 = "";
-         }
-
-         if (StringsKt.isBlank(this.loadedReportId) && !StringsKt.isBlank(var1)) {
-            this.loadReport(var1);
-         }
-      }
-   }
-
-   private final TextView barBtn(LinearLayout var1, String var2, boolean var3, Function0<Unit> var4) {
-      TextView var8 = this.getUi().button(var2, var3, var4);
-      View var5 = (View)var8;
-      LayoutParams var6 = new LayoutParams(-2, -2);
-      var6.rightMargin = this.getUi().dp(10);
-      Unit var7 = Unit.INSTANCE;
-      var1.addView(var5, (android.view.ViewGroup.LayoutParams)var6);
-      return var8;
-   }
-
-   // $VF: synthetic method
-   static TextView barBtn$default(GxTuningPage var0, LinearLayout var1, String var2, boolean var3, Function0 var4, int var5, Object var6) {
-      if ((var5 & 4) != 0) {
-         var3 = false;
-      }
-
-      return var0.barBtn(var1, var2, var3, var4);
-   }
-
-   private final GxTuningPage.Bounds bounds(String var1) {
-      Iterator var7 = this.routes.iterator();
-
-      Object var5;
-      while (true) {
-         boolean var4 = var7.hasNext();
-         var5 = null;
-         if (var4) {
-            Object var6 = var7.next();
-            if (!Intrinsics.areEqual(this.s((JSONObject)var6, "name"), var1)) {
-               continue;
+        });
+        every(3000L, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda63
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit build$lambda$4;
+                build$lambda$4 = GxTuningPage.build$lambda$4(GxTuningPage.this);
+                return build$lambda$4;
             }
+        });
+        every(3000L, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda64
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit build$lambda$5;
+                build$lambda$5 = GxTuningPage.build$lambda$5(GxTuningPage.this);
+                return build$lambda$5;
+            }
+        });
+    }
 
-            var8 = var6;
-            break;
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$0(GxTuningPage this$0, int i) {
+        int was = this$0.tab;
+        this$0.tab = i;
+        if (this$0.getShown() && was != i) {
+            this$0.kick(i);
+        }
+        return Unit.INSTANCE;
+    }
 
-         var8 = null;
-         break;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$1(GxTuningPage this$0, int i, LinearLayout b) {
+        Intrinsics.checkNotNullParameter(b, "b");
+        switch (i) {
+            case 0:
+                this$0.buildLateral(b);
+                break;
+            case 1:
+                this$0.buildPlots(b);
+                break;
+            case 2:
+                this$0.buildTesting(b);
+                break;
+            default:
+                this$0.buildManeuvers(b);
+                break;
+        }
+        return Unit.INSTANCE;
+    }
 
-      JSONObject var11 = (JSONObject)var8;
-      Object var9;
-      if (var11 != null) {
-         var9 = var11.opt("segmentCount");
-      } else {
-         var9 = null;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$2(GxTuningPage this$0) {
+        if (this$0.tab == 0) {
+            flmRefresh$default(this$0, true, null, 2, null);
+        }
+        return Unit.INSTANCE;
+    }
 
-      int var3 = Math.max(0, (int)Math.round(num$default(this, var9, 0.0, 2, null)));
-      var9 = var5;
-      if (var11 != null) {
-         var9 = var11.opt("firstSegmentNum");
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$3(GxTuningPage this$0) {
+        if (this$0.tab == 1 && !this$0.plotsPaused) {
+            plotsLoad$default(this$0, false, 1, null);
+        }
+        return Unit.INSTANCE;
+    }
 
-      int var2 = Math.max(0, (int)Math.round(num$default(this, var9, 0.0, 2, null)));
-      return new GxTuningPage.Bounds(var2, Math.max(0, var3 - 1) + var2, var3);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$4(GxTuningPage this$0) {
+        if (this$0.tab == 2 && !this$0.tgBusy) {
+            this$0.tgLoad();
+        }
+        return Unit.INSTANCE;
+    }
 
-   private final LinearLayout btnBar(ViewGroup var1) {
-      LinearLayout var2 = new LinearLayout((Context)this.getAct());
-      var2.setOrientation(0);
-      var2.setPadding(0, this.getUi().dp(6), 0, this.getUi().dp(6));
-      HorizontalScrollView var3 = new HorizontalScrollView((Context)this.getAct());
-      var3.setHorizontalScrollBarEnabled(false);
-      var3.addView((View)var2);
-      var1.addView((View)var3);
-      return var2;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$5(GxTuningPage this$0) {
+        if (this$0.tab == 3) {
+            this$0.manLoad(true);
+            this$0.manLoad(false);
+        }
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit build$lambda$0(GxTuningPage var0, int var1) {
-      int var2 = var0.tab;
-      var0.tab = var1;
-      if (var0.getShown() && var2 != var1) {
-         var0.kick(var1);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit build$lambda$1(GxTuningPage var0, int var1, LinearLayout var2) {
-      Intrinsics.checkNotNullParameter(var2, "b");
-      switch (var1) {
-         case 0:
-            var0.buildLateral(var2);
-            break;
-         case 1:
-            var0.buildPlots(var2);
-            break;
-         case 2:
-            var0.buildTesting(var2);
-            break;
-         default:
-            var0.buildManeuvers(var2);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit build$lambda$2(GxTuningPage var0) {
-      if (var0.tab == 0) {
-         flmRefresh$default(var0, true, null, 2, null);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit build$lambda$3(GxTuningPage var0) {
-      if (var0.tab == 1 && !var0.plotsPaused) {
-         plotsLoad$default(var0, false, 1, null);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit build$lambda$4(GxTuningPage var0) {
-      if (var0.tab == 2 && !var0.tgBusy) {
-         var0.tgLoad();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit build$lambda$5(GxTuningPage var0) {
-      if (var0.tab == 3) {
-         var0.manLoad(true);
-         var0.manLoad(false);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final void buildLateral(LinearLayout var1) {
-      this.flmBuilt = true;
-      LinearLayout var4 = this.card((ViewGroup)var1);
-      headLine$default(this, (ViewGroup)var4, "Lateral Tuning (FLM)", 0, 4, null);
-      GxPage.text$default(
-         this,
-         "Analyze one or more local routes, review deterministic lateral findings, apply a bounded trial, drive, then revert or refine.",
-         (ViewGroup)var4,
-         0.0F,
-         0,
-         false,
-         28,
-         null
-      );
-      this.flmNotices = this.box((ViewGroup)var4);
-      LinearLayout var3 = this.btnBar((ViewGroup)var4);
-      this.bAnalyze = this.barBtn(var3, "Analyze Selected", true, new GxTuningPage$$ExternalSyntheticLambda11(this));
-      this.bStop = barBtn$default(this, var3, "Stop", false, new GxTuningPage$$ExternalSyntheticLambda22(this), 4, null);
-      this.bRevert = barBtn$default(this, var3, "Revert Trial", false, new GxTuningPage$$ExternalSyntheticLambda33(this), 4, null);
-      this.bKeep = barBtn$default(this, var3, "Keep as Baseline", false, new GxTuningPage$$ExternalSyntheticLambda44(this), 4, null);
-      this.bSave = barBtn$default(this, var3, "Save Tune", false, new GxTuningPage$$ExternalSyntheticLambda55(this), 4, null);
-      this.bRefresh = barBtn$default(this, var3, "Refresh", false, new GxTuningPage$$ExternalSyntheticLambda66(this), 4, null);
-      this.sub("Workspace status", (ViewGroup)var4);
-      this.flmStatusBox = this.box((ViewGroup)var4);
-      this.header("Saved Tunes", (ViewGroup)var1);
-      this.note(
-         "Save a working FLM trial, switch between setups, then use Revert Trial to return to the exact manual settings from before FLM.", (ViewGroup)var1
-      );
-      this.tunesBox = this.box((ViewGroup)var1);
-      this.header("Local Routes", (ViewGroup)var1);
-      int var2 = this.maxSegments;
-      this.note("Pick routes and segment ranges to analyze. A run is limited to " + var2 + " segments total.", (ViewGroup)var1);
-      this.routesHead = this.box((ViewGroup)var1);
-      this.routesBox = this.box((ViewGroup)var1);
-      this.header("Reports", (ViewGroup)var1);
-      this.reportsBox = this.box((ViewGroup)var1);
-      this.reportBox = this.box((ViewGroup)var1);
-      var1 = this.card((ViewGroup)var1);
-      this.bSaveCurrent = headBtn$default(
-         this,
-         headLine$default(this, (ViewGroup)var1, "Trial Profiles", 0, 4, null),
-         "Save Current",
-         false,
-         new GxTuningPage$$ExternalSyntheticLambda70(this),
-         4,
-         null
-      );
-      GxPage.text$default(
-         this,
-         "Apply one bounded profile at a time. Revert restores the exact advanced-lateral and FLM state from before the trial.",
-         (ViewGroup)var1,
-         0.0F,
-         0,
-         false,
-         28,
-         null
-      );
-      this.profilesBox = this.box((ViewGroup)var1);
-      this.paintFlm();
-      this.renderReport();
-      this.renderRoutesAll();
-      this.loadRoutes();
-   }
-
-   private static final Unit buildLateral$lambda$30(GxTuningPage var0) {
-      var0.analyze();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildLateral$lambda$31(GxTuningPage var0) {
-      runWith$default(var0, "POST", "/api/flm/analyze/stop", null, "FLM analysis stopped.", null, 16, null);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildLateral$lambda$32(GxTuningPage var0) {
-      runWith$default(var0, "POST", "/api/flm/trials/revert", null, "Trial reverted.", null, 16, null);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildLateral$lambda$34(GxTuningPage var0) {
-      var0.confirm(
-         "Keep Current as Baseline",
-         "Keep the currently applied tuning values and end this trial? This does not restore the previous tune.",
-         "Yes, Keep",
-         new GxTuningPage$$ExternalSyntheticLambda0(var0)
-      );
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildLateral$lambda$34$lambda$33(GxTuningPage var0) {
-      runWith$default(var0, "POST", "/api/flm/trials/accept", null, "Current tune kept as baseline.", null, 16, null);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildLateral$lambda$35(GxTuningPage var0) {
-      var0.saveCurrent();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildLateral$lambda$36(GxTuningPage var0) {
-      flmRefresh$default(var0, false, null, 3, null);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildLateral$lambda$37(GxTuningPage var0) {
-      var0.saveCurrent();
-      return Unit.INSTANCE;
-   }
-
-   private final void buildManeuvers(LinearLayout var1) {
-      this.manBuilt = true;
-      this.header("Lateral Maneuvers", (ViewGroup)var1);
-      LinearLayout var3 = this.card((ViewGroup)var1);
-      GxPage.text$default(this, "Arm the lateral maneuver suite from your phone and monitor progress live.", (ViewGroup)var3, 0.0F, 0, false, 28, null);
-      LinearLayout var4 = this.btnBar((ViewGroup)var3);
-      TextView var2 = this.barBtn(var4, "Start / Arm", true, new GxTuningPage$$ExternalSyntheticLambda34(this));
-      TextView var5 = barBtn$default(this, var4, "Stop", false, new GxTuningPage$$ExternalSyntheticLambda35(this), 4, null);
-      var5.setTextColor(Color.rgb(240, 110, 130));
-      Unit var10 = Unit.INSTANCE;
-      this.latBtns = TuplesKt.to(var2, var5);
-      this.latBox = this.box((ViewGroup)var3);
-      this.header("Long Maneuvers", (ViewGroup)var1);
-      LinearLayout var7 = this.card((ViewGroup)var1);
-      GxPage.text$default(this, "Run the longitudinal maneuver suite from your phone and monitor progress live.", (ViewGroup)var7, 0.0F, 0, false, 28, null);
-      var3 = this.btnBar((ViewGroup)var7);
-      TextView var6 = this.barBtn(var3, "Start / Arm", true, new GxTuningPage$$ExternalSyntheticLambda36(this));
-      TextView var9 = barBtn$default(this, var3, "Stop", false, new GxTuningPage$$ExternalSyntheticLambda37(this), 4, null);
-      var9.setTextColor(Color.rgb(240, 110, 130));
-      Unit var11 = Unit.INSTANCE;
-      this.lonBtns = TuplesKt.to(var6, var9);
-      this.lonBox = this.box((ViewGroup)var7);
-      this.paintLat();
-      this.paintLon();
-   }
-
-   private static final Unit buildManeuvers$lambda$187(GxTuningPage var0) {
-      var0.manRun(true, "start");
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildManeuvers$lambda$188(GxTuningPage var0) {
-      var0.manRun(true, "stop");
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildManeuvers$lambda$190(GxTuningPage var0) {
-      var0.manRun(false, "start");
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildManeuvers$lambda$191(GxTuningPage var0) {
-      var0.manRun(false, "stop");
-      return Unit.INSTANCE;
-   }
-
-   // $VF: Could not inline inconsistent finally blocks
-   // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-   private final void buildPlots(LinearLayout var1) {
-      this.plotsBuilt = true;
-
-      Object var10;
-      label97:
-      try {
-         var10 = Result.Companion;
-         var10 = (Collection)KtCompat.resultOf(this.getPrefs().getBoolean("plotsShowAdvancedTerms", false));
-      } catch (Throwable var6) {
-         var10 = Result.Companion;
-         var10 = (Collection)KtCompat.resultOf(ResultKt.createFailure(var6));
-         break label97;
-      }
-
-      Object var3 = var10;
-      if (KtCompat.isFailure(var10)) {
-         var3 = false;
-      }
-
-      this.showAdvanced = (Boolean)var3;
-      var10 = this.card((ViewGroup)var1);
-      headLine$default(this, (ViewGroup)var10, "Live tuning status", 0, 4, null);
-      GxPage.text$default(
-         this,
-         "Live comparison view for tuning diagnostics. These scores are a quick health check, not a final verdict. Short spikes from bumps, lane changes, traffic transitions, and manual inputs can temporarily lower a score.",
-         (ViewGroup)var10,
-         0.0F,
-         0,
-         false,
-         28,
-         null
-      );
-      this.plotsStatus = this.box((ViewGroup)var10);
-      GxPage.text$default(
-         this,
-         "Match rating uses a 30-second rolling window. Strong steering or accel moments are preferred, but gentler windows can still earn a rating. Longitudinal also checks how much of the window stays above error limits.",
-         (ViewGroup)var10,
-         14.0F,
-         0,
-         false,
-         24,
-         null
-      );
-      var10 = this.btnBar((ViewGroup)var10);
-      this.bPause = barBtn$default(this, (LinearLayout)var10, "Pause Live", false, new GxTuningPage$$ExternalSyntheticLambda20(this), 4, null);
-      barBtn$default(this, (LinearLayout)var10, "Clear History", false, new GxTuningPage$$ExternalSyntheticLambda21(this), 4, null);
-      barBtn$default(this, (LinearLayout)var10, "Refresh", false, new GxTuningPage$$ExternalSyntheticLambda23(this), 4, null);
-      var3 = this.charts;
-      var10 = new ArrayList();
-
-      for (var var3_it : var3) {
-
-         var3 = var3_it;
-         if (!((GxTuningPage.ChartCfg)var3).getAdvanced()) {
-            var10.add(var3);
-         }
-      }
-
-      List var15 = (List)var10;
-      Iterator var16 = var15.iterator();
-
-      while (var16.hasNext()) {
-         this.chartCard(var1, (GxTuningPage.ChartCfg)var16.next());
-      }
-
-      this.bAdvanced = this.getUi().button("", false, new GxTuningPage$$ExternalSyntheticLambda24(this));
-      var3 = this.bAdvanced;
-      TextView var17 = (TextView)var3;
-      if (var3 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("bAdvanced");
-         var17 = null;
-      }
-
-      View var28 = (View)var17;
-      LayoutParams var18 = new LayoutParams(-2, -2);
-      var18.topMargin = this.getUi().dp(8);
-      var18.bottomMargin = this.getUi().dp(10);
-      var3 = Unit.INSTANCE;
-      var1.addView(var28, (android.view.ViewGroup.LayoutParams)var18);
-      this.advancedBox = this.box((ViewGroup)var1);
-      Iterable var19 = this.charts;
-      var var7 = new ArrayList();
-
-      for (Object var26 : var19) {
-         if (((GxTuningPage.ChartCfg)var26).getAdvanced()) {
-            var7.add(var26);
-         }
-      }
-
-      for (GxTuningPage.ChartCfg var29 : var7) {
-         LinearLayout var21 = this.advancedBox;
-         var1 = var21;
-         if (var21 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("advancedBox");
-            var1 = null;
-         }
-
-         this.chartCard(var1, var29);
-      }
-
-      this.paintPlots();
-   }
-
-   private static final Unit buildPlots$lambda$138(GxTuningPage var0) {
-      var0.togglePaused();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildPlots$lambda$139(GxTuningPage var0) {
-      var0.samples.clear();
-      var0.lastTs = 0.0;
-      var0.paintPlots();
-      var0.toast("Plot history cleared.");
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildPlots$lambda$140(GxTuningPage var0) {
-      var0.plotsLoading = true;
-      var0.plotsError = "";
-      var0.paintPlots();
-      var0.plotsLoad(true);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildPlots$lambda$142(GxTuningPage var0) {
-      var0.toggleAdvanced();
-      return Unit.INSTANCE;
-   }
-
-   private final void buildTesting(LinearLayout var1) {
-      this.tgBuilt = true;
-      this.header("A/B Tuning Sandbox", (ViewGroup)var1);
-      this.note("A/B Tuning Sandbox. If you don't know what this is, you probably shouldn't be here ;)", (ViewGroup)var1);
-      this.tgBox = this.box((ViewGroup)var1);
-      this.paintTg();
-   }
-
-   private final void bullets(ViewGroup var1, List<String> var2, boolean var3) {
-      Iterator var8 = var2.iterator();
-      int var4 = 0;
-
-      while (true) {
-         int var5 = var4;
-         if (!var8.hasNext()) {
+    @Override // com.starpilot.starview.GxPage
+    public void onShow() {
+        if (!this.flmBuilt || !this.routes.isEmpty() || this.loadingRoutes) {
             return;
-         }
+        }
+        loadRoutes();
+    }
 
-         var4++;
-         String var7 = (String)var8.next();
-         GxPage var9 = this;
-         StringBuilder var6;
-         String var10;
-         if (var3) {
-            var6 = new StringBuilder().append(var5 + 1);
-            var10 = ". ";
-         } else {
-            var6 = new StringBuilder();
-            var10 = "•  ";
-         }
+    private final void kick(int i) {
+        switch (i) {
+            case 0:
+                flmRefresh$default(this, false, null, 3, null);
+                break;
+            case 1:
+                if (!this.plotsPaused) {
+                    plotsLoad$default(this, false, 1, null);
+                    break;
+                }
+                break;
+            case 2:
+                tgLoad();
+                break;
+            default:
+                manLoad(true);
+                manLoad(false);
+                break;
+        }
+    }
 
-         GxPage.text$default(var9, var6.append(var10).append(var7).toString(), var1, 16.0F, CarUi.Companion.getDIM(), false, 16, null)
-            .setPadding(this.getUi().dp(6), this.getUi().dp(3), 0, this.getUi().dp(3));
-      }
-   }
+    static /* synthetic */ double num$default(GxTuningPage gxTuningPage, Object obj, double d, int i, Object obj2) {
+        if ((i & 2) != 0) {
+            d = 0.0d;
+        }
+        return gxTuningPage.num(obj, d);
+    }
 
-   // $VF: synthetic method
-   static void bullets$default(GxTuningPage var0, ViewGroup var1, List var2, boolean var3, int var4, Object var5) {
-      if ((var4 & 4) != 0) {
-         var3 = false;
-      }
+    private final double num(Object v, double fb) {
+        double d;
+        if (v != null && !Intrinsics.areEqual(v, JSONObject.NULL)) {
+            if (v instanceof Number) {
+                d = ((Number) v).doubleValue();
+            } else if (v instanceof Boolean) {
+                if (((Boolean) v).booleanValue()) {
+                    d = 1.0d;
+                }
+                d = 0.0d;
+            } else if (v instanceof String) {
+                if (!StringsKt.isBlank((CharSequence) v)) {
+                    Double doubleOrNull = StringsKt.toDoubleOrNull(StringsKt.trim((CharSequence) v).toString());
+                    if (doubleOrNull != null) {
+                        d = doubleOrNull.doubleValue();
+                    }
+                }
+                d = 0.0d;
+            }
+            return !Double.isInfinite(d) && !Double.isNaN(d) ? d : fb;
+        }
+        return fb;
+    }
 
-      var0.bullets(var1, var2, var3);
-   }
+    private final boolean truthy(Object v) {
+        if (v == null || Intrinsics.areEqual(v, JSONObject.NULL)) {
+            return false;
+        }
+        if (v instanceof Boolean) {
+            return ((Boolean) v).booleanValue();
+        }
+        if (v instanceof Number) {
+            if (((Number) v).doubleValue() == 0.0d) {
+                return false;
+            }
+        } else if ((v instanceof String) && ((CharSequence) v).length() <= 0) {
+            return false;
+        }
+        return true;
+    }
 
-   private final boolean canAnalyze() {
-      int var1 = this.selectedSegmentCount();
-      boolean var2;
-      if (!this.selectedRoutes.isEmpty() && var1 > 0 && var1 <= this.maxSegments && !this.isOnroad && !this.laneCentering) {
-         var2 = true;
-      } else {
-         var2 = false;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final String s(JSONObject o, String k) {
+        String str;
+        Object opt;
+        if (o != null) {
+            if (!o.has(k) || o.isNull(k) || (opt = o.opt(k)) == null || (str = opt.toString()) == null) {
+                str = "";
+            }
+            return str == null ? "" : str;
+        }
+        return "";
+    }
 
-      return var2;
-   }
+    private final String f(double v, int d) {
+        StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
+        String format = String.format(Locale.US, "%." + d + "f", Arrays.copyOf(new Object[]{Double.valueOf(v)}, 1));
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        return format;
+    }
 
-   private final boolean canApplyTrial() {
-      boolean var1;
-      if (!this.busy && !this.rollbackUnavailable()) {
-         var1 = true;
-      } else {
-         var1 = false;
-      }
+    private final JSONArray arr(JSONObject $this$arr, String k) {
+        JSONArray optJSONArray;
+        return ($this$arr == null || (optJSONArray = $this$arr.optJSONArray(k)) == null) ? new JSONArray() : optJSONArray;
+    }
 
-      return var1;
-   }
+    private final JSONObject obj(JSONObject $this$obj, String k) {
+        JSONObject optJSONObject;
+        return ($this$obj == null || (optJSONObject = $this$obj.optJSONObject(k)) == null) ? new JSONObject() : optJSONObject;
+    }
 
-   private final void chartCard(LinearLayout var1, GxTuningPage.ChartCfg var2) {
-      var1 = this.card((ViewGroup)var1);
-      headLine$default(this, (ViewGroup)var1, var2.getTitle(), 0, 4, null);
-      TextView var3 = GxPage.text$default(this, "", (ViewGroup)var1, 14.0F, 0, false, 24, null);
-      LinearLayout var4 = new LinearLayout((Context)this.getAct());
-      var4.setOrientation(0);
-      var4.setPadding(0, this.getUi().dp(4), 0, this.getUi().dp(8));
-      var1.addView((View)var4);
-      Context var5 = (Context)this.getAct();
-      Iterable var7 = var2.getSeries();
-      var var6 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var7, 10));
+    private final List<Pair<String, Object>> entries(final JSONObject $this$entries) {
+        Iterator<String> keys = $this$entries.keys();
+        Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
+        return SequencesKt.toList(SequencesKt.map(SequencesKt.asSequence(keys), new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda65
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Pair entries$lambda$7;
+                entries$lambda$7 = GxTuningPage.entries$lambda$7($this$entries, (String) obj);
+                return entries$lambda$7;
+            }
+        }));
+    }
 
-      for (Triple var8 : var7) {
-         var6.add(TuplesKt.to(var8.getFirst(), var8.getThird()));
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Pair entries$lambda$7(JSONObject $this_entries, String it) {
+        return TuplesKt.to(it, $this_entries.opt(it));
+    }
 
-      List var11 = var6;
-      GxTuningChartView var12 = new GxTuningChartView(
-         var5, var11, var2.getUnit(), var2.getRangeDigits(), var2.getRangeFloor(), var2.getRangeMult(), var2.getRoundDiv(), this.samples
-      );
-      var1.addView(var12, (android.view.ViewGroup.LayoutParams)(new LayoutParams(-1, this.getUi().dp(220))));
-      TextView var10 = this.empty("Waiting for enough live samples...");
-      var1.addView((View)var10);
-      this.chartViews.add(new GxTuningPage.ChartViews(var2, var3, var4, var12, var10));
-   }
+    private final void en(TextView $this$en, boolean on) {
+        $this$en.setEnabled(on);
+        $this$en.setAlpha(on ? 1.0f : 0.4f);
+    }
 
-   private final List<GxTuningPage.CmpRow> comparisonRows() {
-      JSONObject var2 = this.report;
-      if (var2 == null) {
-         return CollectionsKt.emptyList();
-      } else {
-         JSONObject var6 = this.obj(var2, "stockParams");
-         JSONObject var4 = this.obj(var2, "currentParams");
-         JSONObject var3 = this.obj(this.activeTrial, "appliedGenericParams");
-         boolean var1 = this.angleControl();
-         List var12;
-         if (var1) {
-            var12 = CollectionsKt.listOf(
-               new Pair[]{
-                  TuplesKt.to("Auto steer delay", "UseAutoSteerDelay"), TuplesKt.to("Steer delay", "SteerDelay"), TuplesKt.to("Steer ratio", "SteerRatio")
-               }
-            );
-         } else {
-            var12 = CollectionsKt.listOf(
-               new Pair[]{
-                  TuplesKt.to("Lat accel", "SteerLatAccel"),
-                  TuplesKt.to("Friction", "SteerFriction"),
-                  TuplesKt.to("Auto steer delay", "UseAutoSteerDelay"),
-                  TuplesKt.to("Steer delay", "SteerDelay"),
-                  TuplesKt.to("Steer ratio", "SteerRatio"),
-                  TuplesKt.to("KP", "SteerKP")
-               }
-            );
-         }
+    static /* synthetic */ TextView line$default(GxTuningPage gxTuningPage, ViewGroup viewGroup, String str, String str2, int i, int i2, Object obj) {
+        if ((i2 & 8) != 0) {
+            i = CarUi.Companion.getTEXT();
+        }
+        return gxTuningPage.line(viewGroup, str, str2, i);
+    }
 
-         ArrayList var5 = new ArrayList();
+    private final TextView line(ViewGroup into, String label, String value, int valueColor) {
+        LinearLayout l = new LinearLayout(getAct());
+        l.setOrientation(0);
+        l.setGravity(16);
+        l.setPadding(0, getUi().dp(5), 0, getUi().dp(5));
+        TextView $this$line_u24lambda_u249 = new TextView(getAct());
+        $this$line_u24lambda_u249.setText(label);
+        $this$line_u24lambda_u249.setTextSize(17.0f);
+        $this$line_u24lambda_u249.setTextColor(CarUi.Companion.getDIM());
+        l.addView($this$line_u24lambda_u249, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        TextView v = new TextView(getAct());
+        v.setText(value);
+        v.setTextSize(17.0f);
+        v.setTextColor(valueColor);
+        v.setTypeface(Typeface.DEFAULT_BOLD);
+        v.setGravity(8388613);
+        l.addView(v, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        into.addView(l);
+        return v;
+    }
 
-         for (Pair var13 : var12) {
-            String var7 = (String)var13.component1();
-            String var10 = (String)var13.component2();
-            Object var9 = var6.opt(var10);
-            if (var3.has(var10)) {
-               var2 = (JSONObject)var3.opt(var10);
+    static /* synthetic */ LinearLayout headLine$default(GxTuningPage gxTuningPage, ViewGroup viewGroup, String str, int i, int i2, Object obj) {
+        if ((i2 & 4) != 0) {
+            i = CarUi.Companion.getTEXT();
+        }
+        return gxTuningPage.headLine(viewGroup, str, i);
+    }
+
+    private final LinearLayout headLine(ViewGroup into, String title, int color) {
+        LinearLayout l = new LinearLayout(getAct());
+        l.setOrientation(0);
+        l.setGravity(16);
+        l.setPadding(0, 0, 0, getUi().dp(6));
+        TextView $this$headLine_u24lambda_u2412 = new TextView(getAct());
+        $this$headLine_u24lambda_u2412.setText(title);
+        $this$headLine_u24lambda_u2412.setTextSize(21.0f);
+        $this$headLine_u24lambda_u2412.setTextColor(color);
+        $this$headLine_u24lambda_u2412.setTypeface(Typeface.DEFAULT_BOLD);
+        l.addView($this$headLine_u24lambda_u2412, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        into.addView(l);
+        return l;
+    }
+
+    static /* synthetic */ TextView headBtn$default(GxTuningPage gxTuningPage, LinearLayout linearLayout, String str, boolean z, Function0 function0, int i, Object obj) {
+        if ((i & 4) != 0) {
+            z = false;
+        }
+        return gxTuningPage.headBtn(linearLayout, str, z, function0);
+    }
+
+    private final TextView headBtn(LinearLayout head, String label, boolean accent, Function0<Unit> onClick) {
+        TextView b = getUi().button(label, accent, onClick);
+        LinearLayout.LayoutParams $this$headBtn_u24lambda_u2413 = new LinearLayout.LayoutParams(-2, -2);
+        $this$headBtn_u24lambda_u2413.leftMargin = getUi().dp(8);
+        Unit unit = Unit.INSTANCE;
+        head.addView(b, $this$headBtn_u24lambda_u2413);
+        return b;
+    }
+
+    private final TextView sub(String title, ViewGroup into) {
+        TextView $this$sub_u24lambda_u2414 = text(title, into, 18.0f, CarUi.Companion.getTEXT(), true);
+        $this$sub_u24lambda_u2414.setPadding(0, getUi().dp(14), 0, getUi().dp(4));
+        return $this$sub_u24lambda_u2414;
+    }
+
+    private final LinearLayout inner(ViewGroup into) {
+        LinearLayout c = new LinearLayout(getAct());
+        c.setOrientation(1);
+        c.setBackground(getUi().rounded(CarUi.Companion.getCARD_ON(), 12, Integer.valueOf(Color.rgb(50, 55, 66))));
+        c.setPadding(getUi().dp(16), getUi().dp(12), getUi().dp(16), getUi().dp(12));
+        LinearLayout.LayoutParams $this$inner_u24lambda_u2416 = new LinearLayout.LayoutParams(-1, -2);
+        $this$inner_u24lambda_u2416.topMargin = getUi().dp(6);
+        $this$inner_u24lambda_u2416.bottomMargin = getUi().dp(6);
+        Unit unit = Unit.INSTANCE;
+        into.addView(c, $this$inner_u24lambda_u2416);
+        return c;
+    }
+
+    static /* synthetic */ void notice$default(GxTuningPage gxTuningPage, ViewGroup viewGroup, String str, int i, String str2, int i2, Object obj) {
+        if ((i2 & 4) != 0) {
+            i = CarUi.Companion.getWARN();
+        }
+        if ((i2 & 8) != 0) {
+            str2 = null;
+        }
+        gxTuningPage.notice(viewGroup, str, i, str2);
+    }
+
+    private final void notice(ViewGroup into, String text, int color, String title) {
+        LinearLayout c = new LinearLayout(getAct());
+        c.setOrientation(1);
+        c.setBackground(getUi().rounded(Color.argb(40, Color.red(color), Color.green(color), Color.blue(color)), 12, Integer.valueOf(color)));
+        c.setPadding(getUi().dp(16), getUi().dp(10), getUi().dp(16), getUi().dp(10));
+        SpannableStringBuilder sb = new SpannableStringBuilder();
+        if (title != null) {
+            sb.append((CharSequence) title).append((CharSequence) " ");
+            sb.setSpan(new StyleSpan(1), 0, title.length(), 33);
+        }
+        sb.append((CharSequence) text);
+        TextView $this$notice_u24lambda_u2418 = new TextView(getAct());
+        $this$notice_u24lambda_u2418.setText(sb);
+        $this$notice_u24lambda_u2418.setTextSize(15.0f);
+        $this$notice_u24lambda_u2418.setTextColor(CarUi.Companion.getTEXT());
+        c.addView($this$notice_u24lambda_u2418);
+        LinearLayout.LayoutParams $this$notice_u24lambda_u2419 = new LinearLayout.LayoutParams(-1, -2);
+        $this$notice_u24lambda_u2419.topMargin = getUi().dp(4);
+        $this$notice_u24lambda_u2419.bottomMargin = getUi().dp(8);
+        Unit unit = Unit.INSTANCE;
+        into.addView(c, $this$notice_u24lambda_u2419);
+    }
+
+    static /* synthetic */ void bullets$default(GxTuningPage gxTuningPage, ViewGroup viewGroup, List list, boolean z, int i, Object obj) {
+        if ((i & 4) != 0) {
+            z = false;
+        }
+        gxTuningPage.bullets(viewGroup, list, z);
+    }
+
+    private final void bullets(ViewGroup into, List<String> items, boolean ordered) {
+        StringBuilder sb;
+        String str;
+        int i = 0;
+        for (String it : items) {
+            int i2 = i;
+            i++;
+            GxTuningPage gxTuningPage = this;
+            if (ordered) {
+                sb = new StringBuilder().append(i2 + 1);
+                str = ". ";
             } else {
-               var2 = (JSONObject)var4.opt(var10);
+                sb = new StringBuilder();
+                str = "•  ";
             }
-
-            var5.add(new GxTuningPage.CmpRow(var10, var7, false, var9, var2));
-         }
-
-         if (var1) {
-            return var5;
-         } else {
-            JSONObject var28 = this.obj(this.activeTrial, "appliedFrictionThresholds");
-
-            for (Pair var15 : this.entries(this.obj(var6, "FLMBaseFrictionThresholds"))) {
-               String var30 = (String)var15.component1();
-               var2 = (JSONObject)var15.component2();
-               var1 = var2 instanceof JSONObject;
-               JSONArray var20 = null;
-               if (var1) {
-                  var2 = var2;
-               } else {
-                  var2 = null;
-               }
-
-               label60: {
-                  if (var2 != null) {
-                     JSONArray var22 = var2.optJSONArray("values");
-                     var18 = var22;
-                     if (var22 != null) {
-                        break label60;
-                     }
-                  }
-
-                  var18 = new JSONArray();
-               }
-
-               var4 = var28.optJSONObject(var30);
-               if (var4 != null) {
-                  var20 = var4.optJSONArray("values");
-               }
-
-               String var24 = "friction-" + var30;
-               var30 = var30 + " friction threshold";
-               if (var20 == null) {
-                  var20 = var18;
-               }
-
-               var5.add(new GxTuningPage.CmpRow(var24, var30, true, var18, var20));
-            }
-
-            var3 = this.obj(var6, "FLMVehicleKnobs");
-
-            for (Pair var26 : this.entries(this.obj(this.activeTrial, "appliedVehicleKnobs"))) {
-               String var19 = (String)var26.component1();
-               Object var27 = var26.component2();
-               if (var3.has(var19)) {
-                  var5.add(
-                     new GxTuningPage.CmpRow(
-                        var19,
-                        CollectionsKt.joinToString$default(
-                           CollectionsKt.drop(StringsKt.split$default(var19, new String[]{"."}, false, 0, 6, null), 1),
-                           ".",
-                           null,
-                           null,
-                           0,
-                           null,
-                           null,
-                           62,
-                           null
-                        ),
-                        false,
-                        var3.opt(var19),
-                        var27
-                     )
-                  );
-               }
-            }
-
-            return var5;
-         }
-      }
-   }
-
-   private final GxTuningPage.Quality computeQuality(GxTuningPage.QualityCfg var1) {
-      if (this.samples.size() < 2) {
-         return new GxTuningPage.Quality("na", null, "Waiting for data");
-      } else {
-         int var15 = 8;
-         double var4 = CollectionsKt.last(this.samples).getTs();
-         double var2;
-         if (var4 > 0.0) {
-            var2 = var4 - 30.0;
-         } else {
-            var2 = 0.0;
-         }
-
-         Iterable var23 = this.samples;
-         var var22 = new ArrayList();
-         Iterator var71 = var23.iterator();
-
-         while (true) {
-            boolean var21 = var71.hasNext();
-            int var14 = 1;
-            if (!var21) {
-               List var72 = var22;
-               Iterable var63 = var72;
-               var var25 = new ArrayList();
-
-               for (Object var27 : var63) {
-                  GxTuningSample var26 = (GxTuningSample)var27;
-                  Double var28 = var26.getV().get("speed");
-                  double var6;
-                  if (var28 != null) {
-                     var6 = var28;
-                  } else {
-                     var6 = 0.0;
-                  }
-
-                  var6 = Math.abs(var6);
-                  if ((var1.getMinSpeed() <= 0.0 || var6 >= var1.getMinSpeed())
-                     && (var1.getMinDemand() <= 0.0 || computeQuality$mag(var1, var26) >= var1.getMinDemand())) {
-                     var14 = (boolean)1;
-                  } else {
-                     var14 = (boolean)0;
-                  }
-
-                  if (var14) {
-                     var25.add(var27);
-                  }
-               }
-
-               List var64 = var25;
-               var14 = (boolean)0;
-               if (var1.getAllowFallback() && var64.size() < 8 && var72.size() >= 8) {
-                  Iterator var76 = var72.iterator();
-                  var4 = 0.0;
-
-                  while (var76.hasNext()) {
-                     GxTuningSample var81 = (GxTuningSample)var76.next();
-                     Double var82 = var81.getV().get("speed");
-                     double var44;
-                     if (var82 != null) {
-                        var44 = var82;
-                     } else {
-                        var44 = 0.0;
-                     }
-
-                     var4 += Math.abs(var44);
-                  }
-
-                  List var77 = var64;
-                  double var45 = var4 / var72.size();
-                  Iterator var65 = var72.iterator();
-                  if (!var65.hasNext()) {
-                     throw new NoSuchElementException();
-                  }
-
-                  var4 = computeQuality$mag(var1, (GxTuningSample)var65.next());
-
-                  while (var65.hasNext()) {
-                     var4 = Math.max(var4, computeQuality$mag(var1, (GxTuningSample)var65.next()));
-                  }
-
-                  var64 = var64;
-                  if (var45 >= Math.max(0.0, var1.getFallbackMinSpeed())) {
-                     var64 = var77;
-                     if (var4 >= Math.max(0.0, var1.getFallbackMinPeak())) {
-                        var64 = var72;
-                        var14 = (boolean)1;
-                     }
-                  }
-               }
-
-               if (var64.size() < 8) {
-                  var15 = var64.size();
-                  String var31;
-                  if (var1.getAllowFallback()) {
-                     var31 = "eligible";
-                  } else {
-                     var31 = "signal";
-                  }
-
-                  var14 = var72.size();
-                  return new GxTuningPage.Quality("na", null, "Need " + 8 + " samples (" + var15 + " " + var31 + " / " + var14 + " total)");
-               } else {
-                  Iterable var78 = var64;
-                  var var86 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var78, 10));
-
-                  for (GxTuningSample var89 : var78) {
-                     Double var87 = var89.getV().get(var1.getDesiredKey());
-                     if (var87 != null) {
-                        var2 = var87;
-                     } else {
-                        var2 = 0.0;
-                     }
-
-                     var87 = var89.getV().get(var1.getActualKey());
-                     if (var87 != null) {
-                        var4 = var87;
-                     } else {
-                        var4 = 0.0;
-                     }
-
-                     var86.add(Math.abs(var2 - var4));
-                  }
-
-                  List var73 = var86;
-                  List var79 = CollectionsKt.sorted(var73);
-                  if (var79.isEmpty()) {
-                     return new GxTuningPage.Quality("na", null, "No eligible samples");
-                  } else {
-                     double var46 = this.percentile(var79, 0.5) * 0.7 + this.percentile(var79, 0.9) * 0.3;
-                     int var16 = var64.size();
-                     var15 = (int)30.0;
-                     String var66;
-                     if (var14) {
-                        var66 = ", low-demand fallback";
-                     } else {
-                        var66 = "";
-                     }
-
-                     String var74 = var16 + " samples / " + var15 + "s" + var66;
-                     if (var1.getPersistence()) {
-                        boolean var49;
-                        if (var1.getWarnError() == 0.0) {
-                           var49 = 1;
-                        } else {
-                           var49 = 0;
-                        }
-
-                        var4 = 0.35;
-                        if (!var49) {
-                           var2 = var1.getWarnError();
-                        } else {
-                           var2 = 0.35;
-                        }
-
-                        if (var1.getGood() == 0.0) {
-                           var49 = (boolean)1;
-                        } else {
-                           var49 = (boolean)0;
-                        }
-
-                        if (!var49) {
-                           var4 = var1.getGood();
-                        }
-
-                        double var8 = Math.max(var2, var4);
-                        if (var1.getSevereError() == 0.0) {
-                           var49 = (boolean)1;
-                        } else {
-                           var49 = (boolean)0;
-                        }
-
-                        if (!var49) {
-                           var2 = var1.getSevereError();
-                        } else {
-                           var2 = 0.7;
-                        }
-
-                        if (var1.getFair() == 0.0) {
-                           var49 = (boolean)1;
-                        } else {
-                           var49 = (boolean)0;
-                        }
-
-                        if (!var49) {
-                           var4 = var1.getFair();
-                        } else {
-                           var4 = 0.55;
-                        }
-
-                        var2 = Math.max(var2, var4);
-                        var var67 = var79;
-                        if (var67 instanceof Collection && ((Collection)var67).isEmpty()) {
-                           var49 = 0;
-                        } else {
-                           var49 = 0;
-                           Iterator var68 = var67.iterator();
-
-                           while (var68.hasNext()) {
-                              boolean var58;
-                              if (((Number)var68.next()).doubleValue() > var8) {
-                                 var58 = 1;
-                              } else {
-                                 var58 = 0;
-                              }
-
-                              if (var58) {
-                                 var58 = var49 + 1;
-                                 var49 = var58;
-                                 if (var58 < 0) {
-                                    CollectionsKt.throwCountOverflow();
-                                    var49 = var58;
-                                 }
-                              }
-                           }
-                        }
-
-                        var4 = var49;
-                        var49 = var79.size();
-                        String var69 = "poor";
-                        var4 /= var49;
-                        var var84 = var79;
-                        if (var84 instanceof Collection && ((Collection)var84).isEmpty()) {
-                           var49 = 0;
-                        } else {
-                           var49 = 0;
-                           Iterator var85 = var84.iterator();
-
-                           while (var85.hasNext()) {
-                              boolean var60;
-                              if (((Number)var85.next()).doubleValue() > var2) {
-                                 var60 = 1;
-                              } else {
-                                 var60 = 0;
-                              }
-
-                              if (var60) {
-                                 var60 = var49 + 1;
-                                 var49 = var60;
-                                 if (var60 < 0) {
-                                    CollectionsKt.throwCountOverflow();
-                                    var49 = var60;
-                                 }
-                              }
-                           }
-                        }
-
-                        double var10 = (double)var49 / var79.size();
-                        String var30;
-                        if (var46 <= var1.getGreat() && var4 <= 0.18 && var10 <= 0.05) {
-                           var30 = "great";
-                        } else if (var46 <= var1.getGood() && var4 <= 0.34 && var10 <= 0.12) {
-                           var30 = "good";
-                        } else if (var46 <= var1.getFair() && var4 <= 0.55 && var10 <= 0.24) {
-                           var30 = "fair";
-                        } else {
-                           var30 = var69;
-                        }
-
-                        double var12 = 100;
-                        long var19 = Math.round(var4 * var12);
-                        String var70 = this.f(var8, 2);
-                        long var17 = Math.round(var12 * var10);
-                        String var80 = this.f(var2, 2);
-                        return new GxTuningPage.Quality(var30, var46, var74 + ", " + var19 + "% > " + var70 + " and " + var17 + "% > " + var80);
-                     } else {
-                        String var29;
-                        if (var46 <= var1.getGreat()) {
-                           var29 = "great";
-                        } else if (var46 <= var1.getGood()) {
-                           var29 = "good";
-                        } else if (var46 <= var1.getFair()) {
-                           var29 = "fair";
-                        } else {
-                           var29 = "poor";
-                        }
-
-                        return new GxTuningPage.Quality(var29, var46, var74);
-                     }
-                  }
-               }
-            }
-
-            Object var24 = var71.next();
-            if (!(((GxTuningSample)var24).getTs() >= var2)) {
-               var14 = 0;
-            }
-
-            if (var14) {
-               var22.add(var24);
-            }
-         }
-      }
-   }
-
-   private static final double computeQuality$mag(GxTuningPage.QualityCfg var0, GxTuningSample var1) {
-      Double var8 = var1.getV().get(var0.getDesiredKey());
-      double var4 = 0.0;
-      double var2;
-      if (var8 != null) {
-         var2 = var8;
-      } else {
-         var2 = 0.0;
-      }
-
-      double var6 = Math.abs(var2);
-      Double var9 = var1.getV().get(var0.getActualKey());
-      var2 = var4;
-      if (var9 != null) {
-         var2 = var9;
-      }
-
-      return Math.max(var6, Math.abs(var2));
-   }
-
-   private final String curveStr(JSONArray var1) {
-      int var2;
-      if (var1 != null) {
-         var2 = var1.length();
-      } else {
-         var2 = 0;
-      }
-
-      String var3 = CollectionsKt.joinToString$default(
-         RangesKt.until(0, var2), ", ", null, null, 0, null, new GxTuningPage$$ExternalSyntheticLambda54(this, var1), 30, null
-      );
-      return "[" + var3 + "]";
-   }
-
-   private static final CharSequence curveStr$lambda$74(GxTuningPage var0, JSONArray var1, int var2) {
-      Intrinsics.checkNotNull(var1);
-      return var0.fmtNum3(var1.opt(var2));
-   }
-
-   private final String defaultMode(JSONObject var1) {
-      Set var2 = this.variantLabels(var1).keySet();
-      Intrinsics.checkNotNullExpressionValue(var2, "<get-keys>(...)");
-      String var3 = "A";
-      if (!var2.contains("A")) {
-         String var4 = CollectionsKt.firstOrNull(var2);
-         if (var4 != null) {
-            var3 = var4;
-         }
-      }
-
-      return var3;
-   }
-
-   private final void deleteReport(JSONObject var1) {
-      String var2 = this.s(var1, "reportId");
-      if (!StringsKt.isBlank(var2)) {
-         this.confirm(
-            "Delete Report",
-            "Delete this saved tuning report and its generated trial data?",
-            "Yes, Delete",
-            new GxTuningPage$$ExternalSyntheticLambda14(this, var2)
-         );
-      }
-   }
-
-   private static final Unit deleteReport$lambda$109(GxTuningPage var0, String var1) {
-      String var2 = var0.enc(var1);
-      var0.runWith("DELETE", "/api/flm/report/" + var2, null, "Report deleted.", new GxTuningPage$$ExternalSyntheticLambda4(var0, var1));
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit deleteReport$lambda$109$lambda$108(GxTuningPage var0, String var1, JSONObject var2) {
-      if (var2 != null && Intrinsics.areEqual(var0.loadedReportId, var1)) {
-         var0.report = null;
-         var0.loadedReportId = "";
-         var0.renderReport();
-         var0.paintFlm();
-         var0.autoOpenReport();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final void editRange(String var1, boolean var2) {
-      Pair var4 = this.segmentRanges.get(var1);
-      Pair var3 = var4;
-      if (var4 == null) {
-         var3 = TuplesKt.to("", "");
-      }
-
-      String var6 = (String)var3.component1();
-      String var7 = (String)var3.component2();
-      String var8;
-      if (var2) {
-         var8 = "First segment";
-      } else {
-         var8 = "Last segment";
-      }
-
-      String var9;
-      if (var2) {
-         var9 = "First";
-      } else {
-         var9 = "Last";
-      }
-
-      String var5;
-      if (var2) {
-         var5 = var6;
-      } else {
-         var5 = var7;
-      }
-
-      this.prompt(var8, var9, var5, 2, "Leave blank to use the whole route.", new GxTuningPage$$ExternalSyntheticLambda57(this, var1, var2, var7, var6));
-   }
-
-   private static final Unit editRange$lambda$135(GxTuningPage var0, String var1, boolean var2, String var3, String var4, String var5) {
-      Intrinsics.checkNotNullParameter(var5, "raw");
-      CharSequence var8 = var5;
-      String var6 = new Regex("[^\\d]").replace(var8, "");
-      Map var9 = var0.segmentRanges;
-      Pair var7;
-      if (var2) {
-         var7 = TuplesKt.to(var6, var3);
-      } else {
-         var7 = TuplesKt.to(var4, var6);
-      }
-
-      var9.put(var1, var7);
-      var0.renderRoute(var1);
-      var0.afterSelectionChange();
-      return Unit.INSTANCE;
-   }
-
-   private final void en(TextView var1, boolean var2) {
-      var1.setEnabled(var2);
-      float var3;
-      if (var2) {
-         var3 = 1.0F;
-      } else {
-         var3 = 0.4F;
-      }
-
-      var1.setAlpha(var3);
-   }
-
-   private final List<Pair<String, Object>> entries(JSONObject var1) {
-      Iterator var2 = var1.keys();
-      Intrinsics.checkNotNullExpressionValue(var2, "keys(...)");
-      return SequencesKt.toList(SequencesKt.map(SequencesKt.asSequence(var2), new GxTuningPage$$ExternalSyntheticLambda65(var1)));
-   }
-
-   private static final Pair entries$lambda$7(JSONObject var0, String var1) {
-      return TuplesKt.to(var1, var0.opt(var1));
-   }
-
-   private final String f(double var1, int var3) {
-      StringCompanionObject var4 = StringCompanionObject.INSTANCE;
-      String var5 = String.format(Locale.US, "%." + var3 + "f", Arrays.copyOf(new Object[]{var1}, 1));
-      Intrinsics.checkNotNullExpressionValue(var5, "format(...)");
-      return var5;
-   }
-
-   private final void flmRefresh(boolean var1, Function0<Unit> var2) {
-      if (!var1 || !this.flmFetching && !this.busy) {
-         this.flmFetching = true;
-         this.getJson("/api/flm/workspace", new GxTuningPage$$ExternalSyntheticLambda56(this, var2));
-      }
-   }
-
-   // $VF: synthetic method
-   static void flmRefresh$default(GxTuningPage var0, boolean var1, Function0 var2, int var3, Object var4) {
-      if ((var3 & 1) != 0) {
-         var1 = false;
-      }
-
-      if ((var3 & 2) != 0) {
-         var2 = null;
-      }
-
-      var0.flmRefresh(var1, var2);
-   }
-
-   private static final Unit flmRefresh$lambda$66(GxTuningPage var0, Function0 var1, String var2, JSONObject var3) {
-      if (var3 != null) {
-         var0.reports = var0.arr(var3, "reports");
-         var0.savedTunes = var0.arr(var3, "savedTunes");
-         var0.carFp = var0.s(var3, "currentCarFingerprint");
-         var0.activeTrial = var3.optJSONObject("activeTrial");
-         JSONObject var5 = var3.optJSONObject("status");
-         JSONObject var4 = var5;
-         if (var5 == null) {
-            var4 = new JSONObject();
-         }
-
-         var0.wsStatus = var4;
-      }
-
-      var0.getJson("/api/flm/status", new GxTuningPage$$ExternalSyntheticLambda58(var0, var3, var2, var1));
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit flmRefresh$lambda$66$lambda$65(GxTuningPage var0, JSONObject var1, String var2, Function0 var3, String var4, JSONObject var5) {
-      var0.flmFetching = false;
-      if (var5 != null) {
-         var0.isOnroad = var0.truthy(var5.opt("isOnroad"));
-         var0.laneCentering = var0.truthy(var5.opt("laneCentering"));
-         var0.statusData = var5.optJSONObject("status");
-         JSONArray var6 = var5.optJSONArray("savedTunes");
-         if (var6 != null && var6.length() > 0) {
-            var0.savedTunes = var6;
-         }
-
-         JSONObject var8 = var5.optJSONObject("activeTrial");
-         if (var8 != null) {
-            var0.activeTrial = var8;
-         }
-
-         var6 = var5.optJSONArray("reports");
-         if (var6 != null && var6.length() > 0) {
-            var0.reports = var6;
-         }
-      }
-
-      String var7;
-      if (var1 != null || var5 != null) {
-         var7 = "";
-      } else if (var2 == null) {
-         if (var4 == null) {
-            var7 = "Failed to load tuning workspace.";
-         } else {
-            var7 = var4;
-         }
-      } else {
-         var7 = var2;
-      }
-
-      var0.flmError = var7;
-      var0.flmLoading = false;
-      var0.paintFlm();
-      var0.autoOpenReport();
-      if (var3 != null) {
-         var3.invoke();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final String fmtAge(Object var1) {
-      double var2 = this.num(var1, Double.NaN);
-      if (!Double.isNaN(var2) && !(var2 <= 0.0)) {
-         long var4 = Math.max(0L, Math.round(System.currentTimeMillis() / 1000.0 - var2));
-         if (var4 < 5L) {
-            var1 = "just now";
-         } else {
-            String var6;
-            StringBuilder var8;
-            if (var4 < 60L) {
-               var8 = new StringBuilder().append(var4);
-               var6 = "s ago";
-            } else if (var4 < 3600L) {
-               var4 = Math.round(var4 / 60.0);
-               var8 = new StringBuilder().append(var4);
-               var6 = "m ago";
+            TextView $this$bullets_u24lambda_u2420 = GxPage.text$default(gxTuningPage, sb.append(str).append(it).toString(), into, 16.0f, CarUi.Companion.getDIM(), false, 16, null);
+            $this$bullets_u24lambda_u2420.setPadding(getUi().dp(6), getUi().dp(3), 0, getUi().dp(3));
+        }
+    }
+
+    private final void para(ViewGroup into, String label, String value) {
+        SpannableStringBuilder sb = new SpannableStringBuilder(label).append((CharSequence) " ").append((CharSequence) value);
+        sb.setSpan(new StyleSpan(1), 0, label.length(), 33);
+        TextView $this$para_u24lambda_u2421 = GxPage.text$default(this, "", into, 16.0f, CarUi.Companion.getTEXT(), false, 16, null);
+        $this$para_u24lambda_u2421.setText(sb);
+        $this$para_u24lambda_u2421.setPadding(0, getUi().dp(3), 0, getUi().dp(3));
+    }
+
+    private final TextView mono(ViewGroup into, String s) {
+        TextView $this$mono_u24lambda_u2422 = GxPage.text$default(this, s, into, 14.0f, Color.rgb(210, 220, 230), false, 16, null);
+        $this$mono_u24lambda_u2422.setTypeface(Typeface.MONOSPACE);
+        return $this$mono_u24lambda_u2422;
+    }
+
+    private final LinearLayout btnBar(ViewGroup into) {
+        LinearLayout bar = new LinearLayout(getAct());
+        bar.setOrientation(0);
+        bar.setPadding(0, getUi().dp(6), 0, getUi().dp(6));
+        HorizontalScrollView $this$btnBar_u24lambda_u2424 = new HorizontalScrollView(getAct());
+        $this$btnBar_u24lambda_u2424.setHorizontalScrollBarEnabled(false);
+        $this$btnBar_u24lambda_u2424.addView(bar);
+        into.addView($this$btnBar_u24lambda_u2424);
+        return bar;
+    }
+
+    static /* synthetic */ TextView barBtn$default(GxTuningPage gxTuningPage, LinearLayout linearLayout, String str, boolean z, Function0 function0, int i, Object obj) {
+        if ((i & 4) != 0) {
+            z = false;
+        }
+        return gxTuningPage.barBtn(linearLayout, str, z, function0);
+    }
+
+    private final TextView barBtn(LinearLayout bar, String label, boolean accent, Function0<Unit> onClick) {
+        TextView b = getUi().button(label, accent, onClick);
+        LinearLayout.LayoutParams $this$barBtn_u24lambda_u2425 = new LinearLayout.LayoutParams(-2, -2);
+        $this$barBtn_u24lambda_u2425.rightMargin = getUi().dp(10);
+        Unit unit = Unit.INSTANCE;
+        bar.addView(b, $this$barBtn_u24lambda_u2425);
+        return b;
+    }
+
+    private final String fmtAge(Object epoch) {
+        StringBuilder append;
+        String str;
+        double at = num(epoch, Double.NaN);
+        if (Double.isNaN(at) || at <= 0.0d) {
+            return "unknown";
+        }
+        long age = Math.max(0L, Math.round((System.currentTimeMillis() / 1000.0d) - at));
+        if (age < 5) {
+            return "just now";
+        }
+        if (age < 60) {
+            append = new StringBuilder().append(age);
+            str = "s ago";
+        } else if (age < 3600) {
+            append = new StringBuilder().append(Math.round(age / 60.0d));
+            str = "m ago";
+        } else {
+            append = new StringBuilder().append(Math.round(age / 3600.0d));
+            str = "h ago";
+        }
+        return append.append(str).toString();
+    }
+
+    private final String fmtAgeSeconds(Object v) {
+        StringBuilder append;
+        String str;
+        double sec = num(v, Double.NaN);
+        if (Double.isNaN(sec) || sec < 0.0d) {
+            return "unknown";
+        }
+        if (sec < 1.0d) {
+            return "just now";
+        }
+        if (sec < 60.0d) {
+            append = new StringBuilder().append(Math.round(sec));
+            str = "s ago";
+        } else {
+            double d = 60;
+            if (sec / d < 60.0d) {
+                append = new StringBuilder().append(Math.round(sec / d));
+                str = "m ago";
             } else {
-               var4 = Math.round(var4 / 3600.0);
-               var8 = new StringBuilder().append(var4);
-               var6 = "h ago";
+                append = new StringBuilder().append(Math.round(sec / 3600));
+                str = "h ago";
             }
+        }
+        return append.append(str).toString();
+    }
 
-            var1 = var8.append(var6).toString();
-         }
-
-         return var1;
-      } else {
-         return "unknown";
-      }
-   }
-
-   private final String fmtAgeSeconds(Object var1) {
-      double var4 = this.num(var1, Double.NaN);
-      if (!Double.isNaN(var4) && !(var4 < 0.0)) {
-         if (var4 < 1.0) {
-            var1 = "just now";
-         } else {
-            String var8;
-            StringBuilder var10;
-            if (var4 < 60.0) {
-               long var6 = Math.round(var4);
-               var10 = new StringBuilder().append(var6);
-               var8 = "s ago";
-            } else {
-               double var2 = 60;
-               if (var4 / var2 < 60.0) {
-                  long var11 = Math.round(var4 / var2);
-                  var10 = new StringBuilder().append(var11);
-                  var8 = "m ago";
-               } else {
-                  long var12 = Math.round(var4 / 3600);
-                  var10 = new StringBuilder().append(var12);
-                  var8 = "h ago";
-               }
+    /* JADX WARN: Type inference failed for: r6v3, types: [java.time.ZonedDateTime] */
+    private final String fmtDate(Object value) {
+        Object m1191constructorimpl;
+        Object m1191constructorimpl2;
+        Object obj;
+        if (value == null || Intrinsics.areEqual(value, JSONObject.NULL) || StringsKt.isBlank(value.toString())) {
+            return "unknown";
+        }
+        Double valueOf = value instanceof Number ? Double.valueOf(((Number) value).doubleValue()) : StringsKt.toDoubleOrNull(StringsKt.trim((CharSequence) value.toString()).toString());
+        if (valueOf != null) {
+            double doubleValue = valueOf.doubleValue();
+            if ((Double.isInfinite(doubleValue) || Double.isNaN(doubleValue)) ? false : true) {
+                if (valueOf.doubleValue() <= 0.0d) {
+                    return "unknown";
+                }
+                String format = this.dateFmt.format(new Date((long) (valueOf.doubleValue() > 1.0E11d ? valueOf.doubleValue() : valueOf.doubleValue() * 1000)));
+                Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+                return format;
             }
-
-            var1 = var10.append(var8).toString();
-         }
-
-         return var1;
-      } else {
-         return "unknown";
-      }
-   }
-
-   // $VF: Could not inline inconsistent finally blocks
-   // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-   private final String fmtDate(Object var1) {
-      if (var1 != null && !Intrinsics.areEqual(var1, JSONObject.NULL) && !StringsKt.isBlank(var1.toString())) {
-         Double var6;
-         if (var1 instanceof Number) {
-            var6 = ((Number)var1).doubleValue();
-         } else {
-            var6 = StringsKt.toDoubleOrNull(StringsKt.trim(var1.toString()).toString());
-         }
-
-         if (var6 != null) {
-            double var2 = var6;
-            boolean var4;
-            if (!Double.isInfinite(var2) && !Double.isNaN(var2)) {
-               var4 = true;
-            } else {
-               var4 = false;
-            }
-
-            if (var4) {
-               if (var6 <= 0.0) {
-                  return "unknown";
-               }
-
-               var1 = this.dateFmt;
-               if (var6 > 1.0E11) {
-                  var2 = var6;
-               } else {
-                  var2 = var6 * 1000;
-               }
-
-               var1 = var1.format(new Date((long)var2));
-               Intrinsics.checkNotNullExpressionValue(var1, "format(...)");
-               return var1;
-            }
-         }
-
-         String var7 = var1.toString();
-
-         label213:
-         try {
-            var1 = Result.Companion;
-            var1 = this;
-            var1 = KtCompat.resultOf(OffsetDateTime.parse(var7).toInstant().toEpochMilli());
-         } catch (Throwable var20) {
-            var1 = Result.Companion;
-            var1 = KtCompat.resultOf(ResultKt.createFailure(var20));
-            break label213;
-         }
-
-         boolean var5 = KtCompat.isFailure(var1);
-         Object var8 = null;
-         if (var5) {
-            var1 = null;
-         }
-
-         Long var38 = (Long)var1;
-         Long var25 = var38;
-         if (var38 == null) {
-            label207:
+        }
+        String obj2 = value.toString();
+        try {
+            Result.Companion companion = Result.Companion;
+            GxTuningPage gxTuningPage = this;
+            m1191constructorimpl = Result.m1191constructorimpl(Long.valueOf(OffsetDateTime.parse(obj2).toInstant().toEpochMilli()));
+        } catch (Throwable th) {
+            Result.Companion companion2 = Result.Companion;
+            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+        }
+        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+            m1191constructorimpl = null;
+        }
+        Long l = (Long) m1191constructorimpl;
+        if (l == null) {
             try {
-               var1 = Result.Companion;
-               var1 = this;
-               var1 = KtCompat.resultOf(Instant.parse(var7).toEpochMilli());
-            } catch (Throwable var19) {
-               var1 = Result.Companion;
-               var1 = KtCompat.resultOf(ResultKt.createFailure(var19));
-               break label207;
+                Result.Companion companion3 = Result.Companion;
+                GxTuningPage gxTuningPage2 = this;
+                m1191constructorimpl2 = Result.m1191constructorimpl(Long.valueOf(Instant.parse(obj2).toEpochMilli()));
+            } catch (Throwable th2) {
+                Result.Companion companion4 = Result.Companion;
+                m1191constructorimpl2 = Result.m1191constructorimpl(ResultKt.createFailure(th2));
             }
-
-            Object var39 = var1;
-            if (KtCompat.isFailure(var1)) {
-               var39 = null;
+            if (Result.m1197isFailureimpl(m1191constructorimpl2)) {
+                m1191constructorimpl2 = null;
             }
-
-            var39 = (Long)var39;
-            var25 = (Long)var39;
-            if (var39 == null) {
-               label202:
-               try {
-                  Result.Companion var32 = Result.Companion;
-                  var1 = this;
-                  var1 = KtCompat.resultOf(LocalDateTime.parse(var7).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-               } catch (Throwable var18) {
-                  Result.Companion var30 = Result.Companion;
-                  var1 = KtCompat.resultOf(ResultKt.createFailure(var18));
-                  break label202;
-               }
-
-               if (KtCompat.isFailure(var1)) {
-                  var1 = var8;
-               }
-
-               var25 = (Long)var1;
+            l = (Long) m1191constructorimpl2;
+            if (l == null) {
+                try {
+                    Result.Companion companion5 = Result.Companion;
+                    GxTuningPage gxTuningPage3 = this;
+                    obj = Result.m1191constructorimpl(Long.valueOf(LocalDateTime.parse(obj2).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
+                } catch (Throwable th3) {
+                    Result.Companion companion6 = Result.Companion;
+                    obj = Result.m1191constructorimpl(ResultKt.createFailure(th3));
+                }
+                l = (Long) (Result.m1197isFailureimpl(obj) ? null : obj);
             }
-         }
+        }
+        if (l == null) {
+            return obj2;
+        }
+        String format2 = this.dateFmt.format(new Date(l.longValue()));
+        Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
+        return format2;
+    }
 
-         String var34;
-         if (var25 != null) {
-            var34 = this.dateFmt.format(new Date(var25));
-            Intrinsics.checkNotNullExpressionValue(var34, "format(...)");
-         } else {
-            var34 = var7;
-         }
-
-         return var34;
-      } else {
-         return "unknown";
-      }
-   }
-
-   private final String fmtLen(JSONObject var1) {
-      long var4 = Math.max(0L, Math.round(num$default(this, var1.opt("segmentCount"), 0.0, 2, null)));
-      if (var4 == 0L) {
-         return "Length unavailable";
-      } else {
-         long var2 = Math.round(num$default(this, var1.opt("approxDurationSeconds"), 0.0, 2, null) / 60.0);
-         if (var2 == 0L) {
-            var2 = var4;
-         }
-
-         var2 = Math.max(1L, var2);
-         String var10;
-         StringBuilder var11;
-         if (var2 >= 60L) {
-            long var8 = 60;
-            long var6 = var2 / var8;
-            var11 = new StringBuilder().append(var6).append("h ").append(var2 % var8);
-            var10 = "m";
-         } else {
-            var11 = new StringBuilder().append("~").append(var2);
-            var10 = " min";
-         }
-
-         var10 = var11.append(var10).toString();
-         String var12;
-         if (var4 == 1L) {
-            var12 = "";
-         } else {
-            var12 = "s";
-         }
-
-         return var4 + " segment" + var12 + " (" + var10 + ")";
-      }
-   }
-
-   private final String fmtNum3(Object var1) {
-      double var2 = this.num(var1, Double.NaN);
-      if (Double.isNaN(var2)) {
-         var1 = "NaN";
-      } else {
-         var1 = this.f(var2, 3);
-      }
-
-      return var1;
-   }
-
-   private final String fmtVal(Object var1) {
-      String var5;
-      if (var1 instanceof JSONArray) {
-         var5 = this.curveStr((JSONArray)var1);
-      } else if (var1 instanceof Boolean) {
-         if ((Boolean)var1) {
-            var5 = "On";
-         } else {
-            var5 = "Off";
-         }
-      } else if (var1 == null || Intrinsics.areEqual(var1, JSONObject.NULL)) {
-         var5 = "-";
-      } else if (var1 instanceof Number) {
-         double var2 = ((Number)var1).doubleValue();
-         boolean var4;
-         if (!Double.isInfinite(var2) && !Double.isNaN(var2)) {
-            var4 = true;
-         } else {
-            var4 = false;
-         }
-
-         if (var4) {
-            var5 = this.f(((Number)var1).doubleValue(), 3);
-         } else {
-            var5 = ((Number)var1).toString();
-         }
-      } else if (var1 instanceof String) {
-         Double var7;
-         if (StringsKt.isBlank((CharSequence)var1)) {
-            var7 = 0.0;
-         } else {
-            var7 = StringsKt.toDoubleOrNull(StringsKt.trim((String & CharSequence)var1).toString());
-         }
-
-         if (var7 != null) {
-            String var6 = this.f(var7.doubleValue(), 3);
-            if (var6 != null) {
-               return var6;
+    private final JSONObject status() {
+        JSONObject m = new JSONObject(this.wsStatus.toString());
+        JSONObject sd = this.statusData;
+        if (sd != null) {
+            Iterator<String> keys = sd.keys();
+            Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
+            while (keys.hasNext()) {
+                String k = keys.next();
+                m.put(k, sd.opt(k));
             }
-         }
+        }
+        return m;
+    }
 
-         var5 = (String)var1;
-      } else {
-         var5 = var1.toString();
-      }
+    private final boolean rollbackUnavailable() {
+        JSONObject jSONObject = this.activeTrial;
+        if (jSONObject != null) {
+            return Intrinsics.areEqual(jSONObject.opt("rollbackAvailable"), (Object) false);
+        }
+        return false;
+    }
 
-      return var5;
-   }
+    private final boolean canApplyTrial() {
+        return (this.busy || rollbackUnavailable()) ? false : true;
+    }
 
-   private final String formatAge(double var1) {
-      var1 = Math.max(0.0, var1);
-      String var5;
-      StringBuilder var6;
-      if (var1 < 1.0) {
-         long var3 = Math.round(1000 * var1);
-         var6 = new StringBuilder().append(var3);
-         var5 = " ms";
-      } else {
-         var5 = this.f(var1, 1);
-         var6 = new StringBuilder().append(var5);
-         var5 = " s";
-      }
+    private final boolean canAnalyze() {
+        int c = selectedSegmentCount();
+        return (this.selectedRoutes.isEmpty() || c <= 0 || c > this.maxSegments || this.isOnroad || this.laneCentering) ? false : true;
+    }
 
-      return var6.append(var5).toString();
-   }
-
-   private final SharedPreferences getPrefs() {
-      return (SharedPreferences)this.prefs$delegate.getValue();
-   }
-
-   private final TextView headBtn(LinearLayout var1, String var2, boolean var3, Function0<Unit> var4) {
-      TextView var6 = this.getUi().button(var2, var3, var4);
-      View var8 = (View)var6;
-      LayoutParams var5 = new LayoutParams(-2, -2);
-      var5.leftMargin = this.getUi().dp(8);
-      Unit var7 = Unit.INSTANCE;
-      var1.addView(var8, (android.view.ViewGroup.LayoutParams)var5);
-      return var6;
-   }
-
-   // $VF: synthetic method
-   static TextView headBtn$default(GxTuningPage var0, LinearLayout var1, String var2, boolean var3, Function0 var4, int var5, Object var6) {
-      if ((var5 & 4) != 0) {
-         var3 = false;
-      }
-
-      return var0.headBtn(var1, var2, var3, var4);
-   }
-
-   private final LinearLayout headLine(ViewGroup var1, String var2, int var3) {
-      LinearLayout var5 = new LinearLayout((Context)this.getAct());
-      var5.setOrientation(0);
-      var5.setGravity(16);
-      var5.setPadding(0, 0, 0, this.getUi().dp(6));
-      TextView var4 = new TextView((Context)this.getAct());
-      var4.setText(var2);
-      var4.setTextSize(21.0F);
-      var4.setTextColor(var3);
-      var4.setTypeface(Typeface.DEFAULT_BOLD);
-      var5.addView((View)var4, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
-      var1.addView((View)var5);
-      return var5;
-   }
-
-   // $VF: synthetic method
-   static LinearLayout headLine$default(GxTuningPage var0, ViewGroup var1, String var2, int var3, int var4, Object var5) {
-      if ((var4 & 4) != 0) {
-         var3 = CarUi.Companion.getTEXT();
-      }
-
-      return var0.headLine(var1, var2, var3);
-   }
-
-   private final void history(ViewGroup var1, JSONObject var2, String var3) {
-      List var4 = this.strings(this.arr(var2, "history"));
-      if (!var4.isEmpty() || var3 != null) {
-         this.sub("Progress chain", var1);
-         if (var4.isEmpty()) {
-            GxPage var5 = this;
-            if (var3 == null) {
-               var3 = "";
+    private final void buildLateral(LinearLayout b) {
+        this.flmBuilt = true;
+        LinearLayout c = card(b);
+        headLine$default(this, c, "Lateral Tuning (FLM)", 0, 4, null);
+        GxPage.text$default(this, "Analyze one or more local routes, review deterministic lateral findings, apply a bounded trial, drive, then revert or refine.", c, 0.0f, 0, false, 28, null);
+        this.flmNotices = box(c);
+        LinearLayout bar = btnBar(c);
+        this.bAnalyze = barBtn(bar, "Analyze Selected", true, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda11
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildLateral$lambda$30;
+                buildLateral$lambda$30 = GxTuningPage.buildLateral$lambda$30(GxTuningPage.this);
+                return buildLateral$lambda$30;
             }
-
-            GxPage.text$default(var5, var3, var1, 0.0F, 0, false, 28, null);
-         } else {
-            this.bullets((ViewGroup)this.inner(var1), CollectionsKt.reversed(var4), true);
-         }
-      }
-   }
-
-   private final LinearLayout inner(ViewGroup var1) {
-      LinearLayout var2 = new LinearLayout((Context)this.getAct());
-      var2.setOrientation(1);
-      var2.setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 12, Color.rgb(50, 55, 66)));
-      var2.setPadding(this.getUi().dp(16), this.getUi().dp(12), this.getUi().dp(16), this.getUi().dp(12));
-      View var4 = (View)var2;
-      LayoutParams var3 = new LayoutParams(-1, -2);
-      var3.topMargin = this.getUi().dp(6);
-      var3.bottomMargin = this.getUi().dp(6);
-      Unit var5 = Unit.INSTANCE;
-      var1.addView(var4, (android.view.ViewGroup.LayoutParams)var3);
-      return var2;
-   }
-
-   private final boolean isUnused(JSONObject var1) {
-      String var3 = StringsKt.trim(this.s(var1, "name")).toString().toLowerCase(Locale.ROOT);
-      Intrinsics.checkNotNullExpressionValue(var3, "toLowerCase(...)");
-      if (!Intrinsics.areEqual(var3, "unused")) {
-         boolean var2 = false;
-         if (!StringsKt.startsWith$default(var3, "unused ", false, 2, null)) {
-            return var2;
-         }
-      }
-
-      return true;
-   }
-
-   private final void kick(int var1) {
-      switch (var1) {
-         case 0:
-            flmRefresh$default(this, false, null, 3, null);
-            break;
-         case 1:
-            if (!this.plotsPaused) {
-               plotsLoad$default(this, false, 1, null);
+        });
+        this.bStop = barBtn$default(this, bar, "Stop", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda22
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildLateral$lambda$31;
+                buildLateral$lambda$31 = GxTuningPage.buildLateral$lambda$31(GxTuningPage.this);
+                return buildLateral$lambda$31;
             }
-            break;
-         case 2:
-            this.tgLoad();
-            break;
-         default:
-            this.manLoad(true);
-            this.manLoad(false);
-      }
-   }
-
-   private final TextView line(ViewGroup var1, String var2, String var3, int var4) {
-      LinearLayout var5 = new LinearLayout((Context)this.getAct());
-      var5.setOrientation(0);
-      var5.setGravity(16);
-      var5.setPadding(0, this.getUi().dp(5), 0, this.getUi().dp(5));
-      TextView var6 = new TextView((Context)this.getAct());
-      var6.setText(var2);
-      var6.setTextSize(17.0F);
-      var6.setTextColor(CarUi.Companion.getDIM());
-      var5.addView((View)var6, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
-      TextView var7 = new TextView((Context)this.getAct());
-      var7.setText(var3);
-      var7.setTextSize(17.0F);
-      var7.setTextColor(var4);
-      var7.setTypeface(Typeface.DEFAULT_BOLD);
-      var7.setGravity(8388613);
-      var5.addView((View)var7, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
-      var1.addView((View)var5);
-      return var7;
-   }
-
-   // $VF: synthetic method
-   static TextView line$default(GxTuningPage var0, ViewGroup var1, String var2, String var3, int var4, int var5, Object var6) {
-      if ((var5 & 8) != 0) {
-         var4 = CarUi.Companion.getTEXT();
-      }
-
-      return var0.line(var1, var2, var3, var4);
-   }
-
-   private final void loadReport(String var1) {
-      if (!StringsKt.isBlank(var1) && (!Intrinsics.areEqual(var1, this.loadedReportId) || this.report == null)) {
-         this.loadedReportId = var1;
-         this.reportLoading = true;
-         this.renderReport();
-         this.paintReports();
-         this.paintProfiles();
-         var1 = this.enc(var1);
-         this.getJson("/api/flm/report/" + var1, new GxTuningPage$$ExternalSyntheticLambda19(this));
-      }
-   }
-
-   private static final Unit loadReport$lambda$68(GxTuningPage var0, String var1, JSONObject var2) {
-      var0.reportLoading = false;
-      if (var2 != null) {
-         var0.report = var2;
-         var0.syncFeedback(var2);
-         var0.flmError = "";
-      } else {
-         var0.report = null;
-         if (var1 == null) {
-            var1 = "Failed to load report.";
-         }
-
-         var0.toast(var1);
-      }
-
-      var0.renderReport();
-      var0.paintFlm();
-      return Unit.INSTANCE;
-   }
-
-   private final void loadRoutes() {
-      if (!this.loadingRoutes) {
-         this.loadingRoutes = true;
-         this.routes.clear();
-         this.renderRoutesAll();
-         this.call("GET", "/api/routes", null, 300L, new GxTuningPage$$ExternalSyntheticLambda25(this));
-      }
-   }
-
-   // $VF: Could not inline inconsistent finally blocks
-   // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-   private static final Unit loadRoutes$lambda$122(GxTuningPage var0, int var1, String var2, String var3) {
-      Intrinsics.checkNotNullParameter(var2, "text");
-      var0.loadingRoutes = false;
-      HashSet var6 = new HashSet();
-      CharSequence var13 = var2;
-
-      for (var var2_it : new Regex("\\r?\\n\\r?\\n").split(var13, 0)) {
-
-         var2 = var2_it;
-         Iterable var15 = new Regex("\\r?\\n").split(var2, 0);
-         var var9 = new ArrayList();
-         Iterator var8 = var15.iterator();
-
-         while (true) {
-            boolean var4 = var8.hasNext();
-            Object var5 = null;
-            if (!var4) {
-               List var31 = var9;
-               if (!var31.isEmpty()) {
-                  label120:
-                  try {
-                     Result.Companion var17 = Result.Companion;
-                     Iterable var10 = var31;
-                     CharSequence var35 = "\n";
-                     GxTuningPage$$ExternalSyntheticLambda68 var33 = new GxTuningPage$$ExternalSyntheticLambda68();
-                     JSONObject var18 = new JSONObject(CollectionsKt.joinToString$default(var10, var35, null, null, 0, null, var33, 30, null));
-                     var16 = KtCompat.resultOf(var18);
-                  } catch (Throwable var12) {
-                     Result.Companion var32 = Result.Companion;
-                     var16 = KtCompat.resultOf(ResultKt.createFailure(var12));
-                     break label120;
-                  }
-
-                  if (KtCompat.isFailure(var16)) {
-                     var16 = var5;
-                  }
-
-                  JSONObject var19 = (JSONObject)var16;
-                  if (var19 != null) {
-                     for (JSONObject var28 : var0.objects(var0.arr(var19, "routes"))) {
-                        var2 = var0.s(var28, "name");
-                        if (!StringsKt.isBlank(var2) && var6.add(var2) && var0.routes.size() < var0.maxRoutes) {
-                           var0.routes.add(var28);
-                        }
-                     }
-                  }
-               }
-               break;
+        }, 4, null);
+        this.bRevert = barBtn$default(this, bar, "Revert Trial", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda33
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildLateral$lambda$32;
+                buildLateral$lambda$32 = GxTuningPage.buildLateral$lambda$32(GxTuningPage.this);
+                return buildLateral$lambda$32;
             }
-
-            var5 = var8.next();
-            if (StringsKt.startsWith$default((String)var5, "data:", false, 2, null)) {
-               var9.add(var5);
+        }, 4, null);
+        this.bKeep = barBtn$default(this, bar, "Keep as Baseline", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda44
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildLateral$lambda$34;
+                buildLateral$lambda$34 = GxTuningPage.buildLateral$lambda$34(GxTuningPage.this);
+                return buildLateral$lambda$34;
             }
-         }
-      }
-
-      List var21 = var0.routes;
-      if (var21.size() > 1) {
-         CollectionsKt.sortWith(var21, new Comparator(var0) {
-            final GxTuningPage this$0;
-
-            {
-               this.this$0 = var1;
+        }, 4, null);
+        this.bSave = barBtn$default(this, bar, "Save Tune", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda55
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildLateral$lambda$35;
+                buildLateral$lambda$35 = GxTuningPage.buildLateral$lambda$35(GxTuningPage.this);
+                return buildLateral$lambda$35;
             }
-
-            @Override
-            public final int compare(T var1, T var2x) {
-               var2x = var2x;
-               Comparable var5x = this.this$0.s(var2x, "startedAt");
-               var1 = var1;
-               return ComparisonsKt.compareValues(var5x, this.this$0.s(var1, "startedAt"));
+        }, 4, null);
+        this.bRefresh = barBtn$default(this, bar, "Refresh", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda66
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildLateral$lambda$36;
+                buildLateral$lambda$36 = GxTuningPage.buildLateral$lambda$36(GxTuningPage.this);
+                return buildLateral$lambda$36;
             }
-         });
-      }
-
-      if (var3 != null) {
-         CharSequence var24 = var3;
-         Object var22 = var24;
-         if (StringsKt.isBlank(var24)) {
-            var22 = "Failed to load routes.";
-         }
-
-         var0.toast((String)var22);
-      }
-
-      LinkedHashSet var23 = var0.selectedRoutes;
-      Iterable var29 = var0.routes;
-      var var25 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var29, 10));
-      Iterator var30 = var29.iterator();
-
-      while (var30.hasNext()) {
-         var25.add(var0.s((JSONObject)var30.next(), "name"));
-      }
-
-      List var26 = var25;
-      var23.retainAll(CollectionsKt.toSet(var26));
-      var0.renderRoutesAll();
-      return Unit.INSTANCE;
-   }
-
-   private static final CharSequence loadRoutes$lambda$122$lambda$118$lambda$117(String var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      var0 = var0.substring(5);
-      Intrinsics.checkNotNullExpressionValue(var0, "substring(...)");
-      return StringsKt.trimStart(var0).toString();
-   }
-
-   private final void manLoad(boolean var1) {
-      if (this.manBuilt) {
-         if (var1) {
-            if (this.latFetching) {
-               return;
+        }, 4, null);
+        sub("Workspace status", c);
+        this.flmStatusBox = box(c);
+        header("Saved Tunes", b);
+        note("Save a working FLM trial, switch between setups, then use Revert Trial to return to the exact manual settings from before FLM.", b);
+        this.tunesBox = box(b);
+        header("Local Routes", b);
+        note("Pick routes and segment ranges to analyze. A run is limited to " + this.maxSegments + " segments total.", b);
+        this.routesHead = box(b);
+        this.routesBox = box(b);
+        header("Reports", b);
+        this.reportsBox = box(b);
+        this.reportBox = box(b);
+        LinearLayout pc = card(b);
+        LinearLayout ph = headLine$default(this, pc, "Trial Profiles", 0, 4, null);
+        this.bSaveCurrent = headBtn$default(this, ph, "Save Current", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda70
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildLateral$lambda$37;
+                buildLateral$lambda$37 = GxTuningPage.buildLateral$lambda$37(GxTuningPage.this);
+                return buildLateral$lambda$37;
             }
+        }, 4, null);
+        GxPage.text$default(this, "Apply one bounded profile at a time. Revert restores the exact advanced-lateral and FLM state from before the trial.", pc, 0.0f, 0, false, 28, null);
+        this.profilesBox = box(pc);
+        paintFlm();
+        renderReport();
+        renderRoutesAll();
+        loadRoutes();
+    }
 
-            this.latFetching = true;
-         } else {
-            if (this.lonFetching) {
-               return;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildLateral$lambda$30(GxTuningPage this$0) {
+        this$0.analyze();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildLateral$lambda$31(GxTuningPage this$0) {
+        runWith$default(this$0, "POST", "/api/flm/analyze/stop", null, "FLM analysis stopped.", null, 16, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildLateral$lambda$32(GxTuningPage this$0) {
+        runWith$default(this$0, "POST", "/api/flm/trials/revert", null, "Trial reverted.", null, 16, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildLateral$lambda$34(final GxTuningPage this$0) {
+        this$0.confirm("Keep Current as Baseline", "Keep the currently applied tuning values and end this trial? This does not restore the previous tune.", "Yes, Keep", new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda0
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildLateral$lambda$34$lambda$33;
+                buildLateral$lambda$34$lambda$33 = GxTuningPage.buildLateral$lambda$34$lambda$33(GxTuningPage.this);
+                return buildLateral$lambda$34$lambda$33;
             }
-
-            this.lonFetching = true;
-         }
-
-         String var2;
-         if (var1) {
-            var2 = "/api/lateral_maneuvers/status";
-         } else {
-            var2 = "/api/longitudinal_maneuvers/status";
-         }
-
-         this.getJson(var2, new GxTuningPage$$ExternalSyntheticLambda8(var1, this));
-      }
-   }
-
-   private static final Unit manLoad$lambda$193(boolean var0, GxTuningPage var1, String var2, JSONObject var3) {
-      if (var0) {
-         var1.latFetching = false;
-         var1.latLoading = false;
-         if (var3 != null) {
-            var1.latData = var3;
-         }
-
-         var1.paintLat();
-      } else {
-         var1.lonFetching = false;
-         var1.lonLoading = false;
-         if (var3 != null) {
-            var1.lonData = var3;
-            var2 = "";
-         } else if (var2 == null) {
-            var2 = "Failed to load maneuver status";
-         }
-
-         var1.lonError = var2;
-         var1.paintLon();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final void manRun(boolean var1, String var2) {
-      boolean var3;
-      if (var1) {
-         var3 = this.latBusy;
-      } else {
-         var3 = this.lonBusy;
-      }
-
-      if (!var3) {
-         if (var1) {
-            this.latBusy = true;
-         } else {
-            this.lonBusy = true;
-         }
-
-         this.paintLat();
-         this.paintLon();
-         GxPage var5 = this;
-         String var4;
-         if (var1) {
-            var4 = "lateral";
-         } else {
-            var4 = "longitudinal";
-         }
-
-         GxPage.send$default(
-            var5, "POST", "/api/" + var4 + "_maneuvers/" + var2, null, 0L, new GxTuningPage$$ExternalSyntheticLambda67(var1, this, var2), 12, null
-         );
-      }
-   }
-
-   private static final Unit manRun$lambda$197(boolean var0, GxTuningPage var1, String var2, String var3, JSONObject var4) {
-      if (var0) {
-         var1.latBusy = false;
-      } else {
-         var1.lonBusy = false;
-      }
-
-      if (var3 != null) {
-         CharSequence var5 = var3;
-         Object var12 = var5;
-         if (StringsKt.isBlank(var5)) {
-            var12 = "Action failed.";
-         }
-
-         var1.toast((String)var12);
-         if (!var0) {
-            var12 = var3;
-            Object var9 = var12;
-            if (StringsKt.isBlank((CharSequence)var12)) {
-               var9 = "Failed to " + var2 + " maneuvers";
-            }
-
-            var1.lonError = (String)var9;
-         }
-      } else {
-         if (var4 != null) {
-            if (var0) {
-               var1.latData = var4;
-            } else {
-               var1.lonData = var4;
-               var1.lonError = "";
-            }
-         }
-
-         label40: {
-            if (var4 != null) {
-               var2 = var4.optString("message");
-               if (var2 != null) {
-                  CharSequence var10 = var2;
-                  CharSequence var7 = var10;
-                  if (StringsKt.isBlank(var10)) {
-                     var7 = null;
-                  }
-
-                  var3 = (String)var7;
-                  var2 = var3;
-                  if (var3 != null) {
-                     break label40;
-                  }
-               }
-            }
-
-            var2 = "Action complete.";
-         }
-
-         var1.toast(var2);
-         var1.manLoad(var0 ^ true);
-      }
-
-      var1.paintLat();
-      var1.paintLon();
-      return Unit.INSTANCE;
-   }
-
-   private final String modeLabel(JSONObject var1, String var2) {
-      String var3 = StringsKt.trim(var2).toString().toUpperCase(Locale.ROOT);
-      Intrinsics.checkNotNullExpressionValue(var3, "toUpperCase(...)");
-      var2 = this.variantLabels(var1).get(var3);
-      String var4 = var2;
-      if (var2 == null) {
-         CharSequence var7 = var3;
-         Object var5 = var7;
-         if (StringsKt.isBlank(var7)) {
-            var5 = "A";
-         }
-
-         var4 = (String)var5;
-      }
-
-      return var4;
-   }
-
-   private final TextView mono(ViewGroup var1, String var2) {
-      TextView var3 = GxPage.text$default(this, var2, var1, 14.0F, Color.rgb(210, 220, 230), false, 16, null);
-      var3.setTypeface(Typeface.MONOSPACE);
-      return var3;
-   }
-
-   private final void notice(ViewGroup var1, String var2, int var3, String var4) {
-      LinearLayout var5 = new LinearLayout((Context)this.getAct());
-      var5.setOrientation(1);
-      var5.setBackground((Drawable)this.getUi().rounded(Color.argb(40, Color.red(var3), Color.green(var3), Color.blue(var3)), 12, var3));
-      var5.setPadding(this.getUi().dp(16), this.getUi().dp(10), this.getUi().dp(16), this.getUi().dp(10));
-      SpannableStringBuilder var6 = new SpannableStringBuilder();
-      if (var4 != null) {
-         var6.append(var4).append(" ");
-         var6.setSpan(new StyleSpan(1), 0, var4.length(), 33);
-      }
-
-      var6.append(var2);
-      TextView var7 = new TextView((Context)this.getAct());
-      var7.setText((CharSequence)var6);
-      var7.setTextSize(15.0F);
-      var7.setTextColor(CarUi.Companion.getTEXT());
-      var5.addView((View)var7);
-      View var8 = (View)var5;
-      LayoutParams var10 = new LayoutParams(-1, -2);
-      var10.topMargin = this.getUi().dp(4);
-      var10.bottomMargin = this.getUi().dp(8);
-      Unit var9 = Unit.INSTANCE;
-      var1.addView(var8, (android.view.ViewGroup.LayoutParams)var10);
-   }
-
-   // $VF: synthetic method
-   static void notice$default(GxTuningPage var0, ViewGroup var1, String var2, int var3, String var4, int var5, Object var6) {
-      if ((var5 & 4) != 0) {
-         var3 = CarUi.Companion.getWARN();
-      }
-
-      if ((var5 & 8) != 0) {
-         var4 = null;
-      }
-
-      var0.notice(var1, var2, var3, var4);
-   }
-
-   private final double num(Object var1, double var2) {
-      if (var1 != null && !Intrinsics.areEqual(var1, JSONObject.NULL)) {
-         double var4;
-         if (var1 instanceof Number) {
-            var4 = var1.doubleValue();
-         } else {
-            label45: {
-               if (var1 instanceof Boolean) {
-                  if ((Boolean)var1) {
-                     var4 = 1.0;
-                     break label45;
-                  }
-               } else {
-                  if (!(var1 instanceof String)) {
-                     return var2;
-                  }
-
-                  if (!StringsKt.isBlank((CharSequence)var1)) {
-                     var1 = StringsKt.toDoubleOrNull(StringsKt.trim((String & CharSequence)var1).toString());
-                     if (var1 == null) {
-                        return var2;
-                     }
-
-                     var4 = var1;
-                     break label45;
-                  }
-               }
-
-               var4 = 0.0;
-            }
-         }
-
-         boolean var6;
-         if (!Double.isInfinite(var4) && !Double.isNaN(var4)) {
-            var6 = true;
-         } else {
-            var6 = false;
-         }
-
-         if (var6) {
-            var2 = var4;
-         }
-
-         return var2;
-      } else {
-         return var2;
-      }
-   }
-
-   // $VF: synthetic method
-   static double num$default(GxTuningPage var0, Object var1, double var2, int var4, Object var5) {
-      if ((var4 & 2) != 0) {
-         var2 = 0.0;
-      }
-
-      return var0.num(var1, var2);
-   }
-
-   private final JSONObject obj(JSONObject var1, String var2) {
-      if (var1 != null) {
-         JSONObject var4 = var1.optJSONObject(var2);
-         if (var4 != null) {
-            return var4;
-         }
-      }
-
-      return new JSONObject();
-   }
-
-   private final void paintActions() {
-      if (this.flmBuilt) {
-         JSONObject var7 = this.status();
-         TextView var6 = this.bAnalyze;
-         Object var5 = null;
-         TextView var4 = var6;
-         if (var6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("bAnalyze");
-            var4 = null;
-         }
-
-         boolean var2 = this.busy;
-         boolean var3 = false;
-         if (!var2 && this.canAnalyze()) {
-            var2 = true;
-         } else {
-            var2 = false;
-         }
-
-         this.en(var4, var2);
-         var6 = this.bStop;
-         var4 = var6;
-         if (var6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("bStop");
-            var4 = null;
-         }
-
-         if (!this.busy && this.truthy(var7.opt("running"))) {
-            var2 = true;
-         } else {
-            var2 = false;
-         }
-
-         this.en(var4, var2);
-         var6 = this.bRevert;
-         var4 = var6;
-         if (var6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("bRevert");
-            var4 = null;
-         }
-
-         if (!this.busy && this.activeTrial != null && !this.rollbackUnavailable()) {
-            var2 = true;
-         } else {
-            var2 = false;
-         }
-
-         this.en(var4, var2);
-         var6 = this.bKeep;
-         var4 = var6;
-         if (var6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("bKeep");
-            var4 = null;
-         }
-
-         byte var1;
-         if (this.rollbackUnavailable()) {
-            var1 = 0;
-         } else {
-            var1 = 8;
-         }
-
-         var4.setVisibility(var1);
-         var6 = this.bKeep;
-         var4 = var6;
-         if (var6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("bKeep");
-            var4 = null;
-         }
-
-         this.en(var4, this.busy ^ true);
-         var6 = this.bSave;
-         var4 = var6;
-         if (var6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("bSave");
-            var4 = null;
-         }
-
-         if (!this.busy && this.activeTrial != null) {
-            var2 = true;
-         } else {
-            var2 = false;
-         }
-
-         this.en(var4, var2);
-         var6 = this.bRefresh;
-         var4 = var6;
-         if (var6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("bRefresh");
-            var4 = null;
-         }
-
-         this.en(var4, this.busy ^ true);
-         var4 = this.bSaveCurrent;
-         if (var4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("bSaveCurrent");
-            var4 = (TextView)var5;
-         }
-
-         var2 = var3;
-         if (!this.busy) {
-            var2 = var3;
-            if (this.activeTrial != null) {
-               var2 = true;
-            }
-         }
-
-         this.en(var4, var2);
-      }
-   }
-
-   private final void paintComparison() {
-      LinearLayout var4 = this.comparisonBox;
-      if (var4 != null) {
-         var4.removeAllViews();
-         List var3 = this.comparisonRows();
-         if (!var3.isEmpty()) {
-            String var2;
-            if (this.angleControl()) {
-               var2 = "Applicable Angle Settings";
-            } else {
-               var2 = "Stock vs Current FLM";
-            }
-
-            this.sub(var2, (ViewGroup)var4);
-            if (!this.angleControl()) {
-               GxPage.text$default(this, "Active trial values are shown in the current column when one is applied.", (ViewGroup)var4, 0.0F, 0, false, 28, null);
-            }
-
-            for (GxTuningPage.CmpRow var8 : var3) {
-               LinearLayout var6 = new LinearLayout((Context)this.getAct());
-               var6.setOrientation(0);
-               var6.setGravity(16);
-               var6.setPadding(0, this.getUi().dp(6), 0, this.getUi().dp(6));
-               TextView var9 = new TextView((Context)this.getAct());
-               var9.setText(var8.getLabel());
-               var9.setTextSize(17.0F);
-               var9.setTextColor(CarUi.Companion.getDIM());
-               var6.addView((View)var9, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
-               LinearLayout var7 = new LinearLayout((Context)this.getAct());
-               var7.setOrientation(1);
-               var7.setGravity(8388613);
-               boolean var1 = var8.getCurve();
-               JSONArray var14 = null;
-               if (var1) {
-                  var2 = (String)var8.getStock();
-                  JSONArray var11;
-                  if (var2 instanceof JSONArray) {
-                     var11 = (JSONArray)var2;
-                  } else {
-                     var11 = null;
-                  }
-
-                  var2 = this.curveStr(var11);
-               } else {
-                  var2 = this.fmtVal(var8.getStock());
-               }
-
-               String var15;
-               if (var8.getCurve()) {
-                  Object var16 = var8.getCurrent();
-                  if (var16 instanceof JSONArray) {
-                     var14 = (JSONArray)var16;
-                  }
-
-                  var15 = this.curveStr(var14);
-               } else {
-                  var15 = this.fmtVal(var8.getCurrent());
-               }
-
-               TextView var17 = new TextView((Context)this.getAct());
-               var17.setText("stock " + var2);
-               var17.setTextSize(14.0F);
-               var17.setTextColor(CarUi.Companion.getDIM());
-               var17.setGravity(8388613);
-               var7.addView((View)var17);
-               TextView var13 = new TextView((Context)this.getAct());
-               var13.setText(var15);
-               var13.setTextSize(17.0F);
-               var13.setTextColor(CarUi.Companion.getACCENT());
-               var13.setTypeface(Typeface.DEFAULT_BOLD);
-               var13.setGravity(8388613);
-               var7.addView((View)var13);
-               var6.addView((View)var7, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.4F)));
-               var4.addView((View)var6);
-            }
-         }
-      }
-   }
-
-   private final void paintFlm() {
-      if (this.flmBuilt) {
-         this.paintNotices();
-         this.paintActions();
-         this.paintStatus();
-         this.paintTunes();
-         this.paintReports();
-         this.paintComparison();
-         this.paintProfiles();
-      }
-   }
-
-   private final void paintLat() {
-      if (this.manBuilt) {
-         Pair var9 = this.latBtns;
-         Object var7 = null;
-         Object var8 = null;
-         Pair var6 = var9;
-         if (var9 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("latBtns");
-            var6 = null;
-         }
-
-         this.en((TextView)var6.getFirst(), this.latBusy ^ true);
-         var9 = this.latBtns;
-         var6 = var9;
-         if (var9 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("latBtns");
-            var6 = null;
-         }
-
-         this.en((TextView)var6.getSecond(), this.latBusy ^ true);
-         LinearLayout var60 = this.latBox;
-         LinearLayout var15 = var60;
-         if (var60 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("latBox");
-            var15 = null;
-         }
-
-         var15.removeAllViews();
-         if (this.latLoading) {
-            var7 = this;
-            LinearLayout var41 = this.latBox;
-            if (var41 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("latBox");
-               var41 = (LinearLayout)var8;
-            }
-
-            GxPage.text$default((GxPage)var7, "Loading status...", (ViewGroup)var41, 0.0F, 0, false, 28, null);
-         } else {
-            JSONObject var10 = this.latData;
-            if (var10 != null) {
-               var8 = this.latBox;
-               LinearLayout var16 = (LinearLayout)var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var16 = null;
-               }
-
-               var8 = (ViewGroup)var16;
-               String var17;
-               if (this.truthy(var10.opt("modeEnabled"))) {
-                  var17 = "Yes";
-               } else {
-                  var17 = "No";
-               }
-
-               line$default(this, (ViewGroup)var8, "Mode Enabled", var17, 0, 8, null);
-               var8 = this.latBox;
-               LinearLayout var18 = (LinearLayout)var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var18 = null;
-               }
-
-               ViewGroup var61 = (ViewGroup)var18;
-               var8 = this.s(var10, "state");
-               var6 = (Pair)var8;
-               if (StringsKt.isBlank((CharSequence)var8)) {
-                  var6 = "idle";
-               }
-
-               line$default(this, var61, "State", (String)var6, 0, 8, null);
-               var8 = this.latBox;
-               LinearLayout var20 = (LinearLayout)var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var20 = null;
-               }
-
-               var8 = (ViewGroup)var20;
-               String var21;
-               if (this.truthy(var10.opt("isOnroad"))) {
-                  var21 = "Yes";
-               } else {
-                  var21 = "No";
-               }
-
-               line$default(this, (ViewGroup)var8, "Onroad", var21, 0, 8, null);
-               var8 = this.latBox;
-               LinearLayout var22 = (LinearLayout)var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var22 = null;
-               }
-
-               var8 = (ViewGroup)var22;
-               String var23;
-               if (this.truthy(var10.opt("isEngaged"))) {
-                  var23 = "Yes";
-               } else {
-                  var23 = "No";
-               }
-
-               line$default(this, (ViewGroup)var8, "Engaged", var23, 0, 8, null);
-               var8 = this.latBox;
-               LinearLayout var24 = (LinearLayout)var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var24 = null;
-               }
-
-               ViewGroup var62 = (ViewGroup)var24;
-               var var25 = this.s(var10, "phase");
-               boolean var5 = StringsKt.isBlank(var25);
-               var8 = "n/a";
-               if (var5) {
-                  var25 = "n/a";
-               }
-
-               line$default(this, var62, "Phase", var25, 0, 8, null);
-               LinearLayout var63 = this.latBox;
-               LinearLayout var26 = var63;
-               if (var63 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var26 = null;
-               }
-
-               ViewGroup var27 = (ViewGroup)var26;
-               long var1 = (long)num$default(this, var10.opt("stepIndex"), 0.0, 2, null);
-               long var3 = (long)num$default(this, var10.opt("stepTotal"), 0.0, 2, null);
-               line$default(this, var27, "Step", var1 + " / " + var3, 0, 8, null);
-               LinearLayout var64 = this.latBox;
-               LinearLayout var28 = var64;
-               if (var64 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var28 = null;
-               }
-
-               ViewGroup var29 = (ViewGroup)var28;
-               var1 = (long)num$default(this, var10.opt("runIndex"), 0.0, 2, null);
-               var3 = (long)num$default(this, var10.opt("runTotal"), 0.0, 2, null);
-               line$default(this, var29, "Run", var1 + " / " + var3, 0, 8, null);
-               LinearLayout var65 = this.latBox;
-               LinearLayout var30 = var65;
-               if (var65 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var30 = null;
-               }
-
-               line$default(this, (ViewGroup)var30, "Updated", this.fmtAgeSeconds(var10.opt("updatedAgeSec")), 0, 8, null);
-               LinearLayout var66 = this.latBox;
-               LinearLayout var31 = var66;
-               if (var66 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var31 = null;
-               }
-
-               this.sub("Current maneuver", (ViewGroup)var31);
-               var var32 = this.s(var10, "maneuver");
-               if (StringsKt.isBlank(var32)) {
-                  var32 = (String)var8;
-               }
-
-               String var67 = var32;
-               var8 = this.latBox;
-               LinearLayout var33 = (LinearLayout)var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var33 = null;
-               }
-
-               this.text(var67, (ViewGroup)var33, 18.0F, CarUi.Companion.getTEXT(), true);
-               var8 = this.s(var10, "uiText1");
-               String var34 = this.s(var10, "uiText2");
-               String var35;
-               if (!StringsKt.isBlank(var34)) {
-                  var35 = " | " + var34;
-               } else {
-                  var35 = "";
-               }
-
-               String var68 = var8 + var35;
-               if (!StringsKt.isBlank(var68)) {
-                  GxPage var11 = this;
-                  var8 = this.latBox;
-                  LinearLayout var36 = (LinearLayout)var8;
-                  if (var8 == null) {
-                     Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                     var36 = null;
-                  }
-
-                  GxPage.text$default(var11, var68, (ViewGroup)var36, 0.0F, 0, false, 28, null);
-               }
-
-               var8 = this.latBox;
-               LinearLayout var37 = (LinearLayout)var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var37 = null;
-               }
-
-               this.sub("Quick guide", (ViewGroup)var37);
-               var8 = this.latBox;
-               LinearLayout var38 = (LinearLayout)var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var38 = null;
-               }
-
-               ViewGroup var39 = (ViewGroup)var38;
-               var8 = CollectionsKt.listOf(
-                  new String[]{
-                     "Find a large, empty, straight, flat road or lot with no traffic.",
-                     "Press Start / Arm here, then engage openpilot and set the requested speed manually.",
-                     "Keep full supervision and be ready to steer or disengage immediately at all times.",
-                     "Do not touch the wheel during a run. Steering input or speed drift can reset the current maneuver.",
-                     "When the status says complete, collect logs and generate the HTML report if needed."
-                  }
-               );
-               this.bullets(var39, (List<String>)var8, true);
-               LinearLayout var40 = this.latBox;
-               if (var40 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("latBox");
-                  var40 = (LinearLayout)var7;
-               }
-
-               this.history((ViewGroup)var40, var10, "No steps logged yet.");
-            }
-         }
-      }
-   }
-
-   private final void paintLon() {
-      if (this.manBuilt) {
-         Pair var7 = this.lonBtns;
-         Pair var6 = var7;
-         if (var7 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("lonBtns");
-            var6 = null;
-         }
-
-         this.en((TextView)var6.getFirst(), this.lonBusy ^ true);
-         var7 = this.lonBtns;
-         var6 = var7;
-         if (var7 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("lonBtns");
-            var6 = null;
-         }
-
-         this.en((TextView)var6.getSecond(), this.lonBusy ^ true);
-         LinearLayout var26 = this.lonBox;
-         LinearLayout var15 = var26;
-         if (var26 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-            var15 = null;
-         }
-
-         var15.removeAllViews();
-         if (!StringsKt.isBlank(this.lonError)) {
-            LinearLayout var27 = this.lonBox;
-            LinearLayout var16 = var27;
-            if (var27 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-               var16 = null;
-            }
-
-            notice$default(this, (ViewGroup)var16, this.lonError, 0, null, 12, null);
-         }
-
-         if (this.lonLoading) {
-            GxPage var67 = this;
-            LinearLayout var24 = this.lonBox;
-            if (var24 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-               var24 = null;
-            }
-
-            GxPage.text$default(var67, "Loading status...", (ViewGroup)var24, 0.0F, 0, false, 28, null);
-         } else {
-            JSONObject var10 = this.lonData;
-            if (var10 != null) {
-               JSONObject var28 = var10.optJSONObject("support");
-               JSONObject var17 = var28;
-               if (var28 == null) {
-                  var17 = new JSONObject();
-               }
-
-               LinearLayout var8 = this.lonBox;
-               LinearLayout var29 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var29 = null;
-               }
-
-               this.sub("Live status", (ViewGroup)var29);
-               var8 = this.lonBox;
-               LinearLayout var30 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var30 = null;
-               }
-
-               ViewGroup var69 = (ViewGroup)var30;
-               String var31;
-               if (this.truthy(var10.opt("modeEnabled"))) {
-                  var31 = "Yes";
-               } else {
-                  var31 = "No";
-               }
-
-               line$default(this, var69, "Mode Enabled", var31, 0, 8, null);
-               var8 = this.lonBox;
-               LinearLayout var32 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var32 = null;
-               }
-
-               ViewGroup var9 = (ViewGroup)var32;
-               CharSequence var71 = this.s(var10, "state");
-               var7 = var71;
-               if (StringsKt.isBlank(var71)) {
-                  var7 = "idle";
-               }
-
-               line$default(this, var9, "State", (String)var7, 0, 8, null);
-               var8 = this.lonBox;
-               LinearLayout var34 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var34 = null;
-               }
-
-               ViewGroup var73 = (ViewGroup)var34;
-               String var35;
-               if (this.truthy(var10.opt("isOnroad"))) {
-                  var35 = "Yes";
-               } else {
-                  var35 = "No";
-               }
-
-               line$default(this, var73, "Onroad", var35, 0, 8, null);
-               var8 = this.lonBox;
-               LinearLayout var36 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var36 = null;
-               }
-
-               ViewGroup var75 = (ViewGroup)var36;
-               String var37;
-               if (this.truthy(var10.opt("isEngaged"))) {
-                  var37 = "Yes";
-               } else {
-                  var37 = "No";
-               }
-
-               line$default(this, var75, "Engaged", var37, 0, 8, null);
-               var8 = this.lonBox;
-               LinearLayout var38 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var38 = null;
-               }
-
-               var9 = (ViewGroup)var38;
-               var var39 = this.s(var10, "phase");
-               boolean var5 = StringsKt.isBlank(var39);
-               String var77 = "n/a";
-               if (var5) {
-                  var39 = "n/a";
-               }
-
-               line$default(this, var9, "Phase", var39, 0, 8, null);
-               LinearLayout var92 = this.lonBox;
-               LinearLayout var40 = var92;
-               if (var92 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var40 = null;
-               }
-
-               ViewGroup var11 = (ViewGroup)var40;
-               CharSequence var93 = this.s(var10, "paddleMode");
-               var7 = var93;
-               if (StringsKt.isBlank(var93)) {
-                  var7 = "auto";
-               }
-
-               line$default(this, var11, "Paddle Mode", (String)var7, 0, 8, null);
-               LinearLayout var94 = this.lonBox;
-               LinearLayout var42 = var94;
-               if (var94 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var42 = null;
-               }
-
-               ViewGroup var43 = (ViewGroup)var42;
-               long var3 = (long)num$default(this, var10.opt("stepIndex"), 0.0, 2, null);
-               long var1 = (long)num$default(this, var10.opt("stepTotal"), 0.0, 2, null);
-               line$default(this, var43, "Step", var3 + " / " + var1, 0, 8, null);
-               LinearLayout var95 = this.lonBox;
-               LinearLayout var44 = var95;
-               if (var95 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var44 = null;
-               }
-
-               ViewGroup var45 = (ViewGroup)var44;
-               var3 = (long)num$default(this, var10.opt("runIndex"), 0.0, 2, null);
-               var1 = (long)num$default(this, var10.opt("runTotal"), 0.0, 2, null);
-               line$default(this, var45, "Run", var3 + " / " + var1, 0, 8, null);
-               LinearLayout var96 = this.lonBox;
-               LinearLayout var46 = var96;
-               if (var96 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var46 = null;
-               }
-
-               line$default(this, (ViewGroup)var46, "Updated", this.fmtAgeSeconds(var10.opt("updatedAgeSec")), 0, 8, null);
-               LinearLayout var97 = this.lonBox;
-               LinearLayout var47 = var97;
-               if (var97 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var47 = null;
-               }
-
-               this.sub("Current maneuver", (ViewGroup)var47);
-               var var48 = this.s(var10, "maneuver");
-               if (StringsKt.isBlank(var48)) {
-                  var48 = var77;
-               }
-
-               String var98 = var48;
-               var8 = this.lonBox;
-               LinearLayout var49 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var49 = null;
-               }
-
-               this.text(var98, (ViewGroup)var49, 18.0F, CarUi.Companion.getTEXT(), true);
-               String var79 = this.s(var10, "uiText1");
-               String var50 = this.s(var10, "uiText2");
-               String var51;
-               if (!StringsKt.isBlank(var50)) {
-                  var51 = " | " + var50;
-               } else {
-                  var51 = "";
-               }
-
-               String var99 = var79 + var51;
-               if (!StringsKt.isBlank(var99)) {
-                  GxPage var100 = this;
-                  var8 = this.lonBox;
-                  LinearLayout var52 = var8;
-                  if (var8 == null) {
-                     Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                     var52 = null;
-                  }
-
-                  GxPage.text$default(var100, var99, (ViewGroup)var52, 0.0F, 0, false, 28, null);
-               }
-
-               var8 = this.lonBox;
-               LinearLayout var53 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var53 = null;
-               }
-
-               this.sub("Longitudinal support", (ViewGroup)var53);
-               var8 = this.lonBox;
-               LinearLayout var54 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var54 = null;
-               }
-
-               line$default(this, (ViewGroup)var54, "openpilot Longitudinal", paintLon$yes(this, var17, "openpilotLongitudinalControl"), 0, 8, null);
-               var8 = this.lonBox;
-               LinearLayout var55 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var55 = null;
-               }
-
-               line$default(this, (ViewGroup)var55, "Full Stop + Go", paintLon$yes(this, var17, "fullStopAndGo"), 0, 8, null);
-               var8 = this.lonBox;
-               LinearLayout var56 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var56 = null;
-               }
-
-               line$default(this, (ViewGroup)var56, "Auto Resume from Stop", paintLon$yes(this, var17, "autoResumeFromStop"), 0, 8, null);
-               var8 = this.lonBox;
-               LinearLayout var57 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var57 = null;
-               }
-
-               line$default(this, (ViewGroup)var57, "Requires Resume Assist", paintLon$yes(this, var17, "requiresResumeAssist"), 0, 8, null);
-               var8 = this.lonBox;
-               LinearLayout var58 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var58 = null;
-               }
-
-               line$default(this, (ViewGroup)var58, "Expected to Reach Zero", paintLon$yes(this, var17, "expectedToReachZero"), 0, 8, null);
-               var8 = this.lonBox;
-               LinearLayout var59 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var59 = null;
-               }
-
-               line$default(this, (ViewGroup)var59, "Minimum Enable Speed", paintLon$number(this, var17, "minEnableSpeed", "m/s"), 0, 8, null);
-               var8 = this.lonBox;
-               LinearLayout var60 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var60 = null;
-               }
-
-               line$default(this, (ViewGroup)var60, "Stop Acceleration", paintLon$number(this, var17, "stopAccel", "m/s²"), 0, 8, null);
-               List var89 = this.strings(this.arr(var10, "caveats"));
-               if (!var89.isEmpty()) {
-                  LinearLayout var61 = this.lonBox;
-                  LinearLayout var18 = var61;
-                  if (var61 == null) {
-                     Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                     var18 = null;
-                  }
-
-                  notice$default(
-                     this,
-                     (ViewGroup)var18,
-                     CollectionsKt.joinToString$default(var89, "\n", null, null, 0, null, new GxTuningPage$$ExternalSyntheticLambda43(), 30, null),
-                     0,
-                     "Platform caveats\n",
-                     4,
-                     null
-                  );
-               }
-
-               List var90 = this.strings(this.arr(var10, "skippedManeuvers"));
-               if (!var90.isEmpty()) {
-                  LinearLayout var62 = this.lonBox;
-                  LinearLayout var19 = var62;
-                  if (var62 == null) {
-                     Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                     var19 = null;
-                  }
-
-                  this.notice(
-                     (ViewGroup)var19,
-                     CollectionsKt.joinToString$default(var90, "\n", null, null, 0, null, new GxTuningPage$$ExternalSyntheticLambda45(), 30, null),
-                     Color.rgb(94, 200, 200),
-                     "Expected skips\n"
-                  );
-               }
-
-               LinearLayout var63 = this.lonBox;
-               LinearLayout var20 = var63;
-               if (var63 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var20 = null;
-               }
-
-               this.sub("Quick guide", (ViewGroup)var20);
-               LinearLayout var64 = this.lonBox;
-               LinearLayout var21 = var64;
-               if (var64 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var21 = null;
-               }
-
-               ViewGroup var65 = (ViewGroup)var21;
-               List var22 = CollectionsKt.listOf(
-                  new String[]{
-                     "Find a large, empty, straight road or lot with no traffic.",
-                     "Press Start / Arm, then engage openpilot with SET.",
-                     "Keep full supervision and be ready to disengage at all times.",
-                     "Review the platform caveats first. Low-speed maneuvers can be skipped automatically on cars that do not fully stop.",
-                     "When the status says complete, collect the logs and generate your HTML report."
-                  }
-               );
-               this.bullets(var65, var22, true);
-               LinearLayout var66 = this.lonBox;
-               LinearLayout var23 = var66;
-               if (var66 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("lonBox");
-                  var23 = null;
-               }
-
-               this.history((ViewGroup)var23, var10, null);
-            }
-         }
-      }
-   }
-
-   private static final CharSequence paintLon$lambda$207(String var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      return "•  " + var0;
-   }
-
-   private static final CharSequence paintLon$lambda$208(String var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      return "•  " + var0;
-   }
-
-   private static final String paintLon$number(GxTuningPage var0, JSONObject var1, String var2, String var3) {
-      double var4 = var0.num(var1.opt(var2), Double.NaN);
-      String var6;
-      if (Double.isNaN(var4)) {
-         var6 = "n/a";
-      } else {
-         String var7 = var0.f(var4, 2);
-         var6 = var7 + " " + var3;
-      }
-
-      return var6;
-   }
-
-   private static final String paintLon$yes(GxTuningPage var0, JSONObject var1, String var2) {
-      String var3;
-      if (var0.truthy(var1.opt(var2))) {
-         var3 = "Yes";
-      } else {
-         var3 = "No";
-      }
-
-      return var3;
-   }
-
-   private final void paintNotices() {
-      LinearLayout var3 = this.flmNotices;
-      Object var2 = null;
-      LinearLayout var1 = var3;
-      if (var3 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("flmNotices");
-         var1 = null;
-      }
-
-      var1.removeAllViews();
-      if (this.laneCentering) {
-         var3 = this.flmNotices;
-         var1 = var3;
-         if (var3 == null) {
+        });
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildLateral$lambda$34$lambda$33(GxTuningPage this$0) {
+        runWith$default(this$0, "POST", "/api/flm/trials/accept", null, "Current tune kept as baseline.", null, 16, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildLateral$lambda$35(GxTuningPage this$0) {
+        this$0.saveCurrent();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildLateral$lambda$36(GxTuningPage this$0) {
+        flmRefresh$default(this$0, false, null, 3, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildLateral$lambda$37(GxTuningPage this$0) {
+        this$0.saveCurrent();
+        return Unit.INSTANCE;
+    }
+
+    private final void paintFlm() {
+        if (this.flmBuilt) {
+            paintNotices();
+            paintActions();
+            paintStatus();
+            paintTunes();
+            paintReports();
+            paintComparison();
+            paintProfiles();
+        }
+    }
+
+    private final void paintNotices() {
+        LinearLayout linearLayout = this.flmNotices;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
             Intrinsics.throwUninitializedPropertyAccessException("flmNotices");
-            var1 = null;
-         }
-
-         notice$default(
-            this,
-            (ViewGroup)var1,
-            "Turn Lane Centering off. FLM must analyze the model's unmodified lateral request; routes recorded with Lane Centering enabled are excluded.",
-            0,
-            "Before using FLM:",
-            4,
-            null
-         );
-      }
-
-      if (this.isOnroad) {
-         var3 = this.flmNotices;
-         var1 = var3;
-         if (var3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("flmNotices");
-            var1 = null;
-         }
-
-         notice$default(this, (ViewGroup)var1, "FLM analysis is offroad-only. Stop the car and go offroad before starting a run.", 0, null, 12, null);
-      }
-
-      if (this.rollbackUnavailable()) {
-         var3 = this.flmNotices;
-         var1 = var3;
-         if (var3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("flmNotices");
-            var1 = null;
-         }
-
-         notice$default(
-            this,
-            (ViewGroup)var1,
-            "The original rollback data is unavailable. Keep the current tune as the new baseline before applying another trial.",
-            0,
-            null,
-            12,
-            null
-         );
-      }
-
-      if (!StringsKt.isBlank(this.flmError)) {
-         var3 = this.flmNotices;
-         var1 = var3;
-         if (var3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("flmNotices");
-            var1 = null;
-         }
-
-         notice$default(this, (ViewGroup)var1, this.flmError, Color.rgb(224, 85, 119), null, 8, null);
-      }
-
-      if (this.flmLoading) {
-         GxPage var13 = this;
-         var1 = this.flmNotices;
-         if (var1 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("flmNotices");
-            var1 = (LinearLayout)var2;
-         }
-
-         GxPage.text$default(var13, "Loading tuning workspace...", (ViewGroup)var1, 0.0F, 0, false, 28, null);
-      }
-   }
-
-   private final void paintPlots() {
-      if (this.plotsBuilt) {
-         JSONObject var6 = this.live;
-         JSONObject var7 = var6;
-         if (var6 == null) {
-            var7 = new JSONObject();
-         }
-
-         LinearLayout var8 = this.plotsStatus;
-         GxTuningPage.ChartViews var9 = null;
-         LinearLayout var19 = var8;
-         if (var8 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
-            var19 = null;
-         }
-
-         var19.removeAllViews();
-         if (this.plotsLoading) {
-            GxPage var10 = this;
-            var8 = this.plotsStatus;
-            LinearLayout var20 = var8;
-            if (var8 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
-               var20 = null;
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        if (this.laneCentering) {
+            LinearLayout linearLayout3 = this.flmNotices;
+            if (linearLayout3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("flmNotices");
+                linearLayout3 = null;
             }
-
-            GxPage.text$default(var10, "Loading live data...", (ViewGroup)var20, 0.0F, 0, false, 28, null);
-         }
-
-         if (!StringsKt.isBlank(this.plotsError)) {
-            var8 = this.plotsStatus;
-            LinearLayout var21 = var8;
-            if (var8 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
-               var21 = null;
+            notice$default(this, linearLayout3, "Turn Lane Centering off. FLM must analyze the model's unmodified lateral request; routes recorded with Lane Centering enabled are excluded.", 0, "Before using FLM:", 4, null);
+        }
+        if (this.isOnroad) {
+            LinearLayout linearLayout4 = this.flmNotices;
+            if (linearLayout4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("flmNotices");
+                linearLayout4 = null;
             }
-
-            notice$default(this, (ViewGroup)var21, this.plotsError, 0, "Error:", 4, null);
-         }
-
-         if (!this.plotsLoading || this.live != null) {
-            var8 = this.plotsStatus;
-            LinearLayout var22 = var8;
-            if (var8 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
-               var22 = null;
+            notice$default(this, linearLayout4, "FLM analysis is offroad-only. Stop the car and go offroad before starting a run.", 0, null, 12, null);
+        }
+        if (rollbackUnavailable()) {
+            LinearLayout linearLayout5 = this.flmNotices;
+            if (linearLayout5 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("flmNotices");
+                linearLayout5 = null;
             }
-
-            ViewGroup var45 = (ViewGroup)var22;
-            String var23;
-            if (this.truthy(var7.opt("isOnroad"))) {
-               var23 = "Yes";
+            notice$default(this, linearLayout5, "The original rollback data is unavailable. Keep the current tune as the new baseline before applying another trial.", 0, null, 12, null);
+        }
+        if (!StringsKt.isBlank(this.flmError)) {
+            LinearLayout linearLayout6 = this.flmNotices;
+            if (linearLayout6 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("flmNotices");
+                linearLayout6 = null;
+            }
+            notice$default(this, linearLayout6, this.flmError, Color.rgb(224, 85, 119), null, 8, null);
+        }
+        if (this.flmLoading) {
+            GxTuningPage gxTuningPage = this;
+            LinearLayout linearLayout7 = this.flmNotices;
+            if (linearLayout7 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("flmNotices");
             } else {
-               var23 = "No";
+                linearLayout2 = linearLayout7;
             }
+            GxPage.text$default(gxTuningPage, "Loading tuning workspace...", linearLayout2, 0.0f, 0, false, 28, null);
+        }
+    }
 
-            line$default(this, var45, "Onroad", var23, 0, 8, null);
-            var8 = this.plotsStatus;
-            LinearLayout var24 = var8;
-            if (var8 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
-               var24 = null;
+    private final void paintActions() {
+        if (this.flmBuilt) {
+            JSONObject st = status();
+            TextView textView = this.bAnalyze;
+            TextView textView2 = null;
+            if (textView == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("bAnalyze");
+                textView = null;
             }
-
-            line$default(this, (ViewGroup)var24, "Sample Age", this.formatAge(num$default(this, var7.opt("sampleAgeSeconds"), 0.0, 2, null)), 0, 8, null);
-            var8 = this.plotsStatus;
-            LinearLayout var25 = var8;
-            if (var8 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
-               var25 = null;
+            boolean z = false;
+            en(textView, !this.busy && canAnalyze());
+            TextView textView3 = this.bStop;
+            if (textView3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("bStop");
+                textView3 = null;
             }
-
-            ViewGroup var26 = (ViewGroup)var25;
-            String var48 = this.f(num$default(this, var7.opt("speed"), 0.0, 2, null), 2);
-            line$default(this, var26, "Vehicle Speed", var48 + " m/s", 0, 8, null);
-            var8 = this.plotsStatus;
-            LinearLayout var27 = var8;
-            if (var8 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
-               var27 = null;
+            en(textView3, !this.busy && truthy(st.opt("running")));
+            TextView textView4 = this.bRevert;
+            if (textView4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("bRevert");
+                textView4 = null;
             }
-
-            line$default(this, (ViewGroup)var27, "Samples", String.valueOf(this.samples.size()), 0, 8, null);
-            if (this.truthy(var7.opt("bootStabilizing"))) {
-               var8 = this.plotsStatus;
-               LinearLayout var28 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
-                  var28 = null;
-               }
-
-               notice$default(this, (ViewGroup)var28, "Plots are warming up after startup.", 0, "Boot stabilizing", 4, null);
+            en(textView4, (this.busy || this.activeTrial == null || rollbackUnavailable()) ? false : true);
+            TextView textView5 = this.bKeep;
+            if (textView5 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("bKeep");
+                textView5 = null;
             }
-
-            if (!StringsKt.isBlank(this.s(var7, "lastError"))) {
-               var8 = this.plotsStatus;
-               LinearLayout var29 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
-                  var29 = null;
-               }
-
-               notice$default(this, (ViewGroup)var29, this.s(var7, "lastError"), 0, "Source Error:", 4, null);
+            textView5.setVisibility(rollbackUnavailable() ? 0 : 8);
+            TextView textView6 = this.bKeep;
+            if (textView6 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("bKeep");
+                textView6 = null;
             }
-
-            for (Pair var30 : CollectionsKt.listOf(
-               new Pair[]{
-                  TuplesKt.to("Your lateral tuning is", this.computeQuality(this.latQ)),
-                  TuplesKt.to("Your longitudinal tuning is", this.computeQuality(this.lonQ))
-               }
-            )) {
-               String var12 = (String)var30.component1();
-               GxTuningPage.Quality var64 = (GxTuningPage.Quality)var30.component2();
-               String var31;
-               if (Intrinsics.areEqual(var64.getLabel(), "na")) {
-                  var31 = "N/A";
-               } else {
-                  String var52 = var64.getLabel();
-                  boolean var4;
-                  if (var52.length() > 0) {
-                     var4 = true;
-                  } else {
-                     var4 = false;
-                  }
-
-                  var31 = var52;
-                  if (var4) {
-                     StringBuilder var32 = new StringBuilder();
-                     char var1 = var52.charAt(0);
-                     String var13 = String.valueOf(var1);
-                     Intrinsics.checkNotNull(var13, "null cannot be cast to non-null type java.lang.String");
-                     var13 = var13.toUpperCase(Locale.ROOT);
-                     Intrinsics.checkNotNullExpressionValue(var13, "toUpperCase(...)");
-                     StringBuilder var33 = var32.append(var13);
-                     String var53 = var52.substring(1);
-                     Intrinsics.checkNotNullExpressionValue(var53, "substring(...)");
-                     var31 = var33.append(var53).toString();
-                  }
-               }
-
-               SpannableStringBuilder var73 = new SpannableStringBuilder(var12 + " ");
-               int var14 = var73.length();
-               var73.append(var31);
-               var73.setSpan(new ForegroundColorSpan(this.toneColor(var64.getLabel())), var14, var73.length(), 33);
-               var8 = this.plotsStatus;
-               LinearLayout var34 = var8;
-               if (var8 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
-                  var34 = null;
-               }
-
-               TextView var35 = this.text("", (ViewGroup)var34, 18.0F, CarUi.Companion.getTEXT(), true);
-               var35.setText((CharSequence)var73);
-               var35.setPadding(0, this.getUi().dp(10), 0, 0);
-               GxPage var74 = this;
-               String var36;
-               if (var64.getValue() == null) {
-                  var36 = var64.getDetail();
-               } else {
-                  String var37 = this.f(var64.getValue(), 2);
-                  String var55 = var64.getDetail();
-                  var36 = var37 + " m/s² error (" + var55 + ")";
-               }
-
-               LinearLayout var65 = this.plotsStatus;
-               var8 = var65;
-               if (var65 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
-                  var8 = null;
-               }
-
-               GxPage.text$default(var74, var36, (ViewGroup)var8, 14.0F, 0, false, 24, null);
+            en(textView6, !this.busy);
+            TextView textView7 = this.bSave;
+            if (textView7 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("bSave");
+                textView7 = null;
             }
-         }
-
-         TextView var57 = this.bPause;
-         TextView var38 = var57;
-         if (var57 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("bPause");
-            var38 = null;
-         }
-
-         String var58;
-         if (this.plotsPaused) {
-            var58 = "Resume Live";
-         } else {
-            var58 = "Pause Live";
-         }
-
-         var38.setText(var58);
-         TextView var59 = this.bAdvanced;
-         TextView var39 = var59;
-         if (var59 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("bAdvanced");
-            var39 = null;
-         }
-
-         String var60;
-         if (this.showAdvanced) {
-            var60 = "Hide Advanced Controller Terms";
-         } else {
-            var60 = "Show Advanced Controller Terms";
-         }
-
-         var39.setText(var60);
-         LinearLayout var40 = this.advancedBox;
-         if (var40 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("advancedBox");
-            var40 = var9;
-         }
-
-         byte var15;
-         if (this.showAdvanced) {
-            var15 = 0;
-         } else {
-            var15 = 8;
-         }
-
-         var40.setVisibility(var15);
-         boolean var16;
-         if (this.samples.size() <= 1) {
-            var16 = true;
-         } else {
-            var16 = false;
-         }
-
-         GxTuningSample var41 = CollectionsKt.lastOrNull(this.samples);
-         Iterator var61 = this.chartViews.iterator();
-         Intrinsics.checkNotNullExpressionValue(var61, "iterator(...)");
-
-         while (var61.hasNext()) {
-            var9 = var61.next();
-            Intrinsics.checkNotNullExpressionValue(var9, "next(...)");
-            var9 = (GxTuningPage.ChartViews)var9;
-            TextView var70 = var9.getSource();
-            String var66 = this.sourceLabel(var9.getCfg().getSourceKind(), this.s(var7, var9.getCfg().getSourceKey()));
-            var70.setText("Source: " + var66);
-            var9.getLegend().removeAllViews();
-
-            for (Triple var78 : var9.getCfg().getSeries()) {
-               double var2;
-               int var5;
-               label158: {
-                  String var75 = (String)var78.component1();
-                  var71 = (String)var78.component2();
-                  var5 = ((Number)var78.component3()).intValue();
-                  if (var41 != null) {
-                     Map var79 = var41.getV();
-                     if (var79 != null) {
-                        Double var80 = (Double)var79.get(var75);
-                        if (var80 != null) {
-                           var2 = var80;
-                           break label158;
-                        }
-                     }
-                  }
-
-                  var2 = num$default(this, var7.opt(var75), 0.0, 2, null);
-               }
-
-               SpannableStringBuilder var76 = new SpannableStringBuilder("▬ ");
-               var76.setSpan(new ForegroundColorSpan(var5), 0, 1, 33);
-               String var81 = this.f(var2, var9.getCfg().getLegendDigits());
-               var76.append(var71 + ": " + var81);
-               LinearLayout var72 = var9.getLegend();
-               TextView var82 = new TextView((Context)this.getAct());
-               var82.setText((CharSequence)var76);
-               var82.setTextSize(16.0F);
-               var82.setTextColor(CarUi.Companion.getTEXT());
-               var82.setPadding(0, 0, this.getUi().dp(20), 0);
-               var72.addView((View)var82);
+            en(textView7, (this.busy || this.activeTrial == null) ? false : true);
+            TextView textView8 = this.bRefresh;
+            if (textView8 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("bRefresh");
+                textView8 = null;
             }
-
-            GxTuningChartView var68 = var9.getChart();
-            byte var17;
-            if (var16) {
-               var17 = 8;
+            en(textView8, !this.busy);
+            TextView textView9 = this.bSaveCurrent;
+            if (textView9 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("bSaveCurrent");
             } else {
-               var17 = 0;
+                textView2 = textView9;
             }
-
-            var68.setVisibility(var17);
-            TextView var69 = var9.getWaiting();
-            if (var16) {
-               var17 = 0;
-            } else {
-               var17 = 8;
+            if (!this.busy && this.activeTrial != null) {
+                z = true;
             }
+            en(textView2, z);
+        }
+    }
 
-            var69.setVisibility(var17);
-            if (!var16) {
-               var9.getChart().invalidate();
-            }
-         }
-      }
-   }
-
-   private final void paintProfiles() {
-      if (this.flmBuilt) {
-         LinearLayout var2 = this.profilesBox;
-         LinearLayout var1 = var2;
-         if (var2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("profilesBox");
-            var1 = null;
-         }
-
-         var1.removeAllViews();
-         JSONObject var11 = this.report;
-         if (this.reportLoading) {
-            GxPage var30 = this;
-            var1 = this.profilesBox;
-            if (var1 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("profilesBox");
-               var1 = null;
-            }
-
-            GxPage.text$default(var30, "Loading report profiles...", (ViewGroup)var1, 0.0F, 0, false, 28, null);
-         } else if (var11 == null) {
-            var1 = this.profilesBox;
-            if (var1 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("profilesBox");
-               var1 = null;
-            }
-
-            var1.addView((View)this.empty("Open a report to view and apply its trial profiles."));
-         } else {
-            List var12 = this.profiles();
-            if (var12.isEmpty()) {
-               var1 = this.profilesBox;
-               if (var1 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("profilesBox");
-                  var1 = null;
-               }
-
-               var1.addView((View)this.empty("No trial profiles for this report."));
-            } else {
-               for (JSONObject var5 : var12) {
-                  var2 = this.profilesBox;
-                  var1 = var2;
-                  if (var2 == null) {
-                     Intrinsics.throwUninitializedPropertyAccessException("profilesBox");
-                     var1 = null;
-                  }
-
-                  LinearLayout var4 = this.inner((ViewGroup)var1);
-                  var1 = headLine$default(this, (ViewGroup)var4, this.s(var5, "label"), 0, 4, null);
-                  this.en(this.headBtn(var1, "Apply Trial", true, new GxTuningPage$$ExternalSyntheticLambda7(this, var5)), this.canApplyTrial());
-                  if (!StringsKt.isBlank(this.s(var5, "description"))) {
-                     GxPage.text$default(this, this.s(var5, "description"), (ViewGroup)var4, 16.0F, 0, false, 24, null);
-                  }
-
-                  Iterable var6 = this.entries(this.obj(var5, "genericParams"));
-                  var var26 = new ArrayList();
-
-                  for (Object var7 : var6) {
-                     if (!Intrinsics.areEqual(((Pair)var7).getFirst(), "AdvancedLateralTune")) {
-                        var26.add(var7);
-                     }
-                  }
-
-                  List var27 = var26;
-                  JSONObject var15 = this.obj(var5, "flmOverrides");
-                  List var35 = this.entries(this.obj(var15, "baseFrictionThresholds"));
-                  List var31 = this.entries(this.obj(var15, "vehicleKnobs"));
-                  if (var27.isEmpty() && var35.isEmpty() && var31.isEmpty()) {
-                     GxPage.text$default(this, "No parameter overrides in this profile.", (ViewGroup)var4, 0.0F, 0, false, 28, null);
-                  } else {
-                     for (Pair var9 : var27) {
-                        String var8 = (String)var9.component1();
-                        Object var10 = var9.component2();
-                        ViewGroup var41 = (ViewGroup)var4;
-                        var10 = this.fmtVal(var10);
-                        this.mono(var41, var8 + ": " + var10);
-                     }
-
-                     for (Pair var16 : var35) {
-                        String var28 = (String)var16.component1();
-                        JSONObject var17 = (JSONObject)var16.component2();
-                        ViewGroup var40 = (ViewGroup)var4;
-                        if (var17 instanceof JSONObject) {
-                           var17 = var17;
-                        } else {
-                           var17 = null;
-                        }
-
-                        JSONArray var19;
-                        if (var17 != null) {
-                           var19 = var17.optJSONArray("values");
-                        } else {
-                           var19 = null;
-                        }
-
-                        String var20 = this.curveStr(var19);
-                        this.mono(var40, var28 + ": " + var20);
-                     }
-
-                     for (Pair var32 : var31) {
-                        String var21 = (String)var32.component1();
-                        var6 = (Iterable)var32.component2();
-                        ViewGroup var33 = (ViewGroup)var4;
-                        String var38 = this.fmtVal(var6);
-                        this.mono(var33, var21 + ": " + var38);
-                     }
-                  }
-               }
-            }
-         }
-      }
-   }
-
-   private static final Unit paintProfiles$lambda$104(GxTuningPage var0, JSONObject var1) {
-      var0.applyTrial(var0.s(var1, "id"));
-      return Unit.INSTANCE;
-   }
-
-   private final void paintReports() {
-      LinearLayout var4 = this.reportsBox;
-      GxPage.Row var3 = null;
-      LinearLayout var2 = var4;
-      if (var4 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("reportsBox");
-         var2 = null;
-      }
-
-      var2.removeAllViews();
-      List var9 = this.objects(this.reports);
-      if (!this.flmLoading && !var9.isEmpty()) {
-         for (var var3_it : var9) {
-            var3 = var3_it;
-            String var5 = this.s((JSONObject)var3, "reportId");
-            boolean var1 = Intrinsics.areEqual(this.loadedReportId, var5);
-            String var6 = this.fmtDate(var3.opt("createdAt"));
-            String var11 = this.s((JSONObject)var3, "controlPath");
-            String var12;
-            if (!StringsKt.isBlank(var11)) {
-               var12 = " / " + var11;
-            } else {
-               var12 = "";
-            }
-
-            var6 = var6 + var12;
-            GxPage var7 = this;
-            var3 = this.s((JSONObject)var3, "carFingerprint");
-            Object var13 = var3;
-            if (StringsKt.isBlank((CharSequence)var3)) {
-               var13 = "Unknown car";
-            }
-
-            String var8 = (String)var13;
-            var3 = this.reportsBox;
-            var13 = var3;
-            if (var3 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("reportsBox");
-               var13 = null;
-            }
-
-            var3 = GxPage.row$default(var7, var8, var6, (ViewGroup)var13, 0, 8, null);
-            if (var1) {
-               var13 = "Open ✓";
-            } else {
-               var13 = "Open";
-            }
-
-            var3.button((String)var13, var1, new GxTuningPage$$ExternalSyntheticLambda9(this, var5));
-            var3.getView().setOnClickListener(new GxTuningPage$$ExternalSyntheticLambda10(this, var5));
-            if (var1) {
-               var3.getView().setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 14, CarUi.Companion.getACCENT()));
-            }
-         }
-      } else {
-         var2 = this.reportsBox;
-         if (var2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("reportsBox");
-            var2 = var3;
-         }
-
-         var2.addView((View)this.empty("No reports yet. Analyze routes to generate findings."));
-      }
-   }
-
-   private static final Unit paintReports$lambda$71(GxTuningPage var0, String var1) {
-      var0.loadReport(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final void paintReports$lambda$72(GxTuningPage var0, String var1, View var2) {
-      var0.loadReport(var1);
-   }
-
-   private final void paintRoutesHead() {
-      if (this.flmBuilt) {
-         LinearLayout var7 = this.routesHead;
-         Object var5 = null;
-         Object var4 = null;
-         Object var6 = null;
-         LinearLayout var3 = var7;
-         if (var7 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("routesHead");
-            var3 = null;
-         }
-
-         var3.removeAllViews();
-         if (this.loadingRoutes) {
-            var3 = this.routesHead;
-            if (var3 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("routesHead");
-               var3 = (LinearLayout)var6;
-            }
-
-            var3.addView((View)this.empty("Loading local routes..."));
-         } else if (this.routes.isEmpty()) {
-            var4 = this.routesHead;
-            var3 = (LinearLayout)var4;
-            if (var4 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("routesHead");
-               var3 = null;
-            }
-
-            var3.addView((View)this.empty("No local routes found."));
-            var4 = this;
-            var6 = TuplesKt.to("Reload routes", new GxTuningPage$$ExternalSyntheticLambda71(this));
-            var3 = this.routesHead;
-            if (var3 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("routesHead");
-               var3 = (LinearLayout)var5;
-            }
-
-            ViewGroup var16 = (ViewGroup)var3;
-            GxPage.buttons$default((GxPage)var4, new Pair[]{(Pair)var6}, var16, false, 4, null);
-         } else {
-            int var2 = this.selectedSegmentCount();
-            GxPage var25 = this;
-            int var1 = this.maxSegments;
-            var6 = var2 + "/" + var1 + " segments selected";
-            var5 = this.routesHead;
-            var3 = (LinearLayout)var5;
-            if (var5 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("routesHead");
-               var3 = null;
-            }
-
-            GxPage.Row var11 = GxPage.row$default(var25, (String)var6, null, (ViewGroup)var3, 0, 8, null);
-            if (var2 > this.maxSegments) {
-               var11.getTitleView().setTextColor(Color.rgb(240, 110, 130));
-            }
-
-            var6 = this;
-            var1 = this.maxSegments;
-            Pair var26 = TuplesKt.to("Select first " + var1, new GxTuningPage$$ExternalSyntheticLambda72(this));
-            Pair var8 = TuplesKt.to("Clear", new GxTuningPage$$ExternalSyntheticLambda1(this));
-            var5 = TuplesKt.to("Reload routes", new GxTuningPage$$ExternalSyntheticLambda2(this));
-            var3 = this.routesHead;
-            if (var3 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("routesHead");
-               var3 = (LinearLayout)var4;
-            }
-
-            ViewGroup var13 = (ViewGroup)var3;
-            GxPage.buttons$default((GxPage)var6, new Pair[]{var26, var8, (Pair)var5}, var13, false, 4, null);
-         }
-      }
-   }
-
-   private static final Unit paintRoutesHead$lambda$125(GxTuningPage var0) {
-      var0.loadRoutes();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit paintRoutesHead$lambda$126(GxTuningPage var0) {
-      var0.selectFirstSegments();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit paintRoutesHead$lambda$127(GxTuningPage var0) {
-      var0.selectedRoutes.clear();
-      var0.segmentRanges.clear();
-      var0.renderRoutesAll();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit paintRoutesHead$lambda$128(GxTuningPage var0) {
-      var0.loadRoutes();
-      return Unit.INSTANCE;
-   }
-
-   private final void paintStatus() {
-      LinearLayout var7 = this.flmStatusBox;
-      Object var6 = null;
-      LinearLayout var5 = var7;
-      if (var7 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
-         var5 = null;
-      }
-
-      var5.removeAllViews();
-      JSONObject var8 = this.status();
-      var7 = this.flmStatusBox;
-      var5 = var7;
-      if (var7 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
-         var5 = null;
-      }
-
-      ViewGroup var9 = (ViewGroup)var5;
-      CharSequence var28 = this.s(var8, "state");
-      Object var12 = var28;
-      if (StringsKt.isBlank(var28)) {
-         var12 = "idle";
-      }
-
-      line$default(this, var9, "State", (String)var12, 0, 8, null);
-      var7 = this.flmStatusBox;
-      var12 = var7;
-      if (var7 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
-         var12 = null;
-      }
-
-      ViewGroup var30 = (ViewGroup)var12;
-      if (this.truthy(var8.opt("running"))) {
-         var12 = "Yes";
-      } else {
-         var12 = "No";
-      }
-
-      line$default(this, var30, "Running", (String)var12, 0, 8, null);
-      var7 = this.flmStatusBox;
-      var12 = var7;
-      if (var7 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
-         var12 = null;
-      }
-
-      ViewGroup var32 = (ViewGroup)var12;
-      if (this.isOnroad) {
-         var12 = "Yes";
-      } else {
-         var12 = "No";
-      }
-
-      line$default(this, var32, "Onroad", (String)var12, 0, 8, null);
-      var7 = this.flmStatusBox;
-      var12 = var7;
-      if (var7 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
-         var12 = null;
-      }
-
-      ViewGroup var34 = (ViewGroup)var12;
-      if (this.laneCentering) {
-         var12 = "On";
-      } else {
-         var12 = "Off";
-      }
-
-      line$default(this, var34, "Lane Centering", (String)var12, 0, 8, null);
-      var7 = this.flmStatusBox;
-      var12 = var7;
-      if (var7 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
-         var12 = null;
-      }
-
-      line$default(this, (ViewGroup)var12, "Updated", this.fmtAge(var8.opt("updatedAt")), 0, 8, null);
-      if (this.truthy(var8.opt("currentSegment"))) {
-         var7 = this.flmStatusBox;
-         var12 = var7;
-         if (var7 == null) {
+    private final void paintStatus() {
+        LinearLayout linearLayout = this.flmStatusBox;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
             Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
-            var12 = null;
-         }
-
-         line$default(this, (ViewGroup)var12, "Current segment", this.s(var8, "currentSegment"), 0, 8, null);
-      }
-
-      if (this.truthy(var8.opt("lastSkippedSegment"))) {
-         var7 = this.flmStatusBox;
-         var12 = var7;
-         if (var7 == null) {
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        JSONObject st = status();
+        LinearLayout linearLayout3 = this.flmStatusBox;
+        if (linearLayout3 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
-            var12 = null;
-         }
-
-         line$default(this, (ViewGroup)var12, "Skipped", this.s(var8, "lastSkippedSegment"), 0, 8, null);
-      }
-
-      JSONObject var10 = this.activeTrial;
-      if (var10 != null) {
-         var7 = this.flmStatusBox;
-         var12 = var7;
-         if (var7 == null) {
+            linearLayout3 = null;
+        }
+        LinearLayout linearLayout4 = linearLayout3;
+        String s = s(st, "state");
+        if (StringsKt.isBlank(s)) {
+            s = "idle";
+        }
+        line$default(this, linearLayout4, "State", s, 0, 8, null);
+        LinearLayout linearLayout5 = this.flmStatusBox;
+        if (linearLayout5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
-            var12 = null;
-         }
-
-         var9 = (ViewGroup)var12;
-         CharSequence var39 = this.s(var10, "profileLabel");
-         var12 = var39;
-         if (StringsKt.isBlank(var39)) {
-            var12 = this.s(var10, "profileId");
-         }
-
-         CharSequence var40 = (CharSequence)var12;
-         var12 = var40;
-         if (StringsKt.isBlank(var40)) {
-            var12 = "Active";
-         }
-
-         this.line(var9, "Active trial", (String)var12, CarUi.Companion.getACCENT());
-      }
-
-      if (this.truthy(var8.opt("running")) && this.truthy(var8.opt("total"))) {
-         var12 = this.flmStatusBox;
-         if (var12 == null) {
+            linearLayout5 = null;
+        }
+        line$default(this, linearLayout5, "Running", truthy(st.opt("running")) ? "Yes" : "No", 0, 8, null);
+        LinearLayout linearLayout6 = this.flmStatusBox;
+        if (linearLayout6 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
-            var12 = var6;
-         }
-
-         var12 = (ViewGroup)var12;
-         long var1 = (long)num$default(this, var8.opt("progress"), 0.0, 2, null);
-         long var3 = (long)num$default(this, var8.opt("total"), 0.0, 2, null);
-         line$default(this, (ViewGroup)var12, "Progress", var1 + " / " + var3, 0, 8, null);
-      }
-   }
-
-   private final void paintTg() {
-      if (this.tgBuilt) {
-         LinearLayout var4 = this.tgBox;
-         LinearLayout var3 = var4;
-         if (var4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-            var3 = null;
-         }
-
-         var3.removeAllViews();
-         JSONObject var8 = this.tgData;
-         if (this.tgLoading) {
-            var3 = this.tgBox;
-            if (var3 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-               var3 = null;
+            linearLayout6 = null;
+        }
+        line$default(this, linearLayout6, "Onroad", this.isOnroad ? "Yes" : "No", 0, 8, null);
+        LinearLayout linearLayout7 = this.flmStatusBox;
+        if (linearLayout7 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
+            linearLayout7 = null;
+        }
+        line$default(this, linearLayout7, "Lane Centering", this.laneCentering ? "On" : "Off", 0, 8, null);
+        LinearLayout linearLayout8 = this.flmStatusBox;
+        if (linearLayout8 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
+            linearLayout8 = null;
+        }
+        line$default(this, linearLayout8, "Updated", fmtAge(st.opt("updatedAt")), 0, 8, null);
+        if (truthy(st.opt("currentSegment"))) {
+            LinearLayout linearLayout9 = this.flmStatusBox;
+            if (linearLayout9 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
+                linearLayout9 = null;
             }
-
-            var3.addView((View)this.empty("Loading testing ground state..."));
-         } else if (var8 == null) {
-            if (!StringsKt.isBlank(this.tgError)) {
-               var3 = this.tgBox;
-               if (var3 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-                  var3 = null;
-               }
-
-               notice$default(this, (ViewGroup)var3, this.tgError, 0, null, 12, null);
+            line$default(this, linearLayout9, "Current segment", s(st, "currentSegment"), 0, 8, null);
+        }
+        if (truthy(st.opt("lastSkippedSegment"))) {
+            LinearLayout linearLayout10 = this.flmStatusBox;
+            if (linearLayout10 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
+                linearLayout10 = null;
             }
-         } else {
-            if (!StringsKt.isBlank(this.tgError)) {
-               var4 = this.tgBox;
-               var3 = var4;
-               if (var4 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-                  var3 = null;
-               }
-
-               notice$default(this, (ViewGroup)var3, this.tgError, 0, null, 12, null);
+            line$default(this, linearLayout10, "Skipped", s(st, "lastSkippedSegment"), 0, 8, null);
+        }
+        JSONObject t = this.activeTrial;
+        if (t != null) {
+            LinearLayout linearLayout11 = this.flmStatusBox;
+            if (linearLayout11 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
+                linearLayout11 = null;
             }
-
-            List var9 = this.tgSelectable();
-            if (var9.isEmpty()) {
-               if (StringsKt.isBlank(this.tgError)) {
-                  var3 = this.tgBox;
-                  if (var3 == null) {
-                     Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-                     var3 = null;
-                  }
-
-                  var3.addView((View)this.empty("No active test slots."));
-               }
+            LinearLayout linearLayout12 = linearLayout11;
+            String s2 = s(t, "profileLabel");
+            if (StringsKt.isBlank(s2)) {
+                s2 = s(t, "profileId");
+            }
+            String str = s2;
+            if (StringsKt.isBlank(str)) {
+                str = "Active";
+            }
+            line(linearLayout12, "Active trial", str, CarUi.Companion.getACCENT());
+        }
+        if (truthy(st.opt("running")) && truthy(st.opt("total"))) {
+            LinearLayout linearLayout13 = this.flmStatusBox;
+            if (linearLayout13 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("flmStatusBox");
             } else {
-               List var44 = this.tgSlots();
-               JSONObject var5;
-               if (StringsKt.isBlank(this.tgSelected)) {
-                  var5 = null;
-               } else {
-                  Iterator var47 = var44.iterator();
-
-                  do {
-                     if (!var47.hasNext()) {
-                        var16 = null;
-                        break;
-                     }
-
-                     var16 = var47.next();
-                  } while (!Intrinsics.areEqual(this.slotId((JSONObject)var16), StringsKt.trim(this.tgSelected).toString()));
-
-                  var5 = (JSONObject)var16;
-               }
-
-               JSONObject var45;
-               if (StringsKt.isBlank(this.tgActiveId())) {
-                  var45 = null;
-               } else {
-                  Iterator var46 = var44.iterator();
-
-                  do {
-                     if (!var46.hasNext()) {
-                        var17 = null;
-                        break;
-                     }
-
-                     var17 = var46.next();
-                  } while (!Intrinsics.areEqual(this.slotId((JSONObject)var17), this.tgActiveId()));
-
-                  var45 = (JSONObject)var17;
-               }
-
-               LinearLayout var6 = this.tgBox;
-               var3 = var6;
-               if (var6 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-                  var3 = null;
-               }
-
-               LinearLayout var7;
-               ViewGroup var10;
-               label201: {
-                  var7 = this.card((ViewGroup)var3);
-                  headLine$default(this, (ViewGroup)var7, "Status", 0, 4, null);
-                  var10 = (ViewGroup)var7;
-                  if (var5 != null) {
-                     String var19 = this.s(var5, "name");
-                     if (var19 != null) {
-                        CharSequence var54 = var19;
-                        CharSequence var20 = var54;
-                        if (StringsKt.isBlank(var54)) {
-                           var20 = null;
-                        }
-
-                        String var55 = (String)var20;
-                        var21 = var55;
-                        if (var55 != null) {
-                           break label201;
-                        }
-                     }
-                  }
-
-                  var21 = "Unknown";
-               }
-
-               line$default(this, var10, "Selected Slot", var21, 0, 8, null);
-               String var22 = "Not active";
-               if (var5 != null && Intrinsics.areEqual(this.tgActiveId(), StringsKt.trim(this.tgSelected).toString())) {
-                  CharSequence var56 = StringsKt.trim(this.s(var8, "activeVariantLabel")).toString();
-                  Object var23 = var56;
-                  if (StringsKt.isBlank(var56)) {
-                     CharSequence var57 = this.tgActiveVariant();
-                     var23 = var57;
-                     if (StringsKt.isBlank(var57)) {
-                        var23 = this.defaultMode(var5);
-                     }
-
-                     var23 = this.modeLabel(var5, (String)var23);
-                  }
-
-                  var22 = (String)var23;
-               }
-
-               line$default(this, (ViewGroup)var7, "Selected Mode", var22, 0, 8, null);
-               var10 = (ViewGroup)var7;
-               String var58;
-               if (this.truthy(var8.opt("isOnroad"))) {
-                  var58 = "Yes";
-               } else {
-                  var58 = "No";
-               }
-
-               line$default(this, var10, "Onroad", var58, 0, 8, null);
-               line$default(this, (ViewGroup)var7, "Selectable Slots", String.valueOf(var9.size()), 0, 8, null);
-               int var1 = var9.size();
-               String var80 = "Current Test Slots (" + var1 + ")";
-               var7 = this.tgBox;
-               var6 = var7;
-               if (var7 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-                  var6 = null;
-               }
-
-               this.header(var80, (ViewGroup)var6);
-               var7 = this.tgBox;
-               var6 = var7;
-               if (var7 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-                  var6 = null;
-               }
-
-               var7 = this.card((ViewGroup)var6);
-
-               for (JSONObject var12 : var9) {
-                  boolean var2 = Intrinsics.areEqual(this.slotId(var12), this.tgActiveId());
-                  TextView var81 = new TextView((Context)this.getAct());
-                  String var11 = this.slotId(var12);
-                  String var87 = this.s(var12, "name");
-                  var81.setText(var11 + ". " + var87);
-                  var81.setTextSize(18.0F);
-                  CarUi.Companion var84 = CarUi.Companion;
-                  if (var2) {
-                     var1 = var84.getACCENT();
-                  } else {
-                     var1 = var84.getTEXT();
-                  }
-
-                  var81.setTextColor(var1);
-                  if (var2) {
-                     var81.setTypeface(Typeface.DEFAULT_BOLD);
-                  }
-
-                  var81.setPadding(this.getUi().dp(12), this.getUi().dp(10), this.getUi().dp(12), this.getUi().dp(10));
-                  if (var2) {
-                     var81.setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 10, CarUi.Companion.getACCENT()));
-                  }
-
-                  View var85 = (View)var81;
-                  LayoutParams var82 = new LayoutParams(-1, -2);
-                  var82.bottomMargin = this.getUi().dp(4);
-                  Unit var88 = Unit.INSTANCE;
-                  var7.addView(var85, (android.view.ViewGroup.LayoutParams)var82);
-               }
-
-               GxPage var73 = this;
-               var6 = this.tgBox;
-               var3 = var6;
-               if (var6 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-                  var3 = null;
-               }
-
-               label187: {
-                  var74 = GxPage.row$default(var73, "View Slot", null, (ViewGroup)var3, 0, 8, null);
-                  if (var5 != null) {
-                     String var26 = this.slotId(var5);
-                     String var63 = this.s(var5, "name");
-                     String var64 = var26 + ". " + var63;
-                     var27 = var64;
-                     if (var64 != null) {
-                        break label187;
-                     }
-                  }
-
-                  var27 = "Choose…";
-               }
-
-               this.en(GxPage.Row.button$default(var74, var27, false, new GxTuningPage$$ExternalSyntheticLambda40(this, var9), 2, null), this.tgBusy ^ true);
-               var6 = this.tgBox;
-               var3 = var6;
-               if (var6 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-                  var3 = null;
-               }
-
-               this.note(
-                  "Only one Testing Ground can be active at a time. Switching slots only changes what you're viewing; the active test stays enabled until you explicitly choose another mode.",
-                  (ViewGroup)var3
-               );
-               if (var5 != null) {
-                  var6 = this.tgBox;
-                  var3 = var6;
-                  if (var6 == null) {
-                     Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-                     var3 = null;
-                  }
-
-                  var6 = this.card((ViewGroup)var3);
-                  var7 = headLine$default(this, (ViewGroup)var6, this.s(var5, "name"), 0, 4, null);
-                  if (Intrinsics.areEqual(this.slotId(var5), this.tgActiveId())) {
-                     TextView var30 = new TextView((Context)this.getAct());
-                     var30.setText("Active");
-                     var30.setTextSize(15.0F);
-                     var30.setTextColor(CarUi.Companion.getBG());
-                     var30.setTypeface(Typeface.DEFAULT_BOLD);
-                     var30.setBackground((Drawable)CarUi.rounded$default(this.getUi(), CarUi.Companion.getACCENT(), 10, null, 4, null));
-                     var30.setPadding(this.getUi().dp(12), this.getUi().dp(4), this.getUi().dp(12), this.getUi().dp(4));
-                     var7.addView((View)var30);
-                  }
-
-                  if (!StringsKt.isBlank(this.s(var5, "description"))) {
-                     GxPage.text$default(this, this.s(var5, "description"), (ViewGroup)var6, 16.0F, 0, false, 24, null);
-                  }
-
-                  LinearLayout var78 = this.btnBar((ViewGroup)var6);
-
-                  for (Object var31 : this.variantLabels(var5).keySet()) {
-                     Intrinsics.checkNotNullExpressionValue(var31, "next(...)");
-                     String var83 = (String)var31;
-                     boolean var14;
-                     if (Intrinsics.areEqual(this.tgActiveId(), StringsKt.trim(this.tgSelected).toString())
-                        && Intrinsics.areEqual(this.tgActiveVariant(), var83)) {
-                        var14 = true;
-                     } else {
-                        var14 = false;
-                     }
-
-                     String var32;
-                     if (var14) {
-                        var32 = "✓ ";
-                     } else {
-                        var32 = "";
-                     }
-
-                     String var86 = this.modeLabel(var5, var83);
-                     this.en(
-                        this.barBtn(var78, var32 + var83 + " · " + var86, var14, new GxTuningPage$$ExternalSyntheticLambda41(this, var83)), this.tgBusy ^ true
-                     );
-                  }
-
-                  GxPage var33 = this;
-                  String var48 = this.s(var5, "name");
-                  GxPage.text$default(var33, "Selecting a mode sets " + var48 + " as the active Testing Ground.", (ViewGroup)var6, 0.0F, 0, false, 28, null);
-               }
-
-               LinearLayout var49 = this.tgBox;
-               var3 = var49;
-               if (var49 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-                  var3 = null;
-               }
-
-               this.header("Currently Active", (ViewGroup)var3);
-               if (var45 != null) {
-                  GxPage var68 = this;
-                  String var35 = this.s(var45, "id");
-                  String var50 = this.s(var45, "name");
-                  String var77 = var35 + ". " + var50;
-                  LinearLayout var51 = this.tgBox;
-                  var3 = var51;
-                  if (var51 == null) {
-                     Intrinsics.throwUninitializedPropertyAccessException("tgBox");
-                     var3 = null;
-                  }
-
-                  GxPage.Row var69 = GxPage.row$default(var68, var77, null, (ViewGroup)var3, 0, 8, null);
-                  var69.getView().setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 14, CarUi.Companion.getACCENT()));
-                  CharSequence var52 = StringsKt.trim(this.s(var8, "activeVariantLabel")).toString();
-                  Object var37 = var52;
-                  if (StringsKt.isBlank(var52)) {
-                     CharSequence var53 = this.tgActiveVariant();
-                     var37 = var53;
-                     if (StringsKt.isBlank(var53)) {
-                        var37 = "A";
-                     }
-
-                     var37 = this.modeLabel(var45, (String)var37);
-                  }
-
-                  var37 = (String)var37;
-                  var69.value("Mode " + var37).setTextColor(CarUi.Companion.getACCENT());
-               }
+                linearLayout2 = linearLayout13;
             }
-         }
-      }
-   }
+            line$default(this, linearLayout2, "Progress", ((long) num$default(this, st.opt("progress"), 0.0d, 2, null)) + " / " + ((long) num$default(this, st.opt("total"), 0.0d, 2, null)), 0, 8, null);
+        }
+    }
 
-   private static final Unit paintTg$lambda$182(GxTuningPage var0, List var1) {
-      if (var0.tgBusy) {
-         return Unit.INSTANCE;
-      } else {
-         Iterable var3 = var1;
-         var var2 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var3, 10));
-
-         for (JSONObject var5 : var3) {
-            String var4 = var0.slotId(var5);
-            String var8 = var0.s(var5, "name");
-            var2.add(var4 + ". " + var8);
-         }
-
-         List var6 = var2;
-         var0.pick("View Slot", var6, new GxTuningPage$$ExternalSyntheticLambda3(var0, var1));
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final Unit paintTg$lambda$182$lambda$181(GxTuningPage var0, List var1, int var2) {
-      var0.tgSelected = var0.slotId((JSONObject)var1.get(var2));
-      var0.paintTg();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit paintTg$lambda$184(GxTuningPage var0, String var1) {
-      var0.tgSelectMode(var1);
-      return Unit.INSTANCE;
-   }
-
-   private final void paintTunes() {
-      LinearLayout var6 = this.tunesBox;
-      CarUi.Companion var5 = null;
-      LinearLayout var4 = var6;
-      if (var6 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("tunesBox");
-         var4 = null;
-      }
-
-      var4.removeAllViews();
-      List var13 = this.objects(this.savedTunes);
-      if (var13.isEmpty()) {
-         var4 = this.tunesBox;
-         if (var4 == null) {
+    private final void paintTunes() {
+        LinearLayout linearLayout = this.tunesBox;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
             Intrinsics.throwUninitializedPropertyAccessException("tunesBox");
-            var4 = var5;
-         }
-
-         var4.addView((View)this.empty("No saved tunes yet. Apply a trial, then save it here."));
-      } else {
-         for (JSONObject var8 : var13) {
-            boolean var3 = this.truthy(var8.opt("active"));
-            var5 = this.tunesBox;
-            var4 = (LinearLayout)var5;
-            if (var5 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("tunesBox");
-               var4 = null;
-            }
-
-            LinearLayout var9 = this.card((ViewGroup)var4);
-            var5 = this.s(var8, "name");
-            TextView var15 = (TextView)var5;
-            if (StringsKt.isBlank((CharSequence)var5)) {
-               var15 = "Saved Tune";
-            }
-
-            String var31 = "";
-            if (var3) {
-               var5 = " (Active)";
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        List list = objects(this.savedTunes);
+        if (list.isEmpty()) {
+            LinearLayout linearLayout3 = this.tunesBox;
+            if (linearLayout3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("tunesBox");
             } else {
-               var5 = "";
+                linearLayout2 = linearLayout3;
             }
-
-            String var10 = var15 + var5;
-            var15 = (ViewGroup)var9;
-            var5 = CarUi.Companion;
-            int var1;
-            if (var3) {
-               var1 = var5.getACCENT();
-            } else {
-               var1 = var5.getTEXT();
-            }
-
-            this.text(var10, (ViewGroup)var15, 21.0F, var1, true);
-            GxPage var33 = this;
-            CharSequence var27 = this.s(var8, "carFingerprint");
-            var15 = var27;
-            if (StringsKt.isBlank(var27)) {
-               var15 = "Unknown car";
-            }
-
-            String var11 = this.s(var8, "pathLabel");
-            var5 = var31;
-            if (!StringsKt.isBlank(var11)) {
-               var5 = " / " + var11;
-            }
-
-            GxPage.text$default(var33, var15 + var5, (ViewGroup)var9, 0.0F, 0, false, 28, null);
-            GxPage var32 = this;
-            var15 = this.s(var8, "genericParamCount");
-            String var29 = this.s(var8, "frictionCurveCount");
-            var10 = this.s(var8, "vehicleKnobCount");
-            GxPage.text$default(var32, var15 + " generic, " + var29 + " friction curve, " + var10 + " knobs", (ViewGroup)var9, 0.0F, 0, false, 28, null);
-            GxPage.text$default(this, this.fmtAge(var8.opt("updatedAt")), (ViewGroup)var9, 0.0F, 0, false, 28, null);
-            LinearLayout var30 = this.btnBar((ViewGroup)var9);
-            if (var3) {
-               var15 = "Active";
-            } else {
-               var15 = "Apply";
-            }
-
-            var15 = this.barBtn(var30, (String)var15, var3 ^ true, new GxTuningPage$$ExternalSyntheticLambda27(this, var3, var8));
-            boolean var2;
-            if (!this.busy && !var3) {
-               var2 = true;
-            } else {
-               var2 = false;
-            }
-
-            this.en((TextView)var15, var2);
-            this.en(barBtn$default(this, var30, "Rename", false, new GxTuningPage$$ExternalSyntheticLambda28(this, var8), 4, null), this.busy ^ true);
-            var15 = barBtn$default(this, var30, "Delete", false, new GxTuningPage$$ExternalSyntheticLambda29(this, var3, var8), 4, null);
-            var15.setTextColor(Color.rgb(240, 110, 130));
-            if (!this.busy && !var3) {
-               var2 = true;
-            } else {
-               var2 = false;
-            }
-
-            this.en(var15, var2);
-            this.en(barBtn$default(this, var30, "Firestar", false, new GxTuningPage$$ExternalSyntheticLambda30(this, var8), 4, null), this.busy ^ true);
-         }
-      }
-   }
-
-   private static final Unit paintTunes$lambda$45(GxTuningPage var0, boolean var1, JSONObject var2) {
-      if (!var0.busy && !var1) {
-         String var3 = var0.enc(var0.s(var2, "tuneId"));
-         runWith$default(var0, "POST", "/api/flm/saved-tunes/" + var3 + "/apply", null, "Saved tune applied.", null, 16, null);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit paintTunes$lambda$46(GxTuningPage var0, JSONObject var1) {
-      var0.renameSavedTune(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit paintTunes$lambda$49(GxTuningPage var0, boolean var1, JSONObject var2) {
-      if (!var0.busy && !var1) {
-         CharSequence var4 = var0.s(var2, "name");
-         Object var3 = var4;
-         if (StringsKt.isBlank(var4)) {
-            var3 = "Saved Tune";
-         }
-
-         var0.confirm("Delete Saved Tune", "Delete saved tune \"" + var3 + "\"?", "Yes, Delete", new GxTuningPage$$ExternalSyntheticLambda13(var0, var2));
-         return Unit.INSTANCE;
-      } else {
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final Unit paintTunes$lambda$49$lambda$48(GxTuningPage var0, JSONObject var1) {
-      String var2 = var0.enc(var0.s(var1, "tuneId"));
-      runWith$default(var0, "DELETE", "/api/flm/saved-tunes/" + var2, null, "Saved tune deleted.", null, 16, null);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit paintTunes$lambda$51(GxTuningPage var0, JSONObject var1) {
-      var0.submitTune(var1);
-      return Unit.INSTANCE;
-   }
-
-   private final void para(ViewGroup var1, String var2, String var3) {
-      SpannableStringBuilder var5 = new SpannableStringBuilder(var2).append(" ").append(var3);
-      var5.setSpan(new StyleSpan(1), 0, var2.length(), 33);
-      TextView var4 = GxPage.text$default(this, "", var1, 16.0F, CarUi.Companion.getTEXT(), false, 16, null);
-      var4.setText((CharSequence)var5);
-      var4.setPadding(0, this.getUi().dp(3), 0, this.getUi().dp(3));
-   }
-
-   private final List<JSONObject> pathList() {
-      JSONObject var3 = this.report;
-      if (var3 == null) {
-         return CollectionsKt.emptyList();
-      } else {
-         JSONArray var1 = var3.optJSONArray("paths");
-         if (var1 != null && var1.length() > 0) {
-            return this.objects(var1);
-         } else {
-            JSONObject var4 = new JSONObject();
-            CharSequence var2 = this.s(var3, "primaryPathKey");
-            var1 = var2;
-            if (StringsKt.isBlank(var2)) {
-               var1 = "cleanup_pass";
-            }
-
-            return CollectionsKt.listOf(
-               var4.put("key", var1)
-                  .put("title", "Recommendations")
-                  .put("description", "")
-                  .put("whySelected", "")
-                  .put("isPrimary", true)
-                  .put("suggestions", this.arr(var3, "suggestions"))
-                  .put("profiles", this.arr(var3, "profiles"))
-            );
-         }
-      }
-   }
-
-   private final double percentile(List<Double> var1, double var2) {
-      if (var1.isEmpty()) {
-         return 0.0;
-      } else {
-         var2 = (var1.size() - 1) * RangesKt.coerceIn(var2, 0.0, 1.0);
-         int var5 = (int)Math.floor(var2);
-         int var4 = (int)Math.ceil(var2);
-         if (var5 == var4) {
-            return ((Number)var1.get(var5)).doubleValue();
-         } else {
-            var2 -= var5;
-            return ((Number)var1.get(var5)).doubleValue() * (1 - var2) + ((Number)var1.get(var4)).doubleValue() * var2;
-         }
-      }
-   }
-
-   private final void plotsLoad(boolean var1) {
-      if (this.plotsBuilt && (!this.plotsFetching || var1)) {
-         this.plotsFetching = true;
-         this.getJson("/api/plots/live", new GxTuningPage$$ExternalSyntheticLambda46(this));
-      }
-   }
-
-   // $VF: synthetic method
-   static void plotsLoad$default(GxTuningPage var0, boolean var1, int var2, Object var3) {
-      if ((var2 & 1) != 0) {
-         var1 = false;
-      }
-
-      var0.plotsLoad(var1);
-   }
-
-   private static final Unit plotsLoad$lambda$148(GxTuningPage var0, String var1, JSONObject var2) {
-      var0.plotsFetching = false;
-      if (var2 != null) {
-         var0.live = var2;
-         var0.plotsError = "";
-         if (!var0.truthy(var2.opt("stale"))) {
-            var0.pushSample(var2);
-         }
-      } else {
-         if (var1 == null) {
-            var1 = "Failed to load live plot data";
-         }
-
-         var0.plotsError = var1;
-      }
-
-      var0.plotsLoading = false;
-      var0.paintPlots();
-      return Unit.INSTANCE;
-   }
-
-   private static final SharedPreferences prefs_delegate$lambda$136(Activity var0) {
-      return var0.getSharedPreferences("gx_tuning", 0);
-   }
-
-   private final JSONObject primaryPath() {
-      List var5 = this.pathList();
-      String var4 = this.activePathKey();
-      Iterator var6 = var5.iterator();
-
-      Object var2;
-      Object var3;
-      do {
-         boolean var1 = var6.hasNext();
-         var3 = null;
-         if (!var1) {
-            var2 = null;
-            break;
-         }
-
-         var2 = (JSONObject)var6.next();
-      } while (!Intrinsics.areEqual(this.s(var2, "key"), var4));
-
-      JSONObject var10 = var2;
-      var2 = var10;
-      if (var10 == null) {
-         Iterator var11 = var5.iterator();
-
-         do {
-            if (!var11.hasNext()) {
-               var2 = (JSONObject)var3;
-               break;
-            }
-
-            var2 = (JSONObject)var11.next();
-         } while (!this.truthy(var2.opt("isPrimary")));
-
-         var3 = var2;
-         var2 = (JSONObject)var3;
-         if (var3 == null) {
-            var2 = CollectionsKt.firstOrNull(var5);
-         }
-      }
-
-      return var2;
-   }
-
-   private final List<JSONObject> profiles() {
-      List var1 = this.objects(this.arr(this.primaryPath(), "profiles"));
-      if (var1.isEmpty()) {
-         var1 = this.objects(this.arr(this.report, "profiles"));
-      }
-
-      return var1;
-   }
-
-   private final void pushSample(JSONObject var1) {
-      double var2 = num$default(this, var1.opt("timestamp"), 0.0, 2, null);
-      if (!(var2 <= 0.0)) {
-         boolean var4;
-         if (var2 == this.lastTs) {
-            var4 = true;
-         } else {
-            var4 = false;
-         }
-
-         if (!var4) {
-            this.lastTs = var2;
-            HashMap var7 = new HashMap();
-
-            for (String var5 : this.sampleKeys) {
-               var7.put(var5, num$default(this, var1.opt(var5), 0.0, 2, null));
-            }
-
-            this.samples.add(new GxTuningSample(var2, var7));
-            if (this.samples.size() > 240) {
-               this.samples.subList(0, this.samples.size() - 240).clear();
-            }
-
+            linearLayout2.addView(empty("No saved tunes yet. Apply a trial, then save it here."));
             return;
-         }
-      }
-   }
-
-   private final void renameSavedTune(JSONObject var1) {
-      String var4 = this.s(var1, "tuneId");
-      if (!StringsKt.isBlank(var4) && !this.busy) {
-         GxPage var5 = this;
-         String var3 = this.s(var1, "name");
-         CharSequence var2 = this.s(var1, "name");
-         Object var6 = var2;
-         if (StringsKt.isBlank(var2)) {
-            var6 = "Saved Tune";
-         }
-
-         GxPage.prompt$default(
-            var5,
-            "Rename Saved Tune",
-            "Name this tune...",
-            var3,
-            0,
-            "Choose a new name for “" + var6 + "”.",
-            new GxTuningPage$$ExternalSyntheticLambda15(this, var4),
-            8,
-            null
-         );
-      }
-   }
-
-   private static final Unit renameSavedTune$lambda$53(GxTuningPage var0, String var1, String var2) {
-      Intrinsics.checkNotNullParameter(var2, "name");
-      var1 = var0.enc(var1);
-      runWith$default(var0, "PATCH", "/api/flm/saved-tunes/" + var1, new JSONObject().put("name", var2), "Tune renamed.", null, 16, null);
-      return Unit.INSTANCE;
-   }
-
-   private final void renderReport() {
-      if (this.flmBuilt) {
-         LinearLayout var7 = this.reportBox;
-         LinearLayout var6 = var7;
-         if (var7 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("reportBox");
-            var6 = null;
-         }
-
-         var6.removeAllViews();
-         this.comparisonBox = null;
-         JSONObject var8 = this.report;
-         if (var8 != null && !this.reportLoading) {
-            var7 = this.reportBox;
-            var6 = var7;
-            if (var7 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("reportBox");
-               var6 = null;
+        }
+        for (final JSONObject t : list) {
+            final boolean active = truthy(t.opt("active"));
+            LinearLayout linearLayout4 = this.tunesBox;
+            if (linearLayout4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("tunesBox");
+                linearLayout4 = null;
             }
-
-            this.header("Report Summary", (ViewGroup)var6);
-            var7 = this.reportBox;
-            var6 = var7;
-            if (var7 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("reportBox");
-               var6 = null;
+            LinearLayout c = card(linearLayout4);
+            String s = s(t, "name");
+            if (StringsKt.isBlank(s)) {
+                s = "Saved Tune";
             }
-
-            LinearLayout var9;
-            ViewGroup var10;
-            label191: {
-               var9 = this.card((ViewGroup)var6);
-               var10 = (ViewGroup)var9;
-               JSONObject var18 = var8.optJSONObject("car");
-               if (var18 != null) {
-                  String var19 = this.s(var18, "carFingerprint");
-                  if (var19 != null) {
-                     CharSequence var42 = var19;
-                     CharSequence var20 = var42;
-                     if (StringsKt.isBlank(var42)) {
-                        var20 = null;
-                     }
-
-                     String var43 = (String)var20;
-                     var21 = var43;
-                     if (var43 != null) {
-                        break label191;
-                     }
-                  }
-               }
-
-               var21 = "Report";
+            String str = ((Object) s) + (active ? " (Active)" : "");
+            LinearLayout linearLayout5 = c;
+            CarUi.Companion companion = CarUi.Companion;
+            text(str, linearLayout5, 21.0f, active ? companion.getACCENT() : companion.getTEXT(), true);
+            GxTuningPage gxTuningPage = this;
+            String s2 = s(t, "carFingerprint");
+            if (StringsKt.isBlank(s2)) {
+                s2 = "Unknown car";
             }
+            String it = s(t, "pathLabel");
+            GxPage.text$default(gxTuningPage, new StringBuilder().append((Object) s2).append((Object) (StringsKt.isBlank(it) ? "" : " / " + it)).toString(), c, 0.0f, 0, false, 28, null);
+            GxPage.text$default(this, s(t, "genericParamCount") + " generic, " + s(t, "frictionCurveCount") + " friction curve, " + s(t, "vehicleKnobCount") + " knobs", c, 0.0f, 0, false, 28, null);
+            GxPage.text$default(this, fmtAge(t.opt("updatedAt")), c, 0.0f, 0, false, 28, null);
+            LinearLayout bar = btnBar(c);
+            en(barBtn(bar, active ? "Active" : "Apply", !active, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda27
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit paintTunes$lambda$45;
+                    paintTunes$lambda$45 = GxTuningPage.paintTunes$lambda$45(GxTuningPage.this, active, t);
+                    return paintTunes$lambda$45;
+                }
+            }), (this.busy || active) ? false : true);
+            en(barBtn$default(this, bar, "Rename", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda28
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit paintTunes$lambda$46;
+                    paintTunes$lambda$46 = GxTuningPage.paintTunes$lambda$46(GxTuningPage.this, t);
+                    return paintTunes$lambda$46;
+                }
+            }, 4, null), !this.busy);
+            TextView $this$paintTunes_u24lambda_u2450 = barBtn$default(this, bar, "Delete", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda29
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit paintTunes$lambda$49;
+                    paintTunes$lambda$49 = GxTuningPage.paintTunes$lambda$49(GxTuningPage.this, active, t);
+                    return paintTunes$lambda$49;
+                }
+            }, 4, null);
+            $this$paintTunes_u24lambda_u2450.setTextColor(Color.rgb(240, 110, 130));
+            en($this$paintTunes_u24lambda_u2450, (this.busy || active) ? false : true);
+            en(barBtn$default(this, bar, "Firestar", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda30
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit paintTunes$lambda$51;
+                    paintTunes$lambda$51 = GxTuningPage.paintTunes$lambda$51(GxTuningPage.this, t);
+                    return paintTunes$lambda$51;
+                }
+            }, 4, null), !this.busy);
+        }
+    }
 
-            headBtn$default(
-                  this,
-                  headLine$default(this, var10, var21, 0, 4, null),
-                  "Delete report",
-                  false,
-                  new GxTuningPage$$ExternalSyntheticLambda47(this, var8),
-                  4,
-                  null
-               )
-               .setTextColor(Color.rgb(240, 110, 130));
-            JSONObject var11 = this.obj(var8, "car");
-            JSONObject var69 = this.obj(var8, "summary");
-            ViewGroup var12 = (ViewGroup)var9;
-            CharSequence var44 = this.s(var11, "carFingerprint");
-            EditText var22 = var44;
-            if (StringsKt.isBlank(var44)) {
-               var22 = "Unknown";
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintTunes$lambda$45(GxTuningPage this$0, boolean $active, JSONObject $t) {
+        if (!this$0.busy && !$active) {
+            runWith$default(this$0, "POST", "/api/flm/saved-tunes/" + this$0.enc(this$0.s($t, "tuneId")) + "/apply", null, "Saved tune applied.", null, 16, null);
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintTunes$lambda$46(GxTuningPage this$0, JSONObject $t) {
+        this$0.renameSavedTune($t);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintTunes$lambda$49(final GxTuningPage this$0, boolean $active, final JSONObject $t) {
+        if (this$0.busy || $active) {
+            return Unit.INSTANCE;
+        }
+        String s = this$0.s($t, "name");
+        if (StringsKt.isBlank(s)) {
+            s = "Saved Tune";
+        }
+        this$0.confirm("Delete Saved Tune", "Delete saved tune \"" + ((Object) s) + "\"?", "Yes, Delete", new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda13
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit paintTunes$lambda$49$lambda$48;
+                paintTunes$lambda$49$lambda$48 = GxTuningPage.paintTunes$lambda$49$lambda$48(GxTuningPage.this, $t);
+                return paintTunes$lambda$49$lambda$48;
             }
+        });
+        return Unit.INSTANCE;
+    }
 
-            line$default(this, var12, "Car", (String)var22, 0, 8, null);
-            var12 = (ViewGroup)var9;
-            CharSequence var45 = this.s(var11, "controlPath");
-            var22 = var45;
-            if (StringsKt.isBlank(var45)) {
-               var22 = "unknown";
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintTunes$lambda$49$lambda$48(GxTuningPage this$0, JSONObject $t) {
+        runWith$default(this$0, "DELETE", "/api/flm/saved-tunes/" + this$0.enc(this$0.s($t, "tuneId")), null, "Saved tune deleted.", null, 16, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintTunes$lambda$51(GxTuningPage this$0, JSONObject $t) {
+        this$0.submitTune($t);
+        return Unit.INSTANCE;
+    }
+
+    private final void renameSavedTune(JSONObject t) {
+        final String id = s(t, "tuneId");
+        if (StringsKt.isBlank(id) || this.busy) {
+            return;
+        }
+        GxTuningPage gxTuningPage = this;
+        String s = s(t, "name");
+        String s2 = s(t, "name");
+        if (StringsKt.isBlank(s2)) {
+            s2 = "Saved Tune";
+        }
+        GxPage.prompt$default(gxTuningPage, "Rename Saved Tune", "Name this tune...", s, 0, "Choose a new name for “" + ((Object) s2) + "”.", new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda15
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit renameSavedTune$lambda$53;
+                renameSavedTune$lambda$53 = GxTuningPage.renameSavedTune$lambda$53(GxTuningPage.this, id, (String) obj);
+                return renameSavedTune$lambda$53;
             }
+        }, 8, null);
+    }
 
-            line$default(this, var12, "Control path", (String)var22, 0, 8, null);
-            ViewGroup var46 = (ViewGroup)var9;
-            double var1 = this.num(var8.opt("createdAt"), Double.NaN);
-            boolean var3;
-            if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
-               var3 = 1;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renameSavedTune$lambda$53(GxTuningPage this$0, String $id, String name) {
+        Intrinsics.checkNotNullParameter(name, "name");
+        runWith$default(this$0, "PATCH", "/api/flm/saved-tunes/" + this$0.enc($id), new JSONObject().put("name", name), "Tune renamed.", null, 16, null);
+        return Unit.INSTANCE;
+    }
+
+    private final void submitTune(final JSONObject t) {
+        confirm("Send to Firestar", "Think this FLM tune is genuinely good and worth sharing? Only the tune values, car identity, and your Discord username are sent; routes and driving logs are not included.", "Continue", new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda32
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit submitTune$lambda$55;
+                submitTune$lambda$55 = GxTuningPage.submitTune$lambda$55(GxTuningPage.this, t);
+                return submitTune$lambda$55;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit submitTune$lambda$55(final GxTuningPage this$0, final JSONObject $t) {
+        GxPage.prompt$default(this$0, "Send to Firestar", "Enter your Discord username...", null, 0, null, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda53
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit submitTune$lambda$55$lambda$54;
+                submitTune$lambda$55$lambda$54 = GxTuningPage.submitTune$lambda$55$lambda$54(GxTuningPage.this, $t, (String) obj);
+                return submitTune$lambda$55$lambda$54;
+            }
+        }, 28, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit submitTune$lambda$55$lambda$54(GxTuningPage this$0, JSONObject $t, String raw) {
+        Intrinsics.checkNotNullParameter(raw, "raw");
+        String name = StringsKt.trim((CharSequence) raw).toString();
+        if (name.length() == 0) {
+            this$0.toast("A Discord username is required.");
+            return Unit.INSTANCE;
+        }
+        runWith$default(this$0, "POST", "/api/flm/saved-tunes/" + this$0.enc(this$0.s($t, "tuneId")) + "/submit", new JSONObject().put("discordUsername", name), "Tune submitted to Firestar.", null, 16, null);
+        return Unit.INSTANCE;
+    }
+
+    private final void saveCurrent() {
+        JSONObject t = this.activeTrial;
+        if (t == null || this.busy) {
+            return;
+        }
+        String s = s(t, "profileLabel");
+        if (StringsKt.isBlank(s)) {
+            s = this.carFp;
+        }
+        String str = s;
+        if (StringsKt.isBlank(str)) {
+            str = "Saved Tune";
+        }
+        String def = str;
+        GxPage.prompt$default(this, "Save Current Tune", "Name this tune...", def, 0, null, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda39
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit saveCurrent$lambda$58;
+                saveCurrent$lambda$58 = GxTuningPage.saveCurrent$lambda$58(GxTuningPage.this, (String) obj);
+                return saveCurrent$lambda$58;
+            }
+        }, 24, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit saveCurrent$lambda$58(GxTuningPage this$0, String raw) {
+        Intrinsics.checkNotNullParameter(raw, "raw");
+        String name = StringsKt.trim((CharSequence) raw).toString();
+        if (name.length() == 0) {
+            this$0.toast("A name is required.");
+            return Unit.INSTANCE;
+        }
+        runWith$default(this$0, "POST", "/api/flm/saved-tunes", new JSONObject().put("name", name), "Tune saved.", null, 16, null);
+        return Unit.INSTANCE;
+    }
+
+    static /* synthetic */ void runWith$default(GxTuningPage gxTuningPage, String str, String str2, JSONObject jSONObject, String str3, Function1 function1, int i, Object obj) {
+        if ((i & 16) != 0) {
+            function1 = null;
+        }
+        gxTuningPage.runWith(str, str2, jSONObject, str3, function1);
+    }
+
+    private final void runWith(String method, String path, JSONObject body, final String okMsg, final Function1<? super JSONObject, Unit> after) {
+        if (this.busy) {
+            return;
+        }
+        this.busy = true;
+        this.flmError = "";
+        paintActions();
+        send(method, path, body, 60L, new Function2() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda31
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit runWith$lambda$61;
+                runWith$lambda$61 = GxTuningPage.runWith$lambda$61(GxTuningPage.this, after, okMsg, (String) obj, (JSONObject) obj2);
+                return runWith$lambda$61;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:16:0x002a, code lost:
+    
+        if (r2 == null) goto L15;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit runWith$lambda$61(final GxTuningPage this$0, final Function1 $after, String $okMsg, String e, final JSONObject o) {
+        String str;
+        String optString;
+        if (e != null) {
+            this$0.busy = false;
+            this$0.flmError = e;
+            this$0.toast(e);
+            this$0.paintFlm();
+            if ($after != null) {
+                $after.invoke(null);
+            }
+        } else {
+            if (o != null && (optString = o.optString("message")) != null) {
+                String str2 = optString;
+                if (StringsKt.isBlank(str2)) {
+                    str2 = null;
+                }
+                str = str2;
+            }
+            str = $okMsg;
+            this$0.toast(str);
+            flmRefresh$default(this$0, false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda42
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit runWith$lambda$61$lambda$60;
+                    runWith$lambda$61$lambda$60 = GxTuningPage.runWith$lambda$61$lambda$60(GxTuningPage.this, $after, o);
+                    return runWith$lambda$61$lambda$60;
+                }
+            }, 1, null);
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit runWith$lambda$61$lambda$60(GxTuningPage this$0, Function1 $after, JSONObject $o) {
+        this$0.busy = false;
+        this$0.paintFlm();
+        if ($after != null) {
+            $after.invoke($o == null ? new JSONObject() : $o);
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    static /* synthetic */ void flmRefresh$default(GxTuningPage gxTuningPage, boolean z, Function0 function0, int i, Object obj) {
+        if ((i & 1) != 0) {
+            z = false;
+        }
+        if ((i & 2) != 0) {
+            function0 = null;
+        }
+        gxTuningPage.flmRefresh(z, function0);
+    }
+
+    private final void flmRefresh(boolean poll, final Function0<Unit> then) {
+        if (poll && (this.flmFetching || this.busy)) {
+            return;
+        }
+        this.flmFetching = true;
+        getJson("/api/flm/workspace", new Function2() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda56
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit flmRefresh$lambda$66;
+                flmRefresh$lambda$66 = GxTuningPage.flmRefresh$lambda$66(GxTuningPage.this, then, (String) obj, (JSONObject) obj2);
+                return flmRefresh$lambda$66;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit flmRefresh$lambda$66(final GxTuningPage this$0, final Function0 $then, final String e, final JSONObject ws) {
+        if (ws != null) {
+            this$0.reports = this$0.arr(ws, "reports");
+            this$0.savedTunes = this$0.arr(ws, "savedTunes");
+            this$0.carFp = this$0.s(ws, "currentCarFingerprint");
+            this$0.activeTrial = ws.optJSONObject("activeTrial");
+            JSONObject optJSONObject = ws.optJSONObject("status");
+            if (optJSONObject == null) {
+                optJSONObject = new JSONObject();
+            }
+            this$0.wsStatus = optJSONObject;
+        }
+        this$0.getJson("/api/flm/status", new Function2() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda58
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit flmRefresh$lambda$66$lambda$65;
+                flmRefresh$lambda$66$lambda$65 = GxTuningPage.flmRefresh$lambda$66$lambda$65(GxTuningPage.this, ws, e, $then, (String) obj, (JSONObject) obj2);
+                return flmRefresh$lambda$66$lambda$65;
+            }
+        });
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit flmRefresh$lambda$66$lambda$65(GxTuningPage this$0, JSONObject $ws, String $e, Function0 $then, String e2, JSONObject st) {
+        this$0.flmFetching = false;
+        if (st != null) {
+            this$0.isOnroad = this$0.truthy(st.opt("isOnroad"));
+            this$0.laneCentering = this$0.truthy(st.opt("laneCentering"));
+            this$0.statusData = st.optJSONObject("status");
+            JSONArray it = st.optJSONArray("savedTunes");
+            if (it != null && it.length() > 0) {
+                this$0.savedTunes = it;
+            }
+            JSONObject it2 = st.optJSONObject("activeTrial");
+            if (it2 != null) {
+                this$0.activeTrial = it2;
+            }
+            JSONArray it3 = st.optJSONArray("reports");
+            if (it3 != null && it3.length() > 0) {
+                this$0.reports = it3;
+            }
+        }
+        this$0.flmError = ($ws == null && st == null) ? $e == null ? e2 == null ? "Failed to load tuning workspace." : e2 : $e : "";
+        this$0.flmLoading = false;
+        this$0.paintFlm();
+        this$0.autoOpenReport();
+        if ($then != null) {
+            $then.invoke();
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void autoOpenReport() {
+        String first;
+        String statusId = s(status(), "reportId");
+        if (!StringsKt.isBlank(statusId) && !Intrinsics.areEqual(statusId, this.lastStatusReportId)) {
+            this.lastStatusReportId = statusId;
+            loadReport(statusId);
+            return;
+        }
+        JSONObject it = this.reports.optJSONObject(0);
+        if (it == null || (first = s(it, "reportId")) == null) {
+            first = "";
+        }
+        if (!StringsKt.isBlank(this.loadedReportId) || StringsKt.isBlank(first)) {
+            return;
+        }
+        loadReport(first);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void loadReport(String id) {
+        if (StringsKt.isBlank(id)) {
+            return;
+        }
+        if (Intrinsics.areEqual(id, this.loadedReportId) && this.report != null) {
+            return;
+        }
+        this.loadedReportId = id;
+        this.reportLoading = true;
+        renderReport();
+        paintReports();
+        paintProfiles();
+        getJson("/api/flm/report/" + enc(id), new Function2() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda19
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit loadReport$lambda$68;
+                loadReport$lambda$68 = GxTuningPage.loadReport$lambda$68(GxTuningPage.this, (String) obj, (JSONObject) obj2);
+                return loadReport$lambda$68;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit loadReport$lambda$68(GxTuningPage this$0, String e, JSONObject o) {
+        this$0.reportLoading = false;
+        if (o != null) {
+            this$0.report = o;
+            this$0.syncFeedback(o);
+            this$0.flmError = "";
+        } else {
+            this$0.report = null;
+            this$0.toast(e == null ? "Failed to load report." : e);
+        }
+        this$0.renderReport();
+        this$0.paintFlm();
+        return Unit.INSTANCE;
+    }
+
+    private final void syncFeedback(JSONObject rep) {
+        JSONObject fb = obj(rep, "feedback");
+        this.fbAccepted.clear();
+        this.fbAccepted.addAll(strings(arr(fb, "acceptedDimensions")));
+        this.fbIgnored.clear();
+        this.fbIgnored.addAll(strings(arr(fb, "ignoredDimensions")));
+        Object opt = fb.opt("notes");
+        String str = opt instanceof String ? (String) opt : null;
+        if (str == null) {
+            str = "";
+        }
+        this.fbNotes = str;
+    }
+
+    private final void paintReports() {
+        LinearLayout linearLayout = this.reportsBox;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("reportsBox");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        List list = objects(this.reports);
+        if (this.flmLoading || list.isEmpty()) {
+            LinearLayout linearLayout3 = this.reportsBox;
+            if (linearLayout3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("reportsBox");
             } else {
-               var3 = 0;
+                linearLayout2 = linearLayout3;
             }
-
-            if (var3 && var1 > 1.0E9) {
-               var22 = this.fmtDate(var1);
-            } else {
-               var22 = "";
+            linearLayout2.addView(empty("No reports yet. Analyze routes to generate findings."));
+            return;
+        }
+        for (JSONObject r : list) {
+            final String id = s(r, "reportId");
+            boolean open = Intrinsics.areEqual(this.loadedReportId, id);
+            String fmtDate = fmtDate(r.opt("createdAt"));
+            String it = s(r, "controlPath");
+            String desc = fmtDate + ((Object) (!StringsKt.isBlank(it) ? " / " + it : ""));
+            GxTuningPage gxTuningPage = this;
+            String s = s(r, "carFingerprint");
+            if (StringsKt.isBlank(s)) {
+                s = "Unknown car";
             }
-
-            line$default(this, var46, "Created", (String)var22, 0, 8, null);
-            line$default(this, (ViewGroup)var9, "Samples", String.valueOf((long)num$default(this, var69.opt("sampleCount"), 0.0, 2, null)), 0, 8, null);
-            line$default(
-               this, (ViewGroup)var9, "Processed segments", String.valueOf((long)num$default(this, var69.opt("processedSegments"), 0.0, 2, null)), 0, 8, null
-            );
-            if (this.truthy(var69.opt("usedQlogFallback"))) {
-               line$default(this, (ViewGroup)var9, "qlog fallback", "Yes", 0, 8, null);
+            String str = s;
+            LinearLayout linearLayout4 = this.reportsBox;
+            if (linearLayout4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("reportsBox");
+                linearLayout4 = null;
             }
-
-            this.comparisonBox = this.box((ViewGroup)var9);
-            this.paintComparison();
-            var22 = this.pathList();
-
-            for (JSONObject var70 : var22) {
-               this.sub(this.s(var70, "title"), (ViewGroup)var9);
-               if (!StringsKt.isBlank(this.s(var70, "description"))) {
-                  GxPage.text$default(this, this.s(var70, "description"), (ViewGroup)var9, 16.0F, 0, false, 24, null);
-               }
-
-               if (!StringsKt.isBlank(this.s(var70, "whySelected"))) {
-                  this.para((ViewGroup)var9, "Why this path:", this.s(var70, "whySelected"));
-               }
-
-               String var73 = this.s(var70, "key");
-               if (Intrinsics.areEqual(var73, this.activePathKey())) {
-                  this.text("Active path", (ViewGroup)var9, 15.0F, CarUi.Companion.getACCENT(), true);
-               } else if (var22.size() > 1) {
-                  GxPage var71 = this;
-                  Pair var78 = TuplesKt.to("Use this path", new GxTuningPage$$ExternalSyntheticLambda48(this, var73));
-                  ViewGroup var74 = (ViewGroup)var9;
-                  GxPage.buttons$default(var71, new Pair[]{var78}, var74, false, 4, null);
-               }
-            }
-
-            var22 = this.strings(this.arr(var8, "addTheseParametersAndStartHere"));
-            if (!((Collection)var22).isEmpty()) {
-               this.sub("Add these and start here", (ViewGroup)var9);
-               bullets$default(this, (ViewGroup)var9, (List)var22, false, 4, null);
-            }
-
-            var22 = this.strings(this.arr(var8, "warnings"));
-            if (!((Collection)var22).isEmpty()) {
-               this.sub("Warnings", (ViewGroup)var9);
-               bullets$default(this, (ViewGroup)var9, (List)var22, false, 4, null);
-            }
-
-            var7 = this.reportBox;
-            var22 = var7;
-            if (var7 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("reportBox");
-               var22 = null;
-            }
-
-            this.header("Findings & feedback", (ViewGroup)var22);
-            var7 = this.reportBox;
-            var22 = var7;
-            if (var7 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("reportBox");
-               var22 = null;
-            }
-
-            var7 = this.card((ViewGroup)var22);
-            GxPage.text$default(this, "Finding decisions save immediately and regenerate trial profiles.", (ViewGroup)var7, 0.0F, 0, false, 28, null);
-            var22 = new EditText((Context)this.getAct());
-            var22.setText(this.fbNotes);
-            var22.setHint("Optional tuning notes");
-            var22.setTextSize(18.0F);
-            var22.setTextColor(CarUi.Companion.getTEXT());
-            var22.setHintTextColor(CarUi.Companion.getDIM());
-            var22.setInputType(147457);
-            var22.setMinLines(2);
-            var22.setGravity(8388659);
-            var22.setBackground((Drawable)this.getUi().rounded(Color.rgb(6, 8, 11), 12, Color.rgb(50, 55, 66)));
-            var22.setPadding(this.getUi().dp(14), this.getUi().dp(10), this.getUi().dp(14), this.getUi().dp(10));
-            var22.addTextChangedListener(new TextWatcher() {
-
-               public void afterTextChanged(Editable var1) {
-                  GxTuningPage var3x;
-                  label11: {
-                     var3x = GxTuningPage.this;
-                     if (var1 != null) {
-                        String var2 = var1.toString();
-                        var4 = var2;
-                        if (var2 != null) {
-                           break label11;
-                        }
-                     }
-
-                     var4 = "";
-                  }
-
-                  var3x.fbNotes = var4;
-               }
-
-               public void beforeTextChanged(CharSequence var1, int var2, int var3x, int var4) {
-               }
-
-               public void onTextChanged(CharSequence var1, int var2, int var3x, int var4) {
-               }
+            GxPage.Row row = GxPage.row$default(gxTuningPage, str, desc, linearLayout4, 0, 8, null);
+            row.button(open ? "Open ✓" : "Open", open, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda9
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit paintReports$lambda$71;
+                    paintReports$lambda$71 = GxTuningPage.paintReports$lambda$71(GxTuningPage.this, id);
+                    return paintReports$lambda$71;
+                }
             });
-            View var51 = (View)var22;
-            LayoutParams var31 = new LayoutParams(-1, -2);
-            var31.topMargin = this.getUi().dp(8);
-            Unit var62 = Unit.INSTANCE;
-            var7.addView(var51, (android.view.ViewGroup.LayoutParams)var31);
-            GxPage var52 = this;
-            Pair var32 = TuplesKt.to("Save Notes", new GxTuningPage$$ExternalSyntheticLambda49(this));
-            ViewGroup var63 = (ViewGroup)var7;
-            GxPage.buttons$default(var52, new Pair[]{var32}, var63, false, 4, null);
-            List var33 = this.suggestions();
-            if (var33.isEmpty()) {
-               var7.addView((View)this.empty("No findings for the active path."));
+            row.getView().setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda10
+                @Override // android.view.View.OnClickListener
+                public final void onClick(View view) {
+                    GxTuningPage.this.loadReport(id);
+                }
+            });
+            if (open) {
+                row.getView().setBackground(getUi().rounded(CarUi.Companion.getCARD_ON(), 14, Integer.valueOf(CarUi.Companion.getACCENT())));
             }
+        }
+    }
 
-            for (JSONObject var79 : var33) {
-               LinearLayout var75 = this.inner((ViewGroup)var7);
-               CharSequence var53 = this.s(var79, "bucket");
-               var22 = var53;
-               if (StringsKt.isBlank(var53)) {
-                  var22 = "finding";
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintReports$lambda$71(GxTuningPage this$0, String $id) {
+        this$0.loadReport($id);
+        return Unit.INSTANCE;
+    }
 
-               this.text(StringsKt.replace$default((String)var22, "_", " ", false, 4, null), (ViewGroup)var75, 18.0F, CarUi.Companion.getTEXT(), true);
-               JSONObject var14 = var79.optJSONObject("evidence");
-               if (var14 != null && (this.truthy(var14.opt("speedBand")) || this.truthy(var14.opt("directionBias")) || this.truthy(var14.opt("eventCount")))) {
-                  GxPage var13 = this;
-                  CharSequence var54 = this.s(var14, "speedBand");
-                  var22 = var54;
-                  if (StringsKt.isBlank(var54)) {
-                     var22 = "mixed";
-                  }
-
-                  CharSequence var64 = this.s(var14, "directionBias");
-                  Object var55 = var64;
-                  if (StringsKt.isBlank(var64)) {
-                     var55 = "center";
-                  }
-
-                  long var4 = (long)num$default(this, var14.opt("eventCount"), 0.0, 2, null);
-                  GxPage.text$default(var13, var22 + " | " + var55 + " | " + var4 + " event(s)", (ViewGroup)var75, 14.0F, 0, false, 24, null);
-               }
-
-               if (!StringsKt.isBlank(this.s(var79, "observedBehavior"))) {
-                  this.para((ViewGroup)var75, "Observed:", this.s(var79, "observedBehavior"));
-               }
-
-               if (!StringsKt.isBlank(this.s(var79, "likelyInterpretation"))) {
-                  this.para((ViewGroup)var75, "Interpretation:", this.s(var79, "likelyInterpretation"));
-               }
-
-               if (!StringsKt.isBlank(this.s(var79, "primaryAdjustment"))) {
-                  this.para((ViewGroup)var75, "Primary adjustment:", this.s(var79, "primaryAdjustment"));
-               }
-
-               if (!StringsKt.isBlank(this.s(var79, "whatNotToTouchYet"))) {
-                  this.para((ViewGroup)var75, "What not to touch yet:", this.s(var79, "whatNotToTouchYet"));
-               }
-
-               if (!StringsKt.isBlank(this.s(var79, "ifThatWasWrong"))) {
-                  this.para((ViewGroup)var75, "Next thing to try:", this.s(var79, "ifThatWasWrong"));
-               }
-
-               JSONObject var65 = var79.optJSONObject("currentVsSuggested");
-               if (var65 != null) {
-                  ViewGroup var36 = (ViewGroup)var75;
-                  var3 = CarUi.Companion.getTEXT();
-                  this.text("Current vs suggested:", var36, 15.0F, var3, true).setPadding(0, this.getUi().dp(8), 0, 0);
-                  if (Intrinsics.areEqual(this.s(var65, "type"), "friction_curve")) {
-                     ViewGroup var56 = (ViewGroup)var75;
-                     String var37 = this.s(var65, "family");
-                     String var80 = this.curveStr(var65.optJSONArray("current"));
-                     String var66 = this.curveStr(var65.optJSONArray("suggested"));
-                     this.mono(var56, var37 + " " + var80 + " → " + var66);
-                  } else {
-                     ViewGroup var81 = (ViewGroup)var75;
-                     CharSequence var57 = this.s(var65, "paramKey");
-                     var22 = var57;
-                     if (StringsKt.isBlank(var57)) {
-                        var22 = this.s(var65, "symbol");
-                     }
-
-                     String var58 = this.fmtVal(var65.opt("current"));
-                     String var67 = this.fmtVal(var65.opt("suggested"));
-                     this.mono(var81, var22 + " " + var58 + " → " + var67);
-                  }
-               }
-
-               String var68 = this.s(var79, "dimensionId");
-               String var39;
-               if (this.fbAccepted.contains(var68)) {
-                  var39 = "accepted";
-               } else if (this.fbIgnored.contains(var68)) {
-                  var39 = "ignored";
-               } else {
-                  var39 = "unset";
-               }
-
-               LinearLayout var76 = this.btnBar((ViewGroup)var75);
-               String var59;
-               if (Intrinsics.areEqual(var39, "accepted")) {
-                  var59 = "Matched";
-               } else {
-                  var59 = "Matches Experience";
-               }
-
-               this.barBtn(var76, var59, Intrinsics.areEqual(var39, "accepted"), new GxTuningPage$$ExternalSyntheticLambda50(this, var68));
-               String var60;
-               if (Intrinsics.areEqual(var39, "ignored")) {
-                  var60 = "Ignored";
-               } else {
-                  var60 = "Ignore";
-               }
-
-               TextView var61 = barBtn$default(this, var76, var60, false, new GxTuningPage$$ExternalSyntheticLambda51(this, var68), 4, null);
-               if (Intrinsics.areEqual(var39, "ignored")) {
-                  var61.setTextColor(Color.rgb(240, 110, 130));
-               }
+    private final String fmtVal(Object v) {
+        if (v instanceof JSONArray) {
+            return curveStr((JSONArray) v);
+        }
+        if (v instanceof Boolean) {
+            return ((Boolean) v).booleanValue() ? "On" : "Off";
+        }
+        if (v == null || Intrinsics.areEqual(v, JSONObject.NULL)) {
+            return "-";
+        }
+        if (v instanceof Number) {
+            double doubleValue = ((Number) v).doubleValue();
+            return !Double.isInfinite(doubleValue) && !Double.isNaN(doubleValue) ? f(((Number) v).doubleValue(), 3) : ((Number) v).toString();
+        }
+        if (!(v instanceof String)) {
+            return v.toString();
+        }
+        Double valueOf = StringsKt.isBlank((CharSequence) v) ? Double.valueOf(0.0d) : StringsKt.toDoubleOrNull(StringsKt.trim((CharSequence) v).toString());
+        if (valueOf != null) {
+            double it = valueOf.doubleValue();
+            String f = f(it, 3);
+            if (f != null) {
+                return f;
             }
-         }
-      }
-   }
+        }
+        return (String) v;
+    }
 
-   private static final Unit renderReport$lambda$101(GxTuningPage var0, String var1) {
-      var0.toggleFeedback(var1, "accepted");
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderReport$lambda$102(GxTuningPage var0, String var1) {
-      var0.toggleFeedback(var1, "ignored");
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderReport$lambda$88(GxTuningPage var0, JSONObject var1) {
-      var0.deleteReport(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderReport$lambda$92(GxTuningPage var0, String var1) {
-      var0.selectPath(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderReport$lambda$95(GxTuningPage var0) {
-      var0.saveFeedback();
-      return Unit.INSTANCE;
-   }
-
-   private final void renderRoute(String var1) {
-      LinearLayout var9 = this.routeBoxes.get(var1);
-      if (var9 != null) {
-         Iterator var8 = this.routes.iterator();
-
-         Object var7;
-         do {
-            if (!var8.hasNext()) {
-               var7 = null;
-               break;
+    private final String curveStr(final JSONArray a) {
+        return "[" + CollectionsKt.joinToString$default(RangesKt.until(0, a != null ? a.length() : 0), ", ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda54
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                CharSequence curveStr$lambda$74;
+                curveStr$lambda$74 = GxTuningPage.curveStr$lambda$74(GxTuningPage.this, a, ((Integer) obj).intValue());
+                return curveStr$lambda$74;
             }
+        }, 30, null) + "]";
+    }
 
-            var7 = (GxPage.Row)var8.next();
-         } while (!Intrinsics.areEqual(this.s((JSONObject)var7, "name"), var1));
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final CharSequence curveStr$lambda$74(GxTuningPage this$0, JSONArray $a, int it) {
+        Intrinsics.checkNotNull($a);
+        return this$0.fmtNum3($a.opt(it));
+    }
 
-         JSONObject var10 = (JSONObject)var7;
-         if (var10 != null) {
-            var9.removeAllViews();
-            boolean var6 = this.selectedRoutes.contains(var1);
-            GxPage var24 = this;
-            var7 = this.fmtDate(var10.opt("timestamp"));
-            String var28 = this.fmtLen(var10);
-            int var3 = this.routeSelectedCount(var1);
-            var7 = GxPage.row$default(var24, (String)var7, var1 + "\n" + var28 + " · " + var3 + " selected", (ViewGroup)var9, 0, 8, null);
-            if (var6) {
-               var7.getView().setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 14, CarUi.Companion.getACCENT()));
+    private final String fmtNum3(Object v) {
+        double d = num(v, Double.NaN);
+        return Double.isNaN(d) ? "NaN" : f(d, 3);
+    }
+
+    private final List<JSONObject> pathList() {
+        JSONObject rep = this.report;
+        if (rep == null) {
+            return CollectionsKt.emptyList();
+        }
+        JSONArray p = rep.optJSONArray("paths");
+        if (p != null && p.length() > 0) {
+            return objects(p);
+        }
+        JSONObject jSONObject = new JSONObject();
+        String s = s(rep, "primaryPathKey");
+        if (StringsKt.isBlank(s)) {
+            s = "cleanup_pass";
+        }
+        return CollectionsKt.listOf(jSONObject.put("key", s).put("title", "Recommendations").put("description", "").put("whySelected", "").put("isPrimary", true).put("suggestions", arr(rep, "suggestions")).put("profiles", arr(rep, "profiles")));
+    }
+
+    private final String activePathKey() {
+        JSONObject it = this.report;
+        if (it != null) {
+            String s = s(it, "selectedPathKey");
+            if (StringsKt.isBlank(s)) {
+                s = s(it, "primaryPathKey");
             }
+            String str = s;
+            if (str != null) {
+                return str;
+            }
+        }
+        return "";
+    }
 
-            Switch var19 = var7.switch_(var6, new GxTuningPage$$ExternalSyntheticLambda16(this, var1));
-            this.routeSwitches.put(var1, var19);
-            int var4 = this.selectedSegmentCount();
-            var3 = this.maxSegments;
-            boolean var5 = false;
-            boolean var14;
-            if (var4 >= var3) {
-               var14 = 1;
+    private final JSONObject primaryPath() {
+        Object obj;
+        Object element$iv;
+        List ps = pathList();
+        String k = activePathKey();
+        List $this$firstOrNull$iv = ps;
+        Iterator it = $this$firstOrNull$iv.iterator();
+        while (true) {
+            obj = null;
+            if (!it.hasNext()) {
+                element$iv = null;
+                break;
+            }
+            element$iv = it.next();
+            JSONObject it2 = (JSONObject) element$iv;
+            if (Intrinsics.areEqual(s(it2, "key"), k)) {
+                break;
+            }
+        }
+        JSONObject jSONObject = (JSONObject) element$iv;
+        if (jSONObject != null) {
+            return jSONObject;
+        }
+        List $this$firstOrNull$iv2 = ps;
+        Iterator it3 = $this$firstOrNull$iv2.iterator();
+        while (true) {
+            if (!it3.hasNext()) {
+                break;
+            }
+            Object element$iv2 = it3.next();
+            JSONObject it4 = (JSONObject) element$iv2;
+            if (truthy(it4.opt("isPrimary"))) {
+                obj = element$iv2;
+                break;
+            }
+        }
+        JSONObject jSONObject2 = (JSONObject) obj;
+        return jSONObject2 == null ? (JSONObject) CollectionsKt.firstOrNull(ps) : jSONObject2;
+    }
+
+    private final List<JSONObject> suggestions() {
+        JSONObject p = primaryPath();
+        return objects(p != null ? arr(p, "suggestions") : arr(this.report, "suggestions"));
+    }
+
+    private final List<JSONObject> profiles() {
+        List l = objects(arr(primaryPath(), "profiles"));
+        return !l.isEmpty() ? l : objects(arr(this.report, "profiles"));
+    }
+
+    private final boolean angleControl() {
+        JSONObject it;
+        JSONObject jSONObject = this.report;
+        return Intrinsics.areEqual((jSONObject == null || (it = jSONObject.optJSONObject("car")) == null) ? null : s(it, "controlPath"), "angle");
+    }
+
+    /* compiled from: GxTuning.kt */
+    private static final /* data */ class CmpRow {
+        private final Object current;
+        private final boolean curve;
+        private final String key;
+        private final String label;
+        private final Object stock;
+
+        public static /* synthetic */ CmpRow copy$default(CmpRow cmpRow, String str, String str2, boolean z, Object obj, Object obj2, int i, Object obj3) {
+            if ((i & 1) != 0) {
+                str = cmpRow.key;
+            }
+            if ((i & 2) != 0) {
+                str2 = cmpRow.label;
+            }
+            String str3 = str2;
+            if ((i & 4) != 0) {
+                z = cmpRow.curve;
+            }
+            boolean z2 = z;
+            if ((i & 8) != 0) {
+                obj = cmpRow.stock;
+            }
+            Object obj4 = obj;
+            if ((i & 16) != 0) {
+                obj2 = cmpRow.current;
+            }
+            return cmpRow.copy(str, str3, z2, obj4, obj2);
+        }
+
+        /* renamed from: component1, reason: from getter */
+        public final String getKey() {
+            return this.key;
+        }
+
+        /* renamed from: component2, reason: from getter */
+        public final String getLabel() {
+            return this.label;
+        }
+
+        /* renamed from: component3, reason: from getter */
+        public final boolean getCurve() {
+            return this.curve;
+        }
+
+        /* renamed from: component4, reason: from getter */
+        public final Object getStock() {
+            return this.stock;
+        }
+
+        /* renamed from: component5, reason: from getter */
+        public final Object getCurrent() {
+            return this.current;
+        }
+
+        public final CmpRow copy(String key, String label, boolean curve, Object stock, Object current) {
+            Intrinsics.checkNotNullParameter(key, "key");
+            Intrinsics.checkNotNullParameter(label, "label");
+            return new CmpRow(key, label, curve, stock, current);
+        }
+
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (!(other instanceof CmpRow)) {
+                return false;
+            }
+            CmpRow cmpRow = (CmpRow) other;
+            return Intrinsics.areEqual(this.key, cmpRow.key) && Intrinsics.areEqual(this.label, cmpRow.label) && this.curve == cmpRow.curve && Intrinsics.areEqual(this.stock, cmpRow.stock) && Intrinsics.areEqual(this.current, cmpRow.current);
+        }
+
+        public int hashCode() {
+            return (((((((this.key.hashCode() * 31) + this.label.hashCode()) * 31) + Boolean.hashCode(this.curve)) * 31) + (this.stock == null ? 0 : this.stock.hashCode())) * 31) + (this.current != null ? this.current.hashCode() : 0);
+        }
+
+        public String toString() {
+            return "CmpRow(key=" + this.key + ", label=" + this.label + ", curve=" + this.curve + ", stock=" + this.stock + ", current=" + this.current + ")";
+        }
+
+        public CmpRow(String key, String label, boolean curve, Object stock, Object current) {
+            Intrinsics.checkNotNullParameter(key, "key");
+            Intrinsics.checkNotNullParameter(label, "label");
+            this.key = key;
+            this.label = label;
+            this.curve = curve;
+            this.stock = stock;
+            this.current = current;
+        }
+
+        public final Object getCurrent() {
+            return this.current;
+        }
+
+        public final boolean getCurve() {
+            return this.curve;
+        }
+
+        public final String getKey() {
+            return this.key;
+        }
+
+        public final String getLabel() {
+            return this.label;
+        }
+
+        public final Object getStock() {
+            return this.stock;
+        }
+    }
+
+    private final List<CmpRow> comparisonRows() {
+        JSONArray jSONArray;
+        JSONObject rep = this.report;
+        if (rep == null) {
+            return CollectionsKt.emptyList();
+        }
+        JSONObject stock = obj(rep, "stockParams");
+        JSONObject current = obj(rep, "currentParams");
+        JSONObject trial = obj(this.activeTrial, "appliedGenericParams");
+        boolean angle = angleControl();
+        List<Pair> pairs = angle ? CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Auto steer delay", "UseAutoSteerDelay"), TuplesKt.to("Steer delay", "SteerDelay"), TuplesKt.to("Steer ratio", "SteerRatio")}) : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Lat accel", "SteerLatAccel"), TuplesKt.to("Friction", "SteerFriction"), TuplesKt.to("Auto steer delay", "UseAutoSteerDelay"), TuplesKt.to("Steer delay", "SteerDelay"), TuplesKt.to("Steer ratio", "SteerRatio"), TuplesKt.to("KP", "SteerKP")});
+        ArrayList rows = new ArrayList();
+        for (Pair pair : pairs) {
+            String label = (String) pair.component1();
+            String key = (String) pair.component2();
+            rows.add(new CmpRow(key, label, false, stock.opt(key), trial.has(key) ? trial.opt(key) : current.opt(key)));
+        }
+        if (angle) {
+            return rows;
+        }
+        JSONObject ovFriction = obj(this.activeTrial, "appliedFrictionThresholds");
+        for (Pair<String, Object> pair2 : entries(obj(stock, "FLMBaseFrictionThresholds"))) {
+            String family = pair2.component1();
+            Object payload = pair2.component2();
+            JSONObject jSONObject = payload instanceof JSONObject ? (JSONObject) payload : null;
+            if (jSONObject == null || (jSONArray = jSONObject.optJSONArray("values")) == null) {
+                jSONArray = new JSONArray();
+            }
+            JSONArray pv = jSONArray;
+            JSONObject optJSONObject = ovFriction.optJSONObject(family);
+            JSONArray ov = optJSONObject != null ? optJSONObject.optJSONArray("values") : null;
+            rows.add(new CmpRow("friction-" + family, family + " friction threshold", true, pv, ov == null ? pv : ov));
+        }
+        JSONObject stockKnobs = obj(stock, "FLMVehicleKnobs");
+        for (Pair<String, Object> pair3 : entries(obj(this.activeTrial, "appliedVehicleKnobs"))) {
+            String symbol = pair3.component1();
+            Object value = pair3.component2();
+            if (stockKnobs.has(symbol)) {
+                rows.add(new CmpRow(symbol, CollectionsKt.joinToString$default(CollectionsKt.drop(StringsKt.split$default((CharSequence) symbol, new String[]{"."}, false, 0, 6, (Object) null), 1), ".", null, null, 0, null, null, 62, null), false, stockKnobs.opt(symbol), value));
+            }
+        }
+        return rows;
+    }
+
+    private final void paintComparison() {
+        String st;
+        String cu;
+        LinearLayout box = this.comparisonBox;
+        if (box == null) {
+            return;
+        }
+        box.removeAllViews();
+        List rows = comparisonRows();
+        if (rows.isEmpty()) {
+            return;
+        }
+        sub(angleControl() ? "Applicable Angle Settings" : "Stock vs Current FLM", box);
+        if (!angleControl()) {
+            GxPage.text$default(this, "Active trial values are shown in the current column when one is applied.", box, 0.0f, 0, false, 28, null);
+        }
+        for (CmpRow r : rows) {
+            LinearLayout l = new LinearLayout(getAct());
+            l.setOrientation(0);
+            l.setGravity(16);
+            l.setPadding(0, getUi().dp(6), 0, getUi().dp(6));
+            TextView $this$paintComparison_u24lambda_u2482 = new TextView(getAct());
+            $this$paintComparison_u24lambda_u2482.setText(r.getLabel());
+            $this$paintComparison_u24lambda_u2482.setTextSize(17.0f);
+            $this$paintComparison_u24lambda_u2482.setTextColor(CarUi.Companion.getDIM());
+            l.addView($this$paintComparison_u24lambda_u2482, new LinearLayout.LayoutParams(0, -2, 1.0f));
+            LinearLayout right = new LinearLayout(getAct());
+            right.setOrientation(1);
+            right.setGravity(8388613);
+            if (r.getCurve()) {
+                Object stock = r.getStock();
+                st = curveStr(stock instanceof JSONArray ? (JSONArray) stock : null);
             } else {
-               var14 = 0;
+                st = fmtVal(r.getStock());
             }
-
-            if (var6 || !var14) {
-               var5 = true;
-            }
-
-            var19.setEnabled(var5);
-            float var2;
-            if (var19.isEnabled()) {
-               var2 = 1.0F;
+            if (r.getCurve()) {
+                Object current = r.getCurrent();
+                cu = curveStr(current instanceof JSONArray ? (JSONArray) current : null);
             } else {
-               var2 = 0.4F;
+                cu = fmtVal(r.getCurrent());
             }
+            TextView $this$paintComparison_u24lambda_u2484 = new TextView(getAct());
+            $this$paintComparison_u24lambda_u2484.setText("stock " + st);
+            $this$paintComparison_u24lambda_u2484.setTextSize(14.0f);
+            $this$paintComparison_u24lambda_u2484.setTextColor(CarUi.Companion.getDIM());
+            $this$paintComparison_u24lambda_u2484.setGravity(8388613);
+            right.addView($this$paintComparison_u24lambda_u2484);
+            TextView $this$paintComparison_u24lambda_u2485 = new TextView(getAct());
+            $this$paintComparison_u24lambda_u2485.setText(cu);
+            $this$paintComparison_u24lambda_u2485.setTextSize(17.0f);
+            $this$paintComparison_u24lambda_u2485.setTextColor(CarUi.Companion.getACCENT());
+            $this$paintComparison_u24lambda_u2485.setTypeface(Typeface.DEFAULT_BOLD);
+            $this$paintComparison_u24lambda_u2485.setGravity(8388613);
+            right.addView($this$paintComparison_u24lambda_u2485);
+            l.addView(right, new LinearLayout.LayoutParams(0, -2, 1.4f));
+            box.addView(l);
+        }
+    }
 
-            var19.setAlpha(var2);
-            if (var6) {
-               GxTuningPage.Bounds var29 = this.bounds(var1);
-               Pair var25 = this.segmentRanges.get(var1);
-               Pair var20 = var25;
-               if (var25 == null) {
-                  var20 = TuplesKt.to("", "");
-               }
-
-               String var12 = (String)var20.component1();
-               String var11 = (String)var20.component2();
-               var4 = var29.getFirst();
-               var14 = var29.getLast();
-               StringBuilder var21 = new StringBuilder().append("Segments ").append(var4);
-               String var26 = "–";
-               GxPage.Row var30 = this.row("Segments", var21.append("–").append(var14).append(". Blank uses the whole route.").toString(), (ViewGroup)var9, 1);
-               CharSequence var27 = var12;
-               var7 = var27;
-               if (StringsKt.isBlank(var27)) {
-                  var7 = "–";
-               }
-
-               GxPage.Row.button$default(var30, "First: " + var7, false, new GxTuningPage$$ExternalSyntheticLambda17(this, var1), 2, null);
-               var7 = var11;
-               if (StringsKt.isBlank(var7)) {
-                  var7 = var26;
-               }
-
-               GxPage.Row.button$default(var30, "Last: " + var7, false, new GxTuningPage$$ExternalSyntheticLambda18(this, var1), 2, null);
+    /* JADX WARN: Code restructure failed: missing block: B:26:0x005f, code lost:
+    
+        if (r0 == null) goto L28;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void renderReport() {
+        String str;
+        LinearLayout fc;
+        JSONObject cvs;
+        String s;
+        final GxTuningPage gxTuningPage = this;
+        if (gxTuningPage.flmBuilt) {
+            LinearLayout linearLayout = gxTuningPage.reportBox;
+            if (linearLayout == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("reportBox");
+                linearLayout = null;
             }
-         }
-      }
-   }
-
-   private static final Unit renderRoute$lambda$130(GxTuningPage var0, String var1, boolean var2) {
-      var0.toggleRoute(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderRoute$lambda$132(GxTuningPage var0, String var1) {
-      var0.editRange(var1, true);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderRoute$lambda$134(GxTuningPage var0, String var1) {
-      var0.editRange(var1, false);
-      return Unit.INSTANCE;
-   }
-
-   private final void renderRoutesAll() {
-      if (this.flmBuilt) {
-         LinearLayout var2 = this.routesBox;
-         LinearLayout var1 = var2;
-         if (var2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("routesBox");
-            var1 = null;
-         }
-
-         var1.removeAllViews();
-         this.routeBoxes.clear();
-         this.routeSwitches.clear();
-         if (!this.loadingRoutes) {
-            Iterator var3 = this.routes.iterator();
-            Intrinsics.checkNotNullExpressionValue(var3, "iterator(...)");
-
-            while (var3.hasNext()) {
-               Object var6 = var3.next();
-               Intrinsics.checkNotNullExpressionValue(var6, "next(...)");
-               String var5 = this.s((JSONObject)var6, "name");
-               Map var4 = this.routeBoxes;
-               var2 = this.routesBox;
-               var6 = var2;
-               if (var2 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("routesBox");
-                  var6 = null;
-               }
-
-               var4.put(var5, this.box((ViewGroup)var6));
-               this.renderRoute(var5);
+            linearLayout.removeAllViews();
+            gxTuningPage.comparisonBox = null;
+            final JSONObject rep = gxTuningPage.report;
+            if (rep == null || gxTuningPage.reportLoading) {
+                return;
             }
-         }
-
-         this.afterSelectionChange();
-      }
-   }
-
-   private final boolean rollbackUnavailable() {
-      JSONObject var2 = this.activeTrial;
-      boolean var1 = false;
-      if (var2 != null) {
-         var1 = Intrinsics.areEqual(var2.opt("rollbackAvailable"), false);
-      }
-
-      return var1;
-   }
-
-   private final int routeSelectedCount(String var1) {
-      GxTuningPage.Bounds var12 = this.bounds(var1);
-      int var9 = var12.getCount();
-      int var8 = 0;
-      if (var9 == 0) {
-         return 0;
-      } else {
-         Pair var11 = this.segmentRanges.get(var1);
-         Pair var13 = var11;
-         if (var11 == null) {
-            var13 = TuplesKt.to("", "");
-         }
-
-         String var19 = (String)var13.component1();
-         var1 = (String)var13.component2();
-         double var6 = var12.getLast();
-         double var4 = var12.getFirst();
-         double var2;
-         if (StringsKt.isBlank(var19)) {
-            var2 = var12.getFirst();
-         } else {
-            var2 = this.num(var19, var12.getFirst());
-         }
-
-         var9 = (int)Math.min(var6, Math.max(var4, var2));
-         var4 = var12.getFirst();
-         var6 = var12.getLast();
-         if (StringsKt.isBlank(var1)) {
-            var2 = var12.getLast();
-         } else {
-            var2 = this.num(var1, var12.getLast());
-         }
-
-         int var10 = (int)Math.max(var4, Math.min(var6, var2));
-         if (var10 >= var9) {
-            var8 = var10 - var9 + 1;
-         }
-
-         return var8;
-      }
-   }
-
-   private final void runWith(String var1, String var2, JSONObject var3, String var4, Function1<? super JSONObject, Unit> var5) {
-      if (!this.busy) {
-         this.busy = true;
-         this.flmError = "";
-         this.paintActions();
-         this.send(var1, var2, var3, 60L, new GxTuningPage$$ExternalSyntheticLambda31(this, var5, var4));
-      }
-   }
-
-   // $VF: synthetic method
-   static void runWith$default(GxTuningPage var0, String var1, String var2, JSONObject var3, String var4, Function1 var5, int var6, Object var7) {
-      if ((var6 & 16) != 0) {
-         var5 = null;
-      }
-
-      var0.runWith(var1, var2, var3, var4, var5);
-   }
-
-   private static final Unit runWith$lambda$61(GxTuningPage var0, Function1 var1, String var2, String var3, JSONObject var4) {
-      if (var3 != null) {
-         var0.busy = false;
-         var0.flmError = var3;
-         var0.toast(var3);
-         var0.paintFlm();
-         if (var1 != null) {
-            var1.invoke(null);
-         }
-      } else {
-         label22: {
-            if (var4 != null) {
-               var3 = var4.optString("message");
-               if (var3 != null) {
-                  CharSequence var5 = var3;
-                  CharSequence var7 = var5;
-                  if (StringsKt.isBlank(var5)) {
-                     var7 = null;
-                  }
-
-                  String var9 = (String)var7;
-                  var3 = var9;
-                  if (var9 != null) {
-                     break label22;
-                  }
-               }
+            LinearLayout linearLayout2 = gxTuningPage.reportBox;
+            if (linearLayout2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("reportBox");
+                linearLayout2 = null;
             }
-
-            var3 = var2;
-         }
-
-         var0.toast(var3);
-         flmRefresh$default(var0, false, new GxTuningPage$$ExternalSyntheticLambda42(var0, var1, var4), 1, null);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit runWith$lambda$61$lambda$60(GxTuningPage var0, Function1 var1, JSONObject var2) {
-      var0.busy = false;
-      var0.paintFlm();
-      if (var1 != null) {
-         if (var2 == null) {
-            var2 = new JSONObject();
-         }
-
-         var1.invoke(var2);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final String s(JSONObject var1, String var2) {
-      String var4 = "";
-      String var3 = var4;
-      if (var1 != null) {
-         label20: {
-            if (var1.has(var2) && !var1.isNull(var2)) {
-               Object var5 = var1.opt(var2);
-               if (var5 != null) {
-                  var2 = var5.toString();
-                  var6 = var2;
-                  if (var2 != null) {
-                     break label20;
-                  }
-               }
+            gxTuningPage.header("Report Summary", linearLayout2);
+            LinearLayout linearLayout3 = gxTuningPage.reportBox;
+            if (linearLayout3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("reportBox");
+                linearLayout3 = null;
             }
-
-            var6 = "";
-         }
-
-         if (var6 == null) {
-            var3 = var4;
-         } else {
-            var3 = var6;
-         }
-      }
-
-      return var3;
-   }
-
-   private final void saveCurrent() {
-      JSONObject var1 = this.activeTrial;
-      if (var1 != null) {
-         if (!this.busy) {
-            CharSequence var2 = this.s(var1, "profileLabel");
-            var1 = var2;
-            if (StringsKt.isBlank(var2)) {
-               var1 = this.carFp;
+            LinearLayout c = gxTuningPage.card(linearLayout3);
+            LinearLayout linearLayout4 = c;
+            JSONObject it = rep.optJSONObject("car");
+            if (it != null && (s = gxTuningPage.s(it, "carFingerprint")) != null) {
+                String str2 = s;
+                if (StringsKt.isBlank(str2)) {
+                    str2 = null;
+                }
+                str = str2;
             }
-
-            var2 = (CharSequence)var1;
-            var1 = var2;
-            if (StringsKt.isBlank(var2)) {
-               var1 = "Saved Tune";
+            str = "Report";
+            LinearLayout h = headLine$default(this, linearLayout4, str, 0, 4, null);
+            headBtn$default(this, h, "Delete report", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda47
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderReport$lambda$88;
+                    renderReport$lambda$88 = GxTuningPage.renderReport$lambda$88(GxTuningPage.this, rep);
+                    return renderReport$lambda$88;
+                }
+            }, 4, null).setTextColor(Color.rgb(240, 110, 130));
+            JSONObject car = gxTuningPage.obj(rep, "car");
+            JSONObject summary = gxTuningPage.obj(rep, "summary");
+            LinearLayout linearLayout5 = c;
+            String s2 = gxTuningPage.s(car, "carFingerprint");
+            if (StringsKt.isBlank(s2)) {
+                s2 = "Unknown";
             }
-
-            String var5 = (String)var1;
-            GxPage.prompt$default(this, "Save Current Tune", "Name this tune...", var5, 0, null, new GxTuningPage$$ExternalSyntheticLambda39(this), 24, null);
-         }
-      }
-   }
-
-   private static final Unit saveCurrent$lambda$58(GxTuningPage var0, String var1) {
-      Intrinsics.checkNotNullParameter(var1, "raw");
-      var1 = StringsKt.trim(var1).toString();
-      boolean var2;
-      if (var1.length() == 0) {
-         var2 = true;
-      } else {
-         var2 = false;
-      }
-
-      if (var2) {
-         var0.toast("A name is required.");
-         return Unit.INSTANCE;
-      } else {
-         runWith$default(var0, "POST", "/api/flm/saved-tunes", new JSONObject().put("name", var1), "Tune saved.", null, 16, null);
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final void saveFeedback() {
-      JSONObject var1 = this.report;
-      if (var1 != null) {
-         String var2 = this.s(var1, "reportId");
-         if (!StringsKt.isBlank(var2) && !this.busy) {
-            this.busy = true;
-            this.paintActions();
-            this.send(
-               "POST",
-               "/api/flm/feedback",
-               new JSONObject()
-                  .put("reportId", var2)
-                  .put("acceptedDimensions", new JSONArray(CollectionsKt.toList(this.fbAccepted)))
-                  .put("ignoredDimensions", new JSONArray(CollectionsKt.toList(this.fbIgnored)))
-                  .put("notes", this.fbNotes),
-               60L,
-               new GxTuningPage$$ExternalSyntheticLambda52(this)
-            );
-         }
-      }
-   }
-
-   private static final Unit saveFeedback$lambda$114(GxTuningPage var0, String var1, JSONObject var2) {
-      if (var1 != null) {
-         var0.busy = false;
-         CharSequence var10 = var1;
-         Object var7 = var10;
-         if (StringsKt.isBlank(var10)) {
-            var7 = "Failed to save feedback.";
-         }
-
-         var0.toast((String)var7);
-         var0.paintFlm();
-         return Unit.INSTANCE;
-      } else {
-         if (var2 != null) {
-            JSONObject var3 = var2.optJSONObject("report");
-            if (var3 != null) {
-               var0.report = var3;
-               var0.syncFeedback(var3);
-               var0.renderReport();
+            line$default(this, linearLayout5, "Car", s2, 0, 8, null);
+            LinearLayout linearLayout6 = c;
+            String s3 = gxTuningPage.s(car, "controlPath");
+            if (StringsKt.isBlank(s3)) {
+                s3 = "unknown";
             }
-         }
-
-         label28: {
-            if (var2 != null) {
-               var1 = var2.optString("message");
-               if (var1 != null) {
-                  CharSequence var8 = var1;
-                  CharSequence var5 = var8;
-                  if (StringsKt.isBlank(var8)) {
-                     var5 = null;
-                  }
-
-                  String var9 = (String)var5;
-                  var1 = var9;
-                  if (var9 != null) {
-                     break label28;
-                  }
-               }
+            line$default(this, linearLayout6, "Control path", s3, 0, 8, null);
+            LinearLayout linearLayout7 = c;
+            double it2 = gxTuningPage.num(rep.opt("createdAt"), Double.NaN);
+            line$default(this, linearLayout7, "Created", (!(!Double.isInfinite(it2) && !Double.isNaN(it2)) || it2 <= 1.0E9d) ? "" : gxTuningPage.fmtDate(Double.valueOf(it2)), 0, 8, null);
+            line$default(this, c, "Samples", String.valueOf((long) num$default(this, summary.opt("sampleCount"), 0.0d, 2, null)), 0, 8, null);
+            line$default(this, c, "Processed segments", String.valueOf((long) num$default(this, summary.opt("processedSegments"), 0.0d, 2, null)), 0, 8, null);
+            if (gxTuningPage.truthy(summary.opt("usedQlogFallback"))) {
+                line$default(this, c, "qlog fallback", "Yes", 0, 8, null);
             }
-
-            var1 = "Feedback saved.";
-         }
-
-         var0.toast(var1);
-         flmRefresh$default(var0, false, new GxTuningPage$$ExternalSyntheticLambda69(var0), 1, null);
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final Unit saveFeedback$lambda$114$lambda$113(GxTuningPage var0) {
-      var0.busy = false;
-      var0.paintFlm();
-      return Unit.INSTANCE;
-   }
-
-   private final void selectFirstSegments() {
-      this.selectedRoutes.clear();
-      this.segmentRanges.clear();
-      int var1 = this.maxSegments;
-      Iterator var3 = this.routes.iterator();
-      Intrinsics.checkNotNullExpressionValue(var3, "iterator(...)");
-
-      while (var3.hasNext()) {
-         Object var4 = var3.next();
-         Intrinsics.checkNotNullExpressionValue(var4, "next(...)");
-         var4 = (JSONObject)var4;
-         if (var1 <= 0) {
-            break;
-         }
-
-         String var5 = this.s((JSONObject)var4, "name");
-         var4 = this.bounds(var5);
-         if (((GxTuningPage.Bounds)var4).getCount() != 0) {
-            int var2 = Math.min(((GxTuningPage.Bounds)var4).getCount(), var1);
-            this.selectedRoutes.add(var5);
-            if (var2 < ((GxTuningPage.Bounds)var4).getCount()) {
-               this.segmentRanges
-                  .put(
-                     var5,
-                     TuplesKt.to(String.valueOf(((GxTuningPage.Bounds)var4).getFirst()), String.valueOf(((GxTuningPage.Bounds)var4).getFirst() + var2 - 1))
-                  );
+            gxTuningPage.comparisonBox = gxTuningPage.box(c);
+            paintComparison();
+            List paths = pathList();
+            for (JSONObject p : paths) {
+                gxTuningPage.sub(gxTuningPage.s(p, "title"), c);
+                if (!StringsKt.isBlank(gxTuningPage.s(p, "description"))) {
+                    GxPage.text$default(gxTuningPage, gxTuningPage.s(p, "description"), c, 16.0f, 0, false, 24, null);
+                }
+                if (!StringsKt.isBlank(gxTuningPage.s(p, "whySelected"))) {
+                    gxTuningPage.para(c, "Why this path:", gxTuningPage.s(p, "whySelected"));
+                }
+                final String key = gxTuningPage.s(p, "key");
+                if (Intrinsics.areEqual(key, activePathKey())) {
+                    text("Active path", c, 15.0f, CarUi.Companion.getACCENT(), true);
+                } else if (paths.size() > 1) {
+                    GxPage.buttons$default(gxTuningPage, new Pair[]{TuplesKt.to("Use this path", new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda48
+                        @Override // kotlin.jvm.functions.Function0
+                        public final Object invoke() {
+                            Unit renderReport$lambda$92;
+                            renderReport$lambda$92 = GxTuningPage.renderReport$lambda$92(GxTuningPage.this, key);
+                            return renderReport$lambda$92;
+                        }
+                    })}, c, false, 4, null);
+                }
             }
-
-            var1 -= var2;
-         }
-      }
-
-      this.renderRoutesAll();
-   }
-
-   private final void selectPath(String var1) {
-      JSONObject var2 = this.report;
-      if (var2 != null) {
-         String var3 = this.s(var2, "reportId");
-         if (!StringsKt.isBlank(var3) && !Intrinsics.areEqual(var1, this.activePathKey())) {
-            String var4 = this.enc(var3);
-            this.runWith(
-               "POST",
-               "/api/flm/report/" + var4 + "/path",
-               new JSONObject().put("pathKey", var1),
-               "Path selected.",
-               new GxTuningPage$$ExternalSyntheticLambda38(this)
-            );
-         }
-      }
-   }
-
-   private static final Unit selectPath$lambda$107(GxTuningPage var0, JSONObject var1) {
-      if (var1 != null) {
-         var1 = var1.optJSONObject("report");
-         if (var1 != null) {
-            var0.report = var1;
-            var0.syncFeedback(var1);
-            var0.renderReport();
-            var0.paintProfiles();
-         }
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final int selectedSegmentCount() {
-      Iterator var2 = this.selectedRoutes.iterator();
-      int var1 = 0;
-
-      while (var2.hasNext()) {
-         String var3 = (String)var2.next();
-         var1 += this.routeSelectedCount(var3);
-      }
-
-      return var1;
-   }
-
-   private final String slotId(JSONObject var1) {
-      if (var1 != null) {
-         String var2 = StringsKt.trim(this.s(var1, "id")).toString();
-         if (var2 != null) {
-            return var2;
-         }
-      }
-
-      return "";
-   }
-
-   private final String sourceLabel(String var1, String var2) {
-      var1 = var1.toLowerCase(Locale.ROOT);
-      Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-      var2 = var2.toLowerCase(Locale.ROOT);
-      Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
-      if (Intrinsics.areEqual(var1, "lateral")) {
-         if (Intrinsics.areEqual(var2, "torquestate")) {
-            return "Steering controller output";
-         }
-
-         if (Intrinsics.areEqual(var2, "curvature")) {
-            return "Path model estimate";
-         }
-      }
-
-      if (Intrinsics.areEqual(var1, "longitudinal")) {
-         if (StringsKt.contains$default(var2, "atarget", false, 2, null)) {
-            return "Planner target acceleration + measured acceleration";
-         }
-
-         if (StringsKt.contains$default(var2, "pid sum", false, 2, null)) {
-            return "PID term sum + measured acceleration";
-         }
-
-         if (StringsKt.contains$default(var2, "caroutput", false, 2, null)) {
-            return "Final accel command + measured acceleration";
-         }
-
-         if (StringsKt.contains$default(var2, "livelocationkalman", false, 2, null)) {
-            return "Control output + calibrated acceleration";
-         }
-
-         if (Intrinsics.areEqual(var2, "controlsstate")) {
-            return "Planner target output";
-         }
-      }
-
-      if (Intrinsics.areEqual(var1, "lateralterms")) {
-         if (Intrinsics.areEqual(var2, "torquestate")) {
-            return "Steering torque controller";
-         }
-
-         if (Intrinsics.areEqual(var2, "pidstate")) {
-            return "Steering angle PID controller";
-         }
-      }
-
-      return Intrinsics.areEqual(var1, "longitudinalterms") && Intrinsics.areEqual(var2, "controlsstate")
-         ? "Longitudinal controller terms"
-         : "Live control signal";
-   }
-
-   private final JSONObject status() {
-      JSONObject var2 = new JSONObject(this.wsStatus.toString());
-      JSONObject var4 = this.statusData;
-      if (var4 != null) {
-         Iterator var3 = var4.keys();
-         Intrinsics.checkNotNullExpressionValue(var3, "keys(...)");
-
-         while (var3.hasNext()) {
-            String var1 = (String)var3.next();
-            var2.put(var1, var4.opt(var1));
-         }
-      }
-
-      return var2;
-   }
-
-   private final TextView sub(String var1, ViewGroup var2) {
-      TextView var3 = this.text(var1, var2, 18.0F, CarUi.Companion.getTEXT(), true);
-      var3.setPadding(0, this.getUi().dp(14), 0, this.getUi().dp(4));
-      return var3;
-   }
-
-   private final void submitTune(JSONObject var1) {
-      this.confirm(
-         "Send to Firestar",
-         "Think this FLM tune is genuinely good and worth sharing? Only the tune values, car identity, and your Discord username are sent; routes and driving logs are not included.",
-         "Continue",
-         new GxTuningPage$$ExternalSyntheticLambda32(this, var1)
-      );
-   }
-
-   private static final Unit submitTune$lambda$55(GxTuningPage var0, JSONObject var1) {
-      GxPage.prompt$default(
-         var0, "Send to Firestar", "Enter your Discord username...", null, 0, null, new GxTuningPage$$ExternalSyntheticLambda53(var0, var1), 28, null
-      );
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit submitTune$lambda$55$lambda$54(GxTuningPage var0, JSONObject var1, String var2) {
-      Intrinsics.checkNotNullParameter(var2, "raw");
-      var2 = StringsKt.trim(var2).toString();
-      boolean var3;
-      if (var2.length() == 0) {
-         var3 = true;
-      } else {
-         var3 = false;
-      }
-
-      if (var3) {
-         var0.toast("A Discord username is required.");
-         return Unit.INSTANCE;
-      } else {
-         String var4 = var0.enc(var0.s(var1, "tuneId"));
-         runWith$default(
-            var0,
-            "POST",
-            "/api/flm/saved-tunes/" + var4 + "/submit",
-            new JSONObject().put("discordUsername", var2),
-            "Tune submitted to Firestar.",
-            null,
-            16,
-            null
-         );
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final List<JSONObject> suggestions() {
-      JSONObject var1 = this.primaryPath();
-      JSONArray var2;
-      if (var1 != null) {
-         var2 = this.arr(var1, "suggestions");
-      } else {
-         var2 = this.arr(this.report, "suggestions");
-      }
-
-      return this.objects(var2);
-   }
-
-   private final void syncFeedback(JSONObject var1) {
-      var1 = this.obj(var1, "feedback");
-      this.fbAccepted.clear();
-      this.fbAccepted.addAll(this.strings(this.arr(var1, "acceptedDimensions")));
-      this.fbIgnored.clear();
-      this.fbIgnored.addAll(this.strings(this.arr(var1, "ignoredDimensions")));
-      Object var4 = var1.opt("notes");
-      if (var4 instanceof String) {
-         var4 = (String)var4;
-      } else {
-         var4 = null;
-      }
-
-      String var2 = (String)var4;
-      if (var4 == null) {
-         var2 = "";
-      }
-
-      this.fbNotes = var2;
-   }
-
-   private final String tgActiveId() {
-      return StringsKt.trim(this.s(this.tgData, "activeSlot")).toString();
-   }
-
-   private final String tgActiveVariant() {
-      String var1 = StringsKt.trim(this.s(this.tgData, "activeVariant")).toString().toUpperCase(Locale.ROOT);
-      Intrinsics.checkNotNullExpressionValue(var1, "toUpperCase(...)");
-      return var1;
-   }
-
-   private final void tgApplyPayload(JSONObject var1) {
-      this.tgData = var1;
-      this.tgError = "";
-      List var5 = this.objects(this.arr(var1, "selectableSlots"));
-      var var6 = var5;
-      boolean var4 = var6 instanceof Collection;
-      boolean var3 = false;
-      boolean var2;
-      if (var4 && ((Collection)var6).isEmpty()) {
-         var2 = true;
-      } else {
-         Iterator var9 = var6.iterator();
-
-         while (true) {
-            if (!var9.hasNext()) {
-               var2 = true;
-               break;
+            List start = gxTuningPage.strings(gxTuningPage.arr(rep, "addTheseParametersAndStartHere"));
+            if (!start.isEmpty()) {
+                gxTuningPage.sub("Add these and start here", c);
+                bullets$default(this, c, start, false, 4, null);
             }
-
-            if (Intrinsics.areEqual(this.slotId((JSONObject)var9.next()), StringsKt.trim(this.tgSelected).toString())) {
-               var2 = false;
-               break;
+            List warns = gxTuningPage.strings(gxTuningPage.arr(rep, "warnings"));
+            if (!warns.isEmpty()) {
+                gxTuningPage.sub("Warnings", c);
+                bullets$default(this, c, warns, false, 4, null);
             }
-         }
-      }
+            LinearLayout linearLayout8 = gxTuningPage.reportBox;
+            if (linearLayout8 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("reportBox");
+                linearLayout8 = null;
+            }
+            gxTuningPage.header("Findings & feedback", linearLayout8);
+            LinearLayout linearLayout9 = gxTuningPage.reportBox;
+            if (linearLayout9 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("reportBox");
+                linearLayout9 = null;
+            }
+            LinearLayout fc2 = gxTuningPage.card(linearLayout9);
+            GxPage.text$default(gxTuningPage, "Finding decisions save immediately and regenerate trial profiles.", fc2, 0.0f, 0, false, 28, null);
+            EditText $this$renderReport_u24lambda_u2493 = new EditText(getAct());
+            $this$renderReport_u24lambda_u2493.setText(gxTuningPage.fbNotes);
+            $this$renderReport_u24lambda_u2493.setHint("Optional tuning notes");
+            $this$renderReport_u24lambda_u2493.setTextSize(18.0f);
+            $this$renderReport_u24lambda_u2493.setTextColor(CarUi.Companion.getTEXT());
+            $this$renderReport_u24lambda_u2493.setHintTextColor(CarUi.Companion.getDIM());
+            $this$renderReport_u24lambda_u2493.setInputType(147457);
+            $this$renderReport_u24lambda_u2493.setMinLines(2);
+            $this$renderReport_u24lambda_u2493.setGravity(8388659);
+            $this$renderReport_u24lambda_u2493.setBackground(getUi().rounded(Color.rgb(6, 8, 11), 12, Integer.valueOf(Color.rgb(50, 55, 66))));
+            $this$renderReport_u24lambda_u2493.setPadding(getUi().dp(14), getUi().dp(10), getUi().dp(14), getUi().dp(10));
+            $this$renderReport_u24lambda_u2493.addTextChangedListener(new TextWatcher() { // from class: com.starpilot.starview.GxTuningPage$renderReport$notes$1$1
+                @Override // android.text.TextWatcher
+                public void beforeTextChanged(CharSequence s4, int a, int b, int c2) {
+                }
 
-      if (var2) {
-         String var7 = StringsKt.trim(this.s(var1, "activeSlot")).toString();
-         var6 = var5;
-         if (var6 instanceof Collection && ((Collection)var6).isEmpty()) {
-            var2 = var3;
-         } else {
-            Iterator var11 = var6.iterator();
+                @Override // android.text.TextWatcher
+                public void onTextChanged(CharSequence s4, int a, int b, int c2) {
+                }
 
+                @Override // android.text.TextWatcher
+                public void afterTextChanged(Editable e) {
+                    String str3;
+                    GxTuningPage gxTuningPage2 = GxTuningPage.this;
+                    if (e == null || (str3 = e.toString()) == null) {
+                        str3 = "";
+                    }
+                    gxTuningPage2.fbNotes = str3;
+                }
+            });
+            LinearLayout.LayoutParams $this$renderReport_u24lambda_u2494 = new LinearLayout.LayoutParams(-1, -2);
+            $this$renderReport_u24lambda_u2494.topMargin = getUi().dp(8);
+            Unit unit = Unit.INSTANCE;
+            fc2.addView($this$renderReport_u24lambda_u2493, $this$renderReport_u24lambda_u2494);
+            GxPage.buttons$default(gxTuningPage, new Pair[]{TuplesKt.to("Save Notes", new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda49
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderReport$lambda$95;
+                    renderReport$lambda$95 = GxTuningPage.renderReport$lambda$95(GxTuningPage.this);
+                    return renderReport$lambda$95;
+                }
+            })}, fc2, false, 4, null);
+            List sugg = suggestions();
+            if (sugg.isEmpty()) {
+                fc2.addView(gxTuningPage.empty("No findings for the active path."));
+            }
+            for (JSONObject sg : sugg) {
+                LinearLayout ic = gxTuningPage.inner(fc2);
+                String s4 = gxTuningPage.s(sg, "bucket");
+                if (StringsKt.isBlank(s4)) {
+                    s4 = "finding";
+                }
+                text(StringsKt.replace$default(s4, "_", " ", false, 4, (Object) null), ic, 18.0f, CarUi.Companion.getTEXT(), true);
+                JSONObject ev = sg.optJSONObject("evidence");
+                if (ev != null && (gxTuningPage.truthy(ev.opt("speedBand")) || gxTuningPage.truthy(ev.opt("directionBias")) || gxTuningPage.truthy(ev.opt("eventCount")))) {
+                    GxTuningPage gxTuningPage2 = gxTuningPage;
+                    String s5 = gxTuningPage.s(ev, "speedBand");
+                    if (StringsKt.isBlank(s5)) {
+                        s5 = "mixed";
+                    }
+                    String str3 = s5;
+                    String s6 = gxTuningPage.s(ev, "directionBias");
+                    if (StringsKt.isBlank(s6)) {
+                        s6 = "center";
+                    }
+                    GxPage.text$default(gxTuningPage2, ((Object) str3) + " | " + ((Object) s6) + " | " + ((long) num$default(this, ev.opt("eventCount"), 0.0d, 2, null)) + " event(s)", ic, 14.0f, 0, false, 24, null);
+                }
+                if (!StringsKt.isBlank(gxTuningPage.s(sg, "observedBehavior"))) {
+                    gxTuningPage.para(ic, "Observed:", gxTuningPage.s(sg, "observedBehavior"));
+                }
+                if (!StringsKt.isBlank(gxTuningPage.s(sg, "likelyInterpretation"))) {
+                    gxTuningPage.para(ic, "Interpretation:", gxTuningPage.s(sg, "likelyInterpretation"));
+                }
+                if (!StringsKt.isBlank(gxTuningPage.s(sg, "primaryAdjustment"))) {
+                    gxTuningPage.para(ic, "Primary adjustment:", gxTuningPage.s(sg, "primaryAdjustment"));
+                }
+                if (!StringsKt.isBlank(gxTuningPage.s(sg, "whatNotToTouchYet"))) {
+                    gxTuningPage.para(ic, "What not to touch yet:", gxTuningPage.s(sg, "whatNotToTouchYet"));
+                }
+                if (!StringsKt.isBlank(gxTuningPage.s(sg, "ifThatWasWrong"))) {
+                    gxTuningPage.para(ic, "Next thing to try:", gxTuningPage.s(sg, "ifThatWasWrong"));
+                }
+                JSONObject cvs2 = sg.optJSONObject("currentVsSuggested");
+                if (cvs2 != null) {
+                    fc = fc2;
+                    cvs = cvs2;
+                    TextView $this$renderReport_u24lambda_u2499 = text("Current vs suggested:", ic, 15.0f, CarUi.Companion.getTEXT(), true);
+                    $this$renderReport_u24lambda_u2499.setPadding(0, getUi().dp(8), 0, 0);
+                    if (Intrinsics.areEqual(gxTuningPage.s(cvs, "type"), "friction_curve")) {
+                        gxTuningPage.mono(ic, gxTuningPage.s(cvs, "family") + " " + gxTuningPage.curveStr(cvs.optJSONArray("current")) + " → " + gxTuningPage.curveStr(cvs.optJSONArray("suggested")));
+                    } else {
+                        LinearLayout linearLayout10 = ic;
+                        String s7 = gxTuningPage.s(cvs, "paramKey");
+                        if (StringsKt.isBlank(s7)) {
+                            s7 = gxTuningPage.s(cvs, "symbol");
+                        }
+                        gxTuningPage.mono(linearLayout10, ((Object) s7) + " " + gxTuningPage.fmtVal(cvs.opt("current")) + " → " + gxTuningPage.fmtVal(cvs.opt("suggested")));
+                    }
+                } else {
+                    fc = fc2;
+                    cvs = cvs2;
+                }
+                final String dim = gxTuningPage.s(sg, "dimensionId");
+                String state = gxTuningPage.fbAccepted.contains(dim) ? "accepted" : gxTuningPage.fbIgnored.contains(dim) ? "ignored" : "unset";
+                LinearLayout bar = gxTuningPage.btnBar(ic);
+                gxTuningPage.barBtn(bar, Intrinsics.areEqual(state, "accepted") ? "Matched" : "Matches Experience", Intrinsics.areEqual(state, "accepted"), new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda50
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit renderReport$lambda$101;
+                        renderReport$lambda$101 = GxTuningPage.renderReport$lambda$101(GxTuningPage.this, dim);
+                        return renderReport$lambda$101;
+                    }
+                });
+                TextView $this$renderReport_u24lambda_u24103 = barBtn$default(this, bar, Intrinsics.areEqual(state, "ignored") ? "Ignored" : "Ignore", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda51
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit renderReport$lambda$102;
+                        renderReport$lambda$102 = GxTuningPage.renderReport$lambda$102(GxTuningPage.this, dim);
+                        return renderReport$lambda$102;
+                    }
+                }, 4, null);
+                if (Intrinsics.areEqual(state, "ignored")) {
+                    $this$renderReport_u24lambda_u24103.setTextColor(Color.rgb(240, 110, 130));
+                }
+                gxTuningPage = this;
+                fc2 = fc;
+            }
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderReport$lambda$88(GxTuningPage this$0, JSONObject $rep) {
+        this$0.deleteReport($rep);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderReport$lambda$92(GxTuningPage this$0, String $key) {
+        this$0.selectPath($key);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderReport$lambda$95(GxTuningPage this$0) {
+        this$0.saveFeedback();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderReport$lambda$101(GxTuningPage this$0, String $dim) {
+        this$0.toggleFeedback($dim, "accepted");
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderReport$lambda$102(GxTuningPage this$0, String $dim) {
+        this$0.toggleFeedback($dim, "ignored");
+        return Unit.INSTANCE;
+    }
+
+    private final void paintProfiles() {
+        LinearLayout linearLayout;
+        LinearLayout linearLayout2;
+        LinearLayout linearLayout3;
+        if (this.flmBuilt) {
+            LinearLayout linearLayout4 = this.profilesBox;
+            if (linearLayout4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("profilesBox");
+                linearLayout4 = null;
+            }
+            linearLayout4.removeAllViews();
+            JSONObject rep = this.report;
+            if (this.reportLoading) {
+                GxTuningPage gxTuningPage = this;
+                LinearLayout linearLayout5 = this.profilesBox;
+                if (linearLayout5 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("profilesBox");
+                    linearLayout3 = null;
+                } else {
+                    linearLayout3 = linearLayout5;
+                }
+                GxPage.text$default(gxTuningPage, "Loading report profiles...", linearLayout3, 0.0f, 0, false, 28, null);
+                return;
+            }
+            if (rep == null) {
+                LinearLayout linearLayout6 = this.profilesBox;
+                if (linearLayout6 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("profilesBox");
+                    linearLayout2 = null;
+                } else {
+                    linearLayout2 = linearLayout6;
+                }
+                linearLayout2.addView(empty("Open a report to view and apply its trial profiles."));
+                return;
+            }
+            List list = profiles();
+            if (list.isEmpty()) {
+                LinearLayout linearLayout7 = this.profilesBox;
+                if (linearLayout7 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("profilesBox");
+                    linearLayout = null;
+                } else {
+                    linearLayout = linearLayout7;
+                }
+                linearLayout.addView(empty("No trial profiles for this report."));
+                return;
+            }
+            for (final JSONObject p : list) {
+                LinearLayout linearLayout8 = this.profilesBox;
+                if (linearLayout8 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("profilesBox");
+                    linearLayout8 = null;
+                }
+                LinearLayout ic = inner(linearLayout8);
+                LinearLayout h = headLine$default(this, ic, s(p, "label"), 0, 4, null);
+                en(headBtn(h, "Apply Trial", true, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda7
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit paintProfiles$lambda$104;
+                        paintProfiles$lambda$104 = GxTuningPage.paintProfiles$lambda$104(GxTuningPage.this, p);
+                        return paintProfiles$lambda$104;
+                    }
+                }), canApplyTrial());
+                if (!StringsKt.isBlank(s(p, "description"))) {
+                    GxPage.text$default(this, s(p, "description"), ic, 16.0f, 0, false, 24, null);
+                }
+                Iterable $this$filter$iv = entries(obj(p, "genericParams"));
+                Collection destination$iv$iv = new ArrayList();
+                for (Object element$iv$iv : $this$filter$iv) {
+                    Pair it = (Pair) element$iv$iv;
+                    LinearLayout h2 = h;
+                    if (!Intrinsics.areEqual(it.getFirst(), "AdvancedLateralTune")) {
+                        destination$iv$iv.add(element$iv$iv);
+                    }
+                    h = h2;
+                }
+                List<Pair> gen = (List) destination$iv$iv;
+                JSONObject ov = obj(p, "flmOverrides");
+                List fr = entries(obj(ov, "baseFrictionThresholds"));
+                List kn = entries(obj(ov, "vehicleKnobs"));
+                if (gen.isEmpty() && fr.isEmpty() && kn.isEmpty()) {
+                    GxPage.text$default(this, "No parameter overrides in this profile.", ic, 0.0f, 0, false, 28, null);
+                } else {
+                    for (Pair pair : gen) {
+                        String k = (String) pair.component1();
+                        Object v = pair.component2();
+                        mono(ic, k + ": " + fmtVal(v));
+                        gen = gen;
+                        ov = ov;
+                    }
+                    for (Pair<String, Object> pair2 : fr) {
+                        String fam = pair2.component1();
+                        Object pl = pair2.component2();
+                        LinearLayout linearLayout9 = ic;
+                        JSONObject jSONObject = pl instanceof JSONObject ? (JSONObject) pl : null;
+                        mono(linearLayout9, fam + ": " + curveStr(jSONObject != null ? jSONObject.optJSONArray("values") : null));
+                    }
+                    for (Pair<String, Object> pair3 : kn) {
+                        String sym = pair3.component1();
+                        Object v2 = pair3.component2();
+                        mono(ic, sym + ": " + fmtVal(v2));
+                    }
+                }
+            }
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintProfiles$lambda$104(GxTuningPage this$0, JSONObject $p) {
+        this$0.applyTrial(this$0.s($p, "id"));
+        return Unit.INSTANCE;
+    }
+
+    private final void applyTrial(String profileId) {
+        JSONObject rep = this.report;
+        if (rep == null) {
+            return;
+        }
+        String id = s(rep, "reportId");
+        if (StringsKt.isBlank(id) || !canApplyTrial()) {
+            return;
+        }
+        runWith$default(this, "POST", "/api/flm/trials/apply", new JSONObject().put("reportId", id).put("profileId", profileId), "Trial profile applied.", null, 16, null);
+    }
+
+    private final void selectPath(String key) {
+        JSONObject rep = this.report;
+        if (rep == null) {
+            return;
+        }
+        String id = s(rep, "reportId");
+        if (StringsKt.isBlank(id) || Intrinsics.areEqual(key, activePathKey())) {
+            return;
+        }
+        runWith("POST", "/api/flm/report/" + enc(id) + "/path", new JSONObject().put("pathKey", key), "Path selected.", new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda38
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit selectPath$lambda$107;
+                selectPath$lambda$107 = GxTuningPage.selectPath$lambda$107(GxTuningPage.this, (JSONObject) obj);
+                return selectPath$lambda$107;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit selectPath$lambda$107(GxTuningPage this$0, JSONObject o) {
+        JSONObject r;
+        if (o != null && (r = o.optJSONObject("report")) != null) {
+            this$0.report = r;
+            this$0.syncFeedback(r);
+            this$0.renderReport();
+            this$0.paintProfiles();
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void deleteReport(JSONObject rep) {
+        final String id = s(rep, "reportId");
+        if (StringsKt.isBlank(id)) {
+            return;
+        }
+        confirm("Delete Report", "Delete this saved tuning report and its generated trial data?", "Yes, Delete", new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda14
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit deleteReport$lambda$109;
+                deleteReport$lambda$109 = GxTuningPage.deleteReport$lambda$109(GxTuningPage.this, id);
+                return deleteReport$lambda$109;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit deleteReport$lambda$109(final GxTuningPage this$0, final String $id) {
+        this$0.runWith("DELETE", "/api/flm/report/" + this$0.enc($id), null, "Report deleted.", new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda4
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit deleteReport$lambda$109$lambda$108;
+                deleteReport$lambda$109$lambda$108 = GxTuningPage.deleteReport$lambda$109$lambda$108(GxTuningPage.this, $id, (JSONObject) obj);
+                return deleteReport$lambda$109$lambda$108;
+            }
+        });
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit deleteReport$lambda$109$lambda$108(GxTuningPage this$0, String $id, JSONObject o) {
+        if (o != null && Intrinsics.areEqual(this$0.loadedReportId, $id)) {
+            this$0.report = null;
+            this$0.loadedReportId = "";
+            this$0.renderReport();
+            this$0.paintFlm();
+            this$0.autoOpenReport();
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void toggleFeedback(String dim, String mode) {
+        String cur = this.fbAccepted.contains(dim) ? "accepted" : this.fbIgnored.contains(dim) ? "ignored" : "unset";
+        String next = Intrinsics.areEqual(cur, mode) ? "unset" : mode;
+        this.fbAccepted.remove(dim);
+        this.fbIgnored.remove(dim);
+        if (Intrinsics.areEqual(next, "accepted")) {
+            this.fbAccepted.add(dim);
+        }
+        if (Intrinsics.areEqual(next, "ignored")) {
+            this.fbIgnored.add(dim);
+        }
+        renderReport();
+        saveFeedback();
+    }
+
+    private final void saveFeedback() {
+        JSONObject rep = this.report;
+        if (rep == null) {
+            return;
+        }
+        String id = s(rep, "reportId");
+        if (StringsKt.isBlank(id) || this.busy) {
+            return;
+        }
+        this.busy = true;
+        paintActions();
+        JSONObject body = new JSONObject().put("reportId", id).put("acceptedDimensions", new JSONArray((Collection) CollectionsKt.toList(this.fbAccepted))).put("ignoredDimensions", new JSONArray((Collection) CollectionsKt.toList(this.fbIgnored))).put("notes", this.fbNotes);
+        send("POST", "/api/flm/feedback", body, 60L, new Function2() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda52
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit saveFeedback$lambda$114;
+                saveFeedback$lambda$114 = GxTuningPage.saveFeedback$lambda$114(GxTuningPage.this, (String) obj, (JSONObject) obj2);
+                return saveFeedback$lambda$114;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:21:0x0047, code lost:
+    
+        if (r2 == null) goto L22;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit saveFeedback$lambda$114(final GxTuningPage this$0, String e, JSONObject o) {
+        String str;
+        String optString;
+        JSONObject r;
+        if (e != null) {
+            this$0.busy = false;
+            String str2 = e;
+            if (StringsKt.isBlank(str2)) {
+                str2 = "Failed to save feedback.";
+            }
+            this$0.toast(str2);
+            this$0.paintFlm();
+            return Unit.INSTANCE;
+        }
+        if (o != null && (r = o.optJSONObject("report")) != null) {
+            this$0.report = r;
+            this$0.syncFeedback(r);
+            this$0.renderReport();
+        }
+        if (o != null && (optString = o.optString("message")) != null) {
+            String str3 = optString;
+            if (StringsKt.isBlank(str3)) {
+                str3 = null;
+            }
+            str = str3;
+        }
+        str = "Feedback saved.";
+        this$0.toast(str);
+        flmRefresh$default(this$0, false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda69
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit saveFeedback$lambda$114$lambda$113;
+                saveFeedback$lambda$114$lambda$113 = GxTuningPage.saveFeedback$lambda$114$lambda$113(GxTuningPage.this);
+                return saveFeedback$lambda$114$lambda$113;
+            }
+        }, 1, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit saveFeedback$lambda$114$lambda$113(GxTuningPage this$0) {
+        this$0.busy = false;
+        this$0.paintFlm();
+        return Unit.INSTANCE;
+    }
+
+    private final void analyze() {
+        if (!canAnalyze() || this.busy) {
+            return;
+        }
+        JSONObject ranges = new JSONObject();
+        Iterator<String> it = this.selectedRoutes.iterator();
+        Intrinsics.checkNotNullExpressionValue(it, "iterator(...)");
+        while (it.hasNext()) {
+            String next = it.next();
+            Intrinsics.checkNotNullExpressionValue(next, "next(...)");
+            String r = next;
+            Pair<String, String> pair = this.segmentRanges.get(r);
+            if (pair == null) {
+                pair = TuplesKt.to("", "");
+            }
+            String st = pair.component1();
+            String en = pair.component2();
+            if (!StringsKt.isBlank(st) || !StringsKt.isBlank(en)) {
+                ranges.put(r, new JSONObject().put("start", StringsKt.isBlank(st) ? JSONObject.NULL : st).put("end", StringsKt.isBlank(en) ? JSONObject.NULL : en));
+            }
+        }
+        JSONObject body = new JSONObject().put("routes", new JSONArray((Collection) CollectionsKt.toList(this.selectedRoutes))).put("segmentRanges", ranges);
+        runWith("POST", "/api/flm/analyze", body, "FLM analysis started.", new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda5
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit analyze$lambda$115;
+                analyze$lambda$115 = GxTuningPage.analyze$lambda$115(GxTuningPage.this, (JSONObject) obj);
+                return analyze$lambda$115;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit analyze$lambda$115(GxTuningPage this$0, JSONObject o) {
+        if (o != null && !this$0.selectedRoutes.isEmpty()) {
+            this$0.selectedRoutes.clear();
+            this$0.segmentRanges.clear();
+            this$0.renderRoutesAll();
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void loadRoutes() {
+        if (this.loadingRoutes) {
+            return;
+        }
+        this.loadingRoutes = true;
+        this.routes.clear();
+        renderRoutesAll();
+        call("GET", "/api/routes", null, 300L, new Function3() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda25
+            @Override // kotlin.jvm.functions.Function3
+            public final Object invoke(Object obj, Object obj2, Object obj3) {
+                Unit loadRoutes$lambda$122;
+                loadRoutes$lambda$122 = GxTuningPage.loadRoutes$lambda$122(GxTuningPage.this, ((Integer) obj).intValue(), (String) obj2, (String) obj3);
+                return loadRoutes$lambda$122;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit loadRoutes$lambda$122(final GxTuningPage gxTuningPage, int i, String text, String str) {
+        Object obj;
+        Intrinsics.checkNotNullParameter(text, "text");
+        gxTuningPage.loadingRoutes = false;
+        HashSet hashSet = new HashSet();
+        Iterator<String> it = new Regex("\\r?\\n\\r?\\n").split(text, 0).iterator();
+        while (it.hasNext()) {
+            List<String> split = new Regex("\\r?\\n").split(it.next(), 0);
+            ArrayList arrayList = new ArrayList();
+            Iterator<T> it2 = split.iterator();
             while (true) {
-               if (!var11.hasNext()) {
-                  var2 = var3;
-                  break;
-               }
-
-               if (Intrinsics.areEqual(this.slotId((JSONObject)var11.next()), var7)) {
-                  var2 = true;
-                  break;
-               }
+                if (!it2.hasNext()) {
+                    break;
+                }
+                Object next = it2.next();
+                List<String> list = split;
+                if (StringsKt.startsWith$default((String) next, "data:", false, 2, (Object) null)) {
+                    arrayList.add(next);
+                }
+                split = list;
             }
-         }
-
-         if (!var2) {
-            var7 = this.slotId(CollectionsKt.firstOrNull(var5));
-         }
-
-         this.tgSelected = var7;
-      }
-   }
-
-   private final void tgLoad() {
-      if (this.tgBuilt && !this.tgFetching) {
-         this.tgFetching = true;
-         this.getJson("/api/testing_grounds", new GxTuningPage$$ExternalSyntheticLambda6(this));
-      }
-   }
-
-   private static final Unit tgLoad$lambda$165(GxTuningPage var0, String var1, JSONObject var2) {
-      var0.tgFetching = false;
-      var0.tgLoading = false;
-      if (var2 != null) {
-         var0.tgApplyPayload(var2);
-      } else {
-         if (var1 == null) {
-            var1 = "Failed to load testing grounds";
-         }
-
-         var0.tgError = var1;
-      }
-
-      var0.paintTg();
-      return Unit.INSTANCE;
-   }
-
-   private final void tgSelectMode(String var1) {
-      if (!this.tgBusy) {
-         Iterator var3 = this.tgSlots().iterator();
-
-         Object var2;
-         do {
-            if (!var3.hasNext()) {
-               var2 = null;
-               break;
+            ArrayList arrayList2 = arrayList;
+            if (!arrayList2.isEmpty()) {
+                try {
+                    Result.Companion companion = Result.Companion;
+                    obj = Result.m1191constructorimpl(new JSONObject(CollectionsKt.joinToString$default(arrayList2, "\n", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda68
+                        @Override // kotlin.jvm.functions.Function1
+                        public final Object invoke(Object obj2) {
+                            CharSequence loadRoutes$lambda$122$lambda$118$lambda$117;
+                            loadRoutes$lambda$122$lambda$118$lambda$117 = GxTuningPage.loadRoutes$lambda$122$lambda$118$lambda$117((String) obj2);
+                            return loadRoutes$lambda$122$lambda$118$lambda$117;
+                        }
+                    }, 30, null)));
+                } catch (Throwable th) {
+                    Result.Companion companion2 = Result.Companion;
+                    obj = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                }
+                JSONObject jSONObject = (JSONObject) (Result.m1197isFailureimpl(obj) ? null : obj);
+                if (jSONObject != null) {
+                    for (JSONObject jSONObject2 : gxTuningPage.objects(gxTuningPage.arr(jSONObject, "routes"))) {
+                        String s = gxTuningPage.s(jSONObject2, "name");
+                        if (!StringsKt.isBlank(s) && hashSet.add(s) && gxTuningPage.routes.size() < gxTuningPage.maxRoutes) {
+                            gxTuningPage.routes.add(jSONObject2);
+                        }
+                    }
+                }
             }
-
-            var2 = var3.next();
-         } while (!Intrinsics.areEqual(this.slotId((JSONObject)var2), StringsKt.trim(this.tgSelected).toString()));
-
-         var2 = (JSONObject)var2;
-         if (var2 == null) {
-            this.toast("Select a testing ground first.");
-         } else {
-            var2 = this.slotId((JSONObject)var2);
-            var1 = StringsKt.trim(var1).toString().toUpperCase(Locale.ROOT);
-            Intrinsics.checkNotNullExpressionValue(var1, "toUpperCase(...)");
-            if (!StringsKt.isBlank((CharSequence)var2) && !StringsKt.isBlank(var1)) {
-               this.tgBusy = true;
-               this.paintTg();
-               GxPage.send$default(
-                  this,
-                  "POST",
-                  "/api/testing_grounds/select",
-                  new JSONObject().put("slotId", var2).put("variant", var1),
-                  0L,
-                  new GxTuningPage$$ExternalSyntheticLambda26(this, (String)var2, var1),
-                  8,
-                  null
-               );
+        }
+        ArrayList<JSONObject> arrayList3 = gxTuningPage.routes;
+        if (arrayList3.size() > 1) {
+            CollectionsKt.sortWith(arrayList3, new Comparator() { // from class: com.starpilot.starview.GxTuningPage$loadRoutes$lambda$122$$inlined$sortByDescending$1
+                /* JADX WARN: Multi-variable type inference failed */
+                @Override // java.util.Comparator
+                public final int compare(T t, T t2) {
+                    String s2;
+                    String s3;
+                    JSONObject it3 = (JSONObject) t2;
+                    s2 = GxTuningPage.this.s(it3, "startedAt");
+                    JSONObject it4 = (JSONObject) t;
+                    s3 = GxTuningPage.this.s(it4, "startedAt");
+                    return ComparisonsKt.compareValues(s2, s3);
+                }
+            });
+        }
+        if (str != null) {
+            String str2 = str;
+            if (StringsKt.isBlank(str2)) {
+                str2 = "Failed to load routes.";
             }
-         }
-      }
-   }
+            gxTuningPage.toast(str2);
+        }
+        LinkedHashSet<String> linkedHashSet = gxTuningPage.selectedRoutes;
+        ArrayList<JSONObject> arrayList4 = gxTuningPage.routes;
+        ArrayList arrayList5 = new ArrayList(CollectionsKt.collectionSizeOrDefault(arrayList4, 10));
+        Iterator<T> it3 = arrayList4.iterator();
+        while (it3.hasNext()) {
+            arrayList5.add(gxTuningPage.s((JSONObject) it3.next(), "name"));
+        }
+        linkedHashSet.retainAll(CollectionsKt.toSet(arrayList5));
+        gxTuningPage.renderRoutesAll();
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit tgSelectMode$lambda$170(GxTuningPage var0, String var1, String var2, String var3, JSONObject var4) {
-      var0.tgBusy = false;
-      if (var3 == null && var4 != null) {
-         var0.tgApplyPayload(var4);
-         var0.tgSelected = var1;
-         var0.tgError = "";
-         Iterator var5 = var0.objects(var0.arr(var4, "slots")).iterator();
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final CharSequence loadRoutes$lambda$122$lambda$118$lambda$117(String it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        String substring = it.substring(5);
+        Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
+        return StringsKt.trimStart((CharSequence) substring).toString();
+    }
 
-         do {
-            if (!var5.hasNext()) {
-               var8 = null;
-               break;
+    /* compiled from: GxTuning.kt */
+    private static final /* data */ class Bounds {
+        private final int count;
+        private final int first;
+        private final int last;
+
+        public static /* synthetic */ Bounds copy$default(Bounds bounds, int i, int i2, int i3, int i4, Object obj) {
+            if ((i4 & 1) != 0) {
+                i = bounds.first;
             }
-
-            var8 = var5.next();
-         } while (!Intrinsics.areEqual(var0.slotId((JSONObject)var8), var1));
-
-         JSONObject var6 = (JSONObject)var8;
-         CharSequence var11 = StringsKt.trim(var0.s(var4, "activeVariantLabel")).toString();
-         Object var9 = var11;
-         if (StringsKt.isBlank(var11)) {
-            var9 = var0.modeLabel(var6, var2);
-         }
-
-         String var12 = (String)var9;
-         var9 = var0.s(var4, "message");
-         Object var7 = var9;
-         if (StringsKt.isBlank((CharSequence)var9)) {
-            var7 = "Testing Ground " + var1 + " set to " + var12 + ".";
-         }
-
-         var0.toast((String)var7);
-      } else {
-         if (var3 == null) {
-            var3 = "Failed to update testing ground mode";
-         }
-
-         var0.tgError = var3;
-         var0.toast(var0.tgError);
-      }
-
-      var0.paintTg();
-      return Unit.INSTANCE;
-   }
-
-   private final List<JSONObject> tgSelectable() {
-      List var1 = this.objects(this.arr(this.tgData, "selectableSlots"));
-      if (var1.isEmpty()) {
-         Iterable var2 = this.tgSlots();
-         var var4 = new ArrayList();
-
-         for (Object var3 : var2) {
-            if (!this.isUnused((JSONObject)var3)) {
-               var4.add(var3);
+            if ((i4 & 2) != 0) {
+                i2 = bounds.last;
             }
-         }
-
-         var1 = var4;
-      }
-
-      return var1;
-   }
-
-   private final List<JSONObject> tgSlots() {
-      return this.objects(this.arr(this.tgData, "slots"));
-   }
-
-   // $VF: Could not inline inconsistent finally blocks
-   // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-   private final void toggleAdvanced() {
-      this.showAdvanced ^= true;
-
-      label20:
-      try {
-         Result.Companion var1 = Result.Companion;
-         GxTuningPage var5 = this;
-         var5.getPrefs().edit().putBoolean("plotsShowAdvancedTerms", var5.showAdvanced).apply();
-         KtCompat.resultOf(Unit.INSTANCE);
-      } catch (Throwable var4) {
-         Result.Companion var2 = Result.Companion;
-         KtCompat.resultOf(ResultKt.createFailure(var4));
-         break label20;
-      }
-
-      this.paintPlots();
-   }
-
-   private final void toggleFeedback(String var1, String var2) {
-      boolean var3 = this.fbAccepted.contains(var1);
-      String var5 = "unset";
-      String var4;
-      if (var3) {
-         var4 = "accepted";
-      } else if (this.fbIgnored.contains(var1)) {
-         var4 = "ignored";
-      } else {
-         var4 = "unset";
-      }
-
-      if (Intrinsics.areEqual(var4, var2)) {
-         var2 = var5;
-      }
-
-      this.fbAccepted.remove(var1);
-      this.fbIgnored.remove(var1);
-      if (Intrinsics.areEqual(var2, "accepted")) {
-         this.fbAccepted.add(var1);
-      }
-
-      if (Intrinsics.areEqual(var2, "ignored")) {
-         this.fbIgnored.add(var1);
-      }
-
-      this.renderReport();
-      this.saveFeedback();
-   }
-
-   private final void togglePaused() {
-      this.plotsPaused ^= true;
-      this.paintPlots();
-      if (!this.plotsPaused) {
-         this.plotsLoad(true);
-      }
-   }
-
-   private final void toggleRoute(String var1) {
-      if (this.selectedRoutes.contains(var1)) {
-         this.selectedRoutes.remove(var1);
-         this.segmentRanges.remove(var1);
-      } else {
-         int var2 = this.maxSegments - this.selectedSegmentCount();
-         if (var2 <= 0) {
-            var2 = this.maxSegments;
-            this.toast("FLM is limited to " + var2 + " segments at a time.");
-            this.renderRoute(var1);
-            return;
-         }
-
-         GxTuningPage.Bounds var3 = this.bounds(var1);
-         if (var3.getCount() == 0) {
-            this.renderRoute(var1);
-            return;
-         }
-
-         this.selectedRoutes.add(var1);
-         if (var3.getCount() > var2) {
-            this.segmentRanges.put(var1, TuplesKt.to(String.valueOf(var3.getFirst()), String.valueOf(var3.getFirst() + var2 - 1)));
-         }
-      }
-
-      this.renderRoute(var1);
-      this.afterSelectionChange();
-   }
-
-   private final int toneColor(String var1) {
-      switch (var1.hashCode()) {
-         case 3135268:
-            if (var1.equals("fair")) {
-               var1 = "#d4a060";
-               return Color.parseColor(var1);
+            if ((i4 & 4) != 0) {
+                i3 = bounds.count;
             }
-            break;
-         case 3178685:
-            if (var1.equals("good")) {
-               var1 = "#5ec8c8";
-               return Color.parseColor(var1);
+            return bounds.copy(i, i2, i3);
+        }
+
+        /* renamed from: component1, reason: from getter */
+        public final int getFirst() {
+            return this.first;
+        }
+
+        /* renamed from: component2, reason: from getter */
+        public final int getLast() {
+            return this.last;
+        }
+
+        /* renamed from: component3, reason: from getter */
+        public final int getCount() {
+            return this.count;
+        }
+
+        public final Bounds copy(int first, int last, int count) {
+            return new Bounds(first, last, count);
+        }
+
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
             }
-            break;
-         case 3446818:
-            if (var1.equals("poor")) {
-               var1 = "#e05577";
-               return Color.parseColor(var1);
+            if (!(other instanceof Bounds)) {
+                return false;
             }
-            break;
-         case 98619021:
-            if (var1.equals("great")) {
-               var1 = "#6cc56e";
-               return Color.parseColor(var1);
-            }
-      }
+            Bounds bounds = (Bounds) other;
+            return this.first == bounds.first && this.last == bounds.last && this.count == bounds.count;
+        }
 
-      return CarUi.Companion.getDIM();
-   }
+        public int hashCode() {
+            return (((Integer.hashCode(this.first) * 31) + Integer.hashCode(this.last)) * 31) + Integer.hashCode(this.count);
+        }
 
-   private final boolean truthy(Object var1) {
-      boolean var4 = false;
-      boolean var3 = var4;
-      if (var1 != null) {
-         if (Intrinsics.areEqual(var1, JSONObject.NULL)) {
-            var3 = var4;
-         } else if (var1 instanceof Boolean) {
-            var3 = (Boolean)var1;
-         } else {
-            if (var1 instanceof Number) {
-               boolean var2;
-               if (((Number)var1).doubleValue() == 0.0) {
-                  var2 = true;
-               } else {
-                  var2 = false;
-               }
+        public String toString() {
+            return "Bounds(first=" + this.first + ", last=" + this.last + ", count=" + this.count + ")";
+        }
 
-               if (var2) {
-                  return var4;
-               }
-            } else if (var1 instanceof String && ((CharSequence)var1).length() <= 0) {
-               return var4;
-            }
+        public Bounds(int first, int last, int count) {
+            this.first = first;
+            this.last = last;
+            this.count = count;
+        }
 
-            var3 = true;
-         }
-      }
+        public final int getCount() {
+            return this.count;
+        }
 
-      return var3;
-   }
+        public final int getFirst() {
+            return this.first;
+        }
 
-   private final TreeMap<String, String> variantLabels(JSONObject var1) {
-      TreeMap var4 = new TreeMap();
-      if (var1 == null) {
-         var4.put("A", "A");
-         return var4;
-      } else {
-         JSONObject var7 = var1.optJSONObject("variantLabels");
-         boolean var3 = true;
-         if (var7 != null) {
-            Iterator var6 = var7.keys();
-            Intrinsics.checkNotNullExpressionValue(var6, "keys(...)");
+        public final int getLast() {
+            return this.last;
+        }
+    }
 
-            while (var6.hasNext()) {
-               String var8 = (String)var6.next();
-               Intrinsics.checkNotNull(var8);
-               String var5 = StringsKt.trim(var8).toString().toUpperCase(Locale.ROOT);
-               Intrinsics.checkNotNullExpressionValue(var5, "toUpperCase(...)");
-               var8 = StringsKt.trim(this.s(var7, var8)).toString();
-               if (var5.length() == 1) {
-                  char var2 = var5.charAt(0);
-                  boolean var10;
-                  if ('A' <= var2 && var2 < '[') {
-                     var10 = true;
-                  } else {
-                     var10 = false;
-                  }
-
-                  if (var10) {
-                     if (var8.length() > 0) {
-                        var10 = true;
-                     } else {
-                        var10 = false;
-                     }
-
-                     if (var10) {
-                        var4.put(var5, var8);
-                     }
-                  }
-               }
-            }
-         }
-
-         String var14 = StringsKt.trim(this.s(var1, "aLabel")).toString();
-         String var9 = StringsKt.trim(this.s(var1, "bLabel")).toString();
-         boolean var12;
-         if (var14.length() > 0) {
-            var12 = true;
-         } else {
-            var12 = false;
-         }
-
-         if (var12 && var4.get("A") == null) {
-            var4.put("A", var14);
-         }
-
-         if (var9.length() > 0) {
-            var12 = var3;
-         } else {
-            var12 = false;
-         }
-
-         if (var12 && var4.get("B") == null) {
-            var4.put("B", var9);
-         }
-
-         if (var4.get("A") == null) {
-            var4.put("A", "A");
-         }
-
-         return var4;
-      }
-   }
-
-   @Override
-   public void build() {
-      GxPage.header$default(this, "Tuning, Plots & Testing", null, 2, null);
-      GxPage.tabs$default(
-         this,
-         CollectionsKt.listOf(new String[]{"Lateral Tuning", "Plots", "Testing Ground", "Maneuvers"}),
-         0,
-         new GxTuningPage$$ExternalSyntheticLambda59(this),
-         new GxTuningPage$$ExternalSyntheticLambda60(this),
-         2,
-         null
-      );
-      this.every(4000L, new GxTuningPage$$ExternalSyntheticLambda61(this));
-      this.every(1000L, new GxTuningPage$$ExternalSyntheticLambda62(this));
-      this.every(3000L, new GxTuningPage$$ExternalSyntheticLambda63(this));
-      this.every(3000L, new GxTuningPage$$ExternalSyntheticLambda64(this));
-   }
-
-   @Override
-   public boolean getNeedsOffroad() {
-      return this.needsOffroad;
-   }
-
-   @Override
-   public void onShow() {
-      if (this.flmBuilt && this.routes.isEmpty() && !this.loadingRoutes) {
-         this.loadRoutes();
-      }
-   }
-
-   private static final class Bounds {
-      private final int count;
-      private final int first;
-      private final int last;
-
-      public Bounds(int var1, int var2, int var3) {
-         this.first = var1;
-         this.last = var2;
-         this.count = var3;
-      }
-
-      // $VF: synthetic method
-      public static GxTuningPage.Bounds copy$default(GxTuningPage.Bounds var0, int var1, int var2, int var3, int var4, Object var5) {
-         if ((var4 & 1) != 0) {
-            var1 = var0.first;
-         }
-
-         if ((var4 & 2) != 0) {
-            var2 = var0.last;
-         }
-
-         if ((var4 & 4) != 0) {
-            var3 = var0.count;
-         }
-
-         return var0.copy(var1, var2, var3);
-      }
-
-      public final int component1() {
-         return this.first;
-      }
-
-      public final int component2() {
-         return this.last;
-      }
-
-      public final int component3() {
-         return this.count;
-      }
-
-      public final GxTuningPage.Bounds copy(int var1, int var2, int var3) {
-         return new GxTuningPage.Bounds(var1, var2, var3);
-      }
-
-      @Override
-      public boolean equals(Object var1) {
-         if (this == var1) {
-            return true;
-         } else if (!(var1 instanceof GxTuningPage.Bounds)) {
-            return false;
-         } else {
-            var1 = var1;
-            if (this.first != var1.first) {
-               return false;
+    private final Bounds bounds(String name) {
+        Object element$iv;
+        Iterable $this$firstOrNull$iv = this.routes;
+        Iterator it = $this$firstOrNull$iv.iterator();
+        while (true) {
+            if (it.hasNext()) {
+                element$iv = it.next();
+                JSONObject it2 = (JSONObject) element$iv;
+                if (Intrinsics.areEqual(s(it2, "name"), name)) {
+                    break;
+                }
             } else {
-               return this.last != var1.last ? false : this.count == var1.count;
+                element$iv = null;
+                break;
             }
-         }
-      }
+        }
+        JSONObject r = (JSONObject) element$iv;
+        int count = Math.max(0, (int) Math.round(num$default(this, r != null ? r.opt("segmentCount") : null, 0.0d, 2, null)));
+        int first = Math.max(0, (int) Math.round(num$default(this, r != null ? r.opt("firstSegmentNum") : null, 0.0d, 2, null)));
+        return new Bounds(first, Math.max(0, count - 1) + first, count);
+    }
 
-      public final int getCount() {
-         return this.count;
-      }
+    private final int routeSelectedCount(String name) {
+        Bounds b = bounds(name);
+        if (b.getCount() == 0) {
+            return 0;
+        }
+        Pair<String, String> pair = this.segmentRanges.get(name);
+        if (pair == null) {
+            pair = TuplesKt.to("", "");
+        }
+        String rs = pair.component1();
+        String re = pair.component2();
+        int start = (int) Math.min(b.getLast(), Math.max(b.getFirst(), StringsKt.isBlank(rs) ? b.getFirst() : num(rs, b.getFirst())));
+        int end = (int) Math.max(b.getFirst(), Math.min(b.getLast(), StringsKt.isBlank(re) ? b.getLast() : num(re, b.getLast())));
+        if (end >= start) {
+            return (end - start) + 1;
+        }
+        return 0;
+    }
 
-      public final int getFirst() {
-         return this.first;
-      }
+    private final int selectedSegmentCount() {
+        int i = 0;
+        for (String it : this.selectedRoutes) {
+            i += routeSelectedCount(it);
+        }
+        return i;
+    }
 
-      public final int getLast() {
-         return this.last;
-      }
+    private final String fmtLen(JSONObject r) {
+        StringBuilder append;
+        String str;
+        long seg = Math.max(0L, Math.round(num$default(this, r.opt("segmentCount"), 0.0d, 2, null)));
+        if (seg == 0) {
+            return "Length unavailable";
+        }
+        long m0 = Math.round(num$default(this, r.opt("approxDurationSeconds"), 0.0d, 2, null) / 60.0d);
+        long min = Math.max(1L, m0 != 0 ? m0 : seg);
+        if (min >= 60) {
+            long j = 60;
+            append = new StringBuilder().append(min / j).append("h ").append(min % j);
+            str = "m";
+        } else {
+            append = new StringBuilder().append("~").append(min);
+            str = " min";
+        }
+        String dur = append.append(str).toString();
+        return seg + " segment" + (seg == 1 ? "" : "s") + " (" + dur + ")";
+    }
 
-      @Override
-      public int hashCode() {
-         return (Integer.hashCode(this.first) * 31 + Integer.hashCode(this.last)) * 31 + Integer.hashCode(this.count);
-      }
-
-      @Override
-      public String toString() {
-         int var1 = this.first;
-         int var3 = this.last;
-         int var2 = this.count;
-         return "Bounds(first=" + var1 + ", last=" + var3 + ", count=" + var2 + ")";
-      }
-   }
-
-   private static final class ChartCfg {
-      private final boolean advanced;
-      private final String id;
-      private final int legendDigits;
-      private final int rangeDigits;
-      private final double rangeFloor;
-      private final double rangeMult;
-      private final double roundDiv;
-      private final List<Triple<String, String, Integer>> series;
-      private final String sourceKey;
-      private final String sourceKind;
-      private final String title;
-      private final String unit;
-
-      public ChartCfg(
-         String var1,
-         boolean var2,
-         String var3,
-         String var4,
-         int var5,
-         int var6,
-         double var7,
-         double var9,
-         double var11,
-         String var13,
-         String var14,
-         List<Triple<String, String, Integer>> var15
-      ) {
-         Intrinsics.checkNotNullParameter(var1, "id");
-         Intrinsics.checkNotNullParameter(var3, "title");
-         Intrinsics.checkNotNullParameter(var4, "unit");
-         Intrinsics.checkNotNullParameter(var13, "sourceKind");
-         Intrinsics.checkNotNullParameter(var14, "sourceKey");
-         Intrinsics.checkNotNullParameter(var15, "series");
-         super();
-         this.id = var1;
-         this.advanced = var2;
-         this.title = var3;
-         this.unit = var4;
-         this.legendDigits = var5;
-         this.rangeDigits = var6;
-         this.rangeFloor = var7;
-         this.rangeMult = var9;
-         this.roundDiv = var11;
-         this.sourceKind = var13;
-         this.sourceKey = var14;
-         this.series = var15;
-      }
-
-      public final boolean getAdvanced() {
-         return this.advanced;
-      }
-
-      public final String getId() {
-         return this.id;
-      }
-
-      public final int getLegendDigits() {
-         return this.legendDigits;
-      }
-
-      public final int getRangeDigits() {
-         return this.rangeDigits;
-      }
-
-      public final double getRangeFloor() {
-         return this.rangeFloor;
-      }
-
-      public final double getRangeMult() {
-         return this.rangeMult;
-      }
-
-      public final double getRoundDiv() {
-         return this.roundDiv;
-      }
-
-      public final List<Triple<String, String, Integer>> getSeries() {
-         return this.series;
-      }
-
-      public final String getSourceKey() {
-         return this.sourceKey;
-      }
-
-      public final String getSourceKind() {
-         return this.sourceKind;
-      }
-
-      public final String getTitle() {
-         return this.title;
-      }
-
-      public final String getUnit() {
-         return this.unit;
-      }
-   }
-
-   private static final class ChartViews {
-      private final GxTuningPage.ChartCfg cfg;
-      private final GxTuningChartView chart;
-      private final LinearLayout legend;
-      private final TextView source;
-      private final TextView waiting;
-
-      public ChartViews(GxTuningPage.ChartCfg var1, TextView var2, LinearLayout var3, GxTuningChartView var4, TextView var5) {
-         Intrinsics.checkNotNullParameter(var1, "cfg");
-         Intrinsics.checkNotNullParameter(var2, "source");
-         Intrinsics.checkNotNullParameter(var3, "legend");
-         Intrinsics.checkNotNullParameter(var4, "chart");
-         Intrinsics.checkNotNullParameter(var5, "waiting");
-         super();
-         this.cfg = var1;
-         this.source = var2;
-         this.legend = var3;
-         this.chart = var4;
-         this.waiting = var5;
-      }
-
-      public final GxTuningPage.ChartCfg getCfg() {
-         return this.cfg;
-      }
-
-      public final GxTuningChartView getChart() {
-         return this.chart;
-      }
-
-      public final LinearLayout getLegend() {
-         return this.legend;
-      }
-
-      public final TextView getSource() {
-         return this.source;
-      }
-
-      public final TextView getWaiting() {
-         return this.waiting;
-      }
-   }
-
-   private static final class CmpRow {
-      private final Object current;
-      private final boolean curve;
-      private final String key;
-      private final String label;
-      private final Object stock;
-
-      public CmpRow(String var1, String var2, boolean var3, Object var4, Object var5) {
-         Intrinsics.checkNotNullParameter(var1, "key");
-         Intrinsics.checkNotNullParameter(var2, "label");
-         super();
-         this.key = var1;
-         this.label = var2;
-         this.curve = var3;
-         this.stock = var4;
-         this.current = var5;
-      }
-
-      // $VF: synthetic method
-      public static GxTuningPage.CmpRow copy$default(
-         GxTuningPage.CmpRow var0, String var1, String var2, boolean var3, Object var4, Object var5, int var6, Object var7
-      ) {
-         if ((var6 & 1) != 0) {
-            var1 = var0.key;
-         }
-
-         if ((var6 & 2) != 0) {
-            var2 = var0.label;
-         }
-
-         if ((var6 & 4) != 0) {
-            var3 = var0.curve;
-         }
-
-         if ((var6 & 8) != 0) {
-            var4 = var0.stock;
-         }
-
-         if ((var6 & 16) != 0) {
-            var5 = var0.current;
-         }
-
-         return var0.copy(var1, var2, var3, var4, var5);
-      }
-
-      public final String component1() {
-         return this.key;
-      }
-
-      public final String component2() {
-         return this.label;
-      }
-
-      public final boolean component3() {
-         return this.curve;
-      }
-
-      public final Object component4() {
-         return this.stock;
-      }
-
-      public final Object component5() {
-         return this.current;
-      }
-
-      public final GxTuningPage.CmpRow copy(String var1, String var2, boolean var3, Object var4, Object var5) {
-         Intrinsics.checkNotNullParameter(var1, "key");
-         Intrinsics.checkNotNullParameter(var2, "label");
-         return new GxTuningPage.CmpRow(var1, var2, var3, var4, var5);
-      }
-
-      @Override
-      public boolean equals(Object var1) {
-         if (this == var1) {
-            return true;
-         } else if (!(var1 instanceof GxTuningPage.CmpRow)) {
-            return false;
-         } else {
-            var1 = var1;
-            if (!Intrinsics.areEqual(this.key, var1.key)) {
-               return false;
-            } else if (!Intrinsics.areEqual(this.label, var1.label)) {
-               return false;
-            } else if (this.curve != var1.curve) {
-               return false;
+    private final void toggleRoute(String name) {
+        if (this.selectedRoutes.contains(name)) {
+            this.selectedRoutes.remove(name);
+            this.segmentRanges.remove(name);
+        } else {
+            int remaining = this.maxSegments - selectedSegmentCount();
+            if (remaining <= 0) {
+                toast("FLM is limited to " + this.maxSegments + " segments at a time.");
+                renderRoute(name);
+                return;
             } else {
-               return !Intrinsics.areEqual(this.stock, var1.stock) ? false : Intrinsics.areEqual(this.current, var1.current);
+                Bounds b = bounds(name);
+                if (b.getCount() == 0) {
+                    renderRoute(name);
+                    return;
+                } else {
+                    this.selectedRoutes.add(name);
+                    if (b.getCount() > remaining) {
+                        this.segmentRanges.put(name, TuplesKt.to(String.valueOf(b.getFirst()), String.valueOf((b.getFirst() + remaining) - 1)));
+                    }
+                }
             }
-         }
-      }
+        }
+        renderRoute(name);
+        afterSelectionChange();
+    }
 
-      public final Object getCurrent() {
-         return this.current;
-      }
+    private final void selectFirstSegments() {
+        this.selectedRoutes.clear();
+        this.segmentRanges.clear();
+        int remaining = this.maxSegments;
+        Iterator<JSONObject> it = this.routes.iterator();
+        Intrinsics.checkNotNullExpressionValue(it, "iterator(...)");
+        while (it.hasNext()) {
+            JSONObject next = it.next();
+            Intrinsics.checkNotNullExpressionValue(next, "next(...)");
+            JSONObject r = next;
+            if (remaining <= 0) {
+                break;
+            }
+            String name = s(r, "name");
+            Bounds b = bounds(name);
+            if (b.getCount() != 0) {
+                int take = Math.min(b.getCount(), remaining);
+                this.selectedRoutes.add(name);
+                if (take < b.getCount()) {
+                    this.segmentRanges.put(name, TuplesKt.to(String.valueOf(b.getFirst()), String.valueOf((b.getFirst() + take) - 1)));
+                }
+                remaining -= take;
+            }
+        }
+        renderRoutesAll();
+    }
 
-      public final boolean getCurve() {
-         return this.curve;
-      }
+    private final void afterSelectionChange() {
+        boolean full = selectedSegmentCount() >= this.maxSegments;
+        for (Map.Entry<String, Switch> entry : this.routeSwitches.entrySet()) {
+            String n = entry.getKey();
+            Switch sw = entry.getValue();
+            boolean on = this.selectedRoutes.contains(n) || !full;
+            sw.setEnabled(on);
+            sw.setAlpha(on ? 1.0f : 0.4f);
+        }
+        paintRoutesHead();
+        paintActions();
+    }
 
-      public final String getKey() {
-         return this.key;
-      }
+    private final void paintRoutesHead() {
+        if (this.flmBuilt) {
+            LinearLayout linearLayout = this.routesHead;
+            LinearLayout linearLayout2 = null;
+            if (linearLayout == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("routesHead");
+                linearLayout = null;
+            }
+            linearLayout.removeAllViews();
+            if (this.loadingRoutes) {
+                LinearLayout linearLayout3 = this.routesHead;
+                if (linearLayout3 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("routesHead");
+                } else {
+                    linearLayout2 = linearLayout3;
+                }
+                linearLayout2.addView(empty("Loading local routes..."));
+                return;
+            }
+            if (this.routes.isEmpty()) {
+                LinearLayout linearLayout4 = this.routesHead;
+                if (linearLayout4 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("routesHead");
+                    linearLayout4 = null;
+                }
+                linearLayout4.addView(empty("No local routes found."));
+                GxTuningPage gxTuningPage = this;
+                Pair[] pairArr = {TuplesKt.to("Reload routes", new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda71
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit paintRoutesHead$lambda$125;
+                        paintRoutesHead$lambda$125 = GxTuningPage.paintRoutesHead$lambda$125(GxTuningPage.this);
+                        return paintRoutesHead$lambda$125;
+                    }
+                })};
+                LinearLayout linearLayout5 = this.routesHead;
+                if (linearLayout5 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("routesHead");
+                } else {
+                    linearLayout2 = linearLayout5;
+                }
+                GxPage.buttons$default(gxTuningPage, pairArr, linearLayout2, false, 4, null);
+                return;
+            }
+            int n = selectedSegmentCount();
+            GxTuningPage gxTuningPage2 = this;
+            String str = n + "/" + this.maxSegments + " segments selected";
+            LinearLayout linearLayout6 = this.routesHead;
+            if (linearLayout6 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("routesHead");
+                linearLayout6 = null;
+            }
+            GxPage.Row r = GxPage.row$default(gxTuningPage2, str, null, linearLayout6, 0, 8, null);
+            if (n > this.maxSegments) {
+                r.getTitleView().setTextColor(Color.rgb(240, 110, 130));
+            }
+            GxTuningPage gxTuningPage3 = this;
+            Pair[] pairArr2 = {TuplesKt.to("Select first " + this.maxSegments, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda72
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit paintRoutesHead$lambda$126;
+                    paintRoutesHead$lambda$126 = GxTuningPage.paintRoutesHead$lambda$126(GxTuningPage.this);
+                    return paintRoutesHead$lambda$126;
+                }
+            }), TuplesKt.to("Clear", new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda1
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit paintRoutesHead$lambda$127;
+                    paintRoutesHead$lambda$127 = GxTuningPage.paintRoutesHead$lambda$127(GxTuningPage.this);
+                    return paintRoutesHead$lambda$127;
+                }
+            }), TuplesKt.to("Reload routes", new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda2
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit paintRoutesHead$lambda$128;
+                    paintRoutesHead$lambda$128 = GxTuningPage.paintRoutesHead$lambda$128(GxTuningPage.this);
+                    return paintRoutesHead$lambda$128;
+                }
+            })};
+            LinearLayout linearLayout7 = this.routesHead;
+            if (linearLayout7 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("routesHead");
+            } else {
+                linearLayout2 = linearLayout7;
+            }
+            GxPage.buttons$default(gxTuningPage3, pairArr2, linearLayout2, false, 4, null);
+        }
+    }
 
-      public final String getLabel() {
-         return this.label;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintRoutesHead$lambda$125(GxTuningPage this$0) {
+        this$0.loadRoutes();
+        return Unit.INSTANCE;
+    }
 
-      public final Object getStock() {
-         return this.stock;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintRoutesHead$lambda$126(GxTuningPage this$0) {
+        this$0.selectFirstSegments();
+        return Unit.INSTANCE;
+    }
 
-      @Override
-      public int hashCode() {
-         int var3 = this.key.hashCode();
-         int var5 = this.label.hashCode();
-         int var4 = Boolean.hashCode(this.curve);
-         Object var6 = this.stock;
-         int var2 = 0;
-         int var1;
-         if (var6 == null) {
-            var1 = 0;
-         } else {
-            var1 = this.stock.hashCode();
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintRoutesHead$lambda$127(GxTuningPage this$0) {
+        this$0.selectedRoutes.clear();
+        this$0.segmentRanges.clear();
+        this$0.renderRoutesAll();
+        return Unit.INSTANCE;
+    }
 
-         if (this.current != null) {
-            var2 = this.current.hashCode();
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintRoutesHead$lambda$128(GxTuningPage this$0) {
+        this$0.loadRoutes();
+        return Unit.INSTANCE;
+    }
 
-         return (((var3 * 31 + var5) * 31 + var4) * 31 + var1) * 31 + var2;
-      }
+    private final void renderRoutesAll() {
+        if (this.flmBuilt) {
+            LinearLayout linearLayout = this.routesBox;
+            if (linearLayout == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("routesBox");
+                linearLayout = null;
+            }
+            linearLayout.removeAllViews();
+            this.routeBoxes.clear();
+            this.routeSwitches.clear();
+            if (!this.loadingRoutes) {
+                Iterator<JSONObject> it = this.routes.iterator();
+                Intrinsics.checkNotNullExpressionValue(it, "iterator(...)");
+                while (it.hasNext()) {
+                    JSONObject next = it.next();
+                    Intrinsics.checkNotNullExpressionValue(next, "next(...)");
+                    JSONObject r = next;
+                    String name = s(r, "name");
+                    HashMap<String, LinearLayout> hashMap = this.routeBoxes;
+                    LinearLayout linearLayout2 = this.routesBox;
+                    if (linearLayout2 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("routesBox");
+                        linearLayout2 = null;
+                    }
+                    hashMap.put(name, box(linearLayout2));
+                    renderRoute(name);
+                }
+            }
+            afterSelectionChange();
+        }
+    }
 
-      @Override
-      public String toString() {
-         String var3 = this.key;
-         String var5 = this.label;
-         boolean var1 = this.curve;
-         Object var4 = this.stock;
-         Object var2 = this.current;
-         return "CmpRow(key=" + var3 + ", label=" + var5 + ", curve=" + var1 + ", stock=" + var4 + ", current=" + var2 + ")";
-      }
-   }
+    private final void renderRoute(final String name) {
+        Object element$iv;
+        LinearLayout b = this.routeBoxes.get(name);
+        if (b == null) {
+            return;
+        }
+        Iterable $this$firstOrNull$iv = this.routes;
+        Iterator it = $this$firstOrNull$iv.iterator();
+        while (true) {
+            if (it.hasNext()) {
+                element$iv = it.next();
+                JSONObject it2 = (JSONObject) element$iv;
+                if (Intrinsics.areEqual(s(it2, "name"), name)) {
+                    break;
+                }
+            } else {
+                element$iv = null;
+                break;
+            }
+        }
+        JSONObject r = (JSONObject) element$iv;
+        if (r == null) {
+            return;
+        }
+        b.removeAllViews();
+        boolean sel = this.selectedRoutes.contains(name);
+        GxPage.Row row = GxPage.row$default(this, fmtDate(r.opt("timestamp")), name + "\n" + fmtLen(r) + " · " + routeSelectedCount(name) + " selected", b, 0, 8, null);
+        if (sel) {
+            row.getView().setBackground(getUi().rounded(CarUi.Companion.getCARD_ON(), 14, Integer.valueOf(CarUi.Companion.getACCENT())));
+        }
+        Switch sw = row.m806switch(sel, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda16
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit renderRoute$lambda$130;
+                renderRoute$lambda$130 = GxTuningPage.renderRoute$lambda$130(GxTuningPage.this, name, ((Boolean) obj).booleanValue());
+                return renderRoute$lambda$130;
+            }
+        });
+        this.routeSwitches.put(name, sw);
+        boolean full = selectedSegmentCount() >= this.maxSegments;
+        sw.setEnabled(sel || !full);
+        sw.setAlpha(sw.isEnabled() ? 1.0f : 0.4f);
+        if (sel) {
+            Bounds bd = bounds(name);
+            Pair<String, String> pair = this.segmentRanges.get(name);
+            if (pair == null) {
+                pair = TuplesKt.to("", "");
+            }
+            String st = pair.component1();
+            String en = pair.component2();
+            String str = "–";
+            GxPage.Row sr = row("Segments", "Segments " + bd.getFirst() + "–" + bd.getLast() + ". Blank uses the whole route.", b, 1);
+            String str2 = st;
+            if (StringsKt.isBlank(str2)) {
+                str2 = "–";
+            }
+            GxPage.Row.button$default(sr, "First: " + ((Object) str2), false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda17
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderRoute$lambda$132;
+                    renderRoute$lambda$132 = GxTuningPage.renderRoute$lambda$132(GxTuningPage.this, name);
+                    return renderRoute$lambda$132;
+                }
+            }, 2, null);
+            String str3 = en;
+            if (!StringsKt.isBlank(str3)) {
+                str = str3;
+            }
+            GxPage.Row.button$default(sr, "Last: " + ((Object) str), false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda18
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderRoute$lambda$134;
+                    renderRoute$lambda$134 = GxTuningPage.renderRoute$lambda$134(GxTuningPage.this, name);
+                    return renderRoute$lambda$134;
+                }
+            }, 2, null);
+        }
+    }
 
-   private static final class Quality {
-      private final String detail;
-      private final String label;
-      private final Double value;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderRoute$lambda$130(GxTuningPage this$0, String $name, boolean it) {
+        this$0.toggleRoute($name);
+        return Unit.INSTANCE;
+    }
 
-      public Quality(String var1, Double var2, String var3) {
-         Intrinsics.checkNotNullParameter(var1, "label");
-         Intrinsics.checkNotNullParameter(var3, "detail");
-         super();
-         this.label = var1;
-         this.value = var2;
-         this.detail = var3;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderRoute$lambda$132(GxTuningPage this$0, String $name) {
+        this$0.editRange($name, true);
+        return Unit.INSTANCE;
+    }
 
-      public final String getDetail() {
-         return this.detail;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderRoute$lambda$134(GxTuningPage this$0, String $name) {
+        this$0.editRange($name, false);
+        return Unit.INSTANCE;
+    }
 
-      public final String getLabel() {
-         return this.label;
-      }
+    private final void editRange(final String name, final boolean start) {
+        Pair<String, String> pair = this.segmentRanges.get(name);
+        if (pair == null) {
+            pair = TuplesKt.to("", "");
+        }
+        final String st = pair.component1();
+        final String en = pair.component2();
+        prompt(start ? "First segment" : "Last segment", start ? "First" : "Last", start ? st : en, 2, "Leave blank to use the whole route.", new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda57
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit editRange$lambda$135;
+                editRange$lambda$135 = GxTuningPage.editRange$lambda$135(GxTuningPage.this, name, start, en, st, (String) obj);
+                return editRange$lambda$135;
+            }
+        });
+    }
 
-      public final Double getValue() {
-         return this.value;
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit editRange$lambda$135(GxTuningPage this$0, String $name, boolean $start, String $en, String $st, String raw) {
+        Intrinsics.checkNotNullParameter(raw, "raw");
+        String cleaned = new Regex("[^\\d]").replace(raw, "");
+        this$0.segmentRanges.put($name, $start ? TuplesKt.to(cleaned, $en) : TuplesKt.to($st, cleaned));
+        this$0.renderRoute($name);
+        this$0.afterSelectionChange();
+        return Unit.INSTANCE;
+    }
 
-   private static final class QualityCfg {
-      private final String actualKey;
-      private final boolean allowFallback;
-      private final String desiredKey;
-      private final double fair;
-      private final double fallbackMinPeak;
-      private final double fallbackMinSpeed;
-      private final double good;
-      private final double great;
-      private final double minDemand;
-      private final double minSpeed;
-      private final boolean persistence;
-      private final double severeError;
-      private final double warnError;
+    /* compiled from: GxTuning.kt */
+    private static final class ChartCfg {
+        private final boolean advanced;
+        private final String id;
+        private final int legendDigits;
+        private final int rangeDigits;
+        private final double rangeFloor;
+        private final double rangeMult;
+        private final double roundDiv;
+        private final List<Triple<String, String, Integer>> series;
+        private final String sourceKey;
+        private final String sourceKind;
+        private final String title;
+        private final String unit;
 
-      public QualityCfg(
-         String var1,
-         String var2,
-         double var3,
-         double var5,
-         boolean var7,
-         double var8,
-         double var10,
-         boolean var12,
-         double var13,
-         double var15,
-         double var17,
-         double var19,
-         double var21
-      ) {
-         Intrinsics.checkNotNullParameter(var1, "desiredKey");
-         Intrinsics.checkNotNullParameter(var2, "actualKey");
-         super();
-         this.desiredKey = var1;
-         this.actualKey = var2;
-         this.minSpeed = var3;
-         this.minDemand = var5;
-         this.allowFallback = var7;
-         this.fallbackMinSpeed = var8;
-         this.fallbackMinPeak = var10;
-         this.persistence = var12;
-         this.warnError = var13;
-         this.severeError = var15;
-         this.great = var17;
-         this.good = var19;
-         this.fair = var21;
-      }
+        public ChartCfg(String id, boolean advanced, String title, String unit, int legendDigits, int rangeDigits, double rangeFloor, double rangeMult, double roundDiv, String sourceKind, String sourceKey, List<Triple<String, String, Integer>> series) {
+            Intrinsics.checkNotNullParameter(id, "id");
+            Intrinsics.checkNotNullParameter(title, "title");
+            Intrinsics.checkNotNullParameter(unit, "unit");
+            Intrinsics.checkNotNullParameter(sourceKind, "sourceKind");
+            Intrinsics.checkNotNullParameter(sourceKey, "sourceKey");
+            Intrinsics.checkNotNullParameter(series, "series");
+            this.id = id;
+            this.advanced = advanced;
+            this.title = title;
+            this.unit = unit;
+            this.legendDigits = legendDigits;
+            this.rangeDigits = rangeDigits;
+            this.rangeFloor = rangeFloor;
+            this.rangeMult = rangeMult;
+            this.roundDiv = roundDiv;
+            this.sourceKind = sourceKind;
+            this.sourceKey = sourceKey;
+            this.series = series;
+        }
 
-      public final String getActualKey() {
-         return this.actualKey;
-      }
+        public final boolean getAdvanced() {
+            return this.advanced;
+        }
 
-      public final boolean getAllowFallback() {
-         return this.allowFallback;
-      }
+        public final String getId() {
+            return this.id;
+        }
 
-      public final String getDesiredKey() {
-         return this.desiredKey;
-      }
+        public final int getLegendDigits() {
+            return this.legendDigits;
+        }
 
-      public final double getFair() {
-         return this.fair;
-      }
+        public final int getRangeDigits() {
+            return this.rangeDigits;
+        }
 
-      public final double getFallbackMinPeak() {
-         return this.fallbackMinPeak;
-      }
+        public final String getTitle() {
+            return this.title;
+        }
 
-      public final double getFallbackMinSpeed() {
-         return this.fallbackMinSpeed;
-      }
+        public final String getUnit() {
+            return this.unit;
+        }
 
-      public final double getGood() {
-         return this.good;
-      }
+        public final double getRangeFloor() {
+            return this.rangeFloor;
+        }
 
-      public final double getGreat() {
-         return this.great;
-      }
+        public final double getRangeMult() {
+            return this.rangeMult;
+        }
 
-      public final double getMinDemand() {
-         return this.minDemand;
-      }
+        public final double getRoundDiv() {
+            return this.roundDiv;
+        }
 
-      public final double getMinSpeed() {
-         return this.minSpeed;
-      }
+        public final String getSourceKey() {
+            return this.sourceKey;
+        }
 
-      public final boolean getPersistence() {
-         return this.persistence;
-      }
+        public final String getSourceKind() {
+            return this.sourceKind;
+        }
 
-      public final double getSevereError() {
-         return this.severeError;
-      }
+        public final List<Triple<String, String, Integer>> getSeries() {
+            return this.series;
+        }
+    }
 
-      public final double getWarnError() {
-         return this.warnError;
-      }
-   }
+    /* compiled from: GxTuning.kt */
+    private static final class QualityCfg {
+        private final String actualKey;
+        private final boolean allowFallback;
+        private final String desiredKey;
+        private final double fair;
+        private final double fallbackMinPeak;
+        private final double fallbackMinSpeed;
+        private final double good;
+        private final double great;
+        private final double minDemand;
+        private final double minSpeed;
+        private final boolean persistence;
+        private final double severeError;
+        private final double warnError;
+
+        public QualityCfg(String desiredKey, String actualKey, double minSpeed, double minDemand, boolean allowFallback, double fallbackMinSpeed, double fallbackMinPeak, boolean persistence, double warnError, double severeError, double great, double good, double fair) {
+            Intrinsics.checkNotNullParameter(desiredKey, "desiredKey");
+            Intrinsics.checkNotNullParameter(actualKey, "actualKey");
+            this.desiredKey = desiredKey;
+            this.actualKey = actualKey;
+            this.minSpeed = minSpeed;
+            this.minDemand = minDemand;
+            this.allowFallback = allowFallback;
+            this.fallbackMinSpeed = fallbackMinSpeed;
+            this.fallbackMinPeak = fallbackMinPeak;
+            this.persistence = persistence;
+            this.warnError = warnError;
+            this.severeError = severeError;
+            this.great = great;
+            this.good = good;
+            this.fair = fair;
+        }
+
+        public final String getActualKey() {
+            return this.actualKey;
+        }
+
+        public final boolean getAllowFallback() {
+            return this.allowFallback;
+        }
+
+        public final String getDesiredKey() {
+            return this.desiredKey;
+        }
+
+        public final double getMinDemand() {
+            return this.minDemand;
+        }
+
+        public final double getMinSpeed() {
+            return this.minSpeed;
+        }
+
+        public final double getFallbackMinPeak() {
+            return this.fallbackMinPeak;
+        }
+
+        public final double getFallbackMinSpeed() {
+            return this.fallbackMinSpeed;
+        }
+
+        public final boolean getPersistence() {
+            return this.persistence;
+        }
+
+        public final double getSevereError() {
+            return this.severeError;
+        }
+
+        public final double getWarnError() {
+            return this.warnError;
+        }
+
+        public final double getFair() {
+            return this.fair;
+        }
+
+        public final double getGood() {
+            return this.good;
+        }
+
+        public final double getGreat() {
+            return this.great;
+        }
+    }
+
+    /* compiled from: GxTuning.kt */
+    private static final class Quality {
+        private final String detail;
+        private final String label;
+        private final Double value;
+
+        public Quality(String label, Double value, String detail) {
+            Intrinsics.checkNotNullParameter(label, "label");
+            Intrinsics.checkNotNullParameter(detail, "detail");
+            this.label = label;
+            this.value = value;
+            this.detail = detail;
+        }
+
+        public final String getDetail() {
+            return this.detail;
+        }
+
+        public final String getLabel() {
+            return this.label;
+        }
+
+        public final Double getValue() {
+            return this.value;
+        }
+    }
+
+    private final SharedPreferences getPrefs() {
+        return (SharedPreferences) this.prefs.getValue();
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final SharedPreferences prefs_delegate$lambda$136(Activity $act) {
+        return $act.getSharedPreferences("gx_tuning", 0);
+    }
+
+    /* compiled from: GxTuning.kt */
+    private static final class ChartViews {
+        private final ChartCfg cfg;
+        private final GxTuningChartView chart;
+        private final LinearLayout legend;
+        private final TextView source;
+        private final TextView waiting;
+
+        public ChartViews(ChartCfg cfg, TextView source, LinearLayout legend, GxTuningChartView chart, TextView waiting) {
+            Intrinsics.checkNotNullParameter(cfg, "cfg");
+            Intrinsics.checkNotNullParameter(source, "source");
+            Intrinsics.checkNotNullParameter(legend, "legend");
+            Intrinsics.checkNotNullParameter(chart, "chart");
+            Intrinsics.checkNotNullParameter(waiting, "waiting");
+            this.cfg = cfg;
+            this.source = source;
+            this.legend = legend;
+            this.chart = chart;
+            this.waiting = waiting;
+        }
+
+        public final ChartCfg getCfg() {
+            return this.cfg;
+        }
+
+        public final GxTuningChartView getChart() {
+            return this.chart;
+        }
+
+        public final LinearLayout getLegend() {
+            return this.legend;
+        }
+
+        public final TextView getSource() {
+            return this.source;
+        }
+
+        public final TextView getWaiting() {
+            return this.waiting;
+        }
+    }
+
+    private final void buildPlots(LinearLayout b) {
+        Object m1191constructorimpl;
+        this.plotsBuilt = true;
+        try {
+            Result.Companion companion = Result.Companion;
+            GxTuningPage $this$buildPlots_u24lambda_u24137 = this;
+            m1191constructorimpl = Result.m1191constructorimpl(Boolean.valueOf($this$buildPlots_u24lambda_u24137.getPrefs().getBoolean("plotsShowAdvancedTerms", false)));
+        } catch (Throwable th) {
+            Result.Companion companion2 = Result.Companion;
+            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+        }
+        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+            m1191constructorimpl = false;
+        }
+        this.showAdvanced = ((Boolean) m1191constructorimpl).booleanValue();
+        LinearLayout c = card(b);
+        headLine$default(this, c, "Live tuning status", 0, 4, null);
+        GxPage.text$default(this, "Live comparison view for tuning diagnostics. These scores are a quick health check, not a final verdict. Short spikes from bumps, lane changes, traffic transitions, and manual inputs can temporarily lower a score.", c, 0.0f, 0, false, 28, null);
+        this.plotsStatus = box(c);
+        GxPage.text$default(this, "Match rating uses a 30-second rolling window. Strong steering or accel moments are preferred, but gentler windows can still earn a rating. Longitudinal also checks how much of the window stays above error limits.", c, 14.0f, 0, false, 24, null);
+        LinearLayout bar = btnBar(c);
+        this.bPause = barBtn$default(this, bar, "Pause Live", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda20
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildPlots$lambda$138;
+                buildPlots$lambda$138 = GxTuningPage.buildPlots$lambda$138(GxTuningPage.this);
+                return buildPlots$lambda$138;
+            }
+        }, 4, null);
+        barBtn$default(this, bar, "Clear History", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda21
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildPlots$lambda$139;
+                buildPlots$lambda$139 = GxTuningPage.buildPlots$lambda$139(GxTuningPage.this);
+                return buildPlots$lambda$139;
+            }
+        }, 4, null);
+        barBtn$default(this, bar, "Refresh", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda23
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildPlots$lambda$140;
+                buildPlots$lambda$140 = GxTuningPage.buildPlots$lambda$140(GxTuningPage.this);
+                return buildPlots$lambda$140;
+            }
+        }, 4, null);
+        Iterable $this$filter$iv = this.charts;
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            ChartCfg it = (ChartCfg) element$iv$iv;
+            if (!it.getAdvanced()) {
+                destination$iv$iv.add(element$iv$iv);
+            }
+        }
+        for (ChartCfg cfg : (List) destination$iv$iv) {
+            chartCard(b, cfg);
+        }
+        this.bAdvanced = getUi().button("", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda24
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildPlots$lambda$142;
+                buildPlots$lambda$142 = GxTuningPage.buildPlots$lambda$142(GxTuningPage.this);
+                return buildPlots$lambda$142;
+            }
+        });
+        TextView textView = this.bAdvanced;
+        if (textView == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("bAdvanced");
+            textView = null;
+        }
+        LinearLayout.LayoutParams $this$buildPlots_u24lambda_u24143 = new LinearLayout.LayoutParams(-2, -2);
+        $this$buildPlots_u24lambda_u24143.topMargin = getUi().dp(8);
+        $this$buildPlots_u24lambda_u24143.bottomMargin = getUi().dp(10);
+        Unit unit = Unit.INSTANCE;
+        b.addView(textView, $this$buildPlots_u24lambda_u24143);
+        this.advancedBox = box(b);
+        Iterable $this$filter$iv2 = this.charts;
+        Collection destination$iv$iv2 = new ArrayList();
+        for (Object element$iv$iv2 : $this$filter$iv2) {
+            ChartCfg it2 = (ChartCfg) element$iv$iv2;
+            if (it2.getAdvanced()) {
+                destination$iv$iv2.add(element$iv$iv2);
+            }
+        }
+        for (ChartCfg cfg2 : (List) destination$iv$iv2) {
+            LinearLayout linearLayout = this.advancedBox;
+            if (linearLayout == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("advancedBox");
+                linearLayout = null;
+            }
+            chartCard(linearLayout, cfg2);
+        }
+        paintPlots();
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildPlots$lambda$138(GxTuningPage this$0) {
+        this$0.togglePaused();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildPlots$lambda$139(GxTuningPage this$0) {
+        this$0.samples.clear();
+        this$0.lastTs = 0.0d;
+        this$0.paintPlots();
+        this$0.toast("Plot history cleared.");
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildPlots$lambda$140(GxTuningPage this$0) {
+        this$0.plotsLoading = true;
+        this$0.plotsError = "";
+        this$0.paintPlots();
+        this$0.plotsLoad(true);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildPlots$lambda$142(GxTuningPage this$0) {
+        this$0.toggleAdvanced();
+        return Unit.INSTANCE;
+    }
+
+    private final void chartCard(LinearLayout into, ChartCfg cfg) {
+        LinearLayout c = card(into);
+        headLine$default(this, c, cfg.getTitle(), 0, 4, null);
+        TextView src = GxPage.text$default(this, "", c, 14.0f, 0, false, 24, null);
+        LinearLayout $this$chartCard_u24lambda_u24145 = new LinearLayout(getAct());
+        $this$chartCard_u24lambda_u24145.setOrientation(0);
+        $this$chartCard_u24lambda_u24145.setPadding(0, getUi().dp(4), 0, getUi().dp(8));
+        c.addView($this$chartCard_u24lambda_u24145);
+        Activity act = getAct();
+        Iterable $this$map$iv = cfg.getSeries();
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            Triple it = (Triple) item$iv$iv;
+            destination$iv$iv.add(TuplesKt.to(it.getFirst(), it.getThird()));
+        }
+        GxTuningChartView chart = new GxTuningChartView(act, (List) destination$iv$iv, cfg.getUnit(), cfg.getRangeDigits(), cfg.getRangeFloor(), cfg.getRangeMult(), cfg.getRoundDiv(), this.samples);
+        c.addView(chart, new LinearLayout.LayoutParams(-1, getUi().dp(220)));
+        TextView waiting = empty("Waiting for enough live samples...");
+        c.addView(waiting);
+        this.chartViews.add(new ChartViews(cfg, src, $this$chartCard_u24lambda_u24145, chart, waiting));
+    }
+
+    private final void togglePaused() {
+        this.plotsPaused = !this.plotsPaused;
+        paintPlots();
+        if (!this.plotsPaused) {
+            plotsLoad(true);
+        }
+    }
+
+    private final void toggleAdvanced() {
+        this.showAdvanced = !this.showAdvanced;
+        try {
+            Result.Companion companion = Result.Companion;
+            GxTuningPage $this$toggleAdvanced_u24lambda_u24147 = this;
+            $this$toggleAdvanced_u24lambda_u24147.getPrefs().edit().putBoolean("plotsShowAdvancedTerms", $this$toggleAdvanced_u24lambda_u24147.showAdvanced).apply();
+            Result.m1191constructorimpl(Unit.INSTANCE);
+        } catch (Throwable th) {
+            Result.Companion companion2 = Result.Companion;
+            Result.m1191constructorimpl(ResultKt.createFailure(th));
+        }
+        paintPlots();
+    }
+
+    static /* synthetic */ void plotsLoad$default(GxTuningPage gxTuningPage, boolean z, int i, Object obj) {
+        if ((i & 1) != 0) {
+            z = false;
+        }
+        gxTuningPage.plotsLoad(z);
+    }
+
+    private final void plotsLoad(boolean force) {
+        if (this.plotsBuilt) {
+            if (this.plotsFetching && !force) {
+                return;
+            }
+            this.plotsFetching = true;
+            getJson("/api/plots/live", new Function2() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda46
+                @Override // kotlin.jvm.functions.Function2
+                public final Object invoke(Object obj, Object obj2) {
+                    Unit plotsLoad$lambda$148;
+                    plotsLoad$lambda$148 = GxTuningPage.plotsLoad$lambda$148(GxTuningPage.this, (String) obj, (JSONObject) obj2);
+                    return plotsLoad$lambda$148;
+                }
+            });
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit plotsLoad$lambda$148(GxTuningPage this$0, String e, JSONObject o) {
+        this$0.plotsFetching = false;
+        if (o != null) {
+            this$0.live = o;
+            this$0.plotsError = "";
+            if (!this$0.truthy(o.opt("stale"))) {
+                this$0.pushSample(o);
+            }
+        } else {
+            this$0.plotsError = e == null ? "Failed to load live plot data" : e;
+        }
+        this$0.plotsLoading = false;
+        this$0.paintPlots();
+        return Unit.INSTANCE;
+    }
+
+    private final void pushSample(JSONObject p) {
+        double ts = num$default(this, p.opt("timestamp"), 0.0d, 2, null);
+        if (ts > 0.0d) {
+            if (ts == this.lastTs) {
+                return;
+            }
+            this.lastTs = ts;
+            HashMap m = new HashMap();
+            for (String k : this.sampleKeys) {
+                m.put(k, Double.valueOf(num$default(this, p.opt(k), 0.0d, 2, null)));
+            }
+            this.samples.add(new GxTuningSample(ts, m));
+            if (this.samples.size() > 240) {
+                this.samples.subList(0, this.samples.size() - 240).clear();
+            }
+        }
+    }
+
+    private final String sourceLabel(String kind, String source) {
+        String k = kind.toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(k, "toLowerCase(...)");
+        String src = source.toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(src, "toLowerCase(...)");
+        if (Intrinsics.areEqual(k, "lateral")) {
+            if (Intrinsics.areEqual(src, "torquestate")) {
+                return "Steering controller output";
+            }
+            if (Intrinsics.areEqual(src, "curvature")) {
+                return "Path model estimate";
+            }
+        }
+        if (Intrinsics.areEqual(k, "longitudinal")) {
+            if (StringsKt.contains$default((CharSequence) src, (CharSequence) "atarget", false, 2, (Object) null)) {
+                return "Planner target acceleration + measured acceleration";
+            }
+            if (StringsKt.contains$default((CharSequence) src, (CharSequence) "pid sum", false, 2, (Object) null)) {
+                return "PID term sum + measured acceleration";
+            }
+            if (StringsKt.contains$default((CharSequence) src, (CharSequence) "caroutput", false, 2, (Object) null)) {
+                return "Final accel command + measured acceleration";
+            }
+            if (StringsKt.contains$default((CharSequence) src, (CharSequence) "livelocationkalman", false, 2, (Object) null)) {
+                return "Control output + calibrated acceleration";
+            }
+            if (Intrinsics.areEqual(src, "controlsstate")) {
+                return "Planner target output";
+            }
+        }
+        if (Intrinsics.areEqual(k, "lateralterms")) {
+            if (Intrinsics.areEqual(src, "torquestate")) {
+                return "Steering torque controller";
+            }
+            if (Intrinsics.areEqual(src, "pidstate")) {
+                return "Steering angle PID controller";
+            }
+        }
+        return (Intrinsics.areEqual(k, "longitudinalterms") && Intrinsics.areEqual(src, "controlsstate")) ? "Longitudinal controller terms" : "Live control signal";
+    }
+
+    private final String formatAge(double seconds) {
+        StringBuilder append;
+        String str;
+        double v = Math.max(0.0d, seconds);
+        if (v < 1.0d) {
+            append = new StringBuilder().append(Math.round(1000 * v));
+            str = " ms";
+        } else {
+            append = new StringBuilder().append(f(v, 1));
+            str = " s";
+        }
+        return append.append(str).toString();
+    }
+
+    private final double percentile(List<Double> sorted, double p) {
+        if (sorted.isEmpty()) {
+            return 0.0d;
+        }
+        double idx = (sorted.size() - 1) * RangesKt.coerceIn(p, 0.0d, 1.0d);
+        int lo = (int) Math.floor(idx);
+        int hi = (int) Math.ceil(idx);
+        if (lo == hi) {
+            return sorted.get(lo).doubleValue();
+        }
+        double w = idx - lo;
+        return (sorted.get(lo).doubleValue() * (1 - w)) + (sorted.get(hi).doubleValue() * w);
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:76:0x01b7  */
+    /* JADX WARN: Removed duplicated region for block: B:82:0x0208  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final Quality computeQuality(QualityCfg cfg) {
+        List eligible;
+        double window;
+        List eligible2;
+        int count$iv;
+        int count$iv2;
+        if (this.samples.size() < 2) {
+            return new Quality("na", null, "Waiting for data");
+        }
+        int minN = 8;
+        double latest = ((GxTuningSample) CollectionsKt.last((List) this.samples)).getTs();
+        double cutoff = latest > 0.0d ? latest - 30.0d : 0.0d;
+        Iterable $this$filter$iv = this.samples;
+        Collection destination$iv$iv = new ArrayList();
+        Iterator it = $this$filter$iv.iterator();
+        while (true) {
+            if (!it.hasNext()) {
+                break;
+            }
+            Object element$iv$iv = it.next();
+            GxTuningSample it2 = (GxTuningSample) element$iv$iv;
+            if (it2.getTs() >= cutoff) {
+                destination$iv$iv.add(element$iv$iv);
+            }
+        }
+        List<GxTuningSample> recent = (List) destination$iv$iv;
+        List $this$filter$iv2 = recent;
+        Collection destination$iv$iv2 = new ArrayList();
+        for (Object element$iv$iv2 : $this$filter$iv2) {
+            Iterable $this$filter$iv3 = $this$filter$iv2;
+            GxTuningSample s = (GxTuningSample) element$iv$iv2;
+            double latest2 = latest;
+            Double d = s.getV().get("speed");
+            double speed = Math.abs(d != null ? d.doubleValue() : 0.0d);
+            if ((((cfg.getMinSpeed() <= 0.0d || speed >= cfg.getMinSpeed()) && (cfg.getMinDemand() <= 0.0d || computeQuality$mag(cfg, s) >= cfg.getMinDemand())) ? 1 : null) != null) {
+                destination$iv$iv2.add(element$iv$iv2);
+            }
+            $this$filter$iv2 = $this$filter$iv3;
+            latest = latest2;
+        }
+        List eligible3 = (List) destination$iv$iv2;
+        boolean fallback = false;
+        if (!cfg.getAllowFallback() || eligible3.size() >= 8 || recent.size() < 8) {
+            eligible = eligible3;
+            window = 30.0d;
+        } else {
+            double d2 = 0.0d;
+            for (GxTuningSample it3 : recent) {
+                List eligible4 = eligible3;
+                Double d3 = it3.getV().get("speed");
+                d2 += Math.abs(d3 != null ? d3.doubleValue() : 0.0d);
+                eligible3 = eligible4;
+            }
+            eligible = eligible3;
+            double avgSpeed = d2 / recent.size();
+            Iterator it4 = recent.iterator();
+            if (!it4.hasNext()) {
+                throw new NoSuchElementException();
+            }
+            GxTuningSample it5 = (GxTuningSample) it4.next();
+            double peak = computeQuality$mag(cfg, it5);
+            while (it4.hasNext()) {
+                GxTuningSample it6 = (GxTuningSample) it4.next();
+                peak = Math.max(peak, computeQuality$mag(cfg, it6));
+                cutoff = cutoff;
+            }
+            window = 30.0d;
+            if (avgSpeed >= Math.max(0.0d, cfg.getFallbackMinSpeed()) && peak >= Math.max(0.0d, cfg.getFallbackMinPeak())) {
+                eligible2 = recent;
+                fallback = true;
+                if (eligible2.size() >= 8) {
+                    return new Quality("na", null, "Need 8 samples (" + eligible2.size() + " " + (cfg.getAllowFallback() ? "eligible" : "signal") + " / " + recent.size() + " total)");
+                }
+                Iterable $this$map$iv = eligible2;
+                Collection destination$iv$iv3 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+                for (Object item$iv$iv : $this$map$iv) {
+                    GxTuningSample it7 = (GxTuningSample) item$iv$iv;
+                    int minN2 = minN;
+                    Double d4 = it7.getV().get(cfg.getDesiredKey());
+                    double doubleValue = d4 != null ? d4.doubleValue() : 0.0d;
+                    List recent2 = recent;
+                    Iterable $this$map$iv2 = $this$map$iv;
+                    Double d5 = it7.getV().get(cfg.getActualKey());
+                    destination$iv$iv3.add(Double.valueOf(Math.abs(doubleValue - (d5 != null ? d5.doubleValue() : 0.0d))));
+                    minN = minN2;
+                    recent = recent2;
+                    $this$map$iv = $this$map$iv2;
+                }
+                List errors = CollectionsKt.sorted((List) destination$iv$iv3);
+                if (errors.isEmpty()) {
+                    return new Quality("na", null, "No eligible samples");
+                }
+                double robust = (percentile(errors, 0.5d) * 0.7d) + (percentile(errors, 0.9d) * 0.3d);
+                String summary = eligible2.size() + " samples / " + ((int) window) + "s" + (fallback ? ", low-demand fallback" : "");
+                if (!cfg.getPersistence()) {
+                    String label = robust <= cfg.getGreat() ? "great" : robust <= cfg.getGood() ? "good" : robust <= cfg.getFair() ? "fair" : "poor";
+                    return new Quality(label, Double.valueOf(robust), summary);
+                }
+                double warnT = Math.max(!((cfg.getWarnError() > 0.0d ? 1 : (cfg.getWarnError() == 0.0d ? 0 : -1)) == 0) ? cfg.getWarnError() : 0.35d, (cfg.getGood() > 0.0d ? 1 : (cfg.getGood() == 0.0d ? 0 : -1)) == 0 ? 0.35d : cfg.getGood());
+                double sevT = Math.max(!((cfg.getSevereError() > 0.0d ? 1 : (cfg.getSevereError() == 0.0d ? 0 : -1)) == 0) ? cfg.getSevereError() : 0.7d, !((cfg.getFair() > 0.0d ? 1 : (cfg.getFair() == 0.0d ? 0 : -1)) == 0) ? cfg.getFair() : 0.55d);
+                List $this$count$iv = errors;
+                if (($this$count$iv instanceof Collection) && $this$count$iv.isEmpty()) {
+                    count$iv = 0;
+                } else {
+                    count$iv = 0;
+                    for (Object element$iv : $this$count$iv) {
+                        double it8 = ((Number) element$iv).doubleValue();
+                        if ((it8 > warnT) && (count$iv = count$iv + 1) < 0) {
+                            CollectionsKt.throwCountOverflow();
+                        }
+                    }
+                }
+                String str = "poor";
+                double warnFrac = count$iv / errors.size();
+                List $this$count$iv2 = errors;
+                if (($this$count$iv2 instanceof Collection) && $this$count$iv2.isEmpty()) {
+                    count$iv2 = 0;
+                } else {
+                    count$iv2 = 0;
+                    for (Object element$iv2 : $this$count$iv2) {
+                        double it9 = ((Number) element$iv2).doubleValue();
+                        if ((it9 > sevT) && (count$iv2 = count$iv2 + 1) < 0) {
+                            CollectionsKt.throwCountOverflow();
+                        }
+                    }
+                }
+                double sevFrac = count$iv2 / errors.size();
+                if (robust <= cfg.getGreat() && warnFrac <= 0.18d && sevFrac <= 0.05d) {
+                    str = "great";
+                } else if (robust <= cfg.getGood() && warnFrac <= 0.34d && sevFrac <= 0.12d) {
+                    str = "good";
+                } else if (robust <= cfg.getFair() && warnFrac <= 0.55d && sevFrac <= 0.24d) {
+                    str = "fair";
+                }
+                String label2 = str;
+                Double valueOf = Double.valueOf(robust);
+                double d6 = 100;
+                long round = Math.round(warnFrac * d6);
+                String label3 = f(warnT, 2);
+                return new Quality(label2, valueOf, summary + ", " + round + "% > " + label3 + " and " + Math.round(d6 * sevFrac) + "% > " + f(sevT, 2));
+            }
+        }
+        eligible2 = eligible;
+        if (eligible2.size() >= 8) {
+        }
+    }
+
+    private static final double computeQuality$mag(QualityCfg $cfg, GxTuningSample s) {
+        Double d = s.getV().get($cfg.getDesiredKey());
+        double abs = Math.abs(d != null ? d.doubleValue() : 0.0d);
+        Double d2 = s.getV().get($cfg.getActualKey());
+        return Math.max(abs, Math.abs(d2 != null ? d2.doubleValue() : 0.0d));
+    }
+
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    private final int toneColor(String label) {
+        String str;
+        switch (label.hashCode()) {
+            case 3135268:
+                if (label.equals("fair")) {
+                    str = "#d4a060";
+                    break;
+                }
+                return CarUi.Companion.getDIM();
+            case 3178685:
+                if (label.equals("good")) {
+                    str = "#5ec8c8";
+                    break;
+                }
+                return CarUi.Companion.getDIM();
+            case 3446818:
+                if (label.equals("poor")) {
+                    str = "#e05577";
+                    break;
+                }
+                return CarUi.Companion.getDIM();
+            case 98619021:
+                if (label.equals("great")) {
+                    str = "#6cc56e";
+                    break;
+                }
+                return CarUi.Companion.getDIM();
+            default:
+                return CarUi.Companion.getDIM();
+        }
+        return Color.parseColor(str);
+    }
+
+    private final void paintPlots() {
+        String label;
+        int color;
+        String label2;
+        double value;
+        Map<String, Double> v;
+        Double d;
+        if (this.plotsBuilt) {
+            JSONObject jSONObject = this.live;
+            if (jSONObject == null) {
+                jSONObject = new JSONObject();
+            }
+            JSONObject lv = jSONObject;
+            LinearLayout linearLayout = this.plotsStatus;
+            LinearLayout linearLayout2 = null;
+            if (linearLayout == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
+                linearLayout = null;
+            }
+            linearLayout.removeAllViews();
+            if (this.plotsLoading) {
+                GxTuningPage gxTuningPage = this;
+                LinearLayout linearLayout3 = this.plotsStatus;
+                if (linearLayout3 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
+                    linearLayout3 = null;
+                }
+                GxPage.text$default(gxTuningPage, "Loading live data...", linearLayout3, 0.0f, 0, false, 28, null);
+            }
+            if (!StringsKt.isBlank(this.plotsError)) {
+                LinearLayout linearLayout4 = this.plotsStatus;
+                if (linearLayout4 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
+                    linearLayout4 = null;
+                }
+                notice$default(this, linearLayout4, this.plotsError, 0, "Error:", 4, null);
+            }
+            int i = 33;
+            int i2 = 1;
+            if (!this.plotsLoading || this.live != null) {
+                LinearLayout linearLayout5 = this.plotsStatus;
+                if (linearLayout5 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
+                    linearLayout5 = null;
+                }
+                line$default(this, linearLayout5, "Onroad", truthy(lv.opt("isOnroad")) ? "Yes" : "No", 0, 8, null);
+                LinearLayout linearLayout6 = this.plotsStatus;
+                if (linearLayout6 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
+                    linearLayout6 = null;
+                }
+                line$default(this, linearLayout6, "Sample Age", formatAge(num$default(this, lv.opt("sampleAgeSeconds"), 0.0d, 2, null)), 0, 8, null);
+                LinearLayout linearLayout7 = this.plotsStatus;
+                if (linearLayout7 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
+                    linearLayout7 = null;
+                }
+                line$default(this, linearLayout7, "Vehicle Speed", f(num$default(this, lv.opt("speed"), 0.0d, 2, null), 2) + " m/s", 0, 8, null);
+                LinearLayout linearLayout8 = this.plotsStatus;
+                if (linearLayout8 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
+                    linearLayout8 = null;
+                }
+                line$default(this, linearLayout8, "Samples", String.valueOf(this.samples.size()), 0, 8, null);
+                if (truthy(lv.opt("bootStabilizing"))) {
+                    LinearLayout linearLayout9 = this.plotsStatus;
+                    if (linearLayout9 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
+                        linearLayout9 = null;
+                    }
+                    notice$default(this, linearLayout9, "Plots are warming up after startup.", 0, "Boot stabilizing", 4, null);
+                }
+                if (!StringsKt.isBlank(s(lv, "lastError"))) {
+                    LinearLayout linearLayout10 = this.plotsStatus;
+                    if (linearLayout10 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
+                        linearLayout10 = null;
+                    }
+                    notice$default(this, linearLayout10, s(lv, "lastError"), 0, "Source Error:", 4, null);
+                }
+                for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Your lateral tuning is", computeQuality(this.latQ)), TuplesKt.to("Your longitudinal tuning is", computeQuality(this.lonQ))})) {
+                    String base = (String) pair.component1();
+                    Quality q = (Quality) pair.component2();
+                    if (Intrinsics.areEqual(q.getLabel(), "na")) {
+                        label = "N/A";
+                    } else {
+                        label = q.getLabel();
+                        if (label.length() > 0) {
+                            StringBuilder sb = new StringBuilder();
+                            char it = label.charAt(0);
+                            String valueOf = String.valueOf(it);
+                            Intrinsics.checkNotNull(valueOf, "null cannot be cast to non-null type java.lang.String");
+                            String upperCase = valueOf.toUpperCase(Locale.ROOT);
+                            Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
+                            StringBuilder append = sb.append((Object) upperCase);
+                            String substring = label.substring(1);
+                            Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
+                            label = append.append(substring).toString();
+                        }
+                    }
+                    String tone = label;
+                    SpannableStringBuilder sb2 = new SpannableStringBuilder(base + " ");
+                    int st = sb2.length();
+                    sb2.append((CharSequence) tone);
+                    sb2.setSpan(new ForegroundColorSpan(toneColor(q.getLabel())), st, sb2.length(), 33);
+                    LinearLayout linearLayout11 = this.plotsStatus;
+                    if (linearLayout11 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
+                        linearLayout11 = null;
+                    }
+                    TextView $this$paintPlots_u24lambda_u24157 = text("", linearLayout11, 18.0f, CarUi.Companion.getTEXT(), true);
+                    $this$paintPlots_u24lambda_u24157.setText(sb2);
+                    $this$paintPlots_u24lambda_u24157.setPadding(0, getUi().dp(10), 0, 0);
+                    GxTuningPage gxTuningPage2 = this;
+                    String detail = q.getValue() == null ? q.getDetail() : f(q.getValue().doubleValue(), 2) + " m/s² error (" + q.getDetail() + ")";
+                    LinearLayout linearLayout12 = this.plotsStatus;
+                    if (linearLayout12 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("plotsStatus");
+                        linearLayout12 = null;
+                    }
+                    GxPage.text$default(gxTuningPage2, detail, linearLayout12, 14.0f, 0, false, 24, null);
+                }
+            }
+            TextView textView = this.bPause;
+            if (textView == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("bPause");
+                textView = null;
+            }
+            textView.setText(this.plotsPaused ? "Resume Live" : "Pause Live");
+            TextView textView2 = this.bAdvanced;
+            if (textView2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("bAdvanced");
+                textView2 = null;
+            }
+            textView2.setText(this.showAdvanced ? "Hide Advanced Controller Terms" : "Show Advanced Controller Terms");
+            LinearLayout linearLayout13 = this.advancedBox;
+            if (linearLayout13 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("advancedBox");
+            } else {
+                linearLayout2 = linearLayout13;
+            }
+            linearLayout2.setVisibility(this.showAdvanced ? 0 : 8);
+            boolean empty = this.samples.size() <= 1;
+            GxTuningSample latest = (GxTuningSample) CollectionsKt.lastOrNull((List) this.samples);
+            Iterator<ChartViews> it2 = this.chartViews.iterator();
+            Intrinsics.checkNotNullExpressionValue(it2, "iterator(...)");
+            while (it2.hasNext()) {
+                ChartViews next = it2.next();
+                Intrinsics.checkNotNullExpressionValue(next, "next(...)");
+                ChartViews cv = next;
+                cv.getSource().setText("Source: " + sourceLabel(cv.getCfg().getSourceKind(), s(lv, cv.getCfg().getSourceKey())));
+                cv.getLegend().removeAllViews();
+                for (Triple<String, String, Integer> triple : cv.getCfg().getSeries()) {
+                    String key = triple.component1();
+                    String label3 = triple.component2();
+                    int color2 = triple.component3().intValue();
+                    if (latest == null || (v = latest.getV()) == null || (d = v.get(key)) == null) {
+                        color = color2;
+                        label2 = label3;
+                        value = num$default(this, lv.opt(key), 0.0d, 2, null);
+                    } else {
+                        value = d.doubleValue();
+                        color = color2;
+                        label2 = label3;
+                    }
+                    SpannableStringBuilder sb3 = new SpannableStringBuilder("▬ ");
+                    sb3.setSpan(new ForegroundColorSpan(color), 0, i2, i);
+                    sb3.append((CharSequence) (label2 + ": " + f(value, cv.getCfg().getLegendDigits())));
+                    LinearLayout legend = cv.getLegend();
+                    TextView $this$paintPlots_u24lambda_u24158 = new TextView(getAct());
+                    $this$paintPlots_u24lambda_u24158.setText(sb3);
+                    $this$paintPlots_u24lambda_u24158.setTextSize(16.0f);
+                    $this$paintPlots_u24lambda_u24158.setTextColor(CarUi.Companion.getTEXT());
+                    $this$paintPlots_u24lambda_u24158.setPadding(0, 0, getUi().dp(20), 0);
+                    legend.addView($this$paintPlots_u24lambda_u24158);
+                    i = 33;
+                    i2 = 1;
+                }
+                cv.getChart().setVisibility(empty ? 8 : 0);
+                cv.getWaiting().setVisibility(empty ? 0 : 8);
+                if (empty) {
+                    i = 33;
+                    i2 = 1;
+                } else {
+                    cv.getChart().invalidate();
+                    i = 33;
+                    i2 = 1;
+                }
+            }
+        }
+    }
+
+    private final String slotId(JSONObject slot) {
+        String obj;
+        return (slot == null || (obj = StringsKt.trim((CharSequence) s(slot, "id")).toString()) == null) ? "" : obj;
+    }
+
+    private final boolean isUnused(JSONObject slot) {
+        String n = StringsKt.trim((CharSequence) s(slot, "name")).toString().toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(n, "toLowerCase(...)");
+        return Intrinsics.areEqual(n, "unused") || StringsKt.startsWith$default(n, "unused ", false, 2, (Object) null);
+    }
+
+    private final TreeMap<String, String> variantLabels(JSONObject slot) {
+        TreeMap labels = new TreeMap();
+        if (slot == null) {
+            labels.put("A", "A");
+            return labels;
+        }
+        JSONObject raw = slot.optJSONObject("variantLabels");
+        if (raw != null) {
+            Iterator<String> keys = raw.keys();
+            Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
+            while (keys.hasNext()) {
+                String k = keys.next();
+                Intrinsics.checkNotNull(k);
+                String mode = StringsKt.trim((CharSequence) k).toString().toUpperCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(mode, "toUpperCase(...)");
+                String label = StringsKt.trim((CharSequence) s(raw, k)).toString();
+                if (mode.length() == 1) {
+                    char charAt = mode.charAt(0);
+                    if ('A' <= charAt && charAt < '[') {
+                        if (label.length() > 0) {
+                            labels.put(mode, label);
+                        }
+                    }
+                }
+            }
+        }
+        String a = StringsKt.trim((CharSequence) s(slot, "aLabel")).toString();
+        String b = StringsKt.trim((CharSequence) s(slot, "bLabel")).toString();
+        if ((a.length() > 0) && labels.get("A") == null) {
+            labels.put("A", a);
+        }
+        if ((b.length() > 0) && labels.get("B") == null) {
+            labels.put("B", b);
+        }
+        if (labels.get("A") == null) {
+            labels.put("A", "A");
+        }
+        return labels;
+    }
+
+    private final String modeLabel(JSONObject slot, String mode) {
+        String m = StringsKt.trim((CharSequence) mode).toString().toUpperCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(m, "toUpperCase(...)");
+        String str = variantLabels(slot).get(m);
+        if (str != null) {
+            return str;
+        }
+        String str2 = m;
+        if (StringsKt.isBlank(str2)) {
+            str2 = "A";
+        }
+        return str2;
+    }
+
+    private final String defaultMode(JSONObject slot) {
+        String str;
+        Set modes = variantLabels(slot).keySet();
+        Intrinsics.checkNotNullExpressionValue(modes, "<get-keys>(...)");
+        return (modes.contains("A") || (str = (String) CollectionsKt.firstOrNull(modes)) == null) ? "A" : str;
+    }
+
+    private final List<JSONObject> tgSlots() {
+        return objects(arr(this.tgData, "slots"));
+    }
+
+    private final List<JSONObject> tgSelectable() {
+        List sel = objects(arr(this.tgData, "selectableSlots"));
+        if (!sel.isEmpty()) {
+            return sel;
+        }
+        Iterable $this$filter$iv = tgSlots();
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            JSONObject it = (JSONObject) element$iv$iv;
+            if (!isUnused(it)) {
+                destination$iv$iv.add(element$iv$iv);
+            }
+        }
+        return (List) destination$iv$iv;
+    }
+
+    private final String tgActiveId() {
+        return StringsKt.trim((CharSequence) s(this.tgData, "activeSlot")).toString();
+    }
+
+    private final String tgActiveVariant() {
+        String upperCase = StringsKt.trim((CharSequence) s(this.tgData, "activeVariant")).toString().toUpperCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
+        return upperCase;
+    }
+
+    private final void buildTesting(LinearLayout b) {
+        this.tgBuilt = true;
+        header("A/B Tuning Sandbox", b);
+        note("A/B Tuning Sandbox. If you don't know what this is, you probably shouldn't be here ;)", b);
+        this.tgBox = box(b);
+        paintTg();
+    }
+
+    private final void tgApplyPayload(JSONObject p) {
+        Iterable $this$none$iv;
+        this.tgData = p;
+        this.tgError = "";
+        List selectable = objects(arr(p, "selectableSlots"));
+        List $this$none$iv2 = selectable;
+        boolean z = false;
+        if (!($this$none$iv2 instanceof Collection) || !$this$none$iv2.isEmpty()) {
+            Iterator it = $this$none$iv2.iterator();
+            while (true) {
+                if (it.hasNext()) {
+                    Object element$iv = it.next();
+                    JSONObject it2 = (JSONObject) element$iv;
+                    if (Intrinsics.areEqual(slotId(it2), StringsKt.trim((CharSequence) this.tgSelected).toString())) {
+                        $this$none$iv = null;
+                        break;
+                    }
+                } else {
+                    $this$none$iv = 1;
+                    break;
+                }
+            }
+        } else {
+            $this$none$iv = 1;
+        }
+        if ($this$none$iv != null) {
+            String active = StringsKt.trim((CharSequence) s(p, "activeSlot")).toString();
+            List $this$any$iv = selectable;
+            if (!($this$any$iv instanceof Collection) || !$this$any$iv.isEmpty()) {
+                Iterator it3 = $this$any$iv.iterator();
+                while (true) {
+                    if (!it3.hasNext()) {
+                        break;
+                    }
+                    Object element$iv2 = it3.next();
+                    JSONObject it4 = (JSONObject) element$iv2;
+                    if (Intrinsics.areEqual(slotId(it4), active)) {
+                        z = true;
+                        break;
+                    }
+                }
+            }
+            this.tgSelected = z ? active : slotId((JSONObject) CollectionsKt.firstOrNull(selectable));
+        }
+    }
+
+    private final void tgLoad() {
+        if (!this.tgBuilt || this.tgFetching) {
+            return;
+        }
+        this.tgFetching = true;
+        getJson("/api/testing_grounds", new Function2() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda6
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit tgLoad$lambda$165;
+                tgLoad$lambda$165 = GxTuningPage.tgLoad$lambda$165(GxTuningPage.this, (String) obj, (JSONObject) obj2);
+                return tgLoad$lambda$165;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit tgLoad$lambda$165(GxTuningPage this$0, String e, JSONObject o) {
+        this$0.tgFetching = false;
+        this$0.tgLoading = false;
+        if (o != null) {
+            this$0.tgApplyPayload(o);
+        } else {
+            this$0.tgError = e == null ? "Failed to load testing grounds" : e;
+        }
+        this$0.paintTg();
+        return Unit.INSTANCE;
+    }
+
+    private final void tgSelectMode(String mode) {
+        Object element$iv;
+        if (this.tgBusy) {
+            return;
+        }
+        Iterable $this$firstOrNull$iv = tgSlots();
+        Iterator it = $this$firstOrNull$iv.iterator();
+        while (true) {
+            if (it.hasNext()) {
+                element$iv = it.next();
+                JSONObject it2 = (JSONObject) element$iv;
+                if (Intrinsics.areEqual(slotId(it2), StringsKt.trim((CharSequence) this.tgSelected).toString())) {
+                    break;
+                }
+            } else {
+                element$iv = null;
+                break;
+            }
+        }
+        JSONObject slot = (JSONObject) element$iv;
+        if (slot == null) {
+            toast("Select a testing ground first.");
+            return;
+        }
+        final String sid = slotId(slot);
+        final String m = StringsKt.trim((CharSequence) mode).toString().toUpperCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(m, "toUpperCase(...)");
+        if (StringsKt.isBlank(sid) || StringsKt.isBlank(m)) {
+            return;
+        }
+        this.tgBusy = true;
+        paintTg();
+        GxPage.send$default(this, "POST", "/api/testing_grounds/select", new JSONObject().put("slotId", sid).put("variant", m), 0L, new Function2() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda26
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit tgSelectMode$lambda$170;
+                tgSelectMode$lambda$170 = GxTuningPage.tgSelectMode$lambda$170(GxTuningPage.this, sid, m, (String) obj, (JSONObject) obj2);
+                return tgSelectMode$lambda$170;
+            }
+        }, 8, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit tgSelectMode$lambda$170(GxTuningPage this$0, String $sid, String $m, String e, JSONObject o) {
+        Object element$iv;
+        this$0.tgBusy = false;
+        if (e != null || o == null) {
+            this$0.tgError = e == null ? "Failed to update testing ground mode" : e;
+            this$0.toast(this$0.tgError);
+        } else {
+            this$0.tgApplyPayload(o);
+            this$0.tgSelected = $sid;
+            this$0.tgError = "";
+            Iterable $this$firstOrNull$iv = this$0.objects(this$0.arr(o, "slots"));
+            Iterator it = $this$firstOrNull$iv.iterator();
+            while (true) {
+                if (it.hasNext()) {
+                    element$iv = it.next();
+                    JSONObject it2 = (JSONObject) element$iv;
+                    if (Intrinsics.areEqual(this$0.slotId(it2), $sid)) {
+                        break;
+                    }
+                } else {
+                    element$iv = null;
+                    break;
+                }
+            }
+            JSONObject selSlot = (JSONObject) element$iv;
+            String obj = StringsKt.trim((CharSequence) this$0.s(o, "activeVariantLabel")).toString();
+            if (StringsKt.isBlank(obj)) {
+                obj = this$0.modeLabel(selSlot, $m);
+            }
+            String label = obj;
+            String s = this$0.s(o, "message");
+            if (StringsKt.isBlank(s)) {
+                s = "Testing Ground " + $sid + " set to " + label + ".";
+            }
+            this$0.toast(s);
+        }
+        this$0.paintTg();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:60:0x0153, code lost:
+    
+        if (r0 == null) goto L75;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:96:0x035a, code lost:
+    
+        if (r4 == null) goto L119;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void paintTg() {
+        Object element$iv;
+        JSONObject jSONObject;
+        Object element$iv2;
+        JSONObject jSONObject2;
+        String str;
+        String str2;
+        String str3;
+        String s;
+        LinearLayout linearLayout;
+        LinearLayout linearLayout2;
+        LinearLayout linearLayout3;
+        if (this.tgBuilt) {
+            LinearLayout linearLayout4 = this.tgBox;
+            if (linearLayout4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                linearLayout4 = null;
+            }
+            linearLayout4.removeAllViews();
+            JSONObject data = this.tgData;
+            if (this.tgLoading) {
+                LinearLayout linearLayout5 = this.tgBox;
+                if (linearLayout5 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                    linearLayout3 = null;
+                } else {
+                    linearLayout3 = linearLayout5;
+                }
+                linearLayout3.addView(empty("Loading testing ground state..."));
+                return;
+            }
+            if (data == null) {
+                if (StringsKt.isBlank(this.tgError)) {
+                    return;
+                }
+                LinearLayout linearLayout6 = this.tgBox;
+                if (linearLayout6 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                    linearLayout2 = null;
+                } else {
+                    linearLayout2 = linearLayout6;
+                }
+                notice$default(this, linearLayout2, this.tgError, 0, null, 12, null);
+                return;
+            }
+            if (!StringsKt.isBlank(this.tgError)) {
+                LinearLayout linearLayout7 = this.tgBox;
+                if (linearLayout7 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                    linearLayout7 = null;
+                }
+                notice$default(this, linearLayout7, this.tgError, 0, null, 12, null);
+            }
+            final List selectable = tgSelectable();
+            if (selectable.isEmpty()) {
+                if (StringsKt.isBlank(this.tgError)) {
+                    LinearLayout linearLayout8 = this.tgBox;
+                    if (linearLayout8 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                        linearLayout = null;
+                    } else {
+                        linearLayout = linearLayout8;
+                    }
+                    linearLayout.addView(empty("No active test slots."));
+                    return;
+                }
+                return;
+            }
+            Iterable slots = tgSlots();
+            if (StringsKt.isBlank(this.tgSelected)) {
+                jSONObject = null;
+            } else {
+                Iterable $this$firstOrNull$iv = slots;
+                Iterator it = $this$firstOrNull$iv.iterator();
+                while (true) {
+                    if (!it.hasNext()) {
+                        element$iv = null;
+                        break;
+                    }
+                    element$iv = it.next();
+                    JSONObject it2 = (JSONObject) element$iv;
+                    if (Intrinsics.areEqual(slotId(it2), StringsKt.trim((CharSequence) this.tgSelected).toString())) {
+                        break;
+                    }
+                }
+                jSONObject = (JSONObject) element$iv;
+            }
+            JSONObject selected = jSONObject;
+            if (StringsKt.isBlank(tgActiveId())) {
+                jSONObject2 = null;
+            } else {
+                Iterable $this$firstOrNull$iv2 = slots;
+                Iterator it3 = $this$firstOrNull$iv2.iterator();
+                while (true) {
+                    if (!it3.hasNext()) {
+                        element$iv2 = null;
+                        break;
+                    }
+                    element$iv2 = it3.next();
+                    JSONObject it4 = (JSONObject) element$iv2;
+                    if (Intrinsics.areEqual(slotId(it4), tgActiveId())) {
+                        break;
+                    }
+                }
+                jSONObject2 = (JSONObject) element$iv2;
+            }
+            JSONObject activeSlot = jSONObject2;
+            LinearLayout linearLayout9 = this.tgBox;
+            if (linearLayout9 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                linearLayout9 = null;
+            }
+            LinearLayout sc = card(linearLayout9);
+            headLine$default(this, sc, "Status", 0, 4, null);
+            LinearLayout linearLayout10 = sc;
+            if (selected != null && (s = s(selected, "name")) != null) {
+                String str4 = s;
+                if (StringsKt.isBlank(str4)) {
+                    str4 = null;
+                }
+                str = str4;
+            }
+            str = "Unknown";
+            line$default(this, linearLayout10, "Selected Slot", str, 0, 8, null);
+            String str5 = "Not active";
+            if (selected != null && Intrinsics.areEqual(tgActiveId(), StringsKt.trim((CharSequence) this.tgSelected).toString())) {
+                String obj = StringsKt.trim((CharSequence) s(data, "activeVariantLabel")).toString();
+                if (StringsKt.isBlank(obj)) {
+                    String tgActiveVariant = tgActiveVariant();
+                    if (StringsKt.isBlank(tgActiveVariant)) {
+                        tgActiveVariant = defaultMode(selected);
+                    }
+                    obj = modeLabel(selected, tgActiveVariant);
+                }
+                str5 = obj;
+            }
+            String selMode = str5;
+            line$default(this, sc, "Selected Mode", selMode, 0, 8, null);
+            line$default(this, sc, "Onroad", truthy(data.opt("isOnroad")) ? "Yes" : "No", 0, 8, null);
+            line$default(this, sc, "Selectable Slots", String.valueOf(selectable.size()), 0, 8, null);
+            String str6 = "Current Test Slots (" + selectable.size() + ")";
+            LinearLayout linearLayout11 = this.tgBox;
+            if (linearLayout11 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                linearLayout11 = null;
+            }
+            header(str6, linearLayout11);
+            LinearLayout linearLayout12 = this.tgBox;
+            if (linearLayout12 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                linearLayout12 = null;
+            }
+            LinearLayout lc = card(linearLayout12);
+            Iterator<JSONObject> it5 = selectable.iterator();
+            while (it5.hasNext()) {
+                JSONObject slot = it5.next();
+                boolean on = Intrinsics.areEqual(slotId(slot), tgActiveId());
+                TextView $this$paintTg_u24lambda_u24177 = new TextView(getAct());
+                String selMode2 = selMode;
+                Iterator<JSONObject> it6 = it5;
+                $this$paintTg_u24lambda_u24177.setText(slotId(slot) + ". " + s(slot, "name"));
+                $this$paintTg_u24lambda_u24177.setTextSize(18.0f);
+                CarUi.Companion companion = CarUi.Companion;
+                $this$paintTg_u24lambda_u24177.setTextColor(on ? companion.getACCENT() : companion.getTEXT());
+                if (on) {
+                    $this$paintTg_u24lambda_u24177.setTypeface(Typeface.DEFAULT_BOLD);
+                }
+                $this$paintTg_u24lambda_u24177.setPadding(getUi().dp(12), getUi().dp(10), getUi().dp(12), getUi().dp(10));
+                if (on) {
+                    $this$paintTg_u24lambda_u24177.setBackground(getUi().rounded(CarUi.Companion.getCARD_ON(), 10, Integer.valueOf(CarUi.Companion.getACCENT())));
+                }
+                LinearLayout.LayoutParams $this$paintTg_u24lambda_u24178 = new LinearLayout.LayoutParams(-1, -2);
+                $this$paintTg_u24lambda_u24178.bottomMargin = getUi().dp(4);
+                Unit unit = Unit.INSTANCE;
+                lc.addView($this$paintTg_u24lambda_u24177, $this$paintTg_u24lambda_u24178);
+                selMode = selMode2;
+                it5 = it6;
+            }
+            GxTuningPage gxTuningPage = this;
+            LinearLayout linearLayout13 = this.tgBox;
+            if (linearLayout13 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                linearLayout13 = null;
+            }
+            GxPage.Row vr = GxPage.row$default(gxTuningPage, "View Slot", null, linearLayout13, 0, 8, null);
+            if (selected != null) {
+                str2 = slotId(selected) + ". " + s(selected, "name");
+            }
+            str2 = "Choose…";
+            en(GxPage.Row.button$default(vr, str2, false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda40
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit paintTg$lambda$182;
+                    paintTg$lambda$182 = GxTuningPage.paintTg$lambda$182(GxTuningPage.this, selectable);
+                    return paintTg$lambda$182;
+                }
+            }, 2, null), !this.tgBusy);
+            LinearLayout linearLayout14 = this.tgBox;
+            if (linearLayout14 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                linearLayout14 = null;
+            }
+            note("Only one Testing Ground can be active at a time. Switching slots only changes what you're viewing; the active test stays enabled until you explicitly choose another mode.", linearLayout14);
+            if (selected != null) {
+                LinearLayout linearLayout15 = this.tgBox;
+                if (linearLayout15 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                    linearLayout15 = null;
+                }
+                LinearLayout c = card(linearLayout15);
+                str3 = ". ";
+                LinearLayout h = headLine$default(this, c, s(selected, "name"), 0, 4, null);
+                if (Intrinsics.areEqual(slotId(selected), tgActiveId())) {
+                    TextView $this$paintTg_u24lambda_u24183 = new TextView(getAct());
+                    $this$paintTg_u24lambda_u24183.setText("Active");
+                    $this$paintTg_u24lambda_u24183.setTextSize(15.0f);
+                    $this$paintTg_u24lambda_u24183.setTextColor(CarUi.Companion.getBG());
+                    $this$paintTg_u24lambda_u24183.setTypeface(Typeface.DEFAULT_BOLD);
+                    $this$paintTg_u24lambda_u24183.setBackground(CarUi.rounded$default(getUi(), CarUi.Companion.getACCENT(), 10, null, 4, null));
+                    $this$paintTg_u24lambda_u24183.setPadding(getUi().dp(12), getUi().dp(4), getUi().dp(12), getUi().dp(4));
+                    h.addView($this$paintTg_u24lambda_u24183);
+                }
+                if (!StringsKt.isBlank(s(selected, "description"))) {
+                    GxPage.text$default(this, s(selected, "description"), c, 16.0f, 0, false, 24, null);
+                }
+                LinearLayout bar = btnBar(c);
+                for (String str7 : variantLabels(selected).keySet()) {
+                    Intrinsics.checkNotNullExpressionValue(str7, "next(...)");
+                    final String mode = str7;
+                    boolean active = Intrinsics.areEqual(tgActiveId(), StringsKt.trim((CharSequence) this.tgSelected).toString()) && Intrinsics.areEqual(tgActiveVariant(), mode);
+                    en(barBtn(bar, (active ? "✓ " : "") + mode + " · " + modeLabel(selected, mode), active, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda41
+                        @Override // kotlin.jvm.functions.Function0
+                        public final Object invoke() {
+                            Unit paintTg$lambda$184;
+                            paintTg$lambda$184 = GxTuningPage.paintTg$lambda$184(GxTuningPage.this, mode);
+                            return paintTg$lambda$184;
+                        }
+                    }), !this.tgBusy);
+                }
+                GxPage.text$default(this, "Selecting a mode sets " + s(selected, "name") + " as the active Testing Ground.", c, 0.0f, 0, false, 28, null);
+            } else {
+                str3 = ". ";
+            }
+            LinearLayout lc2 = this.tgBox;
+            if (lc2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                lc2 = null;
+            }
+            header("Currently Active", lc2);
+            if (activeSlot != null) {
+                GxTuningPage gxTuningPage2 = this;
+                String str8 = s(activeSlot, "id") + str3 + s(activeSlot, "name");
+                LinearLayout linearLayout16 = this.tgBox;
+                if (linearLayout16 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("tgBox");
+                    linearLayout16 = null;
+                }
+                GxPage.Row r = GxPage.row$default(gxTuningPage2, str8, null, linearLayout16, 0, 8, null);
+                r.getView().setBackground(getUi().rounded(CarUi.Companion.getCARD_ON(), 14, Integer.valueOf(CarUi.Companion.getACCENT())));
+                String obj2 = StringsKt.trim((CharSequence) s(data, "activeVariantLabel")).toString();
+                if (StringsKt.isBlank(obj2)) {
+                    String tgActiveVariant2 = tgActiveVariant();
+                    if (StringsKt.isBlank(tgActiveVariant2)) {
+                        tgActiveVariant2 = "A";
+                    }
+                    obj2 = modeLabel(activeSlot, tgActiveVariant2);
+                }
+                String label = obj2;
+                r.value("Mode " + label).setTextColor(CarUi.Companion.getACCENT());
+            }
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintTg$lambda$182(final GxTuningPage this$0, final List $selectable) {
+        if (this$0.tgBusy) {
+            return Unit.INSTANCE;
+        }
+        List $this$map$iv = $selectable;
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            JSONObject it = (JSONObject) item$iv$iv;
+            destination$iv$iv.add(this$0.slotId(it) + ". " + this$0.s(it, "name"));
+        }
+        this$0.pick("View Slot", (List) destination$iv$iv, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda3
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit paintTg$lambda$182$lambda$181;
+                paintTg$lambda$182$lambda$181 = GxTuningPage.paintTg$lambda$182$lambda$181(GxTuningPage.this, $selectable, ((Integer) obj).intValue());
+                return paintTg$lambda$182$lambda$181;
+            }
+        });
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintTg$lambda$182$lambda$181(GxTuningPage this$0, List $selectable, int i) {
+        this$0.tgSelected = this$0.slotId((JSONObject) $selectable.get(i));
+        this$0.paintTg();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paintTg$lambda$184(GxTuningPage this$0, String $mode) {
+        this$0.tgSelectMode($mode);
+        return Unit.INSTANCE;
+    }
+
+    private final void buildManeuvers(LinearLayout b) {
+        this.manBuilt = true;
+        header("Lateral Maneuvers", b);
+        LinearLayout lc = card(b);
+        GxPage.text$default(this, "Arm the lateral maneuver suite from your phone and monitor progress live.", lc, 0.0f, 0, false, 28, null);
+        LinearLayout lb = btnBar(lc);
+        TextView barBtn = barBtn(lb, "Start / Arm", true, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda34
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildManeuvers$lambda$187;
+                buildManeuvers$lambda$187 = GxTuningPage.buildManeuvers$lambda$187(GxTuningPage.this);
+                return buildManeuvers$lambda$187;
+            }
+        });
+        TextView $this$buildManeuvers_u24lambda_u24189 = barBtn$default(this, lb, "Stop", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda35
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildManeuvers$lambda$188;
+                buildManeuvers$lambda$188 = GxTuningPage.buildManeuvers$lambda$188(GxTuningPage.this);
+                return buildManeuvers$lambda$188;
+            }
+        }, 4, null);
+        $this$buildManeuvers_u24lambda_u24189.setTextColor(Color.rgb(240, 110, 130));
+        Unit unit = Unit.INSTANCE;
+        this.latBtns = TuplesKt.to(barBtn, $this$buildManeuvers_u24lambda_u24189);
+        this.latBox = box(lc);
+        header("Long Maneuvers", b);
+        LinearLayout oc = card(b);
+        GxPage.text$default(this, "Run the longitudinal maneuver suite from your phone and monitor progress live.", oc, 0.0f, 0, false, 28, null);
+        LinearLayout ob = btnBar(oc);
+        TextView barBtn2 = barBtn(ob, "Start / Arm", true, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda36
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildManeuvers$lambda$190;
+                buildManeuvers$lambda$190 = GxTuningPage.buildManeuvers$lambda$190(GxTuningPage.this);
+                return buildManeuvers$lambda$190;
+            }
+        });
+        TextView $this$buildManeuvers_u24lambda_u24192 = barBtn$default(this, ob, "Stop", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda37
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildManeuvers$lambda$191;
+                buildManeuvers$lambda$191 = GxTuningPage.buildManeuvers$lambda$191(GxTuningPage.this);
+                return buildManeuvers$lambda$191;
+            }
+        }, 4, null);
+        $this$buildManeuvers_u24lambda_u24192.setTextColor(Color.rgb(240, 110, 130));
+        Unit unit2 = Unit.INSTANCE;
+        this.lonBtns = TuplesKt.to(barBtn2, $this$buildManeuvers_u24lambda_u24192);
+        this.lonBox = box(oc);
+        paintLat();
+        paintLon();
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildManeuvers$lambda$187(GxTuningPage this$0) {
+        this$0.manRun(true, "start");
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildManeuvers$lambda$188(GxTuningPage this$0) {
+        this$0.manRun(true, "stop");
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildManeuvers$lambda$190(GxTuningPage this$0) {
+        this$0.manRun(false, "start");
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildManeuvers$lambda$191(GxTuningPage this$0) {
+        this$0.manRun(false, "stop");
+        return Unit.INSTANCE;
+    }
+
+    private final void manLoad(final boolean lateral) {
+        if (this.manBuilt) {
+            if (lateral) {
+                if (this.latFetching) {
+                    return;
+                } else {
+                    this.latFetching = true;
+                }
+            } else if (this.lonFetching) {
+                return;
+            } else {
+                this.lonFetching = true;
+            }
+            getJson(lateral ? "/api/lateral_maneuvers/status" : "/api/longitudinal_maneuvers/status", new Function2() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda8
+                @Override // kotlin.jvm.functions.Function2
+                public final Object invoke(Object obj, Object obj2) {
+                    Unit manLoad$lambda$193;
+                    manLoad$lambda$193 = GxTuningPage.manLoad$lambda$193(lateral, this, (String) obj, (JSONObject) obj2);
+                    return manLoad$lambda$193;
+                }
+            });
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit manLoad$lambda$193(boolean $lateral, GxTuningPage this$0, String e, JSONObject o) {
+        String str;
+        if ($lateral) {
+            this$0.latFetching = false;
+            this$0.latLoading = false;
+            if (o != null) {
+                this$0.latData = o;
+            }
+            this$0.paintLat();
+        } else {
+            this$0.lonFetching = false;
+            this$0.lonLoading = false;
+            if (o != null) {
+                this$0.lonData = o;
+                str = "";
+            } else {
+                str = e == null ? "Failed to load maneuver status" : e;
+            }
+            this$0.lonError = str;
+            this$0.paintLon();
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void manRun(final boolean lateral, final String action) {
+        if (lateral ? this.latBusy : this.lonBusy) {
+            return;
+        }
+        if (lateral) {
+            this.latBusy = true;
+        } else {
+            this.lonBusy = true;
+        }
+        paintLat();
+        paintLon();
+        GxPage.send$default(this, "POST", "/api/" + (lateral ? "lateral" : "longitudinal") + "_maneuvers/" + action, null, 0L, new Function2() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda67
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit manRun$lambda$197;
+                manRun$lambda$197 = GxTuningPage.manRun$lambda$197(lateral, this, action, (String) obj, (JSONObject) obj2);
+                return manRun$lambda$197;
+            }
+        }, 12, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:28:0x006a, code lost:
+    
+        if (r0 == null) goto L28;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit manRun$lambda$197(boolean $lateral, GxTuningPage this$0, String $action, String e, JSONObject o) {
+        String str;
+        String optString;
+        if ($lateral) {
+            this$0.latBusy = false;
+        } else {
+            this$0.lonBusy = false;
+        }
+        if (e != null) {
+            String str2 = e;
+            if (StringsKt.isBlank(str2)) {
+                str2 = "Action failed.";
+            }
+            this$0.toast(str2);
+            if (!$lateral) {
+                String str3 = e;
+                if (StringsKt.isBlank(str3)) {
+                    str3 = "Failed to " + $action + " maneuvers";
+                }
+                this$0.lonError = str3;
+            }
+        } else {
+            if (o != null) {
+                if ($lateral) {
+                    this$0.latData = o;
+                } else {
+                    this$0.lonData = o;
+                    this$0.lonError = "";
+                }
+            }
+            if (o != null && (optString = o.optString("message")) != null) {
+                String str4 = optString;
+                if (StringsKt.isBlank(str4)) {
+                    str4 = null;
+                }
+                str = str4;
+            }
+            str = "Action complete.";
+            this$0.toast(str);
+            this$0.manLoad(!$lateral);
+        }
+        this$0.paintLat();
+        this$0.paintLon();
+        return Unit.INSTANCE;
+    }
+
+    private final void history(ViewGroup into, JSONObject d, String emptyText) {
+        List h = strings(arr(d, "history"));
+        if (h.isEmpty() && emptyText == null) {
+            return;
+        }
+        sub("Progress chain", into);
+        if (h.isEmpty()) {
+            GxPage.text$default(this, emptyText == null ? "" : emptyText, into, 0.0f, 0, false, 28, null);
+        } else {
+            LinearLayout ic = inner(into);
+            bullets(ic, CollectionsKt.reversed(h), true);
+        }
+    }
+
+    private final void paintLat() {
+        if (this.manBuilt) {
+            Pair<? extends TextView, ? extends TextView> pair = this.latBtns;
+            LinearLayout linearLayout = null;
+            if (pair == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBtns");
+                pair = null;
+            }
+            en(pair.getFirst(), !this.latBusy);
+            Pair<? extends TextView, ? extends TextView> pair2 = this.latBtns;
+            if (pair2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBtns");
+                pair2 = null;
+            }
+            en(pair2.getSecond(), !this.latBusy);
+            LinearLayout linearLayout2 = this.latBox;
+            if (linearLayout2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout2 = null;
+            }
+            linearLayout2.removeAllViews();
+            if (this.latLoading) {
+                GxTuningPage gxTuningPage = this;
+                LinearLayout linearLayout3 = this.latBox;
+                if (linearLayout3 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                } else {
+                    linearLayout = linearLayout3;
+                }
+                GxPage.text$default(gxTuningPage, "Loading status...", linearLayout, 0.0f, 0, false, 28, null);
+                return;
+            }
+            JSONObject d = this.latData;
+            if (d == null) {
+                return;
+            }
+            LinearLayout linearLayout4 = this.latBox;
+            if (linearLayout4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout4 = null;
+            }
+            line$default(this, linearLayout4, "Mode Enabled", truthy(d.opt("modeEnabled")) ? "Yes" : "No", 0, 8, null);
+            LinearLayout linearLayout5 = this.latBox;
+            if (linearLayout5 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout5 = null;
+            }
+            LinearLayout linearLayout6 = linearLayout5;
+            String s = s(d, "state");
+            if (StringsKt.isBlank(s)) {
+                s = "idle";
+            }
+            line$default(this, linearLayout6, "State", s, 0, 8, null);
+            LinearLayout linearLayout7 = this.latBox;
+            if (linearLayout7 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout7 = null;
+            }
+            line$default(this, linearLayout7, "Onroad", truthy(d.opt("isOnroad")) ? "Yes" : "No", 0, 8, null);
+            LinearLayout linearLayout8 = this.latBox;
+            if (linearLayout8 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout8 = null;
+            }
+            line$default(this, linearLayout8, "Engaged", truthy(d.opt("isEngaged")) ? "Yes" : "No", 0, 8, null);
+            LinearLayout linearLayout9 = this.latBox;
+            if (linearLayout9 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout9 = null;
+            }
+            LinearLayout linearLayout10 = linearLayout9;
+            String s2 = s(d, "phase");
+            String str = "n/a";
+            if (StringsKt.isBlank(s2)) {
+                s2 = "n/a";
+            }
+            line$default(this, linearLayout10, "Phase", s2, 0, 8, null);
+            LinearLayout linearLayout11 = this.latBox;
+            if (linearLayout11 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout11 = null;
+            }
+            line$default(this, linearLayout11, "Step", ((long) num$default(this, d.opt("stepIndex"), 0.0d, 2, null)) + " / " + ((long) num$default(this, d.opt("stepTotal"), 0.0d, 2, null)), 0, 8, null);
+            LinearLayout linearLayout12 = this.latBox;
+            if (linearLayout12 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout12 = null;
+            }
+            line$default(this, linearLayout12, "Run", ((long) num$default(this, d.opt("runIndex"), 0.0d, 2, null)) + " / " + ((long) num$default(this, d.opt("runTotal"), 0.0d, 2, null)), 0, 8, null);
+            LinearLayout linearLayout13 = this.latBox;
+            if (linearLayout13 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout13 = null;
+            }
+            line$default(this, linearLayout13, "Updated", fmtAgeSeconds(d.opt("updatedAgeSec")), 0, 8, null);
+            LinearLayout linearLayout14 = this.latBox;
+            if (linearLayout14 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout14 = null;
+            }
+            sub("Current maneuver", linearLayout14);
+            String s3 = s(d, "maneuver");
+            if (!StringsKt.isBlank(s3)) {
+                str = s3;
+            }
+            String str2 = str;
+            LinearLayout linearLayout15 = this.latBox;
+            if (linearLayout15 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout15 = null;
+            }
+            text(str2, linearLayout15, 18.0f, CarUi.Companion.getTEXT(), true);
+            String s4 = s(d, "uiText1");
+            String it = s(d, "uiText2");
+            String popup = s4 + ((Object) (!StringsKt.isBlank(it) ? " | " + it : ""));
+            if (!StringsKt.isBlank(popup)) {
+                GxTuningPage gxTuningPage2 = this;
+                LinearLayout linearLayout16 = this.latBox;
+                if (linearLayout16 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                    linearLayout16 = null;
+                }
+                GxPage.text$default(gxTuningPage2, popup, linearLayout16, 0.0f, 0, false, 28, null);
+            }
+            LinearLayout linearLayout17 = this.latBox;
+            if (linearLayout17 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout17 = null;
+            }
+            sub("Quick guide", linearLayout17);
+            LinearLayout linearLayout18 = this.latBox;
+            if (linearLayout18 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+                linearLayout18 = null;
+            }
+            bullets(linearLayout18, CollectionsKt.listOf((Object[]) new String[]{"Find a large, empty, straight, flat road or lot with no traffic.", "Press Start / Arm here, then engage openpilot and set the requested speed manually.", "Keep full supervision and be ready to steer or disengage immediately at all times.", "Do not touch the wheel during a run. Steering input or speed drift can reset the current maneuver.", "When the status says complete, collect logs and generate the HTML report if needed."}), true);
+            LinearLayout linearLayout19 = this.latBox;
+            if (linearLayout19 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("latBox");
+            } else {
+                linearLayout = linearLayout19;
+            }
+            history(linearLayout, d, "No steps logged yet.");
+        }
+    }
+
+    private final void paintLon() {
+        LinearLayout linearLayout;
+        if (this.manBuilt) {
+            Pair<? extends TextView, ? extends TextView> pair = this.lonBtns;
+            if (pair == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBtns");
+                pair = null;
+            }
+            en(pair.getFirst(), !this.lonBusy);
+            Pair<? extends TextView, ? extends TextView> pair2 = this.lonBtns;
+            if (pair2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBtns");
+                pair2 = null;
+            }
+            en(pair2.getSecond(), !this.lonBusy);
+            LinearLayout linearLayout2 = this.lonBox;
+            if (linearLayout2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout2 = null;
+            }
+            linearLayout2.removeAllViews();
+            if (!StringsKt.isBlank(this.lonError)) {
+                LinearLayout linearLayout3 = this.lonBox;
+                if (linearLayout3 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                    linearLayout3 = null;
+                }
+                notice$default(this, linearLayout3, this.lonError, 0, null, 12, null);
+            }
+            if (this.lonLoading) {
+                GxTuningPage gxTuningPage = this;
+                LinearLayout linearLayout4 = this.lonBox;
+                if (linearLayout4 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                    linearLayout = null;
+                } else {
+                    linearLayout = linearLayout4;
+                }
+                GxPage.text$default(gxTuningPage, "Loading status...", linearLayout, 0.0f, 0, false, 28, null);
+                return;
+            }
+            JSONObject d = this.lonData;
+            if (d == null) {
+                return;
+            }
+            JSONObject optJSONObject = d.optJSONObject("support");
+            if (optJSONObject == null) {
+                optJSONObject = new JSONObject();
+            }
+            JSONObject sup = optJSONObject;
+            LinearLayout linearLayout5 = this.lonBox;
+            if (linearLayout5 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout5 = null;
+            }
+            sub("Live status", linearLayout5);
+            LinearLayout linearLayout6 = this.lonBox;
+            if (linearLayout6 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout6 = null;
+            }
+            line$default(this, linearLayout6, "Mode Enabled", truthy(d.opt("modeEnabled")) ? "Yes" : "No", 0, 8, null);
+            LinearLayout linearLayout7 = this.lonBox;
+            if (linearLayout7 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout7 = null;
+            }
+            LinearLayout linearLayout8 = linearLayout7;
+            String s = s(d, "state");
+            if (StringsKt.isBlank(s)) {
+                s = "idle";
+            }
+            line$default(this, linearLayout8, "State", s, 0, 8, null);
+            LinearLayout linearLayout9 = this.lonBox;
+            if (linearLayout9 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout9 = null;
+            }
+            line$default(this, linearLayout9, "Onroad", truthy(d.opt("isOnroad")) ? "Yes" : "No", 0, 8, null);
+            LinearLayout linearLayout10 = this.lonBox;
+            if (linearLayout10 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout10 = null;
+            }
+            line$default(this, linearLayout10, "Engaged", truthy(d.opt("isEngaged")) ? "Yes" : "No", 0, 8, null);
+            LinearLayout linearLayout11 = this.lonBox;
+            if (linearLayout11 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout11 = null;
+            }
+            LinearLayout linearLayout12 = linearLayout11;
+            String s2 = s(d, "phase");
+            String str = "n/a";
+            if (StringsKt.isBlank(s2)) {
+                s2 = "n/a";
+            }
+            line$default(this, linearLayout12, "Phase", s2, 0, 8, null);
+            LinearLayout linearLayout13 = this.lonBox;
+            if (linearLayout13 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout13 = null;
+            }
+            LinearLayout linearLayout14 = linearLayout13;
+            String s3 = s(d, "paddleMode");
+            if (StringsKt.isBlank(s3)) {
+                s3 = "auto";
+            }
+            line$default(this, linearLayout14, "Paddle Mode", s3, 0, 8, null);
+            LinearLayout linearLayout15 = this.lonBox;
+            if (linearLayout15 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout15 = null;
+            }
+            line$default(this, linearLayout15, "Step", ((long) num$default(this, d.opt("stepIndex"), 0.0d, 2, null)) + " / " + ((long) num$default(this, d.opt("stepTotal"), 0.0d, 2, null)), 0, 8, null);
+            LinearLayout linearLayout16 = this.lonBox;
+            if (linearLayout16 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout16 = null;
+            }
+            line$default(this, linearLayout16, "Run", ((long) num$default(this, d.opt("runIndex"), 0.0d, 2, null)) + " / " + ((long) num$default(this, d.opt("runTotal"), 0.0d, 2, null)), 0, 8, null);
+            LinearLayout linearLayout17 = this.lonBox;
+            if (linearLayout17 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout17 = null;
+            }
+            line$default(this, linearLayout17, "Updated", fmtAgeSeconds(d.opt("updatedAgeSec")), 0, 8, null);
+            LinearLayout linearLayout18 = this.lonBox;
+            if (linearLayout18 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout18 = null;
+            }
+            sub("Current maneuver", linearLayout18);
+            String s4 = s(d, "maneuver");
+            if (!StringsKt.isBlank(s4)) {
+                str = s4;
+            }
+            String str2 = str;
+            LinearLayout linearLayout19 = this.lonBox;
+            if (linearLayout19 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout19 = null;
+            }
+            text(str2, linearLayout19, 18.0f, CarUi.Companion.getTEXT(), true);
+            String s5 = s(d, "uiText1");
+            String it = s(d, "uiText2");
+            String popup = s5 + ((Object) (!StringsKt.isBlank(it) ? " | " + it : ""));
+            if (!StringsKt.isBlank(popup)) {
+                GxTuningPage gxTuningPage2 = this;
+                LinearLayout linearLayout20 = this.lonBox;
+                if (linearLayout20 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                    linearLayout20 = null;
+                }
+                GxPage.text$default(gxTuningPage2, popup, linearLayout20, 0.0f, 0, false, 28, null);
+            }
+            LinearLayout linearLayout21 = this.lonBox;
+            if (linearLayout21 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout21 = null;
+            }
+            sub("Longitudinal support", linearLayout21);
+            LinearLayout linearLayout22 = this.lonBox;
+            if (linearLayout22 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout22 = null;
+            }
+            line$default(this, linearLayout22, "openpilot Longitudinal", paintLon$yes(this, sup, "openpilotLongitudinalControl"), 0, 8, null);
+            LinearLayout linearLayout23 = this.lonBox;
+            if (linearLayout23 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout23 = null;
+            }
+            line$default(this, linearLayout23, "Full Stop + Go", paintLon$yes(this, sup, "fullStopAndGo"), 0, 8, null);
+            LinearLayout linearLayout24 = this.lonBox;
+            if (linearLayout24 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout24 = null;
+            }
+            line$default(this, linearLayout24, "Auto Resume from Stop", paintLon$yes(this, sup, "autoResumeFromStop"), 0, 8, null);
+            LinearLayout linearLayout25 = this.lonBox;
+            if (linearLayout25 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout25 = null;
+            }
+            line$default(this, linearLayout25, "Requires Resume Assist", paintLon$yes(this, sup, "requiresResumeAssist"), 0, 8, null);
+            LinearLayout linearLayout26 = this.lonBox;
+            if (linearLayout26 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout26 = null;
+            }
+            line$default(this, linearLayout26, "Expected to Reach Zero", paintLon$yes(this, sup, "expectedToReachZero"), 0, 8, null);
+            LinearLayout linearLayout27 = this.lonBox;
+            if (linearLayout27 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout27 = null;
+            }
+            line$default(this, linearLayout27, "Minimum Enable Speed", paintLon$number(this, sup, "minEnableSpeed", "m/s"), 0, 8, null);
+            LinearLayout linearLayout28 = this.lonBox;
+            if (linearLayout28 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout28 = null;
+            }
+            line$default(this, linearLayout28, "Stop Acceleration", paintLon$number(this, sup, "stopAccel", "m/s²"), 0, 8, null);
+            List caveats = strings(arr(d, "caveats"));
+            if (!caveats.isEmpty()) {
+                LinearLayout linearLayout29 = this.lonBox;
+                if (linearLayout29 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                    linearLayout29 = null;
+                }
+                notice$default(this, linearLayout29, CollectionsKt.joinToString$default(caveats, "\n", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda43
+                    @Override // kotlin.jvm.functions.Function1
+                    public final Object invoke(Object obj) {
+                        CharSequence paintLon$lambda$207;
+                        paintLon$lambda$207 = GxTuningPage.paintLon$lambda$207((String) obj);
+                        return paintLon$lambda$207;
+                    }
+                }, 30, null), 0, "Platform caveats\n", 4, null);
+            }
+            List skipped = strings(arr(d, "skippedManeuvers"));
+            if (!skipped.isEmpty()) {
+                LinearLayout linearLayout30 = this.lonBox;
+                if (linearLayout30 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                    linearLayout30 = null;
+                }
+                notice(linearLayout30, CollectionsKt.joinToString$default(skipped, "\n", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda45
+                    @Override // kotlin.jvm.functions.Function1
+                    public final Object invoke(Object obj) {
+                        CharSequence paintLon$lambda$208;
+                        paintLon$lambda$208 = GxTuningPage.paintLon$lambda$208((String) obj);
+                        return paintLon$lambda$208;
+                    }
+                }, 30, null), Color.rgb(94, 200, 200), "Expected skips\n");
+            }
+            LinearLayout linearLayout31 = this.lonBox;
+            if (linearLayout31 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout31 = null;
+            }
+            sub("Quick guide", linearLayout31);
+            LinearLayout linearLayout32 = this.lonBox;
+            if (linearLayout32 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout32 = null;
+            }
+            bullets(linearLayout32, CollectionsKt.listOf((Object[]) new String[]{"Find a large, empty, straight road or lot with no traffic.", "Press Start / Arm, then engage openpilot with SET.", "Keep full supervision and be ready to disengage at all times.", "Review the platform caveats first. Low-speed maneuvers can be skipped automatically on cars that do not fully stop.", "When the status says complete, collect the logs and generate your HTML report."}), true);
+            LinearLayout linearLayout33 = this.lonBox;
+            if (linearLayout33 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lonBox");
+                linearLayout33 = null;
+            }
+            history(linearLayout33, d, null);
+        }
+    }
+
+    private static final String paintLon$yes(GxTuningPage this$0, JSONObject sup, String k) {
+        return this$0.truthy(sup.opt(k)) ? "Yes" : "No";
+    }
+
+    private static final String paintLon$number(GxTuningPage this$0, JSONObject sup, String k, String unit) {
+        double v = this$0.num(sup.opt(k), Double.NaN);
+        if (Double.isNaN(v)) {
+            return "n/a";
+        }
+        return this$0.f(v, 2) + " " + unit;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final CharSequence paintLon$lambda$207(String it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return "•  " + it;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final CharSequence paintLon$lambda$208(String it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return "•  " + it;
+    }
 }

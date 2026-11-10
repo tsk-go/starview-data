@@ -1,27 +1,28 @@
 package com.starpilot.starview;
 
 
+/* compiled from: IdeasMore.kt */
 public final class WantIdeas {
-   public static final WantIdeas INSTANCE = new WantIdeas();
-   private static volatile boolean schoolBus;
-   private static volatile boolean wipers;
+    public static final WantIdeas INSTANCE = new WantIdeas();
+    private static volatile boolean schoolBus;
+    private static volatile boolean wipers;
 
-   private WantIdeas() {
-   }
+    private WantIdeas() {
+    }
 
-   public final boolean getSchoolBus() {
-      return schoolBus;
-   }
+    public final boolean getSchoolBus() {
+        return schoolBus;
+    }
 
-   public final boolean getWipers() {
-      return wipers;
-   }
+    public final void setSchoolBus(boolean z) {
+        schoolBus = z;
+    }
 
-   public final void setSchoolBus(boolean var1) {
-      schoolBus = var1;
-   }
+    public final boolean getWipers() {
+        return wipers;
+    }
 
-   public final void setWipers(boolean var1) {
-      wipers = var1;
-   }
+    public final void setWipers(boolean z) {
+        wipers = z;
+    }
 }

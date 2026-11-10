@@ -8,9 +8,6 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.graphics.Paint.Align;
-import android.graphics.Paint.Cap;
-import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.View;
 import java.util.Arrays;
@@ -24,489 +21,348 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt;
 import kotlin.text.StringsKt;
-import org.capnproto.SlcPeek.Slc;
+import org.capnproto.SlcPeek;
 
+/* compiled from: HudViews.kt */
 public final class SlcView extends View {
-   public static final SlcView.Companion Companion = new SlcView.Companion(null);
-   private static final Map<String, String> LABELS = MapsKt.mapOf(
-      new Pair[]{TuplesKt.to("dashboard", "DASH"), TuplesKt.to("map", "OSM"), TuplesKt.to("vision", "VISION"), TuplesKt.to("mapbox", "NAV")}
-   );
-   private final Rect bounds;
-   private final Paint p;
-   public Telemetry t;
-   private final Paint tp;
+    public static final Companion Companion = new Companion(null);
+    private static final Map<String, String> LABELS = MapsKt.mapOf(TuplesKt.to("dashboard", "DASH"), TuplesKt.to("map", "OSM"), TuplesKt.to("vision", "VISION"), TuplesKt.to("mapbox", "NAV"));
+    private final Rect bounds;
+    private final Paint p;
+    public Telemetry t;
+    private final Paint tp;
 
-   public SlcView(Context var1, AttributeSet var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      super(var1, var2);
-      this.p = new Paint(1);
-      Paint var3 = new Paint(1);
-      var3.setTextAlign(Align.CENTER);
-      var3.setTypeface(Typeface.DEFAULT_BOLD);
-      this.tp = var3;
-      this.bounds = new Rect();
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public SlcView(Context ctx, AttributeSet attrs) {
+        super(ctx, attrs);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        this.p = new Paint(1);
+        Paint $this$tp_u24lambda_u240 = new Paint(1);
+        $this$tp_u24lambda_u240.setTextAlign(Paint.Align.CENTER);
+        $this$tp_u24lambda_u240.setTypeface(Typeface.DEFAULT_BOLD);
+        this.tp = $this$tp_u24lambda_u240;
+        this.bounds = new Rect();
+    }
 
-   // $VF: synthetic method
-   public SlcView(Context var1, AttributeSet var2, int var3, DefaultConstructorMarker var4) {
-      if ((var3 & 2) != 0) {
-         var2 = null;
-      }
+    public /* synthetic */ SlcView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this(context, (i & 2) != 0 ? null : attributeSet);
+    }
 
-      this(var1, var2);
-   }
+    public final Telemetry getT() {
+        Telemetry telemetry = this.t;
+        if (telemetry != null) {
+            return telemetry;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("t");
+        return null;
+    }
 
-   private final float toDisplay(float var1) {
-      float var2;
-      if (this.getT().isMetric()) {
-         var2 = 3.6F;
-      } else {
-         var2 = 2.23694F;
-      }
+    public final void setT(Telemetry telemetry) {
+        Intrinsics.checkNotNullParameter(telemetry, "<set-?>");
+        this.t = telemetry;
+    }
 
-      return var2 * var1;
-   }
+    /* compiled from: HudViews.kt */
+    public static final class Shown {
+        private final int arrow;
+        private final String heading;
+        private final String offset;
+        private final boolean override;
+        private final boolean pending;
+        private final String posted;
 
-   public final Telemetry getT() {
-      Telemetry var1 = this.t;
-      if (var1 != null) {
-         return var1;
-      } else {
-         Intrinsics.throwUninitializedPropertyAccessException("t");
-         return null;
-      }
-   }
+        public Shown(String heading, String posted, String offset, int arrow, boolean override, boolean pending) {
+            Intrinsics.checkNotNullParameter(heading, "heading");
+            Intrinsics.checkNotNullParameter(posted, "posted");
+            this.heading = heading;
+            this.posted = posted;
+            this.offset = offset;
+            this.arrow = arrow;
+            this.override = override;
+            this.pending = pending;
+        }
 
-   protected void onDraw(Canvas var1) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      if (this.t != null) {
-         Telemetry var11 = this.getT();
-         Object var13 = null;
-         Slc var38 = Telemetry.slcLive$default(var11, 0L, 1, null);
-         SlcView.Shown var39;
-         if (var38 != null) {
-            SlcView.Shown var12 = Companion.shown(var38, this.getT().isMetric(), this.getT().getVEgo());
-            var39 = var12;
-            if (var12 == null) {
-               return;
+        public final int getArrow() {
+            return this.arrow;
+        }
+
+        public final String getHeading() {
+            return this.heading;
+        }
+
+        public final String getOffset() {
+            return this.offset;
+        }
+
+        public final boolean getOverride() {
+            return this.override;
+        }
+
+        public final boolean getPending() {
+            return this.pending;
+        }
+
+        public final String getPosted() {
+            return this.posted;
+        }
+    }
+
+    /* compiled from: HudViews.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
+
+        private Companion() {
+        }
+
+        /* JADX WARN: Removed duplicated region for block: B:28:0x0071  */
+        /* JADX WARN: Removed duplicated region for block: B:40:0x0093  */
+        /* JADX WARN: Removed duplicated region for block: B:56:0x00ba  */
+        /* JADX WARN: Removed duplicated region for block: B:59:0x00da  */
+        /* JADX WARN: Removed duplicated region for block: B:63:0x00bd  */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
+        public final Shown shown(SlcPeek.Slc s, boolean metric, float vEgo) {
+            float adjusted;
+            int adj;
+            boolean pending;
+            int arrow;
+            String str;
+            Intrinsics.checkNotNullParameter(s, "s");
+            float k = metric ? 3.6f : 2.2369363f;
+            boolean valid = Intrinsics.areEqual(s.kind, "valid");
+            float posted = valid ? s.speedMps : s.hasAccepted ? s.acceptedMps : Float.NaN;
+            int i = 0;
+            String str2 = null;
+            if (!((Float.isInfinite(posted) || Float.isNaN(posted)) ? false : true) || posted <= 0.0f) {
+                return null;
             }
-         } else {
-            boolean var10;
-            if (this.getT().getSlcChanged() && this.getT().getSlcUnconfirmed() > 0.0F) {
-               var10 = true;
+            if (valid) {
+                float f = s.adjustedMps;
+                if (((Float.isInfinite(f) || Float.isNaN(f)) ? false : true) && s.adjustedMps > 0.0f) {
+                    adjusted = s.adjustedMps;
+                    adj = MathKt.roundToInt(adjusted * k) - MathKt.roundToInt(posted * k);
+                    if (valid) {
+                        float f2 = s.pendingMps;
+                        if (((Float.isInfinite(f2) || Float.isNaN(f2)) ? false : true) && s.pendingMps > 0.0f && !s.autoAdoptionPending) {
+                            pending = true;
+                            if (pending) {
+                                if ((Float.isInfinite(adjusted) || Float.isNaN(adjusted)) ? false : true) {
+                                    if (!(adjusted == vEgo)) {
+                                        if (adjusted <= vEgo) {
+                                            arrow = 1;
+                                            if (valid) {
+                                                str = "LAST";
+                                            } else {
+                                                str = (String) SlcView.LABELS.get(s.source);
+                                                if (str == null) {
+                                                    str = "SPEED";
+                                                }
+                                            }
+                                            String str3 = str;
+                                            String valueOf = String.valueOf(MathKt.roundToInt(posted * k));
+                                            if (adj != 0) {
+                                                str2 = String.format("%+d", Arrays.copyOf(new Object[]{Integer.valueOf(adj)}, 1));
+                                                Intrinsics.checkNotNullExpressionValue(str2, "format(...)");
+                                            }
+                                            return new Shown(str3, valueOf, str2, arrow, s.driverOverride, pending);
+                                        }
+                                        i = -1;
+                                    }
+                                }
+                            }
+                            arrow = i;
+                            if (valid) {
+                            }
+                            String str32 = str;
+                            String valueOf2 = String.valueOf(MathKt.roundToInt(posted * k));
+                            if (adj != 0) {
+                            }
+                            return new Shown(str32, valueOf2, str2, arrow, s.driverOverride, pending);
+                        }
+                    }
+                    pending = false;
+                    if (pending) {
+                    }
+                    arrow = i;
+                    if (valid) {
+                    }
+                    String str322 = str;
+                    String valueOf22 = String.valueOf(MathKt.roundToInt(posted * k));
+                    if (adj != 0) {
+                    }
+                    return new Shown(str322, valueOf22, str2, arrow, s.driverOverride, pending);
+                }
+            }
+            adjusted = s.offsetMps + posted;
+            adj = MathKt.roundToInt(adjusted * k) - MathKt.roundToInt(posted * k);
+            if (valid) {
+            }
+            pending = false;
+            if (pending) {
+            }
+            arrow = i;
+            if (valid) {
+            }
+            String str3222 = str;
+            String valueOf222 = String.valueOf(MathKt.roundToInt(posted * k));
+            if (adj != 0) {
+            }
+            return new Shown(str3222, valueOf222, str2, arrow, s.driverOverride, pending);
+        }
+    }
+
+    private final float toDisplay(float ms) {
+        return (getT().isMetric() ? 3.6f : 2.23694f) * ms;
+    }
+
+    @Override // android.view.View
+    protected void onDraw(Canvas c) {
+        String take;
+        Shown shown;
+        float rr;
+        float dp;
+        float dp2;
+        float dp3;
+        float dp4;
+        float dp5;
+        RectF numBox;
+        float dp6;
+        float i;
+        float dp7;
+        float dp8;
+        Intrinsics.checkNotNullParameter(c, "c");
+        if (this.t == null) {
+            return;
+        }
+        String str = null;
+        SlcPeek.Slc live = Telemetry.slcLive$default(getT(), 0L, 1, null);
+        if (live != null) {
+            shown = Companion.shown(live, getT().isMetric(), getT().getVEgo());
+            if (shown == null) {
+                return;
+            }
+        } else {
+            boolean pending = getT().getSlcChanged() && getT().getSlcUnconfirmed() > 0.0f;
+            Telemetry t = getT();
+            float v = pending ? t.getSlcUnconfirmed() : t.getSlcSpeedLimit();
+            if (v <= 0.0f) {
+                return;
+            }
+            int off = MathKt.roundToInt(toDisplay(getT().getSlcOffset()));
+            if (pending) {
+                take = "PENDING";
             } else {
-               var10 = false;
+                String slcSource = getT().getSlcSource();
+                if (slcSource.length() == 0) {
+                    slcSource = "LIMIT";
+                }
+                String upperCase = slcSource.toUpperCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
+                take = StringsKt.take(upperCase, 6);
             }
-
-            var11 = this.getT();
-            float var2;
-            if (var10) {
-               var2 = var11.getSlcUnconfirmed();
-            } else {
-               var2 = var11.getSlcSpeedLimit();
+            String str2 = take;
+            String valueOf = String.valueOf(MathKt.roundToInt(toDisplay(v)));
+            if (off != 0 && !pending) {
+                str = String.format("%+d", Arrays.copyOf(new Object[]{Integer.valueOf(off)}, 1));
+                Intrinsics.checkNotNullExpressionValue(str, "format(...)");
             }
-
-            if (var2 <= 0.0F) {
-               return;
-            }
-
-            int var9 = MathKt.roundToInt(this.toDisplay(this.getT().getSlcOffset()));
-            String var41;
-            if (var10) {
-               var41 = "PENDING";
-            } else {
-               var var42 = this.getT().getSlcSource();
-               boolean var8;
-               if (var42.length() == 0) {
-                  var8 = true;
-               } else {
-                  var8 = false;
-               }
-
-               if (var8) {
-                  var42 = "LIMIT";
-               }
-
-               String var43 = var42.toUpperCase(Locale.ROOT);
-               Intrinsics.checkNotNullExpressionValue(var43, "toUpperCase(...)");
-               var41 = StringsKt.take(var43, 6);
-            }
-
-            int var33 = MathKt.roundToInt(this.toDisplay(var2));
-            String var45 = (String)var13;
-            if (var9 != 0) {
-               var45 = (String)var13;
-               if (!var10) {
-                  var45 = String.format("%+d", Arrays.copyOf(new Object[]{var9}, 1));
-                  Intrinsics.checkNotNullExpressionValue(var45, "format(...)");
-               }
-            }
-
-            var39 = new SlcView.Shown(var41, String.valueOf(var33), var45, 0, false, var10);
-         }
-
-         float var4 = this.getWidth();
-         float var5 = this.getHeight();
-         boolean var34;
-         if (System.nanoTime() / 500000000L % 2 == 0L) {
-            var34 = 1;
-         } else {
-            var34 = 0;
-         }
-
-         RectF var48;
-         if (this.getT().s("vienna")) {
-            float var14 = Math.min(var4, var5);
-            float var6 = 2;
-            float var7 = var14 / var6;
-            this.p.setStyle(Style.FILL);
-            this.p.setColor(-1);
-            var1.drawCircle(var4 / var6, var5 / var6, var7, this.p);
-            this.p.setStyle(Style.STROKE);
-            this.p.setStrokeWidth(0.23F * var7);
-            Paint var46 = this.p;
-            if (var39.getPending() && !var34) {
-               var34 = -1;
-            } else {
-               var34 = Color.rgb(201, 34, 49);
-            }
-
-            var46.setColor(var34);
-            var1.drawCircle(var4 / var6, var5 / var6, var7 - this.p.getStrokeWidth() / var6, this.p);
-            this.tp.setColor(-16777216);
-            Paint var47 = this.tp;
-            if (var39.getPosted().length() <= 2) {
-               var14 = 0.8F;
-            } else {
-               var14 = 0.68F;
-            }
-
-            float var3;
-            if (var39.getOffset() != null) {
-               var3 = 0.85F;
-            } else {
-               var3 = 1.0F;
-            }
-
-            var47.setTextSize(var14 * var7 * var3);
-            var5 /= var6;
-            var3 = this.tp.getTextSize();
-            if (var39.getOffset() != null) {
-               var14 = 0.12F * var7;
-            } else {
-               var14 = 0.0F;
-            }
-
-            var14 = var5 + var3 * 0.36F - var14;
-            var1.drawText(var39.getPosted(), var4 / var6, var14, this.tp);
-            var13 = new RectF(
-               var4 / var6 - this.tp.measureText(var39.getPosted()) / var6,
-               var14 - this.tp.getTextSize() * 0.72F,
-               var4 / var6 + this.tp.measureText(var39.getPosted()) / var6,
-               var14
-            );
-            var48 = (RectF)var13;
-            if (var39.getOffset() != null) {
-               this.tp.setTextSize(var7 * 0.3F);
-               var1.drawText(var39.getOffset(), var4 / var6, var14 + 0.36F * var7, this.tp);
-               var48 = (RectF)var13;
-            }
-         } else {
-            float var18 = HudViewsKt.access$dp(this, 14.0F);
-            this.p.setStyle(Style.FILL);
+            shown = new Shown(str2, valueOf, str, 0, false, pending);
+        }
+        Shown sh = shown;
+        float w = getWidth();
+        float h = getHeight();
+        boolean blinkOn = (System.nanoTime() / 500000000) % ((long) 2) == 0;
+        if (!getT().s("vienna")) {
+            rr = HudViewsKt.dp(this, 14.0f);
+            this.p.setStyle(Paint.Style.FILL);
             this.p.setColor(Color.argb(166, 0, 0, 0));
-            var1.drawRoundRect(new RectF(0.0F, 0.0F, var4, var5), var18, var18, this.p);
-            this.p.setStyle(Style.STROKE);
-            this.p.setStrokeWidth(HudViewsKt.access$dp(this, 3.0F));
-            Paint var49 = this.p;
-            if (var39.getPending()) {
-               if (var34) {
-                  var34 = -1;
-               } else {
-                  var34 = Color.rgb(201, 34, 49);
-               }
-            } else {
-               var34 = Color.argb(180, 196, 205, 208);
-            }
-
-            var49.setColor(var34);
-            var1.drawRoundRect(
-               new RectF(
-                  HudViewsKt.access$dp(this, 1.5F),
-                  HudViewsKt.access$dp(this, 1.5F),
-                  var4 - HudViewsKt.access$dp(this, 1.5F),
-                  var5 - HudViewsKt.access$dp(this, 1.5F)
-               ),
-               var18,
-               var18,
-               this.p
-            );
+            c.drawRoundRect(new RectF(0.0f, 0.0f, w, h), rr, rr, this.p);
+            this.p.setStyle(Paint.Style.STROKE);
+            Paint paint = this.p;
+            dp = HudViewsKt.dp(this, 3.0f);
+            paint.setStrokeWidth(dp);
+            this.p.setColor(sh.getPending() ? blinkOn ? -1 : Color.rgb(201, 34, 49) : Color.argb(180, 196, 205, 208));
+            dp2 = HudViewsKt.dp(this, 1.5f);
+            dp3 = HudViewsKt.dp(this, 1.5f);
+            dp4 = HudViewsKt.dp(this, 1.5f);
+            dp5 = HudViewsKt.dp(this, 1.5f);
+            c.drawRoundRect(new RectF(dp2, dp3, w - dp4, h - dp5), rr, rr, this.p);
             this.tp.setColor(-1);
-            this.tp.setTextSize(0.16F * var5);
-            float var29 = this.tp.measureText(var39.getHeading());
-            if (var39.getArrow() != 0) {
-               var18 = var5 * 0.12F;
-            } else {
-               var18 = 0.0F;
+            this.tp.setTextSize(0.16f * h);
+            float hw = this.tp.measureText(sh.getHeading());
+            float aw = sh.getArrow() != 0 ? h * 0.12f : 0.0f;
+            float hy = (sh.getOffset() != null ? 0.2f : 0.24f) * h;
+            float f = 2;
+            c.drawText(sh.getHeading(), (w / f) - (aw / f), hy, this.tp);
+            if (sh.getArrow() != 0) {
+                float ax = (w / f) + (hw / f) + (0.1f * aw);
+                float ay = hy - (this.tp.getTextSize() * 0.36f);
+                float a = 0.45f * aw;
+                Path $this$onDraw_u24lambda_u242 = new Path();
+                if (sh.getArrow() < 0) {
+                    $this$onDraw_u24lambda_u242.moveTo(ax, ay + a);
+                    $this$onDraw_u24lambda_u242.lineTo(ax + a, ay - (0.3f * a));
+                    $this$onDraw_u24lambda_u242.lineTo((f * a) + ax, ay + a);
+                } else {
+                    $this$onDraw_u24lambda_u242.moveTo(ax, ay - a);
+                    $this$onDraw_u24lambda_u242.lineTo(ax + a, ay + (0.3f * a));
+                    $this$onDraw_u24lambda_u242.lineTo((f * a) + ax, ay - a);
+                }
+                this.p.setStyle(Paint.Style.STROKE);
+                Paint paint2 = this.p;
+                dp6 = HudViewsKt.dp(this, 2.0f);
+                paint2.setStrokeWidth(dp6);
+                this.p.setColor(-1);
+                c.drawPath($this$onDraw_u24lambda_u242, this.p);
             }
-
-            float var25;
-            if (var39.getOffset() != null) {
-               var25 = 0.2F;
-            } else {
-               var25 = 0.24F;
+            this.tp.setTextSize(0.42f * h);
+            float ny = (sh.getOffset() != null ? 0.6f : 0.72f) * h;
+            c.drawText(sh.getPosted(), w / f, ny, this.tp);
+            numBox = new RectF((w / f) - (this.tp.measureText(sh.getPosted()) / f), ny - (this.tp.getTextSize() * 0.72f), (w / f) + (this.tp.measureText(sh.getPosted()) / f), ny);
+            if (sh.getOffset() != null) {
+                this.tp.setTextSize(0.17f * h);
+                this.tp.setColor(Color.rgb(223, 232, 227));
+                c.drawText(sh.getOffset(), w / f, 0.86f * h, this.tp);
             }
-
-            float var31 = var25 * var5;
-            String var50 = var39.getHeading();
-            var25 = 2;
-            var1.drawText(var50, var4 / var25 - var18 / var25, var31, this.tp);
-            if (var39.getArrow() != 0) {
-               var29 = var4 / var25 + var29 / var25 + 0.1F * var18;
-               var31 -= this.tp.getTextSize() * 0.36F;
-               var18 = 0.45F * var18;
-               Path var51 = new Path();
-               if (var39.getArrow() < 0) {
-                  var51.moveTo(var29, var31 + var18);
-                  var51.lineTo(var29 + var18, var31 - 0.3F * var18);
-                  var51.lineTo(var25 * var18 + var29, var31 + var18);
-               } else {
-                  var51.moveTo(var29, var31 - var18);
-                  var51.lineTo(var29 + var18, var31 + 0.3F * var18);
-                  var51.lineTo(var25 * var18 + var29, var31 - var18);
-               }
-
-               this.p.setStyle(Style.STROKE);
-               this.p.setStrokeWidth(HudViewsKt.access$dp(this, 2.0F));
-               this.p.setColor(-1);
-               var1.drawPath(var51, this.p);
+        } else {
+            float f2 = 2;
+            float r = Math.min(w, h) / f2;
+            this.p.setStyle(Paint.Style.FILL);
+            this.p.setColor(-1);
+            c.drawCircle(w / f2, h / f2, r, this.p);
+            this.p.setStyle(Paint.Style.STROKE);
+            this.p.setStrokeWidth(0.23f * r);
+            this.p.setColor((!sh.getPending() || blinkOn) ? Color.rgb(201, 34, 49) : -1);
+            c.drawCircle(w / f2, h / f2, r - (this.p.getStrokeWidth() / f2), this.p);
+            this.tp.setColor(-16777216);
+            this.tp.setTextSize((sh.getPosted().length() <= 2 ? 0.8f : 0.68f) * r * (sh.getOffset() != null ? 0.85f : 1.0f));
+            float ny2 = ((h / f2) + (this.tp.getTextSize() * 0.36f)) - (sh.getOffset() != null ? 0.12f * r : 0.0f);
+            c.drawText(sh.getPosted(), w / f2, ny2, this.tp);
+            numBox = new RectF((w / f2) - (this.tp.measureText(sh.getPosted()) / f2), ny2 - (this.tp.getTextSize() * 0.72f), (w / f2) + (this.tp.measureText(sh.getPosted()) / f2), ny2);
+            if (sh.getOffset() != null) {
+                this.tp.setTextSize(r * 0.3f);
+                c.drawText(sh.getOffset(), w / f2, ny2 + (0.36f * r), this.tp);
             }
-
-            this.tp.setTextSize(0.42F * var5);
-            if (var39.getOffset() != null) {
-               var18 = 0.6F;
-            } else {
-               var18 = 0.72F;
+        }
+        RectF numBox2 = numBox;
+        if (sh.getOverride()) {
+            i = HudViewsKt.dp(this, 3.0f);
+            dp7 = HudViewsKt.dp(this, 4.5f);
+            dp8 = HudViewsKt.dp(this, 2.5f);
+            for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(dp7), Integer.valueOf(Color.argb(220, 6, 14, 10))), TuplesKt.to(Float.valueOf(dp8), Integer.valueOf(Color.argb(240, 197, 163, 255)))})) {
+                float sw = ((Number) pair.component1()).floatValue();
+                int col = ((Number) pair.component2()).intValue();
+                this.p.setStyle(Paint.Style.STROKE);
+                this.p.setStrokeWidth(sw);
+                this.p.setColor(col);
+                this.p.setStrokeCap(Paint.Cap.ROUND);
+                c.drawLine(numBox2.left + i, numBox2.top + i, numBox2.right - i, numBox2.bottom - i, this.p);
+                c.drawLine(numBox2.right - i, numBox2.top + i, numBox2.left + i, numBox2.bottom - i, this.p);
             }
-
-            var18 *= var5;
-            var1.drawText(var39.getPosted(), var4 / var25, var18, this.tp);
-            var13 = new RectF(
-               var4 / var25 - this.tp.measureText(var39.getPosted()) / var25,
-               var18 - this.tp.getTextSize() * 0.72F,
-               var4 / var25 + this.tp.measureText(var39.getPosted()) / var25,
-               var18
-            );
-            var48 = (RectF)var13;
-            if (var39.getOffset() != null) {
-               this.tp.setTextSize(0.17F * var5);
-               this.tp.setColor(Color.rgb(223, 232, 227));
-               var1.drawText(var39.getOffset(), var4 / var25, 0.86F * var5, this.tp);
-               var48 = (RectF)var13;
-            }
-         }
-
-         if (var39.getOverride()) {
-            float var23 = HudViewsKt.access$dp(this, 3.0F);
-
-            for (Pair var44 : CollectionsKt.listOf(
-               new Pair[]{
-                  TuplesKt.to(HudViewsKt.access$dp(this, 4.5F), Color.argb(220, 6, 14, 10)),
-                  TuplesKt.to(HudViewsKt.access$dp(this, 2.5F), Color.argb(240, 197, 163, 255))
-               }
-            )) {
-               float var27 = ((Number)var44.component1()).floatValue();
-               var34 = ((Number)var44.component2()).intValue();
-               this.p.setStyle(Style.STROKE);
-               this.p.setStrokeWidth(var27);
-               this.p.setColor(var34);
-               this.p.setStrokeCap(Cap.ROUND);
-               var1.drawLine(var48.left + var23, var48.top + var23, var48.right - var23, var48.bottom - var23, this.p);
-               var1.drawLine(var48.right - var23, var48.top + var23, var48.left + var23, var48.bottom - var23, this.p);
-            }
-
-            this.p.setStrokeCap(Cap.BUTT);
-         }
-      }
-   }
-
-   public final void setT(Telemetry var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.t = var1;
-   }
-
-   public static final class Companion {
-      private Companion() {
-      }
-
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
-
-      public final SlcView.Shown shown(Slc var1, boolean var2, float var3) {
-         Intrinsics.checkNotNullParameter(var1, "s");
-         float var5;
-         if (var2) {
-            var5 = 3.6F;
-         } else {
-            var5 = 2.2369363F;
-         }
-
-         boolean var12 = Intrinsics.areEqual(var1.kind, "valid");
-         float var4;
-         if (var12) {
-            var4 = var1.speedMps;
-         } else if (var1.hasAccepted) {
-            var4 = var1.acceptedMps;
-         } else {
-            var4 = Float.NaN;
-         }
-
-         var2 = Float.isInfinite(var4);
-         byte var10 = 0;
-         boolean var8;
-         if (!var2 && !Float.isNaN(var4)) {
-            var8 = 1;
-         } else {
-            var8 = 0;
-         }
-
-         String var14 = null;
-         if (var8 && !(var4 <= 0.0F)) {
-            float var18;
-            label101: {
-               if (var12) {
-                  var18 = var1.adjustedMps;
-                  if (!Float.isInfinite(var18) && !Float.isNaN(var18)) {
-                     var8 = (boolean)1;
-                  } else {
-                     var8 = (boolean)0;
-                  }
-
-                  if (var8 && var1.adjustedMps > 0.0F) {
-                     var18 = var1.adjustedMps;
-                     break label101;
-                  }
-               }
-
-               var18 = var1.offsetMps + var4;
-            }
-
-            int var11;
-            label90: {
-               var11 = MathKt.roundToInt(var18 * var5) - MathKt.roundToInt(var4 * var5);
-               if (var12) {
-                  float var7 = var1.pendingMps;
-                  if (!Float.isInfinite(var7) && !Float.isNaN(var7)) {
-                     var8 = (boolean)1;
-                  } else {
-                     var8 = (boolean)0;
-                  }
-
-                  if (var8 && var1.pendingMps > 0.0F && !var1.autoAdoptionPending) {
-                     var2 = true;
-                     break label90;
-                  }
-               }
-
-               var2 = false;
-            }
-
-            var8 = var10;
-            if (var2) {
-               boolean var9;
-               if (!Float.isInfinite(var18) && !Float.isNaN(var18)) {
-                  var9 = true;
-               } else {
-                  var9 = false;
-               }
-
-               var8 = var10;
-               if (var9) {
-                  if (var18 == var3) {
-                     var9 = true;
-                  } else {
-                     var9 = false;
-                  }
-
-                  var8 = var10;
-                  if (!var9) {
-                     if (var18 > var3) {
-                        var8 = -1;
-                     } else {
-                        var8 = 1;
-                     }
-                  }
-               }
-            }
-
-            String var13;
-            if (!var12) {
-               var13 = "LAST";
-            } else {
-               String var15 = SlcView.LABELS.get(var1.source);
-               var13 = var15;
-               if (var15 == null) {
-                  var13 = "SPEED";
-               }
-            }
-
-            int var23 = MathKt.roundToInt(var4 * var5);
-            if (var11 != 0) {
-               var14 = String.format("%+d", Arrays.copyOf(new Object[]{var11}, 1));
-               Intrinsics.checkNotNullExpressionValue(var14, "format(...)");
-            }
-
-            return new SlcView.Shown(var13, String.valueOf(var23), var14, var8, var1.driverOverride, var2);
-         } else {
-            return null;
-         }
-      }
-   }
-
-   public static final class Shown {
-      private final int arrow;
-      private final String heading;
-      private final String offset;
-      private final boolean override;
-      private final boolean pending;
-      private final String posted;
-
-      public Shown(String var1, String var2, String var3, int var4, boolean var5, boolean var6) {
-         Intrinsics.checkNotNullParameter(var1, "heading");
-         Intrinsics.checkNotNullParameter(var2, "posted");
-         super();
-         this.heading = var1;
-         this.posted = var2;
-         this.offset = var3;
-         this.arrow = var4;
-         this.override = var5;
-         this.pending = var6;
-      }
-
-      public final int getArrow() {
-         return this.arrow;
-      }
-
-      public final String getHeading() {
-         return this.heading;
-      }
-
-      public final String getOffset() {
-         return this.offset;
-      }
-
-      public final boolean getOverride() {
-         return this.override;
-      }
-
-      public final boolean getPending() {
-         return this.pending;
-      }
-
-      public final String getPosted() {
-         return this.posted;
-      }
-   }
+            this.p.setStrokeCap(Paint.Cap.BUTT);
+        }
+    }
 }

@@ -1,18 +1,16 @@
 package com.starpilot.starview;
 
-import android.app.AlertDialog.Builder;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -21,14 +19,15 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.SeekBar.OnSeekBarChangeListener;
+import com.starpilot.starview.GalaxyRow;
+import com.starpilot.starview.SettingIcons;
+import com.starpilot.starview.SvIcon;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 import kotlin.NoWhenBranchMatchedException;
 import kotlin.Pair;
@@ -40,7 +39,7 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.jvm.internal.Ref.ObjectRef;
+import kotlin.jvm.internal.Ref;
 import kotlin.ranges.RangesKt;
 import kotlin.text.Regex;
 import kotlin.text.RegexOption;
@@ -48,2239 +47,1785 @@ import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: GalaxySettingsView.kt */
 public final class GalaxySettingsView extends FrameLayout {
-   public static final GalaxySettingsView.Companion Companion = new GalaxySettingsView.Companion(null);
-   public static final long REFRESH_MS = 3000L;
-   private boolean busy;
-   private final LinearLayout col;
-   private JSONObject data;
-   private final Function1<LinearLayout, Unit> footer;
-   private final Galaxy7 g;
-   private JSONObject hub;
-   private String lastShown;
-   private final Handler main;
-   private final Function2<String, String, Unit> openWeb;
-   private final Function2<String, LinearLayout, Unit> pageExtras;
-   private final Runnable poll;
-   private final GalaxySettingsView.Root root;
-   private final ScrollView scroll;
-   private final ArrayList<String> stack;
-   private final HashMap<String, String> titles;
-   private boolean touching;
-   private final CarUi ui;
-   private VasmEditorCard vasmCard;
-   private boolean visible;
+    public static final Companion Companion = new Companion(null);
+    public static final long REFRESH_MS = 3000;
+    private boolean busy;
+    private final LinearLayout col;
+    private JSONObject data;
+    private final Function1<LinearLayout, Unit> footer;
+    private final Galaxy7 g;
+    private JSONObject hub;
+    private String lastShown;
+    private final Handler main;
+    private final Function2<String, String, Unit> openWeb;
+    private final Function2<String, LinearLayout, Unit> pageExtras;
+    private final GalaxySettingsView$poll$1 poll;
+    private final Root root;
+    private final ScrollView scroll;
+    private final ArrayList<String> stack;
+    private final HashMap<String, String> titles;
+    private boolean touching;
+    private final CarUi ui;
+    private VasmEditorCard vasmCard;
+    private boolean visible;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$24Jyvw5cG56DXaEZtHzg1BR7HlA(GalaxySettingsView var0, int var1, JSONObject var2) {
-      return draw$lambda$24(var0, var1, var2);
-   }
+    /* compiled from: GalaxySettingsView.kt */
+    public /* synthetic */ class WhenMappings {
+        public static final /* synthetic */ int[] $EnumSwitchMapping$0;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$7t5UmbvRX6ht05_Dlf8ye0H0Oms(GalaxySettingsView var0, String var1) {
-      return drawRoot$lambda$15$lambda$14(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$7vz8wjV3GlPyjAYrDhF9m27CQy8(GalaxySettingsView var0, Function0 var1, JSONObject var2, String var3) {
-      return confirm$lambda$81(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$8jGFi6JvDujnP8R4GFTMS4rLfMo(GalaxySettingsView var0, GalaxyRow var1, JSONObject var2, String var3) {
-      return saveValue$lambda$66(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$AfSOY20oSKlFizjsAj_I2UnITpg/* $VF was: $r8$lambda$AfSOY20oSKlFizjsAj_I2UnITpg*/(
-      GalaxySettingsView var0, JSONObject var1, String var2
-   ) {
-      return reviewDraft$lambda$74(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$D7eB68vxvl37Qc0B0JjRiK2A7XU(GalaxyRow var0, GalaxySettingsView var1, ObjectRef var2, int var3) {
-      return selectRow$lambda$46(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static CharSequence $r8$lambda$DKvU0_UeE76fJH5mgabqfCxxilQ/* $VF was: $r8$lambda$DKvU0_UeE76fJH5mgabqfCxxilQ*/(GalaxyRow var0) {
-      return draw$lambda$26(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$FmLh8I0enIZ9cL_pWW_ZcCCKJoA/* $VF was: $r8$lambda$FmLh8I0enIZ9cL_pWW_ZcCCKJoA*/(
-      GalaxySettingsView var0, GalaxySettingsView.Entry var1
-   ) {
-      return drawRoot$lambda$17(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$GV4vucs_TlSOaTtYWcAj0GNC3bE(GalaxyRow var0, GalaxySettingsView var1, CompoundButton var2, boolean var3) {
-      switchRow$lambda$43(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$GgWfY8bDT_c9a0BTkz6v2TRpMVI(GalaxySettingsView var0, JSONObject var1, String var2) {
-      return resetDefault$lambda$69(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$HaKQKlkVT6sqJMJ37khE8RB_boA(GalaxySettingsView var0, GalaxySettingsView.Entry var1) {
-      return draw$lambda$36(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$JIHNcoyCVDJI0roWeHPyvfzkg0E(GalaxySettingsView var0, String var1, DialogInterface var2, int var3) {
-      review$lambda$79$lambda$76(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$K6Po5NtniICQVdiH7V5B6Qv6dL4(GalaxySettingsView var0, GalaxyRow var1, String var2) {
-      return draw$lambda$33(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$LLP2qfYEOJT0pDSfxCrVK1rUFKg(GalaxySettingsView var0, String var1, boolean var2, JSONObject var3, String var4) {
-      return load$lambda$6(var0, var1, var2, var3, var4);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$LigAhwKpLIjtO30Rsl2eDBpMOZ4(GalaxySettingsView var0, JSONObject var1, String var2) {
-      return load$lambda$5(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$MNb7vbbaIHPkhIZJsImmYL_M2Pw(GalaxySettingsView var0, DialogInterface var1) {
-      reviewDraft$lambda$74$lambda$73(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Mlv9Hk9csSYcNXgt95thwwzh6t4(GalaxySettingsView var0, GalaxyRow var1, JSONObject var2, String var3) {
-      return review$lambda$79(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$MtWn3FafC5nTC__9EkEvsQmxCxY/* $VF was: $r8$lambda$MtWn3FafC5nTC__9EkEvsQmxCxY*/(GalaxyRow var0, GalaxySettingsView var1) {
-      return defaultButton$lambda$40(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$QOik1pOoib476iIgkZXyZg_iOlI(GalaxySettingsView var0, View var1) {
-      backBar$lambda$8$lambda$7(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$QZwOVId0eIZpndfLiYdcjguDQ2s(GalaxyRow var0, GalaxySettingsView var1, DialogInterface var2, int var3) {
-      selectRow$lambda$48$lambda$47(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$RAjyorYbiGFj_nsFd27pDC9oA1k(boolean var0, Function0 var1, View var2) {
-      linkCard$lambda$23(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$SXt_8KUhXzGXLoDZ_iNIsCl8x9U(GalaxySettingsView var0, DialogInterface var1) {
-      review$lambda$79$lambda$78(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$U00vOgkKrS2A35t9mYYT1mFwLGI(GalaxySettingsView var0, GalaxyRow var1) {
-      return draw$lambda$34(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$VBEl7FFNSTiXHIDCY5s_DcvYsQ4() {
-      return confirm$lambda$80();
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Zp8q4efaBYO1XSYQV_uhIJzJzHs/* $VF was: $r8$lambda$Zp8q4efaBYO1XSYQV_uhIJzJzHs*/(GalaxyRow var0, GalaxySettingsView var1) {
-      return actionRow$lambda$61(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$_kxR5zsZ2jN_EMNwf8ftPIYHTac/* $VF was: $r8$lambda$_kxR5zsZ2jN_EMNwf8ftPIYHTac*/(
-      GalaxySettingsView var0, GalaxySettingsView.Entry var1
-   ) {
-      return drawRoot$lambda$16(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$bY7VjXH1JiJryu9vxk3ozORyhrk(GalaxySettingsView var0, int var1) {
-      draw$lambda$38(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$hCYE9Yw9cMM3bPaQdgr_T1VcOHA(GalaxySettingsView var0, DialogInterface var1, int var2) {
-      reviewDraft$lambda$74$lambda$72(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$iTMF0PFpjAyNNDAieiaJLu48n6A(
-      GalaxyRow var0, GalaxySettingsView var1, SeekBar var2, int var3, String var4, GalaxyRow.Bounds var5, int var6
-   ) {
-      return sliderRow$lambda$57(var0, var1, var2, var3, var4, var5, var6);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$k42rSBvFeaFjqgeMKab3iQwSJs8(GalaxyRow var0, GalaxySettingsView var1) {
-      return selectRow$lambda$48(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$k_I2bcaNEoOrDje1kX0Hon7kJHE(GalaxySettingsView var0, DialogInterface var1, int var2) {
-      review$lambda$79$lambda$77(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$lh0ho_749XAPB0pMUw1cvNcV2RM/* $VF was: $r8$lambda$lh0ho_749XAPB0pMUw1cvNcV2RM*/(GalaxySettingsView var0, String var1) {
-      return drawRoot$lambda$11(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$lsolHgBr5yQ_68KHPVpwtCjlNwg/* $VF was: $r8$lambda$lsolHgBr5yQ_68KHPVpwtCjlNwg*/(GalaxySettingsView var0, GalaxyRow var1) {
-      return saveValue$lambda$66$lambda$65(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$nJsy7v0Gi5hIPpfhfIBkleMrQ4c(
-      GalaxyRow var0, GalaxySettingsView var1, SeekBar var2, String var3, GalaxyRow.Bounds var4, int var5
-   ) {
-      return sliderRow$lambda$55(var0, var1, var2, var3, var4, var5);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$pJ5tDm96rE0MGycTkbKwlew4bpo(GalaxySettingsView var0, GalaxyRow var1) {
-      return draw$lambda$35(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$rxUshCcqg9nQbgRJhZ7QK0Dc0A0(GalaxySettingsView var0, String var1, DialogInterface var2, int var3) {
-      reviewDraft$lambda$74$lambda$71(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$vRFaewUbSy_SBgYWpYONNr_9rQE/* $VF was: $r8$lambda$vRFaewUbSy_SBgYWpYONNr_9rQE*/(
-      GalaxySettingsView var0, GalaxySettingsView.Entry var1
-   ) {
-      return draw$lambda$37(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$xK05wWEwnpDsTfXlTdsRXTLEFK8(JSONObject var0, String var1) {
-      return previewSound$lambda$67(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$y3sxJkNfUCcigolBr09_BU0Diqo/* $VF was: $r8$lambda$y3sxJkNfUCcigolBr09_BU0Diqo*/(GalaxySettingsView var0, GalaxyRow var1) {
-      return drawRoot$lambda$19(var0, var1);
-   }
-
-   public GalaxySettingsView(
-      Context var1,
-      CarUi var2,
-      GalaxySettingsView.Root var3,
-      Function2<? super String, ? super String, Unit> var4,
-      Function1<? super LinearLayout, Unit> var5,
-      Function2<? super String, ? super LinearLayout, Unit> var6
-   ) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "ui");
-      Intrinsics.checkNotNullParameter(var3, "root");
-      Intrinsics.checkNotNullParameter(var4, "openWeb");
-      super(var1);
-      this.ui = var2;
-      this.root = var3;
-      this.openWeb = var4;
-      this.footer = var5;
-      this.pageExtras = var6;
-      this.g = Galaxy7.Companion.current();
-      this.main = new Handler(Looper.getMainLooper());
-      this.stack = new ArrayList<>();
-      this.lastShown = "";
-      this.scroll = new ScrollView(var1);
-      LinearLayout var7 = new LinearLayout(var1);
-      var7.setOrientation(1);
-      var7.setPadding(this.ui.dp(10), this.ui.dp(4), this.ui.dp(24), this.ui.dp(60));
-      this.col = var7;
-      this.scroll.addView((View)this.col);
-      this.addView((View)this.scroll, (LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
-      this.poll = new Runnable() {
-
-         @Override
-         public void run() {
-            if (GalaxySettingsView.this.visible) {
-               if (!GalaxySettingsView.this.busy && !GalaxySettingsView.this.touching) {
-                  GalaxySettingsView.this.load(true);
-               }
-
-               GalaxySettingsView.this.main.postDelayed(this, 3000L);
+        static {
+            int[] iArr = new int[GalaxyRow.Control.values().length];
+            try {
+                iArr[GalaxyRow.Control.GROUP.ordinal()] = 1;
+            } catch (NoSuchFieldError e) {
             }
-         }
-      };
-      this.titles = new HashMap<>();
-   }
-
-   // $VF: synthetic method
-   public GalaxySettingsView(
-      Context var1, CarUi var2, GalaxySettingsView.Root var3, Function2 var4, Function1 var5, Function2 var6, int var7, DefaultConstructorMarker var8
-   ) {
-      if ((var7 & 16) != 0) {
-         var5 = null;
-      }
-
-      if ((var7 & 32) != 0) {
-         var6 = null;
-      }
-
-      this(var1, var2, var3, var4, var5, var6);
-   }
-
-   private final void actionRow(GalaxyRow var1) {
-      CarUi var6 = this.ui;
-      String var5 = var1.getLabel();
-      String var7 = this.desc(var1);
-      CharSequence var4 = var1.getValue();
-      CharSequence var3 = var4;
-      if (StringsKt.isBlank(var4)) {
-         var3 = null;
-      }
-
-      boolean var2 = true;
-      var4 = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull(new String[]{var7, var3}), "\n", null, null, 0, null, null, 62, null);
-      var3 = var4;
-      if (StringsKt.isBlank(var4)) {
-         var3 = null;
-      }
-
-      LinearLayout var13 = (LinearLayout)CarUi.row$default(var6, var5, (String)var3, 0, this.icon(var1), this.tag(var1), 4, null).component1();
-      if (var1.getAction()) {
-         String var14 = var1.getRepairValue();
-         String var12 = "Reset";
-         String var9 = var12;
-         if (!Intrinsics.areEqual(var14, "Reset")) {
-            if (new Regex("reset|default", RegexOption.IGNORE_CASE).containsMatchIn(var1.getLabel())) {
-               var9 = var12;
-            } else {
-               if (var1.getRepairValue().length() <= 0) {
-                  var2 = false;
-               }
-
-               if (var2) {
-                  String var10 = var1.getRepairValue();
-                  var9 = "Set " + var10;
-               } else {
-                  var9 = "Run";
-               }
+            try {
+                iArr[GalaxyRow.Control.SWITCH.ordinal()] = 2;
+            } catch (NoSuchFieldError e2) {
             }
-         }
+            try {
+                iArr[GalaxyRow.Control.SELECT.ordinal()] = 3;
+            } catch (NoSuchFieldError e3) {
+            }
+            try {
+                iArr[GalaxyRow.Control.SLIDER.ordinal()] = 4;
+            } catch (NoSuchFieldError e4) {
+            }
+            try {
+                iArr[GalaxyRow.Control.ACTION.ordinal()] = 5;
+            } catch (NoSuchFieldError e5) {
+            }
+            try {
+                iArr[GalaxyRow.Control.READOUT.ordinal()] = 6;
+            } catch (NoSuchFieldError e6) {
+            }
+            $EnumSwitchMapping$0 = iArr;
+        }
+    }
 
-         var13.addView((View)CarUi.button$default(this.ui, var9, false, new GalaxySettingsView$$ExternalSyntheticLambda33(var1, this), 2, null));
-      }
+    /* JADX WARN: Illegal instructions before constructor call */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public /* synthetic */ GalaxySettingsView(Context context, CarUi carUi, Root root, Function2 function2, Function1 function1, Function2 function22, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this(context, carUi, root, function2, r7, r8);
+        Function1 function12;
+        Function2 function23;
+        if ((i & 16) == 0) {
+            function12 = function1;
+        } else {
+            function12 = null;
+        }
+        if ((i & 32) == 0) {
+            function23 = function22;
+        } else {
+            function23 = null;
+        }
+    }
 
-      this.dim((View)var13, var1);
-      this.col.addView((View)var13, (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-   }
+    /* compiled from: GalaxySettingsView.kt */
+    public static abstract class Entry {
+        public /* synthetic */ Entry(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
 
-   private static final Unit actionRow$lambda$61(GalaxyRow var0, GalaxySettingsView var1) {
-      if (var0.getEditable()) {
-         var1.review(var0);
-      }
+        private Entry() {
+        }
 
-      return Unit.INSTANCE;
-   }
+        /* compiled from: GalaxySettingsView.kt */
+        public static final class Hub extends Entry {
+            private final List<String> pages;
 
-   private final void backBar() {
-      int var2 = this.stack.size();
-      byte var1;
-      if (this.root.getPage() != null) {
-         var1 = 1;
-      } else {
-         var1 = 0;
-      }
-
-      if (var2 > var1) {
-         String var6;
-         if (this.stack.size() >= 2) {
-            var6 = this.stack.get(this.stack.size() - 2);
-            Intrinsics.checkNotNullExpressionValue(var6, "get(...)");
-            var6 = this.titleOf(var6);
-         } else {
-            var6 = this.root.getTitle();
-         }
-
-         LinearLayout var4 = this.col;
-         TextView var5 = new TextView(this.getContext());
-         var5.setText("‹  " + var6);
-         var5.setTextColor(CarUi.Companion.getACCENT());
-         var5.setTextSize(18.0F);
-         var5.setTypeface(Typeface.DEFAULT_BOLD);
-         var5.setPadding(this.ui.dp(6), this.ui.dp(6), this.ui.dp(6), this.ui.dp(12));
-         var5.setOnClickListener(new GalaxySettingsView$$ExternalSyntheticLambda5(this));
-         var4.addView((View)var5);
-      }
-   }
-
-   private static final void backBar$lambda$8$lambda$7(GalaxySettingsView var0, View var1) {
-      var0.back();
-   }
-
-   private final void confirm(String var1, Function0<Unit> var2) {
-      Galaxy7 var3 = this.g;
-      if (var3 != null) {
-         String var4 = this.getCurrent();
-         if (var4 != null) {
-            JSONObject var5 = new JSONObject().put("intent", var1).put("confirmed", true).put("page", var4);
-            Intrinsics.checkNotNullExpressionValue(var5, "put(...)");
-            var3.post("/api/settings/confirm", var5, new GalaxySettingsView$$ExternalSyntheticLambda36(this, var2));
-         }
-      }
-   }
-
-   // $VF: synthetic method
-   static void confirm$default(GalaxySettingsView var0, String var1, Function0 var2, int var3, Object var4) {
-      if ((var3 & 2) != 0) {
-         var2 = new GalaxySettingsView$$ExternalSyntheticLambda26();
-      }
-
-      var0.confirm(var1, (Function0<Unit>)var2);
-   }
-
-   private static final Unit confirm$lambda$80() {
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit confirm$lambda$81(GalaxySettingsView var0, Function0 var1, JSONObject var2, String var3) {
-      boolean var5 = false;
-      var0.busy = false;
-      boolean var4 = var5;
-      if (var2 != null) {
-         var4 = var5;
-         if (var2.optBoolean("saved")) {
-            var4 = true;
-         }
-      }
-
-      if (!var4) {
-         if (var3 == null) {
-            var3 = "Galaxy couldn't confirm the save - current values are shown";
-         }
-
-         var0.failed(var3);
-         return Unit.INSTANCE;
-      } else {
-         var1.invoke();
-         JSONObject var6 = var2.optJSONObject("page");
-         if (var6 != null && Intrinsics.areEqual(var6.optString("page"), var0.getCurrent())) {
-            var0.data = var6;
-            var0.draw(var6);
-         } else {
-            var0.load(true);
-         }
-
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final void defaultButton(LinearLayout var1, GalaxyRow var2) {
-      if (var2.getShowDefault()) {
-         TextView var5 = CarUi.button$default(this.ui, "Default", false, new GalaxySettingsView$$ExternalSyntheticLambda25(var2, this), 2, null);
-         var5.setMinWidth(this.ui.dp(100));
-         var5.setTextSize(16.0F);
-         View var4 = (View)var5;
-         android.widget.LinearLayout.LayoutParams var3 = new android.widget.LinearLayout.LayoutParams(-2, -2);
-         var3.rightMargin = this.ui.dp(10);
-         Unit var6 = Unit.INSTANCE;
-         var1.addView(var4, (LayoutParams)var3);
-      }
-   }
-
-   private static final Unit defaultButton$lambda$40(GalaxyRow var0, GalaxySettingsView var1) {
-      if (var0.getEditable()) {
-         var1.resetDefault(var0);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final String desc(GalaxyRow var1) {
-      CharSequence var2 = StringsKt.replace$default(var1.getShownReason(), "https://firestar.link/discord", "the StarPilot Discord", false, 4, null);
-      CharSequence var3 = var2;
-      if (StringsKt.isBlank(var2)) {
-         var3 = null;
-      }
-
-      return (String)var3;
-   }
-
-   private final void dim(View var1, GalaxyRow var2) {
-      float var3;
-      if (var2.getEditable()) {
-         var3 = 1.0F;
-      } else {
-         var3 = 0.45F;
-      }
-
-      var1.setAlpha(var3);
-   }
-
-   private final void draw(JSONObject var1) {
-      List var9 = GalaxyRow.Companion.parse(var1);
-      int var4 = this.vasmEditorRow(var1);
-      if (var4 >= 0) {
-         VasmEditorCard var7 = this.vasmCard;
-         VasmEditorCard var6 = var7;
-         if (var7 == null) {
-            Context var21 = this.getContext();
-            Intrinsics.checkNotNullExpressionValue(var21, "getContext(...)");
-            var6 = new VasmEditorCard(var21, this.ui, new GalaxySettingsView$$ExternalSyntheticLambda9(this, var4));
-            this.vasmCard = var6;
-         }
-
-         GalaxyRow var32 = CollectionsKt.getOrNull(var9, var4);
-         boolean var5;
-         if (var32 != null && var32.getAvailable()) {
-            var5 = true;
-         } else {
-            var5 = false;
-         }
-
-         var6.update(var1, var5);
-      }
-
-      String var22 = var1.optString("title");
-      String var33 = var1.optString("subtitle");
-      boolean var20 = var1.optBoolean("vehicleIdentified");
-      String var8 = CollectionsKt.joinToString$default(var9, "\n", null, null, 0, null, new GalaxySettingsView$$ExternalSyntheticLambda10(), 30, null);
-      var22 = var22 + "|" + var33 + "|" + var20 + "|" + var8;
-      if (!Intrinsics.areEqual(var22, this.lastShown)) {
-         boolean var2;
-         if (this.lastShown.length() > 0) {
-            var2 = 1;
-         } else {
-            var2 = 0;
-         }
-
-         if (var2) {
-            var2 = this.scroll.getScrollY();
-         } else {
-            var2 = 0;
-         }
-
-         this.lastShown = var22;
-         var33 = var1.optString("page");
-         Map var10 = this.titles;
-         CharSequence var36 = var1.optString("title");
-         var22 = var36;
-         if (StringsKt.isBlank(var36)) {
-            Intrinsics.checkNotNull(var33);
-            var22 = this.titleOf(var33);
-         }
-
-         var10.put(var33, var22);
-         this.col.removeAllViews();
-         this.backBar();
-         if (this.stack.size() > 1 || this.root.getPage() == null) {
-            LinearLayout var25 = this.col;
-            TextView var37 = new TextView(this.getContext());
-            Intrinsics.checkNotNull(var33);
-            var37.setText(this.titleOf(var33));
-            var37.setTextColor(CarUi.Companion.getTEXT());
-            var37.setTextSize(24.0F);
-            var37.setTypeface(Typeface.DEFAULT_BOLD);
-            var37.setPadding(this.ui.dp(6), 0, 0, this.ui.dp(4));
-            var25.addView((View)var37);
-         }
-
-         var22 = var1.optString("subtitle");
-         Intrinsics.checkNotNull(var22);
-         if (StringsKt.isBlank(var22)) {
-            var22 = null;
-         }
-
-         if (var22 != null) {
-            this.col.addView((View)this.ui.note(var22), (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-         }
-
-         if (!var1.optBoolean("vehicleIdentified", true)) {
-            this.col
-               .addView(
-                  (View)this.ui.note("The comma hasn't identified the car yet: settings for this car show once it has (turn the car on once)."),
-                  (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null)
-               );
-         }
-
-         if (Intrinsics.areEqual(this.root.getPage(), var33) && this.root.getNote() != null) {
-            this.col.addView((View)this.ui.note(this.root.getNote()), (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-         }
-
-         GalaxyRow.Companion var11 = GalaxyRow.Companion;
-         Intrinsics.checkNotNull(var33);
-         Iterable var12 = var11.visible(var33, var9);
-         var var27 = new ArrayList();
-
-         for (Object var44 : var12) {
-            GalaxyRow var42 = (GalaxyRow)var44;
-            boolean var3;
-            if (var4 < 0 || var42.getIndex() != var4 && !Intrinsics.areEqual(var42.getLabel(), "Saved spot-monitor settings")) {
-               var3 = true;
-            } else {
-               var3 = false;
+            /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+            public Hub(List<String> pages) {
+                super(null);
+                Intrinsics.checkNotNullParameter(pages, "pages");
+                this.pages = pages;
             }
 
-            if (var3) {
-               var27.add(var44);
+            public final List<String> getPages() {
+                return this.pages;
             }
-         }
+        }
 
-         List var28 = var27;
-         if (var4 >= 0) {
-            VasmEditorCard var39 = this.vasmCard;
-            if (var39 != null) {
-               ViewParent var13 = var39.getParent();
-               ViewGroup var14;
-               if (var13 instanceof ViewGroup) {
-                  var14 = (ViewGroup)var13;
-               } else {
-                  var14 = null;
-               }
+        /* compiled from: GalaxySettingsView.kt */
+        public static final class Page extends Entry {
+            private final String desc;
+            private final String label;
+            private final String page;
 
-               if (var14 != null) {
-                  var14.removeView((View)var39);
-               }
-
-               this.col.addView((View)var39, (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-            }
-         }
-
-         if (var28.isEmpty()) {
-            this.col.addView((View)this.ui.note("No settings here for this car."), (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-         }
-
-         GalaxyVisuals var15 = GalaxyVisuals.INSTANCE;
-         Context var40 = this.getContext();
-         Intrinsics.checkNotNullExpressionValue(var40, "getContext(...)");
-         Set var41 = var15.header(
-            var40,
-            this.ui,
-            var33,
-            var28,
-            this.col,
-            new GalaxySettingsView$$ExternalSyntheticLambda12(this),
-            new GalaxySettingsView$$ExternalSyntheticLambda13(this)
-         );
-         Iterator var29 = var28.iterator();
-         String var16 = var33;
-
-         while (var29.hasNext()) {
-            GalaxyRow var35 = (GalaxyRow)var29.next();
-            if (!var41.contains(var35.getIndex())) {
-               GalaxyRow.Control var43 = var35.getControl();
-               switch (GalaxySettingsView.WhenMappings.$EnumSwitchMapping$0[var43.ordinal()]) {
-                  case 1:
-                     this.titles.put(var35.getPage(), var35.getLabel());
-                     linkCard$default(
-                        this,
-                        var35.getLabel(),
-                        var35.getValue(),
-                        var35.getAvailable(),
-                        false,
-                        SettingIcons.INSTANCE.forRow(var16, var35.getLabel(), var35.getPage(), var35.getControl()),
-                        new GalaxySettingsView$$ExternalSyntheticLambda14(this, var35),
-                        8,
-                        null
-                     );
-                     break;
-                  case 2:
-                     this.switchRow(var35);
-                     break;
-                  case 3:
-                     this.selectRow(var35);
-                     break;
-                  case 4:
-                     this.sliderRow(var35);
-                     break;
-                  case 5:
-                     this.actionRow(var35);
-                     break;
-                  case 6:
-                     this.readoutRow(var35);
-                     break;
-                  default:
-                     throw new NoWhenBranchMatchedException();
-               }
-            }
-         }
-
-         Function2 var30 = this.pageExtras;
-         if (var30 != null) {
-            var30.invoke(var16, this.col);
-         }
-
-         if (Intrinsics.areEqual(var16, this.root.getPage()) && this.stack.size() == 1) {
-            for (GalaxySettingsView.Entry var17 : this.root.getEntries()) {
-               if (var17 instanceof GalaxySettingsView.Entry.Web) {
-                  this.linkCard(
-                     ((GalaxySettingsView.Entry.Web)var17).getLabel(),
-                     ((GalaxySettingsView.Entry.Web)var17).getDesc(),
-                     true,
-                     true,
-                     this.webIcon(((GalaxySettingsView.Entry.Web)var17).getPath()),
-                     new GalaxySettingsView$$ExternalSyntheticLambda15(this, var17)
-                  );
-               } else if (var17 instanceof GalaxySettingsView.Entry.Page) {
-                  this.titles.put(((GalaxySettingsView.Entry.Page)var17).getPage(), ((GalaxySettingsView.Entry.Page)var17).getLabel());
-                  linkCard$default(
-                     this,
-                     ((GalaxySettingsView.Entry.Page)var17).getLabel(),
-                     ((GalaxySettingsView.Entry.Page)var17).getDesc(),
-                     true,
-                     false,
-                     SettingIcons.INSTANCE.forPage(((GalaxySettingsView.Entry.Page)var17).getPage()),
-                     new GalaxySettingsView$$ExternalSyntheticLambda16(this, var17),
-                     8,
-                     null
-                  );
-               }
+            /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+            public Page(String label, String desc, String page) {
+                super(null);
+                Intrinsics.checkNotNullParameter(label, "label");
+                Intrinsics.checkNotNullParameter(desc, "desc");
+                Intrinsics.checkNotNullParameter(page, "page");
+                this.label = label;
+                this.desc = desc;
+                this.page = page;
             }
 
-            Function1 var18 = this.footer;
-            if (var18 != null) {
-               var18.invoke(this.col);
-            }
-         }
-
-         if (var2 > 0) {
-            this.scroll.post(new GalaxySettingsView$$ExternalSyntheticLambda17(this, var2));
-         }
-      }
-   }
-
-   private static final Unit draw$lambda$24(GalaxySettingsView var0, int var1, JSONObject var2) {
-      Intrinsics.checkNotNullParameter(var2, "d");
-      var0.reviewDraft(var1, var2);
-      return Unit.INSTANCE;
-   }
-
-   private static final CharSequence draw$lambda$26(GalaxyRow var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      String var6 = var0.getLabel();
-      String var7 = var0.getValue();
-      boolean var5 = var0.getAvailable();
-      String var8 = var0.getReason();
-      List var9 = var0.getChoices();
-      double var1 = var0.getMinimum();
-      double var3 = var0.getMaximum();
-      String var10 = var0.getDefaultValue();
-      return var6 + "|" + var7 + "|" + var5 + "|" + var8 + "|" + var9 + "|" + var1 + "|" + var3 + "|" + var10;
-   }
-
-   private static final Unit draw$lambda$33(GalaxySettingsView var0, GalaxyRow var1, String var2) {
-      Intrinsics.checkNotNullParameter(var1, "r");
-      Intrinsics.checkNotNullParameter(var2, "v");
-      if (!var0.busy) {
-         var0.saveValue(var1, var2);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit draw$lambda$34(GalaxySettingsView var0, GalaxyRow var1) {
-      Intrinsics.checkNotNullParameter(var1, "r");
-      if (!var0.busy) {
-         var0.resetDefault(var1);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit draw$lambda$35(GalaxySettingsView var0, GalaxyRow var1) {
-      var0.open(var1.getPage());
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit draw$lambda$36(GalaxySettingsView var0, GalaxySettingsView.Entry var1) {
-      var0.openWeb.invoke(((GalaxySettingsView.Entry.Web)var1).getPath(), ((GalaxySettingsView.Entry.Web)var1).getLabel());
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit draw$lambda$37(GalaxySettingsView var0, GalaxySettingsView.Entry var1) {
-      var0.open(((GalaxySettingsView.Entry.Page)var1).getPage());
-      return Unit.INSTANCE;
-   }
-
-   private static final void draw$lambda$38(GalaxySettingsView var0, int var1) {
-      var0.scroll.scrollTo(0, var1);
-   }
-
-   private final void drawRoot(String var1) {
-      String var5;
-      String var17;
-      label180: {
-         JSONObject var4 = this.hub;
-         var5 = "";
-         if (var4 != null) {
-            JSONArray var16 = var4.optJSONArray("rows");
-            if (var16 != null) {
-               String var6 = var16.toString();
-               var17 = var6;
-               if (var6 != null) {
-                  break label180;
-               }
-            }
-         }
-
-         var17 = "";
-      }
-
-      if (var1 != null) {
-         var5 = var1;
-      }
-
-      var17 = "root|" + var17 + var5;
-      if (!Intrinsics.areEqual(var17, this.lastShown)) {
-         this.lastShown = var17;
-         this.col.removeAllViews();
-         if (this.root.getNote() != null) {
-            this.col.addView((View)this.ui.note(this.root.getNote()), (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-         }
-
-         if (var1 != null) {
-            this.col.addView((View)this.ui.note(var1), (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-         }
-
-         var var19 = this.root.getEntries();
-         boolean var12;
-         if (var19 instanceof Collection && ((Collection)var19).isEmpty()) {
-            var12 = 0;
-         } else {
-            Iterator var25 = var19.iterator();
-
-            while (true) {
-               if (!var25.hasNext()) {
-                  var12 = 0;
-                  break;
-               }
-
-               GalaxySettingsView.Entry var20 = (GalaxySettingsView.Entry)var25.next();
-               if (var20 instanceof GalaxySettingsView.Entry.Hub
-                  && Intrinsics.areEqual(
-                     CollectionsKt.toSet(((GalaxySettingsView.Entry.Hub)var20).getPages()),
-                     SetsKt.setOf(new String[]{"traffic", "aggressive", "standard", "relaxed"})
-                  )) {
-                  var12 = (boolean)1;
-               } else {
-                  var12 = (boolean)0;
-               }
-
-               if (var12) {
-                  var12 = 1;
-                  break;
-               }
-            }
-         }
-
-         if (var12) {
-            GalaxyVisuals var21 = GalaxyVisuals.INSTANCE;
-            Context var26 = this.getContext();
-            Intrinsics.checkNotNullExpressionValue(var26, "getContext(...)");
-            var21.personalities(var26, this.ui, this.col, new GalaxySettingsView$$ExternalSyntheticLambda27(this));
-         }
-
-         label150: {
-            JSONObject var22 = this.hub;
-            if (var22 != null) {
-               List var27 = GalaxyRow.Companion.parse(var22);
-               var23 = var27;
-               if (var27 != null) {
-                  break label150;
-               }
+            public final String getDesc() {
+                return this.desc;
             }
 
-            var23 = CollectionsKt.emptyList();
-         }
-
-         for (GalaxyRow var33 : var23) {
-            if (var33.getPage().length() > 0) {
-               var12 = (boolean)1;
-            } else {
-               var12 = (boolean)0;
+            public final String getLabel() {
+                return this.label;
             }
 
-            if (var12) {
-               this.titles.put(var33.getPage(), var33.getLabel());
+            public final String getPage() {
+                return this.page;
             }
-         }
+        }
 
-         Iterator var7 = this.root.getEntries().iterator();
-         var12 = 0;
+        /* compiled from: GalaxySettingsView.kt */
+        public static final class Web extends Entry {
+            private final String desc;
+            private final String label;
+            private final String path;
 
-         while (var7.hasNext()) {
-            GalaxySettingsView.Entry var29 = (GalaxySettingsView.Entry)var7.next();
-            if (var29 instanceof GalaxySettingsView.Entry.Hub) {
-               for (String var40 : ((GalaxySettingsView.Entry.Hub)var29).getPages()) {
-                  Iterator var41 = var23.iterator();
-
-                  Object var36;
-                  do {
-                     if (!var41.hasNext()) {
-                        var36 = null;
-                        break;
-                     }
-
-                     var36 = var41.next();
-                  } while (!Intrinsics.areEqual(((GalaxyRow)var36).getPage(), var40));
-
-                  var36 = (GalaxyRow)var36;
-                  if (var36 != null) {
-                     linkCard$default(
-                        this,
-                        ((GalaxyRow)var36).getLabel(),
-                        ((GalaxyRow)var36).getValue(),
-                        ((GalaxyRow)var36).getAvailable(),
-                        false,
-                        SettingIcons.INSTANCE.forPage(var40),
-                        new GalaxySettingsView$$ExternalSyntheticLambda28(this, var40),
-                        8,
-                        null
-                     );
-                     var12++;
-                  }
-               }
-            } else if (var29 instanceof GalaxySettingsView.Entry.Page) {
-               this.titles.put(((GalaxySettingsView.Entry.Page)var29).getPage(), ((GalaxySettingsView.Entry.Page)var29).getLabel());
-               linkCard$default(
-                  this,
-                  ((GalaxySettingsView.Entry.Page)var29).getLabel(),
-                  ((GalaxySettingsView.Entry.Page)var29).getDesc(),
-                  true,
-                  false,
-                  SettingIcons.INSTANCE.forPage(((GalaxySettingsView.Entry.Page)var29).getPage()),
-                  new GalaxySettingsView$$ExternalSyntheticLambda29(this, var29),
-                  8,
-                  null
-               );
-               var12++;
-            } else if (var29 instanceof GalaxySettingsView.Entry.Web) {
-               this.linkCard(
-                  ((GalaxySettingsView.Entry.Web)var29).getLabel(),
-                  ((GalaxySettingsView.Entry.Web)var29).getDesc(),
-                  true,
-                  true,
-                  this.webIcon(((GalaxySettingsView.Entry.Web)var29).getPath()),
-                  new GalaxySettingsView$$ExternalSyntheticLambda30(this, var29)
-               );
-               var12++;
-            } else {
-               if (!(var29 instanceof GalaxySettingsView.Entry.Unplaced)) {
-                  throw new NoWhenBranchMatchedException();
-               }
-
-               Iterable var8 = var23;
-               var var34 = new ArrayList();
-
-               for (Object var9 : var8) {
-                  GalaxyRow var10 = (GalaxyRow)var9;
-                  boolean var3;
-                  if (var10.getPage().length() > 0) {
-                     var3 = true;
-                  } else {
-                     var3 = false;
-                  }
-
-                  if (var3 && !((GalaxySettingsView.Entry.Unplaced)var29).getPlaced().contains(var10.getPage())) {
-                     var3 = true;
-                  } else {
-                     var3 = false;
-                  }
-
-                  if (var3) {
-                     var34.add(var9);
-                  }
-               }
-
-               for (GalaxyRow var35 : var34) {
-                  linkCard$default(
-                     this,
-                     var35.getLabel(),
-                     var35.getValue(),
-                     var35.getAvailable(),
-                     false,
-                     SettingIcons.INSTANCE.forPage(var35.getPage()),
-                     new GalaxySettingsView$$ExternalSyntheticLambda31(this, var35),
-                     8,
-                     null
-                  );
-                  var12++;
-               }
-            }
-         }
-
-         if (var12 == 0 && var1 == null) {
-            LinearLayout var24 = this.col;
-            CarUi var32 = this.ui;
-            if (this.hub == null) {
-               var1 = "Loading…";
-            } else {
-               var1 = "Nothing here for this car and StarPilot version.";
+            /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+            public Web(String label, String desc, String path) {
+                super(null);
+                Intrinsics.checkNotNullParameter(label, "label");
+                Intrinsics.checkNotNullParameter(desc, "desc");
+                Intrinsics.checkNotNullParameter(path, "path");
+                this.label = label;
+                this.desc = desc;
+                this.path = path;
             }
 
-            var24.addView((View)var32.note(var1), (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-         }
-      }
-   }
-
-   private static final Unit drawRoot$lambda$11(GalaxySettingsView var0, String var1) {
-      Intrinsics.checkNotNullParameter(var1, "it");
-      var0.open(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit drawRoot$lambda$15$lambda$14(GalaxySettingsView var0, String var1) {
-      var0.open(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit drawRoot$lambda$16(GalaxySettingsView var0, GalaxySettingsView.Entry var1) {
-      var0.open(((GalaxySettingsView.Entry.Page)var1).getPage());
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit drawRoot$lambda$17(GalaxySettingsView var0, GalaxySettingsView.Entry var1) {
-      var0.openWeb.invoke(((GalaxySettingsView.Entry.Web)var1).getPath(), ((GalaxySettingsView.Entry.Web)var1).getLabel());
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit drawRoot$lambda$19(GalaxySettingsView var0, GalaxyRow var1) {
-      var0.open(var1.getPage());
-      return Unit.INSTANCE;
-   }
-
-   private final void failed(String var1) {
-      this.busy = false;
-      Toast.makeText(this.getContext(), var1, 1).show();
-      this.lastShown = "";
-      this.load(true);
-   }
-
-   private final String getCurrent() {
-      return CollectionsKt.lastOrNull(this.stack);
-   }
-
-   private final View icon(GalaxyRow var1) {
-      SettingIcons var4 = SettingIcons.INSTANCE;
-      String var3 = this.getCurrent();
-      String var2 = var3;
-      if (var3 == null) {
-         var2 = "";
-      }
-
-      SettingIcons.Icon var6 = var4.forRow(var2, var1.getLabel(), var1.getPage(), var1.getControl());
-      SvIcon.State var5;
-      if (!var1.getAvailable()) {
-         var5 = SvIcon.State.NA;
-      } else if (var1.getControl() == GalaxyRow.Control.SWITCH && !Intrinsics.areEqual(var1.getValue(), "On")) {
-         var5 = SvIcon.State.OFF;
-      } else {
-         var5 = SvIcon.State.ON;
-      }
-
-      SvIcon var8 = SvIcon.INSTANCE;
-      Context var7 = this.getContext();
-      Intrinsics.checkNotNullExpressionValue(var7, "getContext(...)");
-      return var8.chip(var7, var6.getName(), var6.getGroup(), 46, var5);
-   }
-
-   private final Object jsonValue(GalaxyRow var1, String var2) {
-      if (var1.getControl() == GalaxyRow.Control.SLIDER && !Intrinsics.areEqual(var2, "Auto")) {
-         Long var3 = StringsKt.toLongOrNull(var2);
-         if (var3 != null) {
-            return var3;
-         }
-
-         Double var5 = StringsKt.toDoubleOrNull(var2);
-         if (var5 != null) {
-            return var5;
-         }
-      }
-
-      return var2;
-   }
-
-   private final void linkCard(String var1, String var2, boolean var3, boolean var4, SettingIcons.Icon var5, Function0<Unit> var6) {
-      CarUi var9 = this.ui;
-      CharSequence var8 = var2;
-      CharSequence var14 = var8;
-      if (StringsKt.isBlank(var8)) {
-         var14 = null;
-      }
-
-      String var20 = (String)var14;
-      View var16;
-      if (var5 != null) {
-         SvIcon var10 = SvIcon.INSTANCE;
-         Context var11 = this.getContext();
-         Intrinsics.checkNotNullExpressionValue(var11, "getContext(...)");
-         String var12 = var5.getName();
-         String var18 = var5.getGroup();
-         SvIcon.State var15;
-         if (var3) {
-            var15 = SvIcon.State.ON;
-         } else {
-            var15 = SvIcon.State.NA;
-         }
-
-         var16 = var10.chip(var11, var12, var18, 46, var15);
-      } else {
-         var16 = null;
-      }
-
-      LinearLayout var17 = (LinearLayout)CarUi.row$default(var9, var1, var20, 0, var16, null, 20, null).component1();
-      TextView var19 = new TextView(this.getContext());
-      if (var4) {
-         var1 = "↗";
-      } else {
-         var1 = "›";
-      }
-
-      var19.setText(var1);
-      var19.setTextSize(30.0F);
-      var19.setTextColor(CarUi.Companion.getDIM());
-      var19.setPadding(this.ui.dp(14), 0, this.ui.dp(6), 0);
-      var17.addView((View)var19);
-      float var7;
-      if (var3) {
-         var7 = 1.0F;
-      } else {
-         var7 = 0.45F;
-      }
-
-      var17.setAlpha(var7);
-      var17.setClickable(true);
-      var17.setOnClickListener(new GalaxySettingsView$$ExternalSyntheticLambda11(var3, var6));
-      this.col.addView((View)var17, (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-   }
-
-   // $VF: synthetic method
-   static void linkCard$default(
-      GalaxySettingsView var0, String var1, String var2, boolean var3, boolean var4, SettingIcons.Icon var5, Function0 var6, int var7, Object var8
-   ) {
-      if ((var7 & 8) != 0) {
-         var4 = false;
-      }
-
-      if ((var7 & 16) != 0) {
-         var5 = null;
-      }
-
-      var0.linkCard(var1, var2, var3, var4, var5, var6);
-   }
-
-   private static final void linkCard$lambda$23(boolean var0, Function0 var1, View var2) {
-      if (var0) {
-         var1.invoke();
-      }
-   }
-
-   private final void load(boolean var1) {
-      Galaxy7 var5 = this.g;
-      if (var5 == null) {
-         this.message("Not connected to the comma. Connect first, then come back.");
-      } else {
-         String var6 = this.getCurrent();
-         String var4 = null;
-         if (var6 != null) {
-            if (!var1) {
-               JSONObject var7 = this.data;
-               if (var7 != null) {
-                  var4 = var7.optString("page");
-               }
-
-               if (!Intrinsics.areEqual(var4, var6)) {
-                  this.message("Loading…");
-               }
+            public final String getDesc() {
+                return this.desc;
             }
 
-            var4 = Uri.encode(var6);
-            var5.get("/api/settings/pages/" + var4, new GalaxySettingsView$$ExternalSyntheticLambda32(this, var6, var1));
-         } else {
-            var var10 = this.root.getEntries();
-            var1 = var10 instanceof Collection;
-            boolean var3 = false;
-            boolean var9;
-            if (var1 && ((Collection)var10).isEmpty()) {
-               var9 = var3;
-            } else {
-               Iterator var11 = var10.iterator();
-
-               while (true) {
-                  if (!var11.hasNext()) {
-                     var9 = var3;
-                     break;
-                  }
-
-                  GalaxySettingsView.Entry var13 = (GalaxySettingsView.Entry)var11.next();
-                  if (!(var13 instanceof GalaxySettingsView.Entry.Hub) && !(var13 instanceof GalaxySettingsView.Entry.Unplaced)) {
-                     var9 = false;
-                  } else {
-                     var9 = true;
-                  }
-
-                  if (var9) {
-                     var9 = true;
-                     break;
-                  }
-               }
+            public final String getLabel() {
+                return this.label;
             }
 
-            if (var9) {
-               var5.get("/api/settings/pages/hub", new GalaxySettingsView$$ExternalSyntheticLambda22(this));
-            } else {
-               this.drawRoot(null);
+            public final String getPath() {
+                return this.path;
             }
-         }
-      }
-   }
+        }
 
-   private static final Unit load$lambda$5(GalaxySettingsView var0, JSONObject var1, String var2) {
-      if (var0.getCurrent() != null) {
-         return Unit.INSTANCE;
-      } else {
-         if (var1 != null) {
-            var0.hub = var1;
-         }
+        /* compiled from: GalaxySettingsView.kt */
+        public static final class Unplaced extends Entry {
+            private final Set<String> placed;
 
-         boolean var3;
-         if (var1 == null && var0.hub == null) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         if (!var3) {
-            var2 = null;
-         }
-
-         var0.drawRoot(var2);
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final Unit load$lambda$6(GalaxySettingsView var0, String var1, boolean var2, JSONObject var3, String var4) {
-      if (!Intrinsics.areEqual(var0.getCurrent(), var1)) {
-         return Unit.INSTANCE;
-      } else if (var3 != null) {
-         var0.data = var3;
-         var0.draw(var3);
-         return Unit.INSTANCE;
-      } else {
-         if (!var2 || var0.data == null) {
-            if (var4 == null) {
-               var1 = "Galaxy didn't answer";
-            } else {
-               var1 = var4;
+            /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+            public Unplaced(Set<String> placed) {
+                super(null);
+                Intrinsics.checkNotNullParameter(placed, "placed");
+                this.placed = placed;
             }
 
-            var0.message(var1);
-         }
-
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final void message(String var1) {
-      this.lastShown = "";
-      this.col.removeAllViews();
-      this.backBar();
-      this.col.addView((View)this.ui.note(var1), (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-   }
-
-   private final void open(String var1) {
-      if (!this.busy) {
-         this.stack.add(var1);
-         this.data = null;
-         this.lastShown = "";
-         this.load(false);
-         this.scroll.scrollTo(0, 0);
-      }
-   }
-
-   private final void previewSound(GalaxyRow var1) {
-      boolean var2;
-      if (var1.getPreviewSound().length() == 0) {
-         var2 = true;
-      } else {
-         var2 = false;
-      }
-
-      if (!var2) {
-         Galaxy7 var3 = this.g;
-         if (var3 != null) {
-            JSONObject var4 = new JSONObject().put("key", var1.getPreviewSound());
-            Intrinsics.checkNotNullExpressionValue(var4, "put(...)");
-            var3.post("/api/sounds/preview", var4, new GalaxySettingsView$$ExternalSyntheticLambda18());
-         }
-      }
-   }
-
-   private static final Unit previewSound$lambda$67(JSONObject var0, String var1) {
-      return Unit.INSTANCE;
-   }
-
-   private final void readoutRow(GalaxyRow var1) {
-      if (!var1.getHeading() && (!StringsKt.isBlank(var1.getValue()) || !StringsKt.isBlank(var1.getReason()))) {
-         LinearLayout var2 = (LinearLayout)CarUi.row$default(this.ui, var1.getLabel(), this.desc(var1), 0, this.icon(var1), this.tag(var1), 4, null)
-            .component1();
-         if (!StringsKt.isBlank(var1.getValue())) {
-            TextView var3 = new TextView(this.getContext());
-            var3.setText(var1.withUnit(GalaxyRow.shown$default(var1, null, 1, null)));
-            var3.setTextColor(CarUi.Companion.getDIM());
-            var3.setTextSize(18.0F);
-            var3.setPadding(this.ui.dp(14), 0, this.ui.dp(6), 0);
-            var3.setMaxWidth(this.ui.dp(360));
-            var2.addView((View)var3);
-         }
-
-         this.col.addView((View)var2, (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-      } else {
-         this.col.addView((View)this.ui.header(var1.getLabel()));
-      }
-   }
-
-   private final void resetDefault(GalaxyRow var1) {
-      Galaxy7 var2 = this.g;
-      if (var2 != null) {
-         String var3 = this.viewId();
-         if (var3 != null) {
-            this.busy = true;
-            JSONObject var4 = new JSONObject().put("view", var3).put("row", var1.getIndex());
-            Intrinsics.checkNotNullExpressionValue(var4, "put(...)");
-            var2.post("/api/settings/reset-default", var4, new GalaxySettingsView$$ExternalSyntheticLambda24(this));
-         }
-      }
-   }
-
-   private static final Unit resetDefault$lambda$69(GalaxySettingsView var0, JSONObject var1, String var2) {
-      label24: {
-         if (var1 != null) {
-            String var4 = var1.optString("intent");
-            if (var4 != null) {
-               CharSequence var3 = var4;
-               CharSequence var6 = var3;
-               if (StringsKt.isBlank(var3)) {
-                  var6 = null;
-               }
-
-               var5 = (String)var6;
-               break label24;
+            public final Set<String> getPlaced() {
+                return this.placed;
             }
-         }
-
-         var5 = null;
-      }
-
-      if (var5 == null) {
-         if (var2 == null) {
-            var2 = "Galaxy didn't accept that";
-         }
-
-         var0.failed(var2);
-         return Unit.INSTANCE;
-      } else {
-         confirm$default(var0, var5, null, 2, null);
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final void review(GalaxyRow var1) {
-      Galaxy7 var2 = this.g;
-      if (var2 != null) {
-         String var3 = this.viewId();
-         if (var3 != null) {
-            this.busy = true;
-            JSONObject var4 = new JSONObject().put("view", var3).put("row", var1.getIndex()).put("direction", 1 ^ var1.getConfirm());
-            Intrinsics.checkNotNullExpressionValue(var4, "put(...)");
-            var2.post("/api/settings/preview", var4, new GalaxySettingsView$$ExternalSyntheticLambda34(this, var1));
-         }
-      }
-   }
-
-   private static final Unit review$lambda$79(GalaxySettingsView var0, GalaxyRow var1, JSONObject var2, String var3) {
-      Object var6 = null;
-      Object var5 = null;
-      String var4 = (String)var6;
-      if (var2 != null) {
-         String var7 = var2.optString("intent");
-         var4 = (String)var6;
-         if (var7 != null) {
-            var4 = var7;
-            if (StringsKt.isBlank(var4)) {
-               var4 = (String)var5;
-            }
-
-            var4 = var4;
-         }
-      }
-
-      if (var4 == null) {
-         if (var3 == null) {
-            var3 = "Galaxy didn't accept that";
-         }
-
-         var0.failed(var3);
-         return Unit.INSTANCE;
-      } else {
-         Builder var9 = new Builder(var0.getContext()).setTitle("Confirm");
-         String var8 = var1.getLabel();
-         var9.setMessage(var2.optString("question", "Apply " + var8 + "?"))
-            .setPositiveButton("Confirm", new GalaxySettingsView$$ExternalSyntheticLambda37(var0, var4))
-            .setNegativeButton("Cancel", new GalaxySettingsView$$ExternalSyntheticLambda38(var0))
-            .setOnCancelListener(new GalaxySettingsView$$ExternalSyntheticLambda1(var0))
-            .show();
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final void review$lambda$79$lambda$76(GalaxySettingsView var0, String var1, DialogInterface var2, int var3) {
-      confirm$default(var0, var1, null, 2, null);
-   }
-
-   private static final void review$lambda$79$lambda$77(GalaxySettingsView var0, DialogInterface var1, int var2) {
-      var0.busy = false;
-      var0.load(true);
-   }
-
-   private static final void review$lambda$79$lambda$78(GalaxySettingsView var0, DialogInterface var1) {
-      var0.busy = false;
-      var0.load(true);
-   }
-
-   private final void reviewDraft(int var1, JSONObject var2) {
-      Galaxy7 var3 = this.g;
-      if (var3 != null) {
-         String var4 = this.viewId();
-         if (var4 != null) {
-            if (!this.busy) {
-               this.busy = true;
-               var2 = new JSONObject().put("view", var4).put("row", var1).put("direction", 0).put("draft", var2);
-               Intrinsics.checkNotNullExpressionValue(var2, "put(...)");
-               var3.post("/api/settings/preview", var2, new GalaxySettingsView$$ExternalSyntheticLambda35(this));
-            }
-         }
-      }
-   }
-
-   private static final Unit reviewDraft$lambda$74(GalaxySettingsView var0, JSONObject var1, String var2) {
-      Object var5 = null;
-      Object var4 = null;
-      String var3 = (String)var5;
-      if (var1 != null) {
-         String var6 = var1.optString("intent");
-         var3 = (String)var5;
-         if (var6 != null) {
-            var3 = var6;
-            if (StringsKt.isBlank(var3)) {
-               var3 = (String)var4;
-            }
-
-            var3 = var3;
-         }
-      }
-
-      if (var3 == null) {
-         if (var2 == null) {
-            var2 = "Galaxy didn't accept those regions";
-         }
-
-         var0.failed(var2);
-         return Unit.INSTANCE;
-      } else {
-         new Builder(var0.getContext())
-            .setTitle("Save changes?")
-            .setMessage(var1.optString("question", "Save the camera window regions?"))
-            .setPositiveButton("Save", new GalaxySettingsView$$ExternalSyntheticLambda2(var0, var3))
-            .setNegativeButton("Cancel", new GalaxySettingsView$$ExternalSyntheticLambda3(var0))
-            .setOnCancelListener(new GalaxySettingsView$$ExternalSyntheticLambda4(var0))
-            .show();
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final void reviewDraft$lambda$74$lambda$71(GalaxySettingsView var0, String var1, DialogInterface var2, int var3) {
-      confirm$default(var0, var1, null, 2, null);
-   }
-
-   private static final void reviewDraft$lambda$74$lambda$72(GalaxySettingsView var0, DialogInterface var1, int var2) {
-      var0.busy = false;
-      var0.load(true);
-   }
-
-   private static final void reviewDraft$lambda$74$lambda$73(GalaxySettingsView var0, DialogInterface var1) {
-      var0.busy = false;
-      var0.load(true);
-   }
-
-   private final void saveValue(GalaxyRow var1, String var2) {
-      Galaxy7 var3 = this.g;
-      if (var3 != null) {
-         String var4 = this.viewId();
-         if (var4 != null) {
-            this.busy = true;
-            JSONObject var5 = new JSONObject().put("view", var4).put("row", var1.getIndex()).put("value", this.jsonValue(var1, var2));
-            Intrinsics.checkNotNullExpressionValue(var5, "put(...)");
-            var3.post("/api/settings/preview", var5, new GalaxySettingsView$$ExternalSyntheticLambda19(this, var1));
-         }
-      }
-   }
-
-   private static final Unit saveValue$lambda$66(GalaxySettingsView var0, GalaxyRow var1, JSONObject var2, String var3) {
-      Object var6 = null;
-      Object var5 = null;
-      String var4 = (String)var6;
-      if (var2 != null) {
-         String var7 = var2.optString("intent");
-         var4 = (String)var6;
-         if (var7 != null) {
-            var var8 = var7;
-            if (StringsKt.isBlank(var8)) {
-               var8 = (String)var5;
-            }
-
-            var4 = var8;
-         }
-      }
-
-      if (var4 == null) {
-         if (var3 == null) {
-            var3 = "Galaxy didn't accept that";
-         }
-
-         var0.failed(var3);
-         return Unit.INSTANCE;
-      } else {
-         var0.confirm(var4, new GalaxySettingsView$$ExternalSyntheticLambda23(var0, var1));
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final Unit saveValue$lambda$66$lambda$65(GalaxySettingsView var0, GalaxyRow var1) {
-      var0.previewSound(var1);
-      return Unit.INSTANCE;
-   }
-
-   private final void selectRow(GalaxyRow var1) {
-      int var2 = var1.getChoices().size();
-      boolean var7;
-      if (2 <= var2 && var2 < 5) {
-         var7 = 1;
-      } else {
-         var7 = 0;
-      }
-
-      label34: {
-         if (var7) {
-            Iterator var3 = var1.getChoices().iterator();
-            var7 = 0;
-
-            while (var3.hasNext()) {
-               String var4 = (String)var3.next();
-               var7 += var4.length();
-            }
-
-            if (var7 <= 40) {
-               var7 = (boolean)1;
-               break label34;
-            }
-         }
-
-         var7 = (boolean)0;
-      }
-
-      if (var7) {
-         LinearLayout var15 = new LinearLayout(this.getContext());
-         var15.setOrientation(1);
-         var15.setBackground((Drawable)CarUi.rounded$default(this.ui, CarUi.Companion.getCARD(), 0, null, 6, null));
-         var15.setPadding(this.ui.dp(20), this.ui.dp(14), this.ui.dp(18), this.ui.dp(14));
-         LinearLayout var11 = (LinearLayout)CarUi.row$default(this.ui, var1.getLabel(), this.desc(var1), 0, this.icon(var1), this.tag(var1), 4, null)
-            .component1();
-         var11.setBackground(null);
-         var11.setPadding(0, 0, 0, 0);
-         var11.setMinimumHeight(0);
-         this.defaultButton(var11, var1);
-         var15.addView((View)var11);
-         ObjectRef var12 = new ObjectRef();
-         Pair var6 = this.ui.chips(var1.getChoices(), new GalaxySettingsView$$ExternalSyntheticLambda20(var1, this, var12));
-         LinearLayout var5 = (LinearLayout)var6.component1();
-         var12.element = (T)((Function1)var6.component2());
-         var5.setPadding(0, this.ui.dp(10), 0, 0);
-         var15.addView((View)var5);
-         Function1 var13;
-         if (var12.element == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("paint");
-            var13 = null;
-         } else {
-            var13 = (Function1)var12.element;
-         }
-
-         var13.invoke(var1.getChoices().indexOf(var1.getValue()));
-         this.dim((View)var15, var1);
-         this.col.addView((View)var15, (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-      } else {
-         LinearLayout var10 = (LinearLayout)CarUi.row$default(this.ui, var1.getLabel(), this.desc(var1), 0, this.icon(var1), this.tag(var1), 4, null)
-            .component1();
-         this.defaultButton(var10, var1);
-         TextView var14 = CarUi.button$default(this.ui, var1.getValue(), false, new GalaxySettingsView$$ExternalSyntheticLambda21(var1, this), 2, null);
-         var14.setMinWidth(this.ui.dp(200));
-         var10.addView((View)var14);
-         this.dim((View)var10, var1);
-         this.col.addView((View)var10, (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-      }
-   }
-
-   private static final Unit selectRow$lambda$46(GalaxyRow var0, GalaxySettingsView var1, ObjectRef var2, int var3) {
-      if (var0.getEditable() && !var1.busy && !Intrinsics.areEqual(var0.getChoices().get(var3), var0.getValue())) {
-         Function1 var4;
-         if (var2.element == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("paint");
-            var4 = null;
-         } else {
-            var4 = (Function1)var2.element;
-         }
-
-         var4.invoke(var3);
-         var1.saveValue(var0, var0.getChoices().get(var3));
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit selectRow$lambda$48(GalaxyRow var0, GalaxySettingsView var1) {
-      if (var0.getEditable() && !var1.busy) {
-         new Builder(var1.getContext())
-            .setTitle(var0.getLabel())
-            .setSingleChoiceItems(
-               var0.getChoices().toArray(new String[0]),
-               var0.getChoices().indexOf(var0.getValue()),
-               new GalaxySettingsView$$ExternalSyntheticLambda0(var0, var1)
-            )
-            .setNegativeButton("Cancel", null)
-            .show();
-         return Unit.INSTANCE;
-      } else {
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final void selectRow$lambda$48$lambda$47(GalaxyRow var0, GalaxySettingsView var1, DialogInterface var2, int var3) {
-      var2.dismiss();
-      if (!Intrinsics.areEqual(var0.getChoices().get(var3), var0.getValue())) {
-         var1.saveValue(var0, var0.getChoices().get(var3));
-      }
-   }
-
-   private final void sliderRow(GalaxyRow var1) {
-      GalaxyRow.Bounds var7 = var1.bounds();
-      if (var7 == null) {
-         this.readoutRow(var1);
-      } else {
-         LinearLayout var6 = new LinearLayout(this.getContext());
-         var6.setOrientation(1);
-         var6.setBackground((Drawable)CarUi.rounded$default(this.ui, CarUi.Companion.getCARD(), 0, null, 6, null));
-         var6.setPadding(this.ui.dp(20), this.ui.dp(14), this.ui.dp(18), this.ui.dp(10));
-         LinearLayout var4 = (LinearLayout)CarUi.row$default(this.ui, var1.getLabel(), this.desc(var1), 0, this.icon(var1), this.tag(var1), 4, null)
-            .component1();
-         var4.setBackground(null);
-         var4.setPadding(0, 0, 0, 0);
-         var4.setMinimumHeight(0);
-         TextView var8 = new TextView(this.getContext());
-         var8.setTextSize(22.0F);
-         var8.setTextColor(CarUi.Companion.getTEXT());
-         var8.setTypeface(Typeface.DEFAULT_BOLD);
-         var8.setGravity(8388613);
-         var8.setPadding(this.ui.dp(12), 0, this.ui.dp(4), 0);
-         this.defaultButton(var4, var1);
-         var4.addView((View)var8);
-         var6.addView((View)var4);
-         int var2 = (int)Math.round((var7.getMax() - var7.getMin()) / var7.getStep());
-         int var3 = var2 + var7.getAuto();
-         String var5 = GalaxyRow.shown$default(var1, null, 1, null);
-         var8.setText(sliderRow$label(var1, var5));
-         SeekBar var13 = new SeekBar(this.getContext());
-         var13.setMax(var3);
-         var13.setProgress(sliderRow$posOf(var3, var7, var2, var5));
-         var13.setEnabled(var1.getEditable());
-         var13.setMinimumHeight(this.ui.dp(48));
-         var13.setThumbTintList(ColorStateList.valueOf(-1));
-         var13.setProgressTintList(ColorStateList.valueOf(CarUi.Companion.getACCENT()));
-         var13.setOnSeekBarChangeListener(new OnSeekBarChangeListener(var8, var7, var2, var1, this, var13, var5) {
-            final GalaxyRow.Bounds $b;
-            final SeekBar $bar;
-            final GalaxyRow $r;
-            final String $shownNow;
-            final int $steps;
-            final TextView $valueTv;
-            final GalaxySettingsView this$0;
-
-            {
-               this.$valueTv = var1;
-               this.$b = var2x;
-               this.$steps = var3x;
-               this.$r = var4x;
-               this.this$0 = var5x;
-               this.$bar = var6x;
-               this.$shownNow = var7x;
-            }
-
-            public void onProgressChanged(SeekBar var1, int var2x, boolean var3x) {
-               this.$valueTv.setText(GalaxySettingsView.sliderRow$label(this.$r, GalaxySettingsView.sliderRow$valueAt(this.$b, this.$steps, var2x)));
-            }
-
-            public void onStartTrackingTouch(SeekBar var1) {
-               this.this$0.touching = true;
-            }
-
-            public void onStopTrackingTouch(SeekBar var1) {
-               this.this$0.touching = false;
-               GalaxySettingsView.sliderRow$commit(this.$shownNow, this.$r, this.this$0, this.$b, this.$steps, this.$bar.getProgress());
-            }
-         });
-         LinearLayout var11 = new LinearLayout(this.getContext());
-         var11.setOrientation(0);
-         var11.setGravity(16);
-         var11.setPadding(0, this.ui.dp(8), 0, 0);
-         var11.addView((View)this.ui.stepper("−", new GalaxySettingsView$$ExternalSyntheticLambda7(var1, this, var13, var5, var7, var2)));
-         View var9 = (View)var13;
-         android.widget.LinearLayout.LayoutParams var10 = new android.widget.LinearLayout.LayoutParams(0, this.ui.dp(48), 1.0F);
-         var10.leftMargin = this.ui.dp(8);
-         var10.rightMargin = this.ui.dp(8);
-         Unit var18 = Unit.INSTANCE;
-         var11.addView(var9, (LayoutParams)var10);
-         var11.addView((View)this.ui.stepper("+", new GalaxySettingsView$$ExternalSyntheticLambda8(var1, this, var13, var3, var5, var7, var2)));
-         var6.addView((View)var11);
-         var8 = new TextView(this.getContext());
-         String var20 = GalaxyRow.Companion.fmt(var7.getMin());
-         String var21 = GalaxyRow.Companion.fmt(var7.getMax());
-         boolean var12;
-         if (var1.getUnit().length() > 0) {
-            var12 = true;
-         } else {
-            var12 = false;
-         }
-
-         var5 = "";
-         String var14;
-         if (var12 && !var1.getLaneStrength()) {
-            String var15 = var1.getUnit();
-            var14 = " " + var15;
-         } else {
-            var14 = "";
-         }
-
-         if (var7.getAuto()) {
-            var5 = " · Auto at the right";
-         }
-
-         String var17 = GalaxyRow.Companion.fmt(var7.getStep());
-         var8.setText(var20 + " to " + var21 + var14 + var5 + " · step " + var17);
-         var8.setTextColor(CarUi.Companion.getDIM());
-         var8.setTextSize(13.0F);
-         var8.setPadding(this.ui.dp(2), this.ui.dp(4), 0, 0);
-         var6.addView((View)var8);
-         this.dim((View)var6, var1);
-         this.col.addView((View)var6, (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-      }
-   }
-
-   private static final void sliderRow$commit(String var0, GalaxyRow var1, GalaxySettingsView var2, GalaxyRow.Bounds var3, int var4, int var5) {
-      String var7 = sliderRow$valueAt(var3, var4, var5);
-      if (!Intrinsics.areEqual(var7, var0)) {
-         var0 = "Auto";
-         if (!Intrinsics.areEqual(var7, "Auto")) {
-            String var8 = var1.saved(Double.parseDouble(var7));
-            var0 = var8;
-            if (var8 == null) {
-               return;
-            }
-         }
-
-         var2.saveValue(var1, var0);
-      }
-   }
-
-   private static final String sliderRow$label(GalaxyRow var0, String var1) {
-      return var0.withUnit(var1);
-   }
-
-   private static final Unit sliderRow$lambda$55(GalaxyRow var0, GalaxySettingsView var1, SeekBar var2, String var3, GalaxyRow.Bounds var4, int var5) {
-      if (var0.getEditable() && !var1.busy && var2.getProgress() > 0) {
-         var2.setProgress(var2.getProgress() - 1);
-         sliderRow$commit(var3, var0, var1, var4, var5, var2.getProgress());
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit sliderRow$lambda$57(GalaxyRow var0, GalaxySettingsView var1, SeekBar var2, int var3, String var4, GalaxyRow.Bounds var5, int var6) {
-      if (var0.getEditable() && !var1.busy && var2.getProgress() < var3) {
-         var2.setProgress(var2.getProgress() + 1);
-         sliderRow$commit(var4, var0, var1, var5, var6, var2.getProgress());
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final int sliderRow$posOf(int var0, GalaxyRow.Bounds var1, int var2, String var3) {
-      if (!Intrinsics.areEqual(var3, "Auto")) {
-         Double var6 = StringsKt.toDoubleOrNull(var3);
-         double var4;
-         if (var6 != null) {
-            var4 = var6;
-         } else {
-            var4 = var1.getMin();
-         }
-
-         var0 = RangesKt.coerceIn((int)Math.round((var4 - var1.getMin()) / var1.getStep()), 0, var2);
-      }
-
-      return var0;
-   }
-
-   private static final String sliderRow$valueAt(GalaxyRow.Bounds var0, int var1, int var2) {
-      String var3;
-      if (var0.getAuto() && var2 > var1) {
-         var3 = "Auto";
-      } else {
-         var3 = GalaxyRow.Companion.fmt(GalaxyRow.Companion.snap(var0.getMin() + var2 * var0.getStep(), var0));
-      }
-
-      return var3;
-   }
-
-   private final void switchRow(GalaxyRow var1) {
-      LinearLayout var3 = (LinearLayout)CarUi.row$default(this.ui, var1.getLabel(), this.desc(var1), 0, this.icon(var1), this.tag(var1), 4, null).component1();
-      this.defaultButton(var3, var1);
-      Switch var2 = this.ui.bigSwitch();
-      var2.setChecked(Intrinsics.areEqual(var1.getValue(), "On"));
-      var2.setEnabled(var1.getEditable());
-      var2.setOnCheckedChangeListener(new GalaxySettingsView$$ExternalSyntheticLambda6(var1, this));
-      var3.addView((View)var2);
-      this.dim((View)var3, var1);
-      this.col.addView((View)var3, (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-   }
-
-   private static final void switchRow$lambda$43(GalaxyRow var0, GalaxySettingsView var1, CompoundButton var2, boolean var3) {
-      if (var0.getEditable() && !var1.busy) {
-         String var4;
-         if (var3) {
-            var4 = "On";
-         } else {
-            var4 = "Off";
-         }
-
-         var1.saveValue(var0, var4);
-      } else {
-         var2.setChecked(var3 ^ true);
-      }
-   }
-
-   private final String tag(GalaxyRow var1) {
-      SettingIcons var4 = SettingIcons.INSTANCE;
-      String var3 = this.getCurrent();
-      String var2 = var3;
-      if (var3 == null) {
-         var2 = "";
-      }
-
-      String var5;
-      if (var4.forRow(var2, var1.getLabel(), var1.getPage(), var1.getControl()).getKnown()) {
-         var5 = null;
-      } else {
-         var5 = "NEW";
-      }
-
-      return var5;
-   }
-
-   private final String titleOf(String var1) {
-      String var5 = this.titles.get(var1);
-      String var4 = var5;
-      if (var5 == null) {
-         boolean var3;
-         if (var1.length() > 0) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         if (var3) {
-            StringBuilder var7 = new StringBuilder();
-            char var2 = var1.charAt(0);
-            var5 = String.valueOf(var2);
-            Intrinsics.checkNotNull(var5, "null cannot be cast to non-null type java.lang.String");
-            var5 = var5.toUpperCase(Locale.ROOT);
-            Intrinsics.checkNotNullExpressionValue(var5, "toUpperCase(...)");
-            StringBuilder var8 = var7.append(var5);
-            var1 = var1.substring(1);
-            Intrinsics.checkNotNullExpressionValue(var1, "substring(...)");
-            var4 = var8.append(var1).toString();
-         } else {
-            var4 = var1;
-         }
-      }
-
-      return var4;
-   }
-
-   private final int vasmEditorRow(JSONObject var1) {
-      boolean var3 = Intrinsics.areEqual(var1.optString("page"), "vasm");
-      int var2 = -1;
-      if (var3) {
-         var2 = var1.optInt("editorRow", -1);
-      }
-
-      return var2;
-   }
-
-   private final String viewId() {
-      JSONObject var4 = this.data;
-      Object var3 = null;
-      Object var2 = null;
-      String var1 = (String)var3;
-      if (var4 != null) {
-         String var6 = var4.optString("view");
-         var1 = (String)var3;
-         if (var6 != null) {
-            var1 = var6;
-            if (StringsKt.isBlank(var1)) {
-               var1 = (String)var2;
-            }
-
-            var1 = var1;
-         }
-      }
-
-      return var1;
-   }
-
-   private final SettingIcons.Icon webIcon(String var1) {
-      if (StringsKt.contains$default(var1, "events", false, 2, null)) {
-         var1 = "sentry";
-      } else {
-         boolean var2 = StringsKt.contains$default(var1, "vasm", false, 2, null);
-         String var3 = "crop";
-         if (var2) {
-            var1 = var3;
-         } else if (StringsKt.contains$default(var1, "pip", false, 2, null)) {
-            var1 = var3;
-         } else if (StringsKt.contains$default(var1, "theme", false, 2, null)) {
-            var1 = "palette";
-         } else if (StringsKt.contains$default(var1, "vehicle", false, 2, null)) {
-            var1 = "car";
-         } else {
-            CharSequence var7 = var1;
-            var1 = "camera";
-            if (!StringsKt.contains$default(var7, "camera", false, 2, null)) {
-               var1 = "link";
-            }
-         }
-      }
-
-      SettingIcons var5 = SettingIcons.INSTANCE;
-      String var4 = this.root.getPage();
-      String var8 = var4;
-      if (var4 == null) {
-         var8 = "cameras";
-      }
-
-      return new SettingIcons.Icon(var1, var5.group(var8), false, 4, null);
-   }
-
-   public final boolean back() {
-      int var2 = this.stack.size();
-      byte var1;
-      if (this.root.getPage() != null) {
-         var1 = 1;
-      } else {
-         var1 = 0;
-      }
-
-      if (var2 <= var1) {
-         return false;
-      } else {
-         this.stack.remove(this.stack.size() - 1);
-         this.data = null;
-         this.lastShown = "";
-         this.load(false);
-         this.scroll.scrollTo(0, 0);
-         return true;
-      }
-   }
-
-   public final boolean getNeedsParked() {
-      JSONObject var4 = this.data;
-      boolean var3 = false;
-      boolean var2 = var3;
-      if (var4 != null) {
-         var2 = var3;
-         if (!var4.optBoolean("parked", true)) {
-            var var8 = GalaxyRow.Companion.parse(var4);
-            boolean var7;
-            if (var8 instanceof Collection && ((Collection)var8).isEmpty()) {
-               var7 = false;
-            } else {
-               Iterator var9 = var8.iterator();
-
-               while (true) {
-                  if (!var9.hasNext()) {
-                     var7 = false;
-                     break;
-                  }
-
-                  label37: {
-                     GalaxyRow var5 = (GalaxyRow)var9.next();
-                     if (!var5.getAvailable()) {
-                        if (var5.getPage().length() == 0) {
-                           var7 = true;
-                        } else {
-                           var7 = false;
+        }
+    }
+
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r0v14, types: [com.starpilot.starview.GalaxySettingsView$poll$1] */
+    public GalaxySettingsView(Context ctx, CarUi ui, Root root, Function2<? super String, ? super String, Unit> openWeb, Function1<? super LinearLayout, Unit> function1, Function2<? super String, ? super LinearLayout, Unit> function2) {
+        super(ctx);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(ui, "ui");
+        Intrinsics.checkNotNullParameter(root, "root");
+        Intrinsics.checkNotNullParameter(openWeb, "openWeb");
+        this.ui = ui;
+        this.root = root;
+        this.openWeb = openWeb;
+        this.footer = function1;
+        this.pageExtras = function2;
+        this.g = Galaxy7.Companion.current();
+        this.main = new Handler(Looper.getMainLooper());
+        this.stack = new ArrayList<>();
+        this.lastShown = "";
+        this.scroll = new ScrollView(ctx);
+        LinearLayout $this$col_u24lambda_u240 = new LinearLayout(ctx);
+        $this$col_u24lambda_u240.setOrientation(1);
+        $this$col_u24lambda_u240.setPadding(this.ui.dp(10), this.ui.dp(4), this.ui.dp(24), this.ui.dp(60));
+        this.col = $this$col_u24lambda_u240;
+        this.scroll.addView(this.col);
+        addView(this.scroll, new FrameLayout.LayoutParams(-1, -1));
+        this.poll = new Runnable() { // from class: com.starpilot.starview.GalaxySettingsView$poll$1
+            @Override // java.lang.Runnable
+            public void run() {
+                boolean z;
+                boolean z2;
+                Handler handler;
+                boolean z3;
+                z = GalaxySettingsView.this.visible;
+                if (z) {
+                    z2 = GalaxySettingsView.this.busy;
+                    if (!z2) {
+                        z3 = GalaxySettingsView.this.touching;
+                        if (!z3) {
+                            GalaxySettingsView.this.load(true);
                         }
-
-                        if (var7) {
-                           var7 = true;
-                           break label37;
-                        }
-                     }
-
-                     var7 = false;
-                  }
-
-                  if (var7) {
-                     var7 = true;
-                     break;
-                  }
-               }
+                    }
+                    handler = GalaxySettingsView.this.main;
+                    handler.postDelayed(this, 3000L);
+                }
             }
+        };
+        this.titles = new HashMap<>();
+    }
 
-            var2 = var3;
-            if (var7) {
-               var2 = true;
-            }
-         }
-      }
+    /* compiled from: GalaxySettingsView.kt */
+    public static final class Root {
+        private final List<Entry> entries;
+        private final String note;
+        private final String page;
+        private final String title;
 
-      return var2;
-   }
+        /* JADX WARN: Multi-variable type inference failed */
+        public Root(String title, String page, List<? extends Entry> entries, String note) {
+            Intrinsics.checkNotNullParameter(title, "title");
+            Intrinsics.checkNotNullParameter(entries, "entries");
+            this.title = title;
+            this.page = page;
+            this.entries = entries;
+            this.note = note;
+        }
 
-   public final void hide() {
-      this.visible = false;
-      this.main.removeCallbacks(this.poll);
-   }
+        public /* synthetic */ Root(String str, String str2, List list, String str3, int i, DefaultConstructorMarker defaultConstructorMarker) {
+            this(str, (i & 2) != 0 ? null : str2, (i & 4) != 0 ? CollectionsKt.emptyList() : list, (i & 8) != 0 ? null : str3);
+        }
 
-   public final void show() {
-      this.visible = true;
-      if (this.root.getPage() != null && this.stack.isEmpty()) {
-         this.stack.add(this.root.getPage());
-      }
+        public final List<Entry> getEntries() {
+            return this.entries;
+        }
 
-      this.load(false);
-      this.main.removeCallbacks(this.poll);
-      this.main.postDelayed(this.poll, 3000L);
-   }
+        public final String getNote() {
+            return this.note;
+        }
 
-   public static final class Companion {
-      private Companion() {
-      }
-
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
-   }
-
-   public abstract static class Entry {
-      private Entry() {
-      }
-
-      // $VF: synthetic method
-      public Entry(DefaultConstructorMarker var1) {
-         this();
-      }
-
-      public static final class Hub extends GalaxySettingsView.Entry {
-         private final List<String> pages;
-
-         public Hub(List<String> var1) {
-            Intrinsics.checkNotNullParameter(var1, "pages");
-            super(null);
-            this.pages = var1;
-         }
-
-         public final List<String> getPages() {
-            return this.pages;
-         }
-      }
-
-      public static final class Page extends GalaxySettingsView.Entry {
-         private final String desc;
-         private final String label;
-         private final String page;
-
-         public Page(String var1, String var2, String var3) {
-            Intrinsics.checkNotNullParameter(var1, "label");
-            Intrinsics.checkNotNullParameter(var2, "desc");
-            Intrinsics.checkNotNullParameter(var3, "page");
-            super(null);
-            this.label = var1;
-            this.desc = var2;
-            this.page = var3;
-         }
-
-         public final String getDesc() {
-            return this.desc;
-         }
-
-         public final String getLabel() {
-            return this.label;
-         }
-
-         public final String getPage() {
+        public final String getPage() {
             return this.page;
-         }
-      }
+        }
 
-      public static final class Unplaced extends GalaxySettingsView.Entry {
-         private final Set<String> placed;
+        public final String getTitle() {
+            return this.title;
+        }
+    }
 
-         public Unplaced(Set<String> var1) {
-            Intrinsics.checkNotNullParameter(var1, "placed");
-            super(null);
-            this.placed = var1;
-         }
+    public final void show() {
+        this.visible = true;
+        if (this.root.getPage() != null && this.stack.isEmpty()) {
+            this.stack.add(this.root.getPage());
+        }
+        load(false);
+        this.main.removeCallbacks(this.poll);
+        this.main.postDelayed(this.poll, 3000L);
+    }
 
-         public final Set<String> getPlaced() {
-            return this.placed;
-         }
-      }
+    public final void hide() {
+        this.visible = false;
+        this.main.removeCallbacks(this.poll);
+    }
 
-      public static final class Web extends GalaxySettingsView.Entry {
-         private final String desc;
-         private final String label;
-         private final String path;
+    private final String getCurrent() {
+        return (String) CollectionsKt.lastOrNull((List) this.stack);
+    }
 
-         public Web(String var1, String var2, String var3) {
-            Intrinsics.checkNotNullParameter(var1, "label");
-            Intrinsics.checkNotNullParameter(var2, "desc");
-            Intrinsics.checkNotNullParameter(var3, "path");
-            super(null);
-            this.label = var1;
-            this.desc = var2;
-            this.path = var3;
-         }
+    /* JADX WARN: Removed duplicated region for block: B:27:0x0055 A[SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:29:? A[LOOP:0: B:16:0x002b->B:29:?, LOOP_END, SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final boolean getNeedsParked() {
+        Iterable $this$any$iv;
+        GalaxyRow it;
+        JSONObject d = this.data;
+        if (d == null || d.optBoolean("parked", true)) {
+            return false;
+        }
+        Iterable $this$any$iv2 = GalaxyRow.Companion.parse(d);
+        if (!($this$any$iv2 instanceof Collection) || !((Collection) $this$any$iv2).isEmpty()) {
+            Iterator it2 = $this$any$iv2.iterator();
+            while (true) {
+                if (!it2.hasNext()) {
+                    $this$any$iv = null;
+                    break;
+                }
+                Object element$iv = it2.next();
+                GalaxyRow it3 = (GalaxyRow) element$iv;
+                if (!it3.getAvailable()) {
+                    if (it3.getPage().length() == 0) {
+                        it = 1;
+                        if (it == null) {
+                            $this$any$iv = 1;
+                            break;
+                        }
+                    }
+                }
+                it = null;
+                if (it == null) {
+                }
+            }
+        } else {
+            $this$any$iv = null;
+        }
+        return $this$any$iv != null;
+    }
 
-         public final String getDesc() {
-            return this.desc;
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void load(final boolean quiet) {
+        Galaxy7 gx = this.g;
+        if (gx == null) {
+            message("Not connected to the comma. Connect first, then come back.");
+            return;
+        }
+        final String page = getCurrent();
+        if (page == null) {
+            Iterable $this$any$iv = this.root.getEntries();
+            boolean z = false;
+            if (!($this$any$iv instanceof Collection) || !((Collection) $this$any$iv).isEmpty()) {
+                Iterator it = $this$any$iv.iterator();
+                while (true) {
+                    if (!it.hasNext()) {
+                        break;
+                    }
+                    Object element$iv = it.next();
+                    Entry it2 = (Entry) element$iv;
+                    if ((((it2 instanceof Entry.Hub) || (it2 instanceof Entry.Unplaced)) ? 1 : null) != null) {
+                        z = true;
+                        break;
+                    }
+                }
+            }
+            if (!z) {
+                drawRoot(null);
+                return;
+            } else {
+                gx.get("/api/settings/pages/hub", new Function2() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda22
+                    @Override // kotlin.jvm.functions.Function2
+                    public final Object invoke(Object obj, Object obj2) {
+                        Unit load$lambda$5;
+                        load$lambda$5 = GalaxySettingsView.load$lambda$5(GalaxySettingsView.this, (JSONObject) obj, (String) obj2);
+                        return load$lambda$5;
+                    }
+                });
+                return;
+            }
+        }
+        if (!quiet) {
+            JSONObject jSONObject = this.data;
+            if (!Intrinsics.areEqual(jSONObject != null ? jSONObject.optString("page") : null, page)) {
+                message("Loading…");
+            }
+        }
+        gx.get("/api/settings/pages/" + Uri.encode(page), new Function2() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda32
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit load$lambda$6;
+                load$lambda$6 = GalaxySettingsView.load$lambda$6(GalaxySettingsView.this, page, quiet, (JSONObject) obj, (String) obj2);
+                return load$lambda$6;
+            }
+        });
+    }
 
-         public final String getLabel() {
-            return this.label;
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit load$lambda$5(GalaxySettingsView this$0, JSONObject o, String err) {
+        if (this$0.getCurrent() != null) {
+            return Unit.INSTANCE;
+        }
+        if (o != null) {
+            this$0.hub = o;
+        }
+        this$0.drawRoot(o == null && this$0.hub == null ? err : null);
+        return Unit.INSTANCE;
+    }
 
-         public final String getPath() {
-            return this.path;
-         }
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit load$lambda$6(GalaxySettingsView this$0, String $page, boolean $quiet, JSONObject o, String err) {
+        if (!Intrinsics.areEqual(this$0.getCurrent(), $page)) {
+            return Unit.INSTANCE;
+        }
+        if (o != null) {
+            this$0.data = o;
+            this$0.draw(o);
+            return Unit.INSTANCE;
+        }
+        if (!$quiet || this$0.data == null) {
+            this$0.message(err == null ? "Galaxy didn't answer" : err);
+        }
+        return Unit.INSTANCE;
+    }
 
-   public static final class Root {
-      private final List<GalaxySettingsView.Entry> entries;
-      private final String note;
-      private final String page;
-      private final String title;
+    private final void message(String text) {
+        this.lastShown = "";
+        this.col.removeAllViews();
+        backBar();
+        this.col.addView(this.ui.note(text), CarUi.lp$default(this.ui, 0, 0, 3, null));
+    }
 
-      public Root(String var1, String var2, List<? extends GalaxySettingsView.Entry> var3, String var4) {
-         Intrinsics.checkNotNullParameter(var1, "title");
-         Intrinsics.checkNotNullParameter(var3, "entries");
-         super();
-         this.title = var1;
-         this.page = var2;
-         this.entries = var3;
-         this.note = var4;
-      }
+    private final void backBar() {
+        String parent;
+        if (this.stack.size() <= (this.root.getPage() != null ? 1 : 0)) {
+            return;
+        }
+        if (this.stack.size() >= 2) {
+            String str = this.stack.get(this.stack.size() - 2);
+            Intrinsics.checkNotNullExpressionValue(str, "get(...)");
+            parent = titleOf(str);
+        } else {
+            parent = this.root.getTitle();
+        }
+        LinearLayout linearLayout = this.col;
+        TextView $this$backBar_u24lambda_u248 = new TextView(getContext());
+        $this$backBar_u24lambda_u248.setText("‹  " + parent);
+        $this$backBar_u24lambda_u248.setTextColor(CarUi.Companion.getACCENT());
+        $this$backBar_u24lambda_u248.setTextSize(18.0f);
+        $this$backBar_u24lambda_u248.setTypeface(Typeface.DEFAULT_BOLD);
+        $this$backBar_u24lambda_u248.setPadding(this.ui.dp(6), this.ui.dp(6), this.ui.dp(6), this.ui.dp(12));
+        $this$backBar_u24lambda_u248.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda5
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                GalaxySettingsView.this.back();
+            }
+        });
+        linearLayout.addView($this$backBar_u24lambda_u248);
+    }
 
-      // $VF: synthetic method
-      public Root(String var1, String var2, List var3, String var4, int var5, DefaultConstructorMarker var6) {
-         if ((var5 & 2) != 0) {
-            var2 = null;
-         }
+    private final String titleOf(String page) {
+        String str = this.titles.get(page);
+        if (str != null) {
+            return str;
+        }
+        if (!(page.length() > 0)) {
+            return page;
+        }
+        StringBuilder sb = new StringBuilder();
+        char it = page.charAt(0);
+        String valueOf = String.valueOf(it);
+        Intrinsics.checkNotNull(valueOf, "null cannot be cast to non-null type java.lang.String");
+        String upperCase = valueOf.toUpperCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
+        StringBuilder append = sb.append((Object) upperCase);
+        String substring = page.substring(1);
+        Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
+        return append.append(substring).toString();
+    }
 
-         if ((var5 & 4) != 0) {
-            var3 = CollectionsKt.emptyList();
-         }
+    public final boolean back() {
+        if (this.stack.size() <= (this.root.getPage() != null ? 1 : 0)) {
+            return false;
+        }
+        this.stack.remove(this.stack.size() - 1);
+        this.data = null;
+        this.lastShown = "";
+        load(false);
+        this.scroll.scrollTo(0, 0);
+        return true;
+    }
 
-         if ((var5 & 8) != 0) {
-            var4 = null;
-         }
+    private final void open(String page) {
+        if (this.busy) {
+            return;
+        }
+        this.stack.add(page);
+        this.data = null;
+        this.lastShown = "";
+        load(false);
+        this.scroll.scrollTo(0, 0);
+    }
 
-         this(var1, var2, var3, var4);
-      }
+    private final void drawRoot(String err) {
+        String str;
+        Iterable $this$any$iv;
+        List emptyList;
+        Object element$iv;
+        JSONArray optJSONArray;
+        JSONObject jSONObject = this.hub;
+        if (jSONObject == null || (optJSONArray = jSONObject.optJSONArray("rows")) == null || (str = optJSONArray.toString()) == null) {
+            str = "";
+        }
+        String sig = "root|" + str + (err != null ? err : "");
+        if (Intrinsics.areEqual(sig, this.lastShown)) {
+            return;
+        }
+        this.lastShown = sig;
+        this.col.removeAllViews();
+        Object obj = null;
+        if (this.root.getNote() != null) {
+            this.col.addView(this.ui.note(this.root.getNote()), CarUi.lp$default(this.ui, 0, 0, 3, null));
+        }
+        if (err != null) {
+            this.col.addView(this.ui.note(err), CarUi.lp$default(this.ui, 0, 0, 3, null));
+        }
+        Iterable $this$any$iv2 = this.root.getEntries();
+        if (!($this$any$iv2 instanceof Collection) || !((Collection) $this$any$iv2).isEmpty()) {
+            Iterator it = $this$any$iv2.iterator();
+            while (true) {
+                if (!it.hasNext()) {
+                    $this$any$iv = null;
+                    break;
+                }
+                Object element$iv2 = it.next();
+                Entry it2 = (Entry) element$iv2;
+                if ((((it2 instanceof Entry.Hub) && Intrinsics.areEqual(CollectionsKt.toSet(((Entry.Hub) it2).getPages()), SetsKt.setOf((Object[]) new String[]{"traffic", "aggressive", "standard", "relaxed"}))) ? 1 : null) != null) {
+                    $this$any$iv = 1;
+                    break;
+                }
+            }
+        } else {
+            $this$any$iv = null;
+        }
+        if ($this$any$iv != null) {
+            GalaxyVisuals galaxyVisuals = GalaxyVisuals.INSTANCE;
+            Context context = getContext();
+            Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
+            galaxyVisuals.personalities(context, this.ui, this.col, new Function1() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda27
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj2) {
+                    Unit drawRoot$lambda$11;
+                    drawRoot$lambda$11 = GalaxySettingsView.drawRoot$lambda$11(GalaxySettingsView.this, (String) obj2);
+                    return drawRoot$lambda$11;
+                }
+            });
+        }
+        JSONObject it3 = this.hub;
+        if (it3 == null || (emptyList = GalaxyRow.Companion.parse(it3)) == null) {
+            emptyList = CollectionsKt.emptyList();
+        }
+        List hubRows = emptyList;
+        for (GalaxyRow r : hubRows) {
+            if (r.getPage().length() > 0) {
+                this.titles.put(r.getPage(), r.getLabel());
+            }
+        }
+        Iterator<Entry> it4 = this.root.getEntries().iterator();
+        int count = 0;
+        while (it4.hasNext()) {
+            final Entry e = it4.next();
+            if (e instanceof Entry.Hub) {
+                for (final String p : ((Entry.Hub) e).getPages()) {
+                    List $this$firstOrNull$iv = hubRows;
+                    Iterator it5 = $this$firstOrNull$iv.iterator();
+                    while (true) {
+                        if (it5.hasNext()) {
+                            element$iv = it5.next();
+                            if (Intrinsics.areEqual(((GalaxyRow) element$iv).getPage(), p)) {
+                                break;
+                            }
+                        } else {
+                            element$iv = obj;
+                            break;
+                        }
+                    }
+                    GalaxyRow r2 = (GalaxyRow) element$iv;
+                    if (r2 != null) {
+                        linkCard$default(this, r2.getLabel(), r2.getValue(), r2.getAvailable(), false, SettingIcons.INSTANCE.forPage(p), new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda28
+                            @Override // kotlin.jvm.functions.Function0
+                            public final Object invoke() {
+                                Unit drawRoot$lambda$15$lambda$14;
+                                drawRoot$lambda$15$lambda$14 = GalaxySettingsView.drawRoot$lambda$15$lambda$14(GalaxySettingsView.this, p);
+                                return drawRoot$lambda$15$lambda$14;
+                            }
+                        }, 8, null);
+                        count++;
+                        e = e;
+                    }
+                }
+            } else if (e instanceof Entry.Page) {
+                this.titles.put(((Entry.Page) e).getPage(), ((Entry.Page) e).getLabel());
+                linkCard$default(this, ((Entry.Page) e).getLabel(), ((Entry.Page) e).getDesc(), true, false, SettingIcons.INSTANCE.forPage(((Entry.Page) e).getPage()), new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda29
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit drawRoot$lambda$16;
+                        drawRoot$lambda$16 = GalaxySettingsView.drawRoot$lambda$16(GalaxySettingsView.this, e);
+                        return drawRoot$lambda$16;
+                    }
+                }, 8, null);
+                count++;
+            } else if (e instanceof Entry.Web) {
+                linkCard(((Entry.Web) e).getLabel(), ((Entry.Web) e).getDesc(), true, true, webIcon(((Entry.Web) e).getPath()), new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda30
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit drawRoot$lambda$17;
+                        drawRoot$lambda$17 = GalaxySettingsView.drawRoot$lambda$17(GalaxySettingsView.this, e);
+                        return drawRoot$lambda$17;
+                    }
+                });
+                count++;
+            } else {
+                if (!(e instanceof Entry.Unplaced)) {
+                    throw new NoWhenBranchMatchedException();
+                }
+                List $this$filter$iv = hubRows;
+                Collection destination$iv$iv = new ArrayList();
+                for (Object element$iv$iv : $this$filter$iv) {
+                    GalaxyRow it6 = (GalaxyRow) element$iv$iv;
+                    if ((it6.getPage().length() > 0) && !((Entry.Unplaced) e).getPlaced().contains(it6.getPage())) {
+                        destination$iv$iv.add(element$iv$iv);
+                    }
+                }
+                for (final GalaxyRow r3 : (List) destination$iv$iv) {
+                    linkCard$default(this, r3.getLabel(), r3.getValue(), r3.getAvailable(), false, SettingIcons.INSTANCE.forPage(r3.getPage()), new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda31
+                        @Override // kotlin.jvm.functions.Function0
+                        public final Object invoke() {
+                            Unit drawRoot$lambda$19;
+                            drawRoot$lambda$19 = GalaxySettingsView.drawRoot$lambda$19(GalaxySettingsView.this, r3);
+                            return drawRoot$lambda$19;
+                        }
+                    }, 8, null);
+                    count++;
+                }
+                obj = null;
+            }
+        }
+        if (count == 0 && err == null) {
+            this.col.addView(this.ui.note(this.hub == null ? "Loading…" : "Nothing here for this car and StarPilot version."), CarUi.lp$default(this.ui, 0, 0, 3, null));
+        }
+    }
 
-      public final List<GalaxySettingsView.Entry> getEntries() {
-         return this.entries;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit drawRoot$lambda$11(GalaxySettingsView this$0, String it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        this$0.open(it);
+        return Unit.INSTANCE;
+    }
 
-      public final String getNote() {
-         return this.note;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit drawRoot$lambda$15$lambda$14(GalaxySettingsView this$0, String $p) {
+        this$0.open($p);
+        return Unit.INSTANCE;
+    }
 
-      public final String getPage() {
-         return this.page;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit drawRoot$lambda$16(GalaxySettingsView this$0, Entry $e) {
+        this$0.open(((Entry.Page) $e).getPage());
+        return Unit.INSTANCE;
+    }
 
-      public final String getTitle() {
-         return this.title;
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit drawRoot$lambda$17(GalaxySettingsView this$0, Entry $e) {
+        this$0.openWeb.invoke(((Entry.Web) $e).getPath(), ((Entry.Web) $e).getLabel());
+        return Unit.INSTANCE;
+    }
 
-   // $VF: synthetic class
-   public final class WhenMappings {
-      public static final int[] $EnumSwitchMapping$0;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit drawRoot$lambda$19(GalaxySettingsView this$0, GalaxyRow $r) {
+        this$0.open($r.getPage());
+        return Unit.INSTANCE;
+    }
 
-      static {
-         int[] var0 = new int[GalaxyRow.Control.values().length];
+    static /* synthetic */ void linkCard$default(GalaxySettingsView galaxySettingsView, String str, String str2, boolean z, boolean z2, SettingIcons.Icon icon, Function0 function0, int i, Object obj) {
+        if ((i & 8) != 0) {
+            z2 = false;
+        }
+        boolean z3 = z2;
+        if ((i & 16) != 0) {
+            icon = null;
+        }
+        galaxySettingsView.linkCard(str, str2, z, z3, icon, function0);
+    }
 
-         try {
-            var0[GalaxyRow.Control.GROUP.ordinal()] = 1;
-         } catch (NoSuchFieldError var7) {
-         }
+    private final void linkCard(String title, String desc, final boolean enabled, boolean web, SettingIcons.Icon icon, final Function0<Unit> onClick) {
+        View view;
+        CarUi carUi = this.ui;
+        String str = desc;
+        if (StringsKt.isBlank(str)) {
+            str = null;
+        }
+        String str2 = str;
+        if (icon != null) {
+            SvIcon svIcon = SvIcon.INSTANCE;
+            Context context = getContext();
+            Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
+            view = svIcon.chip(context, icon.getName(), icon.getGroup(), 46, enabled ? SvIcon.State.ON : SvIcon.State.NA);
+        } else {
+            view = null;
+        }
+        LinearLayout r = (LinearLayout) CarUi.row$default(carUi, title, str2, 0, view, null, 20, null).component1();
+        TextView $this$linkCard_u24lambda_u2422 = new TextView(getContext());
+        $this$linkCard_u24lambda_u2422.setText(web ? "↗" : "›");
+        $this$linkCard_u24lambda_u2422.setTextSize(30.0f);
+        $this$linkCard_u24lambda_u2422.setTextColor(CarUi.Companion.getDIM());
+        $this$linkCard_u24lambda_u2422.setPadding(this.ui.dp(14), 0, this.ui.dp(6), 0);
+        r.addView($this$linkCard_u24lambda_u2422);
+        r.setAlpha(enabled ? 1.0f : 0.45f);
+        r.setClickable(true);
+        r.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda11
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view2) {
+                GalaxySettingsView.linkCard$lambda$23(enabled, onClick, view2);
+            }
+        });
+        this.col.addView(r, CarUi.lp$default(this.ui, 0, 0, 3, null));
+    }
 
-         try {
-            var0[GalaxyRow.Control.SWITCH.ordinal()] = 2;
-         } catch (NoSuchFieldError var6) {
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void linkCard$lambda$23(boolean $enabled, Function0 $onClick, View it) {
+        if ($enabled) {
+            $onClick.invoke();
+        }
+    }
 
-         try {
-            var0[GalaxyRow.Control.SELECT.ordinal()] = 3;
-         } catch (NoSuchFieldError var5) {
-         }
+    private final int vasmEditorRow(JSONObject page) {
+        if (Intrinsics.areEqual(page.optString("page"), "vasm")) {
+            return page.optInt("editorRow", -1);
+        }
+        return -1;
+    }
 
-         try {
-            var0[GalaxyRow.Control.SLIDER.ordinal()] = 4;
-         } catch (NoSuchFieldError var4) {
-         }
+    /* JADX WARN: Code restructure failed: missing block: B:51:0x01f9, code lost:
+    
+        if (kotlin.jvm.internal.Intrinsics.areEqual(r18.getLabel(), "Saved spot-monitor settings") == false) goto L60;
+     */
+    /* JADX WARN: Removed duplicated region for block: B:54:0x0205  */
+    /* JADX WARN: Removed duplicated region for block: B:57:0x0208 A[SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void draw(JSONObject page) {
+        VasmEditorCard c;
+        Iterable $this$filter$iv;
+        boolean z;
+        List rows = GalaxyRow.Companion.parse(page);
+        final int editorRow = vasmEditorRow(page);
+        if (editorRow >= 0) {
+            VasmEditorCard it = this.vasmCard;
+            if (it == null) {
+                Context context = getContext();
+                Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
+                it = new VasmEditorCard(context, this.ui, new Function1() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda9
+                    @Override // kotlin.jvm.functions.Function1
+                    public final Object invoke(Object obj) {
+                        Unit draw$lambda$24;
+                        draw$lambda$24 = GalaxySettingsView.draw$lambda$24(GalaxySettingsView.this, editorRow, (JSONObject) obj);
+                        return draw$lambda$24;
+                    }
+                });
+                this.vasmCard = it;
+            }
+            GalaxyRow galaxyRow = (GalaxyRow) CollectionsKt.getOrNull(rows, editorRow);
+            it.update(page, galaxyRow != null && galaxyRow.getAvailable());
+        }
+        String sig = page.optString("title") + "|" + page.optString("subtitle") + "|" + page.optBoolean("vehicleIdentified") + "|" + CollectionsKt.joinToString$default(rows, "\n", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda10
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                CharSequence draw$lambda$26;
+                draw$lambda$26 = GalaxySettingsView.draw$lambda$26((GalaxyRow) obj);
+                return draw$lambda$26;
+            }
+        }, 30, null);
+        if (Intrinsics.areEqual(sig, this.lastShown)) {
+            return;
+        }
+        final int keepY = this.lastShown.length() > 0 ? this.scroll.getScrollY() : 0;
+        this.lastShown = sig;
+        String name = page.optString("page");
+        HashMap<String, String> hashMap = this.titles;
+        String optString = page.optString("title");
+        if (StringsKt.isBlank(optString)) {
+            Intrinsics.checkNotNull(name);
+            optString = titleOf(name);
+        }
+        hashMap.put(name, optString);
+        this.col.removeAllViews();
+        backBar();
+        if (this.stack.size() > 1 || this.root.getPage() == null) {
+            LinearLayout linearLayout = this.col;
+            TextView $this$draw_u24lambda_u2428 = new TextView(getContext());
+            Intrinsics.checkNotNull(name);
+            $this$draw_u24lambda_u2428.setText(titleOf(name));
+            $this$draw_u24lambda_u2428.setTextColor(CarUi.Companion.getTEXT());
+            $this$draw_u24lambda_u2428.setTextSize(24.0f);
+            $this$draw_u24lambda_u2428.setTypeface(Typeface.DEFAULT_BOLD);
+            $this$draw_u24lambda_u2428.setPadding(this.ui.dp(6), 0, 0, this.ui.dp(4));
+            linearLayout.addView($this$draw_u24lambda_u2428);
+        }
+        String it2 = page.optString("subtitle");
+        Intrinsics.checkNotNull(it2);
+        if (StringsKt.isBlank(it2)) {
+            it2 = null;
+        }
+        if (it2 != null) {
+            this.col.addView(this.ui.note(it2), CarUi.lp$default(this.ui, 0, 0, 3, null));
+        }
+        if (!page.optBoolean("vehicleIdentified", true)) {
+            this.col.addView(this.ui.note("The comma hasn't identified the car yet: settings for this car show once it has (turn the car on once)."), CarUi.lp$default(this.ui, 0, 0, 3, null));
+        }
+        if (Intrinsics.areEqual(this.root.getPage(), name) && this.root.getNote() != null) {
+            this.col.addView(this.ui.note(this.root.getNote()), CarUi.lp$default(this.ui, 0, 0, 3, null));
+        }
+        GalaxyRow.Companion companion = GalaxyRow.Companion;
+        Intrinsics.checkNotNull(name);
+        Iterable $this$filter$iv2 = companion.visible(name, rows);
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv2) {
+            GalaxyRow it3 = (GalaxyRow) element$iv$iv;
+            if (editorRow >= 0) {
+                if (it3.getIndex() != editorRow) {
+                    $this$filter$iv = $this$filter$iv2;
+                } else {
+                    $this$filter$iv = $this$filter$iv2;
+                }
+                z = false;
+                if (!z) {
+                    destination$iv$iv.add(element$iv$iv);
+                }
+                $this$filter$iv2 = $this$filter$iv;
+            } else {
+                $this$filter$iv = $this$filter$iv2;
+            }
+            z = true;
+            if (!z) {
+            }
+            $this$filter$iv2 = $this$filter$iv;
+        }
+        List<GalaxyRow> shownRows = (List) destination$iv$iv;
+        if (editorRow >= 0 && (c = this.vasmCard) != null) {
+            ViewParent parent = c.getParent();
+            ViewGroup viewGroup = parent instanceof ViewGroup ? (ViewGroup) parent : null;
+            if (viewGroup != null) {
+                viewGroup.removeView(c);
+            }
+            this.col.addView(c, CarUi.lp$default(this.ui, 0, 0, 3, null));
+        }
+        if (shownRows.isEmpty()) {
+            this.col.addView(this.ui.note("No settings here for this car."), CarUi.lp$default(this.ui, 0, 0, 3, null));
+        }
+        GalaxyVisuals galaxyVisuals = GalaxyVisuals.INSTANCE;
+        Context context2 = getContext();
+        Intrinsics.checkNotNullExpressionValue(context2, "getContext(...)");
+        Set taken = galaxyVisuals.header(context2, this.ui, name, shownRows, this.col, new Function2() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda12
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit draw$lambda$33;
+                draw$lambda$33 = GalaxySettingsView.draw$lambda$33(GalaxySettingsView.this, (GalaxyRow) obj, (String) obj2);
+                return draw$lambda$33;
+            }
+        }, new Function1() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda13
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit draw$lambda$34;
+                draw$lambda$34 = GalaxySettingsView.draw$lambda$34(GalaxySettingsView.this, (GalaxyRow) obj);
+                return draw$lambda$34;
+            }
+        });
+        for (final GalaxyRow r : shownRows) {
+            if (!taken.contains(Integer.valueOf(r.getIndex()))) {
+                switch (WhenMappings.$EnumSwitchMapping$0[r.getControl().ordinal()]) {
+                    case 1:
+                        this.titles.put(r.getPage(), r.getLabel());
+                        linkCard$default(this, r.getLabel(), r.getValue(), r.getAvailable(), false, SettingIcons.INSTANCE.forRow(name, r.getLabel(), r.getPage(), r.getControl()), new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda14
+                            @Override // kotlin.jvm.functions.Function0
+                            public final Object invoke() {
+                                Unit draw$lambda$35;
+                                draw$lambda$35 = GalaxySettingsView.draw$lambda$35(GalaxySettingsView.this, r);
+                                return draw$lambda$35;
+                            }
+                        }, 8, null);
+                        name = name;
+                        break;
+                    case 2:
+                        switchRow(r);
+                        break;
+                    case 3:
+                        selectRow(r);
+                        break;
+                    case 4:
+                        sliderRow(r);
+                        break;
+                    case 5:
+                        actionRow(r);
+                        break;
+                    case 6:
+                        readoutRow(r);
+                        break;
+                    default:
+                        throw new NoWhenBranchMatchedException();
+                }
+            }
+        }
+        String name2 = name;
+        Function2<String, LinearLayout, Unit> function2 = this.pageExtras;
+        if (function2 != null) {
+            function2.invoke(name2, this.col);
+        }
+        if (Intrinsics.areEqual(name2, this.root.getPage()) && this.stack.size() == 1) {
+            for (final Entry e : this.root.getEntries()) {
+                if (e instanceof Entry.Web) {
+                    linkCard(((Entry.Web) e).getLabel(), ((Entry.Web) e).getDesc(), true, true, webIcon(((Entry.Web) e).getPath()), new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda15
+                        @Override // kotlin.jvm.functions.Function0
+                        public final Object invoke() {
+                            Unit draw$lambda$36;
+                            draw$lambda$36 = GalaxySettingsView.draw$lambda$36(GalaxySettingsView.this, e);
+                            return draw$lambda$36;
+                        }
+                    });
+                } else if (e instanceof Entry.Page) {
+                    this.titles.put(((Entry.Page) e).getPage(), ((Entry.Page) e).getLabel());
+                    linkCard$default(this, ((Entry.Page) e).getLabel(), ((Entry.Page) e).getDesc(), true, false, SettingIcons.INSTANCE.forPage(((Entry.Page) e).getPage()), new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda16
+                        @Override // kotlin.jvm.functions.Function0
+                        public final Object invoke() {
+                            Unit draw$lambda$37;
+                            draw$lambda$37 = GalaxySettingsView.draw$lambda$37(GalaxySettingsView.this, e);
+                            return draw$lambda$37;
+                        }
+                    }, 8, null);
+                }
+            }
+            Function1<LinearLayout, Unit> function1 = this.footer;
+            if (function1 != null) {
+                function1.invoke(this.col);
+            }
+        }
+        if (keepY > 0) {
+            this.scroll.post(new Runnable() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda17
+                @Override // java.lang.Runnable
+                public final void run() {
+                    GalaxySettingsView.draw$lambda$38(GalaxySettingsView.this, keepY);
+                }
+            });
+        }
+    }
 
-         try {
-            var0[GalaxyRow.Control.ACTION.ordinal()] = 5;
-         } catch (NoSuchFieldError var3) {
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit draw$lambda$24(GalaxySettingsView this$0, int $editorRow, JSONObject d) {
+        Intrinsics.checkNotNullParameter(d, "d");
+        this$0.reviewDraft($editorRow, d);
+        return Unit.INSTANCE;
+    }
 
-         try {
-            var0[GalaxyRow.Control.READOUT.ordinal()] = 6;
-         } catch (NoSuchFieldError var2) {
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final CharSequence draw$lambda$26(GalaxyRow it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return it.getLabel() + "|" + it.getValue() + "|" + it.getAvailable() + "|" + it.getReason() + "|" + it.getChoices() + "|" + it.getMinimum() + "|" + it.getMaximum() + "|" + it.getDefaultValue();
+    }
 
-         $EnumSwitchMapping$0 = var0;
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit draw$lambda$33(GalaxySettingsView this$0, GalaxyRow r, String v) {
+        Intrinsics.checkNotNullParameter(r, "r");
+        Intrinsics.checkNotNullParameter(v, "v");
+        if (!this$0.busy) {
+            this$0.saveValue(r, v);
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit draw$lambda$34(GalaxySettingsView this$0, GalaxyRow r) {
+        Intrinsics.checkNotNullParameter(r, "r");
+        if (!this$0.busy) {
+            this$0.resetDefault(r);
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit draw$lambda$35(GalaxySettingsView this$0, GalaxyRow $r) {
+        this$0.open($r.getPage());
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit draw$lambda$36(GalaxySettingsView this$0, Entry $e) {
+        this$0.openWeb.invoke(((Entry.Web) $e).getPath(), ((Entry.Web) $e).getLabel());
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit draw$lambda$37(GalaxySettingsView this$0, Entry $e) {
+        this$0.open(((Entry.Page) $e).getPage());
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void draw$lambda$38(GalaxySettingsView this$0, int $keepY) {
+        this$0.scroll.scrollTo(0, $keepY);
+    }
+
+    private final void dim(View v, GalaxyRow r) {
+        v.setAlpha(r.getEditable() ? 1.0f : 0.45f);
+    }
+
+    private final View icon(GalaxyRow r) {
+        SettingIcons settingIcons = SettingIcons.INSTANCE;
+        String current = getCurrent();
+        if (current == null) {
+            current = "";
+        }
+        SettingIcons.Icon ic = settingIcons.forRow(current, r.getLabel(), r.getPage(), r.getControl());
+        SvIcon.State st = !r.getAvailable() ? SvIcon.State.NA : (r.getControl() != GalaxyRow.Control.SWITCH || Intrinsics.areEqual(r.getValue(), "On")) ? SvIcon.State.ON : SvIcon.State.OFF;
+        SvIcon svIcon = SvIcon.INSTANCE;
+        Context context = getContext();
+        Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
+        return svIcon.chip(context, ic.getName(), ic.getGroup(), 46, st);
+    }
+
+    private final String tag(GalaxyRow r) {
+        SettingIcons settingIcons = SettingIcons.INSTANCE;
+        String current = getCurrent();
+        if (current == null) {
+            current = "";
+        }
+        if (settingIcons.forRow(current, r.getLabel(), r.getPage(), r.getControl()).getKnown()) {
+            return null;
+        }
+        return "NEW";
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:7:0x0070  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final SettingIcons.Icon webIcon(String path) {
+        String str;
+        String str2;
+        String page;
+        if (!StringsKt.contains$default((CharSequence) path, (CharSequence) "events", false, 2, (Object) null)) {
+            str = "crop";
+            if (!StringsKt.contains$default((CharSequence) path, (CharSequence) "vasm", false, 2, (Object) null) && !StringsKt.contains$default((CharSequence) path, (CharSequence) "pip", false, 2, (Object) null)) {
+                if (StringsKt.contains$default((CharSequence) path, (CharSequence) "theme", false, 2, (Object) null)) {
+                    str2 = "palette";
+                } else if (StringsKt.contains$default((CharSequence) path, (CharSequence) "vehicle", false, 2, (Object) null)) {
+                    str2 = "car";
+                } else {
+                    str = "camera";
+                    if (!StringsKt.contains$default((CharSequence) path, (CharSequence) "camera", false, 2, (Object) null)) {
+                        str2 = "link";
+                    }
+                }
+            }
+            SettingIcons settingIcons = SettingIcons.INSTANCE;
+            page = this.root.getPage();
+            if (page == null) {
+                page = "cameras";
+            }
+            return new SettingIcons.Icon(str, settingIcons.group(page), false, 4, null);
+        }
+        str2 = "sentry";
+        str = str2;
+        SettingIcons settingIcons2 = SettingIcons.INSTANCE;
+        page = this.root.getPage();
+        if (page == null) {
+        }
+        return new SettingIcons.Icon(str, settingIcons2.group(page), false, 4, null);
+    }
+
+    private final String desc(GalaxyRow r) {
+        String replace$default = StringsKt.replace$default(r.getShownReason(), "https://firestar.link/discord", "the StarPilot Discord", false, 4, (Object) null);
+        if (StringsKt.isBlank(replace$default)) {
+            replace$default = null;
+        }
+        return replace$default;
+    }
+
+    private final void defaultButton(LinearLayout parent, final GalaxyRow r) {
+        if (r.getShowDefault()) {
+            TextView $this$defaultButton_u24lambda_u2441 = CarUi.button$default(this.ui, "Default", false, new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda25
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit defaultButton$lambda$40;
+                    defaultButton$lambda$40 = GalaxySettingsView.defaultButton$lambda$40(GalaxyRow.this, this);
+                    return defaultButton$lambda$40;
+                }
+            }, 2, null);
+            $this$defaultButton_u24lambda_u2441.setMinWidth(this.ui.dp(100));
+            $this$defaultButton_u24lambda_u2441.setTextSize(16.0f);
+            LinearLayout.LayoutParams $this$defaultButton_u24lambda_u2442 = new LinearLayout.LayoutParams(-2, -2);
+            $this$defaultButton_u24lambda_u2442.rightMargin = this.ui.dp(10);
+            Unit unit = Unit.INSTANCE;
+            parent.addView($this$defaultButton_u24lambda_u2441, $this$defaultButton_u24lambda_u2442);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit defaultButton$lambda$40(GalaxyRow $r, GalaxySettingsView this$0) {
+        if ($r.getEditable()) {
+            this$0.resetDefault($r);
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void switchRow(final GalaxyRow r) {
+        LinearLayout row = (LinearLayout) CarUi.row$default(this.ui, r.getLabel(), desc(r), 0, icon(r), tag(r), 4, null).component1();
+        defaultButton(row, r);
+        Switch sw = this.ui.bigSwitch();
+        sw.setChecked(Intrinsics.areEqual(r.getValue(), "On"));
+        sw.setEnabled(r.getEditable());
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda6
+            @Override // android.widget.CompoundButton.OnCheckedChangeListener
+            public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
+                GalaxySettingsView.switchRow$lambda$43(GalaxyRow.this, this, compoundButton, z);
+            }
+        });
+        row.addView(sw);
+        dim(row, r);
+        this.col.addView(row, CarUi.lp$default(this.ui, 0, 0, 3, null));
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void switchRow$lambda$43(GalaxyRow $r, GalaxySettingsView this$0, CompoundButton b, boolean on) {
+        if (!$r.getEditable() || this$0.busy) {
+            b.setChecked(!on);
+        } else {
+            this$0.saveValue($r, on ? "On" : "Off");
+        }
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:17:0x0043  */
+    /* JADX WARN: Removed duplicated region for block: B:24:0x0125  */
+    /* JADX WARN: Type inference failed for: r9v8, types: [T, kotlin.jvm.functions.Function1] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void selectRow(final GalaxyRow r) {
+        boolean z;
+        Function1 function1;
+        int size = r.getChoices().size();
+        if (2 <= size && size < 5) {
+            int i = 0;
+            for (String it : r.getChoices()) {
+                i += it.length();
+            }
+            if (i <= 40) {
+                z = true;
+                if (!z) {
+                    LinearLayout $this$selectRow_u24lambda_u2445 = new LinearLayout(getContext());
+                    $this$selectRow_u24lambda_u2445.setOrientation(1);
+                    $this$selectRow_u24lambda_u2445.setBackground(CarUi.rounded$default(this.ui, CarUi.Companion.getCARD(), 0, null, 6, null));
+                    $this$selectRow_u24lambda_u2445.setPadding(this.ui.dp(20), this.ui.dp(14), this.ui.dp(18), this.ui.dp(14));
+                    LinearLayout tr = (LinearLayout) CarUi.row$default(this.ui, r.getLabel(), desc(r), 0, icon(r), tag(r), 4, null).component1();
+                    tr.setBackground(null);
+                    tr.setPadding(0, 0, 0, 0);
+                    tr.setMinimumHeight(0);
+                    defaultButton(tr, r);
+                    $this$selectRow_u24lambda_u2445.addView(tr);
+                    final Ref.ObjectRef paint = new Ref.ObjectRef();
+                    Pair<LinearLayout, Function1<Integer, Unit>> chips = this.ui.chips(r.getChoices(), new Function1() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda20
+                        @Override // kotlin.jvm.functions.Function1
+                        public final Object invoke(Object obj) {
+                            Unit selectRow$lambda$46;
+                            selectRow$lambda$46 = GalaxySettingsView.selectRow$lambda$46(GalaxyRow.this, this, paint, ((Integer) obj).intValue());
+                            return selectRow$lambda$46;
+                        }
+                    });
+                    LinearLayout bar = chips.component1();
+                    paint.element = (Function1) chips.component2();
+                    bar.setPadding(0, this.ui.dp(10), 0, 0);
+                    $this$selectRow_u24lambda_u2445.addView(bar);
+                    if (paint.element == 0) {
+                        Intrinsics.throwUninitializedPropertyAccessException("paint");
+                        function1 = null;
+                    } else {
+                        function1 = (Function1) paint.element;
+                    }
+                    function1.invoke(Integer.valueOf(r.getChoices().indexOf(r.getValue())));
+                    dim($this$selectRow_u24lambda_u2445, r);
+                    this.col.addView($this$selectRow_u24lambda_u2445, CarUi.lp$default(this.ui, 0, 0, 3, null));
+                    return;
+                }
+                LinearLayout row = (LinearLayout) CarUi.row$default(this.ui, r.getLabel(), desc(r), 0, icon(r), tag(r), 4, null).component1();
+                defaultButton(row, r);
+                TextView $this$selectRow_u24lambda_u2449 = CarUi.button$default(this.ui, r.getValue(), false, new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda21
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit selectRow$lambda$48;
+                        selectRow$lambda$48 = GalaxySettingsView.selectRow$lambda$48(GalaxyRow.this, this);
+                        return selectRow$lambda$48;
+                    }
+                }, 2, null);
+                $this$selectRow_u24lambda_u2449.setMinWidth(this.ui.dp(200));
+                row.addView($this$selectRow_u24lambda_u2449);
+                dim(row, r);
+                this.col.addView(row, CarUi.lp$default(this.ui, 0, 0, 3, null));
+                return;
+            }
+        }
+        z = false;
+        if (!z) {
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit selectRow$lambda$46(GalaxyRow $r, GalaxySettingsView this$0, Ref.ObjectRef $paint, int i) {
+        Function1 function1;
+        if ($r.getEditable() && !this$0.busy && !Intrinsics.areEqual($r.getChoices().get(i), $r.getValue())) {
+            if ($paint.element == 0) {
+                Intrinsics.throwUninitializedPropertyAccessException("paint");
+                function1 = null;
+            } else {
+                function1 = (Function1) $paint.element;
+            }
+            function1.invoke(Integer.valueOf(i));
+            this$0.saveValue($r, $r.getChoices().get(i));
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit selectRow$lambda$48(final GalaxyRow $r, final GalaxySettingsView this$0) {
+        if (!$r.getEditable() || this$0.busy) {
+            return Unit.INSTANCE;
+        }
+        AlertDialog.Builder title = new AlertDialog.Builder(this$0.getContext()).setTitle($r.getLabel());
+        Collection $this$toTypedArray$iv = $r.getChoices();
+        title.setSingleChoiceItems((CharSequence[]) $this$toTypedArray$iv.toArray(new String[0]), $r.getChoices().indexOf($r.getValue()), new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda0
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                GalaxySettingsView.selectRow$lambda$48$lambda$47(GalaxyRow.this, this$0, dialogInterface, i);
+            }
+        }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void selectRow$lambda$48$lambda$47(GalaxyRow $r, GalaxySettingsView this$0, DialogInterface d, int i) {
+        d.dismiss();
+        if (Intrinsics.areEqual($r.getChoices().get(i), $r.getValue())) {
+            return;
+        }
+        this$0.saveValue($r, $r.getChoices().get(i));
+    }
+
+    private final void sliderRow(final GalaxyRow r) {
+        final GalaxyRow.Bounds bounds = r.bounds();
+        if (bounds == null) {
+            readoutRow(r);
+            return;
+        }
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        linearLayout.setOrientation(1);
+        linearLayout.setBackground(CarUi.rounded$default(this.ui, CarUi.Companion.getCARD(), 0, null, 6, null));
+        linearLayout.setPadding(this.ui.dp(20), this.ui.dp(14), this.ui.dp(18), this.ui.dp(10));
+        LinearLayout linearLayout2 = (LinearLayout) CarUi.row$default(this.ui, r.getLabel(), desc(r), 0, icon(r), tag(r), 4, null).component1();
+        linearLayout2.setBackground(null);
+        linearLayout2.setPadding(0, 0, 0, 0);
+        linearLayout2.setMinimumHeight(0);
+        final TextView textView = new TextView(getContext());
+        textView.setTextSize(22.0f);
+        textView.setTextColor(CarUi.Companion.getTEXT());
+        textView.setTypeface(Typeface.DEFAULT_BOLD);
+        textView.setGravity(8388613);
+        textView.setPadding(this.ui.dp(12), 0, this.ui.dp(4), 0);
+        defaultButton(linearLayout2, r);
+        linearLayout2.addView(textView);
+        linearLayout.addView(linearLayout2);
+        final int round = (int) Math.round((bounds.getMax() - bounds.getMin()) / bounds.getStep());
+        final int i = round + (bounds.getAuto() ? 1 : 0);
+        final String shown$default = GalaxyRow.shown$default(r, null, 1, null);
+        textView.setText(r.withUnit(shown$default));
+        final SeekBar seekBar = new SeekBar(getContext());
+        seekBar.setMax(i);
+        seekBar.setProgress(sliderRow$posOf(i, bounds, round, shown$default));
+        seekBar.setEnabled(r.getEditable());
+        seekBar.setMinimumHeight(this.ui.dp(48));
+        seekBar.setThumbTintList(ColorStateList.valueOf(-1));
+        seekBar.setProgressTintList(ColorStateList.valueOf(CarUi.Companion.getACCENT()));
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() { // from class: com.starpilot.starview.GalaxySettingsView$sliderRow$1
+            @Override // android.widget.SeekBar.OnSeekBarChangeListener
+            public void onProgressChanged(SeekBar sb, int p, boolean fromUser) {
+                String sliderRow$valueAt;
+                String withUnit;
+                TextView textView2 = textView;
+                GalaxyRow galaxyRow = r;
+                sliderRow$valueAt = GalaxySettingsView.sliderRow$valueAt(bounds, round, p);
+                withUnit = galaxyRow.withUnit(sliderRow$valueAt);
+                textView2.setText(withUnit);
+            }
+
+            @Override // android.widget.SeekBar.OnSeekBarChangeListener
+            public void onStartTrackingTouch(SeekBar sb) {
+                this.touching = true;
+            }
+
+            @Override // android.widget.SeekBar.OnSeekBarChangeListener
+            public void onStopTrackingTouch(SeekBar sb) {
+                this.touching = false;
+                GalaxySettingsView.sliderRow$commit(shown$default, r, this, bounds, round, seekBar.getProgress());
+            }
+        });
+        LinearLayout linearLayout3 = new LinearLayout(getContext());
+        linearLayout3.setOrientation(0);
+        linearLayout3.setGravity(16);
+        linearLayout3.setPadding(0, this.ui.dp(8), 0, 0);
+        linearLayout3.addView(this.ui.stepper("−", new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda7
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit sliderRow$lambda$55;
+                sliderRow$lambda$55 = GalaxySettingsView.sliderRow$lambda$55(GalaxyRow.this, this, seekBar, shown$default, bounds, round);
+                return sliderRow$lambda$55;
+            }
+        }));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, this.ui.dp(48), 1.0f);
+        layoutParams.leftMargin = this.ui.dp(8);
+        layoutParams.rightMargin = this.ui.dp(8);
+        Unit unit = Unit.INSTANCE;
+        linearLayout3.addView(seekBar, layoutParams);
+        linearLayout3.addView(this.ui.stepper("+", new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda8
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit sliderRow$lambda$57;
+                sliderRow$lambda$57 = GalaxySettingsView.sliderRow$lambda$57(GalaxyRow.this, this, seekBar, i, shown$default, bounds, round);
+                return sliderRow$lambda$57;
+            }
+        }));
+        linearLayout.addView(linearLayout3);
+        TextView textView2 = new TextView(getContext());
+        textView2.setText(GalaxyRow.Companion.fmt(bounds.getMin()) + " to " + GalaxyRow.Companion.fmt(bounds.getMax()) + ((!(r.getUnit().length() > 0) || r.getLaneStrength()) ? "" : " " + r.getUnit()) + (bounds.getAuto() ? " · Auto at the right" : "") + " · step " + GalaxyRow.Companion.fmt(bounds.getStep()));
+        textView2.setTextColor(CarUi.Companion.getDIM());
+        textView2.setTextSize(13.0f);
+        textView2.setPadding(this.ui.dp(2), this.ui.dp(4), 0, 0);
+        linearLayout.addView(textView2);
+        dim(linearLayout, r);
+        this.col.addView(linearLayout, CarUi.lp$default(this.ui, 0, 0, 3, null));
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final String sliderRow$valueAt(GalaxyRow.Bounds b, int steps, int p) {
+        return (!b.getAuto() || p <= steps) ? GalaxyRow.Companion.fmt(GalaxyRow.Companion.snap(b.getMin() + (p * b.getStep()), b)) : "Auto";
+    }
+
+    private static final int sliderRow$posOf(int maxPos, GalaxyRow.Bounds b, int steps, String v) {
+        if (Intrinsics.areEqual(v, "Auto")) {
+            return maxPos;
+        }
+        Double doubleOrNull = StringsKt.toDoubleOrNull(v);
+        double it = ((doubleOrNull != null ? doubleOrNull.doubleValue() : b.getMin()) - b.getMin()) / b.getStep();
+        return RangesKt.coerceIn((int) Math.round(it), 0, steps);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void sliderRow$commit(String shownNow, GalaxyRow $r, GalaxySettingsView this$0, GalaxyRow.Bounds b, int steps, int p) {
+        String v = sliderRow$valueAt(b, steps, p);
+        if (Intrinsics.areEqual(v, shownNow)) {
+            return;
+        }
+        String out = "Auto";
+        if (!Intrinsics.areEqual(v, "Auto") && (out = $r.saved(Double.parseDouble(v))) == null) {
+            return;
+        }
+        this$0.saveValue($r, out);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit sliderRow$lambda$55(GalaxyRow $r, GalaxySettingsView this$0, SeekBar $bar, String $shownNow, GalaxyRow.Bounds $b, int $steps) {
+        if ($r.getEditable() && !this$0.busy && $bar.getProgress() > 0) {
+            $bar.setProgress($bar.getProgress() - 1);
+            sliderRow$commit($shownNow, $r, this$0, $b, $steps, $bar.getProgress());
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit sliderRow$lambda$57(GalaxyRow $r, GalaxySettingsView this$0, SeekBar $bar, int $maxPos, String $shownNow, GalaxyRow.Bounds $b, int $steps) {
+        if ($r.getEditable() && !this$0.busy && $bar.getProgress() < $maxPos) {
+            $bar.setProgress($bar.getProgress() + 1);
+            sliderRow$commit($shownNow, $r, this$0, $b, $steps, $bar.getProgress());
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void actionRow(final GalaxyRow r) {
+        CarUi carUi = this.ui;
+        String label = r.getLabel();
+        String[] strArr = new String[2];
+        strArr[0] = desc(r);
+        String value = r.getValue();
+        if (StringsKt.isBlank(value)) {
+            value = null;
+        }
+        strArr[1] = value;
+        String joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), "\n", null, null, 0, null, null, 62, null);
+        if (StringsKt.isBlank(joinToString$default)) {
+            joinToString$default = null;
+        }
+        LinearLayout row = (LinearLayout) CarUi.row$default(carUi, label, joinToString$default, 0, icon(r), tag(r), 4, null).component1();
+        if (r.getAction()) {
+            String str = "Reset";
+            if (!Intrinsics.areEqual(r.getRepairValue(), "Reset") && !new Regex("reset|default", RegexOption.IGNORE_CASE).containsMatchIn(r.getLabel())) {
+                str = r.getRepairValue().length() > 0 ? "Set " + r.getRepairValue() : "Run";
+            }
+            String text = str;
+            row.addView(CarUi.button$default(this.ui, text, false, new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda33
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit actionRow$lambda$61;
+                    actionRow$lambda$61 = GalaxySettingsView.actionRow$lambda$61(GalaxyRow.this, this);
+                    return actionRow$lambda$61;
+                }
+            }, 2, null));
+        }
+        dim(row, r);
+        this.col.addView(row, CarUi.lp$default(this.ui, 0, 0, 3, null));
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit actionRow$lambda$61(GalaxyRow $r, GalaxySettingsView this$0) {
+        if ($r.getEditable()) {
+            this$0.review($r);
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void readoutRow(GalaxyRow r) {
+        if (r.getHeading() || (StringsKt.isBlank(r.getValue()) && StringsKt.isBlank(r.getReason()))) {
+            this.col.addView(this.ui.header(r.getLabel()));
+            return;
+        }
+        LinearLayout row = (LinearLayout) CarUi.row$default(this.ui, r.getLabel(), desc(r), 0, icon(r), tag(r), 4, null).component1();
+        if (!StringsKt.isBlank(r.getValue())) {
+            TextView $this$readoutRow_u24lambda_u2462 = new TextView(getContext());
+            $this$readoutRow_u24lambda_u2462.setText(r.withUnit(GalaxyRow.shown$default(r, null, 1, null)));
+            $this$readoutRow_u24lambda_u2462.setTextColor(CarUi.Companion.getDIM());
+            $this$readoutRow_u24lambda_u2462.setTextSize(18.0f);
+            $this$readoutRow_u24lambda_u2462.setPadding(this.ui.dp(14), 0, this.ui.dp(6), 0);
+            $this$readoutRow_u24lambda_u2462.setMaxWidth(this.ui.dp(360));
+            row.addView($this$readoutRow_u24lambda_u2462);
+        }
+        this.col.addView(row, CarUi.lp$default(this.ui, 0, 0, 3, null));
+    }
+
+    private final String viewId() {
+        String optString;
+        JSONObject jSONObject = this.data;
+        String str = null;
+        if (jSONObject == null || (optString = jSONObject.optString("view")) == null) {
+            return null;
+        }
+        String str2 = optString;
+        if (!StringsKt.isBlank(str2)) {
+            str = str2;
+        }
+        return str;
+    }
+
+    private final Object jsonValue(GalaxyRow r, String v) {
+        if (r.getControl() == GalaxyRow.Control.SLIDER && !Intrinsics.areEqual(v, "Auto")) {
+            Long longOrNull = StringsKt.toLongOrNull(v);
+            if (longOrNull != null) {
+                return longOrNull;
+            }
+            Double doubleOrNull = StringsKt.toDoubleOrNull(v);
+            if (doubleOrNull != null) {
+                return doubleOrNull;
+            }
+        }
+        return v;
+    }
+
+    private final void saveValue(final GalaxyRow r, String v) {
+        String view;
+        Galaxy7 gx = this.g;
+        if (gx == null || (view = viewId()) == null) {
+            return;
+        }
+        this.busy = true;
+        JSONObject put = new JSONObject().put("view", view).put("row", r.getIndex()).put("value", jsonValue(r, v));
+        Intrinsics.checkNotNullExpressionValue(put, "put(...)");
+        gx.post("/api/settings/preview", put, new Function2() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda19
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit saveValue$lambda$66;
+                saveValue$lambda$66 = GalaxySettingsView.saveValue$lambda$66(GalaxySettingsView.this, r, (JSONObject) obj, (String) obj2);
+                return saveValue$lambda$66;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit saveValue$lambda$66(final GalaxySettingsView this$0, final GalaxyRow $r, JSONObject o, String err) {
+        String optString;
+        String intent = null;
+        if (o != null && (optString = o.optString("intent")) != null) {
+            String str = optString;
+            if (!StringsKt.isBlank(str)) {
+                intent = str;
+            }
+            intent = intent;
+        }
+        if (intent == null) {
+            this$0.failed(err == null ? "Galaxy didn't accept that" : err);
+            return Unit.INSTANCE;
+        }
+        this$0.confirm(intent, new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda23
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit saveValue$lambda$66$lambda$65;
+                saveValue$lambda$66$lambda$65 = GalaxySettingsView.saveValue$lambda$66$lambda$65(GalaxySettingsView.this, $r);
+                return saveValue$lambda$66$lambda$65;
+            }
+        });
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit saveValue$lambda$66$lambda$65(GalaxySettingsView this$0, GalaxyRow $r) {
+        this$0.previewSound($r);
+        return Unit.INSTANCE;
+    }
+
+    private final void previewSound(GalaxyRow r) {
+        Galaxy7 galaxy7;
+        if (!(r.getPreviewSound().length() == 0) && (galaxy7 = this.g) != null) {
+            JSONObject put = new JSONObject().put("key", r.getPreviewSound());
+            Intrinsics.checkNotNullExpressionValue(put, "put(...)");
+            galaxy7.post("/api/sounds/preview", put, new Function2() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda18
+                @Override // kotlin.jvm.functions.Function2
+                public final Object invoke(Object obj, Object obj2) {
+                    Unit previewSound$lambda$67;
+                    previewSound$lambda$67 = GalaxySettingsView.previewSound$lambda$67((JSONObject) obj, (String) obj2);
+                    return previewSound$lambda$67;
+                }
+            });
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit previewSound$lambda$67(JSONObject jSONObject, String str) {
+        return Unit.INSTANCE;
+    }
+
+    private final void resetDefault(GalaxyRow r) {
+        String view;
+        Galaxy7 gx = this.g;
+        if (gx == null || (view = viewId()) == null) {
+            return;
+        }
+        this.busy = true;
+        JSONObject put = new JSONObject().put("view", view).put("row", r.getIndex());
+        Intrinsics.checkNotNullExpressionValue(put, "put(...)");
+        gx.post("/api/settings/reset-default", put, new Function2() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda24
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit resetDefault$lambda$69;
+                resetDefault$lambda$69 = GalaxySettingsView.resetDefault$lambda$69(GalaxySettingsView.this, (JSONObject) obj, (String) obj2);
+                return resetDefault$lambda$69;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit resetDefault$lambda$69(GalaxySettingsView this$0, JSONObject o, String err) {
+        String intent;
+        String optString;
+        if (o == null || (optString = o.optString("intent")) == null) {
+            intent = null;
+        } else {
+            String str = optString;
+            if (StringsKt.isBlank(str)) {
+                str = null;
+            }
+            intent = str;
+        }
+        if (intent == null) {
+            this$0.failed(err == null ? "Galaxy didn't accept that" : err);
+            return Unit.INSTANCE;
+        }
+        confirm$default(this$0, intent, null, 2, null);
+        return Unit.INSTANCE;
+    }
+
+    private final void reviewDraft(int row, JSONObject draft) {
+        String view;
+        Galaxy7 gx = this.g;
+        if (gx == null || (view = viewId()) == null || this.busy) {
+            return;
+        }
+        this.busy = true;
+        JSONObject put = new JSONObject().put("view", view).put("row", row).put("direction", 0).put("draft", draft);
+        Intrinsics.checkNotNullExpressionValue(put, "put(...)");
+        gx.post("/api/settings/preview", put, new Function2() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda35
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit reviewDraft$lambda$74;
+                reviewDraft$lambda$74 = GalaxySettingsView.reviewDraft$lambda$74(GalaxySettingsView.this, (JSONObject) obj, (String) obj2);
+                return reviewDraft$lambda$74;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit reviewDraft$lambda$74(final GalaxySettingsView this$0, JSONObject o, String err) {
+        String optString;
+        final String intent = null;
+        if (o != null && (optString = o.optString("intent")) != null) {
+            String str = optString;
+            if (!StringsKt.isBlank(str)) {
+                intent = str;
+            }
+            intent = intent;
+        }
+        if (intent == null) {
+            this$0.failed(err == null ? "Galaxy didn't accept those regions" : err);
+            return Unit.INSTANCE;
+        }
+        new AlertDialog.Builder(this$0.getContext()).setTitle("Save changes?").setMessage(o.optString("question", "Save the camera window regions?")).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda2
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                GalaxySettingsView.confirm$default(GalaxySettingsView.this, intent, null, 2, null);
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda3
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                GalaxySettingsView.reviewDraft$lambda$74$lambda$72(GalaxySettingsView.this, dialogInterface, i);
+            }
+        }).setOnCancelListener(new DialogInterface.OnCancelListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda4
+            @Override // android.content.DialogInterface.OnCancelListener
+            public final void onCancel(DialogInterface dialogInterface) {
+                GalaxySettingsView.reviewDraft$lambda$74$lambda$73(GalaxySettingsView.this, dialogInterface);
+            }
+        }).show();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void reviewDraft$lambda$74$lambda$72(GalaxySettingsView this$0, DialogInterface dialogInterface, int i) {
+        this$0.busy = false;
+        this$0.load(true);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void reviewDraft$lambda$74$lambda$73(GalaxySettingsView this$0, DialogInterface it) {
+        this$0.busy = false;
+        this$0.load(true);
+    }
+
+    private final void review(final GalaxyRow r) {
+        String viewId;
+        Galaxy7 galaxy7 = this.g;
+        if (galaxy7 == null || (viewId = viewId()) == null) {
+            return;
+        }
+        this.busy = true;
+        JSONObject put = new JSONObject().put("view", viewId).put("row", r.getIndex()).put("direction", 1 ^ (r.getConfirm() ? 1 : 0));
+        Intrinsics.checkNotNullExpressionValue(put, "put(...)");
+        galaxy7.post("/api/settings/preview", put, new Function2() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda34
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit review$lambda$79;
+                review$lambda$79 = GalaxySettingsView.review$lambda$79(GalaxySettingsView.this, r, (JSONObject) obj, (String) obj2);
+                return review$lambda$79;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit review$lambda$79(final GalaxySettingsView this$0, GalaxyRow $r, JSONObject o, String err) {
+        String optString;
+        final String intent = null;
+        if (o != null && (optString = o.optString("intent")) != null) {
+            String str = optString;
+            if (!StringsKt.isBlank(str)) {
+                intent = str;
+            }
+            intent = intent;
+        }
+        if (intent == null) {
+            this$0.failed(err == null ? "Galaxy didn't accept that" : err);
+            return Unit.INSTANCE;
+        }
+        new AlertDialog.Builder(this$0.getContext()).setTitle("Confirm").setMessage(o.optString("question", "Apply " + $r.getLabel() + "?")).setPositiveButton("Confirm", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda37
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                GalaxySettingsView.confirm$default(GalaxySettingsView.this, intent, null, 2, null);
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda38
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                GalaxySettingsView.review$lambda$79$lambda$77(GalaxySettingsView.this, dialogInterface, i);
+            }
+        }).setOnCancelListener(new DialogInterface.OnCancelListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda1
+            @Override // android.content.DialogInterface.OnCancelListener
+            public final void onCancel(DialogInterface dialogInterface) {
+                GalaxySettingsView.review$lambda$79$lambda$78(GalaxySettingsView.this, dialogInterface);
+            }
+        }).show();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void review$lambda$79$lambda$77(GalaxySettingsView this$0, DialogInterface dialogInterface, int i) {
+        this$0.busy = false;
+        this$0.load(true);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void review$lambda$79$lambda$78(GalaxySettingsView this$0, DialogInterface it) {
+        this$0.busy = false;
+        this$0.load(true);
+    }
+
+    /* JADX INFO: Access modifiers changed from: package-private */
+    /* JADX WARN: Multi-variable type inference failed */
+    public static /* synthetic */ void confirm$default(GalaxySettingsView galaxySettingsView, String str, Function0 function0, int i, Object obj) {
+        if ((i & 2) != 0) {
+            function0 = new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda26
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit unit;
+                    unit = Unit.INSTANCE;
+                    return unit;
+                }
+            };
+        }
+        galaxySettingsView.confirm(str, function0);
+    }
+
+    private final void confirm(String intent, final Function0<Unit> saved) {
+        String page;
+        Galaxy7 gx = this.g;
+        if (gx == null || (page = getCurrent()) == null) {
+            return;
+        }
+        JSONObject put = new JSONObject().put("intent", intent).put("confirmed", true).put("page", page);
+        Intrinsics.checkNotNullExpressionValue(put, "put(...)");
+        gx.post("/api/settings/confirm", put, new Function2() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda36
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit confirm$lambda$81;
+                confirm$lambda$81 = GalaxySettingsView.confirm$lambda$81(GalaxySettingsView.this, saved, (JSONObject) obj, (String) obj2);
+                return confirm$lambda$81;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit confirm$lambda$81(GalaxySettingsView this$0, Function0 $saved, JSONObject o, String err) {
+        boolean z = false;
+        this$0.busy = false;
+        if (o != null && o.optBoolean("saved")) {
+            z = true;
+        }
+        if (!z) {
+            this$0.failed(err == null ? "Galaxy couldn't confirm the save - current values are shown" : err);
+            return Unit.INSTANCE;
+        }
+        $saved.invoke();
+        JSONObject fresh = o.optJSONObject("page");
+        if (fresh == null || !Intrinsics.areEqual(fresh.optString("page"), this$0.getCurrent())) {
+            this$0.load(true);
+        } else {
+            this$0.data = fresh;
+            this$0.draw(fresh);
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void failed(String err) {
+        this.busy = false;
+        Toast.makeText(getContext(), err, 1).show();
+        this.lastShown = "";
+        load(true);
+    }
+
+    /* compiled from: GalaxySettingsView.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
+
+        private Companion() {
+        }
+    }
 }

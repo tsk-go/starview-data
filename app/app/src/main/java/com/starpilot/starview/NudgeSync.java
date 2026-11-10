@@ -3,70 +3,66 @@ package com.starpilot.starview;
 import kotlin.TuplesKt;
 import kotlin.Unit;
 import kotlin.collections.MapsKt;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 import org.json.JSONObject;
 
+/* compiled from: NudgeSync.kt */
 public final class NudgeSync {
-   public static final NudgeSync INSTANCE = new NudgeSync();
-   private static volatile Integer commaPct;
-   private static volatile long retryAt;
-   private static volatile int sent = -1;
-   private static volatile boolean wasConnected;
+    private static volatile Integer commaPct;
+    private static volatile long retryAt;
+    private static volatile boolean wasConnected;
+    public static final NudgeSync INSTANCE = new NudgeSync();
+    private static volatile int sent = -1;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$hH8TibGYKuXNbSszAQw5I0bks_I(int var0, JSONObject var1) {
-      return tick$lambda$0(var0, var1);
-   }
+    private NudgeSync() {
+    }
 
-   private NudgeSync() {
-   }
+    public final Integer getCommaPct() {
+        return commaPct;
+    }
 
-   private static final Unit tick$lambda$0(int var0, JSONObject var1) {
-      Intrinsics.checkNotNullParameter(var1, "ack");
-      if (var1.optBoolean("ok")) {
-         commaPct = var1.optInt("pct", var0);
-      } else {
-         commaPct = null;
-         sent = -1;
-         retryAt = System.currentTimeMillis() + 60000L;
-      }
+    public final void push(float pct) {
+        sent = -1;
+        retryAt = 0L;
+        tick(pct);
+    }
 
-      return Unit.INSTANCE;
-   }
+    public final void tick(float pct) {
+        DataClient dc = Link.INSTANCE.getData();
+        boolean up = dc != null && dc.getConnected();
+        if (!up) {
+            wasConnected = false;
+            return;
+        }
+        final int p = RangesKt.coerceIn(Math.round(pct), 30, 150);
+        long now = System.currentTimeMillis();
+        if (!(wasConnected && sent == p) && now >= retryAt) {
+            wasConnected = true;
+            sent = p;
+            Intrinsics.checkNotNull(dc);
+            dc.request("nudge_set", MapsKt.mapOf(TuplesKt.to("pct", Integer.valueOf(p))), new Function1() { // from class: com.starpilot.starview.NudgeSync$$ExternalSyntheticLambda0
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj) {
+                    Unit tick$lambda$0;
+                    tick$lambda$0 = NudgeSync.tick$lambda$0(p, (JSONObject) obj);
+                    return tick$lambda$0;
+                }
+            });
+        }
+    }
 
-   public final Integer getCommaPct() {
-      return commaPct;
-   }
-
-   public final void push(float var1) {
-      sent = -1;
-      retryAt = 0L;
-      this.tick(var1);
-   }
-
-   public final void tick(float var1) {
-      DataClient var5 = Link.INSTANCE.getData();
-      boolean var2;
-      if (var5 != null && var5.getConnected()) {
-         var2 = 1;
-      } else {
-         var2 = 0;
-      }
-
-      if (!var2) {
-         wasConnected = false;
-      } else {
-         var2 = RangesKt.coerceIn(Math.round(var1), 30, 150);
-         long var3 = System.currentTimeMillis();
-         if (!wasConnected || sent != var2) {
-            if (var3 >= retryAt) {
-               wasConnected = true;
-               sent = var2;
-               Intrinsics.checkNotNull(var5);
-               var5.request("nudge_set", MapsKt.mapOf(TuplesKt.to("pct", var2)), new NudgeSync$$ExternalSyntheticLambda0(var2));
-            }
-         }
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit tick$lambda$0(int $p, JSONObject ack) {
+        Intrinsics.checkNotNullParameter(ack, "ack");
+        if (ack.optBoolean("ok")) {
+            commaPct = Integer.valueOf(ack.optInt("pct", $p));
+        } else {
+            commaPct = null;
+            sent = -1;
+            retryAt = System.currentTimeMillis() + 60000;
+        }
+        return Unit.INSTANCE;
+    }
 }

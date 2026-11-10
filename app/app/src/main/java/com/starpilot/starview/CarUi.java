@@ -7,7 +7,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.text.TextUtils.TruncateAt;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
+import com.starpilot.starview.SettingIcons;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,940 +29,684 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 
+/* compiled from: CarUi.kt */
 public final class CarUi {
-   private static final int ACCENT = Color.rgb(111, 227, 161);
-   private static final int BG = Color.rgb(11, 13, 18);
-   private static final int CARD = Color.rgb(24, 27, 34);
-   private static final int CARD_ON = Color.rgb(30, 38, 47);
-   public static final CarUi.Companion Companion = new CarUi.Companion(null);
-   public static final float DESC = 15.0F;
-   private static final int DIM = Color.rgb(150, 160, 180);
-   private static final int FRAME = Color.rgb(17, 20, 25);
-   public static final float HEADER = 14.0F;
-   private static final int PAGE = Color.rgb(34, 50, 80);
-   private static final int PAGE_DIV = Color.rgb(48, 65, 95);
-   private static final int PAGE_EDGE = Color.rgb(127, 180, 255);
-   public static final int ROW_MIN = 76;
-   private static final int SECTION = Color.rgb(30, 35, 44);
-   private static final int STRIP = Color.rgb(5, 6, 8);
-   private static final int TAB_SEP = Color.rgb(38, 43, 53);
-   private static final int TAB_TEXT = Color.rgb(154, 163, 181);
-   private static final int TEXT = -1;
-   public static final float TITLE = 21.0F;
-   private static final int WARN = Color.rgb(255, 170, 60);
-   private Function1<? super String, SettingIcons.Icon> autoIcon;
-   private final int card;
-   private final Context ctx;
-   private final float d;
-   private final boolean flat;
-   private final int gap;
+    public static final float DESC = 15.0f;
+    public static final float HEADER = 14.0f;
+    public static final int ROW_MIN = 76;
+    public static final float TITLE = 21.0f;
+    private Function1<? super String, SettingIcons.Icon> autoIcon;
+    private final int card;
+    private final Context ctx;
+    private final float d;
+    private final boolean flat;
+    private final int gap;
+    public static final Companion Companion = new Companion(null);
+    private static final int BG = Color.rgb(11, 13, 18);
+    private static final int CARD = Color.rgb(24, 27, 34);
+    private static final int CARD_ON = Color.rgb(30, 38, 47);
+    private static final int TEXT = -1;
+    private static final int DIM = Color.rgb(150, 160, 180);
+    private static final int ACCENT = Color.rgb(111, 227, 161);
+    private static final int WARN = Color.rgb(255, 170, 60);
+    private static final int FRAME = Color.rgb(17, 20, 25);
+    private static final int STRIP = Color.rgb(5, 6, 8);
+    private static final int SECTION = Color.rgb(30, 35, 44);
+    private static final int PAGE = Color.rgb(34, 50, 80);
+    private static final int PAGE_EDGE = Color.rgb(127, 180, 255);
+    private static final int PAGE_DIV = Color.rgb(48, 65, 95);
+    private static final int TAB_TEXT = Color.rgb(154, 163, 181);
+    private static final int TAB_SEP = Color.rgb(38, 43, 53);
 
-   // $VF: synthetic method
-   public static void $r8$lambda$2o3rF0YAwaPZmBhR7cNUS6JUE_g(Function0 var0, View var1) {
-      button$lambda$31$lambda$30(var0, var1);
-   }
+    public CarUi(Context ctx, boolean flat) {
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        this.ctx = ctx;
+        this.flat = flat;
+        this.card = this.flat ? PAGE : CARD;
+        this.gap = this.flat ? 0 : 8;
+        this.d = this.ctx.getResources().getDisplayMetrics().density;
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$AUtg_yPeLdyEgUajfFYVdpMPMs0/* $VF was: $r8$lambda$AUtg_yPeLdyEgUajfFYVdpMPMs0*/(Function0 var0, View var1) {
-      stepper$lambda$33$lambda$32(var0, var1);
-   }
+    public /* synthetic */ CarUi(Context context, boolean z, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this(context, (i & 2) != 0 ? false : z);
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$Hj57XFusv3EElRlY3Xi7F1swsxA(Function0 var0, View var1) {
-      iconTile$lambda$47$lambda$46(var0, var1);
-   }
+    public final Context getCtx() {
+        return this.ctx;
+    }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$JS939idijTplSbYZgRvy5_fk5HI/* $VF was: $r8$lambda$JS939idijTplSbYZgRvy5_fk5HI*/(
-      ArrayList var0, CarUi var1, int var2, int var3, int var4, boolean var5, int var6
-   ) {
-      return browserTabs$lambda$12(var0, var1, var2, var3, var4, var5, var6);
-   }
+    public final boolean getFlat() {
+        return this.flat;
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$aYTpzsw4pW7_mXfVCkCy_L0jBP4(Function1 var0, int var1, View var2) {
-      browserTabs$lambda$7$lambda$6(var0, var1, var2);
-   }
+    public final int getCard() {
+        return this.card;
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$iTWoG1rNAAMe48gLhjnP1Bmgyaw(Function1 var0, int var1, View var2) {
-      chips$lambda$36$lambda$35(var0, var1, var2);
-   }
+    public final int getGap() {
+        return this.gap;
+    }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$vOX9hdtx7lXP1A1z4bnQOuAaCWw(ArrayList var0, CarUi var1, int var2) {
-      return chips$lambda$38(var0, var1, var2);
-   }
+    public final float getD() {
+        return this.d;
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$xTOZ_7qu7lyNPorhnUzlQVGGBAQ/* $VF was: $r8$lambda$xTOZ_7qu7lyNPorhnUzlQVGGBAQ*/(Function0 var0, View var1) {
-      tile$lambda$43$lambda$42(var0, var1);
-   }
+    public final Function1<String, SettingIcons.Icon> getAutoIcon() {
+        return this.autoIcon;
+    }
 
-   public CarUi(Context var1, boolean var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      super();
-      this.ctx = var1;
-      this.flat = var2;
-      int var3;
-      if (this.flat) {
-         var3 = PAGE;
-      } else {
-         var3 = CARD;
-      }
+    public final void setAutoIcon(Function1<? super String, SettingIcons.Icon> function1) {
+        this.autoIcon = function1;
+    }
 
-      this.card = var3;
-      byte var4;
-      if (this.flat) {
-         var4 = 0;
-      } else {
-         var4 = 8;
-      }
+    public final int dp(int v) {
+        return (int) (v * this.d);
+    }
 
-      this.gap = var4;
-      this.d = this.ctx.getResources().getDisplayMetrics().density;
-   }
+    /* compiled from: CarUi.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
 
-   // $VF: synthetic method
-   public CarUi(Context var1, boolean var2, int var3, DefaultConstructorMarker var4) {
-      if ((var3 & 2) != 0) {
-         var2 = false;
-      }
+        private Companion() {
+        }
 
-      this(var1, var2);
-   }
+        public final int getBG() {
+            return CarUi.BG;
+        }
 
-   private static final Unit browserTabs$lambda$12(ArrayList var0, CarUi var1, int var2, int var3, int var4, boolean var5, int var6) {
-      Iterator var12 = var0.iterator();
+        public final int getCARD() {
+            return CarUi.CARD;
+        }
 
-      for (int var8 = 0; var12.hasNext(); var8++) {
-         TextView var11 = (TextView)var12.next();
-         boolean var9;
-         if (var8 == var6) {
-            var9 = true;
-         } else {
-            var9 = false;
-         }
+        public final int getCARD_ON() {
+            return CarUi.CARD_ON;
+        }
 
-         Drawable var15;
-         if (var9) {
-            LayerDrawable var10 = new LayerDrawable(
-               (Drawable[])(new GradientDrawable[]{var1.corners(var2, var3, var3, 0, 0), var1.corners(var4, var3, var3, 0, 0)})
-            );
-            var10.setLayerInset(1, 0, var1.dp(3), 0, 0);
-            var15 = (Drawable)var10;
-         } else if (var8 < var0.size() - 1 && var8 + 1 != var6) {
-            GradientDrawable var16 = new GradientDrawable();
-            var16.setColor(TAB_SEP);
-            Unit var13 = Unit.INSTANCE;
-            LayerDrawable var17 = new LayerDrawable((Drawable[])(new GradientDrawable[]{var16}));
-            var17.setLayerInset(0, 0, 0, 0, 0);
-            var17.setLayerGravity(0, 8388629);
-            var17.setLayerWidth(0, var1.dp(1));
-            byte var7;
-            if (var5) {
-               var7 = 22;
+        public final int getTEXT() {
+            return CarUi.TEXT;
+        }
+
+        public final int getDIM() {
+            return CarUi.DIM;
+        }
+
+        public final int getACCENT() {
+            return CarUi.ACCENT;
+        }
+
+        public final int getWARN() {
+            return CarUi.WARN;
+        }
+
+        public final int getFRAME() {
+            return CarUi.FRAME;
+        }
+
+        public final int getSTRIP() {
+            return CarUi.STRIP;
+        }
+
+        public final int getSECTION() {
+            return CarUi.SECTION;
+        }
+
+        public final int getPAGE() {
+            return CarUi.PAGE;
+        }
+
+        public final int getPAGE_EDGE() {
+            return CarUi.PAGE_EDGE;
+        }
+
+        public final int getPAGE_DIV() {
+            return CarUi.PAGE_DIV;
+        }
+
+        public final int getTAB_TEXT() {
+            return CarUi.TAB_TEXT;
+        }
+
+        public final int getTAB_SEP() {
+            return CarUi.TAB_SEP;
+        }
+    }
+
+    public final Drawable rowBg() {
+        if (!this.flat) {
+            return rounded$default(this, this.card, 0, null, 6, null);
+        }
+        GradientDrawable line = new GradientDrawable();
+        line.setColor(PAGE_DIV);
+        GradientDrawable fill = new GradientDrawable();
+        fill.setColor(PAGE);
+        LayerDrawable $this$rowBg_u24lambda_u242 = new LayerDrawable(new GradientDrawable[]{line, fill});
+        $this$rowBg_u24lambda_u242.setLayerInset(1, 0, 0, 0, dp(1));
+        return $this$rowBg_u24lambda_u242;
+    }
+
+    public final GradientDrawable corners(int color, int tl, int tr, int br, int bl) {
+        GradientDrawable $this$corners_u24lambda_u243 = new GradientDrawable();
+        $this$corners_u24lambda_u243.setColor(color);
+        $this$corners_u24lambda_u243.setCornerRadii(new float[]{dp(tl), dp(tl), dp(tr), dp(tr), dp(br), dp(br), dp(bl), dp(bl)});
+        return $this$corners_u24lambda_u243;
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r8v0 */
+    /* JADX WARN: Type inference failed for: r8v1, types: [boolean, int] */
+    /* JADX WARN: Type inference failed for: r8v6 */
+    public final Pair<View, Function1<Integer, Unit>> browserTabs(List<String> labels, int level, final Function1<? super Integer, Unit> onPick) {
+        FlowRow flowRow;
+        ViewGroup view;
+        char c;
+        LinearLayout.LayoutParams layoutParams;
+        Intrinsics.checkNotNullParameter(labels, "labels");
+        Intrinsics.checkNotNullParameter(onPick, "onPick");
+        ?? r8 = 1;
+        final boolean big = level == 1;
+        final ArrayList tabs = new ArrayList();
+        if (big) {
+            LinearLayout $this$browserTabs_u24lambda_u244 = new LinearLayout(this.ctx);
+            $this$browserTabs_u24lambda_u244.setOrientation(0);
+            $this$browserTabs_u24lambda_u244.setPadding(dp(8), dp(8), dp(8), 0);
+            flowRow = $this$browserTabs_u24lambda_u244;
+        } else {
+            FlowRow $this$browserTabs_u24lambda_u245 = new FlowRow(this.ctx, dp(2), dp(4));
+            $this$browserTabs_u24lambda_u245.setPadding(dp(14), dp(12), dp(14), 0);
+            flowRow = $this$browserTabs_u24lambda_u245;
+        }
+        ViewGroup strip = flowRow;
+        int i = 0;
+        for (String l : labels) {
+            final int i2 = i;
+            i += r8;
+            TextView textView = new TextView(this.ctx);
+            textView.setText(l);
+            textView.setTextSize(big ? 18.0f : 15.0f);
+            textView.setGravity(17);
+            textView.setTextColor(TAB_TEXT);
+            textView.setSingleLine(r8);
+            textView.setPadding(dp(big ? 20 : 16), dp(big ? 14 : 10), dp(big ? 20 : 16), dp(big ? 15 : 11));
+            textView.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda4
+                @Override // android.view.View.OnClickListener
+                public final void onClick(View view2) {
+                    CarUi.browserTabs$lambda$7$lambda$6(Function1.this, i2, view2);
+                }
+            });
+            tabs.add(textView);
+            TextView textView2 = textView;
+            if (big) {
+                LinearLayout.LayoutParams $this$browserTabs_u24lambda_u248 = new LinearLayout.LayoutParams(-2, -2);
+                c = 2;
+                $this$browserTabs_u24lambda_u248.rightMargin = dp(2);
+                Unit unit = Unit.INSTANCE;
+                layoutParams = $this$browserTabs_u24lambda_u248;
             } else {
-               var7 = 18;
+                c = 2;
+                layoutParams = new ViewGroup.LayoutParams(-2, -2);
             }
+            strip.addView(textView2, layoutParams);
+            r8 = 1;
+        }
+        final int selBg = big ? SECTION : PAGE;
+        final int edge = big ? ACCENT : PAGE_EDGE;
+        final int r = big ? 14 : 10;
+        Function1 paint = new Function1() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda5
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit browserTabs$lambda$12;
+                browserTabs$lambda$12 = CarUi.browserTabs$lambda$12(tabs, this, edge, r, selBg, big, ((Integer) obj).intValue());
+                return browserTabs$lambda$12;
+            }
+        };
+        if (big) {
+            HorizontalScrollView $this$browserTabs_u24lambda_u2413 = new HorizontalScrollView(this.ctx);
+            $this$browserTabs_u24lambda_u2413.setHorizontalScrollBarEnabled(false);
+            $this$browserTabs_u24lambda_u2413.setFillViewport(true);
+            $this$browserTabs_u24lambda_u2413.setBackground(corners(STRIP, 14, 14, 0, 0));
+            $this$browserTabs_u24lambda_u2413.addView(strip);
+            view = $this$browserTabs_u24lambda_u2413;
+        } else {
+            strip.setBackgroundColor(SECTION);
+            view = strip;
+        }
+        return TuplesKt.to(view, paint);
+    }
 
-            var17.setLayerHeight(0, var1.dp(var7));
-            var15 = (Drawable)var17;
-         } else {
-            var15 = null;
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void browserTabs$lambda$7$lambda$6(Function1 $onPick, int $i, View it) {
+        $onPick.invoke(Integer.valueOf($i));
+    }
 
-         var11.setBackground(var15);
-         int var14;
-         if (var9) {
-            if (var5) {
-               var14 = ACCENT;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit browserTabs$lambda$12(ArrayList $tabs, CarUi this$0, int $edge, int $r, int $selBg, boolean $big, int sel) {
+        LayerDrawable layerDrawable;
+        Iterator it = $tabs.iterator();
+        int i = 0;
+        while (it.hasNext()) {
+            int i2 = i;
+            int i3 = i + 1;
+            TextView t = (TextView) it.next();
+            boolean on = i2 == sel;
+            if (!on) {
+                if (i2 >= $tabs.size() - 1 || i2 + 1 == sel) {
+                    layerDrawable = null;
+                } else {
+                    GradientDrawable $this$browserTabs_u24lambda_u2412_u24lambda_u2410 = new GradientDrawable();
+                    $this$browserTabs_u24lambda_u2412_u24lambda_u2410.setColor(TAB_SEP);
+                    Unit unit = Unit.INSTANCE;
+                    LayerDrawable $this$browserTabs_u24lambda_u2412_u24lambda_u2411 = new LayerDrawable(new GradientDrawable[]{$this$browserTabs_u24lambda_u2412_u24lambda_u2410});
+                    $this$browserTabs_u24lambda_u2412_u24lambda_u2411.setLayerInset(0, 0, 0, 0, 0);
+                    $this$browserTabs_u24lambda_u2412_u24lambda_u2411.setLayerGravity(0, 8388629);
+                    $this$browserTabs_u24lambda_u2412_u24lambda_u2411.setLayerWidth(0, this$0.dp(1));
+                    $this$browserTabs_u24lambda_u2412_u24lambda_u2411.setLayerHeight(0, this$0.dp($big ? 22 : 18));
+                    layerDrawable = $this$browserTabs_u24lambda_u2412_u24lambda_u2411;
+                }
             } else {
-               var14 = TEXT;
+                LayerDrawable $this$browserTabs_u24lambda_u2412_u24lambda_u249 = new LayerDrawable(new GradientDrawable[]{this$0.corners($edge, $r, $r, 0, 0), this$0.corners($selBg, $r, $r, 0, 0)});
+                $this$browserTabs_u24lambda_u2412_u24lambda_u249.setLayerInset(1, 0, this$0.dp(3), 0, 0);
+                layerDrawable = $this$browserTabs_u24lambda_u2412_u24lambda_u249;
             }
-         } else {
-            var14 = TAB_TEXT;
-         }
-
-         var11.setTextColor(var14);
-         Typeface var18;
-         if (var9) {
-            var18 = Typeface.DEFAULT_BOLD;
-         } else {
-            var18 = Typeface.DEFAULT;
-         }
-
-         var11.setTypeface(var18);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final void browserTabs$lambda$7$lambda$6(Function1 var0, int var1, View var2) {
-      var0.invoke(var1);
-   }
-
-   // $VF: synthetic method
-   public static TextView button$default(CarUi var0, String var1, boolean var2, Function0 var3, int var4, Object var5) {
-      if ((var4 & 2) != 0) {
-         var2 = false;
-      }
-
-      return var0.button(var1, var2, var3);
-   }
-
-   private static final void button$lambda$31$lambda$30(Function0 var0, View var1) {
-      var0.invoke();
-   }
-
-   private static final void chips$lambda$36$lambda$35(Function1 var0, int var1, View var2) {
-      var0.invoke(var1);
-   }
-
-   private static final Unit chips$lambda$38(ArrayList var0, CarUi var1, int var2) {
-      Iterator var8 = var0.iterator();
-      int var3 = 0;
-
-      while (var8.hasNext()) {
-         int var4 = 1;
-         int var6 = var3 + 1;
-         TextView var7 = (TextView)var8.next();
-         boolean var10;
-         if (var3 == var2) {
-            var10 = (boolean)var4;
-         } else {
-            var10 = false;
-         }
-
-         if (var10) {
-            var4 = CARD_ON;
-         } else {
-            var4 = CARD;
-         }
-
-         int var5;
-         if (var10) {
-            var5 = ACCENT;
-         } else {
-            var5 = Color.rgb(50, 55, 66);
-         }
-
-         var7.setBackground((Drawable)var1.rounded(var4, 12, var5));
-         if (var10) {
-            var4 = ACCENT;
-         } else {
-            var4 = TEXT;
-         }
-
-         var7.setTextColor(var4);
-         Typeface var9;
-         if (var10) {
-            var9 = Typeface.DEFAULT_BOLD;
-         } else {
-            var9 = Typeface.DEFAULT;
-         }
-
-         var7.setTypeface(var9);
-         var3 = var6;
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final void iconTile$lambda$47$lambda$46(Function0 var0, View var1) {
-      var0.invoke();
-   }
-
-   // $VF: synthetic method
-   public static LayoutParams lp$default(CarUi var0, int var1, int var2, int var3, Object var4) {
-      if ((var3 & 1) != 0) {
-         var1 = 0;
-      }
-
-      if ((var3 & 2) != 0) {
-         var2 = var0.gap;
-      }
-
-      return var0.lp(var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static GradientDrawable rounded$default(CarUi var0, int var1, int var2, Integer var3, int var4, Object var5) {
-      if ((var4 & 2) != 0) {
-         var2 = 14;
-      }
-
-      if ((var4 & 4) != 0) {
-         var3 = null;
-      }
-
-      return var0.rounded(var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Pair row$default(CarUi var0, String var1, String var2, int var3, View var4, String var5, int var6, Object var7) {
-      if ((var6 & 2) != 0) {
-         var2 = null;
-      }
-
-      if ((var6 & 4) != 0) {
-         var3 = 0;
-      }
-
-      if ((var6 & 8) != 0) {
-         var4 = null;
-      }
-
-      if ((var6 & 16) != 0) {
-         var5 = null;
-      }
-
-      return var0.row(var1, var2, var3, var4, var5);
-   }
-
-   private static final void stepper$lambda$33$lambda$32(Function0 var0, View var1) {
-      var0.invoke();
-   }
-
-   private static final void tile$lambda$43$lambda$42(Function0 var0, View var1) {
-      var0.invoke();
-   }
-
-   public final Switch bigSwitch() {
-      Switch var1 = new Switch(this.ctx);
-      var1.setScaleX(1.45F);
-      var1.setScaleY(1.45F);
-      var1.setPadding(this.dp(14), 0, this.dp(14), 0);
-      return var1;
-   }
-
-   public final Pair<View, Function1<Integer, Unit>> browserTabs(List<String> var1, int var2, Function1<? super Integer, Unit> var3) {
-      Intrinsics.checkNotNullParameter(var1, "labels");
-      Intrinsics.checkNotNullParameter(var3, "onPick");
-      boolean var10;
-      if (var2 == 1) {
-         var10 = true;
-      } else {
-         var10 = false;
-      }
-
-      ArrayList var12 = new ArrayList();
-      ViewGroup var30;
-      if (var10) {
-         LinearLayout var11 = new LinearLayout(this.ctx);
-         var11.setOrientation(0);
-         var11.setPadding(this.dp(8), this.dp(8), this.dp(8), 0);
-         var30 = (ViewGroup)var11;
-      } else {
-         FlowRow var31 = new FlowRow(this.ctx, this.dp(2), this.dp(4));
-         var31.setPadding(this.dp(14), this.dp(12), this.dp(14), 0);
-         var30 = var31;
-      }
-
-      Iterator var13 = var1.iterator();
-      var2 = 0;
-
-      while (var13.hasNext()) {
-         int var6 = var2 + 1;
-         String var16 = (String)var13.next();
-         TextView var14 = new TextView(this.ctx);
-         var14.setText(var16);
-         float var4;
-         if (var10) {
-            var4 = 18.0F;
-         } else {
-            var4 = 15.0F;
-         }
-
-         var14.setTextSize(var4);
-         var14.setGravity(17);
-         var14.setTextColor(TAB_TEXT);
-         var14.setSingleLine(true);
-         byte var22;
-         if (var10) {
-            var22 = 20;
-         } else {
-            var22 = 16;
-         }
-
-         int var7 = this.dp(var22);
-         if (var10) {
-            var22 = 14;
-         } else {
-            var22 = 10;
-         }
-
-         int var8 = this.dp(var22);
-         if (var10) {
-            var22 = 20;
-         } else {
-            var22 = 16;
-         }
-
-         int var9 = this.dp(var22);
-         if (var10) {
-            var22 = 15;
-         } else {
-            var22 = 11;
-         }
-
-         var14.setPadding(var7, var8, var9, this.dp(var22));
-         var14.setOnClickListener(new CarUi$$ExternalSyntheticLambda4(var3, var2));
-         var12.add(var14);
-         View var32 = (View)var14;
-         android.view.ViewGroup.LayoutParams var18;
-         if (var10) {
-            LayoutParams var15 = new LayoutParams(-2, -2);
-            var15.rightMargin = this.dp(2);
-            Unit var17 = Unit.INSTANCE;
-            var18 = (android.view.ViewGroup.LayoutParams)var15;
-         } else {
-            var18 = new android.view.ViewGroup.LayoutParams(-2, -2);
-         }
-
-         var30.addView(var32, var18);
-         var2 = var6;
-      }
-
-      if (var10) {
-         var2 = SECTION;
-      } else {
-         var2 = PAGE;
-      }
-
-      int var28;
-      if (var10) {
-         var28 = ACCENT;
-      } else {
-         var28 = PAGE_EDGE;
-      }
-
-      byte var29;
-      if (var10) {
-         var29 = 14;
-      } else {
-         var29 = 10;
-      }
-
-      CarUi$$ExternalSyntheticLambda5 var27 = new CarUi$$ExternalSyntheticLambda5(var12, this, var28, var29, var2, var10);
-      View var20;
-      if (var10) {
-         HorizontalScrollView var19 = new HorizontalScrollView(this.ctx);
-         var19.setHorizontalScrollBarEnabled(false);
-         var19.setFillViewport(true);
-         var19.setBackground((Drawable)this.corners(STRIP, 14, 14, 0, 0));
-         var19.addView((View)var30);
-         var20 = (View)var19;
-      } else {
-         var30.setBackgroundColor(SECTION);
-         var20 = (View)var30;
-      }
-
-      return TuplesKt.to(var20, var27);
-   }
-
-   public final TextView button(String var1, boolean var2, Function0<Unit> var3) {
-      Intrinsics.checkNotNullParameter(var1, "label");
-      Intrinsics.checkNotNullParameter(var3, "onClick");
-      TextView var5 = new TextView(this.ctx);
-      var5.setText(var1);
-      var5.setTextSize(18.0F);
-      int var4;
-      if (var2) {
-         var4 = BG;
-      } else {
-         var4 = TEXT;
-      }
-
-      var5.setTextColor(var4);
-      var5.setTypeface(Typeface.DEFAULT_BOLD);
-      var5.setGravity(17);
-      var5.setMinWidth(this.dp(120));
-      var5.setMinHeight(this.dp(56));
-      var5.setPadding(this.dp(22), this.dp(10), this.dp(22), this.dp(10));
-      if (var2) {
-         var4 = ACCENT;
-      } else {
-         var4 = CARD_ON;
-      }
-
-      Integer var6;
-      if (var2) {
-         var6 = null;
-      } else {
-         var6 = Color.rgb(60, 66, 78);
-      }
-
-      var5.setBackground((Drawable)this.rounded(var4, 12, var6));
-      var5.setOnClickListener(new CarUi$$ExternalSyntheticLambda3(var3));
-      return var5;
-   }
-
-   public final Pair<LinearLayout, Function1<Integer, Unit>> chips(List<String> var1, Function1<? super Integer, Unit> var2) {
-      Intrinsics.checkNotNullParameter(var1, "labels");
-      Intrinsics.checkNotNullParameter(var2, "onPick");
-      LinearLayout var5 = new LinearLayout(this.ctx);
-      var5.setOrientation(0);
-      ArrayList var7 = new ArrayList();
-      Iterator var6 = var1.iterator();
-      int var3 = 0;
-
-      while (var6.hasNext()) {
-         int var4 = var3 + 1;
-         String var9 = (String)var6.next();
-         TextView var8 = new TextView(this.ctx);
-         var8.setText(var9);
-         var8.setTextSize(17.0F);
-         var8.setGravity(17);
-         var8.setMinHeight(this.dp(54));
-         var8.setPadding(this.dp(12), this.dp(8), this.dp(12), this.dp(8));
-         var8.setOnClickListener(new CarUi$$ExternalSyntheticLambda1(var2, var3));
-         var7.add(var8);
-         View var13 = (View)var8;
-         LayoutParams var12 = new LayoutParams(0, -2, 1.0F);
-         if (var3 < var1.size() - 1) {
-            var3 = this.dp(8);
-         } else {
-            var3 = 0;
-         }
-
-         var12.rightMargin = var3;
-         Unit var10 = Unit.INSTANCE;
-         var5.addView(var13, (android.view.ViewGroup.LayoutParams)var12);
-         var3 = var4;
-      }
-
-      return TuplesKt.to(var5, new CarUi$$ExternalSyntheticLambda2(var7, this));
-   }
-
-   public final GradientDrawable corners(int var1, int var2, int var3, int var4, int var5) {
-      GradientDrawable var6 = new GradientDrawable();
-      var6.setColor(var1);
-      var6.setCornerRadii(new float[]{this.dp(var2), this.dp(var2), this.dp(var3), this.dp(var3), this.dp(var4), this.dp(var4), this.dp(var5), this.dp(var5)});
-      return var6;
-   }
-
-   public final int dp(int var1) {
-      return (int)(var1 * this.d);
-   }
-
-   public final Function1<String, SettingIcons.Icon> getAutoIcon() {
-      return this.autoIcon;
-   }
-
-   public final int getCard() {
-      return this.card;
-   }
-
-   public final Context getCtx() {
-      return this.ctx;
-   }
-
-   public final float getD() {
-      return this.d;
-   }
-
-   public final boolean getFlat() {
-      return this.flat;
-   }
-
-   public final int getGap() {
-      return this.gap;
-   }
-
-   public final TextView header(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "text");
-      TextView var2 = new TextView(this.ctx);
-      var1 = var1.toUpperCase(Locale.ROOT);
-      Intrinsics.checkNotNullExpressionValue(var1, "toUpperCase(...)");
-      var2.setText(var1);
-      var2.setTextColor(DIM);
-      var2.setTextSize(14.0F);
-      var2.setLetterSpacing(0.1F);
-      var2.setPadding(this.dp(6), this.dp(22), 0, this.dp(8));
-      return var2;
-   }
-
-   public final Pair<LinearLayout, TextView> iconTile(String var1, String var2, String var3, String var4, Function0<Unit> var5) {
-      Intrinsics.checkNotNullParameter(var1, "label");
-      Intrinsics.checkNotNullParameter(var3, "icon");
-      Intrinsics.checkNotNullParameter(var4, "group");
-      Intrinsics.checkNotNullParameter(var5, "onClick");
-      TextView var6 = new TextView(this.ctx);
-      CharSequence var7;
-      if (var2 != null) {
-         var7 = var2;
-      } else {
-         var7 = "";
-      }
-
-      var6.setText(var7);
-      var6.setTextColor(DIM);
-      var6.setTextSize(15.0F);
-      var6.setMaxLines(2);
-      var6.setEllipsize(TruncateAt.END);
-      LinearLayout var8 = new LinearLayout(this.ctx);
-      var8.setOrientation(1);
-      var8.setBackground((Drawable)rounded$default(this, CARD, 20, null, 4, null));
-      var8.setPadding(this.dp(20), this.dp(18), this.dp(18), this.dp(16));
-      var8.addView(
-         SvIcon.chip$default(SvIcon.INSTANCE, this.ctx, var3, var4, 58, null, 16, null),
-         (android.view.ViewGroup.LayoutParams)(new LayoutParams(this.dp(58), this.dp(58)))
-      );
-      var8.addView(new View(this.ctx), (android.view.ViewGroup.LayoutParams)(new LayoutParams(1, 0, 1.0F)));
-      TextView var9 = new TextView(this.ctx);
-      var9.setText(var1);
-      var9.setTextColor(TEXT);
-      var9.setTextSize(21.0F);
-      var9.setTypeface(Typeface.DEFAULT_BOLD);
-      var9.setPadding(0, this.dp(10), 0, this.dp(2));
-      var9.setSingleLine(true);
-      var9.setEllipsize(TruncateAt.END);
-      var8.addView((View)var9);
-      var8.addView((View)var6);
-      var8.setClickable(true);
-      var8.setOnClickListener(new CarUi$$ExternalSyntheticLambda7(var5));
-      return TuplesKt.to(var8, var6);
-   }
-
-   public final LayoutParams lp(int var1, int var2) {
-      LayoutParams var3 = new LayoutParams(-1, -2);
-      var3.bottomMargin = this.dp(var2);
-      var3.leftMargin = this.dp(var1 * 26);
-      return var3;
-   }
-
-   public final TextView note(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "text");
-      TextView var2 = new TextView(this.ctx);
-      var2.setText(var1);
-      var2.setTextColor(DIM);
-      var2.setTextSize(15.0F);
-      var2.setPadding(this.dp(6), this.dp(4), this.dp(6), this.dp(10));
-      return var2;
-   }
-
-   public final TextView railItem(String var1, Integer var2) {
-      Intrinsics.checkNotNullParameter(var1, "label");
-      TextView var3 = new TextView(this.ctx);
-      var3.setText(var1);
-      var3.setTextSize(18.0F);
-      var3.setTextColor(TEXT);
-      var3.setGravity(16);
-      var3.setMinHeight(this.dp(66));
-      var3.setPadding(this.dp(16), this.dp(8), this.dp(12), this.dp(8));
-      if (var2 != null) {
-         var3.setCompoundDrawablesRelativeWithIntrinsicBounds(var2, 0, 0, 0);
-         var3.setCompoundDrawablePadding(this.dp(14));
-         var3.setCompoundDrawableTintList(ColorStateList.valueOf(DIM));
-      }
-
-      var3.setBackground((Drawable)rounded$default(this, CARD, 0, null, 6, null));
-      return var3;
-   }
-
-   public final TextView railItem(String var1, String var2, String var3) {
-      Intrinsics.checkNotNullParameter(var1, "label");
-      Intrinsics.checkNotNullParameter(var2, "icon");
-      Intrinsics.checkNotNullParameter(var3, "group");
-      TextView var4 = this.railItem(var1, null);
-      var4.setCompoundDrawablesRelativeWithIntrinsicBounds(SvIcon.INSTANCE.drawable(var2, SvIcon.INSTANCE.fg(var3), this.dp(26)), null, null, null);
-      var4.setCompoundDrawablePadding(this.dp(14));
-      return var4;
-   }
-
-   public final void railSelect(TextView var1, boolean var2) {
-      Intrinsics.checkNotNullParameter(var1, "v");
-      int var3 = 0;
-      Drawable var7;
-      if (var2) {
-         LayerDrawable var4 = new LayerDrawable((Drawable[])(new GradientDrawable[]{this.corners(ACCENT, 14, 0, 0, 14), this.corners(FRAME, 14, 0, 0, 14)}));
-         var4.setLayerInset(1, this.dp(4), 0, 0, 0);
-         var7 = (Drawable)var4;
-      } else {
-         var7 = (Drawable)rounded$default(this, CARD, 0, null, 6, null);
-      }
-
-      var1.setBackground(var7);
-      android.view.ViewGroup.LayoutParams var8 = var1.getLayoutParams();
-      LayoutParams var9;
-      if (var8 instanceof LayoutParams) {
-         var9 = (LayoutParams & android.view.ViewGroup.LayoutParams)var8;
-      } else {
-         var9 = null;
-      }
-
-      if (var9 != null) {
-         if (!var2) {
-            var3 = this.dp(18);
-         }
-
-         if (var9.rightMargin != var3) {
-            var9.rightMargin = var3;
-            var1.setLayoutParams((android.view.ViewGroup.LayoutParams)var9);
-         }
-      }
-
-      if (var2) {
-         var3 = ACCENT;
-      } else {
-         var3 = TEXT;
-      }
-
-      var1.setTextColor(var3);
-      Typeface var10;
-      if (var2) {
-         var10 = Typeface.DEFAULT_BOLD;
-      } else {
-         var10 = Typeface.DEFAULT;
-      }
-
-      var1.setTypeface(var10);
-      if (var2) {
-         var3 = ACCENT;
-      } else {
-         var3 = DIM;
-      }
-
-      var1.setCompoundDrawableTintList(ColorStateList.valueOf(var3));
-   }
-
-   public final GradientDrawable rounded(int var1, int var2, Integer var3) {
-      GradientDrawable var4 = new GradientDrawable();
-      var4.setColor(var1);
-      var4.setCornerRadius(this.dp(var2));
-      if (var3 != null) {
-         var4.setStroke(this.dp(2), var3);
-      }
-
-      return var4;
-   }
-
-   public final Pair<LinearLayout, TextView> row(String var1, String var2, int var3, View var4, String var5) {
-      LinearLayout var6;
-      Intrinsics.checkNotNullParameter(var1, "title");
-      var6 = new LinearLayout(this.ctx);
-      var6.setOrientation(0);
-      var6.setGravity(16);
-      var6.setMinimumHeight(this.dp(76));
-      var6.setPadding(this.dp(20), this.dp(14), this.dp(18), this.dp(14));
-      var6.setBackground(this.rowBg());
-      label37:
-      if (var4 == null) {
-         Function1 var13 = this.autoIcon;
-         if (var13 != null) {
-            SettingIcons.Icon var14 = (SettingIcons.Icon)var13.invoke(var1);
-            if (var14 != null) {
-               var4 = SvIcon.chip$default(SvIcon.INSTANCE, this.ctx, var14.getName(), var14.getGroup(), 46, null, 16, null);
-               break label37;
+            t.setBackground(layerDrawable);
+            t.setTextColor(on ? $big ? ACCENT : TEXT : TAB_TEXT);
+            t.setTypeface(on ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+            i = i3;
+        }
+        return Unit.INSTANCE;
+    }
+
+    public static /* synthetic */ GradientDrawable rounded$default(CarUi carUi, int i, int i2, Integer num, int i3, Object obj) {
+        if ((i3 & 2) != 0) {
+            i2 = 14;
+        }
+        if ((i3 & 4) != 0) {
+            num = null;
+        }
+        return carUi.rounded(i, i2, num);
+    }
+
+    public final GradientDrawable rounded(int color, int radius, Integer stroke) {
+        GradientDrawable $this$rounded_u24lambda_u2415 = new GradientDrawable();
+        $this$rounded_u24lambda_u2415.setColor(color);
+        $this$rounded_u24lambda_u2415.setCornerRadius(dp(radius));
+        if (stroke != null) {
+            $this$rounded_u24lambda_u2415.setStroke(dp(2), stroke.intValue());
+        }
+        return $this$rounded_u24lambda_u2415;
+    }
+
+    public static /* synthetic */ Pair row$default(CarUi carUi, String str, String str2, int i, View view, String str3, int i2, Object obj) {
+        String str4 = (i2 & 2) != 0 ? null : str2;
+        if ((i2 & 4) != 0) {
+            i = 0;
+        }
+        return carUi.row(str, str4, i, (i2 & 8) != 0 ? null : view, (i2 & 16) != 0 ? null : str3);
+    }
+
+    public final Pair<LinearLayout, TextView> row(String title, String desc, int depth, View icon, String tag) {
+        View view;
+        int i;
+        SettingIcons.Icon it;
+        Intrinsics.checkNotNullParameter(title, "title");
+        LinearLayout $this$row_u24lambda_u2416 = new LinearLayout(this.ctx);
+        $this$row_u24lambda_u2416.setOrientation(0);
+        $this$row_u24lambda_u2416.setGravity(16);
+        $this$row_u24lambda_u2416.setMinimumHeight(dp(76));
+        $this$row_u24lambda_u2416.setPadding(dp(20), dp(14), dp(18), dp(14));
+        $this$row_u24lambda_u2416.setBackground(rowBg());
+        if (icon == null) {
+            Function1<? super String, SettingIcons.Icon> function1 = this.autoIcon;
+            view = (function1 == null || (it = function1.invoke(title)) == null) ? null : SvIcon.chip$default(SvIcon.INSTANCE, this.ctx, it.getName(), it.getGroup(), 46, null, 16, null);
+        } else {
+            view = icon;
+        }
+        View icon2 = view;
+        if (icon2 != null) {
+            LinearLayout.LayoutParams $this$row_u24lambda_u2418 = new LinearLayout.LayoutParams(dp(46), dp(46));
+            $this$row_u24lambda_u2418.rightMargin = dp(16);
+            Unit unit = Unit.INSTANCE;
+            $this$row_u24lambda_u2416.addView(icon2, $this$row_u24lambda_u2418);
+        }
+        LinearLayout $this$row_u24lambda_u2419 = new LinearLayout(this.ctx);
+        $this$row_u24lambda_u2419.setOrientation(1);
+        if (tag == null) {
+            TextView $this$row_u24lambda_u2420 = new TextView(this.ctx);
+            $this$row_u24lambda_u2420.setText(title);
+            $this$row_u24lambda_u2420.setTextColor(TEXT);
+            $this$row_u24lambda_u2420.setTextSize(21.0f);
+            $this$row_u24lambda_u2419.addView($this$row_u24lambda_u2420);
+        } else {
+            LinearLayout $this$row_u24lambda_u2424 = new LinearLayout(this.ctx);
+            $this$row_u24lambda_u2424.setOrientation(0);
+            $this$row_u24lambda_u2424.setGravity(16);
+            TextView $this$row_u24lambda_u2424_u24lambda_u2421 = new TextView(this.ctx);
+            $this$row_u24lambda_u2424_u24lambda_u2421.setText(title);
+            $this$row_u24lambda_u2424_u24lambda_u2421.setTextColor(TEXT);
+            $this$row_u24lambda_u2424_u24lambda_u2421.setTextSize(21.0f);
+            $this$row_u24lambda_u2424.addView($this$row_u24lambda_u2424_u24lambda_u2421);
+            TextView $this$row_u24lambda_u2424_u24lambda_u2422 = new TextView(this.ctx);
+            $this$row_u24lambda_u2424_u24lambda_u2422.setText(tag);
+            $this$row_u24lambda_u2424_u24lambda_u2422.setTextColor(WARN);
+            $this$row_u24lambda_u2424_u24lambda_u2422.setTextSize(13.0f);
+            $this$row_u24lambda_u2424_u24lambda_u2422.setTypeface(Typeface.DEFAULT_BOLD);
+            $this$row_u24lambda_u2424_u24lambda_u2422.setPadding(dp(8), dp(2), dp(8), dp(2));
+            $this$row_u24lambda_u2424_u24lambda_u2422.setBackground(rounded$default(this, Color.rgb(61, 46, 23), 8, null, 4, null));
+            LinearLayout.LayoutParams $this$row_u24lambda_u2424_u24lambda_u2423 = new LinearLayout.LayoutParams(-2, -2);
+            $this$row_u24lambda_u2424_u24lambda_u2423.leftMargin = dp(10);
+            Unit unit2 = Unit.INSTANCE;
+            $this$row_u24lambda_u2424.addView($this$row_u24lambda_u2424_u24lambda_u2422, $this$row_u24lambda_u2424_u24lambda_u2423);
+            $this$row_u24lambda_u2419.addView($this$row_u24lambda_u2424);
+        }
+        TextView descTv = null;
+        String str = desc;
+        if (str == null || StringsKt.isBlank(str)) {
+            i = 0;
+        } else {
+            TextView $this$row_u24lambda_u2425 = new TextView(this.ctx);
+            $this$row_u24lambda_u2425.setText(desc);
+            $this$row_u24lambda_u2425.setTextColor(DIM);
+            $this$row_u24lambda_u2425.setTextSize(15.0f);
+            i = 0;
+            $this$row_u24lambda_u2425.setPadding(0, dp(4), 0, 0);
+            descTv = $this$row_u24lambda_u2425;
+            $this$row_u24lambda_u2419.addView(descTv);
+        }
+        $this$row_u24lambda_u2416.addView($this$row_u24lambda_u2419, new LinearLayout.LayoutParams(i, -2, 1.0f));
+        return TuplesKt.to($this$row_u24lambda_u2416, descTv);
+    }
+
+    public static /* synthetic */ LinearLayout.LayoutParams lp$default(CarUi carUi, int i, int i2, int i3, Object obj) {
+        if ((i3 & 1) != 0) {
+            i = 0;
+        }
+        if ((i3 & 2) != 0) {
+            i2 = carUi.gap;
+        }
+        return carUi.lp(i, i2);
+    }
+
+    public final LinearLayout.LayoutParams lp(int depth, int bottom) {
+        LinearLayout.LayoutParams $this$lp_u24lambda_u2426 = new LinearLayout.LayoutParams(-1, -2);
+        $this$lp_u24lambda_u2426.bottomMargin = dp(bottom);
+        $this$lp_u24lambda_u2426.leftMargin = dp(depth * 26);
+        return $this$lp_u24lambda_u2426;
+    }
+
+    public final TextView header(String text) {
+        Intrinsics.checkNotNullParameter(text, "text");
+        TextView $this$header_u24lambda_u2427 = new TextView(this.ctx);
+        String upperCase = text.toUpperCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
+        $this$header_u24lambda_u2427.setText(upperCase);
+        $this$header_u24lambda_u2427.setTextColor(DIM);
+        $this$header_u24lambda_u2427.setTextSize(14.0f);
+        $this$header_u24lambda_u2427.setLetterSpacing(0.1f);
+        $this$header_u24lambda_u2427.setPadding(dp(6), dp(22), 0, dp(8));
+        return $this$header_u24lambda_u2427;
+    }
+
+    public final TextView note(String text) {
+        Intrinsics.checkNotNullParameter(text, "text");
+        TextView $this$note_u24lambda_u2428 = new TextView(this.ctx);
+        $this$note_u24lambda_u2428.setText(text);
+        $this$note_u24lambda_u2428.setTextColor(DIM);
+        $this$note_u24lambda_u2428.setTextSize(15.0f);
+        $this$note_u24lambda_u2428.setPadding(dp(6), dp(4), dp(6), dp(10));
+        return $this$note_u24lambda_u2428;
+    }
+
+    public final Switch bigSwitch() {
+        Switch $this$bigSwitch_u24lambda_u2429 = new Switch(this.ctx);
+        $this$bigSwitch_u24lambda_u2429.setScaleX(1.45f);
+        $this$bigSwitch_u24lambda_u2429.setScaleY(1.45f);
+        $this$bigSwitch_u24lambda_u2429.setPadding(dp(14), 0, dp(14), 0);
+        return $this$bigSwitch_u24lambda_u2429;
+    }
+
+    public static /* synthetic */ TextView button$default(CarUi carUi, String str, boolean z, Function0 function0, int i, Object obj) {
+        if ((i & 2) != 0) {
+            z = false;
+        }
+        return carUi.button(str, z, function0);
+    }
+
+    public final TextView button(String label, boolean accent, final Function0<Unit> onClick) {
+        Intrinsics.checkNotNullParameter(label, "label");
+        Intrinsics.checkNotNullParameter(onClick, "onClick");
+        TextView $this$button_u24lambda_u2431 = new TextView(this.ctx);
+        $this$button_u24lambda_u2431.setText(label);
+        $this$button_u24lambda_u2431.setTextSize(18.0f);
+        $this$button_u24lambda_u2431.setTextColor(accent ? BG : TEXT);
+        $this$button_u24lambda_u2431.setTypeface(Typeface.DEFAULT_BOLD);
+        $this$button_u24lambda_u2431.setGravity(17);
+        $this$button_u24lambda_u2431.setMinWidth(dp(120));
+        $this$button_u24lambda_u2431.setMinHeight(dp(56));
+        $this$button_u24lambda_u2431.setPadding(dp(22), dp(10), dp(22), dp(10));
+        $this$button_u24lambda_u2431.setBackground(rounded(accent ? ACCENT : CARD_ON, 12, accent ? null : Integer.valueOf(Color.rgb(60, 66, 78))));
+        $this$button_u24lambda_u2431.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda3
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                Function0.this.invoke();
             }
-         }
+        });
+        return $this$button_u24lambda_u2431;
+    }
 
-         var4 = null;
-      }
+    public final TextView stepper(String label, final Function0<Unit> onClick) {
+        Intrinsics.checkNotNullParameter(label, "label");
+        Intrinsics.checkNotNullParameter(onClick, "onClick");
+        TextView $this$stepper_u24lambda_u2433 = new TextView(this.ctx);
+        $this$stepper_u24lambda_u2433.setText(label);
+        $this$stepper_u24lambda_u2433.setTextSize(26.0f);
+        $this$stepper_u24lambda_u2433.setTextColor(TEXT);
+        $this$stepper_u24lambda_u2433.setGravity(17);
+        $this$stepper_u24lambda_u2433.setTypeface(Typeface.DEFAULT_BOLD);
+        $this$stepper_u24lambda_u2433.setLayoutParams(new LinearLayout.LayoutParams(dp(62), dp(62)));
+        $this$stepper_u24lambda_u2433.setBackground(rounded(CARD_ON, 31, Integer.valueOf(Color.rgb(60, 66, 78))));
+        $this$stepper_u24lambda_u2433.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda0
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                Function0.this.invoke();
+            }
+        });
+        return $this$stepper_u24lambda_u2433;
+    }
 
-      if (var4 != null) {
-         LayoutParams var7 = new LayoutParams(this.dp(46), this.dp(46));
-         var7.rightMargin = this.dp(16);
-         Unit var8 = Unit.INSTANCE;
-         var6.addView(var4, (android.view.ViewGroup.LayoutParams)var7);
-      }
+    public final Pair<LinearLayout, Function1<Integer, Unit>> chips(List<String> labels, final Function1<? super Integer, Unit> onPick) {
+        Intrinsics.checkNotNullParameter(labels, "labels");
+        Intrinsics.checkNotNullParameter(onPick, "onPick");
+        LinearLayout bar = new LinearLayout(this.ctx);
+        bar.setOrientation(0);
+        final ArrayList views = new ArrayList();
+        int i = 0;
+        for (String l : labels) {
+            final int i2 = i;
+            i++;
+            TextView $this$chips_u24lambda_u2436 = new TextView(this.ctx);
+            $this$chips_u24lambda_u2436.setText(l);
+            $this$chips_u24lambda_u2436.setTextSize(17.0f);
+            $this$chips_u24lambda_u2436.setGravity(17);
+            $this$chips_u24lambda_u2436.setMinHeight(dp(54));
+            $this$chips_u24lambda_u2436.setPadding(dp(12), dp(8), dp(12), dp(8));
+            $this$chips_u24lambda_u2436.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda1
+                @Override // android.view.View.OnClickListener
+                public final void onClick(View view) {
+                    CarUi.chips$lambda$36$lambda$35(Function1.this, i2, view);
+                }
+            });
+            views.add($this$chips_u24lambda_u2436);
+            TextView textView = $this$chips_u24lambda_u2436;
+            LinearLayout.LayoutParams $this$chips_u24lambda_u2437 = new LinearLayout.LayoutParams(0, -2, 1.0f);
+            $this$chips_u24lambda_u2437.rightMargin = i2 < labels.size() + (-1) ? dp(8) : 0;
+            Unit unit = Unit.INSTANCE;
+            bar.addView(textView, $this$chips_u24lambda_u2437);
+        }
+        Function1 paint = new Function1() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda2
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit chips$lambda$38;
+                chips$lambda$38 = CarUi.chips$lambda$38(views, this, ((Integer) obj).intValue());
+                return chips$lambda$38;
+            }
+        };
+        return TuplesKt.to(bar, paint);
+    }
 
-      LinearLayout var15 = new LinearLayout(this.ctx);
-      var15.setOrientation(1);
-      if (var5 == null) {
-         TextView var16 = new TextView(this.ctx);
-         var16.setText(var1);
-         var16.setTextColor(TEXT);
-         var16.setTextSize(21.0F);
-         var15.addView((View)var16);
-      } else {
-         LinearLayout var19 = new LinearLayout(this.ctx);
-         var19.setOrientation(0);
-         var19.setGravity(16);
-         TextView var20 = new TextView(this.ctx);
-         var20.setText(var1);
-         var20.setTextColor(TEXT);
-         var20.setTextSize(21.0F);
-         var19.addView((View)var20);
-         TextView var9 = new TextView(this.ctx);
-         var9.setText(var5);
-         var9.setTextColor(WARN);
-         var9.setTextSize(13.0F);
-         var9.setTypeface(Typeface.DEFAULT_BOLD);
-         var9.setPadding(this.dp(8), this.dp(2), this.dp(8), this.dp(2));
-         var9.setBackground((Drawable)rounded$default(this, Color.rgb(61, 46, 23), 8, null, 4, null));
-         View var10 = (View)var9;
-         LayoutParams var17 = new LayoutParams(-2, -2);
-         var17.leftMargin = this.dp(10);
-         Unit var21 = Unit.INSTANCE;
-         var19.addView(var10, (android.view.ViewGroup.LayoutParams)var17);
-         var15.addView((View)var19);
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void chips$lambda$36$lambda$35(Function1 $onPick, int $i, View it) {
+        $onPick.invoke(Integer.valueOf($i));
+    }
 
-      TextView var11 = null;
-      CharSequence var18 = var2;
-      boolean var12;
-      if (var18 != null && !StringsKt.isBlank(var18)) {
-         var12 = false;
-      } else {
-         var12 = true;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit chips$lambda$38(ArrayList $views, CarUi this$0, int sel) {
+        Iterator it = $views.iterator();
+        int i = 0;
+        while (it.hasNext()) {
+            int i2 = i;
+            i++;
+            TextView v = (TextView) it.next();
+            boolean on = i2 == sel;
+            v.setBackground(this$0.rounded(on ? CARD_ON : CARD, 12, Integer.valueOf(on ? ACCENT : Color.rgb(50, 55, 66))));
+            v.setTextColor(on ? ACCENT : TEXT);
+            v.setTypeface(on ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+        }
+        return Unit.INSTANCE;
+    }
 
-      if (!var12) {
-         var11 = new TextView(this.ctx);
-         var11.setText(var2);
-         var11.setTextColor(DIM);
-         var11.setTextSize(15.0F);
-         var11.setPadding(0, this.dp(4), 0, 0);
-         var15.addView((View)var11);
-      }
+    public final LinearLayout tile(String label, String sub, int icon, int size, final Function0<Unit> onClick) {
+        Intrinsics.checkNotNullParameter(label, "label");
+        Intrinsics.checkNotNullParameter(onClick, "onClick");
+        LinearLayout $this$tile_u24lambda_u2443 = new LinearLayout(this.ctx);
+        $this$tile_u24lambda_u2443.setOrientation(1);
+        $this$tile_u24lambda_u2443.setGravity(17);
+        $this$tile_u24lambda_u2443.setBackground(rounded$default(this, CARD, 18, null, 4, null));
+        $this$tile_u24lambda_u2443.setPadding(dp(16), dp(18), dp(16), dp(18));
+        ImageView $this$tile_u24lambda_u2443_u24lambda_u2439 = new ImageView(this.ctx);
+        $this$tile_u24lambda_u2443_u24lambda_u2439.setImageResource(icon);
+        $this$tile_u24lambda_u2443_u24lambda_u2439.setColorFilter(ACCENT);
+        $this$tile_u24lambda_u2443.addView($this$tile_u24lambda_u2443_u24lambda_u2439, new LinearLayout.LayoutParams(dp(size), dp(size)));
+        TextView $this$tile_u24lambda_u2443_u24lambda_u2440 = new TextView(this.ctx);
+        $this$tile_u24lambda_u2443_u24lambda_u2440.setText(label);
+        $this$tile_u24lambda_u2443_u24lambda_u2440.setTextColor(TEXT);
+        $this$tile_u24lambda_u2443_u24lambda_u2440.setTextSize(22.0f);
+        $this$tile_u24lambda_u2443_u24lambda_u2440.setTypeface(Typeface.DEFAULT_BOLD);
+        $this$tile_u24lambda_u2443_u24lambda_u2440.setGravity(17);
+        $this$tile_u24lambda_u2443_u24lambda_u2440.setPadding(0, dp(12), 0, 0);
+        $this$tile_u24lambda_u2443.addView($this$tile_u24lambda_u2443_u24lambda_u2440);
+        if (sub != null) {
+            TextView $this$tile_u24lambda_u2443_u24lambda_u2441 = new TextView(this.ctx);
+            $this$tile_u24lambda_u2443_u24lambda_u2441.setText(sub);
+            $this$tile_u24lambda_u2443_u24lambda_u2441.setTextColor(DIM);
+            $this$tile_u24lambda_u2443_u24lambda_u2441.setTextSize(15.0f);
+            $this$tile_u24lambda_u2443_u24lambda_u2441.setGravity(17);
+            $this$tile_u24lambda_u2443_u24lambda_u2441.setPadding(0, dp(4), 0, 0);
+            $this$tile_u24lambda_u2443.addView($this$tile_u24lambda_u2443_u24lambda_u2441);
+        }
+        $this$tile_u24lambda_u2443.setClickable(true);
+        $this$tile_u24lambda_u2443.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda6
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                Function0.this.invoke();
+            }
+        });
+        return $this$tile_u24lambda_u2443;
+    }
 
-      var6.addView((View)var15, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
-      return TuplesKt.to(var6, var11);
-   }
+    public final Pair<LinearLayout, TextView> iconTile(String label, String sub, String icon, String group, final Function0<Unit> onClick) {
+        Intrinsics.checkNotNullParameter(label, "label");
+        Intrinsics.checkNotNullParameter(icon, "icon");
+        Intrinsics.checkNotNullParameter(group, "group");
+        Intrinsics.checkNotNullParameter(onClick, "onClick");
+        TextView $this$iconTile_u24lambda_u2444 = new TextView(this.ctx);
+        $this$iconTile_u24lambda_u2444.setText(sub != null ? sub : "");
+        $this$iconTile_u24lambda_u2444.setTextColor(DIM);
+        $this$iconTile_u24lambda_u2444.setTextSize(15.0f);
+        $this$iconTile_u24lambda_u2444.setMaxLines(2);
+        $this$iconTile_u24lambda_u2444.setEllipsize(TextUtils.TruncateAt.END);
+        LinearLayout $this$iconTile_u24lambda_u2447 = new LinearLayout(this.ctx);
+        $this$iconTile_u24lambda_u2447.setOrientation(1);
+        $this$iconTile_u24lambda_u2447.setBackground(rounded$default(this, CARD, 20, null, 4, null));
+        $this$iconTile_u24lambda_u2447.setPadding(dp(20), dp(18), dp(18), dp(16));
+        $this$iconTile_u24lambda_u2447.addView(SvIcon.chip$default(SvIcon.INSTANCE, this.ctx, icon, group, 58, null, 16, null), new LinearLayout.LayoutParams(dp(58), dp(58)));
+        $this$iconTile_u24lambda_u2447.addView(new View(this.ctx), new LinearLayout.LayoutParams(1, 0, 1.0f));
+        TextView $this$iconTile_u24lambda_u2447_u24lambda_u2445 = new TextView(this.ctx);
+        $this$iconTile_u24lambda_u2447_u24lambda_u2445.setText(label);
+        $this$iconTile_u24lambda_u2447_u24lambda_u2445.setTextColor(TEXT);
+        $this$iconTile_u24lambda_u2447_u24lambda_u2445.setTextSize(21.0f);
+        $this$iconTile_u24lambda_u2447_u24lambda_u2445.setTypeface(Typeface.DEFAULT_BOLD);
+        $this$iconTile_u24lambda_u2447_u24lambda_u2445.setPadding(0, dp(10), 0, dp(2));
+        $this$iconTile_u24lambda_u2447_u24lambda_u2445.setSingleLine(true);
+        $this$iconTile_u24lambda_u2447_u24lambda_u2445.setEllipsize(TextUtils.TruncateAt.END);
+        $this$iconTile_u24lambda_u2447.addView($this$iconTile_u24lambda_u2447_u24lambda_u2445);
+        $this$iconTile_u24lambda_u2447.addView($this$iconTile_u24lambda_u2444);
+        $this$iconTile_u24lambda_u2447.setClickable(true);
+        $this$iconTile_u24lambda_u2447.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda7
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                Function0.this.invoke();
+            }
+        });
+        return TuplesKt.to($this$iconTile_u24lambda_u2447, $this$iconTile_u24lambda_u2444);
+    }
 
-   public final Drawable rowBg() {
-      if (!this.flat) {
-         return (Drawable)rounded$default(this, this.card, 0, null, 6, null);
-      } else {
-         GradientDrawable var2 = new GradientDrawable();
-         var2.setColor(PAGE_DIV);
-         GradientDrawable var1 = new GradientDrawable();
-         var1.setColor(PAGE);
-         LayerDrawable var3 = new LayerDrawable((Drawable[])(new GradientDrawable[]{var2, var1}));
-         var3.setLayerInset(1, 0, 0, 0, this.dp(1));
-         return (Drawable)var3;
-      }
-   }
+    public final TextView railItem(String label, String icon, String group) {
+        Intrinsics.checkNotNullParameter(label, "label");
+        Intrinsics.checkNotNullParameter(icon, "icon");
+        Intrinsics.checkNotNullParameter(group, "group");
+        TextView $this$railItem_u24lambda_u2448 = railItem(label, null);
+        $this$railItem_u24lambda_u2448.setCompoundDrawablesRelativeWithIntrinsicBounds(SvIcon.INSTANCE.drawable(icon, SvIcon.INSTANCE.fg(group), dp(26)), (Drawable) null, (Drawable) null, (Drawable) null);
+        $this$railItem_u24lambda_u2448.setCompoundDrawablePadding(dp(14));
+        return $this$railItem_u24lambda_u2448;
+    }
 
-   public final void setAutoIcon(Function1<? super String, SettingIcons.Icon> var1) {
-      this.autoIcon = var1;
-   }
+    public final TextView railItem(String label, Integer icon) {
+        Intrinsics.checkNotNullParameter(label, "label");
+        TextView $this$railItem_u24lambda_u2449 = new TextView(this.ctx);
+        $this$railItem_u24lambda_u2449.setText(label);
+        $this$railItem_u24lambda_u2449.setTextSize(18.0f);
+        $this$railItem_u24lambda_u2449.setTextColor(TEXT);
+        $this$railItem_u24lambda_u2449.setGravity(16);
+        $this$railItem_u24lambda_u2449.setMinHeight(dp(66));
+        $this$railItem_u24lambda_u2449.setPadding(dp(16), dp(8), dp(12), dp(8));
+        if (icon != null) {
+            $this$railItem_u24lambda_u2449.setCompoundDrawablesRelativeWithIntrinsicBounds(icon.intValue(), 0, 0, 0);
+            $this$railItem_u24lambda_u2449.setCompoundDrawablePadding(dp(14));
+            $this$railItem_u24lambda_u2449.setCompoundDrawableTintList(ColorStateList.valueOf(DIM));
+        }
+        $this$railItem_u24lambda_u2449.setBackground(rounded$default(this, CARD, 0, null, 6, null));
+        return $this$railItem_u24lambda_u2449;
+    }
 
-   public final View spacer(int var1) {
-      View var2 = new View(this.ctx);
-      var2.setLayoutParams((android.view.ViewGroup.LayoutParams)(new LayoutParams(1, this.dp(var1))));
-      return var2;
-   }
+    public final void railSelect(TextView v, boolean on) {
+        GradientDrawable rounded$default;
+        Intrinsics.checkNotNullParameter(v, "v");
+        if (!on) {
+            rounded$default = rounded$default(this, CARD, 0, null, 6, null);
+        } else {
+            LayerDrawable $this$railSelect_u24lambda_u2450 = new LayerDrawable(new GradientDrawable[]{corners(ACCENT, 14, 0, 0, 14), corners(FRAME, 14, 0, 0, 14)});
+            $this$railSelect_u24lambda_u2450.setLayerInset(1, dp(4), 0, 0, 0);
+            rounded$default = $this$railSelect_u24lambda_u2450;
+        }
+        v.setBackground(rounded$default);
+        ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
+        LinearLayout.LayoutParams lp = layoutParams instanceof LinearLayout.LayoutParams ? (LinearLayout.LayoutParams) layoutParams : null;
+        if (lp != null) {
+            int m = on ? 0 : dp(18);
+            if (lp.rightMargin != m) {
+                lp.rightMargin = m;
+                v.setLayoutParams(lp);
+            }
+        }
+        v.setTextColor(on ? ACCENT : TEXT);
+        v.setTypeface(on ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+        v.setCompoundDrawableTintList(ColorStateList.valueOf(on ? ACCENT : DIM));
+    }
 
-   public final TextView stepper(String var1, Function0<Unit> var2) {
-      Intrinsics.checkNotNullParameter(var1, "label");
-      Intrinsics.checkNotNullParameter(var2, "onClick");
-      TextView var3 = new TextView(this.ctx);
-      var3.setText(var1);
-      var3.setTextSize(26.0F);
-      var3.setTextColor(TEXT);
-      var3.setGravity(17);
-      var3.setTypeface(Typeface.DEFAULT_BOLD);
-      var3.setLayoutParams((android.view.ViewGroup.LayoutParams)(new LayoutParams(this.dp(62), this.dp(62))));
-      var3.setBackground((Drawable)this.rounded(CARD_ON, 31, Color.rgb(60, 66, 78)));
-      var3.setOnClickListener(new CarUi$$ExternalSyntheticLambda0(var2));
-      return var3;
-   }
-
-   public final LinearLayout tile(String var1, String var2, int var3, int var4, Function0<Unit> var5) {
-      Intrinsics.checkNotNullParameter(var1, "label");
-      Intrinsics.checkNotNullParameter(var5, "onClick");
-      LinearLayout var6 = new LinearLayout(this.ctx);
-      var6.setOrientation(1);
-      var6.setGravity(17);
-      var6.setBackground((Drawable)rounded$default(this, CARD, 18, null, 4, null));
-      var6.setPadding(this.dp(16), this.dp(18), this.dp(16), this.dp(18));
-      ImageView var7 = new ImageView(this.ctx);
-      var7.setImageResource(var3);
-      var7.setColorFilter(ACCENT);
-      var6.addView((View)var7, (android.view.ViewGroup.LayoutParams)(new LayoutParams(this.dp(var4), this.dp(var4))));
-      TextView var9 = new TextView(this.ctx);
-      var9.setText(var1);
-      var9.setTextColor(TEXT);
-      var9.setTextSize(22.0F);
-      var9.setTypeface(Typeface.DEFAULT_BOLD);
-      var9.setGravity(17);
-      var9.setPadding(0, this.dp(12), 0, 0);
-      var6.addView((View)var9);
-      if (var2 != null) {
-         TextView var8 = new TextView(this.ctx);
-         var8.setText(var2);
-         var8.setTextColor(DIM);
-         var8.setTextSize(15.0F);
-         var8.setGravity(17);
-         var8.setPadding(0, this.dp(4), 0, 0);
-         var6.addView((View)var8);
-      }
-
-      var6.setClickable(true);
-      var6.setOnClickListener(new CarUi$$ExternalSyntheticLambda6(var5));
-      return var6;
-   }
-
-   public static final class Companion {
-      private Companion() {
-      }
-
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
-
-      public final int getACCENT() {
-         return CarUi.ACCENT;
-      }
-
-      public final int getBG() {
-         return CarUi.BG;
-      }
-
-      public final int getCARD() {
-         return CarUi.CARD;
-      }
-
-      public final int getCARD_ON() {
-         return CarUi.CARD_ON;
-      }
-
-      public final int getDIM() {
-         return CarUi.DIM;
-      }
-
-      public final int getFRAME() {
-         return CarUi.FRAME;
-      }
-
-      public final int getPAGE() {
-         return CarUi.PAGE;
-      }
-
-      public final int getPAGE_DIV() {
-         return CarUi.PAGE_DIV;
-      }
-
-      public final int getPAGE_EDGE() {
-         return CarUi.PAGE_EDGE;
-      }
-
-      public final int getSECTION() {
-         return CarUi.SECTION;
-      }
-
-      public final int getSTRIP() {
-         return CarUi.STRIP;
-      }
-
-      public final int getTAB_SEP() {
-         return CarUi.TAB_SEP;
-      }
-
-      public final int getTAB_TEXT() {
-         return CarUi.TAB_TEXT;
-      }
-
-      public final int getTEXT() {
-         return CarUi.TEXT;
-      }
-
-      public final int getWARN() {
-         return CarUi.WARN;
-      }
-   }
+    public final View spacer(int h) {
+        View $this$spacer_u24lambda_u2452 = new View(this.ctx);
+        $this$spacer_u24lambda_u2452.setLayoutParams(new LinearLayout.LayoutParams(1, dp(h)));
+        return $this$spacer_u24lambda_u2452;
+    }
 }

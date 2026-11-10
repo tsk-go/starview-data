@@ -8,9 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Paint.Cap;
-import android.graphics.Paint.Join;
-import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import androidx.core.graphics.PathParser;
@@ -26,361 +23,329 @@ import kotlin.enums.EnumEntriesKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
+/* compiled from: SvIcon.kt */
 public final class SvIcon {
-   public static final String CAM = "cam";
-   public static final String DEVICE = "device";
-   public static final String DISPLAY = "display";
-   public static final SvIcon INSTANCE = new SvIcon();
-   public static final int NA_BG = -15394526;
-   public static final int NA_FG = -11840408;
-   public static final int OFF_BG = -14999248;
-   public static final int OFF_FG = -7497813;
-   public static final String PERSON = "person";
-   public static final String SOUND = "sound";
-   public static final String SPEED = "speed";
-   public static final String STEER = "steer";
-   public static final String TABLET = "tablet";
-   private static final HashMap<String, Path> cache = new HashMap<>();
+    public static final String CAM = "cam";
+    public static final String DEVICE = "device";
+    public static final String DISPLAY = "display";
+    public static final int NA_BG = -15394526;
+    public static final int NA_FG = -11840408;
+    public static final int OFF_BG = -14999248;
+    public static final int OFF_FG = -7497813;
+    public static final String PERSON = "person";
+    public static final String SOUND = "sound";
+    public static final String SPEED = "speed";
+    public static final String STEER = "steer";
+    public static final String TABLET = "tablet";
+    public static final SvIcon INSTANCE = new SvIcon();
+    private static final HashMap<String, Path> cache = new HashMap<>();
 
-   private SvIcon() {
-   }
+    private SvIcon() {
+    }
 
-   // $VF: synthetic method
-   public static View chip$default(SvIcon var0, Context var1, String var2, String var3, int var4, SvIcon.State var5, int var6, Object var7) {
-      if ((var6 & 16) != 0) {
-         var5 = SvIcon.State.ON;
-      }
+    public final boolean has(String name) {
+        Intrinsics.checkNotNullParameter(name, "name");
+        return SvIconPaths.INSTANCE.getPATHS().containsKey(name);
+    }
 
-      return var0.chip(var1, var2, var3, var4, var5);
-   }
-
-   // $VF: synthetic method
-   public static Drawable drawable$default(SvIcon var0, String var1, int var2, int var3, int var4, Object var5) {
-      if ((var4 & 4) != 0) {
-         var3 = -1;
-      }
-
-      return var0.drawable(var1, var2, var3);
-   }
-
-   public final int bg(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "group");
-      Pair var3 = SvIconPaths.INSTANCE.getGROUPS().get(var1);
-      int var2;
-      if (var3 != null) {
-         var2 = ((Number)var3.getSecond()).intValue();
-      } else {
-         var2 = -14999248;
-      }
-
-      return var2;
-   }
-
-   public final View chip(Context var1, String var2, String var3, int var4, SvIcon.State var5) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "name");
-      Intrinsics.checkNotNullParameter(var3, "group");
-      Intrinsics.checkNotNullParameter(var5, "state");
-      SvIcon.Chip var6 = new SvIcon.Chip(var1, var2, var3, var5);
-      var4 = (int)(var4 * var1.getResources().getDisplayMetrics().density);
-      var6.setMinimumWidth(var4);
-      var6.setMinimumHeight(var4);
-      return var6;
-   }
-
-   public final Drawable drawable(String var1, int var2, int var3) {
-      Intrinsics.checkNotNullParameter(var1, "name");
-      return new SvIcon.Glyph(var1, var2, var3);
-   }
-
-   public final int fg(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "group");
-      Pair var3 = SvIconPaths.INSTANCE.getGROUPS().get(var1);
-      int var2;
-      if (var3 != null) {
-         var2 = ((Number)var3.getFirst()).intValue();
-      } else {
-         var2 = -7497813;
-      }
-
-      return var2;
-   }
-
-   public final boolean has(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "name");
-      return SvIconPaths.INSTANCE.getPATHS().containsKey(var1);
-   }
-
-   public final Path path(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "name");
-      Map var4 = cache;
-      Object var2 = var4.get(var1);
-      Object var5;
-      if (var2 == null) {
-         String var3 = SvIconPaths.INSTANCE.getPATHS().get(var1);
-         var2 = var3;
-         if (var3 == null) {
-            var2 = MapsKt.getValue(SvIconPaths.INSTANCE.getPATHS(), "slider");
-         }
-
-         Path var8 = PathParser.createPathFromPathData((String)var2);
-         var2 = var8;
-         if (var8 == null) {
-            var2 = new Path();
-         }
-
-         var4.put(var1, var2);
-         var5 = var2;
-      } else {
-         var5 = var2;
-      }
-
-      return (Path)var5;
-   }
-
-   public static final class Chip extends View {
-      private final Paint bgPaint;
-      private String group;
-      private String name;
-      private final RectF r;
-      private SvIcon.State state;
-
-      public Chip(Context var1, String var2, String var3, SvIcon.State var4) {
-         Intrinsics.checkNotNullParameter(var1, "ctx");
-         Intrinsics.checkNotNullParameter(var2, "name");
-         Intrinsics.checkNotNullParameter(var3, "group");
-         Intrinsics.checkNotNullParameter(var4, "state");
-         super(var1);
-         this.name = var2;
-         this.group = var3;
-         this.state = var4;
-         this.bgPaint = new Paint(1);
-         this.r = new RectF();
-      }
-
-      // $VF: synthetic method
-      public static void set$default(SvIcon.Chip var0, String var1, String var2, SvIcon.State var3, int var4, Object var5) {
-         if ((var4 & 1) != 0) {
-            var1 = var0.name;
-         }
-
-         if ((var4 & 2) != 0) {
-            var2 = var0.group;
-         }
-
-         if ((var4 & 4) != 0) {
-            var3 = var0.state;
-         }
-
-         var0.set(var1, var2, var3);
-      }
-
-      public final String getGroup() {
-         return this.group;
-      }
-
-      public final String getName() {
-         return this.name;
-      }
-
-      public final SvIcon.State getState() {
-         return this.state;
-      }
-
-      protected void onDraw(Canvas var1) {
-         Intrinsics.checkNotNullParameter(var1, "c");
-         float var3 = Math.min(this.getWidth(), this.getHeight());
-         SvIcon.State var7 = this.state;
-         int var5;
-         Integer var10;
-         switch (SvIcon.Chip.WhenMappings.$EnumSwitchMapping$0[var7.ordinal()]) {
-            case 1:
-               var10 = SvIcon.INSTANCE.fg(this.group);
-               var5 = SvIcon.INSTANCE.bg(this.group);
-               break;
-            case 2:
-               var10 = -7497813;
-               var5 = -14999248;
-               break;
-            case 3:
-               var10 = -11840408;
-               var5 = -15394526;
-               break;
-            default:
-               throw new NoWhenBranchMatchedException();
-         }
-
-         Pair var11 = TuplesKt.to(var10, var5);
-         int var6 = ((Number)var11.component1()).intValue();
-         var5 = ((Number)var11.component2()).intValue();
-         this.bgPaint.setColor(var5);
-         RectF var12 = this.r;
-         float var4 = this.getWidth();
-         float var2 = 2;
-         var12.set((var4 - var3) / var2, (this.getHeight() - var3) / var2, (this.getWidth() + var3) / var2, (this.getHeight() + var3) / var2);
-         var1.drawRoundRect(this.r, var3 * 0.3F, 0.3F * var3, this.bgPaint);
-         SvIcon.Glyph var13 = new SvIcon.Glyph(this.name, var6, 0, 4, null);
-         var5 = (int)(0.23F * var3);
-         var13.setBounds((int)this.r.left + var5, (int)this.r.top + var5, (int)this.r.right - var5, (int)this.r.bottom - var5);
-         var13.draw(var1);
-      }
-
-      protected void onMeasure(int var1, int var2) {
-         this.setMeasuredDimension(View.resolveSize(this.getMinimumWidth(), var1), View.resolveSize(this.getMinimumHeight(), var2));
-      }
-
-      public final void set(String var1, String var2, SvIcon.State var3) {
-         Intrinsics.checkNotNullParameter(var1, "name");
-         Intrinsics.checkNotNullParameter(var2, "group");
-         Intrinsics.checkNotNullParameter(var3, "state");
-         this.name = var1;
-         this.group = var2;
-         this.state = var3;
-         this.invalidate();
-      }
-
-      public final void setGroup(String var1) {
-         Intrinsics.checkNotNullParameter(var1, "<set-?>");
-         this.group = var1;
-      }
-
-      public final void setName(String var1) {
-         Intrinsics.checkNotNullParameter(var1, "<set-?>");
-         this.name = var1;
-      }
-
-      public final void setState(SvIcon.State var1) {
-         Intrinsics.checkNotNullParameter(var1, "<set-?>");
-         this.state = var1;
-      }
-
-      // $VF: synthetic class
-      public final class WhenMappings {
-         public static final int[] $EnumSwitchMapping$0;
-
-         static {
-            int[] var0 = new int[SvIcon.State.values().length];
-
-            try {
-               var0[SvIcon.State.ON.ordinal()] = 1;
-            } catch (NoSuchFieldError var4) {
+    public final Path path(String name) {
+        Path path;
+        Intrinsics.checkNotNullParameter(name, "name");
+        Map $this$getOrPut$iv = cache;
+        Path path2 = $this$getOrPut$iv.get(name);
+        if (path2 == null) {
+            String d = SvIconPaths.INSTANCE.getPATHS().get(name);
+            if (d == null) {
+                d = (String) MapsKt.getValue(SvIconPaths.INSTANCE.getPATHS(), "slider");
             }
-
-            try {
-               var0[SvIcon.State.OFF.ordinal()] = 2;
-            } catch (NoSuchFieldError var3) {
+            Path createPathFromPathData = PathParser.createPathFromPathData(d);
+            if (createPathFromPathData == null) {
+                createPathFromPathData = new Path();
             }
+            path = createPathFromPathData;
+            $this$getOrPut$iv.put(name, path);
+        } else {
+            path = path2;
+        }
+        return path;
+    }
 
-            try {
-               var0[SvIcon.State.NA.ordinal()] = 3;
-            } catch (NoSuchFieldError var2) {
+    public final int fg(String group) {
+        Intrinsics.checkNotNullParameter(group, "group");
+        Pair<Integer, Integer> pair = SvIconPaths.INSTANCE.getGROUPS().get(group);
+        if (pair != null) {
+            return pair.getFirst().intValue();
+        }
+        return -7497813;
+    }
+
+    public final int bg(String group) {
+        Intrinsics.checkNotNullParameter(group, "group");
+        Pair<Integer, Integer> pair = SvIconPaths.INSTANCE.getGROUPS().get(group);
+        if (pair != null) {
+            return pair.getSecond().intValue();
+        }
+        return -14999248;
+    }
+
+    /* compiled from: SvIcon.kt */
+    public enum State {
+        ON,
+        OFF,
+        NA;
+
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+
+        public static EnumEntries<State> getEntries() {
+            return $ENTRIES;
+        }
+    }
+
+    public static /* synthetic */ Drawable drawable$default(SvIcon svIcon, String str, int i, int i2, int i3, Object obj) {
+        if ((i3 & 4) != 0) {
+            i2 = -1;
+        }
+        return svIcon.drawable(str, i, i2);
+    }
+
+    public final Drawable drawable(String name, int color, int sizePx) {
+        Intrinsics.checkNotNullParameter(name, "name");
+        return new Glyph(name, color, sizePx);
+    }
+
+    public static /* synthetic */ View chip$default(SvIcon svIcon, Context context, String str, String str2, int i, State state, int i2, Object obj) {
+        if ((i2 & 16) != 0) {
+            state = State.ON;
+        }
+        return svIcon.chip(context, str, str2, i, state);
+    }
+
+    public final View chip(Context ctx, String name, String group, int sizeDp, State state) {
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(name, "name");
+        Intrinsics.checkNotNullParameter(group, "group");
+        Intrinsics.checkNotNullParameter(state, "state");
+        Chip it = new Chip(ctx, name, group, state);
+        int px = (int) (sizeDp * ctx.getResources().getDisplayMetrics().density);
+        it.setMinimumWidth(px);
+        it.setMinimumHeight(px);
+        return it;
+    }
+
+    /* compiled from: SvIcon.kt */
+    private static final class Glyph extends Drawable {
+        private final int color;
+        private final Matrix m;
+        private final String name;
+        private final Path p;
+        private final Paint paint;
+        private final int size;
+
+        public Glyph(String name, int color, int size) {
+            Intrinsics.checkNotNullParameter(name, "name");
+            this.name = name;
+            this.color = color;
+            this.size = size;
+            Paint $this$paint_u24lambda_u240 = new Paint(1);
+            $this$paint_u24lambda_u240.setStyle(Paint.Style.STROKE);
+            $this$paint_u24lambda_u240.setStrokeCap(Paint.Cap.ROUND);
+            $this$paint_u24lambda_u240.setStrokeJoin(Paint.Join.ROUND);
+            this.paint = $this$paint_u24lambda_u240;
+            this.m = new Matrix();
+            this.p = new Path();
+        }
+
+        public /* synthetic */ Glyph(String str, int i, int i2, int i3, DefaultConstructorMarker defaultConstructorMarker) {
+            this(str, i, (i3 & 4) != 0 ? -1 : i2);
+        }
+
+        public final int getColor() {
+            return this.color;
+        }
+
+        public final String getName() {
+            return this.name;
+        }
+
+        public final int getSize() {
+            return this.size;
+        }
+
+        @Override // android.graphics.drawable.Drawable
+        public int getIntrinsicWidth() {
+            return this.size;
+        }
+
+        @Override // android.graphics.drawable.Drawable
+        public int getIntrinsicHeight() {
+            return this.size;
+        }
+
+        @Override // android.graphics.drawable.Drawable
+        public void draw(Canvas c) {
+            Intrinsics.checkNotNullParameter(c, "c");
+            Rect b = getBounds();
+            Intrinsics.checkNotNullExpressionValue(b, "getBounds(...)");
+            float s = Math.min(b.width(), b.height()) / 24.0f;
+            this.paint.setColor(this.color);
+            this.paint.setStrokeWidth(2.0f * s);
+            this.m.setScale(s, s);
+            float f = 24;
+            float f2 = 2;
+            this.m.postTranslate(b.left + ((b.width() - (f * s)) / f2), b.top + ((b.height() - (f * s)) / f2));
+            SvIcon.INSTANCE.path(this.name).transform(this.m, this.p);
+            c.drawPath(this.p, this.paint);
+        }
+
+        @Override // android.graphics.drawable.Drawable
+        public void setAlpha(int alpha) {
+            this.paint.setAlpha(alpha);
+        }
+
+        @Override // android.graphics.drawable.Drawable
+        public void setColorFilter(ColorFilter cf) {
+            this.paint.setColorFilter(cf);
+        }
+
+        @Override // android.graphics.drawable.Drawable
+        @Deprecated(message = "Deprecated in Java")
+        public int getOpacity() {
+            return -3;
+        }
+    }
+
+    /* compiled from: SvIcon.kt */
+    public static final class Chip extends View {
+        private final Paint bgPaint;
+        private String group;
+        private String name;
+        private final RectF r;
+        private State state;
+
+        /* compiled from: SvIcon.kt */
+        public /* synthetic */ class WhenMappings {
+            public static final /* synthetic */ int[] $EnumSwitchMapping$0;
+
+            static {
+                int[] iArr = new int[State.values().length];
+                try {
+                    iArr[State.ON.ordinal()] = 1;
+                } catch (NoSuchFieldError e) {
+                }
+                try {
+                    iArr[State.OFF.ordinal()] = 2;
+                } catch (NoSuchFieldError e2) {
+                }
+                try {
+                    iArr[State.NA.ordinal()] = 3;
+                } catch (NoSuchFieldError e3) {
+                }
+                $EnumSwitchMapping$0 = iArr;
             }
+        }
 
-            $EnumSwitchMapping$0 = var0;
-         }
-      }
-   }
+        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+        public Chip(Context ctx, String name, String group, State state) {
+            super(ctx);
+            Intrinsics.checkNotNullParameter(ctx, "ctx");
+            Intrinsics.checkNotNullParameter(name, "name");
+            Intrinsics.checkNotNullParameter(group, "group");
+            Intrinsics.checkNotNullParameter(state, "state");
+            this.name = name;
+            this.group = group;
+            this.state = state;
+            this.bgPaint = new Paint(1);
+            this.r = new RectF();
+        }
 
-   private static final class Glyph extends Drawable {
-      private final int color;
-      private final Matrix m;
-      private final String name;
-      private final Path p;
-      private final Paint paint;
-      private final int size;
+        public final String getGroup() {
+            return this.group;
+        }
 
-      public Glyph(String var1, int var2, int var3) {
-         Intrinsics.checkNotNullParameter(var1, "name");
-         super();
-         this.name = var1;
-         this.color = var2;
-         this.size = var3;
-         Paint var4 = new Paint(1);
-         var4.setStyle(Style.STROKE);
-         var4.setStrokeCap(Cap.ROUND);
-         var4.setStrokeJoin(Join.ROUND);
-         this.paint = var4;
-         this.m = new Matrix();
-         this.p = new Path();
-      }
+        public final String getName() {
+            return this.name;
+        }
 
-      // $VF: synthetic method
-      public Glyph(String var1, int var2, int var3, int var4, DefaultConstructorMarker var5) {
-         if ((var4 & 4) != 0) {
-            var3 = -1;
-         }
+        public final State getState() {
+            return this.state;
+        }
 
-         this(var1, var2, var3);
-      }
+        public final void setGroup(String str) {
+            Intrinsics.checkNotNullParameter(str, "<set-?>");
+            this.group = str;
+        }
 
-      public void draw(Canvas var1) {
-         Intrinsics.checkNotNullParameter(var1, "c");
-         Rect var8 = this.getBounds();
-         Intrinsics.checkNotNullExpressionValue(var8, "getBounds(...)");
-         float var5 = Math.min(var8.width(), var8.height()) / 24.0F;
-         this.paint.setColor(this.color);
-         this.paint.setStrokeWidth(2.0F * var5);
-         this.m.setScale(var5, var5);
-         Matrix var7 = this.m;
-         float var2 = var8.left;
-         float var3 = var8.width();
-         float var4 = 24;
-         float var6 = 2;
-         var7.postTranslate(var2 + (var3 - var4 * var5) / var6, var8.top + (var8.height() - var4 * var5) / var6);
-         SvIcon.INSTANCE.path(this.name).transform(this.m, this.p);
-         var1.drawPath(this.p, this.paint);
-      }
+        public final void setName(String str) {
+            Intrinsics.checkNotNullParameter(str, "<set-?>");
+            this.name = str;
+        }
 
-      public final int getColor() {
-         return this.color;
-      }
+        public final void setState(State state) {
+            Intrinsics.checkNotNullParameter(state, "<set-?>");
+            this.state = state;
+        }
 
-      public int getIntrinsicHeight() {
-         return this.size;
-      }
+        public static /* synthetic */ void set$default(Chip chip, String str, String str2, State state, int i, Object obj) {
+            if ((i & 1) != 0) {
+                str = chip.name;
+            }
+            if ((i & 2) != 0) {
+                str2 = chip.group;
+            }
+            if ((i & 4) != 0) {
+                state = chip.state;
+            }
+            chip.set(str, str2, state);
+        }
 
-      public int getIntrinsicWidth() {
-         return this.size;
-      }
+        public final void set(String name, String group, State state) {
+            Intrinsics.checkNotNullParameter(name, "name");
+            Intrinsics.checkNotNullParameter(group, "group");
+            Intrinsics.checkNotNullParameter(state, "state");
+            this.name = name;
+            this.group = group;
+            this.state = state;
+            invalidate();
+        }
 
-      public final String getName() {
-         return this.name;
-      }
+        @Override // android.view.View
+        protected void onMeasure(int w, int h) {
+            setMeasuredDimension(View.resolveSize(getMinimumWidth(), w), View.resolveSize(getMinimumHeight(), h));
+        }
 
-      @Deprecated(
-         message = "Deprecated in Java"
-      )
-      public int getOpacity() {
-         return -3;
-      }
-
-      public final int getSize() {
-         return this.size;
-      }
-
-      public void setAlpha(int var1) {
-         this.paint.setAlpha(var1);
-      }
-
-      public void setColorFilter(ColorFilter var1) {
-         this.paint.setColorFilter(var1);
-      }
-   }
-
-   public static enum State {
-      NA,
-      OFF,
-      ON;
-      private static final EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(SvIcon.State.$VALUES);
-      private static final SvIcon.State[] $VALUES = $values();
-
-      // $VF: synthetic method
-      private static final SvIcon.State[] $values() {
-         return new SvIcon.State[]{ON, OFF, NA};
-      }
-
-      public static EnumEntries<SvIcon.State> getEntries() {
-         return $ENTRIES;
-      }
-   }
+        @Override // android.view.View
+        protected void onDraw(Canvas c) {
+            int valueOf;
+            int bg;
+            Intrinsics.checkNotNullParameter(c, "c");
+            float sz = Math.min(getWidth(), getHeight());
+            switch (WhenMappings.$EnumSwitchMapping$0[this.state.ordinal()]) {
+                case 1:
+                    valueOf = Integer.valueOf(SvIcon.INSTANCE.fg(this.group));
+                    bg = SvIcon.INSTANCE.bg(this.group);
+                    break;
+                case 2:
+                    valueOf = -7497813;
+                    bg = -14999248;
+                    break;
+                case 3:
+                    valueOf = -11840408;
+                    bg = -15394526;
+                    break;
+                default:
+                    throw new NoWhenBranchMatchedException();
+            }
+            Pair pair = TuplesKt.to(valueOf, Integer.valueOf(bg));
+            int f = ((Number) pair.component1()).intValue();
+            int b = ((Number) pair.component2()).intValue();
+            this.bgPaint.setColor(b);
+            float f2 = 2;
+            this.r.set((getWidth() - sz) / f2, (getHeight() - sz) / f2, (getWidth() + sz) / f2, (getHeight() + sz) / f2);
+            c.drawRoundRect(this.r, sz * 0.3f, 0.3f * sz, this.bgPaint);
+            Glyph g = new Glyph(this.name, f, 0, 4, null);
+            int inset = (int) (0.23f * sz);
+            g.setBounds(((int) this.r.left) + inset, ((int) this.r.top) + inset, ((int) this.r.right) - inset, ((int) this.r.bottom) - inset);
+            g.draw(c);
+        }
+    }
 }

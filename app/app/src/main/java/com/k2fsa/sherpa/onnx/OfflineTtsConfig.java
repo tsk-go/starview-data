@@ -3,185 +3,146 @@ package com.k2fsa.sherpa.onnx;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-public final class OfflineTtsConfig {
-   private int maxNumSentences;
-   private OfflineTtsModelConfig model;
-   private String ruleFars;
-   private String ruleFsts;
-   private float silenceScale;
+/* compiled from: Tts.kt */
+public final /* data */ class OfflineTtsConfig {
+    private int maxNumSentences;
+    private OfflineTtsModelConfig model;
+    private String ruleFars;
+    private String ruleFsts;
+    private float silenceScale;
 
-   public OfflineTtsConfig() {
-      this(null, null, null, 0, 0.0F, 31, null);
-   }
+    public OfflineTtsConfig() {
+        this(null, null, null, 0, 0.0f, 31, null);
+    }
 
-   public OfflineTtsConfig(OfflineTtsModelConfig var1, String var2, String var3, int var4, float var5) {
-      Intrinsics.checkNotNullParameter(var1, "model");
-      Intrinsics.checkNotNullParameter(var2, "ruleFsts");
-      Intrinsics.checkNotNullParameter(var3, "ruleFars");
-      super();
-      this.model = var1;
-      this.ruleFsts = var2;
-      this.ruleFars = var3;
-      this.maxNumSentences = var4;
-      this.silenceScale = var5;
-   }
+    public static /* synthetic */ OfflineTtsConfig copy$default(OfflineTtsConfig offlineTtsConfig, OfflineTtsModelConfig offlineTtsModelConfig, String str, String str2, int i, float f, int i2, Object obj) {
+        if ((i2 & 1) != 0) {
+            offlineTtsModelConfig = offlineTtsConfig.model;
+        }
+        if ((i2 & 2) != 0) {
+            str = offlineTtsConfig.ruleFsts;
+        }
+        String str3 = str;
+        if ((i2 & 4) != 0) {
+            str2 = offlineTtsConfig.ruleFars;
+        }
+        String str4 = str2;
+        if ((i2 & 8) != 0) {
+            i = offlineTtsConfig.maxNumSentences;
+        }
+        int i3 = i;
+        if ((i2 & 16) != 0) {
+            f = offlineTtsConfig.silenceScale;
+        }
+        return offlineTtsConfig.copy(offlineTtsModelConfig, str3, str4, i3, f);
+    }
 
-   // $VF: synthetic method
-   public OfflineTtsConfig(OfflineTtsModelConfig var1, String var2, String var3, int var4, float var5, int var6, DefaultConstructorMarker var7) {
-      if ((var6 & 1) != 0) {
-         var1 = new OfflineTtsModelConfig(null, null, null, null, null, null, null, 0, false, null, 1023, null);
-      }
+    /* renamed from: component1, reason: from getter */
+    public final OfflineTtsModelConfig getModel() {
+        return this.model;
+    }
 
-      String var8 = "";
-      if ((var6 & 2) != 0) {
-         var2 = "";
-      }
+    /* renamed from: component2, reason: from getter */
+    public final String getRuleFsts() {
+        return this.ruleFsts;
+    }
 
-      if ((var6 & 4) != 0) {
-         var3 = var8;
-      }
+    /* renamed from: component3, reason: from getter */
+    public final String getRuleFars() {
+        return this.ruleFars;
+    }
 
-      if ((var6 & 8) != 0) {
-         var4 = 1;
-      }
+    /* renamed from: component4, reason: from getter */
+    public final int getMaxNumSentences() {
+        return this.maxNumSentences;
+    }
 
-      if ((var6 & 16) != 0) {
-         var5 = 0.2F;
-      }
+    /* renamed from: component5, reason: from getter */
+    public final float getSilenceScale() {
+        return this.silenceScale;
+    }
 
-      this(var1, var2, var3, var4, var5);
-   }
+    public final OfflineTtsConfig copy(OfflineTtsModelConfig model, String ruleFsts, String ruleFars, int maxNumSentences, float silenceScale) {
+        Intrinsics.checkNotNullParameter(model, "model");
+        Intrinsics.checkNotNullParameter(ruleFsts, "ruleFsts");
+        Intrinsics.checkNotNullParameter(ruleFars, "ruleFars");
+        return new OfflineTtsConfig(model, ruleFsts, ruleFars, maxNumSentences, silenceScale);
+    }
 
-   // $VF: synthetic method
-   public static OfflineTtsConfig copy$default(
-      OfflineTtsConfig var0, OfflineTtsModelConfig var1, String var2, String var3, int var4, float var5, int var6, Object var7
-   ) {
-      if ((var6 & 1) != 0) {
-         var1 = var0.model;
-      }
-
-      if ((var6 & 2) != 0) {
-         var2 = var0.ruleFsts;
-      }
-
-      if ((var6 & 4) != 0) {
-         var3 = var0.ruleFars;
-      }
-
-      if ((var6 & 8) != 0) {
-         var4 = var0.maxNumSentences;
-      }
-
-      if ((var6 & 16) != 0) {
-         var5 = var0.silenceScale;
-      }
-
-      return var0.copy(var1, var2, var3, var4, var5);
-   }
-
-   public final OfflineTtsModelConfig component1() {
-      return this.model;
-   }
-
-   public final String component2() {
-      return this.ruleFsts;
-   }
-
-   public final String component3() {
-      return this.ruleFars;
-   }
-
-   public final int component4() {
-      return this.maxNumSentences;
-   }
-
-   public final float component5() {
-      return this.silenceScale;
-   }
-
-   public final OfflineTtsConfig copy(OfflineTtsModelConfig var1, String var2, String var3, int var4, float var5) {
-      Intrinsics.checkNotNullParameter(var1, "model");
-      Intrinsics.checkNotNullParameter(var2, "ruleFsts");
-      Intrinsics.checkNotNullParameter(var3, "ruleFars");
-      return new OfflineTtsConfig(var1, var2, var3, var4, var5);
-   }
-
-   @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
-         return true;
-      } else if (!(var1 instanceof OfflineTtsConfig)) {
-         return false;
-      } else {
-         var1 = var1;
-         if (!Intrinsics.areEqual(this.model, var1.model)) {
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof OfflineTtsConfig)) {
             return false;
-         } else if (!Intrinsics.areEqual(this.ruleFsts, var1.ruleFsts)) {
-            return false;
-         } else if (!Intrinsics.areEqual(this.ruleFars, var1.ruleFars)) {
-            return false;
-         } else {
-            return this.maxNumSentences != var1.maxNumSentences ? false : Float.compare(this.silenceScale, var1.silenceScale) == 0;
-         }
-      }
-   }
+        }
+        OfflineTtsConfig offlineTtsConfig = (OfflineTtsConfig) other;
+        return Intrinsics.areEqual(this.model, offlineTtsConfig.model) && Intrinsics.areEqual(this.ruleFsts, offlineTtsConfig.ruleFsts) && Intrinsics.areEqual(this.ruleFars, offlineTtsConfig.ruleFars) && this.maxNumSentences == offlineTtsConfig.maxNumSentences && Float.compare(this.silenceScale, offlineTtsConfig.silenceScale) == 0;
+    }
 
-   public final int getMaxNumSentences() {
-      return this.maxNumSentences;
-   }
+    public int hashCode() {
+        return (((((((this.model.hashCode() * 31) + this.ruleFsts.hashCode()) * 31) + this.ruleFars.hashCode()) * 31) + Integer.hashCode(this.maxNumSentences)) * 31) + Float.hashCode(this.silenceScale);
+    }
 
-   public final OfflineTtsModelConfig getModel() {
-      return this.model;
-   }
+    public String toString() {
+        return "OfflineTtsConfig(model=" + this.model + ", ruleFsts=" + this.ruleFsts + ", ruleFars=" + this.ruleFars + ", maxNumSentences=" + this.maxNumSentences + ", silenceScale=" + this.silenceScale + ")";
+    }
 
-   public final String getRuleFars() {
-      return this.ruleFars;
-   }
+    public OfflineTtsConfig(OfflineTtsModelConfig model, String ruleFsts, String ruleFars, int maxNumSentences, float silenceScale) {
+        Intrinsics.checkNotNullParameter(model, "model");
+        Intrinsics.checkNotNullParameter(ruleFsts, "ruleFsts");
+        Intrinsics.checkNotNullParameter(ruleFars, "ruleFars");
+        this.model = model;
+        this.ruleFsts = ruleFsts;
+        this.ruleFars = ruleFars;
+        this.maxNumSentences = maxNumSentences;
+        this.silenceScale = silenceScale;
+    }
 
-   public final String getRuleFsts() {
-      return this.ruleFsts;
-   }
+    public /* synthetic */ OfflineTtsConfig(OfflineTtsModelConfig offlineTtsModelConfig, String str, String str2, int i, float f, int i2, DefaultConstructorMarker defaultConstructorMarker) {
+        this((i2 & 1) != 0 ? new OfflineTtsModelConfig(null, null, null, null, null, null, null, 0, false, null, 1023, null) : offlineTtsModelConfig, (i2 & 2) != 0 ? "" : str, (i2 & 4) == 0 ? str2 : "", (i2 & 8) != 0 ? 1 : i, (i2 & 16) != 0 ? 0.2f : f);
+    }
 
-   public final float getSilenceScale() {
-      return this.silenceScale;
-   }
+    public final OfflineTtsModelConfig getModel() {
+        return this.model;
+    }
 
-   @Override
-   public int hashCode() {
-      return (((this.model.hashCode() * 31 + this.ruleFsts.hashCode()) * 31 + this.ruleFars.hashCode()) * 31 + Integer.hashCode(this.maxNumSentences)) * 31
-         + Float.hashCode(this.silenceScale);
-   }
+    public final void setModel(OfflineTtsModelConfig offlineTtsModelConfig) {
+        Intrinsics.checkNotNullParameter(offlineTtsModelConfig, "<set-?>");
+        this.model = offlineTtsModelConfig;
+    }
 
-   public final void setMaxNumSentences(int var1) {
-      this.maxNumSentences = var1;
-   }
+    public final String getRuleFsts() {
+        return this.ruleFsts;
+    }
 
-   public final void setModel(OfflineTtsModelConfig var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.model = var1;
-   }
+    public final void setRuleFsts(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.ruleFsts = str;
+    }
 
-   public final void setRuleFars(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.ruleFars = var1;
-   }
+    public final String getRuleFars() {
+        return this.ruleFars;
+    }
 
-   public final void setRuleFsts(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.ruleFsts = var1;
-   }
+    public final void setRuleFars(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.ruleFars = str;
+    }
 
-   public final void setSilenceScale(float var1) {
-      this.silenceScale = var1;
-   }
+    public final int getMaxNumSentences() {
+        return this.maxNumSentences;
+    }
 
-   @Override
-   public String toString() {
-      OfflineTtsModelConfig var3 = this.model;
-      String var5 = this.ruleFsts;
-      String var4 = this.ruleFars;
-      int var2 = this.maxNumSentences;
-      float var1 = this.silenceScale;
-      return "OfflineTtsConfig(model=" + var3 + ", ruleFsts=" + var5 + ", ruleFars=" + var4 + ", maxNumSentences=" + var2 + ", silenceScale=" + var1 + ")";
-   }
+    public final void setMaxNumSentences(int i) {
+        this.maxNumSentences = i;
+    }
+
+    public final float getSilenceScale() {
+        return this.silenceScale;
+    }
+
+    public final void setSilenceScale(float f) {
+        this.silenceScale = f;
+    }
 }

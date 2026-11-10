@@ -3,19 +3,18 @@ package com.starpilot.starview;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioRecord;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
-import android.os.Parcelable;
-import android.os.Build.VERSION;
-import android.os.ParcelFileDescriptor.AutoCloseOutputStream;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.List;
 import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.io.CloseableKt;
@@ -24,411 +23,293 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.Charsets;
 import kotlin.text.StringsKt;
 
+/* compiled from: Bookmarks.kt */
 public final class VoiceNote {
-   private final Context ctx;
-   private boolean delivered;
-   private File file;
-   private volatile float level;
-   private final Handler main;
-   private Function1<? super String, Unit> onText;
-   private String partial;
-   private AutoCloseOutputStream pipeOut;
-   private AudioRecord rec;
-   private SpeechRecognizer recognizer;
-   private volatile boolean running;
-   private Thread thread;
+    private final Context ctx;
+    private boolean delivered;
+    private File file;
+    private volatile float level;
+    private final Handler main;
+    private Function1<? super String, Unit> onText;
+    private String partial;
+    private ParcelFileDescriptor.AutoCloseOutputStream pipeOut;
+    private AudioRecord rec;
+    private SpeechRecognizer recognizer;
+    private volatile boolean running;
+    private Thread thread;
 
-   // $VF: synthetic method
-   public static void $r8$lambda$_CLskCfSwRmv07i0mCgv5NTFHdE/* $VF was: $r8$lambda$_CLskCfSwRmv07i0mCgv5NTFHdE*/(VoiceNote var0) {
-      start$lambda$2$lambda$1(var0);
-   }
+    public VoiceNote(Context ctx) {
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        this.ctx = ctx;
+        this.main = new Handler(Looper.getMainLooper());
+        this.partial = "";
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$Tr8ro7o7Smt2EuMQi4k9m3HXSS0(File var0, VoiceNote var1, AudioRecord var2, int var3) {
-      start$lambda$2(var0, var1, var2, var3);
-   }
+    public final float getLevel() {
+        return this.level;
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$lzjs2KyURAjtaiGNbGR6Xi8yeVU(VoiceNote var0, String var1) {
-      deliver$lambda$4(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$qG1F_Zr0aTShUdMlg9WZIpvcCAo(VoiceNote var0) {
-      start$lambda$2$lambda$1$lambda$0(var0);
-   }
-
-   public VoiceNote(Context var1) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      super();
-      this.ctx = var1;
-      this.main = new Handler(Looper.getMainLooper());
-      this.partial = "";
-   }
-
-   private final void deliver(String var1) {
-      if (!this.delivered) {
-         this.delivered = true;
-         this.main.post(new VoiceNote$$ExternalSyntheticLambda2(this, var1));
-      }
-   }
-
-   private static final void deliver$lambda$4(VoiceNote var0, String var1) {
-      SpeechRecognizer var2 = var0.recognizer;
-      if (var2 != null) {
-         var2.destroy();
-      }
-
-      var0.recognizer = null;
-      Function1 var3 = var0.onText;
-      if (var3 != null) {
-         var3.invoke(StringsKt.trim(var1).toString());
-      }
-   }
-
-   // $VF: Duplicated exception handlers to handle obfuscated exceptions
-   private static final void start$lambda$2(File var0, VoiceNote var1, AudioRecord var2, int var3) {
-      FileOutputStream var15 = new FileOutputStream(var0);
-      var15.write(new byte[44]);
-      short[] var17 = new short[1600];
-      byte[] var16 = new byte[3200];
-      long var9 = 0L;
-      long var13 = System.currentTimeMillis();
-
-      while (var1.running && System.currentTimeMillis() - var13 < 60000L) {
-         int var7 = var2.read(var17, 0, var17.length);
-         if (var7 > 0) {
-            int var6 = 0;
-            int var4 = 0;
-
-            while (var4 < var7) {
-               short var8 = var17[var4];
-               var16[var4 * 2] = (byte)(var8 & 255);
-               var16[var4 * 2 + 1] = (byte)(var8 >> 8 & 0xFF);
-               int var5 = var6;
-               if (Math.abs((int)var8) > var6) {
-                  var5 = Math.abs((int)var8);
-               }
-
-               var4++;
-               var6 = var5;
+    public final String start(final File out, Function1<? super String, Unit> onText) {
+        Intrinsics.checkNotNullParameter(out, "out");
+        Intrinsics.checkNotNullParameter(onText, "onText");
+        if (this.ctx.checkSelfPermission("android.permission.RECORD_AUDIO") != 0) {
+            return "no microphone permission";
+        }
+        final int rate = 16000;
+        int min = AudioRecord.getMinBufferSize(16000, 16, 2);
+        try {
+            final AudioRecord r = new AudioRecord(6, 16000, 16, 2, Math.max(min, 16000));
+            if (r.getState() != 1) {
+                r.release();
+                return "microphone busy";
             }
-
-            var1.level = var6 / 32768.0F;
-            var15.write(var16, 0, var7 * 2);
-            long var11 = var9 + var7 * 2;
-
-            AutoCloseOutputStream var25;
-            try {
-               var25 = var1.pipeOut;
-            } catch (Exception var23) {
-               var1.pipeOut = null;
-               Unit var18 = Unit.INSTANCE;
-               var9 = var11;
-               continue;
-            }
-
-            var9 = var11;
-            if (var25 != null) {
-               try {
-                  var25.write(var16, 0, var7 * 2);
-                  Unit var27 = Unit.INSTANCE;
-               } catch (Exception var22) {
-                  var1.pipeOut = null;
-                  Unit var26 = Unit.INSTANCE;
-                  var9 = var11;
-                  continue;
-               }
-
-               var9 = var11;
-            }
-         }
-      }
-
-      var15.close();
-      var1.wavHeader(var0, var9, var3);
-
-      try {
-         var2.stop();
-      } catch (Exception var20) {
-      }
-
-      var2.release();
-
-      label47: {
-         try {
-            var24 = var1.pipeOut;
-         } catch (Exception var21) {
-            break label47;
-         }
-
-         if (var24 != null) {
-            try {
-               var24.close();
-            } catch (Exception var19) {
-            }
-         }
-      }
-
-      var1.pipeOut = null;
-      var1.main.post(new VoiceNote$$ExternalSyntheticLambda3(var1));
-   }
-
-   private static final void start$lambda$2$lambda$1(VoiceNote var0) {
-      if (var0.recognizer == null) {
-         var0.deliver("");
-      } else {
-         var0.main.postDelayed(new VoiceNote$$ExternalSyntheticLambda0(var0), 6000L);
-      }
-   }
-
-   private static final void start$lambda$2$lambda$1$lambda$0(VoiceNote var0) {
-      var0.deliver(var0.partial);
-   }
-
-   // $VF: Could not inline inconsistent finally blocks
-   // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-   private final void wavHeader(File var1, long var2, int var4) {
-      var var13 = new RandomAccessFile(var1, "rw");
-
-      try {
-         RandomAccessFile var14 = var13;
-         var14.seek(0L);
-         byte[] var6 = "RIFF".getBytes(Charsets.UTF_8);
-         Intrinsics.checkNotNullExpressionValue(var6, "getBytes(...)");
-         var14.write(var6);
-         var14.write(wavHeader$lambda$5$le32(36 + var2));
-         var6 = "WAVEfmt ".getBytes(Charsets.UTF_8);
-         Intrinsics.checkNotNullExpressionValue(var6, "getBytes(...)");
-         var14.write(var6);
-         var14.write(wavHeader$lambda$5$le32(16L));
-         var14.write(wavHeader$lambda$5$le16(1));
-         var14.write(wavHeader$lambda$5$le16(1));
-         var14.write(wavHeader$lambda$5$le32(var4));
-         var14.write(wavHeader$lambda$5$le32(var4 * 2L));
-         var14.write(wavHeader$lambda$5$le16(2));
-         var14.write(wavHeader$lambda$5$le16(16));
-         var6 = "data".getBytes(Charsets.UTF_8);
-         Intrinsics.checkNotNullExpressionValue(var6, "getBytes(...)");
-         var14.write(var6);
-         var14.write(wavHeader$lambda$5$le32(var2));
-         Unit var15 = Unit.INSTANCE;
-      } catch (Throwable var12) {
-         Throwable var5 = var12;
-
-         try {
-            throw var5;
-         } finally {
-            CloseableKt.closeFinally(var13, var12);
-         }
-      }
-
-      CloseableKt.closeFinally(var13, null);
-   }
-
-   private static final byte[] wavHeader$lambda$5$le16(int var0) {
-      return new byte[]{(byte)(var0 & 0xFF), (byte)(var0 >> 8 & 0xFF)};
-   }
-
-   private static final byte[] wavHeader$lambda$5$le32(long var0) {
-      return new byte[]{(byte)(var0 & 255L), (byte)(var0 >> 8 & 255L), (byte)(var0 >> 16 & 255L), (byte)(255L & var0 >> 24)};
-   }
-
-   public final float getLevel() {
-      return this.level;
-   }
-
-   // $VF: Duplicated exception handlers to handle obfuscated exceptions
-   public final String start(File var1, Function1<? super String, Unit> var2) {
-      Intrinsics.checkNotNullParameter(var1, "out");
-      Intrinsics.checkNotNullParameter(var2, "onText");
-      if (this.ctx.checkSelfPermission("android.permission.RECORD_AUDIO") != 0) {
-         return "no microphone permission";
-      } else {
-         int var3 = AudioRecord.getMinBufferSize(16000, 16, 2);
-
-         AudioRecord var4;
-         try {
-            var4 = new AudioRecord(6, 16000, 16, 2, Math.max(var3, 16000));
-         } catch (Exception var8) {
-            String var14 = var8.getMessage();
-            return "microphone: " + var14;
-         }
-
-         if (var4.getState() != 1) {
-            var4.release();
-            return "microphone busy";
-         } else {
-            this.onText = var2;
-            this.file = var1;
+            this.onText = onText;
+            this.file = out;
             this.partial = "";
-            label83:
-            if (VERSION.SDK_INT >= 33) {
-               label81: {
-                  label90: {
-                     label91: {
-                        try {
-                           if (SpeechRecognizer.isOnDeviceRecognitionAvailable(this.ctx)) {
-                              var17 = SpeechRecognizer.createOnDeviceSpeechRecognizer(this.ctx);
-                              break label91;
-                           }
-                        } catch (Exception var12) {
-                           var16 = this.recognizer;
-                           if (var16 == null) {
-                              break label81;
-                           }
-                           break label90;
+            if (Build.VERSION.SDK_INT >= 33) {
+                try {
+                    boolean onDevice = SpeechRecognizer.isOnDeviceRecognitionAvailable(this.ctx);
+                    SpeechRecognizer sr = onDevice ? SpeechRecognizer.createOnDeviceSpeechRecognizer(this.ctx) : SpeechRecognizer.isRecognitionAvailable(this.ctx) ? SpeechRecognizer.createSpeechRecognizer(this.ctx) : null;
+                    if (sr != null) {
+                        ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
+                        this.pipeOut = new ParcelFileDescriptor.AutoCloseOutputStream(pipe[1]);
+                        sr.setRecognitionListener(new RecognitionListener() { // from class: com.starpilot.starview.VoiceNote$start$1
+                            @Override // android.speech.RecognitionListener
+                            public void onResults(Bundle b) {
+                                String t;
+                                ArrayList<String> stringArrayList;
+                                if (b == null || (stringArrayList = b.getStringArrayList("results_recognition")) == null || (t = (String) CollectionsKt.firstOrNull((List) stringArrayList)) == null) {
+                                    t = VoiceNote.this.partial;
+                                }
+                                VoiceNote.this.deliver(t);
+                            }
+
+                            @Override // android.speech.RecognitionListener
+                            public void onPartialResults(Bundle b) {
+                                ArrayList<String> stringArrayList;
+                                String it;
+                                if (b == null || (stringArrayList = b.getStringArrayList("results_recognition")) == null || (it = (String) CollectionsKt.firstOrNull((List) stringArrayList)) == null) {
+                                    return;
+                                }
+                                VoiceNote voiceNote = VoiceNote.this;
+                                if (StringsKt.isBlank(it)) {
+                                    return;
+                                }
+                                voiceNote.partial = it;
+                            }
+
+                            @Override // android.speech.RecognitionListener
+                            public void onError(int error) {
+                                String str;
+                                VoiceNote voiceNote = VoiceNote.this;
+                                str = VoiceNote.this.partial;
+                                voiceNote.deliver(str);
+                            }
+
+                            @Override // android.speech.RecognitionListener
+                            public void onReadyForSpeech(Bundle p) {
+                            }
+
+                            @Override // android.speech.RecognitionListener
+                            public void onBeginningOfSpeech() {
+                            }
+
+                            @Override // android.speech.RecognitionListener
+                            public void onRmsChanged(float v) {
+                            }
+
+                            @Override // android.speech.RecognitionListener
+                            public void onBufferReceived(byte[] b) {
+                            }
+
+                            @Override // android.speech.RecognitionListener
+                            public void onEndOfSpeech() {
+                            }
+
+                            @Override // android.speech.RecognitionListener
+                            public void onEvent(int t, Bundle p) {
+                            }
+                        });
+                        Intent i = new Intent("android.speech.action.RECOGNIZE_SPEECH").putExtra("android.speech.extra.LANGUAGE_MODEL", "free_form").putExtra("android.speech.extra.PARTIAL_RESULTS", true).putExtra("android.speech.extra.AUDIO_SOURCE", pipe[0]).putExtra("android.speech.extra.AUDIO_SOURCE_CHANNEL_COUNT", 1).putExtra("android.speech.extra.AUDIO_SOURCE_ENCODING", 2).putExtra("android.speech.extra.AUDIO_SOURCE_SAMPLING_RATE", 16000).putExtra("android.speech.extras.SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS", 60000L).putExtra("android.speech.extras.SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS", 60000L);
+                        Intrinsics.checkNotNullExpressionValue(i, "putExtra(...)");
+                        sr.startListening(i);
+                        this.recognizer = sr;
+                    }
+                } catch (Exception e) {
+                    SpeechRecognizer speechRecognizer = this.recognizer;
+                    if (speechRecognizer != null) {
+                        speechRecognizer.destroy();
+                    }
+                    this.recognizer = null;
+                    try {
+                        ParcelFileDescriptor.AutoCloseOutputStream autoCloseOutputStream = this.pipeOut;
+                        if (autoCloseOutputStream != null) {
+                            autoCloseOutputStream.close();
                         }
-
-                        try {
-                           if (SpeechRecognizer.isRecognitionAvailable(this.ctx)) {
-                              var17 = SpeechRecognizer.createSpeechRecognizer(this.ctx);
-                              break label91;
-                           }
-                        } catch (Exception var13) {
-                           var16 = this.recognizer;
-                           if (var16 == null) {
-                              break label81;
-                           }
-                           break label90;
-                        }
-
-                        var17 = null;
-                     }
-
-                     if (var17 == null) {
-                        break label83;
-                     }
-
-                     Intent var19;
-                     try {
-                        ParcelFileDescriptor[] var5 = ParcelFileDescriptor.createPipe();
-                        AutoCloseOutputStream var6 = new AutoCloseOutputStream(var5[1]);
-                        this.pipeOut = var6;
-                        RecognitionListener var20 = new RecognitionListener() {
-
-                           public void onBeginningOfSpeech() {
-                           }
-
-                           public void onBufferReceived(byte[] var1) {
-                           }
-
-                           public void onEndOfSpeech() {
-                           }
-
-                           public void onError(int var1) {
-                              VoiceNote.this.deliver(VoiceNote.this.partial);
-                           }
-
-                           public void onEvent(int var1, Bundle var2x) {
-                           }
-
-                           public void onPartialResults(Bundle var1) {
-                              if (var1 != null) {
-                                 ArrayList var3x = var1.getStringArrayList("results_recognition");
-                                 if (var3x != null) {
-                                    String var4x = CollectionsKt.firstOrNull(var3x);
-                                    if (var4x != null) {
-                                       VoiceNote var2x = VoiceNote.this;
-                                       if (!StringsKt.isBlank(var4x)) {
-                                          var2x.partial = var4x;
-                                       }
-                                    }
-                                 }
-                              }
-                           }
-
-                           public void onReadyForSpeech(Bundle var1) {
-                           }
-
-                           public void onResults(Bundle var1) {
-                              label13: {
-                                 if (var1 != null) {
-                                    ArrayList var3x = var1.getStringArrayList("results_recognition");
-                                    if (var3x != null) {
-                                       String var2x = CollectionsKt.firstOrNull(var3x);
-                                       var4 = var2x;
-                                       if (var2x != null) {
-                                          break label13;
-                                       }
-                                    }
-                                 }
-
-                                 var4 = VoiceNote.this.partial;
-                              }
-
-                              VoiceNote.this.deliver(var4);
-                           }
-
-                           public void onRmsChanged(float var1) {
-                           }
-                        };
-                        var17.setRecognitionListener(var20);
-                        Intent var21 = new Intent("android.speech.action.RECOGNIZE_SPEECH");
-                        var19 = var21.putExtra("android.speech.extra.LANGUAGE_MODEL", "free_form")
-                           .putExtra("android.speech.extra.PARTIAL_RESULTS", true)
-                           .putExtra("android.speech.extra.AUDIO_SOURCE", (Parcelable)var5[0])
-                           .putExtra("android.speech.extra.AUDIO_SOURCE_CHANNEL_COUNT", 1)
-                           .putExtra("android.speech.extra.AUDIO_SOURCE_ENCODING", 2)
-                           .putExtra("android.speech.extra.AUDIO_SOURCE_SAMPLING_RATE", 16000)
-                           .putExtra("android.speech.extras.SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS", 60000L)
-                           .putExtra("android.speech.extras.SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS", 60000L);
-                        Intrinsics.checkNotNullExpressionValue(var19, "putExtra(...)");
-                     } catch (Exception var11) {
-                        var16 = this.recognizer;
-                        if (var16 == null) {
-                           break label81;
-                        }
-                        break label90;
-                     }
-
-                     try {
-                        var17.startListening(var19);
-                        this.recognizer = var17;
-                        break label83;
-                     } catch (Exception var10) {
-                        var16 = this.recognizer;
-                        if (var16 == null) {
-                           break label81;
-                        }
-                     }
-                  }
-
-                  var16.destroy();
-               }
-
-               this.recognizer = null;
-
-               label53: {
-                  try {
-                     var18 = this.pipeOut;
-                  } catch (Exception var9) {
-                     break label53;
-                  }
-
-                  if (var18 != null) {
-                     try {
-                        var18.close();
-                     } catch (Exception var7) {
-                     }
-                  }
-               }
-
-               this.pipeOut = null;
+                    } catch (Exception e2) {
+                    }
+                    this.pipeOut = null;
+                }
             }
-
-            this.rec = var4;
+            this.rec = r;
             this.running = true;
-            var4.startRecording();
-            Thread var15 = new Thread(new VoiceNote$$ExternalSyntheticLambda1(var1, this, var4, 16000));
-            var15.start();
-            this.thread = var15;
+            r.startRecording();
+            Thread $this$start_u24lambda_u243 = new Thread(new Runnable() { // from class: com.starpilot.starview.VoiceNote$$ExternalSyntheticLambda1
+                @Override // java.lang.Runnable
+                public final void run() {
+                    VoiceNote.start$lambda$2(out, this, r, rate);
+                }
+            });
+            $this$start_u24lambda_u243.start();
+            this.thread = $this$start_u24lambda_u243;
             return null;
-         }
-      }
-   }
+        } catch (Exception e3) {
+            return "microphone: " + e3.getMessage();
+        }
+    }
 
-   public final void stop() {
-      this.running = false;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void start$lambda$2(File $out, final VoiceNote this$0, AudioRecord $r, int $rate) {
+        FileOutputStream fo = new FileOutputStream($out);
+        fo.write(new byte[44]);
+        short[] buf = new short[1600];
+        byte[] bytes = new byte[3200];
+        long total = 0;
+        long started = System.currentTimeMillis();
+        while (this$0.running && System.currentTimeMillis() - started < 60000) {
+            int n = $r.read(buf, 0, buf.length);
+            if (n > 0) {
+                int peak = 0;
+                for (int peak2 = 0; peak2 < n; peak2++) {
+                    short s = buf[peak2];
+                    bytes[peak2 * 2] = (byte) (s & 255);
+                    bytes[(peak2 * 2) + 1] = (byte) ((s >> 8) & 255);
+                    if (Math.abs((int) s) > peak) {
+                        peak = Math.abs((int) s);
+                    }
+                }
+                this$0.level = peak / 32768.0f;
+                fo.write(bytes, 0, n * 2);
+                total += n * 2;
+                try {
+                    ParcelFileDescriptor.AutoCloseOutputStream autoCloseOutputStream = this$0.pipeOut;
+                    if (autoCloseOutputStream != null) {
+                        autoCloseOutputStream.write(bytes, 0, n * 2);
+                        Unit unit = Unit.INSTANCE;
+                    }
+                } catch (Exception e) {
+                    this$0.pipeOut = null;
+                    Unit unit2 = Unit.INSTANCE;
+                }
+            }
+        }
+        fo.close();
+        this$0.wavHeader($out, total, $rate);
+        try {
+            $r.stop();
+        } catch (Exception e2) {
+        }
+        $r.release();
+        try {
+            ParcelFileDescriptor.AutoCloseOutputStream autoCloseOutputStream2 = this$0.pipeOut;
+            if (autoCloseOutputStream2 != null) {
+                autoCloseOutputStream2.close();
+            }
+        } catch (Exception e3) {
+        }
+        this$0.pipeOut = null;
+        this$0.main.post(new Runnable() { // from class: com.starpilot.starview.VoiceNote$$ExternalSyntheticLambda3
+            @Override // java.lang.Runnable
+            public final void run() {
+                VoiceNote.start$lambda$2$lambda$1(VoiceNote.this);
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void start$lambda$2$lambda$1(final VoiceNote this$0) {
+        if (this$0.recognizer == null) {
+            this$0.deliver("");
+        } else {
+            this$0.main.postDelayed(new Runnable() { // from class: com.starpilot.starview.VoiceNote$$ExternalSyntheticLambda0
+                @Override // java.lang.Runnable
+                public final void run() {
+                    VoiceNote.start$lambda$2$lambda$1$lambda$0(VoiceNote.this);
+                }
+            }, 6000L);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void start$lambda$2$lambda$1$lambda$0(VoiceNote this$0) {
+        this$0.deliver(this$0.partial);
+    }
+
+    public final void stop() {
+        this.running = false;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void deliver(final String t) {
+        if (this.delivered) {
+            return;
+        }
+        this.delivered = true;
+        this.main.post(new Runnable() { // from class: com.starpilot.starview.VoiceNote$$ExternalSyntheticLambda2
+            @Override // java.lang.Runnable
+            public final void run() {
+                VoiceNote.deliver$lambda$4(VoiceNote.this, t);
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void deliver$lambda$4(VoiceNote this$0, String $t) {
+        SpeechRecognizer speechRecognizer = this$0.recognizer;
+        if (speechRecognizer != null) {
+            speechRecognizer.destroy();
+        }
+        this$0.recognizer = null;
+        Function1<? super String, Unit> function1 = this$0.onText;
+        if (function1 != null) {
+            function1.invoke(StringsKt.trim((CharSequence) $t).toString());
+        }
+    }
+
+    private final void wavHeader(File f, long dataBytes, int rate) {
+        RandomAccessFile randomAccessFile = new RandomAccessFile(f, "rw");
+        try {
+            RandomAccessFile r = randomAccessFile;
+            r.seek(0L);
+            byte[] bytes = "RIFF".getBytes(Charsets.UTF_8);
+            Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
+            r.write(bytes);
+            r.write(wavHeader$lambda$5$le32(36 + dataBytes));
+            byte[] bytes2 = "WAVEfmt ".getBytes(Charsets.UTF_8);
+            Intrinsics.checkNotNullExpressionValue(bytes2, "getBytes(...)");
+            r.write(bytes2);
+            r.write(wavHeader$lambda$5$le32(16L));
+            r.write(wavHeader$lambda$5$le16(1));
+            r.write(wavHeader$lambda$5$le16(1));
+            r.write(wavHeader$lambda$5$le32(rate));
+            r.write(wavHeader$lambda$5$le32(rate * 2));
+            r.write(wavHeader$lambda$5$le16(2));
+            r.write(wavHeader$lambda$5$le16(16));
+            byte[] bytes3 = "data".getBytes(Charsets.UTF_8);
+            Intrinsics.checkNotNullExpressionValue(bytes3, "getBytes(...)");
+            r.write(bytes3);
+            r.write(wavHeader$lambda$5$le32(dataBytes));
+            Unit unit = Unit.INSTANCE;
+            CloseableKt.closeFinally(randomAccessFile, null);
+        } finally {
+        }
+    }
+
+    private static final byte[] wavHeader$lambda$5$le32(long v) {
+        return new byte[]{(byte) (v & 255), (byte) ((v >> 8) & 255), (byte) ((v >> 16) & 255), (byte) (255 & (v >> 24))};
+    }
+
+    private static final byte[] wavHeader$lambda$5$le16(int v) {
+        return new byte[]{(byte) (v & 255), (byte) ((v >> 8) & 255)};
+    }
 }

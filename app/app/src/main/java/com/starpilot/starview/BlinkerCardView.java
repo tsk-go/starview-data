@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.graphics.Paint.Align;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
@@ -19,483 +18,404 @@ import java.util.Iterator;
 import kotlin.TuplesKt;
 import kotlin.Unit;
 import kotlin.collections.MapsKt;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.json.JSONObject;
 
+/* compiled from: BlinkerCardView.kt */
 public final class BlinkerCardView extends View {
-   private final Paint bg;
-   private final Paint big;
-   private final float d;
-   private final RectF leftR;
-   private final Handler main;
-   private final Paint p;
-   private final HashMap<Integer, Integer> pointers;
-   private final Runnable repeat;
-   private final RectF rightR;
-   private String sent;
-   private String status;
-   private boolean statusErr;
-   public Telemetry t;
-   private final Paint txt;
+    private final Paint bg;
+    private final Paint big;
+    private final float d;
+    private final RectF leftR;
+    private final Handler main;
+    private final Paint p;
+    private final HashMap<Integer, Integer> pointers;
+    private final BlinkerCardView$repeat$1 repeat;
+    private final RectF rightR;
+    private String sent;
+    private String status;
+    private boolean statusErr;
+    public Telemetry t;
+    private final Paint txt;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$A4OxtvJPxrrtBuajE3xrv4hkOXY(BlinkerCardView var0, boolean var1, String var2, JSONObject var3) {
-      return send$lambda$5(var0, var1, var2, var3);
-   }
-
-   public BlinkerCardView(Context var1, AttributeSet var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      super(var1, var2);
-      this.d = this.getResources().getDisplayMetrics().density;
-      Paint var3 = new Paint(1);
-      var3.setColor(Color.argb(200, 0, 0, 0));
-      this.bg = var3;
-      this.p = new Paint(1);
-      Paint var4 = new Paint(1);
-      var4.setColor(Color.rgb(200, 208, 222));
-      var4.setTextSize(this.d * 13.0F);
-      var4.setTextAlign(Align.CENTER);
-      this.txt = var4;
-      Paint var5 = new Paint(1);
-      var5.setColor(-1);
-      var5.setTextSize(this.d * 15.0F);
-      var5.setTypeface(Typeface.DEFAULT_BOLD);
-      var5.setTextAlign(Align.CENTER);
-      this.big = var5;
-      this.leftR = new RectF();
-      this.rightR = new RectF();
-      this.pointers = new HashMap<>();
-      this.main = new Handler(Looper.getMainLooper());
-      this.sent = "off";
-      this.status = "hold a button to signal";
-      this.repeat = new Runnable() {
-
-         @Override
-         public void run() {
-            String var1x = BlinkerCardView.this.held();
-            if (Intrinsics.areEqual(var1x, "left") || Intrinsics.areEqual(var1x, "right")) {
-               BlinkerCardView.this.send(var1x);
-               BlinkerCardView.this.main.postDelayed(this, 250L);
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    /* JADX WARN: Type inference failed for: r0v14, types: [com.starpilot.starview.BlinkerCardView$repeat$1] */
+    public BlinkerCardView(Context ctx, AttributeSet attrs) {
+        super(ctx, attrs);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        this.d = getResources().getDisplayMetrics().density;
+        Paint $this$bg_u24lambda_u240 = new Paint(1);
+        $this$bg_u24lambda_u240.setColor(Color.argb(200, 0, 0, 0));
+        this.bg = $this$bg_u24lambda_u240;
+        this.p = new Paint(1);
+        Paint $this$txt_u24lambda_u241 = new Paint(1);
+        $this$txt_u24lambda_u241.setColor(Color.rgb(200, 208, 222));
+        $this$txt_u24lambda_u241.setTextSize(this.d * 13.0f);
+        $this$txt_u24lambda_u241.setTextAlign(Paint.Align.CENTER);
+        this.txt = $this$txt_u24lambda_u241;
+        Paint $this$big_u24lambda_u242 = new Paint(1);
+        $this$big_u24lambda_u242.setColor(-1);
+        $this$big_u24lambda_u242.setTextSize(this.d * 15.0f);
+        $this$big_u24lambda_u242.setTypeface(Typeface.DEFAULT_BOLD);
+        $this$big_u24lambda_u242.setTextAlign(Paint.Align.CENTER);
+        this.big = $this$big_u24lambda_u242;
+        this.leftR = new RectF();
+        this.rightR = new RectF();
+        this.pointers = new HashMap<>();
+        this.main = new Handler(Looper.getMainLooper());
+        this.sent = "off";
+        this.status = "hold a button to signal";
+        this.repeat = new Runnable() { // from class: com.starpilot.starview.BlinkerCardView$repeat$1
+            @Override // java.lang.Runnable
+            public void run() {
+                String h;
+                Handler handler;
+                h = BlinkerCardView.this.held();
+                if (Intrinsics.areEqual(h, "left") || Intrinsics.areEqual(h, "right")) {
+                    BlinkerCardView.this.send(h);
+                    handler = BlinkerCardView.this.main;
+                    handler.postDelayed(this, 250L);
+                }
             }
-         }
-      };
-   }
+        };
+    }
 
-   // $VF: synthetic method
-   public BlinkerCardView(Context var1, AttributeSet var2, int var3, DefaultConstructorMarker var4) {
-      if ((var3 & 2) != 0) {
-         var2 = null;
-      }
+    public /* synthetic */ BlinkerCardView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this(context, (i & 2) != 0 ? null : attributeSet);
+    }
 
-      this(var1, var2);
-   }
+    public final Telemetry getT() {
+        Telemetry telemetry = this.t;
+        if (telemetry != null) {
+            return telemetry;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("t");
+        return null;
+    }
 
-   private final String held() {
-      Collection var5 = this.pointers.values();
-      Intrinsics.checkNotNullExpressionValue(var5, "<get-values>(...)");
-      var var8 = var5;
-      boolean var4 = ((Collection)var8).isEmpty();
-      boolean var3 = true;
-      boolean var1;
-      if (var4) {
-         var1 = false;
-      } else {
-         label65: {
-            Iterator var9 = var8.iterator();
+    public final void setT(Telemetry telemetry) {
+        Intrinsics.checkNotNullParameter(telemetry, "<set-?>");
+        this.t = telemetry;
+    }
 
-            while (var9.hasNext()) {
-               if ((Integer)var9.next() < 0) {
-                  var1 = true;
-               } else {
-                  var1 = false;
-               }
-
-               if (var1) {
-                  var1 = true;
-                  break label65;
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r4v0 */
+    /* JADX WARN: Type inference failed for: r4v1 */
+    /* JADX WARN: Type inference failed for: r4v2 */
+    /* JADX WARN: Type inference failed for: r4v3 */
+    public final String held() {
+        Iterable $this$any$iv;
+        Iterable values = this.pointers.values();
+        Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
+        Iterable $this$any$iv2 = values;
+        ?? r4 = 1;
+        if (!((Collection) $this$any$iv2).isEmpty()) {
+            Iterator it = $this$any$iv2.iterator();
+            while (true) {
+                if (!it.hasNext()) {
+                    $this$any$iv = null;
+                    break;
+                }
+                Object element$iv = it.next();
+                Integer it2 = (Integer) element$iv;
+                Integer it3 = it2.intValue() < 0 ? 1 : null;
+                if (it3 != null) {
+                    $this$any$iv = 1;
+                    break;
+                }
             }
-
-            var1 = false;
-         }
-      }
-
-      var5 = this.pointers.values();
-      Intrinsics.checkNotNullExpressionValue(var5, "<get-values>(...)");
-      var var11 = var5;
-      boolean var2;
-      if (((Collection)var11).isEmpty()) {
-         var2 = false;
-      } else {
-         label67: {
-            Iterator var12 = var11.iterator();
-
-            while (var12.hasNext()) {
-               if ((Integer)var12.next() > 0) {
-                  var2 = true;
-               } else {
-                  var2 = false;
-               }
-
-               if (var2) {
-                  var2 = var3;
-                  break label67;
-               }
+        } else {
+            $this$any$iv = null;
+        }
+        Iterable values2 = this.pointers.values();
+        Intrinsics.checkNotNullExpressionValue(values2, "<get-values>(...)");
+        Iterable $this$any$iv3 = values2;
+        if (!((Collection) $this$any$iv3).isEmpty()) {
+            Iterator it4 = $this$any$iv3.iterator();
+            while (true) {
+                if (!it4.hasNext()) {
+                    r4 = 0;
+                    break;
+                }
+                Object element$iv2 = it4.next();
+                Integer it5 = (Integer) element$iv2;
+                Integer it6 = it5.intValue() > 0 ? 1 : null;
+                if (it6 != null) {
+                    break;
+                }
             }
+        } else {
+            r4 = 0;
+        }
+        Iterable $this$any$iv4 = r4;
+        return ($this$any$iv == null || $this$any$iv4 == null) ? $this$any$iv != null ? "left" : $this$any$iv4 != null ? "right" : "off" : "both";
+    }
 
-            var2 = false;
-         }
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void send(final String side) {
+        DataClient dc = Link.INSTANCE.getData();
+        if (dc == null || !dc.getConnected()) {
+            this.status = "not connected to the comma";
+            this.statusErr = true;
+            invalidate();
+        } else {
+            final boolean first = true ^ Intrinsics.areEqual(side, this.sent);
+            this.sent = side;
+            dc.request("blink", MapsKt.mapOf(TuplesKt.to("side", side)), new Function1() { // from class: com.starpilot.starview.BlinkerCardView$$ExternalSyntheticLambda0
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj) {
+                    Unit send$lambda$5;
+                    send$lambda$5 = BlinkerCardView.send$lambda$5(BlinkerCardView.this, first, side, (JSONObject) obj);
+                    return send$lambda$5;
+                }
+            });
+        }
+    }
 
-      String var13;
-      if (var1 && var2) {
-         var13 = "both";
-      } else if (var1) {
-         var13 = "left";
-      } else if (var2) {
-         var13 = "right";
-      } else {
-         var13 = "off";
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit send$lambda$5(BlinkerCardView this$0, boolean $first, String $side, JSONObject ack) {
+        Intrinsics.checkNotNullParameter(ack, "ack");
+        if (!ack.optBoolean("ok")) {
+            this$0.status = ack.optString("error", "rejected");
+            this$0.statusErr = true;
+        } else if ($first) {
+            this$0.status = Intrinsics.areEqual($side, "off") ? "released" : $side + " signal on - let go to stop";
+            this$0.statusErr = false;
+        }
+        this$0.invalidate();
+        return Unit.INSTANCE;
+    }
 
-      return var13;
-   }
+    private final void update() {
+        String h = held();
+        this.main.removeCallbacks(this.repeat);
+        if (Intrinsics.areEqual(h, "both")) {
+            send("off");
+            this.status = "both = off (the relay box never closes both sides)";
+            this.statusErr = true;
+        } else if (!Intrinsics.areEqual(h, "off")) {
+            send(h);
+            this.main.postDelayed(this.repeat, 250L);
+        } else if (!Intrinsics.areEqual(this.sent, "off")) {
+            send("off");
+        }
+        invalidate();
+    }
 
-   private static final void onDraw$button(BlinkerCardView var0, String var1, Canvas var2, boolean var3, RectF var4, int var5, boolean var6, boolean var7) {
-      Paint var14 = var0.p;
-      int var18;
-      if (var6 && Intrinsics.areEqual(var1, "both")) {
-         var18 = Color.rgb(120, 40, 40);
-      } else {
-         short var11;
-         byte var12;
-         short var13;
-         if (var6) {
-            var11 = 140;
-            var12 = 20;
-            var13 = 200;
-         } else {
-            var11 = 54;
-            var12 = 66;
-            var13 = 48;
-         }
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    /* JADX WARN: Code restructure failed: missing block: B:16:0x006f, code lost:
+    
+        return true;
+     */
+    @Override // android.view.View
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public boolean onTouchEvent(MotionEvent e) {
+        Intrinsics.checkNotNullParameter(e, "e");
+        int i = e.getActionIndex();
+        switch (e.getActionMasked()) {
+            case 0:
+            case 5:
+                int side = this.leftR.contains(e.getX(i), e.getY(i)) ? -1 : this.rightR.contains(e.getX(i), e.getY(i)) ? 1 : 0;
+                if (side != 0) {
+                    this.pointers.put(Integer.valueOf(e.getPointerId(i)), Integer.valueOf(side));
+                    performHapticFeedback(1);
+                    update();
+                    break;
+                }
+                break;
+            case 1:
+            case 6:
+                if (this.pointers.remove(Integer.valueOf(e.getPointerId(i))) != null) {
+                    update();
+                    break;
+                }
+                break;
+            case 3:
+                this.pointers.clear();
+                update();
+                break;
+        }
+    }
 
-         var18 = Color.rgb(var13, var11, var12);
-      }
+    @Override // android.view.View
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        this.pointers.clear();
+        this.main.removeCallbacks(this.repeat);
+        if (Intrinsics.areEqual(this.sent, "off")) {
+            return;
+        }
+        send("off");
+    }
 
-      var14.setColor(var18);
-      var2.drawRoundRect(var4, var0.d * 14.0F, var0.d * 14.0F, var0.p);
-      Paint var15 = var0.p;
-      short var19;
-      short var20;
-      short var21;
-      if (var7 && var3) {
-         var19 = 220;
-         var20 = 100;
-         var21 = 60;
-      } else if (var7) {
-         var19 = 110;
-         var20 = 50;
-         var21 = 30;
-      } else {
-         var19 = 176;
-         var20 = 188;
-         var21 = 170;
-      }
+    @Override // android.view.View
+    protected void onVisibilityChanged(View changedView, int visibility) {
+        Intrinsics.checkNotNullParameter(changedView, "changedView");
+        super.onVisibilityChanged(changedView, visibility);
+        if (visibility == 0 || this.pointers.isEmpty()) {
+            return;
+        }
+        this.pointers.clear();
+        update();
+    }
 
-      var15.setColor(Color.rgb(var21, var19, var20));
-      float var8 = var4.centerX();
-      float var9 = var4.centerY() - var0.d * 6.0F;
-      float var10 = Math.min(var4.width(), var4.height()) * 0.28F;
-      Path var16 = new Path();
-      if (var5 < 0) {
-         var16.moveTo(var8 - var10, var9);
-         var16.lineTo(var8, var9 - var10 * 0.8F);
-         var16.lineTo(var8, var9 - var10 * 0.35F);
-         var16.lineTo(var8 + var10, var9 - var10 * 0.35F);
-         var16.lineTo(var8 + var10, var10 * 0.35F + var9);
-         var16.lineTo(var8, 0.35F * var10 + var9);
-         var16.lineTo(var8, 0.8F * var10 + var9);
-      } else {
-         var16.moveTo(var8 + var10, var9);
-         var16.lineTo(var8, var9 - var10 * 0.8F);
-         var16.lineTo(var8, var9 - var10 * 0.35F);
-         var16.lineTo(var8 - var10, var9 - var10 * 0.35F);
-         var16.lineTo(var8 - var10, var10 * 0.35F + var9);
-         var16.lineTo(var8, 0.35F * var10 + var9);
-         var16.lineTo(var8, 0.8F * var10 + var9);
-      }
-
-      var16.close();
-      var2.drawPath(var16, var0.p);
-      if (var6) {
-         var1 = "HOLDING";
-      } else if (var5 < 0) {
-         var1 = "LEFT";
-      } else {
-         var1 = "RIGHT";
-      }
-
-      var2.drawText(var1, var8, var4.bottom - var0.d * 8.0F, var0.big);
-   }
-
-   private final void send(String var1) {
-      DataClient var3 = Link.INSTANCE.getData();
-      if (var3 != null && var3.getConnected()) {
-         boolean var2 = Intrinsics.areEqual(var1, this.sent);
-         this.sent = var1;
-         var3.request("blink", MapsKt.mapOf(TuplesKt.to("side", var1)), new BlinkerCardView$$ExternalSyntheticLambda0(this, true ^ var2, var1));
-      } else {
-         this.status = "not connected to the comma";
-         this.statusErr = true;
-         this.invalidate();
-      }
-   }
-
-   private static final Unit send$lambda$5(BlinkerCardView var0, boolean var1, String var2, JSONObject var3) {
-      Intrinsics.checkNotNullParameter(var3, "ack");
-      if (!var3.optBoolean("ok")) {
-         var0.status = var3.optString("error", "rejected");
-         var0.statusErr = true;
-      } else if (var1) {
-         if (Intrinsics.areEqual(var2, "off")) {
-            var2 = "released";
-         } else {
-            var2 = var2 + " signal on - let go to stop";
-         }
-
-         var0.status = var2;
-         var0.statusErr = false;
-      }
-
-      var0.invalidate();
-      return Unit.INSTANCE;
-   }
-
-   private final void update() {
-      String var1 = this.held();
-      this.main.removeCallbacks(this.repeat);
-      if (Intrinsics.areEqual(var1, "both")) {
-         this.send("off");
-         this.status = "both = off (the relay box never closes both sides)";
-         this.statusErr = true;
-      } else if (Intrinsics.areEqual(var1, "off")) {
-         if (!Intrinsics.areEqual(this.sent, "off")) {
-            this.send("off");
-         }
-      } else {
-         this.send(var1);
-         this.main.postDelayed(this.repeat, 250L);
-      }
-
-      this.invalidate();
-   }
-
-   public final Telemetry getT() {
-      Telemetry var1 = this.t;
-      if (var1 != null) {
-         return var1;
-      } else {
-         Intrinsics.throwUninitializedPropertyAccessException("t");
-         return null;
-      }
-   }
-
-   protected void onDetachedFromWindow() {
-      super.onDetachedFromWindow();
-      this.pointers.clear();
-      this.main.removeCallbacks(this.repeat);
-      if (!Intrinsics.areEqual(this.sent, "off")) {
-         this.send("off");
-      }
-   }
-
-   protected void onDraw(Canvas var1) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      float var2 = this.getWidth();
-      float var3 = this.getHeight();
-      float var4 = this.d * 10.0F;
-      var1.drawRoundRect(new RectF(0.0F, 0.0F, var2, var3), this.d * 16.0F, this.d * 16.0F, this.bg);
-      float var6 = 3;
-      float var5 = 2;
-      var6 = (var2 - var6 * var4) / var5;
-      float var7 = var3 - var4 - this.d * 26.0F;
-      this.leftR.set(var4, var4, var4 + var6, var4 + var7);
-      this.rightR.set(var5 * var4 + var6, var4, var2 - var4, var4 + var7);
-      String var15 = this.held();
-      boolean var12;
-      if (System.currentTimeMillis() / 350 % 2 == 0L) {
-         var12 = true;
-      } else {
-         var12 = false;
-      }
-
-      boolean var13;
-      if (this.t != null && this.getT().getLeftBlinker()) {
-         var13 = true;
-      } else {
-         var13 = false;
-      }
-
-      boolean var14;
-      if (this.t != null && this.getT().getRightBlinker()) {
-         var14 = true;
-      } else {
-         var14 = false;
-      }
-
-      RectF var16 = this.leftR;
-      Collection var17 = this.pointers.values();
-      Intrinsics.checkNotNullExpressionValue(var17, "<get-values>(...)");
-      var var28 = var17;
-      boolean var11;
-      if (((Collection)var28).isEmpty()) {
-         var11 = false;
-      } else {
-         label109: {
-            Iterator var29 = var28.iterator();
-
-            while (var29.hasNext()) {
-               boolean var8;
-               if ((Integer)var29.next() < 0) {
-                  var8 = true;
-               } else {
-                  var8 = false;
-               }
-
-               if (var8) {
-                  var11 = true;
-                  break label109;
-               }
+    @Override // android.view.View
+    protected void onDraw(Canvas c) {
+        boolean z;
+        boolean z2;
+        int i;
+        int i2;
+        int i3;
+        String it;
+        Intrinsics.checkNotNullParameter(c, "c");
+        float w = getWidth();
+        float h = getHeight();
+        float pad = this.d * 10.0f;
+        c.drawRoundRect(new RectF(0.0f, 0.0f, w, h), this.d * 16.0f, this.d * 16.0f, this.bg);
+        float f = 2;
+        float bw = (w - (3 * pad)) / f;
+        float bh = (h - pad) - (this.d * 26.0f);
+        this.leftR.set(pad, pad, pad + bw, pad + bh);
+        this.rightR.set((f * pad) + bw, pad, w - pad, pad + bh);
+        String h0 = held();
+        boolean blink = (System.currentTimeMillis() / ((long) 350)) % ((long) 2) == 0;
+        boolean seenL = this.t != null && getT().getLeftBlinker();
+        boolean seenR = this.t != null && getT().getRightBlinker();
+        RectF rectF = this.leftR;
+        Iterable values = this.pointers.values();
+        Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
+        Iterable $this$any$iv = values;
+        if (!((Collection) $this$any$iv).isEmpty()) {
+            Iterator it2 = $this$any$iv.iterator();
+            while (true) {
+                if (it2.hasNext()) {
+                    Object element$iv = it2.next();
+                    Integer it3 = (Integer) element$iv;
+                    if (it3.intValue() < 0) {
+                        z = true;
+                        break;
+                    }
+                } else {
+                    z = false;
+                    break;
+                }
             }
-
-            var11 = false;
-         }
-      }
-
-      onDraw$button(this, var15, var1, var12, var16, -1, var11, var13);
-      var16 = this.rightR;
-      var17 = this.pointers.values();
-      Intrinsics.checkNotNullExpressionValue(var17, "<get-values>(...)");
-      var var31 = var17;
-      if (((Collection)var31).isEmpty()) {
-         var11 = false;
-      } else {
-         label111: {
-            Iterator var32 = var31.iterator();
-
-            while (var32.hasNext()) {
-               boolean var19;
-               if ((Integer)var32.next() > 0) {
-                  var19 = true;
-               } else {
-                  var19 = false;
-               }
-
-               if (var19) {
-                  var11 = true;
-                  break label111;
-               }
+        } else {
+            z = false;
+        }
+        onDraw$button(this, h0, c, blink, rectF, -1, z, seenL);
+        RectF rectF2 = this.rightR;
+        Iterable values2 = this.pointers.values();
+        Intrinsics.checkNotNullExpressionValue(values2, "<get-values>(...)");
+        Iterable $this$any$iv2 = values2;
+        if (!((Collection) $this$any$iv2).isEmpty()) {
+            Iterator it4 = $this$any$iv2.iterator();
+            while (true) {
+                if (it4.hasNext()) {
+                    Object element$iv2 = it4.next();
+                    Integer it5 = (Integer) element$iv2;
+                    if (it5.intValue() > 0) {
+                        z2 = true;
+                        break;
+                    }
+                } else {
+                    z2 = false;
+                    break;
+                }
             }
+        } else {
+            z2 = false;
+        }
+        onDraw$button(this, h0, c, blink, rectF2, 1, z2, seenR);
+        Paint paint = this.txt;
+        if (this.statusErr) {
+            i = 130;
+            i2 = 120;
+            i3 = 255;
+        } else {
+            i = 208;
+            i2 = 222;
+            i3 = 200;
+        }
+        paint.setColor(Color.rgb(i3, i, i2));
+        String it6 = BlinkerTurn.INSTANCE.label();
+        if (it6 == null || (it = "openpilot: " + it6) == null) {
+            it = (seenL && seenR) ? "openpilot sees: both" : seenL ? "openpilot sees: LEFT" : seenR ? "openpilot sees: RIGHT" : "openpilot sees: none";
+        }
+        c.drawText(this.status + "  ·  " + it, w / f, h - (this.d * 9.0f), this.txt);
+        if (!this.pointers.isEmpty() || seenL || seenR) {
+            postInvalidateDelayed(120L);
+        }
+    }
 
-            var11 = false;
-         }
-      }
-
-      onDraw$button(this, var15, var1, var12, var16, 1, var11, var14);
-      Paint var22 = this.txt;
-      short var9;
-      short var10;
-      short var20;
-      if (this.statusErr) {
-         var20 = 130;
-         var10 = 120;
-         var9 = 255;
-      } else {
-         var20 = 208;
-         var10 = 222;
-         var9 = 200;
-      }
-
-      label113: {
-         var22.setColor(Color.rgb(var9, var20, var10));
-         var15 = BlinkerTurn.INSTANCE.label();
-         if (var15 != null) {
-            String var26 = "openpilot: " + var15;
-            var15 = var26;
-            if (var26 != null) {
-               break label113;
-            }
-         }
-
-         if (var13 && var14) {
-            var15 = "openpilot sees: both";
-         } else if (var13) {
-            var15 = "openpilot sees: LEFT";
-         } else if (var14) {
-            var15 = "openpilot sees: RIGHT";
-         } else {
-            var15 = "openpilot sees: none";
-         }
-      }
-
-      String var27 = this.status;
-      var1.drawText(var27 + "  ·  " + var15, var2 / var5, var3 - this.d * 9.0F, this.txt);
-      if (!this.pointers.isEmpty() || var13 || var14) {
-         this.postInvalidateDelayed(120L);
-      }
-   }
-
-   public boolean onTouchEvent(MotionEvent var1) {
-      Intrinsics.checkNotNullParameter(var1, "e");
-      int var3 = var1.getActionIndex();
-      switch (var1.getActionMasked()) {
-         case 0:
-         case 5:
-            byte var2;
-            if (this.leftR.contains(var1.getX(var3), var1.getY(var3))) {
-               var2 = -1;
-            } else if (this.rightR.contains(var1.getX(var3), var1.getY(var3))) {
-               var2 = 1;
+    private static final void onDraw$button(BlinkerCardView this$0, String h0, Canvas $c, boolean blink, RectF r, int side, boolean held, boolean seen) {
+        int i;
+        int i2;
+        int i3;
+        int rgb;
+        int i4;
+        int i5;
+        int i6;
+        Paint paint = this$0.p;
+        if (held && Intrinsics.areEqual(h0, "both")) {
+            rgb = Color.rgb(120, 40, 40);
+        } else {
+            if (held) {
+                i = 140;
+                i2 = 20;
+                i3 = 200;
             } else {
-               var2 = 0;
+                i = 54;
+                i2 = 66;
+                i3 = 48;
             }
-
-            if (var2 != 0) {
-               this.pointers.put(var1.getPointerId(var3), Integer.valueOf(var2));
-               this.performHapticFeedback(1);
-               this.update();
-            }
-            break;
-         case 1:
-         case 6:
-            if (this.pointers.remove(var1.getPointerId(var3)) != null) {
-               this.update();
-            }
-         case 2:
-         case 4:
-         default:
-            break;
-         case 3:
-            this.pointers.clear();
-            this.update();
-      }
-
-      return true;
-   }
-
-   protected void onVisibilityChanged(View var1, int var2) {
-      Intrinsics.checkNotNullParameter(var1, "changedView");
-      super.onVisibilityChanged(var1, var2);
-      if (var2 != 0 && !this.pointers.isEmpty()) {
-         this.pointers.clear();
-         this.update();
-      }
-   }
-
-   public final void setT(Telemetry var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.t = var1;
-   }
+            rgb = Color.rgb(i3, i, i2);
+        }
+        paint.setColor(rgb);
+        $c.drawRoundRect(r, this$0.d * 14.0f, this$0.d * 14.0f, this$0.p);
+        Paint paint2 = this$0.p;
+        if (seen && blink) {
+            i4 = 220;
+            i5 = 100;
+            i6 = 60;
+        } else if (seen) {
+            i4 = 110;
+            i5 = 50;
+            i6 = 30;
+        } else {
+            i4 = 176;
+            i5 = 188;
+            i6 = 170;
+        }
+        paint2.setColor(Color.rgb(i6, i4, i5));
+        float cx = r.centerX();
+        float cy = r.centerY() - (this$0.d * 6.0f);
+        float s = Math.min(r.width(), r.height()) * 0.28f;
+        Path path = new Path();
+        if (side < 0) {
+            path.moveTo(cx - s, cy);
+            path.lineTo(cx, cy - (s * 0.8f));
+            path.lineTo(cx, cy - (s * 0.35f));
+            path.lineTo(cx + s, cy - (s * 0.35f));
+            path.lineTo(cx + s, (s * 0.35f) + cy);
+            path.lineTo(cx, (0.35f * s) + cy);
+            path.lineTo(cx, (0.8f * s) + cy);
+        } else {
+            path.moveTo(cx + s, cy);
+            path.lineTo(cx, cy - (s * 0.8f));
+            path.lineTo(cx, cy - (s * 0.35f));
+            path.lineTo(cx - s, cy - (s * 0.35f));
+            path.lineTo(cx - s, (s * 0.35f) + cy);
+            path.lineTo(cx, (0.35f * s) + cy);
+            path.lineTo(cx, (0.8f * s) + cy);
+        }
+        path.close();
+        $c.drawPath(path, this$0.p);
+        $c.drawText(held ? "HOLDING" : side < 0 ? "LEFT" : "RIGHT", cx, r.bottom - (this$0.d * 8.0f), this$0.big);
+    }
 }

@@ -1,22 +1,23 @@
 package com.starpilot.starview;
 
+import com.starpilot.starview.NtripCore;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.Base64.Encoder;
 import kotlin.Pair;
 import kotlin.TuplesKt;
 import kotlin.collections.CollectionsKt;
-import kotlin.collections.SetsKt;
 import kotlin.comparisons.ComparisonsKt;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.StringCompanionObject;
@@ -26,926 +27,608 @@ import kotlin.text.Charsets;
 import kotlin.text.Regex;
 import kotlin.text.StringsKt;
 
+/* compiled from: RtkCore.kt */
 public final class NtripCore {
-   public static final NtripCore INSTANCE = new NtripCore();
+    public static final NtripCore INSTANCE = new NtripCore();
 
-   // $VF: synthetic method
-   public static String $r8$lambda$5jFvYD3sZlGXf_fa63_WmGDjPbM/* $VF was: $r8$lambda$5jFvYD3sZlGXf_fa63_WmGDjPbM*/(String var0) {
-      return sourcetable$lambda$12(var0);
-   }
+    private NtripCore() {
+    }
 
-   // $VF: synthetic method
-   public static NtripCore.Mount $r8$lambda$G7zrPgP1Q1NAkzWrGSzd5rTz2aA(String var0) {
-      return sourcetable$lambda$14(var0);
-   }
+    public final String size(long bytes) {
+        if (bytes < 1048576) {
+            return (bytes / 1024) + " KB";
+        }
+        if (bytes >= 1073741824) {
+            StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
+            String format = String.format(Locale.US, "%.2f GB", Arrays.copyOf(new Object[]{Double.valueOf(bytes / 1.073741824E9d)}, 1));
+            Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+            return format;
+        }
+        StringCompanionObject stringCompanionObject2 = StringCompanionObject.INSTANCE;
+        String format2 = String.format(Locale.US, "%.1f MB", Arrays.copyOf(new Object[]{Double.valueOf(bytes / 1048576.0d)}, 1));
+        Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
+        return format2;
+    }
 
-   // $VF: synthetic method
-   public static boolean $r8$lambda$uYGKLgHF0bv4Cwt7xQkyu0WljjY(String var0) {
-      return sourcetable$lambda$13(var0);
-   }
+    public final String gga(RtkStatus st, long utcMs) {
+        String alt;
+        Intrinsics.checkNotNullParameter(st, "st");
+        if (!st.getHasFix()) {
+            return null;
+        }
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        c.setTimeInMillis(utcMs);
+        String time = String.format(Locale.US, "%02d%02d%05.2f", Arrays.copyOf(new Object[]{Integer.valueOf(c.get(11)), Integer.valueOf(c.get(12)), Double.valueOf(c.get(13) + (c.get(14) / 1000.0d))}, 3));
+        Intrinsics.checkNotNullExpressionValue(time, "format(...)");
+        int quality = Intrinsics.areEqual(st.getRtk(), "fixed") ? 4 : Intrinsics.areEqual(st.getRtk(), "float") ? 5 : Intrinsics.areEqual(st.getFixType(), "dead reckoning") ? 6 : 1;
+        double altM = st.getAltM();
+        if ((Double.isInfinite(altM) || Double.isNaN(altM)) ? false : true) {
+            alt = String.format(Locale.US, "%.1f", Arrays.copyOf(new Object[]{Double.valueOf(st.getAltM())}, 1));
+            Intrinsics.checkNotNullExpressionValue(alt, "format(...)");
+        } else {
+            alt = "0.0";
+        }
+        String gga$dm = gga$dm(st.getLat(), 2);
+        String str = st.getLat() >= 0.0d ? "N" : "S";
+        String gga$dm2 = gga$dm(st.getLon(), 3);
+        String str2 = st.getLon() >= 0.0d ? "E" : "W";
+        String format = String.format(Locale.US, quality + ",%02d,1.0," + alt + ",M,0.0,M,,", Arrays.copyOf(new Object[]{Integer.valueOf(RangesKt.coerceIn(st.getUsed(), 0, 99))}, 1));
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        String body = "GPGGA," + time + "," + gga$dm + "," + str + "," + gga$dm2 + "," + str2 + "," + format;
+        String str3 = "$" + body + "*%02X";
+        Locale locale = Locale.US;
+        String $this$fold$iv = body;
+        Object accumulator$iv = 0;
+        for (int i = 0; i < $this$fold$iv.length(); i++) {
+            char element$iv = $this$fold$iv.charAt(i);
+            int x = ((Number) accumulator$iv).intValue();
+            accumulator$iv = Integer.valueOf(x ^ element$iv);
+        }
+        String format2 = String.format(locale, str3, Arrays.copyOf(new Object[]{accumulator$iv}, 1));
+        Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
+        return format2;
+    }
 
-   private NtripCore() {
-   }
+    private static final String gga$dm(double v, int degDigits) {
+        double a = Math.abs(v);
+        int deg = (int) Math.floor(a);
+        double min = (a - deg) * 60;
+        String format = String.format(Locale.US, "%0" + degDigits + "d%010.7f", Arrays.copyOf(new Object[]{Integer.valueOf(deg), Double.valueOf(min)}, 2));
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        return format;
+    }
 
-   private static final String gga$dm(double var0, int var2) {
-      var0 = Math.abs(var0);
-      int var7 = (int)Math.floor(var0);
-      double var5 = var7;
-      double var3 = 60;
-      String var8 = "%0" + var2 + "d%010.7f";
-      var8 = String.format(Locale.US, var8, Arrays.copyOf(new Object[]{var7, (var0 - var5) * var3}, 2));
-      Intrinsics.checkNotNullExpressionValue(var8, "format(...)");
-      return var8;
-   }
+    public final String retime(String gga, long utcMs) {
+        Intrinsics.checkNotNullParameter(gga, "gga");
+        String body = StringsKt.substringBefore$default(StringsKt.removePrefix(gga, (CharSequence) "$"), '*', (String) null, 2, (Object) null);
+        List f = CollectionsKt.toMutableList((Collection) StringsKt.split$default((CharSequence) body, new String[]{","}, false, 0, 6, (Object) null));
+        if (f.size() < 2) {
+            return null;
+        }
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        c.setTimeInMillis(utcMs);
+        String format = String.format(Locale.US, "%02d%02d%05.2f", Arrays.copyOf(new Object[]{Integer.valueOf(c.get(11)), Integer.valueOf(c.get(12)), Double.valueOf(c.get(13) + (c.get(14) / 1000.0d))}, 3));
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        f.set(1, format);
+        String b = CollectionsKt.joinToString$default(f, ",", null, null, 0, null, null, 62, null);
+        String str = "$" + b + "*%02X";
+        Locale locale = Locale.US;
+        String $this$fold$iv = b;
+        Object accumulator$iv = 0;
+        for (int i = 0; i < $this$fold$iv.length(); i++) {
+            char element$iv = $this$fold$iv.charAt(i);
+            int x = ((Number) accumulator$iv).intValue();
+            accumulator$iv = Integer.valueOf(x ^ element$iv);
+        }
+        String format2 = String.format(locale, str, Arrays.copyOf(new Object[]{accumulator$iv}, 1));
+        Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
+        return format2;
+    }
 
-   // $VF: synthetic method
-   public static NtripCore.Mount nearestBase$default(NtripCore var0, List var1, double var2, double var4, double var6, Set var8, int var9, Object var10) {
-      if ((var9 & 8) != 0) {
-         var6 = 25.0;
-      }
-
-      if ((var9 & 16) != 0) {
-         var8 = SetsKt.emptySet();
-      }
-
-      return var0.nearestBase(var1, var2, var4, var6, var8);
-   }
-
-   // $VF: synthetic method
-   public static String request$default(
-      NtripCore var0, String var1, String var2, String var3, String var4, int var5, boolean var6, String var7, int var8, Object var9
-   ) {
-      if ((var8 & 8) != 0) {
-         var4 = "";
-      }
-
-      if ((var8 & 16) != 0) {
-         var5 = 0;
-      }
-
-      if ((var8 & 32) != 0) {
-         var6 = false;
-      }
-
-      if ((var8 & 64) != 0) {
-         var7 = null;
-      }
-
-      return var0.request(var1, var2, var3, var4, var5, var6, var7);
-   }
-
-   // $VF: synthetic method
-   public static List sourcetable$default(NtripCore var0, String var1, double var2, double var4, int var6, Object var7) {
-      if ((var6 & 2) != 0) {
-         var2 = Double.NaN;
-      }
-
-      if ((var6 & 4) != 0) {
-         var4 = Double.NaN;
-      }
-
-      return var0.sourcetable(var1, var2, var4);
-   }
-
-   private static final String sourcetable$lambda$12(String var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      return StringsKt.trim(var0).toString();
-   }
-
-   private static final boolean sourcetable$lambda$13(String var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      return StringsKt.startsWith$default(var0, "STR;", false, 2, null);
-   }
-
-   private static final NtripCore.Mount sourcetable$lambda$14(String var0) {
-      Intrinsics.checkNotNullParameter(var0, "line");
-      CharSequence var12 = var0;
-      boolean var5 = false;
-      List var11 = StringsKt.split$default(var12, new String[]{";"}, false, 0, 6, null);
-      if (var11.size() >= 12) {
-         if (((CharSequence)var11.get(1)).length() == 0) {
-            var5 = true;
-         }
-
-         if (!var5) {
-            String var8 = (String)var11.get(1);
-            var0 = (String)var11.get(2);
-            String var7 = (String)var11.get(3);
-            String var9 = (String)var11.get(4);
-            boolean var6 = Intrinsics.areEqual(var11.get(11), "1");
-            Double var10 = StringsKt.toDoubleOrNull((String)var11.get(9));
-            double var3 = Double.NaN;
-            double var1;
-            if (var10 != null) {
-               var1 = var10;
+    public final String request(String mount, String user, String pass, String host, int port, boolean v2, String gga) {
+        String auth;
+        String str;
+        String h;
+        Intrinsics.checkNotNullParameter(mount, "mount");
+        Intrinsics.checkNotNullParameter(user, "user");
+        Intrinsics.checkNotNullParameter(pass, "pass");
+        Intrinsics.checkNotNullParameter(host, "host");
+        if (user.length() > 0) {
+            Base64.Encoder encoder = Base64.getEncoder();
+            byte[] bytes = (user + ":" + pass).getBytes(Charsets.UTF_8);
+            Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
+            auth = "Authorization: Basic " + encoder.encodeToString(bytes) + "\r\n";
+        } else {
+            auth = "";
+        }
+        if (v2) {
+            String it = StringsKt.trim((CharSequence) host).toString();
+            if (it.length() == 0) {
+                h = "";
             } else {
-               var1 = Double.NaN;
+                h = "Host: " + it + ((port <= 0 || port == 80) ? "" : ":" + port) + "\r\n";
             }
-
-            var10 = StringsKt.toDoubleOrNull((String)var11.get(10));
-            if (var10 != null) {
-               var3 = var10;
+            return "GET /" + StringsKt.trimStart(StringsKt.trim((CharSequence) mount).toString(), '/') + " HTTP/1.1\r\n" + h + "Ntrip-Version: Ntrip/2.0\r\nUser-Agent: NTRIP StarView/2.70\r\n" + (gga != null ? "Ntrip-GGA: " + gga + "\r\n" : "") + auth + "Connection: close\r\n\r\n";
+        }
+        String it2 = StringsKt.trim((CharSequence) host).toString();
+        if (!(it2.length() == 0)) {
+            if (port > 0 && port != 80) {
+                str = ":" + port;
             }
+            str = "Host: " + it2 + str + "\r\n";
+        }
+        String h2 = str;
+        return "GET /" + StringsKt.trimStart(StringsKt.trim((CharSequence) mount).toString(), '/') + " HTTP/1.0\r\n" + h2 + "User-Agent: NTRIP StarView/2.59\r\nAccept: */*\r\n" + auth + "Connection: close\r\n\r\n";
+    }
 
-            return new NtripCore.Mount(var8, var0, var7, var9, var6, var1, var3);
-         }
-      }
-
-      return null;
-   }
-
-   public final NtripCore.Answer answer(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "line");
-      var1 = StringsKt.trim(var1).toString();
-      boolean var2 = false;
-      NtripCore.Answer var4;
-      if (StringsKt.startsWith$default(var1, "ICY 200", false, 2, null) || new Regex("^HTTP/1\\.[01] 200").containsMatchIn(var1)) {
-         var4 = NtripCore.Answer.Stream.INSTANCE;
-      } else if (StringsKt.startsWith$default(var1, "SOURCETABLE 200", false, 2, null)) {
-         var4 = NtripCore.Answer.Sourcetable.INSTANCE;
-      } else if (StringsKt.contains$default(var1, " 401", false, 2, null)) {
-         var4 = new NtripCore.Answer.Refused("login refused: wrong username / password, or the subscription isn't active yet");
-      } else if (StringsKt.contains$default(var1, " 403", false, 2, null)) {
-         var4 = new NtripCore.Answer.Refused("account not allowed on this mountpoint (or not activated yet)");
-      } else if (StringsKt.contains$default(var1, " 404", false, 2, null)) {
-         var4 = new NtripCore.Answer.Refused("mountpoint not found");
-      } else if (StringsKt.contains$default(var1, " 503", false, 2, null)) {
-         var4 = new NtripCore.Answer.Refused("caster busy (503)");
-      } else {
-         if (var1.length() == 0) {
-            var2 = true;
-         }
-
-         if (var2) {
-            var4 = new NtripCore.Answer.Refused("the caster closed the connection");
-         } else {
-            var4 = new NtripCore.Answer.Refused(StringsKt.take(var1, 80));
-         }
-      }
-
-      return var4;
-   }
-
-   public final String gga(RtkStatus var1, long var2) {
-      Intrinsics.checkNotNullParameter(var1, "st");
-      if (!var1.getHasFix()) {
-         return null;
-      } else {
-         Calendar var10 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-         var10.setTimeInMillis(var2);
-         String var13 = String.format(
-            Locale.US, "%02d%02d%05.2f", Arrays.copyOf(new Object[]{var10.get(11), var10.get(12), var10.get(13) + var10.get(14) / 1000.0}, 3)
-         );
-         Intrinsics.checkNotNullExpressionValue(var13, "format(...)");
-         byte var6;
-         if (Intrinsics.areEqual(var1.getRtk(), "fixed")) {
-            var6 = 4;
-         } else if (Intrinsics.areEqual(var1.getRtk(), "float")) {
-            var6 = 5;
-         } else if (Intrinsics.areEqual(var1.getFixType(), "dead reckoning")) {
-            var6 = 6;
-         } else {
-            var6 = 1;
-         }
-
-         double var4 = var1.getAltM();
-         boolean var9 = Double.isInfinite(var4);
-         byte var8 = 0;
-         boolean var7;
-         if (!var9 && !Double.isNaN(var4)) {
-            var7 = '\u0001';
-         } else {
-            var7 = '\u0000';
-         }
-
-         String var11;
-         if (var7) {
-            var11 = String.format(Locale.US, "%.1f", Arrays.copyOf(new Object[]{var1.getAltM()}, 1));
-            Intrinsics.checkNotNullExpressionValue(var11, "format(...)");
-         } else {
-            var11 = "0.0";
-         }
-
-         String var14 = gga$dm(var1.getLat(), 2);
-         String var22;
-         if (var1.getLat() >= 0.0) {
-            var22 = "N";
-         } else {
-            var22 = "S";
-         }
-
-         String var15 = gga$dm(var1.getLon(), 3);
-         String var12;
-         if (var1.getLon() >= 0.0) {
-            var12 = "E";
-         } else {
-            var12 = "W";
-         }
-
-         var11 = var6 + ",%02d,1.0," + var11 + ",M,0.0,M,,";
-         String var16 = String.format(Locale.US, var11, Arrays.copyOf(new Object[]{RangesKt.coerceIn(var1.getUsed(), 0, 99)}, 1));
-         Intrinsics.checkNotNullExpressionValue(var16, "format(...)");
-         String var17 = "GPGGA," + var13 + "," + var14 + "," + var22 + "," + var15 + "," + var12 + "," + var16;
-         String var23 = "$" + var17 + "*%02X";
-         Locale var25 = Locale.US;
-         CharSequence var26 = var17;
-         Integer var18 = 0;
-
-         for (int var20 = var8; var20 < var26.length(); var20++) {
-            var7 = var26.charAt(var20);
-            var18 = var18.intValue() ^ var7;
-         }
-
-         String var19 = String.format(var25, var23, Arrays.copyOf(new Object[]{var18}, 1));
-         Intrinsics.checkNotNullExpressionValue(var19, "format(...)");
-         return var19;
-      }
-   }
-
-   public final NtripCore.Mount nearestBase(List<NtripCore.Mount> var1, double var2, double var4, double var6, Set<String> var8) {
-      Intrinsics.checkNotNullParameter(var1, "list");
-      Intrinsics.checkNotNullParameter(var8, "skip");
-      Iterable var12 = var1;
-      var var15 = new ArrayList();
-      Iterator var13 = var12.iterator();
-
-      while (true) {
-         boolean var11 = var13.hasNext();
-         boolean var10 = false;
-         if (!var11) {
-            var1 = var15;
-            Iterable var28 = var1;
-            var var17 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var28, 10));
-
-            for (NtripCore.Mount var29 : var28) {
-               var17.add(TuplesKt.to(var29, var29.milesFrom(var2, var4)));
-            }
-
-            var1 = var17;
-            Iterable var30 = var1;
-            var var19 = new ArrayList();
-
-            for (Object var31 : var30) {
-               Pair var37 = (Pair)var31;
-               var2 = ((Number)var37.getSecond()).doubleValue();
-               boolean var33;
-               if (!Double.isInfinite(var2) && !Double.isNaN(var2)) {
-                  var33 = true;
-               } else {
-                  var33 = false;
-               }
-
-               if (var33 && ((Number)var37.getSecond()).doubleValue() <= var6) {
-                  var33 = true;
-               } else {
-                  var33 = false;
-               }
-
-               if (var33) {
-                  var19.add(var31);
-               }
-            }
-
-            var1 = var19;
-            var13 = var1.iterator();
-            Object var21;
-            if (!var13.hasNext()) {
-               var21 = null;
+    public final String said(String first, String rest) {
+        Object element$iv;
+        String substringAfter$default;
+        Intrinsics.checkNotNullParameter(first, "first");
+        Intrinsics.checkNotNullParameter(rest, "rest");
+        List lines = StringsKt.split$default((CharSequence) StringsKt.replace$default(rest, "\r", "", false, 4, (Object) null), new char[]{'\n'}, false, 0, 6, (Object) null);
+        int i = 0;
+        while (i < lines.size() && new Regex("^[A-Za-z0-9-]+:\\s").containsMatchIn((CharSequence) lines.get(i))) {
+            i++;
+        }
+        Iterable head = CollectionsKt.take(lines, i);
+        Iterable $this$firstOrNull$iv = head;
+        Iterator it = $this$firstOrNull$iv.iterator();
+        while (true) {
+            if (it.hasNext()) {
+                element$iv = it.next();
+                String it2 = (String) element$iv;
+                if (StringsKt.startsWith(it2, "Server:", true)) {
+                    break;
+                }
             } else {
-               var21 = (Pair)var13.next();
-               if (var13.hasNext()) {
-                  var2 = ((Number)var21.getSecond()).doubleValue();
-                  Object var32 = var21;
+                element$iv = null;
+                break;
+            }
+        }
+        String str = (String) element$iv;
+        String server = (str == null || (substringAfter$default = StringsKt.substringAfter$default(str, ':', (String) null, 2, (Object) null)) == null) ? null : StringsKt.trim((CharSequence) substringAfter$default).toString();
+        String body = StringsKt.trim((CharSequence) new Regex("\\s+").replace(new Regex("<[^>]*>").replace(new Regex("(?s)<(script|style)[^>]*>.*?</\\1>").replace(CollectionsKt.joinToString$default(CollectionsKt.drop(lines, i), " ", null, null, 0, null, null, 62, null), " "), " "), " ")).toString();
+        StringBuilder $this$said_u24lambda_u247 = new StringBuilder();
+        $this$said_u24lambda_u247.append('\"').append(StringsKt.take(StringsKt.trim((CharSequence) first).toString(), 80)).append('\"');
+        String str2 = server;
+        if (!(str2 == null || str2.length() == 0)) {
+            $this$said_u24lambda_u247.append(", server ").append(StringsKt.take(server, 40));
+        }
+        if ((body.length() > 0) && !StringsKt.equals(body, StringsKt.substringAfter$default(StringsKt.trim((CharSequence) first).toString(), ' ', (String) null, 2, (Object) null), true)) {
+            $this$said_u24lambda_u247.append(": ").append(StringsKt.take(body, 160));
+        }
+        String sb = $this$said_u24lambda_u247.toString();
+        Intrinsics.checkNotNullExpressionValue(sb, "toString(...)");
+        return sb;
+    }
 
-                  do {
-                     Object var38 = var13.next();
-                     var6 = ((Number)((Pair)var38).getSecond()).doubleValue();
-                     var21 = (Pair)var32;
-                     var4 = var2;
-                     if (Double.compare(var2, var6) > 0) {
-                        var21 = (Pair)var38;
-                        var4 = var6;
-                     }
+    /* compiled from: RtkCore.kt */
+    public static final class Dechunker {
+        private boolean ended;
+        private int left;
+        private final StringBuilder size = new StringBuilder();
+        private int skip;
 
-                     var32 = var21;
-                     var2 = var4;
-                  } while (var13.hasNext());
-               }
+        public final boolean getEnded() {
+            return this.ended;
+        }
+
+        public final void feed(byte[] b, int n, OutputStream out) {
+            Intrinsics.checkNotNullParameter(b, "b");
+            Intrinsics.checkNotNullParameter(out, "out");
+            int i = 0;
+            while (i < n && !this.ended) {
+                if (this.skip > 0) {
+                    this.skip--;
+                    i++;
+                } else if (this.left > 0) {
+                    int k = Math.min(this.left, n - i);
+                    out.write(b, i, k);
+                    this.left -= k;
+                    i += k;
+                    if (this.left == 0) {
+                        this.skip = 2;
+                    }
+                } else {
+                    char ch = (char) b[i];
+                    i++;
+                    if (ch == '\n') {
+                        String sb = this.size.toString();
+                        Intrinsics.checkNotNullExpressionValue(sb, "toString(...)");
+                        String hex = StringsKt.trim((CharSequence) StringsKt.substringBefore$default(sb, ';', (String) null, 2, (Object) null)).toString();
+                        this.size.setLength(0);
+                        if (hex.length() == 0) {
+                            continue;
+                        } else {
+                            Integer intOrNull = StringsKt.toIntOrNull(hex, 16);
+                            if (intOrNull == null) {
+                                throw new IllegalStateException("caster sent a broken chunk");
+                            }
+                            this.left = intOrNull.intValue();
+                            if (this.left == 0) {
+                                this.ended = true;
+                            }
+                        }
+                    } else if (ch == '\r') {
+                        continue;
+                    } else {
+                        if (this.size.length() > 16) {
+                            throw new IllegalStateException("caster sent a broken chunk");
+                        }
+                        this.size.append(ch);
+                    }
+                }
+            }
+        }
+    }
+
+    /* compiled from: RtkCore.kt */
+    public static final class BackupPlan {
+        private long backupSinceMs;
+        private long mainBadSinceMs;
+        private boolean onBackup;
+        private final long retryMainMs;
+        private final long switchMs;
+
+        public BackupPlan() {
+            this(0L, 0L, 3, null);
+        }
+
+        public BackupPlan(long switchMs, long retryMainMs) {
+            this.switchMs = switchMs;
+            this.retryMainMs = retryMainMs;
+        }
+
+        public /* synthetic */ BackupPlan(long j, long j2, int i, DefaultConstructorMarker defaultConstructorMarker) {
+            this((i & 1) != 0 ? 180000L : j, (i & 2) != 0 ? 600000L : j2);
+        }
+
+        public final long getRetryMainMs() {
+            return this.retryMainMs;
+        }
+
+        public final long getSwitchMs() {
+            return this.switchMs;
+        }
+
+        public final boolean getOnBackup() {
+            return this.onBackup;
+        }
+
+        public final long getBackupSinceMs() {
+            return this.backupSinceMs;
+        }
+
+        public final void mainResult(boolean helped, long startedMs) {
+            long j = 0;
+            if (!helped) {
+                j = this.mainBadSinceMs == 0 ? startedMs : this.mainBadSinceMs;
+            }
+            this.mainBadSinceMs = j;
+        }
+
+        public final boolean shouldSwitch(long nowMs) {
+            return (this.onBackup || this.mainBadSinceMs == 0 || nowMs - this.mainBadSinceMs < this.switchMs) ? false : true;
+        }
+
+        public final void toBackup(long nowMs) {
+            this.onBackup = true;
+            this.backupSinceMs = nowMs;
+        }
+
+        public final boolean timeToRetryMain(long nowMs) {
+            return this.onBackup && nowMs - this.backupSinceMs >= this.retryMainMs;
+        }
+
+        public final void toMain(long nowMs) {
+            this.onBackup = false;
+            this.mainBadSinceMs = nowMs - this.switchMs;
+        }
+    }
+
+    /* compiled from: RtkCore.kt */
+    public static abstract class Answer {
+        public /* synthetic */ Answer(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
+
+        /* compiled from: RtkCore.kt */
+        public static final class Refused extends Answer {
+            private final String why;
+
+            /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+            public Refused(String why) {
+                super(null);
+                Intrinsics.checkNotNullParameter(why, "why");
+                this.why = why;
             }
 
-            var21 = var21;
-            NtripCore.Mount var23;
-            if (var21 != null) {
-               var23 = (NtripCore.Mount)var21.getFirst();
-            } else {
-               var23 = null;
+            public final String getWhy() {
+                return this.why;
             }
+        }
 
-            return var23;
-         }
+        /* compiled from: RtkCore.kt */
+        public static final class Sourcetable extends Answer {
+            public static final Sourcetable INSTANCE = new Sourcetable();
 
-         Object var35 = var13.next();
-         NtripCore.Mount var14 = (NtripCore.Mount)var35;
-         boolean var9 = var10;
-         if (StringsKt.contains(var14.getFormat(), "RTCM", true)) {
-            var9 = var10;
-            if (StringsKt.contains$default(var14.getFormat(), "3", false, 2, null)) {
-               var9 = var10;
-               if (!var8.contains(var14.getName())) {
-                  var9 = true;
-               }
+            private Sourcetable() {
+                super(null);
             }
-         }
+        }
 
-         if (var9) {
-            var15.add(var35);
-         }
-      }
-   }
+        /* compiled from: RtkCore.kt */
+        public static final class Stream extends Answer {
+            public static final Stream INSTANCE = new Stream();
 
-   public final String request(String var1, String var2, String var3, String var4, int var5, boolean var6, String var7) {
-      Intrinsics.checkNotNullParameter(var1, "mount");
-      Intrinsics.checkNotNullParameter(var2, "user");
-      Intrinsics.checkNotNullParameter(var3, "pass");
-      Intrinsics.checkNotNullParameter(var4, "host");
-      boolean var8;
-      if (var2.length() > 0) {
-         var8 = true;
-      } else {
-         var8 = false;
-      }
-
-      String var9 = "";
-      if (var8) {
-         Encoder var10 = Base64.getEncoder();
-         byte[] var13 = (var2 + ":" + var3).getBytes(Charsets.UTF_8);
-         Intrinsics.checkNotNullExpressionValue(var13, "getBytes(...)");
-         var2 = var10.encodeToString(var13);
-         var2 = "Authorization: Basic " + var2 + "\r\n";
-      } else {
-         var2 = "";
-      }
-
-      if (var6) {
-         var4 = StringsKt.trim(var4).toString();
-         if (var4.length() == 0) {
-            var8 = true;
-         } else {
-            var8 = false;
-         }
-
-         if (var8) {
-            var3 = "";
-         } else {
-            if (var5 > 0 && var5 != 80) {
-               var3 = ":" + var5;
-            } else {
-               var3 = "";
+            private Stream() {
+                super(null);
             }
+        }
 
-            var3 = "Host: " + var4 + var3 + "\r\n";
-         }
+        private Answer() {
+        }
+    }
 
-         var1 = StringsKt.trimStart(StringsKt.trim(var1).toString(), new char[]{'/'});
-         if (var7 != null) {
-            var9 = "Ntrip-GGA: " + var7 + "\r\n";
-         }
-
-         return "GET /"
-            + var1
-            + " HTTP/1.1\r\n"
-            + var3
-            + "Ntrip-Version: Ntrip/2.0\r\nUser-Agent: NTRIP StarView/2.70\r\n"
-            + var9
-            + var2
-            + "Connection: close\r\n\r\n";
-      } else {
-         var4 = StringsKt.trim(var4).toString();
-         if (var4.length() == 0) {
-            var8 = true;
-         } else {
-            var8 = false;
-         }
-
-         if (!var8) {
-            var3 = var9;
-            if (var5 > 0) {
-               var3 = var9;
-               if (var5 != 80) {
-                  var3 = ":" + var5;
-               }
+    public final Mount nearestBase(List<Mount> list, double lat, double lon, double maxMiles, Set<String> skip) {
+        Object minElem$iv;
+        Intrinsics.checkNotNullParameter(list, "list");
+        Intrinsics.checkNotNullParameter(skip, "skip");
+        List<Mount> $this$filter$iv = list;
+        Collection destination$iv$iv = new ArrayList();
+        Iterator it = $this$filter$iv.iterator();
+        while (true) {
+            boolean z = false;
+            if (!it.hasNext()) {
+                break;
             }
-
-            var9 = "Host: " + var4 + var3 + "\r\n";
-         }
-
-         var1 = StringsKt.trimStart(StringsKt.trim(var1).toString(), new char[]{'/'});
-         return "GET /" + var1 + " HTTP/1.0\r\n" + var9 + "User-Agent: NTRIP StarView/2.59\r\nAccept: */*\r\n" + var2 + "Connection: close\r\n\r\n";
-      }
-   }
-
-   public final String retime(String var1, long var2) {
-      Intrinsics.checkNotNullParameter(var1, "gga");
-      List var9 = CollectionsKt.toMutableList(
-         StringsKt.split$default(StringsKt.substringBefore$default(StringsKt.removePrefix(var1, "$"), '*', null, 2, null), new String[]{","}, false, 0, 6, null)
-      );
-      if (var9.size() < 2) {
-         return null;
-      } else {
-         Calendar var6 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-         var6.setTimeInMillis(var2);
-         String var13 = String.format(
-            Locale.US, "%02d%02d%05.2f", Arrays.copyOf(new Object[]{var6.get(11), var6.get(12), var6.get(13) + var6.get(14) / 1000.0}, 3)
-         );
-         Intrinsics.checkNotNullExpressionValue(var13, "format(...)");
-         var9.set(1, var13);
-         var1 = CollectionsKt.joinToString$default(var9, ",", null, null, 0, null, null, 62, null);
-         String var7 = "$" + var1 + "*%02X";
-         Locale var14 = Locale.US;
-         CharSequence var8 = var1;
-         int var4 = 0;
-
-         for (var11 = 0; var4 < var8.length(); var4++) {
-            char var5 = var8.charAt(var4);
-            var11 = var11.intValue() ^ var5;
-         }
-
-         var1 = String.format(var14, var7, Arrays.copyOf(new Object[]{var11}, 1));
-         Intrinsics.checkNotNullExpressionValue(var1, "format(...)");
-         return var1;
-      }
-   }
-
-   public final String said(String var1, String var2) {
-      Intrinsics.checkNotNullParameter(var1, "first");
-      Intrinsics.checkNotNullParameter(var2, "rest");
-      List var4 = StringsKt.split$default(StringsKt.replace$default(var2, "\r", "", false, 4, null), new char[]{'\n'}, false, 0, 6, null);
-      int var3 = 0;
-
-      while (var3 < var4.size() && new Regex("^[A-Za-z0-9-]+:\\s").containsMatchIn((CharSequence)var4.get(var3))) {
-         var3++;
-      }
-
-      Iterator var5 = CollectionsKt.take(var4, var3).iterator();
-
-      do {
-         if (!var5.hasNext()) {
-            var8 = null;
-            break;
-         }
-
-         var8 = var5.next();
-      } while (!StringsKt.startsWith((String)var8, "Server:", true));
-
-      label46: {
-         var2 = (String)var8;
-         if (var2 != null) {
-            var2 = StringsKt.substringAfter$default(var2, ':', null, 2, null);
-            if (var2 != null) {
-               var2 = StringsKt.trim(var2).toString();
-               break label46;
+            Object element$iv$iv = it.next();
+            Mount it2 = (Mount) element$iv$iv;
+            if (StringsKt.contains((CharSequence) it2.getFormat(), (CharSequence) "RTCM", true) && StringsKt.contains$default((CharSequence) it2.getFormat(), (CharSequence) "3", false, 2, (Object) null) && !skip.contains(it2.getName())) {
+                z = true;
             }
-         }
-
-         var2 = null;
-      }
-
-      CharSequence var14 = CollectionsKt.joinToString$default(CollectionsKt.drop(var4, var3), " ", null, null, 0, null, null, 62, null);
-      CharSequence var15 = new Regex("(?s)<(script|style)[^>]*>.*?</\\1>").replace(var14, " ");
-      CharSequence var16 = new Regex("<[^>]*>").replace(var15, " ");
-      String var6 = StringsKt.trim(new Regex("\\s+").replace(var16, " ")).toString();
-      StringBuilder var18 = new StringBuilder();
-      var18.append('"').append(StringsKt.take(StringsKt.trim(var1).toString(), 80)).append('"');
-      CharSequence var17 = var2;
-      boolean var12;
-      if (var17 != null && var17.length() != 0) {
-         var12 = false;
-      } else {
-         var12 = true;
-      }
-
-      if (!var12) {
-         var18.append(", server ").append(StringsKt.take(var2, 40));
-      }
-
-      if (var6.length() > 0) {
-         var12 = true;
-      } else {
-         var12 = false;
-      }
-
-      if (var12 && !StringsKt.equals(var6, StringsKt.substringAfter$default(StringsKt.trim(var1).toString(), ' ', null, 2, null), true)) {
-         var18.append(": ").append(StringsKt.take(var6, 160));
-      }
-
-      var1 = var18.toString();
-      Intrinsics.checkNotNullExpressionValue(var1, "toString(...)");
-      return var1;
-   }
-
-   public final String size(long var1) {
-      String var3;
-      if (var1 < 1048576L) {
-         var1 /= 1024;
-         var3 = var1 + " KB";
-      } else if (var1 < 1073741824L) {
-         StringCompanionObject var5 = StringCompanionObject.INSTANCE;
-         var3 = String.format(Locale.US, "%.1f MB", Arrays.copyOf(new Object[]{var1 / 1048576.0}, 1));
-         Intrinsics.checkNotNullExpressionValue(var3, "format(...)");
-      } else {
-         StringCompanionObject var6 = StringCompanionObject.INSTANCE;
-         var3 = String.format(Locale.US, "%.2f GB", Arrays.copyOf(new Object[]{var1 / 1.0737418E9F}, 1));
-         Intrinsics.checkNotNullExpressionValue(var3, "format(...)");
-      }
-
-      return var3;
-   }
-
-   public final List<NtripCore.Mount> sourcetable(String var1, double var2, double var4) {
-      Intrinsics.checkNotNullParameter(var1, "text");
-      List var7 = SequencesKt.toList(
-         SequencesKt.mapNotNull(
-            SequencesKt.filter(
-               SequencesKt.map(StringsKt.lineSequence(var1), new NtripCore$$ExternalSyntheticLambda0()), new NtripCore$$ExternalSyntheticLambda1()
-            ),
-            new NtripCore$$ExternalSyntheticLambda2()
-         )
-      );
-      boolean var6;
-      if (!Double.isInfinite(var2) && !Double.isNaN(var2)) {
-         var6 = true;
-      } else {
-         var6 = false;
-      }
-
-      List var8;
-      if (var6) {
-         var8 = CollectionsKt.sortedWith(var7, new Comparator(new Comparator(var2, var4) {
-            final double $lat0$inlined;
-            final double $lon0$inlined;
-
-            {
-               this.$lat0$inlined = var1;
-               this.$lon0$inlined = var3;
+            if (z) {
+                destination$iv$iv.add(element$iv$iv);
             }
-
-            @Override
-            public final int compare(T var1, T var2) {
-               double var3 = ((NtripCore.Mount)var1).milesFrom(this.$lat0$inlined, this.$lon0$inlined);
-               boolean var7 = Double.isNaN(var3);
-               double var5 = Double.MAX_VALUE;
-               if (var7) {
-                  var3 = Double.MAX_VALUE;
-               }
-
-               var1 = var3;
-               var3 = ((NtripCore.Mount)var2).milesFrom(this.$lat0$inlined, this.$lon0$inlined);
-               if (Double.isNaN(var3)) {
-                  var3 = var5;
-               }
-
-               return ComparisonsKt.compareValues(var1, var3);
+        }
+        Iterable $this$map$iv = (List) destination$iv$iv;
+        Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            Mount it3 = (Mount) item$iv$iv;
+            destination$iv$iv2.add(TuplesKt.to(it3, Double.valueOf(it3.milesFrom(lat, lon))));
+        }
+        Iterable $this$filter$iv2 = (List) destination$iv$iv2;
+        Collection destination$iv$iv3 = new ArrayList();
+        for (Object element$iv$iv2 : $this$filter$iv2) {
+            Pair it4 = (Pair) element$iv$iv2;
+            double doubleValue = ((Number) it4.getSecond()).doubleValue();
+            if ((!Double.isInfinite(doubleValue) && !Double.isNaN(doubleValue)) && ((Number) it4.getSecond()).doubleValue() <= maxMiles) {
+                destination$iv$iv3.add(element$iv$iv2);
             }
-         }) {
-            final Comparator $this_thenBy;
-
-            {
-               this.$this_thenBy = var1;
+        }
+        Iterable $this$minByOrNull$iv = (List) destination$iv$iv3;
+        Iterator iterator$iv = $this$minByOrNull$iv.iterator();
+        if (iterator$iv.hasNext()) {
+            minElem$iv = iterator$iv.next();
+            if (iterator$iv.hasNext()) {
+                Pair it5 = (Pair) minElem$iv;
+                double minValue$iv = ((Number) it5.getSecond()).doubleValue();
+                do {
+                    Object e$iv = iterator$iv.next();
+                    Pair it6 = (Pair) e$iv;
+                    double v$iv = ((Number) it6.getSecond()).doubleValue();
+                    if (Double.compare(minValue$iv, v$iv) > 0) {
+                        minElem$iv = e$iv;
+                        minValue$iv = v$iv;
+                    }
+                } while (iterator$iv.hasNext());
             }
+        } else {
+            minElem$iv = null;
+        }
+        Pair pair = (Pair) minElem$iv;
+        if (pair != null) {
+            return (Mount) pair.getFirst();
+        }
+        return null;
+    }
 
-            @Override
-            public final int compare(T var1, T var2x) {
-               int var3 = this.$this_thenBy.compare(var1, var2x);
-               if (var3 == 0) {
-                  var3 = ComparisonsKt.compareValues(((NtripCore.Mount)var1).getName(), ((NtripCore.Mount)var2x).getName());
-               }
+    public final Answer answer(String line) {
+        Intrinsics.checkNotNullParameter(line, "line");
+        String l = StringsKt.trim((CharSequence) line).toString();
+        if (StringsKt.startsWith$default(l, "ICY 200", false, 2, (Object) null) || new Regex("^HTTP/1\\.[01] 200").containsMatchIn(l)) {
+            return Answer.Stream.INSTANCE;
+        }
+        if (StringsKt.startsWith$default(l, "SOURCETABLE 200", false, 2, (Object) null)) {
+            return Answer.Sourcetable.INSTANCE;
+        }
+        if (StringsKt.contains$default((CharSequence) l, (CharSequence) " 401", false, 2, (Object) null)) {
+            return new Answer.Refused("login refused: wrong username / password, or the subscription isn't active yet");
+        }
+        if (StringsKt.contains$default((CharSequence) l, (CharSequence) " 403", false, 2, (Object) null)) {
+            return new Answer.Refused("account not allowed on this mountpoint (or not activated yet)");
+        }
+        if (StringsKt.contains$default((CharSequence) l, (CharSequence) " 404", false, 2, (Object) null)) {
+            return new Answer.Refused("mountpoint not found");
+        }
+        if (StringsKt.contains$default((CharSequence) l, (CharSequence) " 503", false, 2, (Object) null)) {
+            return new Answer.Refused("caster busy (503)");
+        }
+        return l.length() == 0 ? new Answer.Refused("the caster closed the connection") : new Answer.Refused(StringsKt.take(l, 80));
+    }
 
-               return var3;
+    /* compiled from: RtkCore.kt */
+    public static final class Mount {
+        private final String details;
+        private final String format;
+        private final double lat;
+        private final double lon;
+        private final String name;
+        private final boolean needsGga;
+        private final String place;
+
+        public Mount(String name, String place, String format, String details, boolean needsGga, double lat, double lon) {
+            Intrinsics.checkNotNullParameter(name, "name");
+            Intrinsics.checkNotNullParameter(place, "place");
+            Intrinsics.checkNotNullParameter(format, "format");
+            Intrinsics.checkNotNullParameter(details, "details");
+            this.name = name;
+            this.place = place;
+            this.format = format;
+            this.details = details;
+            this.needsGga = needsGga;
+            this.lat = lat;
+            this.lon = lon;
+        }
+
+        public final String getDetails() {
+            return this.details;
+        }
+
+        public final String getFormat() {
+            return this.format;
+        }
+
+        public final double getLat() {
+            return this.lat;
+        }
+
+        public final double getLon() {
+            return this.lon;
+        }
+
+        public final String getName() {
+            return this.name;
+        }
+
+        public final boolean getNeedsGga() {
+            return this.needsGga;
+        }
+
+        public final String getPlace() {
+            return this.place;
+        }
+
+        public final double milesFrom(double lat0, double lon0) {
+            double d = this.lat;
+            if (!((Double.isInfinite(d) || Double.isNaN(d)) ? false : true)) {
+                return Double.NaN;
             }
-         });
-      } else {
-         var8 = CollectionsKt.sortedWith(var7, new Comparator() {
-            @Override
-            public final int compare(T var1, T var2) {
-               return ComparisonsKt.compareValues(((NtripCore.Mount)var1).getName(), ((NtripCore.Mount)var2).getName());
+            double d2 = this.lon;
+            if (!((Double.isInfinite(d2) || Double.isNaN(d2)) ? false : true)) {
+                return Double.NaN;
             }
-         });
-      }
-
-      return var8;
-   }
-
-   public abstract static class Answer {
-      private Answer() {
-      }
-
-      // $VF: synthetic method
-      public Answer(DefaultConstructorMarker var1) {
-         this();
-      }
-
-      public static final class Refused extends NtripCore.Answer {
-         private final String why;
-
-         public Refused(String var1) {
-            Intrinsics.checkNotNullParameter(var1, "why");
-            super(null);
-            this.why = var1;
-         }
-
-         public final String getWhy() {
-            return this.why;
-         }
-      }
-
-      public static final class Sourcetable extends NtripCore.Answer {
-         public static final NtripCore.Answer.Sourcetable INSTANCE = new NtripCore.Answer.Sourcetable();
-
-         private Sourcetable() {
-            super(null);
-         }
-      }
-
-      public static final class Stream extends NtripCore.Answer {
-         public static final NtripCore.Answer.Stream INSTANCE = new NtripCore.Answer.Stream();
-
-         private Stream() {
-            super(null);
-         }
-      }
-   }
-
-   public static final class BackupPlan {
-      private long backupSinceMs;
-      private long mainBadSinceMs;
-      private boolean onBackup;
-      private final long retryMainMs;
-      private final long switchMs;
-
-      public BackupPlan() {
-         this(0L, 0L, 3, null);
-      }
-
-      public BackupPlan(long var1, long var3) {
-         this.switchMs = var1;
-         this.retryMainMs = var3;
-      }
-
-      // $VF: synthetic method
-      public BackupPlan(long var1, long var3, int var5, DefaultConstructorMarker var6) {
-         if ((var5 & 1) != 0) {
-            var1 = 180000L;
-         }
-
-         if ((var5 & 2) != 0) {
-            var3 = 600000L;
-         }
-
-         this(var1, var3);
-      }
-
-      public final long getBackupSinceMs() {
-         return this.backupSinceMs;
-      }
-
-      public final boolean getOnBackup() {
-         return this.onBackup;
-      }
-
-      public final long getRetryMainMs() {
-         return this.retryMainMs;
-      }
-
-      public final long getSwitchMs() {
-         return this.switchMs;
-      }
-
-      public final void mainResult(boolean var1, long var2) {
-         long var4 = 0L;
-         if (var1) {
-            var2 = var4;
-         } else if (this.mainBadSinceMs != 0L) {
-            var2 = this.mainBadSinceMs;
-         }
-
-         this.mainBadSinceMs = var2;
-      }
-
-      public final boolean shouldSwitch(long var1) {
-         boolean var3;
-         if (!this.onBackup && this.mainBadSinceMs != 0L && var1 - this.mainBadSinceMs >= this.switchMs) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         return var3;
-      }
-
-      public final boolean timeToRetryMain(long var1) {
-         boolean var3;
-         if (this.onBackup && var1 - this.backupSinceMs >= this.retryMainMs) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         return var3;
-      }
-
-      public final void toBackup(long var1) {
-         this.onBackup = true;
-         this.backupSinceMs = var1;
-      }
-
-      public final void toMain(long var1) {
-         this.onBackup = false;
-         this.mainBadSinceMs = var1 - this.switchMs;
-      }
-   }
-
-   public static final class Dechunker {
-      private boolean ended;
-      private int left;
-      private final StringBuilder size = new StringBuilder();
-      private int skip;
-
-      public final void feed(byte[] var1, int var2, OutputStream var3) {
-         Intrinsics.checkNotNullParameter(var1, "b");
-         Intrinsics.checkNotNullParameter(var3, "out");
-         int var5 = 0;
-
-         while (var5 < var2 && !this.ended) {
-            if (this.skip > 0) {
-               this.skip--;
-               var5++;
-            } else if (this.left > 0) {
-               int var6 = Math.min(this.left, var2 - var5);
-               var3.write(var1, var5, var6);
-               this.left -= var6;
-               var6 = var5 + var6;
-               var5 = var6;
-               if (this.left == 0) {
-                  this.skip = 2;
-                  var5 = var6;
-               }
-            } else {
-               char var4 = (char)var1[var5];
-               int var7 = var5 + 1;
-               if (var4 == '\n') {
-                  String var8 = this.size.toString();
-                  Intrinsics.checkNotNullExpressionValue(var8, "toString(...)");
-                  String var9 = StringsKt.trim(StringsKt.substringBefore$default(var8, ';', null, 2, null)).toString();
-                  StringBuilder var12 = this.size;
-                  boolean var11 = false;
-                  var12.setLength(0);
-                  if (var9.length() == 0) {
-                     var11 = true;
-                  }
-
-                  var5 = var7;
-                  if (!var11) {
-                     Integer var13 = StringsKt.toIntOrNull(var9, 16);
-                     if (var13 == null) {
-                        throw new IllegalStateException("caster sent a broken chunk");
-                     }
-
-                     this.left = var13;
-                     var5 = var7;
-                     if (this.left == 0) {
-                        this.ended = true;
-                        var5 = var7;
-                     }
-                  }
-               } else {
-                  var5 = var7;
-                  if (var4 != '\r') {
-                     if (this.size.length() > 16) {
-                        throw new IllegalStateException("caster sent a broken chunk");
-                     }
-
-                     this.size.append(var4);
-                     var5 = var7;
-                  }
-               }
+            if (!((Double.isInfinite(lat0) || Double.isNaN(lat0)) ? false : true)) {
+                return Double.NaN;
             }
-         }
-      }
-
-      public final boolean getEnded() {
-         return this.ended;
-      }
-   }
-
-   public static final class Mount {
-      private final String details;
-      private final String format;
-      private final double lat;
-      private final double lon;
-      private final String name;
-      private final boolean needsGga;
-      private final String place;
-
-      public Mount(String var1, String var2, String var3, String var4, boolean var5, double var6, double var8) {
-         Intrinsics.checkNotNullParameter(var1, "name");
-         Intrinsics.checkNotNullParameter(var2, "place");
-         Intrinsics.checkNotNullParameter(var3, "format");
-         Intrinsics.checkNotNullParameter(var4, "details");
-         super();
-         this.name = var1;
-         this.place = var2;
-         this.format = var3;
-         this.details = var4;
-         this.needsGga = var5;
-         this.lat = var6;
-         this.lon = var8;
-      }
-
-      public final String getDetails() {
-         return this.details;
-      }
-
-      public final String getFormat() {
-         return this.format;
-      }
-
-      public final double getLat() {
-         return this.lat;
-      }
-
-      public final double getLon() {
-         return this.lon;
-      }
-
-      public final String getName() {
-         return this.name;
-      }
-
-      public final boolean getNeedsGga() {
-         return this.needsGga;
-      }
-
-      public final String getPlace() {
-         return this.place;
-      }
-
-      public final double milesFrom(double var1, double var3) {
-         double var5 = this.lat;
-         boolean var9 = Double.isInfinite(var5);
-         boolean var8 = true;
-         boolean var7;
-         if (!var9 && !Double.isNaN(var5)) {
-            var7 = true;
-         } else {
-            var7 = false;
-         }
-
-         label68: {
-            if (var7) {
-               var5 = this.lon;
-               if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
-                  var7 = true;
-               } else {
-                  var7 = false;
-               }
-
-               if (var7) {
-                  if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
-                     var7 = true;
-                  } else {
-                     var7 = false;
-                  }
-
-                  if (var7) {
-                     if (this.lat == 0.0) {
-                        var7 = true;
-                     } else {
-                        var7 = false;
-                     }
-
-                     if (!var7) {
-                        break label68;
-                     }
-
-                     if (this.lon == 0.0) {
-                        var7 = var8;
-                     } else {
-                        var7 = false;
-                     }
-
-                     if (!var7) {
-                        break label68;
-                     }
-                  }
-               }
+            if (this.lat == 0.0d) {
+                if (this.lon == 0.0d) {
+                    return Double.NaN;
+                }
             }
+            double dy = (this.lat - lat0) * 69.05d;
+            double dx = (this.lon - lon0) * 69.17d * Math.cos(Math.toRadians(lat0));
+            return Math.sqrt((dx * dx) + (dy * dy));
+        }
+    }
 
-            return Double.NaN;
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final String sourcetable$lambda$12(String it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return StringsKt.trim((CharSequence) it).toString();
+    }
 
-         var5 = (this.lat - var1) * 69.05;
-         var1 = (this.lon - var3) * 69.17 * Math.cos(Math.toRadians(var1));
-         return Math.sqrt(var1 * var1 + var5 * var5);
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean sourcetable$lambda$13(String it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return StringsKt.startsWith$default(it, "STR;", false, 2, (Object) null);
+    }
+
+    public final List<Mount> sourcetable(String text, final double lat0, final double lon0) {
+        Intrinsics.checkNotNullParameter(text, "text");
+        Iterable out = SequencesKt.toList(SequencesKt.mapNotNull(SequencesKt.filter(SequencesKt.map(StringsKt.lineSequence(text), new Function1() { // from class: com.starpilot.starview.NtripCore$$ExternalSyntheticLambda0
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                String sourcetable$lambda$12;
+                sourcetable$lambda$12 = NtripCore.sourcetable$lambda$12((String) obj);
+                return sourcetable$lambda$12;
+            }
+        }), new Function1() { // from class: com.starpilot.starview.NtripCore$$ExternalSyntheticLambda1
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                boolean sourcetable$lambda$13;
+                sourcetable$lambda$13 = NtripCore.sourcetable$lambda$13((String) obj);
+                return Boolean.valueOf(sourcetable$lambda$13);
+            }
+        }), new Function1() { // from class: com.starpilot.starview.NtripCore$$ExternalSyntheticLambda2
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                NtripCore.Mount sourcetable$lambda$14;
+                sourcetable$lambda$14 = NtripCore.sourcetable$lambda$14((String) obj);
+                return sourcetable$lambda$14;
+            }
+        }));
+        if ((Double.isInfinite(lat0) || Double.isNaN(lat0)) ? false : true) {
+            final Comparator comparator = new Comparator() { // from class: com.starpilot.starview.NtripCore$sourcetable$$inlined$compareBy$1
+                /* JADX WARN: Multi-variable type inference failed */
+                @Override // java.util.Comparator
+                public final int compare(T t, T t2) {
+                    NtripCore.Mount it = (NtripCore.Mount) t;
+                    double d = it.milesFrom(lat0, lon0);
+                    if (Double.isNaN(d)) {
+                        d = Double.MAX_VALUE;
+                    }
+                    Double valueOf = Double.valueOf(d);
+                    NtripCore.Mount it2 = (NtripCore.Mount) t2;
+                    double d2 = it2.milesFrom(lat0, lon0);
+                    return ComparisonsKt.compareValues(valueOf, Double.valueOf(Double.isNaN(d2) ? Double.MAX_VALUE : d2));
+                }
+            };
+            return CollectionsKt.sortedWith(out, new Comparator() { // from class: com.starpilot.starview.NtripCore$sourcetable$$inlined$thenBy$1
+                /* JADX WARN: Multi-variable type inference failed */
+                @Override // java.util.Comparator
+                public final int compare(T t, T t2) {
+                    int previousCompare = comparator.compare(t, t2);
+                    if (previousCompare != 0) {
+                        return previousCompare;
+                    }
+                    NtripCore.Mount it = (NtripCore.Mount) t;
+                    String name = it.getName();
+                    NtripCore.Mount it2 = (NtripCore.Mount) t2;
+                    return ComparisonsKt.compareValues(name, it2.getName());
+                }
+            });
+        }
+        Iterable $this$sortedBy$iv = out;
+        return CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.NtripCore$sourcetable$$inlined$sortedBy$1
+            /* JADX WARN: Multi-variable type inference failed */
+            @Override // java.util.Comparator
+            public final int compare(T t, T t2) {
+                NtripCore.Mount it = (NtripCore.Mount) t;
+                NtripCore.Mount it2 = (NtripCore.Mount) t2;
+                return ComparisonsKt.compareValues(it.getName(), it2.getName());
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Mount sourcetable$lambda$14(String line) {
+        Intrinsics.checkNotNullParameter(line, "line");
+        List f = StringsKt.split$default((CharSequence) line, new String[]{";"}, false, 0, 6, (Object) null);
+        if (f.size() >= 12) {
+            if (!(((CharSequence) f.get(1)).length() == 0)) {
+                String str = (String) f.get(1);
+                String str2 = (String) f.get(2);
+                String str3 = (String) f.get(3);
+                String str4 = (String) f.get(4);
+                boolean areEqual = Intrinsics.areEqual(f.get(11), "1");
+                Double doubleOrNull = StringsKt.toDoubleOrNull((String) f.get(9));
+                double doubleValue = doubleOrNull != null ? doubleOrNull.doubleValue() : Double.NaN;
+                Double doubleOrNull2 = StringsKt.toDoubleOrNull((String) f.get(10));
+                return new Mount(str, str2, str3, str4, areEqual, doubleValue, doubleOrNull2 != null ? doubleOrNull2.doubleValue() : Double.NaN);
+            }
+        }
+        return null;
+    }
 }

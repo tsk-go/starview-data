@@ -9,225 +9,177 @@ import kotlin.text.MatchResult;
 import kotlin.text.Regex;
 import kotlin.text.StringsKt;
 
+/* compiled from: VoiceCommands.kt */
 public final class VoiceCommands {
-   public static final VoiceCommands INSTANCE = new VoiceCommands();
+    public static final VoiceCommands INSTANCE = new VoiceCommands();
 
-   private VoiceCommands() {
-   }
+    /* compiled from: VoiceCommands.kt */
+    public enum Kind {
+        BOOKMARK,
+        EXP_ON,
+        EXP_OFF,
+        MAP_OPEN,
+        MAP_CLOSE,
+        FOCUS_ON,
+        FOCUS_OFF,
+        VOICE_ON,
+        VOICE_OFF,
+        SAVER_ON,
+        SAVER_OFF,
+        KEEP,
+        FOLLOW,
+        FARTHER,
+        CLOSER,
+        NAVIGATE,
+        SCENE,
+        CAMERA,
+        NUDGE,
+        UNKNOWN;
 
-   private static final boolean parse$has(String var0, String... var1) {
-      int var3 = var1.length;
-      boolean var4 = false;
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
 
-      for (int var2 = 0; var2 < var3; var2++) {
-         String var5 = var1[var2];
-         if (new Regex("\\b" + var5 + "\\b").containsMatchIn(var0)) {
-            var4 = true;
-            break;
-         }
-      }
+        public static EnumEntries<Kind> getEntries() {
+            return $ENTRIES;
+        }
+    }
 
-      return var4;
-   }
+    private VoiceCommands() {
+    }
 
-   public final VoiceCommands.Cmd parse(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "raw");
-      var1 = var1.toLowerCase(Locale.ROOT);
-      Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-      CharSequence var6 = StringsKt.trim(var1).toString();
-      CharSequence var7 = new Regex("[.!?,]").replace(var6, "");
-      var1 = new Regex("^(hey )?(starview|star view|ok)\\s+").replace(var7, "");
-      boolean var2 = parse$has(var1, "off", "stop", "disable", "close", "hide", "quiet", "mute");
-      if (!new Regex("^(bookmark|mark)( (this|it|here|that))?$").containsMatchIn(var1) && !Intrinsics.areEqual(var1, "add a bookmark")) {
-         MatchResult var3 = Regex.find$default(new Regex("^(take me|go|drive|navigate|head|bring me|let's go)( back)?( to)? (home|work)$"), var1, 0, 2, null);
-         if (var3 != null) {
-            return new VoiceCommands.Cmd(VoiceCommands.Kind.NAVIGATE, var3.getGroupValues().get(4));
-         } else {
-            var3 = Regex.find$default(new Regex("^(navigate|take me|drive|go|directions|route)( me)? to (.+)$"), var1, 0, 2, null);
-            if (var3 != null) {
-               return new VoiceCommands.Cmd(
-                  VoiceCommands.Kind.NAVIGATE,
-                  StringsKt.trim(StringsKt.removePrefix(StringsKt.trim(var3.getGroupValues().get(3)).toString(), "my ")).toString()
-               );
-            } else {
-               var3 = Regex.find$default(new Regex("^(take|make) (the )?(next )?(left|right)( turn)?$"), var1, 0, 2, null);
-               if (var3 != null) {
-                  VoiceCommands.Kind var16 = VoiceCommands.Kind.NUDGE;
-                  var3 = var3.getGroupValues().get(4);
-                  return new VoiceCommands.Cmd(var16, "turn_" + var3);
-               } else if (new Regex("^(move|go|shift|scoot)( over)?( a (bit|little))?( to the)? (left|right)( a (bit|little))?$").containsMatchIn(var1)) {
-                  VoiceCommands.Kind var19 = VoiceCommands.Kind.NUDGE;
-                  CharSequence var4 = var1;
-                  var1 = "left";
-                  if (!StringsKt.contains$default(var4, "left", false, 2, null)) {
-                     var1 = "right";
-                  }
+    /* compiled from: VoiceCommands.kt */
+    public static final class Cmd {
+        private final String arg;
+        private final Kind kind;
 
-                  return new VoiceCommands.Cmd(var19, var1);
-               } else if (new Regex("^(back to the )?(center|centre|middle)( of the lane)?$").containsMatchIn(var1)) {
-                  return new VoiceCommands.Cmd(VoiceCommands.Kind.NUDGE, "center");
-               } else if (new Regex("(more room|stay behind|give (it|them|him|her) (some )?room|back off)").containsMatchIn(var1)) {
-                  return new VoiceCommands.Cmd(VoiceCommands.Kind.NUDGE, "room");
-               } else {
-                  VoiceCommands.Cmd var10;
-                  if (parse$has(var1, "battery", "saver", "power saving", "power save")) {
-                     VoiceCommands.Kind var9;
-                     if (var2) {
-                        var9 = VoiceCommands.Kind.SAVER_OFF;
-                     } else {
-                        var9 = VoiceCommands.Kind.SAVER_ON;
-                     }
+        public Cmd(Kind kind, String arg) {
+            Intrinsics.checkNotNullParameter(kind, "kind");
+            Intrinsics.checkNotNullParameter(arg, "arg");
+            this.kind = kind;
+            this.arg = arg;
+        }
 
-                     var10 = new VoiceCommands.Cmd(var9, null, 2, null);
-                  } else if (parse$has(var1, "experimental")) {
-                     VoiceCommands.Kind var11;
-                     if (var2) {
-                        var11 = VoiceCommands.Kind.EXP_OFF;
-                     } else {
-                        var11 = VoiceCommands.Kind.EXP_ON;
-                     }
+        public /* synthetic */ Cmd(Kind kind, String str, int i, DefaultConstructorMarker defaultConstructorMarker) {
+            this(kind, (i & 2) != 0 ? "" : str);
+        }
 
-                     var10 = new VoiceCommands.Cmd(var11, null, 2, null);
-                  } else if (parse$has(var1, "chill")) {
-                     var10 = new VoiceCommands.Cmd(VoiceCommands.Kind.EXP_OFF, null, 2, null);
-                  } else if (parse$has(var1, "map")) {
-                     VoiceCommands.Kind var12;
-                     if (var2) {
-                        var12 = VoiceCommands.Kind.MAP_CLOSE;
-                     } else {
-                        var12 = VoiceCommands.Kind.MAP_OPEN;
-                     }
+        public final String getArg() {
+            return this.arg;
+        }
 
-                     var10 = new VoiceCommands.Cmd(var12, null, 2, null);
-                  } else if (parse$has(var1, "focus")) {
-                     VoiceCommands.Kind var13;
-                     if (var2) {
-                        var13 = VoiceCommands.Kind.FOCUS_OFF;
-                     } else {
-                        var13 = VoiceCommands.Kind.FOCUS_ON;
-                     }
+        public final Kind getKind() {
+            return this.kind;
+        }
+    }
 
-                     var10 = new VoiceCommands.Cmd(var13, null, 2, null);
-                  } else if (parse$has(var1, "voice", "talk", "speak")) {
-                     VoiceCommands.Kind var14;
-                     if (var2) {
-                        var14 = VoiceCommands.Kind.VOICE_OFF;
-                     } else {
-                        var14 = VoiceCommands.Kind.VOICE_ON;
-                     }
+    /* JADX WARN: Multi-variable type inference failed */
+    public final Cmd parse(String raw) {
+        Intrinsics.checkNotNullParameter(raw, "raw");
+        String lowerCase = raw.toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+        String replace = new Regex("^(hey )?(starview|star view|ok)\\s+").replace(new Regex("[.!?,]").replace(StringsKt.trim((CharSequence) lowerCase).toString(), ""), "");
+        int i = 2;
+        boolean parse$has = parse$has(replace, "off", "stop", "disable", "close", "hide", "quiet", "mute");
+        String str = null;
+        Object[] objArr = 0;
+        Object[] objArr2 = 0;
+        Object[] objArr3 = 0;
+        Object[] objArr4 = 0;
+        Object[] objArr5 = 0;
+        Object[] objArr6 = 0;
+        Object[] objArr7 = 0;
+        Object[] objArr8 = 0;
+        Object[] objArr9 = 0;
+        Object[] objArr10 = 0;
+        Object[] objArr11 = 0;
+        Object[] objArr12 = 0;
+        Object[] objArr13 = 0;
+        Object[] objArr14 = 0;
+        Object[] objArr15 = 0;
+        Object[] objArr16 = 0;
+        Object[] objArr17 = 0;
+        Object[] objArr18 = 0;
+        Object[] objArr19 = 0;
+        Object[] objArr20 = 0;
+        Object[] objArr21 = 0;
+        Object[] objArr22 = 0;
+        Object[] objArr23 = 0;
+        Object[] objArr24 = 0;
+        Object[] objArr25 = 0;
+        if (new Regex("^(bookmark|mark)( (this|it|here|that))?$").containsMatchIn(replace) || Intrinsics.areEqual(replace, "add a bookmark")) {
+            return new Cmd(Kind.BOOKMARK, objArr2 == true ? 1 : 0, i, objArr == true ? 1 : 0);
+        }
+        MatchResult find$default = Regex.find$default(new Regex("^(take me|go|drive|navigate|head|bring me|let's go)( back)?( to)? (home|work)$"), replace, 0, 2, null);
+        if (find$default != null) {
+            return new Cmd(Kind.NAVIGATE, find$default.getGroupValues().get(4));
+        }
+        MatchResult find$default2 = Regex.find$default(new Regex("^(navigate|take me|drive|go|directions|route)( me)? to (.+)$"), replace, 0, 2, null);
+        if (find$default2 != null) {
+            return new Cmd(Kind.NAVIGATE, StringsKt.trim((CharSequence) StringsKt.removePrefix(StringsKt.trim((CharSequence) find$default2.getGroupValues().get(3)).toString(), (CharSequence) "my ")).toString());
+        }
+        MatchResult find$default3 = Regex.find$default(new Regex("^(take|make) (the )?(next )?(left|right)( turn)?$"), replace, 0, 2, null);
+        if (find$default3 != null) {
+            return new Cmd(Kind.NUDGE, "turn_" + ((Object) find$default3.getGroupValues().get(4)));
+        }
+        if (new Regex("^(move|go|shift|scoot)( over)?( a (bit|little))?( to the)? (left|right)( a (bit|little))?$").containsMatchIn(replace)) {
+            return new Cmd(Kind.NUDGE, StringsKt.contains$default((CharSequence) replace, (CharSequence) "left", false, 2, (Object) null) ? "left" : "right");
+        }
+        if (new Regex("^(back to the )?(center|centre|middle)( of the lane)?$").containsMatchIn(replace)) {
+            return new Cmd(Kind.NUDGE, "center");
+        }
+        if (new Regex("(more room|stay behind|give (it|them|him|her) (some )?room|back off)").containsMatchIn(replace)) {
+            return new Cmd(Kind.NUDGE, "room");
+        }
+        if (parse$has(replace, "battery", "saver", "power saving", "power save")) {
+            return new Cmd(parse$has ? Kind.SAVER_OFF : Kind.SAVER_ON, str, i, objArr25 == true ? 1 : 0);
+        }
+        if (parse$has(replace, "experimental")) {
+            return new Cmd(parse$has ? Kind.EXP_OFF : Kind.EXP_ON, objArr24 == true ? 1 : 0, i, objArr23 == true ? 1 : 0);
+        }
+        if (parse$has(replace, "chill")) {
+            return new Cmd(Kind.EXP_OFF, objArr22 == true ? 1 : 0, i, objArr21 == true ? 1 : 0);
+        }
+        if (parse$has(replace, "map")) {
+            return new Cmd(parse$has ? Kind.MAP_CLOSE : Kind.MAP_OPEN, objArr20 == true ? 1 : 0, i, objArr19 == true ? 1 : 0);
+        }
+        if (parse$has(replace, "focus")) {
+            return new Cmd(parse$has ? Kind.FOCUS_OFF : Kind.FOCUS_ON, objArr18 == true ? 1 : 0, i, objArr17 == true ? 1 : 0);
+        }
+        if (parse$has(replace, "voice", "talk", "speak")) {
+            return new Cmd(parse$has ? Kind.VOICE_OFF : Kind.VOICE_ON, objArr16 == true ? 1 : 0, i, objArr15 == true ? 1 : 0);
+        }
+        if (parse$has(replace, "keep", "save") && parse$has(replace, "drive", "this", "recording", "clip", "video")) {
+            return new Cmd(Kind.KEEP, objArr14 == true ? 1 : 0, i, objArr13 == true ? 1 : 0);
+        }
+        if (parse$has(replace, "aggressive")) {
+            return new Cmd(Kind.FOLLOW, "0");
+        }
+        if (parse$has(replace, "standard", "normal")) {
+            return new Cmd(Kind.FOLLOW, "1");
+        }
+        if (parse$has(replace, "relaxed")) {
+            return new Cmd(Kind.FOLLOW, "2");
+        }
+        if (parse$has(replace, "farther", "further", "more room", "back off")) {
+            return new Cmd(Kind.FARTHER, objArr12 == true ? 1 : 0, i, objArr11 == true ? 1 : 0);
+        }
+        if (parse$has(replace, "closer", "tighter")) {
+            return new Cmd(Kind.CLOSER, objArr10 == true ? 1 : 0, i, objArr9 == true ? 1 : 0);
+        }
+        if (parse$has(replace, "scene", "3d")) {
+            return new Cmd(Kind.SCENE, objArr8 == true ? 1 : 0, i, objArr7 == true ? 1 : 0);
+        }
+        if (parse$has(replace, "camera", "video")) {
+            return new Cmd(Kind.CAMERA, objArr6 == true ? 1 : 0, i, objArr5 == true ? 1 : 0);
+        }
+        return new Cmd(Kind.UNKNOWN, objArr4 == true ? 1 : 0, i, objArr3 == true ? 1 : 0);
+    }
 
-                     var10 = new VoiceCommands.Cmd(var14, null, 2, null);
-                  } else if (parse$has(var1, "keep", "save") && parse$has(var1, "drive", "this", "recording", "clip", "video")) {
-                     var10 = new VoiceCommands.Cmd(VoiceCommands.Kind.KEEP, null, 2, null);
-                  } else if (parse$has(var1, "aggressive")) {
-                     var10 = new VoiceCommands.Cmd(VoiceCommands.Kind.FOLLOW, "0");
-                  } else if (parse$has(var1, "standard", "normal")) {
-                     var10 = new VoiceCommands.Cmd(VoiceCommands.Kind.FOLLOW, "1");
-                  } else if (parse$has(var1, "relaxed")) {
-                     var10 = new VoiceCommands.Cmd(VoiceCommands.Kind.FOLLOW, "2");
-                  } else if (parse$has(var1, "farther", "further", "more room", "back off")) {
-                     var10 = new VoiceCommands.Cmd(VoiceCommands.Kind.FARTHER, null, 2, null);
-                  } else if (parse$has(var1, "closer", "tighter")) {
-                     var10 = new VoiceCommands.Cmd(VoiceCommands.Kind.CLOSER, null, 2, null);
-                  } else if (parse$has(var1, "scene", "3d")) {
-                     var10 = new VoiceCommands.Cmd(VoiceCommands.Kind.SCENE, null, 2, null);
-                  } else if (parse$has(var1, "camera", "video")) {
-                     var10 = new VoiceCommands.Cmd(VoiceCommands.Kind.CAMERA, null, 2, null);
-                  } else {
-                     var10 = new VoiceCommands.Cmd(VoiceCommands.Kind.UNKNOWN, null, 2, null);
-                  }
-
-                  return var10;
-               }
+    private static final boolean parse$has(String t, String... w) {
+        for (String str : w) {
+            if (new Regex("\\b" + str + "\\b").containsMatchIn(t)) {
+                return true;
             }
-         }
-      } else {
-         return new VoiceCommands.Cmd(VoiceCommands.Kind.BOOKMARK, null, 2, null);
-      }
-   }
-
-   public static final class Cmd {
-      private final String arg;
-      private final VoiceCommands.Kind kind;
-
-      public Cmd(VoiceCommands.Kind var1, String var2) {
-         Intrinsics.checkNotNullParameter(var1, "kind");
-         Intrinsics.checkNotNullParameter(var2, "arg");
-         super();
-         this.kind = var1;
-         this.arg = var2;
-      }
-
-      // $VF: synthetic method
-      public Cmd(VoiceCommands.Kind var1, String var2, int var3, DefaultConstructorMarker var4) {
-         if ((var3 & 2) != 0) {
-            var2 = "";
-         }
-
-         this(var1, var2);
-      }
-
-      public final String getArg() {
-         return this.arg;
-      }
-
-      public final VoiceCommands.Kind getKind() {
-         return this.kind;
-      }
-   }
-
-   public static enum Kind {
-      BOOKMARK,
-      CAMERA,
-      CLOSER,
-      EXP_OFF,
-      EXP_ON,
-      FARTHER,
-      FOCUS_OFF,
-      FOCUS_ON,
-      FOLLOW,
-      KEEP,
-      MAP_CLOSE,
-      MAP_OPEN,
-      NAVIGATE,
-      NUDGE,
-      SAVER_OFF,
-      SAVER_ON,
-      SCENE,
-      UNKNOWN,
-      VOICE_OFF,
-      VOICE_ON;
-      private static final EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(VoiceCommands.Kind.$VALUES);
-      private static final VoiceCommands.Kind[] $VALUES = $values();
-
-      // $VF: synthetic method
-      private static final VoiceCommands.Kind[] $values() {
-         return new VoiceCommands.Kind[]{
-            BOOKMARK,
-            EXP_ON,
-            EXP_OFF,
-            MAP_OPEN,
-            MAP_CLOSE,
-            FOCUS_ON,
-            FOCUS_OFF,
-            VOICE_ON,
-            VOICE_OFF,
-            SAVER_ON,
-            SAVER_OFF,
-            KEEP,
-            FOLLOW,
-            FARTHER,
-            CLOSER,
-            NAVIGATE,
-            SCENE,
-            CAMERA,
-            NUDGE,
-            UNKNOWN
-         };
-      }
-
-      public static EnumEntries<VoiceCommands.Kind> getEntries() {
-         return $ENTRIES;
-      }
-   }
+        }
+        return false;
+    }
 }

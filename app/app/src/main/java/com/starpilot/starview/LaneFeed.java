@@ -1,5 +1,11 @@
 package com.starpilot.starview;
 
+import com.starpilot.starview.Hpms;
+import com.starpilot.starview.LaneBrain;
+import com.starpilot.starview.LaneMarks;
+import com.starpilot.starview.LaneRamps;
+import com.starpilot.starview.Nav;
+import com.starpilot.starview.OsmRoads;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -9,1075 +15,723 @@ import kotlin.collections.ArraysKt;
 import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.jvm.internal.Ref.BooleanRef;
-import kotlin.jvm.internal.Ref.IntRef;
+import kotlin.jvm.internal.Ref;
 import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
 
+/* compiled from: LaneFeed.kt */
 public final class LaneFeed {
-   public static final LaneFeed.Companion Companion = new LaneFeed.Companion(null);
-   private volatile Hpms.Match hpms;
-   private LaneBrain.RoadInfo info;
-   private long lastFrameId = -1L;
-   private long lastRoadMs;
-   private double lastYaw = Double.NaN;
-   private int pendingEntry;
-   private volatile List<LaneRamps.Ramp> ramps = CollectionsKt.emptyList();
-   private LaneBrain.Road road;
-   private OsmRoads.Way way;
-
-   private static final float frame$edge(ModelSnapshot var0, int var1) {
-      int var4 = ((Object[])var0.getEdgeX()).length;
-      float var3 = Float.NaN;
-      if (var1 < var4) {
-         float[] var6 = var0.getEdgeStd();
-         boolean var5 = true;
-         boolean var15;
-         if (var1 >= 0 && var1 < var6.length) {
-            var15 = true;
-         } else {
-            var15 = false;
-         }
-
-         float var2;
-         if (var15) {
-            var2 = var6[var1];
-         } else {
-            var2 = 9.0F;
-         }
-
-         if (!(var2 > 1.5F)) {
-            var6 = var0.getEdgeX()[var1];
-            float[] var8 = var0.getEdgeY()[var1];
-            ArrayList var7 = new ArrayList();
-            var1 = 0;
-
-            for (int var16 = var6.length; var1 < var16; var1++) {
-               if (!(var6[var1] < 3.0F)) {
-                  if (var6[var1] > 15.0F) {
-                     break;
-                  }
-
-                  var7.add(Math.abs(var8[var1]));
-               }
-            }
-
-            if (var7.isEmpty()) {
-               return Float.NaN;
-            }
-
-            CollectionsKt.sort(var7);
-            Float var9 = (Float)var7.get(var7.size() / 2);
-            Float var18 = var9;
-            Intrinsics.checkNotNull(var18);
-            var2 = var18;
-            boolean var12;
-            if (0.4F <= var2 && var2 <= 25.0F) {
-               var12 = var5;
-            } else {
-               var12 = false;
-            }
-
-            if (!var12) {
-               var9 = null;
-            }
-
-            var9 = var9;
-            var2 = var3;
-            if (var9 != null) {
-               var2 = var9;
-            }
-
-            return var2;
-         }
-      }
-
-      return Float.NaN;
-   }
-
-   private static final float frame$lineAt(ModelSnapshot var0, int var1, float var2) {
-      if (var1 < ((Object[])var0.getLaneX()).length && var1 < ((Object[])var0.getLaneY()).length) {
-         float[] var3 = var0.getLaneX()[var1];
-         float[] var4 = var0.getLaneY()[var1];
-         if (var3.length < 2) {
-            return Float.NaN;
-         } else {
-            var1 = 1;
-
-            while (var1 < var3.length - 1 && var3[var1] < var2) {
-               var1++;
-            }
-
-            var2 = RangesKt.coerceIn((var2 - var3[var1 - 1]) / Math.max(0.01F, var3[var1] - var3[var1 - 1]), 0.0F, 1.0F);
-            return var4[var1 - 1] + (var4[var1] - var4[var1 - 1]) * var2;
-         }
-      } else {
-         return Float.NaN;
-      }
-   }
-
-   private static final void frame$place(IntRef var0, IntRef var1, BooleanRef var2, ModelSnapshot var3, float var4, float var5, float var6) {
-      if (!(var4 < 5.0F) && !(var4 > 70.0F)) {
-         float var7 = frame$lineAt(var3, 1, var4);
-         var4 = frame$lineAt(var3, 2, var4);
-         boolean var11 = Float.isInfinite(var7);
-         boolean var10 = false;
-         boolean var9;
-         if (!var11 && !Float.isNaN(var7)) {
-            var9 = 1;
-         } else {
-            var9 = 0;
-         }
-
-         if (var9) {
-            if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
-               var9 = (boolean)1;
-            } else {
-               var9 = (boolean)0;
-            }
-
-            if (var9) {
-               float var8 = var4 - var7;
-               var9 = var10;
-               if (2.5F <= var8) {
-                  var9 = var10;
-                  if (var8 <= 4.6F) {
-                     var9 = (boolean)1;
-                  }
-               }
-
-               if (!var9) {
-                  return;
-               }
-
-               var4 = (var5 - (var7 + var4) / 2.0F) / var8;
-               var9 = Math.round(var4);
-               if (!(Math.abs(var4 - var9) > 0.3F) && var9 != 0) {
-                  if (var6 > 3.0F) {
-                     if (var9 < 0) {
-                        var0.element = Math.max(var0.element, -var9);
-                     } else {
-                        var1.element = Math.max(var1.element, var9);
-                     }
-                  } else if (var6 < -3.0F && var9 == -1) {
-                     var2.element = true;
-                  }
-
-                  return;
-               }
-
-               return;
-            }
-         }
-      }
-   }
-
-   private final LaneBrain.Road mapdRoad(Telemetry var1) {
-      if (System.nanoTime() - var1.getMapdAtNs() <= 3000000000L && var1.getMapdMatched()) {
-         var var7 = var1.getMapdWayName();
-         boolean var2;
-         if (var7.length() == 0) {
-            var2 = 1;
-         } else {
-            var2 = 0;
-         }
-
-         if (var2) {
-            var7 = var1.getRoadName();
-         }
-
-         var7 = var7;
-         boolean var5 = var1.getMapdOneWay();
-         boolean var6 = var1.getMapdFreeway();
-         if (var1.getMapdLanes() <= 0) {
-            var2 = 0;
-         } else {
-            var2 = var1.getMapdLanes();
-            if (!var5) {
-               var2 = Math.max(1, var2 / 2);
-            }
-         }
-
-         String var8 = var1.getMapdWayRef();
-         long var3 = ("mapd:" + var7 + "|" + var8).hashCode();
-         String var9;
-         if (var6) {
-            var9 = "motorway";
-         } else {
-            var9 = "road";
-         }
-
-         if (!var5 && !var6) {
-            var5 = false;
-         } else {
-            var5 = true;
-         }
-
-         return new LaneBrain.Road(var3, var7, var9, var5, var6, var2);
-      } else {
-         return null;
-      }
-   }
-
-   // $VF: Duplicated exception handlers to handle obfuscated exceptions
-   private final void matchOwnMap() {
-      OsmRoads.Fix var18 = OsmRoads.INSTANCE.getLastFix();
-      if (var18 != null && !Double.isNaN(OsmRoads.INSTANCE.getLat0()) && System.nanoTime() - var18.getTNs() <= 3000000000L) {
-         if (var18.getSpeed() > 3.0F) {
-            float var11 = var18.getBearingDeg();
-            boolean var12;
-            if (!Float.isInfinite(var11) && !Float.isNaN(var11)) {
-               var12 = true;
-            } else {
-               var12 = false;
-            }
-
-            if (var12) {
-               this.lastYaw = (Math.PI / 2) - Math.toRadians(var18.getBearingDeg());
-            }
-         }
-
-         double var7 = this.lastYaw;
-         if (!Double.isNaN(var7)) {
-            double var1;
-            double var9;
-            OsmRoads.Match var29;
-            label128: {
-               Pair var16 = OsmRoads.INSTANCE.toLocal(var18.getLat(), var18.getLon());
-               var1 = ((Number)var16.component1()).doubleValue();
-               var9 = ((Number)var16.component2()).doubleValue();
-               var29 = OsmRoads.INSTANCE.matchSeg(var1, var9, var7);
-               if (var29 != null) {
-                  boolean var26;
-                  if (var29.getDist() < 15.0) {
-                     var26 = true;
-                  } else {
-                     var26 = false;
-                  }
-
-                  if (var26) {
-                     break label128;
-                  }
-               }
-
-               var29 = null;
-            }
-
-            OsmRoads.Way var17;
-            if (var29 != null) {
-               var17 = var29.getWay();
-            } else {
-               var17 = null;
-            }
-
-            label121: {
-               label143: {
-                  double var3;
-                  double var5;
-                  Hpms var19;
-                  try {
-                     var19 = Hpms.INSTANCE;
-                     var3 = var18.getLat();
-                     var5 = var18.getLon();
-                  } catch (Exception var25) {
-                     break label143;
-                  }
-
-                  label116: {
-                     if (var17 != null) {
-                        try {
-                           var30 = var17.getKind();
-                        } catch (Exception var24) {
-                           break label143;
-                        }
-
-                        if (var30 != null) {
-                           boolean var13;
-                           try {
-                              var13 = StringsKt.endsWith$default(var30, "_link", false, 2, null);
-                           } catch (Exception var23) {
-                              break label143;
-                           }
-
-                           var31 = var13;
-                           break label116;
-                        }
-                     }
-
-                     var31 = null;
-                  }
-
-                  try {
-                     var32 = Hpms.match$default(var19, var3, var5, var7, var31, 0.0, null, 48, null);
-                     break label121;
-                  } catch (Exception var22) {
-                  }
-               }
-
-               var32 = null;
-            }
-
-            this.hpms = var32;
-            if (var17 == null) {
-               this.road = null;
-               this.way = null;
-               this.ramps = CollectionsKt.emptyList();
-            } else {
-               label101:
-               if (var17.getHighway() && !StringsKt.endsWith$default(var17.getKind(), "_link", false, 2, null)) {
-                  label97: {
-                     try {
-                        var37 = LaneRamps.INSTANCE;
-                        var34 = OsmRoads.INSTANCE;
-                     } catch (Exception var21) {
-                        break label97;
-                     }
-
-                     try {
-                        var33 = var37.scan(var34.near(var1, var9, 450.0), var17, var1, var9, var7);
-                        break label101;
-                     } catch (Exception var20) {
-                     }
-                  }
-
-                  var33 = CollectionsKt.emptyList();
-               } else {
-                  var33 = CollectionsKt.emptyList();
-               }
-
-               this.ramps = var33;
-               OsmRoads.Way var35 = this.way;
-               if (var35 != null
-                  && var35.getId() != var17.getId()
-                  && StringsKt.endsWith$default(var35.getKind(), "_link", false, 2, null)
-                  && var17.getHighway()
-                  && !StringsKt.endsWith$default(var17.getKind(), "_link", false, 2, null)) {
-                  this.pendingEntry = Companion.rampSide(var35, var17, var1, var9, var7);
-               }
-
-               this.way = var17;
-               int var27;
-               if (var17.getLanes() <= 0) {
-                  var27 = 0;
-               } else if (var17.getOneway() != 0) {
-                  var27 = var17.getLanes();
-               } else {
-                  var27 = Math.max(1, var17.getLanes() / 2);
-               }
-
-               long var14 = var17.getId();
-               String var36 = var17.getName();
-               String var38 = var17.getKind();
-               boolean var28;
-               if (var17.getOneway() != 0) {
-                  var28 = true;
-               } else {
-                  var28 = false;
-               }
-
-               this.road = new LaneBrain.Road(var14, var36, var38, var28, var17.getHighway(), var27);
-            }
-         }
-      } else {
-         this.road = null;
-         this.way = null;
-         this.ramps = CollectionsKt.emptyList();
-         this.hpms = null;
-      }
-   }
-
-   private final void matchRoad(Telemetry var1) {
-      this.matchOwnMap();
-      if (this.road == null) {
-         this.road = this.mapdRoad(var1);
-      }
-
-      this.info = this.roadInfo();
-   }
-
-   private final LaneBrain.RoadInfo roadInfo() {
-      Hpms.Match var18 = this.hpms;
-      ArrayList var17 = new ArrayList();
-      Iterator var15 = this.ramps.iterator();
-      String var13 = "";
-      String var14 = "";
-      int var6 = 0;
-      int var7 = 0;
-
-      while (var15.hasNext()) {
-         LaneRamps.Ramp var16 = (LaneRamps.Ramp)var15.next();
-         if (var16.getSide() < 0) {
-            var7 = 1;
-            var14 = var16.getKind();
-         } else {
-            var6 = 1;
-            var13 = var16.getKind();
-         }
-
-         String var45 = var16.text();
-         var17.add("map: " + var45);
-      }
-
-      int var5 = 0;
-      double var1 = Double.NaN;
-
-      try {
-         var34 = Nav.INSTANCE.nextLanes();
-      } catch (Exception var23) {
-         var34 = null;
-      }
-
-      if (var34 != null && ((Number)var34.getSecond()).doubleValue() < 600.0) {
-         Nav.Step var19 = (Nav.Step)var34.component1();
-         double var3 = ((Number)var34.component2()).doubleValue();
-         var1 = var3;
-         Iterable var35 = var19.getLanes();
-         var var20 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var35, 10));
-         Iterator var21 = var35.iterator();
-
-         while (var21.hasNext()) {
-            var var46 = ((Nav.Lane)var21.next()).getArrows();
-            boolean var10;
-            if (var46 instanceof Collection && ((Collection)var46).isEmpty()) {
-               var10 = false;
-            } else {
-               var15 = var46.iterator();
-
-               while (true) {
-                  if (!var15.hasNext()) {
-                     var10 = false;
-                     break;
-                  }
-
-                  String var22 = (String)var15.next();
-                  boolean var24;
-                  if (!Intrinsics.areEqual(var22, "straight") && !Intrinsics.areEqual(var22, "none")) {
-                     var24 = false;
-                  } else {
-                     var24 = true;
-                  }
-
-                  if (var24) {
-                     var10 = true;
-                     break;
-                  }
-               }
-            }
-
-            var20.add(var10);
-         }
-
-         List var47 = var20;
-         var var37 = var47;
-         if (var37 instanceof Collection && ((Collection)var37).isEmpty()) {
-            var5 = 0;
-         } else {
-            var5 = 0;
-
-            for (boolean var28 : var37) {
-               if (var28) {
-                  int var8 = var5 + 1;
-                  var5 = var8;
-                  if (var8 < 0) {
-                     CollectionsKt.throwCountOverflow();
-                     var5 = var8;
-                  }
-               }
-            }
-         }
-
-         if (Intrinsics.areEqual(var19.getType(), "off ramp") && var3 < 320.0 && var5 > 0) {
-            Iterable var39 = CollectionsKt.reversed(var47);
-            ArrayList var55 = new ArrayList();
-
-            for (Object var59 : var39) {
-               boolean var29 = (Boolean)var59;
-               if (var29) {
-                  break;
-               }
-
-               var55.add(var59);
-            }
-
-            int var9 = var55.size();
-            Iterable var40 = var47;
-            ArrayList var56 = new ArrayList();
-
-            for (Object var48 : var40) {
-               boolean var30 = (Boolean)var48;
-               if (var30) {
-                  break;
-               }
-
-               var56.add(var48);
-            }
-
-            int var25 = var56.size();
-            String var41 = "s";
-            if (var9 > var6) {
-               String var49 = "exit";
-               if (var9 > 1) {
-                  var13 = "s";
-               } else {
-                  var13 = "";
-               }
-
-               var17.add("route: " + var9 + " exit-only lane" + var13 + " right");
-               var6 = var9;
-               var13 = var49;
-            }
-
-            if (var25 > var7) {
-               var7 = var25;
-               if (var25 > 1) {
-                  var14 = var41;
-               } else {
-                  var14 = "";
-               }
-
-               var17.add("route: " + var25 + " exit-only lane" + var14 + " left");
-               var14 = "exit";
-            }
-         }
-      }
-
-      int var26;
-      label145: {
-         if (var18 != null) {
-            Hpms.Section var42 = var18.getS();
-            if (var42 != null) {
-               var26 = var42.ourLanes();
-               break label145;
-            }
-         }
-
-         var26 = 0;
-      }
-
-      label140: {
-         if (var18 != null) {
-            Hpms.Section var43 = var18.getS();
-            if (var43 != null) {
-               var44 = var43.getName();
-               if (var44 != null) {
-                  break label140;
-               }
-            }
-         }
-
-         var44 = "";
-      }
-
-      boolean var31;
-      label134: {
-         if (var18 != null) {
-            Hpms.Section var50 = var18.getS();
-            if (var50 != null && var50.getRamp()) {
-               var31 = true;
-               break label134;
-            }
-         }
-
-         var31 = false;
-      }
-
-      boolean var27;
-      label128: {
-         if (var18 != null) {
-            Hpms.Section var51 = var18.getS();
-            if (var51 != null && !var51.getOurLanesSure()) {
-               var27 = true;
-               break label128;
-            }
-         }
-
-         var27 = false;
-      }
-
-      boolean var11;
-      label122: {
-         if (var18 != null) {
-            Hpms.Section var52 = var18.getS();
-            if (var52 != null && var52.getTunnel()) {
-               var11 = true;
-               break label122;
-            }
-         }
-
-         var11 = false;
-      }
-
-      boolean var12;
-      label116: {
-         if (var18 != null) {
-            Hpms.Section var53 = var18.getS();
-            if (var53 != null && var53.getBridge()) {
-               var12 = true;
-               break label116;
-            }
-         }
-
-         var12 = false;
-      }
-
-      String var54 = CollectionsKt.joinToString$default(var17, ", ", null, null, 0, null, null, 62, null);
-      return new LaneBrain.RoadInfo(var26, var44, var31, var11, var12, var27 ^ true, var7, var6, var14, var13, var54, var5, var1);
-   }
-
-   private final LaneFeed.Rtk rtkOffset(long var1, double var3) {
-      if (!Double.isNaN(OsmRoads.INSTANCE.getLat0()) && RtkPosition.INSTANCE.fast(var1)) {
-         double[] var12 = RtkPosition.INSTANCE.now(var1, var3);
-         if (var12 == null) {
+    public static final Companion Companion = new Companion(null);
+    private volatile Hpms.Match hpms;
+    private LaneBrain.RoadInfo info;
+    private long lastRoadMs;
+    private int pendingEntry;
+    private LaneBrain.Road road;
+    private OsmRoads.Way way;
+    private long lastFrameId = -1;
+    private double lastYaw = Double.NaN;
+    private volatile List<LaneRamps.Ramp> ramps = CollectionsKt.emptyList();
+
+    public final List<LaneRamps.Ramp> getRamps() {
+        return this.ramps;
+    }
+
+    public final Hpms.Match getHpms() {
+        return this.hpms;
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Removed duplicated region for block: B:102:0x02a3  */
+    /* JADX WARN: Removed duplicated region for block: B:103:0x0292  */
+    /* JADX WARN: Removed duplicated region for block: B:104:0x027b  */
+    /* JADX WARN: Removed duplicated region for block: B:105:0x0272  */
+    /* JADX WARN: Removed duplicated region for block: B:106:0x025f  */
+    /* JADX WARN: Removed duplicated region for block: B:107:0x0256  */
+    /* JADX WARN: Removed duplicated region for block: B:109:0x021c  */
+    /* JADX WARN: Removed duplicated region for block: B:110:0x020d  */
+    /* JADX WARN: Removed duplicated region for block: B:111:0x01ff  */
+    /* JADX WARN: Removed duplicated region for block: B:112:0x01e8  */
+    /* JADX WARN: Removed duplicated region for block: B:113:0x01e1  */
+    /* JADX WARN: Removed duplicated region for block: B:114:0x01d4  */
+    /* JADX WARN: Removed duplicated region for block: B:115:0x01cd  */
+    /* JADX WARN: Removed duplicated region for block: B:116:0x01a3  */
+    /* JADX WARN: Removed duplicated region for block: B:34:0x00ea  */
+    /* JADX WARN: Removed duplicated region for block: B:61:0x01cb  */
+    /* JADX WARN: Removed duplicated region for block: B:63:0x01d0  */
+    /* JADX WARN: Removed duplicated region for block: B:66:0x01df  */
+    /* JADX WARN: Removed duplicated region for block: B:68:0x01e4  */
+    /* JADX WARN: Removed duplicated region for block: B:71:0x01f6  */
+    /* JADX WARN: Removed duplicated region for block: B:73:0x0203  */
+    /* JADX WARN: Removed duplicated region for block: B:76:0x0217  */
+    /* JADX WARN: Removed duplicated region for block: B:84:0x0254  */
+    /* JADX WARN: Removed duplicated region for block: B:86:0x0259  */
+    /* JADX WARN: Removed duplicated region for block: B:89:0x026f  */
+    /* JADX WARN: Removed duplicated region for block: B:91:0x0276  */
+    /* JADX WARN: Removed duplicated region for block: B:94:0x028b  */
+    /* JADX WARN: Removed duplicated region for block: B:96:0x0296  */
+    /* JADX WARN: Removed duplicated region for block: B:99:0x029e  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final LaneBrain.Frame frame(Telemetry t, LaneMarks marks, long nowMs) {
+        LaneMarks.Mark[] markArr;
+        int i;
+        Ref.BooleanRef booleanRef;
+        Ref.IntRef intRef;
+        Ref.IntRef intRef2;
+        int i2;
+        int i3;
+        RadarTrack[] radarTrackArr;
+        Ref.BooleanRef booleanRef2;
+        Ref.IntRef intRef3;
+        Ref.IntRef intRef4;
+        boolean z;
+        Intrinsics.checkNotNullParameter(t, "t");
+        ModelSnapshot model = t.getModel();
+        if (model == null || model.getFrameId() == this.lastFrameId) {
             return null;
-         } else {
-            double var5 = RtkPosition.INSTANCE.getHeading();
-            boolean var11 = Double.isInfinite(var5);
-            boolean var10 = true;
-            boolean var9;
-            if (!var11 && !Double.isNaN(var5)) {
-               var9 = true;
+        }
+        this.lastFrameId = model.getFrameId();
+        float poseYawZ = t.getPoseYawZ();
+        boolean z2 = false;
+        float poseYawZ2 = ((!Float.isInfinite(poseYawZ) && !Float.isNaN(poseYawZ)) == true && System.nanoTime() - t.getPoseAtNs() < 500000000) == true ? t.getPoseYawZ() * Odometry.INSTANCE.getGyroSign() : (float) ((t.getVEgo() * Math.tan(Math.toRadians(t.getSteeringAngleDeg() - t.getAngleOffsetDeg()) / (t.getSteerRatioLive() > 5.0f ? t.getSteerRatioLive() : 15.5f))) / 3.03d);
+        if (nowMs - this.lastRoadMs > 500) {
+            this.lastRoadMs = nowMs;
+            matchRoad(t);
+        }
+        int i4 = this.pendingEntry;
+        this.pendingEntry = 0;
+        if (marks != null) {
+            LaneMarks laneMarks = (((System.nanoTime() - marks.getLastNs()) > 1000000000L ? 1 : ((System.nanoTime() - marks.getLastNs()) == 1000000000L ? 0 : -1)) < 0 ? 1 : null) != null ? marks : null;
+            if (laneMarks != null) {
+                markArr = laneMarks.getMarks();
+                Ref.IntRef intRef5 = new Ref.IntRef();
+                Ref.IntRef intRef6 = new Ref.IntRef();
+                Ref.BooleanRef booleanRef3 = new Ref.BooleanRef();
+                if (t.getVEgo() <= 3.0f) {
+                    RadarTrack[] radar = t.getRadar();
+                    int length = radar.length;
+                    i = i4;
+                    int i5 = 0;
+                    while (i5 < length) {
+                        RadarTrack radarTrack = radar[i5];
+                        if (radarTrack.getMeasured()) {
+                            radarTrackArr = radar;
+                            i3 = length;
+                            booleanRef2 = booleanRef3;
+                            intRef3 = intRef6;
+                            intRef4 = intRef5;
+                            z = z2;
+                            frame$place(intRef5, intRef6, booleanRef3, model, radarTrack.getDRel() + 2.3f, -radarTrack.getYRel(), t.getVEgo() + radarTrack.getVRel());
+                        } else {
+                            i3 = length;
+                            radarTrackArr = radar;
+                            booleanRef2 = booleanRef3;
+                            intRef3 = intRef6;
+                            intRef4 = intRef5;
+                            z = z2;
+                        }
+                        i5++;
+                        z2 = z;
+                        radar = radarTrackArr;
+                        length = i3;
+                        booleanRef3 = booleanRef2;
+                        intRef6 = intRef3;
+                        intRef5 = intRef4;
+                    }
+                    booleanRef = booleanRef3;
+                    intRef = intRef6;
+                    intRef2 = intRef5;
+                    Lead[] leadArr = new Lead[2];
+                    leadArr[z2 ? 1 : 0] = t.getLeadLeft();
+                    int i6 = 1;
+                    leadArr[1] = t.getLeadRight();
+                    for (Lead lead : CollectionsKt.listOf((Object[]) leadArr)) {
+                        if (lead.getStatus()) {
+                            frame$place(intRef2, intRef, booleanRef, model, lead.getDRel() + 2.3f, -lead.getYRel(), lead.getVLead());
+                            i6 = i6;
+                        }
+                    }
+                    i2 = i6;
+                } else {
+                    i = i4;
+                    booleanRef = booleanRef3;
+                    intRef = intRef6;
+                    intRef2 = intRef5;
+                    i2 = 1;
+                }
+                Rtk rtkOffset = rtkOffset(nowMs, t.getVEgo());
+                float vEgo = t.getVEgo();
+                float frame$lineAt = frame$lineAt(model, i2, 3.0f);
+                float frame$lineAt2 = frame$lineAt(model, 2, 3.0f);
+                float[] laneProb = model.getLaneProb();
+                float f = (i2 >= laneProb.length ? i2 : 0) == 0 ? laneProb[i2] : 0.0f;
+                float[] laneProb2 = model.getLaneProb();
+                float f2 = (2 >= laneProb2.length ? i2 : 0) == 0 ? laneProb2[2] : 0.0f;
+                float frame$edge = frame$edge(model, 0);
+                float frame$edge2 = frame$edge(model, i2);
+                LaneMarks.Mark mark = markArr == null ? (LaneMarks.Mark) ArraysKt.getOrNull(markArr, i2) : null;
+                LaneMarks.Mark mark2 = markArr == null ? (LaneMarks.Mark) ArraysKt.getOrNull(markArr, 2) : null;
+                LaneBrain.Road road = this.road;
+                int laneChangeDir = !model.getLaneChanging() ? model.getLaneChangeDir() : 0;
+                int i7 = (model.getLaneChanging() || !model.getLaneChangeFinishing()) ? 0 : i2;
+                float f3 = poseYawZ2;
+                int i8 = intRef2.element;
+                int i9 = intRef.element;
+                boolean z3 = booleanRef.element;
+                float frame$lineAt3 = frame$lineAt(model, 0, 3.0f);
+                float frame$lineAt4 = frame$lineAt(model, 3, 3.0f);
+                float[] laneProb3 = model.getLaneProb();
+                float f4 = !(laneProb3.length <= 0) ? laneProb3[0] : 0.0f;
+                float[] laneProb4 = model.getLaneProb();
+                return new LaneBrain.Frame(nowMs, vEgo, f3, frame$lineAt, frame$lineAt2, f, f2, frame$edge, frame$edge2, mark, mark2, road, i, laneChangeDir, i7, i8, i9, z3, frame$lineAt3, frame$lineAt4, f4, !(3 >= laneProb4.length) ? laneProb4[3] : 0.0f, t.getLeftBlindspot(), t.getRightBlindspot(), rtkOffset == null ? rtkOffset.getOffset() : Double.NaN, rtkOffset != null ? rtkOffset.getSigma() : Double.NaN, rtkOffset == null ? rtkOffset.getWay() : 0L, model.getLaneChangeProb(), this.info);
+            }
+        }
+        markArr = null;
+        Ref.IntRef intRef52 = new Ref.IntRef();
+        Ref.IntRef intRef62 = new Ref.IntRef();
+        Ref.BooleanRef booleanRef32 = new Ref.BooleanRef();
+        if (t.getVEgo() <= 3.0f) {
+        }
+        Rtk rtkOffset2 = rtkOffset(nowMs, t.getVEgo());
+        float vEgo2 = t.getVEgo();
+        float frame$lineAt5 = frame$lineAt(model, i2, 3.0f);
+        float frame$lineAt22 = frame$lineAt(model, 2, 3.0f);
+        float[] laneProb5 = model.getLaneProb();
+        if ((i2 >= laneProb5.length ? i2 : 0) == 0) {
+        }
+        float[] laneProb22 = model.getLaneProb();
+        if ((2 >= laneProb22.length ? i2 : 0) == 0) {
+        }
+        float frame$edge3 = frame$edge(model, 0);
+        float frame$edge22 = frame$edge(model, i2);
+        if (markArr == null) {
+        }
+        if (markArr == null) {
+        }
+        LaneBrain.Road road2 = this.road;
+        if (!model.getLaneChanging()) {
+        }
+        if (model.getLaneChanging()) {
+        }
+        float f32 = poseYawZ2;
+        int i82 = intRef2.element;
+        int i92 = intRef.element;
+        boolean z32 = booleanRef.element;
+        float frame$lineAt32 = frame$lineAt(model, 0, 3.0f);
+        float frame$lineAt42 = frame$lineAt(model, 3, 3.0f);
+        float[] laneProb32 = model.getLaneProb();
+        if (!(laneProb32.length <= 0)) {
+        }
+        float[] laneProb42 = model.getLaneProb();
+        return new LaneBrain.Frame(nowMs, vEgo2, f32, frame$lineAt5, frame$lineAt22, f, f2, frame$edge3, frame$edge22, mark, mark2, road2, i, laneChangeDir, i7, i82, i92, z32, frame$lineAt32, frame$lineAt42, f4, !(3 >= laneProb42.length) ? laneProb42[3] : 0.0f, t.getLeftBlindspot(), t.getRightBlindspot(), rtkOffset2 == null ? rtkOffset2.getOffset() : Double.NaN, rtkOffset2 != null ? rtkOffset2.getSigma() : Double.NaN, rtkOffset2 == null ? rtkOffset2.getWay() : 0L, model.getLaneChangeProb(), this.info);
+    }
+
+    private static final float frame$lineAt(ModelSnapshot m, int i, float x) {
+        if (i >= m.getLaneX().length || i >= m.getLaneY().length) {
+            return Float.NaN;
+        }
+        float[] xs = m.getLaneX()[i];
+        float[] ys = m.getLaneY()[i];
+        if (xs.length < 2) {
+            return Float.NaN;
+        }
+        int j = 1;
+        while (j < xs.length - 1 && xs[j] < x) {
+            j++;
+        }
+        float f = RangesKt.coerceIn((x - xs[j - 1]) / Math.max(0.01f, xs[j] - xs[j - 1]), 0.0f, 1.0f);
+        return ys[j - 1] + ((ys[j] - ys[j - 1]) * f);
+    }
+
+    private static final float frame$edge(ModelSnapshot m, int e) {
+        if (e < m.getEdgeX().length) {
+            float[] edgeStd = m.getEdgeStd();
+            if ((e >= 0 && e < edgeStd.length ? edgeStd[e] : 9.0f) <= 1.5f) {
+                float[] xs = m.getEdgeX()[e];
+                float[] ys = m.getEdgeY()[e];
+                ArrayList l = new ArrayList();
+                int length = xs.length;
+                for (int i = 0; i < length; i++) {
+                    if (xs[i] >= 3.0f) {
+                        if (xs[i] > 15.0f) {
+                            break;
+                        }
+                        l.add(Float.valueOf(Math.abs(ys[i])));
+                    }
+                }
+                if (l.isEmpty()) {
+                    return Float.NaN;
+                }
+                CollectionsKt.sort(l);
+                Object obj = l.get(l.size() / 2);
+                Float it = (Float) obj;
+                Intrinsics.checkNotNull(it);
+                float floatValue = it.floatValue();
+                if (!(0.4f <= floatValue && floatValue <= 25.0f)) {
+                    obj = null;
+                }
+                Float f = (Float) obj;
+                if (f != null) {
+                    return f.floatValue();
+                }
+                return Float.NaN;
+            }
+        }
+        return Float.NaN;
+    }
+
+    private static final void frame$place(Ref.IntRef cl, Ref.IntRef cr, Ref.BooleanRef onL, ModelSnapshot m, float d, float yRight, float vAbs) {
+        if (d < 5.0f || d > 70.0f) {
+            return;
+        }
+        float a = frame$lineAt(m, 1, d);
+        float b = frame$lineAt(m, 2, d);
+        boolean z = false;
+        if ((Float.isInfinite(a) || Float.isNaN(a)) ? false : true) {
+            if (!((Float.isInfinite(b) || Float.isNaN(b)) ? false : true)) {
+                return;
+            }
+            float w = b - a;
+            if (2.5f <= w && w <= 4.6f) {
+                z = true;
+            }
+            if (z) {
+                float k = (yRight - ((a + b) / 2.0f)) / w;
+                int kr = Math.round(k);
+                if (Math.abs(k - kr) > 0.3f || kr == 0) {
+                    return;
+                }
+                if (vAbs > 3.0f) {
+                    if (kr < 0) {
+                        cl.element = Math.max(cl.element, -kr);
+                        return;
+                    } else {
+                        cr.element = Math.max(cr.element, kr);
+                        return;
+                    }
+                }
+                if (vAbs < -3.0f && kr == -1) {
+                    onL.element = true;
+                }
+            }
+        }
+    }
+
+    /* compiled from: LaneFeed.kt */
+    public static final class Rtk {
+        private final double offset;
+        private final double sigma;
+        private final long way;
+
+        public Rtk(double offset, double sigma, long way) {
+            this.offset = offset;
+            this.sigma = sigma;
+            this.way = way;
+        }
+
+        public final double getOffset() {
+            return this.offset;
+        }
+
+        public final double getSigma() {
+            return this.sigma;
+        }
+
+        public final long getWay() {
+            return this.way;
+        }
+    }
+
+    private final Rtk rtkOffset(long nowMs, double vEgo) {
+        double[] pos;
+        if (Double.isNaN(OsmRoads.INSTANCE.getLat0()) || !RtkPosition.INSTANCE.fast(nowMs) || (pos = RtkPosition.INSTANCE.now(nowMs, vEgo)) == null) {
+            return null;
+        }
+        double h = RtkPosition.INSTANCE.getHeading();
+        if (((Double.isInfinite(h) || Double.isNaN(h)) ? false : true) && vEgo >= 3.0d) {
+            double yaw = 1.5707963267948966d - Math.toRadians(h);
+            Pair<Double, Double> local = OsmRoads.INSTANCE.toLocal(pos[0], pos[1]);
+            double e = local.component1().doubleValue();
+            double n = local.component2().doubleValue();
+            OsmRoads.Match mt = OsmRoads.INSTANCE.matchSeg(e, n, yaw);
+            if (mt != null) {
+                if (!(mt.getDist() < 15.0d)) {
+                    mt = null;
+                }
+                if (mt == null) {
+                    return null;
+                }
+                return new Rtk(mt.rightOf(yaw), Math.max(0.2d, RtkPosition.INSTANCE.getAccM()), mt.getWay().getId());
+            }
+            return null;
+        }
+        return null;
+    }
+
+    private final LaneBrain.Road mapdRoad(Telemetry t) {
+        int ourWay;
+        if (System.nanoTime() - t.getMapdAtNs() > 3000000000L || !t.getMapdMatched()) {
+            return null;
+        }
+        String mapdWayName = t.getMapdWayName();
+        if (mapdWayName.length() == 0) {
+            mapdWayName = t.getRoadName();
+        }
+        String name = mapdWayName;
+        boolean oneway = t.getMapdOneWay();
+        boolean hw = t.getMapdFreeway();
+        if (t.getMapdLanes() <= 0) {
+            ourWay = 0;
+        } else {
+            int mapdLanes = t.getMapdLanes();
+            if (!oneway) {
+                mapdLanes = Math.max(1, mapdLanes / 2);
+            }
+            ourWay = mapdLanes;
+        }
+        return new LaneBrain.Road(("mapd:" + name + "|" + t.getMapdWayRef()).hashCode(), name, hw ? "motorway" : "road", oneway || hw, hw, ourWay);
+    }
+
+    private final void matchRoad(Telemetry t) {
+        matchOwnMap();
+        if (this.road == null) {
+            this.road = mapdRoad(t);
+        }
+        this.info = roadInfo();
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:26:0x00a6, code lost:
+    
+        if ((r0.getDist() < 15.0d) != false) goto L31;
+     */
+    /* JADX WARN: Removed duplicated region for block: B:43:0x00ee  */
+    /* JADX WARN: Removed duplicated region for block: B:45:0x00f9  */
+    /* JADX WARN: Removed duplicated region for block: B:67:0x0184  */
+    /* JADX WARN: Removed duplicated region for block: B:71:0x01b5  */
+    /* JADX WARN: Removed duplicated region for block: B:74:0x01b7  */
+    /* JADX WARN: Removed duplicated region for block: B:75:0x0188  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void matchOwnMap() {
+        int i;
+        Hpms.Match match;
+        OsmRoads.Way w;
+        List<LaneRamps.Ramp> emptyList;
+        OsmRoads.Way prev;
+        OsmRoads.Way w2;
+        boolean z;
+        int ourWay;
+        String kind;
+        OsmRoads.Fix f = OsmRoads.INSTANCE.getLastFix();
+        if (f == null || Double.isNaN(OsmRoads.INSTANCE.getLat0()) || System.nanoTime() - f.getTNs() > 3000000000L) {
+            this.road = null;
+            this.way = null;
+            this.ramps = CollectionsKt.emptyList();
+            this.hpms = null;
+            return;
+        }
+        if (f.getSpeed() > 3.0f) {
+            float bearingDeg = f.getBearingDeg();
+            if ((Float.isInfinite(bearingDeg) || Float.isNaN(bearingDeg)) ? false : true) {
+                this.lastYaw = 1.5707963267948966d - Math.toRadians(f.getBearingDeg());
+            }
+        }
+        double yaw = this.lastYaw;
+        if (Double.isNaN(yaw)) {
+            return;
+        }
+        Pair<Double, Double> local = OsmRoads.INSTANCE.toLocal(f.getLat(), f.getLon());
+        double e = local.component1().doubleValue();
+        double n = local.component2().doubleValue();
+        OsmRoads.Match it = OsmRoads.INSTANCE.matchSeg(e, n, yaw);
+        if (it != null) {
+        }
+        it = null;
+        OsmRoads.Match mt = it;
+        OsmRoads.Way w3 = mt != null ? mt.getWay() : null;
+        try {
+            i = 2;
+        } catch (Exception e2) {
+            i = 2;
+        }
+        try {
+            match = Hpms.INSTANCE.match(f.getLat(), f.getLon(), yaw, (w3 == null || (kind = w3.getKind()) == null) ? null : Boolean.valueOf(StringsKt.endsWith$default(kind, "_link", false, 2, (Object) null)), (r24 & 16) != 0 ? 45.0d : 0.0d, (r24 & 32) != 0 ? "" : null);
+        } catch (Exception e3) {
+            match = null;
+            this.hpms = match;
+            if (w3 != null) {
+            }
+        }
+        this.hpms = match;
+        if (w3 != null) {
+            this.road = null;
+            this.way = null;
+            this.ramps = CollectionsKt.emptyList();
+            return;
+        }
+        if (!w3.getHighway() || StringsKt.endsWith$default(w3.getKind(), "_link", false, i, (Object) null)) {
+            w = w3;
+            emptyList = CollectionsKt.emptyList();
+        } else {
+            try {
+                w = w3;
+            } catch (Exception e4) {
+                w = w3;
+            }
+            try {
+                emptyList = LaneRamps.INSTANCE.scan(OsmRoads.INSTANCE.near(e, n, 450.0d), w, e, n, yaw);
+            } catch (Exception e5) {
+                emptyList = CollectionsKt.emptyList();
+                this.ramps = emptyList;
+                prev = this.way;
+                if (prev != null) {
+                    this.pendingEntry = Companion.rampSide(prev, w, e, n, yaw);
+                }
+                w2 = w;
+                this.way = w2;
+                if (w2.getLanes() > 0) {
+                }
+                z = true;
+                this.road = new LaneBrain.Road(w2.getId(), w2.getName(), w2.getKind(), w2.getOneway() != 0 ? z : false, w2.getHighway(), ourWay);
+            }
+        }
+        this.ramps = emptyList;
+        prev = this.way;
+        if (prev != null && prev.getId() != w.getId() && StringsKt.endsWith$default(prev.getKind(), "_link", false, i, (Object) null) && w.getHighway() && !StringsKt.endsWith$default(w.getKind(), "_link", false, i, (Object) null)) {
+            this.pendingEntry = Companion.rampSide(prev, w, e, n, yaw);
+        }
+        w2 = w;
+        this.way = w2;
+        if (w2.getLanes() > 0) {
+            ourWay = 0;
+        } else {
+            if (w2.getOneway() == 0) {
+                int lanes = w2.getLanes() / i;
+                z = true;
+                ourWay = Math.max(1, lanes);
+                this.road = new LaneBrain.Road(w2.getId(), w2.getName(), w2.getKind(), w2.getOneway() != 0 ? z : false, w2.getHighway(), ourWay);
+            }
+            ourWay = w2.getLanes();
+        }
+        z = true;
+        this.road = new LaneBrain.Road(w2.getId(), w2.getName(), w2.getKind(), w2.getOneway() != 0 ? z : false, w2.getHighway(), ourWay);
+    }
+
+    private final LaneBrain.RoadInfo roadInfo() {
+        Pair nl;
+        String kL;
+        Hpms.Section s;
+        Hpms.Section s2;
+        Hpms.Section s3;
+        Hpms.Section s4;
+        Hpms.Section s5;
+        String name;
+        Hpms.Section s6;
+        int count$iv;
+        int straight;
+        boolean z;
+        Hpms.Match h = this.hpms;
+        ArrayList why = new ArrayList();
+        String kR = "";
+        String kL2 = "";
+        int xR = 0;
+        int xL = 0;
+        for (LaneRamps.Ramp r : this.ramps) {
+            if (r.getSide() < 0) {
+                xL = 1;
+                kL2 = r.getKind();
             } else {
-               var9 = false;
+                xR = 1;
+                kR = r.getKind();
             }
-
-            if (var9 && !(var3 < 3.0)) {
-               double var7 = (Math.PI / 2) - Math.toRadians(var5);
-               Pair var16 = OsmRoads.INSTANCE.toLocal(var12[0], var12[1]);
-               var5 = ((Number)var16.component1()).doubleValue();
-               var3 = ((Number)var16.component2()).doubleValue();
-               OsmRoads.Match var17 = OsmRoads.INSTANCE.matchSeg(var5, var3, var7);
-               if (var17 != null) {
-                  if (var17.getDist() < 15.0) {
-                     var9 = var10;
-                  } else {
-                     var9 = false;
-                  }
-
-                  if (!var9) {
-                     var17 = null;
-                  }
-
-                  if (var17 != null) {
-                     return new LaneFeed.Rtk(var17.rightOf(var7), Math.max(0.2, RtkPosition.INSTANCE.getAccM()), var17.getWay().getId());
-                  }
-               }
-
-               return null;
+            why.add("map: " + r.text());
+        }
+        int straight2 = 0;
+        double navDist = Double.NaN;
+        try {
+            nl = Nav.INSTANCE.nextLanes();
+        } catch (Exception e) {
+            nl = null;
+        }
+        if (nl == null || nl.getSecond().doubleValue() >= 600.0d) {
+            kL = kL2;
+        } else {
+            Nav.Step step = nl.component1();
+            double d = nl.component2().doubleValue();
+            navDist = d;
+            Iterable $this$map$iv = step.getLanes();
+            Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+            for (Object item$iv$iv : $this$map$iv) {
+                Nav.Lane l = (Nav.Lane) item$iv$iv;
+                Iterable $this$any$iv = l.getArrows();
+                String kL3 = kL2;
+                if (($this$any$iv instanceof Collection) && ((Collection) $this$any$iv).isEmpty()) {
+                    z = false;
+                } else {
+                    Iterator it = $this$any$iv.iterator();
+                    while (true) {
+                        if (!it.hasNext()) {
+                            z = false;
+                            break;
+                        }
+                        Object element$iv = it.next();
+                        Iterable $this$any$iv2 = $this$any$iv;
+                        String it2 = (String) element$iv;
+                        Iterator it3 = it;
+                        if (Intrinsics.areEqual(it2, "straight") || Intrinsics.areEqual(it2, "none")) {
+                            z = true;
+                            break;
+                        }
+                        $this$any$iv = $this$any$iv2;
+                        it = it3;
+                    }
+                }
+                destination$iv$iv.add(Boolean.valueOf(z));
+                kL2 = kL3;
+            }
+            String kL4 = kL2;
+            Object item$iv = (List) destination$iv$iv;
+            Iterable $this$count$iv = (Iterable) item$iv;
+            if (($this$count$iv instanceof Collection) && ((Collection) $this$count$iv).isEmpty()) {
+                count$iv = 0;
             } else {
-               return null;
+                count$iv = 0;
+                for (Object element$iv2 : $this$count$iv) {
+                    boolean it4 = ((Boolean) element$iv2).booleanValue();
+                    if (it4 && (count$iv = count$iv + 1) < 0) {
+                        CollectionsKt.throwCountOverflow();
+                    }
+                }
             }
-         }
-      } else {
-         return null;
-      }
-   }
-
-   public final LaneBrain.Frame frame(Telemetry var1, LaneMarks var2, long var3) {
-      Intrinsics.checkNotNullParameter(var1, "t");
-      ModelSnapshot var37 = var1.getModel();
-      if (var37 == null) {
-         return null;
-      } else if (var37.getFrameId() == this.lastFrameId) {
-         return null;
-      } else {
-         this.lastFrameId = var37.getFrameId();
-         float var9 = var1.getPoseYawZ();
-         boolean var27 = Float.isInfinite(var9);
-         int var22 = 0;
-         boolean var21;
-         if (!var27 && !Float.isNaN(var9)) {
-            var21 = 1;
-         } else {
-            var21 = 0;
-         }
-
-         if (var21 && System.nanoTime() - var1.getPoseAtNs() < 500000000L) {
-            var21 = (boolean)1;
-         } else {
-            var21 = (boolean)0;
-         }
-
-         if (var21) {
-            var9 = var1.getPoseYawZ() * Odometry.INSTANCE.getGyroSign();
-         } else {
-            if (var1.getSteerRatioLive() > 5.0F) {
-               var9 = var1.getSteerRatioLive();
+            int straight3 = count$iv;
+            if (!Intrinsics.areEqual(step.getType(), "off ramp") || d >= 320.0d || straight3 <= 0) {
+                straight2 = straight3;
+                kL = kL4;
             } else {
-               var9 = 15.5F;
+                Iterable $this$takeWhile$iv = CollectionsKt.reversed((Iterable) item$iv);
+                ArrayList list$iv = new ArrayList();
+                for (Object item$iv2 : $this$takeWhile$iv) {
+                    Iterable $this$takeWhile$iv2 = $this$takeWhile$iv;
+                    boolean it5 = ((Boolean) item$iv2).booleanValue();
+                    if (it5) {
+                        break;
+                    }
+                    list$iv.add(item$iv2);
+                    $this$takeWhile$iv = $this$takeWhile$iv2;
+                }
+                int right = list$iv.size();
+                ArrayList list$iv2 = new ArrayList();
+                for (Object item$iv3 : (Iterable) item$iv) {
+                    Object goesOn = item$iv;
+                    boolean it6 = ((Boolean) item$iv3).booleanValue();
+                    if (it6) {
+                        break;
+                    }
+                    list$iv2.add(item$iv3);
+                    item$iv = goesOn;
+                }
+                int left = list$iv2.size();
+                if (right > xR) {
+                    kR = "exit";
+                    straight = straight3;
+                    why.add("route: " + right + " exit-only lane" + (right > 1 ? "s" : "") + " right");
+                    xR = right;
+                } else {
+                    straight = straight3;
+                }
+                if (left > xL) {
+                    xL = left;
+                    why.add("route: " + left + " exit-only lane" + (left <= 1 ? "" : "s") + " left");
+                    kL = "exit";
+                    straight2 = straight;
+                } else {
+                    straight2 = straight;
+                    kL = kL4;
+                }
             }
+        }
+        return new LaneBrain.RoadInfo((h == null || (s6 = h.getS()) == null) ? 0 : s6.ourLanes(), (h == null || (s5 = h.getS()) == null || (name = s5.getName()) == null) ? "" : name, (h == null || (s4 = h.getS()) == null || !s4.getRamp()) ? false : true, (h == null || (s2 = h.getS()) == null || !s2.getTunnel()) ? false : true, (h == null || (s = h.getS()) == null || !s.getBridge()) ? false : true, !((h == null || (s3 = h.getS()) == null || s3.getOurLanesSure()) ? false : true), xL, xR, kL, kR, CollectionsKt.joinToString$default(why, ", ", null, null, 0, null, null, 62, null), straight2, navDist);
+    }
 
-            var9 = (float)(var1.getVEgo() * Math.tan(Math.toRadians(var1.getSteeringAngleDeg() - var1.getAngleOffsetDeg()) / var9) / 3.03);
-         }
+    /* compiled from: LaneFeed.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
 
-         if (var3 - this.lastRoadMs > 500L) {
-            this.lastRoadMs = var3;
-            this.matchRoad(var1);
-         }
+        private Companion() {
+        }
 
-         int var25;
-         LaneMarks.Mark[] var34;
-         label156: {
-            var25 = this.pendingEntry;
-            this.pendingEntry = 0;
-            if (var2 != null) {
-               if (System.nanoTime() - var2.getLastNs() < 1000000000L) {
-                  var21 = (boolean)1;
-               } else {
-                  var21 = (boolean)0;
-               }
-
-               if (!var21) {
-                  var2 = null;
-               }
-
-               if (var2 != null) {
-                  var34 = var2.getMarks();
-                  break label156;
-               }
+        public final int rampSide(OsmRoads.Way ramp, OsmRoads.Way hw, double e, double n, double yaw) {
+            long j;
+            Intrinsics.checkNotNullParameter(ramp, "ramp");
+            Intrinsics.checkNotNullParameter(hw, "hw");
+            double best = Double.MAX_VALUE;
+            double ax = 0.0d;
+            double ay = 0.0d;
+            double dx = 0.0d;
+            double dy = 0.0d;
+            int length = hw.getE().length - 1;
+            for (int i = 0; i < length; i++) {
+                double x0 = hw.getE()[i];
+                double y0 = hw.getN()[i];
+                double ex = hw.getE()[i + 1] - x0;
+                double ey = hw.getN()[i + 1] - y0;
+                double l2 = (ex * ex) + (ey * ey);
+                if (l2 >= 0.01d) {
+                    double t = RangesKt.coerceIn((((e - x0) * ex) + ((n - y0) * ey)) / l2, 0.0d, 1.0d);
+                    double d = Math.hypot(e - (x0 + (t * ex)), n - (y0 + (t * ey)));
+                    if (d < best) {
+                        best = d;
+                        ax = x0;
+                        ay = y0;
+                        dx = ex;
+                        dy = ey;
+                    }
+                }
             }
-
-            var34 = null;
-         }
-
-         IntRef var32 = new IntRef();
-         IntRef var33 = new IntRef();
-         BooleanRef var35 = new BooleanRef();
-         BooleanRef var42;
-         if (var1.getVEgo() > 3.0F) {
-            RadarTrack[] var36 = var1.getRadar();
-            int var23 = var36.length;
-            byte var24 = 0;
-            IntRef var39 = var32;
-            var32 = var33;
-            BooleanRef var60 = var35;
-            RadarTrack[] var62 = var36;
-
-            for (int var51 = var24; var51 < var23; var51++) {
-               RadarTrack var67 = var62[var51];
-               if (var67.getMeasured()) {
-                  frame$place(var39, var32, var60, var37, var67.getDRel() + 2.3F, -var67.getYRel(), var1.getVEgo() + var67.getVRel());
-               }
+            if (best > 40.0d) {
+                return 0;
             }
-
-            IntRef var63 = var39;
-            Lead[] var40 = new Lead[2];
-            var40[var22] = var1.getLeadLeft();
-            Lead var68 = var1.getLeadRight();
-            var21 = 1;
-            var40[1] = var68;
-
-            for (Lead var69 : CollectionsKt.listOf(var40)) {
-               if (var69.getStatus()) {
-                  frame$place(var63, var32, var60, var37, var69.getDRel() + 2.3F, -var69.getYRel(), var69.getVLead());
-               }
+            if (hw.getOneway() < 0 || (hw.getOneway() == 0 && Math.cos(Math.atan2(dy, dx) - yaw) < 0.0d)) {
+                dx = -dx;
+                dy = -dy;
             }
-
-            var42 = var60;
-            var33 = var32;
-            var32 = var63;
-         } else {
-            var42 = var35;
-            var21 = 1;
-         }
-
-         LaneFeed.Rtk var70 = this.rtkOffset(var3, var1.getVEgo());
-         float var16 = var1.getVEgo();
-         float var14 = frame$lineAt(var37, var21, 3.0F);
-         float var15 = frame$lineAt(var37, 2, 3.0F);
-         float[] var64 = var37.getLaneProb();
-         if (var21 < var64.length) {
-            var22 = var21;
-         } else {
-            var22 = (byte)0;
-         }
-
-         float var10;
-         if (var22 != 0) {
-            var10 = var64[var21];
-         } else {
-            var10 = 0.0F;
-         }
-
-         float[] var65 = var37.getLaneProb();
-         if (2 < var65.length) {
-            var22 = var21;
-         } else {
-            var22 = (byte)0;
-         }
-
-         float var11;
-         if (var22 != 0) {
-            var11 = var65[2];
-         } else {
-            var11 = 0.0F;
-         }
-
-         float var18 = frame$edge(var37, 0);
-         float var20 = frame$edge(var37, var21);
-         LaneMarks.Mark var66;
-         if (var34 != null) {
-            var66 = ArraysKt.getOrNull(var34, var21);
-         } else {
-            var66 = null;
-         }
-
-         LaneMarks.Mark var61;
-         if (var34 != null) {
-            var61 = ArraysKt.getOrNull(var34, 2);
-         } else {
-            var61 = null;
-         }
-
-         LaneBrain.Road var38 = this.road;
-         if (var37.getLaneChanging()) {
-            var22 = var37.getLaneChangeDir();
-         } else {
-            var22 = 0;
-         }
-
-         if (!var37.getLaneChanging() || !var37.getLaneChangeFinishing()) {
-            var21 = 0;
-         }
-
-         int var57 = var32.element;
-         int var26 = var33.element;
-         var27 = var42.element;
-         float var19 = frame$lineAt(var37, 0, 3.0F);
-         float var17 = frame$lineAt(var37, 3, 3.0F);
-         float[] var43 = var37.getLaneProb();
-         boolean var55;
-         if (var43.length > 0) {
-            var55 = true;
-         } else {
-            var55 = false;
-         }
-
-         float var12;
-         if (var55) {
-            var12 = var43[0];
-         } else {
-            var12 = 0.0F;
-         }
-
-         float[] var44 = var37.getLaneProb();
-         if (3 < var44.length) {
-            var55 = true;
-         } else {
-            var55 = false;
-         }
-
-         float var13;
-         if (var55) {
-            var13 = var44[3];
-         } else {
-            var13 = 0.0F;
-         }
-
-         boolean var29 = var1.getLeftBlindspot();
-         boolean var28 = var1.getRightBlindspot();
-         double var7 = Double.NaN;
-         double var5;
-         if (var70 != null) {
-            var5 = var70.getOffset();
-         } else {
-            var5 = Double.NaN;
-         }
-
-         if (var70 != null) {
-            var7 = var70.getSigma();
-         }
-
-         long var30;
-         if (var70 != null) {
-            var30 = var70.getWay();
-         } else {
-            var30 = 0L;
-         }
-
-         return new LaneBrain.Frame(
-            var3,
-            var16,
-            var9,
-            var14,
-            var15,
-            var10,
-            var11,
-            var18,
-            var20,
-            var66,
-            var61,
-            var38,
-            var25,
-            var22,
-            (boolean)var21,
-            var57,
-            var26,
-            var27,
-            var19,
-            var17,
-            var12,
-            var13,
-            var29,
-            var28,
-            var5,
-            var7,
-            var30,
-            var37.getLaneChangeProb(),
-            this.info
-         );
-      }
-   }
-
-   public final Hpms.Match getHpms() {
-      return this.hpms;
-   }
-
-   public final List<LaneRamps.Ramp> getRamps() {
-      return this.ramps;
-   }
-
-   public static final class Companion {
-      private Companion() {
-      }
-
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
-
-      public final int rampSide(OsmRoads.Way var1, OsmRoads.Way var2, double var3, double var5, double var7) {
-         Intrinsics.checkNotNullParameter(var1, "ramp");
-         Intrinsics.checkNotNullParameter(var2, "hw");
-         double var9 = Double.MAX_VALUE;
-         double var17 = 0.0;
-         double var15 = 0.0;
-         double var13 = 0.0;
-         double var11 = 0.0;
-         int var31 = 0;
-         int var32 = var2.getE().length;
-
-         while (var31 < var32 - 1) {
-            double var27 = var2.getE()[var31];
-            double var25 = var2.getN()[var31];
-            double var23 = var2.getE()[var31 + 1] - var27;
-            double var21 = var2.getN()[var31 + 1] - var25;
-            double var19 = var23 * var23 + var21 * var21;
-            if (!(var19 < 0.01)) {
-               var19 = RangesKt.coerceIn(((var3 - var27) * var23 + (var5 - var25) * var21) / var19, 0.0, 1.0);
-               double var29 = Math.hypot(var3 - (var27 + var19 * var23), var5 - (var25 + var19 * var21));
-               var19 = var9;
-               if (var29 < var9) {
-                  var19 = var29;
-                  var17 = var27;
-                  var15 = var25;
-                  var13 = var23;
-                  var11 = var21;
-               }
-            } else {
-               var19 = var9;
+            double len = Math.hypot(dx, dy);
+            double sum = 0.0d;
+            int k = 0;
+            int i2 = 0;
+            int length2 = ramp.getE().length;
+            while (i2 < length2) {
+                double px = ramp.getE()[i2];
+                double py = ramp.getN()[i2];
+                double best2 = best;
+                double best3 = py - n;
+                double dist = Math.hypot(px - e, best3);
+                if (dist < 20.0d) {
+                    j = 0;
+                } else if (dist > 200.0d) {
+                    j = 0;
+                } else {
+                    j = 0;
+                    if (((px - e) * Math.cos(yaw)) + ((py - n) * Math.sin(yaw)) <= 0.0d) {
+                        sum += (((py - ay) * dx) - ((px - ax) * dy)) / len;
+                        k++;
+                    }
+                }
+                i2++;
+                best = best2;
             }
-
-            var31++;
-            var9 = var19;
-         }
-
-         if (var9 > 40.0) {
-            return 0;
-         } else {
-            double var41;
-            double var42;
-            label56: {
-               if (var2.getOneway() >= 0) {
-                  var42 = var13;
-                  var41 = var11;
-                  if (var2.getOneway() != 0) {
-                     break label56;
-                  }
-
-                  var42 = var13;
-                  var41 = var11;
-                  if (!(Math.cos(Math.atan2(var11, var13) - var7) < 0.0)) {
-                     break label56;
-                  }
-               }
-
-               var42 = -var13;
-               var41 = -var11;
+            if (k == 0) {
+                return 0;
             }
-
-            double var43 = Math.hypot(var42, var41);
-            var11 = 0.0;
-            var32 = 0;
-            var31 = 0;
-            int var34 = var1.getE().length;
-
-            while (var31 < var34) {
-               double var44 = var1.getE()[var31];
-               double var45 = var1.getN()[var31];
-               var13 = Math.hypot(var44 - var3, var45 - var5);
-               int var33;
-               if (!(var13 < 20.0)) {
-                  if (var13 > 200.0) {
-                     var33 = var32;
-                     var13 = var11;
-                  } else {
-                     var33 = var32;
-                     var13 = var11;
-                     if (!((var44 - var3) * Math.cos(var7) + (var45 - var5) * Math.sin(var7) > 0.0)) {
-                        var13 = var11 + ((var45 - var15) * var42 - (var44 - var17) * var41) / var43;
-                        var33 = var32 + 1;
-                     }
-                  }
-               } else {
-                  var13 = var11;
-                  var33 = var32;
-               }
-
-               var31++;
-               var32 = var33;
-               var11 = var13;
+            double off = sum / k;
+            if (off > 4.0d) {
+                return -1;
             }
-
-            if (var32 == 0) {
-               return 0;
-            } else {
-               var3 = var11 / var32;
-               byte var47;
-               if (var3 > 4.0) {
-                  var47 = -1;
-               } else if (var3 < -4.0) {
-                  var47 = 1;
-               } else {
-                  var47 = 0;
-               }
-
-               return var47;
-            }
-         }
-      }
-   }
-
-   public static final class Rtk {
-      private final double offset;
-      private final double sigma;
-      private final long way;
-
-      public Rtk(double var1, double var3, long var5) {
-         this.offset = var1;
-         this.sigma = var3;
-         this.way = var5;
-      }
-
-      public final double getOffset() {
-         return this.offset;
-      }
-
-      public final double getSigma() {
-         return this.sigma;
-      }
-
-      public final long getWay() {
-         return this.way;
-      }
-   }
+            return off < -4.0d ? 1 : 0;
+        }
+    }
 }

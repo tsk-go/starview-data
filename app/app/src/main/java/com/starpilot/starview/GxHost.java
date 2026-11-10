@@ -4,12 +4,13 @@ import android.net.Uri;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
+/* compiled from: GxKit.kt */
 public interface GxHost {
-   GalaxyApi getGxApi();
+    GalaxyApi getGxApi();
 
-   String getGxHost();
+    String getGxHost();
 
-   void openPage(String var1);
+    void openPage(String page);
 
-   void pickFile(String[] var1, Function1<? super Uri, Unit> var2);
+    void pickFile(String[] mimes, Function1<? super Uri, Unit> then);
 }

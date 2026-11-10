@@ -1,6 +1,6 @@
 package com.starpilot.starview;
 
-import android.app.AlertDialog.Builder;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,8 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
 import androidx.appcompat.app.AppCompatActivity;
+import com.starpilot.starview.DestinationActivity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,6 +46,7 @@ import kotlin.collections.IntIterator;
 import kotlin.collections.MapsKt;
 import kotlin.comparisons.ComparisonsKt;
 import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt;
@@ -54,2156 +55,1576 @@ import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: DestinationActivity.kt */
 public final class DestinationActivity extends AppCompatActivity {
-   private static final String CLIENT_ID;
-   public static final DestinationActivity.Companion Companion = new DestinationActivity.Companion(null);
-   public static final String EXTRA_LAT = "lat";
-   public static final String EXTRA_LON = "lon";
-   public static final String EXTRA_QUERY = "query";
-   public static final String EXTRA_ROUTE = "route";
-   private static final String KEY_RECENTS = "recents";
-   private static final int MAX_RECENTS = 12;
-   private static final String PREFS = "starview_nav";
-   private static final List<Pair<String, String>> QUICK;
-   public static final String R_ADDRESS = "address";
-   public static final String R_LAT = "latitude";
-   public static final String R_LON = "longitude";
-   public static final String R_MAPBOX_ID = "mapbox_id";
-   public static final String R_NAME = "name";
-   public static final String R_SEARCH_ID = "search_id";
-   private boolean along;
-   private TextView alongBtn;
-   private final ExecutorService bg;
-   private boolean commaSearch;
-   private final Runnable doSearch;
-   private EditText edit;
-   private List<DestinationActivity.Place> favorites;
-   private Pair<Double, Double> here;
-   private LinearLayout list;
-   private List<DestinationActivity.Place> results;
-   private String resultsTitle;
-   private String route;
-   private String searchId;
-   private int searchSeq;
-   private List<DestinationActivity.Place> spRecents;
-   private TextView status;
-   private final Handler ui = new Handler(Looper.getMainLooper());
+    private static final String CLIENT_ID;
+    public static final Companion Companion = new Companion(null);
+    public static final String EXTRA_LAT = "lat";
+    public static final String EXTRA_LON = "lon";
+    public static final String EXTRA_QUERY = "query";
+    public static final String EXTRA_ROUTE = "route";
+    private static final String KEY_RECENTS = "recents";
+    private static final int MAX_RECENTS = 12;
+    private static final String PREFS = "starview_nav";
+    private static final List<Pair<String, String>> QUICK;
+    public static final String R_ADDRESS = "address";
+    public static final String R_LAT = "latitude";
+    public static final String R_LON = "longitude";
+    public static final String R_MAPBOX_ID = "mapbox_id";
+    public static final String R_NAME = "name";
+    public static final String R_SEARCH_ID = "search_id";
+    private TextView alongBtn;
+    private boolean commaSearch;
+    private final Runnable doSearch;
+    private EditText edit;
+    private Pair<Double, Double> here;
+    private LinearLayout list;
+    private List<Place> results;
+    private String route;
+    private String searchId;
+    private int searchSeq;
+    private TextView status;
+    private final Handler ui = new Handler(Looper.getMainLooper());
+    private final ExecutorService bg = Executors.newSingleThreadExecutor();
+    private boolean along = true;
+    private List<Place> favorites = CollectionsKt.emptyList();
+    private List<Place> spRecents = CollectionsKt.emptyList();
+    private String resultsTitle = "";
 
-   // $VF: synthetic method
-   public static void $r8$lambda$45Vyy1Y3LGnKD___bZCLYdwvSks/* $VF was: $r8$lambda$45Vyy1Y3LGnKD___bZCLYdwvSks*/(
-      String[] var0, UiSettings var1, JSONObject var2, boolean var3, DataClient var4, DestinationActivity var5, DialogInterface var6, int var7
-   ) {
-      placeMenu$lambda$79(var0, var1, var2, var3, var4, var5, var6, var7);
-   }
+    /* compiled from: DestinationActivity.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$65zVHckM3JEBsB6nxPZjlI300s0(
-      String[] var0, DestinationActivity.Place var1, DataClient var2, DestinationActivity var3, DialogInterface var4, int var5
-   ) {
-      placeMenu$lambda$74(var0, var1, var2, var3, var4, var5);
-   }
+        private Companion() {
+        }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$6JW18kv41KNfW1kXoQlMEZED1lc(DestinationActivity var0, Pair var1, String var2, int var3) {
-      androidSearch$lambda$48(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$7jmgMYowtgKPKa76WPNEUBM2GGk(String var0, DestinationActivity var1, String var2) {
-      return placeMenu$lambda$74$lambda$72(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Ep6vTwylPolaAm747sMEM6YqCTQ(String var0, DestinationActivity var1, String var2) {
-      return placeMenu$lambda$74$lambda$73(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$FFCYERFJrX2foZHEVFMlU0QGeMs(Function0 var0, View var1) {
-      chip$lambda$23$lambda$22(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Flt_S_cYcHD6rvOP2YNY74Nmm_g/* $VF was: $r8$lambda$Flt_S_cYcHD6rvOP2YNY74Nmm_g*/(
-      DestinationActivity var0, String var1, String var2
-   ) {
-      return onCreate$lambda$12(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$GacM4BxraD1h8Z9c170h6wSpiwE(DestinationActivity var0) {
-      return onCreate$lambda$11(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$HY5Zzr3A_5wRj_DR2bdk7oggHOA(DestinationActivity var0, String var1) {
-      return placeMenu$lambda$79$lambda$76(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$PcRhB__ibEZx2CTBzG1DrgySaog/* $VF was: $r8$lambda$PcRhB__ibEZx2CTBzG1DrgySaog*/(
-      DestinationActivity var0, DestinationActivity.Place var1, JSONObject var2, View var3
-   ) {
-      row$lambda$69$lambda$68(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Rvd9knqYlTET_5pE5GmMOcGYrbQ(int var0, DestinationActivity var1, String var2, JSONObject var3) {
-      return quick$lambda$42(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$S6xjYCXRcr45vlrURFCClVNv5zo(DestinationActivity var0, String var1) {
-      return placeMenu$lambda$79$lambda$78(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$SGdz5co514P9cJzpzyIrH9qXAKI(DestinationActivity var0, DestinationActivity.Place var1, View var2) {
-      row$lambda$59$lambda$58(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$YnOuwxh3YRbZkNGOxraDC9B5_ig/* $VF was: $r8$lambda$YnOuwxh3YRbZkNGOxraDC9B5_ig*/(DestinationActivity var0, View var1) {
-      onCreate$lambda$9$lambda$8(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$ZU66GvB9vWSiQwiHWiZLUAeEV40(int var0, DestinationActivity var1, String var2, boolean var3, JSONObject var4) {
-      return runSearch$lambda$34(var0, var1, var2, var3, var4);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$_Y6K4SDSlkhxPmh9MMv7Chi2KE8(DestinationActivity var0, JSONObject var1) {
-      return onCreate$lambda$19(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$aanO3_9NA7FsWSLkx1OXhLey4vQ(int var0, DestinationActivity var1, List var2) {
-      androidSearch$lambda$48$lambda$47(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$cPF95ZWs4Gbrpjq_RbUN4AKVmbc(DestinationActivity var0, View var1) {
-      onCreate$lambda$4$lambda$3(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$dcptpAmPbYRTuFs6cvz0dwZwTzA(DestinationActivity var0) {
-      doSearch$lambda$28(var0);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$ju2aN0xEcYTFH4Vq62v33BbjC3A(DestinationActivity var0) {
-      onCreate$lambda$20(var0);
-   }
-
-   // $VF: synthetic method
-   public static boolean $r8$lambda$oFcRSmWKSqwNiWVhHVN86qYjrqs(DestinationActivity var0, DestinationActivity.Place var1, JSONObject var2, View var3) {
-      return row$lambda$60(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$q2ekVE_5DvnG0inR4LD3c1xnojA/* $VF was: $r8$lambda$q2ekVE_5DvnG0inR4LD3c1xnojA*/(DestinationActivity var0, String var1) {
-      return placeMenu$lambda$79$lambda$77(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$tlf28zaOYHjimhFDQQ4gjLR2tEE(DestinationActivity var0, String var1) {
-      return placeMenu$lambda$79$lambda$75(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static boolean $r8$lambda$vz2FrQb2wBBKHNHMuVD_r6VZ30U/* $VF was: $r8$lambda$vz2FrQb2wBBKHNHMuVD_r6VZ30U*/(
-      DestinationActivity var0, EditText var1, TextView var2, int var3, KeyEvent var4
-   ) {
-      return onCreate$lambda$7$lambda$6(var0, var1, var2, var3, var4);
-   }
-
-   static {
-      String var0 = UUID.randomUUID().toString();
-      Intrinsics.checkNotNullExpressionValue(var0, "toString(...)");
-      CLIENT_ID = var0;
-      Pair var6 = TuplesKt.to("gas", "⛽  Gas");
-      Pair var9 = TuplesKt.to("ev", "⚡  EV charging");
-      Pair var4 = TuplesKt.to("coffee", "☕  Coffee");
-      Pair var1 = TuplesKt.to("food", "\ud83c\udf7d  Food");
-      Pair var2 = TuplesKt.to("fast_food", "\ud83c\udf54  Fast food");
-      Pair var7 = TuplesKt.to("parking", "\ud83c\udd7f  Parking");
-      Pair var5 = TuplesKt.to("grocery", "\ud83d\uded2  Grocery");
-      Pair var8 = TuplesKt.to("pharmacy", "\ud83d\udc8a  Pharmacy");
-      Pair var3 = TuplesKt.to("hotel", "\ud83d\udecf  Hotels");
-      QUICK = CollectionsKt.listOf(new Pair[]{var6, var9, var4, var1, var2, var7, var5, var8, var3, TuplesKt.to("rest_area", "\ud83d\udebb  Rest areas")});
-   }
-
-   public DestinationActivity() {
-      this.bg = Executors.newSingleThreadExecutor();
-      this.along = true;
-      this.favorites = CollectionsKt.emptyList();
-      this.spRecents = CollectionsKt.emptyList();
-      this.resultsTitle = "";
-      String var1 = UUID.randomUUID().toString();
-      Intrinsics.checkNotNullExpressionValue(var1, "toString(...)");
-      this.searchId = var1;
-      this.commaSearch = true;
-      this.doSearch = new DestinationActivity$$ExternalSyntheticLambda20(this);
-   }
-
-   private final void androidSearch(String var1, int var2) {
-      boolean var3 = Geocoder.isPresent();
-      Object var5 = null;
-      TextView var4 = null;
-      if (!var3) {
-         TextView var6 = this.status;
-         if (var6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("status");
-            var6 = var4;
-         }
-
-         var6.setText("Address search isn't available on this tablet (needs Google Play services)");
-      } else {
-         var4 = this.status;
-         if (var4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("status");
-            var4 = (TextView)var5;
-         }
-
-         var4.setText("Searching addresses…");
-         Pair var8 = this.here;
-         this.bg.execute(new DestinationActivity$$ExternalSyntheticLambda0(this, var8, var1, var2));
-      }
-   }
-
-   // $VF: Duplicated exception handlers to handle obfuscated exceptions
-   private static final void androidSearch$lambda$48(DestinationActivity var0, Pair var1, String var2, int var3) {
-      label223: {
-         label225: {
-            Geocoder var9;
+        public final List<JSONObject> recents(Context ctx) {
+            Intrinsics.checkNotNullParameter(ctx, "ctx");
             try {
-               var9 = new Geocoder((Context)var0, Locale.getDefault());
-            } catch (Exception var35) {
-               break label225;
+                JSONArray a = new JSONArray(ctx.getSharedPreferences("starview_nav", 0).getString("recents", "[]"));
+                Iterable $this$map$iv = RangesKt.until(0, a.length());
+                Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+                Iterator<Integer> it = $this$map$iv.iterator();
+                while (it.hasNext()) {
+                    int item$iv$iv = ((IntIterator) it).nextInt();
+                    destination$iv$iv.add(a.getJSONObject(item$iv$iv));
+                }
+                return (List) destination$iv$iv;
+            } catch (Exception e) {
+                return CollectionsKt.emptyList();
             }
+        }
 
-            List var36;
-            if (var1 != null) {
-               try {
-                  double var4 = 0.45 / RangesKt.coerceAtLeast(Math.cos(Math.toRadians(((Number)var1.getFirst()).doubleValue())), 0.2);
-                  var36 = var9.getFromLocationName(
-                     var2,
-                     8,
-                     ((Number)var1.getFirst()).doubleValue() - 0.45,
-                     ((Number)var1.getSecond()).doubleValue() - var4,
-                     ((Number)var1.getFirst()).doubleValue() + 0.45,
-                     ((Number)var1.getSecond()).doubleValue() + var4
-                  );
-               } catch (Exception var34) {
-                  break label225;
-               }
-            } else {
-               var36 = null;
-            }
-
-            Collection var10;
-            try {
-               var10 = var36;
-            } catch (Exception var33) {
-               break label225;
-            }
-
-            boolean var6;
-            label210: {
-               if (var10 != null) {
-                  boolean var8;
-                  try {
-                     var8 = var10.isEmpty();
-                  } catch (Exception var32) {
-                     break label225;
-                  }
-
-                  if (!var8) {
-                     var6 = 0;
-                     break label210;
-                  }
-               }
-
-               var6 = 1;
-            }
-
-            if (var6) {
-               try {
-                  var36 = var9.getFromLocationName(var2, 8);
-               } catch (Exception var31) {
-                  break label225;
-               }
-            }
-
-            List var39;
-            if (var36 == null) {
-               try {
-                  var39 = CollectionsKt.emptyList();
-               } catch (Exception var30) {
-                  break label225;
-               }
-            } else {
-               var39 = var36;
-            }
-
-            Iterator var11;
-            try {
-               Iterable var53 = var39;
-               ArrayList var40 = new ArrayList();
-               var41 = var40;
-               var11 = var53.iterator();
-            } catch (Exception var28) {
-               break label225;
-            }
-
+        public final void remember(Context ctx, String name, String address, double lat, double lon) {
+            Intrinsics.checkNotNullParameter(ctx, "ctx");
+            Intrinsics.checkNotNullParameter(name, "name");
+            Intrinsics.checkNotNullParameter(address, "address");
+            Iterable $this$filterNot$iv = recents(ctx);
+            int $i$f$filterNot = 0;
+            Collection destination$iv$iv = new ArrayList();
+            Iterable $this$filterNotTo$iv$iv = $this$filterNot$iv;
+            Iterator it = $this$filterNotTo$iv$iv.iterator();
             while (true) {
-               Object var12;
-               label190: {
-                  label189: {
-                     try {
-                        if (!var11.hasNext()) {
-                           break;
-                        }
+                Iterable $this$filterNot$iv2 = $this$filterNot$iv;
+                int $i$f$filterNot2 = $i$f$filterNot;
+                if (!it.hasNext()) {
+                    break;
+                }
+                Object element$iv$iv = it.next();
+                Iterable $this$filterNotTo$iv$iv2 = $this$filterNotTo$iv$iv;
+                JSONObject it2 = (JSONObject) element$iv$iv;
+                if (!(Math.abs(it2.optDouble("latitude") - lat) < 1.0E-5d && Math.abs(it2.optDouble("longitude") - lon) < 1.0E-5d)) {
+                    destination$iv$iv.add(element$iv$iv);
+                }
+                $this$filterNot$iv = $this$filterNot$iv2;
+                $i$f$filterNot = $i$f$filterNot2;
+                $this$filterNotTo$iv$iv = $this$filterNotTo$iv$iv2;
+            }
+            List list = (List) destination$iv$iv;
+            JSONArray out = new JSONArray().put(new JSONObject().put("name", name).put("address", address).put("latitude", lat).put("longitude", lon));
+            for (JSONObject o : CollectionsKt.take(list, 11)) {
+                out.put(o);
+            }
+            ctx.getSharedPreferences("starview_nav", 0).edit().putString("recents", out.toString()).apply();
+        }
+    }
 
-                        var12 = var11.next();
-                        Address var54 = (Address)var12;
-                        if (var54.hasLatitude() && var54.hasLongitude()) {
-                           break label189;
-                        }
-                     } catch (Exception var29) {
-                        break label225;
-                     }
+    public DestinationActivity() {
+        String uuid = UUID.randomUUID().toString();
+        Intrinsics.checkNotNullExpressionValue(uuid, "toString(...)");
+        this.searchId = uuid;
+        this.commaSearch = true;
+        this.doSearch = new Runnable() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda20
+            @Override // java.lang.Runnable
+            public final void run() {
+                DestinationActivity.doSearch$lambda$28(DestinationActivity.this);
+            }
+        };
+    }
 
-                     var6 = (boolean)0;
-                     break label190;
-                  }
+    static {
+        String uuid = UUID.randomUUID().toString();
+        Intrinsics.checkNotNullExpressionValue(uuid, "toString(...)");
+        CLIENT_ID = uuid;
+        QUICK = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("gas", "⛽  Gas"), TuplesKt.to("ev", "⚡  EV charging"), TuplesKt.to("coffee", "☕  Coffee"), TuplesKt.to("food", "🍽  Food"), TuplesKt.to("fast_food", "🍔  Fast food"), TuplesKt.to("parking", "🅿  Parking"), TuplesKt.to("grocery", "🛒  Grocery"), TuplesKt.to("pharmacy", "💊  Pharmacy"), TuplesKt.to("hotel", "🛏  Hotels"), TuplesKt.to("rest_area", "🚻  Rest areas")});
+    }
 
-                  var6 = (boolean)1;
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    /* compiled from: DestinationActivity.kt */
+    static final class Place {
+        private final String address;
+        private final double distM;
+        private final boolean keep;
+        private final String kind;
+        private final double lat;
+        private final double lon;
+        private final String mapboxId;
+        private final String name;
 
-               if (var6) {
-                  try {
-                     var41.add(var12);
-                  } catch (Exception var27) {
-                     break label225;
-                  }
-               }
+        public Place(String name, String address, double lat, double lon, String mapboxId, double distM, String kind, boolean keep) {
+            Intrinsics.checkNotNullParameter(name, "name");
+            Intrinsics.checkNotNullParameter(address, "address");
+            Intrinsics.checkNotNullParameter(mapboxId, "mapboxId");
+            Intrinsics.checkNotNullParameter(kind, "kind");
+            this.name = name;
+            this.address = address;
+            this.lat = lat;
+            this.lon = lon;
+            this.mapboxId = mapboxId;
+            this.distM = distM;
+            this.kind = kind;
+            this.keep = keep;
+        }
+
+        public /* synthetic */ Place(String str, String str2, double d, double d2, String str3, double d3, String str4, boolean z, int i, DefaultConstructorMarker defaultConstructorMarker) {
+            this(str, str2, d, d2, (i & 16) != 0 ? "" : str3, (i & 32) != 0 ? Double.NaN : d3, (i & 64) != 0 ? "" : str4, (i & 128) != 0 ? true : z);
+        }
+
+        public final String getAddress() {
+            return this.address;
+        }
+
+        public final double getLat() {
+            return this.lat;
+        }
+
+        public final double getLon() {
+            return this.lon;
+        }
+
+        public final String getName() {
+            return this.name;
+        }
+
+        public final double getDistM() {
+            return this.distM;
+        }
+
+        public final boolean getKeep() {
+            return this.keep;
+        }
+
+        public final String getKind() {
+            return this.kind;
+        }
+
+        public final String getMapboxId() {
+            return this.mapboxId;
+        }
+    }
+
+    private final int dp(int v) {
+        return MathKt.roundToInt(v * getResources().getDisplayMetrics().density);
+    }
+
+    @Override // androidx.appcompat.app.AppCompatActivity, android.app.Activity, android.view.ContextThemeWrapper, android.content.ContextWrapper
+    protected void attachBaseContext(Context base) {
+        Intrinsics.checkNotNullParameter(base, "base");
+        super.attachBaseContext(NarrowDensity.wrap$default(NarrowDensity.INSTANCE, base, 0, 0.0f, 6, null));
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:20:0x0051, code lost:
+    
+        if ((r3 == 0.0d) == false) goto L26;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:30:0x007a, code lost:
+    
+        if ((r5.length() >= 10 ? 1 : null) != null) goto L36;
+     */
+    @Override // androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    protected void onCreate(Bundle savedInstanceState) {
+        EditText editText;
+        super.onCreate(savedInstanceState);
+        double lat = getIntent().getDoubleExtra("lat", Double.NaN);
+        double lon = getIntent().getDoubleExtra("lon", Double.NaN);
+        if ((Double.isInfinite(lat) || Double.isNaN(lat)) ? false : true) {
+            if ((Double.isInfinite(lon) || Double.isNaN(lon)) ? false : true) {
+                if (lat == 0.0d) {
+                }
+                this.here = TuplesKt.to(Double.valueOf(lat), Double.valueOf(lon));
+            }
+        }
+        String it = getIntent().getStringExtra("route");
+        if (it != null) {
+        }
+        it = null;
+        this.route = it;
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(1);
+        root.setBackgroundColor(Color.rgb(11, 13, 18));
+        root.setPadding(dp(20), dp(16), dp(20), dp(8));
+        LinearLayout head = new LinearLayout(this);
+        head.setOrientation(0);
+        head.setGravity(16);
+        TextView $this$onCreate_u24lambda_u244 = new TextView(this);
+        $this$onCreate_u24lambda_u244.setText("‹");
+        $this$onCreate_u24lambda_u244.setTextSize(34.0f);
+        $this$onCreate_u24lambda_u244.setTextColor(-1);
+        $this$onCreate_u24lambda_u244.setPadding(dp(4), 0, dp(16), dp(4));
+        $this$onCreate_u24lambda_u244.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda22
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                DestinationActivity.this.finish();
+            }
+        });
+        head.addView($this$onCreate_u24lambda_u244);
+        final EditText $this$onCreate_u24lambda_u247 = new EditText(this);
+        $this$onCreate_u24lambda_u247.setHint("Search places or addresses");
+        $this$onCreate_u24lambda_u247.setHintTextColor(Color.rgb(128, 134, 144));
+        $this$onCreate_u24lambda_u247.setTextColor(-1);
+        $this$onCreate_u24lambda_u247.setTextSize(20.0f);
+        $this$onCreate_u24lambda_u247.setInputType(8193);
+        $this$onCreate_u24lambda_u247.setImeOptions(3);
+        $this$onCreate_u24lambda_u247.setSingleLine(true);
+        GradientDrawable $this$onCreate_u24lambda_u247_u24lambda_u245 = new GradientDrawable();
+        $this$onCreate_u24lambda_u247_u24lambda_u245.setCornerRadius(dp(14));
+        $this$onCreate_u24lambda_u247_u24lambda_u245.setColor(Color.rgb(27, 31, 39));
+        $this$onCreate_u24lambda_u247.setBackground($this$onCreate_u24lambda_u247_u24lambda_u245);
+        $this$onCreate_u24lambda_u247.setPadding(dp(16), dp(12), dp(16), dp(12));
+        $this$onCreate_u24lambda_u247.setOnEditorActionListener(new TextView.OnEditorActionListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda23
+            @Override // android.widget.TextView.OnEditorActionListener
+            public final boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                boolean onCreate$lambda$7$lambda$6;
+                onCreate$lambda$7$lambda$6 = DestinationActivity.onCreate$lambda$7$lambda$6(DestinationActivity.this, $this$onCreate_u24lambda_u247, textView, i, keyEvent);
+                return onCreate$lambda$7$lambda$6;
+            }
+        });
+        $this$onCreate_u24lambda_u247.addTextChangedListener(new TextWatcher() { // from class: com.starpilot.starview.DestinationActivity$onCreate$3$3
+            @Override // android.text.TextWatcher
+            public void beforeTextChanged(CharSequence s, int a, int b, int c) {
             }
 
-            try {
-               var42 = var41;
-            } catch (Exception var26) {
-               break label225;
+            @Override // android.text.TextWatcher
+            public void onTextChanged(CharSequence s, int a, int b, int c) {
             }
 
-            Iterator var13;
-            ArrayList var57;
-            try {
-               Iterable var43 = var42;
-               ArrayList var55 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var43, 10));
-               var57 = var55;
-               var13 = var43.iterator();
-            } catch (Exception var25) {
-               break label225;
+            @Override // android.text.TextWatcher
+            public void afterTextChanged(Editable s) {
+                DestinationActivity destinationActivity = DestinationActivity.this;
+                String obj = s != null ? s.toString() : null;
+                if (obj == null) {
+                    obj = "";
+                }
+                destinationActivity.search(obj, false);
             }
-
-            Geocoder var37 = var9;
-
-            while (true) {
-               byte var7 = 0;
-
-               Address var14;
-               try {
-                  if (!var13.hasNext()) {
-                     break;
-                  }
-
-                  var14 = (Address)var13.next();
-                  var56 = var14.getAddressLine(0);
-               } catch (Exception var21) {
-                  break label225;
-               }
-
-               if (var56 == null) {
-                  try {
-                     var56 = CollectionsKt.joinToString$default(
-                        CollectionsKt.listOfNotNull(new String[]{var14.getThoroughfare(), var14.getLocality()}), ", ", null, null, 0, null, null, 62, null
-                     );
-                  } catch (Exception var20) {
-                     break label225;
-                  }
-               }
-
-               try {
-                  var49 = var14.getFeatureName();
-               } catch (Exception var19) {
-                  break label225;
-               }
-
-               var2 = var49;
-               if (var49 == null) {
-                  var2 = "";
-               }
-
-               label159: {
-                  label158: {
-                     try {
-                        if (var2.length() > 0) {
-                           break label158;
-                        }
-                     } catch (Exception var24) {
-                        break label225;
-                     }
-
-                     var6 = (boolean)0;
-                     break label159;
-                  }
-
-                  var6 = (boolean)1;
-               }
-
-               label228: {
-                  if (var6) {
-                     try {
-                        var50 = var2;
-                     } catch (Exception var18) {
-                        break label225;
-                     }
-
-                     var6 = var7;
-
-                     label148: {
-                        while (true) {
-                           label145: {
-                              try {
-                                 if (var6 < var50.length()) {
-                                    if (Character.isLetter(var50.charAt(var6))) {
-                                       break;
-                                    }
-                                    break label145;
-                                 }
-                              } catch (Exception var23) {
-                                 break label225;
-                              }
-
-                              var48 = false;
-                              break label148;
-                           }
-
-                           var6++;
-                        }
-
-                        var48 = true;
-                     }
-
-                     if (var48) {
-                        var9 = var37;
-
-                        try {
-                           if (!StringsKt.startsWith$default(var56, var2, false, 2, null)) {
-                              break label228;
-                           }
-                        } catch (Exception var22) {
-                           break label225;
-                        }
-                     } else {
-                        var9 = var37;
-                     }
-                  } else {
-                     var9 = var37;
-                  }
-
-                  try {
-                     var2 = StringsKt.substringBefore$default(var56, ",", null, 2, null);
-                  } catch (Exception var17) {
-                     break label225;
-                  }
-
-                  var37 = var9;
-               }
-
-               try {
-                  DestinationActivity.Place var52 = new DestinationActivity.Place(
-                     var2, var56, var14.getLatitude(), var14.getLongitude(), null, 0.0, null, false, 240, null
-                  );
-                  var57.add(var52);
-               } catch (Exception var16) {
-                  break label225;
-               }
+        });
+        this.edit = $this$onCreate_u24lambda_u247;
+        EditText editText2 = this.edit;
+        if (editText2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("edit");
+            editText2 = null;
+        }
+        head.addView(editText2, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        TextView $this$onCreate_u24lambda_u249 = new TextView(this);
+        $this$onCreate_u24lambda_u249.setText("✕");
+        $this$onCreate_u24lambda_u249.setTextSize(22.0f);
+        $this$onCreate_u24lambda_u249.setTextColor(Color.rgb(154, 161, 172));
+        $this$onCreate_u24lambda_u249.setPadding(dp(14), 0, dp(4), 0);
+        $this$onCreate_u24lambda_u249.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda1
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                DestinationActivity.onCreate$lambda$9$lambda$8(DestinationActivity.this, view);
             }
-
-            try {
-               var38 = var57;
-               break label223;
-            } catch (Exception var15) {
+        });
+        head.addView($this$onCreate_u24lambda_u249);
+        root.addView(head);
+        LinearLayout chips = new LinearLayout(this);
+        chips.setOrientation(0);
+        chips.setPadding(0, dp(12), 0, dp(2));
+        this.alongBtn = chip("", new Function0() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda2
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit onCreate$lambda$11;
+                onCreate$lambda$11 = DestinationActivity.onCreate$lambda$11(DestinationActivity.this);
+                return onCreate$lambda$11;
             }
-         }
-
-         var38 = null;
-      }
-
-      var0.ui.post(new DestinationActivity$$ExternalSyntheticLambda9(var3, var0, var38));
-   }
-
-   private static final void androidSearch$lambda$48$lambda$47(int var0, DestinationActivity var1, List var2) {
-      if (var0 == var1.searchSeq && !var1.isFinishing()) {
-         if (var2 == null) {
-            TextView var4 = var1.status;
-            TextView var3 = var4;
-            if (var4 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("status");
-               var3 = null;
+        });
+        if (this.route != null) {
+            TextView textView = this.alongBtn;
+            if (textView == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("alongBtn");
+                textView = null;
             }
-
-            var3.setText("Search failed - is the tablet online?");
-         } else {
-            var1.results = CollectionsKt.sortedWith(var2, new Comparator(var1) {
-               final DestinationActivity this$0;
-
-               {
-                  this.this$0 = var1;
-               }
-
-               @Override
-               public final int compare(T var1, T var2x) {
-                  var1 = var1;
-                  Double var8 = this.this$0.dist(var1);
-                  double var5 = 0.0;
-                  double var3;
-                  if (var8 != null) {
-                     var3 = var8;
-                  } else {
-                     var3 = 0.0;
-                  }
-
-                  Comparable var9 = var3;
-                  var2x = var2x;
-                  Double var11 = this.this$0.dist(var2x);
-                  var3 = var5;
-                  if (var11 != null) {
-                     var3 = var11;
-                  }
-
-                  return ComparisonsKt.compareValues(var9, var3);
-               }
-            });
-            var1.resultsTitle = "";
-            var1.render();
-         }
-      }
-   }
-
-   private final TextView chip(String var1, Function0<Unit> var2) {
-      TextView var3 = new TextView((Context)this);
-      var3.setText(var1);
-      var3.setTextSize(15.0F);
-      var3.setTextColor(-1);
-      var3.setTypeface(var3.getTypeface(), 1);
-      var3.setGravity(17);
-      var3.setPadding(this.dp(16), this.dp(9), this.dp(16), this.dp(9));
-      GradientDrawable var4 = new GradientDrawable();
-      var4.setCornerRadius(this.dp(20));
-      var4.setColor(Color.rgb(30, 35, 44));
-      var3.setBackground((Drawable)var4);
-      var3.setOnClickListener(new DestinationActivity$$ExternalSyntheticLambda21(var2));
-      return var3;
-   }
-
-   private static final void chip$lambda$23$lambda$22(Function0 var0, View var1) {
-      var0.invoke();
-   }
-
-   private final LayoutParams chipLp() {
-      LayoutParams var1 = new LayoutParams(-2, -2);
-      var1.setMarginEnd(this.dp(8));
-      return var1;
-   }
-
-   private final Double dist(DestinationActivity.Place var1) {
-      Pair var5 = this.here;
-      if (var5 == null) {
-         return null;
-      } else {
-         double var2 = var1.getLat();
-         boolean var4;
-         if (!Double.isInfinite(var2) && !Double.isNaN(var2)) {
-            var4 = true;
-         } else {
-            var4 = false;
-         }
-
-         return !var4
-            ? null
-            : Math.hypot(
-                  (var1.getLon() - ((Number)var5.getSecond()).doubleValue()) * 111320.0 * Math.cos(Math.toRadians(((Number)var5.getFirst()).doubleValue())),
-                  (var1.getLat() - ((Number)var5.getFirst()).doubleValue()) * 110540.0
-               )
-               / 1609.344;
-      }
-   }
-
-   private static final void doSearch$lambda$28(DestinationActivity var0) {
-      EditText var2 = var0.edit;
-      EditText var1 = var2;
-      if (var2 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("edit");
-         var1 = null;
-      }
-
-      var0.runSearch(var1.getText().toString(), false);
-   }
-
-   private final int dp(int var1) {
-      return MathKt.roundToInt(var1 * this.getResources().getDisplayMetrics().density);
-   }
-
-   private final String icon(String var1) {
-      CharSequence var4 = var1;
-      CharSequence var3 = "fuel";
-      boolean var2 = false;
-      if (StringsKt.contains$default(var4, var3, false, 2, null) || StringsKt.contains$default(var1, "gas", false, 2, null)) {
-         var1 = "⛽";
-      } else if (StringsKt.contains$default(var1, "charging", false, 2, null)) {
-         var1 = "⚡";
-      } else if (StringsKt.contains$default(var1, "cafe", false, 2, null) || StringsKt.contains$default(var1, "coffee", false, 2, null)) {
-         var1 = "☕";
-      } else if (StringsKt.contains$default(var1, "fast", false, 2, null)) {
-         var1 = "\ud83c\udf54";
-      } else if (StringsKt.contains$default(var1, "restaurant", false, 2, null) || StringsKt.contains$default(var1, "food", false, 2, null)) {
-         var1 = "\ud83c\udf7d";
-      } else if (StringsKt.contains$default(var1, "parking", false, 2, null)) {
-         var1 = "\ud83c\udd7f";
-      } else if (StringsKt.contains$default(var1, "grocery", false, 2, null)
-         || StringsKt.contains$default(var1, "shop", false, 2, null)
-         || StringsKt.contains$default(var1, "super", false, 2, null)) {
-         var1 = "\ud83d\uded2";
-      } else if (StringsKt.contains$default(var1, "pharmacy", false, 2, null)
-         || StringsKt.contains$default(var1, "hospital", false, 2, null)
-         || StringsKt.contains$default(var1, "doctor", false, 2, null)) {
-         var1 = "\ud83d\udc8a";
-      } else if (!StringsKt.contains$default(var1, "lodging", false, 2, null) && !StringsKt.contains$default(var1, "hotel", false, 2, null)) {
-         if (var1.length() == 0) {
-            var2 = true;
-         }
-
-         var1 = "\ud83d\udccd";
-         if (var2) {
-         }
-      } else {
-         var1 = "\ud83d\udecf";
-      }
-
-      return var1;
-   }
-
-   private static final Unit onCreate$lambda$11(DestinationActivity var0) {
-      var0.along ^= true;
-      var0.paintAlong();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit onCreate$lambda$12(DestinationActivity var0, String var1, String var2) {
-      var0.quick(var1, var2);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit onCreate$lambda$19(DestinationActivity var0, JSONObject var1) {
-      Intrinsics.checkNotNullParameter(var1, "r");
-      if (var1.optBoolean("ok")) {
-         Favorites.load$default(Favorites.INSTANCE, Link.INSTANCE.getData(), null, 2, null);
-         var0.favorites = var0.places(var1.optJSONArray("favorites"), "name");
-         var0.spRecents = var0.places(var1.optJSONArray("recents"), "place_name");
-         if (var0.results == null) {
-            var0.render();
-         }
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final void onCreate$lambda$20(DestinationActivity var0) {
-      Object var1 = var0.getSystemService("input_method");
-      Intrinsics.checkNotNull(var1, "null cannot be cast to non-null type android.view.inputmethod.InputMethodManager");
-      InputMethodManager var2 = (InputMethodManager)var1;
-      var1 = var0.edit;
-      EditText var3 = (EditText)var1;
-      if (var1 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("edit");
-         var3 = null;
-      }
-
-      var2.showSoftInput((View)var3, 1);
-   }
-
-   private static final void onCreate$lambda$4$lambda$3(DestinationActivity var0, View var1) {
-      var0.finish();
-   }
-
-   private static final boolean onCreate$lambda$7$lambda$6(DestinationActivity var0, EditText var1, TextView var2, int var3, KeyEvent var4) {
-      boolean var5 = true;
-      if (var3 != 3) {
-         boolean var6;
-         if (var4 != null && var4.getKeyCode() == 66) {
-            var6 = true;
-         } else {
-            var6 = false;
-         }
-
-         if (!var6) {
-            var5 = false;
-            return var5;
-         }
-      }
-
-      var0.search(var1.getText().toString(), true);
-      return var5;
-   }
-
-   private static final void onCreate$lambda$9$lambda$8(DestinationActivity var0, View var1) {
-      EditText var2 = var0.edit;
-      EditText var3 = var2;
-      if (var2 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("edit");
-         var3 = null;
-      }
-
-      var3.setText("");
-      var0.results = null;
-      var0.render();
-   }
-
-   private final void paintAlong() {
-      TextView var5 = this.alongBtn;
-      Object var6 = null;
-      TextView var4 = var5;
-      if (var5 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("alongBtn");
-         var4 = null;
-      }
-
-      String var10;
-      if (this.along) {
-         var10 = "↗  Along the route";
-      } else {
-         var10 = "◎  Near me";
-      }
-
-      var4.setText(var10);
-      var4 = this.alongBtn;
-      if (var4 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("alongBtn");
-         var4 = (TextView)var6;
-      }
-
-      Drawable var8 = var4.getBackground();
-      Intrinsics.checkNotNull(var8, "null cannot be cast to non-null type android.graphics.drawable.GradientDrawable");
-      GradientDrawable var9 = (GradientDrawable)var8;
-      byte var1;
-      short var2;
-      short var3;
-      if (this.along) {
-         var3 = 128;
-         var2 = 237;
-         var1 = 47;
-      } else {
-         var3 = 35;
-         var2 = 44;
-         var1 = 30;
-      }
-
-      var9.setColor(Color.rgb(var1, var3, var2));
-   }
-
-   private final void pick(DestinationActivity.Place var1) {
-      Intent var3 = new Intent().putExtra("name", var1.getName()).putExtra("address", var1.getAddress());
-      Intrinsics.checkNotNullExpressionValue(var3, "putExtra(...)");
-      boolean var2;
-      if (var1.getMapboxId().length() > 0) {
-         var2 = true;
-      } else {
-         var2 = false;
-      }
-
-      if (var2) {
-         var3.putExtra("mapbox_id", var1.getMapboxId()).putExtra("search_id", this.searchId);
-      } else {
-         if (var1.getKeep()) {
-            Companion.remember((Context)this, var1.getName(), var1.getAddress(), var1.getLat(), var1.getLon());
-         }
-
-         var3.putExtra("latitude", var1.getLat()).putExtra("longitude", var1.getLon());
-      }
-
-      this.setResult(-1, var3);
-      this.finish();
-   }
-
-   private final void placeMenu(DestinationActivity.Place var1, JSONObject var2) {
-      DataClient var7 = Link.INSTANCE.getData();
-      UiSettings var8 = new UiSettings((Context)this);
-      boolean var4 = true;
-      boolean var3 = true;
-      if (var2 == null) {
-         String[] var15 = new String[]{"☆  Save", "\ud83c\udfe0  Save as Home", "\ud83d\udcbc  Save as Work"};
-         Builder var14 = new Builder((Context)this);
-         Object var11 = var1.getName();
-         if (var11.length() != 0) {
-            var3 = false;
-         }
-
-         if (var3) {
-            var11 = var1.getAddress();
-         }
-
-         var14.setTitle((CharSequence)var11)
-            .setItems(var15, new DestinationActivity$$ExternalSyntheticLambda14(var15, var1, var7, this))
-            .setNegativeButton("Cancel", null)
-            .show();
-      } else {
-         boolean var5 = Favorites.INSTANCE.pinned(var8, var1.getLat(), var1.getLon());
-         String var9;
-         if (var5) {
-            var9 = "\ud83d\udccc  Take off the main screen";
-         } else {
-            var9 = "\ud83d\udccc  Show on the main screen (one tap to go)";
-         }
-
-         String var6 = var2.optString("label");
-         Intrinsics.checkNotNullExpressionValue(var6, "optString(...)");
-         if (var6.length() > 0) {
-            var3 = var4;
-         } else {
-            var3 = false;
-         }
-
-         if (var3) {
-            var6 = "★  Just a saved place (not Home / Work)";
-         } else {
-            var6 = null;
-         }
-
-         String[] var10 = ArraysKt.filterNotNull(
-               new String[]{var9, "\ud83c\udfe0  Make it Home", "\ud83d\udcbc  Make it Work", var6, "\ud83d\uddd1  Remove from saved places"}
-            )
-            .toArray(new String[0]);
-         new Builder((Context)this)
-            .setTitle(Favorites.INSTANCE.title(var2))
-            .setItems(var10, new DestinationActivity$$ExternalSyntheticLambda15(var10, var8, var2, var5, var7, this))
-            .setNegativeButton("Cancel", null)
-            .show();
-      }
-   }
-
-   private static final void placeMenu$done(DestinationActivity var0, String var1, String var2) {
-      Context var3 = (Context)var0;
-      if (var1 == null) {
-         var1 = var2;
-      }
-
-      Toast.makeText(var3, var1, 0).show();
-      var0.favorites = var0.places(new JSONArray(Favorites.INSTANCE.getList()), "name");
-      var0.render();
-   }
-
-   private static final void placeMenu$lambda$74(
-      String[] var0, DestinationActivity.Place var1, DataClient var2, DestinationActivity var3, DialogInterface var4, int var5
-   ) {
-      String var11;
-      switch (var5) {
-         case 1:
-            var11 = "home";
-            break;
-         case 2:
-            var11 = "work";
-            break;
-         default:
-            var11 = null;
-      }
-
-      String var9;
-      if (var11 != null) {
-         String var8 = StringsKt.substringAfter$default(var0[var5], "as ", null, 2, null);
-         var9 = " as " + var8;
-      } else {
-         var9 = "";
-      }
-
-      String var10 = "Saved" + var9;
-      double var6 = var1.getLat();
-      boolean var12;
-      if (!Double.isInfinite(var6) && !Double.isNaN(var6)) {
-         var12 = true;
-      } else {
-         var12 = false;
-      }
-
-      if (var12) {
-         Favorites.INSTANCE
-            .save(var2, var1.getName(), var1.getAddress(), var1.getLat(), var1.getLon(), var11, new DestinationActivity$$ExternalSyntheticLambda10(var10, var3));
-      } else {
-         Favorites.INSTANCE
-            .saveFound((Context)var3, var2, var1.getName(), var1.getAddress(), var11, new DestinationActivity$$ExternalSyntheticLambda12(var10, var3));
-      }
-   }
-
-   private static final Unit placeMenu$lambda$74$lambda$72(String var0, DestinationActivity var1, String var2) {
-      placeMenu$done(var1, var2, var0);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit placeMenu$lambda$74$lambda$73(String var0, DestinationActivity var1, String var2) {
-      placeMenu$done(var1, var2, var0);
-      return Unit.INSTANCE;
-   }
-
-   private static final void placeMenu$lambda$79(
-      String[] var0, UiSettings var1, JSONObject var2, boolean var3, DataClient var4, DestinationActivity var5, DialogInterface var6, int var7
-   ) {
-      if (StringsKt.startsWith$default(var0[var7], "\ud83d\udccc", false, 2, null)) {
-         Favorites.INSTANCE.setPinned(var1, var2, var3 ^ true);
-         String var8;
-         if (var3) {
-            var8 = "Taken off the main screen";
-         } else {
-            var8 = "On the main screen";
-         }
-
-         placeMenu$done(var5, null, var8);
-      } else if (StringsKt.startsWith$default(var0[var7], "\ud83c\udfe0", false, 2, null)) {
-         Favorites.INSTANCE.label(var4, var2, "home", new DestinationActivity$$ExternalSyntheticLambda11(var5));
-      } else if (StringsKt.startsWith$default(var0[var7], "\ud83d\udcbc", false, 2, null)) {
-         Favorites.INSTANCE.label(var4, var2, "work", new DestinationActivity$$ExternalSyntheticLambda16(var5));
-      } else if (StringsKt.startsWith$default(var0[var7], "★", false, 2, null)) {
-         Favorites.INSTANCE.label(var4, var2, null, new DestinationActivity$$ExternalSyntheticLambda17(var5));
-      } else {
-         Favorites.INSTANCE.remove((Context)var5, var4, var2, new DestinationActivity$$ExternalSyntheticLambda18(var5));
-      }
-   }
-
-   private static final Unit placeMenu$lambda$79$lambda$75(DestinationActivity var0, String var1) {
-      placeMenu$done(var0, var1, "Home set");
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit placeMenu$lambda$79$lambda$76(DestinationActivity var0, String var1) {
-      placeMenu$done(var0, var1, "Work set");
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit placeMenu$lambda$79$lambda$77(DestinationActivity var0, String var1) {
-      placeMenu$done(var0, var1, "Done");
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit placeMenu$lambda$79$lambda$78(DestinationActivity var0, String var1) {
-      placeMenu$done(var0, var1, "Removed");
-      return Unit.INSTANCE;
-   }
-
-   private final List<DestinationActivity.Place> places(JSONArray var1, String var2) {
-      if (var1 == null) {
-         return CollectionsKt.emptyList();
-      } else {
-         ArrayList var12 = new ArrayList();
-         int var7 = 0;
-
-         for (int var9 = var1.length(); var7 < var9; var7++) {
-            JSONObject var13 = var1.optJSONObject(var7);
-            if (var13 != null) {
-               double var5 = var13.optDouble("latitude", Double.NaN);
-               double var3 = var13.optDouble("longitude", Double.NaN);
-               boolean var8;
-               if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
-                  var8 = true;
-               } else {
-                  var8 = false;
-               }
-
-               if (var8) {
-                  if (!Double.isInfinite(var3) && !Double.isNaN(var3)) {
-                     var8 = true;
-                  } else {
-                     var8 = false;
-                  }
-
-                  if (var8) {
-                     var var10 = var13.optString(var2);
-                     if (var10.length() == 0) {
-                        var8 = true;
-                     } else {
-                        var8 = false;
-                     }
-
-                     if (var8) {
-                        var10 = var13.optString("name");
-                        if (var10.length() == 0) {
-                           var8 = true;
-                        } else {
-                           var8 = false;
-                        }
-
-                        if (var8) {
-                           var10 = var13.optString("place_name");
-                        }
-
-                        var10 = var10;
-                     }
-
-                     var10 = var10;
-                     Intrinsics.checkNotNull(var10);
-                     List var11 = StringsKt.split$default(var10, new String[]{": "}, false, 2, 2, null);
-                     Pair var20;
-                     if (var11.size() == 2) {
-                        var20 = TuplesKt.to(var11.get(0), var11.get(1));
-                     } else {
-                        var20 = TuplesKt.to(var10, var13.optString("address"));
-                     }
-
-                     String var23 = (String)var20.component1();
-                     String var14 = (String)var20.component2();
-                     var10 = var13.optString("label");
-                     if (Intrinsics.areEqual(var10, "home")) {
-                        var10 = "Home";
-                     } else if (Intrinsics.areEqual(var10, "work")) {
-                        var10 = "Work";
-                     } else {
-                        var10 = var23;
-                     }
-
-                     var12.add(new DestinationActivity.Place(var10, var14, var5, var3, null, 0.0, null, false, 240, null));
-                  }
-               }
-            }
-         }
-
-         return var12;
-      }
-   }
-
-   private final void quick(String var1, String var2) {
-      DataClient var7 = Link.INSTANCE.getData();
-      Pair var8 = this.here;
-      String var6 = null;
-      TextView var5 = null;
-      if (var7 == null || !var7.getConnected()) {
-         TextView var12 = this.status;
-         if (var12 == null) {
+            chips.addView(textView, chipLp());
+            paintAlong();
+        }
+        for (Pair<String, String> pair : QUICK) {
+            final String key = pair.component1();
+            final String label = pair.component2();
+            chips.addView(chip(label, new Function0() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda3
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit onCreate$lambda$12;
+                    onCreate$lambda$12 = DestinationActivity.onCreate$lambda$12(DestinationActivity.this, key, label);
+                    return onCreate$lambda$12;
+                }
+            }), chipLp());
+        }
+        HorizontalScrollView $this$onCreate_u24lambda_u2413 = new HorizontalScrollView(this);
+        $this$onCreate_u24lambda_u2413.setHorizontalScrollBarEnabled(false);
+        $this$onCreate_u24lambda_u2413.addView(chips);
+        root.addView($this$onCreate_u24lambda_u2413);
+        TextView $this$onCreate_u24lambda_u2414 = new TextView(this);
+        $this$onCreate_u24lambda_u2414.setTextColor(Color.rgb(143, 163, 199));
+        $this$onCreate_u24lambda_u2414.setTextSize(14.0f);
+        $this$onCreate_u24lambda_u2414.setPadding(dp(4), dp(10), dp(4), dp(4));
+        this.status = $this$onCreate_u24lambda_u2414;
+        TextView textView2 = this.status;
+        if (textView2 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("status");
-            var12 = var6;
-         }
-
-         var12.setText("Not connected to the comma");
-      } else if (var8 == null) {
-         TextView var11 = this.status;
-         if (var11 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("status");
-            var11 = var5;
-         }
-
-         var11.setText("The car's position isn't known yet");
-      } else {
-         this.searchSeq++;
-         int var4 = this.searchSeq;
-         boolean var3;
-         if (this.route != null && this.along) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         var6 = this.status;
-         var5 = (TextView)var6;
-         if (var6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("status");
-            var5 = null;
-         }
-
-         var6 = StringsKt.substringAfter$default(var2, "  ", null, 2, null);
-         Locale var9 = Locale.US;
-         Intrinsics.checkNotNullExpressionValue(var9, "US");
-         String var17 = var6.toLowerCase(var9);
-         Intrinsics.checkNotNullExpressionValue(var17, "toLowerCase(...)");
-         if (var3) {
-            var6 = " along the route";
-         } else {
-            var6 = " nearby";
-         }
-
-         var5.setText("Looking for " + var17 + var6 + "…");
-         HashMap var10 = new HashMap(
-            MapsKt.mapOf(new Pair[]{TuplesKt.to("category", var1), TuplesKt.to("latitude", var8.getFirst()), TuplesKt.to("longitude", var8.getSecond())})
-         );
-         if (var3) {
-            var10.put("route", this.route);
-         }
-
-         var7.request("nav_category", var10, new DestinationActivity$$ExternalSyntheticLambda19(var4, this, var2));
-      }
-   }
-
-   private static final Unit quick$lambda$42(int var0, DestinationActivity var1, String var2, JSONObject var3) {
-      Intrinsics.checkNotNullParameter(var3, "r");
-      if (var0 == var1.searchSeq && !var1.isFinishing()) {
-         if (!var3.optBoolean("ok")) {
-            String var24 = var3.optString("error");
-            TextView var21 = var1.status;
-            TextView var19 = var21;
-            if (var21 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("status");
-               var19 = null;
+            textView2 = null;
+        }
+        root.addView(textView2);
+        LinearLayout $this$onCreate_u24lambda_u2415 = new LinearLayout(this);
+        $this$onCreate_u24lambda_u2415.setOrientation(1);
+        this.list = $this$onCreate_u24lambda_u2415;
+        ScrollView $this$onCreate_u24lambda_u2416 = new ScrollView(this);
+        LinearLayout linearLayout = this.list;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("list");
+            linearLayout = null;
+        }
+        $this$onCreate_u24lambda_u2416.addView(linearLayout);
+        root.addView($this$onCreate_u24lambda_u2416, new LinearLayout.LayoutParams(-1, 0, 1.0f));
+        setContentView(root);
+        String q = getIntent().getStringExtra("query");
+        if (q != null) {
+            if (StringsKt.isBlank(q)) {
+                q = null;
             }
-
-            Intrinsics.checkNotNull(var24);
-            CharSequence var22;
-            if (StringsKt.contains$default(var24, "unknown action", false, 2, null)) {
-               var22 = "The comma needs the StarView navigation update for this";
-            } else {
-               Object var23 = var24;
-               boolean var18;
-               if (var23.length() == 0) {
-                  var18 = true;
-               } else {
-                  var18 = false;
-               }
-
-               if (var18) {
-                  var23 = "No answer from the comma";
-               }
-
-               var22 = (CharSequence)var23;
+            if (q != null) {
+                EditText editText3 = this.edit;
+                if (editText3 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("edit");
+                    editText3 = null;
+                }
+                editText3.setText(q);
+                EditText editText4 = this.edit;
+                if (editText4 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("edit");
+                    editText4 = null;
+                }
+                editText4.setSelection(q.length());
+                search(q, true);
             }
-
-            var19.setText(var22);
-            return Unit.INSTANCE;
-         } else {
-            JSONArray var11 = var3.optJSONArray("results");
-            JSONArray var10 = var11;
-            if (var11 == null) {
-               var10 = new JSONArray();
+        }
+        this.favorites = places(new JSONArray((Collection) Favorites.INSTANCE.getList()), "name");
+        DataClient data = Link.INSTANCE.getData();
+        if (data != null) {
+            DataClient.request$default(data, "nav_list", null, new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda4
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj) {
+                    Unit onCreate$lambda$19;
+                    onCreate$lambda$19 = DestinationActivity.onCreate$lambda$19(DestinationActivity.this, (JSONObject) obj);
+                    return onCreate$lambda$19;
+                }
+            }, 2, null);
+        }
+        render();
+        EditText editText5 = this.edit;
+        if (editText5 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("edit");
+            editText = null;
+        } else {
+            editText = editText5;
+        }
+        editText.requestFocus();
+        this.ui.postDelayed(new Runnable() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda5
+            @Override // java.lang.Runnable
+            public final void run() {
+                DestinationActivity.onCreate$lambda$20(DestinationActivity.this);
             }
+        }, 250L);
+    }
 
-            Iterable var12 = RangesKt.until(0, var10.length());
-            var var27 = new ArrayList();
-            Iterator var13 = var12.iterator();
-
-            while (var13.hasNext()) {
-               JSONObject var32 = var10.optJSONObject(((IntIterator)var13).nextInt());
-               if (var32 != null) {
-                  var27.add(var32);
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean onCreate$lambda$7$lambda$6(DestinationActivity this$0, EditText $this_apply, TextView textView, int id, KeyEvent ev) {
+        if (id != 3) {
+            if (!(ev != null && ev.getKeyCode() == 66)) {
+                return false;
             }
+        }
+        this$0.search($this_apply.getText().toString(), true);
+        return true;
+    }
 
-            List var28 = var27;
-            Iterable var29 = var28;
-            var var33 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var29, 10));
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void onCreate$lambda$9$lambda$8(DestinationActivity this$0, View it) {
+        EditText editText = this$0.edit;
+        if (editText == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("edit");
+            editText = null;
+        }
+        editText.setText("");
+        this$0.results = null;
+        this$0.render();
+    }
 
-            for (JSONObject var16 : var29) {
-               String var15 = var16.optString("name");
-               Intrinsics.checkNotNullExpressionValue(var15, "optString(...)");
-               String var14 = var16.optString("address");
-               Intrinsics.checkNotNullExpressionValue(var14, "optString(...)");
-               double var6 = var16.optDouble("latitude");
-               double var8 = var16.optDouble("longitude");
-               double var4 = var16.optDouble("distanceMeters", Double.NaN);
-               var var30 = var16.optString("maki");
-               boolean var17;
-               if (var30.length() == 0) {
-                  var17 = true;
-               } else {
-                  var17 = false;
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit onCreate$lambda$11(DestinationActivity this$0) {
+        this$0.along = !this$0.along;
+        this$0.paintAlong();
+        return Unit.INSTANCE;
+    }
 
-               if (var17) {
-                  var30 = var16.optString("category");
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit onCreate$lambda$12(DestinationActivity this$0, String $key, String $label) {
+        this$0.quick($key, $label);
+        return Unit.INSTANCE;
+    }
 
-               Intrinsics.checkNotNullExpressionValue(var30, "ifEmpty(...)");
-               DestinationActivity.Place var31 = new DestinationActivity.Place(var15, var14, var6, var8, null, var4, var30, false, 16, null);
-               var33.add(var31);
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit onCreate$lambda$19(DestinationActivity this$0, JSONObject r) {
+        Intrinsics.checkNotNullParameter(r, "r");
+        if (r.optBoolean("ok")) {
+            Favorites.load$default(Favorites.INSTANCE, Link.INSTANCE.getData(), null, 2, null);
+            this$0.favorites = this$0.places(r.optJSONArray("favorites"), "name");
+            this$0.spRecents = this$0.places(r.optJSONArray("recents"), "place_name");
+            if (this$0.results == null) {
+                this$0.render();
             }
+        }
+        return Unit.INSTANCE;
+    }
 
-            List var25 = var33;
-            if (!var3.optBoolean("alongRoute")) {
-               var25 = CollectionsKt.sortedWith(var25, new Comparator(var1) {
-                  final DestinationActivity this$0;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void onCreate$lambda$20(DestinationActivity this$0) {
+        Object systemService = this$0.getSystemService("input_method");
+        Intrinsics.checkNotNull(systemService, "null cannot be cast to non-null type android.view.inputmethod.InputMethodManager");
+        InputMethodManager inputMethodManager = (InputMethodManager) systemService;
+        EditText editText = this$0.edit;
+        if (editText == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("edit");
+            editText = null;
+        }
+        inputMethodManager.showSoftInput(editText, 1);
+    }
 
-                  {
-                     this.this$0 = var1;
-                  }
+    @Override // androidx.appcompat.app.AppCompatActivity, androidx.fragment.app.FragmentActivity, android.app.Activity
+    protected void onDestroy() {
+        this.bg.shutdownNow();
+        super.onDestroy();
+    }
 
-                  @Override
-                  public final int compare(T var1, T var2x) {
-                     DestinationActivity.Place var11x = (DestinationActivity.Place)var1;
-                     var1 = var11x.getDistM();
-                     double var3x = var1.doubleValue();
-                     boolean var9 = Double.isInfinite(var3x);
-                     boolean var8x = true;
-                     boolean var7;
-                     if (!var9 && !Double.isNaN(var3x)) {
-                        var7 = true;
-                     } else {
-                        var7 = false;
-                     }
-
-                     Object var10x = null;
-                     if (!var7) {
-                        var1 = null;
-                     }
-
-                     double var5 = 99.0;
-                     if (var1 != null) {
-                        var3x = var1;
-                     } else {
-                        var1 = this.this$0.dist(var11x);
-                        if (var1 != null) {
-                           var3x = var1;
-                        } else {
-                           var3x = 99.0;
-                        }
-
-                        var3x *= 1609.344;
-                     }
-
-                     Comparable var24x = var3x;
-                     DestinationActivity.Place var12x = (DestinationActivity.Place)var2x;
-                     var2x = var12x.getDistM();
-                     var3x = var2x.doubleValue();
-                     if (!Double.isInfinite(var3x) && !Double.isNaN(var3x)) {
-                        var7 = var8x;
-                     } else {
-                        var7 = false;
-                     }
-
-                     var1 = (Double)var10x;
-                     if (var7) {
-                        var1 = var2x;
-                     }
-
-                     if (var1 != null) {
-                        var3x = var1;
-                     } else {
-                        var1 = this.this$0.dist(var12x);
-                        var3x = var5;
-                        if (var1 != null) {
-                           var3x = var1;
-                        }
-
-                        var3x *= 1609.344;
-                     }
-
-                     return ComparisonsKt.compareValues(var24x, var3x);
-                  }
-               });
+    private final TextView chip(String text, final Function0<Unit> onClick) {
+        TextView $this$chip_u24lambda_u2423 = new TextView(this);
+        $this$chip_u24lambda_u2423.setText(text);
+        $this$chip_u24lambda_u2423.setTextSize(15.0f);
+        $this$chip_u24lambda_u2423.setTextColor(-1);
+        $this$chip_u24lambda_u2423.setTypeface($this$chip_u24lambda_u2423.getTypeface(), 1);
+        $this$chip_u24lambda_u2423.setGravity(17);
+        $this$chip_u24lambda_u2423.setPadding(dp(16), dp(9), dp(16), dp(9));
+        GradientDrawable $this$chip_u24lambda_u2423_u24lambda_u2421 = new GradientDrawable();
+        $this$chip_u24lambda_u2423_u24lambda_u2421.setCornerRadius(dp(20));
+        $this$chip_u24lambda_u2423_u24lambda_u2421.setColor(Color.rgb(30, 35, 44));
+        $this$chip_u24lambda_u2423.setBackground($this$chip_u24lambda_u2423_u24lambda_u2421);
+        $this$chip_u24lambda_u2423.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda21
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                Function0.this.invoke();
             }
-
-            var1.results = var25;
-            String var26 = StringsKt.substringAfter$default(var2, "  ", null, 2, null);
-            if (var3.optBoolean("alongRoute")) {
-               var2 = " along the route";
-            } else {
-               var2 = " nearby";
-            }
-
-            var1.resultsTitle = var26 + var2;
-            var1.render();
-            return Unit.INSTANCE;
-         }
-      } else {
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final void render() {
-      LinearLayout var5 = this.list;
-      Object var4 = null;
-      TextView var3 = null;
-      LinearLayout var2 = var5;
-      if (var5 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("list");
-         var2 = null;
-      }
-
-      var2.removeAllViews();
-      List var30 = this.results;
-      if (var30 != null) {
-         TextView var16 = this.status;
-         if (var16 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("status");
-         } else {
-            var3 = var16;
-         }
-
-         Object var17;
-         if (var30.isEmpty()) {
-            var17 = "Nothing found - try adding the town";
-         } else {
-            var17 = this.resultsTitle;
-            boolean var10;
-            if (var17.length() == 0) {
-               var10 = 1;
-            } else {
-               var10 = 0;
-            }
-
-            if (var10) {
-               var10 = var30.size();
-               var17 = var10 + " found";
-            }
-         }
-
-         var17 = (CharSequence)var17;
-         var3.setText((CharSequence)var17);
-         var17 = var30.iterator();
-
-         while (var17.hasNext()) {
-            this.row((DestinationActivity.Place)var17.next());
-         }
-      } else {
-         TextView var12 = this.status;
-         if (var12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("status");
-            var12 = (TextView)var4;
-         }
-
-         String var20;
-         if (this.here == null) {
-            var20 = "No GPS position yet - results won't be sorted by distance";
-         } else {
-            var20 = "";
-         }
-
-         var12.setText(var20);
-         if (!this.favorites.isEmpty()) {
-            this.section("Saved places");
-            Iterator var13 = this.favorites.iterator();
-
-            while (var13.hasNext()) {
-               this.row((DestinationActivity.Place)var13.next());
-            }
-         }
-
-         Iterable var21 = Companion.recents((Context)this);
-         var var14 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var21, 10));
-
-         for (JSONObject var31 : var21) {
-            var4 = var31.optString("name");
-            Intrinsics.checkNotNullExpressionValue(var4, "optString(...)");
-            String var6 = var31.optString("address");
-            Intrinsics.checkNotNullExpressionValue(var6, "optString(...)");
-            var14.add(
-               new DestinationActivity.Place((String)var4, var6, var31.optDouble("latitude"), var31.optDouble("longitude"), null, 0.0, null, false, 240, null)
-            );
-         }
-
-         List var15 = var14;
-         if (!var15.isEmpty()) {
-            this.section("Recent on this tablet");
-            Iterator var23 = var15.iterator();
-
-            while (var23.hasNext()) {
-               this.row((DestinationActivity.Place)var23.next());
-            }
-         }
-
-         var4 = this.spRecents;
-         var var24 = new ArrayList();
-
-         for (Object var32 : var4) {
-            DestinationActivity.Place var33 = (DestinationActivity.Place)var32;
-            var var7 = var15;
-            boolean var9;
-            if (var7 instanceof Collection && ((Collection)var7).isEmpty()) {
-               var9 = true;
-            } else {
-               Iterator var34 = var7.iterator();
-
-               while (true) {
-                  if (!var34.hasNext()) {
-                     var9 = true;
-                     break;
-                  }
-
-                  DestinationActivity.Place var8 = (DestinationActivity.Place)var34.next();
-                  if (Math.abs(var8.getLat() - var33.getLat()) < 1.0E-4 && Math.abs(var8.getLon() - var33.getLon()) < 1.0E-4) {
-                     var9 = true;
-                  } else {
-                     var9 = false;
-                  }
-
-                  if (var9) {
-                     var9 = false;
-                     break;
-                  }
-               }
-            }
-
-            if (var9) {
-               var24.add(var32);
-            }
-         }
-
-         List var25 = var24;
-         if (!var25.isEmpty()) {
-            this.section("Recent in StarPilot");
-            var4 = var25.iterator();
-
-            while (var4.hasNext()) {
-               this.row((DestinationActivity.Place)var4.next());
-            }
-         }
-
-         if (this.favorites.isEmpty() && var15.isEmpty() && var25.isEmpty()) {
-            this.section("Type a place or an address, or pick a kind of place above");
-         }
-      }
-   }
-
-   private final void row(DestinationActivity.Place var1) {
-      LinearLayout var8 = new LinearLayout((Context)this);
-      var8.setOrientation(0);
-      var8.setGravity(16);
-      var8.setPadding(this.dp(14), this.dp(12), this.dp(14), this.dp(12));
-      GradientDrawable var6 = new GradientDrawable();
-      var6.setCornerRadius(this.dp(12));
-      var6.setColor(Color.rgb(22, 25, 32));
-      var8.setBackground((Drawable)var6);
-      boolean var5 = true;
-      var8.setClickable(true);
-      TypedValue var19 = new TypedValue();
-      var8.getContext().getTheme().resolveAttribute(16843534, var19, true);
-      var8.setForeground(var8.getContext().getDrawable(var19.resourceId));
-      var8.setOnClickListener(new DestinationActivity$$ExternalSyntheticLambda6(this, var1));
-      double var2 = var1.getLat();
-      boolean var4;
-      if (!Double.isInfinite(var2) && !Double.isNaN(var2)) {
-         var4 = 1;
-      } else {
-         var4 = 0;
-      }
-
-      JSONObject var7;
-      if (var4) {
-         var7 = Favorites.INSTANCE.find(var1.getLat(), var1.getLon());
-      } else {
-         var7 = null;
-      }
-
-      var8.setOnLongClickListener(new DestinationActivity$$ExternalSyntheticLambda7(this, var1, var7));
-      TextView var9 = new TextView((Context)this);
-      String var20;
-      if (var7 != null) {
-         var20 = Favorites.INSTANCE.icon(var7);
-      } else {
-         var20 = this.icon(var1.getKind());
-      }
-
-      var9.setText(var20);
-      var9.setTextSize(22.0F);
-      var9.setPadding(0, 0, this.dp(14), 0);
-      var8.addView((View)var9);
-      LinearLayout var32 = new LinearLayout((Context)this);
-      var32.setOrientation(1);
-      TextView var10 = new TextView((Context)this);
-      TextView var21 = var1.getName();
-      if (var21.length() == 0) {
-         var4 = (boolean)1;
-      } else {
-         var4 = (boolean)0;
-      }
-
-      if (var4) {
-         var21 = var1.getAddress();
-      }
-
-      var10.setText((CharSequence)var21);
-      var10.setTextColor(-1);
-      var10.setTextSize(18.0F);
-      var10.setTypeface(var10.getTypeface(), 1);
-      var32.addView((View)var10);
-      if (var1.getAddress().length() > 0) {
-         var4 = (boolean)1;
-      } else {
-         var4 = (boolean)0;
-      }
-
-      if (var4 && !Intrinsics.areEqual(var1.getAddress(), var1.getName())) {
-         var21 = new TextView((Context)this);
-         var21.setText(var1.getAddress());
-         var21.setTextColor(Color.rgb(154, 161, 172));
-         var21.setTextSize(14.0F);
-         var32.addView((View)var21);
-      }
-
-      var8.addView((View)var32, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
-      var2 = var1.getDistM();
-      if (!Double.isInfinite(var2) && !Double.isNaN(var2)) {
-         var4 = (boolean)1;
-      } else {
-         var4 = (boolean)0;
-      }
-
-      Double var23;
-      if (var4) {
-         var23 = var1.getDistM() / 1609.344;
-      } else {
-         var23 = this.dist(var1);
-      }
-
-      if (var23 != null) {
-         var2 = var23.doubleValue();
-         var9 = new TextView((Context)this);
-         CharSequence var24;
-         if (var2 < 0.1) {
-            var24 = "here";
-         } else {
-            String var25;
-            if (var2 < 10.0) {
-               var25 = String.format("%.1f mi", Arrays.copyOf(new Object[]{var2}, 1));
-            } else {
-               var25 = String.format("%.0f mi", Arrays.copyOf(new Object[]{var2}, 1));
-            }
-
-            Intrinsics.checkNotNullExpressionValue(var25, "format(...)");
-            var24 = var25;
-         }
-
-         var9.setText(var24);
-         var9.setTextColor(Color.rgb(154, 161, 172));
-         var9.setTextSize(15.0F);
-         var9.setPadding(this.dp(12), 0, 0, 0);
-         var8.addView((View)var9);
-      }
-
-      if (var7 != null && Favorites.INSTANCE.pinned(new UiSettings((Context)this), var1.getLat(), var1.getLon())) {
-         var4 = var5;
-      } else {
-         var4 = (boolean)0;
-      }
-
-      var9 = new TextView((Context)this);
-      String var26;
-      if (var7 == null) {
-         var26 = "☆";
-      } else if (var4) {
-         var26 = "★\ud83d\udccc";
-      } else {
-         var26 = "★";
-      }
-
-      CharSequence var27 = var26;
-      var9.setText(var27);
-      var9.setTextSize(24.0F);
-      if (var7 == null) {
-         var4 = Color.rgb(154, 161, 172);
-      } else {
-         var4 = Color.rgb(255, 200, 87);
-      }
-
-      var9.setTextColor(var4);
-      var9.setPadding(this.dp(16), 0, this.dp(4), 0);
-      var9.setOnClickListener(new DestinationActivity$$ExternalSyntheticLambda8(this, var1, var7));
-      var8.addView((View)var9);
-      LinearLayout var28 = this.list;
-      LinearLayout var11 = var28;
-      if (var28 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("list");
-         var11 = null;
-      }
-
-      View var29 = (View)var8;
-      LayoutParams var30 = new LayoutParams(-1, -2);
-      var30.bottomMargin = this.dp(8);
-      Unit var31 = Unit.INSTANCE;
-      var11.addView(var29, (android.view.ViewGroup.LayoutParams)var30);
-   }
-
-   private static final void row$lambda$59$lambda$58(DestinationActivity var0, DestinationActivity.Place var1, View var2) {
-      var0.pick(var1);
-   }
-
-   private static final boolean row$lambda$60(DestinationActivity var0, DestinationActivity.Place var1, JSONObject var2, View var3) {
-      var0.placeMenu(var1, var2);
-      return true;
-   }
-
-   private static final void row$lambda$69$lambda$68(DestinationActivity var0, DestinationActivity.Place var1, JSONObject var2, View var3) {
-      var0.placeMenu(var1, var2);
-   }
-
-   private final void runSearch(String var1, boolean var2) {
-      String var6 = StringsKt.trim(var1).toString();
-      if (var6.length() >= 2) {
-         this.searchSeq++;
-         int var3 = this.searchSeq;
-         DataClient var5 = Link.INSTANCE.getData();
-         if (this.commaSearch && var5 != null && var5.getConnected()) {
-            TextView var4 = this.status;
-            TextView var7 = var4;
-            if (var4 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("status");
-               var7 = null;
-            }
-
-            var7.setText("Searching…");
-            HashMap var8 = new HashMap(
-               MapsKt.mapOf(new Pair[]{TuplesKt.to("query", var6), TuplesKt.to("searchId", this.searchId), TuplesKt.to("clientId", CLIENT_ID)})
-            );
-            Pair var9 = this.here;
-            if (var9 != null) {
-               var8.put("latitude", var9.getFirst());
-               var8.put("longitude", var9.getSecond());
-            }
-
-            var5.request("nav_search", var8, new DestinationActivity$$ExternalSyntheticLambda13(var3, this, var6, var2));
-         } else {
-            if (var6.length() >= 3) {
-               this.androidSearch(var6, var3);
-            }
-         }
-      }
-   }
-
-   private static final Unit runSearch$lambda$34(int var0, DestinationActivity var1, String var2, boolean var3, JSONObject var4) {
-      Intrinsics.checkNotNullParameter(var4, "r");
-      if (var0 != var1.searchSeq || var1.isFinishing()) {
-         return Unit.INSTANCE;
-      } else if (!var4.optBoolean("ok")) {
-         String var30 = var4.optString("error");
-         Intrinsics.checkNotNull(var30);
-         CharSequence var32 = var30;
-         CharSequence var24 = "new destination search";
-         TextView var19 = null;
-         if (StringsKt.contains$default(var32, var24, false, 2, null)) {
-            var1.searchId = UUID.randomUUID().toString();
-         } else {
-            var1.commaSearch = false;
-            TextView var25 = var1.status;
-            if (var25 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("status");
-            } else {
-               var19 = var25;
-            }
-
-            var24 = var30;
-            boolean var20;
-            if (var24.length() == 0) {
-               var20 = true;
-            } else {
-               var20 = false;
-            }
-
-            if (var20) {
-               var24 = "no answer";
-            }
-
-            var19.setText("Mapbox search isn't available (" + var24 + ") - Android's address search instead");
-         }
-
-         if (var2.length() >= 3) {
-            var1.androidSearch(var2, var0);
-         }
-
-         return Unit.INSTANCE;
-      } else {
-         JSONArray var9 = var4.optJSONArray("results");
-         JSONArray var17 = var9;
-         if (var9 == null) {
-            var17 = new JSONArray();
-         }
-
-         Iterable var10 = RangesKt.until(0, var17.length());
-         var var21 = new ArrayList();
-         Iterator var27 = var10.iterator();
-
-         while (var27.hasNext()) {
-            JSONObject var11 = var17.optJSONObject(((IntIterator)var27).nextInt());
-            if (var11 != null) {
-               var21.add(var11);
-            }
-         }
-
-         List var22 = var21;
-         Iterable var23 = var22;
-         var var31 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var23, 10));
-         boolean var8 = false;
-
-         for (JSONObject var16 : var23) {
-            String var13 = var16.optString("name");
-            Intrinsics.checkNotNullExpressionValue(var13, "optString(...)");
-            String var14 = var16.optString("description");
-            Intrinsics.checkNotNullExpressionValue(var14, "optString(...)");
-            String var15 = var16.optString("id");
-            Intrinsics.checkNotNullExpressionValue(var15, "optString(...)");
-            double var5 = var16.optDouble("distanceMeters", Double.NaN);
-            var var28 = var16.optString("maki");
-            boolean var7;
-            if (var28.length() == 0) {
-               var7 = true;
-            } else {
-               var7 = false;
-            }
-
-            if (var7) {
-               var28 = var16.optString("category");
-            }
-
-            Intrinsics.checkNotNullExpressionValue(var28, "ifEmpty(...)");
-            DestinationActivity.Place var29 = new DestinationActivity.Place(var13, var14, Double.NaN, Double.NaN, var15, var5, var28, false, 128, null);
-            var31.add(var29);
-         }
-
-         List var18 = var31;
-         if (!var18.isEmpty() || !var3 && var2.length() < 4) {
-            var1.results = var18;
-            var1.resultsTitle = "";
-            var1.render();
-            return Unit.INSTANCE;
-         } else {
-            var1.androidSearch(var2, var0);
-            return Unit.INSTANCE;
-         }
-      }
-   }
-
-   private final void search(String var1, boolean var2) {
-      this.ui.removeCallbacks(this.doSearch);
-      if (StringsKt.trim(var1).toString().length() < 2) {
-         this.results = null;
-         this.render();
-      } else {
-         if (var2) {
-            this.runSearch(var1, true);
-         } else {
-            this.ui.postDelayed(this.doSearch, 300L);
-         }
-      }
-   }
-
-   private final void section(String var1) {
-      LinearLayout var3 = this.list;
-      LinearLayout var2 = var3;
-      if (var3 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("list");
-         var2 = null;
-      }
-
-      TextView var6 = new TextView((Context)this);
-      Locale var4 = Locale.US;
-      Intrinsics.checkNotNullExpressionValue(var4, "US");
-      var1 = var1.toUpperCase(var4);
-      Intrinsics.checkNotNullExpressionValue(var1, "toUpperCase(...)");
-      var6.setText(var1);
-      var6.setTextColor(Color.rgb(110, 118, 130));
-      var6.setTextSize(13.0F);
-      var6.setLetterSpacing(0.08F);
-      var6.setTypeface(var6.getTypeface(), 1);
-      var6.setPadding(this.dp(4), this.dp(18), this.dp(4), this.dp(6));
-      var2.addView((View)var6);
-   }
-
-   @Override
-   protected void attachBaseContext(Context var1) {
-      Intrinsics.checkNotNullParameter(var1, "base");
-      super.attachBaseContext(NarrowDensity.wrap$default(NarrowDensity.INSTANCE, var1, 0, 0.0F, 6, null));
-   }
-
-   @Override
-   protected void onCreate(Bundle var1) {
-      super.onCreate(var1);
-      double var4 = this.getIntent().getDoubleExtra("lat", Double.NaN);
-      double var2 = this.getIntent().getDoubleExtra("lon", Double.NaN);
-      boolean var6;
-      if (!Double.isInfinite(var4) && !Double.isNaN(var4)) {
-         var6 = true;
-      } else {
-         var6 = false;
-      }
-
-      if (var6) {
-         if (!Double.isInfinite(var2) && !Double.isNaN(var2)) {
-            var6 = true;
-         } else {
-            var6 = false;
-         }
-
-         label102:
-         if (var6) {
-            if (var4 == 0.0) {
-               var6 = true;
-            } else {
-               var6 = false;
-            }
-
-            if (var6) {
-               if (var2 == 0.0) {
-                  var6 = true;
-               } else {
-                  var6 = false;
-               }
-
-               if (var6) {
-                  break label102;
-               }
-            }
-
-            this.here = TuplesKt.to(var4, var2);
-         }
-      }
-
-      label94: {
-         var11 = this.getIntent().getStringExtra("route");
-         if (var11 != null) {
-            if (var11.length() >= 10) {
-               var6 = true;
-            } else {
-               var6 = false;
-            }
-
-            if (var6) {
-               break label94;
-            }
-         }
-
-         var11 = null;
-      }
-
-      this.route = var11;
-      LinearLayout var8 = new LinearLayout((Context)this);
-      var8.setOrientation(1);
-      var8.setBackgroundColor(Color.rgb(11, 13, 18));
-      var8.setPadding(this.dp(20), this.dp(16), this.dp(20), this.dp(8));
-      LinearLayout var9 = new LinearLayout((Context)this);
-      var9.setOrientation(0);
-      var9.setGravity(16);
-      TextView var12 = new TextView((Context)this);
-      var12.setText("‹");
-      var12.setTextSize(34.0F);
-      var12.setTextColor(-1);
-      var12.setPadding(this.dp(4), 0, this.dp(16), this.dp(4));
-      var12.setOnClickListener(new DestinationActivity$$ExternalSyntheticLambda22(this));
-      var9.addView((View)var12);
-      EditText var13 = new EditText((Context)this);
-      var13.setHint("Search places or addresses");
-      var13.setHintTextColor(Color.rgb(128, 134, 144));
-      var13.setTextColor(-1);
-      var13.setTextSize(20.0F);
-      var13.setInputType(8193);
-      var13.setImeOptions(3);
-      var13.setSingleLine(true);
-      GradientDrawable var7 = new GradientDrawable();
-      var7.setCornerRadius(this.dp(14));
-      var7.setColor(Color.rgb(27, 31, 39));
-      var13.setBackground((Drawable)var7);
-      var13.setPadding(this.dp(16), this.dp(12), this.dp(16), this.dp(12));
-      var13.setOnEditorActionListener(new DestinationActivity$$ExternalSyntheticLambda23(this, var13));
-      var13.addTextChangedListener(new TextWatcher() {
-
-         public void afterTextChanged(Editable var1) {
-            DestinationActivity var3 = DestinationActivity.this;
-            String var4x;
-            if (var1 != null) {
-               var4x = var1.toString();
-            } else {
-               var4x = null;
-            }
-
-            String var2x = var4x;
-            if (var4x == null) {
-               var2x = "";
-            }
-
-            var3.search(var2x, false);
-         }
-
-         public void beforeTextChanged(CharSequence var1, int var2x, int var3, int var4x) {
-         }
-
-         public void onTextChanged(CharSequence var1, int var2x, int var3, int var4x) {
-         }
-      });
-      this.edit = var13;
-      EditText var30 = this.edit;
-      EditText var14 = var30;
-      if (var30 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("edit");
-         var14 = null;
-      }
-
-      var9.addView((View)var14, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
-      TextView var15 = new TextView((Context)this);
-      var15.setText("✕");
-      var15.setTextSize(22.0F);
-      var15.setTextColor(Color.rgb(154, 161, 172));
-      var15.setPadding(this.dp(14), 0, this.dp(4), 0);
-      var15.setOnClickListener(new DestinationActivity$$ExternalSyntheticLambda1(this));
-      var9.addView((View)var15);
-      var8.addView((View)var9);
-      var9 = new LinearLayout((Context)this);
-      var9.setOrientation(0);
-      var9.setPadding(0, this.dp(12), 0, this.dp(2));
-      this.alongBtn = this.chip("", new DestinationActivity$$ExternalSyntheticLambda2(this));
-      if (this.route != null) {
-         TextView var31 = this.alongBtn;
-         TextView var16 = var31;
-         if (var31 == null) {
+        });
+        return $this$chip_u24lambda_u2423;
+    }
+
+    private final LinearLayout.LayoutParams chipLp() {
+        LinearLayout.LayoutParams $this$chipLp_u24lambda_u2424 = new LinearLayout.LayoutParams(-2, -2);
+        $this$chipLp_u24lambda_u2424.setMarginEnd(dp(8));
+        return $this$chipLp_u24lambda_u2424;
+    }
+
+    private final void paintAlong() {
+        int i;
+        int i2;
+        int i3;
+        TextView textView = this.alongBtn;
+        TextView textView2 = null;
+        if (textView == null) {
             Intrinsics.throwUninitializedPropertyAccessException("alongBtn");
-            var16 = null;
-         }
+            textView = null;
+        }
+        textView.setText(this.along ? "↗  Along the route" : "◎  Near me");
+        TextView textView3 = this.alongBtn;
+        if (textView3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("alongBtn");
+        } else {
+            textView2 = textView3;
+        }
+        Drawable background = textView2.getBackground();
+        Intrinsics.checkNotNull(background, "null cannot be cast to non-null type android.graphics.drawable.GradientDrawable");
+        GradientDrawable gradientDrawable = (GradientDrawable) background;
+        if (this.along) {
+            i = 128;
+            i2 = 237;
+            i3 = 47;
+        } else {
+            i = 35;
+            i2 = 44;
+            i3 = 30;
+        }
+        gradientDrawable.setColor(Color.rgb(i3, i, i2));
+    }
 
-         var9.addView((View)var16, (android.view.ViewGroup.LayoutParams)this.chipLp());
-         this.paintAlong();
-      }
-
-      for (Pair var10 : QUICK) {
-         String var32 = (String)var10.component1();
-         String var41 = (String)var10.component2();
-         var9.addView(
-            (View)this.chip(var41, new DestinationActivity$$ExternalSyntheticLambda3(this, var32, var41)), (android.view.ViewGroup.LayoutParams)this.chipLp()
-         );
-      }
-
-      HorizontalScrollView var18 = new HorizontalScrollView((Context)this);
-      var18.setHorizontalScrollBarEnabled(false);
-      var18.addView((View)var9);
-      var8.addView((View)var18);
-      TextView var19 = new TextView((Context)this);
-      var19.setTextColor(Color.rgb(143, 163, 199));
-      var19.setTextSize(14.0F);
-      var19.setPadding(this.dp(4), this.dp(10), this.dp(4), this.dp(4));
-      this.status = var19;
-      TextView var33 = this.status;
-      TextView var20 = var33;
-      if (var33 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("status");
-         var20 = null;
-      }
-
-      var8.addView((View)var20);
-      LinearLayout var21 = new LinearLayout((Context)this);
-      var21.setOrientation(1);
-      this.list = var21;
-      ScrollView var40 = new ScrollView((Context)this);
-      LinearLayout var34 = this.list;
-      LinearLayout var22 = var34;
-      if (var34 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("list");
-         var22 = null;
-      }
-
-      var40.addView((View)var22);
-      var8.addView((View)var40, (android.view.ViewGroup.LayoutParams)(new LayoutParams(-1, 0, 1.0F)));
-      this.setContentView((View)var8);
-      String var23 = this.getIntent().getStringExtra("query");
-      if (var23 != null) {
-         if (StringsKt.isBlank(var23)) {
-            var23 = null;
-         }
-
-         if (var23 != null) {
-            EditText var37 = this.edit;
-            EditText var35 = var37;
-            if (var37 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("edit");
-               var35 = null;
-            }
-
-            var35.setText(var23);
-            EditText var38 = this.edit;
-            EditText var36 = var38;
-            if (var38 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("edit");
-               var36 = null;
-            }
-
-            var36.setSelection(var23.length());
-            this.search(var23, true);
-         }
-      }
-
-      this.favorites = this.places(new JSONArray(Favorites.INSTANCE.getList()), "name");
-      DataClient var24 = Link.INSTANCE.getData();
-      if (var24 != null) {
-         DataClient.request$default(var24, "nav_list", null, new DestinationActivity$$ExternalSyntheticLambda4(this), 2, null);
-      }
-
-      this.render();
-      EditText var25 = this.edit;
-      if (var25 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("edit");
-         var25 = null;
-      }
-
-      var25.requestFocus();
-      this.ui.postDelayed(new DestinationActivity$$ExternalSyntheticLambda5(this), 250L);
-   }
-
-   @Override
-   protected void onDestroy() {
-      this.bg.shutdownNow();
-      super.onDestroy();
-   }
-
-   public static final class Companion {
-      private Companion() {
-      }
-
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
-
-      // $VF: Duplicated exception handlers to handle obfuscated exceptions
-      public final List<JSONObject> recents(Context var1) {
-         Intrinsics.checkNotNullParameter(var1, "ctx");
-
-         JSONArray var2;
-         ArrayList var10;
-         try {
-            var2 = new JSONArray(var1.getSharedPreferences("starview_nav", 0).getString("recents", "[]"));
-            Iterable var8 = RangesKt.until(0, var2.length());
-            var10 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var8, 10));
-            var10 = var10;
-            var9 = var8.iterator();
-         } catch (Exception var5) {
+    private final List<Place> places(JSONArray a, String nameKey) {
+        String name;
+        String str;
+        JSONArray jSONArray = a;
+        if (jSONArray == null) {
             return CollectionsKt.emptyList();
-         }
-
-         while (true) {
-            try {
-               if (!var9.hasNext()) {
-                  break;
-               }
-
-               var10.add(var2.getJSONObject(((IntIterator)var9).nextInt()));
-            } catch (Exception var6) {
-               return CollectionsKt.emptyList();
+        }
+        ArrayList out = new ArrayList();
+        int i = 0;
+        int length = a.length();
+        while (i < length) {
+            JSONObject o = jSONArray.optJSONObject(i);
+            if (o != null) {
+                double lat = o.optDouble("latitude", Double.NaN);
+                double lon = o.optDouble("longitude", Double.NaN);
+                if ((Double.isInfinite(lat) || Double.isNaN(lat)) ? false : true) {
+                    if ((Double.isInfinite(lon) || Double.isNaN(lon)) ? false : true) {
+                        String optString = o.optString(nameKey);
+                        if (optString.length() == 0) {
+                            String optString2 = o.optString("name");
+                            if (optString2.length() == 0) {
+                                optString2 = o.optString("place_name");
+                            }
+                            optString = optString2;
+                        }
+                        String n = optString;
+                        Intrinsics.checkNotNull(n);
+                        List it = StringsKt.split$default((CharSequence) n, new String[]{": "}, false, 2, 2, (Object) null);
+                        Pair pair = it.size() == 2 ? TuplesKt.to(it.get(0), it.get(1)) : TuplesKt.to(n, o.optString("address"));
+                        String name0 = (String) pair.component1();
+                        String addr = (String) pair.component2();
+                        String optString3 = o.optString("label");
+                        if (Intrinsics.areEqual(optString3, "home")) {
+                            str = "Home";
+                        } else if (Intrinsics.areEqual(optString3, "work")) {
+                            str = "Work";
+                        } else {
+                            name = name0;
+                            out.add(new Place(name, addr, lat, lon, null, 0.0d, null, false, 240, null));
+                        }
+                        name = str;
+                        out.add(new Place(name, addr, lat, lon, null, 0.0d, null, false, 240, null));
+                    }
+                }
             }
-         }
+            i++;
+            jSONArray = a;
+        }
+        return out;
+    }
 
-         try {
-            var7 = var10;
-         } catch (Exception var4) {
-            var7 = CollectionsKt.emptyList();
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void doSearch$lambda$28(DestinationActivity this$0) {
+        EditText editText = this$0.edit;
+        if (editText == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("edit");
+            editText = null;
+        }
+        this$0.runSearch(editText.getText().toString(), false);
+    }
 
-         return var7;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void search(String q, boolean now) {
+        this.ui.removeCallbacks(this.doSearch);
+        if (StringsKt.trim((CharSequence) q).toString().length() < 2) {
+            this.results = null;
+            render();
+        } else if (now) {
+            runSearch(q, true);
+        } else {
+            this.ui.postDelayed(this.doSearch, 300L);
+        }
+    }
 
-      public final void remember(Context var1, String var2, String var3, double var4, double var6) {
-         Intrinsics.checkNotNullParameter(var1, "ctx");
-         Intrinsics.checkNotNullParameter(var2, "name");
-         Intrinsics.checkNotNullParameter(var3, "address");
-         Iterable var11 = this.recents(var1);
-         boolean var9 = false;
-         var var13 = new ArrayList();
+    private final void runSearch(String q0, final boolean enter) {
+        final String q = StringsKt.trim((CharSequence) q0).toString();
+        if (q.length() < 2) {
+            return;
+        }
+        this.searchSeq++;
+        final int seq = this.searchSeq;
+        DataClient data = Link.INSTANCE.getData();
+        if (!this.commaSearch || data == null || !data.getConnected()) {
+            if (q.length() >= 3) {
+                androidSearch(q, seq);
+                return;
+            }
+            return;
+        }
+        TextView textView = this.status;
+        if (textView == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("status");
+            textView = null;
+        }
+        textView.setText("Searching…");
+        HashMap args = new HashMap(MapsKt.mapOf(TuplesKt.to("query", q), TuplesKt.to("searchId", this.searchId), TuplesKt.to("clientId", CLIENT_ID)));
+        Pair it = this.here;
+        if (it != null) {
+            args.put("latitude", it.getFirst());
+            args.put("longitude", it.getSecond());
+        }
+        data.request("nav_search", args, new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda13
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit runSearch$lambda$34;
+                runSearch$lambda$34 = DestinationActivity.runSearch$lambda$34(seq, this, q, enter, (JSONObject) obj);
+                return runSearch$lambda$34;
+            }
+        });
+    }
 
-         for (Object var14 : var11) {
-            JSONObject var15 = (JSONObject)var14;
-            boolean var8;
-            if (Math.abs(var15.optDouble("latitude") - var4) < 1.0E-5 && Math.abs(var15.optDouble("longitude") - var6) < 1.0E-5) {
-               var8 = true;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit runSearch$lambda$34(int $seq, DestinationActivity this$0, String $q, boolean $enter, JSONObject r) {
+        Intrinsics.checkNotNullParameter(r, "r");
+        if ($seq != this$0.searchSeq || this$0.isFinishing()) {
+            return Unit.INSTANCE;
+        }
+        if (!r.optBoolean("ok")) {
+            String e = r.optString("error");
+            Intrinsics.checkNotNull(e);
+            TextView textView = null;
+            if (StringsKt.contains$default((CharSequence) e, (CharSequence) "new destination search", false, 2, (Object) null)) {
+                this$0.searchId = UUID.randomUUID().toString();
             } else {
-               var8 = false;
+                this$0.commaSearch = false;
+                TextView textView2 = this$0.status;
+                if (textView2 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("status");
+                } else {
+                    textView = textView2;
+                }
+                String str = e;
+                if (str.length() == 0) {
+                    str = "no answer";
+                }
+                textView.setText("Mapbox search isn't available (" + ((Object) str) + ") - Android's address search instead");
             }
-
-            if (!var8) {
-               var13.add(var14);
+            if ($q.length() >= 3) {
+                this$0.androidSearch($q, $seq);
             }
-         }
+            return Unit.INSTANCE;
+        }
+        JSONArray a = r.optJSONArray("results");
+        if (a == null) {
+            a = new JSONArray();
+        }
+        Iterable $this$mapNotNull$iv = RangesKt.until(0, a.length());
+        Collection destination$iv$iv = new ArrayList();
+        Iterator<Integer> it = $this$mapNotNull$iv.iterator();
+        while (it.hasNext()) {
+            int element$iv$iv$iv = ((IntIterator) it).nextInt();
+            JSONObject optJSONObject = a.optJSONObject(element$iv$iv$iv);
+            if (optJSONObject != null) {
+                destination$iv$iv.add(optJSONObject);
+            }
+        }
+        Iterable $this$map$iv = (List) destination$iv$iv;
+        Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        Iterable $this$mapTo$iv$iv = $this$map$iv;
+        int $i$f$mapTo = 0;
+        for (Object item$iv$iv : $this$mapTo$iv$iv) {
+            JSONObject o = (JSONObject) item$iv$iv;
+            String optString = o.optString("name");
+            Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
+            String optString2 = o.optString("description");
+            Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
+            JSONArray a2 = a;
+            String optString3 = o.optString("id");
+            Intrinsics.checkNotNullExpressionValue(optString3, "optString(...)");
+            Iterable $this$mapTo$iv$iv2 = $this$mapTo$iv$iv;
+            int $i$f$mapTo2 = $i$f$mapTo;
+            double optDouble = o.optDouble("distanceMeters", Double.NaN);
+            String optString4 = o.optString("maki");
+            if (optString4.length() == 0) {
+                optString4 = o.optString("category");
+            }
+            Intrinsics.checkNotNullExpressionValue(optString4, "ifEmpty(...)");
+            destination$iv$iv2.add(new Place(optString, optString2, Double.NaN, Double.NaN, optString3, optDouble, optString4, false, 128, null));
+            a = a2;
+            $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
+            $i$f$mapTo = $i$f$mapTo2;
+        }
+        List found = (List) destination$iv$iv2;
+        if (found.isEmpty() && ($enter || $q.length() >= 4)) {
+            this$0.androidSearch($q, $seq);
+            return Unit.INSTANCE;
+        }
+        this$0.results = found;
+        this$0.resultsTitle = "";
+        this$0.render();
+        return Unit.INSTANCE;
+    }
 
-         List var10 = var13;
-         JSONArray var16 = new JSONArray().put(new JSONObject().put("name", var2).put("address", var3).put("latitude", var4).put("longitude", var6));
-         Iterator var17 = CollectionsKt.take(var10, 11).iterator();
+    private final void quick(String key, final String label) {
+        DataClient data = Link.INSTANCE.getData();
+        Pair pos = this.here;
+        TextView textView = null;
+        if (data == null || !data.getConnected()) {
+            TextView textView2 = this.status;
+            if (textView2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("status");
+            } else {
+                textView = textView2;
+            }
+            textView.setText("Not connected to the comma");
+            return;
+        }
+        if (pos == null) {
+            TextView textView3 = this.status;
+            if (textView3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("status");
+            } else {
+                textView = textView3;
+            }
+            textView.setText("The car's position isn't known yet");
+            return;
+        }
+        this.searchSeq++;
+        final int seq = this.searchSeq;
+        boolean alongRoute = this.route != null && this.along;
+        TextView textView4 = this.status;
+        if (textView4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("status");
+            textView4 = null;
+        }
+        String substringAfter$default = StringsKt.substringAfter$default(label, "  ", (String) null, 2, (Object) null);
+        Locale US = Locale.US;
+        Intrinsics.checkNotNullExpressionValue(US, "US");
+        String lowerCase = substringAfter$default.toLowerCase(US);
+        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+        textView4.setText("Looking for " + lowerCase + (alongRoute ? " along the route" : " nearby") + "…");
+        HashMap args = new HashMap(MapsKt.mapOf(TuplesKt.to("category", key), TuplesKt.to("latitude", pos.getFirst()), TuplesKt.to("longitude", pos.getSecond())));
+        if (alongRoute) {
+            args.put("route", this.route);
+        }
+        data.request("nav_category", args, new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda19
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit quick$lambda$42;
+                quick$lambda$42 = DestinationActivity.quick$lambda$42(seq, this, label, (JSONObject) obj);
+                return quick$lambda$42;
+            }
+        });
+    }
 
-         while (var17.hasNext()) {
-            var16.put((JSONObject)var17.next());
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit quick$lambda$42(int $seq, final DestinationActivity this$0, String $label, JSONObject r) {
+        List sortedWith;
+        String str;
+        Intrinsics.checkNotNullParameter(r, "r");
+        if ($seq == this$0.searchSeq && !this$0.isFinishing()) {
+            if (!r.optBoolean("ok")) {
+                String e = r.optString("error");
+                TextView textView = this$0.status;
+                if (textView == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("status");
+                    textView = null;
+                }
+                Intrinsics.checkNotNull(e);
+                if (!StringsKt.contains$default((CharSequence) e, (CharSequence) "unknown action", false, 2, (Object) null)) {
+                    String str2 = e;
+                    if (str2.length() == 0) {
+                        str2 = "No answer from the comma";
+                    }
+                    str = str2;
+                }
+                textView.setText(str);
+                return Unit.INSTANCE;
+            }
+            JSONArray a = r.optJSONArray("results");
+            if (a == null) {
+                a = new JSONArray();
+            }
+            Iterable $this$mapNotNull$iv = RangesKt.until(0, a.length());
+            Collection destination$iv$iv = new ArrayList();
+            Iterator<Integer> it = $this$mapNotNull$iv.iterator();
+            while (it.hasNext()) {
+                int element$iv$iv$iv = ((IntIterator) it).nextInt();
+                JSONObject optJSONObject = a.optJSONObject(element$iv$iv$iv);
+                if (optJSONObject != null) {
+                    destination$iv$iv.add(optJSONObject);
+                }
+            }
+            Iterable $this$map$iv = (List) destination$iv$iv;
+            Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+            for (Object item$iv$iv : $this$map$iv) {
+                JSONObject o = (JSONObject) item$iv$iv;
+                String optString = o.optString("name");
+                Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
+                String optString2 = o.optString("address");
+                Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
+                double optDouble = o.optDouble("latitude");
+                double optDouble2 = o.optDouble("longitude");
+                JSONArray a2 = a;
+                double optDouble3 = o.optDouble("distanceMeters", Double.NaN);
+                String optString3 = o.optString("maki");
+                if (optString3.length() == 0) {
+                    optString3 = o.optString("category");
+                }
+                Intrinsics.checkNotNullExpressionValue(optString3, "ifEmpty(...)");
+                destination$iv$iv2.add(new Place(optString, optString2, optDouble, optDouble2, null, optDouble3, optString3, false, 16, null));
+                a = a2;
+            }
+            List it2 = (List) destination$iv$iv2;
+            if (r.optBoolean("alongRoute")) {
+                sortedWith = it2;
+            } else {
+                List $this$sortedBy$iv = it2;
+                sortedWith = CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.DestinationActivity$quick$lambda$42$lambda$41$$inlined$sortedBy$1
+                    /* JADX WARN: Multi-variable type inference failed */
+                    @Override // java.util.Comparator
+                    public final int compare(T t, T t2) {
+                        Double dist;
+                        double doubleValue;
+                        Double dist2;
+                        double doubleValue2;
+                        DestinationActivity.Place p = (DestinationActivity.Place) t;
+                        Double valueOf = Double.valueOf(p.getDistM());
+                        double d = valueOf.doubleValue();
+                        if (!((Double.isInfinite(d) || Double.isNaN(d)) ? false : true)) {
+                            valueOf = null;
+                        }
+                        if (valueOf != null) {
+                            doubleValue = valueOf.doubleValue();
+                        } else {
+                            dist = DestinationActivity.this.dist(p);
+                            doubleValue = (dist != null ? dist.doubleValue() : 99.0d) * 1609.344d;
+                        }
+                        Double valueOf2 = Double.valueOf(doubleValue);
+                        DestinationActivity.Place p2 = (DestinationActivity.Place) t2;
+                        Double valueOf3 = Double.valueOf(p2.getDistM());
+                        double d2 = valueOf3.doubleValue();
+                        Double d3 = (Double.isInfinite(d2) || Double.isNaN(d2)) ? false : true ? valueOf3 : null;
+                        if (d3 != null) {
+                            doubleValue2 = d3.doubleValue();
+                        } else {
+                            dist2 = DestinationActivity.this.dist(p2);
+                            doubleValue2 = (dist2 != null ? dist2.doubleValue() : 99.0d) * 1609.344d;
+                        }
+                        return ComparisonsKt.compareValues(valueOf2, Double.valueOf(doubleValue2));
+                    }
+                });
+            }
+            this$0.results = sortedWith;
+            this$0.resultsTitle = StringsKt.substringAfter$default($label, "  ", (String) null, 2, (Object) null) + (r.optBoolean("alongRoute") ? " along the route" : " nearby");
+            this$0.render();
+            return Unit.INSTANCE;
+        }
+        return Unit.INSTANCE;
+    }
 
-         var1.getSharedPreferences("starview_nav", 0).edit().putString("recents", var16.toString()).apply();
-      }
-   }
+    private final void androidSearch(final String q, final int seq) {
+        TextView textView = null;
+        if (!Geocoder.isPresent()) {
+            TextView textView2 = this.status;
+            if (textView2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("status");
+            } else {
+                textView = textView2;
+            }
+            textView.setText("Address search isn't available on this tablet (needs Google Play services)");
+            return;
+        }
+        TextView textView3 = this.status;
+        if (textView3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("status");
+        } else {
+            textView = textView3;
+        }
+        textView.setText("Searching addresses…");
+        final Pair pos = this.here;
+        this.bg.execute(new Runnable() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda0
+            @Override // java.lang.Runnable
+            public final void run() {
+                DestinationActivity.androidSearch$lambda$48(DestinationActivity.this, pos, q, seq);
+            }
+        });
+    }
 
-   private static final class Place {
-      private final String address;
-      private final double distM;
-      private final boolean keep;
-      private final String kind;
-      private final double lat;
-      private final double lon;
-      private final String mapboxId;
-      private final String name;
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Removed duplicated region for block: B:12:0x0086  */
+    /* JADX WARN: Removed duplicated region for block: B:16:0x0097 A[Catch: Exception -> 0x0090, TryCatch #0 {Exception -> 0x0090, blocks: (B:14:0x008a, B:16:0x0097, B:17:0x009d, B:18:0x00ad, B:20:0x00b3, B:22:0x00c1, B:27:0x00cc, B:33:0x00d0, B:34:0x00eb, B:36:0x00f1, B:38:0x0100, B:39:0x0133, B:42:0x013d, B:46:0x0152, B:47:0x015b, B:49:0x0163, B:55:0x0182, B:51:0x0176), top: B:13:0x008a }] */
+    /* JADX WARN: Removed duplicated region for block: B:20:0x00b3 A[Catch: Exception -> 0x0090, TryCatch #0 {Exception -> 0x0090, blocks: (B:14:0x008a, B:16:0x0097, B:17:0x009d, B:18:0x00ad, B:20:0x00b3, B:22:0x00c1, B:27:0x00cc, B:33:0x00d0, B:34:0x00eb, B:36:0x00f1, B:38:0x0100, B:39:0x0133, B:42:0x013d, B:46:0x0152, B:47:0x015b, B:49:0x0163, B:55:0x0182, B:51:0x0176), top: B:13:0x008a }] */
+    /* JADX WARN: Removed duplicated region for block: B:36:0x00f1 A[Catch: Exception -> 0x0090, TryCatch #0 {Exception -> 0x0090, blocks: (B:14:0x008a, B:16:0x0097, B:17:0x009d, B:18:0x00ad, B:20:0x00b3, B:22:0x00c1, B:27:0x00cc, B:33:0x00d0, B:34:0x00eb, B:36:0x00f1, B:38:0x0100, B:39:0x0133, B:42:0x013d, B:46:0x0152, B:47:0x015b, B:49:0x0163, B:55:0x0182, B:51:0x0176), top: B:13:0x008a }] */
+    /* JADX WARN: Removed duplicated region for block: B:81:0x009c  */
+    /* JADX WARN: Removed duplicated region for block: B:85:0x0093  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final void androidSearch$lambda$48(final DestinationActivity this$0, Pair $pos, String $q, final int $seq) {
+        List r;
+        List list;
+        Geocoder g;
+        List list2;
+        List r2;
+        List list3;
+        int i;
+        boolean z;
+        int i2;
+        Geocoder g2;
+        List r3;
+        String name;
+        int i3;
+        try {
+            g = new Geocoder(this$0, Locale.getDefault());
+            if ($pos != null) {
+                double dLon = 0.45d / RangesKt.coerceAtLeast(Math.cos(Math.toRadians(((Number) $pos.getFirst()).doubleValue())), 0.2d);
+                list2 = g.getFromLocationName($q, 8, ((Number) $pos.getFirst()).doubleValue() - 0.45d, ((Number) $pos.getSecond()).doubleValue() - dLon, ((Number) $pos.getFirst()).doubleValue() + 0.45d, ((Number) $pos.getSecond()).doubleValue() + dLon);
+            } else {
+                list2 = null;
+            }
+            r2 = list2;
+            list3 = r2;
+            i = 0;
+        } catch (Exception e) {
+        }
+        if (list3 != null) {
+            if (!list3.isEmpty()) {
+                z = false;
+                if (!z) {
+                    try {
+                        r2 = g.getFromLocationName($q, 8);
+                    } catch (Exception e2) {
+                        r = null;
+                        list = r;
+                        final List found = list;
+                        this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda9
+                            @Override // java.lang.Runnable
+                            public final void run() {
+                                DestinationActivity.androidSearch$lambda$48$lambda$47($seq, this$0, found);
+                            }
+                        });
+                    }
+                }
+                List $this$filter$iv = r2 != null ? CollectionsKt.emptyList() : r2;
+                Collection destination$iv$iv = new ArrayList();
+                for (Object element$iv$iv : $this$filter$iv) {
+                    Address it = (Address) element$iv$iv;
+                    if (it.hasLatitude() && it.hasLongitude()) {
+                        destination$iv$iv.add(element$iv$iv);
+                    }
+                }
+                Iterable $this$map$iv = (List) destination$iv$iv;
+                Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+                for (Object item$iv$iv : $this$map$iv) {
+                    Address a = (Address) item$iv$iv;
+                    String addressLine = a.getAddressLine(i);
+                    if (addressLine == null) {
+                        String[] strArr = new String[2];
+                        strArr[i] = a.getThoroughfare();
+                        i2 = 1;
+                        strArr[1] = a.getLocality();
+                        addressLine = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", null, null, 0, null, null, 62, null);
+                    } else {
+                        i2 = 1;
+                    }
+                    String line = addressLine;
+                    String featureName = a.getFeatureName();
+                    if (featureName == null) {
+                        featureName = "";
+                    }
+                    String fn = featureName;
+                    try {
+                        if ((fn.length() > 0 ? i2 : i) != 0) {
+                            CharSequence $this$any$iv = fn;
+                            while (true) {
+                                g2 = g;
+                                if (i >= $this$any$iv.length()) {
+                                    i3 = 0;
+                                    break;
+                                }
+                                CharSequence $this$any$iv2 = $this$any$iv;
+                                char element$iv = $this$any$iv2.charAt(i);
+                                if (Character.isLetter(element$iv)) {
+                                    i3 = i2;
+                                    break;
+                                } else {
+                                    i++;
+                                    $this$any$iv = $this$any$iv2;
+                                    g = g2;
+                                }
+                            }
+                            if (i3 != 0) {
+                                r3 = r2;
+                                if (!StringsKt.startsWith$default(line, fn, false, 2, (Object) null)) {
+                                    name = fn;
+                                    destination$iv$iv2.add(new Place(name, line, a.getLatitude(), a.getLongitude(), null, 0.0d, null, false, 240, null));
+                                    r2 = r3;
+                                    g = g2;
+                                    i = 0;
+                                }
+                            } else {
+                                r3 = r2;
+                            }
+                        } else {
+                            g2 = g;
+                            r3 = r2;
+                        }
+                        name = StringsKt.substringBefore$default(line, ",", (String) null, 2, (Object) null);
+                        destination$iv$iv2.add(new Place(name, line, a.getLatitude(), a.getLongitude(), null, 0.0d, null, false, 240, null));
+                        r2 = r3;
+                        g = g2;
+                        i = 0;
+                    } catch (Exception e3) {
+                        list = r;
+                        final List found2 = list;
+                        this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda9
+                            @Override // java.lang.Runnable
+                            public final void run() {
+                                DestinationActivity.androidSearch$lambda$48$lambda$47($seq, this$0, found2);
+                            }
+                        });
+                    }
+                    r = null;
+                }
+                r = null;
+                list = (List) destination$iv$iv2;
+                final List found22 = list;
+                this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda9
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        DestinationActivity.androidSearch$lambda$48$lambda$47($seq, this$0, found22);
+                    }
+                });
+            }
+        }
+        z = true;
+        if (!z) {
+        }
+        List $this$filter$iv2 = r2 != null ? CollectionsKt.emptyList() : r2;
+        Collection destination$iv$iv3 = new ArrayList();
+        while (r12.hasNext()) {
+        }
+        Iterable $this$map$iv2 = (List) destination$iv$iv3;
+        Collection destination$iv$iv22 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv2, 10));
+        while (r12.hasNext()) {
+        }
+        r = null;
+        list = (List) destination$iv$iv22;
+        final List found222 = list;
+        this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda9
+            @Override // java.lang.Runnable
+            public final void run() {
+                DestinationActivity.androidSearch$lambda$48$lambda$47($seq, this$0, found222);
+            }
+        });
+    }
 
-      public Place(String var1, String var2, double var3, double var5, String var7, double var8, String var10, boolean var11) {
-         Intrinsics.checkNotNullParameter(var1, "name");
-         Intrinsics.checkNotNullParameter(var2, "address");
-         Intrinsics.checkNotNullParameter(var7, "mapboxId");
-         Intrinsics.checkNotNullParameter(var10, "kind");
-         super();
-         this.name = var1;
-         this.address = var2;
-         this.lat = var3;
-         this.lon = var5;
-         this.mapboxId = var7;
-         this.distM = var8;
-         this.kind = var10;
-         this.keep = var11;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void androidSearch$lambda$48$lambda$47(int $seq, final DestinationActivity this$0, List $found) {
+        if ($seq != this$0.searchSeq || this$0.isFinishing()) {
+            return;
+        }
+        if ($found != null) {
+            List $this$sortedBy$iv = $found;
+            this$0.results = CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.DestinationActivity$androidSearch$lambda$48$lambda$47$$inlined$sortedBy$1
+                /* JADX WARN: Multi-variable type inference failed */
+                @Override // java.util.Comparator
+                public final int compare(T t, T t2) {
+                    Double dist;
+                    Double dist2;
+                    DestinationActivity.Place it = (DestinationActivity.Place) t;
+                    dist = DestinationActivity.this.dist(it);
+                    Double valueOf = Double.valueOf(dist != null ? dist.doubleValue() : 0.0d);
+                    DestinationActivity.Place it2 = (DestinationActivity.Place) t2;
+                    dist2 = DestinationActivity.this.dist(it2);
+                    return ComparisonsKt.compareValues(valueOf, Double.valueOf(dist2 != null ? dist2.doubleValue() : 0.0d));
+                }
+            });
+            this$0.resultsTitle = "";
+            this$0.render();
+            return;
+        }
+        TextView textView = this$0.status;
+        if (textView == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("status");
+            textView = null;
+        }
+        textView.setText("Search failed - is the tablet online?");
+    }
 
-      // $VF: synthetic method
-      public Place(
-         String var1, String var2, double var3, double var5, String var7, double var8, String var10, boolean var11, int var12, DefaultConstructorMarker var13
-      ) {
-         if ((var12 & 16) != 0) {
-            var7 = "";
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final Double dist(Place p) {
+        Pair h = this.here;
+        if (h == null) {
+            return null;
+        }
+        double lat = p.getLat();
+        if (!((Double.isInfinite(lat) || Double.isNaN(lat)) ? false : true)) {
+            return null;
+        }
+        double dx = (p.getLon() - h.getSecond().doubleValue()) * 111320.0d * Math.cos(Math.toRadians(h.getFirst().doubleValue()));
+        double dy = (p.getLat() - h.getFirst().doubleValue()) * 110540.0d;
+        return Double.valueOf(Math.hypot(dx, dy) / 1609.344d);
+    }
 
-         if ((var12 & 32) != 0) {
-            var8 = Double.NaN;
-         }
+    private final void render() {
+        boolean z;
+        String str;
+        LinearLayout linearLayout = this.list;
+        TextView textView = null;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("list");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        List res = this.results;
+        if (res != null) {
+            TextView textView2 = this.status;
+            if (textView2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("status");
+            } else {
+                textView = textView2;
+            }
+            if (res.isEmpty()) {
+                str = "Nothing found - try adding the town";
+            } else {
+                str = this.resultsTitle;
+                if (str.length() == 0) {
+                    str = res.size() + " found";
+                }
+            }
+            textView.setText(str);
+            for (Place p : res) {
+                row(p);
+            }
+            return;
+        }
+        TextView textView3 = this.status;
+        if (textView3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("status");
+        } else {
+            textView = textView3;
+        }
+        textView.setText(this.here == null ? "No GPS position yet - results won't be sorted by distance" : "");
+        if (!this.favorites.isEmpty()) {
+            section("Saved places");
+            Iterable $this$forEach$iv = this.favorites;
+            for (Object element$iv : $this$forEach$iv) {
+                row((Place) element$iv);
+            }
+        }
+        Iterable $this$map$iv = Companion.recents(this);
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            JSONObject it = (JSONObject) item$iv$iv;
+            String optString = it.optString("name");
+            Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
+            String optString2 = it.optString("address");
+            Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
+            destination$iv$iv.add(new Place(optString, optString2, it.optDouble("latitude"), it.optDouble("longitude"), null, 0.0d, null, false, 240, null));
+        }
+        List mine = (List) destination$iv$iv;
+        if (!mine.isEmpty()) {
+            section("Recent on this tablet");
+            List $this$forEach$iv2 = mine;
+            for (Object element$iv2 : $this$forEach$iv2) {
+                row((Place) element$iv2);
+            }
+        }
+        Iterable $this$forEach$iv3 = this.spRecents;
+        Iterable $this$filter$iv = $this$forEach$iv3;
+        Collection destination$iv$iv2 = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            Place s = (Place) element$iv$iv;
+            List $this$none$iv = mine;
+            if (!($this$none$iv instanceof Collection) || !$this$none$iv.isEmpty()) {
+                Iterator it2 = $this$none$iv.iterator();
+                while (true) {
+                    if (!it2.hasNext()) {
+                        z = true;
+                        break;
+                    }
+                    Object element$iv3 = it2.next();
+                    Place it3 = (Place) element$iv3;
+                    if (Math.abs(it3.getLat() - s.getLat()) < 1.0E-4d && Math.abs(it3.getLon() - s.getLon()) < 1.0E-4d) {
+                        z = false;
+                        break;
+                    }
+                }
+            } else {
+                z = true;
+            }
+            if (z) {
+                destination$iv$iv2.add(element$iv$iv);
+            }
+        }
+        List sp = (List) destination$iv$iv2;
+        if (!sp.isEmpty()) {
+            section("Recent in StarPilot");
+            List $this$forEach$iv4 = sp;
+            for (Object element$iv4 : $this$forEach$iv4) {
+                row((Place) element$iv4);
+            }
+        }
+        if (this.favorites.isEmpty() && mine.isEmpty() && sp.isEmpty()) {
+            section("Type a place or an address, or pick a kind of place above");
+        }
+    }
 
-         if ((var12 & 64) != 0) {
-            var10 = "";
-         }
+    private final void section(String title) {
+        LinearLayout linearLayout = this.list;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("list");
+            linearLayout = null;
+        }
+        TextView $this$section_u24lambda_u2456 = new TextView(this);
+        Locale US = Locale.US;
+        Intrinsics.checkNotNullExpressionValue(US, "US");
+        String upperCase = title.toUpperCase(US);
+        Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
+        $this$section_u24lambda_u2456.setText(upperCase);
+        $this$section_u24lambda_u2456.setTextColor(Color.rgb(110, 118, 130));
+        $this$section_u24lambda_u2456.setTextSize(13.0f);
+        $this$section_u24lambda_u2456.setLetterSpacing(0.08f);
+        $this$section_u24lambda_u2456.setTypeface($this$section_u24lambda_u2456.getTypeface(), 1);
+        $this$section_u24lambda_u2456.setPadding(dp(4), dp(18), dp(4), dp(6));
+        linearLayout.addView($this$section_u24lambda_u2456);
+    }
 
-         if ((var12 & 128) != 0) {
-            var11 = true;
-         }
+    private final String icon(String kind) {
+        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "fuel", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "gas", false, 2, (Object) null)) {
+            return "⛽";
+        }
+        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "charging", false, 2, (Object) null)) {
+            return "⚡";
+        }
+        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "cafe", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "coffee", false, 2, (Object) null)) {
+            return "☕";
+        }
+        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "fast", false, 2, (Object) null)) {
+            return "🍔";
+        }
+        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "restaurant", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "food", false, 2, (Object) null)) {
+            return "🍽";
+        }
+        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "parking", false, 2, (Object) null)) {
+            return "🅿";
+        }
+        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "grocery", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "shop", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "super", false, 2, (Object) null)) {
+            return "🛒";
+        }
+        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "pharmacy", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "hospital", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "doctor", false, 2, (Object) null)) {
+            return "💊";
+        }
+        if (StringsKt.contains$default((CharSequence) kind, (CharSequence) "lodging", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) kind, (CharSequence) "hotel", false, 2, (Object) null)) {
+            return "🛏";
+        }
+        if (kind.length() == 0) {
+        }
+        return "📍";
+    }
 
-         this(var1, var2, var3, var5, var7, var8, var10, var11);
-      }
+    private final void row(final Place p) {
+        String str;
+        LinearLayout r = new LinearLayout(this);
+        r.setOrientation(0);
+        r.setGravity(16);
+        r.setPadding(dp(14), dp(12), dp(14), dp(12));
+        GradientDrawable $this$row_u24lambda_u2459_u24lambda_u2457 = new GradientDrawable();
+        $this$row_u24lambda_u2459_u24lambda_u2457.setCornerRadius(dp(12));
+        $this$row_u24lambda_u2459_u24lambda_u2457.setColor(Color.rgb(22, 25, 32));
+        r.setBackground($this$row_u24lambda_u2459_u24lambda_u2457);
+        r.setClickable(true);
+        TypedValue tv = new TypedValue();
+        r.getContext().getTheme().resolveAttribute(16843534, tv, true);
+        r.setForeground(r.getContext().getDrawable(tv.resourceId));
+        r.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda6
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                DestinationActivity.this.pick(p);
+            }
+        });
+        double lat = p.getLat();
+        final JSONObject fav = !Double.isInfinite(lat) && !Double.isNaN(lat) ? Favorites.INSTANCE.find(p.getLat(), p.getLon()) : null;
+        r.setOnLongClickListener(new View.OnLongClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda7
+            @Override // android.view.View.OnLongClickListener
+            public final boolean onLongClick(View view) {
+                boolean row$lambda$60;
+                row$lambda$60 = DestinationActivity.row$lambda$60(DestinationActivity.this, p, fav, view);
+                return row$lambda$60;
+            }
+        });
+        TextView $this$row_u24lambda_u2461 = new TextView(this);
+        $this$row_u24lambda_u2461.setText(fav != null ? Favorites.INSTANCE.icon(fav) : icon(p.getKind()));
+        $this$row_u24lambda_u2461.setTextSize(22.0f);
+        $this$row_u24lambda_u2461.setPadding(0, 0, dp(14), 0);
+        r.addView($this$row_u24lambda_u2461);
+        LinearLayout texts = new LinearLayout(this);
+        texts.setOrientation(1);
+        TextView $this$row_u24lambda_u2464 = new TextView(this);
+        String name = p.getName();
+        if (name.length() == 0) {
+            name = p.getAddress();
+        }
+        $this$row_u24lambda_u2464.setText(name);
+        $this$row_u24lambda_u2464.setTextColor(-1);
+        $this$row_u24lambda_u2464.setTextSize(18.0f);
+        $this$row_u24lambda_u2464.setTypeface($this$row_u24lambda_u2464.getTypeface(), 1);
+        texts.addView($this$row_u24lambda_u2464);
+        if ((p.getAddress().length() > 0) && !Intrinsics.areEqual(p.getAddress(), p.getName())) {
+            TextView $this$row_u24lambda_u2465 = new TextView(this);
+            $this$row_u24lambda_u2465.setText(p.getAddress());
+            $this$row_u24lambda_u2465.setTextColor(Color.rgb(154, 161, 172));
+            $this$row_u24lambda_u2465.setTextSize(14.0f);
+            texts.addView($this$row_u24lambda_u2465);
+        }
+        r.addView(texts, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        double distM = p.getDistM();
+        Double mi = !Double.isInfinite(distM) && !Double.isNaN(distM) ? Double.valueOf(p.getDistM() / 1609.344d) : dist(p);
+        if (mi != null) {
+            double d = mi.doubleValue();
+            TextView $this$row_u24lambda_u2467_u24lambda_u2466 = new TextView(this);
+            if (d >= 0.1d) {
+                String format = d < 10.0d ? String.format("%.1f mi", Arrays.copyOf(new Object[]{Double.valueOf(d)}, 1)) : String.format("%.0f mi", Arrays.copyOf(new Object[]{Double.valueOf(d)}, 1));
+                Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+                str = format;
+            }
+            $this$row_u24lambda_u2467_u24lambda_u2466.setText(str);
+            $this$row_u24lambda_u2467_u24lambda_u2466.setTextColor(Color.rgb(154, 161, 172));
+            $this$row_u24lambda_u2467_u24lambda_u2466.setTextSize(15.0f);
+            $this$row_u24lambda_u2467_u24lambda_u2466.setPadding(dp(12), 0, 0, 0);
+            r.addView($this$row_u24lambda_u2467_u24lambda_u2466);
+        }
+        boolean pinned = fav != null && Favorites.INSTANCE.pinned(new UiSettings(this), p.getLat(), p.getLon());
+        TextView $this$row_u24lambda_u2469 = new TextView(this);
+        $this$row_u24lambda_u2469.setText(fav == null ? "☆" : pinned ? "★📌" : "★");
+        $this$row_u24lambda_u2469.setTextSize(24.0f);
+        $this$row_u24lambda_u2469.setTextColor(fav == null ? Color.rgb(154, 161, 172) : Color.rgb(255, 200, 87));
+        $this$row_u24lambda_u2469.setPadding(dp(16), 0, dp(4), 0);
+        $this$row_u24lambda_u2469.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda8
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                DestinationActivity.this.placeMenu(p, fav);
+            }
+        });
+        r.addView($this$row_u24lambda_u2469);
+        LinearLayout linearLayout = this.list;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("list");
+            linearLayout = null;
+        }
+        LinearLayout.LayoutParams $this$row_u24lambda_u2470 = new LinearLayout.LayoutParams(-1, -2);
+        $this$row_u24lambda_u2470.bottomMargin = dp(8);
+        Unit unit = Unit.INSTANCE;
+        linearLayout.addView(r, $this$row_u24lambda_u2470);
+    }
 
-      public final String getAddress() {
-         return this.address;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean row$lambda$60(DestinationActivity this$0, Place $p, JSONObject $fav, View it) {
+        this$0.placeMenu($p, $fav);
+        return true;
+    }
 
-      public final double getDistM() {
-         return this.distM;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void placeMenu(final Place p, final JSONObject fav) {
+        final DataClient data = Link.INSTANCE.getData();
+        final UiSettings s = new UiSettings(this);
+        if (fav == null) {
+            final String[] opts = {"☆  Save", "🏠  Save as Home", "💼  Save as Work"};
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            String name = p.getName();
+            if (name.length() == 0) {
+                name = p.getAddress();
+            }
+            builder.setTitle(name).setItems(opts, new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda14
+                @Override // android.content.DialogInterface.OnClickListener
+                public final void onClick(DialogInterface dialogInterface, int i) {
+                    DestinationActivity.placeMenu$lambda$74(opts, p, data, this, dialogInterface, i);
+                }
+            }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
+            return;
+        }
+        final boolean pinned = Favorites.INSTANCE.pinned(s, p.getLat(), p.getLon());
+        String[] strArr = new String[5];
+        strArr[0] = pinned ? "📌  Take off the main screen" : "📌  Show on the main screen (one tap to go)";
+        strArr[1] = "🏠  Make it Home";
+        strArr[2] = "💼  Make it Work";
+        String optString = fav.optString("label");
+        Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
+        strArr[3] = optString.length() > 0 ? "★  Just a saved place (not Home / Work)" : null;
+        strArr[4] = "🗑  Remove from saved places";
+        Collection $this$toTypedArray$iv = ArraysKt.filterNotNull(strArr);
+        final String[] opts2 = (String[]) $this$toTypedArray$iv.toArray(new String[0]);
+        new AlertDialog.Builder(this).setTitle(Favorites.INSTANCE.title(fav)).setItems(opts2, new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda15
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                DestinationActivity.placeMenu$lambda$79(opts2, s, fav, pinned, data, this, dialogInterface, i);
+            }
+        }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
+    }
 
-      public final boolean getKeep() {
-         return this.keep;
-      }
+    private static final void placeMenu$done(DestinationActivity this$0, String e, String ok) {
+        Toast.makeText(this$0, e == null ? ok : e, 0).show();
+        this$0.favorites = this$0.places(new JSONArray((Collection) Favorites.INSTANCE.getList()), "name");
+        this$0.render();
+    }
 
-      public final String getKind() {
-         return this.kind;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void placeMenu$lambda$74(String[] $opts, Place $p, DataClient $data, final DestinationActivity this$0, DialogInterface dialogInterface, int i) {
+        String label;
+        switch (i) {
+            case 1:
+                label = "home";
+                break;
+            case 2:
+                label = "work";
+                break;
+            default:
+                label = null;
+                break;
+        }
+        final String ok = "Saved" + (label != null ? " as " + StringsKt.substringAfter$default($opts[i], "as ", (String) null, 2, (Object) null) : "");
+        double lat = $p.getLat();
+        if ((Double.isInfinite(lat) || Double.isNaN(lat)) ? false : true) {
+            Favorites.INSTANCE.save($data, $p.getName(), $p.getAddress(), $p.getLat(), $p.getLon(), label, new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda10
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj) {
+                    Unit placeMenu$lambda$74$lambda$72;
+                    placeMenu$lambda$74$lambda$72 = DestinationActivity.placeMenu$lambda$74$lambda$72(ok, this$0, (String) obj);
+                    return placeMenu$lambda$74$lambda$72;
+                }
+            });
+        } else {
+            Favorites.INSTANCE.saveFound(this$0, $data, $p.getName(), $p.getAddress(), label, new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda12
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj) {
+                    Unit placeMenu$lambda$74$lambda$73;
+                    placeMenu$lambda$74$lambda$73 = DestinationActivity.placeMenu$lambda$74$lambda$73(ok, this$0, (String) obj);
+                    return placeMenu$lambda$74$lambda$73;
+                }
+            });
+        }
+    }
 
-      public final double getLat() {
-         return this.lat;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit placeMenu$lambda$74$lambda$72(String $ok, DestinationActivity this$0, String e) {
+        placeMenu$done(this$0, e, $ok);
+        return Unit.INSTANCE;
+    }
 
-      public final double getLon() {
-         return this.lon;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit placeMenu$lambda$74$lambda$73(String $ok, DestinationActivity this$0, String e) {
+        placeMenu$done(this$0, e, $ok);
+        return Unit.INSTANCE;
+    }
 
-      public final String getMapboxId() {
-         return this.mapboxId;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void placeMenu$lambda$79(String[] $opts, UiSettings $s, JSONObject $fav, boolean $pinned, DataClient $data, final DestinationActivity this$0, DialogInterface dialogInterface, int i) {
+        if (!StringsKt.startsWith$default($opts[i], "📌", false, 2, (Object) null)) {
+            if (!StringsKt.startsWith$default($opts[i], "🏠", false, 2, (Object) null)) {
+                if (!StringsKt.startsWith$default($opts[i], "💼", false, 2, (Object) null)) {
+                    if (!StringsKt.startsWith$default($opts[i], "★", false, 2, (Object) null)) {
+                        Favorites.INSTANCE.remove(this$0, $data, $fav, new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda18
+                            @Override // kotlin.jvm.functions.Function1
+                            public final Object invoke(Object obj) {
+                                Unit placeMenu$lambda$79$lambda$78;
+                                placeMenu$lambda$79$lambda$78 = DestinationActivity.placeMenu$lambda$79$lambda$78(DestinationActivity.this, (String) obj);
+                                return placeMenu$lambda$79$lambda$78;
+                            }
+                        });
+                        return;
+                    } else {
+                        Favorites.INSTANCE.label($data, $fav, null, new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda17
+                            @Override // kotlin.jvm.functions.Function1
+                            public final Object invoke(Object obj) {
+                                Unit placeMenu$lambda$79$lambda$77;
+                                placeMenu$lambda$79$lambda$77 = DestinationActivity.placeMenu$lambda$79$lambda$77(DestinationActivity.this, (String) obj);
+                                return placeMenu$lambda$79$lambda$77;
+                            }
+                        });
+                        return;
+                    }
+                }
+                Favorites.INSTANCE.label($data, $fav, "work", new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda16
+                    @Override // kotlin.jvm.functions.Function1
+                    public final Object invoke(Object obj) {
+                        Unit placeMenu$lambda$79$lambda$76;
+                        placeMenu$lambda$79$lambda$76 = DestinationActivity.placeMenu$lambda$79$lambda$76(DestinationActivity.this, (String) obj);
+                        return placeMenu$lambda$79$lambda$76;
+                    }
+                });
+                return;
+            }
+            Favorites.INSTANCE.label($data, $fav, "home", new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda11
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj) {
+                    Unit placeMenu$lambda$79$lambda$75;
+                    placeMenu$lambda$79$lambda$75 = DestinationActivity.placeMenu$lambda$79$lambda$75(DestinationActivity.this, (String) obj);
+                    return placeMenu$lambda$79$lambda$75;
+                }
+            });
+            return;
+        }
+        Favorites.INSTANCE.setPinned($s, $fav, !$pinned);
+        placeMenu$done(this$0, null, $pinned ? "Taken off the main screen" : "On the main screen");
+    }
 
-      public final String getName() {
-         return this.name;
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit placeMenu$lambda$79$lambda$75(DestinationActivity this$0, String e) {
+        placeMenu$done(this$0, e, "Home set");
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit placeMenu$lambda$79$lambda$76(DestinationActivity this$0, String e) {
+        placeMenu$done(this$0, e, "Work set");
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit placeMenu$lambda$79$lambda$77(DestinationActivity this$0, String e) {
+        placeMenu$done(this$0, e, "Done");
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit placeMenu$lambda$79$lambda$78(DestinationActivity this$0, String e) {
+        placeMenu$done(this$0, e, "Removed");
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void pick(Place p) {
+        Intent out = new Intent().putExtra("name", p.getName()).putExtra("address", p.getAddress());
+        Intrinsics.checkNotNullExpressionValue(out, "putExtra(...)");
+        if (p.getMapboxId().length() > 0) {
+            out.putExtra("mapbox_id", p.getMapboxId()).putExtra("search_id", this.searchId);
+        } else {
+            if (p.getKeep()) {
+                Companion.remember(this, p.getName(), p.getAddress(), p.getLat(), p.getLon());
+            }
+            out.putExtra("latitude", p.getLat()).putExtra("longitude", p.getLon());
+        }
+        setResult(-1, out);
+        finish();
+    }
 }

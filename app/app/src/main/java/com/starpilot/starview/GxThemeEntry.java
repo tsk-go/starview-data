@@ -4,73 +4,64 @@ import java.util.HashMap;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
+/* compiled from: GxTheme.kt */
 final class GxThemeEntry {
-   private final boolean builtin;
-   private final HashMap<String, Boolean> has;
-   private final HashMap<String, Boolean> local;
-   private final String name;
-   private final String path;
-   private final boolean pseudo;
-   private final String type;
-   private final boolean userCreated;
+    private final boolean builtin;
+    private final HashMap<String, Boolean> has;
+    private final HashMap<String, Boolean> local;
+    private final String name;
+    private final String path;
+    private final boolean pseudo;
+    private final String type;
+    private final boolean userCreated;
 
-   public GxThemeEntry(String var1, String var2, String var3, boolean var4, boolean var5, boolean var6) {
-      Intrinsics.checkNotNullParameter(var1, "name");
-      Intrinsics.checkNotNullParameter(var2, "path");
-      Intrinsics.checkNotNullParameter(var3, "type");
-      super();
-      this.name = var1;
-      this.path = var2;
-      this.type = var3;
-      this.userCreated = var4;
-      this.pseudo = var5;
-      this.builtin = var6;
-      this.has = new HashMap<>();
-      this.local = new HashMap<>();
-   }
+    public GxThemeEntry(String name, String path, String type, boolean userCreated, boolean pseudo, boolean builtin) {
+        Intrinsics.checkNotNullParameter(name, "name");
+        Intrinsics.checkNotNullParameter(path, "path");
+        Intrinsics.checkNotNullParameter(type, "type");
+        this.name = name;
+        this.path = path;
+        this.type = type;
+        this.userCreated = userCreated;
+        this.pseudo = pseudo;
+        this.builtin = builtin;
+        this.has = new HashMap<>();
+        this.local = new HashMap<>();
+    }
 
-   // $VF: synthetic method
-   public GxThemeEntry(String var1, String var2, String var3, boolean var4, boolean var5, boolean var6, int var7, DefaultConstructorMarker var8) {
-      if ((var7 & 16) != 0) {
-         var5 = false;
-      }
+    public /* synthetic */ GxThemeEntry(String str, String str2, String str3, boolean z, boolean z2, boolean z3, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this(str, str2, str3, z, (i & 16) != 0 ? false : z2, (i & 32) != 0 ? false : z3);
+    }
 
-      if ((var7 & 32) != 0) {
-         var6 = false;
-      }
+    public final boolean getBuiltin() {
+        return this.builtin;
+    }
 
-      this(var1, var2, var3, var4, var5, var6);
-   }
+    public final String getName() {
+        return this.name;
+    }
 
-   public final boolean getBuiltin() {
-      return this.builtin;
-   }
+    public final String getPath() {
+        return this.path;
+    }
 
-   public final HashMap<String, Boolean> getHas() {
-      return this.has;
-   }
+    public final boolean getPseudo() {
+        return this.pseudo;
+    }
 
-   public final HashMap<String, Boolean> getLocal() {
-      return this.local;
-   }
+    public final String getType() {
+        return this.type;
+    }
 
-   public final String getName() {
-      return this.name;
-   }
+    public final boolean getUserCreated() {
+        return this.userCreated;
+    }
 
-   public final String getPath() {
-      return this.path;
-   }
+    public final HashMap<String, Boolean> getHas() {
+        return this.has;
+    }
 
-   public final boolean getPseudo() {
-      return this.pseudo;
-   }
-
-   public final String getType() {
-      return this.type;
-   }
-
-   public final boolean getUserCreated() {
-      return this.userCreated;
-   }
+    public final HashMap<String, Boolean> getLocal() {
+        return this.local;
+    }
 }

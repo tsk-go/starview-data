@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +12,7 @@ import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.collections.IntIterator;
 import kotlin.collections.SetsKt;
+import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 import kotlin.text.Regex;
@@ -18,176 +20,147 @@ import kotlin.text.RegexOption;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: QuickPanel.kt */
 public final class KeepDrive {
-   public static final KeepDrive INSTANCE = new KeepDrive();
+    public static final KeepDrive INSTANCE = new KeepDrive();
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$9yySkEo1lCwcrIpKz9c_6u_e2NI/* $VF was: $r8$lambda$9yySkEo1lCwcrIpKz9c_6u_e2NI*/(Context var0, JSONObject var1, String var2) {
-      return keepNewest$lambda$3(var0, var1, var2);
-   }
+    private KeepDrive() {
+    }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$e9veODMTXpDYXMVvK3JjR_voA1s(Context var0, String var1, JSONObject var2, String var3) {
-      return applyPending$lambda$4(var0, var1, var2, var3);
-   }
+    private final SharedPreferences prefs(Context ctx) {
+        return ctx.getSharedPreferences("starview_keep", 0);
+    }
 
-   private KeepDrive() {
-   }
+    public final void keepNewest(Context ctx) {
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        final Context app = ctx.getApplicationContext();
+        Galaxy7 g = Galaxy7.Companion.current();
+        if (g == null) {
+            keepNewest$toast(app, "Not connected to the comma");
+        } else {
+            g.get("/api/recordings/local", new Function2() { // from class: com.starpilot.starview.KeepDrive$$ExternalSyntheticLambda1
+                @Override // kotlin.jvm.functions.Function2
+                public final Object invoke(Object obj, Object obj2) {
+                    Unit keepNewest$lambda$3;
+                    keepNewest$lambda$3 = KeepDrive.keepNewest$lambda$3(app, (JSONObject) obj, (String) obj2);
+                    return keepNewest$lambda$3;
+                }
+            });
+        }
+    }
 
-   private static final Unit applyPending$lambda$4(Context var0, String var1, JSONObject var2, String var3) {
-      boolean var6 = false;
-      boolean var4;
-      if (var3 != null && new Regex("turn off the vehicle|active segment|refresh|sign in|timeout|connect", RegexOption.IGNORE_CASE).containsMatchIn(var3)) {
-         var4 = true;
-      } else {
-         var4 = false;
-      }
+    private static final void keepNewest$toast(Context app, String s) {
+        Toast.makeText(app, s, 1).show();
+    }
 
-      boolean var5;
-      label24: {
-         if (var2 == null) {
-            var5 = var6;
-            if (var3 == null) {
-               break label24;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit keepNewest$lambda$3(Context $app, JSONObject o, String err) {
+        JSONArray a;
+        Object maxElem$iv;
+        if (o != null && (a = o.optJSONArray("routes")) != null) {
+            Iterable $this$mapNotNull$iv = RangesKt.until(0, a.length());
+            Collection destination$iv$iv = new ArrayList();
+            Iterator<Integer> it = $this$mapNotNull$iv.iterator();
+            while (it.hasNext()) {
+                int element$iv$iv$iv = ((IntIterator) it).nextInt();
+                JSONObject optJSONObject = a.optJSONObject(element$iv$iv$iv);
+                if (optJSONObject != null) {
+                    destination$iv$iv.add(optJSONObject);
+                }
             }
-
-            var5 = var6;
-            if (var4) {
-               break label24;
-            }
-         }
-
-         var5 = true;
-      }
-
-      if (var5) {
-         KeepDrive var7 = INSTANCE;
-         Intrinsics.checkNotNull(var0);
-         Set var8 = var7.prefs(var0).getStringSet("pending", SetsKt.emptySet());
-         Intrinsics.checkNotNull(var8);
-         Set var9 = CollectionsKt.toMutableSet(var8);
-         var9.remove(var1);
-         INSTANCE.prefs(var0).edit().putStringSet("pending", var9).apply();
-         if (var2 == null) {
-            Toast.makeText(var0, "Couldn't keep the drive: " + var3, 1).show();
-         }
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit keepNewest$lambda$3(Context var0, JSONObject var1, String var2) {
-      if (var1 != null) {
-         JSONArray var9 = var1.optJSONArray("routes");
-         if (var9 != null) {
-            Iterable var10 = RangesKt.until(0, var9.length());
-            var var12 = new ArrayList();
-            Iterator var11 = var10.iterator();
-
-            while (var11.hasNext()) {
-               JSONObject var19 = var9.optJSONObject(((IntIterator)var11).nextInt());
-               if (var19 != null) {
-                  var12.add(var19);
-               }
-            }
-
-            List var13 = var12;
-            var11 = var13.iterator();
-            Object var14;
-            if (!var11.hasNext()) {
-               var14 = null;
+            Iterable $this$maxByOrNull$iv = (List) destination$iv$iv;
+            Iterator iterator$iv = $this$maxByOrNull$iv.iterator();
+            if (iterator$iv.hasNext()) {
+                maxElem$iv = iterator$iv.next();
+                if (iterator$iv.hasNext()) {
+                    JSONObject it2 = (JSONObject) maxElem$iv;
+                    double maxValue$iv = it2.optDouble("startTime", 0.0d);
+                    do {
+                        Object e$iv = iterator$iv.next();
+                        JSONObject it3 = (JSONObject) e$iv;
+                        double v$iv = it3.optDouble("startTime", 0.0d);
+                        if (Double.compare(maxValue$iv, v$iv) < 0) {
+                            maxElem$iv = e$iv;
+                            maxValue$iv = v$iv;
+                        }
+                    } while (iterator$iv.hasNext());
+                }
             } else {
-               var14 = (KeepDrive)var11.next();
-               if (var11.hasNext()) {
-                  double var3 = ((JSONObject)var14).optDouble("startTime", 0.0);
-                  Object var17 = var14;
-
-                  do {
-                     Object var20 = var11.next();
-                     double var7 = ((JSONObject)var20).optDouble("startTime", 0.0);
-                     var14 = (KeepDrive)var17;
-                     double var5 = var3;
-                     if (Double.compare(var3, var7) < 0) {
-                        var14 = (KeepDrive)var20;
-                        var5 = var7;
-                     }
-
-                     var17 = var14;
-                     var3 = var5;
-                  } while (var11.hasNext());
-               }
+                maxElem$iv = null;
             }
-
-            JSONObject var18 = (JSONObject)var14;
-            if (var18 != null) {
-               if (var18.optBoolean("preserved")) {
-                  keepNewest$toast(var0, "This drive is already kept");
-                  return Unit.INSTANCE;
-               }
-
-               var14 = INSTANCE;
-               Intrinsics.checkNotNull(var0);
-               var2 = var18.optString("routeId");
-               Intrinsics.checkNotNullExpressionValue(var2, "optString(...)");
-               var14.request(var0, var2);
-               keepNewest$toast(var0, "This drive will be kept (Galaxy saves it once you park)");
-               INSTANCE.applyPending(var0);
-               return Unit.INSTANCE;
+            JSONObject r = (JSONObject) maxElem$iv;
+            if (r != null) {
+                if (r.optBoolean("preserved")) {
+                    keepNewest$toast($app, "This drive is already kept");
+                    return Unit.INSTANCE;
+                }
+                KeepDrive keepDrive = INSTANCE;
+                Intrinsics.checkNotNull($app);
+                String optString = r.optString("routeId");
+                Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
+                keepDrive.request($app, optString);
+                keepNewest$toast($app, "This drive will be kept (Galaxy saves it once you park)");
+                INSTANCE.applyPending($app);
+                return Unit.INSTANCE;
             }
-         }
-      }
+        }
+        keepNewest$toast($app, err == null ? "No drive found" : err);
+        return Unit.INSTANCE;
+    }
 
-      if (var2 == null) {
-         var2 = "No drive found";
-      }
+    public final void request(Context ctx, String routeId) {
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(routeId, "routeId");
+        Set<String> stringSet = prefs(ctx).getStringSet("pending", SetsKt.emptySet());
+        Intrinsics.checkNotNull(stringSet);
+        Set s = CollectionsKt.toMutableSet(stringSet);
+        s.add(routeId);
+        prefs(ctx).edit().putStringSet("pending", s).apply();
+    }
 
-      keepNewest$toast(var0, var2);
-      return Unit.INSTANCE;
-   }
+    public final void applyPending(Context ctx) {
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Galaxy7 g = Galaxy7.Companion.current();
+        if (g == null) {
+            return;
+        }
+        final Context app = ctx.getApplicationContext();
+        Intrinsics.checkNotNull(app);
+        Set<String> stringSet = prefs(app).getStringSet("pending", SetsKt.emptySet());
+        Intrinsics.checkNotNull(stringSet);
+        for (final String id : CollectionsKt.toList(stringSet)) {
+            JSONObject put = new JSONObject().put("action", "preserve").put("routeId", id).put("preserved", true);
+            Intrinsics.checkNotNullExpressionValue(put, "put(...)");
+            g.post("/api/recordings/action", put, new Function2() { // from class: com.starpilot.starview.KeepDrive$$ExternalSyntheticLambda0
+                @Override // kotlin.jvm.functions.Function2
+                public final Object invoke(Object obj, Object obj2) {
+                    Unit applyPending$lambda$4;
+                    applyPending$lambda$4 = KeepDrive.applyPending$lambda$4(app, id, (JSONObject) obj, (String) obj2);
+                    return applyPending$lambda$4;
+                }
+            });
+        }
+    }
 
-   private static final void keepNewest$toast(Context var0, String var1) {
-      Toast.makeText(var0, var1, 1).show();
-   }
-
-   private final SharedPreferences prefs(Context var1) {
-      return var1.getSharedPreferences("starview_keep", 0);
-   }
-
-   public final void applyPending(Context var1) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Galaxy7 var2 = Galaxy7.Companion.current();
-      if (var2 != null) {
-         var1 = var1.getApplicationContext();
-         Intrinsics.checkNotNull(var1);
-         Set var3 = this.prefs(var1).getStringSet("pending", SetsKt.emptySet());
-         Intrinsics.checkNotNull(var3);
-
-         for (String var5 : CollectionsKt.toList(var3)) {
-            JSONObject var7 = new JSONObject().put("action", "preserve").put("routeId", var5).put("preserved", true);
-            Intrinsics.checkNotNullExpressionValue(var7, "put(...)");
-            var2.post("/api/recordings/action", var7, new KeepDrive$$ExternalSyntheticLambda0(var1, var5));
-         }
-      }
-   }
-
-   public final void keepNewest(Context var1) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      var1 = var1.getApplicationContext();
-      Galaxy7 var2 = Galaxy7.Companion.current();
-      if (var2 == null) {
-         keepNewest$toast(var1, "Not connected to the comma");
-      } else {
-         var2.get("/api/recordings/local", new KeepDrive$$ExternalSyntheticLambda1(var1));
-      }
-   }
-
-   public final void request(Context var1, String var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "routeId");
-      Set var3 = this.prefs(var1).getStringSet("pending", SetsKt.emptySet());
-      Intrinsics.checkNotNull(var3);
-      var3 = CollectionsKt.toMutableSet(var3);
-      var3.add(var2);
-      this.prefs(var1).edit().putStringSet("pending", var3).apply();
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit applyPending$lambda$4(Context $app, String $id, JSONObject o, String err) {
+        boolean drop = false;
+        boolean later = err != null && new Regex("turn off the vehicle|active segment|refresh|sign in|timeout|connect", RegexOption.IGNORE_CASE).containsMatchIn(err);
+        if (o != null || (err != null && !later)) {
+            drop = true;
+        }
+        if (drop) {
+            KeepDrive keepDrive = INSTANCE;
+            Intrinsics.checkNotNull($app);
+            Set<String> stringSet = keepDrive.prefs($app).getStringSet("pending", SetsKt.emptySet());
+            Intrinsics.checkNotNull(stringSet);
+            Set s = CollectionsKt.toMutableSet(stringSet);
+            s.remove($id);
+            INSTANCE.prefs($app).edit().putStringSet("pending", s).apply();
+            if (o == null) {
+                Toast.makeText($app, "Couldn't keep the drive: " + err, 1).show();
+            }
+        }
+        return Unit.INSTANCE;
+    }
 }

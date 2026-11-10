@@ -5,11 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.PorterDuff.Mode;
 import android.util.AttributeSet;
 import android.view.View;
 import androidx.core.graphics.ColorUtils;
@@ -18,129 +18,99 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt;
 import kotlin.ranges.RangesKt;
 
+/* compiled from: HudViews.kt */
 public final class DmView extends View {
-   private final Bitmap bg;
-   private final Bitmap cone;
-   private float fadeF;
-   private float greenF;
-   private long lastNs;
-   private final Paint p;
-   private final Bitmap person;
-   private float pitchF;
-   private float rotF;
-   public Telemetry t;
-   private float yawF;
+    private final Bitmap bg;
+    private final Bitmap cone;
+    private float fadeF;
+    private float greenF;
+    private long lastNs;
+    private final Paint p;
+    private final Bitmap person;
+    private float pitchF;
+    private float rotF;
+    public Telemetry t;
+    private float yawF;
 
-   public DmView(Context var1, AttributeSet var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      super(var1, var2);
-      this.bg = BitmapFactory.decodeResource(this.getResources(), R.drawable.dm_background);
-      this.person = BitmapFactory.decodeResource(this.getResources(), R.drawable.dm_person);
-      this.cone = BitmapFactory.decodeResource(this.getResources(), R.drawable.dm_cone);
-      this.p = new Paint(3);
-      this.greenF = 1.0F;
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public DmView(Context ctx, AttributeSet attrs) {
+        super(ctx, attrs);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        this.bg = BitmapFactory.decodeResource(getResources(), R.drawable.dm_background);
+        this.person = BitmapFactory.decodeResource(getResources(), R.drawable.dm_person);
+        this.cone = BitmapFactory.decodeResource(getResources(), R.drawable.dm_cone);
+        this.p = new Paint(3);
+        this.greenF = 1.0f;
+    }
 
-   // $VF: synthetic method
-   public DmView(Context var1, AttributeSet var2, int var3, DefaultConstructorMarker var4) {
-      if ((var3 & 2) != 0) {
-         var2 = null;
-      }
+    public /* synthetic */ DmView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this(context, (i & 2) != 0 ? null : attributeSet);
+    }
 
-      this(var1, var2);
-   }
+    public final Telemetry getT() {
+        Telemetry telemetry = this.t;
+        if (telemetry != null) {
+            return telemetry;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("t");
+        return null;
+    }
 
-   private static final float onDraw$lp(float var0, float var1, float var2, float var3) {
-      return (var2 - var1) * (var0 / (var3 + var0)) + var1;
-   }
+    public final void setT(Telemetry telemetry) {
+        Intrinsics.checkNotNullParameter(telemetry, "<set-?>");
+        this.t = telemetry;
+    }
 
-   public final Telemetry getT() {
-      Telemetry var1 = this.t;
-      if (var1 != null) {
-         return var1;
-      } else {
-         Intrinsics.throwUninitializedPropertyAccessException("t");
-         return null;
-      }
-   }
+    @Override // android.view.View
+    protected void onDraw(Canvas c) {
+        Intrinsics.checkNotNullParameter(c, "c");
+        if (this.t == null) {
+            return;
+        }
+        long now = System.nanoTime();
+        float dt = this.lastNs == 0 ? 0.05f : RangesKt.coerceIn((now - this.lastNs) / 1.0E9f, 0.001f, 0.2f);
+        this.lastNs = now;
+        boolean hidden = (getT().s("dm_icon") && getT().getStarted()) ? false : true;
+        float targetFade = hidden ? 0.0f : !getT().getDmPolicyVision() ? 0.35f : 1.0f;
+        this.fadeF = onDraw$lp(dt, this.fadeF, targetFade, 0.1f);
+        if (this.fadeF < 0.02f) {
+            return;
+        }
+        float facePitch = getT().getDmPitch() + ((float) Math.toRadians(6.0d));
+        float faceYaw = -getT().getDmYaw();
+        this.pitchF = onDraw$lp(dt, this.pitchF, facePitch, 0.05f);
+        this.yawF = onDraw$lp(dt, this.yawF, faceYaw, 0.05f);
+        float f = 2;
+        float rot = (float) Math.toDegrees(Math.atan2(this.pitchF * f, this.yawF));
+        float diff = (((((rot - this.rotF) + 180.0f) % 360.0f) + 360.0f) % 360.0f) - 180.0f;
+        this.rotF = onDraw$lp(dt, this.rotF, this.rotF + diff, 0.1f);
+        this.greenF = onDraw$lp(dt, this.greenF, getT().getDmAwareness() < 95 ? 0.0f : 1.0f, 0.1f);
+        float s = Math.min(getWidth(), getHeight());
+        float cx = getWidth() / 2.0f;
+        float cy = getHeight() / 2.0f;
+        float emoji = 0.6666667f * s;
+        float coneS = 0.578125f * s;
+        float f2 = 255;
+        this.p.setAlpha(MathKt.roundToInt(this.fadeF * f2));
+        float rot2 = cy - (emoji / f);
+        float diff2 = cy + (emoji / f);
+        c.drawBitmap(this.bg, (Rect) null, new RectF(cx - (emoji / f), rot2, cx + (emoji / f), diff2), this.p);
+        this.p.setAlpha(MathKt.roundToInt(this.fadeF * 229.5f));
+        c.drawBitmap(this.person, (Rect) null, new RectF(cx - (coneS / f), cy - (coneS / f), (coneS / f) + cx, cy + (coneS / f)), this.p);
+        if (getT().getDmPolicyVision()) {
+            int col = ColorUtils.blendARGB(Color.rgb(255, 115, 0), Color.rgb(0, 255, 64), this.greenF);
+            this.p.setColorFilter(new PorterDuffColorFilter(col, PorterDuff.Mode.SRC_IN));
+            this.p.setAlpha(MathKt.roundToInt(f2 * this.fadeF));
+            c.save();
+            c.rotate(this.rotF - 90.0f, cx, cy);
+            c.drawBitmap(this.cone, (Rect) null, new RectF(cx - (coneS / f), cy - (coneS / f), (coneS / f) + cx, (coneS / f) + cy), this.p);
+            c.restore();
+            this.p.setColorFilter(null);
+        }
+        this.p.setAlpha(255);
+    }
 
-   protected void onDraw(Canvas var1) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      if (this.t != null) {
-         long var9 = System.nanoTime();
-         float var3;
-         if (this.lastNs == 0L) {
-            var3 = 0.05F;
-         } else {
-            var3 = RangesKt.coerceIn((float)(var9 - this.lastNs) / 1.0E9F, 0.001F, 0.2F);
-         }
-
-         this.lastNs = var9;
-         boolean var8;
-         if (this.getT().s("dm_icon") && this.getT().getStarted()) {
-            var8 = 0;
-         } else {
-            var8 = 1;
-         }
-
-         float var2;
-         if (var8) {
-            var2 = 0.0F;
-         } else if (!this.getT().getDmPolicyVision()) {
-            var2 = 0.35F;
-         } else {
-            var2 = 1.0F;
-         }
-
-         this.fadeF = onDraw$lp(var3, this.fadeF, var2, 0.1F);
-         if (!(this.fadeF < 0.02F)) {
-            float var4 = this.getT().getDmPitch();
-            var2 = (float)Math.toRadians(6.0);
-            float var5 = -this.getT().getDmYaw();
-            this.pitchF = onDraw$lp(var3, this.pitchF, var4 + var2, 0.05F);
-            this.yawF = onDraw$lp(var3, this.yawF, var5, 0.05F);
-            var2 = this.pitchF;
-            var4 = 2;
-            var2 = (float)Math.toDegrees(Math.atan2(var2 * var4, this.yawF));
-            var5 = this.rotF;
-            this.rotF = onDraw$lp(var3, this.rotF, this.rotF + (((var2 - var5 + 180.0F) % 360.0F + 360.0F) % 360.0F - 180.0F), 0.1F);
-            var5 = this.greenF;
-            if (this.getT().getDmAwareness() < 95) {
-               var2 = 0.0F;
-            } else {
-               var2 = 1.0F;
-            }
-
-            this.greenF = onDraw$lp(var3, var5, var2, 0.1F);
-            float var6 = Math.min(this.getWidth(), this.getHeight());
-            var2 = this.getWidth() / 2.0F;
-            var5 = this.getHeight() / 2.0F;
-            var3 = 0.6666667F * var6;
-            var6 = 0.578125F * var6;
-            Paint var11 = this.p;
-            float var7 = 255;
-            var11.setAlpha(MathKt.roundToInt(this.fadeF * var7));
-            var1.drawBitmap(this.bg, null, new RectF(var2 - var3 / var4, var5 - var3 / var4, var2 + var3 / var4, var5 + var3 / var4), this.p);
-            this.p.setAlpha(MathKt.roundToInt(this.fadeF * 229.5F));
-            var1.drawBitmap(this.person, null, new RectF(var2 - var6 / var4, var5 - var6 / var4, var6 / var4 + var2, var5 + var6 / var4), this.p);
-            if (this.getT().getDmPolicyVision()) {
-               var8 = ColorUtils.blendARGB(Color.rgb(255, 115, 0), Color.rgb(0, 255, 64), this.greenF);
-               this.p.setColorFilter((ColorFilter)(new PorterDuffColorFilter(var8, Mode.SRC_IN)));
-               this.p.setAlpha(MathKt.roundToInt(var7 * this.fadeF));
-               var1.save();
-               var1.rotate(this.rotF - 90.0F, var2, var5);
-               var1.drawBitmap(this.cone, null, new RectF(var2 - var6 / var4, var5 - var6 / var4, var6 / var4 + var2, var6 / var4 + var5), this.p);
-               var1.restore();
-               this.p.setColorFilter(null);
-            }
-
-            this.p.setAlpha(255);
-         }
-      }
-   }
-
-   public final void setT(Telemetry var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.t = var1;
-   }
+    private static final float onDraw$lp(float dt, float cur, float target, float tau) {
+        return ((target - cur) * (dt / (tau + dt))) + cur;
+    }
 }

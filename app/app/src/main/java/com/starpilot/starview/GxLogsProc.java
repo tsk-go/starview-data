@@ -2,218 +2,128 @@ package com.starpilot.starview;
 
 import kotlin.jvm.internal.Intrinsics;
 
-final class GxLogsProc {
-   private final Double cpu;
-   private final String feature;
-   private final boolean kernel;
-   private final Double mem;
-   private final String name;
-   private final int pid;
-   private final String state;
-   private final String user;
+/* compiled from: GxLogs.kt */
+final /* data */ class GxLogsProc {
+    private final Double cpu;
+    private final String feature;
+    private final boolean kernel;
+    private final Double mem;
+    private final String name;
+    private final int pid;
+    private final String state;
+    private final String user;
 
-   public GxLogsProc(int var1, String var2, String var3, boolean var4, String var5, Double var6, Double var7, String var8) {
-      Intrinsics.checkNotNullParameter(var2, "name");
-      Intrinsics.checkNotNullParameter(var3, "user");
-      Intrinsics.checkNotNullParameter(var5, "state");
-      Intrinsics.checkNotNullParameter(var8, "feature");
-      super();
-      this.pid = var1;
-      this.name = var2;
-      this.user = var3;
-      this.kernel = var4;
-      this.state = var5;
-      this.cpu = var6;
-      this.mem = var7;
-      this.feature = var8;
-   }
+    /* renamed from: component1, reason: from getter */
+    public final int getPid() {
+        return this.pid;
+    }
 
-   // $VF: synthetic method
-   public static GxLogsProc copy$default(
-      GxLogsProc var0, int var1, String var2, String var3, boolean var4, String var5, Double var6, Double var7, String var8, int var9, Object var10
-   ) {
-      if ((var9 & 1) != 0) {
-         var1 = var0.pid;
-      }
+    /* renamed from: component2, reason: from getter */
+    public final String getName() {
+        return this.name;
+    }
 
-      if ((var9 & 2) != 0) {
-         var2 = var0.name;
-      }
+    /* renamed from: component3, reason: from getter */
+    public final String getUser() {
+        return this.user;
+    }
 
-      if ((var9 & 4) != 0) {
-         var3 = var0.user;
-      }
+    /* renamed from: component4, reason: from getter */
+    public final boolean getKernel() {
+        return this.kernel;
+    }
 
-      if ((var9 & 8) != 0) {
-         var4 = var0.kernel;
-      }
+    /* renamed from: component5, reason: from getter */
+    public final String getState() {
+        return this.state;
+    }
 
-      if ((var9 & 16) != 0) {
-         var5 = var0.state;
-      }
+    /* renamed from: component6, reason: from getter */
+    public final Double getCpu() {
+        return this.cpu;
+    }
 
-      if ((var9 & 32) != 0) {
-         var6 = var0.cpu;
-      }
+    /* renamed from: component7, reason: from getter */
+    public final Double getMem() {
+        return this.mem;
+    }
 
-      if ((var9 & 64) != 0) {
-         var7 = var0.mem;
-      }
+    /* renamed from: component8, reason: from getter */
+    public final String getFeature() {
+        return this.feature;
+    }
 
-      if ((var9 & 128) != 0) {
-         var8 = var0.feature;
-      }
+    public final GxLogsProc copy(int pid, String name, String user, boolean kernel, String state, Double cpu, Double mem, String feature) {
+        Intrinsics.checkNotNullParameter(name, "name");
+        Intrinsics.checkNotNullParameter(user, "user");
+        Intrinsics.checkNotNullParameter(state, "state");
+        Intrinsics.checkNotNullParameter(feature, "feature");
+        return new GxLogsProc(pid, name, user, kernel, state, cpu, mem, feature);
+    }
 
-      return var0.copy(var1, var2, var3, var4, var5, var6, var7, var8);
-   }
-
-   public final int component1() {
-      return this.pid;
-   }
-
-   public final String component2() {
-      return this.name;
-   }
-
-   public final String component3() {
-      return this.user;
-   }
-
-   public final boolean component4() {
-      return this.kernel;
-   }
-
-   public final String component5() {
-      return this.state;
-   }
-
-   public final Double component6() {
-      return this.cpu;
-   }
-
-   public final Double component7() {
-      return this.mem;
-   }
-
-   public final String component8() {
-      return this.feature;
-   }
-
-   public final GxLogsProc copy(int var1, String var2, String var3, boolean var4, String var5, Double var6, Double var7, String var8) {
-      Intrinsics.checkNotNullParameter(var2, "name");
-      Intrinsics.checkNotNullParameter(var3, "user");
-      Intrinsics.checkNotNullParameter(var5, "state");
-      Intrinsics.checkNotNullParameter(var8, "feature");
-      return new GxLogsProc(var1, var2, var3, var4, var5, var6, var7, var8);
-   }
-
-   @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
-         return true;
-      } else if (!(var1 instanceof GxLogsProc)) {
-         return false;
-      } else {
-         var1 = var1;
-         if (this.pid != var1.pid) {
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof GxLogsProc)) {
             return false;
-         } else if (!Intrinsics.areEqual(this.name, var1.name)) {
-            return false;
-         } else if (!Intrinsics.areEqual(this.user, var1.user)) {
-            return false;
-         } else if (this.kernel != var1.kernel) {
-            return false;
-         } else if (!Intrinsics.areEqual(this.state, var1.state)) {
-            return false;
-         } else if (!Intrinsics.areEqual(this.cpu, var1.cpu)) {
-            return false;
-         } else {
-            return !Intrinsics.areEqual(this.mem, var1.mem) ? false : Intrinsics.areEqual(this.feature, var1.feature);
-         }
-      }
-   }
+        }
+        GxLogsProc gxLogsProc = (GxLogsProc) other;
+        return this.pid == gxLogsProc.pid && Intrinsics.areEqual(this.name, gxLogsProc.name) && Intrinsics.areEqual(this.user, gxLogsProc.user) && this.kernel == gxLogsProc.kernel && Intrinsics.areEqual(this.state, gxLogsProc.state) && Intrinsics.areEqual((Object) this.cpu, (Object) gxLogsProc.cpu) && Intrinsics.areEqual((Object) this.mem, (Object) gxLogsProc.mem) && Intrinsics.areEqual(this.feature, gxLogsProc.feature);
+    }
 
-   public final Double getCpu() {
-      return this.cpu;
-   }
+    public int hashCode() {
+        return (((((((((((((Integer.hashCode(this.pid) * 31) + this.name.hashCode()) * 31) + this.user.hashCode()) * 31) + Boolean.hashCode(this.kernel)) * 31) + this.state.hashCode()) * 31) + (this.cpu == null ? 0 : this.cpu.hashCode())) * 31) + (this.mem != null ? this.mem.hashCode() : 0)) * 31) + this.feature.hashCode();
+    }
 
-   public final String getFeature() {
-      return this.feature;
-   }
+    public String toString() {
+        return "GxLogsProc(pid=" + this.pid + ", name=" + this.name + ", user=" + this.user + ", kernel=" + this.kernel + ", state=" + this.state + ", cpu=" + this.cpu + ", mem=" + this.mem + ", feature=" + this.feature + ")";
+    }
 
-   public final boolean getKernel() {
-      return this.kernel;
-   }
+    public GxLogsProc(int pid, String name, String user, boolean kernel, String state, Double cpu, Double mem, String feature) {
+        Intrinsics.checkNotNullParameter(name, "name");
+        Intrinsics.checkNotNullParameter(user, "user");
+        Intrinsics.checkNotNullParameter(state, "state");
+        Intrinsics.checkNotNullParameter(feature, "feature");
+        this.pid = pid;
+        this.name = name;
+        this.user = user;
+        this.kernel = kernel;
+        this.state = state;
+        this.cpu = cpu;
+        this.mem = mem;
+        this.feature = feature;
+    }
 
-   public final Double getMem() {
-      return this.mem;
-   }
+    public final Double getCpu() {
+        return this.cpu;
+    }
 
-   public final String getName() {
-      return this.name;
-   }
+    public final String getFeature() {
+        return this.feature;
+    }
 
-   public final int getPid() {
-      return this.pid;
-   }
+    public final boolean getKernel() {
+        return this.kernel;
+    }
 
-   public final String getState() {
-      return this.state;
-   }
+    public final Double getMem() {
+        return this.mem;
+    }
 
-   public final String getUser() {
-      return this.user;
-   }
+    public final String getName() {
+        return this.name;
+    }
 
-   @Override
-   public int hashCode() {
-      int var4 = Integer.hashCode(this.pid);
-      int var6 = this.name.hashCode();
-      int var5 = this.user.hashCode();
-      int var7 = Boolean.hashCode(this.kernel);
-      int var3 = this.state.hashCode();
-      Double var8 = this.cpu;
-      int var2 = 0;
-      int var1;
-      if (var8 == null) {
-         var1 = 0;
-      } else {
-         var1 = this.cpu.hashCode();
-      }
+    public final int getPid() {
+        return this.pid;
+    }
 
-      if (this.mem != null) {
-         var2 = this.mem.hashCode();
-      }
+    public final String getState() {
+        return this.state;
+    }
 
-      return ((((((var4 * 31 + var6) * 31 + var5) * 31 + var7) * 31 + var3) * 31 + var1) * 31 + var2) * 31 + this.feature.hashCode();
-   }
-
-   @Override
-   public String toString() {
-      int var1 = this.pid;
-      String var4 = this.name;
-      String var6 = this.user;
-      boolean var2 = this.kernel;
-      String var7 = this.state;
-      Double var3 = this.cpu;
-      Double var5 = this.mem;
-      String var8 = this.feature;
-      return "GxLogsProc(pid="
-         + var1
-         + ", name="
-         + var4
-         + ", user="
-         + var6
-         + ", kernel="
-         + var2
-         + ", state="
-         + var7
-         + ", cpu="
-         + var3
-         + ", mem="
-         + var5
-         + ", feature="
-         + var8
-         + ")";
-   }
+    public final String getUser() {
+        return this.user;
+    }
 }

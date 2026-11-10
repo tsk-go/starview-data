@@ -1,16 +1,13 @@
 package com.starpilot.starview;
 
-import android.animation.TimeInterpolator;
-import android.app.AlertDialog.Builder;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.ViewGroup.LayoutParams;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -18,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.starpilot.starview.SettingIcons;
+import com.starpilot.starview.SettingsIndex;
+import com.starpilot.starview.ShortcutBoard;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -27,7 +27,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import kotlin.Pair;
 import kotlin.TuplesKt;
 import kotlin.Unit;
@@ -40,809 +39,688 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
 
+/* compiled from: SettingsLauncher.kt */
 public final class SettingsLauncher extends FrameLayout {
-   public static final SettingsLauncher.Companion Companion = new SettingsLauncher.Companion(null);
-   private static int lastPage = 1;
-   private final Function0<List<SettingsIndex.Entry>> allPages;
-   private final ShortcutBoard board;
-   private final LinearLayout dots;
-   private final LinearLayout drawer;
-   private float drawerDownY;
-   private final LinearLayout drawerList;
-   private final ScrollView drawerScroll;
-   private final View home;
-   private final Function1<String, Unit> open;
-   private final SwipePager pager;
-   private int pickFor;
-   private final UiSettings prefs;
-   private final CarUi ui;
+    public static final Companion Companion = new Companion(null);
+    private static int lastPage = 1;
+    private final Function0<List<SettingsIndex.Entry>> allPages;
+    private final ShortcutBoard board;
+    private final LinearLayout dots;
+    private final LinearLayout drawer;
+    private float drawerDownY;
+    private final LinearLayout drawerList;
+    private final ScrollView drawerScroll;
+    private final View home;
+    private final Function1<String, Unit> open;
+    private final SwipePager pager;
+    private int pickFor;
+    private final UiSettings prefs;
+    private final CarUi ui;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$_xHSQfAqtavE9wOKwegkJmfLetc/* $VF was: $r8$lambda$_xHSQfAqtavE9wOKwegkJmfLetc*/(SettingsLauncher var0, int var1) {
-      return _init_$lambda$7(var0, var1);
-   }
+    /* compiled from: SettingsLauncher.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$0IRZeqgvDSSHuLFwVsaKxGD54QQ(SettingsLauncher var0, int var1, View var2) {
-      shortcutPage$lambda$19$lambda$18(var0, var1, var2);
-   }
+        private Companion() {
+        }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$5Ns9V21G3V4itmLp1_Rorc6FBOA(SettingsLauncher var0, ShortcutBoard.Item var1) {
-      return shortcutPage$lambda$14(var0, var1);
-   }
+        public final int getLastPage() {
+            return SettingsLauncher.lastPage;
+        }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$6TP0MwIosVvqNG2LlO85ujtMXlY(SettingsLauncher var0, SettingsIndex.Entry var1, View var2) {
-      fillDrawer$lambda$46(var0, var1, var2);
-   }
+        public final void setLastPage(int i) {
+            SettingsLauncher.lastPage = i;
+        }
+    }
 
-   // $VF: synthetic method
-   public static boolean $r8$lambda$7AzzR4vNz7_23jyvp_XGI8XugIY(SettingsLauncher var0, SettingsIndex.Entry var1, View var2) {
-      return fillDrawer$lambda$47(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static boolean $r8$lambda$8WGghI0pQ0IMQ9hsEe4nktgvPJk(SettingsLauncher var0, int var1, int var2, View var3) {
-      return shortcutPage$lambda$15(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$BGyC52xUpEEZEqGA7PevpCqQhPk(SettingsLauncher var0, int var1, int var2) {
-      return editShortcut$lambda$27(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$FxncqzEfwCyrKxOygQHfjrGEvGQ(SettingsLauncher var0, int var1, int var2, int var3) {
-      return editShortcut$lambda$25(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$NXvZO8ODejxAf_ot5TaiWiTzyEw/* $VF was: $r8$lambda$NXvZO8ODejxAf_ot5TaiWiTzyEw*/(SettingsLauncher var0, int var1, int var2) {
-      return editShortcut$lambda$23(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$O09dWkpkQgI__jBYt48GOoNOxFo(SettingsLauncher var0, int var1, View var2) {
-      paintDots$lambda$11$lambda$10(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$PRkg6gtNi83nV_USn0nZOOmMw2c(SettingsLauncher var0, int var1) {
-      rebuild$lambda$9(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static boolean $r8$lambda$PjOlUaf_m8oPk_ZoCs_Ii5Ewa8I/* $VF was: $r8$lambda$PjOlUaf_m8oPk_ZoCs_Ii5Ewa8I*/(
-      SettingsLauncher var0, View var1, MotionEvent var2
-   ) {
-      return buildDrawer$lambda$37(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$XdEEhMS0waMLzv5Smp6ujRP_bJs/* $VF was: $r8$lambda$XdEEhMS0waMLzv5Smp6ujRP_bJs*/(SettingsLauncher var0, View var1) {
-      buildDrawer$lambda$35$lambda$33(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$YB_nwSWoQRuXRNaDky_xaK0fdfw/* $VF was: $r8$lambda$YB_nwSWoQRuXRNaDky_xaK0fdfw*/(
-      SettingsLauncher var0, int var1, int var2, int var3
-   ) {
-      return editShortcut$lambda$26(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$lLJOdmqbvBX9WjZEr5ppRmlwUBA(SettingsLauncher var0) {
-      closeDrawer$lambda$38(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$nqsbznbIOaj4rMYdlbOv0txowUQ(SettingsLauncher var0, int var1, int var2) {
-      return editShortcut$lambda$24(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$o2uYwxGDX_e6tKPNpRAqVXk7p48/* $VF was: $r8$lambda$o2uYwxGDX_e6tKPNpRAqVXk7p48*/(SettingsLauncher var0) {
-      return _init_$lambda$8(var0);
-   }
-
-   // $VF: synthetic method
-   public static boolean $r8$lambda$ol_oA9RJvHgxS17h9Rzo4Y4ckac/* $VF was: $r8$lambda$ol_oA9RJvHgxS17h9Rzo4Y4ckac*/(
-      SettingsLauncher var0, View var1, MotionEvent var2
-   ) {
-      return buildDrawer$lambda$35$lambda$34(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$qeQuKbgOKPbE38QanzJmiQdNx_Y/* $VF was: $r8$lambda$qeQuKbgOKPbE38QanzJmiQdNx_Y*/(
-      ArrayList var0, SettingsLauncher var1, int var2, ShortcutBoard.Item var3, DialogInterface var4, int var5
-   ) {
-      editShortcut$lambda$31(var0, var1, var2, var3, var4, var5);
-   }
-
-   public SettingsLauncher(Context var1, CarUi var2, View var3, Function0<? extends List<SettingsIndex.Entry>> var4, Function1<? super String, Unit> var5) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "ui");
-      Intrinsics.checkNotNullParameter(var3, "home");
-      Intrinsics.checkNotNullParameter(var4, "allPages");
-      Intrinsics.checkNotNullParameter(var5, "open");
-      super(var1);
-      this.ui = var2;
-      this.home = var3;
-      this.allPages = var4;
-      this.open = var5;
-      this.prefs = new UiSettings(var1);
-      this.board = new ShortcutBoard(this.prefs.getStr("settings_shortcuts", "{}"));
-      this.pager = new SwipePager(var1, 1);
-      LinearLayout var7 = new LinearLayout(var1);
-      var7.setOrientation(0);
-      var7.setGravity(17);
-      this.dots = var7;
-      LinearLayout var8 = new LinearLayout(var1);
-      var8.setOrientation(1);
-      var8.setBackground((Drawable)CarUi.rounded$default(this.ui, CarUi.Companion.getFRAME(), 24, null, 4, null));
-      var8.setVisibility(8);
-      var8.setClickable(true);
-      this.drawer = var8;
-      LinearLayout var9 = new LinearLayout(var1);
-      var9.setOrientation(1);
-      this.drawerList = var9;
-      ScrollView var10 = new ScrollView(var1);
-      var10.addView((View)this.drawerList);
-      this.drawerScroll = var10;
-      this.pickFor = -1;
-      LinearLayout var11 = new LinearLayout(var1);
-      var11.setOrientation(1);
-      var11.addView((View)this.pager, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F)));
-      var11.addView((View)this.dots, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, this.ui.dp(30))));
-      TextView var6 = new TextView(var1);
-      var6.setText("Swipe sideways for your shortcuts  ·  swipe up for every setting");
-      var6.setTextColor(CarUi.Companion.getDIM());
-      var6.setTextSize(14.0F);
-      var6.setGravity(17);
-      var6.setOnClickListener(new SettingsLauncher$$ExternalSyntheticLambda2(this));
-      var11.addView((View)var6, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
-      this.addView((View)var11, (LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
-      this.buildDrawer();
-      this.addView((View)this.drawer, (LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
-      this.pager.setOnPage(new SettingsLauncher$$ExternalSyntheticLambda3(this));
-      this.pager.setOnSwipeUp(new SettingsLauncher$$ExternalSyntheticLambda4(this));
-      this.rebuild(RangesKt.coerceAtLeast(lastPage, 0));
-   }
-
-   private static final Unit _init_$lambda$7(SettingsLauncher var0, int var1) {
-      lastPage = var1;
-      var0.paintDots();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit _init_$lambda$8(SettingsLauncher var0) {
-      var0.openDrawer(-1);
-      return Unit.INSTANCE;
-   }
-
-   // $VF: synthetic method
-   public static void addShortcut$default(SettingsLauncher var0, SettingsIndex.Entry var1, int var2, int var3, Object var4) {
-      if ((var3 & 2) != 0) {
-         var2 = -1;
-      }
-
-      var0.addShortcut(var1, var2);
-   }
-
-   private final int boardPage(int var1) {
-      if (var1 == 0) {
-         var1 = 0;
-      } else {
-         var1--;
-      }
-
-      return var1;
-   }
-
-   private final void buildDrawer() {
-      LinearLayout var2 = new LinearLayout(this.getContext());
-      var2.setOrientation(1);
-      var2.setGravity(1);
-      var2.setPadding(this.ui.dp(16), this.ui.dp(10), this.ui.dp(16), this.ui.dp(6));
-      View var1 = new View(var2.getContext());
-      var1.setBackground((Drawable)CarUi.rounded$default(this.ui, CarUi.Companion.getDIM(), 99, null, 4, null));
-      var2.addView(var1, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(this.ui.dp(70), this.ui.dp(6))));
-      var2.setClickable(true);
-      var2.setOnClickListener(new SettingsLauncher$$ExternalSyntheticLambda5(this));
-      var2.setOnTouchListener(new SettingsLauncher$$ExternalSyntheticLambda6(this));
-      this.drawer.addView((View)var2);
-      LinearLayout var5 = this.drawer;
-      View var6 = (View)this.drawerScroll;
-      android.widget.LinearLayout.LayoutParams var4 = new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F);
-      var4.setMargins(this.ui.dp(14), 0, this.ui.dp(14), this.ui.dp(10));
-      Unit var3 = Unit.INSTANCE;
-      var5.addView(var6, (LayoutParams)var4);
-      this.drawerScroll.setOnTouchListener(new SettingsLauncher$$ExternalSyntheticLambda7(this));
-   }
-
-   private static final void buildDrawer$lambda$35$lambda$33(SettingsLauncher var0, View var1) {
-      var0.closeDrawer();
-   }
-
-   private static final boolean buildDrawer$lambda$35$lambda$34(SettingsLauncher var0, View var1, MotionEvent var2) {
-      switch (var2.getActionMasked()) {
-         case 0:
-            var0.drawerDownY = var2.getRawY();
-            break;
-         case 1:
-            if (var2.getRawY() - var0.drawerDownY > var0.ui.dp(40)) {
-               var0.closeDrawer();
-               return true;
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    /* JADX WARN: Multi-variable type inference failed */
+    public SettingsLauncher(Context ctx, CarUi ui, View home, Function0<? extends List<SettingsIndex.Entry>> allPages, Function1<? super String, Unit> open) {
+        super(ctx);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(ui, "ui");
+        Intrinsics.checkNotNullParameter(home, "home");
+        Intrinsics.checkNotNullParameter(allPages, "allPages");
+        Intrinsics.checkNotNullParameter(open, "open");
+        this.ui = ui;
+        this.home = home;
+        this.allPages = allPages;
+        this.open = open;
+        this.prefs = new UiSettings(ctx);
+        this.board = new ShortcutBoard(this.prefs.getStr("settings_shortcuts", "{}"));
+        this.pager = new SwipePager(ctx, 1);
+        LinearLayout $this$dots_u24lambda_u240 = new LinearLayout(ctx);
+        $this$dots_u24lambda_u240.setOrientation(0);
+        $this$dots_u24lambda_u240.setGravity(17);
+        this.dots = $this$dots_u24lambda_u240;
+        LinearLayout $this$drawer_u24lambda_u241 = new LinearLayout(ctx);
+        $this$drawer_u24lambda_u241.setOrientation(1);
+        $this$drawer_u24lambda_u241.setBackground(CarUi.rounded$default(this.ui, CarUi.Companion.getFRAME(), 24, null, 4, null));
+        $this$drawer_u24lambda_u241.setVisibility(8);
+        $this$drawer_u24lambda_u241.setClickable(true);
+        this.drawer = $this$drawer_u24lambda_u241;
+        LinearLayout $this$drawerList_u24lambda_u242 = new LinearLayout(ctx);
+        $this$drawerList_u24lambda_u242.setOrientation(1);
+        this.drawerList = $this$drawerList_u24lambda_u242;
+        ScrollView $this$drawerScroll_u24lambda_u243 = new ScrollView(ctx);
+        $this$drawerScroll_u24lambda_u243.addView(this.drawerList);
+        this.drawerScroll = $this$drawerScroll_u24lambda_u243;
+        this.pickFor = -1;
+        LinearLayout $this$_init__u24lambda_u244 = new LinearLayout(ctx);
+        $this$_init__u24lambda_u244.setOrientation(1);
+        $this$_init__u24lambda_u244.addView(this.pager, new LinearLayout.LayoutParams(-1, 0, 1.0f));
+        $this$_init__u24lambda_u244.addView(this.dots, new LinearLayout.LayoutParams(-1, this.ui.dp(30)));
+        TextView $this$_init__u24lambda_u246 = new TextView(ctx);
+        $this$_init__u24lambda_u246.setText("Swipe sideways for your shortcuts  ·  swipe up for every setting");
+        $this$_init__u24lambda_u246.setTextColor(CarUi.Companion.getDIM());
+        $this$_init__u24lambda_u246.setTextSize(14.0f);
+        $this$_init__u24lambda_u246.setGravity(17);
+        $this$_init__u24lambda_u246.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda2
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                SettingsLauncher.this.openDrawer(-1);
             }
-      }
-
-      return false;
-   }
-
-   private static final boolean buildDrawer$lambda$37(SettingsLauncher var0, View var1, MotionEvent var2) {
-      switch (var2.getActionMasked()) {
-         case 0:
-            var0.drawerDownY = var2.getRawY();
-            break;
-         case 1:
-            if (var0.drawerScroll.getScrollY() == 0 && var2.getRawY() - var0.drawerDownY > var0.ui.dp(90)) {
-               var0.closeDrawer();
-               return true;
+        });
+        $this$_init__u24lambda_u244.addView($this$_init__u24lambda_u246, new LinearLayout.LayoutParams(-1, -2));
+        addView($this$_init__u24lambda_u244, new FrameLayout.LayoutParams(-1, -1));
+        buildDrawer();
+        addView(this.drawer, new FrameLayout.LayoutParams(-1, -1));
+        this.pager.setOnPage(new Function1() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda3
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit _init_$lambda$7;
+                _init_$lambda$7 = SettingsLauncher._init_$lambda$7(SettingsLauncher.this, ((Integer) obj).intValue());
+                return _init_$lambda$7;
             }
-      }
-
-      return false;
-   }
-
-   private final android.widget.GridLayout.LayoutParams cell(int var1, int var2) {
-      android.widget.GridLayout.LayoutParams var3 = new android.widget.GridLayout.LayoutParams(
-         GridLayout.spec(var1 / var2, 1.0F), GridLayout.spec(var1 % var2, 1.0F)
-      );
-      var3.width = 0;
-      var3.height = 0;
-      var3.setMargins(this.ui.dp(7), this.ui.dp(7), this.ui.dp(7), this.ui.dp(7));
-      return var3;
-   }
-
-   private static final void closeDrawer$lambda$38(SettingsLauncher var0) {
-      var0.drawer.setVisibility(8);
-      var0.pickFor = -1;
-   }
-
-   private final void editShortcut(int var1, int var2) {
-      ShortcutBoard.Item var7 = CollectionsKt.getOrNull(this.board.getPages().get(var1), var2);
-      if (var7 != null) {
-         ArrayList var5 = new ArrayList();
-         if (var2 > 0) {
-            var5.add(TuplesKt.to("Move earlier", new SettingsLauncher$$ExternalSyntheticLambda15(this, var1, var2)));
-         }
-
-         int var3 = this.board.getPages().get(var1).size();
-         int var4 = 1;
-         if (var2 < var3 - 1) {
-            var5.add(TuplesKt.to("Move later", new SettingsLauncher$$ExternalSyntheticLambda16(this, var1, var2)));
-         }
-
-         if (var1 == 1) {
-            var3 = 0;
-         } else if (var1 > 1) {
-            var3 = var1 - 1;
-         } else {
-            var3 = -1;
-         }
-
-         if (var1 != 0) {
-            var4 = var1 + 1;
-         }
-
-         if (var3 >= 0 && this.board.getPages().get(var3).size() < 12) {
-            var5.add(TuplesKt.to("Move to the page on the left", new SettingsLauncher$$ExternalSyntheticLambda17(this, var1, var2, var3)));
-         }
-
-         if (var4 < this.board.getPages().size() && this.board.getPages().get(var4).size() < 12) {
-            var5.add(TuplesKt.to("Move to the page on the right", new SettingsLauncher$$ExternalSyntheticLambda18(this, var1, var2, var4)));
-         }
-
-         var5.add(TuplesKt.to("Remove", new SettingsLauncher$$ExternalSyntheticLambda19(this, var1, var2)));
-         Builder var6 = new Builder(this.getContext()).setTitle(var7.getLabel());
-         Iterable var9 = var5;
-         var var8 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var9, 10));
-         Iterator var13 = var9.iterator();
-
-         while (var13.hasNext()) {
-            var8.add((String)((Pair)var13.next()).getFirst());
-         }
-
-         List var11 = var8;
-         Collection var12 = var11;
-         var6.setItems(var12.toArray(new String[0]), new SettingsLauncher$$ExternalSyntheticLambda1(var5, this, var1, var7))
-            .setNegativeButton("Cancel", null)
-            .show();
-      }
-   }
-
-   private static final Unit editShortcut$lambda$23(SettingsLauncher var0, int var1, int var2) {
-      var0.board.move(var1, var2, -1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit editShortcut$lambda$24(SettingsLauncher var0, int var1, int var2) {
-      var0.board.move(var1, var2, 1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit editShortcut$lambda$25(SettingsLauncher var0, int var1, int var2, int var3) {
-      var0.board.toPage(var1, var2, var3 - var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit editShortcut$lambda$26(SettingsLauncher var0, int var1, int var2, int var3) {
-      var0.board.toPage(var1, var2, var3 - var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit editShortcut$lambda$27(SettingsLauncher var0, int var1, int var2) {
-      var0.board.remove(var1, var2);
-      return Unit.INSTANCE;
-   }
-
-   private static final void editShortcut$lambda$31(ArrayList var0, SettingsLauncher var1, int var2, ShortcutBoard.Item var3, DialogInterface var4, int var5) {
-      ((Function0)((Pair)var0.get(var5)).getSecond()).invoke();
-      var1.save();
-      List var6 = var1.board.getPages();
-      var5 = 0;
-      Iterator var7 = var6.iterator();
-
-      while (true) {
-         if (!var7.hasNext()) {
-            var5 = -1;
-            break;
-         }
-
-         if (((List)var7.next()).contains(var3)) {
-            break;
-         }
-
-         var5++;
-      }
-
-      Integer var8 = var5;
-      boolean var11;
-      if (var8.intValue() >= 0) {
-         var11 = true;
-      } else {
-         var11 = false;
-      }
-
-      if (!var11) {
-         var8 = null;
-      }
-
-      if (var8 != null) {
-         var2 = var8;
-      } else {
-         var2 = RangesKt.coerceAtMost(var2, var1.board.getPages().size() - 1);
-      }
-
-      var1.rebuild(var1.viewPage(var2));
-   }
-
-   private final void fillDrawer() {
-      this.drawerList.removeAllViews();
-      this.drawerScroll.scrollTo(0, 0);
-      LinearLayout var5 = this.drawerList;
-      TextView var4 = new TextView(this.getContext());
-      String var3;
-      if (this.pickFor >= 0) {
-         var3 = "Pick a setting for your shortcut page";
-      } else {
-         var3 = "Every setting";
-      }
-
-      var4.setText(var3);
-      var4.setTextColor(CarUi.Companion.getTEXT());
-      var4.setTextSize(22.0F);
-      var4.setTypeface(Typeface.DEFAULT_BOLD);
-      var4.setPadding(this.ui.dp(6), this.ui.dp(4), this.ui.dp(6), this.ui.dp(2));
-      var5.addView((View)var4);
-      var5 = this.drawerList;
-      CarUi var21 = this.ui;
-      if (this.pickFor >= 0) {
-         var3 = "Tap one to add it. The search bar above finds single switches too.";
-      } else {
-         var3 = "Tap to open. Hold to add it to your shortcuts. The search bar above finds single switches too.";
-      }
-
-      var5.addView((View)var21.note(var3));
-      Iterable var28 = this.allPages.invoke();
-      HashSet var22 = new HashSet();
-      ArrayList var13 = new ArrayList();
-
-      for (Object var6 : var28) {
-         SettingsIndex.Entry var7 = (SettingsIndex.Entry)var6;
-         Pair var38 = TuplesKt.to(var7.getTarget(), var7.getLabel());
-         if (var22.add(var38)) {
-            var13.add(var6);
-         }
-      }
-
-      List var14 = var13;
-      Iterable var15 = var14;
-      Map var23 = new LinkedHashMap();
-      Iterator var30 = var15.iterator();
-
-      while (true) {
-         boolean var2 = var30.hasNext();
-         var3 = null;
-         if (!var2) {
-            for (Entry var31 : var23.entrySet()) {
-               String var24 = (String)var31.getKey();
-               List var42 = (List)var31.getValue();
-               var5 = this.drawerList;
-               TextView var8 = new TextView(this.getContext());
-               var8.setText(var24);
-               var8.setTextColor(CarUi.Companion.getACCENT());
-               var8.setTextSize(17.0F);
-               var8.setTypeface(Typeface.DEFAULT_BOLD);
-               var8.setPadding(this.ui.dp(6), this.ui.dp(16), this.ui.dp(6), this.ui.dp(6));
-               var5.addView((View)var8);
-
-               for (SettingsIndex.Entry var44 : CollectionsKt.sortedWith(var42, new Comparator() {
-                  @Override
-                  public final int compare(T var1, T var2x) {
-                     var1 = ((SettingsIndex.Entry)var1).getLabel().toLowerCase(Locale.ROOT);
-                     Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-                     Comparable var4x = var1;
-                     var2x = ((SettingsIndex.Entry)var2x).getLabel().toLowerCase(Locale.ROOT);
-                     Intrinsics.checkNotNullExpressionValue(var2x, "toLowerCase(...)");
-                     return ComparisonsKt.compareValues(var4x, var2x);
-                  }
-               })) {
-                  SettingIcons.Icon var33 = var44.getIcon();
-                  SettingIcons.Icon var25 = var33;
-                  if (var33 == null) {
-                     var25 = new SettingIcons.Icon("new", "device", false, 4, null);
-                  }
-
-                  CarUi var10 = this.ui;
-                  String var9 = var44.getLabel();
-                  var var34 = StringsKt.substringAfter(StringsKt.substringAfter$default(var44.getWhere(), " · ", var3, 2, var3), " · ", "");
-                  boolean var1;
-                  if (var34.length() == 0) {
-                     var1 = true;
-                  } else {
-                     var1 = false;
-                  }
-
-                  if (var1) {
-                     var34 = var3;
-                  }
-
-                  String var11 = var34;
-                  SvIcon var19 = SvIcon.INSTANCE;
-                  Context var35 = this.getContext();
-                  Intrinsics.checkNotNullExpressionValue(var35, "getContext(...)");
-                  LinearLayout var26 = (LinearLayout)CarUi.row$default(
-                        var10, var9, var11, 0, SvIcon.chip$default(var19, var35, var25.getName(), var25.getGroup(), 46, null, 16, null), null, 20, null
-                     )
-                     .component1();
-                  if (this.board.contains(var44.getTarget())) {
-                     TextView var20 = new TextView(this.getContext());
-                     var20.setText("on a page");
-                     var20.setTextSize(14.0F);
-                     var20.setTextColor(CarUi.Companion.getDIM());
-                     var20.setPadding(this.ui.dp(10), 0, this.ui.dp(10), 0);
-                     var26.addView((View)var20);
-                  }
-
-                  var26.setClickable(true);
-                  var26.setOnClickListener(new SettingsLauncher$$ExternalSyntheticLambda13(this, var44));
-                  var26.setOnLongClickListener(new SettingsLauncher$$ExternalSyntheticLambda14(this, var44));
-                  this.drawerList.addView((View)var26, (LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
-                  var3 = null;
-               }
+        });
+        this.pager.setOnSwipeUp(new Function0() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda4
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit _init_$lambda$8;
+                _init_$lambda$8 = SettingsLauncher._init_$lambda$8(SettingsLauncher.this);
+                return _init_$lambda$8;
             }
+        });
+        rebuild(RangesKt.coerceAtLeast(lastPage, 0));
+    }
 
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit _init_$lambda$7(SettingsLauncher this$0, int it) {
+        lastPage = it;
+        this$0.paintDots();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit _init_$lambda$8(SettingsLauncher this$0) {
+        this$0.openDrawer(-1);
+        return Unit.INSTANCE;
+    }
+
+    private final void save() {
+        this.prefs.setStr("settings_shortcuts", this.board.json());
+    }
+
+    private final int boardPage(int view) {
+        if (view == 0) {
+            return 0;
+        }
+        return view - 1;
+    }
+
+    private final int viewPage(int boardPage) {
+        if (boardPage == 0) {
+            return 0;
+        }
+        return boardPage + 1;
+    }
+
+    private final void rebuild(final int show) {
+        ViewParent parent = this.home.getParent();
+        ViewGroup viewGroup = parent instanceof ViewGroup ? (ViewGroup) parent : null;
+        if (viewGroup != null) {
+            viewGroup.removeView(this.home);
+        }
+        this.pager.removeAllViews();
+        this.pager.addView(shortcutPage(0));
+        this.pager.addView(this.home);
+        int size = this.board.getPages().size();
+        for (int p = 1; p < size; p++) {
+            this.pager.addView(shortcutPage(p));
+        }
+        this.pager.post(new Runnable() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda12
+            @Override // java.lang.Runnable
+            public final void run() {
+                SettingsLauncher.rebuild$lambda$9(SettingsLauncher.this, show);
+            }
+        });
+        paintDots();
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void rebuild$lambda$9(SettingsLauncher this$0, int $show) {
+        this$0.pager.go(RangesKt.coerceIn($show, 0, this$0.pager.getChildCount() - 1), false);
+        lastPage = this$0.pager.getIndex();
+        this$0.paintDots();
+    }
+
+    private final void paintDots() {
+        this.dots.removeAllViews();
+        final int i = 0;
+        int childCount = this.pager.getChildCount();
+        while (i < childCount) {
+            LinearLayout linearLayout = this.dots;
+            View $this$paintDots_u24lambda_u2411 = new View(getContext());
+            $this$paintDots_u24lambda_u2411.setBackground(CarUi.rounded$default(this.ui, i == this.pager.getIndex() ? CarUi.Companion.getTEXT() : CarUi.Companion.getDIM(), 99, null, 4, null));
+            $this$paintDots_u24lambda_u2411.setAlpha(i == this.pager.getIndex() ? 1.0f : 0.5f);
+            $this$paintDots_u24lambda_u2411.setContentDescription(i == 1 ? "Settings home" : "Shortcut page");
+            $this$paintDots_u24lambda_u2411.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda11
+                @Override // android.view.View.OnClickListener
+                public final void onClick(View view) {
+                    SettingsLauncher.paintDots$lambda$11$lambda$10(SettingsLauncher.this, i, view);
+                }
+            });
+            int i2 = 14;
+            int dp = this.ui.dp(i == 1 ? 14 : 10);
+            CarUi carUi = this.ui;
+            if (i != 1) {
+                i2 = 10;
+            }
+            LinearLayout.LayoutParams $this$paintDots_u24lambda_u2412 = new LinearLayout.LayoutParams(dp, carUi.dp(i2));
+            $this$paintDots_u24lambda_u2412.setMargins(this.ui.dp(6), 0, this.ui.dp(6), 0);
+            Unit unit = Unit.INSTANCE;
+            linearLayout.addView($this$paintDots_u24lambda_u2411, $this$paintDots_u24lambda_u2412);
+            i++;
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void paintDots$lambda$11$lambda$10(SettingsLauncher this$0, int $i, View it) {
+        SwipePager.go$default(this$0.pager, $i, false, 2, null);
+    }
+
+    private final View shortcutPage(final int p) {
+        List<ShortcutBoard.Item> items = this.board.getPages().get(p);
+        GridLayout grid = new GridLayout(getContext());
+        grid.setColumnCount(4);
+        grid.setRowCount(3);
+        grid.setUseDefaultMargins(false);
+        int i = 0;
+        for (final ShortcutBoard.Item s : items) {
+            final int i2 = i;
+            i++;
+            LinearLayout v = this.ui.iconTile(s.getLabel(), s.getWhere(), s.getIcon(), s.getGroup(), new Function0() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda8
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit shortcutPage$lambda$14;
+                    shortcutPage$lambda$14 = SettingsLauncher.shortcutPage$lambda$14(SettingsLauncher.this, s);
+                    return shortcutPage$lambda$14;
+                }
+            }).component1();
+            v.setOnLongClickListener(new View.OnLongClickListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda9
+                @Override // android.view.View.OnLongClickListener
+                public final boolean onLongClick(View view) {
+                    boolean shortcutPage$lambda$15;
+                    shortcutPage$lambda$15 = SettingsLauncher.shortcutPage$lambda$15(SettingsLauncher.this, p, i2, view);
+                    return shortcutPage$lambda$15;
+                }
+            });
+            grid.addView(v, cell(i2, 4));
+        }
+        if (items.size() < 12) {
+            LinearLayout $this$shortcutPage_u24lambda_u2419 = new LinearLayout(getContext());
+            $this$shortcutPage_u24lambda_u2419.setOrientation(1);
+            $this$shortcutPage_u24lambda_u2419.setGravity(17);
+            $this$shortcutPage_u24lambda_u2419.setBackground(this.ui.rounded(CarUi.Companion.getCARD(), 20, Integer.valueOf(CarUi.Companion.getDIM())));
+            TextView $this$shortcutPage_u24lambda_u2419_u24lambda_u2416 = new TextView($this$shortcutPage_u24lambda_u2419.getContext());
+            $this$shortcutPage_u24lambda_u2419_u24lambda_u2416.setText("+");
+            $this$shortcutPage_u24lambda_u2419_u24lambda_u2416.setTextSize(46.0f);
+            $this$shortcutPage_u24lambda_u2419_u24lambda_u2416.setTextColor(CarUi.Companion.getDIM());
+            $this$shortcutPage_u24lambda_u2419_u24lambda_u2416.setGravity(17);
+            $this$shortcutPage_u24lambda_u2419.addView($this$shortcutPage_u24lambda_u2419_u24lambda_u2416);
+            TextView $this$shortcutPage_u24lambda_u2419_u24lambda_u2417 = new TextView($this$shortcutPage_u24lambda_u2419.getContext());
+            $this$shortcutPage_u24lambda_u2419_u24lambda_u2417.setText(items.isEmpty() ? "Add a shortcut" : "Add");
+            $this$shortcutPage_u24lambda_u2419_u24lambda_u2417.setTextSize(17.0f);
+            $this$shortcutPage_u24lambda_u2419_u24lambda_u2417.setTextColor(CarUi.Companion.getDIM());
+            $this$shortcutPage_u24lambda_u2419_u24lambda_u2417.setGravity(17);
+            $this$shortcutPage_u24lambda_u2419.addView($this$shortcutPage_u24lambda_u2419_u24lambda_u2417);
+            $this$shortcutPage_u24lambda_u2419.setClickable(true);
+            $this$shortcutPage_u24lambda_u2419.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda10
+                @Override // android.view.View.OnClickListener
+                public final void onClick(View view) {
+                    SettingsLauncher.this.openDrawer(p);
+                }
+            });
+            $this$shortcutPage_u24lambda_u2419.setContentDescription("Add a shortcut to this page");
+            grid.addView($this$shortcutPage_u24lambda_u2419, cell(items.size(), 4));
+            for (int k = items.size() + 1; k < 12; k++) {
+                grid.addView(new View(getContext()), cell(k, 4));
+            }
+        }
+        LinearLayout $this$shortcutPage_u24lambda_u2421 = new LinearLayout(getContext());
+        $this$shortcutPage_u24lambda_u2421.setOrientation(1);
+        if (items.isEmpty()) {
+            TextView $this$shortcutPage_u24lambda_u2421_u24lambda_u2420 = new TextView($this$shortcutPage_u24lambda_u2421.getContext());
+            $this$shortcutPage_u24lambda_u2421_u24lambda_u2420.setText("Your shortcuts: tap + and pick any setting, or hold one in the list that slides up. Hold a shortcut to move or remove it.");
+            $this$shortcutPage_u24lambda_u2421_u24lambda_u2420.setTextColor(CarUi.Companion.getDIM());
+            $this$shortcutPage_u24lambda_u2421_u24lambda_u2420.setTextSize(16.0f);
+            $this$shortcutPage_u24lambda_u2421_u24lambda_u2420.setPadding(this.ui.dp(10), 0, this.ui.dp(10), this.ui.dp(8));
+            $this$shortcutPage_u24lambda_u2421.addView($this$shortcutPage_u24lambda_u2421_u24lambda_u2420);
+        }
+        $this$shortcutPage_u24lambda_u2421.addView(grid, new LinearLayout.LayoutParams(-1, 0, 1.0f));
+        return $this$shortcutPage_u24lambda_u2421;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit shortcutPage$lambda$14(SettingsLauncher this$0, ShortcutBoard.Item $s) {
+        this$0.open.invoke($s.getTarget());
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean shortcutPage$lambda$15(SettingsLauncher this$0, int $p, int $i, View it) {
+        this$0.editShortcut($p, $i);
+        return true;
+    }
+
+    private final GridLayout.LayoutParams cell(int i, int cols) {
+        GridLayout.LayoutParams $this$cell_u24lambda_u2422 = new GridLayout.LayoutParams(GridLayout.spec(i / cols, 1.0f), GridLayout.spec(i % cols, 1.0f));
+        $this$cell_u24lambda_u2422.width = 0;
+        $this$cell_u24lambda_u2422.height = 0;
+        $this$cell_u24lambda_u2422.setMargins(this.ui.dp(7), this.ui.dp(7), this.ui.dp(7), this.ui.dp(7));
+        return $this$cell_u24lambda_u2422;
+    }
+
+    private final void editShortcut(final int p, final int i) {
+        final ShortcutBoard.Item s = (ShortcutBoard.Item) CollectionsKt.getOrNull(this.board.getPages().get(p), i);
+        if (s == null) {
             return;
-         }
-
-         Object var36 = var30.next();
-         SettingsIndex.Entry var39 = (SettingsIndex.Entry)var36;
-         var3 = StringsKt.substringBefore(var39.getWhere(), " · ", var39.getWhere());
-         String var40 = StringsKt.substringBefore$default(StringsKt.substringAfter$default(var39.getWhere(), " · ", null, 2, null), " · ", null, 2, null);
-         String var41 = var3 + " · " + var40;
-         var3 = (String)var23.get(var41);
-         if (var3 == null) {
-            var3 = new ArrayList();
-            var23.put(var41, var3);
-         }
-
-         ((List)var3).add(var36);
-      }
-   }
-
-   private static final void fillDrawer$lambda$46(SettingsLauncher var0, SettingsIndex.Entry var1, View var2) {
-      if (var0.pickFor >= 0) {
-         int var3 = var0.pickFor;
-         var0.closeDrawer();
-         var0.addShortcut(var1, var3);
-      } else {
-         var0.closeDrawer();
-         var0.open.invoke(var1.getTarget());
-      }
-   }
-
-   private static final boolean fillDrawer$lambda$47(SettingsLauncher var0, SettingsIndex.Entry var1, View var2) {
-      var0.closeDrawer();
-      var0.addShortcut(var1, var0.pickFor);
-      return true;
-   }
-
-   static final void lambda$6$lambda$5(SettingsLauncher var0, View var1) {
-      var0.openDrawer(-1);
-   }
-
-   private final void paintDots() {
-      this.dots.removeAllViews();
-      int var2 = 0;
-
-      for (int var5 = this.pager.getChildCount(); var2 < var5; var2++) {
-         LinearLayout var8 = this.dots;
-         View var9 = new View(this.getContext());
-         CarUi var7 = this.ui;
-         int var3;
-         if (var2 == this.pager.getIndex()) {
-            var3 = CarUi.Companion.getTEXT();
-         } else {
-            var3 = CarUi.Companion.getDIM();
-         }
-
-         var9.setBackground((Drawable)CarUi.rounded$default(var7, var3, 99, null, 4, null));
-         float var1;
-         if (var2 == this.pager.getIndex()) {
-            var1 = 1.0F;
-         } else {
-            var1 = 0.5F;
-         }
-
-         var9.setAlpha(var1);
-         String var13;
-         if (var2 == 1) {
-            var13 = "Settings home";
-         } else {
-            var13 = "Shortcut page";
-         }
-
-         var9.setContentDescription(var13);
-         var9.setOnClickListener(new SettingsLauncher$$ExternalSyntheticLambda11(this, var2));
-         var7 = this.ui;
-         byte var4 = 14;
-         byte var11;
-         if (var2 == 1) {
-            var11 = 14;
-         } else {
-            var11 = 10;
-         }
-
-         int var6 = var7.dp(var11);
-         var7 = this.ui;
-         if (var2 == 1) {
-            var11 = var4;
-         } else {
-            var11 = 10;
-         }
-
-         android.widget.LinearLayout.LayoutParams var10 = new android.widget.LinearLayout.LayoutParams(var6, var7.dp(var11));
-         var10.setMargins(this.ui.dp(6), 0, this.ui.dp(6), 0);
-         Unit var16 = Unit.INSTANCE;
-         var8.addView(var9, (LayoutParams)var10);
-      }
-   }
-
-   private static final void paintDots$lambda$11$lambda$10(SettingsLauncher var0, int var1, View var2) {
-      SwipePager.go$default(var0.pager, var1, false, 2, null);
-   }
-
-   private final void rebuild(int var1) {
-      ViewParent var4 = this.home.getParent();
-      ViewGroup var5;
-      if (var4 instanceof ViewGroup) {
-         var5 = (ViewGroup)var4;
-      } else {
-         var5 = null;
-      }
-
-      if (var5 != null) {
-         var5.removeView(this.home);
-      }
-
-      this.pager.removeAllViews();
-      this.pager.addView(this.shortcutPage(0));
-      this.pager.addView(this.home);
-      int var2 = 1;
-
-      for (int var3 = this.board.getPages().size(); var2 < var3; var2++) {
-         this.pager.addView(this.shortcutPage(var2));
-      }
-
-      this.pager.post(new SettingsLauncher$$ExternalSyntheticLambda12(this, var1));
-      this.paintDots();
-   }
-
-   private static final void rebuild$lambda$9(SettingsLauncher var0, int var1) {
-      var0.pager.go(RangesKt.coerceIn(var1, 0, var0.pager.getChildCount() - 1), false);
-      lastPage = var0.pager.getIndex();
-      var0.paintDots();
-   }
-
-   private final void save() {
-      this.prefs.setStr("settings_shortcuts", this.board.json());
-   }
-
-   private final View shortcutPage(int var1) {
-      List var6 = this.board.getPages().get(var1);
-      GridLayout var5 = new GridLayout(this.getContext());
-      var5.setColumnCount(4);
-      var5.setRowCount(3);
-      var5.setUseDefaultMargins(false);
-      Iterator var4 = var6.iterator();
-      int var2 = 0;
-
-      while (var4.hasNext()) {
-         int var3 = var2 + 1;
-         ShortcutBoard.Item var7 = (ShortcutBoard.Item)var4.next();
-         LinearLayout var14 = this.ui
-            .iconTile(var7.getLabel(), var7.getWhere(), var7.getIcon(), var7.getGroup(), new SettingsLauncher$$ExternalSyntheticLambda8(this, var7))
-            .component1();
-         var14.setOnLongClickListener(new SettingsLauncher$$ExternalSyntheticLambda9(this, var1, var2));
-         var5.addView((View)var14, (LayoutParams)this.cell(var2, 4));
-         var2 = var3;
-      }
-
-      if (var6.size() < 12) {
-         LinearLayout var15 = new LinearLayout(this.getContext());
-         var15.setOrientation(1);
-         var15.setGravity(17);
-         var15.setBackground((Drawable)this.ui.rounded(CarUi.Companion.getCARD(), 20, CarUi.Companion.getDIM()));
-         TextView var10 = new TextView(var15.getContext());
-         var10.setText("+");
-         var10.setTextSize(46.0F);
-         var10.setTextColor(CarUi.Companion.getDIM());
-         var10.setGravity(17);
-         var15.addView((View)var10);
-         TextView var8 = new TextView(var15.getContext());
-         String var11;
-         if (var6.isEmpty()) {
-            var11 = "Add a shortcut";
-         } else {
-            var11 = "Add";
-         }
-
-         var8.setText(var11);
-         var8.setTextSize(17.0F);
-         var8.setTextColor(CarUi.Companion.getDIM());
-         var8.setGravity(17);
-         var15.addView((View)var8);
-         var15.setClickable(true);
-         var15.setOnClickListener(new SettingsLauncher$$ExternalSyntheticLambda10(this, var1));
-         var15.setContentDescription("Add a shortcut to this page");
-         var5.addView((View)var15, (LayoutParams)this.cell(var6.size(), 4));
-
-         for (int var9 = var6.size() + 1; var9 < 12; var9++) {
-            var5.addView(new View(this.getContext()), (LayoutParams)this.cell(var9, 4));
-         }
-      }
-
-      LinearLayout var12 = new LinearLayout(this.getContext());
-      var12.setOrientation(1);
-      if (var6.isEmpty()) {
-         TextView var13 = new TextView(var12.getContext());
-         var13.setText("Your shortcuts: tap + and pick any setting, or hold one in the list that slides up. Hold a shortcut to move or remove it.");
-         var13.setTextColor(CarUi.Companion.getDIM());
-         var13.setTextSize(16.0F);
-         var13.setPadding(this.ui.dp(10), 0, this.ui.dp(10), this.ui.dp(8));
-         var12.addView((View)var13);
-      }
-
-      var12.addView((View)var5, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F)));
-      return (View)var12;
-   }
-
-   private static final Unit shortcutPage$lambda$14(SettingsLauncher var0, ShortcutBoard.Item var1) {
-      var0.open.invoke(var1.getTarget());
-      return Unit.INSTANCE;
-   }
-
-   private static final boolean shortcutPage$lambda$15(SettingsLauncher var0, int var1, int var2, View var3) {
-      var0.editShortcut(var1, var2);
-      return true;
-   }
-
-   private static final void shortcutPage$lambda$19$lambda$18(SettingsLauncher var0, int var1, View var2) {
-      var0.openDrawer(var1);
-   }
-
-   private final int viewPage(int var1) {
-      if (var1 == 0) {
-         var1 = 0;
-      } else {
-         var1++;
-      }
-
-      return var1;
-   }
-
-   public final void addShortcut(SettingsIndex.Entry var1, int var2) {
-      Intrinsics.checkNotNullParameter(var1, "e");
-      if (this.board.contains(var1.getTarget())) {
-         Context var9 = this.getContext();
-         String var6 = var1.getLabel();
-         Toast.makeText(var9, var6 + " is already a shortcut", 0).show();
-      } else {
-         SettingIcons.Icon var4 = var1.getIcon();
-         SettingIcons.Icon var3 = var4;
-         if (var4 == null) {
-            var3 = new SettingIcons.Icon("new", "device", false, 4, null);
-         }
-
-         if (var2 < 0) {
-            if (this.pager.getIndex() != 1) {
-               var2 = this.boardPage(this.pager.getIndex());
-            } else {
-               var2 = -1;
+        }
+        final ArrayList opts = new ArrayList();
+        if (i > 0) {
+            opts.add(TuplesKt.to("Move earlier", new Function0() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda15
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit editShortcut$lambda$23;
+                    editShortcut$lambda$23 = SettingsLauncher.editShortcut$lambda$23(SettingsLauncher.this, p, i);
+                    return editShortcut$lambda$23;
+                }
+            }));
+        }
+        if (i < this.board.getPages().get(p).size() - 1) {
+            opts.add(TuplesKt.to("Move later", new Function0() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda16
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit editShortcut$lambda$24;
+                    editShortcut$lambda$24 = SettingsLauncher.editShortcut$lambda$24(SettingsLauncher.this, p, i);
+                    return editShortcut$lambda$24;
+                }
+            }));
+        }
+        final int leftOf = p == 1 ? 0 : p > 1 ? p - 1 : -1;
+        final int rightOf = p != 0 ? p + 1 : 1;
+        if (leftOf >= 0 && this.board.getPages().get(leftOf).size() < 12) {
+            opts.add(TuplesKt.to("Move to the page on the left", new Function0() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda17
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit editShortcut$lambda$25;
+                    editShortcut$lambda$25 = SettingsLauncher.editShortcut$lambda$25(SettingsLauncher.this, p, i, leftOf);
+                    return editShortcut$lambda$25;
+                }
+            }));
+        }
+        if (rightOf < this.board.getPages().size() && this.board.getPages().get(rightOf).size() < 12) {
+            opts.add(TuplesKt.to("Move to the page on the right", new Function0() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda18
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit editShortcut$lambda$26;
+                    editShortcut$lambda$26 = SettingsLauncher.editShortcut$lambda$26(SettingsLauncher.this, p, i, rightOf);
+                    return editShortcut$lambda$26;
+                }
+            }));
+        }
+        opts.add(TuplesKt.to("Remove", new Function0() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda19
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit editShortcut$lambda$27;
+                editShortcut$lambda$27 = SettingsLauncher.editShortcut$lambda$27(SettingsLauncher.this, p, i);
+                return editShortcut$lambda$27;
             }
-         }
+        }));
+        AlertDialog.Builder title = new AlertDialog.Builder(getContext()).setTitle(s.getLabel());
+        ArrayList $this$map$iv = opts;
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            Pair it = (Pair) item$iv$iv;
+            destination$iv$iv.add((String) it.getFirst());
+        }
+        Collection $this$toTypedArray$iv = (List) destination$iv$iv;
+        title.setItems((CharSequence[]) $this$toTypedArray$iv.toArray(new String[0]), new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda1
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i2) {
+                SettingsLauncher.editShortcut$lambda$31(opts, this, p, s, dialogInterface, i2);
+            }
+        }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
+    }
 
-         var2 = this.board.add(new ShortcutBoard.Item(var1.getLabel(), var1.getWhere(), var1.getTarget(), var3.getName(), var3.getGroup()), var2);
-         this.save();
-         Context var8 = this.getContext();
-         String var5 = var1.getLabel();
-         Toast.makeText(var8, var5 + " added to your shortcuts", 0).show();
-         this.rebuild(this.viewPage(var2));
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit editShortcut$lambda$23(SettingsLauncher this$0, int $p, int $i) {
+        this$0.board.move($p, $i, -1);
+        return Unit.INSTANCE;
+    }
 
-   public final void closeDrawer() {
-      if (this.getDrawerOpen()) {
-         this.drawer.animate().translationY(this.getHeight()).setDuration(180L).withEndAction(new SettingsLauncher$$ExternalSyntheticLambda0(this)).start();
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit editShortcut$lambda$24(SettingsLauncher this$0, int $p, int $i) {
+        this$0.board.move($p, $i, 1);
+        return Unit.INSTANCE;
+    }
 
-   public final boolean getDrawerOpen() {
-      boolean var1;
-      if (this.drawer.getVisibility() == 0) {
-         var1 = true;
-      } else {
-         var1 = false;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit editShortcut$lambda$25(SettingsLauncher this$0, int $p, int $i, int $leftOf) {
+        this$0.board.toPage($p, $i, $leftOf - $p);
+        return Unit.INSTANCE;
+    }
 
-      return var1;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit editShortcut$lambda$26(SettingsLauncher this$0, int $p, int $i, int $rightOf) {
+        this$0.board.toPage($p, $i, $rightOf - $p);
+        return Unit.INSTANCE;
+    }
 
-   public final void openDrawer(int var1) {
-      this.pickFor = var1;
-      this.fillDrawer();
-      this.drawer.setVisibility(0);
-      this.drawer.setTranslationY(RangesKt.coerceAtLeast(this.getHeight(), 1.0F));
-      this.drawer.animate().translationY(0.0F).setDuration(220L).setInterpolator((TimeInterpolator)(new DecelerateInterpolator())).start();
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit editShortcut$lambda$27(SettingsLauncher this$0, int $p, int $i) {
+        this$0.board.remove($p, $i);
+        return Unit.INSTANCE;
+    }
 
-   public static final class Companion {
-      private Companion() {
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void editShortcut$lambda$31(ArrayList $opts, SettingsLauncher this$0, int $p, ShortcutBoard.Item $s, DialogInterface dialogInterface, int w) {
+        ((Function0) ((Pair) $opts.get(w)).getSecond()).invoke();
+        this$0.save();
+        List $this$indexOfFirst$iv = this$0.board.getPages();
+        int index$iv = 0;
+        Iterator<List<ShortcutBoard.Item>> it = $this$indexOfFirst$iv.iterator();
+        while (true) {
+            if (!it.hasNext()) {
+                index$iv = -1;
+                break;
+            }
+            List item$iv = it.next();
+            List it2 = item$iv;
+            if (it2.contains($s)) {
+                break;
+            } else {
+                index$iv++;
+            }
+        }
+        Integer valueOf = Integer.valueOf(index$iv);
+        int it3 = valueOf.intValue();
+        if (!(it3 >= 0)) {
+            valueOf = null;
+        }
+        int stay = valueOf != null ? valueOf.intValue() : RangesKt.coerceAtMost($p, this$0.board.getPages().size() - 1);
+        this$0.rebuild(this$0.viewPage(stay));
+    }
 
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
+    public static /* synthetic */ void addShortcut$default(SettingsLauncher settingsLauncher, SettingsIndex.Entry entry, int i, int i2, Object obj) {
+        if ((i2 & 2) != 0) {
+            i = -1;
+        }
+        settingsLauncher.addShortcut(entry, i);
+    }
 
-      public final int getLastPage() {
-         return SettingsLauncher.lastPage;
-      }
+    public final void addShortcut(SettingsIndex.Entry e, int page) {
+        Intrinsics.checkNotNullParameter(e, "e");
+        if (this.board.contains(e.getTarget())) {
+            Toast.makeText(getContext(), e.getLabel() + " is already a shortcut", 0).show();
+            return;
+        }
+        SettingIcons.Icon ic = e.getIcon();
+        if (ic == null) {
+            ic = new SettingIcons.Icon("new", "device", false, 4, null);
+        }
+        int want = page >= 0 ? page : this.pager.getIndex() != 1 ? boardPage(this.pager.getIndex()) : -1;
+        int at = this.board.add(new ShortcutBoard.Item(e.getLabel(), e.getWhere(), e.getTarget(), ic.getName(), ic.getGroup()), want);
+        save();
+        Toast.makeText(getContext(), e.getLabel() + " added to your shortcuts", 0).show();
+        rebuild(viewPage(at));
+    }
 
-      public final void setLastPage(int var1) {
-         SettingsLauncher.lastPage = var1;
-      }
-   }
+    private final void buildDrawer() {
+        LinearLayout $this$buildDrawer_u24lambda_u2435 = new LinearLayout(getContext());
+        $this$buildDrawer_u24lambda_u2435.setOrientation(1);
+        $this$buildDrawer_u24lambda_u2435.setGravity(1);
+        $this$buildDrawer_u24lambda_u2435.setPadding(this.ui.dp(16), this.ui.dp(10), this.ui.dp(16), this.ui.dp(6));
+        View $this$buildDrawer_u24lambda_u2435_u24lambda_u2432 = new View($this$buildDrawer_u24lambda_u2435.getContext());
+        $this$buildDrawer_u24lambda_u2435_u24lambda_u2432.setBackground(CarUi.rounded$default(this.ui, CarUi.Companion.getDIM(), 99, null, 4, null));
+        $this$buildDrawer_u24lambda_u2435.addView($this$buildDrawer_u24lambda_u2435_u24lambda_u2432, new LinearLayout.LayoutParams(this.ui.dp(70), this.ui.dp(6)));
+        $this$buildDrawer_u24lambda_u2435.setClickable(true);
+        $this$buildDrawer_u24lambda_u2435.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda5
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                SettingsLauncher.this.closeDrawer();
+            }
+        });
+        $this$buildDrawer_u24lambda_u2435.setOnTouchListener(new View.OnTouchListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda6
+            @Override // android.view.View.OnTouchListener
+            public final boolean onTouch(View view, MotionEvent motionEvent) {
+                boolean buildDrawer$lambda$35$lambda$34;
+                buildDrawer$lambda$35$lambda$34 = SettingsLauncher.buildDrawer$lambda$35$lambda$34(SettingsLauncher.this, view, motionEvent);
+                return buildDrawer$lambda$35$lambda$34;
+            }
+        });
+        this.drawer.addView($this$buildDrawer_u24lambda_u2435);
+        LinearLayout linearLayout = this.drawer;
+        ScrollView scrollView = this.drawerScroll;
+        LinearLayout.LayoutParams $this$buildDrawer_u24lambda_u2436 = new LinearLayout.LayoutParams(-1, 0, 1.0f);
+        $this$buildDrawer_u24lambda_u2436.setMargins(this.ui.dp(14), 0, this.ui.dp(14), this.ui.dp(10));
+        Unit unit = Unit.INSTANCE;
+        linearLayout.addView(scrollView, $this$buildDrawer_u24lambda_u2436);
+        this.drawerScroll.setOnTouchListener(new View.OnTouchListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda7
+            @Override // android.view.View.OnTouchListener
+            public final boolean onTouch(View view, MotionEvent motionEvent) {
+                boolean buildDrawer$lambda$37;
+                buildDrawer$lambda$37 = SettingsLauncher.buildDrawer$lambda$37(SettingsLauncher.this, view, motionEvent);
+                return buildDrawer$lambda$37;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean buildDrawer$lambda$35$lambda$34(SettingsLauncher this$0, View view, MotionEvent e) {
+        switch (e.getActionMasked()) {
+            case 0:
+                this$0.drawerDownY = e.getRawY();
+                return false;
+            case 1:
+                if (e.getRawY() - this$0.drawerDownY <= this$0.ui.dp(40)) {
+                    return false;
+                }
+                this$0.closeDrawer();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean buildDrawer$lambda$37(SettingsLauncher this$0, View view, MotionEvent e) {
+        switch (e.getActionMasked()) {
+            case 0:
+                this$0.drawerDownY = e.getRawY();
+                return false;
+            case 1:
+                if (this$0.drawerScroll.getScrollY() != 0 || e.getRawY() - this$0.drawerDownY <= this$0.ui.dp(90)) {
+                    return false;
+                }
+                this$0.closeDrawer();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public final boolean getDrawerOpen() {
+        return this.drawer.getVisibility() == 0;
+    }
+
+    public final void openDrawer(int forPage) {
+        this.pickFor = forPage;
+        fillDrawer();
+        this.drawer.setVisibility(0);
+        this.drawer.setTranslationY(RangesKt.coerceAtLeast(getHeight(), 1.0f));
+        this.drawer.animate().translationY(0.0f).setDuration(220L).setInterpolator(new DecelerateInterpolator()).start();
+    }
+
+    public final void closeDrawer() {
+        if (getDrawerOpen()) {
+            this.drawer.animate().translationY(getHeight()).setDuration(180L).withEndAction(new Runnable() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda0
+                @Override // java.lang.Runnable
+                public final void run() {
+                    SettingsLauncher.closeDrawer$lambda$38(SettingsLauncher.this);
+                }
+            }).start();
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void closeDrawer$lambda$38(SettingsLauncher this$0) {
+        this$0.drawer.setVisibility(8);
+        this$0.pickFor = -1;
+    }
+
+    private final void fillDrawer() {
+        String str;
+        Object answer$iv$iv$iv;
+        this.drawerList.removeAllViews();
+        this.drawerScroll.scrollTo(0, 0);
+        LinearLayout linearLayout = this.drawerList;
+        TextView $this$fillDrawer_u24lambda_u2439 = new TextView(getContext());
+        $this$fillDrawer_u24lambda_u2439.setText(this.pickFor >= 0 ? "Pick a setting for your shortcut page" : "Every setting");
+        $this$fillDrawer_u24lambda_u2439.setTextColor(CarUi.Companion.getTEXT());
+        $this$fillDrawer_u24lambda_u2439.setTextSize(22.0f);
+        $this$fillDrawer_u24lambda_u2439.setTypeface(Typeface.DEFAULT_BOLD);
+        $this$fillDrawer_u24lambda_u2439.setPadding(this.ui.dp(6), this.ui.dp(4), this.ui.dp(6), this.ui.dp(2));
+        linearLayout.addView($this$fillDrawer_u24lambda_u2439);
+        this.drawerList.addView(this.ui.note(this.pickFor >= 0 ? "Tap one to add it. The search bar above finds single switches too." : "Tap to open. Hold to add it to your shortcuts. The search bar above finds single switches too."));
+        Iterable $this$distinctBy$iv = this.allPages.invoke();
+        HashSet set$iv = new HashSet();
+        ArrayList list$iv = new ArrayList();
+        for (Object e$iv : $this$distinctBy$iv) {
+            SettingsIndex.Entry it = (SettingsIndex.Entry) e$iv;
+            if (set$iv.add(TuplesKt.to(it.getTarget(), it.getLabel()))) {
+                list$iv.add(e$iv);
+            }
+        }
+        ArrayList entries = list$iv;
+        ArrayList $this$groupBy$iv = entries;
+        Map destination$iv$iv = new LinkedHashMap();
+        Iterator it2 = $this$groupBy$iv.iterator();
+        while (true) {
+            str = null;
+            if (!it2.hasNext()) {
+                break;
+            }
+            Object element$iv$iv = it2.next();
+            SettingsIndex.Entry it3 = (SettingsIndex.Entry) element$iv$iv;
+            String str2 = StringsKt.substringBefore(it3.getWhere(), " · ", it3.getWhere()) + " · " + StringsKt.substringBefore$default(StringsKt.substringAfter$default(it3.getWhere(), " · ", (String) null, 2, (Object) null), " · ", (String) null, 2, (Object) null);
+            Object value$iv$iv$iv = destination$iv$iv.get(str2);
+            if (value$iv$iv$iv == null) {
+                answer$iv$iv$iv = new ArrayList();
+                destination$iv$iv.put(str2, answer$iv$iv$iv);
+            } else {
+                answer$iv$iv$iv = value$iv$iv$iv;
+            }
+            List list$iv$iv = (List) answer$iv$iv$iv;
+            list$iv$iv.add(element$iv$iv);
+        }
+        for (Map.Entry entry : destination$iv$iv.entrySet()) {
+            String where = (String) entry.getKey();
+            Iterable group = (List) entry.getValue();
+            LinearLayout linearLayout2 = this.drawerList;
+            TextView $this$fillDrawer_u24lambda_u2442 = new TextView(getContext());
+            $this$fillDrawer_u24lambda_u2442.setText(where);
+            $this$fillDrawer_u24lambda_u2442.setTextColor(CarUi.Companion.getACCENT());
+            $this$fillDrawer_u24lambda_u2442.setTextSize(17.0f);
+            $this$fillDrawer_u24lambda_u2442.setTypeface(Typeface.DEFAULT_BOLD);
+            $this$fillDrawer_u24lambda_u2442.setPadding(this.ui.dp(6), this.ui.dp(16), this.ui.dp(6), this.ui.dp(6));
+            linearLayout2.addView($this$fillDrawer_u24lambda_u2442);
+            Iterable $this$sortedBy$iv = group;
+            for (final SettingsIndex.Entry e : CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.SettingsLauncher$fillDrawer$$inlined$sortedBy$1
+                /* JADX WARN: Multi-variable type inference failed */
+                @Override // java.util.Comparator
+                public final int compare(T t, T t2) {
+                    SettingsIndex.Entry it4 = (SettingsIndex.Entry) t;
+                    String lowerCase = it4.getLabel().toLowerCase(Locale.ROOT);
+                    Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+                    SettingsIndex.Entry it5 = (SettingsIndex.Entry) t2;
+                    String lowerCase2 = it5.getLabel().toLowerCase(Locale.ROOT);
+                    Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
+                    return ComparisonsKt.compareValues(lowerCase, lowerCase2);
+                }
+            })) {
+                SettingIcons.Icon ic = e.getIcon();
+                if (ic == null) {
+                    ic = new SettingIcons.Icon("new", "device", false, 4, null);
+                }
+                CarUi carUi = this.ui;
+                String label = e.getLabel();
+                String substringAfter = StringsKt.substringAfter(StringsKt.substringAfter$default(e.getWhere(), " · ", str, 2, str), " · ", "");
+                if (substringAfter.length() == 0) {
+                    substringAfter = str;
+                }
+                String str3 = substringAfter;
+                SvIcon svIcon = SvIcon.INSTANCE;
+                Context context = getContext();
+                Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
+                LinearLayout row = (LinearLayout) CarUi.row$default(carUi, label, str3, 0, SvIcon.chip$default(svIcon, context, ic.getName(), ic.getGroup(), 46, null, 16, null), null, 20, null).component1();
+                if (this.board.contains(e.getTarget())) {
+                    TextView $this$fillDrawer_u24lambda_u2445 = new TextView(getContext());
+                    $this$fillDrawer_u24lambda_u2445.setText("on a page");
+                    $this$fillDrawer_u24lambda_u2445.setTextSize(14.0f);
+                    $this$fillDrawer_u24lambda_u2445.setTextColor(CarUi.Companion.getDIM());
+                    $this$fillDrawer_u24lambda_u2445.setPadding(this.ui.dp(10), 0, this.ui.dp(10), 0);
+                    row.addView($this$fillDrawer_u24lambda_u2445);
+                }
+                row.setClickable(true);
+                row.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda13
+                    @Override // android.view.View.OnClickListener
+                    public final void onClick(View view) {
+                        SettingsLauncher.fillDrawer$lambda$46(SettingsLauncher.this, e, view);
+                    }
+                });
+                row.setOnLongClickListener(new View.OnLongClickListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda14
+                    @Override // android.view.View.OnLongClickListener
+                    public final boolean onLongClick(View view) {
+                        boolean fillDrawer$lambda$47;
+                        fillDrawer$lambda$47 = SettingsLauncher.fillDrawer$lambda$47(SettingsLauncher.this, e, view);
+                        return fillDrawer$lambda$47;
+                    }
+                });
+                this.drawerList.addView(row, CarUi.lp$default(this.ui, 0, 0, 3, null));
+                str = null;
+            }
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void fillDrawer$lambda$46(SettingsLauncher this$0, SettingsIndex.Entry $e, View it) {
+        if (this$0.pickFor < 0) {
+            this$0.closeDrawer();
+            this$0.open.invoke($e.getTarget());
+        } else {
+            int p = this$0.pickFor;
+            this$0.closeDrawer();
+            this$0.addShortcut($e, p);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean fillDrawer$lambda$47(SettingsLauncher this$0, SettingsIndex.Entry $e, View it) {
+        this$0.closeDrawer();
+        this$0.addShortcut($e, this$0.pickFor);
+        return true;
+    }
 }

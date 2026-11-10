@@ -3,8 +3,6 @@ package com.starpilot.starview;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
@@ -12,9 +10,11 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
+import com.starpilot.starview.GalaxyRow;
+import com.starpilot.starview.SvIcon;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import kotlin.NoWhenBranchMatchedException;
 import kotlin.Triple;
@@ -22,398 +22,330 @@ import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.collections.MapsKt;
 import kotlin.jvm.functions.Function1;
+import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
 
+/* compiled from: DeviceHubs.kt */
 public final class ConnectionsView extends ScrollView {
-   private final HashMap<String, ConnectionsView.Card> cards;
-   private final Handler main;
-   private final Function1<String, Unit> open;
-   private final CarUi ui;
+    private final HashMap<String, Card> cards;
+    private final Handler main;
+    private final Function1<String, Unit> open;
+    private final CarUi ui;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$6upwz_amlUU2u4quftqZ1UeSDX0/* $VF was: $r8$lambda$6upwz_amlUU2u4quftqZ1UeSDX0*/(ConnectionsView var0, JSONObject var1) {
-      return refresh$lambda$24(var0, var1);
-   }
+    /* compiled from: DeviceHubs.kt */
+    private static final class Card {
+        private final LinearLayout box;
+        private final SvIcon.Chip chip;
+        private final TextView state;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$AJHONcKdwezw5tv5K9_hyfN2AdA/* $VF was: $r8$lambda$AJHONcKdwezw5tv5K9_hyfN2AdA*/(ConnectionsView var0, JSONObject var1) {
-      return refresh$lambda$10(var0, var1);
-   }
+        public Card(SvIcon.Chip chip, TextView state, LinearLayout box) {
+            Intrinsics.checkNotNullParameter(chip, "chip");
+            Intrinsics.checkNotNullParameter(state, "state");
+            Intrinsics.checkNotNullParameter(box, "box");
+            this.chip = chip;
+            this.state = state;
+            this.box = box;
+        }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$O3TNp0Nf3DPU9NiCsagaKoQXa7c(ConnectionsView var0, JSONObject var1, String var2) {
-      return refresh$lambda$18(var0, var1, var2);
-   }
+        public final LinearLayout getBox() {
+            return this.box;
+        }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Qq0VzPJ3Obpl26OeVHkAsw8luG0(ConnectionsView var0, JSONObject var1, String var2) {
-      return refresh$lambda$16(var0, var1, var2);
-   }
+        public final SvIcon.Chip getChip() {
+            return this.chip;
+        }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$ezJKC0_7P6Ra68A5_J_jbsQJqls/* $VF was: $r8$lambda$ezJKC0_7P6Ra68A5_J_jbsQJqls*/(
-      ConnectionsView var0, JSONObject var1, String var2
-   ) {
-      return refresh$lambda$20(var0, var1, var2);
-   }
+        public final TextView getState() {
+            return this.state;
+        }
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$gLf1nIT5hGeUKSBhQjpg3D8Hbak(ConnectionsView var0, String var1, String var2, Boolean var3) {
-      set$lambda$9(var0, var1, var2, var3);
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    /* JADX WARN: Multi-variable type inference failed */
+    public ConnectionsView(Context ctx, CarUi ui, Function1<? super String, Unit> open) {
+        super(ctx);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(ui, "ui");
+        Intrinsics.checkNotNullParameter(open, "open");
+        this.ui = ui;
+        this.open = open;
+        this.cards = new HashMap<>();
+        this.main = new Handler(Looper.getMainLooper());
+        GridLayout $this$_init__u24lambda_u240 = new GridLayout(ctx);
+        $this$_init__u24lambda_u240.setColumnCount(2);
+        $this$_init__u24lambda_u240.setPadding(this.ui.dp(2), this.ui.dp(2), this.ui.dp(2), this.ui.dp(30));
+        int i = 0;
+        boolean z = true;
+        String str = "satellite";
+        List<Triple> list = CollectionsKt.listOf((Object[]) new Triple[]{new Triple("wifi", "Wi-Fi", "native:network"), new Triple("link", "This tablet", "tablet:connection"), new Triple("hotspot", "Galaxy hotspot", "gweb:/galaxy|Galaxy Access & Install"), new Triple("bluetooth", "Bluetooth", "gweb:/bluetooth|Bluetooth"), new Triple("star", "Remote Galaxy", "gweb:/galaxy|Galaxy Access & Install"), new Triple("upload", "Uploads", "galaxy:data"), new Triple("satellite", "RTK GPS", "tablet:rtk")});
+        int i2 = 0;
+        for (final Triple c : list) {
+            int i3 = i2;
+            int i4 = i2 + 1;
+            String group = (Intrinsics.areEqual(c.getFirst(), "link") || Intrinsics.areEqual(c.getFirst(), str)) ? "tablet" : "device";
+            String str2 = str;
+            View chip$default = SvIcon.chip$default(SvIcon.INSTANCE, ctx, (String) c.getFirst(), group, 52, null, 16, null);
+            Intrinsics.checkNotNull(chip$default, "null cannot be cast to non-null type com.starpilot.starview.SvIcon.Chip");
+            SvIcon.Chip chip = (SvIcon.Chip) chip$default;
+            TextView $this$_init__u24lambda_u241 = new TextView(ctx);
+            $this$_init__u24lambda_u241.setText("…");
+            $this$_init__u24lambda_u241.setTextColor(CarUi.Companion.getDIM());
+            $this$_init__u24lambda_u241.setTextSize(16.0f);
+            LinearLayout $this$_init__u24lambda_u247 = new LinearLayout(ctx);
+            $this$_init__u24lambda_u247.setOrientation(i);
+            $this$_init__u24lambda_u247.setGravity(16);
+            $this$_init__u24lambda_u247.setBackground(CarUi.rounded$default(this.ui, CarUi.Companion.getCARD(), 20, null, 4, null));
+            $this$_init__u24lambda_u247.setPadding(this.ui.dp(18), this.ui.dp(18), this.ui.dp(16), this.ui.dp(18));
+            $this$_init__u24lambda_u247.setMinimumHeight(this.ui.dp(110));
+            LinearLayout.LayoutParams $this$lambda_u247_u24lambda_u242 = new LinearLayout.LayoutParams(this.ui.dp(52), this.ui.dp(52));
+            $this$lambda_u247_u24lambda_u242.rightMargin = this.ui.dp(16);
+            Unit unit = Unit.INSTANCE;
+            $this$_init__u24lambda_u247.addView(chip, $this$lambda_u247_u24lambda_u242);
+            LinearLayout $this$lambda_u247_u24lambda_u244 = new LinearLayout(ctx);
+            $this$lambda_u247_u24lambda_u244.setOrientation(1);
+            TextView $this$lambda_u247_u24lambda_u244_u24lambda_u243 = new TextView(ctx);
+            $this$lambda_u247_u24lambda_u244_u24lambda_u243.setText((CharSequence) c.getSecond());
+            $this$lambda_u247_u24lambda_u244_u24lambda_u243.setTextColor(CarUi.Companion.getTEXT());
+            $this$lambda_u247_u24lambda_u244_u24lambda_u243.setTextSize(20.0f);
+            $this$lambda_u247_u24lambda_u244_u24lambda_u243.setTypeface(Typeface.DEFAULT_BOLD);
+            $this$lambda_u247_u24lambda_u244.addView($this$lambda_u247_u24lambda_u244_u24lambda_u243);
+            $this$lambda_u247_u24lambda_u244.addView($this$_init__u24lambda_u241);
+            $this$_init__u24lambda_u247.addView($this$lambda_u247_u24lambda_u244, new LinearLayout.LayoutParams(0, -2, 1.0f));
+            TextView $this$lambda_u247_u24lambda_u245 = new TextView(ctx);
+            $this$lambda_u247_u24lambda_u245.setText("›");
+            $this$lambda_u247_u24lambda_u245.setTextSize(30.0f);
+            $this$lambda_u247_u24lambda_u245.setTextColor(CarUi.Companion.getDIM());
+            $this$_init__u24lambda_u247.addView($this$lambda_u247_u24lambda_u245);
+            $this$_init__u24lambda_u247.setClickable(true);
+            $this$_init__u24lambda_u247.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.ConnectionsView$$ExternalSyntheticLambda0
+                @Override // android.view.View.OnClickListener
+                public final void onClick(View view) {
+                    ConnectionsView.this.open.invoke(c.getThird());
+                }
+            });
+            this.cards.put(c.getFirst(), new Card(chip, $this$_init__u24lambda_u241, $this$_init__u24lambda_u247));
+            GridLayout.LayoutParams $this$_init__u24lambda_u248 = new GridLayout.LayoutParams(GridLayout.spec(i3 / 2), GridLayout.spec(i3 % 2, 1.0f));
+            $this$_init__u24lambda_u248.width = 0;
+            $this$_init__u24lambda_u248.setMargins(this.ui.dp(7), this.ui.dp(7), this.ui.dp(7), this.ui.dp(7));
+            Unit unit2 = Unit.INSTANCE;
+            $this$_init__u24lambda_u240.addView($this$_init__u24lambda_u247, $this$_init__u24lambda_u248);
+            i2 = i4;
+            str = str2;
+            z = true;
+            i = 0;
+        }
+        addView($this$_init__u24lambda_u240);
+    }
 
-   public ConnectionsView(Context var1, CarUi var2, Function1<? super String, Unit> var3) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "ui");
-      Intrinsics.checkNotNullParameter(var3, "open");
-      super(var1);
-      this.ui = var2;
-      this.open = var3;
-      this.cards = new HashMap<>();
-      this.main = new Handler(Looper.getMainLooper());
-      GridLayout var5 = new GridLayout(var1);
-      var5.setColumnCount(2);
-      var5.setPadding(this.ui.dp(2), this.ui.dp(2), this.ui.dp(2), this.ui.dp(30));
-      Triple var7 = new Triple<>("wifi", "Wi-Fi", "native:network");
-      Triple var6 = new Triple<>("link", "This tablet", "tablet:connection");
-      Triple var10 = new Triple<>("hotspot", "Galaxy hotspot", "gweb:/galaxy|Galaxy Access & Install");
-      Triple var11 = new Triple<>("bluetooth", "Bluetooth", "gweb:/bluetooth|Bluetooth");
-      Triple var9 = new Triple<>("star", "Remote Galaxy", "gweb:/galaxy|Galaxy Access & Install");
-      Triple var14 = new Triple<>("upload", "Uploads", "galaxy:data");
-      String var13 = "satellite";
-      Triple var8 = new Triple<>("satellite", "RTK GPS", "tablet:rtk");
-      Iterator var19 = CollectionsKt.listOf(new Triple[]{var7, var6, var10, var11, var9, var14, var8}).iterator();
-
-      for (int var4 = 0; var19.hasNext(); var4++) {
-         var7 = (Triple)var19.next();
-         String var15;
-         if (!Intrinsics.areEqual(var7.getFirst(), "link") && !Intrinsics.areEqual(var7.getFirst(), var13)) {
-            var15 = "device";
-         } else {
-            var15 = "tablet";
-         }
-
-         View var16 = SvIcon.chip$default(SvIcon.INSTANCE, var1, (String)var7.getFirst(), var15, 52, null, 16, null);
-         Intrinsics.checkNotNull(var16, "null cannot be cast to non-null type com.starpilot.starview.SvIcon.Chip");
-         SvIcon.Chip var22 = (SvIcon.Chip)var16;
-         TextView var24 = new TextView(var1);
-         var24.setText("…");
-         var24.setTextColor(CarUi.Companion.getDIM());
-         var24.setTextSize(16.0F);
-         LinearLayout var17 = new LinearLayout(var1);
-         var17.setOrientation(0);
-         var17.setGravity(16);
-         var17.setBackground((Drawable)CarUi.rounded$default(this.ui, CarUi.Companion.getCARD(), 20, null, 4, null));
-         var17.setPadding(this.ui.dp(18), this.ui.dp(18), this.ui.dp(16), this.ui.dp(18));
-         var17.setMinimumHeight(this.ui.dp(110));
-         View var25 = var22;
-         LayoutParams var28 = new LayoutParams(this.ui.dp(52), this.ui.dp(52));
-         var28.rightMargin = this.ui.dp(16);
-         Unit var12 = Unit.INSTANCE;
-         var17.addView(var25, (android.view.ViewGroup.LayoutParams)var28);
-         LinearLayout var26 = new LinearLayout(var1);
-         var26.setOrientation(1);
-         TextView var29 = new TextView(var1);
-         var29.setText((CharSequence)var7.getSecond());
-         var29.setTextColor(CarUi.Companion.getTEXT());
-         var29.setTextSize(20.0F);
-         var29.setTypeface(Typeface.DEFAULT_BOLD);
-         var26.addView((View)var29);
-         var26.addView((View)var24);
-         var17.addView((View)var26, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
-         TextView var27 = new TextView(var1);
-         var27.setText("›");
-         var27.setTextSize(30.0F);
-         var27.setTextColor(CarUi.Companion.getDIM());
-         var17.addView((View)var27);
-         var17.setClickable(true);
-         var17.setOnClickListener(new ConnectionsView$$ExternalSyntheticLambda0(this, var7));
-         this.cards.put((String)var7.getFirst(), new ConnectionsView.Card(var22, var24, var17));
-         View var21 = (View)var17;
-         android.widget.GridLayout.LayoutParams var23 = new android.widget.GridLayout.LayoutParams(GridLayout.spec(var4 / 2), GridLayout.spec(var4 % 2, 1.0F));
-         var23.width = 0;
-         var23.setMargins(this.ui.dp(7), this.ui.dp(7), this.ui.dp(7), this.ui.dp(7));
-         Unit var18 = Unit.INSTANCE;
-         var5.addView(var21, (android.view.ViewGroup.LayoutParams)var23);
-      }
-
-      this.addView((View)var5);
-   }
-
-   static final void lambda$7$lambda$6(ConnectionsView var0, Triple var1, View var2) {
-      var0.open.invoke((String)var1.getThird());
-   }
-
-   private static final Unit refresh$lambda$10(ConnectionsView var0, JSONObject var1) {
-      Intrinsics.checkNotNullParameter(var1, "st");
-      String var5 = var1.optString("ssid");
-      boolean var3 = var1.optBoolean("tethering");
-      boolean var2 = true;
-      Boolean var4 = true;
-      if (var3) {
-         String var6 = var1.optString("tether_ssid");
-         var0.set("wifi", "Tethering · " + var6, var4);
-      } else {
-         Intrinsics.checkNotNull(var5);
-         if (var5.length() <= 0) {
-            var2 = false;
-         }
-
-         if (var2) {
-            String var7 = var1.optString("ip");
-            var0.set("wifi", var5 + " · " + var7, var4);
-         } else {
-            var0.set("wifi", "Not connected", false);
-         }
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit refresh$lambda$16(ConnectionsView var0, JSONObject var1, String var2) {
-      if (var1 != null) {
-         if (!var1.optBoolean("active")) {
-            var2 = "Off";
-         } else {
-            label26: {
-               JSONObject var4 = var1.optJSONObject("config");
-               if (var4 != null) {
-                  var2 = var4.optString("ssid");
-                  if (var2 != null) {
-                     CharSequence var3 = var2;
-                     CharSequence var6 = var3;
-                     if (StringsKt.isBlank(var3)) {
-                        var6 = null;
-                     }
-
-                     var2 = (String)var6;
-                     if (var2 != null) {
-                        String var10 = " · " + var2;
-                        var2 = var10;
-                        if (var10 != null) {
-                           break label26;
-                        }
-                     }
-                  }
-               }
-
-               var2 = "";
+    public final boolean set(final String id, final String text, final Boolean on) {
+        Intrinsics.checkNotNullParameter(id, "id");
+        Intrinsics.checkNotNullParameter(text, "text");
+        return this.main.post(new Runnable() { // from class: com.starpilot.starview.ConnectionsView$$ExternalSyntheticLambda1
+            @Override // java.lang.Runnable
+            public final void run() {
+                ConnectionsView.set$lambda$9(ConnectionsView.this, id, text, on);
             }
+        });
+    }
 
-            var2 = "On" + var2;
-         }
-
-         var0.set("hotspot", var2, var1.optBoolean("active"));
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit refresh$lambda$18(ConnectionsView var0, JSONObject var1, String var2) {
-      if (var1 != null) {
-         String var3 = ToolLines.INSTANCE.line("/bluetooth", var1);
-         var2 = var3;
-         if (var3 == null) {
-            var2 = "–";
-         }
-
-         var0.set("bluetooth", var2, var1.optBoolean("powered"));
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit refresh$lambda$20(ConnectionsView var0, JSONObject var1, String var2) {
-      if (var1 != null) {
-         if (var1.optBoolean("paired")) {
-            var2 = "Paired";
-         } else {
-            var2 = "Not paired";
-         }
-
-         var0.set("star", var2, var1.optBoolean("paired"));
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit refresh$lambda$24(ConnectionsView var0, JSONObject var1) {
-      if (var1 != null) {
-         label25: {
-            for (var var5_it : GalaxyRow.Companion.parse(var1)) {
-               var5 = var5_it;
-               boolean var2;
-               if (((GalaxyRow)var5).getControl() == GalaxyRow.Control.SWITCH) {
-                  var2 = true;
-               } else {
-                  var2 = false;
-               }
-
-               if (var2) {
-                  break label25;
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void set$lambda$9(ConnectionsView this$0, String $id, String $text, Boolean $on) {
+        SvIcon.State state;
+        Card c = this$0.cards.get($id);
+        if (c == null) {
+            return;
+        }
+        c.getState().setText($text);
+        SvIcon.Chip chip = c.getChip();
+        if (Intrinsics.areEqual((Object) $on, (Object) true)) {
+            state = SvIcon.State.ON;
+        } else if (Intrinsics.areEqual((Object) $on, (Object) false)) {
+            state = SvIcon.State.OFF;
+        } else {
+            if ($on != null) {
+                throw new NoWhenBranchMatchedException();
             }
+            state = SvIcon.State.NA;
+        }
+        SvIcon.Chip.set$default(chip, null, null, state, 3, null);
+        c.getBox().setBackground(Intrinsics.areEqual((Object) $on, (Object) true) ? this$0.ui.rounded(Color.rgb(19, 34, 25), 20, Integer.valueOf(Color.rgb(43, 107, 75))) : CarUi.rounded$default(this$0.ui, CarUi.Companion.getCARD(), 20, null, 4, null));
+    }
 
-            var5 = null;
-         }
-
-         GalaxyRow var6 = (GalaxyRow)var5;
-         if (var6 != null) {
-            String var7 = var6.getLabel();
-            String var4 = var6.getValue().toLowerCase(Locale.ROOT);
-            Intrinsics.checkNotNullExpressionValue(var4, "toLowerCase(...)");
-            var0.set("upload", var7 + ": " + var4, Intrinsics.areEqual(var6.getValue(), "On"));
-         }
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final void set$lambda$9(ConnectionsView var0, String var1, String var2, Boolean var3) {
-      ConnectionsView.Card var4 = var0.cards.get(var1);
-      if (var4 != null) {
-         var4.getState().setText(var2);
-         SvIcon.Chip var8 = var4.getChip();
-         SvIcon.State var6;
-         if (Intrinsics.areEqual(var3, true)) {
-            var6 = SvIcon.State.ON;
-         } else if (Intrinsics.areEqual(var3, false)) {
-            var6 = SvIcon.State.OFF;
-         } else {
-            if (var3 != null) {
-               throw new NoWhenBranchMatchedException();
+    /* JADX WARN: Code restructure failed: missing block: B:29:0x00c4, code lost:
+    
+        if (r2 == null) goto L37;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final void refresh() {
+        String str;
+        String str2;
+        DataClient d = Link.INSTANCE.getData();
+        if (d != null && d.getConnected()) {
+            String host = Link.INSTANCE.getHost();
+            if (host == null) {
+                host = "";
             }
-
-            var6 = SvIcon.State.NA;
-         }
-
-         SvIcon.Chip.set$default(var8, null, null, var6, 3, null);
-         LinearLayout var7 = var4.getBox();
-         GradientDrawable var5;
-         if (Intrinsics.areEqual(var3, true)) {
-            var5 = var0.ui.rounded(Color.rgb(19, 34, 25), 20, Color.rgb(43, 107, 75));
-         } else {
-            var5 = CarUi.rounded$default(var0.ui, CarUi.Companion.getCARD(), 20, null, 4, null);
-         }
-
-         var7.setBackground((Drawable)var5);
-      }
-   }
-
-   public final void refresh() {
-      DataClient var7 = Link.INSTANCE.getData();
-      boolean var2 = true;
-      boolean var1;
-      if (var7 != null && var7.getConnected()) {
-         var1 = 1;
-      } else {
-         var1 = 0;
-      }
-
-      String var5 = "";
-      String var11;
-      if (var1) {
-         String var6 = Link.INSTANCE.getHost();
-         var11 = var6;
-         if (var6 == null) {
-            var11 = "";
-         }
-
-         var11 = "Linked · " + var11;
-      } else {
-         var11 = "Not linked";
-      }
-
-      boolean var3;
-      if (var7 != null && var7.getConnected()) {
-         var3 = true;
-      } else {
-         var3 = false;
-      }
-
-      this.set("link", var11, var3);
-      if (var7 != null && var7.getConnected()) {
-         var1 = var2;
-      } else {
-         var1 = (boolean)0;
-      }
-
-      Object var18 = null;
-      if (var1) {
-         var7.request("wifi_status", MapsKt.emptyMap(), new ConnectionsView$$ExternalSyntheticLambda2(this));
-      } else {
-         this.set("wifi", "Unknown (tablet not linked)", null);
-      }
-
-      label47: {
-         var19 = Ntrip.INSTANCE.getRtk();
-         if (var19 != null) {
-            String var8 = var19.getWords();
-            var1 = var19.getUsed();
-            var11 = var5;
-            if (var19.getHasFix()) {
-               var11 = RtkStatus.Companion.accuracy(var19.getHAccM(), false);
-               var11 = " · ±" + var11;
+            str = "Linked · " + host;
+        } else {
+            str = "Not linked";
+        }
+        set("link", str, Boolean.valueOf(d != null && d.getConnected()));
+        if (d != null && d.getConnected()) {
+            d.request("wifi_status", MapsKt.emptyMap(), new Function1() { // from class: com.starpilot.starview.ConnectionsView$$ExternalSyntheticLambda2
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj) {
+                    Unit refresh$lambda$10;
+                    refresh$lambda$10 = ConnectionsView.refresh$lambda$10(ConnectionsView.this, (JSONObject) obj);
+                    return refresh$lambda$10;
+                }
+            });
+        } else {
+            set("wifi", "Unknown (tablet not linked)", null);
+        }
+        RtkStatus r = Ntrip.INSTANCE.getRtk();
+        if (r != null) {
+            str2 = r.getWords() + " · " + r.getUsed() + " sats" + (r.getHasFix() ? " · ±" + RtkStatus.Companion.accuracy(r.getHAccM(), false) : "");
+        }
+        str2 = "No receiver seen";
+        set("satellite", str2, r != null ? Boolean.valueOf(r.getHasFix()) : null);
+        Galaxy7 g = Galaxy7.Companion.current();
+        if (g == null) {
+            return;
+        }
+        g.get("/api/galaxy/hotspot", new Function2() { // from class: com.starpilot.starview.ConnectionsView$$ExternalSyntheticLambda3
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit refresh$lambda$16;
+                refresh$lambda$16 = ConnectionsView.refresh$lambda$16(ConnectionsView.this, (JSONObject) obj, (String) obj2);
+                return refresh$lambda$16;
             }
-
-            var5 = var8 + " · " + var1 + " sats" + var11;
-            var11 = var5;
-            if (var5 != null) {
-               break label47;
+        });
+        g.get("/api/bluetooth/status", new Function2() { // from class: com.starpilot.starview.ConnectionsView$$ExternalSyntheticLambda4
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit refresh$lambda$18;
+                refresh$lambda$18 = ConnectionsView.refresh$lambda$18(ConnectionsView.this, (JSONObject) obj, (String) obj2);
+                return refresh$lambda$18;
             }
-         }
+        });
+        g.get("/api/galaxy/status", new Function2() { // from class: com.starpilot.starview.ConnectionsView$$ExternalSyntheticLambda5
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit refresh$lambda$20;
+                refresh$lambda$20 = ConnectionsView.refresh$lambda$20(ConnectionsView.this, (JSONObject) obj, (String) obj2);
+                return refresh$lambda$20;
+            }
+        });
+        GalaxyPages.get$default(GalaxyPages.INSTANCE, "data", 0L, new Function1() { // from class: com.starpilot.starview.ConnectionsView$$ExternalSyntheticLambda6
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit refresh$lambda$24;
+                refresh$lambda$24 = ConnectionsView.refresh$lambda$24(ConnectionsView.this, (JSONObject) obj);
+                return refresh$lambda$24;
+            }
+        }, 2, null);
+    }
 
-         var11 = "No receiver seen";
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit refresh$lambda$10(ConnectionsView this$0, JSONObject st) {
+        Intrinsics.checkNotNullParameter(st, "st");
+        String ssid = st.optString("ssid");
+        if (st.optBoolean("tethering")) {
+            this$0.set("wifi", "Tethering · " + st.optString("tether_ssid"), true);
+        } else {
+            Intrinsics.checkNotNull(ssid);
+            if (ssid.length() > 0) {
+                this$0.set("wifi", ssid + " · " + st.optString("ip"), true);
+            } else {
+                this$0.set("wifi", "Not connected", false);
+            }
+        }
+        return Unit.INSTANCE;
+    }
 
-      Boolean var17 = (Boolean)var18;
-      if (var19 != null) {
-         var17 = var19.getHasFix();
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:14:0x0040, code lost:
+    
+        if (r2 != null) goto L17;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit refresh$lambda$16(ConnectionsView this$0, JSONObject o, String str) {
+        String str2;
+        String s;
+        String optString;
+        if (o != null) {
+            if (o.optBoolean("active")) {
+                JSONObject optJSONObject = o.optJSONObject("config");
+                if (optJSONObject != null && (optString = optJSONObject.optString("ssid")) != null) {
+                    String str3 = optString;
+                    if (StringsKt.isBlank(str3)) {
+                        str3 = null;
+                    }
+                    String s2 = str3;
+                    if (s2 != null) {
+                        s = " · " + s2;
+                    }
+                }
+                s = "";
+                str2 = "On" + s;
+            } else {
+                str2 = "Off";
+            }
+            this$0.set("hotspot", str2, Boolean.valueOf(o.optBoolean("active")));
+        }
+        return Unit.INSTANCE;
+    }
 
-      this.set("satellite", var11, var17);
-      Galaxy7 var15 = Galaxy7.Companion.current();
-      if (var15 != null) {
-         var15.get("/api/galaxy/hotspot", new ConnectionsView$$ExternalSyntheticLambda3(this));
-         var15.get("/api/bluetooth/status", new ConnectionsView$$ExternalSyntheticLambda4(this));
-         var15.get("/api/galaxy/status", new ConnectionsView$$ExternalSyntheticLambda5(this));
-         GalaxyPages.get$default(GalaxyPages.INSTANCE, "data", 0L, new ConnectionsView$$ExternalSyntheticLambda6(this), 2, null);
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit refresh$lambda$18(ConnectionsView this$0, JSONObject o, String str) {
+        if (o != null) {
+            String line = ToolLines.INSTANCE.line("/bluetooth", o);
+            if (line == null) {
+                line = "–";
+            }
+            this$0.set("bluetooth", line, Boolean.valueOf(o.optBoolean("powered")));
+        }
+        return Unit.INSTANCE;
+    }
 
-   public final boolean set(String var1, String var2, Boolean var3) {
-      Intrinsics.checkNotNullParameter(var1, "id");
-      Intrinsics.checkNotNullParameter(var2, "text");
-      return this.main.post(new ConnectionsView$$ExternalSyntheticLambda1(this, var1, var2, var3));
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit refresh$lambda$20(ConnectionsView this$0, JSONObject o, String str) {
+        if (o != null) {
+            this$0.set("star", o.optBoolean("paired") ? "Paired" : "Not paired", Boolean.valueOf(o.optBoolean("paired")));
+        }
+        return Unit.INSTANCE;
+    }
 
-   private static final class Card {
-      private final LinearLayout box;
-      private final SvIcon.Chip chip;
-      private final TextView state;
-
-      public Card(SvIcon.Chip var1, TextView var2, LinearLayout var3) {
-         Intrinsics.checkNotNullParameter(var1, "chip");
-         Intrinsics.checkNotNullParameter(var2, "state");
-         Intrinsics.checkNotNullParameter(var3, "box");
-         super();
-         this.chip = var1;
-         this.state = var2;
-         this.box = var3;
-      }
-
-      public final LinearLayout getBox() {
-         return this.box;
-      }
-
-      public final SvIcon.Chip getChip() {
-         return this.chip;
-      }
-
-      public final TextView getState() {
-         return this.state;
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit refresh$lambda$24(ConnectionsView this$0, JSONObject o) {
+        Object element$iv;
+        if (o != null) {
+            Iterable $this$firstOrNull$iv = GalaxyRow.Companion.parse(o);
+            Iterator it = $this$firstOrNull$iv.iterator();
+            while (true) {
+                if (!it.hasNext()) {
+                    element$iv = null;
+                    break;
+                }
+                element$iv = it.next();
+                if (((GalaxyRow) element$iv).getControl() == GalaxyRow.Control.SWITCH) {
+                    break;
+                }
+            }
+            GalaxyRow r = (GalaxyRow) element$iv;
+            if (r != null) {
+                String label = r.getLabel();
+                String lowerCase = r.getValue().toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+                this$0.set("upload", label + ": " + lowerCase, Boolean.valueOf(Intrinsics.areEqual(r.getValue(), "On")));
+            }
+        }
+        return Unit.INSTANCE;
+    }
 }

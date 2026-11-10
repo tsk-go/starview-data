@@ -1,7 +1,9 @@
 package com.starpilot.starview;
 
 import android.content.Context;
+import com.starpilot.starview.DriveTrack;
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -11,280 +13,224 @@ import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.comparisons.ComparisonsKt;
 import kotlin.io.FilesKt;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 
+/* compiled from: DriveTrack.kt */
 public final class DriveTrack {
-   public static final DriveTrack INSTANCE = new DriveTrack();
-   private static final StringBuilder buf = new StringBuilder();
-   private static File dir;
-   private static File file;
-   private static double lastLat = Double.NaN;
-   private static double lastLon = Double.NaN;
-   private static long lastT;
+    private static File dir;
+    private static File file;
+    private static long lastT;
+    public static final DriveTrack INSTANCE = new DriveTrack();
+    private static double lastLat = Double.NaN;
+    private static double lastLon = Double.NaN;
+    private static final StringBuilder buf = new StringBuilder();
 
-   // $VF: synthetic method
-   public static boolean $r8$lambda$2iaI7mRw3F53F1fuQOcdYE8j4H4(File var0) {
-      return between$lambda$1(var0);
-   }
+    /* compiled from: DriveTrack.kt */
+    public static final class Pt {
+        private final double lat;
+        private final double lon;
+        private final long t;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$VxuUuK0a_neI3IBiZ2N84m3V6Z0(long var0, long var2, ArrayList var4, String var5) {
-      return between$lambda$2(var0, var2, var4, var5);
-   }
+        public Pt(long t, double lat, double lon) {
+            this.t = t;
+            this.lat = lat;
+            this.lon = lon;
+        }
 
-   private DriveTrack() {
-   }
+        public final double getLat() {
+            return this.lat;
+        }
 
-   private static final boolean between$lambda$1(File var0) {
-      String var1 = var0.getName();
-      Intrinsics.checkNotNullExpressionValue(var1, "getName(...)");
-      return StringsKt.endsWith$default(var1, ".csv", false, 2, null);
-   }
+        public final double getLon() {
+            return this.lon;
+        }
 
-   private static final Unit between$lambda$2(long var0, long var2, ArrayList var4, String var5) {
-      Intrinsics.checkNotNullParameter(var5, "l");
-      CharSequence var11 = var5;
-      boolean var7 = false;
-      List var12 = StringsKt.split$default(var11, new char[]{','}, false, 0, 6, null);
-      if (var12.size() < 3) {
-         return Unit.INSTANCE;
-      } else {
-         Long var10 = StringsKt.toLongOrNull((String)var12.get(0));
-         if (var10 != null) {
-            long var8 = var10;
-            boolean var6 = var7;
-            if (var0 <= var8) {
-               var6 = var7;
-               if (var8 <= var2) {
-                  var6 = true;
-               }
-            }
+        public final long getT() {
+            return this.t;
+        }
+    }
 
-            if (var6) {
-               var4.add(new DriveTrack.Pt(var8, Double.parseDouble((String)var12.get(1)), Double.parseDouble((String)var12.get(2))));
-            }
+    private DriveTrack() {
+    }
 
-            return Unit.INSTANCE;
-         } else {
-            return Unit.INSTANCE;
-         }
-      }
-   }
+    public final void init(Context ctx) {
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        if (dir == null) {
+            File $this$init_u24lambda_u240 = new File(ctx.getFilesDir(), "tracks");
+            $this$init_u24lambda_u240.mkdirs();
+            INSTANCE.prune($this$init_u24lambda_u240);
+            dir = $this$init_u24lambda_u240;
+        }
+    }
 
-   private final void flush() {
-      File var2 = file;
-      if (var2 != null) {
-         boolean var1;
-         if (buf.length() == 0) {
-            var1 = true;
-         } else {
-            var1 = false;
-         }
+    public static /* synthetic */ void tick$default(DriveTrack driveTrack, Telemetry telemetry, long j, int i, Object obj) {
+        if ((i & 2) != 0) {
+            j = System.currentTimeMillis();
+        }
+        driveTrack.tick(telemetry, j);
+    }
 
-         if (!var1) {
-            String var3 = buf.toString();
-            Intrinsics.checkNotNullExpressionValue(var3, "toString(...)");
-            buf.setLength(0);
-
-            try {
-               FilesKt.appendText$default(var2, var3, null, 2, null);
-            } catch (Exception var4) {
-            }
-         }
-      }
-   }
-
-   private final void prune(File var1) {
-      long var4 = System.currentTimeMillis();
-      File[] var6 = var1.listFiles();
-      if (var6 != null) {
-         for (File var7 : var6) {
-            if (var7.lastModified() < var4 - 7776000000L) {
-               var7.delete();
-            }
-         }
-      }
-   }
-
-   // $VF: synthetic method
-   public static void tick$default(DriveTrack var0, Telemetry var1, long var2, int var4, Object var5) {
-      if ((var4 & 2) != 0) {
-         var2 = System.currentTimeMillis();
-      }
-
-      var0.tick(var1, var2);
-   }
-
-   public final List<DriveTrack.Pt> between(Context var1, long var2, long var4) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      this.flush();
-      File var9 = dir;
-      File var8 = var9;
-      if (var9 == null) {
-         var8 = new File(var1.getFilesDir(), "tracks");
-      }
-
-      ArrayList var16 = new ArrayList();
-      File[] var14 = var8.listFiles(new DriveTrack$$ExternalSyntheticLambda0());
-      File[] var12 = var14;
-      if (var14 == null) {
-         var12 = new File[0];
-      }
-
-      for (File var15 : var12) {
-         Intrinsics.checkNotNull(var15);
-         Long var10 = StringsKt.toLongOrNull(FilesKt.getNameWithoutExtension(var15));
-         if (var10 != null && var10 <= var4 && var15.lastModified() >= var2) {
-            try {
-               DriveTrack$$ExternalSyntheticLambda1 var17 = new DriveTrack$$ExternalSyntheticLambda1(var2, var4, var16);
-               FilesKt.forEachLine$default(var15, null, var17, 1, null);
-            } catch (Exception var11) {
-            }
-         }
-      }
-
-      List var13 = var16;
-      if (var13.size() > 1) {
-         CollectionsKt.sortWith(var13, new Comparator() {
-            @Override
-            public final int compare(T var1, T var2x) {
-               return ComparisonsKt.compareValues(((DriveTrack.Pt)var1).getT(), ((DriveTrack.Pt)var2x).getT());
-            }
-         });
-      }
-
-      return var16;
-   }
-
-   public final void init(Context var1) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      if (dir == null) {
-         File var2 = new File(var1.getFilesDir(), "tracks");
-         var2.mkdirs();
-         INSTANCE.prune(var2);
-         dir = var2;
-      }
-   }
-
-   public final void tick(Telemetry var1, long var2) {
-      Intrinsics.checkNotNullParameter(var1, "t");
-      File var12 = dir;
-      if (var12 != null) {
-         if (!var1.getStarted()) {
+    public final void tick(Telemetry t, long nowMs) {
+        Intrinsics.checkNotNullParameter(t, "t");
+        File d = dir;
+        if (d == null) {
+            return;
+        }
+        if (!t.getStarted()) {
             if (file != null) {
-               this.flush();
-               file = null;
+                flush();
+                file = null;
+                return;
             }
-         } else {
-            if (file == null) {
-               file = new File(var12, var2 + ".csv");
-               lastT = 0L;
-            }
-
-            if (var2 - lastT >= 2000L) {
-               double[] var18 = RtkPosition.INSTANCE.now(var2, var1.getVEgo());
-               boolean var11 = false;
-               double var4;
-               if (var18 != null) {
-                  var4 = var18[0];
-               } else {
-                  var4 = var1.getGpsLat();
-               }
-
-               double var6;
-               if (var18 != null) {
-                  var6 = var18[1];
-               } else {
-                  var6 = var1.getGpsLon();
-               }
-
-               boolean var10;
-               if (!Double.isInfinite(var4) && !Double.isNaN(var4)) {
-                  var10 = true;
-               } else {
-                  var10 = false;
-               }
-
-               if (var10) {
-                  if (!Double.isInfinite(var6) && !Double.isNaN(var6)) {
-                     var10 = true;
-                  } else {
-                     var10 = false;
-                  }
-
-                  if (var10) {
-                     if (var4 == 0.0) {
-                        var10 = true;
-                     } else {
-                        var10 = false;
-                     }
-
-                     if (var10) {
-                        var10 = var11;
-                        if (var6 == 0.0) {
-                           var10 = true;
-                        }
-
-                        if (var10) {
-                           return;
-                        }
-                     }
-
-                     double var8;
-                     if (Double.isNaN(lastLat)) {
-                        var8 = 1.0E9;
-                     } else {
-                        var8 = Math.hypot((var4 - lastLat) * 111195.0, (var6 - lastLon) * 111320.0 * Math.cos(Math.toRadians(var4)));
-                     }
-
-                     if (var8 < 15.0 && var2 - lastT < 20000L) {
+            return;
+        }
+        if (file == null) {
+            file = new File(d, nowMs + ".csv");
+            lastT = 0L;
+        }
+        if (nowMs - lastT < 2000) {
+            return;
+        }
+        double[] rtk = RtkPosition.INSTANCE.now(nowMs, t.getVEgo());
+        double lat = rtk != null ? rtk[0] : t.getGpsLat();
+        double lon = rtk != null ? rtk[1] : t.getGpsLon();
+        if ((Double.isInfinite(lat) || Double.isNaN(lat)) ? false : true) {
+            if ((Double.isInfinite(lon) || Double.isNaN(lon)) ? false : true) {
+                if (lat == 0.0d) {
+                    if (lon == 0.0d) {
                         return;
-                     }
-
-                     lastT = var2;
-                     lastLat = var4;
-                     lastLon = var6;
-                     StringBuilder var19 = buf.append(var2).append(',');
-                     String var13 = String.format(Locale.US, "%.6f", Arrays.copyOf(new Object[]{var4}, 1));
-                     Intrinsics.checkNotNullExpressionValue(var13, "format(...)");
-                     StringBuilder var14 = var19.append(var13).append(',');
-                     String var20 = String.format(Locale.US, "%.6f", Arrays.copyOf(new Object[]{var6}, 1));
-                     Intrinsics.checkNotNullExpressionValue(var20, "format(...)");
-                     var14.append(var20).append('\n');
-                     if (buf.length() > 4000) {
-                        this.flush();
-                     }
-
-                     return;
-                  }
-               }
+                    }
+                }
+                double moved = Double.isNaN(lastLat) ? 1.0E9d : Math.hypot((lat - lastLat) * 111195.0d, (lon - lastLon) * 111320.0d * Math.cos(Math.toRadians(lat)));
+                if (moved >= 15.0d || nowMs - lastT >= 20000) {
+                    lastT = nowMs;
+                    lastLat = lat;
+                    lastLon = lon;
+                    StringBuilder append = buf.append(nowMs).append(',');
+                    String format = String.format(Locale.US, "%.6f", Arrays.copyOf(new Object[]{Double.valueOf(lat)}, 1));
+                    Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+                    StringBuilder append2 = append.append(format).append(',');
+                    String format2 = String.format(Locale.US, "%.6f", Arrays.copyOf(new Object[]{Double.valueOf(lon)}, 1));
+                    Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
+                    append2.append(format2).append('\n');
+                    if (buf.length() > 4000) {
+                        flush();
+                    }
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   public static final class Pt {
-      private final double lat;
-      private final double lon;
-      private final long t;
+    private final void flush() {
+        File f = file;
+        if (f == null) {
+            return;
+        }
+        if (buf.length() == 0) {
+            return;
+        }
+        String text = buf.toString();
+        Intrinsics.checkNotNullExpressionValue(text, "toString(...)");
+        buf.setLength(0);
+        try {
+            FilesKt.appendText$default(f, text, null, 2, null);
+        } catch (Exception e) {
+        }
+    }
 
-      public Pt(long var1, double var3, double var5) {
-         this.t = var1;
-         this.lat = var3;
-         this.lon = var5;
-      }
+    public final List<Pt> between(Context ctx, final long fromMs, final long toMs) {
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        flush();
+        File file2 = dir;
+        if (file2 == null) {
+            file2 = new File(ctx.getFilesDir(), "tracks");
+        }
+        File d = file2;
+        final ArrayList out = new ArrayList();
+        File[] listFiles = d.listFiles(new FileFilter() { // from class: com.starpilot.starview.DriveTrack$$ExternalSyntheticLambda0
+            @Override // java.io.FileFilter
+            public final boolean accept(File file3) {
+                boolean between$lambda$1;
+                between$lambda$1 = DriveTrack.between$lambda$1(file3);
+                return between$lambda$1;
+            }
+        });
+        if (listFiles == null) {
+            listFiles = new File[0];
+        }
+        for (File f : listFiles) {
+            Intrinsics.checkNotNull(f);
+            Long longOrNull = StringsKt.toLongOrNull(FilesKt.getNameWithoutExtension(f));
+            if (longOrNull != null) {
+                long start = longOrNull.longValue();
+                if (start <= toMs && f.lastModified() >= fromMs) {
+                    try {
+                        FilesKt.forEachLine$default(f, null, new Function1() { // from class: com.starpilot.starview.DriveTrack$$ExternalSyntheticLambda1
+                            @Override // kotlin.jvm.functions.Function1
+                            public final Object invoke(Object obj) {
+                                Unit between$lambda$2;
+                                between$lambda$2 = DriveTrack.between$lambda$2(fromMs, toMs, out, (String) obj);
+                                return between$lambda$2;
+                            }
+                        }, 1, null);
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        }
+        ArrayList $this$sortBy$iv = out;
+        if ($this$sortBy$iv.size() > 1) {
+            CollectionsKt.sortWith($this$sortBy$iv, new Comparator() { // from class: com.starpilot.starview.DriveTrack$between$$inlined$sortBy$1
+                /* JADX WARN: Multi-variable type inference failed */
+                @Override // java.util.Comparator
+                public final int compare(T t, T t2) {
+                    DriveTrack.Pt it = (DriveTrack.Pt) t;
+                    DriveTrack.Pt it2 = (DriveTrack.Pt) t2;
+                    return ComparisonsKt.compareValues(Long.valueOf(it.getT()), Long.valueOf(it2.getT()));
+                }
+            });
+        }
+        return out;
+    }
 
-      public final double getLat() {
-         return this.lat;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean between$lambda$1(File x) {
+        String name = x.getName();
+        Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
+        return StringsKt.endsWith$default(name, ".csv", false, 2, (Object) null);
+    }
 
-      public final double getLon() {
-         return this.lon;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit between$lambda$2(long $fromMs, long $toMs, ArrayList $out, String l) {
+        Long longOrNull;
+        Intrinsics.checkNotNullParameter(l, "l");
+        boolean z = false;
+        List p = StringsKt.split$default((CharSequence) l, new char[]{','}, false, 0, 6, (Object) null);
+        if (p.size() >= 3 && (longOrNull = StringsKt.toLongOrNull((String) p.get(0))) != null) {
+            long t = longOrNull.longValue();
+            if ($fromMs <= t && t <= $toMs) {
+                z = true;
+            }
+            if (z) {
+                $out.add(new Pt(t, Double.parseDouble((String) p.get(1)), Double.parseDouble((String) p.get(2))));
+            }
+            return Unit.INSTANCE;
+        }
+        return Unit.INSTANCE;
+    }
 
-      public final long getT() {
-         return this.t;
-      }
-   }
+    private final void prune(File d) {
+        long old = System.currentTimeMillis() - 7776000000L;
+        File[] listFiles = d.listFiles();
+        if (listFiles == null) {
+            return;
+        }
+        for (File file2 : listFiles) {
+            if (file2.lastModified() < old) {
+                file2.delete();
+            }
+        }
+    }
 }

@@ -3,11 +3,9 @@ package com.starpilot.starview;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,7 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
+import com.starpilot.starview.GxNavigationPage;
+import com.starpilot.starview.GxPage;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,9 +32,9 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.Map.Entry;
 import kotlin.Pair;
 import kotlin.Result;
 import kotlin.ResultKt;
@@ -45,6310 +44,4678 @@ import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.collections.SetsKt;
 import kotlin.comparisons.ComparisonsKt;
+import kotlin.io.CloseableKt;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.jvm.internal.Ref;
 import kotlin.jvm.internal.SpreadBuilder;
 import kotlin.jvm.internal.StringCompanionObject;
-import kotlin.jvm.internal.Ref.ObjectRef;
+import kotlin.ranges.IntRange;
 import kotlin.text.MatchResult;
 import kotlin.text.Regex;
 import kotlin.text.RegexOption;
 import kotlin.text.StringsKt;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: GxNavigation.kt */
 public final class GxNavigationPage extends GxPage {
-   private String appUrl;
-   private boolean canProcessNow;
-   private LinearLayout catalogBox;
-   private String cookieName;
-   private int curTab;
-   private LinearLayout destBox;
-   private JSONObject destination;
-   private final HashSet<String> expandedGroups;
-   private LinearLayout favBox;
-   private List<? extends JSONObject> favorites;
-   private String galaxyToken;
-   private final HashMap<String, Pair<GxPage.Row, JSONObject>> groupRows;
-   private boolean isMetric;
-   private LinearLayout keyBox;
-   private final List<GxNavigationPage.KeyMeta> keyMeta;
-   private LinearLayout keysBox;
-   private String keysError;
-   private boolean keysLoading;
-   private String language;
-   private Pair<Double, Double> lastPosition;
-   private boolean loadingRoute;
-   private String mapboxPublic;
-   private String mapboxSecret;
-   private boolean mapsActionBusy;
-   private LinearLayout mapsBar;
-   private String mapsError;
-   private TextView mapsErrorNote;
-   private boolean mapsLoadingCatalog;
-   private boolean mapsLoadingStatus;
-   private JSONObject mapsProgress;
-   private boolean mapsSavingSchedule;
-   private boolean mapsSavingSelection;
-   private String mapsSearch;
-   private List<? extends JSONObject> mapsSections;
-   private JSONObject mapsStatus;
-   private boolean mapsStatusInFlight;
-   private TextView nOnroad;
-   private TextView nSchDirty;
-   private TextView nSelDirty;
-   private String navError;
-   private boolean navLoading;
-   private boolean navigationStarted;
-   private final boolean needsOffroad;
-   private TextView pEstimate;
-   private TextView pEta;
-   private TextView pFiles;
-   private TextView pRegion;
-   private TextView pStored;
-   private Function1<? super Integer, Unit> paintSchedule;
-   private boolean paired;
-   private ProgressBar progBar;
-   private LinearLayout progCard;
-   private TextView progTitle;
-   private EditText queryEdit;
-   private boolean quietEdit;
-   private LinearLayout recentBox;
-   private List<? extends JSONObject> recentDestinations;
-   private final HashMap<String, Switch> regionSwitches;
-   private Triple<Double, Double, String> routeSummary;
-   private List<? extends JSONObject> routes;
-   private LinearLayout sBar;
-   private TextView sDebug;
-   private GxPage.Row sDebugRow;
-   private TextView sLastEvent;
-   private TextView sReason;
-   private TextView sStatus;
-   private TextView sVision;
-   private final HashMap<String, String> savedKeys;
-   private TextView schedNote;
-   private LinearLayout scheduleBox;
-   private String scheduleDraft;
-   private List<Pair<String, String>> scheduleOptions;
-   private String scheduleSaved;
-   private LinearLayout searchCard;
-   private final Runnable searchRunner;
-   private int searchSeq;
-   private boolean searching;
-   private TextView selRegionsText;
-   private Function1<? super Integer, Unit> selectTab;
-   private final LinkedHashSet<String> selectedDraft;
-   private String selectedRouteId;
-   private Set<String> selectedSaved;
-   private final String sessionToken;
-   private boolean speedLoading;
-   private JSONObject speedObj;
-   private boolean speedProcessing;
-   private String speedReason;
-   private String speedStatus;
-   private boolean speedSubmitting;
-   private TextView statusNote;
-   private LinearLayout suggestBox;
-   private List<? extends JSONObject> suggestions;
-   private final HashMap<String, String> tokenLabels;
-   private boolean tokenVisible;
-   private TextView vDownloader;
-   private TextView vEstimate;
-   private TextView vLastUpdate;
-   private TextView vSaved;
-   private TextView vStorage;
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$0tJFnqF9_STCoJec3qP3VXoARlQ/* $VF was: $r8$lambda$0tJFnqF9_STCoJec3qP3VXoARlQ*/(GxNavigationPage var0, JSONObject var1) {
-      return renderRecents$lambda$100(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$1Tt5_IrJw3tB78cvEDlJAQDDz0A(GxNavigationPage var0, GxNavigationPage.KeyMeta var1) {
-      return keyRow$lambda$162(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$1WYm5_CvSWrc2bu_5ODgT7BdJQo/* $VF was: $r8$lambda$1WYm5_CvSWrc2bu_5ODgT7BdJQo*/(JSONObject var0, GxNavigationPage var1) {
-      return renderFavorites$lambda$89$lambda$88(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$1fLF40fue0b9GIqIXX7qlnW_2tA(GxNavigationPage.KeyMeta var0, GxNavigationPage var1, String var2) {
-      return editKey$lambda$166(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$23gWRfRynTawC4kUJlRsmhKujAY(GxNavigationPage var0) {
-      return renderDest$lambda$75(var0);
-   }
-
-   // $VF: synthetic method
-   public static CharSequence $r8$lambda$27XxcG1X3iYzhXiw8Rl1pLrJkX0(GxNavigationPage var0, Pair var1) {
-      return qs$lambda$21(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$2IZeaKFbbwS6YEpYGRG5Zh_F8PE(GxNavigationPage var0) {
-      return buildDest$lambda$27(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$2xNkgSg4nuFjP2jw_mqY5tehppI(GxNavigationPage var0, GxNavigationPage.KeyMeta var1) {
-      return keyRow$lambda$162$lambda$161(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$61lxBbC7c7O2kMrnXnnfgfg70H4(GxNavigationPage var0, int var1) {
-      return buildSchedule$lambda$114(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$6ExDU2_tP5mjhaMLwT8WfsiZpiM/* $VF was: $r8$lambda$6ExDU2_tP5mjhaMLwT8WfsiZpiM*/(
-      GxNavigationPage var0, String var1, JSONObject var2
-   ) {
-      return chooseSuggestion$lambda$51(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$6o6BAdu9sHNsZuKilXkigf60nKY(GxNavigationPage var0, String var1, JSONObject var2) {
-      return loadNav$lambda$32(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$7Lv6_qXfiaTf0C97aCNNsI76x1E(GxNavigationPage var0) {
-      return renderDest$lambda$76(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$7u0DogkeLWKAtLXQU6LFU61Xyj4(GxNavigationPage var0) {
-      return buildDest$lambda$28(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$9p3LgghAOO_WjKZkqAnMxKf3ByY(GxNavigationPage var0) {
-      return removeMaps$lambda$146(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$9u6Nw_ht0lv_Msqr5dnSkBNcNgM/* $VF was: $r8$lambda$9u6Nw_ht0lv_Msqr5dnSkBNcNgM*/(List var0, GxNavigationPage var1) {
-      return renderCatalog$lambda$137(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$A1fi6DsFKw7TSHVOXPHumqb6U2U(Function0 var0, View var1) {
-      clickable$lambda$13(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static CharSequence $r8$lambda$BGQKJGHNZwZkZ6XwmTx_Fam0H4U/* $VF was: $r8$lambda$BGQKJGHNZwZkZ6XwmTx_Fam0H4U*/(MatchResult var0) {
-      return keyRow$lambda$156(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$BT_9Ir48UZJxAs2Drm2x71gKneQ(GxNavigationPage var0) {
-      return buildSchedule$lambda$115(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$DJ5_tKgPWoUouBfZHYdYbQUsCfU(GxNavigationPage var0, String var1, JSONObject var2) {
-      return renameFavorite$lambda$91$lambda$90(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static boolean $r8$lambda$DdJSZN0YqcWshzFtc6sBeVUbw34(GxNavigationPage var0, TextView var1, int var2, KeyEvent var3) {
-      return buildDest$lambda$24$lambda$23(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$DfFgKjstQn5_XXvs_mVZujF2e3U/* $VF was: $r8$lambda$DfFgKjstQn5_XXvs_mVZujF2e3U*/(
-      GxNavigationPage var0, String var1, JSONObject var2
-   ) {
-      return loadSpeed$lambda$172(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$E7StRAnnwQWORGs8aSPK2S_OE8E/* $VF was: $r8$lambda$E7StRAnnwQWORGs8aSPK2S_OE8E*/(GxNavigationPage var0) {
-      return buildMaps$lambda$105(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$G8QeClsbrzfw_4_79fiq0jQ60cg/* $VF was: $r8$lambda$G8QeClsbrzfw_4_79fiq0jQ60cg*/(
-      GxNavigationPage var0, Function2 var1, String var2, JSONObject var3, String var4, String var5, JSONObject var6
-   ) {
-      return resolvePlace$geocode$lambda$49(var0, var1, var2, var3, var4, var5, var6);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$HwC8NKCIZqN6g_jXaxpJKEhAHDY/* $VF was: $r8$lambda$HwC8NKCIZqN6g_jXaxpJKEhAHDY*/(
-      GxNavigationPage var0, String var1, JSONObject var2
-   ) {
-      return saveSelection$lambda$141(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$JlyR0SMxxFwrJKOESpiIEha1Xi0(GxNavigationPage var0, JSONObject var1, String var2, JSONObject var3) {
-      return loadNav$lambda$32$lambda$31(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$K9spdNlFyVj5zCjRgGTeGZkilEo(GxNavigationPage var0) {
-      return buildSpeed$lambda$168(var0);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$KQXzwrhFZoWZ2HFKQ8ISecKG7LY(Function2 var0, ObjectRef var1, ObjectRef var2) {
-      extGet$lambda$19$lambda$18(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$OMtIpf7EJzU7fMEW0ANgRqqwci0(GxNavigationPage var0) {
-      return renderKeys$lambda$153(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Omg3Me_qcfZHqd6M_JKSweGIfIA/* $VF was: $r8$lambda$Omg3Me_qcfZHqd6M_JKSweGIfIA*/(
-      GxNavigationPage var0, String var1, JSONObject var2
-   ) {
-      return loadCatalog$lambda$111(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$QBRtkhLNFSVNQ_31aVJNVyjKwVE(GxNavigationPage var0, String var1, JSONObject var2) {
-      return toggleFavorite$lambda$60(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$QPdooNi1Iv_O3etvejZGY3_ckwY(String var0, GxNavigationPage var1, Function2 var2) {
-      extGet$lambda$19(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$QTSBsS0zqMsZf5z7tJQe5HErMw0(GxNavigationPage var0, String var1, JSONObject var2) {
-      return loadKeys$lambda$150$lambda$149(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$QhoxuF_NGfXjphNI_5EIAoZPN20/* $VF was: $r8$lambda$QhoxuF_NGfXjphNI_5EIAoZPN20*/(GxNavigationPage var0) {
-      return renderKeys$lambda$154(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$QoXu6Gnt34unqIBkDR_X7IoYkYU/* $VF was: $r8$lambda$QoXu6Gnt34unqIBkDR_X7IoYkYU*/(
-      JSONObject var0, boolean var1, boolean var2, GxNavigationPage var3, int var4
-   ) {
-      return homeWork$lambda$93(var0, var1, var2, var3, var4);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$R7_ZsMYfDzeT2KPqcdfjcOPgWzE/* $VF was: $r8$lambda$R7_ZsMYfDzeT2KPqcdfjcOPgWzE*/(
-      GxNavigationPage var0, String var1, boolean var2
-   ) {
-      return renderCatalog$lambda$139(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$RrjTSFt1W_Irtjqoko70OXSND0Q(GxNavigationPage var0, String var1, JSONObject var2) {
-      return toggleFavorite$lambda$63(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$S8y8MEOfogq0kFAC0Pr6GcwRsTE(Function0 var0) {
-      return renderCatalog$lambda$134(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$SfvpUmoYMhx3y3FEJTkKvUJaPzw(String var0, JSONObject var1, GxNavigationPage var2, String var3) {
-      return renameFavorite$lambda$91(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Te6_gCwNds3R2eSs8JoT_4yedGU/* $VF was: $r8$lambda$Te6_gCwNds3R2eSs8JoT_4yedGU*/(GxNavigationPage var0, int var1) {
-      return build$lambda$0(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$VfkEFeBpuu5itMvvTPFaDasoyxQ(GxNavigationPage var0) {
-      return buildDest$lambda$26(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Vx0_elBOjO6EhOzXnen5fy9wjJw/* $VF was: $r8$lambda$Vx0_elBOjO6EhOzXnen5fy9wjJw*/(
-      GxNavigationPage var0, String var1, JSONObject var2
-   ) {
-      return renderFavorites$lambda$89$lambda$88$lambda$87(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$W_C9tGhRcwRXEnQBo2RgSAatnXI(GxNavigationPage var0, String var1, String var2, JSONObject var3) {
-      return mapsOp$lambda$145(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$WzYgEeyqQlRlnROQA_E9_XXfMs8(GxNavigationPage var0) {
-      return renderKeys$lambda$152(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$XA2MgEh4wN_L3HWbCYImfGqpHoo/* $VF was: $r8$lambda$XA2MgEh4wN_L3HWbCYImfGqpHoo*/(
-      GxNavigationPage var0, JSONObject var1, String var2, String var3, JSONObject var4
-   ) {
-      return setDestination$lambda$55$lambda$54(var0, var1, var2, var3, var4);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$YMKOwcWGftRWFsW4E7hwJn4GWYA(GxNavigationPage var0, String var1, JSONObject var2) {
-      return processSpeed$lambda$180(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Ya23yZ2jBS9GAkxXl6XNkxFm55M(GxNavigationPage var0, String var1, JSONObject var2) {
-      return loadKeys$lambda$150(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$ZAvbndPpQ_mTFEXrSWbUajZsEGk(GxNavigationPage var0) {
-      return buildSpeed$lambda$170(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$_5MCZn0npv1G7zNi7xWNPuXuYOY(GxNavigationPage var0, JSONObject var1) {
-      return renderFavorites$lambda$84(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$_bcmlnjEKHRItBEgn3zxTpfHocs(GxNavigationPage var0, String var1, JSONObject var2) {
-      return reloadFavorites$lambda$59(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$cIpwgGc8MLAHn0pecllIkGnFV9A(GxNavigationPage var0) {
-      return buildMaps$lambda$107(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$cO6VtjPQZ34gqJsR3le5QtVIosA(GxNavigationPage var0, String var1, JSONObject var2) {
-      return refreshMapsStatus$lambda$116(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$eSozxjRVsujs5Schg08OpkDD6EI(GxNavigationPage var0, String var1, JSONObject var2) {
-      return setDestination$lambda$55(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$fkJn6FA_X9LzCDlt7hB540_WzDE(GxNavigationPage var0, int var1) {
-      return renderDest$lambda$79(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$fyMAPvQV_xNeAnh4tI2Mx4nEv58/* $VF was: $r8$lambda$fyMAPvQV_xNeAnh4tI2Mx4nEv58*/(GxNavigationPage var0) {
-      return build$lambda$2(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$hP7jrfp4Lsn6jQBcUUNo6uQ_CXo(GxNavigationPage var0) {
-      return buildMaps$lambda$104(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$haeR37YEQSZxf_Lv19ZPi1suJ1g/* $VF was: $r8$lambda$haeR37YEQSZxf_Lv19ZPi1suJ1g*/(GxNavigationPage var0) {
-      return buildSpeed$lambda$169(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$iDQOiBbt5ytZBAZLM1fTCEJsM3Y(GxNavigationPage var0, JSONObject var1) {
-      return renderSuggestions$lambda$43(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$iDxtlhB7_YKABUDJjIPeBI1pi9M/* $VF was: $r8$lambda$iDxtlhB7_YKABUDJjIPeBI1pi9M*/(GxNavigationPage var0, JSONObject var1) {
-      return renderFavorites$lambda$85(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$iMS1baoR7kydDg4Ym3B3aRSOTvs(GxNavigationPage var0, int var1, LinearLayout var2) {
-      return build$lambda$1(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$iNabwMd4gQKqCd8OhwREnUNvagg(GxNavigationPage var0, String var1, JSONObject var2) {
-      return cancelNavigation$lambda$57(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$ijG_S_QnMrhQ3T3eC6a03Xa8oQg(GxNavigationPage var0) {
-      return renderKeyNotice$lambda$33(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$k4aMAm6umlSpbNHqSXJrpJ8wF_A(GxNavigationPage var0, GxNavigationPage.KeyMeta var1, String var2, JSONObject var3) {
-      return keyRow$lambda$162$lambda$161$lambda$160(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$kXxdTy393VM6y8NBMMsZVz1rpBM(GxNavigationPage var0) {
-      return renderKeyNotice$lambda$34(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$lM6oeGZayMa3A_OBSmPdKDbZ5Ag/* $VF was: $r8$lambda$lM6oeGZayMa3A_OBSmPdKDbZ5Ag*/(
-      GxNavigationPage var0, String var1, JSONObject var2
-   ) {
-      return saveSchedule$lambda$143(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$lrTSK49v7xd4t_ykdhnos_DX7J0/* $VF was: $r8$lambda$lrTSK49v7xd4t_ykdhnos_DX7J0*/(GxNavigationPage var0) {
-      return buildMaps$lambda$103(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$m3WC9N1PVE7OaarpxlzYxCPUxLI(GxNavigationPage var0) {
-      return renderDest$lambda$74(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$qQ7LTha7tAf9TZ6l5_cGR5HI6IY/* $VF was: $r8$lambda$qQ7LTha7tAf9TZ6l5_cGR5HI6IY*/(
-      GxNavigationPage var0, GxNavigationPage.KeyMeta var1, String var2, String var3, JSONObject var4
-   ) {
-      return editKey$lambda$166$lambda$165(var0, var1, var2, var3, var4);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$r5Bc_EhTydq9oSJseexKzm7dgWU/* $VF was: $r8$lambda$r5Bc_EhTydq9oSJseexKzm7dgWU*/(GxNavigationPage var0) {
-      searchRunner$lambda$22(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$rfB_5GZjbheIzWGGg9J1t5WIGfA/* $VF was: $r8$lambda$rfB_5GZjbheIzWGGg9J1t5WIGfA*/(
-      GxNavigationPage var0, JSONObject var1, String var2, Pair var3, String var4, JSONObject var5
-   ) {
-      return previewDestination$lambda$71(var0, var1, var2, var3, var4, var5);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$sBQTBqKT1NuOFm30IVfkUFI56tw(int var0, GxNavigationPage var1, String var2, JSONObject var3) {
-      return search$lambda$38(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$sGfE8bLshtkOjgq1EoEfzGb4J6s(GxNavigationPage var0, String var1, JSONObject var2) {
-      return setDestination$lambda$55$lambda$54$lambda$53(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$t6LK8tNumvSyzV6kIuIeE0Lar_o(GxNavigationPage var0, String var1) {
-      return renderCatalog$lambda$132(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$tIwjqE44tfRM2gSe3rRBVxokHEA(GxNavigationPage var0, JSONObject var1) {
-      return renderSuggestions$lambda$44(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$u0rv37MQqY1S8s_3GHyhoyNYnEw/* $VF was: $r8$lambda$u0rv37MQqY1S8s_3GHyhoyNYnEw*/(
-      GxNavigationPage var0, int var1, String var2, String var3, JSONObject var4
-   ) {
-      return homeWork$lambda$93$lambda$92(var0, var1, var2, var3, var4);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$uITR5LDAzHTT55SHeKA5rVUpsdA(GxNavigationPage var0, JSONObject var1) {
-      return renderFavorites$lambda$86(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$v91ap3OstY_jXHTcWAwvGiC3hIs/* $VF was: $r8$lambda$v91ap3OstY_jXHTcWAwvGiC3hIs*/(GxNavigationPage var0) {
-      return build$lambda$3(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$v_v3Smb69iiiwnMlHCsOrVBWq6w(List var0, GxNavigationPage var1) {
-      return renderCatalog$lambda$136(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$wHc9bifMzEE0Q6HaAm7nrpBJ0Vg(GxNavigationPage var0, GxNavigationPage.KeyMeta var1) {
-      return keyRow$lambda$157(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$xPs26eeMVf_2bH3OekXx4ggoWgw(GxNavigationPage var0, JSONObject var1) {
-      return renderRecents$lambda$99(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$y6wF81vpYYAy55dMbkGOykzxG9A(Function0 var0) {
-      return renderCatalog$lambda$133(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$yLnbl3OLF8tthuqYjd3WmN37STU(GxNavigationPage var0) {
-      return buildMaps$lambda$106(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$yUHFAtQsOxN0_KijDAZ7P_DUaIQ/* $VF was: $r8$lambda$yUHFAtQsOxN0_KijDAZ7P_DUaIQ*/(GxNavigationPage var0, JSONObject var1) {
-      return renderFavorites$lambda$89(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$zmoaQq0EidXxfmZZ7QbmE9ZNYek(
-      GxNavigationPage var0, Function2 var1, String var2, JSONObject var3, String var4, String var5, JSONObject var6
-   ) {
-      return resolvePlace$lambda$50(var0, var1, var2, var3, var4, var5, var6);
-   }
-
-   public GxNavigationPage(Activity var1, GxHost var2) {
-      Intrinsics.checkNotNullParameter(var1, "act");
-      Intrinsics.checkNotNullParameter(var2, "gx");
-      super(var1, var2);
-      this.needsOffroad = true;
-      this.navLoading = true;
-      this.navError = "";
-      this.mapboxPublic = "";
-      this.mapboxSecret = "";
-      this.language = "";
-      this.favorites = CollectionsKt.emptyList();
-      this.recentDestinations = CollectionsKt.emptyList();
-      this.routes = CollectionsKt.emptyList();
-      this.selectedRouteId = "main";
-      this.suggestions = CollectionsKt.emptyList();
-      String var5 = UUID.randomUUID().toString();
-      Intrinsics.checkNotNullExpressionValue(var5, "toString(...)");
-      this.sessionToken = var5;
-      this.searchRunner = new GxNavigationPage$$ExternalSyntheticLambda55(this);
-      this.mapsLoadingCatalog = true;
-      this.mapsLoadingStatus = true;
-      this.mapsError = "";
-      this.mapsSearch = "";
-      this.mapsSections = CollectionsKt.emptyList();
-      this.scheduleOptions = CollectionsKt.emptyList();
-      this.mapsStatus = new JSONObject();
-      this.mapsProgress = new JSONObject();
-      this.selectedSaved = SetsKt.emptySet();
-      this.selectedDraft = new LinkedHashSet<>();
-      this.scheduleSaved = "2";
-      this.scheduleDraft = "2";
-      this.tokenLabels = new HashMap<>();
-      this.expandedGroups = new HashSet<>();
-      this.regionSwitches = new HashMap<>();
-      this.groupRows = new HashMap<>();
-      GxNavigationPage.KeyMeta var6 = new GxNavigationPage.KeyMeta("amap1", "amap1", "", 39, "AMap / Gaode 1", "amap1Key");
-      GxNavigationPage.KeyMeta var3 = new GxNavigationPage.KeyMeta("amap2", "amap2", "", 39, "AMap / Gaode 2", "amap2Key");
-      GxNavigationPage.KeyMeta var7 = new GxNavigationPage.KeyMeta("public", "public", "pk.", 80, "Public Mapbox", "mapboxPublic");
-      GxNavigationPage.KeyMeta var4 = new GxNavigationPage.KeyMeta("secret", "secret", "sk.", 80, "Secret Mapbox", "mapboxSecret");
-      this.keyMeta = CollectionsKt.listOf(new GxNavigationPage.KeyMeta[]{var6, var3, var7, var4});
-      this.savedKeys = new HashMap<>();
-      this.keysLoading = true;
-      this.keysError = "";
-      this.appUrl = "https://play.google.com/store/apps/details?id=com.embaucha.galaxynav&hl=en-US&ah=9FldHJ99kxL8oNbSlO5F4sQqwC4";
-      this.cookieName = "galaxy_session";
-      this.galaxyToken = "";
-      this.speedLoading = true;
-      this.speedReason = "";
-      this.speedStatus = "Idle";
-      this.speedObj = new JSONObject();
-   }
-
-   private static final Unit build$lambda$0(GxNavigationPage var0, int var1) {
-      var0.curTab = var1;
-      switch (var1) {
-         case 0:
-            var0.loadNav();
-            break;
-         case 1:
-            var0.refreshMapsStatus();
-            break;
-         case 2:
-            var0.loadKeys();
-            break;
-         case 3:
-            var0.loadSpeed();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit build$lambda$1(GxNavigationPage var0, int var1, LinearLayout var2) {
-      Intrinsics.checkNotNullParameter(var2, "box");
-      switch (var1) {
-         case 0:
-            var0.buildDest(var2);
-            break;
-         case 1:
-            var0.buildMaps(var2);
-            break;
-         case 2:
-            var0.buildKeys(var2);
-            break;
-         case 3:
-            var0.buildSpeed(var2);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit build$lambda$2(GxNavigationPage var0) {
-      if (var0.curTab == 1) {
-         var0.refreshMapsStatus();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit build$lambda$3(GxNavigationPage var0) {
-      if (var0.curTab == 3) {
-         var0.loadSpeed();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final void buildDest(LinearLayout var1) {
-      this.keyBox = this.box((ViewGroup)var1);
-      this.searchCard = this.card((ViewGroup)var1);
-      GxPage var5 = this;
-      LinearLayout var3 = this.searchCard;
-      Object var4 = null;
-      LinearLayout var2 = var3;
-      if (var3 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("searchCard");
-         var2 = null;
-      }
-
-      GxPage.text$default(var5, "Search for a destination", (ViewGroup)var2, 21.0F, CarUi.Companion.getTEXT(), false, 16, null);
-      EditText var7 = this.field("Search here");
-      var7.setImeOptions(3);
-      var7.setInputType(524289);
-      var7.setOnEditorActionListener(new GxNavigationPage$$ExternalSyntheticLambda54(this));
-      var7.addTextChangedListener(new TextWatcher() {
-
-         public void afterTextChanged(Editable var1) {
-            if (!GxNavigationPage.this.quietEdit) {
-               GxNavigationPage.this.onInput();
+    private String appUrl;
+    private boolean canProcessNow;
+    private LinearLayout catalogBox;
+    private String cookieName;
+    private int curTab;
+    private LinearLayout destBox;
+    private JSONObject destination;
+    private final HashSet<String> expandedGroups;
+    private LinearLayout favBox;
+    private List<? extends JSONObject> favorites;
+    private String galaxyToken;
+    private final HashMap<String, Pair<GxPage.Row, JSONObject>> groupRows;
+    private boolean isMetric;
+    private LinearLayout keyBox;
+    private final List<KeyMeta> keyMeta;
+    private LinearLayout keysBox;
+    private String keysError;
+    private boolean keysLoading;
+    private String language;
+    private Pair<Double, Double> lastPosition;
+    private boolean loadingRoute;
+    private String mapboxPublic;
+    private String mapboxSecret;
+    private boolean mapsActionBusy;
+    private LinearLayout mapsBar;
+    private String mapsError;
+    private TextView mapsErrorNote;
+    private boolean mapsLoadingCatalog;
+    private boolean mapsLoadingStatus;
+    private JSONObject mapsProgress;
+    private boolean mapsSavingSchedule;
+    private boolean mapsSavingSelection;
+    private String mapsSearch;
+    private List<? extends JSONObject> mapsSections;
+    private JSONObject mapsStatus;
+    private boolean mapsStatusInFlight;
+    private TextView nOnroad;
+    private TextView nSchDirty;
+    private TextView nSelDirty;
+    private String navError;
+    private boolean navLoading;
+    private boolean navigationStarted;
+    private final boolean needsOffroad;
+    private TextView pEstimate;
+    private TextView pEta;
+    private TextView pFiles;
+    private TextView pRegion;
+    private TextView pStored;
+    private Function1<? super Integer, Unit> paintSchedule;
+    private boolean paired;
+    private ProgressBar progBar;
+    private LinearLayout progCard;
+    private TextView progTitle;
+    private EditText queryEdit;
+    private boolean quietEdit;
+    private LinearLayout recentBox;
+    private List<? extends JSONObject> recentDestinations;
+    private final HashMap<String, Switch> regionSwitches;
+    private Triple<Double, Double, String> routeSummary;
+    private List<? extends JSONObject> routes;
+    private LinearLayout sBar;
+    private TextView sDebug;
+    private GxPage.Row sDebugRow;
+    private TextView sLastEvent;
+    private TextView sReason;
+    private TextView sStatus;
+    private TextView sVision;
+    private final HashMap<String, String> savedKeys;
+    private TextView schedNote;
+    private LinearLayout scheduleBox;
+    private String scheduleDraft;
+    private List<Pair<String, String>> scheduleOptions;
+    private String scheduleSaved;
+    private LinearLayout searchCard;
+    private final Runnable searchRunner;
+    private int searchSeq;
+    private boolean searching;
+    private TextView selRegionsText;
+    private Function1<? super Integer, Unit> selectTab;
+    private final LinkedHashSet<String> selectedDraft;
+    private String selectedRouteId;
+    private Set<String> selectedSaved;
+    private final String sessionToken;
+    private boolean speedLoading;
+    private JSONObject speedObj;
+    private boolean speedProcessing;
+    private String speedReason;
+    private String speedStatus;
+    private boolean speedSubmitting;
+    private TextView statusNote;
+    private LinearLayout suggestBox;
+    private List<? extends JSONObject> suggestions;
+    private final HashMap<String, String> tokenLabels;
+    private boolean tokenVisible;
+    private TextView vDownloader;
+    private TextView vEstimate;
+    private TextView vLastUpdate;
+    private TextView vSaved;
+    private TextView vStorage;
+
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public GxNavigationPage(Activity act, GxHost gx) {
+        super(act, gx);
+        Intrinsics.checkNotNullParameter(act, "act");
+        Intrinsics.checkNotNullParameter(gx, "gx");
+        this.needsOffroad = true;
+        this.navLoading = true;
+        this.navError = "";
+        this.mapboxPublic = "";
+        this.mapboxSecret = "";
+        this.language = "";
+        this.favorites = CollectionsKt.emptyList();
+        this.recentDestinations = CollectionsKt.emptyList();
+        this.routes = CollectionsKt.emptyList();
+        this.selectedRouteId = "main";
+        this.suggestions = CollectionsKt.emptyList();
+        String uuid = UUID.randomUUID().toString();
+        Intrinsics.checkNotNullExpressionValue(uuid, "toString(...)");
+        this.sessionToken = uuid;
+        this.searchRunner = new Runnable() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda55
+            @Override // java.lang.Runnable
+            public final void run() {
+                GxNavigationPage.searchRunner$lambda$22(GxNavigationPage.this);
             }
-         }
+        };
+        this.mapsLoadingCatalog = true;
+        this.mapsLoadingStatus = true;
+        this.mapsError = "";
+        this.mapsSearch = "";
+        this.mapsSections = CollectionsKt.emptyList();
+        this.scheduleOptions = CollectionsKt.emptyList();
+        this.mapsStatus = new JSONObject();
+        this.mapsProgress = new JSONObject();
+        this.selectedSaved = SetsKt.emptySet();
+        this.selectedDraft = new LinkedHashSet<>();
+        this.scheduleSaved = "2";
+        this.scheduleDraft = "2";
+        this.tokenLabels = new HashMap<>();
+        this.expandedGroups = new HashSet<>();
+        this.regionSwitches = new HashMap<>();
+        this.groupRows = new HashMap<>();
+        this.keyMeta = CollectionsKt.listOf((Object[]) new KeyMeta[]{new KeyMeta("amap1", "amap1", "", 39, "AMap / Gaode 1", "amap1Key"), new KeyMeta("amap2", "amap2", "", 39, "AMap / Gaode 2", "amap2Key"), new KeyMeta("public", "public", "pk.", 80, "Public Mapbox", "mapboxPublic"), new KeyMeta("secret", "secret", "sk.", 80, "Secret Mapbox", "mapboxSecret")});
+        this.savedKeys = new HashMap<>();
+        this.keysLoading = true;
+        this.keysError = "";
+        this.appUrl = "https://play.google.com/store/apps/details?id=com.embaucha.galaxynav&hl=en-US&ah=9FldHJ99kxL8oNbSlO5F4sQqwC4";
+        this.cookieName = "galaxy_session";
+        this.galaxyToken = "";
+        this.speedLoading = true;
+        this.speedReason = "";
+        this.speedStatus = "Idle";
+        this.speedObj = new JSONObject();
+    }
 
-         public void beforeTextChanged(CharSequence var1, int var2x, int var3x, int var4x) {
-         }
+    @Override // com.starpilot.starview.GxPage
+    public boolean getNeedsOffroad() {
+        return this.needsOffroad;
+    }
 
-         public void onTextChanged(CharSequence var1, int var2x, int var3x, int var4x) {
-         }
-      });
-      this.queryEdit = var7;
-      var3 = this.searchCard;
-      var2 = var3;
-      if (var3 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("searchCard");
-         var2 = null;
-      }
-
-      EditText var15 = this.queryEdit;
-      EditText var12 = var15;
-      if (var15 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("queryEdit");
-         var12 = null;
-      }
-
-      View var13 = (View)var12;
-      LayoutParams var16 = new LayoutParams(-1, -2);
-      var16.topMargin = this.getUi().dp(10);
-      var16.bottomMargin = this.getUi().dp(8);
-      Unit var6 = Unit.INSTANCE;
-      var2.addView(var13, (android.view.ViewGroup.LayoutParams)var16);
-      Pair var14 = TuplesKt.to("Set Destination", new GxNavigationPage$$ExternalSyntheticLambda56(this));
-      Pair var18 = TuplesKt.to("Search", new GxNavigationPage$$ExternalSyntheticLambda57(this));
-      Pair var17 = TuplesKt.to("Clear", new GxNavigationPage$$ExternalSyntheticLambda58(this));
-      var2 = this.searchCard;
-      if (var2 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("searchCard");
-         var2 = (LinearLayout)var4;
-      }
-
-      ViewGroup var10 = (ViewGroup)var2;
-      this.buttons(new Pair[]{var14, var18, var17}, var10, true);
-      this.statusNote = this.note("", (ViewGroup)var1);
-      this.suggestBox = this.box((ViewGroup)var1);
-      this.destBox = this.box((ViewGroup)var1);
-      this.favBox = this.box((ViewGroup)var1);
-      this.recentBox = this.box((ViewGroup)var1);
-      this.renderDestAll();
-   }
-
-   private static final boolean buildDest$lambda$24$lambda$23(GxNavigationPage var0, TextView var1, int var2, KeyEvent var3) {
-      boolean var4;
-      switch (var2) {
-         case 3:
-         case 6:
-            var0.setDestination(null);
-            var4 = true;
-            break;
-         default:
-            var4 = false;
-      }
-
-      return var4;
-   }
-
-   private static final Unit buildDest$lambda$26(GxNavigationPage var0) {
-      var0.setDestination(null);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildDest$lambda$27(GxNavigationPage var0) {
-      var0.getMain().removeCallbacks(var0.searchRunner);
-      String var1 = StringsKt.trim(var0.getQuery()).toString();
-      if (var1.length() >= 3) {
-         var0.search(var1);
-      } else {
-         var0.toast("Type at least 3 letters.");
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildDest$lambda$28(GxNavigationPage var0) {
-      var0.setQuery("");
-      var0.onInput();
-      return Unit.INSTANCE;
-   }
-
-   private final void buildKeys(LinearLayout var1) {
-      this.keysBox = this.box((ViewGroup)var1);
-      this.renderKeys();
-   }
-
-   private final void buildMaps(LinearLayout var1) {
-      TextView var2 = this.note("", (ViewGroup)var1);
-      var2.setTextColor(CarUi.Companion.getWARN());
-      var2.setVisibility(8);
-      this.mapsErrorNote = var2;
-      this.header("Offline Maps", (ViewGroup)var1);
-      this.note("Select regions, start downloads, and manage offline maps entirely from Galaxy.", (ViewGroup)var1);
-      this.vDownloader = this.statRow("Downloader", var1);
-      this.vSaved = this.statRow("Saved Regions", var1);
-      this.vEstimate = this.statRow("Additional Storage", var1);
-      this.vLastUpdate = this.statRow("Last Updated", var1);
-      this.vStorage = this.statRow("Storage Used", var1);
-      this.nOnroad = this.noteIn("Map downloads and removal are blocked while driving.", var1);
-      this.nSelDirty = this.noteIn("You have unsaved region changes. Downloading now will use the current selection.", var1);
-      this.nSchDirty = this.noteIn("You have an unsaved schedule change. Downloading now will also apply it.", var1);
-      Pair var5 = TuplesKt.to("Download Maps", new GxNavigationPage$$ExternalSyntheticLambda25(this));
-      Pair var7 = TuplesKt.to("Remove Maps", new GxNavigationPage$$ExternalSyntheticLambda26(this));
-      Pair var3 = TuplesKt.to("Save Selection", new GxNavigationPage$$ExternalSyntheticLambda27(this));
-      Pair var8 = TuplesKt.to("Reset", new GxNavigationPage$$ExternalSyntheticLambda28(this));
-      Pair var4 = TuplesKt.to("Clear All", new GxNavigationPage$$ExternalSyntheticLambda29(this));
-      ViewGroup var6 = (ViewGroup)var1;
-      this.mapsBar = this.buttons(new Pair[]{var5, var7, var3, var8, var4}, var6, true);
-      LinearLayout var25 = this.mapsBar;
-      var3 = null;
-      LinearLayout var9 = var25;
-      if (var25 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
-         var9 = null;
-      }
-
-      View var10 = var9.getChildAt(1);
-      if (var10 instanceof TextView) {
-         var2 = (TextView)var10;
-      } else {
-         var2 = null;
-      }
-
-      if (var2 != null) {
-         var2.setTextColor(CarUi.Companion.getWARN());
-      }
-
-      LinearLayout var12 = this.card((ViewGroup)var1);
-      var12.setVisibility(8);
-      this.progCard = var12;
-      LinearLayout var26 = this.progCard;
-      LinearLayout var13 = var26;
-      if (var26 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("progCard");
-         var13 = null;
-      }
-
-      this.progTitle = this.text("Download Progress", (ViewGroup)var13, 21.0F, CarUi.Companion.getTEXT(), true);
-      LinearLayout var27 = this.progCard;
-      LinearLayout var14 = var27;
-      if (var27 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("progCard");
-         var14 = null;
-      }
-
-      this.progBar = this.progress((ViewGroup)var14);
-      GxPage var34 = this;
-      LinearLayout var28 = this.progCard;
-      LinearLayout var15 = var28;
-      if (var28 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("progCard");
-         var15 = null;
-      }
-
-      this.pEstimate = GxPage.text$default(var34, "", (ViewGroup)var15, 0.0F, 0, false, 28, null);
-      GxPage var35 = this;
-      LinearLayout var29 = this.progCard;
-      LinearLayout var16 = var29;
-      if (var29 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("progCard");
-         var16 = null;
-      }
-
-      this.pStored = GxPage.text$default(var35, "", (ViewGroup)var16, 0.0F, 0, false, 28, null);
-      GxPage var36 = this;
-      LinearLayout var30 = this.progCard;
-      LinearLayout var17 = var30;
-      if (var30 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("progCard");
-         var17 = null;
-      }
-
-      this.pFiles = GxPage.text$default(var36, "", (ViewGroup)var17, 0.0F, 0, false, 28, null);
-      GxPage var37 = this;
-      LinearLayout var31 = this.progCard;
-      LinearLayout var18 = var31;
-      if (var31 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("progCard");
-         var18 = null;
-      }
-
-      this.pEta = GxPage.text$default(var37, "", (ViewGroup)var18, 0.0F, 0, false, 28, null);
-      GxPage var32 = this;
-      LinearLayout var19 = this.progCard;
-      if (var19 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("progCard");
-         var19 = var3;
-      }
-
-      this.pRegion = GxPage.text$default(var32, "", (ViewGroup)var19, 0.0F, 0, false, 28, null);
-      this.header("Regions & Schedule", (ViewGroup)var1);
-      LinearLayout var20 = this.card((ViewGroup)var1);
-      GxPage.text$default(this, "Search", (ViewGroup)var20, 21.0F, CarUi.Companion.getTEXT(), false, 16, null);
-      EditText var23 = this.field("Filter by name or code");
-      var23.addTextChangedListener(new TextWatcher() {
-
-         public void afterTextChanged(Editable var1) {
-            GxNavigationPage var3x = GxNavigationPage.this;
-            String var4x;
-            if (var1 != null) {
-               var4x = var1.toString();
-            } else {
-               var4x = null;
+    @Override // com.starpilot.starview.GxPage
+    public void build() {
+        GxPage.header$default(this, "Navigation & Maps", null, 2, null);
+        this.selectTab = tabs(CollectionsKt.listOf((Object[]) new String[]{"Destination", "Maps", "App Keys", "Speed Limits"}), 0, new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda68
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit build$lambda$0;
+                build$lambda$0 = GxNavigationPage.build$lambda$0(GxNavigationPage.this, ((Integer) obj).intValue());
+                return build$lambda$0;
             }
-
-            String var2x = var4x;
-            if (var4x == null) {
-               var2x = "";
+        }, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda69
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit build$lambda$1;
+                build$lambda$1 = GxNavigationPage.build$lambda$1(GxNavigationPage.this, ((Integer) obj).intValue(), (LinearLayout) obj2);
+                return build$lambda$1;
             }
-
-            var3x.mapsSearch = var2x;
-            GxNavigationPage.this.renderCatalog();
-         }
-
-         public void beforeTextChanged(CharSequence var1, int var2x, int var3x, int var4x) {
-         }
-
-         public void onTextChanged(CharSequence var1, int var2x, int var3x, int var4x) {
-         }
-      });
-      View var24 = (View)var23;
-      LayoutParams var38 = new LayoutParams(-1, -2);
-      var38.topMargin = this.getUi().dp(8);
-      var38.bottomMargin = this.getUi().dp(6);
-      Unit var33 = Unit.INSTANCE;
-      var20.addView(var24, (android.view.ViewGroup.LayoutParams)var38);
-      this.scheduleBox = this.box((ViewGroup)var1);
-      LinearLayout var21 = this.card((ViewGroup)var1);
-      GxPage.text$default(this, "Selected Regions", (ViewGroup)var21, 21.0F, CarUi.Companion.getTEXT(), false, 16, null);
-      this.selRegionsText = GxPage.text$default(this, "No regions selected.", (ViewGroup)var21, 0.0F, 0, false, 28, null);
-      this.schedNote = this.note("", (ViewGroup)var1);
-      this.catalogBox = this.box((ViewGroup)var1);
-      this.loadCatalog();
-   }
-
-   private static final Unit buildMaps$lambda$103(GxNavigationPage var0) {
-      if (var0.isDownloading()) {
-         var0.cancelDownload();
-      } else {
-         var0.startDownload();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildMaps$lambda$104(GxNavigationPage var0) {
-      var0.removeMaps();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildMaps$lambda$105(GxNavigationPage var0) {
-      var0.saveSelection();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildMaps$lambda$106(GxNavigationPage var0) {
-      var0.selectedDraft.clear();
-      var0.selectedDraft.addAll(var0.selectedSaved);
-      var0.scheduleDraft = var0.scheduleSaved;
-      var0.paintMaps();
-      var0.renderCatalog();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildMaps$lambda$107(GxNavigationPage var0) {
-      var0.selectedDraft.clear();
-      var0.paintMaps();
-      return Unit.INSTANCE;
-   }
-
-   private final void buildSchedule() {
-      LinearLayout var4 = this.scheduleBox;
-      Object var3 = null;
-      LinearLayout var2 = var4;
-      if (var4 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("scheduleBox");
-         var2 = null;
-      }
-
-      var2.removeAllViews();
-      this.paintSchedule = null;
-      if (!this.scheduleOptions.isEmpty()) {
-         Iterable var12 = this.scheduleOptions;
-         var var6 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var12, 10));
-         Iterator var13 = var12.iterator();
-
-         while (var13.hasNext()) {
-            var6.add((String)((Pair)var13.next()).getSecond());
-         }
-
-         List var5 = var6;
-         List var7 = this.scheduleOptions;
-         int var1 = 0;
-         Iterator var8 = var7.iterator();
-
-         while (true) {
-            if (!var8.hasNext()) {
-               var1 = -1;
-               break;
+        });
+        every(2500L, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda70
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit build$lambda$2;
+                build$lambda$2 = GxNavigationPage.build$lambda$2(GxNavigationPage.this);
+                return build$lambda$2;
             }
-
-            if (Intrinsics.areEqual(((Pair)var8.next()).getFirst(), this.scheduleDraft)) {
-               break;
+        });
+        every(3000L, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda71
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit build$lambda$3;
+                build$lambda$3 = GxNavigationPage.build$lambda$3(GxNavigationPage.this);
+                return build$lambda$3;
             }
+        });
+    }
 
-            var1++;
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$0(GxNavigationPage this$0, int i) {
+        this$0.curTab = i;
+        switch (i) {
+            case 0:
+                this$0.loadNav();
+                break;
+            case 1:
+                this$0.refreshMapsStatus();
+                break;
+            case 2:
+                this$0.loadKeys();
+                break;
+            case 3:
+                this$0.loadSpeed();
+                break;
+        }
+        return Unit.INSTANCE;
+    }
 
-         var4 = this.scheduleBox;
-         var2 = var4;
-         if (var4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("scheduleBox");
-            var2 = null;
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$1(GxNavigationPage this$0, int i, LinearLayout box) {
+        Intrinsics.checkNotNullParameter(box, "box");
+        switch (i) {
+            case 0:
+                this$0.buildDest(box);
+                break;
+            case 1:
+                this$0.buildMaps(box);
+                break;
+            case 2:
+                this$0.buildKeys(box);
+                break;
+            case 3:
+                this$0.buildSpeed(box);
+                break;
+        }
+        return Unit.INSTANCE;
+    }
 
-         this.paintSchedule = this.choice(
-            "Auto Update",
-            "How often the comma refreshes the downloaded maps.",
-            var5,
-            var1,
-            (ViewGroup)var2,
-            new GxNavigationPage$$ExternalSyntheticLambda47(this)
-         );
-         GxPage var15 = this;
-         Pair var16 = TuplesKt.to("Apply", new GxNavigationPage$$ExternalSyntheticLambda48(this));
-         var2 = this.scheduleBox;
-         if (var2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("scheduleBox");
-            var2 = (LinearLayout)var3;
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$2(GxNavigationPage this$0) {
+        if (this$0.curTab == 1) {
+            this$0.refreshMapsStatus();
+        }
+        return Unit.INSTANCE;
+    }
 
-         ViewGroup var11 = (ViewGroup)var2;
-         GxPage.buttons$default(var15, new Pair[]{var16}, var11, false, 4, null);
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$3(GxNavigationPage this$0) {
+        if (this$0.curTab == 3) {
+            this$0.loadSpeed();
+        }
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit buildSchedule$lambda$114(GxNavigationPage var0, int var1) {
-      var0.scheduleDraft = var0.scheduleOptions.get(var1).getFirst();
-      var0.paintMaps();
-      return Unit.INSTANCE;
-   }
+    @Override // com.starpilot.starview.GxPage
+    public void onShow() {
+        if (this.curTab == 0) {
+            loadNav();
+        } else if (this.curTab == 2) {
+            loadKeys();
+        }
+    }
 
-   private static final Unit buildSchedule$lambda$115(GxNavigationPage var0) {
-      var0.saveSchedule();
-      return Unit.INSTANCE;
-   }
+    @Override // com.starpilot.starview.GxPage
+    public void onHide() {
+        getMain().removeCallbacks(this.searchRunner);
+    }
 
-   private final void buildSpeed(LinearLayout var1) {
-      this.header("Download Speed Limits", (ViewGroup)var1);
-      this.note("Enable \"Speed Limit Filler\" on the device, drive to collect data, then process and download it here when parked.", (ViewGroup)var1);
-      this.sStatus = this.statRow("Processor Status", var1);
-      this.sVision = this.statRow("Vision Detector", var1);
-      this.sDebugRow = GxPage.row$default(this, "Vision Debug", null, (ViewGroup)var1, 0, 8, null);
-      GxPage.Row var3 = this.sDebugRow;
-      GxPage.Row var2 = var3;
-      if (var3 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("sDebugRow");
-         var2 = null;
-      }
-
-      this.sDebug = var2.value("");
-      this.sLastEvent = this.note("", (ViewGroup)var1);
-      TextView var6 = this.note("", (ViewGroup)var1);
-      var6.setTextColor(CarUi.Companion.getWARN());
-      this.sReason = var6;
-      Pair var4 = TuplesKt.to("Download", new GxNavigationPage$$ExternalSyntheticLambda50(this));
-      Pair var7 = TuplesKt.to("Process Now", new GxNavigationPage$$ExternalSyntheticLambda51(this));
-      Pair var8 = TuplesKt.to("Submit speed limits here", new GxNavigationPage$$ExternalSyntheticLambda52(this));
-      ViewGroup var5 = (ViewGroup)var1;
-      this.sBar = this.buttons(new Pair[]{var4, var7, var8}, var5, true);
-      this.paintSpeed();
-   }
-
-   private static final Unit buildSpeed$lambda$168(GxNavigationPage var0) {
-      var0.download("/api/speed_limits", "speed_limits.json", "application/json");
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildSpeed$lambda$169(GxNavigationPage var0) {
-      var0.processSpeed();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit buildSpeed$lambda$170(GxNavigationPage var0) {
-      var0.openUrl("https://nerf.077769.xyz/");
-      return Unit.INSTANCE;
-   }
-
-   private final void cancelDownload() {
-      if (!this.mapsActionBusy && this.isDownloading()) {
-         this.mapsOp("cancel", new JSONObject(), "Map download cancellation requested.");
-      }
-   }
-
-   private final void cancelNavigation() {
-      GxPage.send$default(this, "DELETE", "/api/navigation", null, 0L, new GxNavigationPage$$ExternalSyntheticLambda38(this), 12, null);
-   }
-
-   private static final Unit cancelNavigation$lambda$57(GxNavigationPage var0, String var1, JSONObject var2) {
-      if (var1 != null) {
-         CharSequence var4 = var1;
-         Object var3 = var4;
-         if (StringsKt.isBlank(var4)) {
-            var3 = "Could not cancel navigation.";
-         }
-
-         var0.toast((String)var3);
-         return Unit.INSTANCE;
-      } else {
-         var0.navigationStarted = false;
-         var0.destination = null;
-         var0.routeSummary = null;
-         var0.routes = CollectionsKt.emptyList();
-         var0.selectedRouteId = "main";
-         var0.suggestions = CollectionsKt.emptyList();
-         var0.setQuery("");
-         var0.toast("Navigation cancelled.");
-         var0.renderSuggestions();
-         var0.renderDest();
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final void chooseSuggestion(JSONObject var1) {
-      this.searching = true;
-      this.renderStatus();
-      this.resolvePlace(var1, new GxNavigationPage$$ExternalSyntheticLambda75(this));
-   }
-
-   private static final Unit chooseSuggestion$lambda$51(GxNavigationPage var0, String var1, JSONObject var2) {
-      var0.searching = false;
-      if (var1 == null && var2 != null) {
-         var0.selectedRouteId = "main";
-         var0.routes = CollectionsKt.emptyList();
-         var0.routeSummary = null;
-         var0.navigationStarted = false;
-         var0.destination = var2;
-         var0.setQuery(GxPage.str$default(var0, var2, "name", null, 2, null));
-         var0.suggestions = CollectionsKt.emptyList();
-         var0.navError = "";
-         var0.renderStatus();
-         var0.renderSuggestions();
-         var0.renderDest();
-         var0.previewDestination(var2, null);
-         return Unit.INSTANCE;
-      } else {
-         if (var1 == null) {
-            var1 = "Could not determine that location.";
-         }
-
-         var0.navError = var1;
-         var0.toast(var0.navError);
-         var0.renderStatus();
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final void clickable(GxPage.Row var1, Function0<Unit> var2) {
-      var1.getView().setClickable(true);
-      var1.getView().setOnClickListener(new GxNavigationPage$$ExternalSyntheticLambda49(var2));
-   }
-
-   private static final void clickable$lambda$13(Function0 var0, View var1) {
-      var0.invoke();
-   }
-
-   private final Pair<Double, Double> coordsArr(JSONArray var1) {
-      if (var1 != null && var1.length() >= 2) {
-         Double var4 = this.numOf(var1.opt(0));
-         if (var4 != null) {
-            double var2 = var4;
-            Double var5 = this.numOf(var1.opt(1));
-            if (var5 != null) {
-               return TuplesKt.to(var5, var2);
+    private final Double numOf(Object v) {
+        Double doubleOrNull;
+        if (v instanceof Number) {
+            Double valueOf = Double.valueOf(((Number) v).doubleValue());
+            double it = valueOf.doubleValue();
+            if ((Double.isInfinite(it) || Double.isNaN(it)) ? false : true) {
+                return valueOf;
             }
-         }
-
-         return null;
-      } else {
-         return null;
-      }
-   }
-
-   private final Pair<Double, Double> coordsOf(JSONObject var1) {
-      if (var1 == null) {
-         return null;
-      } else {
-         JSONObject var4 = var1.optJSONObject("geometry");
-         JSONArray var6;
-         if (var4 != null) {
-            var6 = var4.optJSONArray("coordinates");
-         } else {
-            var6 = null;
-         }
-
-         Pair var7 = this.coordsArr(var6);
-         if (var7 != null) {
-            return var7;
-         } else {
-            Double var8 = this.numOf(var1.opt("latitude"));
-            if (var8 != null) {
-               double var2 = var8;
-               Double var5 = this.numOf(var1.opt("longitude"));
-               if (var5 != null) {
-                  return TuplesKt.to(var2, var5);
-               }
-            }
-
             return null;
-         }
-      }
-   }
-
-   private final void editKey(GxNavigationPage.KeyMeta var1) {
-      GxPage var2 = this;
-      String var3 = var1.getTitle();
-      String var4 = var3 + " key";
-      var3 = var1.getPrefix();
-      GxPage.prompt$default(var2, var4, var3 + "xxxxxx...", "", 524433, null, new GxNavigationPage$$ExternalSyntheticLambda31(var1, this), 16, null);
-   }
-
-   private static final Unit editKey$lambda$166(GxNavigationPage.KeyMeta var0, GxNavigationPage var1, String var2) {
-      Intrinsics.checkNotNullParameter(var2, "v");
-      var2 = StringsKt.trim(var2).toString();
-      boolean var3;
-      if (var2.length() == 0) {
-         var3 = true;
-      } else {
-         var3 = false;
-      }
-
-      if (var3) {
-         return Unit.INSTANCE;
-      } else {
-         if (!StringsKt.startsWith$default(var2, var0.getPrefix(), false, 2, null)) {
-            String var4 = var0.getPrefix();
-            var2 = var4 + var2;
-         }
-
-         if (var2.length() < var0.getMin()) {
-            String var5 = var0.getTitle();
-            var1.toast(var5 + " key is invalid or too short...");
-            return Unit.INSTANCE;
-         } else {
-            GxPage.send$default(
-               var1,
-               "POST",
-               "/api/navigation_key",
-               new JSONObject().put(var0.getBody(), var2),
-               0L,
-               new GxNavigationPage$$ExternalSyntheticLambda66(var1, var0, var2),
-               8,
-               null
-            );
-            return Unit.INSTANCE;
-         }
-      }
-   }
-
-   private static final Unit editKey$lambda$166$lambda$165(GxNavigationPage var0, GxNavigationPage.KeyMeta var1, String var2, String var3, JSONObject var4) {
-      if (var3 != null) {
-         CharSequence var6 = var3;
-         Object var5 = var6;
-         if (StringsKt.isBlank(var6)) {
-            var5 = "Save failed...";
-         }
-
-         var0.toast((String)var5);
-         return Unit.INSTANCE;
-      } else {
-         label31: {
-            if (var4 != null) {
-               var3 = var4.optString("message");
-               if (var3 != null) {
-                  CharSequence var10 = var3;
-                  CharSequence var8 = var10;
-                  if (StringsKt.isBlank(var10)) {
-                     var8 = null;
-                  }
-
-                  String var11 = (String)var8;
-                  var3 = var11;
-                  if (var11 != null) {
-                     break label31;
-                  }
-               }
-            }
-
-            var3 = "Saved!";
-         }
-
-         var0.toast(var3);
-         var0.savedKeys.put(var1.getKind(), var2);
-         if (Intrinsics.areEqual(var1.getKind(), "public")) {
-            var0.mapboxPublic = var2;
-         } else if (Intrinsics.areEqual(var1.getKind(), "secret")) {
-            var0.mapboxSecret = var2;
-         }
-
-         var0.renderKeys();
-         var0.renderNavAfterKeys();
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final void extGet(String var1, Function2<? super String, ? super JSONObject, Unit> var2) {
-      new Thread(new GxNavigationPage$$ExternalSyntheticLambda76(var1, this, var2)).start();
-   }
-
-   private static final void extGet$lambda$19(String param0, GxNavigationPage param1, Function2 param2) {
-      // $VF: Couldn't be decompiled
-      // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-      // java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
-      //   at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:100)
-      //   at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:106)
-      //   at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:302)
-      //   at java.base/java.util.Objects.checkIndex(Objects.java:385)
-      //   at java.base/java.util.ArrayList.remove(ArrayList.java:551)
-      //   at org.jetbrains.java.decompiler.modules.decompiler.FinallyProcessor.removeExceptionInstructionsEx(FinallyProcessor.java:1057)
-      //   at org.jetbrains.java.decompiler.modules.decompiler.FinallyProcessor.verifyFinallyEx(FinallyProcessor.java:572)
-      //   at org.jetbrains.java.decompiler.modules.decompiler.FinallyProcessor.iterateGraph(FinallyProcessor.java:90)
-      //   at org.jetbrains.java.decompiler.main.rels.MethodProcessor.codeToJava(MethodProcessor.java:178)
-      //
-      // Bytecode:
-      // 000: new kotlin/jvm/internal/Ref$ObjectRef
-      // 003: dup
-      // 004: invokespecial kotlin/jvm/internal/Ref$ObjectRef.<init> ()V
-      // 007: astore 5
-      // 009: new kotlin/jvm/internal/Ref$ObjectRef
-      // 00c: dup
-      // 00d: invokespecial kotlin/jvm/internal/Ref$ObjectRef.<init> ()V
-      // 010: astore 6
-      // 012: getstatic com/starpilot/starview/GxPage.Companion Lcom/starpilot/starview/GxPage$Companion;
-      // 015: ldc2_w 20
-      // 018: invokevirtual com/starpilot/starview/GxPage$Companion.client (J)Lokhttp3/OkHttpClient;
-      // 01b: astore 4
-      // 01d: new okhttp3/Request$Builder
-      // 020: astore 7
-      // 022: aload 7
-      // 024: invokespecial okhttp3/Request$Builder.<init> ()V
-      // 027: aload 4
-      // 029: aload 7
-      // 02b: aload 0
-      // 02c: invokevirtual okhttp3/Request$Builder.url (Ljava/lang/String;)Lokhttp3/Request$Builder;
-      // 02f: invokevirtual okhttp3/Request$Builder.build ()Lokhttp3/Request;
-      // 032: invokevirtual okhttp3/OkHttpClient.newCall (Lokhttp3/Request;)Lokhttp3/Call;
-      // 035: invokeinterface okhttp3/Call.execute ()Lokhttp3/Response; 1
-      // 03a: checkcast java/io/Closeable
-      // 03d: astore 7
-      // 03f: aload 7
-      // 041: checkcast okhttp3/Response
-      // 044: astore 8
-      // 046: aload 8
-      // 048: invokevirtual okhttp3/Response.body ()Lokhttp3/ResponseBody;
-      // 04b: astore 0
-      // 04c: aload 0
-      // 04d: ifnull 05e
-      // 050: aload 0
-      // 051: invokevirtual okhttp3/ResponseBody.string ()Ljava/lang/String;
-      // 054: astore 4
-      // 056: aload 4
-      // 058: astore 0
-      // 059: aload 4
-      // 05b: ifnonnull 062
-      // 05e: ldc_w ""
-      // 061: astore 0
-      // 062: getstatic kotlin/Result.Companion Lkotlin/Result$Companion;
-      // 065: astore 4
-      // 067: new org/json/JSONObject
-      // 06a: astore 4
-      // 06c: aload 4
-      // 06e: aload 0
-      // 06f: invokespecial org/json/JSONObject.<init> (Ljava/lang/String;)V
-      // 072: aload 4
-      // 074: invokestatic kotlin/Result.constructor-impl (Ljava/lang/Object;)Ljava/lang/Object;
-      // 077: astore 0
-      // 078: goto 089
-      // 07b: astore 0
-      // 07c: getstatic kotlin/Result.Companion Lkotlin/Result$Companion;
-      // 07f: astore 4
-      // 081: aload 0
-      // 082: invokestatic kotlin/ResultKt.createFailure (Ljava/lang/Throwable;)Ljava/lang/Object;
-      // 085: invokestatic kotlin/Result.constructor-impl (Ljava/lang/Object;)Ljava/lang/Object;
-      // 088: astore 0
-      // 089: aload 0
-      // 08a: astore 4
-      // 08c: aload 0
-      // 08d: invokestatic kotlin/Result.isFailure-impl (Ljava/lang/Object;)Z
-      // 090: ifeq 096
-      // 093: aconst_null
-      // 094: astore 4
-      // 096: aload 6
-      // 098: aload 4
-      // 09a: putfield kotlin/jvm/internal/Ref$ObjectRef.element Ljava/lang/Object;
-      // 09d: aload 8
-      // 09f: invokevirtual okhttp3/Response.isSuccessful ()Z
-      // 0a2: ifne 142
-      // 0a5: aload 6
-      // 0a7: getfield kotlin/jvm/internal/Ref$ObjectRef.element Ljava/lang/Object;
-      // 0aa: checkcast org/json/JSONObject
-      // 0ad: astore 0
-      // 0ae: aload 0
-      // 0af: ifnull 0df
-      // 0b2: aload 0
-      // 0b3: ldc_w "message"
-      // 0b6: invokevirtual org/json/JSONObject.optString (Ljava/lang/String;)Ljava/lang/String;
-      // 0b9: astore 0
-      // 0ba: aload 0
-      // 0bb: ifnull 0df
-      // 0be: aload 0
-      // 0bf: checkcast java/lang/CharSequence
-      // 0c2: astore 4
-      // 0c4: aload 4
-      // 0c6: astore 0
-      // 0c7: aload 4
-      // 0c9: invokestatic kotlin/text/StringsKt.isBlank (Ljava/lang/CharSequence;)Z
-      // 0cc: ifeq 0d1
-      // 0cf: aconst_null
-      // 0d0: astore 0
-      // 0d1: aload 0
-      // 0d2: checkcast java/lang/String
-      // 0d5: astore 4
-      // 0d7: aload 4
-      // 0d9: astore 0
-      // 0da: aload 4
-      // 0dc: ifnonnull 13c
-      // 0df: aload 6
-      // 0e1: getfield kotlin/jvm/internal/Ref$ObjectRef.element Ljava/lang/Object;
-      // 0e4: checkcast org/json/JSONObject
-      // 0e7: astore 0
-      // 0e8: aload 0
-      // 0e9: ifnull 114
-      // 0ec: aload 0
-      // 0ed: ldc_w "error"
-      // 0f0: invokevirtual org/json/JSONObject.optString (Ljava/lang/String;)Ljava/lang/String;
-      // 0f3: astore 0
-      // 0f4: aload 0
-      // 0f5: ifnull 114
-      // 0f8: aload 0
-      // 0f9: checkcast java/lang/CharSequence
-      // 0fc: astore 4
-      // 0fe: aload 4
-      // 100: astore 0
-      // 101: aload 4
-      // 103: invokestatic kotlin/text/StringsKt.isBlank (Ljava/lang/CharSequence;)Z
-      // 106: ifeq 10b
-      // 109: aconst_null
-      // 10a: astore 0
-      // 10b: aload 0
-      // 10c: checkcast java/lang/String
-      // 10f: astore 4
-      // 111: goto 117
-      // 114: aconst_null
-      // 115: astore 4
-      // 117: aload 4
-      // 119: astore 0
-      // 11a: aload 4
-      // 11c: ifnonnull 13c
-      // 11f: aload 8
-      // 121: invokevirtual okhttp3/Response.code ()I
-      // 124: istore 3
-      // 125: new java/lang/StringBuilder
-      // 128: astore 0
-      // 129: aload 0
-      // 12a: invokespecial java/lang/StringBuilder.<init> ()V
-      // 12d: aload 0
-      // 12e: ldc_w "HTTP "
-      // 131: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 134: iload 3
-      // 135: invokevirtual java/lang/StringBuilder.append (I)Ljava/lang/StringBuilder;
-      // 138: invokevirtual java/lang/StringBuilder.toString ()Ljava/lang/String;
-      // 13b: astore 0
-      // 13c: aload 5
-      // 13e: aload 0
-      // 13f: putfield kotlin/jvm/internal/Ref$ObjectRef.element Ljava/lang/Object;
-      // 142: getstatic kotlin/Unit.INSTANCE Lkotlin/Unit;
-      // 145: astore 0
-      // 146: aload 7
-      // 148: aconst_null
-      // 149: invokestatic kotlin/io/CloseableKt.closeFinally (Ljava/io/Closeable;Ljava/lang/Throwable;)V
-      // 14c: goto 17b
-      // 14f: astore 4
-      // 151: aload 4
-      // 153: athrow
-      // 154: astore 0
-      // 155: aload 7
-      // 157: aload 4
-      // 159: invokestatic kotlin/io/CloseableKt.closeFinally (Ljava/io/Closeable;Ljava/lang/Throwable;)V
-      // 15c: aload 0
-      // 15d: athrow
-      // 15e: astore 7
-      // 160: aload 7
-      // 162: invokevirtual java/lang/Exception.getMessage ()Ljava/lang/String;
-      // 165: astore 4
-      // 167: aload 4
-      // 169: astore 0
-      // 16a: aload 4
-      // 16c: ifnonnull 175
-      // 16f: aload 7
-      // 171: invokevirtual java/lang/Exception.toString ()Ljava/lang/String;
-      // 174: astore 0
-      // 175: aload 5
-      // 177: aload 0
-      // 178: putfield kotlin/jvm/internal/Ref$ObjectRef.element Ljava/lang/Object;
-      // 17b: aload 1
-      // 17c: invokevirtual com/starpilot/starview/GxNavigationPage.getMain ()Landroid/os/Handler;
-      // 17f: new com/starpilot/starview/GxNavigationPage$$ExternalSyntheticLambda33
-      // 182: dup
-      // 183: aload 2
-      // 184: aload 5
-      // 186: aload 6
-      // 188: invokespecial com/starpilot/starview/GxNavigationPage$$ExternalSyntheticLambda33.<init> (Lkotlin/jvm/functions/Function2;Lkotlin/jvm/internal/Ref$ObjectRef;Lkotlin/jvm/internal/Ref$ObjectRef;)V
-      // 18b: invokevirtual android/os/Handler.post (Ljava/lang/Runnable;)Z
-      // 18e: pop
-      // 18f: return
-   }
-
-   private static final void extGet$lambda$19$lambda$18(Function2 var0, ObjectRef var1, ObjectRef var2) {
-      var0.invoke(var1.element, var2.element);
-   }
-
-   private final JSONObject favoriteOf(JSONObject var1) {
-      Pair var3 = this.coordsOf(var1);
-      Object var2 = null;
-      if (var3 == null) {
-         return null;
-      } else {
-         Iterator var4 = this.favorites.iterator();
-
-         do {
-            if (!var4.hasNext()) {
-               var5 = var2;
-               break;
-            }
-
-            var5 = var4.next();
-         } while (!this.sameSpot(this.coordsOf((JSONObject)var5), var3));
-
-         return (JSONObject)var5;
-      }
-   }
-
-   private final EditText field(String var1) {
-      EditText var2 = new EditText((Context)this.getAct());
-      var2.setHint(var1);
-      var2.setTextSize(20.0F);
-      var2.setTextColor(CarUi.Companion.getTEXT());
-      var2.setHintTextColor(CarUi.Companion.getDIM());
-      var2.setSingleLine(true);
-      var2.setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 12, Color.rgb(60, 66, 78)));
-      var2.setPadding(this.getUi().dp(16), this.getUi().dp(12), this.getUi().dp(16), this.getUi().dp(12));
-      var2.setMinHeight(this.getUi().dp(56));
-      return var2;
-   }
-
-   private final String fmtDistance(double var1) {
-      String var8;
-      if (this.isMetric) {
-         if (var1 >= 1000.0) {
-            StringCompanionObject var5 = StringCompanionObject.INSTANCE;
-            var8 = String.format(Locale.US, "%.1f km", Arrays.copyOf(new Object[]{var1 / 1000}, 1));
-            Intrinsics.checkNotNullExpressionValue(var8, "format(...)");
-         } else {
-            long var3 = Math.round(var1);
-            var8 = var3 + " m";
-         }
-      } else {
-         var1 /= 1609.34;
-         if (var1 >= 0.1) {
-            StringCompanionObject var9 = StringCompanionObject.INSTANCE;
-            var8 = String.format(Locale.US, "%.1f mi", Arrays.copyOf(new Object[]{var1}, 1));
-            Intrinsics.checkNotNullExpressionValue(var8, "format(...)");
-         } else {
-            long var7 = Math.round(5280 * var1);
-            var8 = var7 + " ft";
-         }
-      }
-
-      return var8;
-   }
-
-   private final String fmtDuration(double var1) {
-      double var3 = 3600;
-      int var6 = (int)(var1 / var3);
-      int var5 = (int)(var1 % var3 / 60);
-      StringBuilder var7 = null;
-      if (var6 > 0) {
-         var7 = new StringBuilder();
-         var7 = var7.append(var6).append("h ");
-      } else {
-         var7 = new StringBuilder();
-      }
-
-      return var7.append(var5).append(" min").toString();
-   }
-
-   private final String fmtEta(double var1) {
-      String var3 = DateFormat.getTimeInstance(3).format(new Date(System.currentTimeMillis() + (long)(1000 * var1)));
-      Intrinsics.checkNotNullExpressionValue(var3, "format(...)");
-      return var3;
-   }
-
-   private final boolean getHasMapbox() {
-      boolean var1;
-      if (this.mapboxPublic.length() > 0) {
-         var1 = true;
-      } else {
-         var1 = false;
-      }
-
-      return var1;
-   }
-
-   private final boolean getHasRoutingKey() {
-      boolean var1;
-      if (this.mapboxSecret.length() > 0) {
-         var1 = true;
-      } else {
-         var1 = false;
-      }
-
-      return var1;
-   }
-
-   private final String getQuery() {
-      String var3;
-      if (this.queryEdit != null) {
-         EditText var2 = this.queryEdit;
-         EditText var1 = var2;
-         if (var2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("queryEdit");
-            var1 = null;
-         }
-
-         var3 = var1.getText().toString();
-      } else {
-         var3 = "";
-      }
-
-      return var3;
-   }
-
-   private final boolean getScheduleDirty() {
-      return Intrinsics.areEqual(this.scheduleDraft, this.scheduleSaved) ^ true;
-   }
-
-   private final boolean getSelectionDirty() {
-      return Intrinsics.areEqual(CollectionsKt.toSet(this.selectedDraft), this.selectedSaved) ^ true;
-   }
-
-   private final int groupSelectedCount(JSONObject var1) {
-      label40: {
-         JSONArray var6 = var1.optJSONArray("regions");
-         if (var6 != null) {
-            List var4 = this.objects(var6);
-            var7 = var4;
-            if (var4 != null) {
-               break label40;
-            }
-         }
-
-         var7 = CollectionsKt.emptyList();
-      }
-
-      Iterable var11 = var7;
-      var var8 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var11, 10));
-
-      for (JSONObject var5 : var11) {
-         var8.add(GxPage.str$default(this, var5, "token", null, 2, null));
-      }
-
-      List var9 = var8;
-      Set var10 = CollectionsKt.toSet(var9);
-      var var13 = this.selectedDraft;
-      int var2;
-      if (var13 instanceof Collection && var13.isEmpty()) {
-         var2 = 0;
-      } else {
-         var2 = 0;
-         Iterator var14 = var13.iterator();
-
-         while (var14.hasNext()) {
-            if (var10.contains((String)var14.next())) {
-               int var3 = var2 + 1;
-               var2 = var3;
-               if (var3 < 0) {
-                  CollectionsKt.throwCountOverflow();
-                  var2 = var3;
-               }
-            }
-         }
-      }
-
-      return var2;
-   }
-
-   private final String gxBytes(double var1) {
-      if (var1 <= 0.0) {
-         return "0 MB";
-      } else {
-         List var5 = CollectionsKt.listOf(new String[]{"B", "KB", "MB", "GB", "TB"});
-         int var3 = Math.min((int)(Math.log(var1) / Math.log(1024.0)), var5.size() - 1);
-         var1 /= Math.pow(1024.0, var3);
-         String var7;
-         if (!(var1 >= 10.0) && var3 != 0) {
-            StringCompanionObject var8 = StringCompanionObject.INSTANCE;
-            var7 = String.format(Locale.US, "%.2f", Arrays.copyOf(new Object[]{var1}, 1));
-         } else {
-            StringCompanionObject var4 = StringCompanionObject.INSTANCE;
-            var7 = String.format(Locale.US, "%.0f", Arrays.copyOf(new Object[]{var1}, 1));
-         }
-
-         Intrinsics.checkNotNullExpressionValue(var7, "format(...)");
-         Object var9 = var5.get(var3);
-         return var7 + " " + var9;
-      }
-   }
-
-   private final String gxDuration(double var1) {
-      long var7 = Math.max(0L, Math.round(var1));
-      if (var7 < 60L) {
-         return var7 + "s";
-      } else {
-         long var5 = 60;
-         long var3 = var7 / var5;
-         if (var3 < 60L) {
-            return var3 + "m " + var7 % var5 + "s";
-         } else {
-            var7 = var3 / var5;
-            return var7 + "h " + var3 % var5 + "m";
-         }
-      }
-   }
-
-   private final void homeWork(JSONObject var1) {
-      boolean var2 = var1.optBoolean("is_home");
-      boolean var3 = var1.optBoolean("is_work");
-      String var6 = GxPage.str$default(this, var1, "name", null, 2, null);
-      String var4;
-      if (var2) {
-         var4 = "Remove Home";
-      } else {
-         var4 = "Set as Home";
-      }
-
-      String var5;
-      if (var3) {
-         var5 = "Remove Work";
-      } else {
-         var5 = "Set as Work";
-      }
-
-      this.pick(var6, CollectionsKt.listOf(new String[]{var4, var5}), new GxNavigationPage$$ExternalSyntheticLambda61(var1, var2, var3, this));
-   }
-
-   private static final Unit homeWork$lambda$93(JSONObject var0, boolean var1, boolean var2, GxNavigationPage var3, int var4) {
-      JSONObject var7 = new JSONObject();
-      JSONObject var6 = (JSONObject)var0.opt("routeId");
-      JSONObject var5 = var6;
-      if (var6 == null) {
-         var5 = (JSONObject)JSONObject.NULL;
-      }
-
-      var6 = var7.put("routeId", var5);
-      var5 = var0.opt("id");
-      Object var8 = var5;
-      if (var5 == null) {
-         var8 = JSONObject.NULL;
-      }
-
-      var5 = var6.put("id", var8);
-      if (var4 == 0) {
-         if (var1) {
-            var5.put("is_home", false);
-            var8 = "Home location removed!";
-         } else {
-            var5.put("is_home", true);
-            if (var2) {
-               var5.put("is_work", false);
-            }
-
-            var8 = "Home location set!";
-         }
-      } else if (var2) {
-         var5.put("is_work", false);
-         var8 = "Work location removed!";
-      } else {
-         var5.put("is_work", true);
-         if (var1) {
-            var5.put("is_home", false);
-         }
-
-         var8 = "Work location set!";
-      }
-
-      GxPage.send$default(
-         var3, "POST", "/api/navigation/favorite/rename", var5, 0L, new GxNavigationPage$$ExternalSyntheticLambda40(var3, var4, (String)var8), 8, null
-      );
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit homeWork$lambda$93$lambda$92(GxNavigationPage var0, int var1, String var2, String var3, JSONObject var4) {
-      if (var3 != null) {
-         if (var1 == 0) {
-            var2 = "home";
-         } else {
-            var2 = "work";
-         }
-
-         var0.toast("Failed to update " + var2 + " location...");
-      } else {
-         var0.toast(var2);
-         var0.reloadFavorites();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final boolean isDownloading() {
-      return this.mapsStatus.optBoolean("downloading");
-   }
-
-   private final boolean isOnroad() {
-      return this.mapsStatus.optBoolean("isOnroad");
-   }
-
-   private final void keyRow(GxNavigationPage.KeyMeta var1) {
-      String var7 = this.savedKeys.get(var1.getKind());
-      String var6 = var7;
-      if (var7 == null) {
-         var6 = "";
-      }
-
-      String var8 = var1.getKind();
-      int var3 = var8.length();
-      boolean var4 = true;
-      boolean var12;
-      if (var3 > 0) {
-         var12 = true;
-      } else {
-         var12 = false;
-      }
-
-      var7 = var8;
-      if (var12) {
-         StringBuilder var18 = new StringBuilder();
-         char var2 = var8.charAt(0);
-         String var9 = String.valueOf(var2);
-         Intrinsics.checkNotNull(var9, "null cannot be cast to non-null type java.lang.String");
-         var9 = var9.toUpperCase(Locale.ROOT);
-         Intrinsics.checkNotNullExpressionValue(var9, "toUpperCase(...)");
-         StringBuilder var19 = var18.append(var9);
-         var8 = var8.substring(1);
-         Intrinsics.checkNotNullExpressionValue(var8, "substring(...)");
-         var7 = var19.append(var8).toString();
-      }
-
-      CharSequence var20 = var7;
-      var7 = new Regex("[0-9]").replace(var20, new GxNavigationPage$$ExternalSyntheticLambda12());
-      var8 = var7 + " Key";
-      GxPage var10 = this;
-      var7 = var1.getTitle();
-      String var11 = var7 + "  (" + var8 + ")";
-      if (var6.length() == 0) {
-         var12 = true;
-      } else {
-         var12 = false;
-      }
-
-      if (var12) {
-         var7 = "Not set";
-      } else {
-         var7 = this.maskKey(var6);
-      }
-
-      LinearLayout var31 = this.keysBox;
-      LinearLayout var28 = var31;
-      if (var31 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("keysBox");
-         var28 = null;
-      }
-
-      GxPage.Row var29 = GxPage.row$default(var10, var11, var7, (ViewGroup)var28, 0, 8, null);
-      TextView var32 = var29.getDesc();
-      if (var6.length() == 0) {
-         var12 = true;
-      } else {
-         var12 = false;
-      }
-
-      Typeface var24;
-      if (var12) {
-         var24 = Typeface.DEFAULT;
-      } else {
-         var24 = Typeface.MONOSPACE;
-      }
-
-      var32.setTypeface(var24);
-      if (var6.length() == 0) {
-         var12 = true;
-      } else {
-         var12 = false;
-      }
-
-      if (var12) {
-         var7 = "Set";
-      } else {
-         var7 = "Change";
-      }
-
-      boolean var5;
-      if (var6.length() == 0) {
-         var5 = true;
-      } else {
-         var5 = false;
-      }
-
-      var29.button(var7, var5, new GxNavigationPage$$ExternalSyntheticLambda13(this, var1));
-      if (var6.length() > 0) {
-         var12 = var4;
-      } else {
-         var12 = false;
-      }
-
-      if (var12) {
-         GxPage.Row.button$default(var29, "Delete", false, new GxNavigationPage$$ExternalSyntheticLambda14(this, var1), 2, null);
-      }
-   }
-
-   private static final CharSequence keyRow$lambda$156(MatchResult var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      String var1 = var0.getValue();
-      return " " + var1;
-   }
-
-   private static final Unit keyRow$lambda$157(GxNavigationPage var0, GxNavigationPage.KeyMeta var1) {
-      var0.editKey(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit keyRow$lambda$162(GxNavigationPage var0, GxNavigationPage.KeyMeta var1) {
-      String var2 = var1.getTitle();
-      var0.confirm(
-         "Confirm Delete", "Are you sure you want to delete your " + var2 + " key?", "Yes, Delete", new GxNavigationPage$$ExternalSyntheticLambda0(var0, var1)
-      );
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit keyRow$lambda$162$lambda$161(GxNavigationPage var0, GxNavigationPage.KeyMeta var1) {
-      GxPage var3 = var0;
-      String var2 = var0.enc(var1.getKind());
-      GxPage.send$default(var3, "DELETE", "/api/navigation_key?type=" + var2, null, 0L, new GxNavigationPage$$ExternalSyntheticLambda24(var0, var1), 12, null);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit keyRow$lambda$162$lambda$161$lambda$160(GxNavigationPage var0, GxNavigationPage.KeyMeta var1, String var2, JSONObject var3) {
-      if (var2 != null) {
-         CharSequence var8 = var2;
-         Object var4 = var8;
-         if (StringsKt.isBlank(var8)) {
-            var4 = "Delete failed...";
-         }
-
-         var0.toast((String)var4);
-         return Unit.INSTANCE;
-      } else {
-         label31: {
-            if (var3 != null) {
-               var2 = var3.optString("message");
-               if (var2 != null) {
-                  CharSequence var9 = var2;
-                  CharSequence var6 = var9;
-                  if (StringsKt.isBlank(var9)) {
-                     var6 = null;
-                  }
-
-                  String var10 = (String)var6;
-                  var2 = var10;
-                  if (var10 != null) {
-                     break label31;
-                  }
-               }
-            }
-
-            var2 = "Deleted!";
-         }
-
-         var0.toast(var2);
-         var0.savedKeys.put(var1.getKind(), "");
-         if (Intrinsics.areEqual(var1.getKind(), "public")) {
-            var0.mapboxPublic = "";
-         } else if (Intrinsics.areEqual(var1.getKind(), "secret")) {
-            var0.mapboxSecret = "";
-         }
-
-         var0.renderKeys();
-         var0.renderNavAfterKeys();
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final String labelFor(JSONObject var1) {
-      Iterable var4 = CollectionsKt.listOf(new String[]{"full_address", "place_name", "name", "address"});
-      var var7 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var4, 10));
-      Iterator var8 = var4.iterator();
-
-      while (true) {
-         boolean var3 = var8.hasNext();
-         String var5 = "";
-         Object var13 = null;
-         Iterator var6 = null;
-         if (!var3) {
-            List var10 = var7;
-            var6 = var10.iterator();
-
-            boolean var2;
-            do {
-               if (!var6.hasNext()) {
-                  var11 = var13;
-                  break;
-               }
-
-               var11 = var6.next();
-               if (((String)var11).length() > 0) {
-                  var2 = true;
-               } else {
-                  var2 = false;
-               }
-            } while (!var2);
-
-            String var12 = (String)var11;
-            if (var12 == null) {
-               var12 = var5;
-            }
-
-            return var12;
-         }
-
-         String var9 = (String)var8.next();
-         var13 = var6;
-         if (var1 != null) {
-            var9 = GxPage.str$default(this, var1, var9, null, 2, null);
-            var13 = var6;
-            if (var9 != null) {
-               var13 = StringsKt.trim(var9).toString();
-            }
-         }
-
-         if (var13 == null) {
-            var13 = var5;
-         }
-
-         var7.add(var13);
-      }
-   }
-
-   private final void loadCatalog() {
-      this.getJson("/api/maps/catalog", new GxNavigationPage$$ExternalSyntheticLambda44(this));
-   }
-
-   private static final Unit loadCatalog$lambda$111(GxNavigationPage var0, String var1, JSONObject var2) {
-      var0.mapsLoadingCatalog = false;
-      if (var1 == null && var2 != null) {
-         label75: {
-            JSONArray var5 = var2.optJSONArray("sections");
-            if (var5 != null) {
-               List var3 = var0.objects(var5);
-               var6 = var3;
-               if (var3 != null) {
-                  break label75;
-               }
-            }
-
-            var6 = CollectionsKt.emptyList();
-         }
-
-         label70: {
-            var0.mapsSections = var6;
-            JSONArray var7 = var2.optJSONArray("scheduleOptions");
-            if (var7 != null) {
-               List var8 = var0.objects(var7);
-               if (var8 != null) {
-                  Iterable var16 = var8;
-                  var var10 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var16, 10));
-
-                  for (JSONObject var17 : var16) {
-                     var10.add(TuplesKt.to(var17.opt("value").toString(), GxPage.str$default(var0, var17, "label", null, 2, null)));
-                  }
-
-                  var9 = var10;
-                  break label70;
-               }
-            }
-
-            var9 = CollectionsKt.emptyList();
-         }
-
-         var0.scheduleOptions = var9;
-         var0.tokenLabels.clear();
-         Iterator var22 = var0.mapsSections.iterator();
-
-         while (var22.hasNext()) {
-            label41: {
-               JSONArray var11 = ((JSONObject)var22.next()).optJSONArray("groups");
-               if (var11 != null) {
-                  List var18 = var0.objects(var11);
-                  var12 = var18;
-                  if (var18 != null) {
-                     break label41;
-                  }
-               }
-
-               var12 = CollectionsKt.emptyList();
-            }
-
-            Iterator var4 = var12.iterator();
-
-            while (var4.hasNext()) {
-               label49: {
-                  JSONArray var13 = ((JSONObject)var4.next()).optJSONArray("regions");
-                  if (var13 != null) {
-                     List var19 = var0.objects(var13);
-                     var14 = var19;
-                     if (var19 != null) {
-                        break label49;
-                     }
-                  }
-
-                  var14 = CollectionsKt.emptyList();
-               }
-
-               for (JSONObject var15 : var14) {
-                  var0.tokenLabels.put(GxPage.str$default(var0, var15, "token", null, 2, null), GxPage.str$default(var0, var15, "label", null, 2, null));
-               }
-            }
-         }
-      } else {
-         if (var1 == null) {
-            var1 = "Failed to load the map catalog.";
-         }
-
-         var0.mapsError = var1;
-      }
-
-      var0.buildSchedule();
-      var0.renderCatalog();
-      var0.paintMaps();
-      return Unit.INSTANCE;
-   }
-
-   private final void loadKeys() {
-      if (this.keysBox != null) {
-         this.getJson("/api/navigation", new GxNavigationPage$$ExternalSyntheticLambda8(this));
-      }
-   }
-
-   private static final Unit loadKeys$lambda$150(GxNavigationPage var0, String var1, JSONObject var2) {
-      if (var1 == null && var2 != null) {
-         var0.keysError = "";
-
-         for (GxNavigationPage.KeyMeta var4 : var0.keyMeta) {
-            var0.savedKeys.put(var4.getKind(), GxPage.str$default(var0, var2, var4.getNavField(), null, 2, null));
-         }
-
-         var0.mapboxPublic = StringsKt.trim(GxPage.str$default(var0, var2, "mapboxPublic", null, 2, null)).toString();
-         var0.mapboxSecret = StringsKt.trim(GxPage.str$default(var0, var2, "mapboxSecret", null, 2, null)).toString();
-      } else {
-         if (var1 == null) {
-            var1 = "Failed to load keys...";
-         }
-
-         var0.keysError = var1;
-      }
-
-      var0.getJson("/api/galaxy/session", new GxNavigationPage$$ExternalSyntheticLambda2(var0));
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit loadKeys$lambda$150$lambda$149(GxNavigationPage var0, String var1, JSONObject var2) {
-      if (var1 == null && var2 != null) {
-         var1 = GxPage.str$default(var0, var2, "appUrl", null, 2, null);
-         int var3 = var1.length();
-         boolean var4 = true;
-         boolean var7;
-         if (var3 == 0) {
-            var7 = true;
-         } else {
-            var7 = false;
-         }
-
-         if (var7) {
-            var1 = var0.appUrl;
-         }
-
-         var0.appUrl = var1;
-         var1 = GxPage.str$default(var0, var2, "cookieName", null, 2, null);
-         if (var1.length() == 0) {
-            var7 = var4;
-         } else {
-            var7 = false;
-         }
-
-         if (var7) {
-            var1 = "galaxy_session";
-         }
-
-         var0.cookieName = var1;
-         var0.paired = var2.optBoolean("paired");
-         var0.galaxyToken = GxPage.str$default(var0, var2, "sessionToken", null, 2, null);
-         var0.tokenVisible = false;
-      } else {
-         if (var1 == null) {
-            var1 = "Failed to load Galaxy session...";
-         }
-
-         var0.toast(var1);
-      }
-
-      var0.keysLoading = false;
-      var0.renderKeys();
-      return Unit.INSTANCE;
-   }
-
-   private final void loadNav() {
-      if (this.keyBox != null) {
-         this.getJson("/api/navigation", new GxNavigationPage$$ExternalSyntheticLambda9(this));
-      }
-   }
-
-   private static final Unit loadNav$lambda$32(GxNavigationPage var0, String var1, JSONObject var2) {
-      if (var1 == null && var2 != null) {
-         var0.getJson("/api/navigation/favorite", new GxNavigationPage$$ExternalSyntheticLambda30(var0, var2));
-         return Unit.INSTANCE;
-      } else {
-         if (var1 == null) {
-            var1 = "Failed to load navigation.";
-         }
-
-         var0.navError = var1;
-         var0.navLoading = false;
-         var0.renderDestAll();
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final Unit loadNav$lambda$32$lambda$31(GxNavigationPage var0, JSONObject var1, String var2, JSONObject var3) {
-      label54: {
-         var0.mapboxPublic = StringsKt.trim(GxPage.str$default(var0, var1, "mapboxPublic", null, 2, null)).toString();
-         var0.mapboxSecret = StringsKt.trim(GxPage.str$default(var0, var1, "mapboxSecret", null, 2, null)).toString();
-         var0.language = StringsKt.trim(GxPage.str$default(var0, var1, "language", null, 2, null)).toString();
-         var0.isMetric = var1.optBoolean("isMetric");
-         var0.lastPosition = var0.coordsOf(var1.optJSONObject("lastPosition"));
-         if (var3 != null) {
-            JSONArray var11 = var3.optJSONArray("favorites");
-            if (var11 != null) {
-               List var15 = var0.objects(var11);
-               var12 = var15;
-               if (var15 != null) {
-                  break label54;
-               }
-            }
-         }
-
-         var12 = CollectionsKt.emptyList();
-      }
-
-      var0.favorites = var12;
-      var0.recentDestinations = var0.parseArr(var1.opt("previousDestinations"));
-      JSONObject var5 = var0.parseObj(var1.opt("destination"));
-      Pair var16 = var0.coordsOf(var5);
-      String var7 = "main";
-      if (var16 != null && var5 != null) {
-         String var6 = var0.primaryOf(var5);
-         var2 = var0.str(var5, "routeId", "main");
-         if (new Regex("^(?:main|alt-[1-9]\\d*)$").matches(var2)) {
-            var7 = var2;
-         }
-
-         var0.selectedRouteId = var7;
-         JSONObject var14 = new JSONObject(var5.toString())
-            .put("latitude", ((Number)var16.getFirst()).doubleValue())
-            .put("longitude", ((Number)var16.getSecond()).doubleValue());
-         Object var8 = var6;
-         boolean var4;
-         if (var8.length() == 0) {
-            var4 = true;
-         } else {
-            var4 = false;
-         }
-
-         if (var4) {
-            var8 = var0.labelFor(var5);
-            if (var8.length() == 0) {
-               var4 = true;
-            } else {
-               var4 = false;
-            }
-
-            if (var4) {
-               var8 = "Current destination";
-            }
-
-            var8 = (String)var8;
-         }
-
-         var14.put("name", var8);
-         if (!var0.navigationStarted || var0.destination == null || !var0.sameSpot(var0.coordsOf(var0.destination), var16)) {
-            var0.destination = var14;
-            var0.navigationStarted = true;
-            var8 = var0;
-            Intrinsics.checkNotNull(var14);
-            var0.setQuery(GxPage.str$default((GxPage)var8, var14, "name", null, 2, null));
-            var0.suggestions = CollectionsKt.emptyList();
-            var0.previewDestination(var14, null);
-         }
-      } else if (var0.navigationStarted) {
-         var0.navigationStarted = false;
-         var0.destination = null;
-         var0.routes = CollectionsKt.emptyList();
-         var0.routeSummary = null;
-         var0.selectedRouteId = "main";
-      }
-
-      var0.navError = "";
-      var0.navLoading = false;
-      var0.renderDestAll();
-      return Unit.INSTANCE;
-   }
-
-   private final void loadSpeed() {
-      if (this.sStatus != null) {
-         this.getJson("/api/speed_limits/status", new GxNavigationPage$$ExternalSyntheticLambda73(this));
-      }
-   }
-
-   private static final Unit loadSpeed$lambda$172(GxNavigationPage var0, String var1, JSONObject var2) {
-      boolean var3 = false;
-      var0.speedLoading = false;
-      if (var1 == null && var2 != null) {
-         var0.canProcessNow = var2.optBoolean("canProcessNow");
-         var0.speedProcessing = var2.optBoolean("processing");
-         var0.speedReason = GxPage.str$default(var0, var2, "reason", null, 2, null);
-         var1 = GxPage.str$default(var0, var2, "status", null, 2, null);
-         if (var1.length() == 0) {
-            var3 = true;
-         }
-
-         if (var3) {
-            var1 = "Idle";
-         }
-
-         var0.speedStatus = var1;
-         var0.speedObj = var2;
-      } else {
-         var0.speedStatus = "Unavailable";
-         var0.speedObj = new JSONObject().put("visionStatus", "Unavailable");
-         var0.canProcessNow = false;
-         var0.speedProcessing = false;
-      }
-
-      var0.paintSpeed();
-      return Unit.INSTANCE;
-   }
-
-   private final void mapsOp(String var1, JSONObject var2, String var3) {
-      this.mapsActionBusy = true;
-      this.paintMaps();
-      GxPage.send$default(this, "POST", "/api/maps/" + var1, var2, 0L, new GxNavigationPage$$ExternalSyntheticLambda5(this, var3), 8, null);
-   }
-
-   private static final Unit mapsOp$lambda$145(GxNavigationPage var0, String var1, String var2, JSONObject var3) {
-      var0.mapsActionBusy = false;
-      String var9;
-      if (var2 == null) {
-         Object var5 = null;
-         Object var4 = null;
-         var2 = (String)var5;
-         if (var3 != null) {
-            String var8 = var3.optString("message");
-            var2 = (String)var5;
-            if (var8 != null) {
-               var2 = var8;
-               if (StringsKt.isBlank(var2)) {
-                  var2 = (String)var4;
-               }
-
-               var2 = var2;
-            }
-         }
-
-         var9 = var2;
-         if (var2 == null) {
-            var9 = var1;
-         }
-      } else {
-         var9 = var2;
-      }
-
-      var0.toast(var9);
-      var0.paintMaps();
-      var0.refreshMapsStatus();
-      return Unit.INSTANCE;
-   }
-
-   private final String maskKey(String var1) {
-      boolean var2;
-      if (var1.length() == 0) {
-         var2 = 1;
-      } else {
-         var2 = 0;
-      }
-
-      String var5 = "";
-      if (var2) {
-         return "";
-      } else {
-         Iterator var6 = CollectionsKt.listOf(new String[]{"pk.", "sk."}).iterator();
-
-         Object var4;
-         do {
-            boolean var3 = var6.hasNext();
-            var4 = null;
-            if (!var3) {
-               break;
-            }
-
-            var4 = (String)var6.next();
-         } while (!StringsKt.startsWith$default(var1, var4, false, 2, null));
-
-         String var10 = var4;
-         var4 = var10;
-         if (var10 == null) {
-            var4 = "";
-         }
-
-         var2 = var1.length() - var4.length();
-         String var11 = StringsKt.repeat("x", Math.min(var2, 24));
-         var1 = var5;
-         if (var2 > 24) {
-            var1 = "… (" + var2 + " characters)";
-         }
-
-         return var4 + var11 + var1;
-      }
-   }
-
-   private final TextView noteIn(String var1, LinearLayout var2) {
-      TextView var3 = GxPage.text$default(this, var1, (ViewGroup)var2, 15.0F, CarUi.Companion.getWARN(), false, 16, null);
-      var3.setVisibility(8);
-      return var3;
-   }
-
-   private final Double numOf(Object var1) {
-      boolean var6 = var1 instanceof Number;
-      boolean var5 = true;
-      boolean var4 = true;
-      Object var7 = null;
-      if (var6) {
-         Double var8 = var1.doubleValue();
-         double var2 = var8.doubleValue();
-         if (Double.isInfinite(var2) || Double.isNaN(var2)) {
-            var4 = false;
-         }
-
-         var1 = (Double)var7;
-         if (var4) {
-            var1 = var8;
-         }
-      } else if (var1 instanceof String) {
-         Double var12 = StringsKt.toDoubleOrNull(StringsKt.trim((String & CharSequence)var1).toString());
-         var1 = (Double)var7;
-         if (var12 != null) {
-            double var10 = var12.doubleValue();
-            if (!Double.isInfinite(var10) && !Double.isNaN(var10)) {
-               var4 = var5;
-            } else {
-               var4 = false;
-            }
-
-            var1 = (Double)var7;
-            if (var4) {
-               var1 = var12;
-            }
-         }
-      } else {
-         var1 = (Double)var7;
-      }
-
-      return var1;
-   }
-
-   private final void onInput() {
-      this.destination = null;
-      this.routeSummary = null;
-      this.routes = CollectionsKt.emptyList();
-      this.selectedRouteId = "main";
-      this.navigationStarted = false;
-      this.searchSeq++;
-      this.searching = false;
-      this.navError = "";
-      this.getMain().removeCallbacks(this.searchRunner);
-      if (StringsKt.trim(this.getQuery()).toString().length() >= 3 && this.getHasMapbox()) {
-         this.getMain().postDelayed(this.searchRunner, 350L);
-      } else {
-         this.suggestions = CollectionsKt.emptyList();
-      }
-
-      this.renderStatus();
-      this.renderSuggestions();
-      this.renderDest();
-   }
-
-   private final void openUrl(String var1) {
-      try {
-         Activity var2 = this.getAct();
-         Intent var3 = new Intent("android.intent.action.VIEW", Uri.parse(var1));
-         var2.startActivity(var3);
-      } catch (Exception var4) {
-         this.toast("No app can open " + var1);
-      }
-   }
-
-   private final void paintMaps() {
-      if (this.vDownloader != null) {
-         TextView var12 = this.mapsErrorNote;
-         TextView var11 = var12;
-         if (var12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsErrorNote");
-            var11 = null;
-         }
-
-         var11.setText(this.mapsError);
-         var12 = this.mapsErrorNote;
-         var11 = var12;
-         if (var12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsErrorNote");
-            var11 = null;
-         }
-
-         boolean var5;
-         if (this.mapsError.length() == 0) {
-            var5 = 1;
-         } else {
-            var5 = 0;
-         }
-
-         if (var5) {
-            var5 = 8;
-         } else {
-            var5 = 0;
-         }
-
-         var11.setVisibility(var5);
-         JSONObject var14 = this.mapsStatus;
-         JSONObject var13 = this.mapsProgress;
-         var11 = this.vDownloader;
-         var12 = var11;
-         if (var11 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vDownloader");
-            var12 = null;
-         }
-
-         CharSequence var48;
-         if (this.mapsLoadingStatus) {
-            var48 = "Checking...";
-         } else {
-            String var49;
-            if (this.isDownloading()) {
-               if (var14.optBoolean("cancelling")) {
-                  var49 = "Cancelling";
-               } else {
-                  var49 = "Downloading";
-               }
-            } else {
-               var49 = "Idle";
-            }
-
-            var48 = var49;
-         }
-
-         var12.setText(var48);
-         var12 = this.vSaved;
-         var11 = var12;
-         if (var12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vSaved");
-            var11 = null;
-         }
-
-         CharSequence var110;
-         if (this.mapsLoadingStatus) {
-            var110 = "Checking...";
-         } else {
-            var110 = String.valueOf(var14.optInt("selectedCount", 0));
-         }
-
-         var11.setText(var110);
-         Double var51 = var13.optDouble("estimatedDownloadBytes", 0.0);
-         double var1 = var51.doubleValue();
-         boolean var22;
-         if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
-            var22 = 1;
-         } else {
-            var22 = 0;
-         }
-
-         if (!var22) {
-            var51 = null;
-         }
-
-         if (var51 != null) {
-            var1 = var51;
-         } else {
-            var1 = 0.0;
-         }
-
-         var11 = this.vEstimate;
-         var12 = var11;
-         if (var11 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vEstimate");
-            var12 = null;
-         }
-
-         String var53;
-         if (!this.getSelectionDirty() && var1 > 0.0) {
-            String var54 = this.gxBytes(var1);
-            var53 = "~" + var54 + " additional";
-         } else if (!this.selectedDraft.isEmpty()) {
-            var53 = "Not yet available";
-         } else {
-            var53 = "Select regions";
-         }
-
-         CharSequence var55 = var53;
-         var12.setText(var55);
-         var11 = this.vLastUpdate;
-         if (var11 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vLastUpdate");
-            var11 = null;
-         }
-
-         var12 = GxPage.str$default(this, var14, "lastUpdate", null, 2, null);
-         if (var12.length() == 0) {
-            var22 = (boolean)1;
-         } else {
-            var22 = (boolean)0;
-         }
-
-         if (var22) {
-            var12 = "Never";
-         }
-
-         var11.setText((CharSequence)var12);
-         var12 = this.vStorage;
-         var11 = var12;
-         if (var12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vStorage");
-            var11 = null;
-         }
-
-         String var114;
-         if (var14.optBoolean("storageKnown")) {
-            var114 = this.gxBytes(var14.optDouble("storageBytes", 0.0));
-         } else {
-            var114 = "Calculating…";
-         }
-
-         var11.setText(var114);
-         var12 = this.nOnroad;
-         var11 = var12;
-         if (var12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("nOnroad");
-            var11 = null;
-         }
-
-         if (this.isOnroad()) {
-            var22 = 0;
-         } else {
-            var22 = 8;
-         }
-
-         var11.setVisibility(var22);
-         var12 = this.nSelDirty;
-         var11 = var12;
-         if (var12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("nSelDirty");
-            var11 = null;
-         }
-
-         if (this.getSelectionDirty()) {
-            var22 = 0;
-         } else {
-            var22 = 8;
-         }
-
-         var11.setVisibility(var22);
-         var12 = this.nSchDirty;
-         var11 = var12;
-         if (var12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("nSchDirty");
-            var11 = null;
-         }
-
-         if (this.getScheduleDirty()) {
-            var22 = 0;
-         } else {
-            var22 = 8;
-         }
-
-         var11.setVisibility(var22);
-         boolean var27;
-         if (!this.mapsLoadingStatus && !this.mapsActionBusy && !this.isOnroad() && !this.isDownloading() && !this.selectedDraft.isEmpty()) {
-            var27 = 1;
-         } else {
-            var27 = 0;
-         }
-
-         boolean var6;
-         if (!this.mapsLoadingStatus && !this.mapsActionBusy && this.isDownloading()) {
-            var6 = 1;
-         } else {
-            var6 = 0;
-         }
-
-         boolean var7;
-         if (!this.mapsLoadingStatus && !this.mapsActionBusy && !this.isDownloading() && !this.isOnroad() && var14.optBoolean("mapsPresent")) {
-            var7 = true;
-         } else {
-            var7 = false;
-         }
-
-         LinearLayout var118 = this.mapsBar;
-         LinearLayout var61 = var118;
-         if (var118 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
-            var61 = null;
-         }
-
-         View var62 = var61.getChildAt(0);
-         if (var62 instanceof TextView) {
-            var12 = (TextView)var62;
-         } else {
-            var12 = null;
-         }
-
-         if (var12 != null) {
-            String var63;
-            if (this.isDownloading()) {
-               if (var14.optBoolean("cancelling")) {
-                  var63 = "Cancelling...";
-               } else {
-                  var63 = "Cancel Download";
-               }
-            } else {
-               var63 = "Download Maps";
-            }
-
-            var12.setText(var63);
-            boolean var8;
-            if (!var27 && !var6) {
-               var8 = false;
-            } else {
-               var8 = true;
-            }
-
-            this.setOn(var12, var8);
-            Unit var64 = Unit.INSTANCE;
-            Unit var65 = Unit.INSTANCE;
-         }
-
-         LinearLayout var120 = this.mapsBar;
-         LinearLayout var66 = var120;
-         if (var120 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
-            var66 = null;
-         }
-
-         View var67 = var66.getChildAt(1);
-         if (var67 instanceof TextView) {
-            var11 = (TextView)var67;
-         } else {
-            var11 = null;
-         }
-
-         this.setOn(var11, var7);
-         LinearLayout var121 = this.mapsBar;
-         LinearLayout var69 = var121;
-         if (var121 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
-            var69 = null;
-         }
-
-         View var70 = var69.getChildAt(2);
-         if (var70 instanceof TextView) {
-            var11 = (TextView)var70;
-         } else {
-            var11 = null;
-         }
-
-         if (var11 != null) {
-            String var122;
-            if (this.mapsSavingSelection) {
-               var122 = "Saving...";
-            } else {
-               var122 = "Save Selection";
-            }
-
-            var11.setText(var122);
-            if (!this.mapsSavingSelection && !this.mapsLoadingCatalog && this.getSelectionDirty()) {
-               var7 = true;
-            } else {
-               var7 = false;
-            }
-
-            this.setOn(var11, var7);
-            Unit var72 = Unit.INSTANCE;
-            Unit var73 = Unit.INSTANCE;
-         }
-
-         LinearLayout var123 = this.mapsBar;
-         LinearLayout var74 = var123;
-         if (var123 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
-            var74 = null;
-         }
-
-         View var75 = var74.getChildAt(3);
-         if (var75 instanceof TextView) {
-            var11 = (TextView)var75;
-         } else {
-            var11 = null;
-         }
-
-         if (!this.getSelectionDirty() && !this.getScheduleDirty()) {
-            var7 = false;
-         } else {
-            var7 = true;
-         }
-
-         this.setOn(var11, var7);
-         LinearLayout var124 = this.mapsBar;
-         LinearLayout var77 = var124;
-         if (var124 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
-            var77 = null;
-         }
-
-         View var78 = var77.getChildAt(4);
-         if (var78 instanceof TextView) {
-            var11 = (TextView)var78;
-         } else {
-            var11 = null;
-         }
-
-         this.setOn(var11, this.selectedDraft.isEmpty() ^ true);
-         boolean var45 = var13.optBoolean("completed");
-         var7 = var13.optBoolean("cancelled");
-         if (this.mapsLoadingStatus || !this.isDownloading() && !var45 && !var7 && !(var1 > 0.0)) {
-            var27 = (boolean)0;
-         } else {
-            var27 = (boolean)1;
-         }
-
-         LinearLayout var125 = this.progCard;
-         LinearLayout var80 = var125;
-         if (var125 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("progCard");
-            var80 = null;
-         }
-
-         if (var27) {
-            var6 = (byte)0;
-         } else {
-            var6 = (byte)8;
-         }
-
-         var80.setVisibility(var6);
-         if (var27) {
-            Double var81 = var13.optDouble("percent", 0.0);
-            double var3 = var81.doubleValue();
-            if (!Double.isInfinite(var3) && !Double.isNaN(var3)) {
-               var27 = (boolean)1;
-            } else {
-               var27 = (boolean)0;
-            }
-
-            if (!var27) {
-               var81 = null;
-            }
-
-            if (var81 != null) {
-               var3 = var81;
-            } else {
-               var3 = 0.0;
-            }
-
-            var11 = this.progTitle;
-            var12 = var11;
-            if (var11 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("progTitle");
-               var12 = null;
-            }
-
-            String var83;
-            if (this.isDownloading()) {
-               var83 = "Download Progress";
-            } else if (var45) {
-               var83 = "Last Download";
-            } else if (var7) {
-               var83 = "Download Cancelled";
-            } else {
-               var83 = "Download Estimate";
-            }
-
-            long var9 = Math.round(var3);
-            var12.setText(var83 + "  ·  " + var9 + "%");
-            ProgressBar var127 = this.progBar;
-            ProgressBar var84 = var127;
-            if (var127 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("progBar");
-               var84 = null;
-            }
-
-            this.setProgress(var84, var3);
-            var12 = this.pEstimate;
-            var11 = var12;
-            if (var12 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("pEstimate");
-               var11 = null;
-            }
-
-            String var130;
-            if (var1 > 0.0) {
-               String var129 = this.gxBytes(var1);
-               var130 = "~" + var129 + " additional storage";
-            } else {
-               var130 = "Storage estimate unavailable";
-            }
-
-            var11.setText("Estimate: " + var130);
-            var1 = var13.optDouble("downloadedBytes", 0.0);
-            var12 = this.pStored;
-            var11 = var12;
-            if (var12 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("pStored");
-               var11 = null;
-            }
-
-            String var133;
-            if (var1 > 0.0) {
-               String var132 = this.gxBytes(var1);
-               var133 = var132 + " added storage";
-            } else {
-               var133 = "Storage reconciles after completion";
-            }
-
-            var11.setText("Stored: " + var133);
-            var6 = var13.optInt("totalFiles", 0);
-            var12 = this.pFiles;
-            var11 = var12;
-            if (var12 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("pFiles");
-               var11 = null;
-            }
-
-            String var135;
-            if (var6 > 0) {
-               var27 = var13.optInt("downloadedFiles", 0);
-               var135 = var27 + " / " + var6 + " files";
-            } else {
-               var135 = "Waiting for map service...";
-            }
-
-            var11.setText("Files: " + var135);
-            var1 = var13.optDouble("etaSeconds", 0.0);
-            var12 = this.pEta;
-            var11 = var12;
-            if (var12 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("pEta");
-               var11 = null;
-            }
-
-            String var137;
-            if (this.isDownloading() && var1 > 0.0) {
-               String var138 = this.gxDuration(var1);
-               var137 = "About " + var138 + " remaining";
-            } else {
-               var137 = "ETA unavailable until files start arriving";
-            }
-
-            var11.setText("ETA: " + var137);
-            String var156 = GxPage.str$default(this, var13, "primaryLocation", null, 2, null);
-            var12 = this.pRegion;
-            var11 = var12;
-            if (var12 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("pRegion");
-               var11 = null;
-            }
-
-            var11.setText("Current region: " + var156);
-            var12 = this.pRegion;
-            var11 = var12;
-            if (var12 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("pRegion");
-               var11 = null;
-            }
-
-            boolean var31;
-            if (var156.length() == 0) {
-               var31 = 1;
-            } else {
-               var31 = 0;
-            }
-
-            if (var31) {
-               var31 = 8;
-            } else {
-               var31 = 0;
-            }
-
-            var11.setVisibility(var31);
-         }
-
-         Function1 var91 = this.paintSchedule;
-         if (var91 != null) {
-            List var141 = this.scheduleOptions;
-            var27 = 0;
-            Iterator var142 = var141.iterator();
-
-            while (true) {
-               if (!var142.hasNext()) {
-                  var27 = -1;
-                  break;
-               }
-
-               if (Intrinsics.areEqual(((Pair)var142.next()).getFirst(), this.scheduleDraft)) {
-                  break;
-               }
-
-               var27++;
-            }
-
-            var91.invoke(var27);
-            Unit var92 = Unit.INSTANCE;
-         }
-
-         LinearLayout var143 = this.scheduleBox;
-         LinearLayout var93 = var143;
-         if (var143 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("scheduleBox");
-            var93 = null;
-         }
-
-         View var94 = var93.getChildAt(1);
-         HorizontalScrollView var95;
-         if (var94 instanceof HorizontalScrollView) {
-            var95 = (HorizontalScrollView)var94;
-         } else {
-            var95 = null;
-         }
-
-         if (var95 != null) {
-            View var96 = var95.getChildAt(0);
-            LinearLayout var97;
-            if (var96 instanceof LinearLayout) {
-               var97 = (LinearLayout)var96;
-            } else {
-               var97 = null;
-            }
-
-            View var98;
-            if (var97 != null) {
-               var98 = var97.getChildAt(0);
-            } else {
-               var98 = null;
-            }
-
-            if (var98 instanceof TextView) {
-               var11 = (TextView)var98;
-            } else {
-               var11 = null;
-            }
-
-            if (var11 != null) {
-               String var144;
-               if (this.mapsSavingSchedule) {
-                  var144 = "Applying...";
-               } else {
-                  var144 = "Apply";
-               }
-
-               var11.setText(var144);
-               if (!this.mapsSavingSchedule && this.getScheduleDirty()) {
-                  var7 = true;
-               } else {
-                  var7 = false;
-               }
-
-               this.setOn(var11, var7);
-               Unit var100 = Unit.INSTANCE;
-               Unit var101 = Unit.INSTANCE;
-            }
-         }
-
-         var12 = this.selRegionsText;
-         var11 = var12;
-         if (var12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("selRegionsText");
-            var11 = null;
-         }
-
-         CharSequence var146;
-         if (this.selectedDraft.isEmpty()) {
-            var146 = "No regions selected.";
-         } else {
-            Iterable var147 = this.selectedDraft;
-            var var15 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var147, 10));
-
-            for (String var157 : var147) {
-               String var148 = this.tokenLabels.get(var157);
-               if (var148 == null) {
-                  var148 = var157;
-               }
-
-               var15.add(var148);
-            }
-
-            List var149 = var15;
-            Iterable var150 = var149;
-            var146 = CollectionsKt.joinToString$default(CollectionsKt.sortedWith(var150, new Comparator() {
-               @Override
-               public final int compare(T var1, T var2) {
-                  var1 = var1.toLowerCase(Locale.ROOT);
-                  Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-                  Comparable var4 = var1;
-                  var2 = var2.toLowerCase(Locale.ROOT);
-                  Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
-                  return ComparisonsKt.compareValues(var4, var2);
-               }
-            }), ", ", null, null, 0, null, null, 62, null);
-         }
-
-         var11.setText(var146);
-         var12 = this.selRegionsText;
-         var11 = var12;
-         if (var12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("selRegionsText");
-            var11 = null;
-         }
-
-         if (this.selectedDraft.isEmpty()) {
-            var27 = CarUi.Companion.getDIM();
-         } else {
-            var27 = CarUi.Companion.getTEXT();
-         }
-
-         var11.setTextColor(var27);
-         var12 = this.schedNote;
-         var11 = var12;
-         if (var12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("schedNote");
-            var11 = null;
-         }
-
-         var12 = GxPage.str$default(this, var14, "scheduleLabel", null, 2, null);
-         boolean var35;
-         if (var12.length() == 0) {
-            var35 = 1;
-         } else {
-            var35 = 0;
-         }
-
-         if (var35) {
-            var12 = "Monthly";
-         }
-
-         var35 = this.selectedDraft.size();
-         var11.setText("Saved schedule: " + var12 + " · Draft regions: " + var35);
-
-         for (Entry var158 : this.regionSwitches.entrySet()) {
-            String var154 = (String)var158.getKey();
-            Switch var159 = (Switch)var158.getValue();
-            var7 = this.selectedDraft.contains(var154);
-            if (var159.isChecked() != var7) {
-               var159.setChecked(var7);
-            }
-         }
-
-         Iterator var160 = this.groupRows.entrySet().iterator();
-
-         while (var160.hasNext()) {
-            Pair var106 = (Pair)((Entry)var160.next()).getValue();
-            GxPage.Row var155 = (GxPage.Row)var106.getFirst();
-            var35 = this.groupSelectedCount((JSONObject)var106.getSecond());
-            var155.setDesc(var35 + " selected");
-         }
-      }
-   }
-
-   private final void paintSpeed() {
-      JSONObject var14 = this.speedObj;
-      boolean var7 = var14.optBoolean("visionEnabled");
-      TextView var11 = this.sStatus;
-      TextView var10 = var11;
-      if (var11 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("sStatus");
-         var10 = null;
-      }
-
-      CharSequence var45;
-      if (this.speedLoading) {
-         var45 = "Checking...";
-      } else {
-         var45 = this.speedStatus;
-      }
-
-      var10.setText(var45);
-      var11 = this.sVision;
-      if (var11 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("sVision");
-         var11 = null;
-      }
-
-      CharSequence var30;
-      if (this.speedLoading) {
-         var30 = "Checking...";
-      } else {
-         var var31 = GxPage.str$default(this, var14, "visionStatus", null, 2, null);
-         boolean var3;
-         if (var31.length() == 0) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         if (var3) {
-            if (var7) {
-               var31 = "Idle";
-            } else {
-               var31 = "Disabled";
-            }
-         }
-
-         String var12 = var31;
-         String var13 = GxPage.str$default(this, var14, "visionStream", null, 2, null);
-         if (var13.length() > 0) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         String var32 = var12;
-         if (var3) {
-            var32 = var12 + " on " + var13;
-         }
-
-         Double var56 = var14.optDouble("visionDisplaySpeed", 0.0);
-         double var1 = var56.doubleValue();
-         if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         if (!var3) {
-            var56 = null;
-         }
-
-         if (var56 != null) {
-            var1 = var56;
-         } else {
-            var1 = 0.0;
-         }
-
-         if (var1 > 0.0) {
-            if (var1 % 1.0 == 0.0) {
-               var3 = true;
-            } else {
-               var3 = false;
-            }
-
-            if (var3) {
-               var12 = String.valueOf((long)var1);
-            } else {
-               var12 = String.valueOf(var1);
-            }
-
-            var13 = GxPage.str$default(this, var14, "visionSpeedUnit", null, 2, null);
-            if (var13.length() == 0) {
-               var3 = true;
-            } else {
-               var3 = false;
-            }
-
-            if (var3) {
-               var13 = "mph";
-            }
-
-            var12 = var32 + " (" + var12 + " " + var13;
-            Double var33 = var14.optDouble("visionConfidence", 0.0);
-            var1 = var33.doubleValue();
-            if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
-               var3 = true;
-            } else {
-               var3 = false;
-            }
-
-            if (!var3) {
-               var33 = null;
-            }
-
-            if (var33 != null) {
-               var1 = var33;
-            } else {
-               var1 = 0.0;
-            }
-
-            String var34 = var12;
-            if (var1 > 0.0) {
-               long var8 = Math.round(100 * var1);
-               var34 = var12 + ", " + var8 + "%";
-            }
-
-            var32 = var34 + ")";
-         }
-
-         var30 = var32;
-      }
-
-      var11.setText(var30);
-      var11 = this.sVision;
-      var10 = var11;
-      if (var11 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("sVision");
-         var10 = null;
-      }
-
-      var10.setMaxWidth(this.getUi().dp(520));
-      GxPage.Row var48 = this.sDebugRow;
-      GxPage.Row var36 = var48;
-      if (var48 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("sDebugRow");
-         var36 = null;
-      }
-
-      boolean var6;
-      if (!this.speedLoading && var7) {
-         var6 = true;
-      } else {
-         var6 = false;
-      }
-
-      var36.setVisible(var6);
-      int var4 = var14.optInt("visionBookmarkCount", 0);
-      var10 = this.sDebug;
-      if (var10 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("sDebug");
-         var10 = null;
-      }
-
-      var11 = GxPage.str$default(this, var14, "visionDebugSession", null, 2, null);
-      boolean var23;
-      if (var11.length() == 0) {
-         var23 = 1;
-      } else {
-         var23 = 0;
-      }
-
-      if (var23) {
-         var11 = "No active session";
-      }
-
-      String var62 = "";
-      Object var59 = var62;
-      if (var4 > 0) {
-         if (var4 != 1) {
-            var62 = "s";
-         }
-
-         var59 = ", " + var4 + " bookmark" + var62;
-      }
-
-      var10.setText(var11 + var59);
-      var59 = GxPage.str$default(this, var14, "visionLastEvent", null, 2, null);
-      var11 = this.sLastEvent;
-      var10 = var11;
-      if (var11 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("sLastEvent");
-         var10 = null;
-      }
-
-      var10.setText((CharSequence)var59);
-      var11 = this.sLastEvent;
-      var10 = var11;
-      if (var11 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("sLastEvent");
-         var10 = null;
-      }
-
-      byte var5;
-      label183: {
-         var6 = this.speedLoading;
-         var5 = 8;
-         if (!var6 && var7) {
-            boolean var24;
-            if (((CharSequence)var59).length() > 0) {
-               var24 = true;
-            } else {
-               var24 = false;
-            }
-
-            if (var24) {
-               var23 = 0;
-               break label183;
-            }
-         }
-
-         var23 = 8;
-      }
-
-      var10.setVisibility(var23);
-      var11 = this.sReason;
-      var10 = var11;
-      if (var11 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("sReason");
-         var10 = null;
-      }
-
-      var10.setText(this.speedReason);
-      var11 = this.sReason;
-      var10 = var11;
-      if (var11 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("sReason");
-         var10 = null;
-      }
-
-      byte var27 = var5;
-      if (!this.speedLoading) {
-         boolean var26;
-         if (this.speedReason.length() > 0) {
-            var26 = true;
-         } else {
-            var26 = false;
-         }
-
-         var27 = var5;
-         if (var26) {
-            var27 = var5;
-            if (!Intrinsics.areEqual(this.speedReason, this.speedStatus)) {
-               var27 = 0;
-            }
-         }
-      }
-
-      var10.setVisibility(var27);
-      LinearLayout var54 = this.sBar;
-      LinearLayout var42 = var54;
-      if (var54 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("sBar");
-         var42 = null;
-      }
-
-      View var43 = var42.getChildAt(1);
-      if (var43 instanceof TextView) {
-         var10 = (TextView)var43;
-      } else {
-         var10 = null;
-      }
-
-      if (var10 != null) {
-         String var55;
-         if (!this.speedProcessing && !this.speedSubmitting) {
-            var55 = "Process Now";
-         } else {
-            var55 = "Processing...";
-         }
-
-         var10.setText(var55);
-         if (!this.speedSubmitting && !this.speedProcessing && this.canProcessNow) {
-            var6 = true;
-         } else {
-            var6 = false;
-         }
-
-         this.setOn(var10, var6);
-      }
-   }
-
-   // $VF: Could not inline inconsistent finally blocks
-   // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-   private final List<JSONObject> parseArr(Object var1) {
-      if (var1 instanceof JSONArray) {
-         var1 = this.objects((JSONArray)var1);
-      } else if (var1 instanceof String) {
-         label32:
-         try {
-            Result.Companion var2 = Result.Companion;
-            GxNavigationPage var3 = this;
-            JSONArray var9 = new JSONArray((String)var1);
-            var1 = KtCompat.resultOf(var3.objects(var9));
-         } catch (Throwable var5) {
-            var1 = Result.Companion;
-            var1 = KtCompat.resultOf(ResultKt.createFailure(var5));
-            break label32;
-         }
-
-         List var11 = CollectionsKt.emptyList();
-         Object var10 = var1;
-         if (KtCompat.isFailure(var1)) {
-            var10 = var11;
-         }
-
-         var1 = (List)var10;
-      } else {
-         var1 = CollectionsKt.emptyList();
-      }
-
-      return var1;
-   }
-
-   // $VF: Could not inline inconsistent finally blocks
-   // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-   private final JSONObject parseObj(Object var1) {
-      if (var1 instanceof JSONObject) {
-         var1 = (JSONObject)var1;
-      } else {
-         boolean var2 = var1 instanceof String;
-         Object var3 = null;
-         if (var2) {
-            if (StringsKt.isBlank((CharSequence)var1)) {
-               var1 = null;
-            } else {
-               label35:
-               try {
-                  Result.Companion var9 = Result.Companion;
-                  GxNavigationPage var10 = this;
-                  JSONObject var11 = new JSONObject((String)var1);
-                  var1 = KtCompat.resultOf(var11);
-               } catch (Throwable var6) {
-                  Result.Companion var4 = Result.Companion;
-                  var1 = KtCompat.resultOf(ResultKt.createFailure(var6));
-                  break label35;
-               }
-
-               if (KtCompat.isFailure(var1)) {
-                  var1 = var3;
-               }
-
-               var1 = (JSONObject)var1;
-            }
-         } else {
-            var1 = null;
-         }
-      }
-
-      return var1;
-   }
-
-   private final void previewDestination(JSONObject var1, String var2) {
-      Pair var6 = this.lastPosition;
-      Pair var4 = this.coordsOf(var1);
-      boolean var3 = true;
-      if (var6 != null && var4 != null && this.getHasMapbox()) {
-         Object var5 = var6.getSecond();
-         Object var7 = var6.getFirst();
-         Object var9 = var4.getSecond();
-         Object var12 = var4.getFirst();
-         String var8 = this.qs(
-            TuplesKt.to("geometries", "geojson"),
-            TuplesKt.to("overview", "false"),
-            TuplesKt.to("alternatives", "true"),
-            TuplesKt.to("access_token", this.mapboxPublic)
-         );
-         var5 = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/" + var5 + "," + var7 + ";" + var9 + "," + var12 + "?" + var8;
-         this.extGet((String)var5, new GxNavigationPage$$ExternalSyntheticLambda46(this, var1, var2, var4));
-      } else {
-         this.routeSummary = null;
-         this.routes = CollectionsKt.emptyList();
-         var var10 = this.selectedRouteId;
-         if (var10.length() != 0) {
-            var3 = false;
-         }
-
-         if (var3) {
-            var10 = "main";
-         }
-
-         this.selectedRouteId = var10;
-         this.renderDest();
-      }
-   }
-
-   private static final Unit previewDestination$lambda$71(GxNavigationPage var0, JSONObject var1, String var2, Pair var3, String var4, JSONObject var5) {
-      JSONObject var18 = var0.destination;
-      boolean var8 = true;
-      byte var7 = 0;
-      if (var18 != var1) {
-         JSONObject var19 = var0.destination;
-         boolean var6;
-         if (var19 != null && var0.sameSpot(var0.coordsOf(var19), var3)) {
-            var6 = true;
-         } else {
-            var6 = false;
-         }
-
-         if (!var6) {
-            return Unit.INSTANCE;
-         }
-      }
-
-      label65: {
-         if (var5 != null) {
-            JSONArray var16 = var5.optJSONArray("routes");
-            if (var16 != null) {
-               List var20 = var0.objects(var16);
-               var17 = var20;
-               if (var20 != null) {
-                  break label65;
-               }
-            }
-         }
-
-         var17 = CollectionsKt.emptyList();
-      }
-
-      boolean var9 = var17.isEmpty();
-      String var22 = "main";
-      Object var21 = null;
-      if (!var9) {
-         String var12;
-         if (var2 == null) {
-            var var10 = GxPage.str$default(var0, var1, "routeId", null, 2, null);
-            boolean var24;
-            if (var10.length() == 0) {
-               var24 = true;
-            } else {
-               var24 = false;
-            }
-
-            if (var24) {
-               var var11 = var0.selectedRouteId;
-               if (var11.length() == 0) {
-                  var24 = var8;
-               } else {
-                  var24 = false;
-               }
-
-               if (var24) {
-                  var11 = var22;
-               }
-
-               var10 = var11;
-            }
-
-            var12 = var10;
-         } else {
-            var12 = var2;
-         }
-
-         Iterator var23 = CollectionsKt.getIndices(var17).iterator();
-
-         while (true) {
-            if (!var23.hasNext()) {
-               var13 = var21;
-               break;
-            }
-
-            Object var15 = var23.next();
-            if (Intrinsics.areEqual(var0.routeIdOf(((Number)var15).intValue()), var12)) {
-               var13 = var15;
-               break;
-            }
-         }
-
-         Integer var14 = (Integer)var13;
-         int var26 = var7;
-         if (var14 != null) {
-            var26 = var14;
-         }
-
-         var0.routes = var17;
-         var0.selectRoute(var26);
-      } else {
-         var0.routeSummary = null;
-         var0.routes = CollectionsKt.emptyList();
-         var0.selectedRouteId = "main";
-      }
-
-      var0.renderDest();
-      return Unit.INSTANCE;
-   }
-
-   private final String primaryOf(JSONObject var1) {
-      String var9;
-      label33: {
-         Object var4 = null;
-         if (var1 != null) {
-            var9 = GxPage.str$default(this, var1, "name", null, 2, null);
-            if (var9 != null) {
-               var9 = StringsKt.trim(var9).toString();
-               if (var9 != null) {
-                  var9 = var9;
-                  boolean var2;
-                  if (var9.length() == 0) {
-                     var2 = true;
-                  } else {
-                     var2 = false;
-                  }
-
-                  if (var2) {
-                     var9 = null;
-                  }
-
-                  var9 = var9;
-                  if (var9 != null) {
-                     break label33;
-                  }
-               }
-            }
-         }
-
-         var9 = (String)var4;
-         if (var1 != null) {
-            String var5 = GxPage.str$default(this, var1, "text", null, 2, null);
-            var9 = (String)var4;
-            if (var5 != null) {
-               var9 = StringsKt.trim(var5).toString();
-            }
-         }
-      }
-
-      String var6 = var9;
-      if (var9 == null) {
-         var6 = "";
-      }
-
-      return var6;
-   }
-
-   private final void processSpeed() {
-      if (!this.speedSubmitting && !this.speedProcessing && this.canProcessNow) {
-         this.speedSubmitting = true;
-         this.paintSpeed();
-         GxPage.send$default(this, "POST", "/api/speed_limits/process", null, 0L, new GxNavigationPage$$ExternalSyntheticLambda6(this), 12, null);
-      }
-   }
-
-   private static final Unit processSpeed$lambda$180(GxNavigationPage var0, String var1, JSONObject var2) {
-      var0.speedSubmitting = false;
-      String var8;
-      if (var1 == null) {
-         Object var4 = null;
-         Object var3 = null;
-         var1 = (String)var4;
-         if (var2 != null) {
-            String var7 = var2.optString("message");
-            var1 = (String)var4;
-            if (var7 != null) {
-               var1 = var7;
-               if (StringsKt.isBlank(var1)) {
-                  var1 = (String)var3;
-               }
-
-               var1 = var1;
-            }
-         }
-
-         var8 = var1;
-         if (var1 == null) {
-            var8 = "Speed limit processing started.";
-         }
-      } else {
-         var8 = var1;
-      }
-
-      var0.toast(var8);
-      var0.loadSpeed();
-      return Unit.INSTANCE;
-   }
-
-   private final String qs(Pair<String, String>... var1) {
-      var var6 = new ArrayList();
-
-      for (Pair var5 : var1) {
-         CharSequence var7 = (CharSequence)var5.getSecond();
-         boolean var3;
-         if (var7 != null && var7.length() != 0) {
-            var3 = false;
-         } else {
-            var3 = true;
-         }
-
-         if (!var3) {
-            var6.add(var5);
-         }
-      }
-
-      List var8 = var6;
-      return CollectionsKt.joinToString$default(var8, "&", null, null, 0, null, new GxNavigationPage$$ExternalSyntheticLambda80(this), 30, null);
-   }
-
-   private static final CharSequence qs$lambda$21(GxNavigationPage var0, Pair var1) {
-      Intrinsics.checkNotNullParameter(var1, "it");
-      String var2 = var0.enc((String)var1.getFirst());
-      Object var4 = var1.getSecond();
-      Intrinsics.checkNotNull(var4);
-      String var3 = var0.enc((String)var4);
-      return var2 + "=" + var3;
-   }
-
-   private final void refreshMapsStatus() {
-      if (this.vDownloader != null && !this.mapsStatusInFlight) {
-         this.mapsStatusInFlight = true;
-         this.getJson("/api/maps/status", new GxNavigationPage$$ExternalSyntheticLambda10(this));
-      }
-   }
-
-   private static final Unit refreshMapsStatus$lambda$116(GxNavigationPage var0, String var1, JSONObject var2) {
-      var0.mapsStatusInFlight = false;
-      var0.mapsLoadingStatus = false;
-      if (var1 == null && var2 != null) {
-         boolean var3 = var0.getSelectionDirty();
-         boolean var4 = var0.getScheduleDirty();
-         var0.mapsStatus = var2;
-         JSONObject var5 = var2.optJSONObject("downloadProgress");
-         JSONObject var6 = var5;
-         if (var5 == null) {
-            var6 = new JSONObject();
-         }
-
-         label36: {
-            var0.mapsProgress = var6;
-            JSONArray var7 = var2.optJSONArray("selectedLocations");
-            if (var7 != null) {
-               List var9 = var0.strings(var7);
-               var8 = var9;
-               if (var9 != null) {
-                  break label36;
-               }
-            }
-
-            var8 = CollectionsKt.emptyList();
-         }
-
-         var0.selectedSaved = CollectionsKt.toSet(CollectionsKt.toSortedSet(var8, StringsKt.getCASE_INSENSITIVE_ORDER(StringCompanionObject.INSTANCE)));
-         if (!var3) {
-            var0.selectedDraft.clear();
-            var0.selectedDraft.addAll(var0.selectedSaved);
-         }
-
-         if (var2.has("scheduleValue") && !var2.isNull("scheduleValue")) {
-            var0.scheduleSaved = var2.opt("scheduleValue").toString();
-         }
-
-         if (!var4) {
-            var0.scheduleDraft = var0.scheduleSaved;
-         }
-
-         var0.mapsError = "";
-         var0.paintMaps();
-         return Unit.INSTANCE;
-      } else {
-         if (var1 == null) {
-            var1 = "Failed to load map status.";
-         }
-
-         var0.mapsError = var1;
-         var0.paintMaps();
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final void reloadFavorites() {
-      this.getJson("/api/navigation/favorite", new GxNavigationPage$$ExternalSyntheticLambda32(this));
-   }
-
-   private static final Unit reloadFavorites$lambda$59(GxNavigationPage var0, String var1, JSONObject var2) {
-      label13: {
-         if (var2 != null) {
-            JSONArray var3 = var2.optJSONArray("favorites");
-            if (var3 != null) {
-               List var5 = var0.objects(var3);
-               var4 = var5;
-               if (var5 != null) {
-                  break label13;
-               }
-            }
-         }
-
-         var4 = var0.favorites;
-      }
-
-      var0.favorites = var4;
-      var0.renderDest();
-      var0.renderFavorites();
-      var0.renderRecents();
-      return Unit.INSTANCE;
-   }
-
-   private final void removeMaps() {
-      if (!this.mapsActionBusy && !this.isDownloading() && !this.isOnroad() && this.mapsStatus.optBoolean("mapsPresent")) {
-         this.confirm(
-            "Remove Maps", "Are you sure you want to remove all downloaded offline maps?", "Yes, Remove", new GxNavigationPage$$ExternalSyntheticLambda11(this)
-         );
-      }
-   }
-
-   private static final Unit removeMaps$lambda$146(GxNavigationPage var0) {
-      var0.mapsOp("remove", new JSONObject(), "Maps removed.");
-      return Unit.INSTANCE;
-   }
-
-   private final void renameFavorite(JSONObject var1) {
-      String var2 = GxPage.str$default(this, var1, "name", null, 2, null);
-      GxPage.prompt$default(
-         this, "Rename Favorite", "Name", var2, 0, "Rename " + var2 + " to:", new GxNavigationPage$$ExternalSyntheticLambda4(var2, var1, this), 8, null
-      );
-   }
-
-   private static final Unit renameFavorite$lambda$91(String var0, JSONObject var1, GxNavigationPage var2, String var3) {
-      Intrinsics.checkNotNullParameter(var3, "v");
-      String var5 = StringsKt.trim(var3).toString();
-      boolean var4;
-      if (var5.length() == 0) {
-         var4 = true;
-      } else {
-         var4 = false;
-      }
-
-      if (!var4 && !Intrinsics.areEqual(var5, var0)) {
-         JSONObject var6 = new JSONObject();
-         Object var11 = var1.opt("id");
-         Object var7 = var11;
-         if (var11 == null) {
-            var7 = JSONObject.NULL;
-         }
-
-         var11 = var6.put("id", var7);
-         Object var10 = var1.opt("routeId");
-         var7 = var10;
-         if (var10 == null) {
-            var7 = JSONObject.NULL;
-         }
-
-         var7 = var11.put("routeId", var7).put("name", var5);
-         GxPage.send$default(
-            var2, "POST", "/api/navigation/favorite/rename", (JSONObject)var7, 0L, new GxNavigationPage$$ExternalSyntheticLambda3(var2), 8, null
-         );
-         return Unit.INSTANCE;
-      } else {
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final Unit renameFavorite$lambda$91$lambda$90(GxNavigationPage var0, String var1, JSONObject var2) {
-      if (var1 != null) {
-         var0.toast("Failed to rename favorite...");
-      } else {
-         var0.toast("Favorite renamed!");
-         var0.reloadFavorites();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final void renderCatalog() {
-      if (this.catalogBox != null) {
-         LinearLayout var6 = this.catalogBox;
-         LinearLayout var5 = var6;
-         if (var6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
-            var5 = null;
-         }
-
-         var5.removeAllViews();
-         this.regionSwitches.clear();
-         this.groupRows.clear();
-         if (this.mapsLoadingCatalog) {
-            var5 = this.catalogBox;
-            if (var5 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
-               var5 = null;
-            }
-
-            var5.addView((View)this.empty("Loading map catalog..."));
-         } else {
-            String var13 = StringsKt.trim(this.mapsSearch).toString().toLowerCase(Locale.ROOT);
-            String var29 = "toLowerCase(...)";
-            Intrinsics.checkNotNullExpressionValue(var13, "toLowerCase(...)");
-            int var1 = 0;
-
-            for (JSONObject var12 : this.mapsSections) {
-               List var34;
-               label122: {
-                  JSONArray var7 = var12.optJSONArray("groups");
-                  if (var7 != null) {
-                     List var8 = this.objects(var7);
-                     var34 = var8;
-                     if (var8 != null) {
-                        break label122;
-                     }
-                  }
-
-                  var34 = CollectionsKt.emptyList();
-               }
-
-               Iterable var10 = var34;
-               boolean var4 = false;
-               var var15 = new ArrayList();
-               Iterable var9 = var10;
-               boolean var3 = false;
-
-               for (JSONObject var16 : var10) {
-                  List var39;
-                  label130: {
-                     JSONArray var38 = var16.optJSONArray("regions");
-                     if (var38 != null) {
-                        List var11 = this.objects(var38);
-                        var39 = var11;
-                        if (var11 != null) {
-                           break label130;
-                        }
-                     }
-
-                     var39 = CollectionsKt.emptyList();
-                  }
-
-                  Iterable var58 = var39;
-                  var var18 = new ArrayList();
-                  Iterator var17 = var58.iterator();
-                  String var40 = var29;
-
-                  while (var17.hasNext()) {
-                     var9 = (Iterable)var17.next();
-                     JSONObject var21 = (JSONObject)var9;
-                     boolean var2;
-                     if (var13.length() == 0) {
-                        var2 = true;
-                     } else {
-                        var2 = false;
-                     }
-
-                     label140: {
-                        if (!var2) {
-                           String var19 = GxPage.str$default(this, var21, "label", null, 2, null);
-                           String var20 = GxPage.str$default(this, var21, "code", null, 2, null);
-                           String var80 = GxPage.str$default(this, var21, "token", null, 2, null);
-                           var19 = (var19 + " " + var20 + " " + var80).toLowerCase(Locale.ROOT);
-                           Intrinsics.checkNotNullExpressionValue(var19, var40);
-                           if (!StringsKt.contains$default(var19, var13, false, 2, null)) {
-                              var2 = false;
-                              break label140;
-                           }
-                        }
-
-                        var2 = true;
-                     }
-
-                     if (var2) {
-                        var18.add(var9);
-                     }
-                  }
-
-                  List var51 = var18;
-                  Pair var52;
-                  if (var51.isEmpty()) {
-                     var52 = null;
-                  } else {
-                     var52 = TuplesKt.to(var16, var51);
-                  }
-
-                  if (var52 != null) {
-                     var15.add(var52);
-                  }
-
-                  var9 = var9;
-                  var29 = var40;
-               }
-
-               List var53 = var15;
-               if (!var53.isEmpty()) {
-                  String var35 = GxPage.str$default(this, var12, "title", null, 2, null);
-                  var1 = var53.size();
-                  String var55 = var35 + "  (" + var1 + ")";
-                  LinearLayout var41 = this.catalogBox;
-                  LinearLayout var36 = var41;
-                  if (var41 == null) {
-                     Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
-                     var36 = null;
-                  }
-
-                  this.header(var55, (ViewGroup)var36);
-                  Iterator var70 = var53.iterator();
-                  JSONObject var37 = var12;
-
-                  while (var70.hasNext()) {
-                     Pair var42 = (Pair)var70.next();
-                     JSONObject var54 = (JSONObject)var42.component1();
-                     List var73 = (List)var42.component2();
-                     String var43 = GxPage.str$default(this, var37, "key", null, 2, null);
-                     String var56 = GxPage.str$default(this, var54, "key", null, 2, null);
-                     String var57 = var43 + ":" + var56;
-                     boolean var23;
-                     if (var13.length() > 0) {
-                        var23 = true;
-                     } else {
-                        var23 = false;
-                     }
-
-                     if (!var23 && !this.expandedGroups.contains(var57)) {
-                        var23 = false;
-                     } else {
-                        var23 = true;
-                     }
-
-                     GxPage var75 = this;
-                     String var71 = GxPage.str$default(this, var54, "title", null, 2, null);
-                     int var27 = this.groupSelectedCount(var54);
-                     String var64 = var27 + " selected";
-                     LinearLayout var59 = this.catalogBox;
-                     var41 = var59;
-                     if (var59 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
-                        var41 = null;
-                     }
-
-                     GxPage.Row var60 = GxPage.row$default(var75, var71, var64, (ViewGroup)var41, 0, 8, null);
-                     this.groupRows.put(var57, TuplesKt.to(var60, var54));
-                     GxNavigationPage$$ExternalSyntheticLambda17 var65 = new GxNavigationPage$$ExternalSyntheticLambda17(this, var57);
-                     boolean var28;
-                     if (var13.length() == 0) {
-                        var28 = true;
-                     } else {
-                        var28 = false;
-                     }
-
-                     if (var28) {
-                        this.clickable(var60, new GxNavigationPage$$ExternalSyntheticLambda18(var65));
-                        String var45;
-                        if (var23) {
-                           var45 = "Hide";
-                        } else {
-                           var45 = "Show";
-                        }
-
-                        GxPage.Row.button$default(var60, var45, false, new GxNavigationPage$$ExternalSyntheticLambda19(var65), 2, null);
-                     }
-
-                     if (var23) {
-                        LinearLayout var72 = new LinearLayout((Context)this.getAct());
-                        var72.setOrientation(1);
-                        var72.setPadding(this.getUi().dp(28), 0, 0, this.getUi().dp(8));
-                        LinearLayout var66 = this.catalogBox;
-                        var41 = var66;
-                        if (var66 == null) {
-                           Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
-                           var41 = null;
-                        }
-
-                        label174: {
-                           var41.addView((View)var72, (android.view.ViewGroup.LayoutParams)(new LayoutParams(-1, -2)));
-                           JSONArray var47 = var54.optJSONArray("regions");
-                           if (var47 != null) {
-                              List var67 = this.objects(var47);
-                              var48 = var67;
-                              if (var67 != null) {
-                                 break label174;
-                              }
-                           }
-
-                           var48 = CollectionsKt.emptyList();
-                        }
-
-                        var75 = this;
-                        Pair var68 = TuplesKt.to("Select All", new GxNavigationPage$$ExternalSyntheticLambda20(var48, this));
-                        Pair var78 = TuplesKt.to("Clear", new GxNavigationPage$$ExternalSyntheticLambda21(var48, this));
-                        ViewGroup var49 = (ViewGroup)var72;
-                        GxPage.buttons$default(var75, new Pair[]{var68, var78}, var49, false, 4, null);
-
-                        for (JSONObject var61 : var73) {
-                           String var74 = GxPage.str$default(this, var61, "token", null, 2, null);
-                           String var77 = GxPage.str$default(this, var61, "label", null, 2, null);
-                           var var62 = GxPage.str$default(this, var61, "code", null, 2, null);
-                           if (var62.length() == 0) {
-                              var23 = true;
-                           } else {
-                              var23 = false;
-                           }
-
-                           if (var23) {
-                              var62 = null;
-                           }
-
-                           Switch var63 = this.toggle(
-                                 var77,
-                                 var62,
-                                 this.selectedDraft.contains(var74),
-                                 (ViewGroup)var72,
-                                 new GxNavigationPage$$ExternalSyntheticLambda23(this, var74)
-                              )
-                              .component2();
-                           this.regionSwitches.put(var74, var63);
-                        }
-                     }
-                  }
-
-                  var1 = 1;
-               }
-            }
-
-            if (!var1) {
-               var5 = this.catalogBox;
-               if (var5 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
-                  var5 = null;
-               }
-
-               var5.addView((View)this.empty("No regions match the current search."));
-            }
-         }
-      }
-   }
-
-   private static final Unit renderCatalog$lambda$132(GxNavigationPage var0, String var1) {
-      if (var0.expandedGroups.contains(var1)) {
-         var0.expandedGroups.remove(var1);
-      } else {
-         var0.expandedGroups.add(var1);
-      }
-
-      var0.renderCatalog();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderCatalog$lambda$133(Function0 var0) {
-      var0.invoke();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderCatalog$lambda$134(Function0 var0) {
-      var0.invoke();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderCatalog$lambda$136(List var0, GxNavigationPage var1) {
-      for (JSONObject var3 : var0) {
-         var1.selectedDraft.add(GxPage.str$default(var1, var3, "token", null, 2, null));
-      }
-
-      var1.paintMaps();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderCatalog$lambda$137(List var0, GxNavigationPage var1) {
-      for (JSONObject var3 : var0) {
-         var1.selectedDraft.remove(GxPage.str$default(var1, var3, "token", null, 2, null));
-      }
-
-      var1.paintMaps();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderCatalog$lambda$139(GxNavigationPage var0, String var1, boolean var2) {
-      LinkedHashSet var3 = var0.selectedDraft;
-      if (var2) {
-         var3.add(var1);
-      } else {
-         var3.remove(var1);
-      }
-
-      var0.paintMaps();
-      return Unit.INSTANCE;
-   }
-
-   private final void renderDest() {
-      if (this.destBox != null) {
-         LinearLayout var5 = this.destBox;
-         LinearLayout var4 = var5;
-         if (var5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("destBox");
-            var4 = null;
-         }
-
-         var4.removeAllViews();
-         JSONObject var7 = this.destination;
-         if (var7 != null) {
-            var5 = this.destBox;
-            var4 = var5;
-            if (var5 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("destBox");
-               var4 = null;
-            }
-
-            ViewGroup var17 = (ViewGroup)var4;
-            String var36 = "Destination";
-            this.header("Destination", var17);
-            LinearLayout var6 = this.destBox;
-            var4 = var6;
-            if (var6 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("destBox");
-               var4 = null;
-            }
-
-            var6 = this.card((ViewGroup)var4);
-            var var19 = GxPage.str$default(this, var7, "name", null, 2, null);
-            boolean var1;
-            if (var19.length() == 0) {
-               var1 = 1;
-            } else {
-               var1 = 0;
-            }
-
-            if (var1) {
-               var var20 = this.getQuery();
-               if (var20.length() == 0) {
-                  var1 = (boolean)1;
-               } else {
-                  var1 = (boolean)0;
-               }
-
-               if (var1) {
-                  var20 = var36;
-               }
-
-               var19 = var20;
-            }
-
-            this.text(var19, (ViewGroup)var6, 24.0F, CarUi.Companion.getTEXT(), true);
-            String var21 = GxPage.str$default(this, var7, "place_name", null, 2, null);
-            if (var21.length() > 0) {
-               var1 = (boolean)1;
-            } else {
-               var1 = (boolean)0;
-            }
-
-            if (var1 && !StringsKt.equals(var21, GxPage.str$default(this, var7, "name", null, 2, null), true)) {
-               GxPage.text$default(this, var21, (ViewGroup)var6, 0.0F, 0, false, 28, null);
-            }
-
-            Triple var8 = this.routeSummary;
-            if (var8 != null) {
-               String var37 = this.fmtDistance(((Number)var8.getFirst()).doubleValue());
-               String var22 = this.fmtDuration(((Number)var8.getSecond()).doubleValue());
-               String var47 = this.fmtEta(((Number)var8.getSecond()).doubleValue());
-               this.text("Distance  " + var37 + "     Duration  " + var22 + "     ETA  " + var47, (ViewGroup)var6, 19.0F, CarUi.Companion.getACCENT(), true);
-            } else if (this.lastPosition == null) {
-               GxPage.text$default(this, "The car's position is unknown, so no route preview is shown.", (ViewGroup)var6, 0.0F, 0, false, 28, null);
-            }
-
-            if (this.favoriteOf(var7) != null) {
-               var1 = (boolean)1;
-            } else {
-               var1 = (boolean)0;
-            }
-
-            ArrayList var38 = new ArrayList();
-            if (this.navigationStarted) {
-               var38.add(TuplesKt.to("Cancel Navigation", new GxNavigationPage$$ExternalSyntheticLambda63(this)));
-            } else {
-               String var23;
-               if (this.loadingRoute) {
-                  var23 = "Calculating...";
-               } else {
-                  var23 = "Start Navigation";
-               }
-
-               var38.add(TuplesKt.to(var23, new GxNavigationPage$$ExternalSyntheticLambda64(this)));
-            }
-
-            String var24;
-            if (var1) {
-               var24 = "Remove from favorites";
-            } else {
-               var24 = "Add to favorites";
-            }
-
-            var38.add(TuplesKt.to(var24, new GxNavigationPage$$ExternalSyntheticLambda65(this)));
-            Pair[] var25 = var38.toArray(new Pair[0]);
-            var4 = this.buttons(Arrays.copyOf(var25, var25.length), (ViewGroup)var6, this.navigationStarted ^ true);
-            if (this.navigationStarted) {
-               View var27 = var4.getChildAt(0);
-               TextView var28;
-               if (var27 instanceof TextView) {
-                  var28 = (TextView)var27;
-               } else {
-                  var28 = null;
-               }
-
-               if (var28 != null) {
-                  var28.setTextColor(CarUi.Companion.getWARN());
-               }
-            } else {
-               View var29 = var4.getChildAt(0);
-               TextView var30;
-               if (var29 instanceof TextView) {
-                  var30 = (TextView)var29;
-               } else {
-                  var30 = null;
-               }
-
-               boolean var2;
-               if (!this.loadingRoute && this.getHasRoutingKey()) {
-                  var2 = true;
-               } else {
-                  var2 = false;
-               }
-
-               this.setOn(var30, var2);
-            }
-
-            if (this.routes.size() > 1) {
-               Iterable var39 = this.routes;
-               boolean var15 = false;
-               var var45 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var39, 10));
-               boolean var3 = false;
-               var1 = 0;
-
-               for (Object var48 : var39) {
-                  if (var1 < 0) {
-                     CollectionsKt.throwIndexOverflow();
-                  }
-
-                  JSONObject var9 = (JSONObject)var48;
-                  String var49 = this.fmtDistance(var9.optDouble("distance", 0.0));
-                  String var50 = this.fmtDuration(var9.optDouble("duration", 0.0));
-                  var45.add("Route " + (var1 + 1) + "\n" + var49 + " · " + var50);
-                  var1++;
-               }
-
-               List var44 = var45;
-               Iterable var31 = CollectionsKt.getIndices(this.routes);
-               Iterator var46 = var31.iterator();
-
-               while (true) {
-                  if (!var46.hasNext()) {
-                     var32 = null;
-                     break;
-                  }
-
-                  var5 = (LinearLayout)var46.next();
-                  if (Intrinsics.areEqual(this.routeIdOf(((Number)var5).intValue()), this.selectedRouteId)) {
-                     var32 = var5;
-                     break;
-                  }
-               }
-
-               Integer var33 = (Integer)var32;
-               if (var33 != null) {
-                  var1 = var33;
-               } else {
-                  var1 = 0;
-               }
-
-               String var34;
-               if (this.navigationStarted) {
-                  var34 = "Picking another route here only changes the preview; tap Start Navigation again to send it.";
-               } else {
-                  var34 = null;
-               }
-
-               var5 = this.destBox;
-               if (var5 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("destBox");
-                  var5 = null;
-               }
-
-               this.choice("Choose a route", var34, var44, var1, (ViewGroup)var5, new GxNavigationPage$$ExternalSyntheticLambda67(this));
-            }
-         }
-      }
-   }
-
-   private static final Unit renderDest$lambda$74(GxNavigationPage var0) {
-      var0.cancelNavigation();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderDest$lambda$75(GxNavigationPage var0) {
-      var0.setDestination(var0.destination);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderDest$lambda$76(GxNavigationPage var0) {
-      var0.toggleFavorite();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderDest$lambda$79(GxNavigationPage var0, int var1) {
-      var0.selectRoute(var1);
-      if (var0.navigationStarted) {
-         var0.navigationStarted = false;
-      }
-
-      var0.renderDest();
-      return Unit.INSTANCE;
-   }
-
-   private final void renderDestAll() {
-      this.renderKeyNotice();
-      this.renderStatus();
-      this.renderSuggestions();
-      this.renderDest();
-      this.renderFavorites();
-      this.renderRecents();
-   }
-
-   private final void renderFavorites() {
-      if (this.favBox != null) {
-         LinearLayout var4 = this.favBox;
-         LinearLayout var3 = var4;
-         if (var4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("favBox");
-            var3 = null;
-         }
-
-         var3.removeAllViews();
-         if (!this.navLoading && !this.favorites.isEmpty()) {
-            var4 = this.favBox;
-            var3 = var4;
-            if (var4 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("favBox");
-               var3 = null;
-            }
-
-            this.header("Favorite destinations", (ViewGroup)var3);
-
-            for (JSONObject var5 : CollectionsKt.sortedWith(this.favorites, new Comparator() {
-
-               @Override
-               public final int compare(T var1, T var2) {
-                  var1 = var1;
-                  String var4x = GxPage.str$default(GxNavigationPage.this, var1, "name", null, 2, null).toLowerCase(Locale.ROOT);
-                  Intrinsics.checkNotNullExpressionValue(var4x, "toLowerCase(...)");
-                  Comparable var5x = var4x;
-                  var2 = var2;
-                  String var7 = GxPage.str$default(GxNavigationPage.this, var2, "name", null, 2, null).toLowerCase(Locale.ROOT);
-                  Intrinsics.checkNotNullExpressionValue(var7, "toLowerCase(...)");
-                  return ComparisonsKt.compareValues(var5x, var7);
-               }
-            })) {
-               Object var14;
-               if (var5.optBoolean("is_home")) {
-                  var14 = "Home: ";
-               } else if (var5.optBoolean("is_work")) {
-                  var14 = "Work: ";
-               } else {
-                  var14 = "";
-               }
-
-               GxPage var7 = this;
-               String var19 = GxPage.str$default(this, var5, "name", null, 2, null);
-               int var1 = var19.length();
-               boolean var2 = false;
-               boolean var10;
-               if (var1 == 0) {
-                  var10 = true;
-               } else {
-                  var10 = false;
-               }
-
-               if (var10) {
-                  var19 = GxPage.str$default(this, var5, "place_name", null, 2, null);
-                  if (var19.length() == 0) {
-                     var10 = true;
-                  } else {
-                     var10 = false;
-                  }
-
-                  if (var10) {
-                     var19 = "Favorite destination";
-                  }
-
-                  var19 = var19;
-               }
-
-               String var8 = var14 + var19;
-               var14 = this.secondaryLabel(var5);
-               var10 = var2;
-               if (var14.length() == 0) {
-                  var10 = true;
-               }
-
-               if (var10) {
-                  var14 = null;
-               }
-
-               String var9 = (String)var14;
-               LinearLayout var21 = this.favBox;
-               var14 = var21;
-               if (var21 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("favBox");
-                  var14 = null;
-               }
-
-               var14 = GxPage.row$default(var7, var8, var9, (ViewGroup)var14, 0, 8, null);
-               var14.button("Go", true, new GxNavigationPage$$ExternalSyntheticLambda41(this, var5));
-               GxPage.Row.button$default(var14, "Rename", false, new GxNavigationPage$$ExternalSyntheticLambda42(this, var5), 2, null);
-               GxPage.Row.button$default(var14, "Home / Work", false, new GxNavigationPage$$ExternalSyntheticLambda43(this, var5), 2, null);
-               GxPage.Row.button$default(var14, "Delete", false, new GxNavigationPage$$ExternalSyntheticLambda45(this, var5), 2, null);
-            }
-         }
-      }
-   }
-
-   private static final Unit renderFavorites$lambda$84(GxNavigationPage var0, JSONObject var1) {
-      var0.chooseSuggestion(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderFavorites$lambda$85(GxNavigationPage var0, JSONObject var1) {
-      var0.renameFavorite(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderFavorites$lambda$86(GxNavigationPage var0, JSONObject var1) {
-      var0.homeWork(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderFavorites$lambda$89(GxNavigationPage var0, JSONObject var1) {
-      String var2 = GxPage.str$default(var0, var1, "name", null, 2, null);
-      var0.confirm(
-         "Remove Favorite",
-         "Are you sure you want to remove " + var2 + " from your favorites?",
-         "Remove",
-         new GxNavigationPage$$ExternalSyntheticLambda62(var1, var0)
-      );
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderFavorites$lambda$89$lambda$88(JSONObject var0, GxNavigationPage var1) {
-      JSONObject var4 = new JSONObject();
-      JSONObject var3 = (JSONObject)var0.opt("id");
-      Object var2 = var3;
-      if (var3 == null) {
-         var2 = JSONObject.NULL;
-      }
-
-      var4 = var4.put("id", var2);
-      var3 = var0.opt("name");
-      var2 = var3;
-      if (var3 == null) {
-         var2 = JSONObject.NULL;
-      }
-
-      var4 = var4.put("name", var2);
-      var3 = var0.opt("latitude");
-      var2 = var3;
-      if (var3 == null) {
-         var2 = JSONObject.NULL;
-      }
-
-      var4 = var4.put("latitude", var2);
-      var3 = var0.opt("longitude");
-      var2 = var3;
-      if (var3 == null) {
-         var2 = JSONObject.NULL;
-      }
-
-      var3 = var4.put("longitude", var2);
-      var2 = var0.opt("routeId");
-      Object var5 = var2;
-      if (var2 == null) {
-         var5 = JSONObject.NULL;
-      }
-
-      var5 = var3.put("routeId", var5);
-      GxPage.send$default(var1, "DELETE", "/api/navigation/favorite", (JSONObject)var5, 0L, new GxNavigationPage$$ExternalSyntheticLambda78(var1), 8, null);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderFavorites$lambda$89$lambda$88$lambda$87(GxNavigationPage var0, String var1, JSONObject var2) {
-      if (var1 != null) {
-         var0.toast("Failed to remove favorite...");
-      } else {
-         var0.toast("Favorite removed!");
-         var0.reloadFavorites();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final void renderKeyNotice() {
-      LinearLayout var7 = this.keyBox;
-      Object var4 = null;
-      Object var6 = null;
-      Object var5 = null;
-      LinearLayout var3 = var7;
-      if (var7 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("keyBox");
-         var3 = null;
-      }
-
-      var3.removeAllViews();
-      boolean var2 = this.navLoading;
-      byte var1 = 8;
-      if (var2) {
-         var4 = this.keyBox;
-         var3 = (LinearLayout)var4;
-         if (var4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("keyBox");
-            var3 = null;
-         }
-
-         var3.addView((View)this.empty("Loading navigation..."));
-         var3 = this.searchCard;
-         if (var3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("searchCard");
-            var3 = (LinearLayout)var5;
-         }
-
-         var3.setVisibility(8);
-      } else {
-         var5 = this.searchCard;
-         var3 = (LinearLayout)var5;
-         if (var5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("searchCard");
-            var3 = null;
-         }
-
-         if (this.getHasMapbox()) {
-            var1 = 0;
-         }
-
-         var3.setVisibility(var1);
-         if (!this.getHasMapbox()) {
-            var3 = this.keyBox;
-            if (var3 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("keyBox");
-               var3 = (LinearLayout)var4;
-            }
-
-            var4 = this.card((ViewGroup)var3);
-            GxPage.text$default(this, "Map unavailable until a Mapbox key is configured.", (ViewGroup)var4, 21.0F, CarUi.Companion.getTEXT(), false, 16, null);
-            GxPage.text$default(this, "Add a Mapbox public key in App Keys to search destinations and show the map.", (ViewGroup)var4, 0.0F, 0, false, 28, null);
-            Pair var10 = TuplesKt.to("Open App Keys", new GxNavigationPage$$ExternalSyntheticLambda59(this));
-            var4 = (ViewGroup)var4;
-            this.buttons(new Pair[]{var10}, (ViewGroup)var4, true);
-         } else if (!this.getHasRoutingKey()) {
-            var3 = this.keyBox;
-            if (var3 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("keyBox");
-               var3 = (LinearLayout)var6;
-            }
-
-            var5 = this.card((ViewGroup)var3);
-            this.text("Secret Mapbox key needed", (ViewGroup)var5, 21.0F, CarUi.Companion.getWARN(), true);
-            GxPage.text$default(
-               this,
-               "The map and destination search only use your public Mapbox key. Add a secret Mapbox key in App Keys before starting navigation so the comma can calculate the on-device route and provide turn desires.",
-               (ViewGroup)var5,
-               0.0F,
-               0,
-               false,
-               28,
-               null
-            );
-            GxPage var12 = this;
-            var4 = TuplesKt.to("Open App Keys", new GxNavigationPage$$ExternalSyntheticLambda60(this));
-            var5 = (ViewGroup)var5;
-            GxPage.buttons$default(var12, new Pair[]{(Pair)var4}, (ViewGroup)var5, false, 4, null);
-         }
-      }
-   }
-
-   private static final Unit renderKeyNotice$lambda$33(GxNavigationPage var0) {
-      Function1 var1 = var0.selectTab;
-      Function1 var2 = var1;
-      if (var1 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("selectTab");
-         var2 = null;
-      }
-
-      var2.invoke(2);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderKeyNotice$lambda$34(GxNavigationPage var0) {
-      Function1 var1 = var0.selectTab;
-      Function1 var2 = var1;
-      if (var1 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("selectTab");
-         var2 = null;
-      }
-
-      var2.invoke(2);
-      return Unit.INSTANCE;
-   }
-
-   private final void renderKeys() {
-      LinearLayout var6 = this.keysBox;
-      LinearLayout var4 = null;
-      Object var5 = null;
-      LinearLayout var3 = var6;
-      if (var6 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("keysBox");
-         var3 = null;
-      }
-
-      var3.removeAllViews();
-      if (this.keysLoading) {
-         var3 = this.keysBox;
-         if (var3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
-            var3 = (LinearLayout)var5;
-         }
-
-         var3.addView((View)this.empty("Loading keys..."));
-      } else {
-         int var1 = this.keysError.length();
-         boolean var2 = true;
-         boolean var7;
-         if (var1 > 0) {
-            var7 = true;
-         } else {
-            var7 = false;
-         }
-
-         if (var7) {
-            String var33 = this.keysError;
-            var5 = this.keysBox;
-            var3 = (LinearLayout)var5;
-            if (var5 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("keysBox");
-               var3 = null;
-            }
-
-            this.note(var33, (ViewGroup)var3).setTextColor(CarUi.Companion.getWARN());
-         }
-
-         var5 = this.keysBox;
-         var3 = (LinearLayout)var5;
-         if (var5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
-            var3 = null;
-         }
-
-         this.header("AMap / Gaode Keys", (ViewGroup)var3);
-         var5 = this.keysBox;
-         var3 = (LinearLayout)var5;
-         if (var5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
-            var3 = null;
-         }
-
-         this.note("AMap is the Gaode provider, not Google Maps.", (ViewGroup)var3);
-         Iterator var13 = CollectionsKt.take(this.keyMeta, 2).iterator();
-
-         while (var13.hasNext()) {
-            this.keyRow((GxNavigationPage.KeyMeta)var13.next());
-         }
-
-         var5 = this.keysBox;
-         var3 = (LinearLayout)var5;
-         if (var5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
-            var3 = null;
-         }
-
-         this.header("Mapbox Keys", (ViewGroup)var3);
-         var5 = this.keysBox;
-         var3 = (LinearLayout)var5;
-         if (var5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
-            var3 = null;
-         }
-
-         this.note("Public and secret Mapbox tokens used by the navigation app.", (ViewGroup)var3);
-         Iterator var16 = CollectionsKt.drop(this.keyMeta, 2).iterator();
-
-         while (var16.hasNext()) {
-            this.keyRow((GxNavigationPage.KeyMeta)var16.next());
-         }
-
-         var5 = this.keysBox;
-         var3 = (LinearLayout)var5;
-         if (var5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
-            var3 = null;
-         }
-
-         this.header("App Keys", (ViewGroup)var3);
-         GxPage var34 = this;
-         var5 = this.keysBox;
-         var3 = (LinearLayout)var5;
-         if (var5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
-            var3 = null;
-         }
-
-         GxPage.Row.button$default(
-            GxPage.row$default(var34, "Install The App", "The Galaxy navigation app on Google Play.", (ViewGroup)var3, 0, 8, null),
-            "Open Play Store",
-            false,
-            new GxNavigationPage$$ExternalSyntheticLambda81(this),
-            2,
-            null
-         );
-         GxPage var35 = this;
-         var5 = this.keysBox;
-         var3 = (LinearLayout)var5;
-         if (var5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
-            var3 = null;
-         }
-
-         GxPage.row$default(var35, "Cookie Name", null, (ViewGroup)var3, 0, 8, null).value(this.cookieName);
-         GxPage var36 = this;
-         if (this.galaxyToken.length() == 0) {
-            var7 = true;
-         } else {
-            var7 = false;
-         }
-
-         String var20;
-         if (var7) {
-            if (this.paired) {
-               var20 = "Session token unavailable...";
-            } else {
-               var20 = "Pair Galaxy to create a session token...";
-            }
-         } else if (this.tokenVisible) {
-            var20 = this.galaxyToken;
-         } else {
-            var20 = StringsKt.repeat("•", Math.min(this.galaxyToken.length(), 24));
-         }
-
-         var5 = this.keysBox;
-         if (var5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
-         } else {
-            var4 = (LinearLayout)var5;
-         }
-
-         GxPage.Row var23 = GxPage.row$default(var36, "Session Token", var20, (ViewGroup)var4, 0, 8, null);
-         if (this.galaxyToken.length() > 0) {
-            var7 = var2;
-         } else {
-            var7 = false;
-         }
-
-         if (var7) {
-            var23.getDesc().setTextIsSelectable(this.tokenVisible);
-            String var21;
-            if (this.tokenVisible) {
-               var21 = "Hide";
-            } else {
-               var21 = "Show";
-            }
-
-            GxPage.Row.button$default(var23, var21, false, new GxNavigationPage$$ExternalSyntheticLambda82(this), 2, null);
-            GxPage.Row.button$default(var23, "Copy", false, new GxNavigationPage$$ExternalSyntheticLambda1(this), 2, null);
-         }
-      }
-   }
-
-   private static final Unit renderKeys$lambda$152(GxNavigationPage var0) {
-      var0.openUrl(var0.appUrl);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderKeys$lambda$153(GxNavigationPage var0) {
-      var0.tokenVisible ^= true;
-      var0.renderKeys();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderKeys$lambda$154(GxNavigationPage var0) {
-      try {
-         Object var1 = var0.getAct().getSystemService("clipboard");
-         Intrinsics.checkNotNull(var1, "null cannot be cast to non-null type android.content.ClipboardManager");
-         ((ClipboardManager)var1).setPrimaryClip(ClipData.newPlainText("Galaxy session token", var0.galaxyToken));
-         var0.toast("Session token copied!");
-      } catch (Exception var2) {
-         var0.toast("Copy failed...");
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final void renderNavAfterKeys() {
-      if (this.keyBox != null && !this.navLoading) {
-         this.renderKeyNotice();
-         this.renderDest();
-      }
-   }
-
-   private final void renderRecents() {
-      if (this.recentBox != null) {
-         LinearLayout var3 = this.recentBox;
-         LinearLayout var2 = var3;
-         if (var3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("recentBox");
-            var2 = null;
-         }
-
-         var2.removeAllViews();
-         if (!this.navLoading) {
-            HashSet var4 = new HashSet();
-
-            for (JSONObject var5 : this.favorites) {
-               Pair var15 = this.coordsOf(var5);
-               String var17;
-               if (var15 != null) {
-                  var5 = (JSONObject)var15.getFirst();
-                  Object var16 = var15.getSecond();
-                  var17 = var5 + ":" + var16;
-               } else {
-                  var17 = this.labelFor(var5).toLowerCase(Locale.ROOT);
-                  Intrinsics.checkNotNullExpressionValue(var17, "toLowerCase(...)");
-               }
-
-               var4.add(var17);
-            }
-
-            Iterable var29 = this.recentDestinations;
-            var var7 = new ArrayList();
-
-            for (Object var8 : var29) {
-               JSONObject var18 = (JSONObject)var8;
-               Pair var9 = this.coordsOf(var18);
-               String var20;
-               if (var9 != null) {
-                  Object var35 = var9.getFirst();
-                  Object var19 = var9.getSecond();
-                  var20 = var35 + ":" + var19;
-               } else {
-                  var20 = this.labelFor(var18).toLowerCase(Locale.ROOT);
-                  Intrinsics.checkNotNullExpressionValue(var20, "toLowerCase(...)");
-               }
-
-               boolean var1;
-               if (var20.length() > 0) {
-                  var1 = true;
-               } else {
-                  var1 = false;
-               }
-
-               label116: {
-                  if (var1 && var4.add(var20)) {
-                     var var36 = this.favorites;
-                     if (var36 instanceof Collection && ((Collection)var36).isEmpty()) {
-                        var1 = true;
-                     } else {
-                        Iterator var37 = var36.iterator();
-
-                        while (true) {
-                           if (!var37.hasNext()) {
-                              var1 = true;
-                              break;
-                           }
-
-                           if (this.sameSpot(this.coordsOf((JSONObject)var37.next()), var9)) {
-                              var1 = false;
-                              break;
-                           }
-                        }
-                     }
-
-                     if (var1) {
-                        var1 = true;
-                        break label116;
-                     }
-                  }
-
-                  var1 = false;
-               }
-
-               if (var1) {
-                  var7.add(var8);
-               }
-            }
-
-            List var21 = var7;
-            List var32 = CollectionsKt.take(var21, 10);
-            if (!var32.isEmpty()) {
-               var3 = this.recentBox;
-               var2 = var3;
-               if (var3 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("recentBox");
-                  var2 = null;
-               }
-
-               this.header("Recent destinations", (ViewGroup)var2);
-
-               for (JSONObject var33 : var32) {
-                  GxPage var39 = this;
-                  var var23 = GxPage.str$default(this, var33, "name", null, 2, null);
-                  boolean var12;
-                  if (var23.length() == 0) {
-                     var12 = true;
-                  } else {
-                     var12 = false;
-                  }
-
-                  if (var12) {
-                     var var24 = GxPage.str$default(this, var33, "place_name", null, 2, null);
-                     if (var24.length() == 0) {
-                        var12 = true;
-                     } else {
-                        var12 = false;
-                     }
-
-                     if (var12) {
-                        var24 = "Destination";
-                     }
-
-                     var23 = var24;
-                  }
-
-                  String var40 = var23;
-                  var var25 = this.secondaryLabel(var33);
-                  if (var25.length() == 0) {
-                     var12 = true;
-                  } else {
-                     var12 = false;
-                  }
-
-                  if (var12) {
-                     var25 = null;
-                  }
-
-                  String var41 = var25;
-                  var3 = this.recentBox;
-                  var2 = var3;
-                  if (var3 == null) {
-                     Intrinsics.throwUninitializedPropertyAccessException("recentBox");
-                     var2 = null;
-                  }
-
-                  GxPage.Row var27 = GxPage.row$default(var39, var40, var41, (ViewGroup)var2, 0, 8, null);
-                  this.clickable(var27, new GxNavigationPage$$ExternalSyntheticLambda15(this, var33));
-                  GxPage.Row.button$default(var27, "Go", false, new GxNavigationPage$$ExternalSyntheticLambda16(this, var33), 2, null);
-               }
-            }
-         }
-      }
-   }
-
-   private static final Unit renderRecents$lambda$100(GxNavigationPage var0, JSONObject var1) {
-      var0.chooseSuggestion(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderRecents$lambda$99(GxNavigationPage var0, JSONObject var1) {
-      var0.chooseSuggestion(var1);
-      return Unit.INSTANCE;
-   }
-
-   private final void renderStatus() {
-      boolean var3 = this.searching;
-      boolean var2 = true;
-      String var4;
-      if (var3) {
-         var4 = "Searching...";
-      } else {
-         boolean var1;
-         if (this.navError.length() > 0) {
-            var1 = true;
-         } else {
-            var1 = false;
-         }
-
-         if (var1) {
-            var4 = this.navError;
-         } else {
-            var4 = "";
-         }
-      }
-
-      TextView var7 = this.statusNote;
-      Object var6 = null;
-      TextView var5 = var7;
-      if (var7 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("statusNote");
-         var5 = null;
-      }
-
-      var5.setText(var4);
-      var7 = this.statusNote;
-      var5 = var7;
-      if (var7 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("statusNote");
-         var5 = null;
-      }
-
-      boolean var8;
-      if (var4.length() == 0) {
-         var8 = 1;
-      } else {
-         var8 = 0;
-      }
-
-      if (var8) {
-         var8 = (byte)8;
-      } else {
-         var8 = (byte)0;
-      }
-
-      var5.setVisibility(var8);
-      TextView var12 = this.statusNote;
-      if (var12 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("statusNote");
-         var12 = (TextView)var6;
-      }
-
-      label48: {
-         if (!this.searching) {
-            boolean var10;
-            if (this.navError.length() > 0) {
-               var10 = var2;
-            } else {
-               var10 = false;
-            }
-
-            if (var10) {
-               var8 = CarUi.Companion.getWARN();
-               break label48;
-            }
-         }
-
-         var8 = CarUi.Companion.getDIM();
-      }
-
-      var12.setTextColor(var8);
-   }
-
-   private final void renderSuggestions() {
-      LinearLayout var4 = this.suggestBox;
-      LinearLayout var3 = var4;
-      if (var4 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("suggestBox");
-         var3 = null;
-      }
-
-      var3.removeAllViews();
-      if (!this.suggestions.isEmpty()) {
-         var4 = this.suggestBox;
-         var3 = var4;
-         if (var4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("suggestBox");
-            var3 = null;
-         }
-
-         this.header("Results", (ViewGroup)var3);
-
-         for (JSONObject var5 : this.suggestions) {
-            var var15 = this.primaryOf(var5);
-            int var1 = var15.length();
-            boolean var2 = true;
-            boolean var10;
-            if (var1 == 0) {
-               var10 = true;
-            } else {
-               var10 = false;
-            }
-
-            if (var10) {
-               var var16 = GxPage.str$default(this, var5, "place_name", null, 2, null);
-               if (var16.length() == 0) {
-                  var10 = true;
-               } else {
-                  var10 = false;
-               }
-
-               if (var10) {
-                  var16 = "Unnamed location";
-               }
-
-               var15 = var16;
-            }
-
-            String var8 = var15;
-            GxPage var7 = this;
-            var var17 = this.secondaryLabel(var5);
-            if (var17.length() == 0) {
-               var10 = true;
-            } else {
-               var10 = false;
-            }
-
-            if (var10) {
-               var var18 = GxPage.str$default(this, var5, "place_formatted", null, 2, null);
-               if (var18.length() == 0) {
-                  var10 = var2;
-               } else {
-                  var10 = false;
-               }
-
-               if (var10) {
-                  var18 = null;
-               }
-
-               var17 = var18;
-            }
-
-            String var9 = var17;
-            var4 = this.suggestBox;
-            var3 = var4;
-            if (var4 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("suggestBox");
-               var3 = null;
-            }
-
-            GxPage.Row var20 = GxPage.row$default(var7, var8, var9, (ViewGroup)var3, 0, 8, null);
-            this.clickable(var20, new GxNavigationPage$$ExternalSyntheticLambda34(this, var5));
-            GxPage.Row.button$default(var20, "Select", false, new GxNavigationPage$$ExternalSyntheticLambda35(this, var5), 2, null);
-         }
-      }
-   }
-
-   private static final Unit renderSuggestions$lambda$43(GxNavigationPage var0, JSONObject var1) {
-      var0.chooseSuggestion(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderSuggestions$lambda$44(GxNavigationPage var0, JSONObject var1) {
-      var0.chooseSuggestion(var1);
-      return Unit.INSTANCE;
-   }
-
-   private final void resolvePlace(JSONObject var1, Function2<? super String, ? super JSONObject, Unit> var2) {
-      String var5 = this.primaryOf(var1);
-      var var4 = var5;
-      boolean var3;
-      if (var4.length() == 0) {
-         var3 = true;
-      } else {
-         var3 = false;
-      }
-
-      if (var3) {
-         var4 = this.labelFor(var1);
-         if (var4.length() == 0) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         if (var3) {
-            var4 = StringsKt.trim(this.getQuery()).toString();
-         }
-
-         var4 = var4;
-      }
-
-      var4 = var4;
-      Pair var6 = this.coordsOf(var1);
-      if (var6 != null) {
-         resolvePlace$done(var2, var5, this, var1, var4, var6);
-      } else {
-         String var12 = GxPage.str$default(this, var1, "mapbox_id", null, 2, null);
-         if (var12.length() > 0) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         if (var3 && this.getHasMapbox()) {
-            String var13 = this.enc(var12);
-            String var7 = this.qs(TuplesKt.to("access_token", this.mapboxPublic), TuplesKt.to("session_token", this.sessionToken));
-            this.extGet(
-               "https://api.mapbox.com/search/searchbox/v1/retrieve/" + var13 + "?" + var7,
-               new GxNavigationPage$$ExternalSyntheticLambda53(this, var2, var5, var1, var4)
-            );
-         } else {
-            resolvePlace$geocode(this, var4, var2, var5, var1);
-         }
-      }
-   }
-
-   private static final void resolvePlace$done(
-      Function2<? super String, ? super JSONObject, Unit> var0, String var1, GxNavigationPage var2, JSONObject var3, String var4, Pair<Double, Double> var5
-   ) {
-      if (var5 == null) {
-         var0.invoke("Could not determine that location.", null);
-      } else {
-         JSONObject var10 = new JSONObject()
-            .put("latitude", ((Number)var5.getFirst()).doubleValue())
-            .put("longitude", ((Number)var5.getSecond()).doubleValue());
-         Object var8 = var1;
-         int var6 = var8.length();
-         boolean var7 = true;
-         boolean var12;
-         if (var6 == 0) {
-            var12 = true;
-         } else {
-            var12 = false;
-         }
-
-         if (var12) {
-            var8 = var4;
-         }
-
-         JSONObject var11 = var10.put("name", var8);
-         var8 = var2.labelFor(var3);
-         if (var8.length() == 0) {
-            var12 = var7;
-         } else {
-            var12 = false;
-         }
-
-         if (var12) {
-            var8 = var4;
-         }
-
-         var0.invoke(null, var11.put("place_name", var8));
-      }
-   }
-
-   private static final void resolvePlace$geocode(
-      GxNavigationPage var0, String var1, Function2<? super String, ? super JSONObject, Unit> var2, String var3, JSONObject var4
-   ) {
-      if (var0.getHasMapbox()) {
-         boolean var5;
-         if (var1.length() == 0) {
-            var5 = true;
-         } else {
-            var5 = false;
-         }
-
-         if (!var5) {
-            SpreadBuilder var6 = new SpreadBuilder(3);
-            var6.add(TuplesKt.to("access_token", var0.mapboxPublic));
-            var6.add(TuplesKt.to("q", var1));
-            var6.addSpread(var0.searchContext(var1).toArray(new Pair[0]));
-            String var7 = var0.qs((Pair<String, String>[])var6.toArray(new Pair[var6.size()]));
-            var0.extGet(
-               "https://api.mapbox.com/search/geocode/v6/forward?" + var7, new GxNavigationPage$$ExternalSyntheticLambda79(var0, var2, var3, var4, var1)
-            );
+        }
+        if (!(v instanceof String) || (doubleOrNull = StringsKt.toDoubleOrNull(StringsKt.trim((CharSequence) v).toString())) == null) {
+            return null;
+        }
+        double it2 = doubleOrNull.doubleValue();
+        if ((Double.isInfinite(it2) || Double.isNaN(it2)) ? false : true) {
+            return doubleOrNull;
+        }
+        return null;
+    }
+
+    private final Pair<Double, Double> coordsArr(JSONArray a) {
+        Double numOf;
+        if (a != null && a.length() >= 2 && (numOf = numOf(a.opt(0))) != null) {
+            double lon = numOf.doubleValue();
+            Double numOf2 = numOf(a.opt(1));
+            if (numOf2 != null) {
+                double lat = numOf2.doubleValue();
+                return TuplesKt.to(Double.valueOf(lat), Double.valueOf(lon));
+            }
+        }
+        return null;
+    }
+
+    private final Pair<Double, Double> coordsOf(JSONObject o) {
+        if (o == null) {
+            return null;
+        }
+        JSONObject optJSONObject = o.optJSONObject("geometry");
+        Pair it = coordsArr(optJSONObject != null ? optJSONObject.optJSONArray("coordinates") : null);
+        if (it != null) {
+            return it;
+        }
+        Double numOf = numOf(o.opt("latitude"));
+        if (numOf != null) {
+            double lat = numOf.doubleValue();
+            Double numOf2 = numOf(o.opt("longitude"));
+            if (numOf2 != null) {
+                double lon = numOf2.doubleValue();
+                return TuplesKt.to(Double.valueOf(lat), Double.valueOf(lon));
+            }
+        }
+        return null;
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    private final String labelFor(JSONObject p) {
+        String str;
+        String str$default;
+        Iterable $this$map$iv = CollectionsKt.listOf((Object[]) new String[]{"full_address", "place_name", "name", "address"});
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        Iterator it = $this$map$iv.iterator();
+        while (true) {
+            String str2 = "";
+            str = null;
+            if (!it.hasNext()) {
+                break;
+            }
+            Object item$iv$iv = it.next();
+            String it2 = (String) item$iv$iv;
+            if (p != null && (str$default = GxPage.str$default(this, p, it2, null, 2, null)) != null) {
+                str = StringsKt.trim((CharSequence) str$default).toString();
+            }
+            if (str != null) {
+                str2 = str;
+            }
+            destination$iv$iv.add(str2);
+        }
+        Iterable $this$firstOrNull$iv = (List) destination$iv$iv;
+        Iterator it3 = $this$firstOrNull$iv.iterator();
+        while (true) {
+            if (!it3.hasNext()) {
+                break;
+            }
+            Object next = it3.next();
+            String it4 = (String) next;
+            if (it4.length() > 0) {
+                str = next;
+                break;
+            }
+        }
+        String str3 = str;
+        return str3 == null ? "" : str3;
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:16:0x0050 A[ORIG_RETURN, RETURN] */
+    /* JADX WARN: Removed duplicated region for block: B:18:? A[RETURN, SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final String primaryOf(JSONObject p) {
+        String str$default;
+        String str$default2;
+        String obj;
+        String str = null;
+        if (p != null && (str$default2 = GxPage.str$default(this, p, "name", null, 2, null)) != null && (obj = StringsKt.trim((CharSequence) str$default2).toString()) != null) {
+            String str2 = obj;
+            if (str2.length() == 0) {
+                str2 = null;
+            }
+            String str3 = str2;
+            if (str3 != null) {
+                str = str3;
+                return str != null ? "" : str;
+            }
+        }
+        if (p != null && (str$default = GxPage.str$default(this, p, "text", null, 2, null)) != null) {
+            str = StringsKt.trim((CharSequence) str$default).toString();
+        }
+        if (str != null) {
+        }
+    }
+
+    private final String secondaryLabel(JSONObject p) {
+        String primary = primaryOf(p);
+        String full = labelFor(p);
+        return (!(full.length() > 0) || StringsKt.equals(full, primary, true)) ? "" : full;
+    }
+
+    private final boolean sameSpot(Pair<Double, Double> a, Pair<Double, Double> b) {
+        return a != null && b != null && Math.abs(a.getFirst().doubleValue() - b.getFirst().doubleValue()) < 1.0E-5d && Math.abs(a.getSecond().doubleValue() - b.getSecond().doubleValue()) < 1.0E-5d;
+    }
+
+    private final List<JSONObject> parseArr(Object v) {
+        Object m1191constructorimpl;
+        if (v instanceof JSONArray) {
+            return objects((JSONArray) v);
+        }
+        if (v instanceof String) {
+            try {
+                Result.Companion companion = Result.Companion;
+                GxNavigationPage $this$parseArr_u24lambda_u2410 = this;
+                m1191constructorimpl = Result.m1191constructorimpl($this$parseArr_u24lambda_u2410.objects(new JSONArray((String) v)));
+            } catch (Throwable th) {
+                Result.Companion companion2 = Result.Companion;
+                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            }
+            List emptyList = CollectionsKt.emptyList();
+            if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+                m1191constructorimpl = emptyList;
+            }
+            return (List) m1191constructorimpl;
+        }
+        return CollectionsKt.emptyList();
+    }
+
+    private final JSONObject parseObj(Object v) {
+        Object m1191constructorimpl;
+        if (v instanceof JSONObject) {
+            return (JSONObject) v;
+        }
+        if ((v instanceof String) && !StringsKt.isBlank((CharSequence) v)) {
+            try {
+                Result.Companion companion = Result.Companion;
+                GxNavigationPage gxNavigationPage = this;
+                m1191constructorimpl = Result.m1191constructorimpl(new JSONObject((String) v));
+            } catch (Throwable th) {
+                Result.Companion companion2 = Result.Companion;
+                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            }
+            return (JSONObject) (Result.m1197isFailureimpl(m1191constructorimpl) ? null : m1191constructorimpl);
+        }
+        return null;
+    }
+
+    private final void openUrl(String u) {
+        try {
+            getAct().startActivity(new Intent("android.intent.action.VIEW", Uri.parse(u)));
+        } catch (Exception e) {
+            toast("No app can open " + u);
+        }
+    }
+
+    private final void setOn(TextView b, boolean on) {
+        if (b == null) {
             return;
-         }
-      }
+        }
+        b.setEnabled(on);
+        b.setAlpha(on ? 1.0f : 0.4f);
+    }
 
-      resolvePlace$done(var2, var3, var0, var4, var1, null);
-   }
+    private final EditText field(String hint) {
+        EditText $this$field_u24lambda_u2412 = new EditText(getAct());
+        $this$field_u24lambda_u2412.setHint(hint);
+        $this$field_u24lambda_u2412.setTextSize(20.0f);
+        $this$field_u24lambda_u2412.setTextColor(CarUi.Companion.getTEXT());
+        $this$field_u24lambda_u2412.setHintTextColor(CarUi.Companion.getDIM());
+        $this$field_u24lambda_u2412.setSingleLine(true);
+        $this$field_u24lambda_u2412.setBackground(getUi().rounded(CarUi.Companion.getCARD_ON(), 12, Integer.valueOf(Color.rgb(60, 66, 78))));
+        $this$field_u24lambda_u2412.setPadding(getUi().dp(16), getUi().dp(12), getUi().dp(16), getUi().dp(12));
+        $this$field_u24lambda_u2412.setMinHeight(getUi().dp(56));
+        return $this$field_u24lambda_u2412;
+    }
 
-   private static final Unit resolvePlace$geocode$lambda$49(
-      GxNavigationPage var0, Function2 var1, String var2, JSONObject var3, String var4, String var5, JSONObject var6
-   ) {
-      label16: {
-         if (var6 != null) {
-            JSONArray var7 = var6.optJSONArray("features");
-            if (var7 != null) {
-               JSONObject var8 = var7.optJSONObject(0);
-               if (var8 != null) {
-                  JSONObject var9 = var8.optJSONObject("geometry");
-                  if (var9 != null) {
-                     var10 = var9.optJSONArray("coordinates");
-                     break label16;
-                  }
-               }
+    private final void clickable(GxPage.Row r, final Function0<Unit> onClick) {
+        r.getView().setClickable(true);
+        r.getView().setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda49
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                Function0.this.invoke();
             }
-         }
+        });
+    }
 
-         var10 = null;
-      }
-
-      resolvePlace$done(var1, var2, var0, var3, var4, var0.coordsArr(var10));
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit resolvePlace$lambda$50(
-      GxNavigationPage var0, Function2 var1, String var2, JSONObject var3, String var4, String var5, JSONObject var6
-   ) {
-      label21: {
-         if (var6 != null) {
-            JSONArray var7 = var6.optJSONArray("features");
-            if (var7 != null) {
-               JSONObject var8 = var7.optJSONObject(0);
-               if (var8 != null) {
-                  JSONObject var9 = var8.optJSONObject("geometry");
-                  if (var9 != null) {
-                     var10 = var9.optJSONArray("coordinates");
-                     break label21;
-                  }
-               }
+    private final void extGet(final String u, final Function2<? super String, ? super JSONObject, Unit> then) {
+        new Thread(new Runnable() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda76
+            @Override // java.lang.Runnable
+            public final void run() {
+                GxNavigationPage.extGet$lambda$19(u, this, then);
             }
-         }
+        }).start();
+    }
 
-         var10 = null;
-      }
-
-      Pair var11 = var0.coordsArr(var10);
-      if (var11 != null) {
-         resolvePlace$done(var1, var2, var0, var3, var4, var11);
-      } else {
-         resolvePlace$geocode(var0, var4, var1, var2, var3);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final void resolveQuery(Function2<? super String, ? super JSONObject, Unit> var1) {
-      String var3 = StringsKt.trim(this.getQuery()).toString();
-      boolean var2;
-      if (var3.length() == 0) {
-         var2 = true;
-      } else {
-         var2 = false;
-      }
-
-      if (var2) {
-         var1.invoke("Enter a destination first.", null);
-      } else {
-         JSONObject var4 = this.destination;
-         if (var4 != null && Intrinsics.areEqual(GxPage.str$default(this, var4, "name", null, 2, null), var3)) {
-            var1.invoke(null, var4);
-         } else {
-            JSONObject var5 = new JSONObject().put("name", var3);
-            Intrinsics.checkNotNullExpressionValue(var5, "put(...)");
-            this.resolvePlace(var5, var1);
-         }
-      }
-   }
-
-   private final String routeIdOf(int var1) {
-      String var2;
-      if (var1 == 0) {
-         var2 = "main";
-      } else {
-         var2 = "alt-" + var1;
-      }
-
-      return var2;
-   }
-
-   private final boolean sameSpot(Pair<Double, Double> var1, Pair<Double, Double> var2) {
-      boolean var3;
-      if (var1 != null
-         && var2 != null
-         && Math.abs(((Number)var1.getFirst()).doubleValue() - ((Number)var2.getFirst()).doubleValue()) < 1.0E-5
-         && Math.abs(((Number)var1.getSecond()).doubleValue() - ((Number)var2.getSecond()).doubleValue()) < 1.0E-5) {
-         var3 = true;
-      } else {
-         var3 = false;
-      }
-
-      return var3;
-   }
-
-   private final void saveSchedule() {
-      if (!this.mapsSavingSchedule && this.getScheduleDirty()) {
-         this.mapsSavingSchedule = true;
-         this.paintMaps();
-         GxPage.send$default(
-            this,
-            "POST",
-            "/api/maps/schedule",
-            new JSONObject().put("schedule", this.scheduleDraft),
-            0L,
-            new GxNavigationPage$$ExternalSyntheticLambda72(this),
-            8,
-            null
-         );
-      }
-   }
-
-   private static final Unit saveSchedule$lambda$143(GxNavigationPage var0, String var1, JSONObject var2) {
-      var0.mapsSavingSchedule = false;
-      String var8;
-      if (var1 == null) {
-         Object var5 = null;
-         Object var4 = null;
-         String var3 = (String)var5;
-         if (var2 != null) {
-            String var6 = var2.optString("message");
-            var3 = (String)var5;
-            if (var6 != null) {
-               var var7 = var6;
-               if (StringsKt.isBlank(var7)) {
-                  var7 = (String)var4;
-               }
-
-               var3 = var7;
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:24:0x007f, code lost:
+    
+        if (r6 == 0) goto L27;
+     */
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r3v1, types: [T] */
+    /* JADX WARN: Type inference failed for: r3v12 */
+    /* JADX WARN: Type inference failed for: r3v13 */
+    /* JADX WARN: Type inference failed for: r6v10 */
+    /* JADX WARN: Type inference failed for: r6v11 */
+    /* JADX WARN: Type inference failed for: r6v14, types: [java.lang.String] */
+    /* JADX WARN: Type inference failed for: r6v21, types: [T] */
+    /* JADX WARN: Type inference failed for: r6v25, types: [java.lang.String] */
+    /* JADX WARN: Type inference failed for: r6v28 */
+    /* JADX WARN: Type inference failed for: r6v34 */
+    /* JADX WARN: Type inference failed for: r6v35 */
+    /* JADX WARN: Type inference failed for: r6v4, types: [T] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final void extGet$lambda$19(String str, GxNavigationPage gxNavigationPage, final Function2 function2) {
+        String str2;
+        Object obj;
+        String str3;
+        String optString;
+        String optString2;
+        final Ref.ObjectRef objectRef = new Ref.ObjectRef();
+        final Ref.ObjectRef objectRef2 = new Ref.ObjectRef();
+        try {
+            Response execute = GxPage.Companion.client(20L).newCall(new Request.Builder().url(str).build()).execute();
+            try {
+                Response response = execute;
+                ResponseBody body = response.body();
+                if (body == null || (str2 = body.string()) == null) {
+                    str2 = "";
+                }
+                try {
+                    Result.Companion companion = Result.Companion;
+                    obj = Result.m1191constructorimpl(new JSONObject(str2));
+                } catch (Throwable th) {
+                    Result.Companion companion2 = Result.Companion;
+                    obj = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                }
+                boolean m1197isFailureimpl = Result.m1197isFailureimpl(obj);
+                ?? r6 = obj;
+                if (m1197isFailureimpl) {
+                    r6 = 0;
+                }
+                objectRef2.element = r6;
+                if (!response.isSuccessful()) {
+                    JSONObject jSONObject = (JSONObject) objectRef2.element;
+                    if (jSONObject != null && (optString2 = jSONObject.optString("message")) != null) {
+                        String str4 = optString2;
+                        if (StringsKt.isBlank(str4)) {
+                            str4 = null;
+                        }
+                        str3 = str4;
+                    }
+                    JSONObject jSONObject2 = (JSONObject) objectRef2.element;
+                    if (jSONObject2 == null || (optString = jSONObject2.optString("error")) == null) {
+                        str3 = 0;
+                    } else {
+                        String str5 = optString;
+                        if (StringsKt.isBlank(str5)) {
+                            str5 = null;
+                        }
+                        str3 = str5;
+                    }
+                    if (str3 == 0) {
+                        str3 = "HTTP " + response.code();
+                    }
+                    objectRef.element = str3;
+                }
+                Unit unit = Unit.INSTANCE;
+                CloseableKt.closeFinally(execute, null);
+            } finally {
             }
-         }
-
-         var8 = var3;
-         if (var3 == null) {
-            var8 = "Map schedule updated.";
-         }
-      } else {
-         var8 = var1;
-      }
-
-      var0.toast(var8);
-      if (var1 == null) {
-         var0.scheduleSaved = var0.scheduleDraft;
-      }
-
-      var0.paintMaps();
-      var0.refreshMapsStatus();
-      return Unit.INSTANCE;
-   }
-
-   private final void saveSelection() {
-      if (!this.mapsSavingSelection && this.getSelectionDirty()) {
-         this.mapsSavingSelection = true;
-         this.paintMaps();
-         GxPage.send$default(
-            this,
-            "POST",
-            "/api/maps/selection",
-            new JSONObject().put("selectedLocations", new JSONArray(CollectionsKt.toList(this.selectedDraft))),
-            0L,
-            new GxNavigationPage$$ExternalSyntheticLambda22(this),
-            8,
-            null
-         );
-      }
-   }
-
-   private static final Unit saveSelection$lambda$141(GxNavigationPage var0, String var1, JSONObject var2) {
-      var0.mapsSavingSelection = false;
-      String var8;
-      if (var1 == null) {
-         Object var5 = null;
-         Object var4 = null;
-         String var3 = (String)var5;
-         if (var2 != null) {
-            String var6 = var2.optString("message");
-            var3 = (String)var5;
-            if (var6 != null) {
-               var var7 = var6;
-               if (StringsKt.isBlank(var7)) {
-                  var7 = (String)var4;
-               }
-
-               var3 = var7;
+        } catch (Exception e) {
+            String message = e.getMessage();
+            ?? r3 = message;
+            if (message == null) {
+                r3 = e.toString();
             }
-         }
+            objectRef.element = r3;
+        }
+        gxNavigationPage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda33
+            @Override // java.lang.Runnable
+            public final void run() {
+                GxNavigationPage.extGet$lambda$19$lambda$18(Function2.this, objectRef, objectRef2);
+            }
+        });
+    }
 
-         var8 = var3;
-         if (var3 == null) {
-            var8 = "Map selection saved.";
-         }
-      } else {
-         var8 = var1;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void extGet$lambda$19$lambda$18(Function2 $then, Ref.ObjectRef $err, Ref.ObjectRef $obj) {
+        $then.invoke($err.element, $obj.element);
+    }
 
-      var0.toast(var8);
-      if (var1 == null) {
-         var0.selectedSaved = CollectionsKt.toSet(var0.selectedDraft);
-      }
+    private final String qs(Pair<String, String>... kv) {
+        Collection destination$iv$iv = new ArrayList();
+        for (Pair<String, String> pair : kv) {
+            String second = pair.getSecond();
+            if (!(second == null || second.length() == 0)) {
+                destination$iv$iv.add(pair);
+            }
+        }
+        return CollectionsKt.joinToString$default((List) destination$iv$iv, "&", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda80
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                CharSequence qs$lambda$21;
+                qs$lambda$21 = GxNavigationPage.qs$lambda$21(GxNavigationPage.this, (Pair) obj);
+                return qs$lambda$21;
+            }
+        }, 30, null);
+    }
 
-      var0.paintMaps();
-      var0.refreshMapsStatus();
-      return Unit.INSTANCE;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final CharSequence qs$lambda$21(GxNavigationPage this$0, Pair it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        String enc = this$0.enc((String) it.getFirst());
+        Object second = it.getSecond();
+        Intrinsics.checkNotNull(second);
+        return enc + "=" + this$0.enc((String) second);
+    }
 
-   private final void search(String var1) {
-      if (var1.length() >= 3 && this.getHasMapbox()) {
-         this.searchSeq++;
-         int var2 = this.searchSeq;
-         this.searching = true;
-         this.renderStatus();
-         SpreadBuilder var3 = new SpreadBuilder(5);
-         var3.add(TuplesKt.to("access_token", this.mapboxPublic));
-         var3.add(TuplesKt.to("session_token", this.sessionToken));
-         var3.add(TuplesKt.to("q", var1));
-         var3.add(TuplesKt.to("limit", "4"));
-         var3.addSpread(this.searchContext(var1).toArray(new Pair[0]));
-         var1 = this.qs((Pair<String, String>[])var3.toArray(new Pair[var3.size()]));
-         this.extGet("https://api.mapbox.com/search/searchbox/v1/suggest?" + var1, new GxNavigationPage$$ExternalSyntheticLambda74(var2, this));
-      }
-   }
+    private final boolean getHasMapbox() {
+        return this.mapboxPublic.length() > 0;
+    }
 
-   private static final Unit search$lambda$38(int var0, GxNavigationPage var1, String var2, JSONObject var3) {
-      if (var0 != var1.searchSeq) {
-         return Unit.INSTANCE;
-      } else {
-         var1.searching = false;
-         if (var2 != null) {
-            CharSequence var7 = var2;
-            Object var4 = var7;
-            if (StringsKt.isBlank(var7)) {
-               var4 = "Destination search failed.";
+    private final boolean getHasRoutingKey() {
+        return this.mapboxSecret.length() > 0;
+    }
+
+    private final String getQuery() {
+        if (this.queryEdit == null) {
+            return "";
+        }
+        EditText editText = this.queryEdit;
+        if (editText == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("queryEdit");
+            editText = null;
+        }
+        return editText.getText().toString();
+    }
+
+    private final void setQuery(String s) {
+        this.quietEdit = true;
+        EditText editText = this.queryEdit;
+        EditText editText2 = null;
+        if (editText == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("queryEdit");
+            editText = null;
+        }
+        editText.setText(s);
+        EditText editText3 = this.queryEdit;
+        if (editText3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("queryEdit");
+            editText3 = null;
+        }
+        EditText editText4 = this.queryEdit;
+        if (editText4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("queryEdit");
+        } else {
+            editText2 = editText4;
+        }
+        editText3.setSelection(editText2.getText().length());
+        this.quietEdit = false;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void searchRunner$lambda$22(GxNavigationPage this$0) {
+        this$0.search(StringsKt.trim((CharSequence) this$0.getQuery()).toString());
+    }
+
+    private final void buildDest(LinearLayout tab) {
+        this.keyBox = box(tab);
+        this.searchCard = card(tab);
+        GxNavigationPage gxNavigationPage = this;
+        LinearLayout linearLayout = this.searchCard;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("searchCard");
+            linearLayout = null;
+        }
+        GxPage.text$default(gxNavigationPage, "Search for a destination", linearLayout, 21.0f, CarUi.Companion.getTEXT(), false, 16, null);
+        EditText $this$buildDest_u24lambda_u2424 = field("Search here");
+        $this$buildDest_u24lambda_u2424.setImeOptions(3);
+        $this$buildDest_u24lambda_u2424.setInputType(524289);
+        $this$buildDest_u24lambda_u2424.setOnEditorActionListener(new TextView.OnEditorActionListener() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda54
+            @Override // android.widget.TextView.OnEditorActionListener
+            public final boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                boolean buildDest$lambda$24$lambda$23;
+                buildDest$lambda$24$lambda$23 = GxNavigationPage.buildDest$lambda$24$lambda$23(GxNavigationPage.this, textView, i, keyEvent);
+                return buildDest$lambda$24$lambda$23;
+            }
+        });
+        $this$buildDest_u24lambda_u2424.addTextChangedListener(new TextWatcher() { // from class: com.starpilot.starview.GxNavigationPage$buildDest$1$2
+            @Override // android.text.TextWatcher
+            public void beforeTextChanged(CharSequence s, int a, int b, int c) {
             }
 
-            var1.navError = (String)var4;
-         } else {
-            label23: {
-               if (var3 != null) {
-                  JSONArray var5 = var3.optJSONArray("suggestions");
-                  if (var5 != null) {
-                     List var8 = var1.objects(var5);
-                     var6 = var8;
-                     if (var8 != null) {
-                        break label23;
-                     }
-                  }
-               }
-
-               var6 = CollectionsKt.emptyList();
+            @Override // android.text.TextWatcher
+            public void onTextChanged(CharSequence s, int a, int b, int c) {
             }
 
-            var1.suggestions = var6;
-         }
-
-         var1.renderStatus();
-         var1.renderSuggestions();
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final List<Pair<String, String>> searchContext(String var1) {
-      CharSequence var13 = var1;
-      boolean var10 = false;
-      int var6 = 0;
-
-      while (true) {
-         if (var6 >= var13.length()) {
-            var15 = false;
-            break;
-         }
-
-         char var7 = var13.charAt(var6);
-         boolean var16;
-         if (12352 <= var7 && var7 < 12544) {
-            var16 = true;
-         } else {
-            var16 = false;
-         }
-
-         if (var16) {
-            var15 = true;
-            break;
-         }
-
-         var6++;
-      }
-
-      boolean var17;
-      if (!new Regex("^(?:main_)?ja(?:[-_]|$)", RegexOption.IGNORE_CASE).containsMatchIn(this.language)
-         && !Intrinsics.areEqual(Locale.getDefault().getLanguage(), "ja")) {
-         var17 = false;
-      } else {
-         var17 = true;
-      }
-
-      Pair var12 = this.lastPosition;
-      boolean var9 = var10;
-      if (var12 != null) {
-         double var4 = ((Number)var12.component1()).doubleValue();
-         double var2 = ((Number)var12.component2()).doubleValue();
-         boolean var8;
-         if (30.0 <= var4 && var4 <= 45.8) {
-            var8 = true;
-         } else {
-            var8 = false;
-         }
-
-         label110: {
-            label146: {
-               if (var8) {
-                  if (129.2 <= var2 && var2 <= 146.0) {
-                     var8 = true;
-                  } else {
-                     var8 = false;
-                  }
-
-                  if (var8) {
-                     break label146;
-                  }
-               }
-
-               if (var4 >= 24.0 && var4 < 30.0) {
-                  if (122.8 <= var2 && var2 <= 131.5) {
-                     var8 = true;
-                  } else {
-                     var8 = false;
-                  }
-
-                  if (var8) {
-                     break label146;
-                  }
-               }
-
-               if (var4 >= 20.0 && var4 < 30.0) {
-                  if (136.0 <= var2 && var2 <= 154.0) {
-                     var8 = true;
-                  } else {
-                     var8 = false;
-                  }
-
-                  if (var8) {
-                     break label146;
-                  }
-               }
-
-               var8 = false;
-               break label110;
+            @Override // android.text.TextWatcher
+            public void afterTextChanged(Editable s) {
+                boolean z;
+                z = GxNavigationPage.this.quietEdit;
+                if (z) {
+                    return;
+                }
+                GxNavigationPage.this.onInput();
             }
-
-            var8 = true;
-         }
-
-         var9 = var10;
-         if (var8) {
-            var9 = true;
-         }
-      }
-
-      ArrayList var11 = new ArrayList();
-      if (!var9 && (!var15 && !var17 || var12 != null)) {
-         if (var15 || var17) {
-            var11.add(TuplesKt.to("language", "ja"));
-         }
-      } else {
-         var11.add(TuplesKt.to("language", "ja"));
-         var11.add(TuplesKt.to("country", "jp"));
-      }
-
-      if (var12 != null) {
-         Object var14 = var12.getSecond();
-         Object var22 = var12.getFirst();
-         var11.add(TuplesKt.to("proximity", var14 + "," + var22));
-      }
-
-      return var11;
-   }
-
-   private static final void searchRunner$lambda$22(GxNavigationPage var0) {
-      var0.search(StringsKt.trim(var0.getQuery()).toString());
-   }
-
-   private final String secondaryLabel(JSONObject var1) {
-      String var3 = this.primaryOf(var1);
-      String var4 = this.labelFor(var1);
-      boolean var2;
-      if (var4.length() > 0) {
-         var2 = true;
-      } else {
-         var2 = false;
-      }
-
-      if (!var2 || StringsKt.equals(var4, var3, true)) {
-         var4 = "";
-      }
-
-      return var4;
-   }
-
-   private final void selectRoute(int var1) {
-      JSONObject var12 = CollectionsKt.getOrNull(this.routes, var1);
-      if (var12 != null) {
-         String var13 = this.routeIdOf(var1);
-         this.selectedRouteId = var13;
-         JSONObject var10 = this.destination;
-         if (var10 != null) {
-            var10.put("routeId", var13);
-         }
-
-         double var4 = 0.0;
-         Double var17 = var12.optDouble("distance", 0.0);
-         double var2 = var17.doubleValue();
-         boolean var9 = Double.isInfinite(var2);
-         boolean var8 = true;
-         boolean var14;
-         if (!var9 && !Double.isNaN(var2)) {
-            var14 = true;
-         } else {
-            var14 = false;
-         }
-
-         Object var11 = null;
-         if (!var14) {
-            var17 = null;
-         }
-
-         if (var17 != null) {
-            var2 = var17;
-         } else {
-            var2 = 0.0;
-         }
-
-         Double var19 = var12.optDouble("duration", 0.0);
-         double var6 = var19.doubleValue();
-         if (!Double.isInfinite(var6) && !Double.isNaN(var6)) {
-            var14 = var8;
-         } else {
-            var14 = false;
-         }
-
-         Double var18 = (Double)var11;
-         if (var14) {
-            var18 = var19;
-         }
-
-         if (var18 != null) {
-            var4 = var18;
-         }
-
-         this.routeSummary = new Triple<>(var2, var4, var13);
-      }
-   }
-
-   private final void setDestination(JSONObject var1) {
-      if (!this.getHasMapbox()) {
-         this.toast("Add a Mapbox public key in App Keys first.");
-      } else if (!this.getHasRoutingKey()) {
-         this.alert(
-            "Secret Mapbox key needed",
-            "Add a Mapbox secret key in App Keys first. It is required for the comma to calculate the on-device route and provide navigation turn desires."
-         );
-      } else if (!this.loadingRoute) {
-         this.loadingRoute = true;
-         this.renderDest();
-         GxNavigationPage$$ExternalSyntheticLambda39 var2 = new GxNavigationPage$$ExternalSyntheticLambda39(this);
-         if (var1 != null) {
-            var2.invoke(null, var1);
-         } else {
-            this.resolveQuery(var2);
-         }
-      }
-   }
-
-   private static final Unit setDestination$lambda$55(GxNavigationPage var0, String var1, JSONObject var2) {
-      boolean var3 = false;
-      if (var1 == null && var2 != null) {
-         var1 = var0.selectedRouteId;
-         if (var1.length() == 0) {
-            var3 = true;
-         }
-
-         label24:
-         if (var3) {
-            Triple var6 = var0.routeSummary;
-            if (var6 != null) {
-               String var4 = (String)var6.getThird();
-               var1 = var4;
-               if (var4 != null) {
-                  break label24;
-               }
+        });
+        this.queryEdit = $this$buildDest_u24lambda_u2424;
+        LinearLayout linearLayout3 = this.searchCard;
+        if (linearLayout3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("searchCard");
+            linearLayout3 = null;
+        }
+        EditText editText = this.queryEdit;
+        if (editText == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("queryEdit");
+            editText = null;
+        }
+        LinearLayout.LayoutParams $this$buildDest_u24lambda_u2425 = new LinearLayout.LayoutParams(-1, -2);
+        $this$buildDest_u24lambda_u2425.topMargin = getUi().dp(10);
+        $this$buildDest_u24lambda_u2425.bottomMargin = getUi().dp(8);
+        Unit unit = Unit.INSTANCE;
+        linearLayout3.addView(editText, $this$buildDest_u24lambda_u2425);
+        Pair<String, ? extends Function0<Unit>>[] pairArr = {TuplesKt.to("Set Destination", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda56
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildDest$lambda$26;
+                buildDest$lambda$26 = GxNavigationPage.buildDest$lambda$26(GxNavigationPage.this);
+                return buildDest$lambda$26;
             }
+        }), TuplesKt.to("Search", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda57
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildDest$lambda$27;
+                buildDest$lambda$27 = GxNavigationPage.buildDest$lambda$27(GxNavigationPage.this);
+                return buildDest$lambda$27;
+            }
+        }), TuplesKt.to("Clear", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda58
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildDest$lambda$28;
+                buildDest$lambda$28 = GxNavigationPage.buildDest$lambda$28(GxNavigationPage.this);
+                return buildDest$lambda$28;
+            }
+        })};
+        LinearLayout linearLayout4 = this.searchCard;
+        if (linearLayout4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("searchCard");
+        } else {
+            linearLayout2 = linearLayout4;
+        }
+        buttons(pairArr, linearLayout2, true);
+        this.statusNote = note("", tab);
+        this.suggestBox = box(tab);
+        this.destBox = box(tab);
+        this.favBox = box(tab);
+        this.recentBox = box(tab);
+        renderDestAll();
+    }
 
-            var1 = "main";
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean buildDest$lambda$24$lambda$23(GxNavigationPage this$0, TextView textView, int a, KeyEvent keyEvent) {
+        switch (a) {
+            case 3:
+            case 6:
+                this$0.setDestination(null);
+                return true;
+            default:
+                return false;
+        }
+    }
 
-         var1 = var1;
-         var2 = new JSONObject(var2.toString()).put("routeId", var1);
-         var0.destination = var2;
-         GxPage.send$default(var0, "POST", "/api/navigation", var2, 0L, new GxNavigationPage$$ExternalSyntheticLambda77(var0, var2, var1), 8, null);
-         return Unit.INSTANCE;
-      } else {
-         var0.loadingRoute = false;
-         if (var1 == null) {
-            var1 = "Enter a destination first.";
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildDest$lambda$26(GxNavigationPage this$0) {
+        this$0.setDestination(null);
+        return Unit.INSTANCE;
+    }
 
-         var0.navError = var1;
-         var0.toast(var0.navError);
-         var0.renderStatus();
-         var0.renderDest();
-         return Unit.INSTANCE;
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildDest$lambda$27(GxNavigationPage this$0) {
+        this$0.getMain().removeCallbacks(this$0.searchRunner);
+        String v = StringsKt.trim((CharSequence) this$0.getQuery()).toString();
+        if (v.length() >= 3) {
+            this$0.search(v);
+        } else {
+            this$0.toast("Type at least 3 letters.");
+        }
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit setDestination$lambda$55$lambda$54(GxNavigationPage var0, JSONObject var1, String var2, String var3, JSONObject var4) {
-      var0.loadingRoute = false;
-      if (var3 != null) {
-         var0.navError = var3;
-         var0.toast(var3);
-         var0.renderStatus();
-         var0.renderDest();
-         return Unit.INSTANCE;
-      } else {
-         var0.navigationStarted = true;
-         var0.navError = "";
-         GxPage var5 = var0;
-         Intrinsics.checkNotNull(var1);
-         var0.setQuery(GxPage.str$default(var5, var1, "name", null, 2, null));
-         var0.suggestions = CollectionsKt.emptyList();
-         var0.toast("Destination set.");
-         var0.renderStatus();
-         var0.renderSuggestions();
-         var0.renderDest();
-         var0.previewDestination(var1, var2);
-         var0.getJson("/api/navigation", new GxNavigationPage$$ExternalSyntheticLambda7(var0));
-         return Unit.INSTANCE;
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildDest$lambda$28(GxNavigationPage this$0) {
+        this$0.setQuery("");
+        this$0.onInput();
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit setDestination$lambda$55$lambda$54$lambda$53(GxNavigationPage var0, String var1, JSONObject var2) {
-      if (var2 != null) {
-         var0.recentDestinations = var0.parseArr(var2.opt("previousDestinations"));
-         var0.renderRecents();
-      }
+    private final void loadNav() {
+        if (this.keyBox == null) {
+            return;
+        }
+        getJson("/api/navigation", new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda9
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit loadNav$lambda$32;
+                loadNav$lambda$32 = GxNavigationPage.loadNav$lambda$32(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return loadNav$lambda$32;
+            }
+        });
+    }
 
-      return Unit.INSTANCE;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit loadNav$lambda$32(final GxNavigationPage this$0, String e, final JSONObject nav) {
+        if (e != null || nav == null) {
+            this$0.navError = e == null ? "Failed to load navigation." : e;
+            this$0.navLoading = false;
+            this$0.renderDestAll();
+            return Unit.INSTANCE;
+        }
+        this$0.getJson("/api/navigation/favorite", new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda30
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit loadNav$lambda$32$lambda$31;
+                loadNav$lambda$32$lambda$31 = GxNavigationPage.loadNav$lambda$32$lambda$31(GxNavigationPage.this, nav, (String) obj, (JSONObject) obj2);
+                return loadNav$lambda$32$lambda$31;
+            }
+        });
+        return Unit.INSTANCE;
+    }
 
-   private final void setOn(TextView var1, boolean var2) {
-      if (var1 != null) {
-         var1.setEnabled(var2);
-         float var3;
-         if (var2) {
-            var3 = 1.0F;
-         } else {
-            var3 = 0.4F;
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit loadNav$lambda$32$lambda$31(GxNavigationPage this$0, JSONObject $nav, String str, JSONObject fp) {
+        List<JSONObject> emptyList;
+        JSONArray optJSONArray;
+        this$0.mapboxPublic = StringsKt.trim((CharSequence) GxPage.str$default(this$0, $nav, "mapboxPublic", null, 2, null)).toString();
+        this$0.mapboxSecret = StringsKt.trim((CharSequence) GxPage.str$default(this$0, $nav, "mapboxSecret", null, 2, null)).toString();
+        this$0.language = StringsKt.trim((CharSequence) GxPage.str$default(this$0, $nav, "language", null, 2, null)).toString();
+        this$0.isMetric = $nav.optBoolean("isMetric");
+        this$0.lastPosition = this$0.coordsOf($nav.optJSONObject("lastPosition"));
+        if (fp == null || (optJSONArray = fp.optJSONArray("favorites")) == null || (emptyList = this$0.objects(optJSONArray)) == null) {
+            emptyList = CollectionsKt.emptyList();
+        }
+        this$0.favorites = emptyList;
+        this$0.recentDestinations = this$0.parseArr($nav.opt("previousDestinations"));
+        JSONObject saved = this$0.parseObj($nav.opt("destination"));
+        Pair savedCoords = this$0.coordsOf(saved);
+        if (savedCoords != null && saved != null) {
+            String savedName = this$0.primaryOf(saved);
+            String rid = this$0.str(saved, "routeId", "main");
+            this$0.selectedRouteId = new Regex("^(?:main|alt-[1-9]\\d*)$").matches(rid) ? rid : "main";
+            JSONObject d = new JSONObject(saved.toString()).put("latitude", savedCoords.getFirst().doubleValue()).put("longitude", savedCoords.getSecond().doubleValue());
+            String str2 = savedName;
+            if (str2.length() == 0) {
+                String labelFor = this$0.labelFor(saved);
+                if (labelFor.length() == 0) {
+                    labelFor = "Current destination";
+                }
+                str2 = labelFor;
+            }
+            d.put("name", str2);
+            if (!this$0.navigationStarted || this$0.destination == null || !this$0.sameSpot(this$0.coordsOf(this$0.destination), savedCoords)) {
+                this$0.destination = d;
+                this$0.navigationStarted = true;
+                Intrinsics.checkNotNull(d);
+                this$0.setQuery(GxPage.str$default(this$0, d, "name", null, 2, null));
+                this$0.suggestions = CollectionsKt.emptyList();
+                this$0.previewDestination(d, null);
+            }
+        } else if (this$0.navigationStarted) {
+            this$0.navigationStarted = false;
+            this$0.destination = null;
+            this$0.routes = CollectionsKt.emptyList();
+            this$0.routeSummary = null;
+            this$0.selectedRouteId = "main";
+        }
+        this$0.navError = "";
+        this$0.navLoading = false;
+        this$0.renderDestAll();
+        return Unit.INSTANCE;
+    }
 
-         var1.setAlpha(var3);
-      }
-   }
+    private final void renderDestAll() {
+        renderKeyNotice();
+        renderStatus();
+        renderSuggestions();
+        renderDest();
+        renderFavorites();
+        renderRecents();
+    }
 
-   private final void setQuery(String var1) {
-      this.quietEdit = true;
-      EditText var4 = this.queryEdit;
-      Object var3 = null;
-      EditText var2 = var4;
-      if (var4 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("queryEdit");
-         var2 = null;
-      }
-
-      var2.setText(var1);
-      var2 = this.queryEdit;
-      EditText var5 = var2;
-      if (var2 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("queryEdit");
-         var5 = null;
-      }
-
-      var2 = this.queryEdit;
-      if (var2 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("queryEdit");
-         var2 = (EditText)var3;
-      }
-
-      var5.setSelection(var2.getText().length());
-      this.quietEdit = false;
-   }
-
-   private final void startDownload() {
-      if (!this.mapsActionBusy && !this.isDownloading() && !this.isOnroad() && !this.selectedDraft.isEmpty()) {
-         JSONObject var1 = new JSONObject()
-            .put("selectedLocations", new JSONArray(CollectionsKt.toList(this.selectedDraft)))
-            .put("schedule", this.scheduleDraft);
-         Intrinsics.checkNotNullExpressionValue(var1, "put(...)");
-         this.mapsOp("download", var1, "Map download started.");
-      }
-   }
-
-   private final TextView statRow(String var1, LinearLayout var2) {
-      return GxPage.row$default(this, var1, null, (ViewGroup)var2, 0, 8, null).value("…");
-   }
-
-   private final void toggleFavorite() {
-      JSONObject var3 = this.destination;
-      if (var3 != null) {
-         Pair var4 = this.coordsOf(var3);
-         if (var4 != null) {
-            JSONObject var5 = this.favoriteOf(var3);
-            if (var5 != null) {
-               GxPage.send$default(this, "DELETE", "/api/navigation/favorite", var5, 0L, new GxNavigationPage$$ExternalSyntheticLambda36(this), 8, null);
+    private final void renderKeyNotice() {
+        LinearLayout linearLayout = this.keyBox;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("keyBox");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        if (this.navLoading) {
+            LinearLayout linearLayout3 = this.keyBox;
+            if (linearLayout3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("keyBox");
+                linearLayout3 = null;
+            }
+            linearLayout3.addView(empty("Loading navigation..."));
+            LinearLayout linearLayout4 = this.searchCard;
+            if (linearLayout4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("searchCard");
             } else {
-               var5 = new JSONObject();
-               String var8 = GxPage.str$default(this, var3, "name", null, 2, null);
-               int var1 = var8.length();
-               boolean var2 = true;
-               boolean var6;
-               if (var1 == 0) {
-                  var6 = true;
-               } else {
-                  var6 = false;
-               }
-
-               if (var6) {
-                  var8 = this.getQuery();
-                  if (var8.length() == 0) {
-                     var6 = var2;
-                  } else {
-                     var6 = false;
-                  }
-
-                  if (var6) {
-                     var8 = "Favorite destination";
-                  }
-
-                  var8 = var8;
-               }
-
-               label36: {
-                  var5 = var5.put("name", var8)
-                     .put("longitude", ((Number)var4.getSecond()).doubleValue())
-                     .put("latitude", ((Number)var4.getFirst()).doubleValue());
-                  Triple var10 = this.routeSummary;
-                  if (var10 != null) {
-                     String var13 = (String)var10.getThird();
-                     var11 = var13;
-                     if (var13 != null) {
-                        break label36;
-                     }
-                  }
-
-                  var11 = JSONObject.NULL;
-               }
-
-               JSONObject var12 = var5.put("routeId", var11);
-               GxPage.send$default(this, "POST", "/api/navigation/favorite", var12, 0L, new GxNavigationPage$$ExternalSyntheticLambda37(this), 8, null);
+                linearLayout2 = linearLayout4;
             }
-         }
-      }
-   }
-
-   private static final Unit toggleFavorite$lambda$60(GxNavigationPage var0, String var1, JSONObject var2) {
-      if (var1 != null) {
-         var0.toast(var1);
-      } else {
-         var0.toast("Removed from favorites.");
-         var0.reloadFavorites();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit toggleFavorite$lambda$63(GxNavigationPage var0, String var1, JSONObject var2) {
-      if (var1 != null) {
-         var0.toast(var1);
-      } else {
-         var0.toast("Added to favorites.");
-         var0.reloadFavorites();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   @Override
-   public void build() {
-      GxPage.header$default(this, "Navigation & Maps", null, 2, null);
-      this.selectTab = this.tabs(
-         CollectionsKt.listOf(new String[]{"Destination", "Maps", "App Keys", "Speed Limits"}),
-         0,
-         new GxNavigationPage$$ExternalSyntheticLambda68(this),
-         new GxNavigationPage$$ExternalSyntheticLambda69(this)
-      );
-      this.every(2500L, new GxNavigationPage$$ExternalSyntheticLambda70(this));
-      this.every(3000L, new GxNavigationPage$$ExternalSyntheticLambda71(this));
-   }
-
-   @Override
-   public boolean getNeedsOffroad() {
-      return this.needsOffroad;
-   }
-
-   @Override
-   public void onHide() {
-      this.getMain().removeCallbacks(this.searchRunner);
-   }
-
-   @Override
-   public void onShow() {
-      if (this.curTab == 0) {
-         this.loadNav();
-      } else if (this.curTab == 2) {
-         this.loadKeys();
-      }
-   }
-
-   private static final class KeyMeta {
-      private final String body;
-      private final String kind;
-      private final int min;
-      private final String navField;
-      private final String prefix;
-      private final String title;
-
-      public KeyMeta(String var1, String var2, String var3, int var4, String var5, String var6) {
-         Intrinsics.checkNotNullParameter(var1, "kind");
-         Intrinsics.checkNotNullParameter(var2, "body");
-         Intrinsics.checkNotNullParameter(var3, "prefix");
-         Intrinsics.checkNotNullParameter(var5, "title");
-         Intrinsics.checkNotNullParameter(var6, "navField");
-         super();
-         this.kind = var1;
-         this.body = var2;
-         this.prefix = var3;
-         this.min = var4;
-         this.title = var5;
-         this.navField = var6;
-      }
-
-      // $VF: synthetic method
-      public static GxNavigationPage.KeyMeta copy$default(
-         GxNavigationPage.KeyMeta var0, String var1, String var2, String var3, int var4, String var5, String var6, int var7, Object var8
-      ) {
-         if ((var7 & 1) != 0) {
-            var1 = var0.kind;
-         }
-
-         if ((var7 & 2) != 0) {
-            var2 = var0.body;
-         }
-
-         if ((var7 & 4) != 0) {
-            var3 = var0.prefix;
-         }
-
-         if ((var7 & 8) != 0) {
-            var4 = var0.min;
-         }
-
-         if ((var7 & 16) != 0) {
-            var5 = var0.title;
-         }
-
-         if ((var7 & 32) != 0) {
-            var6 = var0.navField;
-         }
-
-         return var0.copy(var1, var2, var3, var4, var5, var6);
-      }
-
-      public final String component1() {
-         return this.kind;
-      }
-
-      public final String component2() {
-         return this.body;
-      }
-
-      public final String component3() {
-         return this.prefix;
-      }
-
-      public final int component4() {
-         return this.min;
-      }
-
-      public final String component5() {
-         return this.title;
-      }
-
-      public final String component6() {
-         return this.navField;
-      }
-
-      public final GxNavigationPage.KeyMeta copy(String var1, String var2, String var3, int var4, String var5, String var6) {
-         Intrinsics.checkNotNullParameter(var1, "kind");
-         Intrinsics.checkNotNullParameter(var2, "body");
-         Intrinsics.checkNotNullParameter(var3, "prefix");
-         Intrinsics.checkNotNullParameter(var5, "title");
-         Intrinsics.checkNotNullParameter(var6, "navField");
-         return new GxNavigationPage.KeyMeta(var1, var2, var3, var4, var5, var6);
-      }
-
-      @Override
-      public boolean equals(Object var1) {
-         if (this == var1) {
-            return true;
-         } else if (!(var1 instanceof GxNavigationPage.KeyMeta)) {
-            return false;
-         } else {
-            var1 = var1;
-            if (!Intrinsics.areEqual(this.kind, var1.kind)) {
-               return false;
-            } else if (!Intrinsics.areEqual(this.body, var1.body)) {
-               return false;
-            } else if (!Intrinsics.areEqual(this.prefix, var1.prefix)) {
-               return false;
-            } else if (this.min != var1.min) {
-               return false;
+            linearLayout2.setVisibility(8);
+            return;
+        }
+        LinearLayout linearLayout5 = this.searchCard;
+        if (linearLayout5 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("searchCard");
+            linearLayout5 = null;
+        }
+        linearLayout5.setVisibility(getHasMapbox() ? 0 : 8);
+        if (!getHasMapbox()) {
+            LinearLayout linearLayout6 = this.keyBox;
+            if (linearLayout6 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("keyBox");
             } else {
-               return !Intrinsics.areEqual(this.title, var1.title) ? false : Intrinsics.areEqual(this.navField, var1.navField);
+                linearLayout2 = linearLayout6;
             }
-         }
-      }
+            LinearLayout c = card(linearLayout2);
+            GxPage.text$default(this, "Map unavailable until a Mapbox key is configured.", c, 21.0f, CarUi.Companion.getTEXT(), false, 16, null);
+            GxPage.text$default(this, "Add a Mapbox public key in App Keys to search destinations and show the map.", c, 0.0f, 0, false, 28, null);
+            buttons(new Pair[]{TuplesKt.to("Open App Keys", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda59
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderKeyNotice$lambda$33;
+                    renderKeyNotice$lambda$33 = GxNavigationPage.renderKeyNotice$lambda$33(GxNavigationPage.this);
+                    return renderKeyNotice$lambda$33;
+                }
+            })}, c, true);
+            return;
+        }
+        if (!getHasRoutingKey()) {
+            LinearLayout linearLayout7 = this.keyBox;
+            if (linearLayout7 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("keyBox");
+            } else {
+                linearLayout2 = linearLayout7;
+            }
+            LinearLayout c2 = card(linearLayout2);
+            text("Secret Mapbox key needed", c2, 21.0f, CarUi.Companion.getWARN(), true);
+            GxPage.text$default(this, "The map and destination search only use your public Mapbox key. Add a secret Mapbox key in App Keys before starting navigation so the comma can calculate the on-device route and provide turn desires.", c2, 0.0f, 0, false, 28, null);
+            GxPage.buttons$default(this, new Pair[]{TuplesKt.to("Open App Keys", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda60
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderKeyNotice$lambda$34;
+                    renderKeyNotice$lambda$34 = GxNavigationPage.renderKeyNotice$lambda$34(GxNavigationPage.this);
+                    return renderKeyNotice$lambda$34;
+                }
+            })}, c2, false, 4, null);
+        }
+    }
 
-      public final String getBody() {
-         return this.body;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderKeyNotice$lambda$33(GxNavigationPage this$0) {
+        Function1<? super Integer, Unit> function1 = this$0.selectTab;
+        if (function1 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("selectTab");
+            function1 = null;
+        }
+        function1.invoke(2);
+        return Unit.INSTANCE;
+    }
 
-      public final String getKind() {
-         return this.kind;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderKeyNotice$lambda$34(GxNavigationPage this$0) {
+        Function1<? super Integer, Unit> function1 = this$0.selectTab;
+        if (function1 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("selectTab");
+            function1 = null;
+        }
+        function1.invoke(2);
+        return Unit.INSTANCE;
+    }
 
-      public final int getMin() {
-         return this.min;
-      }
+    private final void renderStatus() {
+        String s;
+        int dim;
+        if (this.searching) {
+            s = "Searching...";
+        } else {
+            s = this.navError.length() > 0 ? this.navError : "";
+        }
+        TextView textView = this.statusNote;
+        TextView textView2 = null;
+        if (textView == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("statusNote");
+            textView = null;
+        }
+        textView.setText(s);
+        TextView textView3 = this.statusNote;
+        if (textView3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("statusNote");
+            textView3 = null;
+        }
+        textView3.setVisibility(s.length() == 0 ? 8 : 0);
+        TextView textView4 = this.statusNote;
+        if (textView4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("statusNote");
+        } else {
+            textView2 = textView4;
+        }
+        if (!this.searching) {
+            if (this.navError.length() > 0) {
+                dim = CarUi.Companion.getWARN();
+                textView2.setTextColor(dim);
+            }
+        }
+        dim = CarUi.Companion.getDIM();
+        textView2.setTextColor(dim);
+    }
 
-      public final String getNavField() {
-         return this.navField;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void onInput() {
+        this.destination = null;
+        this.routeSummary = null;
+        this.routes = CollectionsKt.emptyList();
+        this.selectedRouteId = "main";
+        this.navigationStarted = false;
+        this.searchSeq++;
+        this.searching = false;
+        this.navError = "";
+        getMain().removeCallbacks(this.searchRunner);
+        String v = StringsKt.trim((CharSequence) getQuery()).toString();
+        if (v.length() < 3 || !getHasMapbox()) {
+            this.suggestions = CollectionsKt.emptyList();
+        } else {
+            getMain().postDelayed(this.searchRunner, 350L);
+        }
+        renderStatus();
+        renderSuggestions();
+        renderDest();
+    }
 
-      public final String getPrefix() {
-         return this.prefix;
-      }
+    /* JADX WARN: Code restructure failed: missing block: B:31:0x0093, code lost:
+    
+        if ((129.2d <= r10 && r10 <= 146.0d) == false) goto L38;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:32:0x00d4, code lost:
+    
+        r7 = 1;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:45:0x00b4, code lost:
+    
+        if ((122.8d <= r10 && r10 <= 131.5d) == false) goto L49;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:56:0x00d2, code lost:
+    
+        if ((136.0d <= r10 && r10 <= 154.0d) != false) goto L60;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final List<Pair<String, String>> searchContext(String q) {
+        CharSequence $this$any$iv;
+        String $this$any$iv2 = q;
+        boolean inJapan = false;
+        int i = 0;
+        while (true) {
+            if (i < $this$any$iv2.length()) {
+                char element$iv = $this$any$iv2.charAt(i);
+                char it = (12352 > element$iv || element$iv >= 12544) ? (char) 0 : (char) 1;
+                if (it != 0) {
+                    $this$any$iv = 1;
+                    break;
+                }
+                i++;
+            } else {
+                $this$any$iv = null;
+                break;
+            }
+        }
+        boolean japaneseLang = new Regex("^(?:main_)?ja(?:[-_]|$)", RegexOption.IGNORE_CASE).containsMatchIn(this.language) || Intrinsics.areEqual(Locale.getDefault().getLanguage(), "ja");
+        Pair p = this.lastPosition;
+        if (p != null) {
+            double lat = p.component1().doubleValue();
+            double lon = p.component2().doubleValue();
+            if (30.0d <= lat && lat <= 45.8d) {
+            }
+            if (lat >= 24.0d && lat < 30.0d) {
+            }
+            if (lat >= 20.0d && lat < 30.0d) {
+            }
+            int i2 = 0;
+            if (i2 != 0) {
+                inJapan = true;
+            }
+        }
+        ArrayList out = new ArrayList();
+        if (inJapan || (($this$any$iv != null || japaneseLang) && p == null)) {
+            out.add(TuplesKt.to("language", "ja"));
+            out.add(TuplesKt.to("country", "jp"));
+        } else if ($this$any$iv != null || japaneseLang) {
+            out.add(TuplesKt.to("language", "ja"));
+        }
+        if (p != null) {
+            out.add(TuplesKt.to("proximity", p.getSecond() + "," + p.getFirst()));
+        }
+        return out;
+    }
 
-      public final String getTitle() {
-         return this.title;
-      }
+    private final void search(String value) {
+        if (value.length() < 3 || !getHasMapbox()) {
+            return;
+        }
+        this.searchSeq++;
+        final int req = this.searchSeq;
+        this.searching = true;
+        renderStatus();
+        SpreadBuilder spreadBuilder = new SpreadBuilder(5);
+        spreadBuilder.add(TuplesKt.to("access_token", this.mapboxPublic));
+        spreadBuilder.add(TuplesKt.to("session_token", this.sessionToken));
+        spreadBuilder.add(TuplesKt.to("q", value));
+        spreadBuilder.add(TuplesKt.to("limit", "4"));
+        Collection $this$toTypedArray$iv = searchContext(value);
+        spreadBuilder.addSpread($this$toTypedArray$iv.toArray(new Pair[0]));
+        String u = "https://api.mapbox.com/search/searchbox/v1/suggest?" + qs((Pair[]) spreadBuilder.toArray(new Pair[spreadBuilder.size()]));
+        extGet(u, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda74
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit search$lambda$38;
+                search$lambda$38 = GxNavigationPage.search$lambda$38(req, this, (String) obj, (JSONObject) obj2);
+                return search$lambda$38;
+            }
+        });
+    }
 
-      @Override
-      public int hashCode() {
-         return (
-                  (((this.kind.hashCode() * 31 + this.body.hashCode()) * 31 + this.prefix.hashCode()) * 31 + Integer.hashCode(this.min)) * 31
-                     + this.title.hashCode()
-               )
-               * 31
-            + this.navField.hashCode();
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit search$lambda$38(int $req, GxNavigationPage this$0, String e, JSONObject o) {
+        List<JSONObject> emptyList;
+        JSONArray optJSONArray;
+        if ($req != this$0.searchSeq) {
+            return Unit.INSTANCE;
+        }
+        this$0.searching = false;
+        if (e != null) {
+            String str = e;
+            if (StringsKt.isBlank(str)) {
+                str = "Destination search failed.";
+            }
+            this$0.navError = str;
+        } else {
+            if (o == null || (optJSONArray = o.optJSONArray("suggestions")) == null || (emptyList = this$0.objects(optJSONArray)) == null) {
+                emptyList = CollectionsKt.emptyList();
+            }
+            this$0.suggestions = emptyList;
+        }
+        this$0.renderStatus();
+        this$0.renderSuggestions();
+        return Unit.INSTANCE;
+    }
 
-      @Override
-      public String toString() {
-         String var6 = this.kind;
-         String var3 = this.body;
-         String var5 = this.prefix;
-         int var1 = this.min;
-         String var2 = this.title;
-         String var4 = this.navField;
-         return "KeyMeta(kind=" + var6 + ", body=" + var3 + ", prefix=" + var5 + ", min=" + var1 + ", title=" + var2 + ", navField=" + var4 + ")";
-      }
-   }
+    private final void renderSuggestions() {
+        LinearLayout linearLayout = this.suggestBox;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("suggestBox");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        if (this.suggestions.isEmpty()) {
+            return;
+        }
+        LinearLayout linearLayout2 = this.suggestBox;
+        if (linearLayout2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("suggestBox");
+            linearLayout2 = null;
+        }
+        header("Results", linearLayout2);
+        for (final JSONObject p : this.suggestions) {
+            String primaryOf = primaryOf(p);
+            if (primaryOf.length() == 0) {
+                String str$default = GxPage.str$default(this, p, "place_name", null, 2, null);
+                if (str$default.length() == 0) {
+                    str$default = "Unnamed location";
+                }
+                primaryOf = str$default;
+            }
+            String title = primaryOf;
+            GxNavigationPage gxNavigationPage = this;
+            String secondaryLabel = secondaryLabel(p);
+            if (secondaryLabel.length() == 0) {
+                String str$default2 = GxPage.str$default(this, p, "place_formatted", null, 2, null);
+                if (str$default2.length() == 0) {
+                    str$default2 = null;
+                }
+                secondaryLabel = str$default2;
+            }
+            String str = secondaryLabel;
+            LinearLayout linearLayout3 = this.suggestBox;
+            if (linearLayout3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("suggestBox");
+                linearLayout3 = null;
+            }
+            GxPage.Row r = GxPage.row$default(gxNavigationPage, title, str, linearLayout3, 0, 8, null);
+            clickable(r, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda34
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderSuggestions$lambda$43;
+                    renderSuggestions$lambda$43 = GxNavigationPage.renderSuggestions$lambda$43(GxNavigationPage.this, p);
+                    return renderSuggestions$lambda$43;
+                }
+            });
+            GxPage.Row.button$default(r, "Select", false, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda35
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderSuggestions$lambda$44;
+                    renderSuggestions$lambda$44 = GxNavigationPage.renderSuggestions$lambda$44(GxNavigationPage.this, p);
+                    return renderSuggestions$lambda$44;
+                }
+            }, 2, null);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderSuggestions$lambda$43(GxNavigationPage this$0, JSONObject $p) {
+        this$0.chooseSuggestion($p);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderSuggestions$lambda$44(GxNavigationPage this$0, JSONObject $p) {
+        this$0.chooseSuggestion($p);
+        return Unit.INSTANCE;
+    }
+
+    private final void resolvePlace(final JSONObject place, final Function2<? super String, ? super JSONObject, Unit> then) {
+        final String primary = primaryOf(place);
+        String str = primary;
+        if (str.length() == 0) {
+            String labelFor = labelFor(place);
+            if (labelFor.length() == 0) {
+                labelFor = StringsKt.trim((CharSequence) getQuery()).toString();
+            }
+            str = labelFor;
+        }
+        final String placeLabel = str;
+        Pair c = coordsOf(place);
+        if (c != null) {
+            resolvePlace$done(then, primary, this, place, placeLabel, c);
+            return;
+        }
+        String mid = GxPage.str$default(this, place, "mapbox_id", null, 2, null);
+        if (!(mid.length() > 0) || !getHasMapbox()) {
+            resolvePlace$geocode(this, placeLabel, then, primary, place);
+        } else {
+            extGet("https://api.mapbox.com/search/searchbox/v1/retrieve/" + enc(mid) + "?" + qs(TuplesKt.to("access_token", this.mapboxPublic), TuplesKt.to("session_token", this.sessionToken)), new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda53
+                @Override // kotlin.jvm.functions.Function2
+                public final Object invoke(Object obj, Object obj2) {
+                    Unit resolvePlace$lambda$50;
+                    resolvePlace$lambda$50 = GxNavigationPage.resolvePlace$lambda$50(GxNavigationPage.this, then, primary, place, placeLabel, (String) obj, (JSONObject) obj2);
+                    return resolvePlace$lambda$50;
+                }
+            });
+        }
+    }
+
+    private static final void resolvePlace$done(Function2<? super String, ? super JSONObject, Unit> function2, String primary, GxNavigationPage this$0, JSONObject $place, String placeLabel, Pair<Double, Double> pair) {
+        if (pair == null) {
+            function2.invoke("Could not determine that location.", null);
+            return;
+        }
+        JSONObject put = new JSONObject().put("latitude", pair.getFirst().doubleValue()).put("longitude", pair.getSecond().doubleValue());
+        String str = primary;
+        if (str.length() == 0) {
+            str = placeLabel;
+        }
+        JSONObject put2 = put.put("name", str);
+        String labelFor = this$0.labelFor($place);
+        if (labelFor.length() == 0) {
+            labelFor = placeLabel;
+        }
+        function2.invoke(null, put2.put("place_name", labelFor));
+    }
+
+    private static final void resolvePlace$geocode(final GxNavigationPage this$0, final String placeLabel, final Function2<? super String, ? super JSONObject, Unit> function2, final String primary, final JSONObject $place) {
+        if (this$0.getHasMapbox()) {
+            if (!(placeLabel.length() == 0)) {
+                SpreadBuilder spreadBuilder = new SpreadBuilder(3);
+                spreadBuilder.add(TuplesKt.to("access_token", this$0.mapboxPublic));
+                spreadBuilder.add(TuplesKt.to("q", placeLabel));
+                Collection $this$toTypedArray$iv = this$0.searchContext(placeLabel);
+                spreadBuilder.addSpread($this$toTypedArray$iv.toArray(new Pair[0]));
+                this$0.extGet("https://api.mapbox.com/search/geocode/v6/forward?" + this$0.qs((Pair[]) spreadBuilder.toArray(new Pair[spreadBuilder.size()])), new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda79
+                    @Override // kotlin.jvm.functions.Function2
+                    public final Object invoke(Object obj, Object obj2) {
+                        Unit resolvePlace$geocode$lambda$49;
+                        resolvePlace$geocode$lambda$49 = GxNavigationPage.resolvePlace$geocode$lambda$49(GxNavigationPage.this, function2, primary, $place, placeLabel, (String) obj, (JSONObject) obj2);
+                        return resolvePlace$geocode$lambda$49;
+                    }
+                });
+                return;
+            }
+        }
+        resolvePlace$done(function2, primary, this$0, $place, placeLabel, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit resolvePlace$geocode$lambda$49(GxNavigationPage this$0, Function2 $then, String $primary, JSONObject $place, String $placeLabel, String str, JSONObject o) {
+        JSONArray optJSONArray;
+        JSONObject optJSONObject;
+        JSONObject optJSONObject2;
+        resolvePlace$done($then, $primary, this$0, $place, $placeLabel, this$0.coordsArr((o == null || (optJSONArray = o.optJSONArray("features")) == null || (optJSONObject = optJSONArray.optJSONObject(0)) == null || (optJSONObject2 = optJSONObject.optJSONObject("geometry")) == null) ? null : optJSONObject2.optJSONArray("coordinates")));
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit resolvePlace$lambda$50(GxNavigationPage this$0, Function2 $then, String $primary, JSONObject $place, String $placeLabel, String str, JSONObject o) {
+        JSONArray optJSONArray;
+        JSONObject optJSONObject;
+        JSONObject optJSONObject2;
+        Pair rc = this$0.coordsArr((o == null || (optJSONArray = o.optJSONArray("features")) == null || (optJSONObject = optJSONArray.optJSONObject(0)) == null || (optJSONObject2 = optJSONObject.optJSONObject("geometry")) == null) ? null : optJSONObject2.optJSONArray("coordinates"));
+        if (rc != null) {
+            resolvePlace$done($then, $primary, this$0, $place, $placeLabel, rc);
+        } else {
+            resolvePlace$geocode(this$0, $placeLabel, $then, $primary, $place);
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void chooseSuggestion(JSONObject place) {
+        this.searching = true;
+        renderStatus();
+        resolvePlace(place, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda75
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit chooseSuggestion$lambda$51;
+                chooseSuggestion$lambda$51 = GxNavigationPage.chooseSuggestion$lambda$51(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return chooseSuggestion$lambda$51;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit chooseSuggestion$lambda$51(GxNavigationPage this$0, String e, JSONObject d) {
+        this$0.searching = false;
+        if (e != null || d == null) {
+            this$0.navError = e == null ? "Could not determine that location." : e;
+            this$0.toast(this$0.navError);
+            this$0.renderStatus();
+            return Unit.INSTANCE;
+        }
+        this$0.selectedRouteId = "main";
+        this$0.routes = CollectionsKt.emptyList();
+        this$0.routeSummary = null;
+        this$0.navigationStarted = false;
+        this$0.destination = d;
+        this$0.setQuery(GxPage.str$default(this$0, d, "name", null, 2, null));
+        this$0.suggestions = CollectionsKt.emptyList();
+        this$0.navError = "";
+        this$0.renderStatus();
+        this$0.renderSuggestions();
+        this$0.renderDest();
+        this$0.previewDestination(d, null);
+        return Unit.INSTANCE;
+    }
+
+    private final void resolveQuery(Function2<? super String, ? super JSONObject, Unit> then) {
+        String v = StringsKt.trim((CharSequence) getQuery()).toString();
+        if (v.length() == 0) {
+            then.invoke("Enter a destination first.", null);
+            return;
+        }
+        JSONObject d = this.destination;
+        if (d != null && Intrinsics.areEqual(GxPage.str$default(this, d, "name", null, 2, null), v)) {
+            then.invoke(null, d);
+            return;
+        }
+        JSONObject put = new JSONObject().put("name", v);
+        Intrinsics.checkNotNullExpressionValue(put, "put(...)");
+        resolvePlace(put, then);
+    }
+
+    private final void setDestination(JSONObject place) {
+        if (!getHasMapbox()) {
+            toast("Add a Mapbox public key in App Keys first.");
+            return;
+        }
+        if (!getHasRoutingKey()) {
+            alert("Secret Mapbox key needed", "Add a Mapbox secret key in App Keys first. It is required for the comma to calculate the on-device route and provide navigation turn desires.");
+            return;
+        }
+        if (this.loadingRoute) {
+            return;
+        }
+        this.loadingRoute = true;
+        renderDest();
+        Function2 go = new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda39
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit destination$lambda$55;
+                destination$lambda$55 = GxNavigationPage.setDestination$lambda$55(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return destination$lambda$55;
+            }
+        };
+        if (place != null) {
+            go.invoke(null, place);
+        } else {
+            resolveQuery(go);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit setDestination$lambda$55(final GxNavigationPage this$0, String e, JSONObject d) {
+        Triple<Double, Double, String> triple;
+        if (e != null || d == null) {
+            this$0.loadingRoute = false;
+            this$0.navError = e == null ? "Enter a destination first." : e;
+            this$0.toast(this$0.navError);
+            this$0.renderStatus();
+            this$0.renderDest();
+            return Unit.INSTANCE;
+        }
+        String str = this$0.selectedRouteId;
+        if ((str.length() == 0) && ((triple = this$0.routeSummary) == null || (str = triple.getThird()) == null)) {
+            str = "main";
+        }
+        final String rid = str;
+        final JSONObject dest = new JSONObject(d.toString()).put("routeId", rid);
+        this$0.destination = dest;
+        GxPage.send$default(this$0, "POST", "/api/navigation", dest, 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda77
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit destination$lambda$55$lambda$54;
+                destination$lambda$55$lambda$54 = GxNavigationPage.setDestination$lambda$55$lambda$54(GxNavigationPage.this, dest, rid, (String) obj, (JSONObject) obj2);
+                return destination$lambda$55$lambda$54;
+            }
+        }, 8, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit setDestination$lambda$55$lambda$54(final GxNavigationPage this$0, JSONObject $dest, String $rid, String err, JSONObject jSONObject) {
+        this$0.loadingRoute = false;
+        if (err != null) {
+            this$0.navError = err;
+            this$0.toast(err);
+            this$0.renderStatus();
+            this$0.renderDest();
+            return Unit.INSTANCE;
+        }
+        this$0.navigationStarted = true;
+        this$0.navError = "";
+        Intrinsics.checkNotNull($dest);
+        this$0.setQuery(GxPage.str$default(this$0, $dest, "name", null, 2, null));
+        this$0.suggestions = CollectionsKt.emptyList();
+        this$0.toast("Destination set.");
+        this$0.renderStatus();
+        this$0.renderSuggestions();
+        this$0.renderDest();
+        this$0.previewDestination($dest, $rid);
+        this$0.getJson("/api/navigation", new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda7
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit destination$lambda$55$lambda$54$lambda$53;
+                destination$lambda$55$lambda$54$lambda$53 = GxNavigationPage.setDestination$lambda$55$lambda$54$lambda$53(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return destination$lambda$55$lambda$54$lambda$53;
+            }
+        });
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit setDestination$lambda$55$lambda$54$lambda$53(GxNavigationPage this$0, String str, JSONObject nav) {
+        if (nav != null) {
+            this$0.recentDestinations = this$0.parseArr(nav.opt("previousDestinations"));
+            this$0.renderRecents();
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void cancelNavigation() {
+        GxPage.send$default(this, "DELETE", "/api/navigation", null, 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda38
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit cancelNavigation$lambda$57;
+                cancelNavigation$lambda$57 = GxNavigationPage.cancelNavigation$lambda$57(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return cancelNavigation$lambda$57;
+            }
+        }, 12, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit cancelNavigation$lambda$57(GxNavigationPage this$0, String e, JSONObject jSONObject) {
+        if (e != null) {
+            String str = e;
+            if (StringsKt.isBlank(str)) {
+                str = "Could not cancel navigation.";
+            }
+            this$0.toast(str);
+            return Unit.INSTANCE;
+        }
+        this$0.navigationStarted = false;
+        this$0.destination = null;
+        this$0.routeSummary = null;
+        this$0.routes = CollectionsKt.emptyList();
+        this$0.selectedRouteId = "main";
+        this$0.suggestions = CollectionsKt.emptyList();
+        this$0.setQuery("");
+        this$0.toast("Navigation cancelled.");
+        this$0.renderSuggestions();
+        this$0.renderDest();
+        return Unit.INSTANCE;
+    }
+
+    private final JSONObject favoriteOf(JSONObject p) {
+        Pair c = coordsOf(p);
+        Object obj = null;
+        if (c == null) {
+            return null;
+        }
+        Iterable $this$firstOrNull$iv = this.favorites;
+        Iterator it = $this$firstOrNull$iv.iterator();
+        while (true) {
+            if (!it.hasNext()) {
+                break;
+            }
+            Object element$iv = it.next();
+            JSONObject it2 = (JSONObject) element$iv;
+            if (sameSpot(coordsOf(it2), c)) {
+                obj = element$iv;
+                break;
+            }
+        }
+        return (JSONObject) obj;
+    }
+
+    private final void reloadFavorites() {
+        getJson("/api/navigation/favorite", new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda32
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit reloadFavorites$lambda$59;
+                reloadFavorites$lambda$59 = GxNavigationPage.reloadFavorites$lambda$59(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return reloadFavorites$lambda$59;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit reloadFavorites$lambda$59(GxNavigationPage this$0, String str, JSONObject fp) {
+        List<? extends JSONObject> list;
+        JSONArray optJSONArray;
+        if (fp == null || (optJSONArray = fp.optJSONArray("favorites")) == null || (list = this$0.objects(optJSONArray)) == null) {
+            list = this$0.favorites;
+        }
+        this$0.favorites = list;
+        this$0.renderDest();
+        this$0.renderFavorites();
+        this$0.renderRecents();
+        return Unit.INSTANCE;
+    }
+
+    private final void toggleFavorite() {
+        Pair c;
+        String str;
+        JSONObject d = this.destination;
+        if (d == null || (c = coordsOf(d)) == null) {
+            return;
+        }
+        JSONObject fav = favoriteOf(d);
+        if (fav != null) {
+            GxPage.send$default(this, "DELETE", "/api/navigation/favorite", fav, 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda36
+                @Override // kotlin.jvm.functions.Function2
+                public final Object invoke(Object obj, Object obj2) {
+                    Unit unit;
+                    unit = GxNavigationPage.toggleFavorite$lambda$60(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                    return unit;
+                }
+            }, 8, null);
+            return;
+        }
+        JSONObject jSONObject = new JSONObject();
+        String str$default = GxPage.str$default(this, d, "name", null, 2, null);
+        if (str$default.length() == 0) {
+            String query = getQuery();
+            if (query.length() == 0) {
+                query = "Favorite destination";
+            }
+            str$default = query;
+        }
+        JSONObject put = jSONObject.put("name", str$default).put("longitude", c.getSecond().doubleValue()).put("latitude", c.getFirst().doubleValue());
+        Triple<Double, Double, String> triple = this.routeSummary;
+        if (triple == null || (str = triple.getThird()) == null) {
+            str = JSONObject.NULL;
+        }
+        JSONObject body = put.put("routeId", str);
+        GxPage.send$default(this, "POST", "/api/navigation/favorite", body, 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda37
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit unit;
+                unit = GxNavigationPage.toggleFavorite$lambda$63(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return unit;
+            }
+        }, 8, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit toggleFavorite$lambda$60(GxNavigationPage this$0, String e, JSONObject jSONObject) {
+        if (e != null) {
+            this$0.toast(e);
+        } else {
+            this$0.toast("Removed from favorites.");
+            this$0.reloadFavorites();
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit toggleFavorite$lambda$63(GxNavigationPage this$0, String e, JSONObject jSONObject) {
+        if (e != null) {
+            this$0.toast(e);
+        } else {
+            this$0.toast("Added to favorites.");
+            this$0.reloadFavorites();
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final String routeIdOf(int i) {
+        return i == 0 ? "main" : "alt-" + i;
+    }
+
+    private final String fmtDistance(double m) {
+        if (this.isMetric) {
+            if (m < 1000.0d) {
+                return Math.round(m) + " m";
+            }
+            StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
+            String format = String.format(Locale.US, "%.1f km", Arrays.copyOf(new Object[]{Double.valueOf(m / 1000)}, 1));
+            Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+            return format;
+        }
+        double mi = m / 1609.34d;
+        if (mi < 0.1d) {
+            return Math.round(5280 * mi) + " ft";
+        }
+        StringCompanionObject stringCompanionObject2 = StringCompanionObject.INSTANCE;
+        String format2 = String.format(Locale.US, "%.1f mi", Arrays.copyOf(new Object[]{Double.valueOf(mi)}, 1));
+        Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
+        return format2;
+    }
+
+    private final String fmtDuration(double s) {
+        StringBuilder sb;
+        double d = 3600;
+        int h = (int) (s / d);
+        int m = (int) ((s % d) / 60);
+        if (h > 0) {
+            sb = new StringBuilder();
+            sb = sb.append(h).append("h ");
+        } else {
+            sb = new StringBuilder();
+        }
+        return sb.append(m).append(" min").toString();
+    }
+
+    private final String fmtEta(double s) {
+        String format = DateFormat.getTimeInstance(3).format(new Date(System.currentTimeMillis() + ((long) (1000 * s))));
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        return format;
+    }
+
+    private final void selectRoute(int i) {
+        JSONObject r = (JSONObject) CollectionsKt.getOrNull(this.routes, i);
+        if (r == null) {
+            return;
+        }
+        String rid = routeIdOf(i);
+        this.selectedRouteId = rid;
+        JSONObject jSONObject = this.destination;
+        if (jSONObject != null) {
+            jSONObject.put("routeId", rid);
+        }
+        Double valueOf = Double.valueOf(r.optDouble("distance", 0.0d));
+        double it = valueOf.doubleValue();
+        if (!((Double.isInfinite(it) || Double.isNaN(it)) ? false : true)) {
+            valueOf = null;
+        }
+        Double valueOf2 = Double.valueOf(valueOf != null ? valueOf.doubleValue() : 0.0d);
+        Double valueOf3 = Double.valueOf(r.optDouble("duration", 0.0d));
+        double it2 = valueOf3.doubleValue();
+        Double d = (Double.isInfinite(it2) || Double.isNaN(it2)) ? false : true ? valueOf3 : null;
+        this.routeSummary = new Triple<>(valueOf2, Double.valueOf(d != null ? d.doubleValue() : 0.0d), rid);
+    }
+
+    private final void previewDestination(final JSONObject place, final String preferredRouteId) {
+        Pair from = this.lastPosition;
+        final Pair to = coordsOf(place);
+        if (from == null || to == null || !getHasMapbox()) {
+            this.routeSummary = null;
+            this.routes = CollectionsKt.emptyList();
+            String str = this.selectedRouteId;
+            if (str.length() == 0) {
+                str = "main";
+            }
+            this.selectedRouteId = str;
+            renderDest();
+            return;
+        }
+        String u = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/" + from.getSecond() + "," + from.getFirst() + ";" + to.getSecond() + "," + to.getFirst() + "?" + qs(TuplesKt.to("geometries", "geojson"), TuplesKt.to("overview", "false"), TuplesKt.to("alternatives", "true"), TuplesKt.to("access_token", this.mapboxPublic));
+        extGet(u, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda46
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit previewDestination$lambda$71;
+                previewDestination$lambda$71 = GxNavigationPage.previewDestination$lambda$71(GxNavigationPage.this, place, preferredRouteId, to, (String) obj, (JSONObject) obj2);
+                return previewDestination$lambda$71;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Removed duplicated region for block: B:9:0x0023  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit previewDestination$lambda$71(GxNavigationPage this$0, JSONObject $place, String $preferredRouteId, Pair $to, String str, JSONObject o) {
+        List rs;
+        String str2;
+        JSONArray optJSONArray;
+        boolean z;
+        if (this$0.destination != $place) {
+            JSONObject it = this$0.destination;
+            if (it != null && this$0.sameSpot(this$0.coordsOf(it), $to)) {
+                z = true;
+                if (!z) {
+                    return Unit.INSTANCE;
+                }
+            }
+            z = false;
+            if (!z) {
+            }
+        }
+        if (o == null || (optJSONArray = o.optJSONArray("routes")) == null || (rs = this$0.objects(optJSONArray)) == null) {
+            rs = CollectionsKt.emptyList();
+        }
+        String str3 = "main";
+        Object obj = null;
+        if (!rs.isEmpty()) {
+            if ($preferredRouteId == null) {
+                String str$default = GxPage.str$default(this$0, $place, "routeId", null, 2, null);
+                if (str$default.length() == 0) {
+                    String str4 = this$0.selectedRouteId;
+                    if (!(str4.length() == 0)) {
+                        str3 = str4;
+                    }
+                    str$default = str3;
+                }
+                str2 = str$default;
+            } else {
+                str2 = $preferredRouteId;
+            }
+            String want = str2;
+            Iterable $this$firstOrNull$iv = CollectionsKt.getIndices(rs);
+            Iterator<Integer> it2 = $this$firstOrNull$iv.iterator();
+            while (true) {
+                if (!it2.hasNext()) {
+                    break;
+                }
+                Object element$iv = it2.next();
+                if (Intrinsics.areEqual(this$0.routeIdOf(((Number) element$iv).intValue()), want)) {
+                    obj = element$iv;
+                    break;
+                }
+            }
+            Integer num = (Integer) obj;
+            int idx = num != null ? num.intValue() : 0;
+            this$0.routes = rs;
+            this$0.selectRoute(idx);
+        } else {
+            this$0.routeSummary = null;
+            this$0.routes = CollectionsKt.emptyList();
+            this$0.selectedRouteId = "main";
+        }
+        this$0.renderDest();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    private final void renderDest() {
+        int i;
+        int i2;
+        Object obj;
+        ViewGroup viewGroup;
+        if (this.destBox == null) {
+            return;
+        }
+        LinearLayout linearLayout = this.destBox;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("destBox");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        JSONObject jSONObject = this.destination;
+        if (jSONObject == null) {
+            return;
+        }
+        ViewGroup viewGroup2 = this.destBox;
+        if (viewGroup2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("destBox");
+            viewGroup2 = null;
+        }
+        String str = "Destination";
+        header("Destination", viewGroup2);
+        ViewGroup viewGroup3 = this.destBox;
+        if (viewGroup3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("destBox");
+            viewGroup3 = null;
+        }
+        LinearLayout card = card(viewGroup3);
+        String str$default = GxPage.str$default(this, jSONObject, "name", null, 2, null);
+        if ((str$default.length() == 0) != false) {
+            String query = getQuery();
+            if ((query.length() == 0) == false) {
+                str = query;
+            }
+            str$default = str;
+        }
+        text(str$default, card, 24.0f, CarUi.Companion.getTEXT(), true);
+        String str$default2 = GxPage.str$default(this, jSONObject, "place_name", null, 2, null);
+        if ((str$default2.length() > 0) != false && !StringsKt.equals(str$default2, GxPage.str$default(this, jSONObject, "name", null, 2, null), true)) {
+            GxPage.text$default(this, str$default2, card, 0.0f, 0, false, 28, null);
+        }
+        Triple<Double, Double, String> triple = this.routeSummary;
+        if (triple != null) {
+            i = 0;
+            i2 = 1;
+            text("Distance  " + fmtDistance(triple.getFirst().doubleValue()) + "     Duration  " + fmtDuration(triple.getSecond().doubleValue()) + "     ETA  " + fmtEta(triple.getSecond().doubleValue()), card, 19.0f, CarUi.Companion.getACCENT(), true);
+        } else {
+            i = 0;
+            i2 = 1;
+            if (this.lastPosition == null) {
+                GxPage.text$default(this, "The car's position is unknown, so no route preview is shown.", card, 0.0f, 0, false, 28, null);
+            }
+        }
+        int i3 = favoriteOf(jSONObject) != null ? i2 : i;
+        ArrayList arrayList = new ArrayList();
+        if (this.navigationStarted) {
+            arrayList.add(TuplesKt.to("Cancel Navigation", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda63
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderDest$lambda$74;
+                    renderDest$lambda$74 = GxNavigationPage.renderDest$lambda$74(GxNavigationPage.this);
+                    return renderDest$lambda$74;
+                }
+            }));
+        } else {
+            arrayList.add(TuplesKt.to(this.loadingRoute ? "Calculating..." : "Start Navigation", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda64
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderDest$lambda$75;
+                    renderDest$lambda$75 = GxNavigationPage.renderDest$lambda$75(GxNavigationPage.this);
+                    return renderDest$lambda$75;
+                }
+            }));
+        }
+        arrayList.add(TuplesKt.to(i3 != 0 ? "Remove from favorites" : "Add to favorites", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda65
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit renderDest$lambda$76;
+                renderDest$lambda$76 = GxNavigationPage.renderDest$lambda$76(GxNavigationPage.this);
+                return renderDest$lambda$76;
+            }
+        }));
+        Pair[] pairArr = (Pair[]) arrayList.toArray(new Pair[i]);
+        LinearLayout buttons = buttons((Pair[]) Arrays.copyOf(pairArr, pairArr.length), card, (this.navigationStarted ? 1 : 0) ^ i2);
+        if (this.navigationStarted) {
+            View childAt = buttons.getChildAt(i);
+            TextView textView = childAt instanceof TextView ? (TextView) childAt : null;
+            if (textView != null) {
+                textView.setTextColor(CarUi.Companion.getWARN());
+            }
+        } else {
+            View childAt2 = buttons.getChildAt(i);
+            setOn(childAt2 instanceof TextView ? (TextView) childAt2 : null, (this.loadingRoute || !getHasRoutingKey()) ? i : i2);
+        }
+        if (this.routes.size() > i2) {
+            List<? extends JSONObject> list = this.routes;
+            int i4 = 0;
+            List<String> arrayList2 = new ArrayList<>(CollectionsKt.collectionSizeOrDefault(list, 10));
+            List<? extends JSONObject> list2 = list;
+            int i5 = 0;
+            int i6 = 0;
+            for (Object obj2 : list2) {
+                int i7 = i6 + 1;
+                if (i6 < 0) {
+                    CollectionsKt.throwIndexOverflow();
+                }
+                JSONObject jSONObject2 = (JSONObject) obj2;
+                arrayList2.add("Route " + (i6 + 1) + "\n" + fmtDistance(jSONObject2.optDouble("distance", 0.0d)) + " · " + fmtDuration(jSONObject2.optDouble("duration", 0.0d)));
+                i6 = i7;
+                list = list;
+                list2 = list2;
+                i5 = i5;
+                i4 = i4;
+            }
+            List<String> list3 = arrayList2;
+            IntRange indices = CollectionsKt.getIndices(this.routes);
+            Iterator<Integer> it = indices.iterator();
+            while (true) {
+                if (!it.hasNext()) {
+                    obj = null;
+                    break;
+                }
+                obj = it.next();
+                IntRange intRange = indices;
+                if (Intrinsics.areEqual(routeIdOf(((Number) obj).intValue()), this.selectedRouteId)) {
+                    break;
+                } else {
+                    indices = intRange;
+                }
+            }
+            Integer num = (Integer) obj;
+            int intValue = num != null ? num.intValue() : 0;
+            String str2 = this.navigationStarted ? "Picking another route here only changes the preview; tap Start Navigation again to send it." : null;
+            ViewGroup viewGroup4 = this.destBox;
+            if (viewGroup4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("destBox");
+                viewGroup = null;
+            } else {
+                viewGroup = viewGroup4;
+            }
+            choice("Choose a route", str2, list3, intValue, viewGroup, new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda67
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj3) {
+                    Unit renderDest$lambda$79;
+                    renderDest$lambda$79 = GxNavigationPage.renderDest$lambda$79(GxNavigationPage.this, ((Integer) obj3).intValue());
+                    return renderDest$lambda$79;
+                }
+            });
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderDest$lambda$74(GxNavigationPage this$0) {
+        this$0.cancelNavigation();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderDest$lambda$75(GxNavigationPage this$0) {
+        this$0.setDestination(this$0.destination);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderDest$lambda$76(GxNavigationPage this$0) {
+        this$0.toggleFavorite();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderDest$lambda$79(GxNavigationPage this$0, int i) {
+        this$0.selectRoute(i);
+        if (this$0.navigationStarted) {
+            this$0.navigationStarted = false;
+        }
+        this$0.renderDest();
+        return Unit.INSTANCE;
+    }
+
+    private final void renderFavorites() {
+        if (this.favBox == null) {
+            return;
+        }
+        LinearLayout linearLayout = this.favBox;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("favBox");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        if (this.navLoading || this.favorites.isEmpty()) {
+            return;
+        }
+        LinearLayout linearLayout2 = this.favBox;
+        if (linearLayout2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("favBox");
+            linearLayout2 = null;
+        }
+        header("Favorite destinations", linearLayout2);
+        Iterable $this$sortedBy$iv = this.favorites;
+        for (final JSONObject f : CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.GxNavigationPage$renderFavorites$$inlined$sortedBy$1
+            /* JADX WARN: Multi-variable type inference failed */
+            @Override // java.util.Comparator
+            public final int compare(T t, T t2) {
+                JSONObject it = (JSONObject) t;
+                String lowerCase = GxPage.str$default(GxNavigationPage.this, it, "name", null, 2, null).toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+                JSONObject it2 = (JSONObject) t2;
+                String lowerCase2 = GxPage.str$default(GxNavigationPage.this, it2, "name", null, 2, null).toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
+                return ComparisonsKt.compareValues(lowerCase, lowerCase2);
+            }
+        })) {
+            String tag = f.optBoolean("is_home") ? "Home: " : f.optBoolean("is_work") ? "Work: " : "";
+            GxNavigationPage gxNavigationPage = this;
+            String str$default = GxPage.str$default(this, f, "name", null, 2, null);
+            if (str$default.length() == 0) {
+                String str$default2 = GxPage.str$default(this, f, "place_name", null, 2, null);
+                if (str$default2.length() == 0) {
+                    str$default2 = "Favorite destination";
+                }
+                str$default = str$default2;
+            }
+            String str = tag + ((Object) str$default);
+            String secondaryLabel = secondaryLabel(f);
+            if (secondaryLabel.length() == 0) {
+                secondaryLabel = null;
+            }
+            String str2 = secondaryLabel;
+            LinearLayout linearLayout3 = this.favBox;
+            if (linearLayout3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("favBox");
+                linearLayout3 = null;
+            }
+            GxPage.Row r = GxPage.row$default(gxNavigationPage, str, str2, linearLayout3, 0, 8, null);
+            r.button("Go", true, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda41
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderFavorites$lambda$84;
+                    renderFavorites$lambda$84 = GxNavigationPage.renderFavorites$lambda$84(GxNavigationPage.this, f);
+                    return renderFavorites$lambda$84;
+                }
+            });
+            GxPage.Row.button$default(r, "Rename", false, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda42
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderFavorites$lambda$85;
+                    renderFavorites$lambda$85 = GxNavigationPage.renderFavorites$lambda$85(GxNavigationPage.this, f);
+                    return renderFavorites$lambda$85;
+                }
+            }, 2, null);
+            GxPage.Row.button$default(r, "Home / Work", false, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda43
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderFavorites$lambda$86;
+                    renderFavorites$lambda$86 = GxNavigationPage.renderFavorites$lambda$86(GxNavigationPage.this, f);
+                    return renderFavorites$lambda$86;
+                }
+            }, 2, null);
+            GxPage.Row.button$default(r, "Delete", false, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda45
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderFavorites$lambda$89;
+                    renderFavorites$lambda$89 = GxNavigationPage.renderFavorites$lambda$89(GxNavigationPage.this, f);
+                    return renderFavorites$lambda$89;
+                }
+            }, 2, null);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderFavorites$lambda$84(GxNavigationPage this$0, JSONObject $f) {
+        this$0.chooseSuggestion($f);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderFavorites$lambda$85(GxNavigationPage this$0, JSONObject $f) {
+        this$0.renameFavorite($f);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderFavorites$lambda$86(GxNavigationPage this$0, JSONObject $f) {
+        this$0.homeWork($f);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderFavorites$lambda$89(final GxNavigationPage this$0, final JSONObject $f) {
+        this$0.confirm("Remove Favorite", "Are you sure you want to remove " + GxPage.str$default(this$0, $f, "name", null, 2, null) + " from your favorites?", "Remove", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda62
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit renderFavorites$lambda$89$lambda$88;
+                renderFavorites$lambda$89$lambda$88 = GxNavigationPage.renderFavorites$lambda$89$lambda$88($f, this$0);
+                return renderFavorites$lambda$89$lambda$88;
+            }
+        });
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderFavorites$lambda$89$lambda$88(JSONObject $f, final GxNavigationPage this$0) {
+        JSONObject jSONObject = new JSONObject();
+        Object opt = $f.opt("id");
+        if (opt == null) {
+            opt = JSONObject.NULL;
+        }
+        JSONObject put = jSONObject.put("id", opt);
+        Object opt2 = $f.opt("name");
+        if (opt2 == null) {
+            opt2 = JSONObject.NULL;
+        }
+        JSONObject put2 = put.put("name", opt2);
+        Object opt3 = $f.opt("latitude");
+        if (opt3 == null) {
+            opt3 = JSONObject.NULL;
+        }
+        JSONObject put3 = put2.put("latitude", opt3);
+        Object opt4 = $f.opt("longitude");
+        if (opt4 == null) {
+            opt4 = JSONObject.NULL;
+        }
+        JSONObject put4 = put3.put("longitude", opt4);
+        Object opt5 = $f.opt("routeId");
+        if (opt5 == null) {
+            opt5 = JSONObject.NULL;
+        }
+        JSONObject body = put4.put("routeId", opt5);
+        GxPage.send$default(this$0, "DELETE", "/api/navigation/favorite", body, 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda78
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit renderFavorites$lambda$89$lambda$88$lambda$87;
+                renderFavorites$lambda$89$lambda$88$lambda$87 = GxNavigationPage.renderFavorites$lambda$89$lambda$88$lambda$87(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return renderFavorites$lambda$89$lambda$88$lambda$87;
+            }
+        }, 8, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderFavorites$lambda$89$lambda$88$lambda$87(GxNavigationPage this$0, String e, JSONObject jSONObject) {
+        if (e != null) {
+            this$0.toast("Failed to remove favorite...");
+        } else {
+            this$0.toast("Favorite removed!");
+            this$0.reloadFavorites();
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void renameFavorite(final JSONObject f) {
+        final String old = GxPage.str$default(this, f, "name", null, 2, null);
+        GxPage.prompt$default(this, "Rename Favorite", "Name", old, 0, "Rename " + old + " to:", new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda4
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit renameFavorite$lambda$91;
+                renameFavorite$lambda$91 = GxNavigationPage.renameFavorite$lambda$91(old, f, this, (String) obj);
+                return renameFavorite$lambda$91;
+            }
+        }, 8, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renameFavorite$lambda$91(String $old, JSONObject $f, final GxNavigationPage this$0, String v) {
+        Intrinsics.checkNotNullParameter(v, "v");
+        String n = StringsKt.trim((CharSequence) v).toString();
+        if ((n.length() == 0) || Intrinsics.areEqual(n, $old)) {
+            return Unit.INSTANCE;
+        }
+        JSONObject jSONObject = new JSONObject();
+        Object opt = $f.opt("id");
+        if (opt == null) {
+            opt = JSONObject.NULL;
+        }
+        JSONObject put = jSONObject.put("id", opt);
+        Object opt2 = $f.opt("routeId");
+        if (opt2 == null) {
+            opt2 = JSONObject.NULL;
+        }
+        JSONObject body = put.put("routeId", opt2).put("name", n);
+        GxPage.send$default(this$0, "POST", "/api/navigation/favorite/rename", body, 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda3
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit renameFavorite$lambda$91$lambda$90;
+                renameFavorite$lambda$91$lambda$90 = GxNavigationPage.renameFavorite$lambda$91$lambda$90(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return renameFavorite$lambda$91$lambda$90;
+            }
+        }, 8, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renameFavorite$lambda$91$lambda$90(GxNavigationPage this$0, String e, JSONObject jSONObject) {
+        if (e != null) {
+            this$0.toast("Failed to rename favorite...");
+        } else {
+            this$0.toast("Favorite renamed!");
+            this$0.reloadFavorites();
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void homeWork(final JSONObject f) {
+        final boolean home = f.optBoolean("is_home");
+        final boolean work = f.optBoolean("is_work");
+        String str$default = GxPage.str$default(this, f, "name", null, 2, null);
+        String[] strArr = new String[2];
+        strArr[0] = home ? "Remove Home" : "Set as Home";
+        strArr[1] = work ? "Remove Work" : "Set as Work";
+        pick(str$default, CollectionsKt.listOf((Object[]) strArr), new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda61
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit homeWork$lambda$93;
+                homeWork$lambda$93 = GxNavigationPage.homeWork$lambda$93(f, home, work, this, ((Integer) obj).intValue());
+                return homeWork$lambda$93;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit homeWork$lambda$93(JSONObject $f, boolean $home, boolean $work, final GxNavigationPage this$0, final int i) {
+        final String msg;
+        JSONObject jSONObject = new JSONObject();
+        Object opt = $f.opt("routeId");
+        if (opt == null) {
+            opt = JSONObject.NULL;
+        }
+        JSONObject put = jSONObject.put("routeId", opt);
+        Object opt2 = $f.opt("id");
+        if (opt2 == null) {
+            opt2 = JSONObject.NULL;
+        }
+        JSONObject body = put.put("id", opt2);
+        if (i == 0) {
+            if ($home) {
+                body.put("is_home", false);
+                msg = "Home location removed!";
+            } else {
+                body.put("is_home", true);
+                if ($work) {
+                    body.put("is_work", false);
+                }
+                msg = "Home location set!";
+            }
+        } else if ($work) {
+            body.put("is_work", false);
+            msg = "Work location removed!";
+        } else {
+            body.put("is_work", true);
+            if ($home) {
+                body.put("is_home", false);
+            }
+            msg = "Work location set!";
+        }
+        GxPage.send$default(this$0, "POST", "/api/navigation/favorite/rename", body, 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda40
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit homeWork$lambda$93$lambda$92;
+                homeWork$lambda$93$lambda$92 = GxNavigationPage.homeWork$lambda$93$lambda$92(GxNavigationPage.this, i, msg, (String) obj, (JSONObject) obj2);
+                return homeWork$lambda$93$lambda$92;
+            }
+        }, 8, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit homeWork$lambda$93$lambda$92(GxNavigationPage this$0, int $i, String $msg, String e, JSONObject jSONObject) {
+        if (e != null) {
+            this$0.toast("Failed to update " + ($i == 0 ? "home" : "work") + " location...");
+        } else {
+            this$0.toast($msg);
+            this$0.reloadFavorites();
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:42:0x0122  */
+    /* JADX WARN: Removed duplicated region for block: B:45:0x0125 A[SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void renderRecents() {
+        Iterable $this$filter$iv;
+        String key;
+        HashSet seen;
+        boolean z;
+        boolean z2;
+        String lowerCase;
+        if (this.recentBox == null) {
+            return;
+        }
+        LinearLayout linearLayout = this.recentBox;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("recentBox");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        if (this.navLoading) {
+            return;
+        }
+        HashSet seen2 = new HashSet();
+        for (JSONObject f : this.favorites) {
+            Pair c = coordsOf(f);
+            if (c != null) {
+                lowerCase = c.getFirst() + ":" + c.getSecond();
+            } else {
+                lowerCase = labelFor(f).toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+            }
+            seen2.add(lowerCase);
+        }
+        Iterable $this$filter$iv2 = this.recentDestinations;
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv2) {
+            JSONObject p = (JSONObject) element$iv$iv;
+            Pair c2 = coordsOf(p);
+            if (c2 != null) {
+                $this$filter$iv = $this$filter$iv2;
+                key = c2.getFirst() + ":" + c2.getSecond();
+            } else {
+                $this$filter$iv = $this$filter$iv2;
+                key = labelFor(p).toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(key, "toLowerCase(...)");
+            }
+            if ((key.length() > 0) && seen2.add(key)) {
+                Iterable $this$none$iv = this.favorites;
+                seen = seen2;
+                if (($this$none$iv instanceof Collection) && ((Collection) $this$none$iv).isEmpty()) {
+                    z2 = true;
+                } else {
+                    Iterator it = $this$none$iv.iterator();
+                    while (true) {
+                        if (!it.hasNext()) {
+                            z2 = true;
+                            break;
+                        }
+                        Object element$iv = it.next();
+                        Iterator it2 = it;
+                        JSONObject it3 = (JSONObject) element$iv;
+                        String key2 = key;
+                        if (sameSpot(coordsOf(it3), c2)) {
+                            z2 = false;
+                            break;
+                        } else {
+                            it = it2;
+                            key = key2;
+                        }
+                    }
+                }
+                if (z2) {
+                    z = true;
+                    if (!z) {
+                        destination$iv$iv.add(element$iv$iv);
+                    }
+                    $this$filter$iv2 = $this$filter$iv;
+                    seen2 = seen;
+                }
+            } else {
+                seen = seen2;
+            }
+            z = false;
+            if (!z) {
+            }
+            $this$filter$iv2 = $this$filter$iv;
+            seen2 = seen;
+        }
+        List<JSONObject> list = CollectionsKt.take((List) destination$iv$iv, 10);
+        if (list.isEmpty()) {
+            return;
+        }
+        LinearLayout linearLayout2 = this.recentBox;
+        if (linearLayout2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("recentBox");
+            linearLayout2 = null;
+        }
+        header("Recent destinations", linearLayout2);
+        for (final JSONObject p2 : list) {
+            GxNavigationPage gxNavigationPage = this;
+            String str$default = GxPage.str$default(this, p2, "name", null, 2, null);
+            if (str$default.length() == 0) {
+                String str$default2 = GxPage.str$default(this, p2, "place_name", null, 2, null);
+                if (str$default2.length() == 0) {
+                    str$default2 = "Destination";
+                }
+                str$default = str$default2;
+            }
+            String str = str$default;
+            String secondaryLabel = secondaryLabel(p2);
+            if (secondaryLabel.length() == 0) {
+                secondaryLabel = null;
+            }
+            String str2 = secondaryLabel;
+            LinearLayout linearLayout3 = this.recentBox;
+            if (linearLayout3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("recentBox");
+                linearLayout3 = null;
+            }
+            GxPage.Row r = GxPage.row$default(gxNavigationPage, str, str2, linearLayout3, 0, 8, null);
+            clickable(r, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda15
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderRecents$lambda$99;
+                    renderRecents$lambda$99 = GxNavigationPage.renderRecents$lambda$99(GxNavigationPage.this, p2);
+                    return renderRecents$lambda$99;
+                }
+            });
+            GxPage.Row.button$default(r, "Go", false, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda16
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderRecents$lambda$100;
+                    renderRecents$lambda$100 = GxNavigationPage.renderRecents$lambda$100(GxNavigationPage.this, p2);
+                    return renderRecents$lambda$100;
+                }
+            }, 2, null);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderRecents$lambda$99(GxNavigationPage this$0, JSONObject $p) {
+        this$0.chooseSuggestion($p);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderRecents$lambda$100(GxNavigationPage this$0, JSONObject $p) {
+        this$0.chooseSuggestion($p);
+        return Unit.INSTANCE;
+    }
+
+    private final boolean getSelectionDirty() {
+        return !Intrinsics.areEqual(CollectionsKt.toSet(this.selectedDraft), this.selectedSaved);
+    }
+
+    private final boolean getScheduleDirty() {
+        return !Intrinsics.areEqual(this.scheduleDraft, this.scheduleSaved);
+    }
+
+    private final boolean isDownloading() {
+        return this.mapsStatus.optBoolean("downloading");
+    }
+
+    private final boolean isOnroad() {
+        return this.mapsStatus.optBoolean("isOnroad");
+    }
+
+    private final String gxBytes(double v) {
+        String format;
+        if (v <= 0.0d) {
+            return "0 MB";
+        }
+        List units = CollectionsKt.listOf((Object[]) new String[]{"B", "KB", "MB", "GB", "TB"});
+        int i = Math.min((int) (Math.log(v) / Math.log(1024.0d)), units.size() - 1);
+        double s = v / Math.pow(1024.0d, i);
+        if (s >= 10.0d || i == 0) {
+            StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
+            format = String.format(Locale.US, "%.0f", Arrays.copyOf(new Object[]{Double.valueOf(s)}, 1));
+        } else {
+            StringCompanionObject stringCompanionObject2 = StringCompanionObject.INSTANCE;
+            format = String.format(Locale.US, "%.2f", Arrays.copyOf(new Object[]{Double.valueOf(s)}, 1));
+        }
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        return format + " " + units.get(i);
+    }
+
+    private final String gxDuration(double sec) {
+        long v = Math.max(0L, Math.round(sec));
+        if (v < 60) {
+            return v + "s";
+        }
+        long j = 60;
+        long m = v / j;
+        if (m < 60) {
+            return m + "m " + (v % j) + "s";
+        }
+        return (m / j) + "h " + (m % j) + "m";
+    }
+
+    private final TextView statRow(String title, LinearLayout into) {
+        return GxPage.row$default(this, title, null, into, 0, 8, null).value("…");
+    }
+
+    private final TextView noteIn(String s, LinearLayout into) {
+        TextView $this$noteIn_u24lambda_u24101 = GxPage.text$default(this, s, into, 15.0f, CarUi.Companion.getWARN(), false, 16, null);
+        $this$noteIn_u24lambda_u24101.setVisibility(8);
+        return $this$noteIn_u24lambda_u24101;
+    }
+
+    private final void buildMaps(LinearLayout tab) {
+        TextView $this$buildMaps_u24lambda_u24102 = note("", tab);
+        $this$buildMaps_u24lambda_u24102.setTextColor(CarUi.Companion.getWARN());
+        $this$buildMaps_u24lambda_u24102.setVisibility(8);
+        this.mapsErrorNote = $this$buildMaps_u24lambda_u24102;
+        header("Offline Maps", tab);
+        note("Select regions, start downloads, and manage offline maps entirely from Galaxy.", tab);
+        this.vDownloader = statRow("Downloader", tab);
+        this.vSaved = statRow("Saved Regions", tab);
+        this.vEstimate = statRow("Additional Storage", tab);
+        this.vLastUpdate = statRow("Last Updated", tab);
+        this.vStorage = statRow("Storage Used", tab);
+        this.nOnroad = noteIn("Map downloads and removal are blocked while driving.", tab);
+        this.nSelDirty = noteIn("You have unsaved region changes. Downloading now will use the current selection.", tab);
+        this.nSchDirty = noteIn("You have an unsaved schedule change. Downloading now will also apply it.", tab);
+        this.mapsBar = buttons(new Pair[]{TuplesKt.to("Download Maps", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda25
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildMaps$lambda$103;
+                buildMaps$lambda$103 = GxNavigationPage.buildMaps$lambda$103(GxNavigationPage.this);
+                return buildMaps$lambda$103;
+            }
+        }), TuplesKt.to("Remove Maps", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda26
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildMaps$lambda$104;
+                buildMaps$lambda$104 = GxNavigationPage.buildMaps$lambda$104(GxNavigationPage.this);
+                return buildMaps$lambda$104;
+            }
+        }), TuplesKt.to("Save Selection", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda27
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildMaps$lambda$105;
+                buildMaps$lambda$105 = GxNavigationPage.buildMaps$lambda$105(GxNavigationPage.this);
+                return buildMaps$lambda$105;
+            }
+        }), TuplesKt.to("Reset", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda28
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildMaps$lambda$106;
+                buildMaps$lambda$106 = GxNavigationPage.buildMaps$lambda$106(GxNavigationPage.this);
+                return buildMaps$lambda$106;
+            }
+        }), TuplesKt.to("Clear All", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda29
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildMaps$lambda$107;
+                buildMaps$lambda$107 = GxNavigationPage.buildMaps$lambda$107(GxNavigationPage.this);
+                return buildMaps$lambda$107;
+            }
+        })}, tab, true);
+        LinearLayout linearLayout = this.mapsBar;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
+            linearLayout = null;
+        }
+        View childAt = linearLayout.getChildAt(1);
+        TextView textView = childAt instanceof TextView ? (TextView) childAt : null;
+        if (textView != null) {
+            textView.setTextColor(CarUi.Companion.getWARN());
+        }
+        LinearLayout $this$buildMaps_u24lambda_u24108 = card(tab);
+        $this$buildMaps_u24lambda_u24108.setVisibility(8);
+        this.progCard = $this$buildMaps_u24lambda_u24108;
+        LinearLayout linearLayout3 = this.progCard;
+        if (linearLayout3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("progCard");
+            linearLayout3 = null;
+        }
+        this.progTitle = text("Download Progress", linearLayout3, 21.0f, CarUi.Companion.getTEXT(), true);
+        LinearLayout linearLayout4 = this.progCard;
+        if (linearLayout4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("progCard");
+            linearLayout4 = null;
+        }
+        this.progBar = progress(linearLayout4);
+        GxNavigationPage gxNavigationPage = this;
+        LinearLayout linearLayout5 = this.progCard;
+        if (linearLayout5 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("progCard");
+            linearLayout5 = null;
+        }
+        this.pEstimate = GxPage.text$default(gxNavigationPage, "", linearLayout5, 0.0f, 0, false, 28, null);
+        GxNavigationPage gxNavigationPage2 = this;
+        LinearLayout linearLayout6 = this.progCard;
+        if (linearLayout6 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("progCard");
+            linearLayout6 = null;
+        }
+        this.pStored = GxPage.text$default(gxNavigationPage2, "", linearLayout6, 0.0f, 0, false, 28, null);
+        GxNavigationPage gxNavigationPage3 = this;
+        LinearLayout linearLayout7 = this.progCard;
+        if (linearLayout7 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("progCard");
+            linearLayout7 = null;
+        }
+        this.pFiles = GxPage.text$default(gxNavigationPage3, "", linearLayout7, 0.0f, 0, false, 28, null);
+        GxNavigationPage gxNavigationPage4 = this;
+        LinearLayout linearLayout8 = this.progCard;
+        if (linearLayout8 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("progCard");
+            linearLayout8 = null;
+        }
+        this.pEta = GxPage.text$default(gxNavigationPage4, "", linearLayout8, 0.0f, 0, false, 28, null);
+        GxNavigationPage gxNavigationPage5 = this;
+        LinearLayout linearLayout9 = this.progCard;
+        if (linearLayout9 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("progCard");
+        } else {
+            linearLayout2 = linearLayout9;
+        }
+        this.pRegion = GxPage.text$default(gxNavigationPage5, "", linearLayout2, 0.0f, 0, false, 28, null);
+        header("Regions & Schedule", tab);
+        LinearLayout sc = card(tab);
+        GxPage.text$default(this, "Search", sc, 21.0f, CarUi.Companion.getTEXT(), false, 16, null);
+        EditText se = field("Filter by name or code");
+        se.addTextChangedListener(new TextWatcher() { // from class: com.starpilot.starview.GxNavigationPage$buildMaps$8
+            @Override // android.text.TextWatcher
+            public void beforeTextChanged(CharSequence s, int a, int b, int c) {
+            }
+
+            @Override // android.text.TextWatcher
+            public void onTextChanged(CharSequence s, int a, int b, int c) {
+            }
+
+            @Override // android.text.TextWatcher
+            public void afterTextChanged(Editable s) {
+                GxNavigationPage gxNavigationPage6 = GxNavigationPage.this;
+                String obj = s != null ? s.toString() : null;
+                if (obj == null) {
+                    obj = "";
+                }
+                gxNavigationPage6.mapsSearch = obj;
+                GxNavigationPage.this.renderCatalog();
+            }
+        });
+        LinearLayout.LayoutParams $this$buildMaps_u24lambda_u24109 = new LinearLayout.LayoutParams(-1, -2);
+        $this$buildMaps_u24lambda_u24109.topMargin = getUi().dp(8);
+        $this$buildMaps_u24lambda_u24109.bottomMargin = getUi().dp(6);
+        Unit unit = Unit.INSTANCE;
+        sc.addView(se, $this$buildMaps_u24lambda_u24109);
+        this.scheduleBox = box(tab);
+        LinearLayout sr = card(tab);
+        GxPage.text$default(this, "Selected Regions", sr, 21.0f, CarUi.Companion.getTEXT(), false, 16, null);
+        this.selRegionsText = GxPage.text$default(this, "No regions selected.", sr, 0.0f, 0, false, 28, null);
+        this.schedNote = note("", tab);
+        this.catalogBox = box(tab);
+        loadCatalog();
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildMaps$lambda$103(GxNavigationPage this$0) {
+        if (this$0.isDownloading()) {
+            this$0.cancelDownload();
+        } else {
+            this$0.startDownload();
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildMaps$lambda$104(GxNavigationPage this$0) {
+        this$0.removeMaps();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildMaps$lambda$105(GxNavigationPage this$0) {
+        this$0.saveSelection();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildMaps$lambda$106(GxNavigationPage this$0) {
+        this$0.selectedDraft.clear();
+        this$0.selectedDraft.addAll(this$0.selectedSaved);
+        this$0.scheduleDraft = this$0.scheduleSaved;
+        this$0.paintMaps();
+        this$0.renderCatalog();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildMaps$lambda$107(GxNavigationPage this$0) {
+        this$0.selectedDraft.clear();
+        this$0.paintMaps();
+        return Unit.INSTANCE;
+    }
+
+    private final void loadCatalog() {
+        getJson("/api/maps/catalog", new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda44
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit loadCatalog$lambda$111;
+                loadCatalog$lambda$111 = GxNavigationPage.loadCatalog$lambda$111(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return loadCatalog$lambda$111;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit loadCatalog$lambda$111(GxNavigationPage this$0, String e, JSONObject o) {
+        List<JSONObject> emptyList;
+        List<Pair<String, String>> emptyList2;
+        List<JSONObject> emptyList3;
+        List<JSONObject> emptyList4;
+        Iterable objects;
+        this$0.mapsLoadingCatalog = false;
+        if (e != null || o == null) {
+            this$0.mapsError = e == null ? "Failed to load the map catalog." : e;
+        } else {
+            JSONArray optJSONArray = o.optJSONArray("sections");
+            if (optJSONArray == null || (emptyList = this$0.objects(optJSONArray)) == null) {
+                emptyList = CollectionsKt.emptyList();
+            }
+            this$0.mapsSections = emptyList;
+            JSONArray optJSONArray2 = o.optJSONArray("scheduleOptions");
+            if (optJSONArray2 == null || (objects = this$0.objects(optJSONArray2)) == null) {
+                emptyList2 = CollectionsKt.emptyList();
+            } else {
+                Iterable $this$map$iv = objects;
+                Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+                for (Object item$iv$iv : $this$map$iv) {
+                    JSONObject it = (JSONObject) item$iv$iv;
+                    destination$iv$iv.add(TuplesKt.to(it.opt("value").toString(), GxPage.str$default(this$0, it, "label", null, 2, null)));
+                }
+                emptyList2 = (List) destination$iv$iv;
+            }
+            this$0.scheduleOptions = emptyList2;
+            this$0.tokenLabels.clear();
+            for (JSONObject s : this$0.mapsSections) {
+                JSONArray optJSONArray3 = s.optJSONArray("groups");
+                if (optJSONArray3 == null || (emptyList3 = this$0.objects(optJSONArray3)) == null) {
+                    emptyList3 = CollectionsKt.emptyList();
+                }
+                for (JSONObject g : emptyList3) {
+                    JSONArray optJSONArray4 = g.optJSONArray("regions");
+                    if (optJSONArray4 == null || (emptyList4 = this$0.objects(optJSONArray4)) == null) {
+                        emptyList4 = CollectionsKt.emptyList();
+                    }
+                    for (JSONObject r : emptyList4) {
+                        this$0.tokenLabels.put(GxPage.str$default(this$0, r, "token", null, 2, null), GxPage.str$default(this$0, r, "label", null, 2, null));
+                    }
+                }
+            }
+        }
+        this$0.buildSchedule();
+        this$0.renderCatalog();
+        this$0.paintMaps();
+        return Unit.INSTANCE;
+    }
+
+    private final void buildSchedule() {
+        int i;
+        LinearLayout linearLayout = this.scheduleBox;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("scheduleBox");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        this.paintSchedule = null;
+        if (this.scheduleOptions.isEmpty()) {
+            return;
+        }
+        Iterable $this$map$iv = this.scheduleOptions;
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            Pair it = (Pair) item$iv$iv;
+            destination$iv$iv.add((String) it.getSecond());
+        }
+        ArrayList arrayList = (List) destination$iv$iv;
+        List $this$indexOfFirst$iv = this.scheduleOptions;
+        int index$iv = 0;
+        Iterator<Pair<String, String>> it2 = $this$indexOfFirst$iv.iterator();
+        while (true) {
+            if (!it2.hasNext()) {
+                i = -1;
+                break;
+            }
+            Pair item$iv = it2.next();
+            Pair it3 = item$iv;
+            if (Intrinsics.areEqual(it3.getFirst(), this.scheduleDraft)) {
+                i = index$iv;
+                break;
+            }
+            index$iv++;
+        }
+        LinearLayout linearLayout3 = this.scheduleBox;
+        if (linearLayout3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("scheduleBox");
+            linearLayout3 = null;
+        }
+        this.paintSchedule = choice("Auto Update", "How often the comma refreshes the downloaded maps.", arrayList, i, linearLayout3, new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda47
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit buildSchedule$lambda$114;
+                buildSchedule$lambda$114 = GxNavigationPage.buildSchedule$lambda$114(GxNavigationPage.this, ((Integer) obj).intValue());
+                return buildSchedule$lambda$114;
+            }
+        });
+        GxNavigationPage gxNavigationPage = this;
+        Pair[] pairArr = {TuplesKt.to("Apply", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda48
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildSchedule$lambda$115;
+                buildSchedule$lambda$115 = GxNavigationPage.buildSchedule$lambda$115(GxNavigationPage.this);
+                return buildSchedule$lambda$115;
+            }
+        })};
+        LinearLayout linearLayout4 = this.scheduleBox;
+        if (linearLayout4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("scheduleBox");
+        } else {
+            linearLayout2 = linearLayout4;
+        }
+        GxPage.buttons$default(gxNavigationPage, pairArr, linearLayout2, false, 4, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildSchedule$lambda$114(GxNavigationPage this$0, int i) {
+        this$0.scheduleDraft = this$0.scheduleOptions.get(i).getFirst();
+        this$0.paintMaps();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildSchedule$lambda$115(GxNavigationPage this$0) {
+        this$0.saveSchedule();
+        return Unit.INSTANCE;
+    }
+
+    private final void refreshMapsStatus() {
+        if (this.vDownloader == null || this.mapsStatusInFlight) {
+            return;
+        }
+        this.mapsStatusInFlight = true;
+        getJson("/api/maps/status", new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda10
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit refreshMapsStatus$lambda$116;
+                refreshMapsStatus$lambda$116 = GxNavigationPage.refreshMapsStatus$lambda$116(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return refreshMapsStatus$lambda$116;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit refreshMapsStatus$lambda$116(GxNavigationPage this$0, String e, JSONObject o) {
+        List<String> emptyList;
+        this$0.mapsStatusInFlight = false;
+        this$0.mapsLoadingStatus = false;
+        if (e != null || o == null) {
+            this$0.mapsError = e == null ? "Failed to load map status." : e;
+            this$0.paintMaps();
+            return Unit.INSTANCE;
+        }
+        boolean wasSel = this$0.getSelectionDirty();
+        boolean wasSch = this$0.getScheduleDirty();
+        this$0.mapsStatus = o;
+        JSONObject optJSONObject = o.optJSONObject("downloadProgress");
+        if (optJSONObject == null) {
+            optJSONObject = new JSONObject();
+        }
+        this$0.mapsProgress = optJSONObject;
+        JSONArray optJSONArray = o.optJSONArray("selectedLocations");
+        if (optJSONArray == null || (emptyList = this$0.strings(optJSONArray)) == null) {
+            emptyList = CollectionsKt.emptyList();
+        }
+        this$0.selectedSaved = CollectionsKt.toSet(CollectionsKt.toSortedSet(emptyList, StringsKt.getCASE_INSENSITIVE_ORDER(StringCompanionObject.INSTANCE)));
+        if (!wasSel) {
+            this$0.selectedDraft.clear();
+            this$0.selectedDraft.addAll(this$0.selectedSaved);
+        }
+        if (o.has("scheduleValue") && !o.isNull("scheduleValue")) {
+            this$0.scheduleSaved = o.opt("scheduleValue").toString();
+        }
+        if (!wasSch) {
+            this$0.scheduleDraft = this$0.scheduleSaved;
+        }
+        this$0.mapsError = "";
+        this$0.paintMaps();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:177:0x02fb, code lost:
+    
+        if (r10 > 0.0d) goto L215;
+     */
+    /* JADX WARN: Removed duplicated region for block: B:181:0x030b  */
+    /* JADX WARN: Removed duplicated region for block: B:183:0x0313  */
+    /* JADX WARN: Removed duplicated region for block: B:186:0x031c  */
+    /* JADX WARN: Removed duplicated region for block: B:244:0x0548  */
+    /* JADX WARN: Removed duplicated region for block: B:256:0x057e  */
+    /* JADX WARN: Removed duplicated region for block: B:259:0x058d  */
+    /* JADX WARN: Removed duplicated region for block: B:261:0x0593  */
+    /* JADX WARN: Removed duplicated region for block: B:283:0x05de  */
+    /* JADX WARN: Removed duplicated region for block: B:286:0x05ea  */
+    /* JADX WARN: Removed duplicated region for block: B:289:0x0661  */
+    /* JADX WARN: Removed duplicated region for block: B:292:0x066d  */
+    /* JADX WARN: Removed duplicated region for block: B:295:0x0681  */
+    /* JADX WARN: Removed duplicated region for block: B:298:0x069c  */
+    /* JADX WARN: Removed duplicated region for block: B:300:0x06a3  */
+    /* JADX WARN: Removed duplicated region for block: B:304:0x06e1  */
+    /* JADX WARN: Removed duplicated region for block: B:315:0x0715 A[LOOP:2: B:313:0x070f->B:315:0x0715, LOOP_END] */
+    /* JADX WARN: Removed duplicated region for block: B:318:0x069f  */
+    /* JADX WARN: Removed duplicated region for block: B:319:0x0674  */
+    /* JADX WARN: Removed duplicated region for block: B:320:0x05ef  */
+    /* JADX WARN: Removed duplicated region for block: B:334:0x05d7  */
+    /* JADX WARN: Removed duplicated region for block: B:335:0x0590  */
+    /* JADX WARN: Removed duplicated region for block: B:349:0x053d  */
+    /* JADX WARN: Removed duplicated region for block: B:350:0x0315  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void paintMaps() {
+        TextView textView;
+        double est;
+        boolean z;
+        boolean showProgress;
+        LinearLayout linearLayout;
+        Function1<? super Integer, Unit> function1;
+        LinearLayout linearLayout2;
+        HorizontalScrollView hs;
+        boolean z2;
+        TextView textView2;
+        String joinToString$default;
+        TextView textView3;
+        TextView textView4;
+        String str$default;
+        Iterator<Map.Entry<String, Pair<GxPage.Row, JSONObject>>> it;
+        if (this.vDownloader == null) {
+            return;
+        }
+        TextView textView5 = this.mapsErrorNote;
+        if (textView5 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("mapsErrorNote");
+            textView5 = null;
+        }
+        textView5.setText(this.mapsError);
+        TextView textView6 = this.mapsErrorNote;
+        if (textView6 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("mapsErrorNote");
+            textView6 = null;
+        }
+        textView6.setVisibility(this.mapsError.length() == 0 ? 8 : 0);
+        JSONObject st = this.mapsStatus;
+        JSONObject p = this.mapsProgress;
+        TextView textView7 = this.vDownloader;
+        if (textView7 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("vDownloader");
+            textView7 = null;
+        }
+        textView7.setText(!this.mapsLoadingStatus ? isDownloading() ? st.optBoolean("cancelling") ? "Cancelling" : "Downloading" : "Idle" : "Checking...");
+        TextView textView8 = this.vSaved;
+        if (textView8 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("vSaved");
+            textView8 = null;
+        }
+        textView8.setText(this.mapsLoadingStatus ? "Checking..." : String.valueOf(st.optInt("selectedCount", 0)));
+        Double valueOf = Double.valueOf(p.optDouble("estimatedDownloadBytes", 0.0d));
+        double it2 = valueOf.doubleValue();
+        if (!((Double.isInfinite(it2) || Double.isNaN(it2)) ? false : true)) {
+            valueOf = null;
+        }
+        double est2 = valueOf != null ? valueOf.doubleValue() : 0.0d;
+        TextView textView9 = this.vEstimate;
+        if (textView9 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("vEstimate");
+            textView9 = null;
+        }
+        textView9.setText((getSelectionDirty() || est2 <= 0.0d) ? !this.selectedDraft.isEmpty() ? "Not yet available" : "Select regions" : "~" + gxBytes(est2) + " additional");
+        TextView textView10 = this.vLastUpdate;
+        if (textView10 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("vLastUpdate");
+            textView = null;
+        } else {
+            textView = textView10;
+        }
+        TextView textView11 = textView;
+        String str$default2 = GxPage.str$default(this, st, "lastUpdate", null, 2, null);
+        if (str$default2.length() == 0) {
+            str$default2 = "Never";
+        }
+        textView11.setText(str$default2);
+        TextView textView12 = this.vStorage;
+        if (textView12 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("vStorage");
+            textView12 = null;
+        }
+        textView12.setText(st.optBoolean("storageKnown") ? gxBytes(st.optDouble("storageBytes", 0.0d)) : "Calculating…");
+        TextView textView13 = this.nOnroad;
+        if (textView13 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("nOnroad");
+            textView13 = null;
+        }
+        textView13.setVisibility(isOnroad() ? 0 : 8);
+        TextView textView14 = this.nSelDirty;
+        if (textView14 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("nSelDirty");
+            textView14 = null;
+        }
+        textView14.setVisibility(getSelectionDirty() ? 0 : 8);
+        TextView textView15 = this.nSchDirty;
+        if (textView15 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("nSchDirty");
+            textView15 = null;
+        }
+        textView15.setVisibility(getScheduleDirty() ? 0 : 8);
+        boolean canDownload = (this.mapsLoadingStatus || this.mapsActionBusy || isOnroad() || isDownloading() || this.selectedDraft.isEmpty()) ? false : true;
+        boolean canCancel = (this.mapsLoadingStatus || this.mapsActionBusy || !isDownloading()) ? false : true;
+        boolean canRemove = (this.mapsLoadingStatus || this.mapsActionBusy || isDownloading() || isOnroad() || !st.optBoolean("mapsPresent")) ? false : true;
+        LinearLayout linearLayout3 = this.mapsBar;
+        if (linearLayout3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
+            linearLayout3 = null;
+        }
+        View childAt = linearLayout3.getChildAt(0);
+        TextView b = childAt instanceof TextView ? (TextView) childAt : null;
+        if (b != null) {
+            b.setText(isDownloading() ? st.optBoolean("cancelling") ? "Cancelling..." : "Cancel Download" : "Download Maps");
+            setOn(b, canDownload || canCancel);
+            Unit unit = Unit.INSTANCE;
+            Unit unit2 = Unit.INSTANCE;
+        }
+        LinearLayout linearLayout4 = this.mapsBar;
+        if (linearLayout4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
+            linearLayout4 = null;
+        }
+        View childAt2 = linearLayout4.getChildAt(1);
+        setOn(childAt2 instanceof TextView ? (TextView) childAt2 : null, canRemove);
+        LinearLayout linearLayout5 = this.mapsBar;
+        if (linearLayout5 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
+            linearLayout5 = null;
+        }
+        View childAt3 = linearLayout5.getChildAt(2);
+        TextView b2 = childAt3 instanceof TextView ? (TextView) childAt3 : null;
+        if (b2 != null) {
+            b2.setText(this.mapsSavingSelection ? "Saving..." : "Save Selection");
+            setOn(b2, (this.mapsSavingSelection || this.mapsLoadingCatalog || !getSelectionDirty()) ? false : true);
+            Unit unit3 = Unit.INSTANCE;
+            Unit unit4 = Unit.INSTANCE;
+        }
+        LinearLayout linearLayout6 = this.mapsBar;
+        if (linearLayout6 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
+            linearLayout6 = null;
+        }
+        View childAt4 = linearLayout6.getChildAt(3);
+        setOn(childAt4 instanceof TextView ? (TextView) childAt4 : null, getSelectionDirty() || getScheduleDirty());
+        LinearLayout linearLayout7 = this.mapsBar;
+        if (linearLayout7 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
+            linearLayout7 = null;
+        }
+        View childAt5 = linearLayout7.getChildAt(4);
+        setOn(childAt5 instanceof TextView ? (TextView) childAt5 : null, !this.selectedDraft.isEmpty());
+        boolean completed = p.optBoolean("completed");
+        boolean cancelled = p.optBoolean("cancelled");
+        if (!this.mapsLoadingStatus) {
+            if (isDownloading() || completed || cancelled) {
+                est = est2;
+            } else {
+                est = est2;
+            }
+            z = true;
+            showProgress = z;
+            linearLayout = this.progCard;
+            if (linearLayout == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("progCard");
+                linearLayout = null;
+            }
+            linearLayout.setVisibility(!showProgress ? 0 : 8);
+            if (!showProgress) {
+                Double valueOf2 = Double.valueOf(p.optDouble("percent", 0.0d));
+                double it3 = valueOf2.doubleValue();
+                if (!((Double.isInfinite(it3) || Double.isNaN(it3)) ? false : true)) {
+                    valueOf2 = null;
+                }
+                double pct = valueOf2 != null ? valueOf2.doubleValue() : 0.0d;
+                TextView textView16 = this.progTitle;
+                if (textView16 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("progTitle");
+                    textView16 = null;
+                }
+                textView16.setText((isDownloading() ? "Download Progress" : completed ? "Last Download" : cancelled ? "Download Cancelled" : "Download Estimate") + "  ·  " + Math.round(pct) + "%");
+                ProgressBar progressBar = this.progBar;
+                if (progressBar == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("progBar");
+                    progressBar = null;
+                }
+                setProgress(progressBar, pct);
+                TextView textView17 = this.pEstimate;
+                if (textView17 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pEstimate");
+                    textView17 = null;
+                }
+                textView17.setText("Estimate: " + (est > 0.0d ? "~" + gxBytes(est) + " additional storage" : "Storage estimate unavailable"));
+                double dl = p.optDouble("downloadedBytes", 0.0d);
+                TextView textView18 = this.pStored;
+                if (textView18 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pStored");
+                    textView18 = null;
+                }
+                textView18.setText("Stored: " + (dl > 0.0d ? gxBytes(dl) + " added storage" : "Storage reconciles after completion"));
+                int tf = p.optInt("totalFiles", 0);
+                TextView textView19 = this.pFiles;
+                if (textView19 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pFiles");
+                    textView19 = null;
+                }
+                textView19.setText("Files: " + (tf > 0 ? p.optInt("downloadedFiles", 0) + " / " + tf + " files" : "Waiting for map service..."));
+                double eta = p.optDouble("etaSeconds", 0.0d);
+                TextView textView20 = this.pEta;
+                if (textView20 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pEta");
+                    textView20 = null;
+                }
+                textView20.setText("ETA: " + ((!isDownloading() || eta <= 0.0d) ? "ETA unavailable until files start arriving" : "About " + gxDuration(eta) + " remaining"));
+                String loc = GxPage.str$default(this, p, "primaryLocation", null, 2, null);
+                TextView textView21 = this.pRegion;
+                if (textView21 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pRegion");
+                    textView21 = null;
+                }
+                textView21.setText("Current region: " + loc);
+                TextView textView22 = this.pRegion;
+                if (textView22 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pRegion");
+                    textView22 = null;
+                }
+                textView22.setVisibility(loc.length() == 0 ? 8 : 0);
+            }
+            function1 = this.paintSchedule;
+            if (function1 != null) {
+                List $this$indexOfFirst$iv = this.scheduleOptions;
+                int index$iv = 0;
+                Iterator<Pair<String, String>> it4 = $this$indexOfFirst$iv.iterator();
+                while (true) {
+                    if (!it4.hasNext()) {
+                        index$iv = -1;
+                        break;
+                    }
+                    Pair item$iv = it4.next();
+                    if (Intrinsics.areEqual(item$iv.getFirst(), this.scheduleDraft)) {
+                        break;
+                    } else {
+                        index$iv++;
+                    }
+                }
+                function1.invoke(Integer.valueOf(index$iv));
+                Unit unit5 = Unit.INSTANCE;
+            }
+            linearLayout2 = this.scheduleBox;
+            if (linearLayout2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("scheduleBox");
+                linearLayout2 = null;
+            }
+            View childAt6 = linearLayout2.getChildAt(1);
+            hs = !(childAt6 instanceof HorizontalScrollView) ? (HorizontalScrollView) childAt6 : null;
+            if (hs == null) {
+                z2 = false;
+                View childAt7 = hs.getChildAt(0);
+                LinearLayout linearLayout8 = childAt7 instanceof LinearLayout ? (LinearLayout) childAt7 : null;
+                View childAt8 = linearLayout8 != null ? linearLayout8.getChildAt(0) : null;
+                TextView b3 = childAt8 instanceof TextView ? (TextView) childAt8 : null;
+                if (b3 != null) {
+                    b3.setText(this.mapsSavingSchedule ? "Applying..." : "Apply");
+                    setOn(b3, !this.mapsSavingSchedule && getScheduleDirty());
+                    Unit unit6 = Unit.INSTANCE;
+                    Unit unit7 = Unit.INSTANCE;
+                }
+            } else {
+                z2 = false;
+            }
+            textView2 = this.selRegionsText;
+            if (textView2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("selRegionsText");
+                textView2 = null;
+            }
+            if (this.selectedDraft.isEmpty()) {
+                Iterable $this$map$iv = this.selectedDraft;
+                Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+                for (Object item$iv$iv : $this$map$iv) {
+                    String it5 = (String) item$iv$iv;
+                    String str = this.tokenLabels.get(it5);
+                    if (str != null) {
+                        it5 = str;
+                    }
+                    destination$iv$iv.add(it5);
+                }
+                Iterable $this$sortedBy$iv = (List) destination$iv$iv;
+                joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.GxNavigationPage$paintMaps$$inlined$sortedBy$1
+                    /* JADX WARN: Multi-variable type inference failed */
+                    @Override // java.util.Comparator
+                    public final int compare(T t, T t2) {
+                        String it6 = (String) t;
+                        String lowerCase = it6.toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+                        String it7 = (String) t2;
+                        String lowerCase2 = it7.toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
+                        return ComparisonsKt.compareValues(lowerCase, lowerCase2);
+                    }
+                }), ", ", null, null, 0, null, null, 62, null);
+            }
+            textView2.setText(joinToString$default);
+            textView3 = this.selRegionsText;
+            if (textView3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("selRegionsText");
+                textView3 = null;
+            }
+            textView3.setTextColor(!this.selectedDraft.isEmpty() ? CarUi.Companion.getDIM() : CarUi.Companion.getTEXT());
+            textView4 = this.schedNote;
+            if (textView4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("schedNote");
+                textView4 = null;
+            }
+            str$default = GxPage.str$default(this, st, "scheduleLabel", null, 2, null);
+            if (str$default.length() != 0 ? true : z2) {
+                str$default = "Monthly";
+            }
+            textView4.setText("Saved schedule: " + ((Object) str$default) + " · Draft regions: " + this.selectedDraft.size());
+            for (Map.Entry<String, Switch> entry : this.regionSwitches.entrySet()) {
+                String tok = entry.getKey();
+                Switch sw = entry.getValue();
+                boolean on = this.selectedDraft.contains(tok);
+                if (sw.isChecked() != on) {
+                    sw.setChecked(on);
+                }
+            }
+            it = this.groupRows.entrySet().iterator();
+            while (it.hasNext()) {
+                Pair pr = it.next().getValue();
+                pr.getFirst().setDesc(groupSelectedCount(pr.getSecond()) + " selected");
+            }
+        }
+        est = est2;
+        z = false;
+        showProgress = z;
+        linearLayout = this.progCard;
+        if (linearLayout == null) {
+        }
+        linearLayout.setVisibility(!showProgress ? 0 : 8);
+        if (!showProgress) {
+        }
+        function1 = this.paintSchedule;
+        if (function1 != null) {
+        }
+        linearLayout2 = this.scheduleBox;
+        if (linearLayout2 == null) {
+        }
+        View childAt62 = linearLayout2.getChildAt(1);
+        if (!(childAt62 instanceof HorizontalScrollView)) {
+        }
+        if (hs == null) {
+        }
+        textView2 = this.selRegionsText;
+        if (textView2 == null) {
+        }
+        if (this.selectedDraft.isEmpty()) {
+        }
+        textView2.setText(joinToString$default);
+        textView3 = this.selRegionsText;
+        if (textView3 == null) {
+        }
+        textView3.setTextColor(!this.selectedDraft.isEmpty() ? CarUi.Companion.getDIM() : CarUi.Companion.getTEXT());
+        textView4 = this.schedNote;
+        if (textView4 == null) {
+        }
+        str$default = GxPage.str$default(this, st, "scheduleLabel", null, 2, null);
+        if (str$default.length() != 0 ? true : z2) {
+        }
+        textView4.setText("Saved schedule: " + ((Object) str$default) + " · Draft regions: " + this.selectedDraft.size());
+        while (r4.hasNext()) {
+        }
+        it = this.groupRows.entrySet().iterator();
+        while (it.hasNext()) {
+        }
+    }
+
+    private final int groupSelectedCount(JSONObject g) {
+        Iterable emptyList;
+        JSONArray optJSONArray = g.optJSONArray("regions");
+        if (optJSONArray == null || (emptyList = objects(optJSONArray)) == null) {
+            emptyList = CollectionsKt.emptyList();
+        }
+        Iterable $this$map$iv = emptyList;
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            JSONObject it = (JSONObject) item$iv$iv;
+            destination$iv$iv.add(GxPage.str$default(this, it, "token", null, 2, null));
+        }
+        Set toks = CollectionsKt.toSet((List) destination$iv$iv);
+        Iterable $this$count$iv = this.selectedDraft;
+        if (($this$count$iv instanceof Collection) && ((Collection) $this$count$iv).isEmpty()) {
+            return 0;
+        }
+        int count$iv = 0;
+        for (Object element$iv : $this$count$iv) {
+            String it2 = (String) element$iv;
+            if (toks.contains(it2) && (count$iv = count$iv + 1) < 0) {
+                CollectionsKt.throwCountOverflow();
+            }
+        }
+        return count$iv;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Removed duplicated region for block: B:41:0x0161  */
+    /* JADX WARN: Removed duplicated region for block: B:44:0x0164 A[SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final void renderCatalog() {
+        LinearLayout linearLayout;
+        Iterable emptyList;
+        Iterator<? extends JSONObject> it;
+        List emptyList2;
+        Iterable emptyList3;
+        Iterable $this$mapNotNullTo$iv$iv;
+        Iterable $this$filter$iv;
+        String str;
+        int $i$f$mapNotNullTo;
+        Iterable $this$forEach$iv$iv$iv;
+        boolean z;
+        LinearLayout linearLayout2;
+        if (this.catalogBox == null) {
+            return;
+        }
+        LinearLayout linearLayout3 = this.catalogBox;
+        if (linearLayout3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
+            linearLayout3 = null;
+        }
+        linearLayout3.removeAllViews();
+        this.regionSwitches.clear();
+        this.groupRows.clear();
+        if (this.mapsLoadingCatalog) {
+            LinearLayout linearLayout4 = this.catalogBox;
+            if (linearLayout4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
+                linearLayout2 = null;
+            } else {
+                linearLayout2 = linearLayout4;
+            }
+            linearLayout2.addView(empty("Loading map catalog..."));
+            return;
+        }
+        String q = StringsKt.trim((CharSequence) this.mapsSearch).toString().toLowerCase(Locale.ROOT);
+        String str2 = "toLowerCase(...)";
+        Intrinsics.checkNotNullExpressionValue(q, "toLowerCase(...)");
+        boolean any = false;
+        Iterator<? extends JSONObject> it2 = this.mapsSections.iterator();
+        while (it2.hasNext()) {
+            JSONObject s = it2.next();
+            JSONArray optJSONArray = s.optJSONArray("groups");
+            if (optJSONArray == null || (emptyList = objects(optJSONArray)) == null) {
+                emptyList = CollectionsKt.emptyList();
+            }
+            Iterable $this$mapNotNull$iv = emptyList;
+            int $i$f$mapNotNull = 0;
+            Collection destination$iv$iv = new ArrayList();
+            Iterable $this$mapNotNullTo$iv$iv2 = $this$mapNotNull$iv;
+            int $i$f$mapNotNullTo2 = 0;
+            Iterable $this$forEach$iv$iv$iv2 = $this$mapNotNullTo$iv$iv2;
+            Iterator it3 = $this$forEach$iv$iv$iv2.iterator();
+            while (true) {
+                it = it2;
+                if (!it3.hasNext()) {
+                    break;
+                }
+                Object element$iv$iv$iv = it3.next();
+                JSONObject g = (JSONObject) element$iv$iv$iv;
+                JSONArray optJSONArray2 = g.optJSONArray("regions");
+                if (optJSONArray2 == null || (emptyList3 = objects(optJSONArray2)) == null) {
+                    emptyList3 = CollectionsKt.emptyList();
+                }
+                Iterable $this$filter$iv2 = emptyList3;
+                Iterable $this$mapNotNull$iv2 = $this$mapNotNull$iv;
+                Collection destination$iv$iv2 = new ArrayList();
+                for (Object element$iv$iv : $this$filter$iv2) {
+                    int $i$f$mapNotNull2 = $i$f$mapNotNull;
+                    JSONObject r = (JSONObject) element$iv$iv;
+                    if (q.length() == 0) {
+                        $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv2;
+                        $this$filter$iv = $this$filter$iv2;
+                        str = str2;
+                        $i$f$mapNotNullTo = $i$f$mapNotNullTo2;
+                        $this$forEach$iv$iv$iv = $this$forEach$iv$iv$iv2;
+                    } else {
+                        $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv2;
+                        $this$filter$iv = $this$filter$iv2;
+                        $i$f$mapNotNullTo = $i$f$mapNotNullTo2;
+                        $this$forEach$iv$iv$iv = $this$forEach$iv$iv$iv2;
+                        String lowerCase = (GxPage.str$default(this, r, "label", null, 2, null) + " " + GxPage.str$default(this, r, "code", null, 2, null) + " " + GxPage.str$default(this, r, "token", null, 2, null)).toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(lowerCase, str2);
+                        str = str2;
+                        if (!StringsKt.contains$default((CharSequence) lowerCase, (CharSequence) q, false, 2, (Object) null)) {
+                            z = false;
+                            if (!z) {
+                                destination$iv$iv2.add(element$iv$iv);
+                            }
+                            str2 = str;
+                            $i$f$mapNotNull = $i$f$mapNotNull2;
+                            $this$forEach$iv$iv$iv2 = $this$forEach$iv$iv$iv;
+                            $this$mapNotNullTo$iv$iv2 = $this$mapNotNullTo$iv$iv;
+                            $this$filter$iv2 = $this$filter$iv;
+                            $i$f$mapNotNullTo2 = $i$f$mapNotNullTo;
+                        }
+                    }
+                    z = true;
+                    if (!z) {
+                    }
+                    str2 = str;
+                    $i$f$mapNotNull = $i$f$mapNotNull2;
+                    $this$forEach$iv$iv$iv2 = $this$forEach$iv$iv$iv;
+                    $this$mapNotNullTo$iv$iv2 = $this$mapNotNullTo$iv$iv;
+                    $this$filter$iv2 = $this$filter$iv;
+                    $i$f$mapNotNullTo2 = $i$f$mapNotNullTo;
+                }
+                int $i$f$mapNotNull3 = $i$f$mapNotNull;
+                Iterable $this$mapNotNullTo$iv$iv3 = $this$mapNotNullTo$iv$iv2;
+                String str3 = str2;
+                int $i$f$mapNotNullTo3 = $i$f$mapNotNullTo2;
+                Iterable $this$forEach$iv$iv$iv3 = $this$forEach$iv$iv$iv2;
+                List regs = (List) destination$iv$iv2;
+                Pair pair = regs.isEmpty() ? null : TuplesKt.to(g, regs);
+                if (pair != null) {
+                    destination$iv$iv.add(pair);
+                }
+                str2 = str3;
+                it2 = it;
+                $this$mapNotNull$iv = $this$mapNotNull$iv2;
+                $i$f$mapNotNull = $i$f$mapNotNull3;
+                $this$forEach$iv$iv$iv2 = $this$forEach$iv$iv$iv3;
+                $this$mapNotNullTo$iv$iv2 = $this$mapNotNullTo$iv$iv3;
+                $i$f$mapNotNullTo2 = $i$f$mapNotNullTo3;
+            }
+            String str4 = str2;
+            List<Pair> groups = (List) destination$iv$iv;
+            if (groups.isEmpty()) {
+                str2 = str4;
+                it2 = it;
+            } else {
+                String str5 = GxPage.str$default(this, s, "title", null, 2, null) + "  (" + groups.size() + ")";
+                LinearLayout linearLayout5 = this.catalogBox;
+                if (linearLayout5 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
+                    linearLayout5 = null;
+                }
+                header(str5, linearLayout5);
+                for (Pair pair2 : groups) {
+                    JSONObject g2 = (JSONObject) pair2.component1();
+                    List<JSONObject> regs2 = (List) pair2.component2();
+                    final String key = GxPage.str$default(this, s, "key", null, 2, null) + ":" + GxPage.str$default(this, g2, "key", null, 2, null);
+                    boolean open = (q.length() > 0) || this.expandedGroups.contains(key);
+                    GxNavigationPage gxNavigationPage = this;
+                    String str$default = GxPage.str$default(this, g2, "title", null, 2, null);
+                    String str6 = groupSelectedCount(g2) + " selected";
+                    LinearLayout linearLayout6 = this.catalogBox;
+                    if (linearLayout6 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
+                        linearLayout6 = null;
+                    }
+                    GxPage.Row r2 = GxPage.row$default(gxNavigationPage, str$default, str6, linearLayout6, 0, 8, null);
+                    this.groupRows.put(key, TuplesKt.to(r2, g2));
+                    final Function0 toggleOpen = new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda17
+                        @Override // kotlin.jvm.functions.Function0
+                        public final Object invoke() {
+                            Unit renderCatalog$lambda$132;
+                            renderCatalog$lambda$132 = GxNavigationPage.renderCatalog$lambda$132(GxNavigationPage.this, key);
+                            return renderCatalog$lambda$132;
+                        }
+                    };
+                    if (q.length() == 0) {
+                        clickable(r2, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda18
+                            @Override // kotlin.jvm.functions.Function0
+                            public final Object invoke() {
+                                Unit renderCatalog$lambda$133;
+                                renderCatalog$lambda$133 = GxNavigationPage.renderCatalog$lambda$133(Function0.this);
+                                return renderCatalog$lambda$133;
+                            }
+                        });
+                        GxPage.Row.button$default(r2, open ? "Hide" : "Show", false, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda19
+                            @Override // kotlin.jvm.functions.Function0
+                            public final Object invoke() {
+                                Unit renderCatalog$lambda$134;
+                                renderCatalog$lambda$134 = GxNavigationPage.renderCatalog$lambda$134(Function0.this);
+                                return renderCatalog$lambda$134;
+                            }
+                        }, 2, null);
+                    }
+                    if (open) {
+                        LinearLayout $this$renderCatalog_u24lambda_u24135 = new LinearLayout(getAct());
+                        $this$renderCatalog_u24lambda_u24135.setOrientation(1);
+                        $this$renderCatalog_u24lambda_u24135.setPadding(getUi().dp(28), 0, 0, getUi().dp(8));
+                        LinearLayout linearLayout7 = this.catalogBox;
+                        if (linearLayout7 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
+                            linearLayout7 = null;
+                        }
+                        linearLayout7.addView($this$renderCatalog_u24lambda_u24135, new LinearLayout.LayoutParams(-1, -2));
+                        JSONArray optJSONArray3 = g2.optJSONArray("regions");
+                        if (optJSONArray3 == null || (emptyList2 = objects(optJSONArray3)) == null) {
+                            emptyList2 = CollectionsKt.emptyList();
+                        }
+                        final List allRegs = emptyList2;
+                        boolean z2 = true;
+                        GxPage.buttons$default(this, new Pair[]{TuplesKt.to("Select All", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda20
+                            @Override // kotlin.jvm.functions.Function0
+                            public final Object invoke() {
+                                Unit renderCatalog$lambda$136;
+                                renderCatalog$lambda$136 = GxNavigationPage.renderCatalog$lambda$136(allRegs, this);
+                                return renderCatalog$lambda$136;
+                            }
+                        }), TuplesKt.to("Clear", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda21
+                            @Override // kotlin.jvm.functions.Function0
+                            public final Object invoke() {
+                                Unit renderCatalog$lambda$137;
+                                renderCatalog$lambda$137 = GxNavigationPage.renderCatalog$lambda$137(allRegs, this);
+                                return renderCatalog$lambda$137;
+                            }
+                        })}, $this$renderCatalog_u24lambda_u24135, false, 4, null);
+                        for (JSONObject reg : regs2) {
+                            final String tok = GxPage.str$default(this, reg, "token", null, 2, null);
+                            String str$default2 = GxPage.str$default(this, reg, "label", null, 2, null);
+                            String key2 = GxPage.str$default(this, reg, "code", null, 2, null);
+                            if (key2.length() == 0 ? z2 : false) {
+                                key2 = null;
+                            }
+                            Switch sw = toggle(str$default2, key2, this.selectedDraft.contains(tok), $this$renderCatalog_u24lambda_u24135, new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda23
+                                @Override // kotlin.jvm.functions.Function1
+                                public final Object invoke(Object obj) {
+                                    Unit renderCatalog$lambda$139;
+                                    renderCatalog$lambda$139 = GxNavigationPage.renderCatalog$lambda$139(GxNavigationPage.this, tok, ((Boolean) obj).booleanValue());
+                                    return renderCatalog$lambda$139;
+                                }
+                            }).component2();
+                            this.regionSwitches.put(tok, sw);
+                            r2 = r2;
+                            key = key;
+                            g2 = g2;
+                            s = s;
+                            z2 = true;
+                        }
+                    }
+                }
+                any = true;
+                str2 = str4;
+                it2 = it;
+            }
+        }
+        if (any) {
+            return;
+        }
+        LinearLayout linearLayout8 = this.catalogBox;
+        if (linearLayout8 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
+            linearLayout = null;
+        } else {
+            linearLayout = linearLayout8;
+        }
+        linearLayout.addView(empty("No regions match the current search."));
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderCatalog$lambda$132(GxNavigationPage this$0, String $key) {
+        if (this$0.expandedGroups.contains($key)) {
+            this$0.expandedGroups.remove($key);
+        } else {
+            this$0.expandedGroups.add($key);
+        }
+        this$0.renderCatalog();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderCatalog$lambda$133(Function0 $toggleOpen) {
+        $toggleOpen.invoke();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderCatalog$lambda$134(Function0 $toggleOpen) {
+        $toggleOpen.invoke();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderCatalog$lambda$136(List $allRegs, GxNavigationPage this$0) {
+        Iterator it = $allRegs.iterator();
+        while (it.hasNext()) {
+            JSONObject x = (JSONObject) it.next();
+            this$0.selectedDraft.add(GxPage.str$default(this$0, x, "token", null, 2, null));
+        }
+        this$0.paintMaps();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderCatalog$lambda$137(List $allRegs, GxNavigationPage this$0) {
+        Iterator it = $allRegs.iterator();
+        while (it.hasNext()) {
+            JSONObject x = (JSONObject) it.next();
+            this$0.selectedDraft.remove(GxPage.str$default(this$0, x, "token", null, 2, null));
+        }
+        this$0.paintMaps();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderCatalog$lambda$139(GxNavigationPage this$0, String $tok, boolean on) {
+        LinkedHashSet<String> linkedHashSet = this$0.selectedDraft;
+        if (on) {
+            linkedHashSet.add($tok);
+        } else {
+            linkedHashSet.remove($tok);
+        }
+        this$0.paintMaps();
+        return Unit.INSTANCE;
+    }
+
+    private final void saveSelection() {
+        if (this.mapsSavingSelection || !getSelectionDirty()) {
+            return;
+        }
+        this.mapsSavingSelection = true;
+        paintMaps();
+        GxPage.send$default(this, "POST", "/api/maps/selection", new JSONObject().put("selectedLocations", new JSONArray((Collection) CollectionsKt.toList(this.selectedDraft))), 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda22
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit saveSelection$lambda$141;
+                saveSelection$lambda$141 = GxNavigationPage.saveSelection$lambda$141(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return saveSelection$lambda$141;
+            }
+        }, 8, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit saveSelection$lambda$141(GxNavigationPage this$0, String e, JSONObject o) {
+        String str;
+        String optString;
+        this$0.mapsSavingSelection = false;
+        if (e == null) {
+            str = null;
+            if (o != null && (optString = o.optString("message")) != null) {
+                String str2 = optString;
+                if (!StringsKt.isBlank(str2)) {
+                    str = str2;
+                }
+                str = str;
+            }
+            if (str == null) {
+                str = "Map selection saved.";
+            }
+        } else {
+            str = e;
+        }
+        this$0.toast(str);
+        if (e == null) {
+            this$0.selectedSaved = CollectionsKt.toSet(this$0.selectedDraft);
+        }
+        this$0.paintMaps();
+        this$0.refreshMapsStatus();
+        return Unit.INSTANCE;
+    }
+
+    private final void saveSchedule() {
+        if (this.mapsSavingSchedule || !getScheduleDirty()) {
+            return;
+        }
+        this.mapsSavingSchedule = true;
+        paintMaps();
+        GxPage.send$default(this, "POST", "/api/maps/schedule", new JSONObject().put("schedule", this.scheduleDraft), 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda72
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit saveSchedule$lambda$143;
+                saveSchedule$lambda$143 = GxNavigationPage.saveSchedule$lambda$143(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return saveSchedule$lambda$143;
+            }
+        }, 8, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit saveSchedule$lambda$143(GxNavigationPage this$0, String e, JSONObject o) {
+        String str;
+        String optString;
+        this$0.mapsSavingSchedule = false;
+        if (e == null) {
+            str = null;
+            if (o != null && (optString = o.optString("message")) != null) {
+                String str2 = optString;
+                if (!StringsKt.isBlank(str2)) {
+                    str = str2;
+                }
+                str = str;
+            }
+            if (str == null) {
+                str = "Map schedule updated.";
+            }
+        } else {
+            str = e;
+        }
+        this$0.toast(str);
+        if (e == null) {
+            this$0.scheduleSaved = this$0.scheduleDraft;
+        }
+        this$0.paintMaps();
+        this$0.refreshMapsStatus();
+        return Unit.INSTANCE;
+    }
+
+    private final void mapsOp(String op, JSONObject body, final String okMsg) {
+        this.mapsActionBusy = true;
+        paintMaps();
+        GxPage.send$default(this, "POST", "/api/maps/" + op, body, 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda5
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit mapsOp$lambda$145;
+                mapsOp$lambda$145 = GxNavigationPage.mapsOp$lambda$145(GxNavigationPage.this, okMsg, (String) obj, (JSONObject) obj2);
+                return mapsOp$lambda$145;
+            }
+        }, 8, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit mapsOp$lambda$145(GxNavigationPage this$0, String $okMsg, String e, JSONObject o) {
+        String str;
+        String optString;
+        this$0.mapsActionBusy = false;
+        if (e == null) {
+            str = null;
+            if (o != null && (optString = o.optString("message")) != null) {
+                String str2 = optString;
+                if (!StringsKt.isBlank(str2)) {
+                    str = str2;
+                }
+                str = str;
+            }
+            if (str == null) {
+                str = $okMsg;
+            }
+        } else {
+            str = e;
+        }
+        this$0.toast(str);
+        this$0.paintMaps();
+        this$0.refreshMapsStatus();
+        return Unit.INSTANCE;
+    }
+
+    private final void startDownload() {
+        if (this.mapsActionBusy || isDownloading() || isOnroad() || this.selectedDraft.isEmpty()) {
+            return;
+        }
+        JSONObject put = new JSONObject().put("selectedLocations", new JSONArray((Collection) CollectionsKt.toList(this.selectedDraft))).put("schedule", this.scheduleDraft);
+        Intrinsics.checkNotNullExpressionValue(put, "put(...)");
+        mapsOp("download", put, "Map download started.");
+    }
+
+    private final void cancelDownload() {
+        if (this.mapsActionBusy || !isDownloading()) {
+            return;
+        }
+        mapsOp("cancel", new JSONObject(), "Map download cancellation requested.");
+    }
+
+    private final void removeMaps() {
+        if (this.mapsActionBusy || isDownloading() || isOnroad() || !this.mapsStatus.optBoolean("mapsPresent")) {
+            return;
+        }
+        confirm("Remove Maps", "Are you sure you want to remove all downloaded offline maps?", "Yes, Remove", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda11
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit removeMaps$lambda$146;
+                removeMaps$lambda$146 = GxNavigationPage.removeMaps$lambda$146(GxNavigationPage.this);
+                return removeMaps$lambda$146;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit removeMaps$lambda$146(GxNavigationPage this$0) {
+        this$0.mapsOp("remove", new JSONObject(), "Maps removed.");
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* compiled from: GxNavigation.kt */
+    static final /* data */ class KeyMeta {
+        private final String body;
+        private final String kind;
+        private final int min;
+        private final String navField;
+        private final String prefix;
+        private final String title;
+
+        public static /* synthetic */ KeyMeta copy$default(KeyMeta keyMeta, String str, String str2, String str3, int i, String str4, String str5, int i2, Object obj) {
+            if ((i2 & 1) != 0) {
+                str = keyMeta.kind;
+            }
+            if ((i2 & 2) != 0) {
+                str2 = keyMeta.body;
+            }
+            String str6 = str2;
+            if ((i2 & 4) != 0) {
+                str3 = keyMeta.prefix;
+            }
+            String str7 = str3;
+            if ((i2 & 8) != 0) {
+                i = keyMeta.min;
+            }
+            int i3 = i;
+            if ((i2 & 16) != 0) {
+                str4 = keyMeta.title;
+            }
+            String str8 = str4;
+            if ((i2 & 32) != 0) {
+                str5 = keyMeta.navField;
+            }
+            return keyMeta.copy(str, str6, str7, i3, str8, str5);
+        }
+
+        /* renamed from: component1, reason: from getter */
+        public final String getKind() {
+            return this.kind;
+        }
+
+        /* renamed from: component2, reason: from getter */
+        public final String getBody() {
+            return this.body;
+        }
+
+        /* renamed from: component3, reason: from getter */
+        public final String getPrefix() {
+            return this.prefix;
+        }
+
+        /* renamed from: component4, reason: from getter */
+        public final int getMin() {
+            return this.min;
+        }
+
+        /* renamed from: component5, reason: from getter */
+        public final String getTitle() {
+            return this.title;
+        }
+
+        /* renamed from: component6, reason: from getter */
+        public final String getNavField() {
+            return this.navField;
+        }
+
+        public final KeyMeta copy(String kind, String body, String prefix, int min, String title, String navField) {
+            Intrinsics.checkNotNullParameter(kind, "kind");
+            Intrinsics.checkNotNullParameter(body, "body");
+            Intrinsics.checkNotNullParameter(prefix, "prefix");
+            Intrinsics.checkNotNullParameter(title, "title");
+            Intrinsics.checkNotNullParameter(navField, "navField");
+            return new KeyMeta(kind, body, prefix, min, title, navField);
+        }
+
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (!(other instanceof KeyMeta)) {
+                return false;
+            }
+            KeyMeta keyMeta = (KeyMeta) other;
+            return Intrinsics.areEqual(this.kind, keyMeta.kind) && Intrinsics.areEqual(this.body, keyMeta.body) && Intrinsics.areEqual(this.prefix, keyMeta.prefix) && this.min == keyMeta.min && Intrinsics.areEqual(this.title, keyMeta.title) && Intrinsics.areEqual(this.navField, keyMeta.navField);
+        }
+
+        public int hashCode() {
+            return (((((((((this.kind.hashCode() * 31) + this.body.hashCode()) * 31) + this.prefix.hashCode()) * 31) + Integer.hashCode(this.min)) * 31) + this.title.hashCode()) * 31) + this.navField.hashCode();
+        }
+
+        public String toString() {
+            return "KeyMeta(kind=" + this.kind + ", body=" + this.body + ", prefix=" + this.prefix + ", min=" + this.min + ", title=" + this.title + ", navField=" + this.navField + ")";
+        }
+
+        public KeyMeta(String kind, String body, String prefix, int min, String title, String navField) {
+            Intrinsics.checkNotNullParameter(kind, "kind");
+            Intrinsics.checkNotNullParameter(body, "body");
+            Intrinsics.checkNotNullParameter(prefix, "prefix");
+            Intrinsics.checkNotNullParameter(title, "title");
+            Intrinsics.checkNotNullParameter(navField, "navField");
+            this.kind = kind;
+            this.body = body;
+            this.prefix = prefix;
+            this.min = min;
+            this.title = title;
+            this.navField = navField;
+        }
+
+        public final String getBody() {
+            return this.body;
+        }
+
+        public final String getKind() {
+            return this.kind;
+        }
+
+        public final int getMin() {
+            return this.min;
+        }
+
+        public final String getNavField() {
+            return this.navField;
+        }
+
+        public final String getPrefix() {
+            return this.prefix;
+        }
+
+        public final String getTitle() {
+            return this.title;
+        }
+    }
+
+    private final void buildKeys(LinearLayout tab) {
+        this.keysBox = box(tab);
+        renderKeys();
+    }
+
+    private final void loadKeys() {
+        if (this.keysBox == null) {
+            return;
+        }
+        getJson("/api/navigation", new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda8
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit loadKeys$lambda$150;
+                loadKeys$lambda$150 = GxNavigationPage.loadKeys$lambda$150(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return loadKeys$lambda$150;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit loadKeys$lambda$150(final GxNavigationPage this$0, String e, JSONObject nav) {
+        if (e != null || nav == null) {
+            this$0.keysError = e == null ? "Failed to load keys..." : e;
+        } else {
+            this$0.keysError = "";
+            for (KeyMeta m : this$0.keyMeta) {
+                this$0.savedKeys.put(m.getKind(), GxPage.str$default(this$0, nav, m.getNavField(), null, 2, null));
+            }
+            this$0.mapboxPublic = StringsKt.trim((CharSequence) GxPage.str$default(this$0, nav, "mapboxPublic", null, 2, null)).toString();
+            this$0.mapboxSecret = StringsKt.trim((CharSequence) GxPage.str$default(this$0, nav, "mapboxSecret", null, 2, null)).toString();
+        }
+        this$0.getJson("/api/galaxy/session", new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda2
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit loadKeys$lambda$150$lambda$149;
+                loadKeys$lambda$150$lambda$149 = GxNavigationPage.loadKeys$lambda$150$lambda$149(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return loadKeys$lambda$150$lambda$149;
+            }
+        });
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit loadKeys$lambda$150$lambda$149(GxNavigationPage this$0, String se, JSONObject d) {
+        if (se != null || d == null) {
+            this$0.toast(se == null ? "Failed to load Galaxy session..." : se);
+        } else {
+            String str$default = GxPage.str$default(this$0, d, "appUrl", null, 2, null);
+            if (str$default.length() == 0) {
+                str$default = this$0.appUrl;
+            }
+            this$0.appUrl = str$default;
+            String str$default2 = GxPage.str$default(this$0, d, "cookieName", null, 2, null);
+            if (str$default2.length() == 0) {
+                str$default2 = "galaxy_session";
+            }
+            this$0.cookieName = str$default2;
+            this$0.paired = d.optBoolean("paired");
+            this$0.galaxyToken = GxPage.str$default(this$0, d, "sessionToken", null, 2, null);
+            this$0.tokenVisible = false;
+        }
+        this$0.keysLoading = false;
+        this$0.renderKeys();
+        return Unit.INSTANCE;
+    }
+
+    private final String maskKey(String raw) {
+        Object obj;
+        if (raw.length() == 0) {
+            return "";
+        }
+        Iterable $this$firstOrNull$iv = CollectionsKt.listOf((Object[]) new String[]{"pk.", "sk."});
+        Iterator it = $this$firstOrNull$iv.iterator();
+        while (true) {
+            obj = null;
+            if (!it.hasNext()) {
+                break;
+            }
+            Object element$iv = it.next();
+            String it2 = (String) element$iv;
+            if (StringsKt.startsWith$default(raw, it2, false, 2, (Object) null)) {
+                obj = element$iv;
+                break;
+            }
+        }
+        String str = (String) obj;
+        if (str == null) {
+            str = "";
+        }
+        String prefix = str;
+        int n = raw.length() - prefix.length();
+        return prefix + StringsKt.repeat("x", Math.min(n, 24)) + (n > 24 ? "… (" + n + " characters)" : "");
+    }
+
+    private final void renderKeys() {
+        LinearLayout linearLayout = this.keysBox;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        if (this.keysLoading) {
+            LinearLayout linearLayout3 = this.keysBox;
+            if (linearLayout3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("keysBox");
+            } else {
+                linearLayout2 = linearLayout3;
+            }
+            linearLayout2.addView(empty("Loading keys..."));
+            return;
+        }
+        if (this.keysError.length() > 0) {
+            String str = this.keysError;
+            LinearLayout linearLayout4 = this.keysBox;
+            if (linearLayout4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("keysBox");
+                linearLayout4 = null;
+            }
+            note(str, linearLayout4).setTextColor(CarUi.Companion.getWARN());
+        }
+        LinearLayout linearLayout5 = this.keysBox;
+        if (linearLayout5 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
+            linearLayout5 = null;
+        }
+        header("AMap / Gaode Keys", linearLayout5);
+        LinearLayout linearLayout6 = this.keysBox;
+        if (linearLayout6 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
+            linearLayout6 = null;
+        }
+        note("AMap is the Gaode provider, not Google Maps.", linearLayout6);
+        for (KeyMeta m : CollectionsKt.take(this.keyMeta, 2)) {
+            keyRow(m);
+        }
+        LinearLayout linearLayout7 = this.keysBox;
+        if (linearLayout7 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
+            linearLayout7 = null;
+        }
+        header("Mapbox Keys", linearLayout7);
+        LinearLayout linearLayout8 = this.keysBox;
+        if (linearLayout8 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
+            linearLayout8 = null;
+        }
+        note("Public and secret Mapbox tokens used by the navigation app.", linearLayout8);
+        for (KeyMeta m2 : CollectionsKt.drop(this.keyMeta, 2)) {
+            keyRow(m2);
+        }
+        LinearLayout linearLayout9 = this.keysBox;
+        if (linearLayout9 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
+            linearLayout9 = null;
+        }
+        header("App Keys", linearLayout9);
+        GxNavigationPage gxNavigationPage = this;
+        LinearLayout linearLayout10 = this.keysBox;
+        if (linearLayout10 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
+            linearLayout10 = null;
+        }
+        GxPage.Row ar = GxPage.row$default(gxNavigationPage, "Install The App", "The Galaxy navigation app on Google Play.", linearLayout10, 0, 8, null);
+        GxPage.Row.button$default(ar, "Open Play Store", false, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda81
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit renderKeys$lambda$152;
+                renderKeys$lambda$152 = GxNavigationPage.renderKeys$lambda$152(GxNavigationPage.this);
+                return renderKeys$lambda$152;
+            }
+        }, 2, null);
+        GxNavigationPage gxNavigationPage2 = this;
+        LinearLayout linearLayout11 = this.keysBox;
+        if (linearLayout11 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
+            linearLayout11 = null;
+        }
+        GxPage.row$default(gxNavigationPage2, "Cookie Name", null, linearLayout11, 0, 8, null).value(this.cookieName);
+        GxNavigationPage gxNavigationPage3 = this;
+        String repeat = this.galaxyToken.length() == 0 ? this.paired ? "Session token unavailable..." : "Pair Galaxy to create a session token..." : this.tokenVisible ? this.galaxyToken : StringsKt.repeat("•", Math.min(this.galaxyToken.length(), 24));
+        LinearLayout linearLayout12 = this.keysBox;
+        if (linearLayout12 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
+        } else {
+            linearLayout2 = linearLayout12;
+        }
+        GxPage.Row tr = GxPage.row$default(gxNavigationPage3, "Session Token", repeat, linearLayout2, 0, 8, null);
+        if (this.galaxyToken.length() > 0) {
+            tr.getDesc().setTextIsSelectable(this.tokenVisible);
+            GxPage.Row.button$default(tr, this.tokenVisible ? "Hide" : "Show", false, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda82
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderKeys$lambda$153;
+                    renderKeys$lambda$153 = GxNavigationPage.renderKeys$lambda$153(GxNavigationPage.this);
+                    return renderKeys$lambda$153;
+                }
+            }, 2, null);
+            GxPage.Row.button$default(tr, "Copy", false, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda1
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit renderKeys$lambda$154;
+                    renderKeys$lambda$154 = GxNavigationPage.renderKeys$lambda$154(GxNavigationPage.this);
+                    return renderKeys$lambda$154;
+                }
+            }, 2, null);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderKeys$lambda$152(GxNavigationPage this$0) {
+        this$0.openUrl(this$0.appUrl);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderKeys$lambda$153(GxNavigationPage this$0) {
+        this$0.tokenVisible = !this$0.tokenVisible;
+        this$0.renderKeys();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderKeys$lambda$154(GxNavigationPage this$0) {
+        try {
+            Object systemService = this$0.getAct().getSystemService("clipboard");
+            Intrinsics.checkNotNull(systemService, "null cannot be cast to non-null type android.content.ClipboardManager");
+            ((ClipboardManager) systemService).setPrimaryClip(ClipData.newPlainText("Galaxy session token", this$0.galaxyToken));
+            this$0.toast("Session token copied!");
+        } catch (Exception e) {
+            this$0.toast("Copy failed...");
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void keyRow(final KeyMeta m) {
+        String raw = this.savedKeys.get(m.getKind());
+        if (raw == null) {
+            raw = "";
+        }
+        String kind = m.getKind();
+        if (kind.length() > 0) {
+            StringBuilder sb = new StringBuilder();
+            char it = kind.charAt(0);
+            String valueOf = String.valueOf(it);
+            Intrinsics.checkNotNull(valueOf, "null cannot be cast to non-null type java.lang.String");
+            String upperCase = valueOf.toUpperCase(Locale.ROOT);
+            Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
+            StringBuilder append = sb.append((Object) upperCase);
+            String substring = kind.substring(1);
+            Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
+            kind = append.append(substring).toString();
+        }
+        String label = new Regex("[0-9]").replace(kind, new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda12
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                CharSequence keyRow$lambda$156;
+                keyRow$lambda$156 = GxNavigationPage.keyRow$lambda$156((MatchResult) obj);
+                return keyRow$lambda$156;
+            }
+        }) + " Key";
+        GxNavigationPage gxNavigationPage = this;
+        String str = m.getTitle() + "  (" + label + ")";
+        String maskKey = raw.length() == 0 ? "Not set" : maskKey(raw);
+        LinearLayout linearLayout = this.keysBox;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("keysBox");
+            linearLayout = null;
+        }
+        GxPage.Row r = GxPage.row$default(gxNavigationPage, str, maskKey, linearLayout, 0, 8, null);
+        r.getDesc().setTypeface(raw.length() == 0 ? Typeface.DEFAULT : Typeface.MONOSPACE);
+        r.button(raw.length() == 0 ? "Set" : "Change", raw.length() == 0, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda13
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit keyRow$lambda$157;
+                keyRow$lambda$157 = GxNavigationPage.keyRow$lambda$157(GxNavigationPage.this, m);
+                return keyRow$lambda$157;
+            }
+        });
+        if (raw.length() > 0) {
+            GxPage.Row.button$default(r, "Delete", false, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda14
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit keyRow$lambda$162;
+                    keyRow$lambda$162 = GxNavigationPage.keyRow$lambda$162(GxNavigationPage.this, m);
+                    return keyRow$lambda$162;
+                }
+            }, 2, null);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final CharSequence keyRow$lambda$156(MatchResult it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return " " + it.getValue();
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit keyRow$lambda$157(GxNavigationPage this$0, KeyMeta $m) {
+        this$0.editKey($m);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit keyRow$lambda$162(final GxNavigationPage this$0, final KeyMeta $m) {
+        this$0.confirm("Confirm Delete", "Are you sure you want to delete your " + $m.getTitle() + " key?", "Yes, Delete", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda0
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit keyRow$lambda$162$lambda$161;
+                keyRow$lambda$162$lambda$161 = GxNavigationPage.keyRow$lambda$162$lambda$161(GxNavigationPage.this, $m);
+                return keyRow$lambda$162$lambda$161;
+            }
+        });
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit keyRow$lambda$162$lambda$161(final GxNavigationPage this$0, final KeyMeta $m) {
+        GxPage.send$default(this$0, "DELETE", "/api/navigation_key?type=" + this$0.enc($m.getKind()), null, 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda24
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit keyRow$lambda$162$lambda$161$lambda$160;
+                keyRow$lambda$162$lambda$161$lambda$160 = GxNavigationPage.keyRow$lambda$162$lambda$161$lambda$160(GxNavigationPage.this, $m, (String) obj, (JSONObject) obj2);
+                return keyRow$lambda$162$lambda$161$lambda$160;
+            }
+        }, 12, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:15:0x002e, code lost:
+    
+        if (r0 == null) goto L16;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit keyRow$lambda$162$lambda$161$lambda$160(GxNavigationPage this$0, KeyMeta $m, String e, JSONObject o) {
+        String str;
+        String optString;
+        if (e != null) {
+            String str2 = e;
+            if (StringsKt.isBlank(str2)) {
+                str2 = "Delete failed...";
+            }
+            this$0.toast(str2);
+            return Unit.INSTANCE;
+        }
+        if (o != null && (optString = o.optString("message")) != null) {
+            String str3 = optString;
+            if (StringsKt.isBlank(str3)) {
+                str3 = null;
+            }
+            str = str3;
+        }
+        str = "Deleted!";
+        this$0.toast(str);
+        this$0.savedKeys.put($m.getKind(), "");
+        if (Intrinsics.areEqual($m.getKind(), "public")) {
+            this$0.mapboxPublic = "";
+        } else if (Intrinsics.areEqual($m.getKind(), "secret")) {
+            this$0.mapboxSecret = "";
+        }
+        this$0.renderKeys();
+        this$0.renderNavAfterKeys();
+        return Unit.INSTANCE;
+    }
+
+    private final void editKey(final KeyMeta m) {
+        GxPage.prompt$default(this, m.getTitle() + " key", m.getPrefix() + "xxxxxx...", "", 524433, null, new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda31
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit editKey$lambda$166;
+                editKey$lambda$166 = GxNavigationPage.editKey$lambda$166(GxNavigationPage.KeyMeta.this, this, (String) obj);
+                return editKey$lambda$166;
+            }
+        }, 16, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit editKey$lambda$166(final KeyMeta $m, final GxNavigationPage this$0, String v) {
+        Intrinsics.checkNotNullParameter(v, "v");
+        String t = StringsKt.trim((CharSequence) v).toString();
+        if (t.length() == 0) {
+            return Unit.INSTANCE;
+        }
+        final String value = StringsKt.startsWith$default(t, $m.getPrefix(), false, 2, (Object) null) ? t : $m.getPrefix() + t;
+        if (value.length() < $m.getMin()) {
+            this$0.toast($m.getTitle() + " key is invalid or too short...");
+            return Unit.INSTANCE;
+        }
+        GxPage.send$default(this$0, "POST", "/api/navigation_key", new JSONObject().put($m.getBody(), value), 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda66
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit editKey$lambda$166$lambda$165;
+                editKey$lambda$166$lambda$165 = GxNavigationPage.editKey$lambda$166$lambda$165(GxNavigationPage.this, $m, value, (String) obj, (JSONObject) obj2);
+                return editKey$lambda$166$lambda$165;
+            }
+        }, 8, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:15:0x002e, code lost:
+    
+        if (r0 == null) goto L16;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit editKey$lambda$166$lambda$165(GxNavigationPage this$0, KeyMeta $m, String $value, String e, JSONObject o) {
+        String str;
+        String optString;
+        if (e != null) {
+            String str2 = e;
+            if (StringsKt.isBlank(str2)) {
+                str2 = "Save failed...";
+            }
+            this$0.toast(str2);
+            return Unit.INSTANCE;
+        }
+        if (o != null && (optString = o.optString("message")) != null) {
+            String str3 = optString;
+            if (StringsKt.isBlank(str3)) {
+                str3 = null;
+            }
+            str = str3;
+        }
+        str = "Saved!";
+        this$0.toast(str);
+        this$0.savedKeys.put($m.getKind(), $value);
+        if (Intrinsics.areEqual($m.getKind(), "public")) {
+            this$0.mapboxPublic = $value;
+        } else if (Intrinsics.areEqual($m.getKind(), "secret")) {
+            this$0.mapboxSecret = $value;
+        }
+        this$0.renderKeys();
+        this$0.renderNavAfterKeys();
+        return Unit.INSTANCE;
+    }
+
+    private final void renderNavAfterKeys() {
+        if (this.keyBox == null || this.navLoading) {
+            return;
+        }
+        renderKeyNotice();
+        renderDest();
+    }
+
+    private final void buildSpeed(LinearLayout tab) {
+        header("Download Speed Limits", tab);
+        note("Enable \"Speed Limit Filler\" on the device, drive to collect data, then process and download it here when parked.", tab);
+        this.sStatus = statRow("Processor Status", tab);
+        this.sVision = statRow("Vision Detector", tab);
+        this.sDebugRow = GxPage.row$default(this, "Vision Debug", null, tab, 0, 8, null);
+        GxPage.Row row = this.sDebugRow;
+        if (row == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sDebugRow");
+            row = null;
+        }
+        this.sDebug = row.value("");
+        this.sLastEvent = note("", tab);
+        TextView $this$buildSpeed_u24lambda_u24167 = note("", tab);
+        $this$buildSpeed_u24lambda_u24167.setTextColor(CarUi.Companion.getWARN());
+        this.sReason = $this$buildSpeed_u24lambda_u24167;
+        this.sBar = buttons(new Pair[]{TuplesKt.to("Download", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda50
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildSpeed$lambda$168;
+                buildSpeed$lambda$168 = GxNavigationPage.buildSpeed$lambda$168(GxNavigationPage.this);
+                return buildSpeed$lambda$168;
+            }
+        }), TuplesKt.to("Process Now", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda51
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildSpeed$lambda$169;
+                buildSpeed$lambda$169 = GxNavigationPage.buildSpeed$lambda$169(GxNavigationPage.this);
+                return buildSpeed$lambda$169;
+            }
+        }), TuplesKt.to("Submit speed limits here", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda52
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit buildSpeed$lambda$170;
+                buildSpeed$lambda$170 = GxNavigationPage.buildSpeed$lambda$170(GxNavigationPage.this);
+                return buildSpeed$lambda$170;
+            }
+        })}, tab, true);
+        paintSpeed();
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildSpeed$lambda$168(GxNavigationPage this$0) {
+        this$0.download("/api/speed_limits", "speed_limits.json", "application/json");
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildSpeed$lambda$169(GxNavigationPage this$0) {
+        this$0.processSpeed();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit buildSpeed$lambda$170(GxNavigationPage this$0) {
+        this$0.openUrl("https://nerf.077769.xyz/");
+        return Unit.INSTANCE;
+    }
+
+    private final void loadSpeed() {
+        if (this.sStatus == null) {
+            return;
+        }
+        getJson("/api/speed_limits/status", new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda73
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit loadSpeed$lambda$172;
+                loadSpeed$lambda$172 = GxNavigationPage.loadSpeed$lambda$172(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return loadSpeed$lambda$172;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit loadSpeed$lambda$172(GxNavigationPage this$0, String e, JSONObject d) {
+        this$0.speedLoading = false;
+        if (e != null || d == null) {
+            this$0.speedStatus = "Unavailable";
+            this$0.speedObj = new JSONObject().put("visionStatus", "Unavailable");
+            this$0.canProcessNow = false;
+            this$0.speedProcessing = false;
+        } else {
+            this$0.canProcessNow = d.optBoolean("canProcessNow");
+            this$0.speedProcessing = d.optBoolean("processing");
+            this$0.speedReason = GxPage.str$default(this$0, d, "reason", null, 2, null);
+            String str$default = GxPage.str$default(this$0, d, "status", null, 2, null);
+            if (str$default.length() == 0) {
+                str$default = "Idle";
+            }
+            this$0.speedStatus = str$default;
+            this$0.speedObj = d;
+        }
+        this$0.paintSpeed();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:53:0x0286  */
+    /* JADX WARN: Removed duplicated region for block: B:56:0x0295  */
+    /* JADX WARN: Removed duplicated region for block: B:59:0x029d  */
+    /* JADX WARN: Removed duplicated region for block: B:69:0x02be  */
+    /* JADX WARN: Removed duplicated region for block: B:72:0x02cd  */
+    /* JADX WARN: Removed duplicated region for block: B:74:0x02d6  */
+    /* JADX WARN: Removed duplicated region for block: B:91:? A[RETURN, SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:92:0x02d2  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void paintSpeed() {
+        TextView textView;
+        String str;
+        TextView textView2;
+        String str2;
+        int i;
+        TextView textView3;
+        TextView textView4;
+        LinearLayout linearLayout;
+        TextView textView5;
+        JSONObject d = this.speedObj;
+        boolean enabled = d.optBoolean("visionEnabled");
+        TextView textView6 = this.sStatus;
+        if (textView6 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sStatus");
+            textView6 = null;
+        }
+        textView6.setText(this.speedLoading ? "Checking..." : this.speedStatus);
+        TextView textView7 = this.sVision;
+        if (textView7 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sVision");
+            textView = null;
+        } else {
+            textView = textView7;
+        }
+        if (!this.speedLoading) {
+            String str$default = GxPage.str$default(this, d, "visionStatus", null, 2, null);
+            if (str$default.length() == 0) {
+                str$default = enabled ? "Idle" : "Disabled";
+            }
+            String out = str$default;
+            String stream = GxPage.str$default(this, d, "visionStream", null, 2, null);
+            if (stream.length() > 0) {
+                out = out + " on " + stream;
+            }
+            Double valueOf = Double.valueOf(d.optDouble("visionDisplaySpeed", 0.0d));
+            double it = valueOf.doubleValue();
+            if (!((Double.isInfinite(it) || Double.isNaN(it)) ? false : true)) {
+                valueOf = null;
+            }
+            double spd = valueOf != null ? valueOf.doubleValue() : 0.0d;
+            if (spd > 0.0d) {
+                String valueOf2 = ((spd % 1.0d) > 0.0d ? 1 : ((spd % 1.0d) == 0.0d ? 0 : -1)) == 0 ? String.valueOf((long) spd) : String.valueOf(spd);
+                String str$default2 = GxPage.str$default(this, d, "visionSpeedUnit", null, 2, null);
+                if (str$default2.length() == 0) {
+                    str$default2 = "mph";
+                }
+                String out2 = out + " (" + valueOf2 + " " + ((Object) str$default2);
+                Double valueOf3 = Double.valueOf(d.optDouble("visionConfidence", 0.0d));
+                double it2 = valueOf3.doubleValue();
+                if (!((Double.isInfinite(it2) || Double.isNaN(it2)) ? false : true)) {
+                    valueOf3 = null;
+                }
+                double conf = valueOf3 != null ? valueOf3.doubleValue() : 0.0d;
+                if (conf > 0.0d) {
+                    out2 = out2 + ", " + Math.round(100 * conf) + "%";
+                }
+                out = out2 + ")";
+            }
+            str = out;
+        }
+        textView.setText(str);
+        TextView textView8 = this.sVision;
+        if (textView8 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sVision");
+            textView8 = null;
+        }
+        textView8.setMaxWidth(getUi().dp(520));
+        GxPage.Row row = this.sDebugRow;
+        if (row == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sDebugRow");
+            row = null;
+        }
+        row.setVisible(!this.speedLoading && enabled);
+        int bm = d.optInt("visionBookmarkCount", 0);
+        TextView textView9 = this.sDebug;
+        if (textView9 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sDebug");
+            textView2 = null;
+        } else {
+            textView2 = textView9;
+        }
+        String str$default3 = GxPage.str$default(this, d, "visionDebugSession", null, 2, null);
+        if (str$default3.length() == 0) {
+            str$default3 = "No active session";
+        }
+        if (bm > 0) {
+            str2 = ", " + bm + " bookmark" + (bm != 1 ? "s" : "");
+        }
+        textView2.setText(((Object) str$default3) + str2);
+        String ev = GxPage.str$default(this, d, "visionLastEvent", null, 2, null);
+        TextView textView10 = this.sLastEvent;
+        if (textView10 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sLastEvent");
+            textView10 = null;
+        }
+        textView10.setText(ev);
+        TextView textView11 = this.sLastEvent;
+        if (textView11 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sLastEvent");
+            textView11 = null;
+        }
+        int i2 = 8;
+        if (!this.speedLoading && enabled) {
+            if (ev.length() > 0) {
+                i = 0;
+                textView11.setVisibility(i);
+                textView3 = this.sReason;
+                if (textView3 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("sReason");
+                    textView3 = null;
+                }
+                textView3.setText(this.speedReason);
+                textView4 = this.sReason;
+                if (textView4 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("sReason");
+                    textView4 = null;
+                }
+                if (!this.speedLoading) {
+                    if ((this.speedReason.length() > 0) && !Intrinsics.areEqual(this.speedReason, this.speedStatus)) {
+                        i2 = 0;
+                    }
+                }
+                textView4.setVisibility(i2);
+                linearLayout = this.sBar;
+                if (linearLayout == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("sBar");
+                    linearLayout = null;
+                }
+                View childAt = linearLayout.getChildAt(1);
+                textView5 = !(childAt instanceof TextView) ? (TextView) childAt : null;
+                if (textView5 == null) {
+                    TextView b = textView5;
+                    b.setText((this.speedProcessing || this.speedSubmitting) ? "Processing..." : "Process Now");
+                    setOn(b, (this.speedSubmitting || this.speedProcessing || !this.canProcessNow) ? false : true);
+                    return;
+                }
+                return;
+            }
+        }
+        i = 8;
+        textView11.setVisibility(i);
+        textView3 = this.sReason;
+        if (textView3 == null) {
+        }
+        textView3.setText(this.speedReason);
+        textView4 = this.sReason;
+        if (textView4 == null) {
+        }
+        if (!this.speedLoading) {
+        }
+        textView4.setVisibility(i2);
+        linearLayout = this.sBar;
+        if (linearLayout == null) {
+        }
+        View childAt2 = linearLayout.getChildAt(1);
+        if (!(childAt2 instanceof TextView)) {
+        }
+        if (textView5 == null) {
+        }
+    }
+
+    private final void processSpeed() {
+        if (this.speedSubmitting || this.speedProcessing || !this.canProcessNow) {
+            return;
+        }
+        this.speedSubmitting = true;
+        paintSpeed();
+        GxPage.send$default(this, "POST", "/api/speed_limits/process", null, 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda6
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit processSpeed$lambda$180;
+                processSpeed$lambda$180 = GxNavigationPage.processSpeed$lambda$180(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                return processSpeed$lambda$180;
+            }
+        }, 12, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit processSpeed$lambda$180(GxNavigationPage this$0, String e, JSONObject o) {
+        String str;
+        String optString;
+        this$0.speedSubmitting = false;
+        if (e == null) {
+            str = null;
+            if (o != null && (optString = o.optString("message")) != null) {
+                String str2 = optString;
+                if (!StringsKt.isBlank(str2)) {
+                    str = str2;
+                }
+                str = str;
+            }
+            if (str == null) {
+                str = "Speed limit processing started.";
+            }
+        } else {
+            str = e;
+        }
+        this$0.toast(str);
+        this$0.loadSpeed();
+        return Unit.INSTANCE;
+    }
 }

@@ -6,248 +6,322 @@ import kotlin.enums.EnumEntries;
 import kotlin.enums.EnumEntriesKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.ranges.RangesKt;
 import org.json.JSONObject;
 
+/* compiled from: NudgeHint.kt */
 public final class NudgeLogic {
-   public static final NudgeLogic INSTANCE = new NudgeLogic();
-   private static final double[] KEEP_D = new double[]{25.0, 90.0, 160.0};
-   private static final double[] KEEP_V = new double[]{0.0, 15.0, 30.0};
+    public static final NudgeLogic INSTANCE = new NudgeLogic();
+    private static final double[] KEEP_V = {0.0d, 15.0d, 30.0d};
+    private static final double[] KEEP_D = {25.0d, 90.0d, 160.0d};
 
-   private NudgeLogic() {
-   }
+    /* compiled from: NudgeHint.kt */
+    public enum State {
+        NONE,
+        SOON,
+        READY,
+        WAIT;
 
-   public final NudgeLogic.Result evaluate(
-      JSONObject var1, double var2, boolean var4, boolean var5, boolean var6, boolean var7, double var8, double var10, double var12
-   ) {
-      if (var1 != null) {
-         boolean var19 = false;
-         if (var1.optBoolean("valid", false)) {
-            String var22 = var1.optString("maneuverType");
-            String var23 = var1.optString("maneuverModifier");
-            if (!Intrinsics.areEqual(var22, "off ramp") && !Intrinsics.areEqual(var22, "fork")) {
-               return new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, null, 30, null);
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+
+        public static EnumEntries<State> getEntries() {
+            return $ENTRIES;
+        }
+    }
+
+    private NudgeLogic() {
+    }
+
+    /* compiled from: NudgeHint.kt */
+    public static final class Result {
+        private final double distanceM;
+        private final boolean right;
+        private final State state;
+        private final String why;
+        private final double windowM;
+
+        public Result(State state, boolean right, double distanceM, double windowM, String why) {
+            Intrinsics.checkNotNullParameter(state, "state");
+            Intrinsics.checkNotNullParameter(why, "why");
+            this.state = state;
+            this.right = right;
+            this.distanceM = distanceM;
+            this.windowM = windowM;
+            this.why = why;
+        }
+
+        public /* synthetic */ Result(State state, boolean z, double d, double d2, String str, int i, DefaultConstructorMarker defaultConstructorMarker) {
+            this(state, (i & 2) != 0 ? false : z, (i & 4) != 0 ? 0.0d : d, (i & 8) == 0 ? d2 : 0.0d, (i & 16) != 0 ? "" : str);
+        }
+
+        public final double getDistanceM() {
+            return this.distanceM;
+        }
+
+        public final boolean getRight() {
+            return this.right;
+        }
+
+        public final State getState() {
+            return this.state;
+        }
+
+        public final String getWhy() {
+            return this.why;
+        }
+
+        public final double getWindowM() {
+            return this.windowM;
+        }
+    }
+
+    public final double interp(double x, double[] xs, double[] ys) {
+        Intrinsics.checkNotNullParameter(xs, "xs");
+        Intrinsics.checkNotNullParameter(ys, "ys");
+        if (x <= xs[0]) {
+            return ys[0];
+        }
+        int length = xs.length;
+        for (int i = 1; i < length; i++) {
+            if (x <= xs[i]) {
+                return ys[i - 1] + (((ys[i] - ys[i - 1]) * (x - xs[i - 1])) / (xs[i] - xs[i - 1]));
             }
+        }
+        return ArraysKt.last(ys);
+    }
 
-            if (!SetsKt.setOf(new String[]{"slightLeft", "left", "sharpLeft", "slightRight", "right", "sharpRight"}).contains(var23)) {
-               return new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, null, 30, null);
-            }
-
-            var22 = var1.optString("activeLaneDirection");
-            if (var22 != null) {
-               boolean var21;
-               label133: {
-                  label132: {
-                     switch (var22.hashCode()) {
-                        case -711874727:
-                           if (!var22.equals("slightRight")) {
-                              return new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, null, 30, null);
-                           }
-                           break;
-                        case -438788310:
-                           if (!var22.equals("slightLeft")) {
-                              return new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, null, 30, null);
-                           }
-                           break label132;
-                        case 3317767:
-                           if (!var22.equals("left")) {
-                              return new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, null, 30, null);
-                           }
-                           break label132;
-                        case 108511772:
-                           if (!var22.equals("right")) {
-                              return new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, null, 30, null);
-                           }
-                           break;
-                        default:
-                           return new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, null, 30, null);
-                     }
-
-                     var21 = true;
-                     break label133;
-                  }
-
-                  var21 = false;
-               }
-
-               double var14 = var1.optDouble("maneuverDistance", Double.NaN);
-               if (Double.isNaN(var14)) {
-                  return new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, null, 30, null);
-               }
-
-               int var20 = var1.optInt("sameSideLaneCount", 0);
-               int var18 = var1.optInt("laneCount", 0);
-               boolean var28;
-               if (var20 <= 1 || var18 > 0 && RangesKt.coerceAtLeast(var18 - var20, 0) > 2) {
-                  var28 = false;
-               } else {
-                  var28 = true;
-               }
-
-               double var16 = this.interp(var2, KEEP_V, KEEP_D);
-               if (var28) {
-                  var2 = 0.6;
-               } else {
-                  var2 = 1.0;
-               }
-
-               var16 *= var2;
-               if (var28 && var1.optBoolean("activeLaneAtRoadEdge", false) && var1.optBoolean("hasSharedSameSideLane", false)) {
-                  return new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, null, 30, null);
-               }
-
-               if (var14 > 2.5 * var16) {
-                  return new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, null, 30, null);
-               }
-
-               if (var14 > var16) {
-                  return new NudgeLogic.Result(NudgeLogic.State.SOON, var21, var14, var16, null, 16, null);
-               }
-
-               String var24;
-               if (var21 && var7) {
-                  var24 = "car in your right blind spot";
-               } else if (!var21 && var6) {
-                  var24 = "car in your left blind spot";
-               } else if (var21 && var4) {
-                  var24 = "left blinker is on";
-               } else if (!var21 && var5) {
-                  var24 = "right blinker is on";
-               } else {
-                  label151: {
-                     if (var12 > 0.0) {
-                        if (var21) {
-                           var2 = var10;
-                        } else {
-                           var2 = var8;
+    /* JADX WARN: Code restructure failed: missing block: B:24:0x0092, code lost:
+    
+        if (r4.equals("right") != false) goto L36;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:28:0x00b0, code lost:
+    
+        r5 = true;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:29:0x00b1, code lost:
+    
+        r7 = r37.optDouble("maneuverDistance", Double.NaN);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:30:0x00bd, code lost:
+    
+        if (java.lang.Double.isNaN(r7) == false) goto L41;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:33:0x00d3, code lost:
+    
+        r15 = r37.optInt("sameSideLaneCount", 0);
+        r20 = r37.optInt("laneCount", 0);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:34:0x00df, code lost:
+    
+        if (r15 <= 1) goto L47;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:35:0x00e1, code lost:
+    
+        if (r20 <= 0) goto L46;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:37:0x00e9, code lost:
+    
+        if (kotlin.ranges.RangesKt.coerceAtLeast(r20 - r15, 0) > 2) goto L47;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:38:0x00eb, code lost:
+    
+        r9 = true;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:39:0x00ee, code lost:
+    
+        r10 = interp(r38, com.starpilot.starview.NudgeLogic.KEEP_V, com.starpilot.starview.NudgeLogic.KEEP_D);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:40:0x00fc, code lost:
+    
+        if (r9 == false) goto L51;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:41:0x00fe, code lost:
+    
+        r16 = 0.6d;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:42:0x0106, code lost:
+    
+        r23 = r10 * r16;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:43:0x0108, code lost:
+    
+        if (r9 == false) goto L60;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:45:0x0110, code lost:
+    
+        if (r37.optBoolean("activeLaneAtRoadEdge", false) == false) goto L60;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:47:0x0118, code lost:
+    
+        if (r37.optBoolean("hasSharedSameSideLane", false) == false) goto L60;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:51:0x0136, code lost:
+    
+        if (r7 <= (2.5d * r23)) goto L64;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:55:0x0150, code lost:
+    
+        if (r7 <= r23) goto L68;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:59:0x016a, code lost:
+    
+        if (r5 == false) goto L72;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:60:0x016c, code lost:
+    
+        if (r43 == false) goto L72;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:61:0x016e, code lost:
+    
+        r10 = "car in your right blind spot";
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:62:0x019c, code lost:
+    
+        r18 = r10;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:63:0x01a8, code lost:
+    
+        if (r18.length() != 0) goto L93;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:64:0x01aa, code lost:
+    
+        r2 = true;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:65:0x01ab, code lost:
+    
+        if (r2 == false) goto L95;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:66:0x01ad, code lost:
+    
+        r2 = com.starpilot.starview.NudgeLogic.State.READY;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:69:0x01b0, code lost:
+    
+        r2 = com.starpilot.starview.NudgeLogic.State.WAIT;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:70:0x0171, code lost:
+    
+        if (r5 != false) goto L75;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:71:0x0173, code lost:
+    
+        if (r42 == false) goto L75;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:72:0x0175, code lost:
+    
+        r10 = "car in your left blind spot";
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:73:0x0178, code lost:
+    
+        if (r5 == false) goto L78;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:74:0x017a, code lost:
+    
+        if (r40 == false) goto L78;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:75:0x017c, code lost:
+    
+        r10 = "left blinker is on";
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:76:0x017f, code lost:
+    
+        if (r5 != false) goto L81;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:77:0x0181, code lost:
+    
+        if (r41 == false) goto L81;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:78:0x0183, code lost:
+    
+        r10 = "right blinker is on";
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:80:0x018a, code lost:
+    
+        if (r48 <= 0.0d) goto L89;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:81:0x018c, code lost:
+    
+        if (r5 == false) goto L85;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:82:0x018e, code lost:
+    
+        r10 = r46;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:84:0x0195, code lost:
+    
+        if (r10 >= r48) goto L89;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:85:0x0197, code lost:
+    
+        r10 = "no lane seen on that side yet";
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:86:0x0191, code lost:
+    
+        r10 = r44;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:87:0x019a, code lost:
+    
+        r10 = "";
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:88:0x0104, code lost:
+    
+        r16 = 1.0d;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:89:0x00ed, code lost:
+    
+        r9 = false;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:91:0x009d, code lost:
+    
+        if (r4.equals("left") == false) goto L25;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:92:0x00a7, code lost:
+    
+        r5 = false;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:94:0x00a4, code lost:
+    
+        if (r4.equals("slightLeft") == false) goto L25;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:96:0x00ad, code lost:
+    
+        if (r4.equals("slightRight") == false) goto L25;
+     */
+    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
+    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
+    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
+    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
+    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
+    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final Result evaluate(JSONObject nav, double vEgo, boolean leftBlinker, boolean rightBlinker, boolean leftBlindspot, boolean rightBlindspot, double laneWidthLeft, double laneWidthRight, double minLaneWidthM) {
+        if (nav != null) {
+            boolean z = false;
+            if (nav.optBoolean("valid", false)) {
+                String type = nav.optString("maneuverType");
+                String mod = nav.optString("maneuverModifier");
+                if ((Intrinsics.areEqual(type, "off ramp") || Intrinsics.areEqual(type, "fork")) && SetsKt.setOf((Object[]) new String[]{"slightLeft", "left", "sharpLeft", "slightRight", "right", "sharpRight"}).contains(mod)) {
+                    String lane = nav.optString("activeLaneDirection");
+                    if (lane != null) {
+                        switch (lane.hashCode()) {
+                            case -711874727:
+                                break;
+                            case -438788310:
+                                break;
+                            case 3317767:
+                                break;
+                            case 108511772:
+                                break;
                         }
-
-                        if (var2 < var12) {
-                           var24 = "no lane seen on that side yet";
-                           break label151;
-                        }
-                     }
-
-                     var24 = "";
-                  }
-               }
-
-               var28 = var19;
-               if (var24.length() == 0) {
-                  var28 = true;
-               }
-
-               NudgeLogic.State var31;
-               if (var28) {
-                  var31 = NudgeLogic.State.READY;
-               } else {
-                  var31 = NudgeLogic.State.WAIT;
-               }
-
-               return new NudgeLogic.Result(var31, var21, var14, var16, var24);
+                        return new Result(State.NONE, false, 0.0d, 0.0d, null, 30, null);
+                    }
+                    return new Result(State.NONE, false, 0.0d, 0.0d, null, 30, null);
+                }
+                return new Result(State.NONE, false, 0.0d, 0.0d, null, 30, null);
             }
-
-            return new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, null, 30, null);
-         }
-      }
-
-      return new NudgeLogic.Result(NudgeLogic.State.NONE, false, 0.0, 0.0, null, 30, null);
-   }
-
-   public final double interp(double var1, double[] var3, double[] var4) {
-      Intrinsics.checkNotNullParameter(var3, "xs");
-      Intrinsics.checkNotNullParameter(var4, "ys");
-      if (var1 <= var3[0]) {
-         return var4[0];
-      } else {
-         int var5 = 1;
-
-         for (int var6 = var3.length; var5 < var6; var5++) {
-            if (var1 <= var3[var5]) {
-               return var4[var5 - 1] + (var4[var5] - var4[var5 - 1]) * (var1 - var3[var5 - 1]) / (var3[var5] - var3[var5 - 1]);
-            }
-         }
-
-         return ArraysKt.last(var4);
-      }
-   }
-
-   public static final class Result {
-      private final double distanceM;
-      private final boolean right;
-      private final NudgeLogic.State state;
-      private final String why;
-      private final double windowM;
-
-      public Result(NudgeLogic.State var1, boolean var2, double var3, double var5, String var7) {
-         Intrinsics.checkNotNullParameter(var1, "state");
-         Intrinsics.checkNotNullParameter(var7, "why");
-         super();
-         this.state = var1;
-         this.right = var2;
-         this.distanceM = var3;
-         this.windowM = var5;
-         this.why = var7;
-      }
-
-      // $VF: synthetic method
-      public Result(NudgeLogic.State var1, boolean var2, double var3, double var5, String var7, int var8, DefaultConstructorMarker var9) {
-         if ((var8 & 2) != 0) {
-            var2 = false;
-         }
-
-         double var10 = 0.0;
-         if ((var8 & 4) != 0) {
-            var3 = 0.0;
-         }
-
-         if ((var8 & 8) != 0) {
-            var5 = var10;
-         }
-
-         if ((var8 & 16) != 0) {
-            var7 = "";
-         }
-
-         this(var1, var2, var3, var5, var7);
-      }
-
-      public final double getDistanceM() {
-         return this.distanceM;
-      }
-
-      public final boolean getRight() {
-         return this.right;
-      }
-
-      public final NudgeLogic.State getState() {
-         return this.state;
-      }
-
-      public final String getWhy() {
-         return this.why;
-      }
-
-      public final double getWindowM() {
-         return this.windowM;
-      }
-   }
-
-   public static enum State {
-      NONE,
-      READY,
-      SOON,
-      WAIT;
-      private static final EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(NudgeLogic.State.$VALUES);
-      private static final NudgeLogic.State[] $VALUES = $values();
-
-      // $VF: synthetic method
-      private static final NudgeLogic.State[] $values() {
-         return new NudgeLogic.State[]{NONE, SOON, READY, WAIT};
-      }
-
-      public static EnumEntries<NudgeLogic.State> getEntries() {
-         return $ENTRIES;
-      }
-   }
+        }
+        return new Result(State.NONE, false, 0.0d, 0.0d, null, 30, null);
+    }
 }

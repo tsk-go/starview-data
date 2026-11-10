@@ -3,305 +3,175 @@ package com.k2fsa.sherpa.onnx;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-public final class OfflineTtsVitsModelConfig {
-   private String dataDir;
-   private String dictDir;
-   private float lengthScale;
-   private String lexicon;
-   private String model;
-   private float noiseScale;
-   private float noiseScaleW;
-   private String tokens;
+/* compiled from: Tts.kt */
+public final /* data */ class OfflineTtsVitsModelConfig {
+    private String dataDir;
+    private String dictDir;
+    private float lengthScale;
+    private String lexicon;
+    private String model;
+    private float noiseScale;
+    private float noiseScaleW;
+    private String tokens;
 
-   public OfflineTtsVitsModelConfig() {
-      this(null, null, null, null, null, 0.0F, 0.0F, 0.0F, 255, null);
-   }
+    public OfflineTtsVitsModelConfig() {
+        this(null, null, null, null, null, 0.0f, 0.0f, 0.0f, 255, null);
+    }
 
-   public OfflineTtsVitsModelConfig(String var1, String var2, String var3, String var4, String var5, float var6, float var7, float var8) {
-      Intrinsics.checkNotNullParameter(var1, "model");
-      Intrinsics.checkNotNullParameter(var2, "lexicon");
-      Intrinsics.checkNotNullParameter(var3, "tokens");
-      Intrinsics.checkNotNullParameter(var4, "dataDir");
-      Intrinsics.checkNotNullParameter(var5, "dictDir");
-      super();
-      this.model = var1;
-      this.lexicon = var2;
-      this.tokens = var3;
-      this.dataDir = var4;
-      this.dictDir = var5;
-      this.noiseScale = var6;
-      this.noiseScaleW = var7;
-      this.lengthScale = var8;
-   }
+    /* renamed from: component1, reason: from getter */
+    public final String getModel() {
+        return this.model;
+    }
 
-   // $VF: synthetic method
-   public OfflineTtsVitsModelConfig(
-      String var1, String var2, String var3, String var4, String var5, float var6, float var7, float var8, int var9, DefaultConstructorMarker var10
-   ) {
-      if ((var9 & 1) != 0) {
-         var1 = "";
-      }
+    /* renamed from: component2, reason: from getter */
+    public final String getLexicon() {
+        return this.lexicon;
+    }
 
-      if ((var9 & 2) != 0) {
-         var2 = "";
-      }
+    /* renamed from: component3, reason: from getter */
+    public final String getTokens() {
+        return this.tokens;
+    }
 
-      if ((var9 & 4) != 0) {
-         var3 = "";
-      }
+    /* renamed from: component4, reason: from getter */
+    public final String getDataDir() {
+        return this.dataDir;
+    }
 
-      if ((var9 & 8) != 0) {
-         var4 = "";
-      }
+    /* renamed from: component5, reason: from getter */
+    public final String getDictDir() {
+        return this.dictDir;
+    }
 
-      if ((var9 & 16) != 0) {
-         var5 = "";
-      }
+    /* renamed from: component6, reason: from getter */
+    public final float getNoiseScale() {
+        return this.noiseScale;
+    }
 
-      if ((var9 & 32) != 0) {
-         var6 = 0.667F;
-      }
+    /* renamed from: component7, reason: from getter */
+    public final float getNoiseScaleW() {
+        return this.noiseScaleW;
+    }
 
-      if ((var9 & 64) != 0) {
-         var7 = 0.8F;
-      }
+    /* renamed from: component8, reason: from getter */
+    public final float getLengthScale() {
+        return this.lengthScale;
+    }
 
-      if ((var9 & 128) != 0) {
-         var8 = 1.0F;
-      }
+    public final OfflineTtsVitsModelConfig copy(String model, String lexicon, String tokens, String dataDir, String dictDir, float noiseScale, float noiseScaleW, float lengthScale) {
+        Intrinsics.checkNotNullParameter(model, "model");
+        Intrinsics.checkNotNullParameter(lexicon, "lexicon");
+        Intrinsics.checkNotNullParameter(tokens, "tokens");
+        Intrinsics.checkNotNullParameter(dataDir, "dataDir");
+        Intrinsics.checkNotNullParameter(dictDir, "dictDir");
+        return new OfflineTtsVitsModelConfig(model, lexicon, tokens, dataDir, dictDir, noiseScale, noiseScaleW, lengthScale);
+    }
 
-      this(var1, var2, var3, var4, var5, var6, var7, var8);
-   }
-
-   // $VF: synthetic method
-   public static OfflineTtsVitsModelConfig copy$default(
-      OfflineTtsVitsModelConfig var0,
-      String var1,
-      String var2,
-      String var3,
-      String var4,
-      String var5,
-      float var6,
-      float var7,
-      float var8,
-      int var9,
-      Object var10
-   ) {
-      if ((var9 & 1) != 0) {
-         var1 = var0.model;
-      }
-
-      if ((var9 & 2) != 0) {
-         var2 = var0.lexicon;
-      }
-
-      if ((var9 & 4) != 0) {
-         var3 = var0.tokens;
-      }
-
-      if ((var9 & 8) != 0) {
-         var4 = var0.dataDir;
-      }
-
-      if ((var9 & 16) != 0) {
-         var5 = var0.dictDir;
-      }
-
-      if ((var9 & 32) != 0) {
-         var6 = var0.noiseScale;
-      }
-
-      if ((var9 & 64) != 0) {
-         var7 = var0.noiseScaleW;
-      }
-
-      if ((var9 & 128) != 0) {
-         var8 = var0.lengthScale;
-      }
-
-      return var0.copy(var1, var2, var3, var4, var5, var6, var7, var8);
-   }
-
-   public final String component1() {
-      return this.model;
-   }
-
-   public final String component2() {
-      return this.lexicon;
-   }
-
-   public final String component3() {
-      return this.tokens;
-   }
-
-   public final String component4() {
-      return this.dataDir;
-   }
-
-   public final String component5() {
-      return this.dictDir;
-   }
-
-   public final float component6() {
-      return this.noiseScale;
-   }
-
-   public final float component7() {
-      return this.noiseScaleW;
-   }
-
-   public final float component8() {
-      return this.lengthScale;
-   }
-
-   public final OfflineTtsVitsModelConfig copy(String var1, String var2, String var3, String var4, String var5, float var6, float var7, float var8) {
-      Intrinsics.checkNotNullParameter(var1, "model");
-      Intrinsics.checkNotNullParameter(var2, "lexicon");
-      Intrinsics.checkNotNullParameter(var3, "tokens");
-      Intrinsics.checkNotNullParameter(var4, "dataDir");
-      Intrinsics.checkNotNullParameter(var5, "dictDir");
-      return new OfflineTtsVitsModelConfig(var1, var2, var3, var4, var5, var6, var7, var8);
-   }
-
-   @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
-         return true;
-      } else if (!(var1 instanceof OfflineTtsVitsModelConfig)) {
-         return false;
-      } else {
-         var1 = var1;
-         if (!Intrinsics.areEqual(this.model, var1.model)) {
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof OfflineTtsVitsModelConfig)) {
             return false;
-         } else if (!Intrinsics.areEqual(this.lexicon, var1.lexicon)) {
-            return false;
-         } else if (!Intrinsics.areEqual(this.tokens, var1.tokens)) {
-            return false;
-         } else if (!Intrinsics.areEqual(this.dataDir, var1.dataDir)) {
-            return false;
-         } else if (!Intrinsics.areEqual(this.dictDir, var1.dictDir)) {
-            return false;
-         } else if (Float.compare(this.noiseScale, var1.noiseScale) != 0) {
-            return false;
-         } else {
-            return Float.compare(this.noiseScaleW, var1.noiseScaleW) != 0 ? false : Float.compare(this.lengthScale, var1.lengthScale) == 0;
-         }
-      }
-   }
+        }
+        OfflineTtsVitsModelConfig offlineTtsVitsModelConfig = (OfflineTtsVitsModelConfig) other;
+        return Intrinsics.areEqual(this.model, offlineTtsVitsModelConfig.model) && Intrinsics.areEqual(this.lexicon, offlineTtsVitsModelConfig.lexicon) && Intrinsics.areEqual(this.tokens, offlineTtsVitsModelConfig.tokens) && Intrinsics.areEqual(this.dataDir, offlineTtsVitsModelConfig.dataDir) && Intrinsics.areEqual(this.dictDir, offlineTtsVitsModelConfig.dictDir) && Float.compare(this.noiseScale, offlineTtsVitsModelConfig.noiseScale) == 0 && Float.compare(this.noiseScaleW, offlineTtsVitsModelConfig.noiseScaleW) == 0 && Float.compare(this.lengthScale, offlineTtsVitsModelConfig.lengthScale) == 0;
+    }
 
-   public final String getDataDir() {
-      return this.dataDir;
-   }
+    public int hashCode() {
+        return (((((((((((((this.model.hashCode() * 31) + this.lexicon.hashCode()) * 31) + this.tokens.hashCode()) * 31) + this.dataDir.hashCode()) * 31) + this.dictDir.hashCode()) * 31) + Float.hashCode(this.noiseScale)) * 31) + Float.hashCode(this.noiseScaleW)) * 31) + Float.hashCode(this.lengthScale);
+    }
 
-   public final String getDictDir() {
-      return this.dictDir;
-   }
+    public String toString() {
+        return "OfflineTtsVitsModelConfig(model=" + this.model + ", lexicon=" + this.lexicon + ", tokens=" + this.tokens + ", dataDir=" + this.dataDir + ", dictDir=" + this.dictDir + ", noiseScale=" + this.noiseScale + ", noiseScaleW=" + this.noiseScaleW + ", lengthScale=" + this.lengthScale + ")";
+    }
 
-   public final float getLengthScale() {
-      return this.lengthScale;
-   }
+    public OfflineTtsVitsModelConfig(String model, String lexicon, String tokens, String dataDir, String dictDir, float noiseScale, float noiseScaleW, float lengthScale) {
+        Intrinsics.checkNotNullParameter(model, "model");
+        Intrinsics.checkNotNullParameter(lexicon, "lexicon");
+        Intrinsics.checkNotNullParameter(tokens, "tokens");
+        Intrinsics.checkNotNullParameter(dataDir, "dataDir");
+        Intrinsics.checkNotNullParameter(dictDir, "dictDir");
+        this.model = model;
+        this.lexicon = lexicon;
+        this.tokens = tokens;
+        this.dataDir = dataDir;
+        this.dictDir = dictDir;
+        this.noiseScale = noiseScale;
+        this.noiseScaleW = noiseScaleW;
+        this.lengthScale = lengthScale;
+    }
 
-   public final String getLexicon() {
-      return this.lexicon;
-   }
+    public /* synthetic */ OfflineTtsVitsModelConfig(String str, String str2, String str3, String str4, String str5, float f, float f2, float f3, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this((i & 1) != 0 ? "" : str, (i & 2) != 0 ? "" : str2, (i & 4) != 0 ? "" : str3, (i & 8) != 0 ? "" : str4, (i & 16) != 0 ? "" : str5, (i & 32) != 0 ? 0.667f : f, (i & 64) != 0 ? 0.8f : f2, (i & 128) != 0 ? 1.0f : f3);
+    }
 
-   public final String getModel() {
-      return this.model;
-   }
+    public final String getModel() {
+        return this.model;
+    }
 
-   public final float getNoiseScale() {
-      return this.noiseScale;
-   }
+    public final void setModel(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.model = str;
+    }
 
-   public final float getNoiseScaleW() {
-      return this.noiseScaleW;
-   }
+    public final String getLexicon() {
+        return this.lexicon;
+    }
 
-   public final String getTokens() {
-      return this.tokens;
-   }
+    public final void setLexicon(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.lexicon = str;
+    }
 
-   @Override
-   public int hashCode() {
-      return (
-               (
-                        (
-                                 (((this.model.hashCode() * 31 + this.lexicon.hashCode()) * 31 + this.tokens.hashCode()) * 31 + this.dataDir.hashCode()) * 31
-                                    + this.dictDir.hashCode()
-                              )
-                              * 31
-                           + Float.hashCode(this.noiseScale)
-                     )
-                     * 31
-                  + Float.hashCode(this.noiseScaleW)
-            )
-            * 31
-         + Float.hashCode(this.lengthScale);
-   }
+    public final String getTokens() {
+        return this.tokens;
+    }
 
-   public final void setDataDir(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.dataDir = var1;
-   }
+    public final void setTokens(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.tokens = str;
+    }
 
-   public final void setDictDir(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.dictDir = var1;
-   }
+    public final String getDataDir() {
+        return this.dataDir;
+    }
 
-   public final void setLengthScale(float var1) {
-      this.lengthScale = var1;
-   }
+    public final void setDataDir(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.dataDir = str;
+    }
 
-   public final void setLexicon(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.lexicon = var1;
-   }
+    public final String getDictDir() {
+        return this.dictDir;
+    }
 
-   public final void setModel(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.model = var1;
-   }
+    public final void setDictDir(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.dictDir = str;
+    }
 
-   public final void setNoiseScale(float var1) {
-      this.noiseScale = var1;
-   }
+    public final float getNoiseScale() {
+        return this.noiseScale;
+    }
 
-   public final void setNoiseScaleW(float var1) {
-      this.noiseScaleW = var1;
-   }
+    public final void setNoiseScale(float f) {
+        this.noiseScale = f;
+    }
 
-   public final void setTokens(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.tokens = var1;
-   }
+    public final float getNoiseScaleW() {
+        return this.noiseScaleW;
+    }
 
-   @Override
-   public String toString() {
-      String var6 = this.model;
-      String var5 = this.lexicon;
-      String var7 = this.tokens;
-      String var8 = this.dataDir;
-      String var4 = this.dictDir;
-      float var3 = this.noiseScale;
-      float var1 = this.noiseScaleW;
-      float var2 = this.lengthScale;
-      return "OfflineTtsVitsModelConfig(model="
-         + var6
-         + ", lexicon="
-         + var5
-         + ", tokens="
-         + var7
-         + ", dataDir="
-         + var8
-         + ", dictDir="
-         + var4
-         + ", noiseScale="
-         + var3
-         + ", noiseScaleW="
-         + var1
-         + ", lengthScale="
-         + var2
-         + ")";
-   }
+    public final void setNoiseScaleW(float f) {
+        this.noiseScaleW = f;
+    }
+
+    public final float getLengthScale() {
+        return this.lengthScale;
+    }
+
+    public final void setLengthScale(float f) {
+        this.lengthScale = f;
+    }
 }

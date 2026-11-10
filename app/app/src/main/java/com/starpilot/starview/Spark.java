@@ -5,9 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Paint.Style;
 import android.view.View;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import kotlin.collections.CollectionsKt;
@@ -15,144 +15,104 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 
+/* compiled from: JournalPages.kt */
 public final class Spark extends View {
-   private final int color;
-   private final List<String> labels;
-   private final float maxV;
-   private final Paint p;
-   private final List<Float> values;
-   private final Float warnAt;
+    private final int color;
+    private final List<String> labels;
+    private final float maxV;
+    private final Paint p;
+    private final List<Float> values;
+    private final Float warnAt;
 
-   public Spark(Context var1, List<Float> var2, float var3, int var4, Float var5, List<String> var6) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "values");
-      Intrinsics.checkNotNullParameter(var6, "labels");
-      super(var1);
-      this.values = var2;
-      this.maxV = var3;
-      this.color = var4;
-      this.warnAt = var5;
-      this.labels = var6;
-      this.p = new Paint(1);
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public Spark(Context ctx, List<Float> values, float maxV, int color, Float warnAt, List<String> labels) {
+        super(ctx);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(values, "values");
+        Intrinsics.checkNotNullParameter(labels, "labels");
+        this.values = values;
+        this.maxV = maxV;
+        this.color = color;
+        this.warnAt = warnAt;
+        this.labels = labels;
+        this.p = new Paint(1);
+    }
 
-   // $VF: synthetic method
-   public Spark(Context var1, List var2, float var3, int var4, Float var5, List var6, int var7, DefaultConstructorMarker var8) {
-      if ((var7 & 16) != 0) {
-         var5 = null;
-      }
+    public /* synthetic */ Spark(Context context, List list, float f, int i, Float f2, List list2, int i2, DefaultConstructorMarker defaultConstructorMarker) {
+        this(context, list, f, i, (i2 & 16) != 0 ? null : f2, (i2 & 32) != 0 ? CollectionsKt.emptyList() : list2);
+    }
 
-      if ((var7 & 32) != 0) {
-         var6 = CollectionsKt.emptyList();
-      }
-
-      this(var1, var2, var3, var4, var5, var6);
-   }
-
-   protected void onDraw(Canvas var1) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      float var3 = this.getResources().getDisplayMetrics().density;
-      float var4 = this.getWidth();
-      float var5 = this.getHeight();
-      float var2;
-      if (!this.labels.isEmpty()) {
-         var2 = 18 * var3;
-      } else {
-         var2 = 0.0F;
-      }
-
-      var5 -= var2;
-      this.p.setColor(Color.rgb(34, 40, 55));
-      this.p.setStyle(Style.FILL);
-      var2 = 10;
-      var1.drawRoundRect(0.0F, 0.0F, var4, var5, var2 * var3, var2 * var3, this.p);
-      if (this.warnAt != null) {
-         this.p.setColor(Color.rgb(120, 60, 40));
-         this.p.setStrokeWidth(var3);
-         var2 = var5 - this.warnAt / this.maxV * var5;
-         var1.drawLine(0.0F, var2, var4, var2, this.p);
-      }
-
-      Iterable var12 = this.values;
-      var var11 = new ArrayList();
-
-      for (Object var13 : var12) {
-         var2 = ((Number)var13).floatValue();
-         boolean var7;
-         if (!Float.isInfinite(var2) && !Float.isNaN(var2)) {
-            var7 = true;
-         } else {
-            var7 = false;
-         }
-
-         if (var7) {
-            var11.add(var13);
-         }
-      }
-
-      List var25 = var11;
-      if (this.values.size() >= 2 && !var25.isEmpty()) {
-         Path var26 = new Path();
-         boolean var21 = false;
-         Iterator var29 = this.values.iterator();
-         int var8 = 0;
-
-         while (var29.hasNext()) {
-            int var9 = var8 + 1;
-            float var6 = ((Number)var29.next()).floatValue();
-            boolean var23;
-            if (!Float.isInfinite(var6) && !Float.isNaN(var6)) {
-               var23 = true;
-            } else {
-               var23 = false;
+    @Override // android.view.View
+    protected void onDraw(Canvas c) {
+        int i;
+        Intrinsics.checkNotNullParameter(c, "c");
+        float d = getResources().getDisplayMetrics().density;
+        float w = getWidth();
+        float h = getHeight() - (!this.labels.isEmpty() ? 18 * d : 0.0f);
+        this.p.setColor(Color.rgb(34, 40, 55));
+        this.p.setStyle(Paint.Style.FILL);
+        float f = 10;
+        c.drawRoundRect(0.0f, 0.0f, w, h, f * d, f * d, this.p);
+        if (this.warnAt != null) {
+            this.p.setColor(Color.rgb(120, 60, 40));
+            this.p.setStrokeWidth(d);
+            float y = h - ((this.warnAt.floatValue() / this.maxV) * h);
+            c.drawLine(0.0f, y, w, y, this.p);
+        }
+        Iterable $this$filter$iv = this.values;
+        Collection destination$iv$iv = new ArrayList();
+        Iterator it = $this$filter$iv.iterator();
+        while (true) {
+            i = 1;
+            if (!it.hasNext()) {
+                break;
             }
-
-            if (!var23) {
-               var21 = false;
-               var8 = var9;
-            } else {
-               var2 = var8 * var4 / (this.values.size() - 1);
-               var6 = var5 - RangesKt.coerceIn(var6 / this.maxV, 0.0F, 1.0F) * (var5 - 6 * var3) - 3 * var3;
-               if (!var21) {
-                  var26.moveTo(var2, var6);
-                  var21 = true;
-                  var8 = var9;
-               } else {
-                  var26.lineTo(var2, var6);
-                  var8 = var9;
-               }
+            Object element$iv$iv = it.next();
+            float it2 = ((Number) element$iv$iv).floatValue();
+            if ((Float.isInfinite(it2) || Float.isNaN(it2)) ? false : true) {
+                destination$iv$iv.add(element$iv$iv);
             }
-         }
-
-         this.p.setStyle(Style.STROKE);
-         this.p.setStrokeWidth(2.5F * var3);
-         this.p.setColor(this.color);
-         var1.drawPath(var26, this.p);
-         this.p.setStyle(Style.FILL);
-      }
-
-      if (!this.labels.isEmpty()) {
-         this.p.setColor(Color.rgb(150, 160, 180));
-         this.p.setTextSize(12 * var3);
-         Iterator var27 = this.labels.iterator();
-         int var22 = 0;
-
-         while (true) {
-            int var24 = var22;
-            if (!var27.hasNext()) {
-               break;
+        }
+        List vals = (List) destination$iv$iv;
+        if (this.values.size() >= 2 && !vals.isEmpty()) {
+            Path path = new Path();
+            boolean started = false;
+            Iterator<T> it3 = this.values.iterator();
+            int i2 = 0;
+            while (it3.hasNext()) {
+                int i3 = i2;
+                i2 += i;
+                float v = ((Number) it3.next()).floatValue();
+                if (((Float.isInfinite(v) || Float.isNaN(v)) ? 0 : i) == 0) {
+                    started = false;
+                } else {
+                    float x = (i3 * w) / (this.values.size() - i);
+                    float y2 = (h - (RangesKt.coerceIn(v / this.maxV, 0.0f, 1.0f) * (h - (6 * d)))) - (3 * d);
+                    if (started) {
+                        path.lineTo(x, y2);
+                        i = 1;
+                    } else {
+                        path.moveTo(x, y2);
+                        started = true;
+                        i = 1;
+                    }
+                }
             }
-
-            var22++;
-            String var30 = (String)var27.next();
-            if (this.labels.size() == 1) {
-               var2 = 0.0F;
-            } else {
-               var2 = var24 * (var4 - this.p.measureText(var30)) / (this.labels.size() - 1);
+            this.p.setStyle(Paint.Style.STROKE);
+            this.p.setStrokeWidth(2.5f * d);
+            this.p.setColor(this.color);
+            c.drawPath(path, this.p);
+            this.p.setStyle(Paint.Style.FILL);
+        }
+        if (!this.labels.isEmpty()) {
+            this.p.setColor(Color.rgb(150, 160, 180));
+            this.p.setTextSize(12 * d);
+            int i4 = 0;
+            for (String l : this.labels) {
+                int i5 = i4;
+                i4++;
+                c.drawText(l, this.labels.size() == 1 ? 0.0f : (i5 * (w - this.p.measureText(l))) / (this.labels.size() - 1), (14 * d) + h, this.p);
             }
-
-            var1.drawText(var30, var2, 14 * var3 + var5, this.p);
-         }
-      }
-   }
+        }
+    }
 }

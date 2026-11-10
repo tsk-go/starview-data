@@ -3,187 +3,149 @@ package com.k2fsa.sherpa.onnx;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-public final class OfflineTtsKittenModelConfig {
-   private String dataDir;
-   private float lengthScale;
-   private String model;
-   private String tokens;
-   private String voices;
+/* compiled from: Tts.kt */
+public final /* data */ class OfflineTtsKittenModelConfig {
+    private String dataDir;
+    private float lengthScale;
+    private String model;
+    private String tokens;
+    private String voices;
 
-   public OfflineTtsKittenModelConfig() {
-      this(null, null, null, null, 0.0F, 31, null);
-   }
+    public OfflineTtsKittenModelConfig() {
+        this(null, null, null, null, 0.0f, 31, null);
+    }
 
-   public OfflineTtsKittenModelConfig(String var1, String var2, String var3, String var4, float var5) {
-      Intrinsics.checkNotNullParameter(var1, "model");
-      Intrinsics.checkNotNullParameter(var2, "voices");
-      Intrinsics.checkNotNullParameter(var3, "tokens");
-      Intrinsics.checkNotNullParameter(var4, "dataDir");
-      super();
-      this.model = var1;
-      this.voices = var2;
-      this.tokens = var3;
-      this.dataDir = var4;
-      this.lengthScale = var5;
-   }
+    public static /* synthetic */ OfflineTtsKittenModelConfig copy$default(OfflineTtsKittenModelConfig offlineTtsKittenModelConfig, String str, String str2, String str3, String str4, float f, int i, Object obj) {
+        if ((i & 1) != 0) {
+            str = offlineTtsKittenModelConfig.model;
+        }
+        if ((i & 2) != 0) {
+            str2 = offlineTtsKittenModelConfig.voices;
+        }
+        String str5 = str2;
+        if ((i & 4) != 0) {
+            str3 = offlineTtsKittenModelConfig.tokens;
+        }
+        String str6 = str3;
+        if ((i & 8) != 0) {
+            str4 = offlineTtsKittenModelConfig.dataDir;
+        }
+        String str7 = str4;
+        if ((i & 16) != 0) {
+            f = offlineTtsKittenModelConfig.lengthScale;
+        }
+        return offlineTtsKittenModelConfig.copy(str, str5, str6, str7, f);
+    }
 
-   // $VF: synthetic method
-   public OfflineTtsKittenModelConfig(String var1, String var2, String var3, String var4, float var5, int var6, DefaultConstructorMarker var7) {
-      if ((var6 & 1) != 0) {
-         var1 = "";
-      }
+    /* renamed from: component1, reason: from getter */
+    public final String getModel() {
+        return this.model;
+    }
 
-      if ((var6 & 2) != 0) {
-         var2 = "";
-      }
+    /* renamed from: component2, reason: from getter */
+    public final String getVoices() {
+        return this.voices;
+    }
 
-      if ((var6 & 4) != 0) {
-         var3 = "";
-      }
+    /* renamed from: component3, reason: from getter */
+    public final String getTokens() {
+        return this.tokens;
+    }
 
-      if ((var6 & 8) != 0) {
-         var4 = "";
-      }
+    /* renamed from: component4, reason: from getter */
+    public final String getDataDir() {
+        return this.dataDir;
+    }
 
-      if ((var6 & 16) != 0) {
-         var5 = 1.0F;
-      }
+    /* renamed from: component5, reason: from getter */
+    public final float getLengthScale() {
+        return this.lengthScale;
+    }
 
-      this(var1, var2, var3, var4, var5);
-   }
+    public final OfflineTtsKittenModelConfig copy(String model, String voices, String tokens, String dataDir, float lengthScale) {
+        Intrinsics.checkNotNullParameter(model, "model");
+        Intrinsics.checkNotNullParameter(voices, "voices");
+        Intrinsics.checkNotNullParameter(tokens, "tokens");
+        Intrinsics.checkNotNullParameter(dataDir, "dataDir");
+        return new OfflineTtsKittenModelConfig(model, voices, tokens, dataDir, lengthScale);
+    }
 
-   // $VF: synthetic method
-   public static OfflineTtsKittenModelConfig copy$default(
-      OfflineTtsKittenModelConfig var0, String var1, String var2, String var3, String var4, float var5, int var6, Object var7
-   ) {
-      if ((var6 & 1) != 0) {
-         var1 = var0.model;
-      }
-
-      if ((var6 & 2) != 0) {
-         var2 = var0.voices;
-      }
-
-      if ((var6 & 4) != 0) {
-         var3 = var0.tokens;
-      }
-
-      if ((var6 & 8) != 0) {
-         var4 = var0.dataDir;
-      }
-
-      if ((var6 & 16) != 0) {
-         var5 = var0.lengthScale;
-      }
-
-      return var0.copy(var1, var2, var3, var4, var5);
-   }
-
-   public final String component1() {
-      return this.model;
-   }
-
-   public final String component2() {
-      return this.voices;
-   }
-
-   public final String component3() {
-      return this.tokens;
-   }
-
-   public final String component4() {
-      return this.dataDir;
-   }
-
-   public final float component5() {
-      return this.lengthScale;
-   }
-
-   public final OfflineTtsKittenModelConfig copy(String var1, String var2, String var3, String var4, float var5) {
-      Intrinsics.checkNotNullParameter(var1, "model");
-      Intrinsics.checkNotNullParameter(var2, "voices");
-      Intrinsics.checkNotNullParameter(var3, "tokens");
-      Intrinsics.checkNotNullParameter(var4, "dataDir");
-      return new OfflineTtsKittenModelConfig(var1, var2, var3, var4, var5);
-   }
-
-   @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
-         return true;
-      } else if (!(var1 instanceof OfflineTtsKittenModelConfig)) {
-         return false;
-      } else {
-         var1 = var1;
-         if (!Intrinsics.areEqual(this.model, var1.model)) {
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof OfflineTtsKittenModelConfig)) {
             return false;
-         } else if (!Intrinsics.areEqual(this.voices, var1.voices)) {
-            return false;
-         } else if (!Intrinsics.areEqual(this.tokens, var1.tokens)) {
-            return false;
-         } else {
-            return !Intrinsics.areEqual(this.dataDir, var1.dataDir) ? false : Float.compare(this.lengthScale, var1.lengthScale) == 0;
-         }
-      }
-   }
+        }
+        OfflineTtsKittenModelConfig offlineTtsKittenModelConfig = (OfflineTtsKittenModelConfig) other;
+        return Intrinsics.areEqual(this.model, offlineTtsKittenModelConfig.model) && Intrinsics.areEqual(this.voices, offlineTtsKittenModelConfig.voices) && Intrinsics.areEqual(this.tokens, offlineTtsKittenModelConfig.tokens) && Intrinsics.areEqual(this.dataDir, offlineTtsKittenModelConfig.dataDir) && Float.compare(this.lengthScale, offlineTtsKittenModelConfig.lengthScale) == 0;
+    }
 
-   public final String getDataDir() {
-      return this.dataDir;
-   }
+    public int hashCode() {
+        return (((((((this.model.hashCode() * 31) + this.voices.hashCode()) * 31) + this.tokens.hashCode()) * 31) + this.dataDir.hashCode()) * 31) + Float.hashCode(this.lengthScale);
+    }
 
-   public final float getLengthScale() {
-      return this.lengthScale;
-   }
+    public String toString() {
+        return "OfflineTtsKittenModelConfig(model=" + this.model + ", voices=" + this.voices + ", tokens=" + this.tokens + ", dataDir=" + this.dataDir + ", lengthScale=" + this.lengthScale + ")";
+    }
 
-   public final String getModel() {
-      return this.model;
-   }
+    public OfflineTtsKittenModelConfig(String model, String voices, String tokens, String dataDir, float lengthScale) {
+        Intrinsics.checkNotNullParameter(model, "model");
+        Intrinsics.checkNotNullParameter(voices, "voices");
+        Intrinsics.checkNotNullParameter(tokens, "tokens");
+        Intrinsics.checkNotNullParameter(dataDir, "dataDir");
+        this.model = model;
+        this.voices = voices;
+        this.tokens = tokens;
+        this.dataDir = dataDir;
+        this.lengthScale = lengthScale;
+    }
 
-   public final String getTokens() {
-      return this.tokens;
-   }
+    public /* synthetic */ OfflineTtsKittenModelConfig(String str, String str2, String str3, String str4, float f, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this((i & 1) != 0 ? "" : str, (i & 2) != 0 ? "" : str2, (i & 4) != 0 ? "" : str3, (i & 8) != 0 ? "" : str4, (i & 16) != 0 ? 1.0f : f);
+    }
 
-   public final String getVoices() {
-      return this.voices;
-   }
+    public final String getModel() {
+        return this.model;
+    }
 
-   @Override
-   public int hashCode() {
-      return (((this.model.hashCode() * 31 + this.voices.hashCode()) * 31 + this.tokens.hashCode()) * 31 + this.dataDir.hashCode()) * 31
-         + Float.hashCode(this.lengthScale);
-   }
+    public final void setModel(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.model = str;
+    }
 
-   public final void setDataDir(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.dataDir = var1;
-   }
+    public final String getVoices() {
+        return this.voices;
+    }
 
-   public final void setLengthScale(float var1) {
-      this.lengthScale = var1;
-   }
+    public final void setVoices(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.voices = str;
+    }
 
-   public final void setModel(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.model = var1;
-   }
+    public final String getTokens() {
+        return this.tokens;
+    }
 
-   public final void setTokens(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.tokens = var1;
-   }
+    public final void setTokens(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.tokens = str;
+    }
 
-   public final void setVoices(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.voices = var1;
-   }
+    public final String getDataDir() {
+        return this.dataDir;
+    }
 
-   @Override
-   public String toString() {
-      String var2 = this.model;
-      String var5 = this.voices;
-      String var3 = this.tokens;
-      String var4 = this.dataDir;
-      float var1 = this.lengthScale;
-      return "OfflineTtsKittenModelConfig(model=" + var2 + ", voices=" + var5 + ", tokens=" + var3 + ", dataDir=" + var4 + ", lengthScale=" + var1 + ")";
-   }
+    public final void setDataDir(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.dataDir = str;
+    }
+
+    public final float getLengthScale() {
+        return this.lengthScale;
+    }
+
+    public final void setLengthScale(float f) {
+        this.lengthScale = f;
+    }
 }

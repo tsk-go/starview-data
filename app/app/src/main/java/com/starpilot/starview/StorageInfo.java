@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -15,493 +14,309 @@ import kotlin.TuplesKt;
 import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.io.CloseableKt;
+import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt;
 import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okhttp3.OkHttpClient.Builder;
 import org.json.JSONObject;
 
+/* compiled from: StorageInfo.kt */
 public final class StorageInfo {
-   public static final StorageInfo INSTANCE = new StorageInfo();
-   private static final Lazy http$delegate = LazyKt.lazy(new StorageInfo$$ExternalSyntheticLambda0());
+    public static final StorageInfo INSTANCE = new StorageInfo();
 
-   // $VF: synthetic method
-   public static OkHttpClient $r8$lambda$ztqFHg2G0pZy59s9fT3Ujdfo5KQ() {
-      return http_delegate$lambda$0();
-   }
+    /* renamed from: http$delegate, reason: from kotlin metadata */
+    private static final Lazy http = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.StorageInfo$$ExternalSyntheticLambda0
+        @Override // kotlin.jvm.functions.Function0
+        public final Object invoke() {
+            OkHttpClient http_delegate$lambda$0;
+            http_delegate$lambda$0 = StorageInfo.http_delegate$lambda$0();
+            return http_delegate$lambda$0;
+        }
+    });
 
-   private StorageInfo() {
-   }
+    private StorageInfo() {
+    }
 
-   // $VF: synthetic method
-   public static JSONObject fetch$default(StorageInfo var0, String var1, int var2, int var3, Object var4) {
-      if ((var3 & 2) != 0) {
-         var2 = 8090;
-      }
+    private final OkHttpClient getHttp() {
+        return (OkHttpClient) http.getValue();
+    }
 
-      return var0.fetch(var1, var2);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final OkHttpClient http_delegate$lambda$0() {
+        return new OkHttpClient.Builder().addInterceptor(Link.INSTANCE.getAuthInterceptor()).connectTimeout(3L, TimeUnit.SECONDS).readTimeout(5L, TimeUnit.SECONDS).build();
+    }
 
-   private final OkHttpClient getHttp() {
-      return (OkHttpClient)http$delegate.getValue();
-   }
+    public static /* synthetic */ JSONObject fetch$default(StorageInfo storageInfo, String str, int i, int i2, Object obj) {
+        if ((i2 & 2) != 0) {
+            i = 8090;
+        }
+        return storageInfo.fetch(str, i);
+    }
 
-   private static final OkHttpClient http_delegate$lambda$0() {
-      return new Builder().addInterceptor(Link.INSTANCE.getAuthInterceptor()).connectTimeout(3L, TimeUnit.SECONDS).readTimeout(5L, TimeUnit.SECONDS).build();
-   }
-
-   public final StorageInfo.Copying copying(JSONObject var1) {
-      if (var1 != null) {
-         var1 = var1.optJSONObject("stick");
-         if (var1 != null) {
-            JSONObject var16 = var1.optJSONObject("progress");
-            if (var16 != null) {
-               String var14 = var16.optString("phase", "copying");
-               if (!Intrinsics.areEqual(var14, "copying")) {
-                  Intrinsics.checkNotNull(var14);
-                  boolean var24;
-                  if (var14.length() > 0) {
-                     var24 = true;
-                  } else {
-                     var24 = false;
-                  }
-
-                  String var23;
-                  if (var24) {
-                     StringBuilder var21 = new StringBuilder();
-                     char var2 = var14.charAt(0);
-                     String var28 = String.valueOf(var2);
-                     Intrinsics.checkNotNull(var28, "null cannot be cast to non-null type java.lang.String");
-                     var28 = var28.toUpperCase(Locale.ROOT);
-                     Intrinsics.checkNotNullExpressionValue(var28, "toUpperCase(...)");
-                     StringBuilder var22 = var21.append(var28);
-                     var28 = var14.substring(1);
-                     Intrinsics.checkNotNullExpressionValue(var28, "substring(...)");
-                     var23 = var22.append(var28).toString();
-                  } else {
-                     var23 = var14;
-                  }
-
-                  return new StorageInfo.Copying(var14, null, var23 + "…");
-               }
-
-               long var12 = var16.optLong("total_bytes");
-               long var10 = var16.optLong("done_bytes");
-               if (var12 <= 0L) {
-                  return new StorageInfo.Copying(var14, 100, "Nothing new to copy");
-               }
-
-               int var7 = RangesKt.coerceIn((int)(100 * var10 / var12), 0, 100);
-               double var5 = var16.optDouble("eta_s", Double.NaN);
-               double var3 = var16.optDouble("rate_MBps", Double.NaN);
-               StringBuilder var19 = new StringBuilder();
-               String var15 = INSTANCE.size(var10);
-               String var17 = INSTANCE.size(var12);
-               int var8 = var16.optInt("done_files");
-               int var9 = var16.optInt("total_files");
-               var19.append(var7 + "%  ·  " + var15 + " of " + var17 + "  ·  " + var8 + " of " + var9 + " files");
-               if (!Double.isNaN(var3) && var3 > 0.0) {
-                  var15 = String.format("%.0f", Arrays.copyOf(new Object[]{var3}, 1));
-                  Intrinsics.checkNotNullExpressionValue(var15, "format(...)");
-                  var19.append("  ·  " + var15 + " MB/s");
-               }
-
-               if (!Double.isNaN(var5) && var5 > 0.0) {
-                  var15 = INSTANCE.dur(var5);
-                  var19.append("  ·  " + var15 + " left");
-               }
-
-               Unit var27 = Unit.INSTANCE;
-               String var20 = var19.toString();
-               Intrinsics.checkNotNullExpressionValue(var20, "toString(...)");
-               return new StorageInfo.Copying(var14, var7, var20);
-            }
-         }
-      }
-
-      return null;
-   }
-
-   public final String dur(double var1) {
-      int var4 = MathKt.roundToInt(var1 / 60);
-      String var5;
-      if (var4 < 1) {
-         var5 = "under a minute";
-      } else {
-         StringBuilder var6;
-         if (var4 < 60) {
-            var6 = new StringBuilder().append("about ").append(var4);
-         } else {
-            int var3 = var4 / 60;
-            var6 = new StringBuilder().append("about ").append(var3).append(" h ").append(var4 % 60);
-         }
-
-         var5 = var6.append(" min").toString();
-      }
-
-      return var5;
-   }
-
-   // $VF: Duplicated exception handlers to handle obfuscated exceptions
-   // $VF: Could not inline inconsistent finally blocks
-   // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-   public final JSONObject fetch(String var1, int var2) {
-      Intrinsics.checkNotNullParameter(var1, "host");
-      Object var3 = null;
-
-      Response var23;
-      try {
-         OkHttpClient var6 = this.getHttp();
-         okhttp3.Request.Builder var4 = new okhttp3.Request.Builder();
-         StringBuilder var5 = new StringBuilder();
-         var23 = var6.newCall(var4.url(var5.append("http://").append(var1).append(":").append(var2).append("/storage").toString()).build()).execute();
-      } catch (Exception var20) {
-         return (JSONObject)var3;
-      }
-
-      label82: {
-         try {
-            Response var25 = var23;
-            if (var25.isSuccessful()) {
-               ResponseBody var26 = var25.body();
-               Intrinsics.checkNotNull(var26);
-               var22 = new JSONObject(var26.string());
-               break label82;
-            }
-         } catch (Throwable var21) {
-            Throwable var24 = var21;
-
+    public final JSONObject fetch(String host, int port) {
+        JSONObject jSONObject;
+        Intrinsics.checkNotNullParameter(host, "host");
+        try {
+            Response execute = getHttp().newCall(new Request.Builder().url("http://" + host + ":" + port + "/storage").build()).execute();
             try {
-               throw var24;
+                Response r = execute;
+                if (r.isSuccessful()) {
+                    ResponseBody body = r.body();
+                    Intrinsics.checkNotNull(body);
+                    jSONObject = new JSONObject(body.string());
+                } else {
+                    jSONObject = null;
+                }
+                CloseableKt.closeFinally(execute, null);
+                return jSONObject;
             } finally {
-               try {
-                  CloseableKt.closeFinally(var23, var24);
-               } catch (Exception var18) {
-                  return (JSONObject)var3;
-               }
             }
-         }
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-         var22 = null;
-      }
+    public final String gb(JSONObject o, String k) {
+        Intrinsics.checkNotNullParameter(o, "o");
+        Intrinsics.checkNotNullParameter(k, "k");
+        double v = o.optDouble(k, Double.NaN);
+        if (Double.isNaN(v)) {
+            return "?";
+        }
+        if (v >= 100.0d) {
+            return String.valueOf(MathKt.roundToInt(v));
+        }
+        String format = String.format("%.1f", Arrays.copyOf(new Object[]{Double.valueOf(v)}, 1));
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        return format;
+    }
 
-      try {
-         CloseableKt.closeFinally(var23, null);
-      } catch (Exception var17) {
-         var22 = (JSONObject)var3;
-      }
-
-      return var22;
-   }
-
-   public final String gb(JSONObject var1, String var2) {
-      Intrinsics.checkNotNullParameter(var1, "o");
-      Intrinsics.checkNotNullParameter(var2, "k");
-      double var3 = var1.optDouble(var2, Double.NaN);
-      String var5;
-      if (Double.isNaN(var3)) {
-         var5 = "?";
-      } else if (var3 >= 100.0) {
-         var5 = String.valueOf(MathKt.roundToInt(var3));
-      } else {
-         var5 = String.format("%.1f", Arrays.copyOf(new Object[]{var3}, 1));
-         Intrinsics.checkNotNullExpressionValue(var5, "format(...)");
-      }
-
-      return var5;
-   }
-
-   public final String mb(int var1) {
-      return this.size(var1 * 1000000L);
-   }
-
-   public final List<Pair<String, String>> rows(JSONObject var1) {
-      if (var1 == null) {
-         return CollectionsKt.listOf(TuplesKt.to("Storage", "comma not reachable (or starviewd too old: install the latest starviewd.py)"));
-      } else {
-         ArrayList var8 = new ArrayList();
-         JSONObject var6 = var1.optJSONObject("internal");
-         if (var6 != null) {
-            Collection var7 = var8;
-            String var10 = this.gb(var6, "free_GB");
-            String var9 = this.gb(var6, "total_GB");
-            var7.add(TuplesKt.to("Internal storage", var10 + " GB free of " + var9 + " GB  ·  openpilot records here"));
-            var7 = var8;
-            int var4 = var6.optInt("segments");
-            var9 = this.whenStr(var6.optDouble("newest_time"));
-            String var28 = this.whenStr(var6.optDouble("oldest_time"));
-            var7.add(TuplesKt.to("Drives on the comma", var4 + " segments  ·  newest " + var9 + "  ·  oldest " + var28));
-         }
-
-         JSONObject var45 = var1.optJSONObject("stick");
-         if (var45 != null && var45.optBoolean("present")) {
-            Collection var36 = var8;
-            String var30;
-            if (var45.has("stick_free_GB")) {
-               String var29 = this.gb(var45, "stick_free_GB");
-               String var46 = this.gb(var45, "stick_size_GB");
-               var30 = var29 + " GB free of " + var46 + " GB  ·  archive copy, only used while parked";
-            } else {
-               var30 = "connected, no copy finished yet";
-            }
-
-            var36.add(TuplesKt.to("USB stick", var30));
-            StorageInfo.Copying var11 = this.copying(var1);
-            if (var11 != null) {
-               var8.add(TuplesKt.to("Copying to the stick now", var11.getLine()));
-            }
-
-            double var2 = var45.optDouble("last_copy_time", Double.NaN);
-            var36 = var8;
-            boolean var5 = Double.isNaN(var2);
-            JSONObject var31 = "–";
-            String var12;
-            if (var5) {
-               var12 = "–";
-            } else {
-               String var47 = this.whenStr(var2);
-               String var13 = this.mb(var45.optInt("last_copy_MB"));
-               var12 = var47 + "  ·  " + var13;
-            }
-
-            var36.add(TuplesKt.to("Last copy to the stick", var12));
-            if (var45.has("stick_segments")) {
-               Collection var14 = var8;
-               int var23 = var45.optInt("stick_segments");
-               String var38 = this.whenStr(var45.optDouble("stick_newest_time"));
-               String var48 = this.whenStr(var45.optDouble("stick_oldest_time"));
-               var14.add(TuplesKt.to("Drives on the stick", var23 + " segments  ·  newest " + var38 + "  ·  oldest " + var48));
-            }
-
-            var2 = var45.optDouble("run_time", Double.NaN);
-            String var39 = var45.optString("result");
-            Collection var49 = var8;
-            String var15;
-            if (Double.isNaN(var2)) {
-               if (var45.has("time")) {
-                  var15 = var45.optString("time");
-               } else {
-                  var15 = "never";
-               }
-            } else {
-               var15 = this.whenStr(var2);
-            }
-
-            CharSequence var40 = var39;
-            boolean var24;
-            if (var40.length() == 0) {
-               var24 = 1;
-            } else {
-               var24 = 0;
-            }
-
-            if (!var24) {
-               var31 = var40;
-            }
-
-            String var41;
-            if (!var45.optBoolean("auto", true)) {
-               var41 = "  ·  auto copy OFF";
-            } else {
-               var41 = "  ·  auto copy every 5 min while parked";
-            }
-
-            var49.add(TuplesKt.to("Last check", var15 + "  ·  " + var31 + var41));
-            var31 = var45.optJSONObject("auto_last");
-            if (var31 != null) {
-               var2 = var31.optDouble("time", Double.NaN);
-               String var16;
-               if (var31.optBoolean("running")) {
-                  var16 = "running now";
-               } else if (var31.isNull("rc")) {
-                  StorageInfo var17 = INSTANCE;
-                  String var33 = var31.optString("out");
-                  Intrinsics.checkNotNullExpressionValue(var33, "optString(...)");
-                  var var18 = var17.runLine(var33);
-                  if (var18.length() == 0) {
-                     var24 = (boolean)1;
-                  } else {
-                     var24 = (boolean)0;
-                  }
-
-                  if (var24) {
-                     var18 = "stopped";
-                  }
-
-                  var16 = var18;
-               } else {
-                  StorageInfo var42 = INSTANCE;
-                  String var19 = var31.optString("out");
-                  Intrinsics.checkNotNullExpressionValue(var19, "optString(...)");
-                  var var20 = var42.runLine(var19);
-                  if (var20.length() == 0) {
-                     var24 = (boolean)1;
-                  } else {
-                     var24 = (boolean)0;
-                  }
-
-                  if (var24) {
-                     var24 = var31.optInt("rc");
-                     var20 = "exit " + var24;
-                  }
-
-                  var16 = var20;
-               }
-
-               Collection var34 = var8;
-               String var43 = INSTANCE.whenStr(var2);
-               var34.add(TuplesKt.to("Last automatic copy", var43 + "  ·  " + var16));
-            }
-
-            return var8;
-         } else {
-            var8.add(TuplesKt.to("USB stick", "not connected"));
-            return var8;
-         }
-      }
-   }
-
-   // $VF: Duplicated exception handlers to handle obfuscated exceptions
-   public final String runLine(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "out");
-      String var3 = StringsKt.trimStart(var1).toString();
-      int var2 = 0;
-      if (!StringsKt.startsWith$default(var3, "{", false, 2, null)) {
-         return var1;
-      } else {
-         JSONObject var5;
-         try {
-            var5 = new JSONObject(var1);
-            var3 = var5.optString("result");
-         } catch (Exception var10) {
-            return StringsKt.take(var1, 80);
-         }
-
-         label50: {
-            try {
-               if (var3.length() != 0) {
-                  break label50;
-               }
-            } catch (Exception var9) {
-               return StringsKt.take(var1, 80);
-            }
-
-            var2 = 1;
-         }
-
-         if (var2) {
-            var3 = "done";
-         }
-
-         String var14;
-         try {
-            var14 = var3;
-         } catch (Exception var8) {
-            return StringsKt.take(var1, 80);
-         }
-
-         var3 = var14;
-
-         label38: {
-            try {
-               if (!Intrinsics.areEqual(var14, "ok")) {
-                  break label38;
-               }
-            } catch (Exception var7) {
-               return StringsKt.take(var1, 80);
-            }
-
-            var3 = "finished";
-         }
-
-         var14 = var3;
-
-         try {
-            if (var5.has("copied_MB")) {
-               var14 = this.mb(var5.optInt("copied_MB"));
-               var2 = var5.optInt("files");
-               StringBuilder var16 = new StringBuilder();
-               var14 = var16.append(var3).append("  ·  ").append(var14).append(" copied, ").append(var2).append(" files").toString();
-            }
-         } catch (Exception var6) {
-            var14 = StringsKt.take(var1, 80);
-         }
-
-         return var14;
-      }
-   }
-
-   public final String size(long var1) {
-      String var3;
-      if (var1 >= 1000000000L) {
-         var3 = String.format("%.1f GB", Arrays.copyOf(new Object[]{var1 / 1.0E9}, 1));
-         Intrinsics.checkNotNullExpressionValue(var3, "format(...)");
-      } else {
-         var1 /= 1000000L;
-         var3 = var1 + " MB";
-      }
-
-      return var3;
-   }
-
-   public final String whenStr(double var1) {
-      if (!Double.isNaN(var1) && !(var1 <= 0.0)) {
-         Calendar var3 = Calendar.getInstance();
-         var3.setTimeInMillis((long)(1000 * var1));
-         Calendar var4 = Calendar.getInstance();
-         String var5 = String.format("%02d:%02d", Arrays.copyOf(new Object[]{var3.get(11), var3.get(12)}, 2));
-         Intrinsics.checkNotNullExpressionValue(var5, "format(...)");
-         StringBuilder var7;
-         String var8;
-         switch ((var4.get(1) - var3.get(1)) * 366 + var4.get(6) - var3.get(6)) {
+    public final String whenStr(double epoch) {
+        StringBuilder sb;
+        String str;
+        if (Double.isNaN(epoch) || epoch <= 0.0d) {
+            return "–";
+        }
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis((long) (1000 * epoch));
+        Calendar now = Calendar.getInstance();
+        String hm = String.format("%02d:%02d", Arrays.copyOf(new Object[]{Integer.valueOf(c.get(11)), Integer.valueOf(c.get(12))}, 2));
+        Intrinsics.checkNotNullExpressionValue(hm, "format(...)");
+        int dayDiff = (((now.get(1) - c.get(1)) * 366) + now.get(6)) - c.get(6);
+        switch (dayDiff) {
             case 0:
-               var7 = new StringBuilder();
-               var8 = "today ";
-               break;
+                sb = new StringBuilder();
+                str = "today ";
+                break;
             case 1:
-               var7 = new StringBuilder();
-               var8 = "yesterday ";
-               break;
+                sb = new StringBuilder();
+                str = "yesterday ";
+                break;
             default:
-               String var6 = new SimpleDateFormat("MMM d HH:mm", Locale.US).format(var3.getTime());
-               Intrinsics.checkNotNullExpressionValue(var6, "format(...)");
-               return var6;
-         }
+                String format = new SimpleDateFormat("MMM d HH:mm", Locale.US).format(c.getTime());
+                Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+                return format;
+        }
+        return sb.append(str).append(hm).toString();
+    }
 
-         return var7.append(var8).append(var5).toString();
-      } else {
-         return "–";
-      }
-   }
+    /* compiled from: StorageInfo.kt */
+    public static final class Copying {
+        private final String line;
+        private final Integer pct;
+        private final String phase;
 
-   public static final class Copying {
-      private final String line;
-      private final Integer pct;
-      private final String phase;
+        public Copying(String phase, Integer pct, String line) {
+            Intrinsics.checkNotNullParameter(phase, "phase");
+            Intrinsics.checkNotNullParameter(line, "line");
+            this.phase = phase;
+            this.pct = pct;
+            this.line = line;
+        }
 
-      public Copying(String var1, Integer var2, String var3) {
-         Intrinsics.checkNotNullParameter(var1, "phase");
-         Intrinsics.checkNotNullParameter(var3, "line");
-         super();
-         this.phase = var1;
-         this.pct = var2;
-         this.line = var3;
-      }
+        public final String getLine() {
+            return this.line;
+        }
 
-      public final String getLine() {
-         return this.line;
-      }
+        public final Integer getPct() {
+            return this.pct;
+        }
 
-      public final Integer getPct() {
-         return this.pct;
-      }
+        public final String getPhase() {
+            return this.phase;
+        }
+    }
 
-      public final String getPhase() {
-         return this.phase;
-      }
-   }
+    public final Copying copying(JSONObject j) {
+        JSONObject optJSONObject;
+        JSONObject p;
+        String str;
+        if (j == null || (optJSONObject = j.optJSONObject("stick")) == null || (p = optJSONObject.optJSONObject("progress")) == null) {
+            return null;
+        }
+        String phase = p.optString("phase", "copying");
+        if (!Intrinsics.areEqual(phase, "copying")) {
+            Intrinsics.checkNotNull(phase);
+            if (phase.length() > 0) {
+                StringBuilder sb = new StringBuilder();
+                char it = phase.charAt(0);
+                String valueOf = String.valueOf(it);
+                Intrinsics.checkNotNull(valueOf, "null cannot be cast to non-null type java.lang.String");
+                String upperCase = valueOf.toUpperCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
+                StringBuilder append = sb.append((Object) upperCase);
+                String substring = phase.substring(1);
+                Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
+                str = append.append(substring).toString();
+            } else {
+                str = phase;
+            }
+            return new Copying(phase, null, str + "…");
+        }
+        long tot = p.optLong("total_bytes");
+        long done = p.optLong("done_bytes");
+        if (tot <= 0) {
+            return new Copying(phase, 100, "Nothing new to copy");
+        }
+        int pct = RangesKt.coerceIn((int) ((100 * done) / tot), 0, 100);
+        double eta = p.optDouble("eta_s", Double.NaN);
+        double rate = p.optDouble("rate_MBps", Double.NaN);
+        Integer valueOf2 = Integer.valueOf(pct);
+        StringBuilder $this$copying_u24lambda_u244 = new StringBuilder();
+        $this$copying_u24lambda_u244.append(pct + "%  ·  " + INSTANCE.size(done) + " of " + INSTANCE.size(tot) + "  ·  " + p.optInt("done_files") + " of " + p.optInt("total_files") + " files");
+        if (!Double.isNaN(rate) && rate > 0.0d) {
+            String format = String.format("%.0f", Arrays.copyOf(new Object[]{Double.valueOf(rate)}, 1));
+            Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+            $this$copying_u24lambda_u244.append("  ·  " + format + " MB/s");
+        }
+        if (!Double.isNaN(eta) && eta > 0.0d) {
+            $this$copying_u24lambda_u244.append("  ·  " + INSTANCE.dur(eta) + " left");
+        }
+        Unit unit = Unit.INSTANCE;
+        String sb2 = $this$copying_u24lambda_u244.toString();
+        Intrinsics.checkNotNullExpressionValue(sb2, "toString(...)");
+        return new Copying(phase, valueOf2, sb2);
+    }
+
+    public final String size(long b) {
+        if (b < 1000000000) {
+            return (b / 1000000) + " MB";
+        }
+        String format = String.format("%.1f GB", Arrays.copyOf(new Object[]{Double.valueOf(b / 1.0E9d)}, 1));
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        return format;
+    }
+
+    public final String mb(int m) {
+        return size(m * 1000000);
+    }
+
+    public final String runLine(String out) {
+        Intrinsics.checkNotNullParameter(out, "out");
+        if (!StringsKt.startsWith$default(StringsKt.trimStart((CharSequence) out).toString(), "{", false, 2, (Object) null)) {
+            return out;
+        }
+        try {
+            JSONObject o = new JSONObject(out);
+            String optString = o.optString("result");
+            if (optString.length() == 0) {
+                optString = "done";
+            }
+            String it = optString;
+            if (Intrinsics.areEqual(it, "ok")) {
+                it = "finished";
+            }
+            if (!o.has("copied_MB")) {
+                return it;
+            }
+            return it + "  ·  " + mb(o.optInt("copied_MB")) + " copied, " + o.optInt("files") + " files";
+        } catch (Exception e) {
+            return StringsKt.take(out, 80);
+        }
+    }
+
+    public final String dur(double s) {
+        StringBuilder append;
+        int m = MathKt.roundToInt(s / 60);
+        if (m < 1) {
+            return "under a minute";
+        }
+        if (m < 60) {
+            append = new StringBuilder().append("about ").append(m);
+        } else {
+            append = new StringBuilder().append("about ").append(m / 60).append(" h ").append(m % 60);
+        }
+        return append.append(" min").toString();
+    }
+
+    public final List<Pair<String, String>> rows(JSONObject j) {
+        String str;
+        if (j == null) {
+            return CollectionsKt.listOf(TuplesKt.to("Storage", "comma not reachable (or starviewd too old: install the latest starviewd.py)"));
+        }
+        ArrayList out = new ArrayList();
+        JSONObject inn = j.optJSONObject("internal");
+        if (inn != null) {
+            out.add(TuplesKt.to("Internal storage", gb(inn, "free_GB") + " GB free of " + gb(inn, "total_GB") + " GB  ·  openpilot records here"));
+            out.add(TuplesKt.to("Drives on the comma", inn.optInt("segments") + " segments  ·  newest " + whenStr(inn.optDouble("newest_time")) + "  ·  oldest " + whenStr(inn.optDouble("oldest_time"))));
+        }
+        JSONObject s = j.optJSONObject("stick");
+        if (s == null || !s.optBoolean("present")) {
+            out.add(TuplesKt.to("USB stick", "not connected"));
+            return out;
+        }
+        out.add(TuplesKt.to("USB stick", s.has("stick_free_GB") ? gb(s, "stick_free_GB") + " GB free of " + gb(s, "stick_size_GB") + " GB  ·  archive copy, only used while parked" : "connected, no copy finished yet"));
+        Copying it = copying(j);
+        if (it != null) {
+            out.add(TuplesKt.to("Copying to the stick now", it.getLine()));
+        }
+        double lc = s.optDouble("last_copy_time", Double.NaN);
+        String str2 = "–";
+        out.add(TuplesKt.to("Last copy to the stick", Double.isNaN(lc) ? "–" : whenStr(lc) + "  ·  " + mb(s.optInt("last_copy_MB"))));
+        if (s.has("stick_segments")) {
+            out.add(TuplesKt.to("Drives on the stick", s.optInt("stick_segments") + " segments  ·  newest " + whenStr(s.optDouble("stick_newest_time")) + "  ·  oldest " + whenStr(s.optDouble("stick_oldest_time"))));
+        }
+        double run = s.optDouble("run_time", Double.NaN);
+        String res = s.optString("result");
+        ArrayList arrayList = out;
+        String optString = Double.isNaN(run) ? s.has("time") ? s.optString("time") : "never" : whenStr(run);
+        String str3 = res;
+        if (!(str3.length() == 0)) {
+            str2 = str3;
+        }
+        arrayList.add(TuplesKt.to("Last check", optString + "  ·  " + ((Object) str2) + (!s.optBoolean("auto", true) ? "  ·  auto copy OFF" : "  ·  auto copy every 5 min while parked")));
+        JSONObject a = s.optJSONObject("auto_last");
+        if (a != null) {
+            double t = a.optDouble("time", Double.NaN);
+            if (a.optBoolean("running")) {
+                str = "running now";
+            } else if (a.isNull("rc")) {
+                StorageInfo storageInfo = INSTANCE;
+                String optString2 = a.optString("out");
+                Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
+                String runLine = storageInfo.runLine(optString2);
+                if (runLine.length() == 0) {
+                    runLine = "stopped";
+                }
+                str = runLine;
+            } else {
+                StorageInfo storageInfo2 = INSTANCE;
+                String optString3 = a.optString("out");
+                Intrinsics.checkNotNullExpressionValue(optString3, "optString(...)");
+                String runLine2 = storageInfo2.runLine(optString3);
+                if (runLine2.length() == 0) {
+                    runLine2 = "exit " + a.optInt("rc");
+                }
+                str = runLine2;
+            }
+            String what = str;
+            out.add(TuplesKt.to("Last automatic copy", INSTANCE.whenStr(t) + "  ·  " + what));
+        }
+        return out;
+    }
 }
