@@ -1787,7 +1787,9 @@ public final class DevicePanel extends ScrollView {
         int i = 0;
         if (st.optBoolean("tethering")) {
             str = "Tethering active (" + st.optString("tether_ssid") + ") · " + ip;
-        } else if (!st.optBoolean("connecting")) {
+        } else if (st.optBoolean("connecting")) {
+            str = "Connecting…";
+        } else {
             Intrinsics.checkNotNull(ssid);
             str = ssid.length() > 0 ? "Connected to " + ssid + " · " + ip : "Not connected to Wi-Fi";
         }

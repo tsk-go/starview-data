@@ -303,7 +303,7 @@ public final class KeyFobView extends CardPage {
             var14.setTextColor(CarUi.Companion.getTEXT());
             var14.setTextSize(19.0F);
             var14.setTypeface(Typeface.DEFAULT_BOLD);
-            var27.addView((View)var14, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
+            var27.addView((View)var14, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
             Switch var36 = this.getUi().bigSwitch();
             var36.setChecked(var10);
             var36.setOnCheckedChangeListener(new KeyFobView$$ExternalSyntheticLambda1(this));

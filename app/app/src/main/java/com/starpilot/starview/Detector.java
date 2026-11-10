@@ -1148,7 +1148,7 @@ public final class Detector {
         long tl = System.nanoTime();
         File detector = ModelDownload.INSTANCE.detector(this.ctx);
         if (detector == null) {
-            throw new ModelDownload.Missing(ModelDownload.INSTANCE.getStatus());
+            throw KtCompat.sneaky(new ModelDownload.Missing(ModelDownload.INSTANCE.getStatus()));
         }
         byte[] bytes = FilesKt.readBytes(detector);
         ByteBuffer $this$ensureInterpreter_u24lambda_u247 = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder());
@@ -1943,9 +1943,9 @@ public final class Detector {
                 String var71 = var26;
 
                 while (var30.hasNext()) {
-                    var97 = (String)var30.next();
-                    Intrinsics.checkNotNullExpressionValue(var97, var71);
-                    Object var99 = (Detector$track$Pair)var97;
+                    Object var97n = var30.next();
+                    Intrinsics.checkNotNullExpressionValue(var97n, var71);
+                    Object var99 = (Detector$track$Pair)var97n;
                     if (!var29.contains(((Detector$track$Pair) var99).getTr()) && !var28.contains(((Detector$track$Pair) var99).getD())) {
                         track$take(var29, var28, var5, var15, this, ((Detector$track$Pair) var99).getTr(), ((Detector$track$Pair) var99).getD(), 0.7F, true);
                     }
@@ -2594,6 +2594,8 @@ public final class Detector {
                         i2 = 0;
                         i4 = 1;
                         detector = this;
+                    } else {
+                        break;
                     }
                 }
                 ArraysKt.sort(vals);
@@ -3730,6 +3732,8 @@ public final class Detector {
                         i2 = 0;
                         i3 = 1;
                         detector = this;
+                    } else {
+                        break;
                     }
                 }
                 ArraysKt.sort(rg);

@@ -391,7 +391,7 @@ public final class Ideas {
                         destination$iv$iv2.add(cap);
                     }
                 }
-                Double minOrNull = CollectionsKt.minOrNull(destination$iv$iv2);
+                Double minOrNull = CollectionsKt.minOrNull((Iterable<Double>) (List) destination$iv$iv2);
                 if (minOrNull != null) {
                     double it4 = minOrNull.doubleValue();
                     args.put("cap", Double.valueOf(it4));

@@ -22,7 +22,6 @@ public final class AmyPrompts {
 
     public final List<String> ask(int dir, String why) {
         Double meters;
-        double d;
         Intrinsics.checkNotNullParameter(why, "why");
         String side = dir < 0 ? "left" : "right";
         String dk = null;
@@ -40,13 +39,12 @@ public final class AmyPrompts {
         if (doubleOrNull != null) {
             double it = doubleOrNull.doubleValue();
             if (Intrinsics.areEqual(unit, "ft")) {
-                d = 0.3048d;
+                meters = Double.valueOf(0.3048d * it);
             } else if (Intrinsics.areEqual(unit, "mi")) {
-                d = 1609.34d;
+                meters = Double.valueOf(1609.34d * it);
             } else {
                 meters = null;
             }
-            meters = Double.valueOf(d * it);
         } else {
             meters = null;
         }

@@ -90,7 +90,7 @@ public final class DevSidebarView extends View {
         pairArr[4] = TuplesKt.to(str3, rows$shown$default(torque ? t3.getLatAccelLearned() : t3.getBaseLatAccel(), 0, null, 6, null));
         pairArr[5] = TuplesKt.to("STEER RATIO", rows$shown$default((!drive || getT().getSteerRatioLive() <= 0.0f) ? Float.NaN : getT().getSteerRatioLive(), 0, null, 6, null));
         pairArr[6] = TuplesKt.to("STEER STIFF", rows$shown$default(drive ? getT().getStiffness() : Float.NaN, 0, null, 6, null));
-        return CollectionsKt.listOf((Object[]) pairArr);
+        return CollectionsKt.listOf(pairArr);
     }
 
     private static final String rows$shown(float v, int dec, String suffix) {

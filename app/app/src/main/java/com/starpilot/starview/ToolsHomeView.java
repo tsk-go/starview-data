@@ -108,7 +108,7 @@ public final class ToolsHomeView extends ScrollView {
             var16.setMinimumHeight(this.ui.dp(168));
             this.lines.put((String)var30.getThird(), var21);
             View var17 = (View)var16;
-            android.widget.GridLayout.LayoutParams var22 = new LayoutParams(GridLayout.spec(var5 / 4), GridLayout.spec(var5 % 4, 1.0F));
+            android.widget.GridLayout.LayoutParams var22 = new android.widget.GridLayout.LayoutParams(GridLayout.spec(var5 / 4), GridLayout.spec(var5 % 4, 1.0F));
             var22.width = 0;
             var22.setMargins(this.ui.dp(7), this.ui.dp(7), this.ui.dp(7), this.ui.dp(7));
             Unit var29 = Unit.INSTANCE;

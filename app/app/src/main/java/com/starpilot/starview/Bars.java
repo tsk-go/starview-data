@@ -57,7 +57,7 @@ public final class Bars extends View {
                 destination$iv$iv.add(element$iv$iv);
             }
         }
-        Float maxOrNull = CollectionsKt.maxOrNull(destination$iv$iv);
+        Float maxOrNull = CollectionsKt.maxOrNull((Iterable<Float>) (List) destination$iv$iv);
         float m = Math.max(maxOrNull != null ? maxOrNull.floatValue() : 1.0f, 0.001f);
         float slot = w / Math.max(this.values.size(), 1);
         float bw = slot * 0.6f;

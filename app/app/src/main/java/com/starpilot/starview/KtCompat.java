@@ -34,4 +34,18 @@ public final class KtCompat {
       throw new IllegalStateException(e);
     }
   }
+
+  /** Kotlin has no checked exceptions: throws a checked one from code whose Java signature doesn't declare it */
+  public static RuntimeException sneaky(Throwable t) {
+    KtCompat.<RuntimeException>throw0(t);
+    return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T extends Throwable> void throw0(Throwable t) throws T {
+    throw (T) t;
+  }
+
+  /** lets Java catch a checked exception that Kotlin code throws without declaring it (a no-op) */
+  public static <T extends Throwable> void mayThrow() throws T {}
 }

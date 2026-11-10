@@ -52,7 +52,7 @@ public final class DevicePanel$fastPoll$1 implements Runnable {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit run$lambda$1;
-                    run$lambda$1 = DevicePanel$fastPoll$1.run$lambda$1(devicePanel2, again, (JSONObject) obj);
+                    run$lambda$1 = DevicePanel$fastPoll$1.run$lambda$1(devicePanel2, DevicePanel$fastPoll$1.this, (JSONObject) obj);
                     return run$lambda$1;
                 }
             });

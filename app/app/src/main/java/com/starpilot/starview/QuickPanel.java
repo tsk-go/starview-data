@@ -266,7 +266,7 @@ public final class QuickPanel extends FrameLayout {
                 return paint$lambda$25;
             }
         });
-        List<View> tiles = CollectionsKt.listOf((Object[]) viewArr);
+        List<View> tiles = CollectionsKt.listOf(viewArr);
         int i3 = 0;
         for (View t : tiles) {
             int i4 = i3;

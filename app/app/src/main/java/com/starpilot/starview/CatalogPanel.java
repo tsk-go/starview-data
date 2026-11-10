@@ -1223,7 +1223,7 @@ public final class CatalogPanel extends ScrollView {
                 LinearLayout var6 = new LinearLayout((Context)var3.act);
                 var6.setOrientation(0);
                 var6.setGravity(16);
-                var6.addView((View)var7, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
+                var6.addView((View)var7, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
                 var6.addView((View)var16);
                 var0.addView((View)var6);
                 var1.element = (new CatalogPanel$$ExternalSyntheticLambda30(var7, var2, var3, var4));
@@ -1607,7 +1607,7 @@ public final class CatalogPanel extends ScrollView {
     }
 
     public final void syncAll() {
-        Row it;
+        Object it;
         int version = this.api.getVersion();
         Telemetry telemetry = Link.INSTANCE.getTelemetry();
         this.lastSig = version + "|" + (telemetry != null ? Boolean.valueOf(telemetry.getEnabled()) : null) + "|" + DriveState.INSTANCE.onroad();

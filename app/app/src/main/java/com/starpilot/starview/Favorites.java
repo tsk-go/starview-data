@@ -216,38 +216,26 @@ public final class Favorites {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void saveFound$lambda$9(Context $ctx, final String $name, final String $address, final Function1 $then, final DataClient $data, final String $label) {
-        Address hit;
-        Address address = null;
+        Address found = null;
         try {
             if (Geocoder.isPresent()) {
-                try {
-                    Geocoder geocoder = new Geocoder($ctx, Locale.getDefault());
-                    Iterable $this$filter$iv = CollectionsKt.listOf(new String[]{$name, $address});
-                    Collection destination$iv$iv = new ArrayList();
-                    for (Object element$iv$iv : $this$filter$iv) {
-                        String it = (String) element$iv$iv;
-                        if (it.length() > 0) {
-                            destination$iv$iv.add(element$iv$iv);
-                        }
+                Geocoder geocoder = new Geocoder($ctx, Locale.getDefault());
+                Iterable $this$filter$iv = CollectionsKt.listOf(new String[]{$name, $address});
+                Collection destination$iv$iv = new ArrayList();
+                for (Object element$iv$iv : $this$filter$iv) {
+                    String it = (String) element$iv$iv;
+                    if (it.length() > 0) {
+                        destination$iv$iv.add(element$iv$iv);
                     }
-                    List<Address> fromLocationName = geocoder.getFromLocationName(CollectionsKt.joinToString((List) destination$iv$iv, ", ", "", "", -1, "...", null), 1);
-                    if (fromLocationName != null) {
-                        address = (Address) CollectionsKt.firstOrNull((List) fromLocationName);
-                    }
-                } catch (Exception e) {
-                    hit = null;
-                    final var hit$f = hit;
-                    INSTANCE.getMain().post(new Runnable() { // from class: com.starpilot.starview.Favorites$$ExternalSyntheticLambda0
-                        @Override // java.lang.Runnable
-                        public final void run() {
-                            Favorites.saveFound$lambda$9$lambda$8(hit$f, $then, $data, $name, $address, $label);
-                        }
-                    });
+                }
+                List<Address> fromLocationName = geocoder.getFromLocationName(CollectionsKt.joinToString((List) destination$iv$iv, ", ", "", "", -1, "...", null), 1);
+                if (fromLocationName != null) {
+                    found = (Address) CollectionsKt.firstOrNull((List) fromLocationName);
                 }
             }
-            hit = address;
-        } catch (Exception e2) {
+        } catch (Exception e) {
         }
+        final Address hit = found;
         INSTANCE.getMain().post(new Runnable() { // from class: com.starpilot.starview.Favorites$$ExternalSyntheticLambda0
             @Override // java.lang.Runnable
             public final void run() {
