@@ -130,7 +130,7 @@ public final class SwipePager extends ViewGroup {
         Intrinsics.checkNotNullParameter(it, "it");
         Object animatedValue = it.getAnimatedValue();
         Intrinsics.checkNotNull(animatedValue, "null cannot be cast to non-null type kotlin.Int");
-        this$0.scrollTo(((Integer) animatedValue).intValue(), 0);
+        this$0.scrollTo(((Number) animatedValue).intValue(), 0);
     }
 
     /* VF: from Vineflower (jadx: ) */

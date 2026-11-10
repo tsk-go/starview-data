@@ -3720,7 +3720,7 @@ public final class SceneView extends SurfaceView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 double updateScene$curbAt$lambda$33;
-                updateScene$curbAt$lambda$33 = SceneView.updateScene$curbAt$lambda$33(c, ((Integer) obj).intValue());
+                updateScene$curbAt$lambda$33 = SceneView.updateScene$curbAt$lambda$33(c, ((Number) obj).intValue());
                 return Double.valueOf(updateScene$curbAt$lambda$33);
             }
         }, c.length, x);
@@ -3746,7 +3746,7 @@ public final class SceneView extends SurfaceView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 double updateScene$edgeAtX$lambda$34;
-                updateScene$edgeAtX$lambda$34 = SceneView.updateScene$edgeAtX$lambda$34(c, ((Integer) obj).intValue());
+                updateScene$edgeAtX$lambda$34 = SceneView.updateScene$edgeAtX$lambda$34(c, ((Number) obj).intValue());
                 return Double.valueOf(updateScene$edgeAtX$lambda$34);
             }
         }, c.length, x);
@@ -5320,8 +5320,8 @@ public final class SceneView extends SurfaceView {
 
                         if (!var62.isEmpty()) {
                             CollectionsKt.sort(var62);
-                            var61 = (float[])var62.get(var62.size() / 2);
-                            Double var18 = (Double)(Object)var61;
+                            Object var61d = var62.get(var62.size() / 2);
+                            Double var18 = (Double)var61d;
                             Intrinsics.checkNotNull(var18);
                             var2 = var18;
                             boolean var46;
@@ -5332,10 +5332,10 @@ public final class SceneView extends SurfaceView {
                             }
 
                             if (!var46) {
-                                var61 = null;
+                                var61d = null;
                             }
 
-                            Double var64 = (Double)(Object)var61;
+                            Double var64 = (Double)var61d;
                             if (var64 != null) {
                                 var2 = var64;
                             } else {
@@ -6304,7 +6304,7 @@ public final class SceneView extends SurfaceView {
                                         var116 = ((Number)var251.next()).intValue();
                                         Map var205 = var245;
                                         Long var266 = drawMapRoads$k(var261.getE()[var116], var261.getN()[var116]);
-                                        var186 = (String)var205.get(var266);
+                                        var186 = var205.get(var266);
                                         if (var186 == null) {
                                             var186 = new ArrayList(2);
                                             var205.put(var266, var186);
@@ -6434,11 +6434,12 @@ public final class SceneView extends SurfaceView {
                     List var239 = (List)var229.getValue();
                     Iterator var247 = var73.iterator();
 
+                    Object var46w;
                     label544: {
                         while (var247.hasNext()) {
-                            var46 = (String)var247.next();
+                            var46w = var247.next();
                             boolean var136;
-                            if (((OsmRoads.Way)(Object)var46).getId() == var35) {
+                            if (((OsmRoads.Way)var46w).getId() == var35) {
                                 var136 = true;
                             } else {
                                 var136 = false;
@@ -6449,10 +6450,10 @@ public final class SceneView extends SurfaceView {
                             }
                         }
 
-                        var46 = null;
+                        var46w = null;
                     }
 
-                    OsmRoads.Way var248 = (OsmRoads.Way)(Object)var46;
+                    OsmRoads.Way var248 = (OsmRoads.Way)var46w;
                     if (var248 != null) {
                         if ((var131 != 0)) {
                             Map var249 = var258;
@@ -7916,9 +7917,9 @@ public final class SceneView extends SurfaceView {
                 Iterator var107 = var35;
 
                 while (var107.hasNext()) {
-                    var35 = (Iterator)var107.next();
-                    Intrinsics.checkNotNullExpressionValue(var35, "next(...)");
-                    LaneTracks.Line var41 = (LaneTracks.Line)(Object)var35;
+                    Object var35n = var107.next();
+                    Intrinsics.checkNotNullExpressionValue(var35n, "next(...)");
+                    LaneTracks.Line var41 = (LaneTracks.Line)var35n;
                     if (!(var41.getAlpha() < 0.03F)) {
                         LaneMarks.Mark var129 = var41.getMark();
                         if (var129 != null) {
@@ -8108,11 +8109,11 @@ public final class SceneView extends SurfaceView {
             Triple var135 = var30.tracks.inner();
             LaneTracks.Line var140 = (LaneTracks.Line)var135.component1();
             LaneTracks.Line var141 = (LaneTracks.Line)var135.component2();
-            Iterable var142 = var30.tracks.getLines();
+            Object var142 = var30.tracks.getLines();
             var var136 = new ArrayList();
 
             for (Object var142$it : (Iterable) var142) {
-                var142 = (Iterable) var142$it;
+                var142 = var142$it;
                 byte var72;
                 if (((LaneTracks.Line)(Object)var142).getAlpha() > 0.2F) {
                     var72 = (byte)var65;
@@ -8127,8 +8128,8 @@ public final class SceneView extends SurfaceView {
 
             List var137 = var136;
             var142 = var137;
-            var var138 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var142, 10));
-            Iterator var145 = var142.iterator();
+            var var138 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var137, 10));
+            Iterator var145 = var137.iterator();
 
             while (var145.hasNext()) {
                 var138.add(((LaneTracks.Line)var145.next()).getY0());

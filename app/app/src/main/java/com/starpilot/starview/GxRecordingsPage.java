@@ -191,14 +191,14 @@ public final class GxRecordingsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$0;
-                build$lambda$0 = GxRecordingsPage.build$lambda$0(GxRecordingsPage.this, ((Integer) obj).intValue());
+                build$lambda$0 = GxRecordingsPage.build$lambda$0(GxRecordingsPage.this, ((Number) obj).intValue());
                 return build$lambda$0;
             }
         }, new Function2() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda35
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit build$lambda$1;
-                build$lambda$1 = GxRecordingsPage.build$lambda$1(GxRecordingsPage.this, ((Integer) obj).intValue(), (LinearLayout) obj2);
+                build$lambda$1 = GxRecordingsPage.build$lambda$1(GxRecordingsPage.this, ((Number) obj).intValue(), (LinearLayout) obj2);
                 return build$lambda$1;
             }
         }, 2, null);
@@ -308,7 +308,7 @@ public final class GxRecordingsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildRoutes$lambda$10;
-                buildRoutes$lambda$10 = GxRecordingsPage.buildRoutes$lambda$10(GxRecordingsPage.this, ((Integer) obj).intValue());
+                buildRoutes$lambda$10 = GxRecordingsPage.buildRoutes$lambda$10(GxRecordingsPage.this, ((Number) obj).intValue());
                 return buildRoutes$lambda$10;
             }
         });
@@ -318,7 +318,7 @@ public final class GxRecordingsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildRoutes$lambda$11;
-                buildRoutes$lambda$11 = GxRecordingsPage.buildRoutes$lambda$11(GxRecordingsPage.this, ((Integer) obj).intValue());
+                buildRoutes$lambda$11 = GxRecordingsPage.buildRoutes$lambda$11(GxRecordingsPage.this, ((Number) obj).intValue());
                 return buildRoutes$lambda$11;
             }
         });
@@ -1702,7 +1702,7 @@ public final class GxRecordingsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit openLogs$lambda$82$lambda$79$lambda$78;
-                openLogs$lambda$82$lambda$79$lambda$78 = GxRecordingsPage.openLogs$lambda$82$lambda$79$lambda$78(start, $segs, this$0, ms, $r, ((Long) obj).longValue());
+                openLogs$lambda$82$lambda$79$lambda$78 = GxRecordingsPage.openLogs$lambda$82$lambda$79$lambda$78(start, $segs, this$0, ms, $r, ((Number) obj).longValue());
                 return openLogs$lambda$82$lambda$79$lambda$78;
             }
         }), new LinearLayout.LayoutParams(-1, 0, 1.0f));
@@ -1739,7 +1739,7 @@ public final class GxRecordingsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit openLogs$lambda$82$lambda$79$lambda$78$lambda$77;
-                openLogs$lambda$82$lambda$79$lambda$78$lambda$77 = GxRecordingsPage.openLogs$lambda$82$lambda$79$lambda$78$lambda$77($ms, this$0, $r, t, seg, n, ((Integer) obj).intValue());
+                openLogs$lambda$82$lambda$79$lambda$78$lambda$77 = GxRecordingsPage.openLogs$lambda$82$lambda$79$lambda$78$lambda$77($ms, this$0, $r, t, seg, n, ((Number) obj).intValue());
                 return openLogs$lambda$82$lambda$79$lambda$78$lambda$77;
             }
         });
@@ -2371,7 +2371,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit paintQual$lambda$7;
-                    paintQual$lambda$7 = GxRecordingsPage.RoutePlayer.paintQual$lambda$7(((Integer) obj).intValue());
+                    paintQual$lambda$7 = GxRecordingsPage.RoutePlayer.paintQual$lambda$7(((Number) obj).intValue());
                     return paintQual$lambda$7;
                 }
             };
@@ -2744,7 +2744,7 @@ public final class GxRecordingsPage extends GxPage {
             this$0.pick("Video segment", (List) destination$iv$iv, new Function1() { // from class: com.starpilot.starview.GxRecordingsPage$RoutePlayer$$ExternalSyntheticLambda12
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
-                    return GxRecordingsPage.RoutePlayer.lambda$15$lambda$14(this$1, ((Integer) obj).intValue());
+                    return GxRecordingsPage.RoutePlayer.lambda$15$lambda$14(this$1, ((Number) obj).intValue());
                 }
             });
             return Unit.INSTANCE;
@@ -2896,7 +2896,7 @@ public final class GxRecordingsPage extends GxPage {
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         Unit unit;
-                        unit = GxRecordingsPage.RoutePlayer.toggleMap$lambda$35(GxRecordingsPage.RoutePlayer.this, ((Long) obj).longValue());
+                        unit = GxRecordingsPage.RoutePlayer.toggleMap$lambda$35(GxRecordingsPage.RoutePlayer.this, ((Number) obj).longValue());
                         return unit;
                     }
                 });
@@ -2985,7 +2985,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function3
                 public final Object invoke(Object obj, Object obj2, Object obj3) {
                     Unit fetch$lambda$48;
-                    fetch$lambda$48 = GxRecordingsPage.RoutePlayer.fetch$lambda$48(GxRecordingsPage.RoutePlayer.this, gxRecordingsPage2, ((Integer) obj).intValue(), (String) obj2, (String) obj3);
+                    fetch$lambda$48 = GxRecordingsPage.RoutePlayer.fetch$lambda$48(GxRecordingsPage.RoutePlayer.this, gxRecordingsPage2, ((Number) obj).intValue(), (String) obj2, (String) obj3);
                     return fetch$lambda$48;
                 }
             }, 12, null);
@@ -3097,7 +3097,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function2
                 public final Object invoke(Object obj, Object obj2) {
                     Unit fetch$lambda$48$lambda$46;
-                    fetch$lambda$48$lambda$46 = GxRecordingsPage.RoutePlayer.fetch$lambda$48$lambda$46(this$0, ((Integer) obj).intValue(), (Function1) obj2);
+                    fetch$lambda$48$lambda$46 = GxRecordingsPage.RoutePlayer.fetch$lambda$48$lambda$46(this$0, ((Number) obj).intValue(), (Function1) obj2);
                     return fetch$lambda$48$lambda$46;
                 }
             });
@@ -3110,7 +3110,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function2
                 public final Object invoke(Object obj, Object obj2) {
                     Unit fetch$lambda$48$lambda$47;
-                    fetch$lambda$48$lambda$47 = GxRecordingsPage.RoutePlayer.fetch$lambda$48$lambda$47(this$0, ((Integer) obj).intValue(), (Function1) obj2);
+                    fetch$lambda$48$lambda$47 = GxRecordingsPage.RoutePlayer.fetch$lambda$48$lambda$47(this$0, ((Number) obj).intValue(), (Function1) obj2);
                     return fetch$lambda$48$lambda$47;
                 }
             });
@@ -3198,7 +3198,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit probe$lambda$51;
-                    probe$lambda$51 = GxRecordingsPage.RoutePlayer.probe$lambda$51(t, GxRecordingsPage.RoutePlayer.this, u, attempt, gxRecordingsPage2, ((Integer) obj).intValue());
+                    probe$lambda$51 = GxRecordingsPage.RoutePlayer.probe$lambda$51(t, GxRecordingsPage.RoutePlayer.this, u, attempt, gxRecordingsPage2, ((Number) obj).intValue());
                     return probe$lambda$51;
                 }
             });
@@ -3533,7 +3533,7 @@ public final class GxRecordingsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit chipBar$lambda$111;
-                chipBar$lambda$111 = GxRecordingsPage.chipBar$lambda$111(views, GxRecordingsPage.this, ((Integer) obj).intValue());
+                chipBar$lambda$111 = GxRecordingsPage.chipBar$lambda$111(views, GxRecordingsPage.this, ((Number) obj).intValue());
                 return chipBar$lambda$111;
             }
         };

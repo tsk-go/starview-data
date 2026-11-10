@@ -2108,7 +2108,7 @@ public final class FilesActivity extends AppCompatActivity {
                     }
                     final String label = (idx + 1) + "/" + jobs.size() + "  " + new File(job.getSrcPath()).getName();
                     final long totalF = total;
-                    Function1 onBytes = (Function1) (Object done) -> FilesActivity.startCopy$lambda$51$lambda$41(doneBytes, t0, this$0, label, totalF, idx, ((Long) done).longValue());
+                    Function1 onBytes = (Function1) (Object done) -> FilesActivity.startCopy$lambda$51$lambda$41(doneBytes, t0, this$0, label, totalF, idx, ((Number) done).longValue());
                     this$0.ui.post(() -> FilesActivity.startCopy$lambda$51$lambda$42(this$0, idx));
                     try {
                         if ($src.getRemote() && !$dst.getRemote()) {

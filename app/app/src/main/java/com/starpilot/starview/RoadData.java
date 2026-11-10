@@ -157,7 +157,7 @@ public final class RoadData {
                         @Override // kotlin.jvm.functions.Function1
                         public final Object invoke(Object obj) {
                             CharSequence sha256$lambda$2;
-                            sha256$lambda$2 = RoadData.sha256$lambda$2(((Byte) obj).byteValue());
+                            sha256$lambda$2 = RoadData.sha256$lambda$2(((Number) obj).byteValue());
                             return sha256$lambda$2;
                         }
                     });

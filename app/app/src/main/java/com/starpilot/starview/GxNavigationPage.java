@@ -233,14 +233,14 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$0;
-                build$lambda$0 = GxNavigationPage.build$lambda$0(GxNavigationPage.this, ((Integer) obj).intValue());
+                build$lambda$0 = GxNavigationPage.build$lambda$0(GxNavigationPage.this, ((Number) obj).intValue());
                 return build$lambda$0;
             }
         }, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda69
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit build$lambda$1;
-                build$lambda$1 = GxNavigationPage.build$lambda$1(GxNavigationPage.this, ((Integer) obj).intValue(), (LinearLayout) obj2);
+                build$lambda$1 = GxNavigationPage.build$lambda$1(GxNavigationPage.this, ((Number) obj).intValue(), (LinearLayout) obj2);
                 return build$lambda$1;
             }
         });
@@ -1931,7 +1931,7 @@ public final class GxNavigationPage extends GxPage {
 
     /* VF: from Vineflower (jadx: ) */
     private final void renderDest() {
-        LinearLayout var32 = null; // declarations Vineflower left out
+        Object var32 = null; // declarations Vineflower left out
         if (this.destBox != null) {
             LinearLayout var5 = this.destBox;
             LinearLayout var4 = var5;
@@ -2096,14 +2096,14 @@ public final class GxNavigationPage extends GxPage {
                             break;
                         }
 
-                        var5 = (LinearLayout)var46.next();
-                        if (Intrinsics.areEqual(this.routeIdOf(((Number)(Object)var5).intValue()), this.selectedRouteId)) {
-                            var32 = var5;
+                        Object var5o = var46.next();
+                        if (Intrinsics.areEqual(this.routeIdOf(((Number)var5o).intValue()), this.selectedRouteId)) {
+                            var32 = var5o;
                             break;
                         }
                     }
 
-                    Integer var33 = (Integer)(Object)var32;
+                    Integer var33 = (Integer)var32;
                     if (var33 != null) {
                         var1 = var33;
                     } else {
@@ -2391,7 +2391,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit homeWork$lambda$93;
-                homeWork$lambda$93 = GxNavigationPage.homeWork$lambda$93(f, home, work, GxNavigationPage.this, ((Integer) obj).intValue());
+                homeWork$lambda$93 = GxNavigationPage.homeWork$lambda$93(f, home, work, GxNavigationPage.this, ((Number) obj).intValue());
                 return homeWork$lambda$93;
             }
         });
@@ -2472,9 +2472,9 @@ public final class GxNavigationPage extends GxPage {
                     Pair var15 = this.coordsOf(var5);
                     String var17;
                     if (var15 != null) {
-                        var5 = (JSONObject)var15.getFirst();
+                        Object var5f = var15.getFirst();
                         Object var16 = var15.getSecond();
-                        var17 = var5 + ":" + var16;
+                        var17 = var5f + ":" + var16;
                     } else {
                         var17 = this.labelFor(var5).toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var17, "toLowerCase(...)");
@@ -2975,7 +2975,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildSchedule$lambda$114;
-                buildSchedule$lambda$114 = GxNavigationPage.buildSchedule$lambda$114(GxNavigationPage.this, ((Integer) obj).intValue());
+                buildSchedule$lambda$114 = GxNavigationPage.buildSchedule$lambda$114(GxNavigationPage.this, ((Number) obj).intValue());
                 return buildSchedule$lambda$114;
             }
         });
@@ -3813,7 +3813,7 @@ public final class GxNavigationPage extends GxPage {
                     Iterable var10 = var34;
                     boolean var4 = false;
                     var var15 = new ArrayList();
-                    Iterable var9 = var10;
+                    Object var9 = var10;
                     boolean var3 = false;
 
                     for (JSONObject var16 : (Iterable<JSONObject>) var10) {
@@ -3837,7 +3837,7 @@ public final class GxNavigationPage extends GxPage {
                         String var40 = var29;
 
                         while (var17.hasNext()) {
-                            var9 = (Iterable)var17.next();
+                            var9 = var17.next();
                             JSONObject var21 = (JSONObject)var9;
                             boolean var2;
                             if (var13.length() == 0) {

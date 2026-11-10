@@ -138,14 +138,14 @@ public final class GxVehiclePage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$1;
-                build$lambda$1 = GxVehiclePage.build$lambda$1(GxVehiclePage.this, ((Integer) obj).intValue());
+                build$lambda$1 = GxVehiclePage.build$lambda$1(GxVehiclePage.this, ((Number) obj).intValue());
                 return build$lambda$1;
             }
         }, new Function2() { // from class: com.starpilot.starview.GxVehiclePage$$ExternalSyntheticLambda7
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit build$lambda$2;
-                build$lambda$2 = GxVehiclePage.build$lambda$2(GxVehiclePage.this, ((Integer) obj).intValue(), (LinearLayout) obj2);
+                build$lambda$2 = GxVehiclePage.build$lambda$2(GxVehiclePage.this, ((Number) obj).intValue(), (LinearLayout) obj2);
                 return build$lambda$2;
             }
         }, 2, null);
@@ -250,7 +250,7 @@ public final class GxVehiclePage extends GxPage {
             @Override // kotlin.jvm.functions.Function3
             public final Object invoke(Object obj, Object obj2, Object obj3) {
                 Unit check$lambda$5;
-                check$lambda$5 = GxVehiclePage.check$lambda$5(GxVehiclePage.this, f, then, ((Integer) obj).intValue(), (String) obj2, (String) obj3);
+                check$lambda$5 = GxVehiclePage.check$lambda$5(GxVehiclePage.this, f, then, ((Number) obj).intValue(), (String) obj2, (String) obj3);
                 return check$lambda$5;
             }
         }, 12, null);

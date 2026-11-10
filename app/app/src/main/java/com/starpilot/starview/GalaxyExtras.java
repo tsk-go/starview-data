@@ -349,7 +349,7 @@ public final class GalaxyExtras {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit cloudProvider$load$lambda$17$lambda$16;
-                cloudProvider$load$lambda$17$lambda$16 = GalaxyExtras.cloudProvider$load$lambda$17$lambda$16(can, ids, selected, $ctx, labels, $g, o, $box, $ui, ((Integer) obj).intValue());
+                cloudProvider$load$lambda$17$lambda$16 = GalaxyExtras.cloudProvider$load$lambda$17$lambda$16(can, ids, selected, $ctx, labels, $g, o, $box, $ui, ((Number) obj).intValue());
                 return cloudProvider$load$lambda$17$lambda$16;
             }
         });
