@@ -3875,7 +3875,6 @@ public final class SceneView extends SurfaceView {
     }
 
     private static final Car updateScene$slotNear(SceneView this$0, HashSet<Car> hashSet, long nowMs, long id, String kindName, double tx, double ty) {
-        Iterator<Car> it;
         Iterator<Car> it2 = this$0.genericPool.iterator();
         Intrinsics.checkNotNullExpressionValue(it2, "iterator(...)");
         while (it2.hasNext()) {
@@ -3890,40 +3889,30 @@ public final class SceneView extends SurfaceView {
         Iterator<Car> it3 = this$0.genericPool.iterator();
         Intrinsics.checkNotNullExpressionValue(it3, "iterator(...)");
         while (it3.hasNext()) {
-            Car next = it3.next();
-            Intrinsics.checkNotNullExpressionValue(next, "next(...)");
-            Car c2 = next;
+            Car c2 = it3.next();
+            Intrinsics.checkNotNullExpressionValue(c2, "next(...)");
             if (hashSet.contains(c2) || !c2.getInScene() || Double.isNaN(c2.getX())) {
-                it = it3;
-            } else if (nowMs - c2.getLastUsed() <= 900 || !Double.isNaN(c2.getWx())) {
-                if (Intrinsics.areEqual(c2.getKind(), kindName)) {
-                    it = it3;
-                } else {
-                    it = it3;
-                    if (StringsKt.startsWith(c2.getKind(), "car_", false)) {
-                        if (!StringsKt.startsWith(kindName, "car_", false)) {
-                        }
-                    }
-                }
-                double dx = Math.abs(c2.getX() - tx);
-                double dy = Math.abs(c2.getY() - ty);
-                if (dx <= (0.12d * tx) + 3.5d && dy <= (0.04d * tx) + 2.0d) {
-                    double d = dx + dy;
-                    if (d < bd) {
-                        bd = d;
-                        best = c2;
-                        it3 = it;
-                    }
-                }
-            } else {
-                it = it3;
+                continue;
             }
-            it3 = it;
+            if (nowMs - c2.getLastUsed() > 900 && Double.isNaN(c2.getWx())) {
+                continue;
+            }
+            if (!Intrinsics.areEqual(c2.getKind(), kindName) && !(StringsKt.startsWith(c2.getKind(), "car_", false) && StringsKt.startsWith(kindName, "car_", false))) {
+                continue;
+            }
+            double dx = Math.abs(c2.getX() - tx);
+            double dy = Math.abs(c2.getY() - ty);
+            if (dx <= (0.12d * tx) + 3.5d && dy <= (0.04d * tx) + 2.0d) {
+                double d = dx + dy;
+                if (d < bd) {
+                    bd = d;
+                    best = c2;
+                }
+            }
         }
         if (best != null) {
-            Car it4 = best;
-            it4.setId(id);
-            it4.setLastUsed(nowMs);
+            best.setId(id);
+            best.setLastUsed(nowMs);
         }
         return best;
     }
@@ -4020,11 +4009,8 @@ public final class SceneView extends SurfaceView {
                         Intrinsics.checkNotNullExpressionValue(next3, "next(...)");
                         Car c3 = next3;
                         if (!Double.isNaN(c3.getWx()) && nowMs - c3.getLastUsed() > 700) {
-                            if (!Intrinsics.areEqual(c3.getKind(), kindName)) {
-                                if (vehicleKind) {
-                                    if (!StringsKt.startsWith(c3.getKind(), "car_", false)) {
-                                    }
-                                }
+                            if (!Intrinsics.areEqual(c3.getKind(), kindName) && !(vehicleKind && StringsKt.startsWith(c3.getKind(), "car_", false))) {
+                                continue;
                             }
                             if (oldest == null || c3.getLastUsed() < oldest.getLastUsed()) {
                                 oldest = c3;

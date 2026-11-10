@@ -83,7 +83,7 @@ public final class DrivingMapView extends ScrollView {
 
             while (var16.hasNext()) {
                 View var8 = this.card((DrivingMapView.Card)var16.next());
-                LayoutParams var7 = new LayoutParams(-1, -2);
+                android.widget.LinearLayout.LayoutParams var7 = new android.widget.LinearLayout.LayoutParams(-1, -2);
                 var7.bottomMargin = this.ui.dp(10);
                 Unit var14 = Unit.INSTANCE;
                 var11.addView(var8, (android.view.ViewGroup.LayoutParams)var7);

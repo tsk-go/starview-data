@@ -3345,7 +3345,7 @@ public final class GxThemePage extends GxPage {
         var9.setOrientation(1);
         var9.setPadding(this.getUi().dp(24), this.getUi().dp(12), this.getUi().dp(24), this.getUi().dp(4));
         View var12 = new View((Context)this.getAct());
-        LayoutParams var6 = new LayoutParams(-1, this.getUi().dp(84));
+        android.widget.LinearLayout.LayoutParams var6 = new android.widget.LinearLayout.LayoutParams(-1, this.getUi().dp(84));
         var6.bottomMargin = this.getUi().dp(12);
         Unit var7 = Unit.INSTANCE;
         var9.addView(var12, (android.view.ViewGroup.LayoutParams)var6);
@@ -3421,7 +3421,7 @@ public final class GxThemePage extends GxPage {
                 public void onStopTrackingTouch(SeekBar var1) {
                 }
             });
-            var9.addView((View)var17, (android.view.ViewGroup.LayoutParams)(new LayoutParams(-1, this.getUi().dp(48))));
+            var9.addView((View)var17, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, this.getUi().dp(48))));
             var14.add(var17);
             var16.setTag(var18);
             var2 = var5;

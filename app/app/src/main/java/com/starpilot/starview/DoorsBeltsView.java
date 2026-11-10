@@ -927,7 +927,7 @@ public final class DoorsBeltsView extends CardPage {
                         var11.setText(var10.optString("name"));
                         var11.setTextColor(CarUi.Companion.getTEXT());
                         var11.setTextSize(17.0F);
-                        var24.addView((View)var11, (android.view.ViewGroup.LayoutParams)(new LayoutParams(this.getUi().dp(260), -2)));
+                        var24.addView((View)var11, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(this.getUi().dp(260), -2)));
                         TextView var25 = new TextView(var24.getContext());
                         if (var4 != null) {
                             var14 = var4;
