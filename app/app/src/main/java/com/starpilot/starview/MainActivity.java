@@ -4595,7 +4595,7 @@ public final class MainActivity extends AppCompatActivity {
 
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     public final void ideasTick(Telemetry var1) {
-        Object var26 = null; Object var34 = null; // declarations Vineflower left out
+        Bitmap var26 = null; Answer var34 = null; // declarations Vineflower left out
         long var8 = System.currentTimeMillis();
         Ideas var13 = Ideas.INSTANCE;
         UiSettings var12 = this.settings;
@@ -4873,7 +4873,7 @@ public final class MainActivity extends AppCompatActivity {
 
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     public final void bookmarkNow() {
-        String var141 = null; String var144 = null; Object var146 = null; Object var149 = null; Object var154 = null; Object var159 = null; Object var162 = null; ArrayList var173 = null; Object var186 = null; Object var194 = null; Object var197 = null; Object var204 = null; Object var213 = null; String var225 = null; String var229 = null; String var232 = null; String var240 = null; String var247 = null; Object var249 = null; Object var252 = null; Object var277 = null; String var280 = null; ArrayList var283 = null; Object var288 = null; ArrayList var291 = null; Object var294 = null; Object var303 = null; ArrayList var308 = null; Object var313 = null; Pair var322 = null; Object var352 = null; Object var355 = null; Object var358 = null; Object var361 = null; Object var369 = null; Object var372 = null; Object var375 = null; ArrayList var376 = null; Object var377 = null; ArrayList var379 = null; Object var380 = null; String var381 = null; Object var382 = null; Object var383 = null; Object var384 = null; Item var385 = null; Object var389 = null; Object var390 = null; ArrayList var391 = null; Object var392 = null; Object var397 = null; Object var398 = null; Object var399 = null; Object var401 = null; // declarations Vineflower left out
+        String var141 = null; String var144 = null; String var146 = null; String var149 = null; JSONJSONObject var154 = null; Object var159 = null; JSONJSONObject var162 = null; ArrayList var173 = null; Object var186 = null; Object var194 = null; JSONJSONObject var197 = null; Object var204 = null; Object var213 = null; String var225 = null; String var229 = null; String var232 = null; String var240 = null; String var247 = null; JSONObject var249 = null; Object var252 = null; Object var277 = null; String var280 = null; ArrayList var283 = null; double[] var288 = null; ArrayList var291 = null; ArrayDeque var294 = null; RoadInfo var303 = null; ArrayList var308 = null; Object var313 = null; Pair var322 = null; Object var352 = null; LaneSuggest var355 = null; Object var358 = null; TurnSignal var361 = null; Object var369 = null; Object var372 = null; E var375 = null; ArrayList var376 = null; Object var377 = null; ArrayList var379 = null; JSONJSONObject var380 = null; String var381 = null; JSONJSONObject var382 = null; JSONJSONObject var383 = null; JSONJSONObject var384 = null; Item var385 = null; Iterator var389 = null; ModelSnapshot var390 = null; ArrayList var391 = null; Iterator var392 = null; Iterator var397 = null; Iterator var398 = null; Iterator var399 = null; E var401 = null; // declarations Vineflower left out
         long var11;
         Telemetry var18;
         JSONObject var19;
@@ -5045,7 +5045,7 @@ public final class MainActivity extends AppCompatActivity {
                         return;
                     }
 
-                    var149 = var277;
+                    var149 = ((String) var277);
                     if (var277 != null) {
                         break label690;
                     }

@@ -475,7 +475,7 @@ public final class LaneFeed {
 
     /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     private final void matchOwnMap() {
-        Object var30 = null; Boolean var31 = null; Object var32 = null; Object var33 = null; Object var34 = null; Object var37 = null; // declarations Vineflower left out
+        String var30 = null; Boolean var31 = null; Object var32 = null; Object var33 = null; Object var34 = null; Object var37 = null; // declarations Vineflower left out
         OsmRoads.Fix var18 = OsmRoads.INSTANCE.getLastFix();
         if (var18 != null && !Double.isNaN(OsmRoads.INSTANCE.getLat0()) && System.nanoTime() - var18.getTNs() <= 3000000000L) {
             if (var18.getSpeed() > 3.0F) {

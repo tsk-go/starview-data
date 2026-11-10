@@ -388,7 +388,7 @@ public final class GxNavigationPage extends GxPage {
 
     /* VF: from Vineflower (jadx: ) */
     private final String labelFor(JSONObject var1) {
-        Object var11 = null; // declarations Vineflower left out
+        E var11 = null; // declarations Vineflower left out
         Iterable var4 = CollectionsKt.listOf(new String[]{"full_address", "place_name", "name", "address"});
         var var7 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var4, 10));
         Iterator var8 = var4.iterator();

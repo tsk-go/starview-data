@@ -1190,7 +1190,7 @@ public final class GxModelsPage extends GxPage {
 
     /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void renderList() {
-        Object var33 = null; // declarations Vineflower left out
+        Row var33 = null; // declarations Vineflower left out
         LinearLayout var5 = this.listBox;
         Object var4 = null;
         Object var3 = var5;

@@ -169,7 +169,7 @@ public final class Telemetry {
     private volatile int dmAwareness = 100;
     private volatile String slcSource = "";
     private volatile boolean weatherDay = true;
-    private volatile Map<String, ? extends Object> toggles = MapsKt.emptyMap();
+    private volatile Map<String, Object> toggles = MapsKt.emptyMap();
     private String lastTogglesStr = "";
     private volatile String roadName = "";
     private volatile float bearingDeg = Float.NaN;
@@ -197,9 +197,9 @@ public final class Telemetry {
     private volatile String gyroSrc = "";
     private float turnLastBearing = Float.NaN;
     private final float TURN_MIN_V = 1.5f;
-    private volatile Map<String, ? extends Object> params = MapsKt.emptyMap();
-    private volatile Map<String, ? extends Object> memParams = MapsKt.emptyMap();
-    private volatile Map<String, ? extends Object> info = MapsKt.emptyMap();
+    private volatile Map<String, Object> params = MapsKt.emptyMap();
+    private volatile Map<String, Object> memParams = MapsKt.emptyMap();
+    private volatile Map<String, Object> info = MapsKt.emptyMap();
     private final ConcurrentHashMap<String, Long> msgCount = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Long> byteCount = new ConcurrentHashMap<>();
     private volatile double rttMs = -1.0d;
@@ -1775,7 +1775,7 @@ public final class Telemetry {
             @Override // java.util.function.BiFunction
             public final Object apply(Object obj, Object obj2) {
                 Long count$lambda$2;
-                count$lambda$2 = Telemetry.count$lambda$2($tmp0, obj, obj2);
+                count$lambda$2 = Telemetry.count$lambda$2(telemetry$count$1, obj, obj2);
                 return count$lambda$2;
             }
         });
@@ -1786,7 +1786,7 @@ public final class Telemetry {
             @Override // java.util.function.BiFunction
             public final Object apply(Object obj, Object obj2) {
                 Long count$lambda$3;
-                count$lambda$3 = Telemetry.count$lambda$3($tmp0, obj, obj2);
+                count$lambda$3 = Telemetry.count$lambda$3(telemetry$count$2, obj, obj2);
                 return count$lambda$3;
             }
         });
@@ -2090,32 +2090,6 @@ public final class Telemetry {
         return fArr;
     }
 
-    /* JADX WARN: Can't wrap try/catch for region: R(43:245|(1:247)|248|249|(1:251)|252|253|(1:255)|256|257|(1:259)|260|261|(1:263)|264|265|(1:267)|268|269|(3:270|271|272)|273|274|275|(2:276|277)|(2:279|(18:281|282|283|284|(1:286)(2:312|(1:314)(1:315))|287|288|289|290|291|292|293|294|295|(2:297|298)(1:303)|299|300|301))|320|282|283|284|(0)(0)|287|288|289|290|291|292|293|294|295|(0)(0)|299|300|301) */
-    /* JADX WARN: Can't wrap try/catch for region: R(44:245|(1:247)|248|249|(1:251)|252|253|(1:255)|256|257|(1:259)|260|261|(1:263)|264|265|(1:267)|268|269|(3:270|271|272)|273|274|275|276|277|(2:279|(18:281|282|283|284|(1:286)(2:312|(1:314)(1:315))|287|288|289|290|291|292|293|294|295|(2:297|298)(1:303)|299|300|301))|320|282|283|284|(0)(0)|287|288|289|290|291|292|293|294|295|(0)(0)|299|300|301) */
-    /* JADX WARN: Can't wrap try/catch for region: R(46:245|(1:247)|248|249|(1:251)|252|253|(1:255)|256|257|(1:259)|260|261|(1:263)|264|265|(1:267)|268|269|270|271|272|273|274|275|276|277|(2:279|(18:281|282|283|284|(1:286)(2:312|(1:314)(1:315))|287|288|289|290|291|292|293|294|295|(2:297|298)(1:303)|299|300|301))|320|282|283|284|(0)(0)|287|288|289|290|291|292|293|294|295|(0)(0)|299|300|301) */
-    /* JADX WARN: Code restructure failed: missing block: B:305:0x0a45, code lost:
-    
-        r44 = Float.NaN;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:308:0x0a20, code lost:
-    
-        r43 = new float[0];
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:311:0x0a09, code lost:
-    
-        r42 = false;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:318:0x09f1, code lost:
-    
-        r41 = 0;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:286:0x09e0  */
-    /* JADX WARN: Removed duplicated region for block: B:297:0x0a34 A[Catch: all -> 0x0a44, TRY_LEAVE, TryCatch #4 {all -> 0x0a44, blocks: (B:295:0x0a25, B:297:0x0a34), top: B:294:0x0a25 }] */
-    /* JADX WARN: Removed duplicated region for block: B:303:0x0a3f  */
-    /* JADX WARN: Removed duplicated region for block: B:312:0x09e2 A[Catch: all -> 0x09f0, TRY_LEAVE, TryCatch #9 {all -> 0x09f0, blocks: (B:284:0x09cc, B:312:0x09e2), top: B:283:0x09cc }] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public final void apply(Log.Event.Reader evt) {
         boolean z;
         float s;
@@ -2350,8 +2324,8 @@ public final class Telemetry {
                 Log.ModelDataV2.Reader m = evt.getModelV2();
                 this.lastModelRxNs = System.nanoTime();
                 this.modelSeen = true;
-                StructList.Reader ll = m.getLaneLines();
-                StructList.Reader re = m.getRoadEdges();
+                StructList.Reader<Log.XYZTData.Reader> ll = m.getLaneLines();
+                StructList.Reader<Log.XYZTData.Reader> re = m.getRoadEdges();
                 int nL = ll.size();
                 int nE = re.size();
                 long frameId = m.getFrameId() & 4294967295L;
@@ -2425,40 +2399,42 @@ public final class Telemetry {
                 } catch (Throwable th3) {
                     f = 0.0f;
                 }
+                boolean laneChanging;
                 try {
-                    it = m.getMeta().getLaneChangeState().toString();
+                    String st = m.getMeta().getLaneChangeState().toString();
+                    laneChanging = Intrinsics.areEqual(st, "LANE_CHANGE_STARTING") || Intrinsics.areEqual(st, "LANE_CHANGE_FINISHING");
                 } catch (Throwable th4) {
-                    z4 = false;
+                    laneChanging = false;
                 }
-                if (!Intrinsics.areEqual(it, "LANE_CHANGE_STARTING")) {
-                    if (!Intrinsics.areEqual(it, "LANE_CHANGE_FINISHING")) {
-                        z5 = false;
-                        z4 = z5;
-                        String laneChangeDirection = m.getMeta().getLaneChangeDirection().toString();
-                        int i9 = !Intrinsics.areEqual(laneChangeDirection, "LEFT") ? -1 : Intrinsics.areEqual(laneChangeDirection, "RIGHT") ? 1 : 0;
-                        boolean z19 = Intrinsics.areEqual(m.getMeta().getLaneChangeState().toString(), "LANE_CHANGE_FINISHING");
-                        PrimitiveList.Float.Reader desirePrediction = m.getMeta().getDesirePrediction();
-                        Intrinsics.checkNotNullExpressionValue(desirePrediction, "getDesirePrediction(...)");
-                        float[] fArr7 = fl(desirePrediction);
-                        PrimitiveList.Float.Reader d3 = m.getMeta().getDesireState();
-                        float f13 = d3.size() <= 4 ? d3.get(3) + d3.get(4) : Float.NaN;
-                        this.model = new ModelSnapshot(frameId, fl, fl2, fl3, fl4, fArr, fArr2, fArr3, fl5, fArr4, fArr5, fArr6, fl6, fl7, fl8, z3, f, z4, i9, z19, fArr7, f13);
-                        Unit unit11 = Unit.INSTANCE;
-                        return;
-                    }
+                int laneChangeDir;
+                try {
+                    String dir = m.getMeta().getLaneChangeDirection().toString();
+                    laneChangeDir = Intrinsics.areEqual(dir, "LEFT") ? -1 : Intrinsics.areEqual(dir, "RIGHT") ? 1 : 0;
+                } catch (Throwable th5) {
+                    laneChangeDir = 0;
                 }
-                z5 = true;
-                z4 = z5;
-                String laneChangeDirection2 = m.getMeta().getLaneChangeDirection().toString();
-                int i92 = !Intrinsics.areEqual(laneChangeDirection2, "LEFT") ? -1 : Intrinsics.areEqual(laneChangeDirection2, "RIGHT") ? 1 : 0;
-                boolean z192 = Intrinsics.areEqual(m.getMeta().getLaneChangeState().toString(), "LANE_CHANGE_FINISHING");
-                PrimitiveList.Float.Reader desirePrediction2 = m.getMeta().getDesirePrediction();
-                Intrinsics.checkNotNullExpressionValue(desirePrediction2, "getDesirePrediction(...)");
-                float[] fArr72 = fl(desirePrediction2);
-                PrimitiveList.Float.Reader d32 = m.getMeta().getDesireState();
-                float f132 = d32.size() <= 4 ? d32.get(3) + d32.get(4) : Float.NaN;
-                this.model = new ModelSnapshot(frameId, fl, fl2, fl3, fl4, fArr, fArr2, fArr3, fl5, fArr4, fArr5, fArr6, fl6, fl7, fl8, z3, f, z4, i92, z192, fArr72, f132);
-                Unit unit112 = Unit.INSTANCE;
+                boolean finishing;
+                try {
+                    finishing = Intrinsics.areEqual(m.getMeta().getLaneChangeState().toString(), "LANE_CHANGE_FINISHING");
+                } catch (Throwable th6) {
+                    finishing = false;
+                }
+                float[] desirePred;
+                try {
+                    PrimitiveList.Float.Reader desirePrediction = m.getMeta().getDesirePrediction();
+                    Intrinsics.checkNotNullExpressionValue(desirePrediction, "getDesirePrediction(...)");
+                    desirePred = fl(desirePrediction);
+                } catch (Throwable th7) {
+                    desirePred = new float[0];
+                }
+                float turnDesire;
+                try {
+                    PrimitiveList.Float.Reader ds = m.getMeta().getDesireState();
+                    turnDesire = ds.size() > 4 ? ds.get(3) + ds.get(4) : Float.NaN;
+                } catch (Throwable th8) {
+                    turnDesire = Float.NaN;
+                }
+                this.model = new ModelSnapshot(frameId, fl, fl2, fl3, fl4, fArr, fArr2, fArr3, fl5, fArr4, fArr5, fArr6, fl6, fl7, fl8, z3, f, laneChanging, laneChangeDir, finishing, desirePred, turnDesire);
                 return;
             case 12:
                 Log.RadarState.Reader r = evt.getRadarState();
@@ -2685,12 +2661,7 @@ public final class Telemetry {
                     z6 = false;
                 }
                 this.mapdFreeway = z6;
-                if (!(this.mapdWayName.length() > 0)) {
-                    if (!(this.roadName.length() > 0)) {
-                        r13 = false;
-                    }
-                }
-                this.mapdMatched = r13;
+                this.mapdMatched = this.mapdWayName.length() > 0 || this.roadName.length() > 0;
                 this.mapdAtNs = System.nanoTime();
                 Unit unit26 = Unit.INSTANCE;
                 return;
@@ -2710,17 +2681,17 @@ public final class Telemetry {
                 this.gpsFixes.put(key, new GpsFixInfo(ext ? "gpsLocationExternal" : "gpsLocation", srcName, g2.getHasFix(), g2.getSatelliteCount(), g2.getLatitude(), g2.getLongitude(), g2.getHorizontalAccuracy(), g2.getSpeed(), g2.getBearingDeg(), g2.getBearingAccuracyDeg(), System.nanoTime(), g2.getAltitude(), g2.getVerticalAccuracy(), g2.getUnixTimestampMillis()));
                 tick(key);
                 if (ext && (this.turnGpsSrc == null || Intrinsics.areEqual(this.turnGpsSrc, srcName))) {
-                    if (g2.getHasFix() && g2.getSpeed() > this.TURN_MIN_V && this.vEgo > this.TURN_MIN_V && !Intrinsics.areEqual(this.gear, "reverse")) {
-                        float bearingDeg = g2.getBearingDeg();
-                        if ((Float.isInfinite(bearingDeg) || Float.isNaN(bearingDeg)) ? false : true) {
-                            this.turnGpsSrc = srcName;
-                            if (!Float.isNaN(this.turnLastBearing)) {
-                                this.turnGpsDeg -= (((g2.getBearingDeg() - r0) + 540.0f) % 360.0f) - 180.0f;
-                            }
-                            this.turnLastBearing = g2.getBearingDeg();
+                    float bearing = g2.getBearingDeg();
+                    if (g2.getHasFix() && g2.getSpeed() > this.TURN_MIN_V && this.vEgo > this.TURN_MIN_V && !Intrinsics.areEqual(this.gear, "reverse") && !Float.isInfinite(bearing) && !Float.isNaN(bearing)) {
+                        this.turnGpsSrc = srcName;
+                        float last = this.turnLastBearing;
+                        if (!Float.isNaN(last)) {
+                            this.turnGpsDeg -= (((g2.getBearingDeg() - last) + 540.0f) % 360.0f) - 180.0f;
                         }
+                        this.turnLastBearing = g2.getBearingDeg();
+                    } else {
+                        this.turnLastBearing = Float.NaN;
                     }
-                    this.turnLastBearing = Float.NaN;
                 }
                 if (ext && g2.getHasFix()) {
                     this.lastExtFixMs = nowMs;
@@ -2754,12 +2725,12 @@ public final class Telemetry {
             case 27:
                 Log.UbloxGnss.Reader u = evt.getUbloxGnss();
                 if (u.which() == Log.UbloxGnss.Which.SAT_REPORT) {
-                    StructList.Reader svs = u.getSatReport().getSvs();
+                    StructList.Reader<Log.UbloxGnss.SatReport.SatInfo.Reader> svs = u.getSatReport().getSvs();
                     int size = svs.size();
                     ArrayList arrayList = new ArrayList(size);
                     while (i < size) {
                         int i10 = i;
-                        Log.UbloxGnss.SatReport.SatInfo.Reader v5 = ((Reader) svs.get(i10));
+                        Log.UbloxGnss.SatReport.SatInfo.Reader v5 = svs.get(i10);
                         arrayList.add(new GnssSat(v5.getGnssId() & 255, v5.getSvId() & 255, v5.getCno() & 255, v5.getElevationDeg(), v5.getAzimuthDeg(), v5.getFlagsBitfield()));
                         i++;
                         u = u;
@@ -2770,12 +2741,12 @@ public final class Telemetry {
                 Unit unit28 = Unit.INSTANCE;
                 return;
             case 28:
-                StructList.Reader pts = evt.getLiveTracks().getPoints();
+                StructList.Reader<Car.RadarData.RadarPoint.Reader> pts = evt.getLiveTracks().getPoints();
                 int n = pts.size();
                 float[] arr = new float[n * 2];
                 ArrayList rt = new ArrayList(n);
                 for (int i11 = 0; i11 < n; i11++) {
-                    Car.RadarData.RadarPoint.Reader q2 = ((Reader) pts.get(i11));
+                    Car.RadarData.RadarPoint.Reader q2 = pts.get(i11);
                     arr[i11 * 2] = q2.getDRel();
                     arr[(i11 * 2) + 1] = q2.getYRel();
                     rt.add(new RadarTrack(q2.getTrackId(), q2.getDRel(), q2.getYRel(), q2.getVRel(), q2.getMeasured()));
