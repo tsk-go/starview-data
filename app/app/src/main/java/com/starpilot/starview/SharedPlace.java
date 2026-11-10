@@ -318,7 +318,7 @@ public final class SharedPlace {
                 List var30 = var29;
                 var2 = CollectionsKt.joinToString(var30, ", ", "", "", -1, "...", null);
                 var23 = (CharSequence)var47;
-                if (((CharSequence) var23).length() == 0) {
+                if (var23.length() == 0) {
                     var40 = true;
                 } else {
                     var40 = false;

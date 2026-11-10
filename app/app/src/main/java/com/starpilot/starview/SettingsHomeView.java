@@ -51,8 +51,8 @@ public final class SettingsHomeView extends LinearLayout {
         Code decompiled incorrectly, please refer to instructions dump.
     */
     public /* synthetic */ SettingsHomeView(Context context, CarUi carUi, View view, Function0 function0, Function1 function1, Function1 function12, int i, DefaultConstructorMarker defaultConstructorMarker) {
-        super(var1);
         this(context, carUi, view, function0, r5, function12);
+        super(var1);
         Function1 function13;
         if ((i & 16) == 0) {
             function13 = function1;

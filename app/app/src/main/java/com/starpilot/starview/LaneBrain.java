@@ -2357,7 +2357,7 @@ public final class LaneBrain {
 
                 Object var29 = var19.getName();
                 boolean var20 = var12;
-                if (((CharSequence) var29).length() == 0) {
+                if (var29.length() == 0) {
                     var20 = true;
                 }
 
@@ -2455,7 +2455,7 @@ public final class LaneBrain {
             if (var19 != null && var3) {
                 Object var27 = var19.getName();
                 boolean var21 = var14;
-                if (((CharSequence) var27).length() == 0) {
+                if (var27.length() == 0) {
                     var21 = true;
                 }
 

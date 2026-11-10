@@ -3185,7 +3185,7 @@ public final class GxNavigationPage extends GxPage {
             }
 
             var12 = GxPage.str$default(this, var14, "lastUpdate", null, 2, null);
-            if (((TextView) var12).length() == 0) {
+            if (var12.length() == 0) {
                 var22 = (((boolean)true) ? 1 : 0);
             } else {
                 var22 = (((boolean)false) ? 1 : 0);
@@ -3709,7 +3709,7 @@ public final class GxNavigationPage extends GxPage {
 
             var12 = GxPage.str$default(this, var14, "scheduleLabel", null, 2, null);
             int var35;
-            if (((TextView) var12).length() == 0) {
+            if (var12.length() == 0) {
                 var35 = 1;
             } else {
                 var35 = 0;
@@ -3999,13 +3999,14 @@ public final class GxNavigationPage extends GxPage {
                                         var62 = null;
                                     }
 
-                                    Switch var63 = (Switch) this.toggle(
+                                    Switch var63 = this.toggle(
                                             var77,
                                             var62,
                                             this.selectedDraft.contains(var74),
                                             (ViewGroup)var72,
                                             new GxNavigationPage$$ExternalSyntheticLambda23(this, var74)
-                                        ).component2();
+                                        )
+                                        .component2();
                                     this.regionSwitches.put(var74, var63);
                                 }
                             }
@@ -5108,7 +5109,7 @@ public final class GxNavigationPage extends GxPage {
 
         var11 = GxPage.str$default(this, var14, "visionDebugSession", null, 2, null);
         int var23;
-        if (((TextView) var11).length() == 0) {
+        if (var11.length() == 0) {
             var23 = 1;
         } else {
             var23 = 0;

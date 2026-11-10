@@ -1012,7 +1012,7 @@ public final class LaneShots {
                 }
 
                 File var30 = this.index;
-                if (!((List) var4).isEmpty()) {
+                if (!var4.isEmpty()) {
                     var5 = CollectionsKt.joinToString(var4, "\n", "", "", -1, "...", null);
                     var5 = var5 + "\n";
                 }

@@ -3455,7 +3455,7 @@ public final class GxThemePage extends GxPage {
         var9.setPadding(this.getUi().dp(24), this.getUi().dp(12), this.getUi().dp(24), this.getUi().dp(4));
         View var12 = new View((Context)this.getAct());
         Object var6 = new LayoutParams(-1, this.getUi().dp(84));
-        ((android.widget.LinearLayout.LayoutParams) var6).bottomMargin = this.getUi().dp(12);
+        var6.bottomMargin = this.getUi().dp(12);
         Unit var7 = Unit.INSTANCE;
         var9.addView(var12, (android.view.ViewGroup.LayoutParams)var6);
         BooleanRef var15 = new BooleanRef();

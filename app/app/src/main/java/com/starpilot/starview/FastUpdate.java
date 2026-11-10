@@ -146,7 +146,7 @@ public final class FastUpdate {
         String var32;
         label201: {
             if (var18 != null) {
-                String var10 = ((List) (String)var18).getFirst();
+                String var10 = ((GxTuningPage) (String)var18).getFirst();
                 var32 = var10;
                 if (var10 != null) {
                     break label201;
@@ -180,7 +180,7 @@ public final class FastUpdate {
 
         var14.put("progressLabel", StringsKt.take(var32, 60));
         if (var18 != null) {
-            var2 = (((Pair) (Number)var18).getSecond()).intValue();
+            var2 = ((Number)var18.getSecond()).intValue();
         } else {
             Integer var19 = STAGE_PCT.get(var5);
             if (var19 != null) {
