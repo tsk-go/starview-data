@@ -1307,6 +1307,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
     }
 
     private final boolean driveDone() {
+        boolean $this$all$ivB = false;
         Iterable $this$all$iv;
         if (this.cur.isEmpty()) {
             return false;
@@ -1319,18 +1320,18 @@ public final class LanePicturesActivity extends AppCompatActivity {
                     Object element$iv = it.next();
                     LaneShots.Shot it2 = (LaneShots.Shot) element$iv;
                     if (!this.marks.containsKey(it2.getName())) {
-                        $this$all$iv = null;
+                        $this$all$ivB = false;
                         break;
                     }
                 } else {
-                    $this$all$iv = 1;
+                    $this$all$ivB = true;
                     break;
                 }
             }
         } else {
-            $this$all$iv = 1;
+            $this$all$ivB = true;
         }
-        return $this$all$iv != null;
+        return $this$all$ivB;
     }
 
     private final void afterMark(boolean wasDone) {
@@ -1441,6 +1442,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
     }
 
     private final void askDelete(final String n, List<LaneShots.Shot> list) {
+        boolean $this$any$ivB = false;
         Iterable $this$any$iv;
         long exportedAt = getLastPrefs().getLong("exported_at", 0L);
         boolean z = true;
@@ -1452,20 +1454,20 @@ public final class LanePicturesActivity extends AppCompatActivity {
                     if (it.hasNext()) {
                         Object element$iv = it.next();
                         LaneShots.Shot it2 = (LaneShots.Shot) element$iv;
-                        LaneShots.Shot it3 = it2.getAtMs() > exportedAt ? 1 : null;
-                        if (it3 != null) {
-                            $this$any$iv = 1;
+                        boolean it3 = it2.getAtMs() > exportedAt;
+                        if (it3) {
+                            $this$any$ivB = true;
                             break;
                         }
                     } else {
-                        $this$any$iv = null;
+                        $this$any$ivB = false;
                         break;
                     }
                 }
             } else {
-                $this$any$iv = null;
+                $this$any$ivB = false;
             }
-            if ($this$any$iv == null && getLastPrefs().getLong("marked_at", 0L) <= exportedAt) {
+            if (!$this$any$ivB && getLastPrefs().getLong("marked_at", 0L) <= exportedAt) {
                 z = false;
             }
         }

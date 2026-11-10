@@ -243,8 +243,8 @@ public final class ShortcutBoard {
         int index$iv = 0;
         for (Object item$iv : $this$indexOfFirst$iv) {
             List it4 = (List) item$iv;
-            List it5 = it4 == target ? 1 : null;
-            if (it5 != null) {
+            boolean it5 = it4 == target;
+            if (it5) {
                 return index$iv;
             }
             index$iv++;

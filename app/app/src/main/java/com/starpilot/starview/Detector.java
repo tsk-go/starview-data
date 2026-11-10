@@ -3375,8 +3375,8 @@ public final class Detector {
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
             Source it = (Source) element$iv$iv;
-            Source it2 = now - it.getAtMs() < 700 ? 1 : null;
-            if (it2 != null) {
+            boolean it2 = now - it.getAtMs() < 700;
+            if (it2) {
                 destination$iv$iv.add(element$iv$iv);
             }
         }
@@ -3838,6 +3838,7 @@ public final class Detector {
     }
 
     private final List<Det> decode(float r, int fw, int fh, float thr) {
+        boolean $this$none$ivB = false;
         Iterable $this$none$iv;
         int[] strides;
         Iterator it;
@@ -3968,18 +3969,18 @@ public final class Detector {
                         Object element$iv = it5.next();
                         Det it6 = (Det) element$iv;
                         if (((it6.getCls() != d.getCls() || iou(it6, d) <= 0.45f) ? null : 1) != null) {
-                            $this$none$iv = null;
+                            $this$none$ivB = false;
                             break;
                         }
                     } else {
-                        $this$none$iv = 1;
+                        $this$none$ivB = true;
                         break;
                     }
                 }
             } else {
-                $this$none$iv = 1;
+                $this$none$ivB = true;
             }
-            if ($this$none$iv != null) {
+            if ($this$none$ivB) {
                 keep.add(d);
             }
         }

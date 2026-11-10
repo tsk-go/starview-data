@@ -1133,8 +1133,8 @@ public final class DoorsBeltsView extends CardPage {
                         LinkedHashMap result$iv = new LinkedHashMap();
                         for (Map.Entry entry$iv : (Iterable<Map.Entry>) $this$filterValues$iv.entrySet()) {
                             JSONObject it = ((JSONObject) entry$iv.getValue());
-                            JSONObject it2 = it != null ? 1 : null;
-                            if (it2 != null) {
+                            boolean it2 = it != null;
+                            if (it2) {
                                 result$iv.put(entry$iv.getKey(), entry$iv.getValue());
                             }
                         }

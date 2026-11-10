@@ -393,8 +393,8 @@ public final class GxModelsPage extends GxPage {
         Collection destination$iv$iv3 = new ArrayList();
         for (Object element$iv$iv3 : $this$filter$iv3) {
             JSONObject it4 = (JSONObject) element$iv$iv3;
-            JSONObject it5 = (Intrinsics.areEqual(this.communityFilter, "all") || it4.optBoolean("communityFavorite") == Intrinsics.areEqual(this.communityFilter, "yes")) ? 1 : null;
-            if (it5 != null) {
+            boolean it5 = (Intrinsics.areEqual(this.communityFilter, "all") || it4.optBoolean("communityFavorite") == Intrinsics.areEqual(this.communityFilter, "yes"));
+            if (it5) {
                 destination$iv$iv3.add(element$iv$iv3);
             }
         }

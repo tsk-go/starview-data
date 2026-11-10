@@ -465,8 +465,8 @@ public final class LaneTracks {
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
             Line it = (Line) element$iv$iv;
-            Line it2 = (!it.getSeen() || it.getY0() >= 0.0f) ? null : 1;
-            if (it2 != null) {
+            boolean it2 = !((!it.getSeen() || it.getY0() >= 0.0f));
+            if (it2) {
                 destination$iv$iv.add(element$iv$iv);
             }
         }
@@ -496,8 +496,8 @@ public final class LaneTracks {
         Collection destination$iv$iv2 = new ArrayList();
         for (Object element$iv$iv2 : $this$filter$iv2) {
             Line it5 = (Line) element$iv$iv2;
-            Line it6 = (!it5.getSeen() || it5.getY0() < 0.0f) ? null : 1;
-            if (it6 != null) {
+            boolean it6 = !((!it5.getSeen() || it5.getY0() < 0.0f));
+            if (it6) {
                 destination$iv$iv2.add(element$iv$iv2);
             }
         }
@@ -632,8 +632,8 @@ public final class LaneTracks {
         Collection destination$iv$iv2 = new ArrayList();
         for (Object element$iv$iv2 : $this$filter$iv2) {
             Line it5 = (Line) element$iv$iv2;
-            Line it6 = (it5.getAlpha() <= 0.05f || it5.getY0() < 0.0f) ? null : 1;
-            if (it6 != null) {
+            boolean it6 = !((it5.getAlpha() <= 0.05f || it5.getY0() < 0.0f));
+            if (it6) {
                 destination$iv$iv2.add(element$iv$iv2);
             }
         }

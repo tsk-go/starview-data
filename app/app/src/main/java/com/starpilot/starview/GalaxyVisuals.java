@@ -744,8 +744,8 @@ public final class GalaxyVisuals {
                 }
                 Object element$iv = it3.next();
                 String it4 = (String) element$iv;
-                String it5 = StringsKt.toDoubleOrNull(StringsKt.trim((CharSequence) StringsKt.removeSuffix(it4, (CharSequence) "%")).toString()) == null ? 1 : null;
-                if (it5 != null) {
+                boolean it5 = StringsKt.toDoubleOrNull(StringsKt.trim((CharSequence) StringsKt.removeSuffix(it4, (CharSequence) "%")).toString()) == null;
+                if (it5) {
                     z = true;
                     break;
                 }
@@ -1211,6 +1211,7 @@ public final class GalaxyVisuals {
     }
 
     private final void bands(Context ctx, CarUi ui, List<GalaxyRow> rows, LinearLayout col) {
+        boolean $this$all$ivB = false;
         String str;
         Iterable $this$all$iv;
         int $i$f$mapNotNull;
@@ -1276,21 +1277,21 @@ public final class GalaxyVisuals {
             Iterator it4 = $this$all$iv2.iterator();
             while (true) {
                 if (!it4.hasNext()) {
-                    $this$all$iv = 1;
+                    $this$all$ivB = true;
                     break;
                 }
                 Object element$iv = it4.next();
                 Triple it5 = (Triple) element$iv;
-                Triple it6 = ((Number) it5.getSecond()).doubleValue() == 0.0d ? 1 : null;
-                if (it6 == null) {
-                    $this$all$iv = null;
+                boolean it6 = ((Number) it5.getSecond()).doubleValue() == 0.0d;
+                if (!it6) {
+                    $this$all$ivB = false;
                     break;
                 }
             }
         } else {
-            $this$all$iv = 1;
+            $this$all$ivB = true;
         }
-        $this$bands_u24lambda_u2474.setText($this$all$iv != null ? "Offset over the limit: none - drives at the limit" : "Offset over the limit, by the limit's speed");
+        $this$bands_u24lambda_u2474.setText($this$all$ivB ? "Offset over the limit: none - drives at the limit" : "Offset over the limit, by the limit's speed");
         $this$bands_u24lambda_u2474.setTextColor(CarUi.Companion.getTEXT());
         $this$bands_u24lambda_u2474.setTextSize(19.0f);
         c.addView($this$bands_u24lambda_u2474);

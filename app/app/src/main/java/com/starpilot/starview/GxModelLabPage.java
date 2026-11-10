@@ -299,6 +299,7 @@ public final class GxModelLabPage extends GxPage {
     }
 
     private final void normalizeSelection() {
+        boolean $this$none$ivB = false;
         Iterable $this$none$iv;
         Object element$iv;
         String gxModelsText$default;
@@ -310,21 +311,21 @@ public final class GxModelLabPage extends GxPage {
             Iterator it = $this$none$iv2.iterator();
             while (true) {
                 if (!it.hasNext()) {
-                    $this$none$iv = 1;
+                    $this$none$ivB = true;
                     break;
                 }
                 Object element$iv2 = it.next();
                 JSONObject it2 = (JSONObject) element$iv2;
                 if (Intrinsics.areEqual(GxModelsKt.gxModelsText$default(it2, "value", null, 4, null), this.lateral)) {
-                    $this$none$iv = null;
+                    $this$none$ivB = false;
                     break;
                 }
             }
         } else {
-            $this$none$iv = 1;
+            $this$none$ivB = true;
         }
         String str2 = "";
-        if ($this$none$iv != null) {
+        if ($this$none$ivB) {
             JSONObject it3 = (JSONObject) CollectionsKt.firstOrNull(r);
             if (it3 == null || (str = GxModelsKt.gxModelsText$default(it3, "value", null, 4, null)) == null) {
                 str = "";

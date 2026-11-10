@@ -1715,6 +1715,7 @@ public final class LaneBrain {
     }
 
     private final void rtk(Frame f, long now) {
+        boolean $this$any$ivB = false;
         Iterable $this$any$iv;
         String doubt;
         camNote(f, now);
@@ -1735,18 +1736,18 @@ public final class LaneBrain {
                     Object element$iv = it.next();
                     double[] it2 = (double[]) element$iv;
                     if (((((double) now) - it2[0] > 8000.0d || Math.abs(this.heading - it2[1]) <= Math.toRadians(10.0d)) ? null : 1) != null) {
-                        $this$any$iv = 1;
+                        $this$any$ivB = true;
                         break;
                     }
                 } else {
-                    $this$any$iv = null;
+                    $this$any$ivB = false;
                     break;
                 }
             }
         } else {
-            $this$any$iv = null;
+            $this$any$ivB = false;
         }
-        if (f.getVEgo() < 6.0f || $this$any$iv != null || this.pending != null || this.opDir != 0 || now - this.rtkCheckMs < 1000 || now - this.lastChangeMs < 10000) {
+        if (f.getVEgo() < 6.0f || $this$any$ivB || this.pending != null || this.opDir != 0 || now - this.rtkCheckMs < 1000 || now - this.lastChangeMs < 10000) {
             return;
         }
         this.rtkCheckMs = now;
@@ -2096,7 +2097,7 @@ public final class LaneBrain {
         if (centred(f)) {
             Road it2 = this.road;
             if (it2 != null) {
-                it = (it2.getOneway() || it2.getHighway()) ? 1 : null;
+                it = (it2.getOneway() || it2.getHighway()) ? it2 : null;
             } else {
                 it = null;
             }

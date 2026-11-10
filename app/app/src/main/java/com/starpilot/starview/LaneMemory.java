@@ -375,8 +375,8 @@ public final class LaneMemory {
         Collection destination$iv$iv2 = new ArrayList();
         for (Object element$iv$iv2 : $this$filter$iv2) {
             Mark it5 = (Mark) element$iv$iv2;
-            Mark it6 = (!it5.getEdge() || it5.getY() <= 0.0f || it5.getConf() < 0.3f) ? null : 1;
-            if (it6 != null) {
+            boolean it6 = !((!it5.getEdge() || it5.getY() <= 0.0f || it5.getConf() < 0.3f));
+            if (it6) {
                 destination$iv$iv2.add(element$iv$iv2);
             }
         }

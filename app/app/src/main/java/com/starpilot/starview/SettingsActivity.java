@@ -674,6 +674,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
 
     @Override // com.starpilot.starview.GxHost
     public void openPage(String page) {
+        boolean $this$indexOfFirst$iv2B = false;
         List $this$indexOfFirst$iv;
         boolean z;
         List $this$indexOfFirst$iv2;
@@ -705,23 +706,23 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                         while (true) {
                             if (!it3.hasNext()) {
                                 $this$indexOfFirst$iv = $this$indexOfFirst$iv3;
-                                $this$indexOfFirst$iv2 = null;
+                                $this$indexOfFirst$iv2B = false;
                                 break;
                             }
                             Object element$iv2 = it3.next();
                             Rail it4 = (Rail) element$iv2;
                             $this$indexOfFirst$iv = $this$indexOfFirst$iv3;
                             if (Intrinsics.areEqual(it4.getPage(), page)) {
-                                $this$indexOfFirst$iv2 = 1;
+                                $this$indexOfFirst$iv2B = true;
                                 break;
                             }
                             $this$indexOfFirst$iv3 = $this$indexOfFirst$iv;
                         }
                     } else {
                         $this$indexOfFirst$iv = $this$indexOfFirst$iv3;
-                        $this$indexOfFirst$iv2 = null;
+                        $this$indexOfFirst$iv2B = false;
                     }
-                    if ($this$indexOfFirst$iv2 != null) {
+                    if ($this$indexOfFirst$iv2B) {
                         z = true;
                         break;
                     }

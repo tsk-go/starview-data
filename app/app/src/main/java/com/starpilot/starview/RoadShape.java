@@ -142,8 +142,8 @@ public final class RoadShape {
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
             Pair it = (Pair) element$iv$iv;
-            Pair it2 = ((OsmRoads.Way) it.getFirst()).getId() != w.getId() ? 1 : null;
-            if (it2 != null) {
+            boolean it2 = ((OsmRoads.Way) it.getFirst()).getId() != w.getId();
+            if (it2) {
                 destination$iv$iv.add(element$iv$iv);
             }
         }

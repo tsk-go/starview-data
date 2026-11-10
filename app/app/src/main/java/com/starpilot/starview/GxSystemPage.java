@@ -225,6 +225,7 @@ public final class GxSystemPage extends GxPage {
     }
 
     private final boolean getInstallVersionBlocked() {
+        boolean $this$none$ivB = false;
         Regex regex;
         Iterable $this$none$iv;
         if (getBranchSwitchBlocked() || this.branchBusy || !this.branches.contains(this.targetBranch)) {
@@ -246,18 +247,18 @@ public final class GxSystemPage extends GxPage {
                         Object element$iv = it.next();
                         JSONObject it2 = (JSONObject) element$iv;
                         if (Intrinsics.areEqual(GxPage.str$default(this, it2, "sha", null, 2, null), this.selectedCommit)) {
-                            $this$none$iv = null;
+                            $this$none$ivB = false;
                             break;
                         }
                     } else {
-                        $this$none$iv = 1;
+                        $this$none$ivB = true;
                         break;
                     }
                 }
             } else {
-                $this$none$iv = 1;
+                $this$none$ivB = true;
             }
-            if ($this$none$iv != null) {
+            if ($this$none$ivB) {
                 return true;
             }
         }

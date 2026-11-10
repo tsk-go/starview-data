@@ -1534,8 +1534,8 @@ public final class OsmRoads {
                     }
                     Object element$iv = it.next();
                     Pair it2 = (Pair) element$iv;
-                    Pair it3 = Math.abs(((Number) it2.getFirst()).doubleValue() - s) < 10.0d ? 1 : null;
-                    if (it3 != null) {
+                    boolean it3 = Math.abs(((Number) it2.getFirst()).doubleValue() - s) < 10.0d;
+                    if (it3) {
                         z = false;
                         break;
                     }

@@ -2005,6 +2005,7 @@ public final class GxThemePage extends GxPage {
     }
 
     private final void submit() {
+        boolean $this$all$ivB = false;
         Iterable iterable;
         Iterable $this$all$iv;
         if (this.busy) {
@@ -2027,18 +2028,18 @@ public final class GxThemePage extends GxPage {
                         String it2 = (String) element$iv;
                         Intrinsics.checkNotNull(it2);
                         if (!StringsKt.isBlank(it2)) {
-                            $this$all$iv = null;
+                            $this$all$ivB = false;
                             break;
                         }
                     } else {
-                        $this$all$iv = 1;
+                        $this$all$ivB = true;
                         break;
                     }
                 }
             } else {
-                $this$all$iv = 1;
+                $this$all$ivB = true;
             }
-            if ($this$all$iv != null && StringsKt.isBlank(this.framesName)) {
+            if ($this$all$ivB && StringsKt.isBlank(this.framesName)) {
                 z = true;
             }
         }
