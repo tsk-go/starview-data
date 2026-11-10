@@ -17,6 +17,8 @@
   <uses-permission android:name="android.permission.WRITE_SETTINGS" />
   <!-- Shizuku: switches the phone's hotspot / Bluetooth for the comma (Hotspot.kt) -->
   <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+  <!-- Updates > Check for updates: installs the newer StarLock from GitHub (the system asks to confirm) -->
+  <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
   <application
     android:icon="@mipmap/ic_launcher"
@@ -59,6 +61,7 @@
         <action android:name="android.intent.action.BOOT_COMPLETED" />
       </intent-filter>
     </receiver>
+    <receiver android:name=".AppUpdateReceiver" android:exported="false" />
     <meta-data android:name="moe.shizuku.client.V3_SUPPORT" android:value="true" />
   </application>
 </manifest>
