@@ -2252,7 +2252,7 @@ public final class GxLogsPage extends GxPage {
                             View var48 = var47.getChildAt(var17);
                             LinearLayout var49;
                             if (var48 instanceof LinearLayout) {
-                                var49 = (LinearLayout & View)var48;
+                                var49 = (LinearLayout)var48;
                             } else {
                                 var49 = null;
                             }

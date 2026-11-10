@@ -1456,7 +1456,7 @@ public final class GxFavoritesPage extends GxPage {
     }
 
     private static final void chooseControl$item(final GxFavoritesPage this$0, LinearLayout list, String cur, final AlertDialog dlg, final int $index, JSONObject o, String detail) {
-        final String k;
+        String k;
         String str;
         String dt;
         if (o == null || (k = o.optString("key")) == null) {
@@ -1499,10 +1499,11 @@ public final class GxFavoritesPage extends GxPage {
             $this$chooseControl_u24item_u24lambda_u2473.setTextColor(CarUi.Companion.getDIM());
             v.addView($this$chooseControl_u24item_u24lambda_u2473);
         }
+        final var k$f = k;
         v.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda19
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                GxFavoritesPage.chooseControl$item$lambda$77(this$0, k, dlg, $index, view);
+                GxFavoritesPage.chooseControl$item$lambda$77(this$0, k$f, dlg, $index, view);
             }
         });
         LinearLayout.LayoutParams $this$chooseControl_u24item_u24lambda_u2478 = new LinearLayout.LayoutParams(-1, -2);

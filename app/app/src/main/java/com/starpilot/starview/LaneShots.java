@@ -312,8 +312,8 @@ public final class LaneShots {
     public final void request(final String caption, final Why why, final File copyTo) {
         Pair<Integer, Integer> pair;
         String str;
-        final List rp;
-        final String ms;
+        List rp;
+        String ms;
         final Ref.BooleanRef wideDone;
         final Ref.BooleanRef sceneDone;
         final Bitmap[] wide;
@@ -419,11 +419,12 @@ public final class LaneShots {
                 sv = sv2;
                 now = now2;
                 det = det2;
+                final var rp$f = rp;
                 det.setWideReq(new Function1() { // from class: com.starpilot.starview.LaneShots$$ExternalSyntheticLambda2
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         Unit request$lambda$4;
-                        request$lambda$4 = LaneShots.request$lambda$4(lock, wideDone, wide2, cam2, sceneDone, clean, LaneShots.this, side, m, n, caption, why, now, rd, ans, rp, ms, copyTo, (Bitmap) obj);
+                        request$lambda$4 = LaneShots.request$lambda$4(lock, wideDone, wide2, cam2, sceneDone, clean, LaneShots.this, side, m, n, caption, why, now, rd, ans, rp$f, ms, copyTo, (Bitmap) obj);
                         return request$lambda$4;
                     }
                 });
@@ -942,7 +943,7 @@ public final class LaneShots {
                 Iterator var63 = var62.iterator();
 
                 while (var63.hasNext()) {
-                    List var58 = StringsKt.split((String & CharSequence)var63.next(), new String[]{"\t"}, false, 0);
+                    List var58 = StringsKt.split((String)var63.next(), new String[]{"\t"}, false, 0);
 
                     try {
                         this.ctx.getContentResolver().delete(Uri.parse((String)var58.get(1)), null, null);
@@ -1149,7 +1150,7 @@ public final class LaneShots {
             }
 
             Object var9 = var8.next();
-            var4 = StringsKt.split((String & CharSequence)var9, new String[]{"\t"}, false, 0);
+            var4 = StringsKt.split((String)var9, new String[]{"\t"}, false, 0);
             boolean var2;
             if (5 < ((List) var4).size()) {
                 var2 = true;

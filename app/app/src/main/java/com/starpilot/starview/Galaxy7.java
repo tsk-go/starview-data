@@ -408,7 +408,7 @@ public final class Galaxy7 {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void async$lambda$16(Function0 $work, Galaxy7 this$0, final Function2 $done) {
-        final Pair res;
+        Pair res;
         try {
             res = TuplesKt.to($work.invoke(), null);
         } catch (Error e) {
@@ -420,10 +420,11 @@ public final class Galaxy7 {
         } catch (Exception e2) {
             res = TuplesKt.to(null, "Can't reach Galaxy on the comma (" + e2.getClass().getSimpleName() + ")");
         }
+        final var res$f = res;
         this$0.main.post(new Runnable() { // from class: com.starpilot.starview.Galaxy7$$ExternalSyntheticLambda0
             @Override // java.lang.Runnable
             public final void run() {
-                Galaxy7.async$lambda$16$lambda$15($done, res);
+                Galaxy7.async$lambda$16$lambda$15($done, res$f);
             }
         });
     }

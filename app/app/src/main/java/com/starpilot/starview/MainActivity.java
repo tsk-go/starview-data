@@ -561,7 +561,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private final void installCrashLog() {
-        final String ver;
+        String ver;
         String str;
         final File f = new File(getFilesDir(), "last_crash.txt");
         if (f.exists()) {
@@ -579,10 +579,11 @@ public final class MainActivity extends AppCompatActivity {
             ver = "?";
         }
         final Thread.UncaughtExceptionHandler prev = Thread.getDefaultUncaughtExceptionHandler();
+        final var ver$f = ver;
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda28
             @Override // java.lang.Thread.UncaughtExceptionHandler
             public final void uncaughtException(Thread thread, Throwable th) {
-                MainActivity.installCrashLog$lambda$13(f, ver, prev, thread, th);
+                MainActivity.installCrashLog$lambda$13(f, ver$f, prev, thread, th);
             }
         });
     }
@@ -3357,16 +3358,17 @@ public final class MainActivity extends AppCompatActivity {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void checkUsbReturn$lambda$160(final MainActivity this$0) {
-        final Discovery.Found found;
+        Discovery.Found found;
         try {
             found = Discovery.INSTANCE.find(1500);
         } catch (Exception e) {
             found = null;
         }
+        final var found$f = found;
         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda109
             @Override // java.lang.Runnable
             public final void run() {
-                MainActivity.checkUsbReturn$lambda$160$lambda$159(this$0, found);
+                MainActivity.checkUsbReturn$lambda$160$lambda$159(this$0, found$f);
             }
         });
     }

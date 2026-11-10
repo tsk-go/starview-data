@@ -1735,7 +1735,7 @@ public final class LaneBrain {
                 if (it.hasNext()) {
                     Object element$iv = it.next();
                     double[] it2 = (double[]) element$iv;
-                    if (((((double) now) - it2[0] > 8000.0d || Math.abs(this.heading - it2[1]) <= Math.toRadians(10.0d)) ? null : 1) != null) {
+                    if (!(((double) now) - it2[0] > 8000.0d || Math.abs(this.heading - it2[1]) <= Math.toRadians(10.0d))) {
                         $this$any$ivB = true;
                         break;
                     }
@@ -2313,7 +2313,7 @@ public final class LaneBrain {
         }
         for (Object element$iv : $this$any$iv) {
             double[] it = (double[]) element$iv;
-            if (((((double) now) - it[0] > 8000.0d || Math.abs(this.heading - it[1]) <= Math.toRadians(10.0d)) ? null : 1) != null) {
+            if (!(((double) now) - it[0] > 8000.0d || Math.abs(this.heading - it[1]) <= Math.toRadians(10.0d))) {
                 return true;
             }
         }

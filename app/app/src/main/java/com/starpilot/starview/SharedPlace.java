@@ -121,7 +121,7 @@ public final class SharedPlace {
         Iterator var48 = var7.iterator();
 
         while (var48.hasNext()) {
-            var6.add(StringsKt.trim((String & CharSequence)var48.next()).toString());
+            var6.add(StringsKt.trim((String)var48.next()).toString());
         }
 
         List var44 = var6;

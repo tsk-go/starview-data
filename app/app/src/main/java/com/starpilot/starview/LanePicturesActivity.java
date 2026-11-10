@@ -1224,7 +1224,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void exportNow$lambda$65(final LanePicturesActivity this$0, final AlertDialog $dlg) {
-        final String msg;
+        String msg;
         try {
             LaneShots laneShots = this$0.shots;
             if (laneShots == null) {
@@ -1242,10 +1242,11 @@ public final class LanePicturesActivity extends AppCompatActivity {
         } catch (Exception e) {
             msg = "Export failed: " + e.getMessage();
         }
+        final var msg$f = msg;
         this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda15
             @Override // java.lang.Runnable
             public final void run() {
-                LanePicturesActivity.exportNow$lambda$65$lambda$64($dlg, this$0, msg);
+                LanePicturesActivity.exportNow$lambda$65$lambda$64($dlg, this$0, msg$f);
             }
         });
     }

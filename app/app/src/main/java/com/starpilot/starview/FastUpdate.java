@@ -298,7 +298,7 @@ public final class FastUpdate {
             return "not now: " + StringsKt.take(str(s, "reason"), 60) + (local.length() > 0 ? "  (" + local + ")" : "");
         }
         String it = str(s, "versionPin");
-        if (((!(it.length() > 0) || Intrinsics.areEqual(it, "false") || Intrinsics.areEqual(it, "{}")) ? null : 1) != null) {
+        if (!(!(it.length() > 0) || Intrinsics.areEqual(it, "false") || Intrinsics.areEqual(it, "{}"))) {
             return "an older version is pinned - choose Latest in Galaxy";
         }
         if (str(s, "remoteError").length() > 0) {

@@ -3968,7 +3968,7 @@ public final class Detector {
                     if (it5.hasNext()) {
                         Object element$iv = it5.next();
                         Det it6 = (Det) element$iv;
-                        if (((it6.getCls() != d.getCls() || iou(it6, d) <= 0.45f) ? null : 1) != null) {
+                        if (!(it6.getCls() != d.getCls() || iou(it6, d) <= 0.45f)) {
                             $this$none$ivB = false;
                             break;
                         }
