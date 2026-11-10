@@ -173,204 +173,88 @@ public final class RoadShape {
     }
 
     public final Pair<double[], double[]> round(double[] e, double[] n, double[] prev, double[] next, double dmax) {
-        String str;
-        int first;
-        int last;
-        int m;
-        int first2;
-        ArrayList oe;
-        int i;
-        int i2;
-        int last2;
         Intrinsics.checkNotNullParameter(e, "e");
         Intrinsics.checkNotNullParameter(n, "n");
-        int m2 = e.length;
-        if (m2 < 2) {
+        int m = e.length;
+        if (m < 2) {
             return TuplesKt.to(e, n);
         }
-        ArrayList xe = new ArrayList(m2 + 2);
-        ArrayList xn = new ArrayList(m2 + 2);
+        ArrayList<Double> xe = new ArrayList<>(m + 2);
+        ArrayList<Double> xn = new ArrayList<>(m + 2);
         if (prev != null) {
             xe.add(Double.valueOf(prev[0]));
             xn.add(Double.valueOf(prev[1]));
         }
-        for (int i3 = 0; i3 < m2; i3++) {
-            xe.add(Double.valueOf(e[i3]));
-            xn.add(Double.valueOf(n[i3]));
+        for (int i = 0; i < m; i++) {
+            xe.add(Double.valueOf(e[i]));
+            xn.add(Double.valueOf(n[i]));
         }
         if (next != null) {
             xe.add(Double.valueOf(next[0]));
             xn.add(Double.valueOf(next[1]));
         }
-        ArrayList oe2 = new ArrayList(m2 * 3);
-        ArrayList on = new ArrayList(m2 * 3);
-        int first3 = prev != null ? 1 : 0;
-        int last3 = (xe.size() - 1) - (next != null ? 1 : 0);
+        ArrayList<Double> oe = new ArrayList<>(m * 3);
+        ArrayList<Double> on = new ArrayList<>(m * 3);
+        int first = prev != null ? 1 : 0;
+        int last = (xe.size() - 1) - (next != null ? 1 : 0);
         if (prev == null) {
-            Object obj = xe.get(0);
-            Intrinsics.checkNotNullExpressionValue(obj, "get(...)");
-            double doubleValue = ((Number) obj).doubleValue();
-            Object obj2 = xn.get(0);
-            Intrinsics.checkNotNullExpressionValue(obj2, "get(...)");
-            str = "get(...)";
-            first = first3;
-            last = last3;
-            round$add(oe2, on, doubleValue, ((Number) obj2).doubleValue());
-        } else {
-            str = "get(...)";
-            first = first3;
-            last = last3;
+            round$add(oe, on, xe.get(0).doubleValue(), xn.get(0).doubleValue());
         }
         int size = xe.size() - 1;
-        int i4 = 1;
-        while (i4 < size) {
-            if (i4 >= first) {
-                int last4 = last;
-                if (i4 > last4) {
-                    m = m2;
-                    first2 = first;
-                    oe = oe2;
-                    last2 = last4;
-                    i = size;
-                    i2 = i4;
-                } else {
-                    Object obj3 = xe.get(i4 - 1);
-                    Intrinsics.checkNotNullExpressionValue(obj3, str);
-                    double ax = ((Number) obj3).doubleValue();
-                    Object obj4 = xn.get(i4 - 1);
-                    Intrinsics.checkNotNullExpressionValue(obj4, str);
-                    double ay = ((Number) obj4).doubleValue();
-                    Object obj5 = xe.get(i4);
-                    Intrinsics.checkNotNullExpressionValue(obj5, str);
-                    double bx = ((Number) obj5).doubleValue();
-                    Object obj6 = xn.get(i4);
-                    Intrinsics.checkNotNullExpressionValue(obj6, str);
-                    double by = ((Number) obj6).doubleValue();
-                    Object obj7 = xe.get(i4 + 1);
-                    Intrinsics.checkNotNullExpressionValue(obj7, str);
-                    double cx = ((Number) obj7).doubleValue();
-                    Object obj8 = xn.get(i4 + 1);
-                    Intrinsics.checkNotNullExpressionValue(obj8, str);
-                    double cy = ((Number) obj8).doubleValue();
-                    oe = oe2;
-                    double l1 = Math.hypot(bx - ax, by - ay);
-                    double l2 = Math.hypot(cx - bx, cy - by);
-                    int half = (prev == null || i4 != first) ? (next == null || i4 != last4) ? 0 : 2 : 1;
-                    if (l1 < 1.0E-6d) {
-                        m = m2;
-                        first2 = first;
-                        last2 = last4;
-                        i = size;
-                        i2 = i4;
-                    } else if (l2 < 1.0E-6d) {
-                        m = m2;
-                        first2 = first;
-                        last2 = last4;
-                        i = size;
-                        i2 = i4;
-                    } else {
-                        double cosT = RangesKt.coerceIn((((bx - ax) * (cx - bx)) + ((by - ay) * (cy - by))) / (l1 * l2), -1.0d, 1.0d);
-                        double deg = Math.toDegrees(Math.acos(cosT));
-                        if (deg < 2.0d) {
-                            m = m2;
-                            first2 = first;
-                            last2 = last4;
-                            i = size;
-                            i2 = i4;
-                        } else if (deg > 150.0d) {
-                            m = m2;
-                            first2 = first;
-                            last2 = last4;
-                            i = size;
-                            i2 = i4;
-                        } else {
-                            m = m2;
-                            first2 = first;
-                            double d = Math.min(dmax, Math.min(l1 * 0.45d, 0.45d * l2));
-                            double sx = bx + (((ax - bx) / l1) * d);
-                            double sy = by + (((ay - by) / l1) * d);
-                            double ex = bx + (((cx - bx) / l2) * d);
-                            double ey = by + (((cy - by) / l2) * d);
-                            int k = RangesKt.coerceIn((int) Math.ceil(deg / 5.0d), 2, 18) * 2;
-                            int t0 = half == 1 ? k / 2 : 0;
-                            int t1 = half == 2 ? k / 2 : k;
-                            int s = t0;
-                            if (s <= t1) {
-                                while (true) {
-                                    double l12 = l1;
-                                    double t = s / k;
-                                    int k2 = k;
-                                    int t02 = t0;
-                                    double d2 = 1;
-                                    double a = (d2 - t) * (d2 - t);
-                                    last2 = last4;
-                                    double b = (d2 - t) * 2 * t;
-                                    double c = t * t;
-                                    int half2 = half;
-                                    i = size;
-                                    i2 = i4;
-                                    round$add(oe, on, (a * sx) + (b * bx) + (c * ex), (a * sy) + (b * by) + (c * ey));
-                                    if (s != t1) {
-                                        s++;
-                                        l1 = l12;
-                                        k = k2;
-                                        t0 = t02;
-                                        last4 = last2;
-                                        size = i;
-                                        i4 = i2;
-                                        half = half2;
-                                    }
-                                }
-                            } else {
-                                last2 = last4;
-                                i = size;
-                                i2 = i4;
-                            }
-                        }
-                        round$add(oe, on, bx, by);
-                    }
-                    round$add(oe, on, bx, by);
-                }
-            } else {
-                m = m2;
-                first2 = first;
-                oe = oe2;
-                i = size;
-                i2 = i4;
-                last2 = last;
+        for (int i = 1; i < size; i++) {
+            if (i < first || i > last) {
+                continue;
             }
-            i4 = i2 + 1;
-            oe2 = oe;
-            m2 = m;
-            first = first2;
-            last = last2;
-            size = i;
+            double ax = xe.get(i - 1).doubleValue();
+            double ay = xn.get(i - 1).doubleValue();
+            double bx = xe.get(i).doubleValue();
+            double by = xn.get(i).doubleValue();
+            double cx = xe.get(i + 1).doubleValue();
+            double cy = xn.get(i + 1).doubleValue();
+            double l1 = Math.hypot(bx - ax, by - ay);
+            double l2 = Math.hypot(cx - bx, cy - by);
+            int half = (prev != null && i == first) ? 1 : (next != null && i == last) ? 2 : 0;
+            if (l1 < 1.0E-6d || l2 < 1.0E-6d) {
+                round$add(oe, on, bx, by);
+                continue;
+            }
+            double cosT = RangesKt.coerceIn((((bx - ax) * (cx - bx)) + ((by - ay) * (cy - by))) / (l1 * l2), -1.0d, 1.0d);
+            double deg = Math.toDegrees(Math.acos(cosT));
+            if (deg < 2.0d || deg > 150.0d) {
+                round$add(oe, on, bx, by);
+                continue;
+            }
+            double d = Math.min(dmax, Math.min(l1 * 0.45d, 0.45d * l2));
+            double sx = bx + (((ax - bx) / l1) * d);
+            double sy = by + (((ay - by) / l1) * d);
+            double ex = bx + (((cx - bx) / l2) * d);
+            double ey = by + (((cy - by) / l2) * d);
+            int k = RangesKt.coerceIn((int) Math.ceil(deg / 5.0d), 2, 18) * 2;
+            int t0 = half == 1 ? k / 2 : 0;
+            int t1 = half == 2 ? k / 2 : k;
+            for (int s = t0; s <= t1; s++) {
+                double t = s / (double) k;
+                double a = (1 - t) * (1 - t);
+                double b = 2 * t * (1 - t);
+                double c = t * t;
+                round$add(oe, on, (a * sx) + (b * bx) + (c * ex), (a * sy) + (b * by) + (c * ey));
+            }
         }
-        ArrayList oe3 = oe2;
         if (next == null) {
-            Object obj9 = xe.get(xe.size() - 1);
-            Intrinsics.checkNotNullExpressionValue(obj9, str);
-            double doubleValue2 = ((Number) obj9).doubleValue();
-            Object obj10 = xn.get(xn.size() - 1);
-            Intrinsics.checkNotNullExpressionValue(obj10, str);
-            round$add(oe3, on, doubleValue2, ((Number) obj10).doubleValue());
+            round$add(oe, on, xe.get(xe.size() - 1).doubleValue(), xn.get(xn.size() - 1).doubleValue());
         }
-        if (oe3.size() < 2) {
+        if (oe.size() < 2) {
             return TuplesKt.to(e, n);
         }
-        int size2 = oe3.size();
+        int size2 = oe.size();
         double[] dArr = new double[size2];
         for (int i5 = 0; i5 < size2; i5++) {
-            Object obj11 = oe3.get(i5);
-            Intrinsics.checkNotNullExpressionValue(obj11, str);
-            dArr[i5] = ((Number) obj11).doubleValue();
+            dArr[i5] = oe.get(i5).doubleValue();
         }
         int size3 = on.size();
         double[] dArr2 = new double[size3];
         for (int i6 = 0; i6 < size3; i6++) {
-            Object obj12 = on.get(i6);
-            Intrinsics.checkNotNullExpressionValue(obj12, str);
-            dArr2[i6] = ((Number) obj12).doubleValue();
+            dArr2[i6] = on.get(i6).doubleValue();
         }
         return TuplesKt.to(dArr, dArr2);
     }
@@ -511,6 +395,8 @@ public final class RoadShape {
                             s++;
                             oe = oe2;
                             m2 = m;
+                        } else {
+                            break;
                         }
                     }
                 } else {

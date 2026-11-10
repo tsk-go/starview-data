@@ -3453,11 +3453,9 @@ public final class GxCamerasPage extends GxPage {
                     function1 = function12;
                 }
                 function1.invoke(Double.valueOf(z));
-                this.pConfigExists = v.getLeftC() == null || v.getRightC() != null;
-                pPaint();
             }
         }
-        this.pConfigExists = v.getLeftC() == null || v.getRightC() != null;
+        this.pConfigExists = v.getLeftC() != null || v.getRightC() != null;
         pPaint();
     }
 

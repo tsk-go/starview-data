@@ -464,6 +464,8 @@ public final class Hpms {
                                 ty2 = ty;
                                 ky2 = ky;
                                 kx3 = kx;
+                            } else {
+                                break;
                             }
                         }
                     } else {

@@ -175,7 +175,6 @@ public final class JournalLogic {
                     if ((Double.isInfinite(lon) || Double.isNaN(lon)) ? false : true) {
                         if (!(s.getLat() == 0.0d)) {
                             $this$feed_u24lambda_u241.put("lat", s.getLat()).put("lon", s.getLon());
-                            arrayList.add($this$feed_u24lambda_u241);
                         }
                     }
                 }

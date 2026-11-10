@@ -2828,6 +2828,8 @@ public final class GxPersonalitiesPage extends GxPage {
                                 }
                                 if (iterator$iv.hasNext()) {
                                     pts = pts2;
+                                } else {
+                                    break;
                                 }
                             }
                         }
