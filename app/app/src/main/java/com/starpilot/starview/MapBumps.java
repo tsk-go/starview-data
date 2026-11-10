@@ -126,7 +126,7 @@ public final class MapBumps {
                 if (optJSONObject == null || (str = optJSONObject.optString("traffic_calming")) == null) {
                     str = "";
                 }
-                ideaSpots.record("map_bump", d, d2, Double.NaN, (r35 & 16) != 0 ? Double.NaN : 0.0d, (r35 & 32) != 0 ? "" : str, (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 3.0d, (r35 & 256) != 0 ? "me" : null);
+                ideaSpots.record("map_bump", d, d2, Double.NaN, Double.NaN, str, System.currentTimeMillis(), 3.0d, "me");
             }
         } catch (Exception e) {
             done.remove(k);

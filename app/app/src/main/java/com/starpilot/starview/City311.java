@@ -104,7 +104,7 @@ public final class City311 {
                     double la = o.optDouble("latitude");
                     double lo = o.optDouble("longitude");
                     if (!Double.isNaN(la) && !Double.isNaN(lo)) {
-                        IdeaSpots.INSTANCE.record("pothole", la, lo, Double.NaN, (r35 & 16) != 0 ? Double.NaN : 0.0d, (r35 & 32) != 0 ? "" : "NYC 311", (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 8.0d, (r35 & 256) != 0 ? "me" : "nyc311");
+                        IdeaSpots.INSTANCE.record("pothole", la, lo, Double.NaN, Double.NaN, "NYC 311", System.currentTimeMillis(), 8.0d, "nyc311");
                     }
                 }
             } finally {

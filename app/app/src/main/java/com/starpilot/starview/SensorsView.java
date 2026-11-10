@@ -234,11 +234,11 @@ public final class SensorsView extends View {
                     } else {
                         var27 = var53.next();
                         if (var53.hasNext()) {
-                            int var13 = Intrinsics.areEqual(((GpsFixInfo)var27).getSource(), "ublox") ^ 1;
+                            int var13 = Intrinsics.areEqual(((GpsFixInfo)var27).getSource(), "ublox") ? 0 : 1;
 
                             while (true) {
                                 var44 = (Iterable)var53.next();
-                                int var14 = Intrinsics.areEqual(((GpsFixInfo)(Object)var44).getSource(), "ublox") ^ 1;
+                                int var14 = Intrinsics.areEqual(((GpsFixInfo)(Object)var44).getSource(), "ublox") ? 0 : 1;
                                 var12 = var13;
                                 if (var13 > var14) {
                                     var27 = var44;

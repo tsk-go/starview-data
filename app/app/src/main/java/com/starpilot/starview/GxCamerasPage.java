@@ -1530,7 +1530,7 @@ public final class GxCamerasPage extends GxPage {
                     } else {
                         objectRef2.element = BitmapFactory.decodeByteArray(bArr2, 0, bArr2.length);
                     }
-                    if (objectRef.element == 0) {
+                    if (objectRef.element == null) {
                         objectRef.element = "Failed to decode image";
                     }
                     Unit unit = Unit.INSTANCE;
@@ -1562,7 +1562,7 @@ public final class GxCamerasPage extends GxPage {
                     }
                     t = "HTTP " + response.code();
                     objectRef.element = t;
-                    if (objectRef.element == 0 && objectRef2.element == 0) {
+                    if (objectRef.element == null && objectRef2.element == null) {
                         objectRef.element = "Failed to decode image";
                     }
                     Unit unit2 = Unit.INSTANCE;

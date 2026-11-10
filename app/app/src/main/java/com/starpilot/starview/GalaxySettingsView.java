@@ -1267,7 +1267,7 @@ public final class GalaxySettingsView extends FrameLayout {
     public static final Unit selectRow$lambda$46(GalaxyRow $r, GalaxySettingsView this$0, Ref.ObjectRef $paint, int i) {
         Function1 function1;
         if ($r.getEditable() && !this$0.busy && !Intrinsics.areEqual($r.getChoices().get(i), $r.getValue())) {
-            if ($paint.element == 0) {
+            if ($paint.element == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("paint");
                 function1 = null;
             } else {
