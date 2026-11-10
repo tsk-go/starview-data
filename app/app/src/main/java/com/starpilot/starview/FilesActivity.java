@@ -421,7 +421,7 @@ public final class FilesActivity extends AppCompatActivity {
                                     Comparable var4 = ((Comparable) var1);
                                     var2 = StringsKt.substringAfterLast(((FilesActivity.Entry)var2).getName(), '.', "").toLowerCase(Locale.ROOT);
                                     Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
-                                    return ComparisonsKt.compareValues(var4, var2);
+                                    return ComparisonsKt.compareValues((Comparable)var4, (Comparable)var2);
                                 }
                             };
 
@@ -434,7 +434,7 @@ public final class FilesActivity extends AppCompatActivity {
                                         Comparable var5 = ((Comparable) var1);
                                         var2 = ((FilesActivity.Entry)var2).getName().toLowerCase(Locale.ROOT);
                                         Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
-                                        var3 = ComparisonsKt.compareValues(var5, var2);
+                                        var3 = ComparisonsKt.compareValues((Comparable)var5, (Comparable)var2);
                                     }
 
                                     return var3;
@@ -452,7 +452,7 @@ public final class FilesActivity extends AppCompatActivity {
                         Comparable var4 = ((Comparable) var1);
                         var2 = ((FilesActivity.Entry)var2).getName().toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
-                        return ComparisonsKt.compareValues(var4, var2);
+                        return ComparisonsKt.compareValues((Comparable)var4, (Comparable)var2);
                     }
                 };
             }
@@ -792,40 +792,21 @@ public final class FilesActivity extends AppCompatActivity {
         /* JADX INFO: Access modifiers changed from: private */
         public static final void refresh$lambda$32(final FilesActivity this$0, String $h, final Pane this$1) {
             try {
-                try {
-                } catch (Exception e) {
-                    e = e;
+                JSONObject j = this$0.getJson("http://" + $h + ":8090/fs/list?path=" + Uri.encode(this$1.path));
+                JSONArray arr = j.getJSONArray("entries");
+                final ArrayList es = new ArrayList();
+                int length = arr.length();
+                for (int i = 0; i < length; i++) {
+                    JSONObject e2 = arr.getJSONObject(i);
+                    String string = e2.getString("name");
+                    Intrinsics.checkNotNullExpressionValue(string, "getString(...)");
+                    es.add(new Entry(string, e2.getBoolean("dir"), e2.optLong("size"), e2.optLong("mtime")));
                 }
-                try {
-                    JSONObject j = this$0.getJson("http://" + $h + ":8090/fs/list?path=" + Uri.encode(this$1.path));
-                    JSONArray arr = j.getJSONArray("entries");
-                    final ArrayList es = new ArrayList();
-                    int length = arr.length();
-                    for (int i = 0; i < length; i++) {
-                        JSONObject e2 = arr.getJSONObject(i);
-                        String string = e2.getString("name");
-                        Intrinsics.checkNotNullExpressionValue(string, "getString(...)");
-                        es.add(new Entry(string, e2.getBoolean("dir"), e2.optLong("size"), e2.optLong("mtime")));
-                    }
-                    final long free = j.optLong("free");
-                    final long total = j.optLong("total");
-                    this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda8
-                        @Override // java.lang.Runnable
-                        public final void run() {
-                            FilesActivity.Pane.refresh$lambda$32$lambda$30(this$1, es, this$0, free, total);
-                        }
-                    });
-                } catch (Exception e3) {
-                    e = e3;
-                    this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda9
-                        @Override // java.lang.Runnable
-                        public final void run() {
-                            FilesActivity.Pane.refresh$lambda$32$lambda$31(this$1, e);
-                        }
-                    });
-                }
-            } catch (Exception e4) {
-                e = e4;
+                final long free = j.optLong("free");
+                final long total = j.optLong("total");
+                this$0.ui.post(() -> FilesActivity.Pane.refresh$lambda$32$lambda$30(this$1, es, this$0, free, total));
+            } catch (final Exception e) {
+                this$0.ui.post(() -> FilesActivity.Pane.refresh$lambda$32$lambda$31(this$1, e));
             }
         }
 
@@ -1040,7 +1021,7 @@ public final class FilesActivity extends AppCompatActivity {
                 }
             }
 
-            var1.ui.post(new FilesActivity$Pane$$ExternalSyntheticLambda13(var2, var3, var1));
+            var1.ui.post(() -> FilesActivity.Pane.deleteSelected$lambda$47$lambda$46$lambda$45(var2, var3, var1));
         }
 
         /* JADX INFO: Access modifiers changed from: private */
@@ -1113,48 +1094,29 @@ public final class FilesActivity extends AppCompatActivity {
             });
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        /* JADX WARN: Code restructure failed: missing block: B:26:0x009c, code lost:
-        
-            if (r4 == null) goto L27;
-         */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
+        /* recovered by hand from the bytecode (jadx lost its try/finally blocks) */
         public static final void openSelected$lambda$58(final FileKinds.Kind $kind, final Pane this$0, final FilesActivity this$1, final String $full, final Entry $e) {
-            long limit;
-            FileInputStream fileInputStream;
-            byte[] byteArray;
-            String str;
-            String string;
             try {
-                limit = $kind.getPreview() == FileKinds.Preview.IMAGE ? 12582912L : 1048576L;
-            } catch (Exception e) {
-                x = e;
-            }
-            try {
-                boolean z = true;
+                long limit = $kind.getPreview() == FileKinds.Preview.IMAGE ? 12582912L : 1048576L;
+                byte[] byteArray;
                 if (this$0.remote) {
                     String h = this$1.getHost();
                     if (h == null) {
                         throw new RuntimeException("not connected");
                     }
-                    fileInputStream = this$1.http.newCall(new Request.Builder().url("http://" + h + ":8090/fs/get?path=" + Uri.encode($full)).build()).execute();
+                    Response r = this$1.http.newCall(new Request.Builder().url("http://" + h + ":8090/fs/get?path=" + Uri.encode($full)).build()).execute();
+                    Throwable cause = null;
                     try {
-                        Response r = fileInputStream;
                         if (!r.isSuccessful()) {
+                            String str = null;
                             ResponseBody body = r.body();
+                            String string;
                             if (body != null && (string = body.string()) != null) {
-                                String str2 = string;
-                                if (str2.length() != 0) {
-                                    z = false;
-                                }
-                                if (z) {
-                                    str2 = "HTTP " + r.code();
-                                }
-                                str = str2;
+                                str = string.length() == 0 ? "HTTP " + r.code() : string;
                             }
-                            str = "HTTP " + r.code();
+                            if (str == null) {
+                                str = "HTTP " + r.code();
+                            }
                             throw new RuntimeException(str);
                         }
                         ResponseBody body2 = r.body();
@@ -1163,66 +1125,45 @@ public final class FilesActivity extends AppCompatActivity {
                         ByteArrayOutputStream out = new ByteArrayOutputStream();
                         byte[] buf = new byte[65536];
                         while (true) {
-                            int it = ins.read(buf);
-                            if (it <= 0 || out.size() >= limit) {
+                            int n = ins.read(buf);
+                            if (n <= 0 || out.size() >= limit) {
                                 break;
-                            } else {
-                                out.write(buf, 0, it);
                             }
+                            out.write(buf, 0, n);
                         }
                         byteArray = out.toByteArray();
-                        CloseableKt.closeFinally(fileInputStream, null);
+                    } catch (Throwable th) {
+                        cause = th;
+                        throw th;
                     } finally {
-                        try {
-                            throw th;
-                        } finally {
-                        }
+                        CloseableKt.closeFinally(r, cause);
                     }
                 } else {
+                    FileInputStream ins2 = new FileInputStream(new File($full));
+                    Throwable cause2 = null;
                     try {
-                        fileInputStream = new FileInputStream(new File($full));
-                        try {
-                            FileInputStream ins2 = fileInputStream;
-                            ByteArrayOutputStream out2 = new ByteArrayOutputStream();
-                            byte[] buf2 = new byte[65536];
-                            while (true) {
-                                int it2 = ins2.read(buf2);
-                                if (it2 <= 0 || out2.size() >= limit) {
-                                    break;
-                                } else {
-                                    out2.write(buf2, 0, it2);
-                                }
+                        ByteArrayOutputStream out2 = new ByteArrayOutputStream();
+                        byte[] buf2 = new byte[65536];
+                        while (true) {
+                            int n = ins2.read(buf2);
+                            if (n <= 0 || out2.size() >= limit) {
+                                break;
                             }
-                            byteArray = out2.toByteArray();
-                            CloseableKt.closeFinally(fileInputStream, null);
-                        } finally {
+                            out2.write(buf2, 0, n);
                         }
-                    } catch (Exception e2) {
-                        x = e2;
-                        this$1.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda15
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                FilesActivity.Pane.openSelected$lambda$58$lambda$57(this$1, x);
-                            }
-                        });
+                        byteArray = out2.toByteArray();
+                    } catch (Throwable th) {
+                        cause2 = th;
+                        throw th;
+                    } finally {
+                        CloseableKt.closeFinally(ins2, cause2);
                     }
                 }
                 final byte[] bytes = byteArray;
                 final boolean truncated = $e.getSize() > ((long) bytes.length);
-                this$1.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda11
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        FilesActivity.Pane.openSelected$lambda$58$lambda$56(this$1, this$0, $e, $full, $kind, bytes, truncated);
-                    }
-                });
-            } catch (Exception e3) {
-                x = e3;
-                this$1.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda15
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        FilesActivity.Pane.openSelected$lambda$58$lambda$57(this$1, x);
-                    }
-                });
+                this$1.ui.post(() -> FilesActivity.Pane.openSelected$lambda$58$lambda$56(this$1, this$0, $e, $full, $kind, bytes, truncated));
+            } catch (final Exception x) {
+                this$1.ui.post(() -> FilesActivity.Pane.openSelected$lambda$58$lambda$57(this$1, x));
             }
         }
 
@@ -1637,7 +1578,9 @@ public final class FilesActivity extends AppCompatActivity {
         } else {
             textView = textView2;
         }
-        if (!this.busy) {
+        if (this.busy) {
+            str = "copying…";
+        } else {
             if (c > 0 && t == 0) {
                 str = c + " selected on comma → tablet folder";
             } else if (t <= 0 || c != 0) {
@@ -2003,815 +1946,199 @@ public final class FilesActivity extends AppCompatActivity {
         this.io.execute(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda25
             @Override // java.lang.Runnable
             public final void run() {
-                FilesActivity.startCopy$lambda$51(FilesActivity.Pane.this, this, h, names, src);
+                FilesActivity.startCopy$lambda$51(dst, FilesActivity.this, h, names, src);
             }
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Removed duplicated region for block: B:103:0x025c A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:63:0x0284 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final void startCopy$lambda$51(final Pane $dst, final FilesActivity this$0, String $h, List $names, Pane $src) {
-        final Pane pane;
-        final FilesActivity filesActivity;
-        Throwable th;
-        final Exception e;
-        Handler handler;
-        Runnable runnable;
-        final Ref.IntRef failed;
-        final int ok;
-        final long j;
-        Object element$iv;
-        String n;
-        Ref.ObjectRef applyAll;
-        ArrayList dirs;
-        String str;
-        String str2;
-        String target;
-        String s;
-        int $i$f$forEach;
-        String str3;
-        Iterator<File> it;
-        String n2;
-        String str4;
-        String str5;
-        String str6;
-        String str7;
-        Pane pane2 = $dst;
-        String t = $h;
-        Pane pane3 = $src;
-        String str8 = "rel";
+    /* recovered by hand from the bytecode (jadx lost its structure, Vineflower could not decompile it) */
+    public static final void startCopy$lambda$51(final Pane $dst, final FilesActivity this$0, String $h, List $names, final Pane $src) {
+        String relKey = "rel";
         try {
             try {
                 HashMap existing = new HashMap();
-                String str9 = "http://";
-                try {
-                    if ($dst.getRemote()) {
-                        JSONArray arr = this$0.getJson("http://" + t + ":8090/fs/list?path=" + Uri.encode($dst.getPath())).getJSONArray("entries");
-                        int length = arr.length();
-                        for (int i = 0; i < length; i++) {
-                            JSONObject e2 = arr.getJSONObject(i);
-                            existing.put(e2.getString("name"), Boolean.valueOf(e2.getBoolean("dir")));
+                String http = "http://";
+                if ($dst.getRemote()) {
+                    JSONArray entries = this$0.getJson(http + $h + ":8090/fs/list?path=" + Uri.encode($dst.getPath())).getJSONArray("entries");
+                    int n = entries.length();
+                    for (int k = 0; k < n; k++) {
+                        JSONObject o = entries.getJSONObject(k);
+                        existing.put(o.getString("name"), Boolean.valueOf(o.getBoolean("dir")));
+                    }
+                } else {
+                    File[] here = new File($dst.getPath()).listFiles();
+                    if (here != null) {
+                        for (File f : here) {
+                            existing.put(f.getName(), Boolean.valueOf(f.isDirectory()));
+                        }
+                    }
+                }
+                final ArrayList jobs = new ArrayList();
+                ArrayList dirs = new ArrayList();
+                final ObjectRef applyAll = new ObjectRef();
+                Iterator names = $names.iterator();
+                while (names.hasNext()) {
+                    String name = (String) names.next();
+                    Entry e = null;
+                    for (Object o : $src.getEntries()) {
+                        if (Intrinsics.areEqual(((Entry) o).getName(), name)) {
+                            e = (Entry) o;
+                            break;
+                        }
+                    }
+                    if (e == null) {
+                        continue;
+                    }
+                    String target = name;
+                    if (existing.containsKey(name)) {
+                        Clash c = (Clash) applyAll.element;
+                        if (c == null) {
+                            c = this$0.askClash(name, e.getDir(), Intrinsics.areEqual(existing.get(name), Boolean.valueOf(true)),
+                                    $dst.getRemote() ? "comma" : "tablet", $dst.getPath(),
+                                    (Function1) (Object it) -> FilesActivity.startCopy$lambda$51$lambda$36(applyAll, (Clash) it));
+                        }
+                        switch (WhenMappings.$EnumSwitchMapping$0[c.ordinal()]) {
+                            case 1:
+                                throw new InterruptedException("cancelled");
+                            case 2:
+                                continue;
+                            case 3:
+                                Set keys = existing.keySet();
+                                Intrinsics.checkNotNullExpressionValue(keys, "<get-keys>(...)");
+                                target = this$0.freeName(name, e.getDir(), keys);
+                                break;
+                            case 4:
+                                if (!Intrinsics.areEqual(existing.get(name), Boolean.valueOf(e.getDir()))) {
+                                    if ($dst.getRemote()) {
+                                        JSONObject del = new JSONObject().put("op", "delete").put("path", this$0.join($dst.getPath(), name));
+                                        Intrinsics.checkNotNullExpressionValue(del, "put(...)");
+                                        this$0.opSync(del);
+                                    } else {
+                                        FilesKt.deleteRecursively(new File(this$0.join($dst.getPath(), name)));
+                                    }
+                                }
+                                break;
+                            default:
+                                throw new NoWhenBranchMatchedException();
+                        }
+                    }
+                    existing.put(target, Boolean.valueOf(e.getDir()));
+                    String srcPath = this$0.join($src.getPath(), name);
+                    String dstPath = this$0.join($dst.getPath(), target);
+                    if (!e.getDir()) {
+                        jobs.add(new Job(srcPath, dstPath, e.getSize(), e.getMtime()));
+                        continue;
+                    }
+                    dirs.add(dstPath);
+                    if ($src.getRemote()) {
+                        JSONObject w = this$0.getJson(http + $h + ":8090/fs/walk?path=" + Uri.encode(srcPath));
+                        JSONArray ds = w.getJSONArray("dirs");
+                        int n = ds.length();
+                        for (int k = 0; k < n; k++) {
+                            String d = ds.getString(k);
+                            Intrinsics.checkNotNullExpressionValue(d, "getString(...)");
+                            dirs.add(this$0.join(dstPath, d));
+                        }
+                        JSONArray fs = w.getJSONArray("files");
+                        int m = fs.length();
+                        for (int k = 0; k < m; k++) {
+                            JSONObject o = fs.getJSONObject(k);
+                            String rel = o.getString(relKey);
+                            Intrinsics.checkNotNullExpressionValue(rel, "getString(...)");
+                            String full = this$0.join(srcPath, rel);
+                            String rel2 = o.getString(relKey);
+                            Intrinsics.checkNotNullExpressionValue(rel2, "getString(...)");
+                            jobs.add(new Job(full, this$0.join(dstPath, rel2), o.getLong("size"), 0L));
                         }
                     } else {
-                        File[] listFiles = new File($dst.getPath()).listFiles();
-                        if (listFiles != null) {
-                            int $i$f$forEach2 = 0;
-                            int length2 = listFiles.length;
-                            int i2 = 0;
-                            while (i2 < length2) {
-                                File file = listFiles[i2];
-                                File[] fileArr = listFiles;
-                                int $i$f$forEach3 = $i$f$forEach2;
-                                existing.put(file.getName(), Boolean.valueOf(file.isDirectory()));
-                                i2++;
-                                listFiles = fileArr;
-                                $i$f$forEach2 = $i$f$forEach3;
+                        Iterator walk = FilesKt.walkTopDown(new File(srcPath)).iterator();
+                        while (walk.hasNext()) {
+                            File f = (File) walk.next();
+                            String rel = FilesKt.relativeTo(f, new File(srcPath)).getPath();
+                            Intrinsics.checkNotNull(rel);
+                            if (rel.length() == 0) {
+                                continue;
                             }
-                        }
-                    }
-                    ArrayList<Job> jobs = new ArrayList();
-                    ArrayList dirs2 = new ArrayList();
-                    Ref.ObjectRef applyAll2 = new Ref.ObjectRef();
-                    Iterator it2 = $names.iterator();
-                    while (it2.hasNext()) {
-                        try {
-                            String n3 = (String) it2.next();
-                            Iterable $this$firstOrNull$iv = $src.getEntries();
-                            Iterator it3 = $this$firstOrNull$iv.iterator();
-                            while (true) {
-                                if (it3.hasNext()) {
-                                    try {
-                                        element$iv = it3.next();
-                                        Entry it4 = (Entry) element$iv;
-                                        if (Intrinsics.areEqual(it4.getName(), n3)) {
-                                        }
-                                    } catch (InterruptedException e3) {
-                                        pane = pane2;
-                                        filesActivity = this$0;
-                                        pane2 = $src;
-                                        filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda7
-                                            @Override // java.lang.Runnable
-                                            public final void run() {
-                                                this$0.toast("Cancelled");
-                                            }
-                                        });
-                                        handler = filesActivity.ui;
-                                        final var pane2$f18 = pane2;
-                                        runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                                            @Override // java.lang.Runnable
-                                            public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f18, pane);
-                                            }
-                                        };
-                                        handler.post(runnable);
-                                    } catch (Exception e4) {
-                                        e = e4;
-                                        pane = pane2;
-                                        filesActivity = this$0;
-                                        pane2 = $src;
-                                        filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda34
-                                            @Override // java.lang.Runnable
-                                            public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$47(this$0, e);
-                                            }
-                                        });
-                                        handler = filesActivity.ui;
-                                        final var pane2$f17 = pane2;
-                                        runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                                            @Override // java.lang.Runnable
-                                            public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f17, pane);
-                                            }
-                                        };
-                                        handler.post(runnable);
-                                    } catch (Throwable th2) {
-                                        th = th2;
-                                        pane = pane2;
-                                        filesActivity = this$0;
-                                        pane2 = $src;
-                                        final var pane2$f16 = pane2;
-                                        filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                                            @Override // java.lang.Runnable
-                                            public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f16, pane);
-                                            }
-                                        });
-                                        throw th;
-                                    }
-                                } else {
-                                    element$iv = null;
-                                }
-                            }
-                            Entry e5 = (Entry) element$iv;
-                            if (e5 == null) {
-                                pane3 = $src;
+                            if (f.isDirectory()) {
+                                dirs.add(this$0.join(dstPath, rel));
                             } else {
-                                try {
-                                    if (existing.containsKey(n3)) {
-                                        try {
-                                            try {
-                                                Clash clash = (Clash) applyAll2.element;
-                                                if (clash == null) {
-                                                    boolean dir = e5.getDir();
-                                                    n2 = n3;
-                                                    str5 = "cancelled";
-                                                    str = str8;
-                                                    str6 = "op";
-                                                    str4 = "path";
-                                                    str2 = str9;
-                                                    str7 = "put(...)";
-                                                    applyAll = applyAll2;
-                                                    dirs = dirs2;
-                                                    clash = this$0.askClash(n2, dir, Intrinsics.areEqual(existing.get(n3), (Object) true), $dst.getRemote() ? "comma" : "tablet", $dst.getPath(), new Function1() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda33
-                                                        @Override // kotlin.jvm.functions.Function1
-                                                        public final Object invoke(Object obj) {
-                                                            Unit startCopy$lambda$51$lambda$36;
-                                                            startCopy$lambda$51$lambda$36 = FilesActivity.startCopy$lambda$51$lambda$36(applyAll, (FilesActivity.Clash) obj);
-                                                            return startCopy$lambda$51$lambda$36;
-                                                        }
-                                                    });
-                                                } else {
-                                                    n2 = n3;
-                                                    str4 = "path";
-                                                    applyAll = applyAll2;
-                                                    dirs = dirs2;
-                                                    str = str8;
-                                                    str2 = str9;
-                                                    str5 = "cancelled";
-                                                    str6 = "op";
-                                                    str7 = "put(...)";
-                                                }
-                                                Clash choice = clash;
-                                                switch (WhenMappings.$EnumSwitchMapping$0[choice.ordinal()]) {
-                                                    case 1:
-                                                        throw new InterruptedException(str5);
-                                                    case 2:
-                                                        pane2 = $dst;
-                                                        t = $h;
-                                                        pane3 = $src;
-                                                        str9 = str2;
-                                                        applyAll2 = applyAll;
-                                                        str8 = str;
-                                                        dirs2 = dirs;
-                                                        break;
-                                                    case 3:
-                                                        n = n2;
-                                                        boolean dir2 = e5.getDir();
-                                                        Set<String> keySet = existing.keySet();
-                                                        Intrinsics.checkNotNullExpressionValue(keySet, "<get-keys>(...)");
-                                                        target = this$0.freeName(n, dir2, keySet);
-                                                        existing.put(target, Boolean.valueOf(e5.getDir()));
-                                                        String s2 = this$0.join($src.getPath(), n);
-                                                        String t2 = this$0.join($dst.getPath(), target);
-                                                        if (e5.getDir()) {
-                                                            jobs.add(new Job(s2, t2, e5.getSize(), e5.getMtime()));
-                                                            pane2 = $dst;
-                                                            t = $h;
-                                                            pane3 = $src;
-                                                            str9 = str2;
-                                                            applyAll2 = applyAll;
-                                                            str8 = str;
-                                                            dirs2 = dirs;
-                                                            break;
-                                                        } else {
-                                                            ArrayList dirs3 = dirs;
-                                                            dirs3.add(t2);
-                                                            if ($src.getRemote()) {
-                                                                String str10 = str2;
-                                                                JSONObject w = this$0.getJson(str10 + $h + ":8090/fs/walk?path=" + Uri.encode(s2));
-                                                                JSONArray da = w.getJSONArray("dirs");
-                                                                int i3 = 0;
-                                                                int length3 = da.length();
-                                                                while (i3 < length3) {
-                                                                    String n4 = n;
-                                                                    String n5 = da.getString(i3);
-                                                                    Intrinsics.checkNotNullExpressionValue(n5, "getString(...)");
-                                                                    dirs3.add(this$0.join(t2, n5));
-                                                                    i3++;
-                                                                    n = n4;
-                                                                }
-                                                                JSONArray fa = w.getJSONArray("files");
-                                                                int i4 = 0;
-                                                                int length4 = fa.length();
-                                                                while (i4 < length4) {
-                                                                    JSONObject f = fa.getJSONObject(i4);
-                                                                    JSONArray da2 = da;
-                                                                    String str11 = str;
-                                                                    String str12 = str10;
-                                                                    String string = f.getString(str11);
-                                                                    Intrinsics.checkNotNullExpressionValue(string, "getString(...)");
-                                                                    String join = this$0.join(s2, string);
-                                                                    String string2 = f.getString(str11);
-                                                                    Intrinsics.checkNotNullExpressionValue(string2, "getString(...)");
-                                                                    jobs.add(new Job(join, this$0.join(t2, string2), f.getLong("size"), 0L));
-                                                                    i4++;
-                                                                    w = w;
-                                                                    fa = fa;
-                                                                    str10 = str12;
-                                                                    str = str11;
-                                                                    da = da2;
-                                                                }
-                                                                pane2 = $dst;
-                                                                pane3 = $src;
-                                                                str8 = str;
-                                                                dirs2 = dirs3;
-                                                                t = $h;
-                                                                applyAll2 = applyAll;
-                                                                str9 = str10;
-                                                                break;
-                                                            } else {
-                                                                String str13 = str;
-                                                                String str14 = str2;
-                                                                Sequence $this$forEach$iv = FilesKt.walkTopDown(new File(s2));
-                                                                int $i$f$forEach4 = 0;
-                                                                Iterator<File> it5 = $this$forEach$iv.iterator();
-                                                                while (it5.hasNext()) {
-                                                                    Object element$iv2 = it5.next();
-                                                                    File f2 = (File) element$iv2;
-                                                                    Sequence $this$forEach$iv2 = $this$forEach$iv;
-                                                                    String rel = FilesKt.relativeTo(f2, new File(s2)).getPath();
-                                                                    Intrinsics.checkNotNull(rel);
-                                                                    if (rel.length() == 0) {
-                                                                        s = s2;
-                                                                        $i$f$forEach = $i$f$forEach4;
-                                                                        str3 = str13;
-                                                                        it = it5;
-                                                                    } else if (f2.isDirectory()) {
-                                                                        s = s2;
-                                                                        dirs3.add(this$0.join(t2, rel));
-                                                                        $i$f$forEach = $i$f$forEach4;
-                                                                        str3 = str13;
-                                                                        it = it5;
-                                                                    } else {
-                                                                        s = s2;
-                                                                        $i$f$forEach = $i$f$forEach4;
-                                                                        String absolutePath = f2.getAbsolutePath();
-                                                                        str3 = str13;
-                                                                        Intrinsics.checkNotNullExpressionValue(absolutePath, "getAbsolutePath(...)");
-                                                                        it = it5;
-                                                                        jobs.add(new Job(absolutePath, this$0.join(t2, rel), f2.length(), f2.lastModified() / 1000));
-                                                                    }
-                                                                    $this$forEach$iv = $this$forEach$iv2;
-                                                                    s2 = s;
-                                                                    $i$f$forEach4 = $i$f$forEach;
-                                                                    str13 = str3;
-                                                                    it5 = it;
-                                                                }
-                                                                pane2 = $dst;
-                                                                pane3 = $src;
-                                                                dirs2 = dirs3;
-                                                                t = $h;
-                                                                applyAll2 = applyAll;
-                                                                str9 = str14;
-                                                                str8 = str13;
-                                                                break;
-                                                            }
-                                                        }
-                                                    case 4:
-                                                        n = n2;
-                                                        if (!Intrinsics.areEqual(existing.get(n), Boolean.valueOf(e5.getDir()))) {
-                                                            if ($dst.getRemote()) {
-                                                                JSONObject put = new JSONObject().put(str6, "delete").put(str4, this$0.join($dst.getPath(), n));
-                                                                Intrinsics.checkNotNullExpressionValue(put, str7);
-                                                                this$0.opSync(put);
-                                                            } else {
-                                                                Boolean.valueOf(FilesKt.deleteRecursively(new File(this$0.join($dst.getPath(), n))));
-                                                            }
-                                                            break;
-                                                        }
-                                                        break;
-                                                    default:
-                                                        throw new NoWhenBranchMatchedException();
-                                                }
-                                            } catch (Throwable th3) {
-                                                th = th3;
-                                                pane = $dst;
-                                                pane2 = $src;
-                                                th = th;
-                                                filesActivity = this$0;
-                                                final var pane2$f15 = pane2;
-                                                filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                                                    @Override // java.lang.Runnable
-                                                    public final void run() {
-                                                        FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f15, pane);
-                                                    }
-                                                });
-                                                throw th;
-                                            }
-                                        } catch (InterruptedException e6) {
-                                            e = e6;
-                                            pane = $dst;
-                                            pane2 = $src;
-                                            filesActivity = this$0;
-                                            filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda7
-                                                @Override // java.lang.Runnable
-                                                public final void run() {
-                                                    this$0.toast("Cancelled");
-                                                }
-                                            });
-                                            handler = filesActivity.ui;
-                                            final var pane2$f14 = pane2;
-                                            runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                                                @Override // java.lang.Runnable
-                                                public final void run() {
-                                                    FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f14, pane);
-                                                }
-                                            };
-                                            handler.post(runnable);
-                                        } catch (Exception e7) {
-                                            e = e7;
-                                            pane = $dst;
-                                            pane2 = $src;
-                                            e = e;
-                                            filesActivity = this$0;
-                                            filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda34
-                                                @Override // java.lang.Runnable
-                                                public final void run() {
-                                                    FilesActivity.startCopy$lambda$51$lambda$47(this$0, e);
-                                                }
-                                            });
-                                            handler = filesActivity.ui;
-                                            final var pane2$f13 = pane2;
-                                            runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                                                @Override // java.lang.Runnable
-                                                public final void run() {
-                                                    FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f13, pane);
-                                                }
-                                            };
-                                            handler.post(runnable);
-                                        }
-                                    } else {
-                                        n = n3;
-                                        applyAll = applyAll2;
-                                        dirs = dirs2;
-                                        str = str8;
-                                        str2 = str9;
-                                    }
-                                    existing.put(target, Boolean.valueOf(e5.getDir()));
-                                    String s22 = this$0.join($src.getPath(), n);
-                                    String t22 = this$0.join($dst.getPath(), target);
-                                    if (e5.getDir()) {
-                                    }
-                                } catch (InterruptedException e8) {
-                                    e = e8;
-                                    pane = $dst;
-                                    pane2 = $src;
-                                    filesActivity = this$0;
-                                    filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda7
-                                        @Override // java.lang.Runnable
-                                        public final void run() {
-                                            this$0.toast("Cancelled");
-                                        }
-                                    });
-                                    handler = filesActivity.ui;
-                                    final var pane2$f12 = pane2;
-                                    runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                                        @Override // java.lang.Runnable
-                                        public final void run() {
-                                            FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f12, pane);
-                                        }
-                                    };
-                                    handler.post(runnable);
-                                } catch (Exception e9) {
-                                    e = e9;
-                                    pane = $dst;
-                                    pane2 = $src;
-                                    e = e;
-                                    filesActivity = this$0;
-                                    filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda34
-                                        @Override // java.lang.Runnable
-                                        public final void run() {
-                                            FilesActivity.startCopy$lambda$51$lambda$47(this$0, e);
-                                        }
-                                    });
-                                    handler = filesActivity.ui;
-                                    final var pane2$f11 = pane2;
-                                    runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                                        @Override // java.lang.Runnable
-                                        public final void run() {
-                                            FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f11, pane);
-                                        }
-                                    };
-                                    handler.post(runnable);
-                                } catch (Throwable th4) {
-                                    th = th4;
-                                    pane = $dst;
-                                    pane2 = $src;
-                                    th = th;
-                                    filesActivity = this$0;
-                                    final var pane2$f10 = pane2;
-                                    filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                                        @Override // java.lang.Runnable
-                                        public final void run() {
-                                            FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f10, pane);
-                                        }
-                                    });
-                                    throw th;
-                                }
-                                target = n3;
+                                String abs = f.getAbsolutePath();
+                                Intrinsics.checkNotNullExpressionValue(abs, "getAbsolutePath(...)");
+                                jobs.add(new Job(abs, this$0.join(dstPath, rel), f.length(), f.lastModified() / 1000));
                             }
-                        } catch (InterruptedException e10) {
-                            e = e10;
-                        } catch (Exception e11) {
-                            e = e11;
-                        } catch (Throwable th5) {
-                            th = th5;
                         }
                     }
-                    ArrayList dirs4 = dirs2;
-                    String label = t;
-                    try {
-                        Iterator it6 = dirs4.iterator();
-                        Intrinsics.checkNotNullExpressionValue(it6, "iterator(...)");
-                        while (it6.hasNext()) {
-                            Object next = it6.next();
-                            Intrinsics.checkNotNullExpressionValue(next, "next(...)");
-                            String dd = (String) next;
-                            if ($dst.getRemote()) {
-                                JSONObject put2 = new JSONObject().put("op", "mkdir").put("path", dd);
-                                Intrinsics.checkNotNullExpressionValue(put2, "put(...)");
-                                this$0.opSync(put2);
-                            } else {
-                                Boolean.valueOf(new File(dd).mkdirs());
-                            }
-                        }
-                        long total = 0;
-                        for (Job it7 : jobs) {
-                            total += it7.getSize();
-                        }
-                        final Ref.LongRef doneBytes = new Ref.LongRef();
-                        final long t0 = System.nanoTime();
-                        CountDownLatch latch = new CountDownLatch(1);
-                        final var jobs$f = jobs;
-                        this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda1
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$39(this$0, jobs$f, latch);
-                            }
-                        });
-                        latch.await();
-                        Ref.IntRef failed2 = new Ref.IntRef();
-                        int i5 = 0;
-                        for (Job j2 : jobs) {
-                            final int i6 = i5;
-                            i5++;
-                            try {
-                                this$0.waitIfPaused();
-                                ArrayList dirs5 = dirs4;
-                                if (this$0.cancel.get()) {
-                                    throw new InterruptedException("cancelled");
-                                }
-                                try {
-                                    Ref.IntRef failed3 = failed2;
-                                    final String label2 = (i6 + 1) + "/" + jobs.size() + "  " + new File(j2.getSrcPath()).getName();
-                                    try {
-                                        HashMap existing2 = existing;
-                                        CountDownLatch latch2 = latch;
-                                        ArrayList jobs2 = jobs;
-                                        final var total$f = total;
-                                        Function1 progress = new Function1() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda2
-                                            @Override // kotlin.jvm.functions.Function1
-                                            public final Object invoke(Object obj) {
-                                                Unit startCopy$lambda$51$lambda$41;
-                                                startCopy$lambda$51$lambda$41 = FilesActivity.startCopy$lambda$51$lambda$41(doneBytes, t0, this$0, label2, total$f, i6, ((Long) obj).longValue());
-                                                return startCopy$lambda$51$lambda$41;
-                                            }
-                                        };
-                                        this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda3
-                                            @Override // java.lang.Runnable
-                                            public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$42(this$0, i6);
-                                            }
-                                        });
-                                        try {
-                                            try {
-                                            } catch (InterruptedException x) {
-                                                throw x;
-                                            }
-                                        } catch (Exception x2) {
-                                            if (this$0.cancel.get()) {
-                                                throw new InterruptedException("cancelled");
-                                            }
-                                            failed3.element++;
-                                            final String msg = x2.getMessage();
-                                            this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda5
-                                                @Override // java.lang.Runnable
-                                                public final void run() {
-                                                    FilesActivity.startCopy$lambda$51$lambda$44(this$0, i6, msg);
-                                                }
-                                            });
-                                        }
-                                        if ($src.getRemote()) {
-                                            try {
-                                                if (!$dst.getRemote()) {
-                                                    this$0.download($h, j2, progress);
-                                                    this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda4
-                                                        @Override // java.lang.Runnable
-                                                        public final void run() {
-                                                            FilesActivity.startCopy$lambda$51$lambda$43(this$0, i6);
-                                                        }
-                                                    });
-                                                    doneBytes.element += j2.getSize();
-                                                    failed2 = failed3;
-                                                    label = $h;
-                                                    dirs4 = dirs5;
-                                                    jobs = jobs2;
-                                                    existing = existing2;
-                                                    latch = latch2;
-                                                }
-                                            } catch (InterruptedException x3) {
-                                                throw x3;
-                                            }
-                                        }
-                                        if ($src.getRemote() || !$dst.getRemote()) {
-                                            throw new RuntimeException("same side");
-                                        }
-                                        this$0.upload($h, j2, progress);
-                                        this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda4
-                                            @Override // java.lang.Runnable
-                                            public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$43(this$0, i6);
-                                            }
-                                        });
-                                        doneBytes.element += j2.getSize();
-                                        failed2 = failed3;
-                                        label = $h;
-                                        dirs4 = dirs5;
-                                        jobs = jobs2;
-                                        existing = existing2;
-                                        latch = latch2;
-                                    } catch (InterruptedException e12) {
-                                        e = e12;
-                                        pane = $dst;
-                                        pane2 = $src;
-                                        filesActivity = this$0;
-                                        filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda7
-                                            @Override // java.lang.Runnable
-                                            public final void run() {
-                                                this$0.toast("Cancelled");
-                                            }
-                                        });
-                                        handler = filesActivity.ui;
-                                        final var pane2$f9 = pane2;
-                                        runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                                            @Override // java.lang.Runnable
-                                            public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f9, pane);
-                                            }
-                                        };
-                                        handler.post(runnable);
-                                    } catch (Exception e13) {
-                                        e = e13;
-                                        pane = $dst;
-                                        pane2 = $src;
-                                        e = e;
-                                        filesActivity = this$0;
-                                        filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda34
-                                            @Override // java.lang.Runnable
-                                            public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$47(this$0, e);
-                                            }
-                                        });
-                                        handler = filesActivity.ui;
-                                        final var pane2$f8 = pane2;
-                                        runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                                            @Override // java.lang.Runnable
-                                            public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f8, pane);
-                                            }
-                                        };
-                                        handler.post(runnable);
-                                    } catch (Throwable th6) {
-                                        th = th6;
-                                        pane = $dst;
-                                        pane2 = $src;
-                                        th = th;
-                                        filesActivity = this$0;
-                                        final var pane2$f7 = pane2;
-                                        filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                                            @Override // java.lang.Runnable
-                                            public final void run() {
-                                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f7, pane);
-                                            }
-                                        });
-                                        throw th;
-                                    }
-                                } catch (InterruptedException e14) {
-                                    e = e14;
-                                } catch (Exception e15) {
-                                    e = e15;
-                                } catch (Throwable th7) {
-                                    th = th7;
-                                }
-                            } catch (InterruptedException e16) {
-                                e = e16;
-                            } catch (Exception e17) {
-                                e = e17;
-                            } catch (Throwable th8) {
-                                th = th8;
-                            }
-                        }
-                        ArrayList jobs3 = jobs;
-                        failed = failed2;
-                        ok = jobs3.size() - failed.element;
-                        pane2 = $src;
-                        j = total;
-                        filesActivity = this$0;
-                    } catch (InterruptedException e18) {
-                        e = e18;
-                        pane = $dst;
-                        pane2 = $src;
-                        filesActivity = this$0;
-                        filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda7
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                this$0.toast("Cancelled");
-                            }
-                        });
-                        handler = filesActivity.ui;
-                        final var pane2$f6 = pane2;
-                        runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f6, pane);
-                            }
-                        };
-                        handler.post(runnable);
-                    } catch (Exception e19) {
-                        e = e19;
-                        pane = $dst;
-                        pane2 = $src;
-                        filesActivity = this$0;
-                        e = e;
-                        filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda34
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$47(this$0, e);
-                            }
-                        });
-                        handler = filesActivity.ui;
-                        final var pane2$f5 = pane2;
-                        runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f5, pane);
-                            }
-                        };
-                        handler.post(runnable);
-                    } catch (Throwable th9) {
-                        th = th9;
-                        pane = $dst;
-                        pane2 = $src;
-                        filesActivity = this$0;
-                        th = th;
-                        final var pane2$f4 = pane2;
-                        filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f4, pane);
-                            }
-                        });
-                        throw th;
-                    }
-                    try {
-                        this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda6
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$45(this$0, ok, j, failed);
-                            }
-                        });
-                        handler = filesActivity.ui;
-                        final var pane2$f3 = pane2;
-                        runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f3, $dst);
-                            }
-                        };
-                    } catch (InterruptedException e20) {
-                        e = e20;
-                        pane = $dst;
-                        filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda7
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                this$0.toast("Cancelled");
-                            }
-                        });
-                        handler = filesActivity.ui;
-                        final var pane2$f2 = pane2;
-                        runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f2, pane);
-                            }
-                        };
-                        handler.post(runnable);
-                    } catch (Exception e21) {
-                        e = e21;
-                        pane = $dst;
-                        e = e;
-                        filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda34
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$47(this$0, e);
-                            }
-                        });
-                        handler = filesActivity.ui;
-                        final var pane2$f1 = pane2;
-                        runnable = new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f1, pane);
-                            }
-                        };
-                        handler.post(runnable);
-                    } catch (Throwable th10) {
-                        th = th10;
-                        pane = $dst;
-                        th = th;
-                        final var pane2$f = pane2;
-                        filesActivity.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda35
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                FilesActivity.startCopy$lambda$51$lambda$50(this$0, pane2$f, pane);
-                            }
-                        });
-                        throw th;
-                    }
-                } catch (InterruptedException e22) {
-                    pane = pane2;
-                    pane2 = pane3;
-                } catch (Exception e23) {
-                    e = e23;
-                    pane = pane2;
-                    pane2 = pane3;
-                } catch (Throwable th11) {
-                    th = th11;
-                    pane = pane2;
-                    pane2 = pane3;
                 }
-            } catch (Throwable th12) {
-                th = th12;
+                Iterator di = dirs.iterator();
+                Intrinsics.checkNotNullExpressionValue(di, "iterator(...)");
+                while (di.hasNext()) {
+                    Object nx = di.next();
+                    Intrinsics.checkNotNullExpressionValue(nx, "next(...)");
+                    String d = (String) nx;
+                    if ($dst.getRemote()) {
+                        JSONObject mk = new JSONObject().put("op", "mkdir").put("path", d);
+                        Intrinsics.checkNotNullExpressionValue(mk, "put(...)");
+                        this$0.opSync(mk);
+                    } else {
+                        new File(d).mkdirs();
+                    }
+                }
+                long total = 0;
+                for (Object o : jobs) {
+                    total += ((Job) o).getSize();
+                }
+                final Ref.LongRef doneBytes = new Ref.LongRef();
+                final long t0 = System.nanoTime();
+                final CountDownLatch latch = new CountDownLatch(1);
+                this$0.ui.post(() -> FilesActivity.startCopy$lambda$51$lambda$39(this$0, jobs, latch));
+                latch.await();
+                final Ref.IntRef failed = new Ref.IntRef();
+                int i = 0;
+                for (Object o : jobs) {
+                    final int idx = i;
+                    i = idx + 1;
+                    Job job = (Job) o;
+                    this$0.waitIfPaused();
+                    if (this$0.cancel.get()) {
+                        throw new InterruptedException("cancelled");
+                    }
+                    final String label = (idx + 1) + "/" + jobs.size() + "  " + new File(job.getSrcPath()).getName();
+                    final long totalF = total;
+                    Function1 onBytes = (Function1) (Object done) -> FilesActivity.startCopy$lambda$51$lambda$41(doneBytes, t0, this$0, label, totalF, idx, ((Long) done).longValue());
+                    this$0.ui.post(() -> FilesActivity.startCopy$lambda$51$lambda$42(this$0, idx));
+                    try {
+                        if ($src.getRemote() && !$dst.getRemote()) {
+                            this$0.download($h, job, onBytes);
+                        } else {
+                            if ($src.getRemote() || !$dst.getRemote()) {
+                                throw new RuntimeException("same side");
+                            }
+                            this$0.upload($h, job, onBytes);
+                        }
+                        this$0.ui.post(() -> FilesActivity.startCopy$lambda$51$lambda$43(this$0, idx));
+                    } catch (InterruptedException ie) {
+                        throw ie;
+                    } catch (Exception ex) {
+                        if (this$0.cancel.get()) {
+                            throw new InterruptedException("cancelled");
+                        }
+                        failed.element++;
+                        final String msg = ex.getMessage();
+                        this$0.ui.post(() -> FilesActivity.startCopy$lambda$51$lambda$44(this$0, idx, msg));
+                    }
+                    doneBytes.element += job.getSize();
+                }
+                final int ok = jobs.size() - failed.element;
+                final long totalF = total;
+                this$0.ui.post(() -> FilesActivity.startCopy$lambda$51$lambda$45(this$0, ok, totalF, failed));
+            } catch (InterruptedException ie) {
+                this$0.ui.post(() -> this$0.toast("Cancelled"));
+            } catch (final Exception ex) {
+                this$0.ui.post(() -> FilesActivity.startCopy$lambda$51$lambda$47(this$0, ex));
             }
-        } catch (InterruptedException e24) {
-            e = e24;
-            pane = pane2;
-            pane2 = pane3;
-        } catch (Exception e25) {
-            e = e25;
-            pane = pane2;
-            pane2 = pane3;
-        } catch (Throwable th13) {
-            th = th13;
-            pane = pane2;
-            pane2 = pane3;
+        } finally {
+            this$0.ui.post(() -> FilesActivity.startCopy$lambda$51$lambda$50(this$0, $src, $dst));
         }
-        handler.post(runnable);
     }
 
     /* VF: from Vineflower (jadx: ) */
@@ -3201,8 +2528,7 @@ public final class FilesActivity extends AppCompatActivity {
         final File f = new File(j.getSrcPath());
         RequestBody requestBody = new RequestBody() { // from class: com.starpilot.starview.FilesActivity$upload$body$1
             @Override // okhttp3.RequestBody
-            /* renamed from: contentType */
-            public MediaType getContentType() {
+            public MediaType contentType() {
                 return MediaType.Companion.get("application/octet-stream");
             }
 
@@ -3222,7 +2548,7 @@ public final class FilesActivity extends AppCompatActivity {
                 Intrinsics.checkNotNullParameter(sink, "sink");
                 FileInputStream fileInputStream = new FileInputStream(f);
                 FilesActivity filesActivity = FilesActivity.this;
-                Function1<Long, Unit> function1 = progress;
+                Function1 function1 = progress;
                 try {
                     FileInputStream ins = fileInputStream;
                     byte[] buf = new byte[262144];
@@ -3408,7 +2734,7 @@ public final class FilesActivity extends AppCompatActivity {
         this.io.execute(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda23
             @Override // java.lang.Runnable
             public final void run() {
-                FilesActivity.saveText$lambda$83(FilesActivity.Pane.this, this, full, text, done);
+                FilesActivity.saveText$lambda$83(pane, FilesActivity.this, full, text, done);
             }
         });
     }
