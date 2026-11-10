@@ -148,7 +148,7 @@ public final class GpsSummary {
 
                 for (Object var67 : var22) {
                     if (Intrinsics.areEqual(((GpsFixInfo)var67).getService(), "gpsLocation")) {
-                        ((Collection) var30).add(var67);
+                        var30.add(var67);
                     }
                 }
 

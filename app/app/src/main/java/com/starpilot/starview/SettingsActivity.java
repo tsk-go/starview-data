@@ -1853,25 +1853,8 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             return quad.copy(i, i2, i3, str);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final int getI() {
-            return this.i;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final int getR() {
-            return this.r;
-        }
 
-        /* renamed from: component3, reason: from getter */
-        public final int getC() {
-            return this.c;
-        }
-
-        /* renamed from: component4, reason: from getter */
-        public final String getSub() {
-            return this.sub;
-        }
 
         public final Quad copy(int i, int r, int c, String sub) {
             Intrinsics.checkNotNullParameter(sub, "sub");

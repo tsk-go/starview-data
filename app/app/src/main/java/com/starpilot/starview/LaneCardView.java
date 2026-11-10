@@ -584,7 +584,7 @@ public final class LaneCardView extends View {
                 }
             }
 
-            String var130 = ((RtkCalibration) (String)var122).component1();
+            String var130 = (String)var122.component1();
             boolean var25 = (Boolean)var122.component2();
             int var63;
             if (var130.length() > 0) {

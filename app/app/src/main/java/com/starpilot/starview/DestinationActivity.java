@@ -1191,7 +1191,7 @@ public final class DestinationActivity extends AppCompatActivity {
                                     label145: {
                                         try {
                                             if (var6 < var50.length()) {
-                                                if (Character.isLetter(((CharSequence) var50).charAt(var6))) {
+                                                if (Character.isLetter(var50.charAt(var6))) {
                                                     break;
                                                 }
                                                 break label145;

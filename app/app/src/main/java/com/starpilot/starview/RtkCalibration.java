@@ -30,50 +30,13 @@ public final /* data */ class RtkCalibration {
         return this.events;
     }
 
-    /* renamed from: component10, reason: from getter */
-    public final Integer getSpeedBadPct() {
-        return this.speedBadPct;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final int getSinceAgoS() {
-        return this.sinceAgoS;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final int getLeft() {
-        return this.left;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final int getRight() {
-        return this.right;
-    }
 
-    /* renamed from: component5, reason: from getter */
-    public final int getLeftFast() {
-        return this.leftFast;
-    }
 
-    /* renamed from: component6, reason: from getter */
-    public final int getRightFast() {
-        return this.rightFast;
-    }
 
-    /* renamed from: component7, reason: from getter */
-    public final int getFastS() {
-        return this.fastS;
-    }
 
-    /* renamed from: component8, reason: from getter */
-    public final int getLongestStillS() {
-        return this.longestStillS;
-    }
-
-    /* renamed from: component9, reason: from getter */
-    public final int getStillNowS() {
-        return this.stillNowS;
-    }
 
     public final RtkCalibration copy(List<Event> events, int sinceAgoS, int left, int right, int leftFast, int rightFast, int fastS, int longestStillS, int stillNowS, Integer speedBadPct) {
         Intrinsics.checkNotNullParameter(events, "events");
@@ -179,25 +142,8 @@ public final /* data */ class RtkCalibration {
             return event.copy(d2, str4, str5, str3);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final double getAgoS() {
-            return this.agoS;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final String getKey() {
-            return this.key;
-        }
 
-        /* renamed from: component3, reason: from getter */
-        public final String getFrom() {
-            return this.from;
-        }
-
-        /* renamed from: component4, reason: from getter */
-        public final String getTo() {
-            return this.to;
-        }
 
         public final Event copy(double agoS, String key, String from, String to) {
             Intrinsics.checkNotNullParameter(key, "key");

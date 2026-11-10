@@ -1252,11 +1252,11 @@ public final class GxHomePage extends GxPage {
                 var239 = this;
                 var11 = false;
                 var247 = columns$default(((GxHomePage) var239), 2, null, 2, null);
-                var250 = ((GxPage) var239).card((ViewGroup)var247.get(0));
+                var250 = var239.card((ViewGroup)var247.get(0));
                 var239.cardHead(var250, "Most used models", TuplesKt.to("Models", "gx:models"));
                 JSONArray var181 = var31.optJSONArray("favoriteModels");
                 if (var181 != null) {
-                    List var221 = ((GxPage) var239).objects(var181);
+                    List var221 = var239.objects(var181);
                     var182 = var221;
                     if (var221 != null) {
                         break label399;
@@ -1270,13 +1270,13 @@ public final class GxHomePage extends GxPage {
             if (var222.isEmpty()) {
                 GxPage.text$default(((GxPage) var239), "No model usage recorded yet.", (ViewGroup)var250, 17.0F, 0, false, 24, null);
             } else {
-                LinearLayout var231 = new LinearLayout(((GxPage) (Context)var239).getAct());
+                LinearLayout var231 = new LinearLayout((Context)var239.getAct());
                 var231.setOrientation(0);
                 Iterator var183 = var222.iterator();
 
                 for (int var50 = 0; var183.hasNext(); var50++) {
                     JSONObject var261 = (JSONObject)var183.next();
-                    View var270 = new View(((GxPage) (Context)var239).getAct());
+                    View var270 = new View((Context)var239.getAct());
                     var270.setBackgroundColor(var239.favColors.get(var50).intValue());
                     var231.addView(
                         var270,
@@ -1293,32 +1293,32 @@ public final class GxHomePage extends GxPage {
                 var184.topMargin = var239.getUi().dp(4);
                 var184.bottomMargin = var239.getUi().dp(8);
                 Unit var232 = Unit.INSTANCE;
-                ((ViewGroup) var250).addView(var262, (android.view.ViewGroup.LayoutParams)var184);
+                var250.addView(var262, (android.view.ViewGroup.LayoutParams)var184);
                 Iterator var233 = var222.iterator();
                 var8 = 0;
 
                 for (Iterator var223 = var233; var223.hasNext(); var8++) {
                     JSONObject var234 = (JSONObject)var223.next();
-                    var29 = new LinearLayout(((GxPage) (Context)var239).getAct());
+                    var29 = new LinearLayout((Context)var239.getAct());
                     var29.setOrientation(0);
                     var29.setGravity(16);
                     var29.setPadding(0, var239.getUi().dp(6), 0, var239.getUi().dp(6));
-                    View var288 = new View(((GxPage) (Context)var239).getAct());
+                    View var288 = new View((Context)var239.getAct());
                     var288.setBackground((Drawable)CarUi.rounded$default(var239.getUi(), var239.favColors.get(var8).intValue(), 5, null, 4, null));
                     android.widget.LinearLayout.LayoutParams var271 = new android.widget.LinearLayout.LayoutParams(var239.getUi().dp(20), var239.getUi().dp(20));
                     var271.rightMargin = var239.getUi().dp(12);
                     Unit var277 = Unit.INSTANCE;
                     var29.addView(var288, (android.view.ViewGroup.LayoutParams)var271);
-                    LinearLayout var272 = new LinearLayout(((GxPage) (Context)var239).getAct());
+                    LinearLayout var272 = new LinearLayout((Context)var239.getAct());
                     var272.setOrientation(1);
-                    TextView var278 = new TextView(((GxPage) (Context)var239).getAct());
+                    TextView var278 = new TextView((Context)var239.getAct());
                     var278.setText(GxPage.str$default(((GxPage) var239), var234, "name", null, 2, null));
                     var278.setTextSize(18.0F);
                     var278.setTextColor(CarUi.Companion.getTEXT());
                     var278.setTypeface(Typeface.DEFAULT_BOLD);
                     var272.addView((View)var278);
                     var40 = GxHomeKt.gxHomeNum(var234.opt(var78));
-                    TextView var279 = new TextView(((GxPage) (Context)var239).getAct());
+                    TextView var279 = new TextView((Context)var239.getAct());
                     var32 = GxHomeKt.gxHomeInt(var40);
                     boolean var54;
                     if (var40 == 1.0) {
@@ -1338,13 +1338,13 @@ public final class GxHomePage extends GxPage {
                     var279.setTextColor(CarUi.Companion.getDIM());
                     var272.addView((View)var279);
                     var29.addView((View)var272);
-                    ((ViewGroup) var250).addView((View)var29);
+                    var250.addView((View)var29);
                 }
 
                 Unit var79 = Unit.INSTANCE;
             }
 
-            LinearLayout var212 = ((GxPage) var239).card((ViewGroup)var247.get(1));
+            LinearLayout var212 = var239.card((ViewGroup)var247.get(1));
             var239.cardHead(var212, "Storage", TuplesKt.to("Recordings", "gx:recordings"));
             JSONObject var121 = var67.optJSONObject("segmentCounts");
             JSONObject var80 = var121;
@@ -1362,7 +1362,7 @@ public final class GxHomePage extends GxPage {
             }
 
             GxPage.text$default(var224, (String)var17, (ViewGroup)var212, 17.0F, CarUi.Companion.getTEXT(), false, 16, null);
-            ((GxPage) var239).setProgress(((GxPage) var239).progress((ViewGroup)var212), GxHomeKt.gxHomeClamp$default(var67.opt("usedPercent"), 0.0, 0.0, 6, null));
+            var239.setProgress(var239.progress((ViewGroup)var212), GxHomeKt.gxHomeClamp$default(var67.opt("usedPercent"), 0.0, 0.0, 6, null));
             String var124 = GxHomeKt.gxHomeInt(var80.opt("standard"));
             var239.kv(var212, "Dashcam footage", var124 + " segments");
             String var125 = GxHomeKt.gxHomeInt(var80.opt("highResolution"));

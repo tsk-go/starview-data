@@ -1061,7 +1061,7 @@ public final class LaneShots {
 
                 Iterator var11;
                 try {
-                    var11 = ((Iterable) var57).iterator();
+                    var11 = var57.iterator();
                 } catch (Exception var23) {
                     return var62.size();
                 }

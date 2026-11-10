@@ -48,30 +48,9 @@ public final /* data */ class RtkSensor {
         return rtkSensor.copy(str, z3, z4, str3, i3, list);
     }
 
-    /* renamed from: component1, reason: from getter */
-    public final String getType() {
-        return this.type;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final boolean getUsed() {
-        return this.used;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final boolean getReady() {
-        return this.ready;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final String getCalib() {
-        return this.calib;
-    }
-
-    /* renamed from: component5, reason: from getter */
-    public final int getHz() {
-        return this.hz;
-    }
 
     public final List<String> component6() {
         return this.faults;

@@ -85,20 +85,7 @@ public final class AmyVoice {
             return pack.copy(str, str2, file);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final String getId() {
-            return this.id;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final String getLabel() {
-            return this.label;
-        }
-
-        /* renamed from: component3, reason: from getter */
-        public final File getDir() {
-            return this.dir;
-        }
 
         public final Pack copy(String id, String label, File dir) {
             Intrinsics.checkNotNullParameter(id, "id");

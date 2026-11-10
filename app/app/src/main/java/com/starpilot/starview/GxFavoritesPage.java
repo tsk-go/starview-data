@@ -123,30 +123,9 @@ public final class GxFavoritesPage extends GxPage {
             return slot.copy(z, z3, str3, obj3, str2);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final boolean getEnabled() {
-            return this.enabled;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final boolean getShowOnroad() {
-            return this.showOnroad;
-        }
 
-        /* renamed from: component3, reason: from getter */
-        public final String getKey() {
-            return this.key;
-        }
 
-        /* renamed from: component4, reason: from getter */
-        public final Object getValue() {
-            return this.value;
-        }
-
-        /* renamed from: component5, reason: from getter */
-        public final String getLabel() {
-            return this.label;
-        }
 
         public final Slot copy(boolean enabled, boolean showOnroad, String key, Object value, String label) {
             Intrinsics.checkNotNullParameter(label, "label");
@@ -1371,7 +1350,7 @@ public final class GxFavoritesPage extends GxPage {
                 }
             }
 
-            return TuplesKt.to(((File) var20).getName(), var26);
+            return TuplesKt.to(var20.getName(), var26);
         }
     }
 

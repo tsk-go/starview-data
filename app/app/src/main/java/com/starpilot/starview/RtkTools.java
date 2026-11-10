@@ -84,20 +84,7 @@ public final class RtkTools {
             return step.copy(str, state, str2);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final String getTitle() {
-            return this.title;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final State getState() {
-            return this.state;
-        }
-
-        /* renamed from: component3, reason: from getter */
-        public final String getWords() {
-            return this.words;
-        }
 
         public final Step copy(String title, State state, String words) {
             Intrinsics.checkNotNullParameter(title, "title");
@@ -177,30 +164,9 @@ public final class RtkTools {
             return tool.copy(str, str4, str5, z3, z2);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final String getOp() {
-            return this.op;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final String getLabel() {
-            return this.label;
-        }
 
-        /* renamed from: component3, reason: from getter */
-        public final String getWhat() {
-            return this.what;
-        }
 
-        /* renamed from: component4, reason: from getter */
-        public final boolean getStoppedOnly() {
-            return this.stoppedOnly;
-        }
-
-        /* renamed from: component5, reason: from getter */
-        public final boolean getDanger() {
-            return this.danger;
-        }
 
         public final Tool copy(String op, String label, String what, boolean stoppedOnly, boolean danger) {
             Intrinsics.checkNotNullParameter(op, "op");
@@ -582,25 +548,8 @@ public final class RtkTools {
             return need.copy(str, str2, z, f);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final String getTitle() {
-            return this.title;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final String getWords() {
-            return this.words;
-        }
 
-        /* renamed from: component3, reason: from getter */
-        public final boolean getMet() {
-            return this.met;
-        }
-
-        /* renamed from: component4, reason: from getter */
-        public final float getProgress() {
-            return this.progress;
-        }
 
         public final Need copy(String title, String words, boolean met, float progress) {
             Intrinsics.checkNotNullParameter(title, "title");

@@ -1199,7 +1199,7 @@ public final class GxModelsPage extends GxPage {
             var3 = null;
         }
 
-        ((ViewGroup) var3).removeAllViews();
+        var3.removeAllViews();
         if (!this.loading) {
             List var14 = this.sorted();
             if (var14.isEmpty()) {
@@ -1209,7 +1209,7 @@ public final class GxModelsPage extends GxPage {
                     var3 = var4;
                 }
 
-                ((ViewGroup) var3).addView((View)this.empty("No models match these filters. Try Both or clear the favourite filters."));
+                var3.addView((View)this.empty("No models match these filters. Try Both or clear the favourite filters."));
             } else {
                 boolean var1;
                 if (this.busy.length() == 0) {
@@ -1296,13 +1296,13 @@ public final class GxModelsPage extends GxPage {
                                 break;
                             case -1422950650:
                                 if (var4.equals("active")) {
-                                    ((String) var33).value("Active model").setTextColor(CarUi.Companion.getACCENT());
+                                    var33.value("Active model").setTextColor(CarUi.Companion.getACCENT());
                                     break label150;
                                 }
                                 break;
                             case 3035641:
                                 if (var4.equals("busy")) {
-                                    ((String) var33).value("Busy").setTextColor(CarUi.Companion.getDIM());
+                                    var33.value("Busy").setTextColor(CarUi.Companion.getDIM());
                                     break label150;
                                 }
                                 break;

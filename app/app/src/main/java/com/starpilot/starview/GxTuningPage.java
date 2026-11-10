@@ -818,7 +818,7 @@ public final class GxTuningPage extends GxPage {
                         var2 = var6 * 1000;
                     }
 
-                    var1 = ((String) var1).format(new Date((long)var2));
+                    var1 = var1.format(new Date((long)var2));
                     Intrinsics.checkNotNullExpressionValue(var1, "format(...)");
                     return ((String) var1);
                 }
@@ -1967,30 +1967,9 @@ public final class GxTuningPage extends GxPage {
             return cmpRow.copy(str, str3, z2, obj4, obj2);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final String getKey() {
-            return this.key;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final String getLabel() {
-            return this.label;
-        }
 
-        /* renamed from: component3, reason: from getter */
-        public final boolean getCurve() {
-            return this.curve;
-        }
 
-        /* renamed from: component4, reason: from getter */
-        public final Object getStock() {
-            return this.stock;
-        }
-
-        /* renamed from: component5, reason: from getter */
-        public final Object getCurrent() {
-            return this.current;
-        }
 
         public final CmpRow copy(String key, String label, boolean curve, Object stock, Object current) {
             Intrinsics.checkNotNullParameter(key, "key");
@@ -2315,16 +2294,16 @@ public final class GxTuningPage extends GxPage {
                 GxPage.text$default(this, "Finding decisions save immediately and regenerate trial profiles.", (ViewGroup)var7, 0.0F, 0, false, 28, null);
                 var22 = new EditText((Context)this.getAct());
                 ((EditText) var22).setText(this.fbNotes);
-                ((TextView) var22).setHint("Optional tuning notes");
-                ((TextView) var22).setTextSize(18.0F);
-                ((TextView) var22).setTextColor(CarUi.Companion.getTEXT());
-                ((TextView) var22).setHintTextColor(CarUi.Companion.getDIM());
-                ((TextView) var22).setInputType(147457);
-                ((TextView) var22).setMinLines(2);
+                var22.setHint("Optional tuning notes");
+                var22.setTextSize(18.0F);
+                var22.setTextColor(CarUi.Companion.getTEXT());
+                var22.setHintTextColor(CarUi.Companion.getDIM());
+                var22.setInputType(147457);
+                var22.setMinLines(2);
                 ((LinearLayout) var22).setGravity(8388659);
-                ((View) var22).setBackground((Drawable)this.getUi().rounded(Color.rgb(6, 8, 11), 12, Color.rgb(50, 55, 66)));
-                ((View) var22).setPadding(this.getUi().dp(14), this.getUi().dp(10), this.getUi().dp(14), this.getUi().dp(10));
-                ((TextView) var22).addTextChangedListener(new TextWatcher() {
+                var22.setBackground((Drawable)this.getUi().rounded(Color.rgb(6, 8, 11), 12, Color.rgb(50, 55, 66)));
+                var22.setPadding(this.getUi().dp(14), this.getUi().dp(10), this.getUi().dp(14), this.getUi().dp(10));
+                var22.addTextChangedListener(new TextWatcher() {
                     final GxTuningPage this$0 = GxTuningPage.this;
 
                     public void afterTextChanged(Editable var1) {
@@ -2963,20 +2942,7 @@ public final class GxTuningPage extends GxPage {
             return bounds.copy(i, i2, i3);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final int getFirst() {
-            return this.first;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final int getLast() {
-            return this.last;
-        }
-
-        /* renamed from: component3, reason: from getter */
-        public final int getCount() {
-            return this.count;
-        }
 
         public final Bounds copy(int first, int last, int count) {
             return new Bounds(first, last, count);
