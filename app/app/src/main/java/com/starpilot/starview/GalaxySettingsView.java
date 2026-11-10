@@ -539,6 +539,7 @@ public final class GalaxySettingsView extends FrameLayout {
     }
 
     private final void drawRoot(String err) {
+        boolean $this$any$ivB = false;
         String str;
         Iterable $this$any$iv;
         List emptyList;
@@ -566,20 +567,20 @@ public final class GalaxySettingsView extends FrameLayout {
             Iterator it = $this$any$iv2.iterator();
             while (true) {
                 if (!it.hasNext()) {
-                    $this$any$iv = null;
+                    $this$any$ivB = false;
                     break;
                 }
                 Object element$iv2 = it.next();
                 Entry it2 = (Entry) element$iv2;
                 if ((((it2 instanceof Entry.Hub) && Intrinsics.areEqual(CollectionsKt.toSet(((Entry.Hub) it2).getPages()), SetsKt.setOf(new String[]{"traffic", "aggressive", "standard", "relaxed"}))) ? 1 : null) != null) {
-                    $this$any$iv = 1;
+                    $this$any$ivB = true;
                     break;
                 }
             }
         } else {
-            $this$any$iv = null;
+            $this$any$ivB = false;
         }
-        if ($this$any$iv != null) {
+        if ($this$any$ivB) {
             GalaxyVisuals galaxyVisuals = GalaxyVisuals.INSTANCE;
             Context context = getContext();
             Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");

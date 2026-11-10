@@ -230,6 +230,7 @@ public final class CarMemory {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final boolean update$lambda$2(List $fresh, Car c) {
+        boolean $this$any$ivB = false;
         Iterable $this$any$iv;
         Intrinsics.checkNotNullParameter(c, "c");
         if (!c.getRemembered()) {
@@ -243,18 +244,18 @@ public final class CarMemory {
                     Object element$iv = it.next();
                     Car f = (Car) element$iv;
                     if (((f == c || Math.abs(f.getX() - c.getX()) >= 6.0d || Math.abs(f.getY() - c.getY()) >= 1.5d) ? null : 1) != null) {
-                        $this$any$iv = 1;
+                        $this$any$ivB = true;
                         break;
                     }
                 } else {
-                    $this$any$iv = null;
+                    $this$any$ivB = false;
                     break;
                 }
             }
         } else {
-            $this$any$iv = null;
+            $this$any$ivB = false;
         }
-        return $this$any$iv != null;
+        return $this$any$ivB;
     }
 
     private final void see(long id, double x, double y, float vRel, float vAbs, long nowMs) {

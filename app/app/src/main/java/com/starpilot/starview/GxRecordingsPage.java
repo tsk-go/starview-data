@@ -1720,8 +1720,8 @@ public final class GxRecordingsPage extends GxPage {
             if (it.hasNext()) {
                 element$iv = it.next();
                 JSONObject it2 = (JSONObject) element$iv;
-                JSONObject it3 = it2.optInt("segmentNum") == n ? 1 : null;
-                if (it3 != null) {
+                boolean it3 = it2.optInt("segmentNum") == n;
+                if (it3) {
                     break;
                 }
             } else {

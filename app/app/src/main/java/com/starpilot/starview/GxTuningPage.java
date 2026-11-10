@@ -2242,7 +2242,7 @@ public final class GxTuningPage extends GxPage {
                 this.paintComparison();
                 var22 = this.pathList();
 
-                for (JSONObject var70 : (JSONObject) (JSONObject) (JSONObject) (JSONObject) (JSONObject) var22) {
+                for (JSONObject var70 : (Iterable<JSONObject>) var22) {
                     this.sub(this.s(var70, "title"), (ViewGroup)var9);
                     if (!StringsKt.isBlank(this.s(var70, "description"))) {
                         GxPage.text$default(this, this.s(var70, "description"), (ViewGroup)var9, 16.0F, 0, false, 24, null);
@@ -2573,14 +2573,14 @@ public final class GxTuningPage extends GxPage {
                         gen = gen;
                         ov = ov;
                     }
-                    for (Pair<String, Object> pair2 : ((Pair<String,Object>) fr)) {
+                    for (Pair<String, Object> pair2 : (Iterable<Pair<String, Object>>) fr) {
                         String fam = pair2.component1();
                         Object pl = pair2.component2();
                         LinearLayout linearLayout9 = ic;
                         JSONObject jSONObject = pl instanceof JSONObject ? (JSONObject) pl : null;
                         mono(linearLayout9, fam + ": " + curveStr(jSONObject != null ? jSONObject.optJSONArray("values") : null));
                     }
-                    for (Pair<String, Object> pair3 : ((Pair<String,Object>) kn)) {
+                    for (Pair<String, Object> pair3 : (Iterable<Pair<String, Object>>) kn) {
                         String sym = pair3.component1();
                         Object v2 = pair3.component2();
                         mono(ic, sym + ": " + fmtVal(v2));
@@ -3698,7 +3698,7 @@ public final class GxTuningPage extends GxPage {
                 destination$iv$iv.add(element$iv$iv);
             }
         }
-        for (ChartCfg cfg : (ChartCfg) destination$iv$iv) {
+        for (ChartCfg cfg : (Iterable<ChartCfg>) destination$iv$iv) {
             chartCard(b, cfg);
         }
         this.bAdvanced = getUi().button("", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda24
@@ -3728,7 +3728,7 @@ public final class GxTuningPage extends GxPage {
                 destination$iv$iv2.add(element$iv$iv2);
             }
         }
-        for (ChartCfg cfg2 : (ChartCfg) destination$iv$iv2) {
+        for (ChartCfg cfg2 : (Iterable<ChartCfg>) destination$iv$iv2) {
             LinearLayout linearLayout = this.advancedBox;
             if (linearLayout == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("advancedBox");
@@ -4577,6 +4577,7 @@ public final class GxTuningPage extends GxPage {
     }
 
     private final void tgApplyPayload(JSONObject p) {
+        boolean $this$none$ivB = false;
         Iterable $this$none$iv;
         this.tgData = p;
         this.tgError = "";
@@ -4590,18 +4591,18 @@ public final class GxTuningPage extends GxPage {
                     Object element$iv = it.next();
                     JSONObject it2 = (JSONObject) element$iv;
                     if (Intrinsics.areEqual(slotId(it2), StringsKt.trim((CharSequence) this.tgSelected).toString())) {
-                        $this$none$iv = null;
+                        $this$none$ivB = false;
                         break;
                     }
                 } else {
-                    $this$none$iv = 1;
+                    $this$none$ivB = true;
                     break;
                 }
             }
         } else {
-            $this$none$iv = 1;
+            $this$none$ivB = true;
         }
-        if ($this$none$iv != null) {
+        if ($this$none$ivB) {
             String active = StringsKt.trim((CharSequence) s(p, "activeSlot")).toString();
             List $this$any$iv = selectable;
             if (!($this$any$iv instanceof Collection) || !$this$any$iv.isEmpty()) {

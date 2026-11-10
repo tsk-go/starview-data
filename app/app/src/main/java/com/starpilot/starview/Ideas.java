@@ -247,6 +247,7 @@ public final class Ideas {
     }
 
     public final void tick(Telemetry t, UiSettings s, Detector det, long nowMs) {
+        boolean $this$any$ivB = false;
         Iterable $this$any$iv;
         Object maxElem$iv;
         Intrinsics.checkNotNullParameter(t, "t");
@@ -260,19 +261,19 @@ public final class Ideas {
             Iterator it = $this$any$iv2.iterator();
             while (true) {
                 if (!it.hasNext()) {
-                    $this$any$iv = null;
+                    $this$any$ivB = false;
                     break;
                 }
                 Object element$iv = it.next();
                 if (s.get(NewIdeas.INSTANCE.key(((NewIdeas.Idea) element$iv).getId()))) {
-                    $this$any$iv = 1;
+                    $this$any$ivB = true;
                     break;
                 }
             }
         } else {
-            $this$any$iv = null;
+            $this$any$ivB = false;
         }
-        if ($this$any$iv == null) {
+        if (!$this$any$ivB) {
             if (sentSomething) {
                 send(CollectionsKt.emptyList(), nowMs);
             }
@@ -456,8 +457,8 @@ public final class Ideas {
                     }
                     Object element$iv = it14.next();
                     Part it15 = (Part) element$iv;
-                    Part it16 = it15.getCap() != null ? 1 : null;
-                    if (it16 != null) {
+                    boolean it16 = it15.getCap() != null;
+                    if (it16) {
                         obj = element$iv;
                         break;
                     }

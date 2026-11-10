@@ -241,7 +241,7 @@ public final class BlinkerTurn {
             }
         }
 
-        return CollectionsKt.sortedWith(var33, new Comparator() {
+        return CollectionsKt.sortedWith((Iterable) var33, new Comparator() {
             @Override
             public final int compare(Object var1, Object var2x) {
                 return ComparisonsKt.compareValues(Math.abs(((BlinkerTurn.Corner)var1).getAhead()), Math.abs(((BlinkerTurn.Corner)var2x).getAhead()));

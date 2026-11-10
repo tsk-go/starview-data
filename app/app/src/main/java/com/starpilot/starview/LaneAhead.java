@@ -1203,8 +1203,8 @@ public final class LaneAhead {
                     ArrayList list$iv = new ArrayList();
                     for (Object item$iv : $this$takeWhile$iv) {
                         Sample it3 = (Sample) item$iv;
-                        Sample it4 = it3.getD() - ((Sample) known.get(k)).getD() <= 300.0d ? 1 : null;
-                        if (it4 == null) {
+                        boolean it4 = it3.getD() - ((Sample) known.get(k)).getD() <= 300.0d;
+                        if (!it4) {
                             break;
                         }
                         list$iv.add(item$iv);

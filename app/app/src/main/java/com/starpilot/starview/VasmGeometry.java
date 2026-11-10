@@ -95,6 +95,7 @@ public final class VasmGeometry {
     }
 
     public final boolean validPolygon(List<int[]> pts, int w, int h) {
+        boolean $this$any$ivB = false;
         Iterable $this$any$iv;
         Intrinsics.checkNotNullParameter(pts, "pts");
         int size = pts.size();
@@ -111,18 +112,18 @@ public final class VasmGeometry {
                     Object element$iv = it.next();
                     int[] it2 = (int[]) element$iv;
                     if (((it2[0] < 0 || it2[0] > w || it2[1] < 0 || it2[1] > h) ? 1 : null) != null) {
-                        $this$any$iv = 1;
+                        $this$any$ivB = true;
                         break;
                     }
                 } else {
-                    $this$any$iv = null;
+                    $this$any$ivB = false;
                     break;
                 }
             }
         } else {
-            $this$any$iv = null;
+            $this$any$ivB = false;
         }
-        if ($this$any$iv != null) {
+        if ($this$any$ivB) {
             return false;
         }
         List<int[]> $this$map$iv = pts;
