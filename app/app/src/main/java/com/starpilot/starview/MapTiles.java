@@ -164,7 +164,7 @@ public final class MapTiles {
 
     public final Bitmap peek(String style, int z, int x, int y) {
         Intrinsics.checkNotNullParameter(style, "style");
-        return get(Companion.key(style, z, x, y));
+        return this.mem.get(Companion.key(style, z, x, y));
     }
 
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
@@ -209,7 +209,7 @@ public final class MapTiles {
             final int x = next.component2().intValue();
             final int y = next.component3().intValue();
             final String k = Companion.key(style, z, x, y);
-            if (get(k) == null) {
+            if (this.mem.get(k) == null) {
                 Long l = this.failedUntil.get(k);
                 if ((l != null ? l.longValue() : 0L) <= System.currentTimeMillis()) {
                     if (this.pending.add(k)) {
@@ -283,108 +283,62 @@ public final class MapTiles {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:112:0x025a A[Catch: all -> 0x027a, TryCatch #3 {all -> 0x027a, blocks: (B:34:0x00bc, B:47:0x0136, B:51:0x014a, B:54:0x016c, B:56:0x0171, B:58:0x0178, B:65:0x0189, B:68:0x0191, B:70:0x0197, B:71:0x019a, B:76:0x01c6, B:78:0x01ce, B:81:0x01f1, B:83:0x0209, B:85:0x020f, B:86:0x0212, B:88:0x0237, B:92:0x023f, B:107:0x0141, B:108:0x0144, B:110:0x024e, B:112:0x025a, B:113:0x025e), top: B:2:0x0008 }] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* recovered by hand from the bytecode (jadx lost its try/finally) */
     public final void load(String style, int z, int x, int y, String k, boolean prefetch) {
-        String message;
-        byte[] bytes;
-        String str;
-        String string;
-        Bitmap it;
         try {
-            if (!prefetch) {
-                try {
-                    if (!this.wanted.contains(k)) {
-                        this.pending.remove(k);
-                        return;
-                    }
-                } catch (Exception e) {
-                    e = e;
-                    this.failures++;
-                    message = e.getMessage();
-                    if (message == null) {
-                    }
-                    this.lastError = message;
-                    this.failedUntil.put(k, Long.valueOf(System.currentTimeMillis() + 15000));
-                    this.pending.remove(k);
-                } catch (Throwable th) {
-                    th = th;
-                    this.pending.remove(k);
-                    throw th;
-                }
+            if (!prefetch && !this.wanted.contains(k)) {
+                return;
             }
             File f = file(style, z, x, y);
             long ttl = StringsKt.startsWith(style, "traffic", false) ? 900000L : 604800000L;
             boolean fresh = false;
             if (f.exists()) {
-                if (!prefetch && get(k) == null && (it = BitmapFactory.decodeFile(f.getPath())) != null) {
-                    put(k, it);
+                Bitmap it;
+                if (!prefetch && this.mem.get(k) == null && (it = BitmapFactory.decodeFile(f.getPath())) != null) {
+                    this.mem.put(k, it);
                     this.madeAt.put(k, Long.valueOf(f.lastModified()));
                     this.onLoaded.invoke();
                 }
                 fresh = System.currentTimeMillis() - f.lastModified() < ttl;
             }
             if (fresh) {
-                this.pending.remove(k);
                 return;
             }
-            byte[] fromMapbox = fromMapbox(style, z, x, y);
-            if (fromMapbox == null) {
-                MapTiles $this$load_u24lambda_u248 = this;
-                String h = $this$load_u24lambda_u248.host;
+            byte[] bytes = fromMapbox(style, z, x, y);
+            if (bytes == null) {
+                String h = this.host;
                 if (h == null) {
-                    this.pending.remove(k);
                     return;
                 }
+                Response r = this.http.newCall(new Request.Builder().url("http://" + h + ":8090/nav/tile/" + style + "/" + z + "/" + x + "/" + y + ".png").build()).execute();
+                Throwable cause = null;
                 try {
-                    Response execute = $this$load_u24lambda_u248.http.newCall(new Request.Builder().url("http://" + h + ":8090/nav/tile/" + style + "/" + z + "/" + x + "/" + y + ".png").build()).execute();
-                    Throwable execute$c = null;
-                    try {
-                        Response r = execute;
-                        if (r.isSuccessful()) {
-                            ResponseBody body = r.body();
-                            if (body != null) {
-                                bytes = body.bytes();
-                                fromMapbox = bytes;
-                            }
-                        } else {
-                            ResponseBody body2 = r.body();
-                            if (body2 == null || (string = body2.string()) == null || (str = StringsKt.take(string, 200)) == null) {
-                                str = "HTTP " + r.code();
-                            }
-                            $this$load_u24lambda_u248.lastError = str;
+                    if (r.isSuccessful()) {
+                        ResponseBody body = r.body();
+                        bytes = body != null ? body.bytes() : null;
+                    } else {
+                        String str;
+                        String string;
+                        ResponseBody body2 = r.body();
+                        if (body2 == null || (string = body2.string()) == null || (str = StringsKt.take(string, 200)) == null) {
+                            str = "HTTP " + r.code();
                         }
+                        this.lastError = str;
                         bytes = null;
-                        fromMapbox = bytes;
-                    } catch (Throwable execute$t) {
-                        execute$c = execute$t;
-                        throw execute$t;
-                    } finally {
-                        CloseableKt.closeFinally(execute, execute$c);
                     }
-                } catch (Exception e2) {
-                    e = e2;
-                    this.failures++;
-                    message = e.getMessage();
-                    if (message == null) {
-                        message = e.toString();
-                    }
-                    this.lastError = message;
-                    this.failedUntil.put(k, Long.valueOf(System.currentTimeMillis() + 15000));
-                    this.pending.remove(k);
+                } catch (Throwable th) {
+                    cause = th;
+                    throw th;
+                } finally {
+                    CloseableKt.closeFinally(r, cause);
                 }
             }
-            byte[] bytes2 = fromMapbox;
-            if (bytes2 == null) {
+            if (bytes == null) {
                 this.failures++;
                 this.failedUntil.put(k, Long.valueOf(System.currentTimeMillis() + 30000));
-                this.pending.remove(k);
                 return;
             }
-            boolean png = bytes2.length > 8 && bytes2[0] == -119 && bytes2[1] == 80;
+            boolean png = bytes.length > 8 && bytes[0] == -119 && bytes[1] == 80;
             if (prefetch && png && !this.wanted.contains(k)) {
                 try {
                     File parentFile = f.getParentFile();
@@ -392,21 +346,19 @@ public final class MapTiles {
                         parentFile.mkdirs();
                     }
                     File tmp = new File(f.getPath() + ".tmp");
-                    FilesKt.writeBytes(tmp, bytes2);
+                    FilesKt.writeBytes(tmp, bytes);
                     tmp.renameTo(f);
                 } catch (Exception e3) {
                 }
-                this.pending.remove(k);
                 return;
             }
-            Bitmap bmp = BitmapFactory.decodeByteArray(bytes2, 0, bytes2.length);
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             if (bmp == null) {
                 this.failures++;
                 this.failedUntil.put(k, Long.valueOf(System.currentTimeMillis() + 60000));
-                this.pending.remove(k);
                 return;
             }
-            put(k, bmp);
+            this.mem.put(k, bmp);
             this.madeAt.put(k, Long.valueOf(System.currentTimeMillis()));
             this.lastError = "";
             try {
@@ -415,16 +367,23 @@ public final class MapTiles {
                     parentFile2.mkdirs();
                 }
                 File tmp2 = new File(f.getPath() + ".tmp");
-                FilesKt.writeBytes(tmp2, bytes2);
+                FilesKt.writeBytes(tmp2, bytes);
                 tmp2.renameTo(f);
             } catch (Exception e4) {
             }
             if (!prefetch || this.wanted.contains(k)) {
                 this.onLoaded.invoke();
             }
+        } catch (Exception e) {
+            this.failures++;
+            String message = e.getMessage();
+            if (message == null) {
+                message = e.toString();
+            }
+            this.lastError = message;
+            this.failedUntil.put(k, Long.valueOf(System.currentTimeMillis() + 15000));
+        } finally {
             this.pending.remove(k);
-        } catch (Throwable th2) {
-            th = th2;
         }
     }
 
@@ -501,6 +460,6 @@ public final class MapTiles {
     }
 
     public final void clearMemory() {
-        evictAll();
+        this.mem.evictAll();
     }
 }
