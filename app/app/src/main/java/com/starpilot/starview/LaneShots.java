@@ -934,7 +934,7 @@ public final class LaneShots {
             if (!var3) {
                 Pair var46 = new Pair<>(var7, var6);
                 List var62 = (List)var46.component1();
-                var4 = (List)var46.component2();
+                List var4s = (List)var46.component2();
                 Iterator var63 = var62.iterator();
 
                 while (var63.hasNext()) {
@@ -1013,8 +1013,8 @@ public final class LaneShots {
                 }
 
                 File var30 = this.index;
-                if (!var4.isEmpty()) {
-                    var5 = CollectionsKt.joinToString(var4, "\n", "", "", -1, "...", null);
+                if (!var4s.isEmpty()) {
+                    var5 = CollectionsKt.joinToString(var4s, "\n", "", "", -1, "...", null);
                     var5 = var5 + "\n";
                 }
 

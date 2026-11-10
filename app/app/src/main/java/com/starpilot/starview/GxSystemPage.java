@@ -773,7 +773,7 @@ public final class GxSystemPage extends GxPage {
                     if (var7 != null) {
                         var var8 = var7;
                         if (StringsKt.isBlank(var8)) {
-                            var8 = (String)var5;
+                            String var8s = (String)var5;
                         }
 
                         var9 = var8;
@@ -1303,7 +1303,7 @@ public final class GxSystemPage extends GxPage {
     public static final Unit loadFastStatus$lambda$45(GxSystemPage var0, Function1 var1, String var2, Object var3) {
         var0.statusInFlight = false;
         if (var3 instanceof JSONObject) {
-            var3 = (JSONObject)var3;
+            JSONObject var3s = (JSONObject)var3;
         } else {
             var3 = null;
         }

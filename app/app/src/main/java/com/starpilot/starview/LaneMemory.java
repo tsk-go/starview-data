@@ -534,10 +534,10 @@ public final class LaneMemory {
             if (!var40.hasNext()) {
                 var30 = null;
             } else {
-                var30 = (LaneMemory.Mark)var40.next();
+                LaneMemory.Mark var30ss = (LaneMemory.Mark)var40.next();
                 if (var40.hasNext()) {
-                    float var19 = Math.abs(var30.getY());
-                    var11 = ((Iterable) var30);
+                    float var19 = Math.abs(var30ss.getY());
+                    var11 = ((Iterable) var30ss);
 
                     do {
                         Object var38 = var40.next();
@@ -545,7 +545,7 @@ public final class LaneMemory {
                         var30 = var11;
                         var3 = var19;
                         if (Float.compare(var19, var5) > 0) {
-                            var30 = (LaneMemory.Mark)var38;
+                            LaneMemory.Mark var30s = (LaneMemory.Mark)var38;
                             var3 = var5;
                         }
 

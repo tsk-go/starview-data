@@ -3283,7 +3283,7 @@ public final class GxNavigationPage extends GxPage {
 
             View var62 = var61.getChildAt(0);
             if (var62 instanceof TextView) {
-                var12 = (TextView)var62;
+                TextView var12s = (TextView)var62;
             } else {
                 var12 = null;
             }
@@ -3392,7 +3392,7 @@ public final class GxNavigationPage extends GxPage {
 
             View var78 = var77.getChildAt(4);
             if (var78 instanceof TextView) {
-                var11 = (TextView)var78;
+                TextView var11ss = (TextView)var78;
             } else {
                 var11 = null;
             }
@@ -3621,7 +3621,7 @@ public final class GxNavigationPage extends GxPage {
                 }
 
                 if (var98 instanceof TextView) {
-                    var11 = (TextView)var98;
+                    TextView var11s = (TextView)var98;
                 } else {
                     var11 = null;
                 }

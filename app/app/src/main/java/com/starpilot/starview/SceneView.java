@@ -6339,7 +6339,7 @@ public final class SceneView extends SurfaceView {
                             var166 = false;
                             ArrayList var262 = new ArrayList();
 
-                            for (Object var42$it : (List)var39) {
+                            for (Object var42$it : (List)(Object)var39) {
                                 var42 = (String) var42$it;
                                 Intrinsics.checkNotNullExpressionValue(var42, "next(...)");
                                 var33 = ((Number)(Object)var42).longValue();

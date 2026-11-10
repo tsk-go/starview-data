@@ -121,15 +121,15 @@ public final class BlinkerTurn {
             var52 = CollectionsKt.<OsmRoads.Way>listOf(var2);
         }
 
-        Object var34 = (List)var52;
+        List var34 = (List)var52;
         var52 = new ArrayList();
         Iterator var57 = var1.iterator();
         Object var33 = (ArrayList)var52;
 
         while (var57.hasNext()) {
-            var52 = (OsmRoads.Way)var57.next();
-            if (var52.getE().length >= 2 && !SKIP.contains(var52.getKind())) {
-                String var58 = var52.getKind();
+            OsmRoads.Way var52s = (OsmRoads.Way)var57.next();
+            if (var52s.getE().length >= 2 && !SKIP.contains(var52s.getKind())) {
+                String var58 = var52s.getKind();
                 byte var21 = 0;
                 if (!StringsKt.startsWith(var58, "motorway", false)) {
                     var var59 = var34;
@@ -141,7 +141,7 @@ public final class BlinkerTurn {
                             Iterator var60 = var59.iterator();
 
                             while (var60.hasNext()) {
-                                if (((OsmRoads.Way)var60.next()).getId() == var52.getId()) {
+                                if (((OsmRoads.Way)var60.next()).getId() == var52s.getId()) {
                                     var43 = (((boolean)true) ? 1 : 0);
                                 } else {
                                     var43 = (((boolean)false) ? 1 : 0);
@@ -158,13 +158,13 @@ public final class BlinkerTurn {
                     }
 
                     if ((var43 == 0)) {
-                        int var23 = var52.getE().length;
+                        int var23 = var52s.getE().length;
                         int var22 = 0;
                         var43 = var21;
 
                         for (int var45 = var23; var22 < var45; var22++) {
-                            double var16 = var52.getE()[var22] - var3;
-                            var7 = var52.getN()[var22] - var5;
+                            double var16 = var52s.getE()[var22] - var3;
+                            var7 = var52s.getN()[var22] - var5;
                             double var12 = var16 * var10 + var7 * var14;
                             if (!(var12 < -8.0) && !(var12 > 76.0) && !(Math.abs(var16 * var14 - var7 * var10) > 25.0)) {
                                 Iterator var61 = ((List) var34).iterator();
@@ -174,22 +174,22 @@ public final class BlinkerTurn {
 
                                 OsmRoads.Way var62 = (OsmRoads.Way)var61.next();
                                 LaneRamps var32 = LaneRamps.INSTANCE;
-                                var7 = var52.getE()[var22];
-                                var16 = var52.getN()[var22];
+                                var7 = var52s.getE()[var22];
+                                var16 = var52s.getN()[var22];
                                 var7 = var32.distTo(var62, var7, var16, var10, var14);
 
                                 while (var61.hasNext()) {
                                     var62 = (OsmRoads.Way)var61.next();
-                                    var7 = Math.min(var7, LaneRamps.INSTANCE.distTo(var62, var52.getE()[var22], var52.getN()[var22], var10, var14));
+                                    var7 = Math.min(var7, LaneRamps.INSTANCE.distTo(var62, var52s.getE()[var22], var52s.getN()[var22], var10, var14));
                                 }
 
                                 if (!(var7 > 4.0)) {
                                     for (int var46 = var43; var46 < 2; var46++) {
                                         int var26 = new int[]{-1, 1}[var46];
-                                        if ((var52.getOneway() != 1 || var26 >= 0) && (var52.getOneway() != -1 || var26 <= 0)) {
+                                        if ((var52s.getOneway() != 1 || var26 >= 0) && (var52s.getOneway() != -1 || var26 <= 0)) {
                                             int var25 = var22 + var26;
                                             int var24;
-                                            if (var25 >= 0 && var25 < var52.getE().length) {
+                                            if (var25 >= 0 && var25 < var52s.getE().length) {
                                                 var24 = 1;
                                             } else {
                                                 var24 = var43;
@@ -199,7 +199,7 @@ public final class BlinkerTurn {
                                                 var24 = var25;
 
                                                 while (true) {
-                                                    int var27 = var52.getE().length;
+                                                    int var27 = var52s.getE().length;
                                                     var25 = var24 + var26;
                                                     int var50;
                                                     if (var25 >= 0 && var25 < var27) {
@@ -209,9 +209,9 @@ public final class BlinkerTurn {
                                                     }
 
                                                     if (var50 == 0
-                                                        || !(Math.hypot(var52.getE()[var24] - var52.getE()[var22], var52.getN()[var24] - var52.getN()[var22]) < 10.0)) {
-                                                        var7 = var52.getE()[var24] - var52.getE()[var22];
-                                                        double var18 = var52.getN()[var24] - var52.getN()[var22];
+                                                        || !(Math.hypot(var52s.getE()[var24] - var52s.getE()[var22], var52s.getN()[var24] - var52s.getN()[var22]) < 10.0)) {
+                                                        var7 = var52s.getE()[var24] - var52s.getE()[var22];
+                                                        double var18 = var52s.getN()[var24] - var52s.getN()[var22];
                                                         var16 = Math.hypot(var7, var18);
                                                         if (!(var16 < 3.0) && !(Math.abs((var7 * var10 + var18 * var14) / var16) > 0.85)) {
                                                             byte var48;
@@ -222,7 +222,7 @@ public final class BlinkerTurn {
                                                             }
 
                                                             if (var48 == var9) {
-                                                                ((ArrayList) var33).add(new BlinkerTurn.Corner(var52.getE()[var22], var52.getN()[var22], var12, var48, var52.getName()));
+                                                                ((ArrayList) var33).add(new BlinkerTurn.Corner(var52s.getE()[var22], var52s.getN()[var22], var12, var48, var52s.getName()));
                                                             }
                                                         }
                                                         break;
