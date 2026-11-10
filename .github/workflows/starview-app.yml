@@ -94,7 +94,7 @@ jobs:
           SL_NAME: ${{ steps.v.outputs.starlock_name }}
           SL_CODE: ${{ steps.v.outputs.starlock_code }}
         run: |
-          release() {  # tag app name code
+          release() {  # tag app name code latest
             if gh release view "$1" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
               echo "Release $1 already exists: bump $2's versionName (and versionCode) for a new one."
               return 0
@@ -102,7 +102,8 @@ jobs:
             printf '%s %s (versionCode %s), built from %s.\n\n%s\n' "$2" "$3" "$4" "${GITHUB_SHA:0:9}" \
               "$(git log -1 --format=%B)" > notes.md
             gh release create "$1" "$2-$3.apk" -R "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
-              --title "$2 $3" --notes-file notes.md
+              --title "$2 $3" --notes-file notes.md --latest="$5"
           }
-          release "v$SV_NAME" StarView "$SV_NAME" "$SV_CODE"
-          release "starlock-v$SL_NAME" StarLock "$SL_NAME" "$SL_CODE"
+          # StarView stays the repo's "Latest" release (what the front page shows)
+          release "starlock-v$SL_NAME" StarLock "$SL_NAME" "$SL_CODE" false
+          release "v$SV_NAME" StarView "$SV_NAME" "$SV_CODE" true
