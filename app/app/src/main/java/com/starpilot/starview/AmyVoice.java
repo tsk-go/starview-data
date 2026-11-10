@@ -613,7 +613,7 @@ public final class AmyVoice {
     public final void demo() {
         stop();
         int dg = demoGen;
-        List seq = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(AmySynth.Style.ASK, AmyPrompts.INSTANCE.ask(1, "exit on the right in 0.6 mi - 2 lanes to go")), TuplesKt.to(AmySynth.Style.SHORT, CollectionsKt.listOf("sig_right")), TuplesKt.to(AmySynth.Style.SHORT, CollectionsKt.listOf("changing")), TuplesKt.to(AmySynth.Style.DONE, CollectionsKt.listOf("done"))});
+        List seq = CollectionsKt.listOf(new Pair[]{TuplesKt.to(AmySynth.Style.ASK, AmyPrompts.INSTANCE.ask(1, "exit on the right in 0.6 mi - 2 lanes to go")), TuplesKt.to(AmySynth.Style.SHORT, CollectionsKt.listOf("sig_right")), TuplesKt.to(AmySynth.Style.SHORT, CollectionsKt.listOf("changing")), TuplesKt.to(AmySynth.Style.DONE, CollectionsKt.listOf("done"))});
         demo$step(dg, seq, 0);
     }
 

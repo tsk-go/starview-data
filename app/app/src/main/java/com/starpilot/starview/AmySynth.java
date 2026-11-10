@@ -530,14 +530,14 @@ public final class AmySynth {
         Intrinsics.checkNotNullParameter(voice, "voice");
         switch (WhenMappings.$EnumSwitchMapping$0[style.ordinal()]) {
             case 1:
-                List notes2 = CollectionsKt.listOf((Object[]) new Bell[]{new Bell(880.0d, 0.0d, 0.55f, 2.2d), new Bell(1318.51d, 0.11d, 0.48f, 2.0d), new Bell(1760.0d, 0.22d, 0.42f, 1.7d), new Bell(554.37d, 0.22d, 0.18f, 1.4d)});
+                List notes2 = CollectionsKt.listOf(new Bell[]{new Bell(880.0d, 0.0d, 0.55f, 2.2d), new Bell(1318.51d, 0.11d, 0.48f, 2.0d), new Bell(1760.0d, 0.22d, 0.42f, 1.7d), new Bell(554.37d, 0.22d, 0.18f, 1.4d)});
                 vStart = 0.62d;
                 tail = 1.6d;
                 notes = notes2;
                 usePad = true;
                 break;
             case 2:
-                List notes3 = CollectionsKt.listOf((Object[]) new Bell[]{new Bell(1318.51d, 0.0d, 0.45f, 2.6d), new Bell(1760.0d, 0.09d, 0.38f, 2.4d)});
+                List notes3 = CollectionsKt.listOf(new Bell[]{new Bell(1318.51d, 0.0d, 0.45f, 2.6d), new Bell(1760.0d, 0.09d, 0.38f, 2.4d)});
                 vStart = 0.3d;
                 tail = 0.5d;
                 notes = notes3;
@@ -551,14 +551,14 @@ public final class AmySynth {
                 usePad = false;
                 break;
             case 4:
-                List notes5 = CollectionsKt.listOf((Object[]) new Bell[]{new Bell(1318.51d, 0.0d, 0.45f, 2.4d), new Bell(880.0d, 0.13d, 0.45f, 2.4d), new Bell(659.26d, 0.26d, 0.4f, 2.0d)});
+                List notes5 = CollectionsKt.listOf(new Bell[]{new Bell(1318.51d, 0.0d, 0.45f, 2.4d), new Bell(880.0d, 0.13d, 0.45f, 2.4d), new Bell(659.26d, 0.26d, 0.4f, 2.0d)});
                 vStart = 0.55d;
                 tail = 0.6d;
                 notes = notes5;
                 usePad = false;
                 break;
             case 5:
-                List notes6 = CollectionsKt.listOf((Object[]) new Bell[]{new Bell(1318.51d, 0.0d, 0.45f, 2.6d), new Bell(1760.0d, 0.09d, 0.38f, 2.4d)});
+                List notes6 = CollectionsKt.listOf(new Bell[]{new Bell(1318.51d, 0.0d, 0.45f, 2.6d), new Bell(1760.0d, 0.09d, 0.38f, 2.4d)});
                 vStart = 0.0d;
                 tail = 0.9d;
                 notes = notes6;
@@ -634,7 +634,7 @@ public final class AmySynth {
         }
         float[] wl = new float[n];
         float[] wr = new float[n];
-        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Double.valueOf(29.0d), Float.valueOf(0.16f)), TuplesKt.to(Double.valueOf(47.0d), Float.valueOf(0.12f)), TuplesKt.to(Double.valueOf(83.0d), Float.valueOf(0.08f)), TuplesKt.to(Double.valueOf(131.0d), Float.valueOf(0.05f)), TuplesKt.to(Double.valueOf(197.0d), Float.valueOf(0.03f))})) {
+        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf(new Pair[]{TuplesKt.to(Double.valueOf(29.0d), Float.valueOf(0.16f)), TuplesKt.to(Double.valueOf(47.0d), Float.valueOf(0.12f)), TuplesKt.to(Double.valueOf(83.0d), Float.valueOf(0.08f)), TuplesKt.to(Double.valueOf(131.0d), Float.valueOf(0.05f)), TuplesKt.to(Double.valueOf(197.0d), Float.valueOf(0.03f))})) {
             double ms = ((Number) pair.component1()).doubleValue();
             float g2 = ((Number) pair.component2()).floatValue();
             delayAdd(wl, l, ms, g2);

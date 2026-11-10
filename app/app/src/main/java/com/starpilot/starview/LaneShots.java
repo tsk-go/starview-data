@@ -575,11 +575,14 @@ public final class LaneShots {
             if (copyTo != null) {
                 try {
                     fileOutputStream = new FileOutputStream(copyTo);
+                    Throwable cause = null;
                     try {
-                        FileOutputStream it = fileOutputStream;
-                        out.compress(Bitmap.CompressFormat.JPEG, 82, it);
-                        CloseableKt.closeFinally(fileOutputStream, null);
+                        out.compress(Bitmap.CompressFormat.JPEG, 82, fileOutputStream);
+                    } catch (Throwable th) {
+                        cause = th;
+                        throw th;
                     } finally {
+                        CloseableKt.closeFinally(fileOutputStream, cause);
                     }
                 } catch (Exception e) {
                 }
@@ -599,16 +602,14 @@ public final class LaneShots {
                 }
                 OutputStream openOutputStream = this.ctx.getContentResolver().openOutputStream(uri);
                 if (openOutputStream != null) {
-                    fileOutputStream = openOutputStream;
+                    Throwable cause2 = null;
                     try {
-                        OutputStream it2 = fileOutputStream;
-                        Boolean.valueOf(out.compress(Bitmap.CompressFormat.JPEG, 72, it2));
-                        CloseableKt.closeFinally(fileOutputStream, null);
+                        out.compress(Bitmap.CompressFormat.JPEG, 72, openOutputStream);
+                    } catch (Throwable th) {
+                        cause2 = th;
+                        throw th;
                     } finally {
-                        try {
-                            throw th;
-                        } finally {
-                        }
+                        CloseableKt.closeFinally(openOutputStream, cause2);
                     }
                 }
                 out.recycle();

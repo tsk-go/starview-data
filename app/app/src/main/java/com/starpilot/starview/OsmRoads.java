@@ -65,8 +65,8 @@ public final class OsmRoads {
     private static volatile double lon0;
     private static volatile long rtkFixNs;
     public static final OsmRoads INSTANCE = new OsmRoads();
-    private static final List<String> URLS = CollectionsKt.listOf((Object[]) new String[]{"https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter", "https://overpass.kumi.systems/api/interpreter"});
-    private static final Set<String> KINDS = SetsKt.setOf((Object[]) new String[]{"motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "living_street", "service", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link"});
+    private static final List<String> URLS = CollectionsKt.listOf(new String[]{"https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter", "https://overpass.kumi.systems/api/interpreter"});
+    private static final Set<String> KINDS = SetsKt.setOf(new String[]{"motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "living_street", "service", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link"});
     private static volatile double lat0 = Double.NaN;
     private static final ConcurrentHashMap<Long, Way> ways = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, List<Way>> boxWays = new ConcurrentHashMap<>();
@@ -97,7 +97,7 @@ public final class OsmRoads {
     });
     private static volatile boolean enabled = true;
     private static final Map<String, String> ABBR = MapsKt.mapOf(TuplesKt.to("st", "street"), TuplesKt.to("ave", "avenue"), TuplesKt.to("av", "avenue"), TuplesKt.to("rd", "road"), TuplesKt.to("blvd", "boulevard"), TuplesKt.to("dr", "drive"), TuplesKt.to("ln", "lane"), TuplesKt.to("pl", "place"), TuplesKt.to("ct", "court"), TuplesKt.to("hwy", "highway"), TuplesKt.to("pkwy", "parkway"), TuplesKt.to("expy", "expressway"), TuplesKt.to("tpke", "turnpike"), TuplesKt.to("e", "east"), TuplesKt.to("w", "west"), TuplesKt.to("n", "north"), TuplesKt.to("s", "south"), TuplesKt.to("ter", "terrace"), TuplesKt.to("sq", "square"), TuplesKt.to("rte", "route"), TuplesKt.to("rt", "route"));
-    private static final Set<String> DIRS = SetsKt.setOf((Object[]) new String[]{"east", "west", "north", "south", "eastbound", "westbound", "northbound", "southbound"});
+    private static final Set<String> DIRS = SetsKt.setOf(new String[]{"east", "west", "north", "south", "eastbound", "westbound", "northbound", "southbound"});
 
     private OsmRoads() {
     }

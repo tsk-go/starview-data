@@ -35,7 +35,7 @@ public final class BlinkerTurn {
     private static volatile boolean mapped;
     private static String sent;
     public static final BlinkerTurn INSTANCE = new BlinkerTurn();
-    private static final Set<String> SKIP = SetsKt.setOf((Object[]) new String[]{"service", "track", "path", "footway", "cycleway", "pedestrian", "steps", "bridleway", "construction", "proposed"});
+    private static final Set<String> SKIP = SetsKt.setOf(new String[]{"service", "track", "path", "footway", "cycleway", "pedestrian", "steps", "bridleway", "construction", "proposed"});
     private static final Keeper keeper = new Keeper();
 
     private BlinkerTurn() {

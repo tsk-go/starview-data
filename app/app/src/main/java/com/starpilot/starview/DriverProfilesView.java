@@ -234,7 +234,7 @@ public final class DriverProfilesView extends CardPage {
         Iterator<String> keys = prefs.keys();
         Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
         for (String k : SequencesKt.toList(SequencesKt.asSequence(keys))) {
-            if (!SetsKt.setOf((Object[]) new String[]{"starview_ui", "starview_hud", "speech"}).contains(k)) {
+            if (!SetsKt.setOf(new String[]{"starview_ui", "starview_hud", "speech"}).contains(k)) {
                 prefs.remove(k);
             }
         }

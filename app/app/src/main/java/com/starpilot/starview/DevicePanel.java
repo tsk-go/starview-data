@@ -1035,7 +1035,7 @@ public final class DevicePanel extends ScrollView {
                 return buildToggles$lambda$60;
             }
         }, 48, null);
-        multi("Driving Personality", this.personalityDesc, CollectionsKt.listOf((Object[]) new String[]{"Aggressive", "Standard", "Relaxed"}), new Function0() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda37
+        multi("Driving Personality", this.personalityDesc, CollectionsKt.listOf(new String[]{"Aggressive", "Standard", "Relaxed"}), new Function0() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda37
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 int buildToggles$lambda$61;
@@ -2224,7 +2224,7 @@ public final class DevicePanel extends ScrollView {
                 return buildNetwork$lambda$170;
             }
         }, 56, null);
-        multi("Wi-Fi Network Metered", "Prevent large data uploads when on a metered Wi-Fi connection", CollectionsKt.listOf((Object[]) new String[]{"default", "metered", "unmetered"}), new Function0() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda124
+        multi("Wi-Fi Network Metered", "Prevent large data uploads when on a metered Wi-Fi connection", CollectionsKt.listOf(new String[]{"default", "metered", "unmetered"}), new Function0() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda124
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 int i;
@@ -2613,7 +2613,7 @@ public final class DevicePanel extends ScrollView {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit buildNetwork$lambda$175(final DevicePanel this$0, int idx) {
-        this$0.call("wifi_metered", MapsKt.mapOf(TuplesKt.to("mode", CollectionsKt.listOf((Object[]) new String[]{"unknown", "yes", "no"}).get(idx))), new Function1() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda168
+        this$0.call("wifi_metered", MapsKt.mapOf(TuplesKt.to("mode", CollectionsKt.listOf(new String[]{"unknown", "yes", "no"}).get(idx))), new Function1() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda168
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildNetwork$lambda$175$lambda$174;

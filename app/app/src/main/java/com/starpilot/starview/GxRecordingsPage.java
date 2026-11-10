@@ -187,7 +187,7 @@ public final class GxRecordingsPage extends GxPage {
 
     @Override // com.starpilot.starview.GxPage
     public void build() {
-        GxPage.tabs$default(this, CollectionsKt.listOf((Object[]) new String[]{"Dashcam Routes", "Screen Recordings"}), 0, new Function1() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda34
+        GxPage.tabs$default(this, CollectionsKt.listOf(new String[]{"Dashcam Routes", "Screen Recordings"}), 0, new Function1() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda34
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$0;
@@ -304,7 +304,7 @@ public final class GxRecordingsPage extends GxPage {
         layoutParams.topMargin = getUi().dp(12);
         Unit unit = Unit.INSTANCE;
         card.addView(editText, layoutParams);
-        choice("Sort", null, CollectionsKt.listOf((Object[]) new String[]{"Newest first", "Oldest first", "Longest duration", "Shortest duration"}), this.sortOrder, b, new Function1() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda8
+        choice("Sort", null, CollectionsKt.listOf(new String[]{"Newest first", "Oldest first", "Longest duration", "Shortest duration"}), this.sortOrder, b, new Function1() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda8
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit buildRoutes$lambda$10;
@@ -312,7 +312,7 @@ public final class GxRecordingsPage extends GxPage {
                 return buildRoutes$lambda$10;
             }
         });
-        List<String> listOf = CollectionsKt.listOf((Object[]) new String[]{"All", "Preserved"});
+        List<String> listOf = CollectionsKt.listOf(new String[]{"All", "Preserved"});
         boolean z = this.preservedOnly;
         choice("Show", null, listOf, z ? 1 : 0, b, new Function1() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda9
             @Override // kotlin.jvm.functions.Function1
@@ -2434,7 +2434,7 @@ public final class GxRecordingsPage extends GxPage {
                     return _init_$lambda$16;
                 }
             }, 2, null);
-            for (TextView v : (Iterable<TextView>) (Iterable) CollectionsKt.listOf((Object[]) new TextView[]{this.prev, this.segLabel, this.next})) {
+            for (TextView v : (Iterable<TextView>) (Iterable) CollectionsKt.listOf(new TextView[]{this.prev, this.segLabel, this.next})) {
                 this.segBar.addView(v, gap());
             }
             this.segBar.addView(new View(this.this$0.getAct()), new LinearLayout.LayoutParams(this.this$0.getUi().dp(14), 1));
@@ -3050,7 +3050,7 @@ public final class GxRecordingsPage extends GxPage {
                 avail = CollectionsKt.emptyList();
             }
             int i = 0;
-            Iterable $this$filter$iv2 = CollectionsKt.listOf((Object[]) new String[]{"forward", "wide", "driver"});
+            Iterable $this$filter$iv2 = CollectionsKt.listOf(new String[]{"forward", "wide", "driver"});
             Collection destination$iv$iv2 = new ArrayList();
             for (Object element$iv$iv2 : $this$filter$iv2) {
                 if (avail.contains((String) element$iv$iv2)) {
@@ -3105,7 +3105,7 @@ public final class GxRecordingsPage extends GxPage {
             this$0.camBox.removeAllViews();
             this$0.camBox.addView(cb);
             paintCam.invoke(Integer.valueOf(this$0.cameras.indexOf(this$0.cam)));
-            Pair chipBar2 = this$1.chipBar(CollectionsKt.listOf((Object[]) new String[]{"Full quality", "Preview"}), new Function2() { // from class: com.starpilot.starview.GxRecordingsPage$RoutePlayer$$ExternalSyntheticLambda14
+            Pair chipBar2 = this$1.chipBar(CollectionsKt.listOf(new String[]{"Full quality", "Preview"}), new Function2() { // from class: com.starpilot.starview.GxRecordingsPage$RoutePlayer$$ExternalSyntheticLambda14
                 @Override // kotlin.jvm.functions.Function2
                 public final Object invoke(Object obj, Object obj2) {
                     Unit fetch$lambda$48$lambda$47;

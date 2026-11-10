@@ -14,7 +14,7 @@ import kotlin.text.StringsKt;
 /* compiled from: GxRecordings.kt */
 public final class GxRecordingsKt {
     private static final int GxRecordingsMaxRendered = 250;
-    static final List<String> GxRecordingsMonths = CollectionsKt.listOf((Object[]) new String[]{"january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"});
+    static final List<String> GxRecordingsMonths = CollectionsKt.listOf(new String[]{"january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"});
     static final int GxRecordingsDanger = Color.rgb(255, 120, 120);
 
     /* JADX INFO: Access modifiers changed from: private */

@@ -125,7 +125,7 @@ public final class GxCamerasPage extends GxPage {
     @Override // com.starpilot.starview.GxPage
     public void build() {
         GxPage.header$default(this, "Cameras & Monitoring", null, 2, null);
-        tabs(CollectionsKt.listOf((Object[]) new String[]{"Sentry Mode", "V-ASM Spot Monitor", "PiP Side Camera"}), this.tab, new Function1() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda17
+        tabs(CollectionsKt.listOf(new String[]{"Sentry Mode", "V-ASM Spot Monitor", "PiP Side Camera"}), this.tab, new Function1() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda17
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$0;
@@ -1811,7 +1811,7 @@ public final class GxCamerasPage extends GxPage {
         box.addView(gxCamerasRegionView3, $this$buildVasm_u24lambda_u2492);
         note("The preview is mirrored: the LEFT side of the vehicle is always on the LEFT here; the RIGHT side is always on the RIGHT. Trace the visible glass (front and rear side windows), exclude A-pillars, door frames, and interior. Drag a point to move it.", box);
         header("Current Status", box);
-        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("VASMLeftActive", "Left Active"), TuplesKt.to("VASMRightActive", "Right Active"), TuplesKt.to("VASMLeftConfidence", "Left Confidence"), TuplesKt.to("VASMRightConfidence", "Right Confidence")})) {
+        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf(new Pair[]{TuplesKt.to("VASMLeftActive", "Left Active"), TuplesKt.to("VASMRightActive", "Right Active"), TuplesKt.to("VASMLeftConfidence", "Left Confidence"), TuplesKt.to("VASMRightConfidence", "Right Confidence")})) {
             String k = (String) pair.component1();
             String label = (String) pair.component2();
             this.vStat.put(k, GxPage.row$default(this, label, null, box, 0, 8, null).value("-"));

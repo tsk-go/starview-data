@@ -241,7 +241,7 @@ public final class LaneCardView extends View {
 
     /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     protected void onDraw(Canvas var1) {
-        Object var122 = null; Object var123 = null; Pair var129 = null; // declarations Vineflower left out
+        Pair var122 = null; Object var123 = null; Pair var129 = null; // declarations Vineflower left out
         Intrinsics.checkNotNullParameter(var1, "c");
         LaneBrain var33 = this.tracker;
         if (var33 != null) {

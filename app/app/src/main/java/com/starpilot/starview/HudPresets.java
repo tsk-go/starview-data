@@ -26,7 +26,7 @@ import org.json.JSONObject;
 public final class HudPresets {
     private static final Map<String, Pair<Float, Float>> COCKPIT;
     public static final HudPresets INSTANCE = new HudPresets();
-    private static final Set<String> FOCUS_KEYS = SetsKt.setOf((Object[]) new String[]{"speedBox", "maxCard", "slc", "navCard", "laneSuggest", "gear", "nudgeHint", "dm"});
+    private static final Set<String> FOCUS_KEYS = SetsKt.setOf(new String[]{"speedBox", "maxCard", "slc", "navCard", "laneSuggest", "gear", "nudgeHint", "dm"});
 
     private HudPresets() {
     }

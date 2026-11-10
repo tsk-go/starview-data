@@ -1097,7 +1097,7 @@ public final class DoorsBeltsView extends CardPage {
 
         public final void liveTick(JSONObject r) {
             Intrinsics.checkNotNullParameter(r, "r");
-            if (SetsKt.setOf((Object[]) new String[]{"intro", "error"}).contains(getPhase())) {
+            if (SetsKt.setOf(new String[]{"intro", "error"}).contains(getPhase())) {
                 return;
             }
             if (r.optBoolean("ok")) {

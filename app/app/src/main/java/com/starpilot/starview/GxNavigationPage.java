@@ -229,7 +229,7 @@ public final class GxNavigationPage extends GxPage {
     @Override // com.starpilot.starview.GxPage
     public void build() {
         GxPage.header$default(this, "Navigation & Maps", null, 2, null);
-        this.selectTab = tabs(CollectionsKt.listOf((Object[]) new String[]{"Destination", "Maps", "App Keys", "Speed Limits"}), 0, new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda68
+        this.selectTab = tabs(CollectionsKt.listOf(new String[]{"Destination", "Maps", "App Keys", "Speed Limits"}), 0, new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda68
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$0;
@@ -2642,7 +2642,7 @@ public final class GxNavigationPage extends GxPage {
         if (v <= 0.0d) {
             return "0 MB";
         }
-        List units = CollectionsKt.listOf((Object[]) new String[]{"B", "KB", "MB", "GB", "TB"});
+        List units = CollectionsKt.listOf(new String[]{"B", "KB", "MB", "GB", "TB"});
         int i = Math.min((int) (Math.log(v) / Math.log(1024.0d)), units.size() - 1);
         double s = v / Math.pow(1024.0d, i);
         if (s >= 10.0d || i == 0) {
@@ -4430,7 +4430,7 @@ public final class GxNavigationPage extends GxPage {
         if (raw.length() == 0) {
             return "";
         }
-        Iterable $this$firstOrNull$iv = CollectionsKt.listOf((Object[]) new String[]{"pk.", "sk."});
+        Iterable $this$firstOrNull$iv = CollectionsKt.listOf(new String[]{"pk.", "sk."});
         Iterator it = $this$firstOrNull$iv.iterator();
         while (true) {
             obj = null;

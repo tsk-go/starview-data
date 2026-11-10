@@ -169,7 +169,7 @@ public final class DestinationActivity extends AppCompatActivity {
         String uuid = UUID.randomUUID().toString();
         Intrinsics.checkNotNullExpressionValue(uuid, "toString(...)");
         CLIENT_ID = uuid;
-        QUICK = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("gas", "⛽  Gas"), TuplesKt.to("ev", "⚡  EV charging"), TuplesKt.to("coffee", "☕  Coffee"), TuplesKt.to("food", "🍽  Food"), TuplesKt.to("fast_food", "🍔  Fast food"), TuplesKt.to("parking", "🅿  Parking"), TuplesKt.to("grocery", "🛒  Grocery"), TuplesKt.to("pharmacy", "💊  Pharmacy"), TuplesKt.to("hotel", "🛏  Hotels"), TuplesKt.to("rest_area", "🚻  Rest areas")});
+        QUICK = CollectionsKt.listOf(new Pair[]{TuplesKt.to("gas", "⛽  Gas"), TuplesKt.to("ev", "⚡  EV charging"), TuplesKt.to("coffee", "☕  Coffee"), TuplesKt.to("food", "🍽  Food"), TuplesKt.to("fast_food", "🍔  Fast food"), TuplesKt.to("parking", "🅿  Parking"), TuplesKt.to("grocery", "🛒  Grocery"), TuplesKt.to("pharmacy", "💊  Pharmacy"), TuplesKt.to("hotel", "🛏  Hotels"), TuplesKt.to("rest_area", "🚻  Rest areas")});
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -988,7 +988,7 @@ public final class DestinationActivity extends AppCompatActivity {
 
     /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     public static final void androidSearch$lambda$48(DestinationActivity var0, Pair var1, String var2, int var3) {
-        ArrayList var38 = null; ArrayList var41 = null; Object var42 = null; boolean var48 = false; Object var49 = null; Object var50 = null; Object var56 = null; // declarations Vineflower left out
+        ArrayList var38 = null; ArrayList var41 = null; ArrayList var42 = null; boolean var48 = false; Object var49 = null; Object var50 = null; Object var56 = null; // declarations Vineflower left out
         label223: {
             label225: {
                 Geocoder var9;

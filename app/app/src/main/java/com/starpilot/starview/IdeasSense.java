@@ -20,7 +20,7 @@ import kotlin.ranges.RangesKt;
 /* compiled from: IdeasSense.kt */
 public final class IdeasSense {
     public static final Companion Companion = new Companion(null);
-    private static final Set<Integer> VEHICLES = SetsKt.setOf((Object[]) new Integer[]{2, 3, 5, 7});
+    private static final Set<Integer> VEHICLES = SetsKt.setOf(new Integer[]{2, 3, 5, 7});
     private long driftMs;
     private String driftText;
     private int eyesSide;

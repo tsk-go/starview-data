@@ -232,7 +232,7 @@ public final class RtkTools {
 
     static {
         boolean z = false;
-        TOOLS = CollectionsKt.listOf((Object[]) new Tool[]{new Tool("realign", "Recalibrate mount", "Forgets how the board sits in the car and learns it again. Use it after moving or re-taping the board, then drive with some turns (about 10 turns of 90° or more at 20+ mph).", false, false, 24, null), new Tool("hot", "Restart", "Restarts satellite tracking and keeps everything learned. The fix is back in a few seconds.", false, false, 24, null), new Tool("warm", "Warm restart", "Restarts and forgets the satellites' orbits (keeps the position and time). The fix is back in about 30 seconds.", false, false, 24, null), new Tool("cold", "Cold restart", "Restarts from nothing: no satellites, position or time. The fix takes a minute or two (longer under a roof). Only while stopped.", true, z, 16, null), new Tool("save", "Save settings", "Writes StarView's receiver settings (10 Hz, automotive, sensor fusion and mount learning on) to the receiver's own flash, so they stay when it's unplugged.", z, false, 24, null), new Tool("factory", "Factory reset", "Erases every setting on the receiver, then writes StarView's back. Its calibration starts over. Only while stopped.", true, true)});
+        TOOLS = CollectionsKt.listOf(new Tool[]{new Tool("realign", "Recalibrate mount", "Forgets how the board sits in the car and learns it again. Use it after moving or re-taping the board, then drive with some turns (about 10 turns of 90° or more at 20+ mph).", false, false, 24, null), new Tool("hot", "Restart", "Restarts satellite tracking and keeps everything learned. The fix is back in a few seconds.", false, false, 24, null), new Tool("warm", "Warm restart", "Restarts and forgets the satellites' orbits (keeps the position and time). The fix is back in about 30 seconds.", false, false, 24, null), new Tool("cold", "Cold restart", "Restarts from nothing: no satellites, position or time. The fix takes a minute or two (longer under a roof). Only while stopped.", true, z, 16, null), new Tool("save", "Save settings", "Writes StarView's receiver settings (10 Hz, automotive, sensor fusion and mount learning on) to the receiver's own flash, so they stay when it's unplugged.", z, false, 24, null), new Tool("factory", "Factory reset", "Erases every setting on the receiver, then writes StarView's back. Its calibration starts over. Only while stopped.", true, true)});
     }
 
     public final List<Tool> getTOOLS() {
@@ -335,7 +335,7 @@ public final class RtkTools {
         if (k.getFirmware().length() == 0) {
             return "not reported yet";
         }
-        Iterable $this$filter$iv = CollectionsKt.listOf((Object[]) new String[]{k.getModule(), k.getFirmware()});
+        Iterable $this$filter$iv = CollectionsKt.listOf(new String[]{k.getModule(), k.getFirmware()});
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
             String it = (String) element$iv$iv;

@@ -134,7 +134,7 @@ public final class GxVehiclePage extends GxPage {
 
     @Override // com.starpilot.starview.GxPage
     public void build() {
-        this.selectTab = GxPage.tabs$default(this, CollectionsKt.listOf((Object[]) new String[]{"Vehicle Features", "Lock/Unlock Doors", "Toyota Security Keys"}), 0, new Function1() { // from class: com.starpilot.starview.GxVehiclePage$$ExternalSyntheticLambda6
+        this.selectTab = GxPage.tabs$default(this, CollectionsKt.listOf(new String[]{"Vehicle Features", "Lock/Unlock Doors", "Toyota Security Keys"}), 0, new Function1() { // from class: com.starpilot.starview.GxVehiclePage$$ExternalSyntheticLambda6
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$1;
@@ -388,7 +388,7 @@ public final class GxVehiclePage extends GxPage {
         header("Lock/Unlock Doors", content);
         LinearLayout c = card(content);
         GxPage.text$default(this, "Remotely lock or unlock your car doors using the buttons below.", c, 18.0f, 0, false, 24, null);
-        bs = GxVehicleKt.gxVehicleButtons(this, c, CollectionsKt.listOf((Object[]) new Triple[]{new Triple("Lock Doors", true, new Function0() { // from class: com.starpilot.starview.GxVehiclePage$$ExternalSyntheticLambda17
+        bs = GxVehicleKt.gxVehicleButtons(this, c, CollectionsKt.listOf(new Triple[]{new Triple("Lock Doors", true, new Function0() { // from class: com.starpilot.starview.GxVehiclePage$$ExternalSyntheticLambda17
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit buildDoors$lambda$8;

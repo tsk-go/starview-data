@@ -225,44 +225,25 @@ public final class GxHomePage extends GxPage {
     }
 
     private final boolean hasPendingWork(JSONObject dash) {
-        double gxHomeNum;
-        List recent;
-        boolean gxHomeTruthy;
-        Iterable $this$any$iv;
         JSONObject a = dash.optJSONObject("analysis");
         if (a == null) {
             a = new JSONObject();
         }
-        gxHomeNum = GxHomeKt.gxHomeNum(a.opt("pendingRoutes"));
-        long pending = Math.max(0L, Math.round(gxHomeNum));
+        long pending = Math.max(0L, Math.round(GxHomeKt.gxHomeNum(a.opt("pendingRoutes"))));
+        List recent;
         JSONArray optJSONArray = dash.optJSONArray("recentDrives");
         if (optJSONArray == null || (recent = objects(optJSONArray)) == null) {
             recent = CollectionsKt.emptyList();
         }
-        gxHomeTruthy = GxHomeKt.gxHomeTruthy(a.opt("running"));
-        if (gxHomeTruthy || pending > 0) {
+        if (GxHomeKt.gxHomeTruthy(a.opt("running")) || pending > 0) {
             return true;
         }
-        List $this$any$iv2 = recent;
-        if (!($this$any$iv2 instanceof Collection) || !$this$any$iv2.isEmpty()) {
-            Iterator it = $this$any$iv2.iterator();
-            while (true) {
-                if (it.hasNext()) {
-                    Object element$iv = it.next();
-                    JSONObject it2 = (JSONObject) element$iv;
-                    if (!driveReady(it2)) {
-                        $this$any$iv = 1;
-                        break;
-                    }
-                } else {
-                    $this$any$iv = null;
-                    break;
-                }
+        for (Object element : (Iterable) recent) {
+            if (!driveReady((JSONObject) element)) {
+                return true;
             }
-        } else {
-            $this$any$iv = null;
         }
-        return $this$any$iv != null;
+        return false;
     }
 
     private final void load() {
@@ -493,7 +474,7 @@ public final class GxHomePage extends GxPage {
 
     /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     private final void render() {
-        List var119 = null; List var133 = null; List var182 = null; GxHomePage var239 = null; Object var247 = null; Object var250 = null; JSONObject var256 = null; String var274 = null; String var304 = null; JSONObject var99 = null; // declarations Vineflower left out
+        List var119 = null; List var133 = null; List var182 = null; GxHomePage var239 = null; List var247 = null; LinearLayout var250 = null; JSONObject var256 = null; String var274 = null; String var304 = null; JSONObject var99 = null; // declarations Vineflower left out
         this.paintHero();
         Object var17 = this.body;
         String var30 = "body";
@@ -748,7 +729,7 @@ public final class GxHomePage extends GxPage {
                 var17 = "Unknown model";
             }
 
-            List var149 = CollectionsKt.mutableListOf(new String[]{var17});
+            List var149 = CollectionsKt.mutableListOf(new String[]{(String)var17});
             String var106;
             if (var11) {
                 String var104 = GxHomeKt.gxHomeInt(((JSONObject) var207).opt("distractedMoments"));
@@ -857,7 +838,7 @@ public final class GxHomePage extends GxPage {
             } else {
                 var71 = CollectionsKt.listOf(new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"});
                 var11 = false;
-                var var113 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var71, 10));
+                var var113 = new ArrayList(CollectionsKt.collectionSizeOrDefault((Iterable)var71, 10));
                 Iterator var155 = ((Iterable) var71).iterator();
 
                 while (var155.hasNext()) {
@@ -1013,7 +994,7 @@ public final class GxHomePage extends GxPage {
                 var37.addView((View)var305);
                 var29.addView((View)var37, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
                 TextView var229 = new TextView((Context)var294.getAct());
-                var229.setText(var27);
+                var229.setText((CharSequence)var27);
                 var229.setTextSize(14.0F);
                 var229.setTextColor(CarUi.Companion.getDIM());
                 var229.setGravity(8388613);

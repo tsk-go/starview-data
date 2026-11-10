@@ -60,4 +60,18 @@ dependencies {
   implementation("org.tensorflow:tensorflow-lite-gpu-api:2.16.1")  // GpuDelegateFactory$Options lives here
 }
 
-tasks.withType<JavaCompile>().configureEach { options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000", "-nowarn")) }
+// The Java here was recovered from Kotlin bytecode, which has no checked exceptions: a few exception classes are made
+// unchecked for compiling only (compile-stubs/README.md). Nothing from compile-stubs is packaged. (Android's org.json is
+// in the java.base of the system image the build compiles against, so it is patched there too.)
+val stubsBase = layout.buildDirectory.dir("compile-stubs/java.base")
+val compileStubsBase by tasks.registering(JavaCompile::class) {
+  source = fileTree("compile-stubs/java.base") { include("**/*.java") }
+  classpath = files()
+  destinationDirectory.set(stubsBase)
+  sourceCompatibility = "17"; targetCompatibility = "17"
+  options.compilerArgs.addAll(listOf("--patch-module", "java.base=" + file("compile-stubs/java.base").path))
+}
+tasks.withType<JavaCompile>().matching { it.name.endsWith("JavaWithJavac") }.configureEach {
+  dependsOn(compileStubsBase)
+  options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000", "-nowarn", "-XDshould-stop.ifError=FLOW", "--patch-module", "java.base=" + stubsBase.get().asFile.path))
+}

@@ -178,7 +178,7 @@ public final class QuickPanel extends FrameLayout {
         final int p = this.a.personality();
         int i = 0;
         int i2 = 1;
-        List names = CollectionsKt.listOf((Object[]) new String[]{"Aggressive", "Standard", "Relaxed"});
+        List names = CollectionsKt.listOf(new String[]{"Aggressive", "Standard", "Relaxed"});
         View[] viewArr = new View[10];
         viewArr[0] = tile("Experimental", this.a.experimental() ? "On" : "Off - Chill", "conditional", "speed", Boolean.valueOf(this.a.experimental()), new Function0() { // from class: com.starpilot.starview.QuickPanel$$ExternalSyntheticLambda6
             @Override // kotlin.jvm.functions.Function0
@@ -190,7 +190,7 @@ public final class QuickPanel extends FrameLayout {
         });
         String str = (p >= 0 && p < names.size() ? names.get(p) : "–") + "  ·  tap for next";
         Object obj = "standard";
-        List listOf = CollectionsKt.listOf((Object[]) new String[]{"aggressive", "standard", "relaxed"});
+        List listOf = CollectionsKt.listOf(new String[]{"aggressive", "standard", "relaxed"});
         if (p >= 0 && p < listOf.size()) {
             obj = listOf.get(p);
         }

@@ -164,7 +164,7 @@ public final class GxModelsKt {
                     } catch (Throwable th4) {
                         Result.Companion companion8 = Result.Companion;
                         KtCompat.resultOf(ResultKt.createFailure(th4));
-                        Iterator it = CollectionsKt.listOf((Object[]) new String[]{"yyyy/MM/dd", "MM/dd/yyyy", "M/d/yyyy", "MMMM d, yyyy", "MMM d, yyyy", "d MMMM yyyy", "d MMM yyyy"}).iterator();
+                        Iterator it = CollectionsKt.listOf(new String[]{"yyyy/MM/dd", "MM/dd/yyyy", "M/d/yyyy", "MMMM d, yyyy", "MMM d, yyyy", "d MMMM yyyy", "d MMM yyyy"}).iterator();
                         while (it.hasNext()) {
                             String p = (String) it.next();
                             try {
@@ -175,7 +175,7 @@ public final class GxModelsKt {
                                 KtCompat.resultOf(ResultKt.createFailure(th5));
                             }
                         }
-                        for (String p2 : (Iterable<String>) (Iterable) CollectionsKt.listOf((Object[]) new String[]{"MMMM yyyy", "MMM yyyy", "yyyy-MM"})) {
+                        for (String p2 : (Iterable<String>) (Iterable) CollectionsKt.listOf(new String[]{"MMMM yyyy", "MMM yyyy", "yyyy-MM"})) {
                             try {
                                 Result.Companion companion11 = Result.Companion;
                                 return YearMonth.parse(t, DateTimeFormatter.ofPattern(p2, Locale.US)).atDay(i).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();

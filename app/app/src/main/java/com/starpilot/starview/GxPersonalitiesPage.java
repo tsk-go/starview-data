@@ -398,7 +398,7 @@ public final class GxPersonalitiesPage extends GxPage {
         JSONArray jSONArray = jSONObject.getJSONObject("options").getJSONArray(c);
         Intrinsics.checkNotNullExpressionValue(jSONArray, "getJSONArray(...)");
         List avail = strings(jSONArray);
-        Iterable $this$filter$iv = Intrinsics.areEqual(c, "following") ? CollectionsKt.listOf((Object[]) new String[]{"close", "medium", "far", "traffic", "custom"}) : CollectionsKt.listOf((Object[]) new String[]{"eco", "standard", "sport", "sport_plus", "custom"});
+        Iterable $this$filter$iv = Intrinsics.areEqual(c, "following") ? CollectionsKt.listOf(new String[]{"close", "medium", "far", "traffic", "custom"}) : CollectionsKt.listOf(new String[]{"eco", "standard", "sport", "sport_plus", "custom"});
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
             String it = (String) element$iv$iv;
@@ -1846,7 +1846,7 @@ public final class GxPersonalitiesPage extends GxPage {
             GalaxyApi.Param p = it.next();
             if (StringsKt.contains((CharSequence) p.getKey(), (CharSequence) "Jerk", false) && CollectionsKt.contains(this.profileKeys.values(), p.getParentKey())) {
                 keys.add(p.getKey());
-                for (String n : (Iterable<String>) (Iterable) CollectionsKt.listOf((Object[]) new String[]{"requires_capability", "disabled_when_key_true", "requires_nonempty_key"})) {
+                for (String n : (Iterable<String>) (Iterable) CollectionsKt.listOf(new String[]{"requires_capability", "disabled_when_key_true", "requires_nonempty_key"})) {
                     String it2 = p.str(n);
                     if (it2 != null) {
                         keys.add(it2);
@@ -2386,7 +2386,7 @@ public final class GxPersonalitiesPage extends GxPage {
                 if (it6 != null) {
                     GxPage.text$default(this, it6, c, 0.0f, CarUi.Companion.getWARN(), false, 20, null);
                 }
-                final List modes = StringsKt.endsWith(param.getKey(), "JerkDanger", false) ? CollectionsKt.listOf((Object[]) new String[]{"standard", str2}) : CollectionsKt.listOf((Object[]) new String[]{"chill", "standard", str2});
+                final List modes = StringsKt.endsWith(param.getKey(), "JerkDanger", false) ? CollectionsKt.listOf(new String[]{"standard", str2}) : CollectionsKt.listOf(new String[]{"chill", "standard", str2});
                 CarUi ui3 = getUi();
                 Iterable $this$map$iv2 = modes;
                 Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv2, 10));

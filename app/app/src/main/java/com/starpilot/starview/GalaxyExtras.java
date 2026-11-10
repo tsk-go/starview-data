@@ -620,7 +620,7 @@ public final class GalaxyExtras {
                 JSONObject d2 = d;
                 this.col.addView(r, CarUi.lp$default(this.ui, 0, 0, 3, null));
                 if (key != null) {
-                    for (Iterator it3 = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("enabled", "Use this button"), TuplesKt.to("show_onroad", "Show on the driving screen")}).iterator(); it3.hasNext(); it3 = it3) {
+                    for (Iterator it3 = CollectionsKt.listOf(new Pair[]{TuplesKt.to("enabled", "Use this button"), TuplesKt.to("show_onroad", "Show on the driving screen")}).iterator(); it3.hasNext(); it3 = it3) {
                         Pair pair = (Pair) it3.next();
                         final String field = (String) pair.component1();
                         String title = (String) pair.component2();

@@ -116,7 +116,7 @@ final class GxTuningChartView extends View {
         double span = Math.max(1.0E-6d, max - min);
         int i = 3;
         int i2 = 1;
-        Iterator it2 = CollectionsKt.listOf((Object[]) new Double[]{Double.valueOf(max * 0.5d), Double.valueOf(0.0d), Double.valueOf(0.5d * min)}).iterator();
+        Iterator it2 = CollectionsKt.listOf(new Double[]{Double.valueOf(max * 0.5d), Double.valueOf(0.0d), Double.valueOf(0.5d * min)}).iterator();
         while (it2.hasNext()) {
             double gv = ((Number) it2.next()).doubleValue();
             double max2 = max;

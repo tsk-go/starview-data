@@ -552,7 +552,7 @@ public final class IdeasMemory {
                 for (Map.Entry<String, float[]> entry : this.lanes.entrySet()) {
                     String k = entry.getKey();
                     float[] c = entry.getValue();
-                    o.put(k, new JSONArray((Collection) CollectionsKt.listOf((Object[]) new Double[]{Double.valueOf(c[0]), Double.valueOf(c[1])})));
+                    o.put(k, new JSONArray((Collection) CollectionsKt.listOf(new Double[]{Double.valueOf(c[0]), Double.valueOf(c[1])})));
                 }
                 File file = this.dir;
                 if (file == null) {

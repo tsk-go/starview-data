@@ -138,7 +138,7 @@ public final class GxBluetoothPage extends GxPage {
 
     @Override // com.starpilot.starview.GxPage
     public void build() {
-        GxPage.tabs$default(this, CollectionsKt.listOf((Object[]) new String[]{"Bluetooth", "Controllers"}), 0, new Function1() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda16
+        GxPage.tabs$default(this, CollectionsKt.listOf(new String[]{"Bluetooth", "Controllers"}), 0, new Function1() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda16
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$0;
@@ -237,7 +237,7 @@ public final class GxBluetoothPage extends GxPage {
         gxVehicleNotice2 = GxVehicleKt.gxVehicleNotice(this, "", i, box);
         this.btErrNote = gxVehicleNotice2;
         this.btPromptBox = box(box);
-        bs = GxVehicleKt.gxVehicleButtons(this, box, CollectionsKt.listOf((Object[]) new Triple[]{new Triple("Search for Devices", true, new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda7
+        bs = GxVehicleKt.gxVehicleButtons(this, box, CollectionsKt.listOf(new Triple[]{new Triple("Search for Devices", true, new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda7
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit buildBt$lambda$5;

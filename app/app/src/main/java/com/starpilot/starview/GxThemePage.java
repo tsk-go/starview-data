@@ -1323,7 +1323,7 @@ public final class GxThemePage extends GxPage {
         }
         linearLayout.removeAllViews();
         int i = 0;
-        List<String> listOf = CollectionsKt.listOf((Object[]) new String[]{"Static", "Traditional"});
+        List<String> listOf = CollectionsKt.listOf(new String[]{"Static", "Traditional"});
         boolean areEqual = Intrinsics.areEqual(this.tsStyle, "Traditional");
         LinearLayout linearLayout3 = this.turnBox;
         if (linearLayout3 == null) {
@@ -1339,7 +1339,7 @@ public final class GxThemePage extends GxPage {
             }
         });
         if (Intrinsics.areEqual(this.tsStyle, "Traditional")) {
-            List<String> listOf2 = CollectionsKt.listOf((Object[]) new String[]{"Sequential", "Single Image"});
+            List<String> listOf2 = CollectionsKt.listOf(new String[]{"Sequential", "Single Image"});
             int i2 = !Intrinsics.areEqual(this.tsType, "Sequential") ? 1 : 0;
             LinearLayout linearLayout4 = this.turnBox;
             if (linearLayout4 == null) {
@@ -2859,7 +2859,7 @@ public final class GxThemePage extends GxPage {
                     loadToEditor$lambda$135$slot$126(this$0, jobs, "distanceIcons_" + k, di.optJSONObject(k));
                 }
             }
-            for (String s : (Iterable<String>) (Iterable) CollectionsKt.listOf((Object[]) new String[]{"homeButton", "settingsButton", "steeringWheel", "turnSignal", "turnSignalBlindspot"})) {
+            for (String s : (Iterable<String>) (Iterable) CollectionsKt.listOf(new String[]{"homeButton", "settingsButton", "steeringWheel", "turnSignal", "turnSignalBlindspot"})) {
                 loadToEditor$lambda$135$slot$126(this$0, jobs, s, imgs.optJSONObject(s));
             }
             JSONObject so = data.optJSONObject("sounds");

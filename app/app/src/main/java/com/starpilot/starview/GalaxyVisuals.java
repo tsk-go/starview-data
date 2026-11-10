@@ -983,7 +983,7 @@ public final class GalaxyVisuals {
         $this$personalities_u24lambda_u2446.setOrientation(0);
         int i2 = 4;
         int i3 = 1;
-        List<Pair> pages = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("traffic", "Traffic"), TuplesKt.to("aggressive", "Aggressive"), TuplesKt.to("standard", "Standard"), TuplesKt.to("relaxed", "Relaxed")});
+        List<Pair> pages = CollectionsKt.listOf(new Pair[]{TuplesKt.to("traffic", "Traffic"), TuplesKt.to("aggressive", "Aggressive"), TuplesKt.to("standard", "Standard"), TuplesKt.to("relaxed", "Relaxed")});
         HashMap cells = new HashMap();
         for (Pair pair : pages) {
             final String p = (String) pair.component1();

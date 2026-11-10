@@ -27,9 +27,9 @@ import org.json.JSONObject;
 public final class GalaxyTools {
     private static final String PREFS = "galaxy_tools";
     public static final GalaxyTools INSTANCE = new GalaxyTools();
-    private static final Set<String> PLACED_ELSEWHERE = SetsKt.setOf((Object[]) new String[]{"/theme_maker", "/cameras", "/vehicle", "/device-preferences", "/system"});
-    private static final List<Tool> ALWAYS = CollectionsKt.listOf((Object[]) new Tool[]{new Tool("Overview", "/"), new Tool("Recordings", "/recordings")});
-    private static final List<Tool> DEFAULT = CollectionsKt.listOf((Object[]) new Tool[]{new Tool("Android Auto", "/android-auto"), new Tool("Bluetooth", "/bluetooth"), new Tool("Galaxy Access & Install", "/galaxy"), new Tool("Logs & Diagnostics", "/logs"), new Tool("Model Manager", "/manage_models"), new Tool("Model Laboratory", "/model_laboratory"), new Tool("Navigation & Maps", "/navigation"), new Tool("Plots & Analysis", "/tuning/plots")});
+    private static final Set<String> PLACED_ELSEWHERE = SetsKt.setOf(new String[]{"/theme_maker", "/cameras", "/vehicle", "/device-preferences", "/system"});
+    private static final List<Tool> ALWAYS = CollectionsKt.listOf(new Tool[]{new Tool("Overview", "/"), new Tool("Recordings", "/recordings")});
+    private static final List<Tool> DEFAULT = CollectionsKt.listOf(new Tool[]{new Tool("Android Auto", "/android-auto"), new Tool("Bluetooth", "/bluetooth"), new Tool("Galaxy Access & Install", "/galaxy"), new Tool("Logs & Diagnostics", "/logs"), new Tool("Model Manager", "/manage_models"), new Tool("Model Laboratory", "/model_laboratory"), new Tool("Navigation & Maps", "/navigation"), new Tool("Plots & Analysis", "/tuning/plots")});
 
     /* compiled from: GalaxyTools.kt */
     public static final class Tool {

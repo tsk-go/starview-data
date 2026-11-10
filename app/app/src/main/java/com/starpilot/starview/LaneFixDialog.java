@@ -1270,7 +1270,7 @@ public final class LaneFixDialog {
     public static final Unit show$lambda$11(LinearLayout $wayRow, final Road $road, LinearLayout $otherRow, CheckBox $keep, TextView $say, String $street, final Ref.ObjectRef $paint, final Ref.ObjectRef $roadView, Context $ctx, float $d, int $grey) {
         String str;
         $wayRow.removeAllViews();
-        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("one", "One-way"), TuplesKt.to("divided", "Divided highway"), TuplesKt.to("two", "Two-way street")})) {
+        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf(new Pair[]{TuplesKt.to("one", "One-way"), TuplesKt.to("divided", "Divided highway"), TuplesKt.to("two", "Two-way street")})) {
             final String k = (String) pair.component1();
             String t = (String) pair.component2();
             $wayRow.addView(show$chip$default($ctx, $d, t, Intrinsics.areEqual($road.getWay(), k), false, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda3

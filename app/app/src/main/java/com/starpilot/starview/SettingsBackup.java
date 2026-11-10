@@ -60,7 +60,7 @@ public final class SettingsBackup {
     private static long lastAutoMs;
     private static Runnable pending;
     public static final SettingsBackup INSTANCE = new SettingsBackup();
-    private static final Map<String, Set<String>> SKIP = MapsKt.mapOf(TuplesKt.to("starview", SetsKt.setOf((Object[]) new String[]{"term_key", "paired_dongle", "paired_hosts"})), TuplesKt.to("starview_ntrip", SetsKt.setOf((Object[]) new String[]{"pass", "b_pass"})));
+    private static final Map<String, Set<String>> SKIP = MapsKt.mapOf(TuplesKt.to("starview", SetsKt.setOf(new String[]{"term_key", "paired_dongle", "paired_hosts"})), TuplesKt.to("starview_ntrip", SetsKt.setOf(new String[]{"pass", "b_pass"})));
     private static final Handler main = new Handler(Looper.getMainLooper());
 
     private SettingsBackup() {

@@ -1945,7 +1945,7 @@ public final class SceneView extends SurfaceView {
         VertexBuffer vb = attribute.build(engine);
         Intrinsics.checkNotNullExpressionValue(vb, "build(...)");
         ByteBuffer v = ByteBuffer.allocateDirect(48).order(ByteOrder.nativeOrder());
-        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(-400.0f), valueOf), TuplesKt.to(valueOf, valueOf), TuplesKt.to(valueOf, Float.valueOf(-400.0f)), TuplesKt.to(Float.valueOf(-400.0f), Float.valueOf(-400.0f))})) {
+        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf(new Pair[]{TuplesKt.to(Float.valueOf(-400.0f), valueOf), TuplesKt.to(valueOf, valueOf), TuplesKt.to(valueOf, Float.valueOf(-400.0f)), TuplesKt.to(Float.valueOf(-400.0f), Float.valueOf(-400.0f))})) {
             float x = ((Number) pair.component1()).floatValue();
             float z = ((Number) pair.component2()).floatValue();
             v.putFloat(x);
@@ -2232,7 +2232,7 @@ public final class SceneView extends SurfaceView {
         }
         this.layoutVb = attribute.build(engine4);
         ByteBuffer v = ByteBuffer.allocateDirect(80).order(ByteOrder.nativeOrder());
-        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(this.XMIN), Float.valueOf(-20.0f)), TuplesKt.to(Float.valueOf(this.XMIN), Float.valueOf(20.0f)), TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(20.0f)), TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(-20.0f))})) {
+        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf(new Pair[]{TuplesKt.to(Float.valueOf(this.XMIN), Float.valueOf(-20.0f)), TuplesKt.to(Float.valueOf(this.XMIN), Float.valueOf(20.0f)), TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(20.0f)), TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(-20.0f))})) {
             float x = ((Number) pair.component1()).floatValue();
             float y = ((Number) pair.component2()).floatValue();
             v.putFloat(y);
@@ -7475,7 +7475,7 @@ public final class SceneView extends SurfaceView {
         float lg2 = linear.component2().floatValue();
         float lb2 = linear.component3().floatValue();
         int i3 = 0;
-        Iterator it2 = CollectionsKt.listOf((Object[]) new Double[]{Double.valueOf(-1.0d), Double.valueOf(1.0d)}).iterator();
+        Iterator it2 = CollectionsKt.listOf(new Double[]{Double.valueOf(-1.0d), Double.valueOf(1.0d)}).iterator();
         while (it2.hasNext()) {
             double sd2 = ((Number) it2.next()).doubleValue();
             int i4 = 0;

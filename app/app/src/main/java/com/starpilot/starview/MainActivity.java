@@ -2027,7 +2027,7 @@ public final class MainActivity extends AppCompatActivity {
         $this$onCreate_u24lambda_u24127.addView($this$onCreate_u24lambda_u24127_u24lambda_u24121);
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(0);
-        Iterator it3 = CollectionsKt.listOf((Object[]) new String[]{"Too close", "Swerved", "Wrong lane", "Braked late", "Just because"}).iterator();
+        Iterator it3 = CollectionsKt.listOf(new String[]{"Too close", "Swerved", "Wrong lane", "Braked late", "Just because"}).iterator();
         while (it3.hasNext()) {
             final String w = (String) it3.next();
             TextView $this$onCreate_u24lambda_u24127_u24lambda_u24125 = new TextView(this);
@@ -2789,7 +2789,7 @@ public final class MainActivity extends AppCompatActivity {
                 MainActivity.wireControls$lambda$144(MainActivity.this, view);
             }
         });
-        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Integer.valueOf(R.id.dsDefault), "default"), TuplesKt.to(Integer.valueOf(R.id.dsOnroad), "onroad"), TuplesKt.to(Integer.valueOf(R.id.dsOffroad), "offroad")})) {
+        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf(new Pair[]{TuplesKt.to(Integer.valueOf(R.id.dsDefault), "default"), TuplesKt.to(Integer.valueOf(R.id.dsOnroad), "onroad"), TuplesKt.to(Integer.valueOf(R.id.dsOffroad), "offroad")})) {
             int id = ((Number) pair.component1()).intValue();
             final String mode = (String) pair.component2();
             ((Button) findViewById(id)).setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda83
@@ -4873,7 +4873,7 @@ public final class MainActivity extends AppCompatActivity {
 
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     public final void bookmarkNow() {
-        String var141 = null; String var144 = null; String var146 = null; String var149 = null; JSONObject var154 = null; Object var159 = null; JSONObject var162 = null; ArrayList var173 = null; ArrayList var186 = null; Object var194 = null; JSONObject var197 = null; Object var204 = null; ArrayList var213 = null; String var225 = null; String var229 = null; String var232 = null; String var240 = null; String var247 = null; JSONObject var249 = null; JSONObject var252 = null; Object var277 = null; String var280 = null; ArrayList var283 = null; double[] var288 = null; ArrayList var291 = null; kotlin.collections.ArrayDeque<LaneBrain.Event> var294 = null; LaneBrain.RoadInfo var303 = null; ArrayList var308 = null; ArrayList var313 = null; Pair var322 = null; Object var352 = null; LaneSuggest var355 = null; Object var358 = null; TurnSignal var361 = null; Object var369 = null; Object var372 = null; Object var375 = null; ArrayList var376 = null; JSONObject var377 = null; ArrayList var379 = null; JSONObject var380 = null; String var381 = null; JSONObject var382 = null; JSONObject var383 = null; JSONObject var384 = null; Bookmarks.Item var385 = null; Iterator var389 = null; ModelSnapshot var390 = null; ArrayList var391 = null; Iterator var392 = null; Iterator var397 = null; Iterator var398 = null; Iterator var399 = null; Object var401 = null; // declarations Vineflower left out
+        String var141 = null; String var144 = null; String var146 = null; String var149 = null; JSONObject var154 = null; ArrayList var159 = null; JSONObject var162 = null; ArrayList var173 = null; ArrayList var186 = null; ArrayList var194 = null; JSONObject var197 = null; ArrayList var204 = null; ArrayList var213 = null; String var225 = null; String var229 = null; String var232 = null; String var240 = null; String var247 = null; JSONObject var249 = null; JSONObject var252 = null; String var277 = null; String var280 = null; ArrayList var283 = null; double[] var288 = null; ArrayList var291 = null; kotlin.collections.ArrayDeque<LaneBrain.Event> var294 = null; LaneBrain.RoadInfo var303 = null; ArrayList var308 = null; ArrayList var313 = null; Pair var322 = null; Object var352 = null; LaneSuggest var355 = null; Object var358 = null; TurnSignal var361 = null; Object var369 = null; Object var372 = null; Object var375 = null; ArrayList var376 = null; JSONObject var377 = null; ArrayList var379 = null; JSONObject var380 = null; String var381 = null; JSONObject var382 = null; JSONObject var383 = null; JSONObject var384 = null; Bookmarks.Item var385 = null; Iterator var389 = null; ModelSnapshot var390 = null; ArrayList var391 = null; Iterator var392 = null; Iterator var397 = null; Iterator var398 = null; Iterator var399 = null; Object var401 = null; // declarations Vineflower left out
         long var11;
         Telemetry var18;
         JSONObject var19;
@@ -6173,7 +6173,7 @@ public final class MainActivity extends AppCompatActivity {
                 break;
             case 12:
                 runVoice$setP(this, Integer.parseInt(parse.getArg()));
-                str = (String) CollectionsKt.listOf((Object[]) new String[]{"Aggressive", "Standard", "Relaxed"}).get(Integer.parseInt(parse.getArg()));
+                str = (String) CollectionsKt.listOf(new String[]{"Aggressive", "Standard", "Relaxed"}).get(Integer.parseInt(parse.getArg()));
                 break;
             case 13:
                 runVoice$setP(this, pInt + 1);
