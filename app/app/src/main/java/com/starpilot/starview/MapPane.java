@@ -637,6 +637,8 @@ public final class MapPane extends FrameLayout {
             this$0.sheet.removeAllViews();
             this$0.map.follow();
             this$0.refreshBars();
+            // 2.85.3: a new destination started: back to the driving screen (turn card + see-through map)
+            this$0.host.closeMap();
         }
         return Unit.INSTANCE;
     }
@@ -3450,7 +3452,7 @@ public final class MapPane extends FrameLayout {
                 Nav.Line line = l;
                 int i14 = split;
                 stroke(c, line, i14, l.getSize() - 1, mapPane.dp(12.0f), -16040559, w);
-                stroke(c, line, i14, l.getSize() - 1, mapPane.dp(n), -13664019, w);
+                stroke(c, line, i14, l.getSize() - 1, mapPane.dp(8.0f), -13664019, w);
                 int length = l.getTrafficLevel().length;
                 int r2 = 0;
                 while (r2 < length) {

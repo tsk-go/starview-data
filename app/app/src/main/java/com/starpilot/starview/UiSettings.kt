@@ -50,7 +50,7 @@ class UiSettings(ctx: Context) {
       Item("alert_tint", "Alert screen tint (orange / red wash behind alerts)", true, "HUD"),
       Item("aether_gauge", "Curve / stop / lead gauge", true, "Widgets"),
       Item("nav_card", "Navigation card", true, "Widgets"),
-      Item("nav_map", "Navigation see-through map (street lines and the route under the turn card)", true, "Widgets"),
+      Item("nav_map", "Navigation see-through map (street lines while the car is on, and the route while one is set)", true, "Widgets"),
       Item("slow_card", "Why it's slowing (shows what openpilot brakes for; tap it for the history)", true, "Widgets"),
       Item("lane_suggest", "Change lanes? - asks when the model or the route wants a lane change; Change = signal it (sound alert)", true, "Widgets"),
       Item("lane_nudge_confirm", "Change lanes? - a light steering nudge toward that side also confirms", true, "Blinker"),

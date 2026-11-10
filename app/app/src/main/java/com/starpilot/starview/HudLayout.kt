@@ -58,6 +58,16 @@ class HudLayout(ctx: Context) {
     Item(R.id.devSidebar, "devSidebar", "Developer sidebar", Anchor(Gravity.TOP or Gravity.END, 24, 250), defaultOn = false),
     Item(R.id.pipLeft, "pipLeft", "Side view - left", Anchor(Gravity.BOTTOM or Gravity.START, 24, 24)),
     Item(R.id.pipRight, "pipRight", "Side view - right", Anchor(Gravity.BOTTOM or Gravity.END, 24, 24)),
+    // 2.85.3: the bottom buttons and chips are widgets too (they were fixed in a row and overlapped)
+    Item(R.id.hudScene, "sceneBtn", "Scene / camera button", Anchor(Gravity.BOTTOM or Gravity.START, 24, 24)),
+    Item(R.id.hudWhere, "whereBtn", "Where to? button", Anchor(Gravity.BOTTOM or Gravity.START, 168, 24)),
+    Item(R.id.hudMap, "mapBtn", "Map button", Anchor(Gravity.BOTTOM or Gravity.START, 330, 24)),
+    Item(R.id.hudBookmark, "bookmarkBtn", "Bookmark button", Anchor(Gravity.BOTTOM or Gravity.START, 426, 24)),
+    Item(R.id.hudMic, "micBtn", "Voice button", Anchor(Gravity.BOTTOM or Gravity.START, 486, 24)),
+    Item(R.id.hudQuick, "quickBtn", "Quick menu button", Anchor(Gravity.BOTTOM or Gravity.START, 546, 24)),
+    Item(R.id.hudSaver, "saverPill", "Battery saver pill", Anchor(Gravity.BOTTOM or Gravity.START, 690, 24)),
+    Item(R.id.hudFavBar, "favBar", "Favorites bar", Anchor(Gravity.BOTTOM or Gravity.START, 24, 84)),
+    Item(R.id.hudIdeas, "ideasChip", "Why it's easing off", Anchor(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 70)),
   )
 
   val states = HashMap<String, State>()
@@ -139,6 +149,15 @@ class HudLayout(ctx: Context) {
     for (id in intArrayOf(R.id.topLeft)) root.findViewById<View>(id)?.let { root.removeView(it) }
     val leftovers = (0 until root.childCount).map { root.getChildAt(it) }.filter { it is ViewGroup && it.id == View.NO_ID && (it as ViewGroup).childCount == 0 }
     for (v in leftovers) root.removeView(v)
+  }
+
+  /** A widget made in code after [adopt] ran: given its item's id, anchored top|start (no margins), pivot at its corner. */
+  fun adoptLate(v: View?, id: Int) {
+    if (v == null) return
+    v.id = id
+    val old = v.layoutParams
+    v.layoutParams = FrameLayout.LayoutParams(old?.width ?: ViewGroup.LayoutParams.WRAP_CONTENT, old?.height ?: ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.TOP or Gravity.START)
+    v.pivotX = 0f; v.pivotY = 0f
   }
 
   /** Default top-left position (px) for a widget of the given size, from its XML-equivalent anchor. */
