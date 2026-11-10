@@ -72,7 +72,7 @@ class GxCamerasSnapView extends View {
         if (it == null) {
             return 480.0f;
         }
-        gxCamRound = GxCamerasKt.gxCamRound((Math.min(it.getWidth(), 1280) * it.getHeight()) / it.getWidth());
+        gxCamRound = GxCamerasKt.gxCamRound((((float) Math.min(it.getWidth(), 1280)) * it.getHeight()) / it.getWidth());
         return gxCamRound;
     }
 

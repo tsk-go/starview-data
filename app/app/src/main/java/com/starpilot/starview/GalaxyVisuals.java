@@ -1777,7 +1777,7 @@ public final class GalaxyVisuals {
             float f = 16;
             float top = f * d;
             float bot = getHeight() - (f * d);
-            float y = bot - ((posOf(this.value) / this.last) * (bot - top));
+            float y = bot - ((((float) posOf(this.value)) / this.last) * (bot - top));
             this.p.setColor(Color.rgb(42, 49, 66));
             float f2 = 6;
             c.drawRoundRect(cx - (f2 * d), top, cx + (f2 * d), bot, f2 * d, f2 * d, this.p);

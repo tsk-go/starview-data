@@ -116,15 +116,10 @@ public final class MapPane extends FrameLayout {
     private final MapTiles tiles;
     private final TextView tiltBtn;
     private final TextView voiceBtn;
-    /** the small card on top of the road view (next turn + a little map); tapping it opens the full navigation screen */
-    private boolean mini;
 
     /* compiled from: MapPane.kt */
     public interface Host {
         void closeMap();
-
-        /** the small next-turn card was tapped: open the full navigation screen */
-        void expandMap();
 
         DataClient getData();
 
@@ -171,7 +166,8 @@ public final class MapPane extends FrameLayout {
         this.setBackgroundColor(Color.rgb(27, 30, 36));
         this.addView(this.map, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
         View var3 = this.banner;
-        android.widget.FrameLayout.LayoutParams var4 = new android.widget.FrameLayout.LayoutParams(-1, this.dpi(92), 48);
+        // 2.85.0: the full screen's turn banner is a card at the top centre, like the one on the road view
+        android.widget.FrameLayout.LayoutParams var4 = new android.widget.FrameLayout.LayoutParams(Math.min(this.dpi(600), var1.getResources().getDisplayMetrics().widthPixels - this.dpi(160)), this.dpi(92), 49);
         var4.setMargins(this.dpi(10), this.dpi(10), this.dpi(10), 0);
         Unit var10 = Unit.INSTANCE;
         this.addView(var3, (android.view.ViewGroup.LayoutParams)var4);
@@ -1265,7 +1261,6 @@ public final class MapPane extends FrameLayout {
             var60.height = var23;
             var48.setLayoutParams((android.view.ViewGroup.LayoutParams)var60);
         }
-        applyMini();
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1409,74 +1404,10 @@ public final class MapPane extends FrameLayout {
         return Unit.INSTANCE;
     }
 
-    public final boolean getMini() {
-        return this.mini;
-    }
-
-    /** Switches between the small next-turn card (true) and the full navigation screen (false). */
-    public final void setMini(boolean m) {
-        if (this.mini == m) {
-            return;
-        }
-        this.mini = m;
-        if (m) {
-            closeSheet();
-            this.map.follow();
-        }
-        setClipToOutline(m);
-        if (m) {
-            final float r = dp(18.0f);
-            setOutlineProvider(new android.view.ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, android.graphics.Outline outline) {
-                    outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), r);
-                }
-            });
-            setElevation(dp(10.0f));
-        } else {
-            setOutlineProvider(android.view.ViewOutlineProvider.BACKGROUND);
-            setElevation(0.0f);
-        }
-        this.side.setVisibility(m ? 8 : 0);
-        refreshBars();
-        applyMini();
-    }
-
-    private final void applyMini() {
-        if (!this.mini) {
-            return;
-        }
-        this.side.setVisibility(8);
-        this.bottomBar.setVisibility(8);
-        this.faster.setVisibility(8);
-        this.info.setVisibility(8);
-        this.note.setVisibility(8);
-        this.sheet.setVisibility(8);
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent e) {
-        if (this.mini) {
-            return true;
-        }
-        return super.onInterceptTouchEvent(e);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        if (this.mini) {
-            if (e.getActionMasked() == MotionEvent.ACTION_UP) {
-                this.host.expandMap();
-            }
-            return true;
-        }
-        return super.onTouchEvent(e);
-    }
-
     public final void showInfo(String text) {
         Intrinsics.checkNotNullParameter(text, "text");
         this.info.setText(text);
-        this.info.setVisibility(this.mini ? 8 : 0);
+        this.info.setVisibility(0);
         removeCallbacks(this.hideInfo);
         postDelayed(this.hideInfo, 6000L);
     }
@@ -2489,8 +2420,15 @@ public final class MapPane extends FrameLayout {
             Intrinsics.checkNotNullParameter(var1, "c");
             float var2 = this.getWidth();
             float var7 = this.getHeight();
-            this.p.setColor(-266899898);
+            // 2.85.0: StarPort's dark card with the purple edge (was green)
+            this.p.setColor(NavOverlay.INSTANCE.getBG());
             var1.drawRoundRect(new RectF(0.0F, 0.0F, var2, var7), this.this$0.dp(16.0F), this.this$0.dp(16.0F), this.p);
+            this.p.setStyle(android.graphics.Paint.Style.STROKE);
+            this.p.setStrokeWidth(this.this$0.dp(2.0F));
+            this.p.setColor(NavOverlay.INSTANCE.getBORDER());
+            float edge = this.this$0.dp(1.0F);
+            var1.drawRoundRect(new RectF(edge, edge, var2 - edge, var7 - edge), this.this$0.dp(16.0F), this.this$0.dp(16.0F), this.p);
+            this.p.setStyle(android.graphics.Paint.Style.FILL);
             JSONObject var10 = this.this$0.getT().navState();
             if (var10 == null) {
                 this.tp.setTextSize(this.this$0.dp(22.0F));
@@ -3362,9 +3300,9 @@ public final class MapPane extends FrameLayout {
                 Iterator it3 = it2;
                 ArrayList order3 = order2;
                 double fx3 = fx2;
-                float left = (float) (((txr3 / n2) - this.cx) * w);
+                float left = (float) (((((double) txr3) / n2) - this.cx) * w);
                 double fy3 = fy2;
-                float top = (float) (((ty3 / n2) - this.cy) * w);
+                float top = (float) (((((double) ty3) / n2) - this.cy) * w);
                 RectF dst4 = dst3;
                 dst4.set(left, top, ((float) tileSize2) + left + 0.6f, ((float) tileSize2) + top + 0.6f);
                 int z5 = z4;

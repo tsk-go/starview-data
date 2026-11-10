@@ -639,7 +639,7 @@ public final class AmyVoice {
         Intrinsics.checkNotNullExpressionValue(t, "build(...)");
         t.write(pcm, 0, pcm.length);
         track = t;
-        long ms = ((pcm.length / 2) * 1000) / 48000;
+        long ms = (((long) (pcm.length / 2)) * 1000L) / 48000L;
         busyUntil = System.currentTimeMillis() + ms;
         t.play();
         main.postDelayed(new Runnable() { // from class: com.starpilot.starview.AmyVoice$$ExternalSyntheticLambda2

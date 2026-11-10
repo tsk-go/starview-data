@@ -624,7 +624,7 @@ public final class Detector {
             Projection.Companion.Cam c = Projection.Companion.camFor(fw, fh, false);
             double[] k = {c.getF(), 0.0d, c.getCx(), 0.0d, c.getF(), c.getCy(), 0.0d, 0.0d, 1.0d};
             double[] ct = Projection.Companion.mul(k, Projection.Companion.mul(Projection.Companion.getVIEW_FROM_DEVICE(), Projection.Companion.rotFromEuler(rpy[0], rpy[1], rpy[2])));
-            double s = bmp.getWidth() / fw;
+            double s = ((double) bmp.getWidth()) / fw;
             ArrayList left = new ArrayList();
             ArrayList right = new ArrayList();
             int j2 = 0;
@@ -752,9 +752,9 @@ public final class Detector {
                 }
                 int band4 = band;
                 if (n != 0) {
-                    float yy = (sy / n) - 16.0f;
-                    float uu = (su / n) - 128.0f;
-                    float vv = (sv / n) - 128.0f;
+                    float yy = (((float) sy) / n) - 16.0f;
+                    float uu = (((float) su) / n) - 128.0f;
+                    float vv = (((float) sv) / n) - 128.0f;
                     int r = RangesKt.coerceIn((int) ((yy * 1.164f) + (1.596f * vv)), 0, 255);
                     int g = RangesKt.coerceIn((int) (((yy * 1.164f) - (0.392f * uu)) - (0.813f * vv)), 0, 255);
                     int b = RangesKt.coerceIn((int) ((1.164f * yy) + (2.017f * uu)), 0, 255);
@@ -1409,7 +1409,7 @@ public final class Detector {
             Arrays.fill(this.pix, 114.0f);
             this.padKey = i;
         }
-        long version = (DetMasks.INSTANCE.getVersion() << 32) | i;
+        long version = (((long) DetMasks.INSTANCE.getVersion()) << 32) | i;
         if (this.maskKey[wide ? 1 : 0] != version) {
             this.maskBits[wide ? 1 : 0] = DetMasks.INSTANCE.maskFor(wide, min2, min3);
             this.maskKey[wide ? 1 : 0] = version;
@@ -2455,7 +2455,7 @@ public final class Detector {
                 }
             }
         }
-        return new Triple<>(Float.valueOf(yel / n), Float.valueOf(busLook$red(u0, u1, f, v0, v1, this, 0.02f, 0.25f)), Float.valueOf(busLook$red(u0, u1, f, v0, v1, this, 0.75f, 0.98f)));
+        return new Triple<>(Float.valueOf(((float) yel) / n), Float.valueOf(busLook$red(u0, u1, f, v0, v1, this, 0.02f, 0.25f)), Float.valueOf(busLook$red(u0, u1, f, v0, v1, this, 0.75f, 0.98f)));
     }
 
     private static final float busLook$red(float $u0, float $u1, Frame $f, float $v0, float $v1, Detector this$0, float fx0, float fx1) {
@@ -2506,7 +2506,7 @@ public final class Detector {
                 dark++;
             }
         }
-        float share = dark / g.length;
+        float share = ((float) dark) / g.length;
         boolean isDark = 0.08f <= share && share <= 0.6f;
         if (isDark && !this.wiperDark) {
             this.wiperTimes.addLast(Long.valueOf(now));

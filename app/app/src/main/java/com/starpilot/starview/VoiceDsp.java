@@ -116,13 +116,13 @@ public final class VoiceDsp {
         if (i == i2) {
             return x;
         }
-        int n2 = (int) ((x.length * i2) / i);
+        int n2 = (int) ((((long) x.length) * i2) / i);
         float[] y = new float[n2];
-        double fc = Math.min(1.0d, i2 / i) * 0.95d;
+        double fc = Math.min(1.0d, ((double) i2) / i) * 0.95d;
         double half = 16 / fc;
         int i3 = 0;
         while (i3 < n2) {
-            double t = (i3 * i) / i2;
+            double t = (((double) i3) * i) / i2;
             int k0 = (int) Math.ceil(t - half);
             int k1 = (int) Math.floor(t + half);
             double s = 0.0d;

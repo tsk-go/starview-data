@@ -7427,7 +7427,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             carUi8 = null;
         }
         col.addView(header, CarUi.lp$default(carUi8, 0, 0, 3, null));
-        toggleCard(col, "Show the next-turn card when a route starts", "On top of the road view; tap it for the full navigation screen. Also a destination set in Galaxy or on the comma.", new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda229
+        toggleCard(col, "See-through map under the turn card", "Street lines and your route over the road view while a route is set. Move or resize it and the turn card in the screen editor (hold the road view). Tap either one for the full navigation screen.", new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda229
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletNavPage$lambda$254;
@@ -7643,12 +7643,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final boolean tabletNavPage$lambda$254(UiSettings $s) {
-        return $s.get("map_auto_open");
+        return $s.get("nav_map");
     }
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit tabletNavPage$lambda$255(UiSettings $s, boolean it) {
-        $s.set("map_auto_open", it);
+        $s.set("nav_map", it);
         return Unit.INSTANCE;
     }
 

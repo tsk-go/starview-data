@@ -1779,7 +1779,7 @@ public final class GxRecordingsPage extends GxPage {
             return null;
         }
         long start = startedAtMs.longValue();
-        long end = ((Math.max(r.getSegmentCount(), 1) + 1) * 60000) + start;
+        long end = (((long) (Math.max(r.getSegmentCount(), 1) + 1)) * 60000L) + start;
         List pts = DriveTrack.INSTANCE.between(getAct(), start - 30000, end);
         if (pts.size() >= 2) {
             return pts;

@@ -217,7 +217,7 @@ public final class StorageInfo {
     }
 
     public final String mb(int m) {
-        return size(m * 1000000);
+        return size(((long) m) * 1000000L);
     }
 
     public final String runLine(String out) {

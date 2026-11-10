@@ -309,7 +309,7 @@ public final class Lights {
         }
         int c = ((Number) f.component1()).intValue();
         long ph = ((Number) f.component2()).longValue();
-        long cm = c * 1000;
+        long cm = ((long) c) * 1000L;
         long next = (nowMs - (nowMs % cm)) + ph;
         if (next < nowMs) {
             next += cm;

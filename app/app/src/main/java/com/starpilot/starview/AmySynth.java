@@ -281,7 +281,7 @@ public final class AmySynth {
                 while (j < n) {
                     Random rng2 = rng;
                     int i4 = i3;
-                    double t = j / 48000;
+                    double t = j / 48000.0d;
                     float trem = 1 + (sn((tr * t) + ph) * 0.08f);
                     double tr2 = tr;
                     double tr3 = 2;
@@ -307,7 +307,7 @@ public final class AmySynth {
             double env = Math.min(1.0d, (j2 / d) / 0.45d);
             double env2 = env * env;
             if (j2 >= n - fo) {
-                double x = (n - j2) / fo;
+                double x = ((double) (n - j2)) / fo;
                 env2 *= x * x;
             }
             float[] l = st.getL();
@@ -646,7 +646,7 @@ public final class AmySynth {
             l[i7] = l[i7] + wl[i7];
             r[i7] = r[i7] + wr[i7];
             if (i7 >= n - fl) {
-                float x = (n - i7) / fl;
+                float x = ((float) (n - i7)) / fl;
                 l[i7] = l[i7] * x * x;
                 r[i7] = r[i7] * x * x;
             }
