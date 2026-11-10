@@ -245,7 +245,7 @@ public final class SlcActionsView extends View {
         for (Control ctl : cs) {
             int i2 = i;
             int i3 = i + 1;
-            RectF r = bx.get(i2);
+            RectF r = ((RectF) bx.get(i2));
             float y = r.centerY() + (this.tp.getTextSize() * 0.36f);
             Paint paint2 = this.tp;
             dpf = BigUiViewsKt.dpf(this, 2.0f);

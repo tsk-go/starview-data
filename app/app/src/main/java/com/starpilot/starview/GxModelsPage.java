@@ -1053,7 +1053,7 @@ public final class GxModelsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit renderControls$lambda$45;
-                renderControls$lambda$45 = GxModelsPage.renderControls$lambda$45(small, this);
+                renderControls$lambda$45 = GxModelsPage.renderControls$lambda$45(small, GxModelsPage.this);
                 return renderControls$lambda$45;
             }
         }, 2, null), selOk);
@@ -1161,7 +1161,7 @@ public final class GxModelsPage extends GxPage {
             destination$iv$iv.add(((Object) str5) + (Intrinsics.areEqual(GxModelsKt.gxModelsText$default(it, "value", null, 4, null), this$0.activeBigModel) ? str3 : str4));
             str = str3;
             str2 = str4;
-            $this$map$iv = $this$map$iv2;
+            $this$map$iv = ((List) $this$map$iv2);
         }
         List labels = CollectionsKt.plus((Collection) listOf, destination$iv$iv);
         this$0.pick("Active Big", labels, new Function1() { // from class: com.starpilot.starview.GxModelsPage$$ExternalSyntheticLambda11
@@ -1192,14 +1192,14 @@ public final class GxModelsPage extends GxPage {
     private final void renderList() {
         Object var33 = null; // declarations Vineflower left out
         LinearLayout var5 = this.listBox;
-        TextView var4 = null;
-        LinearLayout var3 = var5;
+        Object var4 = null;
+        Object var3 = var5;
         if (var5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("listBox");
             var3 = null;
         }
 
-        var3.removeAllViews();
+        ((LinearLayout) var3).removeAllViews();
         if (!this.loading) {
             List var14 = this.sorted();
             if (var14.isEmpty()) {
@@ -1209,7 +1209,7 @@ public final class GxModelsPage extends GxPage {
                     var3 = var4;
                 }
 
-                var3.addView((View)this.empty("No models match these filters. Try Both or clear the favourite filters."));
+                ((LinearLayout) var3).addView((View)this.empty("No models match these filters. Try Both or clear the favourite filters."));
             } else {
                 boolean var1;
                 if (this.busy.length() == 0) {
@@ -1218,7 +1218,7 @@ public final class GxModelsPage extends GxPage {
                     var1 = false;
                 }
 
-                for (JSONObject var8 : var14) {
+                for (JSONObject var8 : (Iterable) (JSONObject) ((JSONObject) var14)) {
                     String var30 = GxModelsKt.gxModelsText$default(var8, "value", null, 4, null);
                     CharSequence var6 = GxModelsKt.gxModelsText(var8, "label", var30);
                     var4 = var6;
@@ -1226,7 +1226,7 @@ public final class GxModelsPage extends GxPage {
                         var4 = var30;
                     }
 
-                    String var35 = (String)var4;
+                    Object var35 = (String)var4;
                     ArrayList var10 = new ArrayList();
                     if (var8.optBoolean("userFavorite")) {
                         var10.add("★ Your Favorite");
@@ -1285,12 +1285,12 @@ public final class GxModelsPage extends GxPage {
                     }
 
                     label150: {
-                        var33 = GxPage.row$default(var36, var35, var37, (ViewGroup)var4, 0, 8, null);
+                        var33 = GxPage.row$default(var36, ((String) var35), var37, (ViewGroup)var4, 0, 8, null);
                         var4 = this.rowState(var8);
                         switch (var4.hashCode()) {
                             case -1560195700:
                                 if (var4.equals("cancellable")) {
-                                    GxModelsKt.gxModelsEnable((View)GxPage.Row.button$default(var33, "Cancel", false, new GxModelsPage$$ExternalSyntheticLambda12(this, var8), 2, null), var1);
+                                    GxModelsKt.gxModelsEnable((View)GxPage.Row.button$default(((GxPage.Row) var33), "Cancel", false, new GxModelsPage$$ExternalSyntheticLambda12(this, var8), 2, null), var1);
                                     break label150;
                                 }
                                 break;
@@ -1324,15 +1324,15 @@ public final class GxModelsPage extends GxPage {
 
                                     GxModelsKt.gxModelsEnable((View)var4, var2);
                                     if (!var8.optBoolean("builtin")) {
-                                        var4 = GxPage.Row.button$default(var33, "Delete", false, new GxModelsPage$$ExternalSyntheticLambda14(this, var8), 2, null);
-                                        var4.setTextColor(CarUi.Companion.getWARN());
+                                        var4 = GxPage.Row.button$default(((GxPage.Row) var33), "Delete", false, new GxModelsPage$$ExternalSyntheticLambda14(this, var8), 2, null);
+                                        ((TextView) var4).setTextColor(CarUi.Companion.getWARN());
                                         GxModelsKt.gxModelsEnable((View)var4, var1);
                                     }
                                     break label150;
                                 }
                         }
 
-                        View var27 = (View)GxPage.Row.button$default(var33, "Download", false, new GxModelsPage$$ExternalSyntheticLambda15(this, var8), 2, null);
+                        View var27 = (View)GxPage.Row.button$default(((GxPage.Row) var33), "Download", false, new GxModelsPage$$ExternalSyntheticLambda15(this, var8), 2, null);
                         boolean var12;
                         if (var1 && !this.isOnroad) {
                             var12 = true;
@@ -1351,7 +1351,7 @@ public final class GxModelsPage extends GxPage {
                         var28 = "☆";
                     }
 
-                    TextView var34 = GxPage.Row.button$default(var33, var28, false, new GxModelsPage$$ExternalSyntheticLambda16(this, var13, var8), 2, null);
+                    TextView var34 = GxPage.Row.button$default(((GxPage.Row) var33), var28, false, new GxModelsPage$$ExternalSyntheticLambda16(this, var13, var8), 2, null);
                     var34.setMinWidth(this.getUi().dp(64));
                     var34.setTextSize(24.0F);
                     String var29;

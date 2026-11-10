@@ -104,7 +104,7 @@ public final class LaneShots {
         USER,
         EVERY_30S;
 
-        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(values());
 
         public static EnumEntries<Why> getEntries() {
             return $ENTRIES;
@@ -423,7 +423,7 @@ public final class LaneShots {
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         Unit request$lambda$4;
-                        request$lambda$4 = LaneShots.request$lambda$4(lock, wideDone, wide2, cam2, sceneDone, clean, this, side, m, n, caption, why, now, rd, ans, rp, ms, copyTo, (Bitmap) obj);
+                        request$lambda$4 = LaneShots.request$lambda$4(lock, wideDone, wide2, cam2, sceneDone, clean, LaneShots.this, side, m, n, caption, why, now, rd, ans, rp, ms, copyTo, (Bitmap) obj);
                         return request$lambda$4;
                     }
                 });
@@ -433,7 +433,7 @@ public final class LaneShots {
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() { // from class: com.starpilot.starview.LaneShots$$ExternalSyntheticLambda3
                     @Override // java.lang.Runnable
                     public final void run() {
-                        LaneShots.request$lambda$6(lock, wideDone, cam, sceneDone, clean, wide, this, side, m, n, caption, why, now, road, ans, list, str3, copyTo);
+                        LaneShots.request$lambda$6(lock, wideDone, cam, sceneDone, clean, wide, LaneShots.this, side, m, n, caption, why, now, road, ans, list, str3, copyTo);
                     }
                 }, 800L);
             }
@@ -458,7 +458,7 @@ public final class LaneShots {
                     PixelCopy.request(sv3, b, new PixelCopy.OnPixelCopyFinishedListener() { // from class: com.starpilot.starview.LaneShots$$ExternalSyntheticLambda4
                         @Override // android.view.PixelCopy.OnPixelCopyFinishedListener
                         public final void onPixelCopyFinished(int i) {
-                            LaneShots.request$lambda$8(lock, bitmapArr, b, booleanRef, bitmapArr2, booleanRef2, bitmapArr3, bitmapArr4, this, m, n, caption, why, j, road2, ans, list2, str4, copyTo, i);
+                            LaneShots.request$lambda$8(lock, bitmapArr, b, booleanRef, bitmapArr2, booleanRef2, bitmapArr3, bitmapArr4, LaneShots.this, m, n, caption, why, j, road2, ans, list2, str4, copyTo, i);
                         }
                     }, new Handler(Looper.getMainLooper()));
                     sceneDone2 = sceneDone;
@@ -482,7 +482,7 @@ public final class LaneShots {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit request$lambda$10;
-                    request$lambda$10 = LaneShots.request$lambda$10(lock, bitmapArr5, bitmapArr6, detector, booleanRef3, booleanRef4, bitmapArr7, this, bitmapArr8, m, n, caption, why, j2, road3, ans, list3, str5, copyTo, (Bitmap) obj);
+                    request$lambda$10 = LaneShots.request$lambda$10(lock, bitmapArr5, bitmapArr6, detector, booleanRef3, booleanRef4, bitmapArr7, LaneShots.this, bitmapArr8, m, n, caption, why, j2, road3, ans, list3, str5, copyTo, (Bitmap) obj);
                     return request$lambda$10;
                 }
             });
@@ -912,24 +912,24 @@ public final class LaneShots {
 
     /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     public final int deleteDrive(String var1) {
-        ArrayList var33 = null; ArrayList var34 = null; String var53 = null; Object var57 = null; Object var61 = null; // declarations Vineflower left out
+        ArrayList var33 = null; ArrayList var34 = null; Object var53 = null; Object var57 = null; Object var61 = null; // declarations Vineflower left out
         Intrinsics.checkNotNullParameter(var1, "drive");
 
-        List var4;
+        Object var4;
         try {
             var4 = FilesKt.readLines(this.index, kotlin.text.Charsets.UTF_8);
         } catch (Exception var14) {
             return 0;
         }
 
-        Iterable var43 = var4;
+        Iterable var43 = ((Iterable) var4);
         ArrayList var7 = new ArrayList();
         ArrayList var6 = new ArrayList();
         Iterator var8 = var43.iterator();
 
         while (true) {
             boolean var3 = var8.hasNext();
-            Iterable var5 = "";
+            Object var5 = "";
             if (!var3) {
                 Pair var46 = new Pair<>(var7, var6);
                 List var62 = (List)var46.component1();
@@ -1012,15 +1012,15 @@ public final class LaneShots {
                 }
 
                 File var30 = this.index;
-                if (!var4.isEmpty()) {
+                if (!((List) var4).isEmpty()) {
                     var5 = CollectionsKt.joinToString(var4, "\n", "", "", -1, "...", null);
                     var5 = var5 + "\n";
                 }
 
-                FilesKt.writeText(var30, var5, kotlin.text.Charsets.UTF_8);
+                FilesKt.writeText(var30, ((String) var5), kotlin.text.Charsets.UTF_8);
                 var5 = var62;
                 var var31 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var5, 10));
-                Iterator var52 = var5.iterator();
+                Iterator var52 = ((Iterable) var5).iterator();
 
                 while (var52.hasNext()) {
                     var31.add(StringsKt.substringBefore((String)var52.next(), '\t', ((String)var52.next())));
@@ -1136,7 +1136,7 @@ public final class LaneShots {
                 }
 
                 try {
-                    FilesKt.writeText(var61, var1, kotlin.text.Charsets.UTF_8);
+                    FilesKt.writeText(((File) var61), var1, kotlin.text.Charsets.UTF_8);
                 } catch (Exception var12) {
                 }
 
@@ -1146,18 +1146,18 @@ public final class LaneShots {
             Object var9 = var8.next();
             var4 = StringsKt.split((String & CharSequence)var9, new String[]{"\t"}, false, 0);
             boolean var2;
-            if (5 < var4.size()) {
+            if (5 < ((List) var4).size()) {
                 var2 = true;
             } else {
                 var2 = false;
             }
 
             if (var2) {
-                var5 = (Iterable)var4.get(5);
+                var5 = (Iterable)((List) var4).get(5);
             }
 
             var4 = (CharSequence)var5;
-            if (var4.length() == 0) {
+            if (((CharSequence) var4).length() == 0) {
                 var2 = true;
             } else {
                 var2 = false;
@@ -1478,10 +1478,10 @@ public final class LaneShots {
                     r = r0;
                     String[] strArr2 = new String[24];
                     strArr2[0] = export$q((String) p2.get(0));
-                    strArr2[1] = p2.get(2);
+                    strArr2[1] = ((String) p2.get(2));
                     File done2 = done;
                     strArr2[2] = export$q((String) (!(5 >= p2.size()) ? p2.get(5) : ""));
-                    strArr2[3] = p2.get(3);
+                    strArr2[3] = ((String) p2.get(3));
                     String str7 = str6;
                     strArr2[4] = !(6 >= p2.size()) ? p2.get(6) : "0";
                     strArr2[5] = export$q((String) (!(7 >= p2.size()) ? p2.get(7) : ""));
@@ -1546,10 +1546,10 @@ public final class LaneShots {
             r = r0 != null ? CollectionsKt.take(r0, 2) : null;
             String[] strArr22 = new String[24];
             strArr22[0] = export$q((String) p2.get(0));
-            strArr22[1] = p2.get(2);
+            strArr22[1] = ((String) p2.get(2));
             File done22 = done;
             strArr22[2] = export$q((String) (!(5 >= p2.size()) ? p2.get(5) : ""));
-            strArr22[3] = p2.get(3);
+            strArr22[3] = ((String) p2.get(3));
             String str72 = str6;
             strArr22[4] = !(6 >= p2.size()) ? p2.get(6) : "0";
             strArr22[5] = export$q((String) (!(7 >= p2.size()) ? p2.get(7) : ""));
@@ -1620,7 +1620,7 @@ public final class LaneShots {
                 destination$iv$iv3.add(element$iv$iv2);
             }
             $i$f$filter = $i$f$filter2;
-            $this$filter$iv = $this$filter$iv2;
+            $this$filter$iv = ((List) $this$filter$iv2);
         }
         Iterable list$iv$iv = (List) destination$iv$iv3;
         int $i$f$flatMap = 0;

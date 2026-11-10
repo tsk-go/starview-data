@@ -422,7 +422,7 @@ public final class GalaxyExtras {
         private final Galaxy7 g;
         private String last;
         private final Handler main;
-        private final GalaxyExtras$QuickSelect$poll$1 poll;
+        private final Runnable poll;
         private boolean saving;
         private final CarUi ui;
         private boolean visible;
@@ -552,7 +552,7 @@ public final class GalaxyExtras {
             JSONArray states2 = d.optJSONArray("states");
             final boolean edit = d.optBoolean("editable");
             int length = slots2.length();
-            final int i2 = 0;
+            int i2 = 0;
             while (i2 < length) {
                 JSONObject s = slots2.getJSONObject(i2);
                 JSONObject st = states2 != null ? states2.optJSONObject(i2) : null;
@@ -610,7 +610,7 @@ public final class GalaxyExtras {
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit draw$lambda$10;
-                        draw$lambda$10 = GalaxyExtras.QuickSelect.draw$lambda$10(edit, this, i2);
+                        draw$lambda$10 = GalaxyExtras.QuickSelect.draw$lambda$10(edit, QuickSelect.this, i2);
                         return draw$lambda$10;
                     }
                 }, 2, null);
@@ -657,7 +657,7 @@ public final class GalaxyExtras {
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit draw$lambda$14;
-                                draw$lambda$14 = GalaxyExtras.QuickSelect.draw$lambda$14(edit, v, this, i3);
+                                draw$lambda$14 = GalaxyExtras.QuickSelect.draw$lambda$14(edit, v, QuickSelect.this, i3);
                                 return draw$lambda$14;
                             }
                         }));
@@ -666,7 +666,7 @@ public final class GalaxyExtras {
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit draw$lambda$15;
-                                draw$lambda$15 = GalaxyExtras.QuickSelect.draw$lambda$15(edit, v, this, i3);
+                                draw$lambda$15 = GalaxyExtras.QuickSelect.draw$lambda$15(edit, v, QuickSelect.this, i3);
                                 return draw$lambda$15;
                             }
                         }));
@@ -767,7 +767,7 @@ public final class GalaxyExtras {
                     str = "  (" + it + ")";
                 }
                 destination$iv$iv2.add(optString + ((Object) str));
-                $this$map$iv2 = $this$map$iv;
+                $this$map$iv2 = ((List) $this$map$iv);
             }
             Collection labels = CollectionsKt.plus((Collection) listOf, destination$iv$iv2);
             Collection $this$toTypedArray$iv = labels;

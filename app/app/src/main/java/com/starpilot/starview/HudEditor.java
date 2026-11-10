@@ -251,7 +251,7 @@ public final class HudEditor extends FrameLayout {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit panel$lambda$17;
-                panel$lambda$17 = HudEditor.panel$lambda$17(ctx, this);
+                panel$lambda$17 = HudEditor.panel$lambda$17(ctx, HudEditor.this);
                 return panel$lambda$17;
             }
         }, 2, null));
@@ -279,7 +279,7 @@ public final class HudEditor extends FrameLayout {
         int i3 = 10;
         tabs.setPadding(0, this.ui.dp(14), 0, this.ui.dp(10));
         int i4 = 0;
-        for (String label : CollectionsKt.listOf((Object[]) new String[]{"Widgets", "Edit widget"})) {
+        for (String label : ((String) CollectionsKt.listOf((Object[]) new String[]{"Widgets", "Edit widget"}))) {
             final int i5 = i4;
             i4 += i;
             TextView b = new TextView(ctx);
@@ -408,10 +408,10 @@ public final class HudEditor extends FrameLayout {
         List off = (List) destination$iv$iv2;
         this.content.addView(this.ui.header("On screen  ·  " + on.size()));
         List $this$sortedBy$iv = on;
-        for (HudLayout.Item it3 : CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.HudEditor$widgetsTab$$inlined$sortedBy$1
+        for (HudLayout.Item it3 : (Iterable<HudLayout.Item>) CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.HudEditor$widgetsTab$$inlined$sortedBy$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 float order;
                 float order2;
                 HudLayout.Item it4 = (HudLayout.Item) t;
@@ -429,10 +429,10 @@ public final class HudEditor extends FrameLayout {
             this.content.addView(this.ui.note("Every widget is on the screen."));
         }
         List $this$sortedBy$iv2 = off;
-        for (HudLayout.Item it4 : CollectionsKt.sortedWith($this$sortedBy$iv2, new Comparator() { // from class: com.starpilot.starview.HudEditor$widgetsTab$$inlined$sortedBy$2
+        for (HudLayout.Item it4 : (Iterable<HudLayout.Item>) CollectionsKt.sortedWith($this$sortedBy$iv2, new Comparator() { // from class: com.starpilot.starview.HudEditor$widgetsTab$$inlined$sortedBy$2
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 HudLayout.Item it5 = (HudLayout.Item) t;
                 HudLayout.Item it6 = (HudLayout.Item) t2;
                 return ComparisonsKt.compareValues(it5.getLabel(), it6.getLabel());
@@ -464,7 +464,7 @@ public final class HudEditor extends FrameLayout {
         r.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.HudEditor$$ExternalSyntheticLambda10
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                HudEditor.listRow$lambda$31$lambda$30(on, this, item, view);
+                HudEditor.listRow$lambda$31$lambda$30(on, HudEditor.this, item, view);
             }
         });
         TextView $this$listRow_u24lambda_u2432 = new TextView(getContext());

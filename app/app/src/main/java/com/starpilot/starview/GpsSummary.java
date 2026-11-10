@@ -100,9 +100,9 @@ public final class GpsSummary {
 
             for (Object var22$it : (Iterable) var22) {
                 var22 = (Iterable) var22$it;
-                GpsFixInfo var25 = (GpsFixInfo)var22;
+                Object var25 = (GpsFixInfo)var22;
                 boolean var44;
-                if (Intrinsics.areEqual(var25.getService(), "gpsLocationExternal") && Intrinsics.areEqual(var25.getSource(), "ublox")) {
+                if (Intrinsics.areEqual(((GpsFixInfo) var25).getService(), "gpsLocationExternal") && Intrinsics.areEqual(((GpsFixInfo) var25).getSource(), "ublox")) {
                     var44 = true;
                 } else {
                     var44 = false;
@@ -122,7 +122,7 @@ public final class GpsSummary {
                 var30 = (Collection)var80.next();
                 if (var80.hasNext()) {
                     long var16 = ((GpsFixInfo)var30).getAtNs();
-                    var22 = var30;
+                    var22 = ((Iterable) var30);
 
                     do {
                         Object var66 = var80.next();
@@ -134,7 +134,7 @@ public final class GpsSummary {
                             var18 = var20;
                         }
 
-                        var22 = var30;
+                        var22 = ((Iterable) var30);
                         var16 = var18;
                     } while (var80.hasNext());
                 }
@@ -160,7 +160,7 @@ public final class GpsSummary {
                     var30 = (Collection)var75.next();
                     if (var75.hasNext()) {
                         long var55 = ((GpsFixInfo)var30).getAtNs();
-                        var22 = var30;
+                        var22 = ((Iterable) var30);
 
                         do {
                             Object var68 = var75.next();
@@ -172,7 +172,7 @@ public final class GpsSummary {
                                 var54 = var56;
                             }
 
-                            var22 = var30;
+                            var22 = ((Iterable) var30);
                             var55 = var54;
                         } while (var75.hasNext());
                     }
@@ -282,13 +282,13 @@ public final class GpsSummary {
             List var74 = CollectionsKt.sortedWith(var2, new Comparator() {
                 final Comparator $this_thenByDescending = new Comparator() {
                 @Override
-                public final int compare(T var1, T var2) {
+                public final int compare(Object var1, Object var2) {
                     return ComparisonsKt.compareValues(((GnssSat)var2).getUsed(), ((GnssSat)var1).getUsed());
                 }
             };
 
                 @Override
-                public final int compare(T var1, T var2x) {
+                public final int compare(Object var1, Object var2x) {
                     int var3x = this.$this_thenByDescending.compare(var1, var2x);
                     if (var3x == 0) {
                         var3x = ComparisonsKt.compareValues(((GnssSat)var2x).getCno(), ((GnssSat)var1).getCno());

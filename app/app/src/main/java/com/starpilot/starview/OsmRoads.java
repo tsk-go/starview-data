@@ -532,7 +532,7 @@ public final class OsmRoads {
             boxState.put($k, 1);
             Collection<List<Way>> values = boxWays.values();
             Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
-            Iterator<T> it = values.iterator();
+            Iterator it = values.iterator();
             int i = 0;
             while (it.hasNext()) {
                 List it2 = (List) it.next();
@@ -558,13 +558,13 @@ public final class OsmRoads {
         double fy2 = (lat / 0.01d) - ty;
         double fx2 = (lon / 0.01d) - tx;
         double mx = 300.0d / (kx * 0.01d);
-        final int dy = -1;
+        int dy = -1;
         while (true) {
             int i2 = 2;
             if (dy >= 2) {
                 return;
             }
-            final int dx = -1;
+            int dx = -1;
             while (dx < i2) {
                 if (dy == -1 && fy2 > 0.2713949701465533d) {
                     j = j2;
@@ -1107,7 +1107,7 @@ public final class OsmRoads {
         Iterable var12 = var11;
         var var20 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var12, 10));
 
-        for (String var13 : var12) {
+        for (String var13 : ((String) var12)) {
             String var18 = ABBR.get(var13);
             if (var18 != null) {
                 var13 = var18;
@@ -1124,7 +1124,7 @@ public final class OsmRoads {
                 return var15;
             }
 
-            CharSequence var21 = CollectionsKt.first(var19);
+            CharSequence var21 = ((CharSequence) CollectionsKt.first(var19));
             int var2 = 0;
 
             while (true) {
@@ -1168,7 +1168,7 @@ public final class OsmRoads {
         for (List list : boxWays.values()) {
             Intrinsics.checkNotNullExpressionValue(list, "next(...)");
             List l = list;
-            for (Way w2 : l) {
+            for (Way w2 : ((Way) l)) {
                 near$take(e, r, n, seen, out, w2);
             }
         }
@@ -1448,7 +1448,7 @@ public final class OsmRoads {
                         OsmRoads.Way var105 = (OsmRoads.Way)var39.get(var39.size() - 2);
                         Intrinsics.checkNotNullExpressionValue(var105, "get(...)");
                         var55 = ((Number)var105).doubleValue();
-                        var105 = var38.get(var38.size() - 2);
+                        var105 = ((Way) var38.get(var38.size() - 2));
                         Intrinsics.checkNotNullExpressionValue(var105, "get(...)");
                         double var21 = Math.atan2(var75 - var55, var79 - ((Number)var105).doubleValue());
                         var105 = null;
@@ -1633,7 +1633,7 @@ public final class OsmRoads {
 
                 return CollectionsKt.sortedWith(var120, new Comparator() {
                     @Override
-                    public final int compare(T var1, T var2) {
+                    public final int compare(Object var1, Object var2) {
                         return ComparisonsKt.compareValues((T)((Double & Comparable)((Pair)var1).getFirst()), (T)((Double & Comparable)((Pair)var2).getFirst()));
                     }
                 });
@@ -2008,7 +2008,7 @@ public final class OsmRoads {
         Iterable $this$map$iv = CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.OsmRoads$carFrame$$inlined$sortedBy$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t2, T t3) {
+            public final int compare(Object t2, Object t3) {
                 Pair it3 = (Pair) t2;
                 Double d = (Double) it3.getFirst();
                 Pair it4 = (Pair) t3;
@@ -2484,7 +2484,7 @@ public final class OsmRoads {
                                     var110 = var10;
                                 }
 
-                                Pair var116 = OsmRoads.INSTANCE.streetHeading(var18, var20, var110);
+                                Pair var116 = OsmRoads.INSTANCE.streetHeading(var18, var20, ((Double) var110));
                                 if (var116 == null) {
                                     return;
                                 }

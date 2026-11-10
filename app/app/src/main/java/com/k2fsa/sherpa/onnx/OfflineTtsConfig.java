@@ -37,30 +37,9 @@ public final /* data */ class OfflineTtsConfig {
         return offlineTtsConfig.copy(offlineTtsModelConfig, str3, str4, i3, f);
     }
 
-    /* renamed from: component1, reason: from getter */
-    public final OfflineTtsModelConfig getModel() {
-        return this.model;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final String getRuleFsts() {
-        return this.ruleFsts;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final String getRuleFars() {
-        return this.ruleFars;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final int getMaxNumSentences() {
-        return this.maxNumSentences;
-    }
-
-    /* renamed from: component5, reason: from getter */
-    public final float getSilenceScale() {
-        return this.silenceScale;
-    }
 
     public final OfflineTtsConfig copy(OfflineTtsModelConfig model, String ruleFsts, String ruleFars, int maxNumSentences, float silenceScale) {
         Intrinsics.checkNotNullParameter(model, "model");

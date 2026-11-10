@@ -278,7 +278,7 @@ public final class SettingsBackup {
                 plan.put(name, puts);
             } else {
                 int n = 0;
-                for (Map.Entry entry : plan.entrySet()) {
+                for (Map.Entry entry : ((Entry) plan.entrySet())) {
                     String name2 = (String) entry.getKey();
                     List<Put> puts2 = (List) entry.getValue();
                     Set skip2 = SKIP.get(name2);

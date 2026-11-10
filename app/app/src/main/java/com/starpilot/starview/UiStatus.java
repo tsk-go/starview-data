@@ -18,7 +18,7 @@ public enum UiStatus {
     PULSE_GLIDE(Color.rgb(24, 72, 150));
 
     private final int color;
-    private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+    private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(values());
     public static final Companion Companion = new Companion(null);
 
     UiStatus(int color) {

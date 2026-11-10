@@ -488,7 +488,7 @@ public final class VoiceStudio {
                 Iterable $this$map$iv = CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.VoiceStudio$catalog$$inlined$sortedBy$1
                     /* JADX WARN: Multi-variable type inference failed */
                     @Override // java.util.Comparator
-                    public final int compare(T t, T t2) {
+                    public final int compare(Object t, Object t2) {
                         Pair it = (Pair) t;
                         Integer num = (Integer) it.getSecond();
                         Pair it2 = (Pair) t2;
@@ -580,14 +580,14 @@ public final class VoiceStudio {
     public final long downloadedBytes(Context c) {
         Intrinsics.checkNotNullParameter(c, "c");
         long j = 0;
-        for (File it : SequencesKt.filter(FilesKt.walk(new File(c.getFilesDir(), "piper"), kotlin.io.FileWalkDirection.TOP_DOWN), new Function1() { // from class: com.starpilot.starview.VoiceStudio$$ExternalSyntheticLambda4
+        for (File it : (Iterable<File>) SequencesKt.asIterable(SequencesKt.filter(FilesKt.walk(new File(c.getFilesDir(), "piper"), kotlin.io.FileWalkDirection.TOP_DOWN), new Function1() { // from class: com.starpilot.starview.VoiceStudio$$ExternalSyntheticLambda4
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 boolean downloadedBytes$lambda$10;
                 downloadedBytes$lambda$10 = VoiceStudio.downloadedBytes$lambda$10((File) obj);
                 return Boolean.valueOf(downloadedBytes$lambda$10);
             }
-        })) {
+        }))) {
             j += it.length();
         }
         return j;
@@ -643,8 +643,8 @@ public final class VoiceStudio {
                 }
             }
             FilesKt.appendBytes(part, PiperPrep.INSTANCE.metadataBytes(cfg));
-            FilesKt.writeText(new File(mdir, "tokens.txt"), PiperPrep.INSTANCE.tokens(cfg), kotlin.text.Charsets.UTF_8);
-            FilesKt.writeText(new File(mdir, "config.json"), cfgText, kotlin.text.Charsets.UTF_8);
+            FilesKt.writeText$default(new File(mdir, "tokens.txt"), PiperPrep.INSTANCE.tokens(cfg), null, 2, null);
+            FilesKt.writeText$default(new File(mdir, "config.json"), cfgText, null, 2, null);
             return part.renameTo(new File(mdir, "model.onnx")) ? null : "Couldn't save it";
         } catch (Exception e) {
             part.delete();

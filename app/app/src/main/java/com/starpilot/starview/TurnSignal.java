@@ -87,7 +87,7 @@ public final class TurnSignal {
         SIGNALING,
         DONE;
 
-        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(values());
 
         public static EnumEntries<State> getEntries() {
             return $ENTRIES;

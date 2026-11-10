@@ -62,7 +62,7 @@ public final class GalaxyPages {
     public final void get(final String page, long maxAgeMs, final Function1<? super JSONObject, Unit> done) {
         Intrinsics.checkNotNullParameter(page, "page");
         Intrinsics.checkNotNullParameter(done, "done");
-        final Hit h = cache.get(page);
+        Hit h = cache.get(page);
         if (h != null) {
             if (!(System.currentTimeMillis() - h.getAt() < maxAgeMs)) {
                 h = null;
@@ -186,7 +186,7 @@ public final class GalaxyPages {
                 }
             }
         }
-        for (GalaxyRow r2 : rows) {
+        for (GalaxyRow r2 : ((GalaxyRow) rows)) {
             if (r2.getPage().length() > 0) {
                 String label2 = r2.getLabel();
                 Intrinsics.checkNotNull(t);

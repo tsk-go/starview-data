@@ -877,7 +877,7 @@ public final class MapPane extends FrameLayout {
         }
         this.pinRow.removeAllViews();
         List pins = dest ? CollectionsKt.emptyList() : Favorites.INSTANCE.pins(getS());
-        for (final JSONObject p : pins) {
+        for (final JSONObject p : (Iterable) (JSONObject) ((JSONObject) pins)) {
             Pair<String, String> pinTitle = Favorites.INSTANCE.pinTitle(p);
             String icon = pinTitle.component1();
             final String title = pinTitle.component2();
@@ -887,7 +887,7 @@ public final class MapPane extends FrameLayout {
             $this$refreshButtons_u24lambda_u2451.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda5
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
-                    MapPane.refreshButtons$lambda$51$lambda$50($this$refreshButtons_u24lambda_u2451, this, title, p, view);
+                    MapPane.refreshButtons$lambda$51$lambda$50($this$refreshButtons_u24lambda_u2451, MapPane.this, title, p, view);
                 }
             });
             LinearLayout.LayoutParams $this$refreshButtons_u24lambda_u2452 = new LinearLayout.LayoutParams(-2, dpi(42));
@@ -1191,14 +1191,14 @@ public final class MapPane extends FrameLayout {
             }
         } while (!var21);
 
-        Nav.Route var58 = (Nav.Route)var9;
+        Object var58 = (Nav.Route)var9;
         var12 = Nav.INSTANCE.getRoute();
         var9 = var11;
         if (var58 != null) {
             var9 = var11;
             if (var12 != null) {
-                var5 = var58.getIndex();
-                var6 = MathKt.roundToInt(var58.getDurationS() / 60);
+                var5 = ((Nav.Route) var58).getIndex();
+                var6 = MathKt.roundToInt(((Nav.Route) var58).getDurationS() / 60);
                 var9 = var5 + "|" + var6;
             }
         }
@@ -1209,10 +1209,10 @@ public final class MapPane extends FrameLayout {
             && Intrinsics.areEqual(Nav.INSTANCE.getStatus(), "guiding")
             && !Intrinsics.areEqual(this.sheetKind, "routes")) {
             TextView var61 = this.faster;
-            var12 = Nav.INSTANCE.durationText(((Nav.Route)var12).getDurationS() - var58.getDurationS());
+            var12 = Nav.INSTANCE.durationText(((Nav.Route)var12).getDurationS() - ((Nav.Route) var58).getDurationS());
             var61.setText("Faster route · saves " + var12 + "   TAKE IT    ✕");
             this.faster.setVisibility(0);
-            this.faster.setOnTouchListener(new MapPane$$ExternalSyntheticLambda33(this, var9, var58));
+            this.faster.setOnTouchListener(new MapPane$$ExternalSyntheticLambda33(this, var9, ((Route) var58)));
         } else {
             this.faster.setVisibility(8);
         }
@@ -1288,7 +1288,7 @@ public final class MapPane extends FrameLayout {
             new AlertDialog.Builder(getContext()).setTitle(name).setItems(opts, new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda50
                 @Override // android.content.DialogInterface.OnClickListener
                 public final void onClick(DialogInterface dialogInterface, int i) {
-                    MapPane.saveDestination$lambda$60(d, this, name, address, dialogInterface, i);
+                    MapPane.saveDestination$lambda$60(d, MapPane.this, name, address, dialogInterface, i);
                 }
             }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         }
@@ -1456,7 +1456,7 @@ public final class MapPane extends FrameLayout {
     private final void fillSheet() {
         String var20 = null; ScrollView var41 = null; // declarations Vineflower left out
         this.sheetVersion = Nav.INSTANCE.getVersion();
-        View var4 = this.sheet.getChildAt(0);
+        Object var4 = this.sheet.getChildAt(0);
         LinearLayout var13;
         if (var4 instanceof LinearLayout) {
             var13 = (LinearLayout)var4;
@@ -1532,7 +1532,7 @@ public final class MapPane extends FrameLayout {
 
                             var4 = var36;
                             boolean var2;
-                            if (var4.length() == 0) {
+                            if (((String) var4).length() == 0) {
                                 var2 = true;
                             } else {
                                 var2 = false;
@@ -1841,7 +1841,7 @@ public final class MapPane extends FrameLayout {
             }
         }
         int carpool = opts.optInt("carpool", 0);
-        String a = avoided.isEmpty() ? "Avoiding nothing" : "Avoiding " + CollectionsKt.joinToString(avoided, ", ", "", "", -1, "...", null);
+        String a = avoided.isEmpty() ? "Avoiding nothing" : "Avoiding " + CollectionsKt.joinToString$default(avoided, ", ", null, null, 0, null, null, 62, null);
         String cp = carpool > 0 ? " · carpool lanes (" + carpool + "+)" : " · no carpool lanes";
         col.addView(label$default(this, a + cp, 13.0f, false, true, 4, null));
     }
@@ -1999,18 +1999,18 @@ public final class MapPane extends FrameLayout {
                 when = "";
             }
             List<String> names = new ArrayList<>();
-            for (String s : CollectionsKt.listOf(new String[]{step.getRef(), StringsKt.contains((CharSequence) step.getText(), (CharSequence) step.getRoad(), false) ? "" : step.getRoad()})) {
+            for (String s : CollectionsKt.listOf(new String[]{step.getRef(), StringsKt.contains$default((CharSequence) step.getText(), (CharSequence) step.getRoad(), false, 2, (Object) null) ? "" : step.getRoad()})) {
                 if (s.length() > 0) {
                     names.add(s);
                 }
             }
             List<String> parts = new ArrayList<>();
-            for (String s : CollectionsKt.listOf(new String[]{when, CollectionsKt.joinToString(names, " · ", "", "", -1, "...", null)})) {
+            for (String s : CollectionsKt.listOf(new String[]{when, CollectionsKt.joinToString$default(names, " · ", null, null, 0, null, null, 62, null)})) {
                 if (s.length() > 0) {
                     parts.add(s);
                 }
             }
-            text.addView(label$default(this, CollectionsKt.joinToString(parts, "   ", "", "", -1, "...", null), 13.0f, false, true, 4, null));
+            text.addView(label$default(this, CollectionsKt.joinToString$default(parts, "   ", null, null, 0, null, null, 62, null), 13.0f, false, true, 4, null));
             row.addView(text, new LinearLayout.LayoutParams(0, -2, 1.0f));
             row.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda22
                 @Override // android.view.View.OnClickListener
@@ -2033,7 +2033,7 @@ public final class MapPane extends FrameLayout {
     private final void fillOptions(LinearLayout col) {
         JSONObject o = Nav.INSTANCE.getOptions();
         col.addView(label("Avoid", 14.0f, true, true));
-        for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("avoidTolls", "Tolls"), TuplesKt.to("avoidHighways", "Highways"), TuplesKt.to("avoidFerries", "Ferries"), TuplesKt.to("avoidUnpaved", "Unpaved roads"), TuplesKt.to("avoidCashTolls", "Cash-only tolls (fine with E-ZPass)"), TuplesKt.to("avoidTunnels", "Tunnels"), TuplesKt.to("avoidBorders", "Border crossings")})) {
+        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("avoidTolls", "Tolls"), TuplesKt.to("avoidHighways", "Highways"), TuplesKt.to("avoidFerries", "Ferries"), TuplesKt.to("avoidUnpaved", "Unpaved roads"), TuplesKt.to("avoidCashTolls", "Cash-only tolls (fine with E-ZPass)"), TuplesKt.to("avoidTunnels", "Tunnels"), TuplesKt.to("avoidBorders", "Border crossings")}))) {
             final String key = (String) pair.component1();
             String title = (String) pair.component2();
             col.addView(toggleRow(title, o.optBoolean(key), new Function1() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda36
@@ -2051,7 +2051,7 @@ public final class MapPane extends FrameLayout {
         col.addView(label$default(this, "Left out of routes unless you have the people for them.", 13.0f, false, true, 4, null));
         LinearLayout $this$fillOptions_u24lambda_u24119 = new LinearLayout(getContext());
         $this$fillOptions_u24lambda_u24119.setOrientation(0);
-        for (Pair pair2 : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(0, "Off"), TuplesKt.to(2, "2+ people"), TuplesKt.to(3, "3+ people")})) {
+        for (Pair pair2 : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(0, "Off"), TuplesKt.to(2, "2+ people"), TuplesKt.to(3, "3+ people")}))) {
             final int v = ((Number) pair2.component1()).intValue();
             String title2 = (String) pair2.component2();
             TextView $this$fillOptions_u24lambda_u24122 = pill(title2, o.optInt("carpool", 0) == v);
@@ -2104,7 +2104,7 @@ public final class MapPane extends FrameLayout {
         col.addView($this$fillOptions_u24lambda_u24130);
         LinearLayout $this$fillOptions_u24lambda_u24131 = new LinearLayout(getContext());
         $this$fillOptions_u24lambda_u24131.setOrientation(0);
-        for (Pair pair3 : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "🔊 Turn-by-turn"), TuplesKt.to("alerts", "⚠ Alerts only"), TuplesKt.to("off", "🔇 Off")})) {
+        for (Pair pair3 : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "🔊 Turn-by-turn"), TuplesKt.to("alerts", "⚠ Alerts only"), TuplesKt.to("off", "🔇 Off")}))) {
             final String v2 = (String) pair3.component1();
             String title3 = (String) pair3.component2();
             TextView $this$fillOptions_u24lambda_u24133 = pill(title3, Intrinsics.areEqual(Nav.INSTANCE.voiceMode(getS()), v2));
@@ -3215,9 +3215,9 @@ public final class MapPane extends FrameLayout {
             Rect src2 = new Rect();
             int z4 = z3;
             Rect src3 = src2;
-            final double fx2 = n2 * this.cx;
+            double fx2 = n2 * this.cx;
             RectF dst3 = dst2;
-            final double fy2 = n2 * this.cy;
+            double fy2 = n2 * this.cy;
             ArrayList order2 = new ArrayList();
             int ty2 = ty0;
             if (ty2 <= ty12) {
@@ -3252,7 +3252,7 @@ public final class MapPane extends FrameLayout {
                 CollectionsKt.sortWith($this$sortByDescending$iv, new Comparator() { // from class: com.starpilot.starview.MapPane$MapCanvas$onDraw$$inlined$sortByDescending$1
                     /* JADX WARN: Multi-variable type inference failed */
                     @Override // java.util.Comparator
-                    public final int compare(T t, T t2) {
+                    public final int compare(Object t, Object t2) {
                         Pair pair = (Pair) t2;
                         int txr3 = ((Number) pair.component1()).intValue();
                         int ty3 = ((Number) pair.component2()).intValue();

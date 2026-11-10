@@ -404,13 +404,13 @@ public final class VasmEditorCard extends LinearLayout {
                 c.restore();
             }
             float dot = Math.max(5.0f, w / 320.0f) * 1.6f;
-            for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(this.this$0.camRight, Integer.valueOf(Color.rgb(94, 229, 238))), TuplesKt.to(this.this$0.camLeft, Integer.valueOf(Color.rgb(255, 184, 101)))})) {
+            for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(this.this$0.camRight, Integer.valueOf(Color.rgb(94, 229, 238))), TuplesKt.to(this.this$0.camLeft, Integer.valueOf(Color.rgb(255, 184, 101)))}))) {
                 ArrayList list = (ArrayList) pair.component1();
                 int col = ((Number) pair.component2()).intValue();
                 if (!list.isEmpty()) {
                     Path path = new Path();
                     path.moveTo(sx(((int[]) list.get(0))[0]), sy(((int[]) list.get(0))[1]));
-                    for (int[] q : CollectionsKt.drop(list, 1)) {
+                    for (int[] q : ((int[]) CollectionsKt.drop(list, 1))) {
                         path.lineTo(sx(q[0]), sy(q[1]));
                     }
                     if (list.size() >= 3) {

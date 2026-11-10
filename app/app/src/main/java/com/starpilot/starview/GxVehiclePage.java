@@ -641,7 +641,7 @@ public final class GxVehiclePage extends GxPage {
                 boolean editKey$isDup;
                 String obj;
                 TextView textView = $this$editKey_u24lambda_u2421;
-                GxVehiclePage gxVehiclePage = this;
+                GxVehiclePage gxVehiclePage = GxVehiclePage.this;
                 String str2 = origName;
                 if (s == null || (obj = s.toString()) == null || (str = StringsKt.trim((CharSequence) obj).toString()) == null) {
                     str = "";
@@ -670,7 +670,7 @@ public final class GxVehiclePage extends GxPage {
         new AlertDialog.Builder(getAct()).setTitle(orig == null ? "Add Key" : "Edit Key").setView($this$editKey_u24lambda_u2423).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GxVehiclePage$$ExternalSyntheticLambda1
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i2) {
-                GxVehiclePage.editKey$lambda$28(nameE, valueE, orig, this, origName, dialogInterface, i2);
+                GxVehiclePage.editKey$lambda$28(nameE, valueE, orig, GxVehiclePage.this, origName, dialogInterface, i2);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }

@@ -286,7 +286,7 @@ public final class Hpms {
             String str;
             Map $this$getOrPut$iv = this.names;
             Integer valueOf = Integer.valueOf(i);
-            String str2 = $this$getOrPut$iv.get(valueOf);
+            String str2 = ((String) $this$getOrPut$iv.get(valueOf));
             if (str2 == null) {
                 int base = this.oNames + ((this.nNames + 1) * 4);
                 int a = this.buf.getInt(this.oNames + (i * 4));

@@ -33,7 +33,7 @@ public final class BlinkerCardView extends View {
     private final Handler main;
     private final Paint p;
     private final HashMap<Integer, Integer> pointers;
-    private final BlinkerCardView$repeat$1 repeat;
+    private final Runnable repeat;
     private final RectF rightR;
     private String sent;
     private String status;

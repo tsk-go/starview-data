@@ -160,173 +160,106 @@ public final class SensorsView extends View {
         return src;
     }
 
-    /* VF: from Vineflower (jadx: Type inference failed) */
-    private final void update(Telemetry var1, long var2) {
-        Iterator var19 = var1.getGpsFixes().entrySet().iterator();
-
+    private final void update(Telemetry tm, long now) {
+        Object next;
+        ArrayList<float[]> arrayList;
+        ArrayList<float[]> arrayList2;
+        Iterator<Map.Entry<String, GpsFixInfo>> it = tm.getGpsFixes().entrySet().iterator();
         while (true) {
-            boolean var17 = var19.hasNext();
-            int var12 = 1;
-            if (!var17) {
-                double var30 = GpsBridge.INSTANCE.getOutLat();
-                double var6 = GpsBridge.INSTANCE.getOutLon();
-                if (!Double.isInfinite(var30) && !Double.isNaN(var30)) {
-                    var12 = (((boolean)true) ? 1 : 0);
-                } else {
-                    var12 = (((boolean)false) ? 1 : 0);
-                }
-
-                if (var12 && !Double.isNaN(this.lat0)) {
-                    Long var41 = this.lastAdd.get("map");
-                    long var37;
-                    if (var41 != null) {
-                        var37 = var41;
-                    } else {
-                        var37 = 0L;
-                    }
-
-                    if (var2 - var37 >= 200000000L) {
-                        this.lastAdd.put("map", var2);
-                        Map var49 = this.trails;
-                        ArrayList var42 = (ArrayList)var49.get("map");
-                        if (var42 == null) {
-                            var42 = new ArrayList();
-                            var49.put("map", var42);
-                        }
-
-                        var42 = var42;
-                        var42.add(this.en(var30, var6));
-                        if (var42.size() > 4000) {
-                            var42.remove(0);
-                        }
-                    }
-                }
-
-                double[] var50 = Odometry.INSTANCE.at(var2);
-                if (this.anchor == null) {
-                    Collection var23 = var1.getGpsFixes().values();
-                    Intrinsics.checkNotNullExpressionValue(var23, "<get-values>(...)");
-                    Iterable var44 = var23;
-                    var var24 = new ArrayList();
-
-                    for (Object var52 : var44) {
-                        GpsFixInfo var45 = (GpsFixInfo)var52;
-                        if (Intrinsics.areEqual(var45.getService(), "gpsLocationExternal")
-                            && var45.getHasFix()
-                            && var2 - var45.getAtNs() < 1000000000L
-                            && var45.getSpeed() > 2.5F) {
-                            var12 = (((boolean)true) ? 1 : 0);
-                        } else {
-                            var12 = (((boolean)false) ? 1 : 0);
-                        }
-
-                        if ((var12 != 0)) {
-                            var24.add(var52);
-                        }
-                    }
-
-                    List var25 = var24;
-                    Iterable var26 = var25;
-                    Iterator var53 = var26.iterator();
-                    Object var27;
-                    if (!var53.hasNext()) {
-                        var27 = null;
-                    } else {
-                        var27 = var53.next();
-                        if (var53.hasNext()) {
-                            int var13 = Intrinsics.areEqual(((GpsFixInfo)var27).getSource(), "ublox") ^ 1;
-
-                            while (true) {
-                                var44 = (Iterable)var53.next();
-                                int var14 = Intrinsics.areEqual(((GpsFixInfo)var44).getSource(), "ublox") ^ 1;
-                                var12 = var13;
-                                if (var13 > var14) {
-                                    var27 = var44;
-                                    var12 = var14;
-                                }
-
-                                if (!var53.hasNext()) {
-                                    break;
-                                }
-
-                                var13 = var12;
-                            }
-                        }
-                    }
-
-                    var27 = (GpsFixInfo)var27;
-                    if (var27 != null && !Double.isNaN(this.lat0)) {
-                        float[] var47 = this.en(((GpsFixInfo)var27).getLat(), ((GpsFixInfo)var27).getLon());
-                        var30 = Math.toRadians(90.0 - ((GpsFixInfo)var27).getBearing());
-                        this.anchor = new double[]{var47[0], var47[1], var30 - var50[2], var50[0], var50[1]};
-                    }
-                }
-
-                double[] var29 = this.anchor;
-                if (var29 != null) {
-                    Long var48 = this.lastAdd.get("dr");
-                    long var38;
-                    if (var48 != null) {
-                        var38 = var48;
-                    } else {
-                        var38 = 0L;
-                    }
-
-                    if (var2 - var38 >= 200000000L) {
-                        this.lastAdd.put("dr", var2);
-                        double var8 = var50[0] - var29[3];
-                        var30 = var50[1] - var29[4];
-                        double var10 = Math.cos(var29[2]);
-                        var6 = Math.sin(var29[2]);
-                        this.dr.add(new float[]{(float)(var29[0] + var10 * var8 - var6 * var30), (float)(var29[1] + var6 * var8 + var10 * var30)});
-                        if (this.dr.size() > 4000) {
-                            this.dr.remove(0);
-                        }
-                    }
-                }
-
-                return;
+            if (!it.hasNext()) {
+                break;
             }
-
-            java.util.Map.Entry var20 = (java.util.Map.Entry)var19.next();
-            String var18 = (String)var20.getKey();
-            GpsFixInfo var51 = (GpsFixInfo)var20.getValue();
-            if (var51.getHasFix() && var2 - var51.getAtNs() <= 3000000000L) {
-                double var4 = var51.getLat();
-                if (Double.isInfinite(var4) || Double.isNaN(var4)) {
-                    var12 = 0;
-                }
-
-                if (var12 && !(Math.abs(var51.getLat()) < 1.0)) {
+            Map.Entry<String, GpsFixInfo> next2 = it.next();
+            String key = next2.getKey();
+            GpsFixInfo value = next2.getValue();
+            if (value.getHasFix() && now - value.getAtNs() <= 3000000000L) {
+                double lat = value.getLat();
+                if (((Double.isInfinite(lat) || Double.isNaN(lat)) ? false : true) && Math.abs(value.getLat()) >= 1.0d) {
                     if (Double.isNaN(this.lat0)) {
-                        this.lat0 = var51.getLat();
-                        this.lon0 = var51.getLon();
+                        this.lat0 = value.getLat();
+                        this.lon0 = value.getLon();
                     }
-
-                    Long var21 = this.lastAdd.get(var18);
-                    long var15;
-                    if (var21 != null) {
-                        var15 = var21;
-                    } else {
-                        var15 = 0L;
-                    }
-
-                    if (var2 - var15 >= 200000000L) {
-                        this.lastAdd.put(var18, var2);
-                        Map var22 = this.trails;
-                        String var54 = var51.getSource();
-                        var18 = (String)var22.get(var54);
-                        if (var18 == null) {
-                            var18 = new ArrayList();
-                            var22.put(var54, var18);
+                    Long l = this.lastAdd.get(key);
+                    if (now - (l != null ? l.longValue() : 0L) >= 200000000) {
+                        this.lastAdd.put(key, Long.valueOf(now));
+                        LinkedHashMap<String, ArrayList<float[]>> linkedHashMap = this.trails;
+                        String source = value.getSource();
+                        ArrayList<float[]> arrayList3 = linkedHashMap.get(source);
+                        if (arrayList3 == null) {
+                            arrayList2 = new ArrayList<>();
+                            linkedHashMap.put(source, arrayList2);
+                        } else {
+                            arrayList2 = arrayList3;
                         }
-
-                        ArrayList var40 = (ArrayList)var18;
-                        var40.add(this.en(var51.getLat(), var51.getLon()));
-                        if (var40.size() > 4000) {
-                            var40.remove(0);
+                        ArrayList<float[]> arrayList4 = arrayList2;
+                        arrayList4.add(en(value.getLat(), value.getLon()));
+                        if (arrayList4.size() > 4000) {
+                            arrayList4.remove(0);
                         }
                     }
+                }
+            }
+        }
+        double outLat = GpsBridge.INSTANCE.getOutLat();
+        double outLon = GpsBridge.INSTANCE.getOutLon();
+        if (((Double.isInfinite(outLat) || Double.isNaN(outLat)) ? false : true) && !Double.isNaN(this.lat0)) {
+            Long l2 = this.lastAdd.get("map");
+            if (now - (l2 != null ? l2.longValue() : 0L) >= 200000000) {
+                this.lastAdd.put("map", Long.valueOf(now));
+                LinkedHashMap<String, ArrayList<float[]>> linkedHashMap2 = this.trails;
+                ArrayList<float[]> arrayList5 = linkedHashMap2.get("map");
+                if (arrayList5 == null) {
+                    arrayList = new ArrayList<>();
+                    linkedHashMap2.put("map", arrayList);
+                } else {
+                    arrayList = arrayList5;
+                }
+                ArrayList<float[]> arrayList6 = arrayList;
+                arrayList6.add(en(outLat, outLon));
+                if (arrayList6.size() > 4000) {
+                    arrayList6.remove(0);
+                }
+            }
+        }
+        double[] at = Odometry.INSTANCE.at(now);
+        if (this.anchor == null) {
+            Collection<GpsFixInfo> values = tm.getGpsFixes().values();
+            Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
+            ArrayList arrayList7 = new ArrayList();
+            for (Object obj : values) {
+                GpsFixInfo gpsFixInfo = (GpsFixInfo) obj;
+                if (Intrinsics.areEqual(gpsFixInfo.getService(), "gpsLocationExternal") && gpsFixInfo.getHasFix() && now - gpsFixInfo.getAtNs() < 1000000000 && gpsFixInfo.getSpeed() > 2.5f) {
+                    arrayList7.add(obj);
+                }
+            }
+            // the u-blox fix first, else the first one
+            next = null;
+            int bestKey = Integer.MAX_VALUE;
+            for (Object o : arrayList7) {
+                int k = !Intrinsics.areEqual(((GpsFixInfo) o).getSource(), "ublox") ? 1 : 0;
+                if (k < bestKey) {
+                    bestKey = k;
+                    next = o;
+                }
+            }
+            GpsFixInfo gpsFixInfo2 = (GpsFixInfo) next;
+            if (gpsFixInfo2 != null && !Double.isNaN(this.lat0)) {
+                float[] en = en(gpsFixInfo2.getLat(), gpsFixInfo2.getLon());
+                this.anchor = new double[]{en[0], en[1], Math.toRadians(90.0d - gpsFixInfo2.getBearing()) - at[2], at[0], at[1]};
+            }
+        }
+        double[] dArr = this.anchor;
+        if (dArr != null) {
+            Long l3 = this.lastAdd.get("dr");
+            if (now - (l3 != null ? l3.longValue() : 0L) >= 200000000) {
+                this.lastAdd.put("dr", Long.valueOf(now));
+                double d = at[0] - dArr[3];
+                double d2 = at[1] - dArr[4];
+                double cos = Math.cos(dArr[2]);
+                double sin = Math.sin(dArr[2]);
+                this.dr.add(new float[]{(float) ((dArr[0] + (cos * d)) - (sin * d2)), (float) (dArr[1] + (sin * d) + (cos * d2))});
+                if (this.dr.size() > 4000) {
+                    this.dr.remove(0);
                 }
             }
         }
@@ -424,7 +357,7 @@ public final class SensorsView extends View {
                             var8 = var14;
 
                             while (var24.hasNext()) {
-                                java.util.Map.Entry var25 = (java.util.Map.Entry)var24.next();
+                                Object var25 = (java.util.Map.Entry)var24.next();
                                 boolean var21;
                                 if (((Number)var25).floatValue() * var10 > 60 * this.d) {
                                     var21 = true;
@@ -551,7 +484,7 @@ public final class SensorsView extends View {
                                     for (var8 += var12 * var9; var30.hasNext(); var8 += this.d * var15) {
                                         var23 = (Collection)var30.next();
                                         Intrinsics.checkNotNullExpressionValue(var23, "next(...)");
-                                        String var73 = (String)var23;
+                                        Object var73 = (String)var23;
                                         Paint var83 = this.fill;
                                         Integer var88 = this.colors.get(var73);
                                         if (var88 != null) {
@@ -565,7 +498,7 @@ public final class SensorsView extends View {
                                         var14 = this.d;
                                         var13 = 5;
                                         var1.drawCircle(var12 + var14 * var15, var8 - this.d * var13, var13 * this.d, this.fill);
-                                        var1.drawText(this.shortName(var73), var2.left + 30 * this.d, var8, this.dim);
+                                        var1.drawText(this.shortName(((String) var73)), var2.left + 30 * this.d, var8, this.dim);
                                     }
 
                                     if (!this.dr.isEmpty()) {

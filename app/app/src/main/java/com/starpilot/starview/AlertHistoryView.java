@@ -48,7 +48,7 @@ public final class AlertHistoryView extends CardPage {
             }).entrySet();
             List<Map.Entry> freq = CollectionsKt.take(CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.AlertHistoryView$refresh$$inlined$sortedByDescending$1
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     Map.Entry it = (Map.Entry) t2;
                     Integer num = (Integer) it.getValue();
                     Map.Entry it2 = (Map.Entry) t;
@@ -67,7 +67,7 @@ public final class AlertHistoryView extends CardPage {
             LinearLayout c = card();
             add(c);
             c.addView(title("All alerts", "history", "sound"));
-            for (JSONObject a : CollectionsKt.take(alerts, 300)) {
+            for (JSONObject a : (Iterable) (JSONObject) ((JSONObject) CollectionsKt.take(alerts, 300))) {
                 String dd = new SimpleDateFormat("EEEE, MMM d", Locale.US).format(new Date(a.optLong("t")));
                 if (!Intrinsics.areEqual(dd, day)) {
                     day = dd;

@@ -222,10 +222,10 @@ public final class DayView {
         if (total < 419430400) {
             return;
         }
-        for (File f : ArraysKt.sortedWith(files, new Comparator() { // from class: com.starpilot.starview.DayView$trim$$inlined$sortedBy$1
+        for (File f : (Iterable<File>) ArraysKt.sortedWith(files, new Comparator() { // from class: com.starpilot.starview.DayView$trim$$inlined$sortedBy$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 File it2 = (File) t;
                 String name = it2.getName();
                 Intrinsics.checkNotNullExpressionValue(name, "getName(...)");

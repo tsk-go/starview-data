@@ -51,7 +51,7 @@ final class GxLogsSpark extends View {
         float w = getWidth();
         float h = getHeight();
         Path p = new Path();
-        Iterator<T> it = this.values.iterator();
+        Iterator it = this.values.iterator();
         int i = 0;
         while (it.hasNext()) {
             int i2 = i;

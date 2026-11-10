@@ -624,7 +624,7 @@ public final class GxSystemPage extends GxPage {
                 var1 = var1.toString();
                 var11 = (Double)var8;
                 if (var1 != null) {
-                    var11 = StringsKt.toDoubleOrNull(var1);
+                    var11 = StringsKt.toDoubleOrNull(((String) var1));
                 }
             }
 
@@ -1200,7 +1200,7 @@ public final class GxSystemPage extends GxPage {
             var0.branches = var18;
             GxPage var8 = var0;
             Intrinsics.checkNotNull(var2);
-            var0.currentBranch = StringsKt.trim(GxPage.str$default(var8, var2, "currentBranch", null, 2, null)).toString();
+            var0.currentBranch = StringsKt.trim(GxPage.str$default(var8, ((JSONObject) var2), "currentBranch", null, 2, null)).toString();
             var0.branchListFallback = false;
             boolean var10;
             if (var0.targetBranch.length() == 0) {
@@ -1319,7 +1319,7 @@ public final class GxSystemPage extends GxPage {
 
         Object var10 = null;
         if (var2 == null && var3 != null && var3.opt("running") instanceof Boolean) {
-            String var11 = StringsKt.trim(GxPage.str$default(var0, var3, "stage", null, 2, null)).toString().toLowerCase(Locale.ROOT);
+            String var11 = StringsKt.trim(GxPage.str$default(var0, ((JSONObject) var3), "stage", null, 2, null)).toString().toLowerCase(Locale.ROOT);
             Intrinsics.checkNotNullExpressionValue(var11, "toLowerCase(...)");
             if (Intrinsics.areEqual(var11, "rebooting") && !var0.rebootPending) {
                 var0.rebootPending = true;
@@ -1350,7 +1350,7 @@ public final class GxSystemPage extends GxPage {
                 var5 = false;
             }
 
-            var0.fastStatus = var3;
+            var0.fastStatus = ((JSONObject) var3);
             var0.statusUnavailable = false;
             var0.isOnroad = var3.optBoolean("isOnroad");
             if (var4) {
@@ -1367,7 +1367,7 @@ public final class GxSystemPage extends GxPage {
             if (var2 == null) {
                 label82: {
                     if (var3 != null) {
-                        var2 = GxPage.str$default(var0, var3, "error", null, 2, null);
+                        var2 = GxPage.str$default(var0, ((JSONObject) var3), "error", null, 2, null);
                         if (var2 != null) {
                             CharSequence var17 = var2;
                             CharSequence var13 = var17;
@@ -1383,7 +1383,7 @@ public final class GxSystemPage extends GxPage {
                     var3 = null;
                 }
 
-                var2 = var3;
+                var2 = ((String) var3);
                 if (var3 == null) {
                     var2 = "Update status unavailable.";
                 }
@@ -1593,7 +1593,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit paintStatus$lambda$64;
-                paintStatus$lambda$64 = GxSystemPage.paintStatus$lambda$64(s, this, (LinearLayout) obj);
+                paintStatus$lambda$64 = GxSystemPage.paintStatus$lambda$64(s, GxSystemPage.this, (LinearLayout) obj);
                 return paintStatus$lambda$64;
             }
         });
@@ -1962,7 +1962,7 @@ public final class GxSystemPage extends GxPage {
             (ViewGroup)var2
         );
         CharSequence var10 = var0.currentBranch;
-        View var9 = var10;
+        Object var9 = var10;
         if (StringsKt.isBlank(var10)) {
             var9 = "Unknown";
         }
@@ -2001,7 +2001,7 @@ public final class GxSystemPage extends GxPage {
             var3 = 0.4F;
         }
 
-        var9.setAlpha(var3);
+        ((View) var9).setAlpha(var3);
         if (var0.otherOpen) {
             List var30 = var0.getOtherBranches();
             GxPage.Row var11 = var0.row("Other branches", "Additional branches from this installation's repository.", (ViewGroup)var2, 1);
@@ -2021,7 +2021,7 @@ public final class GxSystemPage extends GxPage {
                 var6 = false;
             }
 
-            var0.en(var9, var6);
+            var0.en(((View) var9), var6);
         }
 
         if (var0.branchListFallback) {
@@ -2058,7 +2058,7 @@ public final class GxSystemPage extends GxPage {
                 }
             }
 
-            var9.setAlpha(var3);
+            ((View) var9).setAlpha(var3);
             if (Intrinsics.areEqual(var0.versionMode, "earlier")) {
                 if (!var1 && !var0.branchBusy) {
                     var6 = false;
@@ -2305,7 +2305,7 @@ public final class GxSystemPage extends GxPage {
             var8 = var10;
             var var14 = new ArrayList();
 
-            for (Object var15 : var8) {
+            for (Object var15 : (Iterable) var8) {
                 if (!Intrinsics.areEqual(((GxSystemPage.DayGroup)var15).getKey(), "unknown")) {
                     var14.add(var15);
                 }
@@ -2430,7 +2430,7 @@ public final class GxSystemPage extends GxPage {
                     buildPicker$versionRow(this, var7, var1, var2, (JSONObject)var8.next(), 0);
                 }
             } else {
-                for (GxSystemPage.DayGroup var48 : var10) {
+                for (GxSystemPage.DayGroup var48 : ((DayGroup) var10)) {
                     var5 = Intrinsics.areEqual(this.expanded.get(var48.getKey()), var13);
                     GxPage var58 = this;
                     String var62 = var48.getLabel();
@@ -2756,7 +2756,7 @@ public final class GxSystemPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit paintFactory$lambda$92;
-                paintFactory$lambda$92 = GxSystemPage.paintFactory$lambda$92(fr, s, this, (LinearLayout) obj);
+                paintFactory$lambda$92 = GxSystemPage.paintFactory$lambda$92(fr, s, GxSystemPage.this, (LinearLayout) obj);
                 return paintFactory$lambda$92;
             }
         });
@@ -2984,15 +2984,15 @@ public final class GxSystemPage extends GxPage {
                 loadVersions$finish(var0, var1);
                 return Unit.INSTANCE;
             } else {
-                JSONArray var23 = var12;
+                Object var23 = var12;
                 if (var9 != null) {
                     var23 = var9.optJSONArray("commits");
                 }
 
                 if (var9 != null
-                    && Intrinsics.areEqual(GxPage.str$default(var1, var9, "branch", null, 2, null), var2)
+                    && Intrinsics.areEqual(GxPage.str$default(var1, ((JSONObject) var9), "branch", null, 2, null), var2)
                     && var9.optInt("page", -1) == var3
-                    && GxSystemKt.GxSystem_SHA.matches(GxPage.str$default(var1, var9, "head", null, 2, null))) {
+                    && GxSystemKt.GxSystem_SHA.matches(GxPage.str$default(var1, ((JSONObject) var9), "head", null, 2, null))) {
                     boolean var10;
                     if (var4.length() > 0) {
                         var10 = true;
@@ -3000,8 +3000,8 @@ public final class GxSystemPage extends GxPage {
                         var10 = false;
                     }
 
-                    if ((!var10 || Intrinsics.areEqual(GxPage.str$default(var1, var9, "head", null, 2, null), var4)) && var23 != null) {
-                        Iterable var16 = var1.objects(var23);
+                    if ((!var10 || Intrinsics.areEqual(GxPage.str$default(var1, ((JSONObject) var9), "head", null, 2, null), var4)) && var23 != null) {
+                        Iterable var16 = var1.objects(((JSONArray) var23));
                         var12 = new ArrayList();
 
                         for (Object var13 : var16) {
@@ -3016,14 +3016,14 @@ public final class GxSystemPage extends GxPage {
                             Iterable var30 = var1.versionCommits;
                             var var17 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var30, 10));
 
-                            for (JSONObject var34 : var30) {
+                            for (JSONObject var34 : (Iterable) (JSONObject) ((JSONObject) var30)) {
                                 var17.add(GxPage.str$default(var1, var34, "sha", null, 2, null));
                             }
 
                             List var18 = var17;
                             HashSet var32 = CollectionsKt.toHashSet(var18);
 
-                            for (JSONObject var35 : var25) {
+                            for (JSONObject var35 : (Iterable) (JSONObject) ((JSONObject) var25)) {
                                 if (var32.add(GxPage.str$default(var1, var35, "sha", null, 2, null))) {
                                     var1.versionCommits.add(var35);
                                 }
@@ -3036,7 +3036,7 @@ public final class GxSystemPage extends GxPage {
                         var11 = var9.optBoolean("cached");
                         var4 = "";
                         if (var11) {
-                            Instant var33 = var1.parseDate(GxPage.str$default(var1, var9, "cachedAt", null, 2, null));
+                            Instant var33 = var1.parseDate(GxPage.str$default(var1, ((JSONObject) var9), "cachedAt", null, 2, null));
                             if (var33 != null) {
                                 var4 = var1.stampFmt.format(var33);
                                 var4 = " from " + var4;
@@ -3047,7 +3047,7 @@ public final class GxSystemPage extends GxPage {
                             var1.versionNotice = "";
                         }
 
-                        var1.versionHead = GxPage.str$default(var1, var9, "head", null, 2, null);
+                        var1.versionHead = GxPage.str$default(var1, ((JSONObject) var9), "head", null, 2, null);
                         var1.versionPage = var3;
                         if (var9.optBoolean("hasMore") && !var25.isEmpty()) {
                             var11 = true;
@@ -3701,7 +3701,7 @@ public final class GxSystemPage extends GxPage {
         new Thread(new Runnable() { // from class: com.starpilot.starview.GxSystemPage$$ExternalSyntheticLambda70
             @Override // java.lang.Runnable
             public final void run() {
-                GxSystemPage.backupToggles$lambda$140(target, fileName, this);
+                GxSystemPage.backupToggles$lambda$140(target, fileName, GxSystemPage.this);
             }
         }).start();
     }

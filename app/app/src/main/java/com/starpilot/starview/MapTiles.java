@@ -57,7 +57,7 @@ public final class MapTiles {
     private volatile String lastError;
     private final ConcurrentHashMap<String, Long> madeAt;
     private final OkHttpClient mapbox;
-    private final MapTiles$mem$1 mem;
+    private final LruCache<String, Bitmap> mem;
     private final Function0<Unit> onLoaded;
     private final ConcurrentHashMap.KeySetView<String, Boolean> pending;
     private final ThreadPoolExecutor pool;
@@ -75,7 +75,7 @@ public final class MapTiles {
         this.lastError = "";
         this.direct = new AtomicInteger();
         this.dir = new File(var1.getCacheDir(), "maptiles");
-        this.mem = new LruCache<String, Bitmap>() {
+        this.mem = new LruCache<String, Bitmap>(50331648) {
             protected int sizeOf(String var1, Bitmap var2x) {
                 Intrinsics.checkNotNullParameter(var1, "key");
                 Intrinsics.checkNotNullParameter(var2x, "value");
@@ -462,10 +462,10 @@ public final class MapTiles {
             long total = j;
             if (total > 262144000) {
                 List $this$sortedBy$iv = files;
-                for (File f : CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.MapTiles$prune$$inlined$sortedBy$1
+                for (File f : (Iterable<File>) CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.MapTiles$prune$$inlined$sortedBy$1
                     /* JADX WARN: Multi-variable type inference failed */
                     @Override // java.util.Comparator
-                    public final int compare(T t, T t2) {
+                    public final int compare(Object t, Object t2) {
                         File it4 = (File) t;
                         File it5 = (File) t2;
                         return ComparisonsKt.compareValues(Long.valueOf(it4.lastModified()), Long.valueOf(it5.lastModified()));

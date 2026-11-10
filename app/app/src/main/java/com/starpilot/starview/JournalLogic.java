@@ -362,7 +362,7 @@ public final class JournalLogic {
             final Comparator comparator = new Comparator() { // from class: com.starpilot.starview.JournalLogic$Companion$spots$$inlined$compareByDescending$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     JournalLogic$Companion$spots$Acc it6 = (JournalLogic$Companion$spots$Acc) t2;
                     Integer valueOf = Integer.valueOf(it6.getN());
                     JournalLogic$Companion$spots$Acc it7 = (JournalLogic$Companion$spots$Acc) t;
@@ -372,7 +372,7 @@ public final class JournalLogic {
             Iterable $this$map$iv = CollectionsKt.sortedWith(acc, new Comparator() { // from class: com.starpilot.starview.JournalLogic$Companion$spots$$inlined$thenByDescending$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     int previousCompare = comparator.compare(t, t2);
                     if (previousCompare != 0) {
                         return previousCompare;

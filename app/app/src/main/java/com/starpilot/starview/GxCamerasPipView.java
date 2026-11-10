@@ -141,7 +141,7 @@ final class GxCamerasPipView extends GxCamerasSnapView {
         int color = 0;
         float[] fArr2 = this.rightC;
         i2 = GxCamerasKt.GX_CAM_ORANGE;
-        for (Triple triple : CollectionsKt.listOf((Object[]) new Triple[]{new Triple(fArr, Integer.valueOf(i), "LEFT SIDE OF VEHICLE - LEFT HERE"), new Triple(fArr2, Integer.valueOf(i2), "RIGHT SIDE OF VEHICLE - RIGHT HERE")})) {
+        for (Triple triple : ((Triple) CollectionsKt.listOf((Object[]) new Triple[]{new Triple(fArr, Integer.valueOf(i), "LEFT SIDE OF VEHICLE - LEFT HERE"), new Triple(fArr2, Integer.valueOf(i2), "RIGHT SIDE OF VEHICLE - RIGHT HERE")}))) {
             float[] center = (float[]) triple.component1();
             int color2 = ((Number) triple.component2()).intValue();
             String label = (String) triple.component3();

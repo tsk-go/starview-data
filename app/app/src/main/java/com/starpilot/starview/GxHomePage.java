@@ -495,9 +495,9 @@ public final class GxHomePage extends GxPage {
     private final void render() {
         List var119 = null; List var133 = null; List var182 = null; Object var239 = null; Object var247 = null; Object var250 = null; Object var256 = null; String var274 = null; String var304 = null; JSONObject var99 = null; // declarations Vineflower left out
         this.paintHero();
-        LinearLayout var17 = this.body;
+        Object var17 = this.body;
         String var30 = "body";
-        LinearLayout var16 = var17;
+        LinearLayout var16 = ((LinearLayout) var17);
         if (var17 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("body");
             var16 = null;
@@ -527,7 +527,7 @@ public final class GxHomePage extends GxPage {
             ViewGroup var189 = (ViewGroup)var188;
             GxPage.buttons$default(var131, new Pair[]{var97}, var189, false, 4, null);
         } else {
-            JSONObject var18;
+            Object var18;
             JSONObject var31;
             label560: {
                 var31 = this.dash();
@@ -659,20 +659,20 @@ public final class GxHomePage extends GxPage {
             Unit var140 = Unit.INSTANCE;
             GxHomePage var28 = this;
             var18 = var31.optJSONObject("lastDrive");
-            JSONObject var207 = var18;
+            Object var207 = var18;
             if (var18 == null) {
                 var207 = new JSONObject();
             }
 
-            var11 = var28.driveReady(var207);
-            CharSequence var193 = GxPage.str$default(var28, var207, "distanceUnit", null, 2, null);
+            var11 = var28.driveReady(((JSONObject) var207));
+            CharSequence var193 = GxPage.str$default(var28, ((JSONObject) var207), "distanceUnit", null, 2, null);
             var18 = var193;
             if (StringsKt.isBlank(var193)) {
                 var18 = var28.unit;
             }
 
-            String var213 = (String)var18;
-            CharSequence var194 = GxPage.str$default(var28, var207, "speedUnit", null, 2, null);
+            Object var213 = (String)var18;
+            CharSequence var194 = GxPage.str$default(var28, ((JSONObject) var207), "speedUnit", null, 2, null);
             var18 = var194;
             if (StringsKt.isBlank(var194)) {
                 if (Intrinsics.areEqual(var213, "kilometers")) {
@@ -682,7 +682,7 @@ public final class GxHomePage extends GxPage {
                 }
             }
 
-            String var33 = (String)var18;
+            Object var33 = (String)var18;
             LinearLayout var195 = var28.body;
             LinearLayout var144 = var195;
             if (var195 == null) {
@@ -694,7 +694,7 @@ public final class GxHomePage extends GxPage {
             cardHead$default(var28, var29, "Last drive", null, 4, null);
             GxPage.text$default(
                 var28,
-                GxHomeKt.gxHomeRange(GxPage.str$default(var28, var207, "date", null, 2, null), GxPage.str$default(var28, var207, "endDate", null, 2, null)),
+                GxHomeKt.gxHomeRange(GxPage.str$default(var28, ((JSONObject) var207), "date", null, 2, null), GxPage.str$default(var28, ((JSONObject) var207), "endDate", null, 2, null)),
                 (ViewGroup)var29,
                 18.0F,
                 CarUi.Companion.getTEXT(),
@@ -702,11 +702,11 @@ public final class GxHomePage extends GxPage {
                 16,
                 null
             );
-            String var27 = "...";
+            Object var27 = "...";
             String var32 = "distance";
             String var145;
             if (var11) {
-                var145 = GxHomeKt.gxHomeDec(var207.opt("distance"));
+                var145 = GxHomeKt.gxHomeDec(((JSONObject) var207).opt("distance"));
             } else {
                 var145 = "...";
             }
@@ -718,10 +718,10 @@ public final class GxHomePage extends GxPage {
             var20 = var99;
             Pair var34 = TuplesKt.to(var145, var213);
             String var26 = "duration";
-            Pair var214 = TuplesKt.to(GxHomeKt.gxHomeDuration(var207.opt("duration")), "duration");
+            Pair var214 = TuplesKt.to(GxHomeKt.gxHomeDuration(((JSONObject) var207).opt("duration")), "duration");
             String var100;
             if (var11) {
-                var100 = GxHomeKt.gxHomeInt(var207.opt("avgSpeed"));
+                var100 = GxHomeKt.gxHomeInt(((JSONObject) var207).opt("avgSpeed"));
             } else {
                 var100 = "...";
             }
@@ -735,14 +735,14 @@ public final class GxHomePage extends GxPage {
 
             Pair var147 = TuplesKt.to(var100, var146);
             var33 = "engagedPercent";
-            String var101 = var27;
+            String var101 = ((String) var27);
             if (var11) {
-                var101 = GxHomeKt.gxHomePct(var207.opt("engagedPercent"));
+                var101 = GxHomeKt.gxHomePct(((JSONObject) var207).opt("engagedPercent"));
             }
 
             Pair var102 = TuplesKt.to(var101, "engaged");
             var28.metrics(var29, CollectionsKt.listOf(new Pair[]{var34, var214, var147, var102}));
-            CharSequence var148 = GxPage.str$default(var28, var207, "model", null, 2, null);
+            CharSequence var148 = GxPage.str$default(var28, ((JSONObject) var207), "model", null, 2, null);
             var17 = var148;
             if (StringsKt.isBlank(var148)) {
                 var17 = "Unknown model";
@@ -751,9 +751,9 @@ public final class GxHomePage extends GxPage {
             List var149 = CollectionsKt.mutableListOf(new String[]{var17});
             String var106;
             if (var11) {
-                String var104 = GxHomeKt.gxHomeInt(var207.opt("distractedMoments"));
+                String var104 = GxHomeKt.gxHomeInt(((JSONObject) var207).opt("distractedMoments"));
                 var149.add(var104 + " distracted");
-                String var105 = GxHomeKt.gxHomeInt(var207.opt("unresponsiveMoments"));
+                String var105 = GxHomeKt.gxHomeInt(((JSONObject) var207).opt("unresponsiveMoments"));
                 var106 = var105 + " unresponsive";
             } else {
                 var106 = "Analyzing stats";
@@ -780,10 +780,10 @@ public final class GxHomePage extends GxPage {
                 .iterator();
             var8 = 0;
 
-            for (JSONObject var108 = var18; var248.hasNext(); var8++) {
+            for (JSONObject var108 = ((JSONObject) var18); var248.hasNext(); var8++) {
                 Pair var215 = (Pair)var248.next();
                 var207 = var108.optJSONObject((String)var215.getSecond());
-                JSONObject var68 = var207;
+                JSONObject var68 = ((JSONObject) var207);
                 if (var207 == null) {
                     var68 = new JSONObject();
                 }
@@ -812,7 +812,7 @@ public final class GxHomePage extends GxPage {
             GxPage var70 = var294;
             String var249 = " ";
             CharSequence var109 = GxPage.str$default(var70, var22, "distanceUnit", null, 2, null);
-            Iterable var71 = var109;
+            Object var71 = var109;
             if (StringsKt.isBlank(var109)) {
                 var71 = var294.unit;
             }
@@ -849,7 +849,7 @@ public final class GxHomePage extends GxPage {
                 Iterable var152 = (Iterable)var71;
                 var var112 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var152, 10));
 
-                for (JSONObject var201 : var152) {
+                for (JSONObject var201 : (Iterable) (JSONObject) ((JSONObject) var152)) {
                     var112.add(TuplesKt.to(GxPage.str$default(var294, var201, "label", null, 2, null), GxHomeKt.gxHomeNum(var201.opt("distance"))));
                 }
 
@@ -858,7 +858,7 @@ public final class GxHomePage extends GxPage {
                 var71 = CollectionsKt.listOf(new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"});
                 var11 = false;
                 var var113 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var71, 10));
-                Iterator var155 = var71.iterator();
+                Iterator var155 = ((Iterable) var71).iterator();
 
                 while (var155.hasNext()) {
                     var113.add(TuplesKt.to((String)var155.next(), 0.0));
@@ -933,7 +933,7 @@ public final class GxHomePage extends GxPage {
             LinearLayout var297 = var294.card((ViewGroup)var241.get(1));
             cardHead$default(var294, var297, "Personal records", null, 4, null);
             var18 = var31.optJSONObject("records");
-            JSONObject var115 = var18;
+            JSONObject var115 = ((JSONObject) var18);
             if (var18 == null) {
                 var115 = new JSONObject();
             }
@@ -961,7 +961,7 @@ public final class GxHomePage extends GxPage {
 
                             if (var25 != null) {
                                 var27 = var25.toString();
-                                var25 = var27;
+                                var25 = ((String) var27);
                                 if (var27 != null) {
                                     break label480;
                                 }
@@ -1054,7 +1054,7 @@ public final class GxHomePage extends GxPage {
             Iterator var230 = var119.iterator();
             var8 = 0;
             String var211 = var249;
-            String var220 = var33;
+            String var220 = ((String) var33);
             var27 = var32;
 
             while (var230.hasNext()) {
@@ -1116,7 +1116,7 @@ public final class GxHomePage extends GxPage {
                         var167 = "Stats excluded";
                     } else {
                         if (!var53) {
-                            String var168 = GxHomeKt.gxHomeDec(var291.opt(var27));
+                            String var168 = GxHomeKt.gxHomeDec(var291.opt(((String) var27)));
                             var274 = var168 + var211 + var273;
                             break label453;
                         }
@@ -1251,7 +1251,7 @@ public final class GxHomePage extends GxPage {
                 Unit var180 = Unit.INSTANCE;
                 var239 = this;
                 var11 = false;
-                var247 = columns$default(var239, 2, null, 2, null);
+                var247 = columns$default(((GxHomePage) var239), 2, null, 2, null);
                 var250 = var239.card((ViewGroup)var247.get(0));
                 var239.cardHead(var250, "Most used models", TuplesKt.to("Models", "gx:models"));
                 JSONArray var181 = var31.optJSONArray("favoriteModels");
@@ -1268,7 +1268,7 @@ public final class GxHomePage extends GxPage {
 
             List var222 = CollectionsKt.take(var182, 3);
             if (var222.isEmpty()) {
-                GxPage.text$default(var239, "No model usage recorded yet.", (ViewGroup)var250, 17.0F, 0, false, 24, null);
+                GxPage.text$default(((GxPage) var239), "No model usage recorded yet.", (ViewGroup)var250, 17.0F, 0, false, 24, null);
             } else {
                 LinearLayout var231 = new LinearLayout((Context)var239.getAct());
                 var231.setOrientation(0);
@@ -1312,7 +1312,7 @@ public final class GxHomePage extends GxPage {
                     LinearLayout var272 = new LinearLayout((Context)var239.getAct());
                     var272.setOrientation(1);
                     TextView var278 = new TextView((Context)var239.getAct());
-                    var278.setText(GxPage.str$default(var239, var234, "name", null, 2, null));
+                    var278.setText(GxPage.str$default(((GxPage) var239), var234, "name", null, 2, null));
                     var278.setTextSize(18.0F);
                     var278.setTextColor(CarUi.Companion.getTEXT());
                     var278.setTypeface(Typeface.DEFAULT_BOLD);
@@ -1352,8 +1352,8 @@ public final class GxHomePage extends GxPage {
                 var80 = new JSONObject();
             }
 
-            GxPage var224 = var239;
-            CharSequence var185 = GxPage.str$default(var239, var67, "legacyText", null, 2, null);
+            GxPage var224 = ((GxPage) var239);
+            CharSequence var185 = GxPage.str$default(((GxPage) var239), var67, "legacyText", null, 2, null);
             var17 = var185;
             if (StringsKt.isBlank(var185)) {
                 String var186 = GxHomeKt.gxHomeBytes(var67.opt("usedBytes"));
@@ -1372,7 +1372,7 @@ public final class GxHomePage extends GxPage {
             var239.kv(var212, "Free space", GxHomeKt.gxHomeBytes(var67.opt("freeBytes")));
             Unit var82 = Unit.INSTANCE;
             var17 = this.body;
-            LinearLayout var83 = var17;
+            LinearLayout var83 = ((LinearLayout) var17);
             if (var17 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException(var30);
                 var83 = null;

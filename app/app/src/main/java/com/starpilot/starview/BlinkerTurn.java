@@ -92,15 +92,15 @@ public final class BlinkerTurn {
             var29 = (Iterable) var29$it;
             boolean var41;
             label200: {
-                OsmRoads.Way var30 = (OsmRoads.Way)var29;
-                if (var30.getId() != var2.getId()) {
+                Object var30 = (OsmRoads.Way)var29;
+                if (((OsmRoads.Way) var30).getId() != var2.getId()) {
                     if (var2.getName().length() > 0) {
                         var41 = true;
                     } else {
                         var41 = false;
                     }
 
-                    if (!var41 || !Intrinsics.areEqual(var30.getKind(), var2.getKind()) || !OsmRoads.INSTANCE.sameStreet(var30.getName(), var2.getName())) {
+                    if (!var41 || !Intrinsics.areEqual(((OsmRoads.Way) var30).getKind(), var2.getKind()) || !OsmRoads.INSTANCE.sameStreet(((OsmRoads.Way) var30).getName(), var2.getName())) {
                         var41 = false;
                         break label200;
                     }
@@ -116,20 +116,20 @@ public final class BlinkerTurn {
 
         List var51 = var28;
         Collection var56 = var51;
-        OsmRoads.Way var52 = var56;
+        Object var52 = var56;
         if (var56.isEmpty()) {
             var52 = CollectionsKt.<OsmRoads.Way>listOf(var2);
         }
 
-        List var34 = (List)var52;
+        Object var34 = (List)var52;
         var52 = new ArrayList();
         Iterator var57 = var1.iterator();
-        ArrayList var33 = (ArrayList)var52;
+        Object var33 = (ArrayList)var52;
 
         while (var57.hasNext()) {
             var52 = (OsmRoads.Way)var57.next();
-            if (var52.getE().length >= 2 && !SKIP.contains(var52.getKind())) {
-                String var58 = var52.getKind();
+            if (((OsmRoads.Way) var52).getE().length >= 2 && !SKIP.contains(((OsmRoads.Way) var52).getKind())) {
+                String var58 = ((OsmRoads.Way) var52).getKind();
                 byte var21 = 0;
                 if (!StringsKt.startsWith(var58, "motorway", false)) {
                     var var59 = var34;
@@ -141,7 +141,7 @@ public final class BlinkerTurn {
                             Iterator var60 = var59.iterator();
 
                             while (var60.hasNext()) {
-                                if (((OsmRoads.Way)var60.next()).getId() == var52.getId()) {
+                                if (((OsmRoads.Way)var60.next()).getId() == ((OsmRoads.Way) var52).getId()) {
                                     var43 = (((boolean)true) ? 1 : 0);
                                 } else {
                                     var43 = (((boolean)false) ? 1 : 0);
@@ -158,38 +158,38 @@ public final class BlinkerTurn {
                     }
 
                     if (!var43) {
-                        int var23 = var52.getE().length;
+                        int var23 = ((OsmRoads.Way) var52).getE().length;
                         int var22 = 0;
                         var43 = var21;
 
                         for (int var45 = var23; var22 < var45; var22++) {
-                            double var16 = var52.getE()[var22] - var3;
-                            var7 = var52.getN()[var22] - var5;
+                            double var16 = ((OsmRoads.Way) var52).getE()[var22] - var3;
+                            var7 = ((OsmRoads.Way) var52).getN()[var22] - var5;
                             double var12 = var16 * var10 + var7 * var14;
                             if (!(var12 < -8.0) && !(var12 > 76.0) && !(Math.abs(var16 * var14 - var7 * var10) > 25.0)) {
-                                Iterator var61 = var34.iterator();
+                                Iterator var61 = ((List) var34).iterator();
                                 if (!var61.hasNext()) {
                                     throw new NoSuchElementException();
                                 }
 
                                 OsmRoads.Way var62 = (OsmRoads.Way)var61.next();
                                 LaneRamps var32 = LaneRamps.INSTANCE;
-                                var7 = var52.getE()[var22];
-                                var16 = var52.getN()[var22];
+                                var7 = ((OsmRoads.Way) var52).getE()[var22];
+                                var16 = ((OsmRoads.Way) var52).getN()[var22];
                                 var7 = var32.distTo(var62, var7, var16, var10, var14);
 
                                 while (var61.hasNext()) {
                                     var62 = (OsmRoads.Way)var61.next();
-                                    var7 = Math.min(var7, LaneRamps.INSTANCE.distTo(var62, var52.getE()[var22], var52.getN()[var22], var10, var14));
+                                    var7 = Math.min(var7, LaneRamps.INSTANCE.distTo(var62, ((OsmRoads.Way) var52).getE()[var22], ((OsmRoads.Way) var52).getN()[var22], var10, var14));
                                 }
 
                                 if (!(var7 > 4.0)) {
                                     for (int var46 = (((var43 != 0)) ? 1 : 0); var46 < 2; var46++) {
                                         int var26 = new int[]{-1, 1}[var46];
-                                        if ((var52.getOneway() != 1 || var26 >= 0) && (var52.getOneway() != -1 || var26 <= 0)) {
+                                        if ((((OsmRoads.Way) var52).getOneway() != 1 || var26 >= 0) && (((OsmRoads.Way) var52).getOneway() != -1 || var26 <= 0)) {
                                             int var25 = var22 + var26;
                                             int var24;
-                                            if (var25 >= 0 && var25 < var52.getE().length) {
+                                            if (var25 >= 0 && var25 < ((OsmRoads.Way) var52).getE().length) {
                                                 var24 = 1;
                                             } else {
                                                 var24 = (((var43 != 0)) ? 1 : 0);
@@ -199,7 +199,7 @@ public final class BlinkerTurn {
                                                 var24 = var25;
 
                                                 while (true) {
-                                                    int var27 = var52.getE().length;
+                                                    int var27 = ((OsmRoads.Way) var52).getE().length;
                                                     var25 = var24 + var26;
                                                     byte var50;
                                                     if (var25 >= 0 && var25 < var27) {
@@ -209,9 +209,9 @@ public final class BlinkerTurn {
                                                     }
 
                                                     if (var50 == 0
-                                                        || !(Math.hypot(var52.getE()[var24] - var52.getE()[var22], var52.getN()[var24] - var52.getN()[var22]) < 10.0)) {
-                                                        var7 = var52.getE()[var24] - var52.getE()[var22];
-                                                        double var18 = var52.getN()[var24] - var52.getN()[var22];
+                                                        || !(Math.hypot(((OsmRoads.Way) var52).getE()[var24] - ((OsmRoads.Way) var52).getE()[var22], ((OsmRoads.Way) var52).getN()[var24] - ((OsmRoads.Way) var52).getN()[var22]) < 10.0)) {
+                                                        var7 = ((OsmRoads.Way) var52).getE()[var24] - ((OsmRoads.Way) var52).getE()[var22];
+                                                        double var18 = ((OsmRoads.Way) var52).getN()[var24] - ((OsmRoads.Way) var52).getN()[var22];
                                                         var16 = Math.hypot(var7, var18);
                                                         if (!(var16 < 3.0) && !(Math.abs((var7 * var10 + var18 * var14) / var16) > 0.85)) {
                                                             byte var48;
@@ -222,7 +222,7 @@ public final class BlinkerTurn {
                                                             }
 
                                                             if (var48 == var9) {
-                                                                var33.add(new BlinkerTurn.Corner(var52.getE()[var22], var52.getN()[var22], var12, var48, var52.getName()));
+                                                                ((ArrayList) var33).add(new BlinkerTurn.Corner(((OsmRoads.Way) var52).getE()[var22], ((OsmRoads.Way) var52).getN()[var22], var12, var48, ((OsmRoads.Way) var52).getName()));
                                                             }
                                                         }
                                                         break;
@@ -243,7 +243,7 @@ public final class BlinkerTurn {
 
         return CollectionsKt.sortedWith(var33, new Comparator() {
             @Override
-            public final int compare(T var1, T var2x) {
+            public final int compare(Object var1, Object var2x) {
                 return ComparisonsKt.compareValues(Math.abs(((BlinkerTurn.Corner)var1).getAhead()), Math.abs(((BlinkerTurn.Corner)var2x).getAhead()));
             }
         });

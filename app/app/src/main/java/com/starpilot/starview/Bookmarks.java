@@ -174,7 +174,7 @@ public final class Bookmarks {
         return CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.Bookmarks$list$$inlined$sortedByDescending$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 Bookmarks.Item it = (Bookmarks.Item) t2;
                 Bookmarks.Item it2 = (Bookmarks.Item) t;
                 return ComparisonsKt.compareValues(Long.valueOf(it.getAtMs()), Long.valueOf(it2.getAtMs()));

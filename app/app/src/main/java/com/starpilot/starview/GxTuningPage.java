@@ -820,7 +820,7 @@ public final class GxTuningPage extends GxPage {
 
                     var1 = var1.format(new Date((long)var2));
                     Intrinsics.checkNotNullExpressionValue(var1, "format(...)");
-                    return var1;
+                    return ((String) var1);
                 }
             }
 
@@ -1301,7 +1301,7 @@ public final class GxTuningPage extends GxPage {
             linearLayout2.addView(empty("No saved tunes yet. Apply a trial, then save it here."));
             return;
         }
-        for (final JSONObject t : list) {
+        for (final JSONObject t : (Iterable) (JSONObject) ((JSONObject) list)) {
             final boolean active = truthy(t.opt("active"));
             LinearLayout linearLayout4 = this.tunesBox;
             if (linearLayout4 == null) {
@@ -1755,7 +1755,7 @@ public final class GxTuningPage extends GxPage {
             linearLayout2.addView(empty("No reports yet. Analyze routes to generate findings."));
             return;
         }
-        for (JSONObject r : list) {
+        for (JSONObject r : (Iterable) (JSONObject) ((JSONObject) list)) {
             final String id = s(r, "reportId");
             boolean open = Intrinsics.areEqual(this.loadedReportId, id);
             String fmtDate = fmtDate(r.opt("createdAt"));
@@ -2108,7 +2108,7 @@ public final class GxTuningPage extends GxPage {
         if (!angleControl()) {
             GxPage.text$default(this, "Active trial values are shown in the current column when one is applied.", box, 0.0f, 0, false, 28, null);
         }
-        for (CmpRow r : rows) {
+        for (CmpRow r : ((CmpRow) rows)) {
             LinearLayout l = new LinearLayout(getAct());
             l.setOrientation(0);
             l.setGravity(16);
@@ -2221,7 +2221,7 @@ public final class GxTuningPage extends GxPage {
                 JSONObject var69 = this.obj(var8, "summary");
                 ViewGroup var12 = (ViewGroup)var9;
                 CharSequence var44 = this.s(var11, "carFingerprint");
-                EditText var22 = var44;
+                Object var22 = var44;
                 if (StringsKt.isBlank(var44)) {
                     var22 = "Unknown";
                 }
@@ -2263,7 +2263,7 @@ public final class GxTuningPage extends GxPage {
                 this.paintComparison();
                 var22 = this.pathList();
 
-                for (JSONObject var70 : var22) {
+                for (JSONObject var70 : (JSONObject) (JSONObject) var22) {
                     this.sub(this.s(var70, "title"), (ViewGroup)var9);
                     if (!StringsKt.isBlank(this.s(var70, "description"))) {
                         GxPage.text$default(this, this.s(var70, "description"), (ViewGroup)var9, 16.0F, 0, false, 24, null);
@@ -2276,7 +2276,7 @@ public final class GxTuningPage extends GxPage {
                     String var73 = this.s(var70, "key");
                     if (Intrinsics.areEqual(var73, this.activePathKey())) {
                         this.text("Active path", (ViewGroup)var9, 15.0F, CarUi.Companion.getACCENT(), true);
-                    } else if (var22.size() > 1) {
+                    } else if (((EditText) var22).size() > 1) {
                         GxPage var71 = this;
                         Pair var78 = TuplesKt.to("Use this path", new GxTuningPage$$ExternalSyntheticLambda48(this, var73));
                         ViewGroup var74 = (ViewGroup)var9;
@@ -2314,17 +2314,17 @@ public final class GxTuningPage extends GxPage {
                 var7 = this.card((ViewGroup)var22);
                 GxPage.text$default(this, "Finding decisions save immediately and regenerate trial profiles.", (ViewGroup)var7, 0.0F, 0, false, 28, null);
                 var22 = new EditText((Context)this.getAct());
-                var22.setText(this.fbNotes);
-                var22.setHint("Optional tuning notes");
-                var22.setTextSize(18.0F);
-                var22.setTextColor(CarUi.Companion.getTEXT());
-                var22.setHintTextColor(CarUi.Companion.getDIM());
-                var22.setInputType(147457);
-                var22.setMinLines(2);
-                var22.setGravity(8388659);
-                var22.setBackground((Drawable)this.getUi().rounded(Color.rgb(6, 8, 11), 12, Color.rgb(50, 55, 66)));
-                var22.setPadding(this.getUi().dp(14), this.getUi().dp(10), this.getUi().dp(14), this.getUi().dp(10));
-                var22.addTextChangedListener(new TextWatcher() {
+                ((EditText) var22).setText(this.fbNotes);
+                ((EditText) var22).setHint("Optional tuning notes");
+                ((EditText) var22).setTextSize(18.0F);
+                ((EditText) var22).setTextColor(CarUi.Companion.getTEXT());
+                ((EditText) var22).setHintTextColor(CarUi.Companion.getDIM());
+                ((EditText) var22).setInputType(147457);
+                ((EditText) var22).setMinLines(2);
+                ((LinearLayout) var22).setGravity(8388659);
+                ((EditText) var22).setBackground((Drawable)this.getUi().rounded(Color.rgb(6, 8, 11), 12, Color.rgb(50, 55, 66)));
+                ((EditText) var22).setPadding(this.getUi().dp(14), this.getUi().dp(10), this.getUi().dp(14), this.getUi().dp(10));
+                ((EditText) var22).addTextChangedListener(new TextWatcher() {
                     final GxTuningPage this$0 = GxTuningPage.this;
 
                     public void afterTextChanged(Editable var1) {
@@ -2342,7 +2342,7 @@ public final class GxTuningPage extends GxPage {
                             var4 = "";
                         }
 
-                        var3x.fbNotes = var4;
+                        var3x.fbNotes = ((String) var4);
                     }
 
                     public void beforeTextChanged(CharSequence var1, int var2, int var3x, int var4) {
@@ -2352,8 +2352,8 @@ public final class GxTuningPage extends GxPage {
                     }
                 });
                 View var51 = (View)var22;
-                android.widget.LinearLayout.LayoutParams var31 = new LayoutParams(-1, -2);
-                var31.topMargin = this.getUi().dp(8);
+                Object var31 = new LayoutParams(-1, -2);
+                ((android.widget.LinearLayout.LayoutParams) var31).topMargin = this.getUi().dp(8);
                 Unit var62 = Unit.INSTANCE;
                 var7.addView(var51, (android.view.ViewGroup.LayoutParams)var31);
                 GxPage var52 = this;
@@ -2365,7 +2365,7 @@ public final class GxTuningPage extends GxPage {
                     var7.addView((View)this.empty("No findings for the active path."));
                 }
 
-                for (JSONObject var79 : var33) {
+                for (JSONObject var79 : (Iterable) (JSONObject) ((JSONObject) var33)) {
                     LinearLayout var75 = this.inner((ViewGroup)var7);
                     CharSequence var53 = this.s(var79, "bucket");
                     var22 = var53;
@@ -2550,7 +2550,7 @@ public final class GxTuningPage extends GxPage {
                 linearLayout.addView(empty("No trial profiles for this report."));
                 return;
             }
-            for (final JSONObject p : list) {
+            for (final JSONObject p : (Iterable) (JSONObject) ((JSONObject) list)) {
                 LinearLayout linearLayout8 = this.profilesBox;
                 if (linearLayout8 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("profilesBox");
@@ -2593,14 +2593,14 @@ public final class GxTuningPage extends GxPage {
                         gen = gen;
                         ov = ov;
                     }
-                    for (Pair<String, Object> pair2 : fr) {
+                    for (Pair<String, Object> pair2 : ((Pair<String,Object>) fr)) {
                         String fam = pair2.component1();
                         Object pl = pair2.component2();
                         LinearLayout linearLayout9 = ic;
                         JSONObject jSONObject = pl instanceof JSONObject ? (JSONObject) pl : null;
                         mono(linearLayout9, fam + ": " + curveStr(jSONObject != null ? jSONObject.optJSONArray("values") : null));
                     }
-                    for (Pair<String, Object> pair3 : kn) {
+                    for (Pair<String, Object> pair3 : ((Pair<String,Object>) kn)) {
                         String sym = pair3.component1();
                         Object v2 = pair3.component2();
                         mono(ic, sym + ": " + fmtVal(v2));
@@ -2862,7 +2862,7 @@ public final class GxTuningPage extends GxPage {
         while (it.hasNext()) {
             List<String> split = new Regex("\\r?\\n").split(it.next(), 0);
             ArrayList arrayList = new ArrayList();
-            Iterator<T> it2 = split.iterator();
+            Iterator it2 = split.iterator();
             while (true) {
                 if (!it2.hasNext()) {
                     break;
@@ -2906,7 +2906,7 @@ public final class GxTuningPage extends GxPage {
             CollectionsKt.sortWith(arrayList3, new Comparator() { // from class: com.starpilot.starview.GxTuningPage$loadRoutes$lambda$122$$inlined$sortByDescending$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     String s2;
                     String s3;
                     JSONObject it3 = (JSONObject) t2;
@@ -2927,7 +2927,7 @@ public final class GxTuningPage extends GxPage {
         LinkedHashSet<String> linkedHashSet = gxTuningPage.selectedRoutes;
         ArrayList<JSONObject> arrayList4 = gxTuningPage.routes;
         ArrayList arrayList5 = new ArrayList(CollectionsKt.collectionSizeOrDefault(arrayList4, 10));
-        Iterator<T> it3 = arrayList4.iterator();
+        Iterator it3 = arrayList4.iterator();
         while (it3.hasNext()) {
             arrayList5.add(gxTuningPage.s((JSONObject) it3.next(), "name"));
         }
@@ -3731,7 +3731,7 @@ public final class GxTuningPage extends GxPage {
                 destination$iv$iv.add(element$iv$iv);
             }
         }
-        for (ChartCfg cfg : (List) destination$iv$iv) {
+        for (ChartCfg cfg : (ChartCfg) destination$iv$iv) {
             chartCard(b, cfg);
         }
         this.bAdvanced = getUi().button("", false, new Function0() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda24
@@ -3761,7 +3761,7 @@ public final class GxTuningPage extends GxPage {
                 destination$iv$iv2.add(element$iv$iv2);
             }
         }
-        for (ChartCfg cfg2 : (List) destination$iv$iv2) {
+        for (ChartCfg cfg2 : (ChartCfg) destination$iv$iv2) {
             LinearLayout linearLayout = this.advancedBox;
             if (linearLayout == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("advancedBox");
@@ -4080,7 +4080,7 @@ public final class GxTuningPage extends GxPage {
                         Iterable var78 = var64;
                         var var86 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var78, 10));
 
-                        for (GxTuningSample var89 : var78) {
+                        for (GxTuningSample var89 : ((GxTuningSample) var78)) {
                             Double var87 = var89.getV().get(var1.getDesiredKey());
                             if (var87 != null) {
                                 var2 = var87;
@@ -4387,7 +4387,7 @@ public final class GxTuningPage extends GxPage {
                     }
                     notice$default(this, linearLayout10, s(lv, "lastError"), 0, "Source Error:", 4, null);
                 }
-                for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Your lateral tuning is", computeQuality(this.latQ)), TuplesKt.to("Your longitudinal tuning is", computeQuality(this.lonQ))})) {
+                for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Your lateral tuning is", computeQuality(this.latQ)), TuplesKt.to("Your longitudinal tuning is", computeQuality(this.lonQ))}))) {
                     String base = (String) pair.component1();
                     Quality q = (Quality) pair.component2();
                     if (Intrinsics.areEqual(q.getLabel(), "na")) {
@@ -4939,7 +4939,7 @@ public final class GxTuningPage extends GxPage {
 
                     var7 = this.card((ViewGroup)var6);
 
-                    for (JSONObject var12 : var9) {
+                    for (JSONObject var12 : (Iterable) (JSONObject) ((JSONObject) var9)) {
                         boolean var2 = Intrinsics.areEqual(this.slotId(var12), this.tgActiveId());
                         TextView var81 = new TextView((Context)this.getAct());
                         String var11 = this.slotId(var12);
@@ -4964,8 +4964,8 @@ public final class GxTuningPage extends GxPage {
                         }
 
                         View var85 = (View)var81;
-                        android.widget.LinearLayout.LayoutParams var82 = new LayoutParams(-1, -2);
-                        var82.bottomMargin = this.getUi().dp(4);
+                        Object var82 = new LayoutParams(-1, -2);
+                        ((android.widget.LinearLayout.LayoutParams) var82).bottomMargin = this.getUi().dp(4);
                         Unit var88 = Unit.INSTANCE;
                         var7.addView(var85, (android.view.ViewGroup.LayoutParams)var82);
                     }
@@ -4993,7 +4993,7 @@ public final class GxTuningPage extends GxPage {
                         var27 = "Choose…";
                     }
 
-                    this.en(GxPage.Row.button$default(var74, var27, false, new GxTuningPage$$ExternalSyntheticLambda40(this, var9), 2, null), this.tgBusy ^ true);
+                    this.en(GxPage.Row.button$default(((GxPage.Row) var74), var27, false, new GxTuningPage$$ExternalSyntheticLambda40(this, var9), 2, null), this.tgBusy ^ true);
                     var6 = this.tgBox;
                     var3 = var6;
                     if (var6 == null) {
@@ -5233,7 +5233,7 @@ public final class GxTuningPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function2
                 public final Object invoke(Object obj, Object obj2) {
                     Unit manLoad$lambda$193;
-                    manLoad$lambda$193 = GxTuningPage.manLoad$lambda$193(lateral, this, (String) obj, (JSONObject) obj2);
+                    manLoad$lambda$193 = GxTuningPage.manLoad$lambda$193(lateral, GxTuningPage.this, (String) obj, (JSONObject) obj2);
                     return manLoad$lambda$193;
                 }
             });
@@ -5280,7 +5280,7 @@ public final class GxTuningPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit manRun$lambda$197;
-                manRun$lambda$197 = GxTuningPage.manRun$lambda$197(lateral, this, action, (String) obj, (JSONObject) obj2);
+                manRun$lambda$197 = GxTuningPage.manRun$lambda$197(lateral, GxTuningPage.this, action, (String) obj, (JSONObject) obj2);
                 return manRun$lambda$197;
             }
         }, 12, null);

@@ -173,7 +173,7 @@ public final class ReplayBar extends View {
                     var29 = MapsKt.getValue(this.rects, var23);
                     var29.set(var8, var10, var8 + var9, var10 + var12 * 32.0F);
                     var13 = this.d;
-                    var1.drawRoundRect(var29, this.d * 10.0F, this.d * 10.0F, this.btnBg);
+                    var1.drawRoundRect(((RectF) var29), this.d * 10.0F, this.d * 10.0F, this.btnBg);
                     switch (var23.hashCode()) {
                         case 101811:
                             if (var23.equals("fwd")) {

@@ -76,171 +76,76 @@ public final class LaneRamps {
         }
     }
 
-    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;Type inference failed;incorrect) */
-    public final List<LaneRamps.Ramp> scan(List<OsmRoads.Way> var1, OsmRoads.Way var2, double var3, double var5, double var7) {
-        Intrinsics.checkNotNullParameter(var1, "ways");
-        Intrinsics.checkNotNullParameter(var2, "our");
-        long var25 = var2.getId();
-        Iterable var30 = var1;
-        var var29 = new ArrayList();
-
-        for (Object var31 : var30) {
-            boolean var44;
-            label155: {
-                label154: {
-                    OsmRoads.Way var54 = (OsmRoads.Way)var31;
-                    if (var54.getId() != var25) {
-                        if (StringsKt.endsWith(var54.getKind(), "_link", false) || !Intrinsics.areEqual(var54.getKind(), var2.getKind())) {
-                            break label154;
-                        }
-
-                        if (var2.getName().length() > 0) {
-                            var44 = true;
-                        } else {
-                            var44 = false;
-                        }
-
-                        if (!var44 || !OsmRoads.INSTANCE.sameStreet(var54.getName(), var2.getName())) {
-                            break label154;
-                        }
-                    }
-
-                    var44 = true;
-                    break label155;
+    public final List<Ramp> scan(List<OsmRoads.Way> ways, OsmRoads.Way our, double e, double n, double yaw) {
+        Intrinsics.checkNotNullParameter(ways, "ways");
+        Intrinsics.checkNotNullParameter(our, "our");
+        long ourId = our.getId();
+        // our road: our way, and the other pieces of the same street of the same kind
+        List<OsmRoads.Way> mains = new ArrayList<>();
+        for (OsmRoads.Way w : ways) {
+            boolean same = w.getId() == ourId || (!StringsKt.endsWith$default(w.getKind(), "_link", false, 2, (Object) null) && Intrinsics.areEqual(w.getKind(), our.getKind()) && our.getName().length() > 0 && OsmRoads.INSTANCE.sameStreet(w.getName(), our.getName()));
+            if (same) {
+                mains.add(w);
+            }
+        }
+        List<OsmRoads.Way> road = mains.isEmpty() ? CollectionsKt.listOf(our) : mains;
+        double hx = Math.cos(yaw);
+        double hy = Math.sin(yaw);
+        HashMap<Integer, Ramp> best = new HashMap<>();
+        for (OsmRoads.Way w : ways) {
+            if (w.getId() == ourId || !StringsKt.endsWith$default(w.getKind(), "_link", false, 2, (Object) null) || w.getE().length < 2) {
+                continue;
+            }
+            for (int end = 0; end < 2; end++) {
+                int i = end == 0 ? 0 : w.getE().length - 1;
+                double de = w.getE()[i] - e;
+                double dn = w.getN()[i] - n;
+                double along = (de * hx) + (dn * hy);
+                if (Math.abs((de * hy) - (dn * hx)) > 40.0d) {
+                    continue;
                 }
-
-                var44 = false;
-            }
-
-            if (var44) {
-                var29.add(var31);
-            }
-        }
-
-        List var48 = var29;
-        Collection var55 = var48;
-        Iterator var49 = var55;
-        if (var55.isEmpty()) {
-            var49 = CollectionsKt.<OsmRoads.Way>listOf(var2);
-        }
-
-        List var35 = (List)var49;
-        double var9 = Math.cos(var7);
-        double var13 = Math.sin(var7);
-        HashMap var56 = new HashMap();
-        Iterator var57 = var1.iterator();
-        var7 = var9;
-        var1 = var35;
-
-        while (var57.hasNext()) {
-            var2 = (OsmRoads.Way)var57.next();
-            if (var2.getId() != var25 && StringsKt.endsWith(var2.getKind(), "_link", false) && var2.getE().length >= 2) {
-                for (int var45 = 0; var45 < 2; var45++) {
-                    int var22;
-                    if (var45 == 0) {
-                        var22 = 0;
-                    } else {
-                        var22 = var2.getE().length - 1;
-                    }
-
-                    double var11 = var2.getE()[var22] - var3;
-                    var9 = var2.getN()[var22] - var5;
-                    double var15 = var11 * var7 + var9 * var13;
-                    if (!(Math.abs(var11 * var13 - var9 * var7) > 40.0)) {
-                        var49 = var1.iterator();
-                        if (!var49.hasNext()) {
-                            throw new NoSuchElementException();
-                        }
-
-                        OsmRoads.Way var58 = (OsmRoads.Way)var49.next();
-                        var9 = INSTANCE.distTo(var58, var2.getE()[var22], var2.getN()[var22], var7, var13);
-
-                        while (var49.hasNext()) {
-                            var58 = (OsmRoads.Way)var49.next();
-                            var9 = Math.min(var9, INSTANCE.distTo(var58, var2.getE()[var22], var2.getN()[var22], var7, var13));
-                        }
-
-                        long var27 = var25;
-                        if (var9 > 10.0) {
-                            var25 = var25;
-                        } else {
-                            int var23;
-                            if (var45 == 0) {
-                                var23 = var2.getE().length - 1;
-                            } else {
-                                var23 = 0;
-                            }
-
-                            double[] var51 = var2.getE();
-                            int var24;
-                            if (var45 == 0) {
-                                var24 = Math.min(var51.length - 1, 1);
-                            } else {
-                                var24 = Math.max(0, var51.length - 2);
-                            }
-
-                            double var17 = var2.getE()[var23] - var2.getE()[var22];
-                            var9 = var2.getN()[var23];
-                            var11 = var2.getN()[var22];
-                            double var19 = var9 - var11;
-                            if (Math.hypot(var17, var19) < 30.0) {
-                                var25 = var25;
-                            } else {
-                                var11 = (var2.getE()[var24] - var2.getE()[var22]) * var13 - (var2.getN()[var24] - var2.getN()[var22]) * var7;
-                                var9 = var11;
-                                if (Math.abs(var11) < 1.0) {
-                                    var9 = var17 * var13 - var19 * var7;
-                                }
-
-                                byte var46;
-                                if (var9 > 0.0) {
-                                    var46 = 1;
-                                } else {
-                                    var46 = -1;
-                                }
-
-                                String var52;
-                                if (var17 * var7 + var19 * var13 > 0.0) {
-                                    var52 = "exit";
-                                } else {
-                                    var52 = "merge";
-                                }
-
-                                boolean var47;
-                                if (Intrinsics.areEqual(var52, "exit") ? !(-20.0 <= var15) || !(var15 <= 320.0) : !(-260.0 <= var15) || !(var15 <= 60.0)) {
-                                    var47 = false;
-                                } else {
-                                    var47 = true;
-                                }
-
-                                if (var47) {
-                                    LaneRamps.Ramp var60 = new LaneRamps.Ramp(var52, var46, var15);
-                                    LaneRamps.Ramp var53 = (LaneRamps.Ramp)var56.get(Integer.valueOf(var46));
-                                    if (var53 != null) {
-                                        var25 = var25;
-                                        if (!(Math.abs(var60.getDist()) < Math.abs(var53.getDist()))) {
-                                            continue;
-                                        }
-                                    }
-
-                                    var56.put(Integer.valueOf(var46), var60);
-                                    var25 = var27;
-                                } else {
-                                    var25 = var25;
-                                }
-                            }
-                        }
-                    }
+                Iterator<OsmRoads.Way> it = road.iterator();
+                if (!it.hasNext()) {
+                    throw new NoSuchElementException();
                 }
+                double d = INSTANCE.distTo(it.next(), w.getE()[i], w.getN()[i], hx, hy);
+                while (it.hasNext()) {
+                    d = Math.min(d, INSTANCE.distTo(it.next(), w.getE()[i], w.getN()[i], hx, hy));
+                }
+                if (d > 10.0d) {
+                    continue;
+                }
+                int far = end == 0 ? w.getE().length - 1 : 0;
+                int next = end == 0 ? Math.min(w.getE().length - 1, 1) : Math.max(0, w.getE().length - 2);
+                double fe = w.getE()[far] - w.getE()[i];
+                double fn = w.getN()[far] - w.getN()[i];
+                if (Math.hypot(fe, fn) < 30.0d) {
+                    continue;
+                }
+                double cross = ((w.getE()[next] - w.getE()[i]) * hy) - ((w.getN()[next] - w.getN()[i]) * hx);
+                if (Math.abs(cross) < 1.0d) {
+                    cross = (fe * hy) - (fn * hx);
+                }
+                int side = cross > 0.0d ? 1 : -1;
+                String kind = (fe * hx) + (fn * hy) > 0.0d ? "exit" : "merge";
+                boolean inRange = Intrinsics.areEqual(kind, "exit") ? (-20.0d <= along && along <= 320.0d) : (-260.0d <= along && along <= 60.0d);
+                if (!inRange) {
+                    continue;
+                }
+                Ramp r = new Ramp(kind, side, along);
+                Ramp have = best.get(Integer.valueOf(side));
+                if (have != null && !(Math.abs(r.getDist()) < Math.abs(have.getDist()))) {
+                    continue;
+                }
+                best.put(Integer.valueOf(side), r);
             }
         }
-
-        Collection var34 = var56.values();
-        Intrinsics.checkNotNullExpressionValue(var34, "<get-values>(...)");
-        return CollectionsKt.sortedWith(var34, new Comparator() {
-            @Override
-            public final int compare(T var1, T var2x) {
-                return ComparisonsKt.compareValues(((LaneRamps.Ramp)var1).getSide(), ((LaneRamps.Ramp)var2x).getSide());
+        Collection<Ramp> values = best.values();
+        Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
+        return CollectionsKt.sortedWith(values, new Comparator<Ramp>() {
+            @Override // java.util.Comparator
+            public final int compare(Ramp a, Ramp b) {
+                return ComparisonsKt.compareValues(Integer.valueOf(a.getSide()), Integer.valueOf(b.getSide()));
             }
         });
     }

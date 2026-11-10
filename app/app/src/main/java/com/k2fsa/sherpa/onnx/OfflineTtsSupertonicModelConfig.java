@@ -47,40 +47,11 @@ public final /* data */ class OfflineTtsSupertonicModelConfig {
         return offlineTtsSupertonicModelConfig.copy(str, str8, str9, str10, str11, str12, str7);
     }
 
-    /* renamed from: component1, reason: from getter */
-    public final String getDurationPredictor() {
-        return this.durationPredictor;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final String getTextEncoder() {
-        return this.textEncoder;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final String getVectorEstimator() {
-        return this.vectorEstimator;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final String getVocoder() {
-        return this.vocoder;
-    }
 
-    /* renamed from: component5, reason: from getter */
-    public final String getTtsJson() {
-        return this.ttsJson;
-    }
 
-    /* renamed from: component6, reason: from getter */
-    public final String getUnicodeIndexer() {
-        return this.unicodeIndexer;
-    }
-
-    /* renamed from: component7, reason: from getter */
-    public final String getVoiceStyle() {
-        return this.voiceStyle;
-    }
 
     public final OfflineTtsSupertonicModelConfig copy(String durationPredictor, String textEncoder, String vectorEstimator, String vocoder, String ttsJson, String unicodeIndexer, String voiceStyle) {
         Intrinsics.checkNotNullParameter(durationPredictor, "durationPredictor");

@@ -18,45 +18,12 @@ public final /* data */ class OfflineTtsVitsModelConfig {
         this(null, null, null, null, null, 0.0f, 0.0f, 0.0f, 255, null);
     }
 
-    /* renamed from: component1, reason: from getter */
-    public final String getModel() {
-        return this.model;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final String getLexicon() {
-        return this.lexicon;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final String getTokens() {
-        return this.tokens;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final String getDataDir() {
-        return this.dataDir;
-    }
 
-    /* renamed from: component5, reason: from getter */
-    public final String getDictDir() {
-        return this.dictDir;
-    }
 
-    /* renamed from: component6, reason: from getter */
-    public final float getNoiseScale() {
-        return this.noiseScale;
-    }
 
-    /* renamed from: component7, reason: from getter */
-    public final float getNoiseScaleW() {
-        return this.noiseScaleW;
-    }
-
-    /* renamed from: component8, reason: from getter */
-    public final float getLengthScale() {
-        return this.lengthScale;
-    }
 
     public final OfflineTtsVitsModelConfig copy(String model, String lexicon, String tokens, String dataDir, String dictDir, float noiseScale, float noiseScaleW, float lengthScale) {
         Intrinsics.checkNotNullParameter(model, "model");

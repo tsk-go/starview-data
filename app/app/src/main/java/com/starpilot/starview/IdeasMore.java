@@ -450,7 +450,7 @@ public final class IdeasMore {
                     var2 = var34;
                     var2 = CollectionsKt.sortedWith(var2, new Comparator() {
                         @Override
-                        public final int compare(T var1, T var2x) {
+                        public final int compare(Object var1, Object var2x) {
                             return ComparisonsKt.compareValues(((Detector.Obj)var1).getCx(), ((Detector.Obj)var2x).getCx());
                         }
                     });
@@ -543,7 +543,7 @@ public final class IdeasMore {
     /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void speedCams(Telemetry var1, Ideas.Here var2, List<Ideas.Part> var3) {
         if (!Double.isNaN(var2.getYaw())) {
-            IdeaSpots.Seen var13 = CollectionsKt.firstOrNull(
+            IdeaSpots.Seen var13 = (IdeaSpots.Seen) CollectionsKt.firstOrNull(
                 IdeaSpots.around$default(
                     IdeaSpots.INSTANCE, var2.getLat(), var2.getLon(), var2.getYaw(), SetsKt.setOf("speed_cam"), 250.0, 10.0, 20.0, 0, false, 128, null
                 )

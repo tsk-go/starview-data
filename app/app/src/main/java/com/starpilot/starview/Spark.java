@@ -77,7 +77,7 @@ public final class Spark extends View {
         if (this.values.size() >= 2 && !vals.isEmpty()) {
             Path path = new Path();
             boolean started = false;
-            Iterator<T> it3 = this.values.iterator();
+            Iterator it3 = this.values.iterator();
             int i2 = 0;
             while (it3.hasNext()) {
                 int i3 = i2;

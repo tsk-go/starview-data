@@ -192,7 +192,7 @@ public final class DriveState {
             }
             return;
         }
-        final String back = modeNow;
+        String back = modeNow;
         if (!Intrinsics.areEqual(back, "onroad")) {
             back = null;
         }

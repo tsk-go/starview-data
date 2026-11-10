@@ -52,7 +52,7 @@ public final class SvIcon {
         Path path;
         Intrinsics.checkNotNullParameter(name, "name");
         Map $this$getOrPut$iv = cache;
-        Path path2 = $this$getOrPut$iv.get(name);
+        Path path2 = ((Path) $this$getOrPut$iv.get(name));
         if (path2 == null) {
             String d = SvIconPaths.INSTANCE.getPATHS().get(name);
             if (d == null) {
@@ -94,7 +94,7 @@ public final class SvIcon {
         OFF,
         NA;
 
-        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(values());
 
         public static EnumEntries<State> getEntries() {
             return $ENTRIES;

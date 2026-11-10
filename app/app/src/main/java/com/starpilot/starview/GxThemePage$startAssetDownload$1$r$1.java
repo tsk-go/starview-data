@@ -34,7 +34,7 @@ public final class GxThemePage$startAssetDownload$1$r$1 implements Runnable {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit run$lambda$0;
-                run$lambda$0 = GxThemePage$startAssetDownload$1$r$1.run$lambda$0(gxThemePage2, str, str2, intRef, this, (String) obj, (String) obj2);
+                run$lambda$0 = GxThemePage$startAssetDownload$1$r$1.run$lambda$0(gxThemePage2, str, str2, intRef, GxThemePage$startAssetDownload$1$r$1.this, (String) obj, (String) obj2);
                 return run$lambda$0;
             }
         });

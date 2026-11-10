@@ -315,7 +315,7 @@ public final class GalaxyApi {
         long now = System.currentTimeMillis();
         Iterator it = this.pending.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String, Pair<Object, Long>> e = it.next();
+            Map.Entry<String, Pair<Object, Long>> e = ((Entry<String,Pair<Object,Long>>) it.next());
             Pair pair = TuplesKt.to(e.getKey(), e.getValue());
             Object component1 = pair.component1();
             Intrinsics.checkNotNullExpressionValue(component1, "component1(...)");
@@ -604,7 +604,7 @@ public final class GalaxyApi {
         new Thread(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda12
             @Override // java.lang.Runnable
             public final void run() {
-                GalaxyApi.put$lambda$24(key, value, extra, this, then);
+                GalaxyApi.put$lambda$24(key, value, extra, GalaxyApi.this, then);
             }
         }).start();
     }
@@ -629,7 +629,7 @@ public final class GalaxyApi {
         final Ref.ObjectRef objectRef = new Ref.ObjectRef();
         try {
             JSONObject put = new JSONObject().put("key", str).put("value", obj == null ? JSONObject.NULL : obj);
-            for (Map.Entry entry : map.entrySet()) {
+            for (Map.Entry entry : ((Entry) map.entrySet())) {
                 put.put((String) entry.getKey(), entry.getValue());
             }
             Request.Builder url = new Request.Builder().url(galaxyApi.getBase() + "/api/params");

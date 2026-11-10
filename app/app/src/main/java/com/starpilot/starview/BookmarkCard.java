@@ -194,7 +194,7 @@ public final class BookmarkCard extends LinearLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit startTalk$lambda$16;
-                startTalk$lambda$16 = BookmarkCard.startTalk$lambda$16(it, this, name, (String) obj);
+                startTalk$lambda$16 = BookmarkCard.startTalk$lambda$16(it, BookmarkCard.this, name, (String) obj);
                 return startTalk$lambda$16;
             }
         });
@@ -290,7 +290,7 @@ public final class BookmarkCard extends LinearLayout {
         new AlertDialog.Builder(getContext()).setTitle("Bookmark note").setView($this$typeNote_u24lambda_u2417).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda5
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                BookmarkCard.typeNote$lambda$19($this$typeNote_u24lambda_u2417, it, this, dialogInterface, i);
+                BookmarkCard.typeNote$lambda$19($this$typeNote_u24lambda_u2417, it, BookmarkCard.this, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda6
             @Override // android.content.DialogInterface.OnClickListener

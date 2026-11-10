@@ -274,7 +274,7 @@ public final class TermWeb {
                 Iterable $this$forEach$iv = CollectionsKt.take(CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.TermWeb$Bridge$listRecent$lambda$12$lambda$11$$inlined$sortedByDescending$1
                     /* JADX WARN: Multi-variable type inference failed */
                     @Override // java.util.Comparator
-                    public final int compare(T t, T t2) {
+                    public final int compare(Object t, Object t2) {
                         JSONObject it2 = (JSONObject) t2;
                         JSONObject it3 = (JSONObject) t;
                         return ComparisonsKt.compareValues(Long.valueOf(it2.optLong("mtime")), Long.valueOf(it3.optLong("mtime")));
@@ -299,7 +299,7 @@ public final class TermWeb {
             new Thread(new Runnable() { // from class: com.starpilot.starview.TermWeb$Bridge$$ExternalSyntheticLambda4
                 @Override // java.lang.Runnable
                 public final void run() {
-                    TermWeb.Bridge.saveToDownloads$lambda$17(path, this);
+                    TermWeb.Bridge.saveToDownloads$lambda$17(path, Bridge.this);
                 }
             }).start();
         }

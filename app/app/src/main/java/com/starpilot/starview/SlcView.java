@@ -378,7 +378,7 @@ public final class SlcView extends View {
             i = HudViewsKt.dp(this, 3.0f);
             dp7 = HudViewsKt.dp(this, 4.5f);
             dp8 = HudViewsKt.dp(this, 2.5f);
-            for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(dp7), Integer.valueOf(Color.argb(220, 6, 14, 10))), TuplesKt.to(Float.valueOf(dp8), Integer.valueOf(Color.argb(240, 197, 163, 255)))})) {
+            for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(dp7), Integer.valueOf(Color.argb(220, 6, 14, 10))), TuplesKt.to(Float.valueOf(dp8), Integer.valueOf(Color.argb(240, 197, 163, 255)))}))) {
                 float sw = ((Number) pair.component1()).floatValue();
                 int col = ((Number) pair.component2()).intValue();
                 this.p.setStyle(Paint.Style.STROKE);

@@ -156,7 +156,7 @@ public final class QuickPanel extends FrameLayout {
         $this$tile_u24lambda_u2413.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.QuickPanel$$ExternalSyntheticLambda5
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                QuickPanel.tile$lambda$13$lambda$12(onTap, $this$tile_u24lambda_u2413, this, view);
+                QuickPanel.tile$lambda$13$lambda$12(onTap, $this$tile_u24lambda_u2413, QuickPanel.this, view);
             }
         });
         return $this$tile_u24lambda_u2413;

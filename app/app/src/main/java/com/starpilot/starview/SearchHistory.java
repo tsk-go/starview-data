@@ -91,7 +91,7 @@ public final class SearchHistory {
         final Comparator comparator = new Comparator() { // from class: com.starpilot.starview.SearchHistory$list$$inlined$compareByDescending$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 SearchHistory.Item it = (SearchHistory.Item) t2;
                 Integer valueOf = Integer.valueOf(it.getCount());
                 SearchHistory.Item it2 = (SearchHistory.Item) t;
@@ -101,7 +101,7 @@ public final class SearchHistory {
         return CollectionsKt.sortedWith(values, new Comparator() { // from class: com.starpilot.starview.SearchHistory$list$$inlined$thenByDescending$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 int previousCompare = comparator.compare(t, t2);
                 if (previousCompare != 0) {
                     return previousCompare;

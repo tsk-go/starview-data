@@ -85,7 +85,7 @@ public final class TakeoverSpotsView extends CardPage {
             List spots2 = spots;
             String joinToString$default = CollectionsKt.joinToString(CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.TakeoverSpotsView$refresh$lambda$7$lambda$6$lambda$5$$inlined$sortedByDescending$1
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     Map.Entry it2 = (Map.Entry) t2;
                     Integer num = (Integer) it2.getValue();
                     Map.Entry it3 = (Map.Entry) t;

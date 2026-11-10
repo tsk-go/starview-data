@@ -93,7 +93,7 @@ public final class NavIcons {
         String name = sb;
         synchronized (cache) {
             Map $this$getOrPut$iv = cache;
-            Bitmap bitmap3 = $this$getOrPut$iv.get(name);
+            Bitmap bitmap3 = ((Bitmap) $this$getOrPut$iv.get(name));
             if (bitmap3 == null) {
                 Resources r = ctx.getResources();
                 int id = r.getIdentifier(name, "drawable", ctx.getPackageName());

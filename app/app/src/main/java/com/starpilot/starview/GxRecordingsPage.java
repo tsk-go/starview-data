@@ -104,7 +104,7 @@ public final class GxRecordingsPage extends GxPage {
     private int sortOrder;
     private int tab;
     private int thumbActive;
-    private final GxRecordingsPage$thumbCache$1 thumbCache;
+    private final LruCache<String, Bitmap> thumbCache;
     private final HashSet<String> thumbFailed;
     private final ArrayDeque<ThumbJob> thumbQueue;
 
@@ -118,7 +118,7 @@ public final class GxRecordingsPage extends GxPage {
         this.search = "";
         this.screens = new ArrayList<>();
         this.screenError = "";
-        this.thumbCache = new LruCache<String, Bitmap>() {
+        this.thumbCache = new LruCache<String, Bitmap>(25165824) {
             protected int sizeOf(String var1, Bitmap var2x) {
                 Intrinsics.checkNotNullParameter(var1, "key");
                 Intrinsics.checkNotNullParameter(var2x, "value");
@@ -397,7 +397,7 @@ public final class GxRecordingsPage extends GxPage {
             this.renderRoutes();
             HashSet var2 = new HashSet();
             ObjectRef var3 = new ObjectRef();
-            var3.element = (T)this.stream(
+            var3.element = this.stream(
                 "/api/routes", new GxRecordingsPage$$ExternalSyntheticLambda51(this, var2), new GxRecordingsPage$$ExternalSyntheticLambda52(this, var3)
             );
             this.routeCall = (Call)var3.element;
@@ -585,7 +585,7 @@ public final class GxRecordingsPage extends GxPage {
             var18 = null;
         }
 
-        var1.setStartedAtMs(var18);
+        var1.setStartedAtMs(((Long) var18));
         Iterable var51 = CollectionsKt.listOf(GxRecordingsKt.gxRecordingsNorm(var1.getName()));
         var var19 = new ArrayList();
 
@@ -1061,7 +1061,7 @@ public final class GxRecordingsPage extends GxPage {
                     if (var28 instanceof Collection && ((Collection)var28).isEmpty()) {
                         var9 = var8;
                     } else {
-                        for (String var12 : var28) {
+                        for (String var12 : ((String) var28)) {
                             if (var5 && var2.matches(var4) && var3.matches(var12)) {
                                 var8 = false;
                             } else {
@@ -1177,7 +1177,7 @@ public final class GxRecordingsPage extends GxPage {
         TextView textView = this.routesStats;
         if (textView != null) {
             int size = this.routes.size();
-            Iterator<T> it = this.routes.iterator();
+            Iterator it = this.routes.iterator();
             int i = 0;
             while (it.hasNext()) {
                 i += ((GxRecordingsRoute) it.next()).getApproxDurationSeconds();
@@ -1223,7 +1223,7 @@ public final class GxRecordingsPage extends GxPage {
         if (visible.isEmpty() && !this.routesLoading) {
             list.addView(empty("No routes found."));
         }
-        for (GxRecordingsRoute r : CollectionsKt.take(visible, 250)) {
+        for (GxRecordingsRoute r : ((GxRecordingsRoute) CollectionsKt.take(visible, 250))) {
             routeRow(r, list, gen);
         }
         if (visible.size() > 250) {
@@ -1258,7 +1258,7 @@ public final class GxRecordingsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean routeRow$lambda$53;
-                routeRow$lambda$53 = GxRecordingsPage.routeRow$lambda$53(gen, this);
+                routeRow$lambda$53 = GxRecordingsPage.routeRow$lambda$53(gen, GxRecordingsPage.this);
                 return Boolean.valueOf(routeRow$lambda$53);
             }
         });
@@ -1506,7 +1506,7 @@ public final class GxRecordingsPage extends GxPage {
         AlertDialog.Builder b = new AlertDialog.Builder(getAct()).setTitle("Rename route").setMessage("Rename “" + r.getDisplayName() + "”").setView($this$renameRoute_u24lambda_u2466).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda53
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                GxRecordingsPage.renameRoute$lambda$69($this$renameRoute_u24lambda_u2465, r, this, then, dialogInterface, i);
+                GxRecordingsPage.renameRoute$lambda$69($this$renameRoute_u24lambda_u2465, r, GxRecordingsPage.this, then, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null);
         if (r.getIsCustomName()) {
@@ -1657,7 +1657,7 @@ public final class GxRecordingsPage extends GxPage {
                 return openLogs$lambda$82$lambda$79;
             }
         }, 2, null);
-        for (final JSONObject seg : segs) {
+        for (final JSONObject seg : (Iterable) (JSONObject) ((JSONObject) segs)) {
             final String fn = GxPage.str$default(this$0, seg, "filename", null, 2, null);
             String str2 = "Segment " + seg.optInt("segmentNum");
             gxRecordingsBytes2 = GxRecordingsKt.gxRecordingsBytes(seg.optDouble("bytes", d));
@@ -1859,7 +1859,7 @@ public final class GxRecordingsPage extends GxPage {
             this.renderScreens();
             HashSet var3 = new HashSet();
             ObjectRef var2 = new ObjectRef();
-            var2.element = (T)this.stream(
+            var2.element = this.stream(
                 "/api/screen_recordings/list",
                 new GxRecordingsPage$$ExternalSyntheticLambda24(this, var3),
                 new GxRecordingsPage$$ExternalSyntheticLambda25(this, var2)
@@ -1877,7 +1877,7 @@ public final class GxRecordingsPage extends GxPage {
             arr = CollectionsKt.emptyList();
         }
         boolean added = false;
-        for (JSONObject j : arr) {
+        for (JSONObject j : (Iterable) (JSONObject) ((JSONObject) arr)) {
             String fn = GxPage.str$default(this$0, j, "filename", null, 2, null);
             if (!StringsKt.isBlank(fn) && $seen.add(fn)) {
                 this$0.screens.add(new GxRecordingsScreen(fn, GxPage.str$default(this$0, j, "png", null, 2, null), GxPage.str$default(this$0, j, "timestamp", null, 2, null), j.optBoolean("is_custom_name")));
@@ -1890,7 +1890,7 @@ public final class GxRecordingsPage extends GxPage {
                 CollectionsKt.sortWith($this$sortByDescending$iv, new Comparator() { // from class: com.starpilot.starview.GxRecordingsPage$loadScreens$lambda$91$$inlined$sortByDescending$1
                     /* JADX WARN: Multi-variable type inference failed */
                     @Override // java.util.Comparator
-                    public final int compare(T t, T t2) {
+                    public final int compare(Object t, Object t2) {
                         GxRecordingsScreen it = (GxRecordingsScreen) t2;
                         GxRecordingsScreen it2 = (GxRecordingsScreen) t;
                         return ComparisonsKt.compareValues(it.getTimestamp(), it2.getTimestamp());
@@ -2006,7 +2006,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     boolean renderScreens$lambda$96;
-                    renderScreens$lambda$96 = GxRecordingsPage.renderScreens$lambda$96(gen, this);
+                    renderScreens$lambda$96 = GxRecordingsPage.renderScreens$lambda$96(gen, GxRecordingsPage.this);
                     return Boolean.valueOf(renderScreens$lambda$96);
                 }
             });
@@ -2117,7 +2117,7 @@ public final class GxRecordingsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit renameScreen$lambda$103;
-                renameScreen$lambda$103 = GxRecordingsPage.renameScreen$lambda$103(base, this, rec, then, (String) obj);
+                renameScreen$lambda$103 = GxRecordingsPage.renameScreen$lambda$103(base, GxRecordingsPage.this, rec, then, (String) obj);
                 return renameScreen$lambda$103;
             }
         }, 26, null);
@@ -2422,7 +2422,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$15;
-                    _init_$lambda$15 = GxRecordingsPage.RoutePlayer._init_$lambda$15(GxRecordingsPage.this, this);
+                    _init_$lambda$15 = GxRecordingsPage.RoutePlayer._init_$lambda$15(GxRecordingsPage.this, GxRecordingsPage.RoutePlayer.this);
                     return _init_$lambda$15;
                 }
             }, 2, null);
@@ -2434,7 +2434,7 @@ public final class GxRecordingsPage extends GxPage {
                     return _init_$lambda$16;
                 }
             }, 2, null);
-            for (TextView v : CollectionsKt.listOf((Object[]) new TextView[]{this.prev, this.segLabel, this.next})) {
+            for (TextView v : (Iterable) (TextView) ((TextView) CollectionsKt.listOf((Object[]) new TextView[]{this.prev, this.segLabel, this.next}))) {
                 this.segBar.addView(v, gap());
             }
             this.segBar.addView(new View(this.this$0.getAct()), new LinearLayout.LayoutParams(this.this$0.getUi().dp(14), 1));
@@ -2456,7 +2456,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$19;
-                    _init_$lambda$19 = GxRecordingsPage.RoutePlayer._init_$lambda$19(GxRecordingsPage.this, this);
+                    _init_$lambda$19 = GxRecordingsPage.RoutePlayer._init_$lambda$19(GxRecordingsPage.this, GxRecordingsPage.RoutePlayer.this);
                     return _init_$lambda$19;
                 }
             }), gap());
@@ -2466,7 +2466,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$20;
-                    _init_$lambda$20 = GxRecordingsPage.RoutePlayer._init_$lambda$20(GxRecordingsPage.this, this);
+                    _init_$lambda$20 = GxRecordingsPage.RoutePlayer._init_$lambda$20(GxRecordingsPage.this, GxRecordingsPage.RoutePlayer.this);
                     return _init_$lambda$20;
                 }
             }, 2, null), gap());
@@ -2485,7 +2485,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$23;
-                    _init_$lambda$23 = GxRecordingsPage.RoutePlayer._init_$lambda$23(GxRecordingsPage.this, this);
+                    _init_$lambda$23 = GxRecordingsPage.RoutePlayer._init_$lambda$23(GxRecordingsPage.this, GxRecordingsPage.RoutePlayer.this);
                     return _init_$lambda$23;
                 }
             }, 2, null);
@@ -2496,7 +2496,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$25;
-                    _init_$lambda$25 = GxRecordingsPage.RoutePlayer._init_$lambda$25(GxRecordingsPage.this, this);
+                    _init_$lambda$25 = GxRecordingsPage.RoutePlayer._init_$lambda$25(GxRecordingsPage.this, GxRecordingsPage.RoutePlayer.this);
                     return _init_$lambda$25;
                 }
             }, 2, null), gap());
@@ -2506,7 +2506,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$27;
-                    _init_$lambda$27 = GxRecordingsPage.RoutePlayer._init_$lambda$27(GxRecordingsPage.this, this);
+                    _init_$lambda$27 = GxRecordingsPage.RoutePlayer._init_$lambda$27(GxRecordingsPage.this, GxRecordingsPage.RoutePlayer.this);
                     return _init_$lambda$27;
                 }
             }, 2, null);
@@ -3197,7 +3197,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit probe$lambda$51;
-                    probe$lambda$51 = GxRecordingsPage.RoutePlayer.probe$lambda$51(t, this, u, attempt, gxRecordingsPage2, ((Integer) obj).intValue());
+                    probe$lambda$51 = GxRecordingsPage.RoutePlayer.probe$lambda$51(t, GxRecordingsPage.RoutePlayer.this, u, attempt, gxRecordingsPage2, ((Integer) obj).intValue());
                     return probe$lambda$51;
                 }
             });
@@ -3308,7 +3308,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$8;
-                    _init_$lambda$8 = GxRecordingsPage.ScreenPlayer._init_$lambda$8(GxRecordingsPage.this, this);
+                    _init_$lambda$8 = GxRecordingsPage.ScreenPlayer._init_$lambda$8(GxRecordingsPage.this, GxRecordingsPage.ScreenPlayer.this);
                     return _init_$lambda$8;
                 }
             }), (ViewGroup.LayoutParams) lp.invoke());
@@ -3318,7 +3318,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$10;
-                    _init_$lambda$10 = GxRecordingsPage.ScreenPlayer._init_$lambda$10(GxRecordingsPage.this, this);
+                    _init_$lambda$10 = GxRecordingsPage.ScreenPlayer._init_$lambda$10(GxRecordingsPage.this, GxRecordingsPage.ScreenPlayer.this);
                     return _init_$lambda$10;
                 }
             }, 2, null), (ViewGroup.LayoutParams) lp.invoke());
@@ -3328,7 +3328,7 @@ public final class GxRecordingsPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$12;
-                    _init_$lambda$12 = GxRecordingsPage.ScreenPlayer._init_$lambda$12(GxRecordingsPage.this, this);
+                    _init_$lambda$12 = GxRecordingsPage.ScreenPlayer._init_$lambda$12(GxRecordingsPage.this, GxRecordingsPage.ScreenPlayer.this);
                     return _init_$lambda$12;
                 }
             }, 2, null);
@@ -3532,7 +3532,7 @@ public final class GxRecordingsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit chipBar$lambda$111;
-                chipBar$lambda$111 = GxRecordingsPage.chipBar$lambda$111(views, this, ((Integer) obj).intValue());
+                chipBar$lambda$111 = GxRecordingsPage.chipBar$lambda$111(views, GxRecordingsPage.this, ((Integer) obj).intValue());
                 return chipBar$lambda$111;
             }
         };
@@ -3779,7 +3779,7 @@ public final class GxRecordingsPage extends GxPage {
         new Thread(new Runnable() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda0
             @Override // java.lang.Runnable
             public final void run() {
-                GxRecordingsPage.stream$lambda$135(c, this, onData, onDone);
+                GxRecordingsPage.stream$lambda$135(c, GxRecordingsPage.this, onData, onDone);
             }
         }).start();
         return c;

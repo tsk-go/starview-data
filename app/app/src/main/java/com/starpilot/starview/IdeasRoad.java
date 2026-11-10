@@ -360,7 +360,7 @@ public final class IdeasRoad {
         } else {
             this.cutinFrom = Double.NaN;
             if (var29 && var3 != null && !Double.isNaN(var3.getYaw())) {
-                IdeaSpots.Seen var24 = CollectionsKt.firstOrNull(
+                IdeaSpots.Seen var24 = (IdeaSpots.Seen) CollectionsKt.firstOrNull(
                     IdeaSpots.around$default(
                         IdeaSpots.INSTANCE, var3.getLat(), var3.getLon(), var3.getYaw(), SetsKt.setOf("cutin"), 400.0, 50.0, 25.0, 2, false, 256, null
                     )

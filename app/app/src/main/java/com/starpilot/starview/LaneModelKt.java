@@ -93,7 +93,7 @@ public final class LaneModelKt {
                                             th = th4;
                                             obj = null;
                                             th = th;
-                                            str = obj;
+                                            str = ((String) obj);
                                             throw th;
                                         }
                                     } catch (Throwable th5) {

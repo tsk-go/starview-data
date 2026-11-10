@@ -230,7 +230,7 @@ public final class SideCam {
         boolean onBlinker = t.pBool("PIPPreviewShowOnBlinker", false);
         boolean onBsm = t.pBool("PIPPreviewShowOnBSM", false);
         ArrayList out = new ArrayList(2);
-        for (Triple triple : CollectionsKt.listOf((Object[]) new Triple[]{new Triple("right", Boolean.valueOf(t.getRightBlinker()), Boolean.valueOf(t.getRightBlindspot())), new Triple("left", Boolean.valueOf(t.getLeftBlinker()), Boolean.valueOf(t.getLeftBlindspot()))})) {
+        for (Triple triple : ((Triple) CollectionsKt.listOf((Object[]) new Triple[]{new Triple("right", Boolean.valueOf(t.getRightBlinker()), Boolean.valueOf(t.getRightBlindspot())), new Triple("left", Boolean.valueOf(t.getLeftBlinker()), Boolean.valueOf(t.getLeftBlindspot()))}))) {
             String side = (String) triple.component1();
             boolean blinker = ((Boolean) triple.component2()).booleanValue();
             boolean bsm = ((Boolean) triple.component3()).booleanValue();
@@ -395,7 +395,7 @@ public final class SideCam {
             int uPix = uP.getPixelStride();
             int vRow = vP.getRowStride();
             int vPix = vP.getPixelStride();
-            for (String side2 : want2) {
+            for (String side2 : ((String) want2)) {
                 float[] cr = m.crop(side2, fw2, fh2);
                 if (cr != null) {
                     int[] px2 = new int[57600];

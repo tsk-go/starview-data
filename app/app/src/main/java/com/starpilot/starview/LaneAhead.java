@@ -62,7 +62,7 @@ public final class LaneAhead {
         PREPARE,
         URGENT;
 
-        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(values());
 
         public static EnumEntries<Stage> getEntries() {
             return $ENTRIES;
@@ -833,9 +833,9 @@ public final class LaneAhead {
         if (Double.isNaN(OsmRoads.INSTANCE.getLat0())) {
             return null;
         } else {
-            Pair var18 = OsmRoads.INSTANCE.toLocal(var1, var3);
-            double var9 = ((Number)var18.component1()).doubleValue();
-            var3 = ((Number)var18.component2()).doubleValue();
+            Object var18 = OsmRoads.INSTANCE.toLocal(var1, var3);
+            double var9 = ((Number)((Pair) var18).component1()).doubleValue();
+            var3 = ((Number)((Pair) var18).component2()).doubleValue();
             OsmRoads.Match var50 = OsmRoads.INSTANCE.matchSeg(var9, var3, var5);
             if (var50 != null) {
                 int var13;
@@ -850,22 +850,22 @@ public final class LaneAhead {
                 }
 
                 if (var50 != null) {
-                    OsmRoads.Way var21 = var50.getWay();
-                    if (StringsKt.endsWith(var21.getKind(), "_link", false)) {
+                    Object var21 = var50.getWay();
+                    if (StringsKt.endsWith(((OsmRoads.Way) var21).getKind(), "_link", false)) {
                         return null;
                     }
 
                     ArrayList var25 = new ArrayList();
                     String var51 = "_link";
-                    List var20 = roadPath$ordered(var21, var9, var3, var5);
+                    List var20 = roadPath$ordered(((Way) var21), var9, var3, var5);
                     HashSet var19 = new HashSet();
                     var3 = 0.0;
 
                     String var24;
                     while (true) {
-                        var19.add(var21.getId());
+                        var19.add(((OsmRoads.Way) var21).getId());
 
-                        for (double[] var23 : var20) {
+                        for (double[] var23 : ((double[]) var20)) {
                             if (!var25.isEmpty()) {
                                 var3 += Math.hypot(var23[0] - ((double[])CollectionsKt.last(var25))[0], var23[1] - ((double[])CollectionsKt.last(var25))[1]);
                             }
@@ -878,7 +878,7 @@ public final class LaneAhead {
                             break;
                         }
 
-                        double[] var26 = CollectionsKt.last(var25);
+                        double[] var26 = ((double[]) CollectionsKt.last(var25));
                         Object var68 = var25.get(var25.size() - 2);
                         Intrinsics.checkNotNullExpressionValue(var68, "get(...)");
                         var68 = (double[])var68;
@@ -893,7 +893,7 @@ public final class LaneAhead {
                             label179: {
                                 OsmRoads.Way var29 = (OsmRoads.Way)var30;
                                 if (!var19.contains(var29.getId()) && !StringsKt.endsWith(var29.getKind(), var51, false)) {
-                                    if (var21.getName().length() > 0) {
+                                    if (((OsmRoads.Way) var21).getName().length() > 0) {
                                         var13 = (((boolean)true) ? 1 : 0);
                                     } else {
                                         var13 = (((boolean)false) ? 1 : 0);
@@ -901,9 +901,9 @@ public final class LaneAhead {
 
                                     boolean var17;
                                     if ((var13 != 0)) {
-                                        var17 = OsmRoads.INSTANCE.sameStreet(var29.getName(), var21.getName());
+                                        var17 = OsmRoads.INSTANCE.sameStreet(var29.getName(), ((OsmRoads.Way) var21).getName());
                                     } else {
-                                        var17 = Intrinsics.areEqual(var29.getKind(), var21.getKind());
+                                        var17 = Intrinsics.areEqual(var29.getKind(), ((OsmRoads.Way) var21).getKind());
                                     }
 
                                     if (var17) {
@@ -924,7 +924,7 @@ public final class LaneAhead {
                         var73 = var65;
                         var var76 = new ArrayList();
 
-                        for (OsmRoads.Way var52 : var73) {
+                        for (OsmRoads.Way var52 : ((Way) var73)) {
                             label200: {
                                 if (Math.hypot(var52.getE()[0] - var26[0], var52.getN()[0] - var26[1]) < 15.0) {
                                     var13 = 0;
@@ -991,7 +991,7 @@ public final class LaneAhead {
                         } else {
                             var18 = (Pair)var75.next();
                             if (var75.hasNext()) {
-                                var5 = ((Number)var18.getSecond()).doubleValue();
+                                var5 = ((Number)((Pair) var18).getSecond()).doubleValue();
                                 var21 = var18;
 
                                 do {
@@ -1015,12 +1015,12 @@ public final class LaneAhead {
                             break;
                         }
 
-                        var21 = (OsmRoads.Way)var18.getFirst();
+                        var21 = (OsmRoads.Way)((Pair) var18).getFirst();
                         if (var21 == null) {
                             break;
                         }
 
-                        var68 = CollectionsKt.drop(roadPath$ordered(var21, var26[0], var26[1], var1), 1);
+                        var68 = CollectionsKt.drop(roadPath$ordered(((Way) var21), var26[0], var26[1], var1), 1);
                         var51 = var51;
                         var20 = (List)var68;
                     }

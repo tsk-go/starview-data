@@ -129,7 +129,7 @@ public final class GalaxyTools {
             obj = KtCompat.resultOf(CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.GalaxyTools$parse$lambda$4$$inlined$sortedBy$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     GalaxyTools.Tool it4 = (GalaxyTools.Tool) t;
                     String lowerCase = it4.getName().toLowerCase(Locale.ROOT);
                     Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");

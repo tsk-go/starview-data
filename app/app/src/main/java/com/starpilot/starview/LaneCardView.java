@@ -249,12 +249,12 @@ public final class LaneCardView extends View {
             float var12 = this.getHeight();
             float var8 = this.d * 14.0F;
             var1.drawRoundRect(new RectF(0.0F, 0.0F, var11, var12), this.d * 16.0F, this.d * 16.0F, this.bg);
-            Pair var28 = var33.laneFromLeft();
-            int var21 = ((Number)var28.component1()).intValue();
-            double var2 = ((Number)var28.component2()).doubleValue();
+            Object var28 = var33.laneFromLeft();
+            int var21 = ((Number)((Pair) var28).component1()).intValue();
+            double var2 = ((Number)((Pair) var28).component2()).doubleValue();
             var28 = var33.laneCount();
-            int var18 = ((Number)var28.component1()).intValue();
-            String var29 = (String)var28.component2();
+            int var18 = ((Number)((Pair) var28).component1()).intValue();
+            String var29 = (String)((Pair) var28).component2();
             int var19;
             if (var18 > 0) {
                 var19 = Math.max(var18, var21);
@@ -395,18 +395,18 @@ public final class LaneCardView extends View {
 
             var10 = var11 - var9 * var8;
             var28 = var33.side(-1);
-            var20 = ((Number)var28.component1()).intValue();
-            var2 = ((Number)var28.component2()).doubleValue();
+            var20 = ((Number)((Pair) var28).component1()).intValue();
+            var2 = ((Number)((Pair) var28).component2()).doubleValue();
             var28 = var33.side(1);
-            var18 = ((Number)var28.component1()).intValue();
-            double var6 = ((Number)var28.component2()).doubleValue();
+            var18 = ((Number)((Pair) var28).component1()).intValue();
+            double var6 = ((Number)((Pair) var28).component2()).doubleValue();
             double var4 = 100;
             var21 = (int)(var2 * var4);
             var19 = (int)(var4 * var6);
             this.line(var1, "lanes left of us: " + var20 + " (" + var21 + "%)  ·  right: " + var18 + " (" + var19 + "%)", this.small, this.d * 56.0F, var10);
             var28 = CollectionsKt.joinToString(CollectionsKt.take(var33.getWhy(), 2), "  ·  ", "", "", -1, "...", new LaneCardView$$ExternalSyntheticLambda0(this));
             int var53;
-            if (var28.length() == 0) {
+            if (((String) var28).length() == 0) {
                 var53 = 1;
             } else {
                 var53 = 0;
@@ -510,7 +510,7 @@ public final class LaneCardView extends View {
                 label280: {
                     if (var134 != null) {
                         var28 = var134.getName();
-                        if (var28.length() == 0) {
+                        if (((String) var28).length() == 0) {
                             var60 = (((boolean)true) ? 1 : 0);
                         } else {
                             var60 = (((boolean)false) ? 1 : 0);
@@ -922,7 +922,7 @@ public final class LaneCardView extends View {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit askCount$lambda$17;
-                askCount$lambda$17 = LaneCardView.askCount$lambda$17(tr, this);
+                askCount$lambda$17 = LaneCardView.askCount$lambda$17(tr, LaneCardView.this);
                 return askCount$lambda$17;
             }
         };
@@ -1030,7 +1030,7 @@ public final class LaneCardView extends View {
         new AlertDialog.Builder(getContext()).setTitle("Reset").setItems(items, new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda4
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                LaneCardView.askReset$lambda$19(tr, this, dialogInterface, i);
+                LaneCardView.askReset$lambda$19(tr, LaneCardView.this, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }

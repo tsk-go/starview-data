@@ -18,45 +18,12 @@ public final /* data */ class OfflineTtsPocketModelConfig {
         this(null, null, null, null, null, null, null, 0, 255, null);
     }
 
-    /* renamed from: component1, reason: from getter */
-    public final String getLmFlow() {
-        return this.lmFlow;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final String getLmMain() {
-        return this.lmMain;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final String getEncoder() {
-        return this.encoder;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final String getDecoder() {
-        return this.decoder;
-    }
 
-    /* renamed from: component5, reason: from getter */
-    public final String getTextConditioner() {
-        return this.textConditioner;
-    }
 
-    /* renamed from: component6, reason: from getter */
-    public final String getVocabJson() {
-        return this.vocabJson;
-    }
 
-    /* renamed from: component7, reason: from getter */
-    public final String getTokenScoresJson() {
-        return this.tokenScoresJson;
-    }
-
-    /* renamed from: component8, reason: from getter */
-    public final int getVoiceEmbeddingCacheCapacity() {
-        return this.voiceEmbeddingCacheCapacity;
-    }
 
     public final OfflineTtsPocketModelConfig copy(String lmFlow, String lmMain, String encoder, String decoder, String textConditioner, String vocabJson, String tokenScoresJson, int voiceEmbeddingCacheCapacity) {
         Intrinsics.checkNotNullParameter(lmFlow, "lmFlow");

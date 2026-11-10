@@ -31,7 +31,7 @@ public final class KeyFobView extends CardPage {
     private String err;
     private JSONArray events;
     private long eventsAt;
-    private final KeyFobView$poll$1 poll;
+    private final Runnable poll;
     private final int red;
     private boolean shown;
     private JSONObject status;

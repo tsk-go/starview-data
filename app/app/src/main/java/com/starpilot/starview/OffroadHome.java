@@ -157,7 +157,7 @@ public final class OffroadHome extends FrameLayout {
         Iterable var22 = CollectionsKt.listOf(new Pair[]{TuplesKt.to("Aggressive", 0), TuplesKt.to("Standard", 1), TuplesKt.to("Relaxed", 2)});
         var var48 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var22, 10));
 
-        for (Pair var8 : var22) {
+        for (Pair var8 : ((Pair) var22)) {
             String var7 = (String)var8.component1();
             int var3 = ((Number)var8.component2()).intValue();
             TextView var109 = tv$default(this, 19.0F, 0, true, 2, null);
@@ -491,7 +491,7 @@ public final class OffroadHome extends FrameLayout {
         UPDATE,
         ALERTS;
 
-        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(values());
 
         public static EnumEntries<State> getEntries() {
             return $ENTRIES;
@@ -659,7 +659,7 @@ public final class OffroadHome extends FrameLayout {
             TextView $this$view_u24lambda_u247_u24lambda_u243 = OffroadHome.tv$default(offroadHome, 16.0f, Color.rgb(150, 160, 180), false, 4, null);
             $this$view_u24lambda_u247_u24lambda_u243.setText("hours");
             Unit unit2 = Unit.INSTANCE;
-            for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(textView, $this$view_u24lambda_u247_u24lambda_u242), TuplesKt.to(this.dist, this.distUnit), TuplesKt.to(textView2, $this$view_u24lambda_u247_u24lambda_u243)})) {
+            for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(textView, $this$view_u24lambda_u247_u24lambda_u242), TuplesKt.to(this.dist, this.distUnit), TuplesKt.to(textView2, $this$view_u24lambda_u247_u24lambda_u243)}))) {
                 TextView v = (TextView) pair.component1();
                 TextView unit3 = (TextView) pair.component2();
                 LinearLayout $this$view_u24lambda_u247_u24lambda_u245 = new LinearLayout($this$view_u24lambda_u247.getContext());
@@ -843,7 +843,7 @@ public final class OffroadHome extends FrameLayout {
                 break;
             }
             Map.Entry entry$iv = it.next();
-            String it2 = entry$iv.getKey();
+            String it2 = ((String) entry$iv.getKey());
             if (StringsKt.startsWith(it2, "Offroad_", false)) {
                 result$iv.put(entry$iv.getKey(), entry$iv.getValue());
             }
@@ -852,7 +852,7 @@ public final class OffroadHome extends FrameLayout {
         int $i$f$mapNotNull2 = 0;
         Collection destination$iv$iv = new ArrayList();
         Map $this$mapNotNullTo$iv$iv3 = $this$mapNotNull$iv2;
-        for (Map.Entry element$iv$iv$iv : $this$mapNotNullTo$iv$iv3.entrySet()) {
+        for (Map.Entry element$iv$iv$iv : ((Entry) $this$mapNotNullTo$iv$iv3.entrySet())) {
             Object v = element$iv$iv$iv.getValue();
             JSONObject o = jobj(v);
             if (o == null) {
@@ -892,7 +892,7 @@ public final class OffroadHome extends FrameLayout {
         return CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.OffroadHome$alerts$$inlined$sortedByDescending$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t2, T t3) {
+            public final int compare(Object t2, Object t3) {
                 OffroadHome.Alert it3 = (OffroadHome.Alert) t3;
                 OffroadHome.Alert it4 = (OffroadHome.Alert) t2;
                 return ComparisonsKt.compareValues(Integer.valueOf(it3.getSeverity()), Integer.valueOf(it4.getSeverity()));
@@ -1002,7 +1002,7 @@ public final class OffroadHome extends FrameLayout {
             var13.setText(var64);
             String var15 = StringsKt.trim(Telemetry.pStr$default(var1, "UpdaterCurrentDescription", null, 2, null)).toString();
             CharSequence var87 = Telemetry.pStr$default(var1, "DrivingModelName", null, 2, null);
-            LinearLayout var65 = var87;
+            Object var65 = var87;
             if (StringsKt.isBlank(var87)) {
                 var65 = Telemetry.pStr$default(var1, "Model", null, 2, null);
             }
@@ -1071,7 +1071,7 @@ public final class OffroadHome extends FrameLayout {
                 var43 = (byte)8;
             }
 
-            var65.setVisibility((((var43 != 0)) ? 1 : 0));
+            ((LinearLayout) var65).setVisibility((((var43 != 0)) ? 1 : 0));
             var65 = this.detailContent;
             if (this.state == OffroadHome.State.HOME) {
                 var43 = (byte)8;
@@ -1079,7 +1079,7 @@ public final class OffroadHome extends FrameLayout {
                 var43 = (byte)0;
             }
 
-            var65.setVisibility((((var43 != 0)) ? 1 : 0));
+            ((LinearLayout) var65).setVisibility((((var43 != 0)) ? 1 : 0));
             OffroadHome.State var71 = this.state;
             switch (OffroadHome.WhenMappings.$EnumSwitchMapping$0[var71.ordinal()]) {
                 case 1:
@@ -1187,7 +1187,7 @@ public final class OffroadHome extends FrameLayout {
                     var13 = this.devName;
                     var65 = Telemetry.pStr$default(var1, "GalaxyDeviceName", null, 2, null);
                     int var53;
-                    if (var65.length() == 0) {
+                    if (((CharSequence) var65).length() == 0) {
                         var53 = 1;
                     } else {
                         var53 = 0;
@@ -1402,17 +1402,17 @@ public final class OffroadHome extends FrameLayout {
                     this.detailTitle.setText("Update available");
                     this.detailBody.removeAllViews();
                     CharSequence var74 = Telemetry.pStr$default(var1, "UpdaterNewDescription", null, 2, null);
-                    LinearLayout var22 = var74;
+                    Object var22 = var74;
                     if (StringsKt.isBlank(var74)) {
                         var22 = "A new version is ready to install.";
                     }
 
-                    String var75 = (String)var22;
+                    Object var75 = (String)var22;
                     var22 = this.detailBody;
                     var13 = tv$default(this, 22.0F, Color.rgb(210, 216, 228), false, 4, null);
                     var13.setText(var75);
                     var13.setLineSpacing(this.dp(6), 1.0F);
-                    var22.addView((View)var13);
+                    ((LinearLayout) var22).addView((View)var13);
                     this.detailAction.setText("Open Software settings");
                     this.detailAction.setVisibility(0);
                     this.detailAction.setOnClickListener(new OffroadHome$$ExternalSyntheticLambda1(this));
@@ -1431,7 +1431,7 @@ public final class OffroadHome extends FrameLayout {
                     var72.setText(var19);
                     this.detailBody.removeAllViews();
 
-                    for (OffroadHome.Alert var89 : var14) {
+                    for (OffroadHome.Alert var89 : ((Alert) var14)) {
                         LinearLayout var20 = this.detailBody;
                         TextView var106 = tv$default(this, 21.0F, -1, false, 4, null);
                         var106.setText(var89.getText());

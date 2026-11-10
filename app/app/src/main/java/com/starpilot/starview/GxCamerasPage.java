@@ -816,13 +816,13 @@ public final class GxCamerasPage extends GxPage {
         var7.setGravity(16);
         var7.setPadding(0, 0, 0, this.getUi().dp(6));
         CharSequence var6 = GxPage.str$default(this, var2, "kind", null, 2, null);
-        TextView var10 = var6;
+        Object var10 = var6;
         if (StringsKt.isBlank(var6)) {
             var10 = "event";
         }
 
         int var5;
-        String var8;
+        Object var8;
         label35: {
             var8 = (String)var10;
             switch (var8.hashCode()) {
@@ -851,14 +851,14 @@ public final class GxCamerasPage extends GxPage {
         var10 = new TextView((Context)this.getAct());
         Locale var17 = Locale.US;
         Intrinsics.checkNotNullExpressionValue(var17, "US");
-        String var18 = var8.toUpperCase(var17);
+        String var18 = ((String) var8).toUpperCase(var17);
         Intrinsics.checkNotNullExpressionValue(var18, "toUpperCase(...)");
-        var10.setText(var18);
-        var10.setTextSize(14.0F);
-        var10.setTypeface(Typeface.DEFAULT_BOLD);
-        var10.setTextColor(var5);
-        var10.setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 10, var5));
-        var10.setPadding(this.getUi().dp(12), this.getUi().dp(5), this.getUi().dp(12), this.getUi().dp(5));
+        ((TextView) var10).setText(var18);
+        ((TextView) var10).setTextSize(14.0F);
+        ((TextView) var10).setTypeface(Typeface.DEFAULT_BOLD);
+        ((TextView) var10).setTextColor(var5);
+        ((TextView) var10).setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 10, var5));
+        ((TextView) var10).setPadding(this.getUi().dp(12), this.getUi().dp(5), this.getUi().dp(12), this.getUi().dp(5));
         TextView var19 = new TextView((Context)this.getAct());
         var19.setText(var3);
         var19.setTextSize(17.0F);
@@ -879,7 +879,7 @@ public final class GxCamerasPage extends GxPage {
 
         if (var4 != null) {
             var10 = CarUi.button$default(this.getUi(), "Delete", false, new GxCamerasPage$$ExternalSyntheticLambda70(var4), 2, null);
-            var10.setTextColor(GxCamerasKt.GX_CAM_RED);
+            ((TextView) var10).setTextColor(GxCamerasKt.GX_CAM_RED);
             View var15 = (View)var10;
             android.widget.LinearLayout.LayoutParams var16 = new android.widget.LinearLayout.LayoutParams(-2, -2);
             var16.leftMargin = this.getUi().dp(12);
@@ -1443,7 +1443,7 @@ public final class GxCamerasPage extends GxPage {
             new Thread(new Runnable() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda35
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxCamerasPage.gxCamLoadBitmap$lambda$73(h, path, this, then);
+                    GxCamerasPage.gxCamLoadBitmap$lambda$73(h, path, GxCamerasPage.this, then);
                 }
             }).start();
         }
@@ -1811,7 +1811,7 @@ public final class GxCamerasPage extends GxPage {
         box.addView(gxCamerasRegionView3, $this$buildVasm_u24lambda_u2492);
         note("The preview is mirrored: the LEFT side of the vehicle is always on the LEFT here; the RIGHT side is always on the RIGHT. Trace the visible glass (front and rear side windows), exclude A-pillars, door frames, and interior. Drag a point to move it.", box);
         header("Current Status", box);
-        for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("VASMLeftActive", "Left Active"), TuplesKt.to("VASMRightActive", "Right Active"), TuplesKt.to("VASMLeftConfidence", "Left Confidence"), TuplesKt.to("VASMRightConfidence", "Right Confidence")})) {
+        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("VASMLeftActive", "Left Active"), TuplesKt.to("VASMRightActive", "Right Active"), TuplesKt.to("VASMLeftConfidence", "Left Confidence"), TuplesKt.to("VASMRightConfidence", "Right Confidence")}))) {
             String k = (String) pair.component1();
             String label = (String) pair.component2();
             this.vStat.put(k, GxPage.row$default(this, label, null, box, 0, 8, null).value("-"));

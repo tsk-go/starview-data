@@ -145,7 +145,7 @@ public final class DestinationActivity extends AppCompatActivity {
             }
             List list = (List) destination$iv$iv;
             JSONArray out = new JSONArray().put(new JSONObject().put("name", name).put("address", address).put("latitude", lat).put("longitude", lon));
-            for (JSONObject o : CollectionsKt.take(list, 11)) {
+            for (JSONObject o : (Iterable) (JSONObject) ((JSONObject) CollectionsKt.take(list, 11))) {
                 out.put(o);
             }
             ctx.getSharedPreferences("starview_nav", 0).edit().putString("recents", out.toString()).apply();
@@ -308,7 +308,7 @@ public final class DestinationActivity extends AppCompatActivity {
             var11 = null;
         }
 
-        this.route = var11;
+        this.route = ((String) var11);
         LinearLayout var8 = new LinearLayout((Context)this);
         var8.setOrientation(1);
         var8.setBackgroundColor(Color.rgb(11, 13, 18));
@@ -712,7 +712,7 @@ public final class DestinationActivity extends AppCompatActivity {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit runSearch$lambda$34;
-                runSearch$lambda$34 = DestinationActivity.runSearch$lambda$34(seq, this, q, enter, (JSONObject) obj);
+                runSearch$lambda$34 = DestinationActivity.runSearch$lambda$34(seq, DestinationActivity.this, q, enter, (JSONObject) obj);
                 return runSearch$lambda$34;
             }
         });
@@ -846,7 +846,7 @@ public final class DestinationActivity extends AppCompatActivity {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit quick$lambda$42;
-                quick$lambda$42 = DestinationActivity.quick$lambda$42(seq, this, label, (JSONObject) obj);
+                quick$lambda$42 = DestinationActivity.quick$lambda$42(seq, DestinationActivity.this, label, (JSONObject) obj);
                 return quick$lambda$42;
             }
         });
@@ -918,7 +918,7 @@ public final class DestinationActivity extends AppCompatActivity {
                 sortedWith = CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.DestinationActivity$quick$lambda$42$lambda$41$$inlined$sortedBy$1
                     /* JADX WARN: Multi-variable type inference failed */
                     @Override // java.util.Comparator
-                    public final int compare(T t, T t2) {
+                    public final int compare(Object t, Object t2) {
                         Double dist;
                         double doubleValue;
                         Double dist2;
@@ -1115,7 +1115,7 @@ public final class DestinationActivity extends AppCompatActivity {
                 Iterator var13;
                 ArrayList var57;
                 try {
-                    Iterable var43 = var42;
+                    Iterable var43 = ((Iterable) var42);
                     ArrayList var55 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var43, 10));
                     var57 = var55;
                     var13 = var43.iterator();
@@ -1154,7 +1154,7 @@ public final class DestinationActivity extends AppCompatActivity {
                         break label225;
                     }
 
-                    var2 = var49;
+                    var2 = ((String) var49);
                     if (var49 == null) {
                         var2 = "";
                     }
@@ -1238,7 +1238,7 @@ public final class DestinationActivity extends AppCompatActivity {
 
                     try {
                         DestinationActivity.Place var52 = new DestinationActivity.Place(
-                            var2, var56, var14.getLatitude(), var14.getLongitude(), null, 0.0, null, false, 240, null
+                            var2, ((String) var56), var14.getLatitude(), var14.getLongitude(), null, 0.0, null, false, 240, null
                         );
                         var57.add(var52);
                     } catch (Exception var16) {
@@ -1269,7 +1269,7 @@ public final class DestinationActivity extends AppCompatActivity {
             this$0.results = CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.DestinationActivity$androidSearch$lambda$48$lambda$47$$inlined$sortedBy$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     Double dist;
                     Double dist2;
                     DestinationActivity.Place it = (DestinationActivity.Place) t;
@@ -1334,7 +1334,7 @@ public final class DestinationActivity extends AppCompatActivity {
                 }
             }
             textView.setText(str);
-            for (Place p : res) {
+            for (Place p : ((Place) res)) {
                 row(p);
             }
             return;
@@ -1579,7 +1579,7 @@ public final class DestinationActivity extends AppCompatActivity {
             builder.setTitle(name).setItems(opts, new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda14
                 @Override // android.content.DialogInterface.OnClickListener
                 public final void onClick(DialogInterface dialogInterface, int i) {
-                    DestinationActivity.placeMenu$lambda$74(opts, p, data, this, dialogInterface, i);
+                    DestinationActivity.placeMenu$lambda$74(opts, p, data, DestinationActivity.this, dialogInterface, i);
                 }
             }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
             return;
@@ -1598,7 +1598,7 @@ public final class DestinationActivity extends AppCompatActivity {
         new AlertDialog.Builder(this).setTitle(Favorites.INSTANCE.title(fav)).setItems(opts2, new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda15
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                DestinationActivity.placeMenu$lambda$79(opts2, s, fav, pinned, data, this, dialogInterface, i);
+                DestinationActivity.placeMenu$lambda$79(opts2, s, fav, pinned, data, DestinationActivity.this, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }

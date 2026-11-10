@@ -91,7 +91,7 @@ public final class DriverProfilesView extends CardPage {
         if ($this$sortedBy$iv == null || (emptyList = ArraysKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.DriverProfilesView$refresh$$inlined$sortedBy$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 File it = (File) t;
                 String name = it.getName();
                 Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
@@ -176,7 +176,7 @@ public final class DriverProfilesView extends CardPage {
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit refresh$lambda$14$lambda$13;
-                        refresh$lambda$14$lambda$13 = DriverProfilesView.refresh$lambda$14$lambda$13($this$refresh_u24lambda_u2414, o, f, this);
+                        refresh$lambda$14$lambda$13 = DriverProfilesView.refresh$lambda$14$lambda$13($this$refresh_u24lambda_u2414, o, f, DriverProfilesView.this);
                         return refresh$lambda$14$lambda$13;
                     }
                 }, 2, null));
@@ -247,7 +247,7 @@ public final class DriverProfilesView extends CardPage {
         new AlertDialog.Builder(getContext()).setTitle("Save profile").setView($this$askSave_u24lambda_u2415).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DriverProfilesView$$ExternalSyntheticLambda4
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                DriverProfilesView.askSave$lambda$17($this$askSave_u24lambda_u2415, this, dialogInterface, i);
+                DriverProfilesView.askSave$lambda$17($this$askSave_u24lambda_u2415, DriverProfilesView.this, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }

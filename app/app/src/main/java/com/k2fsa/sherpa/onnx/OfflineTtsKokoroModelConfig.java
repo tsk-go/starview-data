@@ -18,45 +18,12 @@ public final /* data */ class OfflineTtsKokoroModelConfig {
         this(null, null, null, null, null, null, null, 0.0f, 255, null);
     }
 
-    /* renamed from: component1, reason: from getter */
-    public final String getModel() {
-        return this.model;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final String getVoices() {
-        return this.voices;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final String getTokens() {
-        return this.tokens;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final String getDataDir() {
-        return this.dataDir;
-    }
 
-    /* renamed from: component5, reason: from getter */
-    public final String getLexicon() {
-        return this.lexicon;
-    }
 
-    /* renamed from: component6, reason: from getter */
-    public final String getLang() {
-        return this.lang;
-    }
 
-    /* renamed from: component7, reason: from getter */
-    public final String getDictDir() {
-        return this.dictDir;
-    }
-
-    /* renamed from: component8, reason: from getter */
-    public final float getLengthScale() {
-        return this.lengthScale;
-    }
 
     public final OfflineTtsKokoroModelConfig copy(String model, String voices, String tokens, String dataDir, String lexicon, String lang, String dictDir, float lengthScale) {
         Intrinsics.checkNotNullParameter(model, "model");

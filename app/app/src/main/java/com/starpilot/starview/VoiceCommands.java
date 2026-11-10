@@ -36,7 +36,7 @@ public final class VoiceCommands {
         NUDGE,
         UNKNOWN;
 
-        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(values());
 
         public static EnumEntries<Kind> getEntries() {
             return $ENTRIES;
