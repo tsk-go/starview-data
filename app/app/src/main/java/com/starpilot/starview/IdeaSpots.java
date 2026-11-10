@@ -263,6 +263,10 @@ public final class IdeaSpots {
         return Double.isNaN(a) || Double.isNaN(b) || Math.abs(Math.IEEEremainder(a - b, 360.0d)) <= tolDeg;
     }
 
+    public static /* synthetic */ Spot record$default(IdeaSpots ideaSpots, String kind, double lat, double lon, double hdgDeg, double lateral, String note, long nowMs, double mergeM, String src, int i, Object obj) {
+        return ideaSpots.record(kind, lat, lon, hdgDeg, (i & 16) != 0 ? Double.NaN : lateral, (i & 32) != 0 ? "" : note, (i & 64) != 0 ? System.currentTimeMillis() : nowMs, (i & 128) != 0 ? 10.0d : mergeM, (i & 256) != 0 ? "me" : src);
+    }
+
     public final synchronized Spot record(String kind, double lat, double lon, double hdgDeg, double lateral, String note, long nowMs, double mergeM, String src) {
         Intrinsics.checkNotNullParameter(kind, "kind");
         Intrinsics.checkNotNullParameter(note, "note");

@@ -617,8 +617,8 @@ public final class VoiceStudio {
                 }
             }
             FilesKt.appendBytes(part, PiperPrep.INSTANCE.metadataBytes(cfg));
-            FilesKt.writeText$default(new File(mdir, "tokens.txt"), PiperPrep.INSTANCE.tokens(cfg), null, 2, null);
-            FilesKt.writeText$default(new File(mdir, "config.json"), cfgText, null, 2, null);
+            FilesKt.writeText(new File(mdir, "tokens.txt"), PiperPrep.INSTANCE.tokens(cfg), kotlin.text.Charsets.UTF_8);
+            FilesKt.writeText(new File(mdir, "config.json"), cfgText, kotlin.text.Charsets.UTF_8);
             return part.renameTo(new File(mdir, "model.onnx")) ? null : "Couldn't save it";
         } catch (Exception e) {
             part.delete();
