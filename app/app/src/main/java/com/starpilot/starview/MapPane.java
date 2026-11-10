@@ -2033,7 +2033,7 @@ public final class MapPane extends FrameLayout {
     private final void fillOptions(LinearLayout col) {
         JSONObject o = Nav.INSTANCE.getOptions();
         col.addView(label("Avoid", 14.0f, true, true));
-        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("avoidTolls", "Tolls"), TuplesKt.to("avoidHighways", "Highways"), TuplesKt.to("avoidFerries", "Ferries"), TuplesKt.to("avoidUnpaved", "Unpaved roads"), TuplesKt.to("avoidCashTolls", "Cash-only tolls (fine with E-ZPass)"), TuplesKt.to("avoidTunnels", "Tunnels"), TuplesKt.to("avoidBorders", "Border crossings")})) {
+        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("avoidTolls", "Tolls"), TuplesKt.to("avoidHighways", "Highways"), TuplesKt.to("avoidFerries", "Ferries"), TuplesKt.to("avoidUnpaved", "Unpaved roads"), TuplesKt.to("avoidCashTolls", "Cash-only tolls (fine with E-ZPass)"), TuplesKt.to("avoidTunnels", "Tunnels"), TuplesKt.to("avoidBorders", "Border crossings")})) {
             final String key = (String) pair.component1();
             String title = (String) pair.component2();
             col.addView(toggleRow(title, o.optBoolean(key), new Function1() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda36
@@ -2051,7 +2051,7 @@ public final class MapPane extends FrameLayout {
         col.addView(label$default(this, "Left out of routes unless you have the people for them.", 13.0f, false, true, 4, null));
         LinearLayout $this$fillOptions_u24lambda_u24119 = new LinearLayout(getContext());
         $this$fillOptions_u24lambda_u24119.setOrientation(0);
-        for (Pair pair2 : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(0, "Off"), TuplesKt.to(2, "2+ people"), TuplesKt.to(3, "3+ people")})) {
+        for (Pair pair2 : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(0, "Off"), TuplesKt.to(2, "2+ people"), TuplesKt.to(3, "3+ people")})) {
             final int v = ((Number) pair2.component1()).intValue();
             String title2 = (String) pair2.component2();
             TextView $this$fillOptions_u24lambda_u24122 = pill(title2, o.optInt("carpool", 0) == v);
@@ -2104,7 +2104,7 @@ public final class MapPane extends FrameLayout {
         col.addView($this$fillOptions_u24lambda_u24130);
         LinearLayout $this$fillOptions_u24lambda_u24131 = new LinearLayout(getContext());
         $this$fillOptions_u24lambda_u24131.setOrientation(0);
-        for (Pair pair3 : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "🔊 Turn-by-turn"), TuplesKt.to("alerts", "⚠ Alerts only"), TuplesKt.to("off", "🔇 Off")})) {
+        for (Pair pair3 : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "🔊 Turn-by-turn"), TuplesKt.to("alerts", "⚠ Alerts only"), TuplesKt.to("off", "🔇 Off")})) {
             final String v2 = (String) pair3.component1();
             String title3 = (String) pair3.component2();
             TextView $this$fillOptions_u24lambda_u24133 = pill(title3, Intrinsics.areEqual(Nav.INSTANCE.voiceMode(getS()), v2));
@@ -2402,7 +2402,7 @@ public final class MapPane extends FrameLayout {
         private final Paint tp;
 
         /* VF: from Vineflower (jadx: ) */
-        public Banner(Context var1, Context var2) {
+        public Banner(MapPane var1, Context var2) {
             super(var2);
             Intrinsics.checkNotNullParameter(var2, "ctx");
             this.this$0 = var1;
@@ -2626,7 +2626,7 @@ public final class MapPane extends FrameLayout {
         private double zoomOffset;
 
         /* VF: from Vineflower (jadx: ) */
-        public MapCanvas(Context var1, Context var2) {
+        public MapCanvas(MapPane var1, Context var2) {
             super(var2);
             Intrinsics.checkNotNullParameter(var2, "ctx");
             this.this$0 = var1;
@@ -2922,6 +2922,15 @@ public final class MapPane extends FrameLayout {
             }
             invalidate();
         }
+
+        /* recovered: the original JVM name (callers taken from Vineflower use it) */
+
+        public final boolean getRotatedByHand() {
+
+            return getUserRotated();
+
+        }
+
 
         /* renamed from: getRotatedByHand, reason: from getter */
         public final boolean getUserRotated() {

@@ -1945,7 +1945,7 @@ public final class SceneView extends SurfaceView {
         VertexBuffer vb = attribute.build(engine);
         Intrinsics.checkNotNullExpressionValue(vb, "build(...)");
         ByteBuffer v = ByteBuffer.allocateDirect(48).order(ByteOrder.nativeOrder());
-        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(-400.0f), valueOf), TuplesKt.to(valueOf, valueOf), TuplesKt.to(valueOf, Float.valueOf(-400.0f)), TuplesKt.to(Float.valueOf(-400.0f), Float.valueOf(-400.0f))})) {
+        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(-400.0f), valueOf), TuplesKt.to(valueOf, valueOf), TuplesKt.to(valueOf, Float.valueOf(-400.0f)), TuplesKt.to(Float.valueOf(-400.0f), Float.valueOf(-400.0f))})) {
             float x = ((Number) pair.component1()).floatValue();
             float z = ((Number) pair.component2()).floatValue();
             v.putFloat(x);
@@ -2232,7 +2232,7 @@ public final class SceneView extends SurfaceView {
         }
         this.layoutVb = attribute.build(engine4);
         ByteBuffer v = ByteBuffer.allocateDirect(80).order(ByteOrder.nativeOrder());
-        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(this.XMIN), Float.valueOf(-20.0f)), TuplesKt.to(Float.valueOf(this.XMIN), Float.valueOf(20.0f)), TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(20.0f)), TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(-20.0f))})) {
+        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(this.XMIN), Float.valueOf(-20.0f)), TuplesKt.to(Float.valueOf(this.XMIN), Float.valueOf(20.0f)), TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(20.0f)), TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(-20.0f))})) {
             float x = ((Number) pair.component1()).floatValue();
             float y = ((Number) pair.component2()).floatValue();
             v.putFloat(y);

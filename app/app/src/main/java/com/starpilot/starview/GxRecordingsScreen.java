@@ -31,6 +31,15 @@ final class GxRecordingsScreen {
         return this.timestamp;
     }
 
+    /* recovered: the original JVM name (callers taken from Vineflower use it) */
+
+    public final boolean isCustomName() {
+
+        return getIsCustomName();
+
+    }
+
+
     /* renamed from: isCustomName, reason: from getter */
     public final boolean getIsCustomName() {
         return this.isCustomName;

@@ -493,7 +493,7 @@ public final class GxHomePage extends GxPage {
 
     /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     private final void render() {
-        List var119 = null; List var133 = null; List var182 = null; Object var239 = null; Object var247 = null; Object var250 = null; JSONObject var256 = null; String var274 = null; String var304 = null; JSONObject var99 = null; // declarations Vineflower left out
+        List var119 = null; List var133 = null; List var182 = null; GxHomePage var239 = null; Object var247 = null; Object var250 = null; JSONObject var256 = null; String var274 = null; String var304 = null; JSONObject var99 = null; // declarations Vineflower left out
         this.paintHero();
         Object var17 = this.body;
         String var30 = "body";

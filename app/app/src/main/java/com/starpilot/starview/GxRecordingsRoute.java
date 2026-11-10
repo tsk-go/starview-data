@@ -53,10 +53,28 @@ final class GxRecordingsRoute {
         return this.timestamp;
     }
 
+    /* recovered: the original JVM name (callers taken from Vineflower use it) */
+
+    public final boolean isCustomName() {
+
+        return getIsCustomName();
+
+    }
+
+
     /* renamed from: isCustomName, reason: from getter */
     public final boolean getIsCustomName() {
         return this.isCustomName;
     }
+
+    /* recovered: the original JVM name (callers taken from Vineflower use it) */
+
+    public final boolean isPreserved() {
+
+        return getIsPreserved();
+
+    }
+
 
     /* renamed from: isPreserved, reason: from getter */
     public final boolean getIsPreserved() {

@@ -78,6 +78,15 @@ final class GxCamerasPipView extends GxCamerasSnapView {
         this.armSide = str;
     }
 
+    /* recovered: the original JVM name (callers taken from Vineflower use it) */
+
+    public final boolean isC4() {
+
+        return getIsC4();
+
+    }
+
+
     /* renamed from: isC4, reason: from getter */
     public final boolean getIsC4() {
         return this.isC4;
@@ -141,7 +150,7 @@ final class GxCamerasPipView extends GxCamerasSnapView {
         int color = 0;
         float[] fArr2 = this.rightC;
         i2 = GxCamerasKt.GX_CAM_ORANGE;
-        for (Triple triple : (Iterable<Triple>) CollectionsKt.listOf((Object[]) new Triple[]{new Triple(fArr, Integer.valueOf(i), "LEFT SIDE OF VEHICLE - LEFT HERE"), new Triple(fArr2, Integer.valueOf(i2), "RIGHT SIDE OF VEHICLE - RIGHT HERE")})) {
+        for (Triple triple : (Iterable<Triple>) (Iterable) CollectionsKt.listOf((Object[]) new Triple[]{new Triple(fArr, Integer.valueOf(i), "LEFT SIDE OF VEHICLE - LEFT HERE"), new Triple(fArr2, Integer.valueOf(i2), "RIGHT SIDE OF VEHICLE - RIGHT HERE")})) {
             float[] center = (float[]) triple.component1();
             int color2 = ((Number) triple.component2()).intValue();
             String label = (String) triple.component3();

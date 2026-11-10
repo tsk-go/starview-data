@@ -2434,7 +2434,7 @@ public final class GxRecordingsPage extends GxPage {
                     return _init_$lambda$16;
                 }
             }, 2, null);
-            for (TextView v : (Iterable<TextView>) CollectionsKt.listOf((Object[]) new TextView[]{this.prev, this.segLabel, this.next})) {
+            for (TextView v : (Iterable<TextView>) (Iterable) CollectionsKt.listOf((Object[]) new TextView[]{this.prev, this.segLabel, this.next})) {
                 this.segBar.addView(v, gap());
             }
             this.segBar.addView(new View(this.this$0.getAct()), new LinearLayout.LayoutParams(this.this$0.getUi().dp(14), 1));

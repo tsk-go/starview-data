@@ -1769,7 +1769,7 @@ public final class GxThemePage extends GxPage {
 
     /* VF: from Vineflower (jadx: ) */
     private final void clearComp(String var1) {
-        var var4 = null; // declarations Vineflower left out
+        Object var4 = null; // declarations Vineflower left out
         label52: {
             this.sources.put(var1, null);
             switch (var1.hashCode()) {
@@ -2859,7 +2859,7 @@ public final class GxThemePage extends GxPage {
                     loadToEditor$lambda$135$slot$126(this$0, jobs, "distanceIcons_" + k, di.optJSONObject(k));
                 }
             }
-            for (String s : (Iterable<String>) CollectionsKt.listOf((Object[]) new String[]{"homeButton", "settingsButton", "steeringWheel", "turnSignal", "turnSignalBlindspot"})) {
+            for (String s : (Iterable<String>) (Iterable) CollectionsKt.listOf((Object[]) new String[]{"homeButton", "settingsButton", "steeringWheel", "turnSignal", "turnSignalBlindspot"})) {
                 loadToEditor$lambda$135$slot$126(this$0, jobs, s, imgs.optJSONObject(s));
             }
             JSONObject so = data.optJSONObject("sounds");

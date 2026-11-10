@@ -4353,7 +4353,7 @@ public final class GxTuningPage extends GxPage {
                     }
                     notice$default(this, linearLayout10, s(lv, "lastError"), 0, "Source Error:", 4, null);
                 }
-                for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Your lateral tuning is", computeQuality(this.latQ)), TuplesKt.to("Your longitudinal tuning is", computeQuality(this.lonQ))})) {
+                for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Your lateral tuning is", computeQuality(this.latQ)), TuplesKt.to("Your longitudinal tuning is", computeQuality(this.lonQ))})) {
                     String base = (String) pair.component1();
                     Quality q = (Quality) pair.component2();
                     if (Intrinsics.areEqual(q.getLabel(), "na")) {
@@ -4734,7 +4734,7 @@ public final class GxTuningPage extends GxPage {
 
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     private final void paintTg() {
-        E var16 = null; E var17 = null; String var21 = null; String var27 = null; Row var74 = null; // declarations Vineflower left out
+        Object var16 = null; Object var17 = null; String var21 = null; String var27 = null; Row var74 = null; // declarations Vineflower left out
         if (this.tgBuilt) {
             LinearLayout var4 = this.tgBox;
             LinearLayout var3 = var4;

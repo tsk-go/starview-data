@@ -173,6 +173,15 @@ public final class VideoClient {
         this.onImage = function1;
     }
 
+    /* recovered: the original JVM name (callers taken from Vineflower use it) */
+
+    public final boolean isRunning() {
+
+        return getRunning();
+
+    }
+
+
     /* renamed from: isRunning, reason: from getter */
     public final boolean getRunning() {
         return this.running;

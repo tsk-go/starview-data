@@ -54,7 +54,7 @@ public final class SettingsIndex {
 
     /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     public final SettingsIndex.Summary summary(List<GalaxyRow> var1, String var2) {
-        E var12 = null; Object var19 = null; // declarations Vineflower left out
+        Object var12 = null; Object var19 = null; // declarations Vineflower left out
         Intrinsics.checkNotNullParameter(var1, "rows");
         Intrinsics.checkNotNullParameter(var2, "title");
         Iterable var4 = var1;

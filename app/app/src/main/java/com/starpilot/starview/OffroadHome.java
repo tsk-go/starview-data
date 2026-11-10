@@ -659,7 +659,7 @@ public final class OffroadHome extends FrameLayout {
             TextView $this$view_u24lambda_u247_u24lambda_u243 = OffroadHome.tv$default(offroadHome, 16.0f, Color.rgb(150, 160, 180), false, 4, null);
             $this$view_u24lambda_u247_u24lambda_u243.setText("hours");
             Unit unit2 = Unit.INSTANCE;
-            for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(textView, $this$view_u24lambda_u247_u24lambda_u242), TuplesKt.to(this.dist, this.distUnit), TuplesKt.to(textView2, $this$view_u24lambda_u247_u24lambda_u243)})) {
+            for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(textView, $this$view_u24lambda_u247_u24lambda_u242), TuplesKt.to(this.dist, this.distUnit), TuplesKt.to(textView2, $this$view_u24lambda_u247_u24lambda_u243)})) {
                 TextView v = (TextView) pair.component1();
                 TextView unit3 = (TextView) pair.component2();
                 LinearLayout $this$view_u24lambda_u247_u24lambda_u245 = new LinearLayout($this$view_u24lambda_u247.getContext());

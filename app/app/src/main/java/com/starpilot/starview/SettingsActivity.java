@@ -630,12 +630,22 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     }
 
     @Override // com.starpilot.starview.GxHost
+    /* recovered: the original JVM name (callers taken from Vineflower use it) */
+    public String getGxHost() {
+        return getHost();
+    }
+
     /* renamed from: getGxHost, reason: from getter */
     public String getHost() {
         return this.host;
     }
 
     @Override // com.starpilot.starview.GxHost
+    /* recovered: the original JVM name (callers taken from Vineflower use it) */
+    public GalaxyApi getGxApi() {
+        return getApi();
+    }
+
     /* renamed from: getGxApi, reason: from getter */
     public GalaxyApi getApi() {
         return this.api;
@@ -2675,7 +2685,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         final /* synthetic */ SettingsActivity this$0;
 
         /* VF: from Vineflower (jadx: ) */
-        public ComboPage(List<? extends View> var1, List var2) {
+        public ComboPage(SettingsActivity var1, List var2) {
             super((Context)var1);
             Intrinsics.checkNotNullParameter(var2, "parts");
             this.this$0 = var1;
@@ -7493,7 +7503,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             carUi12 = null;
         }
         col.addView(note2, CarUi.lp$default(carUi12, 0, 0, 3, null));
-        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "Turn-by-turn directions and alerts"), TuplesKt.to("alerts", "Alerts only"), TuplesKt.to("off", "Off")})) {
+        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "Turn-by-turn directions and alerts"), TuplesKt.to("alerts", "Alerts only"), TuplesKt.to("off", "Off")})) {
             final String v = (String) pair.component1();
             String title = (String) pair.component2();
             toggleCard(col, title, null, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda238
@@ -10160,7 +10170,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             carUi = carUi4;
         }
         LinearLayout rf = (LinearLayout) CarUi.row$default(carUi, "Show", "Filter the list", 0, null, null, 28, null).component1();
-        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "All"), TuplesKt.to("US", "American"), TuplesKt.to("GB", "British"), TuplesKt.to("many", "Many speakers"), TuplesKt.to("have", "Downloaded")})) {
+        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "All"), TuplesKt.to("US", "American"), TuplesKt.to("GB", "British"), TuplesKt.to("many", "Many speakers"), TuplesKt.to("have", "Downloaded")})) {
             final String k = (String) pair.component1();
             String lab = (String) pair.component2();
             CarUi carUi5 = this$0.ui;
@@ -10300,7 +10310,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         ObjectRef var10,
         List var11
     ) {
-        E var55 = null; // declarations Vineflower left out
+        Object var55 = null; // declarations Vineflower left out
         var0.removeAllViews();
         if (!VoiceStudio.INSTANCE.engineInstalled((Context)var1)) {
             CarUi var43 = var1.ui;
