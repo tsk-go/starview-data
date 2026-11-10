@@ -1047,7 +1047,7 @@ public final class FilesActivity extends AppCompatActivity {
         public static final void deleteSelected$lambda$47$lambda$46$lambda$45(Pane this$0, Ref.ObjectRef $err, FilesActivity this$1) {
             this$0.selected.clear();
             this$0.refresh();
-            if ($err.element != 0) {
+            if ($err.element != null) {
                 this$1.toast("delete: " + $err.element);
             }
         }

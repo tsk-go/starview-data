@@ -315,7 +315,7 @@ public final class GalaxyApi {
         long now = System.currentTimeMillis();
         Iterator it = this.pending.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String, Pair<Object, Long>> e = ((Entry<String,Pair<Object,Long>>) it.next());
+            Map.Entry<String, Pair<Object, Long>> e = ((Map.Entry<String,Pair<Object,Long>>) it.next());
             Pair pair = TuplesKt.to(e.getKey(), e.getValue());
             Object component1 = pair.component1();
             Intrinsics.checkNotNullExpressionValue(component1, "component1(...)");
@@ -466,16 +466,8 @@ public final class GalaxyApi {
         }).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:35:0x00ab  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* recovered by hand (all three decompilers failed): every param, plus IsOnroad / IsOffroad from the live drive state */
     public static final void refreshValues$lambda$16(final GalaxyApi this$0, final int $gen, final Function1 $then) {
-        Object m1191constructorimpl;
-        HashMap hashMap;
-        String it;
-        boolean z;
         try {
             JSONObject o = new JSONObject(this$0.get("/api/params/all"));
             final HashMap m = new HashMap();
@@ -488,28 +480,14 @@ public final class GalaxyApi {
             Boolean live = DriveState.INSTANCE.onroad();
             if (live != null) {
                 m.put("IsOnroad", live);
-                m.put("IsOffroad", Boolean.valueOf(live.booleanValue() ? false : true));
+                m.put("IsOffroad", Boolean.valueOf(!live.booleanValue()));
             } else {
                 try {
-                    Result.Companion companion = Result.Companion;
-                    hashMap = m;
-                    it = StringsKt.trim((CharSequence) this$0.get("/api/params?key=IsOnroad")).toString();
+                    String it = StringsKt.trim((CharSequence) this$0.get("/api/params?key=IsOnroad")).toString();
+                    m.put("IsOnroad", Boolean.valueOf(Intrinsics.areEqual(it, "1") || Intrinsics.areEqual(it, "true") || Intrinsics.areEqual(it, "True")));
+                    m.put("IsOffroad", Boolean.valueOf(!Intrinsics.areEqual(m.get("IsOnroad"), (Object) true)));
                 } catch (Throwable th) {
-                    Result.Companion companion2 = Result.Companion;
-                    m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
                 }
-                if (!Intrinsics.areEqual(it, "1") && !Intrinsics.areEqual(it, "true") && !Intrinsics.areEqual(it, "True")) {
-                    z = false;
-                    hashMap.put("IsOnroad", Boolean.valueOf(z));
-                    m.put("IsOffroad", Boolean.valueOf(Intrinsics.areEqual(m.get("IsOnroad"), (Object) true) ? false : true));
-                    m1191constructorimpl = KtCompat.resultOf(Unit.INSTANCE);
-                    KtCompat.box(m1191constructorimpl);
-                }
-                z = true;
-                hashMap.put("IsOnroad", Boolean.valueOf(z));
-                m.put("IsOffroad", Boolean.valueOf(Intrinsics.areEqual(m.get("IsOnroad"), (Object) true) ? false : true));
-                m1191constructorimpl = KtCompat.resultOf(Unit.INSTANCE);
-                KtCompat.box(m1191constructorimpl);
             }
             this$0.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda8
                 @Override // java.lang.Runnable
@@ -609,102 +587,63 @@ public final class GalaxyApi {
         }).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:46:0x00dd, code lost:
-    
-        if (r0 == null) goto L34;
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* recovered by hand (all three decompilers failed): PUT /api/params, then the callback on the main thread */
     public static final void put$lambda$24(final String str, final Object obj, Map map, final GalaxyApi galaxyApi, final Function1 function1) {
-        Response execute;
-        Response response;
-        String str2;
-        String str3;
-        Object m1191constructorimpl;
-        T t;
-        Object m1191constructorimpl2;
         final Ref.ObjectRef objectRef = new Ref.ObjectRef();
         try {
             JSONObject put = new JSONObject().put("key", str).put("value", obj == null ? JSONObject.NULL : obj);
-            for (Map.Entry entry : (Iterable<Map.Entry>) map.entrySet()) {
+            for (Object o : map.entrySet()) {
+                Map.Entry entry = (Map.Entry) o;
                 put.put((String) entry.getKey(), entry.getValue());
             }
-            Request.Builder url = new Request.Builder().url(galaxyApi.getBase() + "/api/params");
-            RequestBody.Companion companion = RequestBody.Companion;
             String jSONObject = put.toString();
             Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
-            execute = galaxyApi.client.newCall(url.put(companion.create(jSONObject, JSON)).build()).execute();
+            Response response = galaxyApi.client.newCall(new Request.Builder().url(galaxyApi.getBase() + "/api/params").put(RequestBody.Companion.create(jSONObject, JSON)).build()).execute();
+            Throwable thrown = null;
             try {
-                response = execute;
                 ResponseBody body = response.body();
-                if (body == null || (str2 = body.string()) == null) {
-                    str2 = "";
+                String text = body != null ? body.string() : null;
+                if (text == null) {
+                    text = "";
                 }
-                str3 = str2;
-            } finally {
-            }
-        } catch (Exception e) {
-            String message = e.getMessage();
-            T t2 = message;
-            if (message == null) {
-                t2 = e.toString();
-            }
-            objectRef.element = t2;
-        }
-        if (response.isSuccessful()) {
-            try {
-                Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl2 = KtCompat.resultOf(new JSONObject(str3).optJSONObject("updated"));
-            } catch (Throwable th) {
-                Result.Companion companion3 = Result.Companion;
-                m1191constructorimpl2 = KtCompat.resultOf(ResultKt.createFailure(th));
-            }
-            if (KtCompat.isFailure(m1191constructorimpl2)) {
-                m1191constructorimpl2 = null;
-            }
-            final JSONObject jSONObject2 = (JSONObject) m1191constructorimpl2;
-            if (jSONObject2 != null) {
-                Boolean.valueOf(galaxyApi.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda4
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        GalaxyApi.put$lambda$24$lambda$22$lambda$21$lambda$20(jSONObject2, galaxyApi, str);
+                if (response.isSuccessful()) {
+                    JSONObject updated;
+                    try {
+                        updated = new JSONObject(text).optJSONObject("updated");
+                    } catch (Throwable th) {
+                        updated = null;
                     }
-                }));
-            }
-            CloseableKt.closeFinally(execute, null);
-            galaxyApi.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda5
-                @Override // java.lang.Runnable
-                public final void run() {
-                    GalaxyApi.put$lambda$24$lambda$23(galaxyApi, objectRef, str, obj, function1);
+                    final JSONObject u = updated;
+                    if (u != null) {
+                        galaxyApi.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda4
+                            @Override // java.lang.Runnable
+                            public final void run() {
+                                GalaxyApi.put$lambda$24$lambda$22$lambda$21$lambda$20(u, galaxyApi, str);
+                            }
+                        });
+                    }
+                } else {
+                    String e;
+                    try {
+                        e = new JSONObject(text).optString("error");
+                    } catch (Throwable th2) {
+                        e = null;
+                    }
+                    if (e != null && StringsKt.isBlank(e)) {
+                        e = null;
+                    }
+                    objectRef.element = e != null ? e : "HTTP " + response.code();
                 }
-            });
-        }
-        try {
-            Result.Companion companion4 = Result.Companion;
-            m1191constructorimpl = KtCompat.resultOf(new JSONObject(str3).optString("error"));
-        } catch (Throwable th2) {
-            Result.Companion companion5 = Result.Companion;
-            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th2));
-        }
-        if (KtCompat.isFailure(m1191constructorimpl)) {
-            m1191constructorimpl = null;
-        }
-        String str4 = (String) m1191constructorimpl;
-        if (str4 != null) {
-            String str5 = str4;
-            if (StringsKt.isBlank(str5)) {
-                str5 = null;
+            } catch (Throwable t) {
+                thrown = t;
+                throw t;
+            } finally {
+                CloseableKt.closeFinally(response, thrown);
             }
-            String str6 = str5;
-            t = str6;
+        } catch (Exception e2) {
+            String message = e2.getMessage();
+            objectRef.element = message != null ? message : e2.toString();
         }
-        t = "HTTP " + response.code();
-        objectRef.element = t;
-        Unit unit = Unit.INSTANCE;
-        CloseableKt.closeFinally(execute, null);
         galaxyApi.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda5
             @Override // java.lang.Runnable
             public final void run() {
@@ -732,7 +671,7 @@ public final class GalaxyApi {
     /* JADX INFO: Access modifiers changed from: private */
     public static final void put$lambda$24$lambda$23(GalaxyApi this$0, Ref.ObjectRef $err, String $key, Object $value, Function1 $then) {
         this$0.writeGen++;
-        if ($err.element != 0) {
+        if ($err.element != null) {
             this$0.pending.remove($key);
             refreshValues$default(this$0, null, 1, null);
         } else {
@@ -790,71 +729,44 @@ public final class GalaxyApi {
         }).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:27:0x00ac, code lost:
-    
-        if (r7 == null) goto L31;
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* recovered by hand (all three decompilers failed): POST path with a JSON body, then (error, json) on the main thread */
     public static final void post$lambda$30(GalaxyApi galaxyApi, String str, JSONObject jSONObject, final Function2 function2) {
-        String str2;
-        Object obj;
-        T t;
-        String optString;
         final Ref.ObjectRef objectRef = new Ref.ObjectRef();
         final Ref.ObjectRef objectRef2 = new Ref.ObjectRef();
         try {
-            Request.Builder url = new Request.Builder().url(galaxyApi.getBase() + str);
-            RequestBody.Companion companion = RequestBody.Companion;
             String jSONObject2 = (jSONObject == null ? new JSONObject() : jSONObject).toString();
             Intrinsics.checkNotNullExpressionValue(jSONObject2, "toString(...)");
-            Response execute = galaxyApi.client.newCall(url.post(companion.create(jSONObject2, JSON)).build()).execute();
+            Response response = galaxyApi.client.newCall(new Request.Builder().url(galaxyApi.getBase() + str).post(RequestBody.Companion.create(jSONObject2, JSON)).build()).execute();
+            Throwable thrown = null;
             try {
-                Response response = execute;
                 ResponseBody body = response.body();
-                if (body == null || (str2 = body.string()) == null) {
-                    str2 = "";
+                String text = body != null ? body.string() : null;
+                if (text == null) {
+                    text = "";
                 }
+                JSONObject obj;
                 try {
-                    Result.Companion companion2 = Result.Companion;
-                    obj = KtCompat.resultOf(new JSONObject(str2));
+                    obj = new JSONObject(text);
                 } catch (Throwable th) {
-                    Result.Companion companion3 = Result.Companion;
-                    obj = KtCompat.resultOf(ResultKt.createFailure(th));
+                    obj = null;
                 }
-                boolean m1197isFailureimpl = KtCompat.isFailure(obj);
-                T t2 = obj;
-                if (m1197isFailureimpl) {
-                    t2 = 0;
-                }
-                objectRef2.element = t2;
+                objectRef2.element = obj;
                 if (!response.isSuccessful()) {
-                    JSONObject jSONObject3 = (JSONObject) objectRef2.element;
-                    if (jSONObject3 != null && (optString = jSONObject3.optString("error")) != null) {
-                        String str3 = optString;
-                        if (StringsKt.isBlank(str3)) {
-                            str3 = null;
-                        }
-                        String str4 = str3;
-                        t = str4;
+                    String e = obj != null ? obj.optString("error") : null;
+                    if (e != null && StringsKt.isBlank(e)) {
+                        e = null;
                     }
-                    t = "HTTP " + response.code();
-                    objectRef.element = t;
+                    objectRef.element = e != null ? e : "HTTP " + response.code();
                 }
-                Unit unit = Unit.INSTANCE;
-                CloseableKt.closeFinally(execute, null);
+            } catch (Throwable t) {
+                thrown = t;
+                throw t;
             } finally {
+                CloseableKt.closeFinally(response, thrown);
             }
-        } catch (Exception e) {
-            String message = e.getMessage();
-            T t3 = message;
-            if (message == null) {
-                t3 = e.toString();
-            }
-            objectRef.element = t3;
+        } catch (Exception e2) {
+            String message = e2.getMessage();
+            objectRef.element = message != null ? message : e2.toString();
         }
         galaxyApi.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda1
             @Override // java.lang.Runnable

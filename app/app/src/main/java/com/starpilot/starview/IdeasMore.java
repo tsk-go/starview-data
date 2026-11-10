@@ -397,7 +397,7 @@ public final class IdeasMore {
 
     /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void parking(Ideas.Here var1, List<Detector.Obj> var2, long var3, List<Ideas.Part> var5) {
-        Object var32 = null; // declarations Vineflower left out
+        E var32 = null; // declarations Vineflower left out
         if (!Double.isNaN(var1.getYaw())) {
             if (var3 - this.parkSeenMs > 1000L) {
                 double var6 = var1.getV();

@@ -912,7 +912,7 @@ public final class LaneShots {
 
     /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     public final int deleteDrive(String var1) {
-        ArrayList var33 = null; ArrayList var34 = null; Object var53 = null; Object var57 = null; Object var61 = null; // declarations Vineflower left out
+        ArrayList var33 = null; ArrayList var34 = null; String var53 = null; Object var57 = null; Object var61 = null; // declarations Vineflower left out
         Intrinsics.checkNotNullParameter(var1, "drive");
 
         Object var4;

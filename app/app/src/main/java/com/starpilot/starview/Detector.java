@@ -1823,7 +1823,7 @@ public final class Detector {
 
     /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void track(Detector.Source var1, List<Detector.Det> var2, Detector.Frame var3) {
-        Object var75 = null; // declarations Vineflower left out
+        E var75 = null; // declarations Vineflower left out
         Iterable var21 = var2;
         var var20 = new ArrayList();
 

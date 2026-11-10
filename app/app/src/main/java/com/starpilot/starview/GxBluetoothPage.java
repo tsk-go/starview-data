@@ -1818,7 +1818,7 @@ public final class GxBluetoothPage extends GxPage {
 
     /* VF: from Vineflower (jadx: Code restructure failed;Type inference failed;incorrect) */
     private final void pickAction(int var1) {
-        Object var19 = null; LinearLayout var38 = null; // declarations Vineflower left out
+        String var19 = null; LinearLayout var38 = null; // declarations Vineflower left out
         if (!this.wcDisabled()) {
             List var6 = this.wcOptions;
             JSONObject var4 = CollectionsKt.getOrNull(this.wcControllerSlots, var1);

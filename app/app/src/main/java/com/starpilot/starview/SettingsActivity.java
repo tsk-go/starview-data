@@ -10300,7 +10300,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         ObjectRef var10,
         List var11
     ) {
-        Object var55 = null; // declarations Vineflower left out
+        E var55 = null; // declarations Vineflower left out
         var0.removeAllViews();
         if (!VoiceStudio.INSTANCE.engineInstalled((Context)var1)) {
             CarUi var43 = var1.ui;

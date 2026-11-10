@@ -2242,7 +2242,7 @@ public final class GxTuningPage extends GxPage {
                 this.paintComparison();
                 var22 = this.pathList();
 
-                for (JSONObject var70 : (JSONObject) (JSONObject) (JSONObject) (JSONObject) var22) {
+                for (JSONObject var70 : (JSONObject) (JSONObject) (JSONObject) (JSONObject) (JSONObject) var22) {
                     this.sub(this.s(var70, "title"), (ViewGroup)var9);
                     if (!StringsKt.isBlank(this.s(var70, "description"))) {
                         GxPage.text$default(this, this.s(var70, "description"), (ViewGroup)var9, 16.0F, 0, false, 24, null);
@@ -4734,7 +4734,7 @@ public final class GxTuningPage extends GxPage {
 
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     private final void paintTg() {
-        Object var16 = null; Object var17 = null; String var21 = null; String var27 = null; Object var74 = null; // declarations Vineflower left out
+        E var16 = null; E var17 = null; String var21 = null; String var27 = null; Row var74 = null; // declarations Vineflower left out
         if (this.tgBuilt) {
             LinearLayout var4 = this.tgBox;
             LinearLayout var3 = var4;
