@@ -294,7 +294,7 @@ public final class DestinationActivity extends AppCompatActivity {
         label94: {
             var11 = this.getIntent().getStringExtra("route");
             if (var11 != null) {
-                if (var11.length() >= 10) {
+                if (((CharSequence) var11).length() >= 10) {
                     var6 = true;
                 } else {
                     var6 = false;
@@ -1190,8 +1190,8 @@ public final class DestinationActivity extends AppCompatActivity {
                                 while (true) {
                                     label145: {
                                         try {
-                                            if (var6 < var50.length()) {
-                                                if (Character.isLetter(var50.charAt(var6))) {
+                                            if (var6 < ((CharSequence) var50).length()) {
+                                                if (Character.isLetter(((CharSequence) var50).charAt(var6))) {
                                                     break;
                                                 }
                                                 break label145;
@@ -1302,8 +1302,8 @@ public final class DestinationActivity extends AppCompatActivity {
         if (!((Double.isInfinite(lat) || Double.isNaN(lat)) ? false : true)) {
             return null;
         }
-        double dx = (p.getLon() - h.getSecond().doubleValue()) * 111320.0d * Math.cos(Math.toRadians(h.getFirst().doubleValue()));
-        double dy = (p.getLat() - h.getFirst().doubleValue()) * 110540.0d;
+        double dx = (p.getLon() - ((Number) h.getSecond()).doubleValue()) * 111320.0d * Math.cos(Math.toRadians(((Number) h.getFirst()).doubleValue()));
+        double dy = (p.getLat() - ((Number) h.getFirst()).doubleValue()) * 110540.0d;
         return Double.valueOf(Math.hypot(dx, dy) / 1609.344d);
     }
 

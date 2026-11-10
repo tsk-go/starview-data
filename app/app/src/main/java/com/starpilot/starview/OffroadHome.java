@@ -1263,7 +1263,7 @@ public final class OffroadHome extends FrameLayout {
                     StringBuilder var16 = new StringBuilder();
                     Object var101 = Telemetry.pStr$default(var1, "DongleId", null, 2, null);
                     int var56;
-                    if (var101.length() == 0) {
+                    if (((CharSequence) var101).length() == 0) {
                         var56 = 1;
                     } else {
                         var56 = 0;
@@ -1303,8 +1303,8 @@ public final class OffroadHome extends FrameLayout {
                         String var25 = this.gb((JSONObject)var101, "free_GB");
                         String var18 = this.gb((JSONObject)var101, "total_GB");
                         var16.append("Internal    " + var25 + " free of " + var18 + " GB");
-                        if (var101.has("newest_time")) {
-                            String var26 = this.whenStr(var101.optDouble("newest_time"));
+                        if (((JSONObject) var101).has("newest_time")) {
+                            String var26 = this.whenStr(((JSONObject) var101).optDouble("newest_time"));
                             var16.append("  ·  newest drive " + var26);
                         }
 

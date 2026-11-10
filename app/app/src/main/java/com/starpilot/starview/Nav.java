@@ -490,7 +490,7 @@ public final class Nav {
             }
             if (hint >= 0) {
                 Triple near = locate$scan(this, x, y, mpu, RangesKt.coerceAtLeast(hint - 60, 0), RangesKt.coerceAtMost(hint + 400, getSize() - 1));
-                if (near.getSecond().doubleValue() < 60.0d) {
+                if (((Number) near.getSecond()).doubleValue() < 60.0d) {
                     return near;
                 }
             }
@@ -1767,7 +1767,7 @@ public final class Nav {
         int k = 0;
         int size = s.size();
         for (int i = 0; i < size; i++) {
-            if (s.get(i).getStartM() <= 1.0d + a) {
+            if (((Nav) s.get(i)).getStartM() <= 1.0d + a) {
                 k = i;
             }
         }

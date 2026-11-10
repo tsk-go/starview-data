@@ -910,7 +910,7 @@ public final class GxNavigationPage extends GxPage {
             String savedName = this$0.primaryOf(saved);
             String rid = this$0.str(saved, "routeId", "main");
             this$0.selectedRouteId = new Regex("^(?:main|alt-[1-9]\\d*)$").matches(rid) ? rid : "main";
-            JSONObject d = new JSONObject(saved.toString()).put("latitude", savedCoords.getFirst().doubleValue()).put("longitude", savedCoords.getSecond().doubleValue());
+            JSONObject d = new JSONObject(saved.toString()).put("latitude", ((Number) savedCoords.getFirst()).doubleValue()).put("longitude", ((Number) savedCoords.getSecond()).doubleValue());
             String str2 = savedName;
             if (str2.length() == 0) {
                 String labelFor = this$0.labelFor(saved);
@@ -1699,7 +1699,7 @@ public final class GxNavigationPage extends GxPage {
             }
             str$default = query;
         }
-        JSONObject put = jSONObject.put("name", str$default).put("longitude", c.getSecond().doubleValue()).put("latitude", c.getFirst().doubleValue());
+        JSONObject put = jSONObject.put("name", str$default).put("longitude", ((Number) c.getSecond()).doubleValue()).put("latitude", ((Number) c.getFirst()).doubleValue());
         Triple<Double, Double, String> triple = this.routeSummary;
         if (triple == null || (str = triple.getThird()) == null) {
             str = ((String) JSONObject.NULL);
@@ -3675,10 +3675,10 @@ public final class GxNavigationPage extends GxPage {
                 var146 = CollectionsKt.joinToString(CollectionsKt.sortedWith(var150, new Comparator() {
                     @Override
                     public final int compare(Object var1, Object var2) {
-                        var1 = var1.toLowerCase(Locale.ROOT);
+                        var1 = ((String) var1).toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
                         Comparable var4 = ((Comparable) var1);
-                        var2 = var2.toLowerCase(Locale.ROOT);
+                        var2 = ((String) var2).toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
                         return ComparisonsKt.compareValues(var4, var2);
                     }
@@ -5075,7 +5075,7 @@ public final class GxNavigationPage extends GxPage {
             var30 = var32;
         }
 
-        var11.setText(var30);
+        ((TextView) var11).setText(var30);
         var11 = this.sVision;
         var10 = ((TextView) var11);
         if (var11 == null) {
@@ -5108,7 +5108,7 @@ public final class GxNavigationPage extends GxPage {
 
         var11 = GxPage.str$default(this, var14, "visionDebugSession", null, 2, null);
         int var23;
-        if (var11.length() == 0) {
+        if (((TextView) var11).length() == 0) {
             var23 = 1;
         } else {
             var23 = 0;

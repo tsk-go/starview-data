@@ -105,7 +105,7 @@ public final class HudPresets {
                 it = new JSONObject();
                 o.put(k, it);
             }
-            it.put("on", true).put("x", xy.getFirst().floatValue()).put("y", xy.getSecond().floatValue()).put("cw", JSONObject.NULL).put("ch", JSONObject.NULL);
+            it.put("on", true).put("x", ((Number) xy.getFirst()).floatValue()).put("y", ((Number) xy.getSecond()).floatValue()).put("cw", JSONObject.NULL).put("ch", JSONObject.NULL);
             if (!it.has("s")) {
                 it.put("s", 1.0d);
             }

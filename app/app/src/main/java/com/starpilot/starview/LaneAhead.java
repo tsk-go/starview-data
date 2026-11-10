@@ -471,9 +471,9 @@ public final class LaneAhead {
             this.stage = Stage.NONE;
             return;
         }
-        double dm = found.component1().doubleValue();
-        int from = found.component2().intValue();
-        int to = found.component3().intValue();
+        double dm = ((Number) found.component1()).doubleValue();
+        int from = ((Number) found.component2()).intValue();
+        int to = ((Number) found.component3()).intValue();
         double at = lookOdo + dm;
         if (at - odo < 30.0d) {
             return;

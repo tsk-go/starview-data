@@ -1813,7 +1813,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                                         double md2 = valueOf.doubleValue();
                                                                                         Pair it3 = Nav.INSTANCE.nextLanes();
                                                                                         if (it3 != null) {
-                                                                                            if (!(Math.abs(it3.getSecond().doubleValue() - md2) < 200.0d)) {
+                                                                                            if (!(Math.abs(((Number) it3.getSecond()).doubleValue() - md2) < 200.0d)) {
                                                                                                 it3 = null;
                                                                                             }
                                                                                             emptyList = (it3 == null || (first = ((Step) it3.getFirst())) == null) ? null : first.getLanes();
@@ -1880,7 +1880,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                                                 laneBrain10 = this.this$0.laneTracker;
                                                                                                 Pair it5 = Nav.INSTANCE.nextLanes();
                                                                                                 if (it5 != null) {
-                                                                                                    double doubleValue = it5.getSecond().doubleValue();
+                                                                                                    double doubleValue = ((Number) it5.getSecond()).doubleValue();
                                                                                                     if (!(0.0d <= doubleValue && doubleValue <= 800.0d)) {
                                                                                                         it5 = null;
                                                                                                     }

@@ -138,7 +138,7 @@ public final class BlinkerTurn {
                         var43 = 0;
                     } else {
                         label222: {
-                            Iterator var60 = var59.iterator();
+                            Iterator var60 = ((Iterable) var59).iterator();
 
                             while (var60.hasNext()) {
                                 if (((OsmRoads.Way)var60.next()).getId() == ((OsmRoads.Way) var52).getId()) {

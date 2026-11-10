@@ -307,8 +307,8 @@ public final class Lights {
         if (f == null) {
             return TuplesKt.to(null, Integer.valueOf(times.size()));
         }
-        int c = f.component1().intValue();
-        long ph = f.component2().longValue();
+        int c = ((Number) f.component1()).intValue();
+        long ph = ((Number) f.component2()).longValue();
         long cm = c * 1000;
         long next = (nowMs - (nowMs % cm)) + ph;
         if (next < nowMs) {
@@ -320,7 +320,7 @@ public final class Lights {
     public final String chip(Ideas.Here h, long nowMs) {
         ArrayList lens;
         Triple r = this.redAhead;
-        if (r == null || nowMs - r.getThird().longValue() > 3000) {
+        if (r == null || nowMs - ((Number) r.getThird()).longValue() > 3000) {
             return null;
         }
         if (this.actuated) {
@@ -343,10 +343,10 @@ public final class Lights {
     public final Ideas.Part coast(Telemetry t, Ideas.Here h, long nowMs) {
         Intrinsics.checkNotNullParameter(t, "t");
         Triple r = this.redAhead;
-        if (r == null || nowMs - r.getThird().longValue() > 1500 || h == null) {
+        if (r == null || nowMs - ((Number) r.getThird()).longValue() > 1500 || h == null) {
             return null;
         }
-        double d = r.getSecond().doubleValue();
+        double d = ((Number) r.getSecond()).doubleValue();
         if (d < 25.0d || d > 160.0d) {
             return null;
         }

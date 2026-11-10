@@ -584,8 +584,8 @@ public final class LaneCardView extends View {
                 }
             }
 
-            String var130 = (String)var122.component1();
-            boolean var25 = (Boolean)var122.component2();
+            String var130 = ((Pair) (String)var122).component1();
+            boolean var25 = ((Pair) (Boolean)var122).component2();
             int var63;
             if (var130.length() > 0) {
                 var63 = 1;

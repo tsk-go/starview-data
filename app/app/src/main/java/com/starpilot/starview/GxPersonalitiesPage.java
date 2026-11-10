@@ -607,7 +607,7 @@ public final class GxPersonalitiesPage extends GxPage {
                             IndexedValue indexedValue = (IndexedValue) element$iv;
                             int i = indexedValue.getIndex();
                             double v = ((Number) indexedValue.component2()).doubleValue();
-                            if (v < 0.0d || (i > 0 && v <= sp.get(i + (-1)).doubleValue())) {
+                            if (v < 0.0d || (i > 0 && v <= ((Number) sp.get(i + (-1))).doubleValue())) {
                                 z2 = true;
                                 break;
                             }
@@ -817,7 +817,7 @@ public final class GxPersonalitiesPage extends GxPage {
                     label234: {
                         if (var3 && var75 != null) {
                             try {
-                                if (!var75.getCatalog().isEmpty()) {
+                                if (!((GalaxyApi) var75).getCatalog().isEmpty()) {
                                     break label234;
                                 }
                             } catch (Exception var34) {
@@ -833,7 +833,7 @@ public final class GxPersonalitiesPage extends GxPage {
 
                         if (var75 != null) {
                             try {
-                                var75.loadCatalog();
+                                ((GalaxyApi) var75).loadCatalog();
                             } catch (Exception var33) {
                                 var5 = var33;
                                 String var50 = var33.getMessage();
@@ -862,7 +862,7 @@ public final class GxPersonalitiesPage extends GxPage {
                     try {
                         var0.acceptData(var2);
                         var40 = new LinkedHashMap();
-                        var76 = var75.getCatalog().iterator();
+                        var76 = ((GalaxyApi) var75).getCatalog().iterator();
                     } catch (Exception var29) {
                         var5 = var29;
                         String var52 = var29.getMessage();
@@ -875,11 +875,11 @@ public final class GxPersonalitiesPage extends GxPage {
 
                     while (true) {
                         try {
-                            if (!var76.hasNext()) {
+                            if (!((Iterator) var76).hasNext()) {
                                 break;
                             }
 
-                            var54 = ((GalaxyApi.Category)var76.next()).getParams().iterator();
+                            var54 = (((Iterator) (GalaxyApi.Category)var76).next()).getParams().iterator();
                         } catch (Exception var31) {
                             var5 = var31;
                             String var53 = var31.getMessage();
@@ -892,11 +892,11 @@ public final class GxPersonalitiesPage extends GxPage {
 
                         while (true) {
                             try {
-                                if (!var54.hasNext()) {
+                                if (!((Iterator) var54).hasNext()) {
                                     break;
                                 }
 
-                                GalaxyApi.Param var6 = (GalaxyApi.Param)var54.next();
+                                GalaxyApi.Param var6 = ((Iterator) (GalaxyApi.Param)var54).next();
                                 var40.put(var6.getKey(), var6);
                             } catch (Exception var30) {
                                 var5 = var30;
@@ -1058,7 +1058,7 @@ public final class GxPersonalitiesPage extends GxPage {
                             }
 
                             try {
-                                var43 = var42.iterator();
+                                var43 = ((Iterable) var42).iterator();
                             } catch (Exception var18) {
                                 var5 = var18;
                                 String var70 = var18.getMessage();
@@ -1071,8 +1071,8 @@ public final class GxPersonalitiesPage extends GxPage {
 
                             label143: {
                                 try {
-                                    while (var43.hasNext()) {
-                                        String var72 = (String)var43.next();
+                                    while (((Iterator) var43).hasNext()) {
+                                        String var72 = ((Iterator) (String)var43).next();
                                         if (!var0.meta.containsKey(var72)) {
                                             break label143;
                                         }
@@ -1583,7 +1583,7 @@ public final class GxPersonalitiesPage extends GxPage {
             if (Intrinsics.areEqual(it.getFirst(), c)) {
                 String str = label + " " + ((Pair) element$iv).getSecond() + " at " + speed(speeds(c).get(i).doubleValue()) + " " + speedUnit();
                 String str2 = Intrinsics.areEqual(c, "following") ? "seconds" : "m/s²";
-                gxHomeFmt = GxHomeKt.gxHomeFmt(cur.get(i).doubleValue());
+                gxHomeFmt = GxHomeKt.gxHomeFmt(((Number) cur.get(i)).doubleValue());
                 GxPage.prompt$default(gxPersonalitiesPage, str, str2, gxHomeFmt, 8194, null, new Function1() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda13
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
@@ -2232,7 +2232,7 @@ public final class GxPersonalitiesPage extends GxPage {
                             top = top2;
                         }
                         CarUi ui2 = getUi();
-                        String speed = speed((i4 >= 0 && i4 < sp.size() ? sp.get(i4) : Double.valueOf(0.0d)).doubleValue());
+                        String speed = speed(((Number) (i4 >= 0 && i4 < sp.size() ? sp.get(i4) : Double.valueOf(0.0d))).doubleValue());
                         String speedUnit = speedUnit();
                         gxHomeFmt5 = GxHomeKt.gxHomeFmt(v);
                         TextView b = CarUi.button$default(ui2, speed + " " + speedUnit + "\n" + gxHomeFmt5, false, new Function0() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda33
@@ -2814,12 +2814,12 @@ public final class GxPersonalitiesPage extends GxPage {
                         minElem$iv = iterator$iv.next();
                         if (iterator$iv.hasNext()) {
                             int it = ((Number) minElem$iv).intValue();
-                            double minValue$iv = Math.abs(pts.get(it).getFirst().doubleValue() - x);
+                            double minValue$iv = Math.abs(((Number) ((List) pts.get(it)).getFirst()).doubleValue() - x);
                             while (true) {
                                 Object e$iv = iterator$iv.next();
                                 int it2 = ((Number) e$iv).intValue();
                                 List pts2 = pts;
-                                double v$iv = Math.abs(pts.get(it2).getFirst().doubleValue() - x);
+                                double v$iv = Math.abs(((Number) ((List) pts.get(it2)).getFirst()).doubleValue() - x);
                                 if (Double.compare(minValue$iv, v$iv) > 0) {
                                     minElem$iv = e$iv;
                                     minValue$iv = v$iv;

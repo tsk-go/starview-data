@@ -885,7 +885,7 @@ public final class GxSystemPage extends GxPage {
         List r = releaseVersions$parts(bv);
         int i = 0;
         while (i < 3) {
-            int d = (i >= 0 && i < r.size() ? r.get(i) : 0).intValue() - (i >= 0 && i < l.size() ? l.get(i) : 0).intValue();
+            int d = ((Number) (i >= 0 && i < r.size() ? r.get(i) : 0)).intValue() - ((Number) (i >= 0 && i < l.size() ? l.get(i) : 0)).intValue();
             if (d != 0) {
                 return d;
             }
@@ -1151,7 +1151,7 @@ public final class GxSystemPage extends GxPage {
         }
 
         if (var2 != null) {
-            var5 = var2.optJSONArray("branches");
+            var5 = ((JSONObject) var2).optJSONArray("branches");
         }
 
         label83: {
@@ -1224,7 +1224,7 @@ public final class GxSystemPage extends GxPage {
                 var0.otherOpen = var4;
             }
 
-            var0.isOnroad = var2.optBoolean("isOnroad");
+            var0.isOnroad = ((JSONObject) var2).optBoolean("isOnroad");
             var0.branchLoading = false;
             var0.paint();
         } else if (var0.fastStatus == null) {
@@ -1318,7 +1318,7 @@ public final class GxSystemPage extends GxPage {
         }
 
         Object var10 = null;
-        if (var2 == null && var3 != null && var3.opt("running") instanceof Boolean) {
+        if (var2 == null && var3 != null && ((JSONObject) var3).opt("running") instanceof Boolean) {
             String var11 = StringsKt.trim(GxPage.str$default(var0, ((JSONObject) var3), "stage", null, 2, null)).toString().toLowerCase(Locale.ROOT);
             Intrinsics.checkNotNullExpressionValue(var11, "toLowerCase(...)");
             if (Intrinsics.areEqual(var11, "rebooting") && !var0.rebootPending) {
@@ -1337,7 +1337,7 @@ public final class GxSystemPage extends GxPage {
             }
 
             boolean var4;
-            if (!var0.rebootPending || var3.optBoolean("running") || Intrinsics.areEqual(var11, "rebooting") || !var0.statusUnavailable && var6 < 30000L) {
+            if (!var0.rebootPending || ((JSONObject) var3).optBoolean("running") || Intrinsics.areEqual(var11, "rebooting") || !var0.statusUnavailable && var6 < 30000L) {
                 var4 = false;
             } else {
                 var4 = true;
@@ -1352,7 +1352,7 @@ public final class GxSystemPage extends GxPage {
 
             var0.fastStatus = ((JSONObject) var3);
             var0.statusUnavailable = false;
-            var0.isOnroad = var3.optBoolean("isOnroad");
+            var0.isOnroad = ((JSONObject) var3).optBoolean("isOnroad");
             if (var4) {
                 clearRebootPending$default(var0, false, 1, null);
                 var2 = (String)var10;
@@ -2312,7 +2312,7 @@ public final class GxSystemPage extends GxPage {
             }
 
             var8 = var14;
-            if (var8.isEmpty()) {
+            if (((CharSequence) var8).isEmpty()) {
                 if (!this.versionCommits.isEmpty()) {
                     int var22 = this.versionCommits.size();
                     var8 = var22 + " versions loaded";
@@ -2324,8 +2324,8 @@ public final class GxSystemPage extends GxPage {
             } else {
                 int var23 = this.versionCommits.size();
                 String var52 = CollectionsKt.<GxSystemPage.DayGroup>last((List<? extends GxSystemPage.DayGroup>)var8).getLabel();
-                if (var8.size() > 1) {
-                    var8 = ((GxSystemPage.DayGroup)var8.get(0)).getLabel();
+                if (((Collection) var8).size() > 1) {
+                    var8 = (((Map) (GxSystemPage.DayGroup)var8).get(0)).getLabel();
                     var8 = " – " + var8;
                 } else {
                     var8 = "";
@@ -2426,8 +2426,8 @@ public final class GxSystemPage extends GxPage {
             if (var7) {
                 var8 = var11.iterator();
 
-                while (var8.hasNext()) {
-                    buildPicker$versionRow(this, var7, var1, var2, (JSONObject)var8.next(), 0);
+                while (((Iterator) var8).hasNext()) {
+                    buildPicker$versionRow(this, var7, var1, var2, ((JSONObject) ((Iterator) (JSONObject)var8).next()), 0);
                 }
             } else {
                 for (GxSystemPage.DayGroup var48 : (Iterable<GxSystemPage.DayGroup>) var10) {
@@ -2986,12 +2986,12 @@ public final class GxSystemPage extends GxPage {
             } else {
                 Object var23 = var12;
                 if (var9 != null) {
-                    var23 = var9.optJSONArray("commits");
+                    var23 = ((JSONObject) var9).optJSONArray("commits");
                 }
 
                 if (var9 != null
                     && Intrinsics.areEqual(GxPage.str$default(var1, ((JSONObject) var9), "branch", null, 2, null), var2)
-                    && var9.optInt("page", -1) == var3
+                    && ((JSONObject) var9).optInt("page", -1) == var3
                     && GxSystemKt.GxSystem_SHA.matches(GxPage.str$default(var1, ((JSONObject) var9), "head", null, 2, null))) {
                     boolean var10;
                     if (var4.length() > 0) {
@@ -3033,7 +3033,7 @@ public final class GxSystemPage extends GxPage {
                             var1.versionCommits.addAll(var25);
                         }
 
-                        var11 = var9.optBoolean("cached");
+                        var11 = ((JSONObject) var9).optBoolean("cached");
                         var4 = "";
                         if (var11) {
                             Instant var33 = var1.parseDate(GxPage.str$default(var1, ((JSONObject) var9), "cachedAt", null, 2, null));
@@ -3049,7 +3049,7 @@ public final class GxSystemPage extends GxPage {
 
                         var1.versionHead = GxPage.str$default(var1, ((JSONObject) var9), "head", null, 2, null);
                         var1.versionPage = var3;
-                        if (var9.optBoolean("hasMore") && !var25.isEmpty()) {
+                        if (((JSONObject) var9).optBoolean("hasMore") && !var25.isEmpty()) {
                             var11 = true;
                         } else {
                             var11 = false;

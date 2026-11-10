@@ -1416,9 +1416,9 @@ public final class OsmRoads {
 
                         while (true) {
                             double var69 = var35.getE()[var26];
-                            var9 = CollectionsKt.last(var38).doubleValue();
+                            var9 = ((Number) CollectionsKt.last(var38)).doubleValue();
                             double var74 = var35.getN()[var26];
-                            double var78 = CollectionsKt.last(var39).doubleValue();
+                            double var78 = ((Number) CollectionsKt.last(var39)).doubleValue();
                             var61 += Math.hypot(var69 - var9, var74 - var78);
                             var38.add(var35.getE()[var26]);
                             var39.add(var35.getN()[var26]);
@@ -1443,8 +1443,8 @@ public final class OsmRoads {
 
                     var5 = var55;
                     if (!(var55 >= var7) && var25 < 8 && var38.size() >= 2) {
-                        double var79 = CollectionsKt.last(var38).doubleValue();
-                        double var75 = CollectionsKt.last(var39).doubleValue();
+                        double var79 = ((Number) CollectionsKt.last(var38)).doubleValue();
+                        double var75 = ((Number) CollectionsKt.last(var39)).doubleValue();
                         OsmRoads.Way var105 = (OsmRoads.Way)var39.get(var39.size() - 2);
                         Intrinsics.checkNotNullExpressionValue(var105, "get(...)");
                         var55 = ((Number)var105).doubleValue();
@@ -1693,7 +1693,7 @@ public final class OsmRoads {
             return new Pair<>(Double.valueOf(nlo), Double.valueOf(nhi));
         }
         Pair it = new Pair(Double.valueOf(Math.max(cl, -h)), Double.valueOf(Math.min(ch, h)));
-        return it.getFirst().doubleValue() <= it.getSecond().doubleValue() ? it : new Pair(Double.valueOf(cl), Double.valueOf(ch));
+        return ((Number) it.getFirst()).doubleValue() <= ((Number) it.getSecond()).doubleValue() ? it : new Pair(Double.valueOf(cl), Double.valueOf(ch));
     }
 
     public static /* synthetic */ double laneCenter$default(OsmRoads osmRoads, double d, int i, int i2, boolean z, int i3, Object obj) {
