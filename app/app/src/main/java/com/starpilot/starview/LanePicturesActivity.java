@@ -568,7 +568,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
                             var88 = this.marks.get(var88.getName());
                             Intrinsics.checkNotNull(var88);
                             int var33;
-                            if (((Number)var88).intValue() > 0) {
+                            if (((Number)(Object)var88).intValue() > 0) {
                                 var33 = 1;
                             } else {
                                 var33 = 0;
@@ -600,7 +600,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
                                 var8 = this.marks.get(var62.getName());
                                 Intrinsics.checkNotNull(var8);
                                 int var38;
-                                if (((Number)var8).intValue() > 0) {
+                                if (((Number)(Object)var8).intValue() > 0) {
                                     var38 = 1;
                                 } else {
                                     var38 = 0;

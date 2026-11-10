@@ -1326,10 +1326,10 @@ public final class OsmRoads {
                         double var75 = ((Number) CollectionsKt.last(var39)).doubleValue();
                         OsmRoads.Way var105 = (OsmRoads.Way)var39.get(var39.size() - 2);
                         Intrinsics.checkNotNullExpressionValue(var105, "get(...)");
-                        var55 = ((Number)var105).doubleValue();
+                        var55 = ((Number)(Object)var105).doubleValue();
                         var105 = ((Way) var38.get(var38.size() - 2));
                         Intrinsics.checkNotNullExpressionValue(var105, "get(...)");
-                        double var21 = Math.atan2(var75 - var55, var79 - ((Number)var105).doubleValue());
+                        double var21 = Math.atan2(var75 - var55, var79 - ((Number)(Object)var105).doubleValue());
                         var105 = null;
                         boolean var30 = true;
                         var55 = Double.MAX_VALUE;

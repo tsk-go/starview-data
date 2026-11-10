@@ -23,7 +23,7 @@ public final class DriveState$restart$1$wait$1 implements Runnable {
         this.$main = $main;
         this.$back = $back;
         this.$act = $act;
-        this.$then = function1;
+        this.$then = (Function1) function1;
     }
 
     @Override // java.lang.Runnable

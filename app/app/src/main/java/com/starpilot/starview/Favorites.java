@@ -47,7 +47,7 @@ public final class Favorites {
     }
 
     public final List<JSONObject> getList() {
-        return list;
+        return (List) list;
     }
 
     public final int getVersion() {

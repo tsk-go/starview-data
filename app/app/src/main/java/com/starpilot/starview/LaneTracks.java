@@ -365,7 +365,7 @@ public final class LaneTracks {
                         } else {
                             var50 = (float[])var64.next();
                             if (var64.hasNext()) {
-                                float var10 = Math.abs(((LaneTracks.Line)var50).getY0() - var6);
+                                float var10 = Math.abs(((LaneTracks.Line)(Object)var50).getY0() - var6);
 
                                 while (true) {
                                     Object var61 = var64.next();
@@ -385,7 +385,7 @@ public final class LaneTracks {
                             }
                         }
 
-                        Object var55 = (LaneTracks.Line)var50;
+                        LaneTracks.Line var55 = (LaneTracks.Line)(Object)var50;
                         if (var55 != null && Math.abs(var55.getY0() - var6) < 1.5F && var55.getY().length == var41.getY().length) {
                             var15 = 0;
 

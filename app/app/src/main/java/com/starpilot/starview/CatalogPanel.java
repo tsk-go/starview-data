@@ -96,7 +96,7 @@ public final class CatalogPanel extends ScrollView {
         this.api = var2;
         this.params = var3;
         this.sectionName = var4;
-        this.openWeb = var6;
+        this.openWeb = (Function1) var6;
         this.ui = new CarUi((Context)this.act, var5);
         LinearLayout var13 = new LinearLayout((Context)this.act);
         var13.setOrientation(1);

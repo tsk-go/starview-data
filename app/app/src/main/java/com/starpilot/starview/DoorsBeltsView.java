@@ -132,7 +132,7 @@ public final class DoorsBeltsView extends CardPage {
         public LearnState(List<? extends JSONObject> var1) {
             super();
             Intrinsics.checkNotNullParameter(var1, "list");
-            this.list = var1;
+            this.list = (List) var1;
             this.phase = "intro";
             this.error = "";
             this.found = new LinkedHashMap<>();
@@ -549,7 +549,7 @@ public final class DoorsBeltsView extends CardPage {
                             var126 = (String)var126;
                             var103 = (java.util.Map.Entry)var103.getValue();
                             Intrinsics.checkNotNullExpressionValue(var103, "component2(...)");
-                            Object var26 = (Integer)var103;
+                            Integer var26 = (Integer)(Object)var103;
                             String var146 = this.nameOf((String)var126);
                             String var106;
                             if (var26) {

@@ -121,7 +121,7 @@ final class GxCamerasPipView extends GxCamerasSnapView {
     }
 
     public final Function1<String, Unit> getOnWrongHalf() {
-        return this.onWrongHalf;
+        return (Function1) this.onWrongHalf;
     }
 
     public final void setOnWrongHalf(Function1<? super String, Unit> function1) {

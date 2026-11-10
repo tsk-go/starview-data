@@ -246,7 +246,7 @@ public final class LaneShots {
     }
 
     public final Function0<SurfaceView> getScene() {
-        return this.scene;
+        return (Function0) this.scene;
     }
 
     public final void setScene(Function0<? extends SurfaceView> function0) {
@@ -262,7 +262,7 @@ public final class LaneShots {
     }
 
     public final Function0<List<LaneRamps.Ramp>> getRamps() {
-        return this.ramps;
+        return (Function0) this.ramps;
     }
 
     public final void setRamps(Function0<? extends List<LaneRamps.Ramp>> function0) {

@@ -2574,7 +2574,7 @@ public final class GxThemePage extends GxPage {
 
         for (Object var3$it : (Iterable) var3) {
             var3 = (Iterable) var3$it;
-            if (!((GxThemeEntry)var3).getPseudo()) {
+            if (!((GxThemeEntry)(Object)var3).getPseudo()) {
                 var2.add(var3);
             }
         }
@@ -2676,7 +2676,7 @@ public final class GxThemePage extends GxPage {
 
         for (Object var6$it : (Iterable) var6) {
             var6 = (Iterable) var6$it;
-            Object var8 = (GxThemeEntry)var6;
+            GxThemeEntry var8 = (GxThemeEntry)(Object)var6;
             boolean var3;
             if (Intrinsics.areEqual(var1, "steering_wheel")) {
                 if (Intrinsics.areEqual(((GxThemeEntry) var8).getType(), "steering_wheel")

@@ -2099,13 +2099,13 @@ public final class GxNavigationPage extends GxPage {
                         }
 
                         var5 = (LinearLayout)var46.next();
-                        if (Intrinsics.areEqual(this.routeIdOf(((Number)var5).intValue()), this.selectedRouteId)) {
+                        if (Intrinsics.areEqual(this.routeIdOf(((Number)(Object)var5).intValue()), this.selectedRouteId)) {
                             var32 = var5;
                             break;
                         }
                     }
 
-                    Object var33 = (Integer)var32;
+                    Integer var33 = (Integer)(Object)var32;
                     if (var33 != null) {
                         var1 = var33;
                     } else {

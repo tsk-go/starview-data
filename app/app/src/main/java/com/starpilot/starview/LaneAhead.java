@@ -196,7 +196,7 @@ public final class LaneAhead {
     }
 
     public final Function2<String, Boolean, Unit> getOnEvent() {
-        return this.onEvent;
+        return (Function2) this.onEvent;
     }
 
     public final void setOnEvent(Function2<? super String, ? super Boolean, Unit> function2) {
@@ -204,7 +204,7 @@ public final class LaneAhead {
     }
 
     public final Function3<Double, Double, Double, List<Sample>> getProfileSource() {
-        return this.profileSource;
+        return (Function3) this.profileSource;
     }
 
     public final void setProfileSource(Function3<? super Double, ? super Double, ? super Double, ? extends List<Sample>> function3) {
@@ -865,7 +865,7 @@ public final class LaneAhead {
                     while (true) {
                         var19.add(var21.getId());
 
-                        for (double[] var23 : ((double[]) var20)) {
+                        for (double[] var23 : (Iterable<double[]>) var20) {
                             if (!var25.isEmpty()) {
                                 var3 += Math.hypot(var23[0] - ((double[])CollectionsKt.last(var25))[0], var23[1] - ((double[])CollectionsKt.last(var25))[1]);
                             }

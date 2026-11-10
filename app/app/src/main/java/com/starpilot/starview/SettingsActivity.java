@@ -848,7 +848,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             this.title = var1;
             this.sub = var2;
             this.icon = var3;
-            this.rails = var4;
+            this.rails = (List) var4;
         }
 
         public final int getIcon() {
@@ -7924,7 +7924,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 float slider$of;
                 TextView textView = d;
                 if (textView != null) {
-                    Function1<Float, String> function1 = fmt;
+                    Function1<Float, String> function1 = (Function1) fmt;
                     slider$of = SettingsActivity.slider$of(min, step, p);
                     textView.setText(function1.invoke(Float.valueOf(slider$of)));
                 }
@@ -7937,7 +7937,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // android.widget.SeekBar.OnSeekBarChangeListener
             public void onStopTrackingTouch(SeekBar sb) {
                 float slider$of;
-                Function1<Float, Unit> function1 = set;
+                Function1<Float, Unit> function1 = (Function1) set;
                 slider$of = SettingsActivity.slider$of(min, step, $this$slider_u24lambda_u24273.getProgress());
                 function1.invoke(Float.valueOf(slider$of));
                 onRelease.invoke();

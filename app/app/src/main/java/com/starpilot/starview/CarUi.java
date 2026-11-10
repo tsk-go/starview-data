@@ -93,7 +93,7 @@ public final class CarUi {
     }
 
     public final Function1<String, SettingIcons.Icon> getAutoIcon() {
-        return this.autoIcon;
+        return (Function1) this.autoIcon;
     }
 
     public final void setAutoIcon(Function1<? super String, SettingIcons.Icon> function1) {

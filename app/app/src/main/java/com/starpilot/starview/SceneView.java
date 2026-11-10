@@ -572,7 +572,7 @@ public final class SceneView extends SurfaceView {
     }
 
     public final Function2<Float, Float, Unit> getOnViewChanged() {
-        return this.onViewChanged;
+        return (Function2) this.onViewChanged;
     }
 
     public final void setOnViewChanged(Function2<? super Float, ? super Float, Unit> function2) {
@@ -2953,7 +2953,7 @@ public final class SceneView extends SurfaceView {
 
     /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     public final void updateScene(long var1) {
-        Object var141 = null; List var88 = null; // declarations Vineflower left out
+        Detector.Obj var141 = null; List var88 = null; // declarations Vineflower left out
         double var3;
         if (this.lastFrameNs == 0L) {
             var3 = 0.016666666666666666;
@@ -3465,7 +3465,7 @@ public final class SceneView extends SurfaceView {
 
                 while (true) {
                     if (!var41.hasNext()) {
-                        var141 = var112;
+                        var141 = (Detector.Obj)(Object)var112;
                         break;
                     }
 
@@ -3480,7 +3480,7 @@ public final class SceneView extends SurfaceView {
 
                 if (var141 != null) {
                     var92.add(var141.getId());
-                } else if (var21
+                } else if ((var21 != 0)
                     && !var44.getLead()
                     && Math.abs(var44.getVAbs()) < 2.0F
                     && var44.getX() < 70.0
@@ -3547,7 +3547,7 @@ public final class SceneView extends SurfaceView {
                     }
 
                     var5 = updateScene$snapY(this, var36, var11, var5, var81);
-                    var11 = updateScene$vehHeading(var35, var102, var24, this, var36, ((Obj) var141), var44.getX(), var44.getVAbs(), var5);
+                    var11 = updateScene$vehHeading(var35, var102, var24, this, var36, var141, var44.getX(), var44.getVAbs(), var5);
                     double var13 = var11 - Math.atan2(var5, var44.getX());
                     double var15 = (var137.getLength() * Math.abs(Math.cos(var13)) + Math.abs(Math.sin(var13)) * 1.9) / 2;
                     var13 = var44.getX();
@@ -5113,7 +5113,7 @@ public final class SceneView extends SurfaceView {
                             this.curbOffS[var85] = var70;
                         } else if (Math.abs(var75) > 0.4) {
                             var50 = this.curbOffS;
-                            ((Object[])var50)[var85] += RangesKt.coerceIn(var75, -0.025, 0.025);
+                            ((double[])var50)[var85] += RangesKt.coerceIn(var75, -0.025, 0.025);
                         }
                     }
 
@@ -5331,7 +5331,7 @@ public final class SceneView extends SurfaceView {
                         if (!var62.isEmpty()) {
                             CollectionsKt.sort(var62);
                             var61 = (float[])var62.get(var62.size() / 2);
-                            Object var18 = (Double)var61;
+                            Double var18 = (Double)(Object)var61;
                             Intrinsics.checkNotNull(var18);
                             var2 = var18;
                             boolean var46;
@@ -5345,7 +5345,7 @@ public final class SceneView extends SurfaceView {
                                 var61 = null;
                             }
 
-                            Object var64 = (Double)var61;
+                            Double var64 = (Double)(Object)var61;
                             if (var64 != null) {
                                 var2 = var64;
                             } else {
@@ -5716,8 +5716,8 @@ public final class SceneView extends SurfaceView {
 
     /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     private final boolean drawMapRoads(ModelSnapshot var1, float var2) {
-        Object var150 = null; String var194 = null; // declarations Vineflower left out
-        Object var39;
+        int var150 = 0; String var194 = null; // declarations Vineflower left out
+        SceneView.LaneHint var39;
         OsmRoads.Fix var41;
         Integer var54;
         label828: {
@@ -5740,7 +5740,7 @@ public final class SceneView extends SurfaceView {
             var39 = null;
         }
 
-        this.hintNow = ((LaneHint) var39);
+        this.hintNow = var39;
         if (this.mapAlign.getOk() && var41 != null) {
             if (this.shiftJumps != this.mapAlign.getJumps()) {
                 this.shiftJumps = this.mapAlign.getJumps();
@@ -5902,7 +5902,7 @@ public final class SceneView extends SurfaceView {
                         var24 = false;
                     }
 
-                    if (var24 && ((var109 != 0) || (var98 != 0) > var3)) {
+                    if (var24 && ((var109 != 0) || var98 > var3)) {
                         var98 = RangesKt.coerceIn(var3 + (var98 - var3) * 0.05, var50.getWay().getWidth() - 3.0, var50.getWay().getWidth() + 5.0);
                         this.learnedW.put(var50.getWay().getId(), var98);
                         var3 = var98;
@@ -6101,15 +6101,15 @@ public final class SceneView extends SurfaceView {
                 var214 = String.format("%.1f", Arrays.copyOf(new Object[]{this.mapAlign.getResid()}, 1));
                 Intrinsics.checkNotNullExpressionValue(var214, "format(...)");
                 if (var50 != null) {
-                    var41 = var50.getWay().getName();
-                    if (var41.length() == 0) {
+                    String var41s = var50.getWay().getName();
+                    if (var41s.length() == 0) {
                         var116 = (((boolean)true) ? 1 : 0);
                     } else {
                         var116 = (((boolean)false) ? 1 : 0);
                     }
 
                     if ((var116 != 0)) {
-                        var41 = var50.getWay().getKind();
+                        var41s = var50.getWay().getKind();
                     }
 
                     if (var50.getWay().getOneway() != 0) {
@@ -6124,7 +6124,7 @@ public final class SceneView extends SurfaceView {
                     Intrinsics.checkNotNullExpressionValue(var47, "format(...)");
                     String var51 = String.format("%.0f", Arrays.copyOf(new Object[]{Math.toDegrees(this.turnA)}, 1));
                     Intrinsics.checkNotNullExpressionValue(var51, "format(...)");
-                    var42 = "on: " + var41 + var42 + " " + var49 + " m right of middle (GPS " + var48 + ", " + var47 + " m wide)  turn " + var51 + "°" + var176;
+                    var42 = "on: " + var41s + var42 + " " + var49 + " m right of middle (GPS " + var48 + ", " + var47 + " m wide)  turn " + var51 + "°" + var176;
                     var194 = var42;
                     if (var42 != null) {
                         break label698;
@@ -6342,14 +6342,14 @@ public final class SceneView extends SurfaceView {
                             for (Object var42$it : (List)var39) {
                                 var42 = (String) var42$it;
                                 Intrinsics.checkNotNullExpressionValue(var42, "next(...)");
-                                var33 = ((Number)var42).longValue();
+                                var33 = ((Number)(Object)var42).longValue();
                                 Iterator var252 = var190.iterator();
 
                                 label581: {
                                     while (var252.hasNext()) {
                                         var42 = (String)var252.next();
                                         boolean var27;
-                                        if (((OsmRoads.Way)var42).getId() == var33) {
+                                        if (((OsmRoads.Way)(Object)var42).getId() == var33) {
                                             var27 = true;
                                         } else {
                                             var27 = false;
@@ -6363,7 +6363,7 @@ public final class SceneView extends SurfaceView {
                                     var42 = null;
                                 }
 
-                                Object var270 = (OsmRoads.Way)var42;
+                                OsmRoads.Way var270 = (OsmRoads.Way)(Object)var42;
                                 if (var270 != null) {
                                     List var271 = this.crossNow.get(var33);
                                     if (var271 != null) {
@@ -6448,7 +6448,7 @@ public final class SceneView extends SurfaceView {
                         while (var247.hasNext()) {
                             var46 = (String)var247.next();
                             boolean var136;
-                            if (((OsmRoads.Way)var46).getId() == var35) {
+                            if (((OsmRoads.Way)(Object)var46).getId() == var35) {
                                 var136 = true;
                             } else {
                                 var136 = false;
@@ -6462,14 +6462,14 @@ public final class SceneView extends SurfaceView {
                         var46 = null;
                     }
 
-                    Object var248 = (OsmRoads.Way)var46;
+                    OsmRoads.Way var248 = (OsmRoads.Way)(Object)var46;
                     if (var248 != null) {
                         if ((var131 != 0)) {
                             Map var249 = var258;
                             Iterable var232 = var239;
                             var var254 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var232, 10));
 
-                            for (double[] var241 : ((double[]) var232)) {
+                            for (double[] var241 : (Iterable<double[]>) var232) {
                                 Pair var242 = (Pair)var221.invoke(var241[0], var241[1]);
                                 var254.add(new double[]{((Number)var242.component1()).doubleValue(), ((Number)var242.component2()).doubleValue()});
                             }
@@ -6641,7 +6641,7 @@ public final class SceneView extends SurfaceView {
                                 var150 = 1;
                             }
 
-                            if (var150) {
+                            if (var150 != 0) {
                                 polyRibbon$default(
                                     this,
                                     this.curN,
@@ -6923,7 +6923,7 @@ public final class SceneView extends SurfaceView {
                         }
 
                         if (var29 != null) {
-                            var43 = var29;
+                            var43 = ((Number)var29).intValue();
                             break label142;
                         }
                     }
@@ -7036,8 +7036,8 @@ public final class SceneView extends SurfaceView {
                 }
                 element$iv2 = it.next();
                 OsmRoads.Way it2 = (OsmRoads.Way) element$iv2;
-                OsmRoads.Way it3 = it2.getId() == startWay.getId() ? 1 : null;
-                if (it3 != null) {
+                boolean it3 = it2.getId() == startWay.getId();
+                if (it3) {
                     break;
                 }
             }
@@ -7081,8 +7081,8 @@ public final class SceneView extends SurfaceView {
                 }
                 element$iv = it5.next();
                 OsmRoads.Way it6 = (OsmRoads.Way) element$iv;
-                OsmRoads.Way it7 = it6.getId() == id ? 1 : null;
-                if (it7 != null) {
+                boolean it7 = it6.getId() == id;
+                if (it7) {
                     break;
                 }
             }
@@ -7423,8 +7423,8 @@ public final class SceneView extends SurfaceView {
                 Object var27 = var1.get(var31);
                 Intrinsics.checkNotNull(var27);
                 var27 = (Pair)var27;
-                var5 = ((Number)var27.component1()).doubleValue();
-                var9 = ((Number)var27.component2()).doubleValue();
+                var5 = ((Number)((Pair)var27).component1()).doubleValue();
+                var9 = ((Number)((Pair)var27).component2()).doubleValue();
                 boolean var32;
                 if ((var4 != 1 || var19 != 0) && (var4 != 0 || var19 != 1)) {
                     var32 = false;
@@ -7435,8 +7435,8 @@ public final class SceneView extends SurfaceView {
                 var27 = var1.get(var3);
                 Intrinsics.checkNotNull(var27);
                 var27 = (Pair)var27;
-                double var40 = ((Number)var27.component1()).doubleValue();
-                var7 = ((Number)var27.component2()).doubleValue();
+                double var40 = ((Number)((Pair)var27).component1()).doubleValue();
+                var7 = ((Number)((Pair)var27).component2()).doubleValue();
                 if (!var32) {
                     var5 = -var5;
                 }
@@ -7931,7 +7931,7 @@ public final class SceneView extends SurfaceView {
                 while (var107.hasNext()) {
                     var35 = (Iterator)var107.next();
                     Intrinsics.checkNotNullExpressionValue(var35, "next(...)");
-                    Object var41 = (LaneTracks.Line)var35;
+                    LaneTracks.Line var41 = (LaneTracks.Line)(Object)var35;
                     if (!(var41.getAlpha() < 0.03F)) {
                         LaneMarks.Mark var129 = var41.getMark();
                         if (var129 != null) {
@@ -7949,7 +7949,7 @@ public final class SceneView extends SurfaceView {
                                 var82 = true;
                             }
 
-                            float[] var42 = var124.shownY(((Line) var41));
+                            float[] var42 = var124.shownY(((LaneTracks.Line) var41));
                             int var66;
                             if ((var18 <= 0 || var41 != var38) && (var18 >= 0 || var41 != var36)) {
                                 var66 = 0;
@@ -8127,7 +8127,7 @@ public final class SceneView extends SurfaceView {
             for (Object var142$it : (Iterable) var142) {
                 var142 = (Iterable) var142$it;
                 byte var72;
-                if (((LaneTracks.Line)var142).getAlpha() > 0.2F) {
+                if (((LaneTracks.Line)(Object)var142).getAlpha() > 0.2F) {
                     var72 = (byte)var65;
                 } else {
                     var72 = 0;

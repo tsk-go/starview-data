@@ -62,7 +62,7 @@ public final class TrackMapView extends View {
         Intrinsics.checkNotNullParameter(var5, "onPick");
         this.pts = var2;
         this.segStartMs = var3;
-        this.onPick = var5;
+        this.onPick = (Function1) var5;
         this.d = this.getResources().getDisplayMetrics().density;
         MapTiles var9 = new MapTiles(var1, new TrackMapView$$ExternalSyntheticLambda1(this));
         var9.setHost(Link.INSTANCE.getHost());

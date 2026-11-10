@@ -73,8 +73,8 @@ public final class VideoClient {
         super();
         Intrinsics.checkNotNullParameter(var1, "onStatus");
         Intrinsics.checkNotNullParameter(var2, "onSize");
-        this.onStatus = var1;
-        this.onSize = var2;
+        this.onStatus = (Function1) var1;
+        this.onSize = (Function2) var2;
         this.http = new Builder().pingInterval(5L, TimeUnit.SECONDS).readTimeout(0L, TimeUnit.MILLISECONDS).build();
         this.queue = new LinkedBlockingQueue<>(6);
         this.fpsT0 = System.nanoTime();
@@ -156,7 +156,7 @@ public final class VideoClient {
     }
 
     public final Function1<Image, Unit> getOnImage() {
-        return this.onImage;
+        return (Function1) this.onImage;
     }
 
     public final void setOnImage(Function1<? super Image, Unit> function1) {

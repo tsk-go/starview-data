@@ -87,8 +87,8 @@ public final class SettingsLauncher extends FrameLayout {
         Intrinsics.checkNotNullParameter(var5, "open");
         this.ui = var2;
         this.home = var3;
-        this.allPages = var4;
-        this.open = var5;
+        this.allPages = (Function0) var4;
+        this.open = (Function1) var5;
         this.prefs = new UiSettings(var1);
         this.board = new ShortcutBoard(this.prefs.getStr("settings_shortcuts", "{}"));
         this.pager = new SwipePager(var1, 1);
