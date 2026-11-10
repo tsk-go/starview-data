@@ -543,16 +543,15 @@ public final class DoorsBeltsView extends CardPage {
                         while (var88.hasNext()) {
                             java.util.Map.Entry var103 = (java.util.Map.Entry)var88.next();
                             Intrinsics.checkNotNullExpressionValue(var103, "next(...)");
-                            var103 = var103;
-                            Object var126 = (Integer)var103.getKey();
-                            Intrinsics.checkNotNullExpressionValue(var126, "component1(...)");
-                            var126 = (String)var126;
-                            var103 = (java.util.Map.Entry)var103.getValue();
-                            Intrinsics.checkNotNullExpressionValue(var103, "component2(...)");
-                            Integer var26 = (Integer)(Object)var103;
-                            String var146 = this.nameOf((String)var126);
+                            Object var126k = var103.getKey();
+                            Intrinsics.checkNotNullExpressionValue(var126k, "component1(...)");
+                            String var126 = (String)var126k;
+                            Object var26v = var103.getValue();
+                            Intrinsics.checkNotNullExpressionValue(var26v, "component2(...)");
+                            Integer var26 = (Integer)var26v;
+                            String var146 = this.nameOf(var126);
                             String var106;
-                            if (var26) {
+                            if (var26.intValue() == 1) {
                                 var106 = "";
                             } else {
                                 var106 = var10;
@@ -560,11 +559,11 @@ public final class DoorsBeltsView extends CardPage {
 
                             Object var27 = var99.get(var126);
                             var4 = var94.length();
-                            var126 = (Integer)var72.get(var126);
-                            if (var126 != null) {
-                                var30 = var126;
+                            Integer var126i = (Integer)var72.get(var126);
+                            if (var126i != null) {
+                                var30 = var126i.intValue();
                             } else {
-                                var30 = var26;
+                                var30 = var26.intValue();
                             }
 
                             var25.addView(
@@ -893,11 +892,11 @@ public final class DoorsBeltsView extends CardPage {
 
                     for (JSONObject var10 : this.items()) {
                         String var5 = var10.optString("id");
-                        CarUi.Companion_ var14 = null;
-                        String var4 = var14;
+                        Object var14 = null;
+                        String var4 = (String) var14;
                         if (var7 != null) {
                             var5 = var7.optString(var5);
-                            var4 = var14;
+                            var4 = (String) var14;
                             if (var5 != null) {
                                 boolean var1;
                                 if (var5.length() > 0) {
@@ -912,7 +911,7 @@ public final class DoorsBeltsView extends CardPage {
                                     var1 = false;
                                 }
 
-                                var4 = var14;
+                                var4 = (String) var14;
                                 if (var1) {
                                     var4 = var5;
                                 }
@@ -936,7 +935,7 @@ public final class DoorsBeltsView extends CardPage {
                             label82: {
                                 label81: {
                                     if (var14 != null) {
-                                        switch (var14.hashCode()) {
+                                        switch (((String) var14).hashCode()) {
                                             case -1282241876:
                                                 if (var14.equals("not on bus")) {
                                                     var14 = "not on the comma's bus";
@@ -972,11 +971,11 @@ public final class DoorsBeltsView extends CardPage {
                         } else if (Intrinsics.areEqual(var4, "buckled")) {
                             var13 = CarUi.Companion.getACCENT();
                         } else {
-                            var14 = CarUi.Companion;
+                            CarUi.Companion_ var14c = CarUi.Companion;
                             if (var4 == null) {
-                                var13 = var14.getDIM();
+                                var13 = var14c.getDIM();
                             } else {
-                                var13 = var14.getTEXT();
+                                var13 = var14c.getTEXT();
                             }
                         }
 
@@ -1147,16 +1146,20 @@ public final class DoorsBeltsView extends CardPage {
                             DoorsBeltsView doorsBeltsView = this.this$0;
                             String str = v != null ? "✓  " : "✗  ";
                             Iterable $this$first$iv = getList();
+                            Object found = null;
                             for (Object element$iv : $this$first$iv) {
                                 JSONObject it3 = (JSONObject) element$iv;
                                 if (Intrinsics.areEqual(it3.optString("id"), k)) {
-                                    String str2 = str + ((JSONObject) element$iv).optString("name");
-                                    CarUi.Companion_ companion = CarUi.Companion;
-                                    c.addView(doorsBeltsView.line(str2, v != null ? companion.getACCENT() : companion.getWARN(), 17.0f));
+                                    found = element$iv;
+                                    break;
                                 }
                             }
-                            throw new NoSuchElementException("Collection contains no element matching the predicate.");
-                            break;
+                            if (found == null) {
+                                throw new NoSuchElementException("Collection contains no element matching the predicate.");
+                            }
+                            String str2 = str + ((JSONObject) found).optString("name");
+                            CarUi.Companion_ companion = CarUi.Companion;
+                            c.addView(doorsBeltsView.line(str2, v != null ? companion.getACCENT() : companion.getWARN(), 17.0f));
                         }
                         c.addView(CardPage.line$default(this.this$0, "Save, and the comma checks these from the next drive on (and the last week again).", 0, 0.0f, 6, null));
                         DoorsBeltsView doorsBeltsView2 = this.this$0;
