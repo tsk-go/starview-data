@@ -206,11 +206,11 @@ public final class Hpms {
             this.abbr = StringsKt.take(StringsKt.removePrefix(name, (CharSequence) "hpms_"), 2);
             this.names = new HashMap<>();
             RandomAccessFile randomAccessFile = new RandomAccessFile(this.file, "r");
+            Throwable randomAccessFile$c = null;
             try {
                 RandomAccessFile raf = randomAccessFile;
                 this.buf = raf.getChannel().map(FileChannel.MapMode.READ_ONLY, 0L, raf.length());
                 Unit unit = Unit.INSTANCE;
-                CloseableKt.closeFinally(randomAccessFile, null);
                 this.buf.order(ByteOrder.LITTLE_ENDIAN);
                 byte[] magic = new byte[8];
                 this.buf.position(0);
@@ -235,7 +235,11 @@ public final class Hpms {
                 this.minTy = this.buf.getInt(52);
                 this.maxTx = this.buf.getInt(56);
                 this.maxTy = this.buf.getInt(60);
+            } catch (Throwable randomAccessFile$t) {
+                randomAccessFile$c = randomAccessFile$t;
+                throw randomAccessFile$t;
             } finally {
+                CloseableKt.closeFinally(randomAccessFile, randomAccessFile$c);
             }
         }
 

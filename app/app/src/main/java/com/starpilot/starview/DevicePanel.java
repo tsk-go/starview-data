@@ -3377,12 +3377,16 @@ public final class DevicePanel extends ScrollView {
             Result.Companion companion = Result.Companion;
             OkHttpClient http = new OkHttpClient.Builder().addInterceptor(Link.INSTANCE.getAuthInterceptor()).connectTimeout(4L, TimeUnit.SECONDS).readTimeout(4L, TimeUnit.SECONDS).build();
             Response execute = http.newCall(new Request.Builder().url("http://" + $h + ":8090/fs/get?path=" + Uri.encode("/data/openpilot/CLAUDE.md")).build()).execute();
+            Throwable execute$c = null;
             try {
                 Response r = execute;
                 String string = (!r.isSuccessful() || (body = r.body()) == null) ? null : body.string();
-                CloseableKt.closeFinally(execute, null);
                 m1191constructorimpl = KtCompat.resultOf(string);
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;

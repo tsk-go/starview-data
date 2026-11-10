@@ -91,6 +91,7 @@ public final class ModelDownload {
                 return "Couldn't open that file";
             }
             InputStream inputStream = openInputStream;
+            Throwable inputStream$c = null;
             try {
                 InputStream inp = inputStream;
                 int i = 0;
@@ -116,7 +117,6 @@ public final class ModelDownload {
                     Unit unit = Unit.INSTANCE;
                     CloseableKt.closeFinally(fileOutputStream, null);
                     Unit unit2 = Unit.INSTANCE;
-                    CloseableKt.closeFinally(inputStream, null);
                     byte[] digest = md.digest();
                     Intrinsics.checkNotNullExpressionValue(digest, "digest(...)");
                     String sha = ArraysKt.joinToString(digest, (CharSequence) "", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.ModelDownload$$ExternalSyntheticLambda2
@@ -146,7 +146,11 @@ public final class ModelDownload {
                         throw th4;
                     }
                 }
+            } catch (Throwable inputStream$t) {
+                inputStream$c = inputStream$t;
+                throw inputStream$t;
             } finally {
+                CloseableKt.closeFinally(inputStream, inputStream$c);
             }
         } catch (Exception e) {
             tmp.delete();

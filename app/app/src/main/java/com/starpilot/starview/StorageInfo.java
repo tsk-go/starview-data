@@ -63,6 +63,7 @@ public final class StorageInfo {
         Intrinsics.checkNotNullParameter(host, "host");
         try {
             Response execute = getHttp().newCall(new Request.Builder().url("http://" + host + ":" + port + "/storage").build()).execute();
+            Throwable execute$c = null;
             try {
                 Response r = execute;
                 if (r.isSuccessful()) {
@@ -72,9 +73,12 @@ public final class StorageInfo {
                 } else {
                     jSONObject = null;
                 }
-                CloseableKt.closeFinally(execute, null);
                 return jSONObject;
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         } catch (Exception e) {
             return null;

@@ -46,14 +46,14 @@ public final class LaneModelKt {
             InputStream openInputStream = ctx.getContentResolver().openInputStream(uri);
             Intrinsics.checkNotNull(openInputStream);
             InputStream inputStream = openInputStream;
+            Throwable inputStream$c = null;
             try {
                 InputStream inputStream2 = inputStream;
                 FileOutputStream fileOutputStream = new FileOutputStream(file2);
+                Throwable fileOutputStream$c = null;
                 try {
                     boolean z = false;
                     ByteStreamsKt.copyTo(inputStream2, fileOutputStream, 8192);
-                    CloseableKt.closeFinally(fileOutputStream, null);
-                    CloseableKt.closeFinally(inputStream, null);
                     FileInputStream fileInputStream = new FileInputStream(file2);
                     try {
                         String str = 8;
@@ -120,9 +120,17 @@ public final class LaneModelKt {
                         } finally {
                         }
                     }
+                } catch (Throwable fileOutputStream$t) {
+                    fileOutputStream$c = fileOutputStream$t;
+                    throw fileOutputStream$t;
                 } finally {
+                    CloseableKt.closeFinally(fileOutputStream, fileOutputStream$c);
                 }
+            } catch (Throwable inputStream$t) {
+                inputStream$c = inputStream$t;
+                throw inputStream$t;
             } finally {
+                CloseableKt.closeFinally(inputStream, inputStream$c);
             }
         } catch (Exception e) {
             return "Import failed: " + e.getMessage();

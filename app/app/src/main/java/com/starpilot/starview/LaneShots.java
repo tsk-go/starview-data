@@ -655,12 +655,16 @@ public final class LaneShots {
         }
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(new File(dir, base + "_" + tag + ".jpg"));
+            Throwable fileOutputStream$c = null;
             try {
                 FileOutputStream it = fileOutputStream;
                 b.compress(Bitmap.CompressFormat.JPEG, 80, it);
-                CloseableKt.closeFinally(fileOutputStream, null);
                 str = drive + "/" + base + "_" + tag + ".jpg";
+            } catch (Throwable fileOutputStream$t) {
+                fileOutputStream$c = fileOutputStream$t;
+                throw fileOutputStream$t;
             } finally {
+                CloseableKt.closeFinally(fileOutputStream, fileOutputStream$c);
             }
         } catch (Exception e) {
         } catch (Throwable th) {

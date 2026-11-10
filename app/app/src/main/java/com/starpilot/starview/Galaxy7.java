@@ -99,6 +99,7 @@ public final class Galaxy7 {
             }
             Request req = $this$session_u24lambda_u243_u24lambda_u240.build();
             Response execute = this.client.newCall(req).execute();
+            Throwable execute$c = null;
             try {
                 Response r = execute;
                 Iterable $this$firstOrNull$iv = r.headers("Set-Cookie");
@@ -124,12 +125,15 @@ public final class Galaxy7 {
                 }
                 if (!(this.cookie.length() == 0)) {
                     Unit unit = Unit.INSTANCE;
-                    CloseableKt.closeFinally(execute, null);
                     Unit unit2 = Unit.INSTANCE;
                     return;
                 }
                 throw new Error(401, "Galaxy gave no local session (is the tablet on the comma's own network?)");
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         }
     }
@@ -167,6 +171,7 @@ public final class Galaxy7 {
             b.get();
         }
         Response execute = this.client.newCall(b.build()).execute();
+        Throwable execute$c = null;
         try {
             Response r = execute;
             ResponseBody body2 = r.body();
@@ -177,7 +182,6 @@ public final class Galaxy7 {
             if (r.code() == 401 && retry) {
                 session(true);
                 JSONObject call = call(method, path, body, false);
-                CloseableKt.closeFinally(execute, null);
                 return call;
             }
             try {
@@ -196,7 +200,6 @@ public final class Galaxy7 {
                 if (obj == null) {
                     obj = new JSONObject();
                 }
-                CloseableKt.closeFinally(execute, null);
                 return obj;
             }
             int code = r.code();
@@ -209,7 +212,11 @@ public final class Galaxy7 {
             }
             str = "Galaxy answered HTTP " + r.code();
             throw new Error(code, str);
+        } catch (Throwable execute$t) {
+            execute$c = execute$t;
+            throw execute$t;
         } finally {
+            CloseableKt.closeFinally(execute, execute$c);
         }
     }
 
@@ -259,6 +266,7 @@ public final class Galaxy7 {
                 r = postImage$lambda$12$once(this$0, $path, $body);
             }
             Response response = r;
+            Throwable response$c = null;
             try {
                 Response it = response;
                 String header$default = it.header("Content-Type", null);
@@ -304,8 +312,11 @@ public final class Galaxy7 {
                     }
                     pair = TuplesKt.to(bArr, null);
                 }
-                CloseableKt.closeFinally(response, null);
+            } catch (Throwable response$t) {
+                response$c = response$t;
+                throw response$t;
             } finally {
+                CloseableKt.closeFinally(response, response$c);
             }
         } catch (Error e) {
             String message = e.getMessage();

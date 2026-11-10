@@ -3770,10 +3770,10 @@ public final class GxSystemPage extends GxPage {
             throw new IllegalStateException("cannot write file");
         }
         OutputStream outputStream = openOutputStream;
+        Throwable outputStream$c = null;
         try {
             outputStream.write(bArr);
             Unit unit = Unit.INSTANCE;
-            CloseableKt.closeFinally(outputStream, null);
             Unit unit2 = Unit.INSTANCE;
             CloseableKt.closeFinally(execute, null);
             objectRef.element = "Toggle backup downloaded to Downloads/StarView/" + str2;
@@ -3783,7 +3783,11 @@ public final class GxSystemPage extends GxPage {
                     GxSystemPage.backupToggles$lambda$140$lambda$139(gxSystemPage, objectRef);
                 }
             });
+        } catch (Throwable outputStream$t) {
+            outputStream$c = outputStream$t;
+            throw outputStream$t;
         } finally {
+            CloseableKt.closeFinally(outputStream, outputStream$c);
         }
     }
 

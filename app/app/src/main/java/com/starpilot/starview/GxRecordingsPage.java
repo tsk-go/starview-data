@@ -3695,6 +3695,7 @@ public final class GxRecordingsPage extends GxPage {
         } catch (Throwable th2) {
             th = th2;
         }
+        Throwable execute$c = null;
         try {
             Response r = execute;
             if (!r.isSuccessful() || (body = r.body()) == null || (data = body.bytes()) == null) {
@@ -3713,7 +3714,6 @@ public final class GxRecordingsPage extends GxPage {
                 Unit unit = Unit.INSTANCE;
                 decodeByteArray = BitmapFactory.decodeByteArray(data, 0, length, $this$fetchThumb_u24lambda_u24126_u24lambda_u24124_u24lambda_u24123_u24lambda_u24122_u24lambda_u24121);
             }
-            CloseableKt.closeFinally(execute, null);
             m1191constructorimpl = KtCompat.resultOf(decodeByteArray);
             final Bitmap bmp2 = (Bitmap) (KtCompat.isFailure(m1191constructorimpl) ? null : m1191constructorimpl);
             this$0.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda43
@@ -3722,7 +3722,11 @@ public final class GxRecordingsPage extends GxPage {
                     $then.invoke(bmp2);
                 }
             });
+        } catch (Throwable execute$t) {
+            execute$c = execute$t;
+            throw execute$t;
         } finally {
+            CloseableKt.closeFinally(execute, execute$c);
         }
     }
 
@@ -3742,12 +3746,16 @@ public final class GxRecordingsPage extends GxPage {
         try {
             Result.Companion companion = Result.Companion;
             Response execute = GxPage.Companion.client(30L).newCall(new Request.Builder().url($u).head().build()).execute();
+            Throwable execute$c = null;
             try {
                 Response it = execute;
                 int code = it.code();
-                CloseableKt.closeFinally(execute, null);
                 m1191constructorimpl = KtCompat.resultOf(Integer.valueOf(code));
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;

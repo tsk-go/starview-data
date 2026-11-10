@@ -3631,6 +3631,7 @@ public final class MainActivity extends AppCompatActivity {
     public static final void fetchStorage$lambda$165(final MainActivity this$0, String $h) {
         try {
             Response execute = this$0.getStorageHttp().newCall(new Request.Builder().url("http://" + $h + ":" + this$0.port + "/storage").build()).execute();
+            Throwable execute$c = null;
             try {
                 Response r = execute;
                 if (r.isSuccessful()) {
@@ -3645,8 +3646,11 @@ public final class MainActivity extends AppCompatActivity {
                     });
                 }
                 Unit unit = Unit.INSTANCE;
-                CloseableKt.closeFinally(execute, null);
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         } catch (Exception e) {
         }

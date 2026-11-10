@@ -361,6 +361,7 @@ public final class GxLogsPage extends GxPage {
         final Ref.ObjectRef objectRef2 = new Ref.ObjectRef();
         try {
             Response execute = GxPage.Companion.client(20L).newCall(new Request.Builder().url("http://" + str + ":8082" + str2).header("Accept", "application/json").build()).execute();
+            Throwable execute$c = null;
             try {
                 Response response = execute;
                 ResponseBody body = response.body();
@@ -385,8 +386,11 @@ public final class GxLogsPage extends GxPage {
                     objectRef.element = "HTTP " + response.code();
                 }
                 Unit unit = Unit.INSTANCE;
-                CloseableKt.closeFinally(execute, null);
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         } catch (Exception e) {
             String message = e.getMessage();

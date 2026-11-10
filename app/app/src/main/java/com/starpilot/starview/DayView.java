@@ -168,9 +168,9 @@ public final class DayView {
             it = new FileOutputStream(new File(d, name));
         } catch (Exception e) {
         }
+        Throwable it$c = null;
         try {
             small.compress(Bitmap.CompressFormat.JPEG, 60, it);
-            CloseableKt.closeFinally(it, null);
             small.recycle();
             synchronized (it3) {
                 try {
@@ -187,7 +187,11 @@ public final class DayView {
                     th = th4;
                 }
             }
+        } catch (Throwable it$t) {
+            it$c = it$t;
+            throw it$t;
         } finally {
+            CloseableKt.closeFinally(it, it$c);
         }
     }
 

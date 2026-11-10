@@ -98,6 +98,7 @@ public final class MapBumps {
                 String q = "[out:json][timeout:25];node[\"traffic_calming\"~\"^(bump|hump|table|cushion|yes)$\"](" + format + ");out;";
                 Request req = new Request.Builder().url("https://overpass-api.de/api/interpreter").header("User-Agent", "StarView (openpilot tablet display)").post(new FormBody.Builder().add("data", q).build()).build();
                 Response execute = getHttp().newCall(req).execute();
+                Throwable execute$c = null;
                 try {
                     Response r = execute;
                     if (!r.isSuccessful()) {
@@ -106,10 +107,13 @@ public final class MapBumps {
                     ResponseBody body = r.body();
                     Intrinsics.checkNotNull(body);
                     String string = body.string();
-                    CloseableKt.closeFinally(execute, null);
                     b = string;
                     FilesKt.writeText(f, b, kotlin.text.Charsets.UTF_8);
+                } catch (Throwable execute$t) {
+                    execute$c = execute$t;
+                    throw execute$t;
                 } finally {
+                    CloseableKt.closeFinally(execute, execute$c);
                 }
             }
             JSONArray els = new JSONObject(b).optJSONArray("elements");

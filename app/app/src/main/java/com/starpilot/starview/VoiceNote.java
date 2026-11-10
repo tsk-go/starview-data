@@ -278,6 +278,7 @@ public final class VoiceNote {
 
     private final void wavHeader(File f, long dataBytes, int rate) {
         RandomAccessFile randomAccessFile = new RandomAccessFile(f, "rw");
+        Throwable randomAccessFile$c = null;
         try {
             RandomAccessFile r = randomAccessFile;
             r.seek(0L);
@@ -300,8 +301,11 @@ public final class VoiceNote {
             r.write(bytes3);
             r.write(wavHeader$lambda$5$le32(dataBytes));
             Unit unit = Unit.INSTANCE;
-            CloseableKt.closeFinally(randomAccessFile, null);
+        } catch (Throwable randomAccessFile$t) {
+            randomAccessFile$c = randomAccessFile$t;
+            throw randomAccessFile$t;
         } finally {
+            CloseableKt.closeFinally(randomAccessFile, randomAccessFile$c);
         }
     }
 

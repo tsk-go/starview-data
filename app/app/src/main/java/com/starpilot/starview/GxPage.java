@@ -852,12 +852,16 @@ public abstract class GxPage extends FrameLayout {
         try {
             Result.Companion companion = Result.Companion;
             Response execute = Companion.client(15L).newCall(new Request.Builder().url("http://" + $h + ":8082" + $path).build()).execute();
+            Throwable execute$c = null;
             try {
                 Response r = execute;
                 Bitmap decodeByteArray = (!r.isSuccessful() || (body = r.body()) == null || (it = body.bytes()) == null) ? null : BitmapFactory.decodeByteArray(it, 0, it.length);
-                CloseableKt.closeFinally(execute, null);
                 m1191constructorimpl = KtCompat.resultOf(decodeByteArray);
+            } catch (Throwable execute$t) {
+                execute$c = execute$t;
+                throw execute$t;
             } finally {
+                CloseableKt.closeFinally(execute, execute$c);
             }
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
