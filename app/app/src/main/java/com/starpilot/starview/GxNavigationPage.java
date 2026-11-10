@@ -3322,7 +3322,7 @@ public final class GxNavigationPage extends GxPage {
 
             View var67 = var66.getChildAt(1);
             if (var67 instanceof TextView) {
-                var11 = (TextView)var67;
+                TextView var11sssss = (TextView)var67;
             } else {
                 var11 = null;
             }

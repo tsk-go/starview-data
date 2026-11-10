@@ -2332,7 +2332,7 @@ public final class GxTuningPage extends GxPage {
                     }
                 });
                 View var51 = (View)var22s;
-                Object var31 = new LayoutParams(-1, -2);
+                LayoutParams var31 = new LayoutParams(-1, -2);
                 var31.topMargin = this.getUi().dp(8);
                 Unit var62 = Unit.INSTANCE;
                 var7.addView(var51, (android.view.ViewGroup.LayoutParams)var31);
@@ -4914,7 +4914,7 @@ public final class GxTuningPage extends GxPage {
                         String var87 = this.s(var12, "name");
                         var81.setText(var11 + ". " + var87);
                         var81.setTextSize(18.0F);
-                        CarUi.Companion var84 = CarUi.Companion;
+                        CarUi.Companion_ var84 = CarUi.Companion;
                         if (var2) {
                             var1 = var84.getACCENT();
                         } else {
@@ -4932,7 +4932,7 @@ public final class GxTuningPage extends GxPage {
                         }
 
                         View var85 = (View)var81;
-                        Object var82 = new LayoutParams(-1, -2);
+                        LayoutParams var82 = new LayoutParams(-1, -2);
                         var82.bottomMargin = this.getUi().dp(4);
                         Unit var88 = Unit.INSTANCE;
                         var7.addView(var85, (android.view.ViewGroup.LayoutParams)var82);

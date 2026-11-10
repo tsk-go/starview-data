@@ -401,7 +401,7 @@ public final class OverlayView extends View {
 
                                 this.fill.setShader(null);
                                 Paint var41 = this.fill;
-                                OverlayView.Companion var77 = Companion;
+                                OverlayView.Companion_ var77 = Companion;
                                 if (var24 && this.tracks.getEffort() > 0.55F) {
                                     var22 = Math.max(var27, 220);
                                 } else {
