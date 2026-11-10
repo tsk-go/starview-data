@@ -11027,6 +11027,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             carUi4 = null;
         }
         col.addView(linearLayout, CarUi.lp$default(carUi4, 0, 0, 3, null));
+        col.addView(AppUpdateKt.appUpdateRow(this, carUi4), CarUi.lp$default(carUi4, 0, 0, 3, null));
         CarUi carUi5 = this.ui;
         if (carUi5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("ui");
