@@ -146,8 +146,8 @@ public final class OffroadHome extends FrameLayout {
         var5.setEllipsize(TruncateAt.END);
         Unit var20 = Unit.INSTANCE;
         this.version = var5;
-        this.allTime = new OffroadHome.StatBlock(this, (int)"ALL TIME", Color.rgb(145, 110, 255));
-        this.pastWeek = new OffroadHome.StatBlock(this, (int)"PAST WEEK", Color.rgb(40, 200, 190));
+        this.allTime = new OffroadHome.StatBlock(this, "ALL TIME", Color.rgb(145, 110, 255));
+        this.pastWeek = new OffroadHome.StatBlock(this, "PAST WEEK", Color.rgb(40, 200, 190));
         this.statsNote = tv$default(this, 15.0F, Color.rgb(150, 160, 180), false, 4, null);
         var5 = tv$default(this, 26.0F, 0, true, 2, null);
         var5.setGravity(16);
@@ -817,67 +817,33 @@ public final class OffroadHome extends FrameLayout {
     }
 
     private final List<Alert> alerts(Telemetry t) {
-        Map map;
-        Alert alert;
-        Map $this$mapNotNull$iv;
-        int $i$f$mapNotNull;
-        Alert alert2;
-        Map $this$mapNotNullTo$iv$iv;
-        Map $this$mapNotNullTo$iv$iv2;
         Map $this$filterKeys$iv = t.getParams();
         LinkedHashMap result$iv = new LinkedHashMap();
         Iterator<Map.Entry<String, Object>> it = $this$filterKeys$iv.entrySet().iterator();
-        while (true) {
-            map = null;
-            alert = null;
-            if (!it.hasNext()) {
-                break;
-            }
+        while (it.hasNext()) {
             Map.Entry entry$iv = it.next();
-            String it2 = ((String) entry$iv.getKey());
-            if (StringsKt.startsWith(it2, "Offroad_", false)) {
+            if (StringsKt.startsWith((String) entry$iv.getKey(), "Offroad_", false)) {
                 result$iv.put(entry$iv.getKey(), entry$iv.getValue());
             }
         }
-        LinkedHashMap $this$mapNotNull$iv2 = result$iv;
-        int $i$f$mapNotNull2 = 0;
         Collection destination$iv$iv = new ArrayList();
-        Map $this$mapNotNullTo$iv$iv3 = $this$mapNotNull$iv2;
-        for (Map.Entry element$iv$iv$iv : (Iterable<Map.Entry>) $this$mapNotNullTo$iv$iv3.entrySet()) {
-            Object v = element$iv$iv$iv.getValue();
-            JSONObject o = jobj(v);
-            if (o == null) {
-                $this$mapNotNull$iv = $this$mapNotNull$iv2;
-                $i$f$mapNotNull = $i$f$mapNotNull2;
-                $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv3;
-                $this$mapNotNullTo$iv$iv2 = map;
-                alert2 = alert;
-            } else {
+        for (Object e : result$iv.entrySet()) {
+            Map.Entry element$iv$iv$iv = (Map.Entry) e;
+            JSONObject o = jobj(element$iv$iv$iv.getValue());
+            Alert alert = null;
+            if (o != null) {
                 String optString = o.optString("text");
-                $this$mapNotNull$iv = $this$mapNotNull$iv2;
                 Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
-                $i$f$mapNotNull = $i$f$mapNotNull2;
                 String optString2 = o.optString("extra");
                 Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
                 String text = StringsKt.replace(optString, "%1", optString2, false);
-                if (StringsKt.isBlank(text)) {
-                    $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv3;
-                    alert2 = null;
-                    $this$mapNotNullTo$iv$iv2 = null;
-                } else {
-                    $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv3;
-                    $this$mapNotNullTo$iv$iv2 = null;
-                    alert2 = new Alert(text, o.optInt("severity", 0));
+                if (!StringsKt.isBlank(text)) {
+                    alert = new Alert(text, o.optInt("severity", 0));
                 }
             }
-            if (alert2 != null) {
-                destination$iv$iv.add(alert2);
+            if (alert != null) {
+                destination$iv$iv.add(alert);
             }
-            map = $this$mapNotNullTo$iv$iv2;
-            $this$mapNotNull$iv2 = $this$mapNotNull$iv;
-            $this$mapNotNullTo$iv$iv3 = $this$mapNotNullTo$iv$iv;
-            $i$f$mapNotNull2 = $i$f$mapNotNull;
-            alert = null;
         }
         Iterable $this$sortedByDescending$iv = (List) destination$iv$iv;
         return CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.OffroadHome$alerts$$inlined$sortedByDescending$1
@@ -1062,7 +1028,7 @@ public final class OffroadHome extends FrameLayout {
                 var43 = (byte)8;
             }
 
-            var65.setVisibility(var43);
+            ((View) var65).setVisibility(var43);
             var65 = this.detailContent;
             if (this.state == OffroadHome.State.HOME) {
                 var43 = (byte)8;
@@ -1070,7 +1036,7 @@ public final class OffroadHome extends FrameLayout {
                 var43 = (byte)0;
             }
 
-            var65.setVisibility(var43);
+            ((View) var65).setVisibility(var43);
             OffroadHome.State var71 = this.state;
             switch (OffroadHome.WhenMappings.$EnumSwitchMapping$0[var71.ordinal()]) {
                 case 1:
@@ -1254,7 +1220,7 @@ public final class OffroadHome extends FrameLayout {
                     StringBuilder var16 = new StringBuilder();
                     Object var101 = Telemetry.pStr$default(var1, "DongleId", null, 2, null);
                     int var56;
-                    if (var101.length() == 0) {
+                    if (((String) var101).length() == 0) {
                         var56 = 1;
                     } else {
                         var56 = 0;
@@ -1294,8 +1260,8 @@ public final class OffroadHome extends FrameLayout {
                         String var25 = this.gb((JSONObject)var101, "free_GB");
                         String var18 = this.gb((JSONObject)var101, "total_GB");
                         var16.append("Internal    " + var25 + " free of " + var18 + " GB");
-                        if (var101.has("newest_time")) {
-                            String var26 = this.whenStr(var101.optDouble("newest_time"));
+                        if (((JSONObject) var101).has("newest_time")) {
+                            String var26 = this.whenStr(((JSONObject) var101).optDouble("newest_time"));
                             var16.append("  ·  newest drive " + var26);
                         }
 
@@ -1398,12 +1364,12 @@ public final class OffroadHome extends FrameLayout {
                         var22 = "A new version is ready to install.";
                     }
 
-                    Object var75 = (String)var22;
+                    String var75 = (String)var22;
                     var22 = this.detailBody;
                     var13 = tv$default(this, 22.0F, Color.rgb(210, 216, 228), false, 4, null);
                     var13.setText(var75);
                     var13.setLineSpacing(this.dp(6), 1.0F);
-                    var22.addView((View)var13);
+                    ((LinearLayout) var22).addView((View)var13);
                     this.detailAction.setText("Open Software settings");
                     this.detailAction.setVisibility(0);
                     this.detailAction.setOnClickListener(new OffroadHome$$ExternalSyntheticLambda1(this));
