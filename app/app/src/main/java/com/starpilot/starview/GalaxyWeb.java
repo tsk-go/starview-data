@@ -165,4 +165,9 @@ public final class GalaxyWeb extends LinearLayout {
         }
         GalaxyWebPool.INSTANCE.park();
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void lambda$7$lambda$6(View var0) {
+       GalaxyWebPool.INSTANCE.reload();
+    }
 }

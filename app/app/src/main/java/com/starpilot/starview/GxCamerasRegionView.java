@@ -296,4 +296,14 @@ final class GxCamerasRegionView extends GxCamerasSnapView {
             }
         }
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final Unit onChanged$lambda$0() {
+       return Unit.INSTANCE;
+    }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final Unit onClose$lambda$1() {
+       return Unit.INSTANCE;
+    }
 }

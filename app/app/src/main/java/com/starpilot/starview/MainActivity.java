@@ -7782,4 +7782,9 @@ public final class MainActivity extends AppCompatActivity {
         }
         dataClient.close();
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void setupMapFrame$lambda$217(MainActivity var0) {
+       var0.openMap();
+    }
 }

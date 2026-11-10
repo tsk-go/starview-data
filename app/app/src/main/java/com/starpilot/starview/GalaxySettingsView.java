@@ -1839,4 +1839,9 @@ public final class GalaxySettingsView extends FrameLayout {
         private Companion() {
         }
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final Unit confirm$lambda$80() {
+       return Unit.INSTANCE;
+    }
 }

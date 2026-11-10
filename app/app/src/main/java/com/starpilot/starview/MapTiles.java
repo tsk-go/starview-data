@@ -462,4 +462,9 @@ public final class MapTiles {
     public final void clearMemory() {
         this.mem.evictAll();
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void _init_$lambda$0(MapTiles var0) {
+       var0.prune();
+    }
 }

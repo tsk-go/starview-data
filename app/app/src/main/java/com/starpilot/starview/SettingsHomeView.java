@@ -403,4 +403,14 @@ public final class SettingsHomeView extends LinearLayout {
         this$0.field.clearFocus();
         return true;
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void lambda$7$lambda$5(SettingsHomeView var0, View var1) {
+       var0.showResults();
+    }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void lambda$9$lambda$8(SettingsHomeView var0, View var1) {
+       var0.field.setText("");
+    }
 }

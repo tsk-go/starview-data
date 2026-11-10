@@ -693,4 +693,9 @@ public final class SettingsBackup {
             CloseableKt.closeFinally(inputStream, inputStream$c);
         }
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final Unit restoreFrom$lambda$23() {
+       return Unit.INSTANCE;
+    }
 }

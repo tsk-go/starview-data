@@ -3164,4 +3164,9 @@ public final class GxLogsPage extends GxPage {
         }
         copyText(CollectionsKt.joinToString(lines, "\n", "", "", -1, "...", null), "Troubleshoot report copied to clipboard.");
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void tsSearchRun$lambda$98(GxLogsPage var0) {
+       var0.tsRender();
+    }
 }

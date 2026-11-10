@@ -347,4 +347,14 @@ final class GxCamerasPipView extends GxCamerasSnapView {
                 return this.tracking;
         }
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final Unit onChanged$lambda$0() {
+       return Unit.INSTANCE;
+    }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final Unit onPlaced$lambda$1() {
+       return Unit.INSTANCE;
+    }
 }

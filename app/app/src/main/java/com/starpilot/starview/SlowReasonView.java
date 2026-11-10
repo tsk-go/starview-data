@@ -322,4 +322,9 @@ public final class SlowReasonView extends View {
             }
         }
     }
+
+    // recovered from Vineflower (R8 lambda body jadx inlined)
+    static final void _init_$lambda$5(SlowReasonView var0, View var1) {
+       var0.showHistory();
+    }
 }
