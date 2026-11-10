@@ -583,10 +583,11 @@ public final class OsmRoads {
                             }
                             tiles.put(k, 0);
                             final var dy$f = dy;
+                            final var dx$f = dx;
                             loader.execute(new Runnable() { // from class: com.starpilot.starview.OsmRoads$$ExternalSyntheticLambda0
                                 @Override // java.lang.Runnable
                                 public final void run() {
-                                    OsmRoads.ensureTiles$lambda$7(ty, dy$f, tx, dx);
+                                    OsmRoads.ensureTiles$lambda$7(ty, dy$f, tx, dx$f);
                                 }
                             });
                         }

@@ -873,9 +873,9 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         int $i$f$map;
         int $i$f$map2;
         Area[] areaArr = new Area[5];
-        areaArr[0] = new Area("Device", "Settings", R.drawable.ic_car, CollectionsKt.listOf(new Pair[]{TuplesKt.to("Driving", CollectionsKt.listOf(new Rail[]{new Rail("Driving controls", R.drawable.ic_speed, "drivingmap"), new Rail("Steering", R.drawable.ic_steering, "galaxy:steering"), new Rail("Speed & following", R.drawable.ic_speed, "galaxy:speed"), new Rail("Personalities", R.drawable.ic_speed, "galaxy:personalities"), new Rail("Speed limits", R.drawable.ic_limit, "galaxy:slc"), new Rail("Vehicle", R.drawable.ic_car, "galaxy:vehicle"), new Rail("TechStream", R.drawable.ic_wheel_controls, "tablet:techstream"), new Rail("Doors & belts", R.drawable.ic_car, "doorbelt"), new Rail("Key fob", R.drawable.ic_car, "keyfob"), new Rail("Wheel controls", R.drawable.ic_wheel_controls, "galaxy:wheel"), new Rail("Sounds & alerts", R.drawable.ic_sound, "galaxy:sounds"), new Rail("Cameras & monitoring", R.drawable.ic_camera, "galaxy:cameras")})), TuplesKt.to("System", CollectionsKt.listOf(new Rail[]{new Rail("Comma health", R.drawable.ic_info, "health"), new Rail("Power management", R.drawable.ic_link, "hubpower"), new Rail("Connections", R.drawable.ic_network, "connections"), new Rail("Toggles", R.drawable.ic_gear, "native:toggles"), new Rail("Device", R.drawable.ic_info, "native:device"), new Rail("Network", R.drawable.ic_network, "native:network"), new Rail("Software", R.drawable.ic_data, "native:software"), new Rail("Data uploads", R.drawable.ic_data, "galaxy:data"), new Rail("Developer", R.drawable.ic_dev, "galaxy:developer"), new Rail("Developer (comma)", R.drawable.ic_terminal, "native:developer"), new Rail("More from Galaxy", R.drawable.ic_star, "galaxy:more")}))}));
+        areaArr[0] = new Area("Device", "Settings", R.drawable.ic_car, (List) CollectionsKt.listOf(new Pair[]{TuplesKt.to("Driving", CollectionsKt.listOf(new Rail[]{new Rail("Driving controls", R.drawable.ic_speed, "drivingmap"), new Rail("Steering", R.drawable.ic_steering, "galaxy:steering"), new Rail("Speed & following", R.drawable.ic_speed, "galaxy:speed"), new Rail("Personalities", R.drawable.ic_speed, "galaxy:personalities"), new Rail("Speed limits", R.drawable.ic_limit, "galaxy:slc"), new Rail("Vehicle", R.drawable.ic_car, "galaxy:vehicle"), new Rail("TechStream", R.drawable.ic_wheel_controls, "tablet:techstream"), new Rail("Doors & belts", R.drawable.ic_car, "doorbelt"), new Rail("Key fob", R.drawable.ic_car, "keyfob"), new Rail("Wheel controls", R.drawable.ic_wheel_controls, "galaxy:wheel"), new Rail("Sounds & alerts", R.drawable.ic_sound, "galaxy:sounds"), new Rail("Cameras & monitoring", R.drawable.ic_camera, "galaxy:cameras")})), TuplesKt.to("System", CollectionsKt.listOf(new Rail[]{new Rail("Comma health", R.drawable.ic_info, "health"), new Rail("Power management", R.drawable.ic_link, "hubpower"), new Rail("Connections", R.drawable.ic_network, "connections"), new Rail("Toggles", R.drawable.ic_gear, "native:toggles"), new Rail("Device", R.drawable.ic_info, "native:device"), new Rail("Network", R.drawable.ic_network, "native:network"), new Rail("Software", R.drawable.ic_data, "native:software"), new Rail("Data uploads", R.drawable.ic_data, "galaxy:data"), new Rail("Developer", R.drawable.ic_dev, "galaxy:developer"), new Rail("Developer (comma)", R.drawable.ic_terminal, "native:developer"), new Rail("More from Galaxy", R.drawable.ic_star, "galaxy:more")}))}));
         areaArr[1] = new Area("Device", "Display", R.drawable.ic_display, CollectionsKt.listOf(TuplesKt.to(null, CollectionsKt.listOf(new Rail[]{new Rail("Screen", R.drawable.ic_sun, "galaxy:display"), new Rail("Driving screen", R.drawable.ic_eye, "galaxy:appearance"), new Rail("Quick Select", R.drawable.ic_star, "quickselect"), new Rail("Blind spot camera", R.drawable.ic_camera, "galaxy:pip")}))));
-        areaArr[2] = new Area("Tablet", "Settings", R.drawable.ic_tablet, CollectionsKt.listOf(new Pair[]{TuplesKt.to(null, CollectionsKt.listOf(new Rail[]{new Rail("Connection", R.drawable.ic_link, "tablet:connection"), new Rail("Navigation map", R.drawable.ic_pin, "tablet:nav"), new Rail("Camera & view", R.drawable.ic_camera, "tablet:view"), new Rail("Street maps", R.drawable.ic_pin, "tablet:maps"), new Rail("GPS & sensors", R.drawable.ic_pin, "activity:sensors"), new Rail("Lane pictures", R.drawable.ic_camera, "activity:lanepics"), new Rail("Lane road data", R.drawable.ic_pin, "roaddata"), new Rail("Bookmarks", R.drawable.ic_pin, "bookmarks"), new Rail("RTK GPS", R.drawable.ic_pin, "tablet:rtk"), new Rail("Braking log", R.drawable.ic_speed, "tablet:braking"), new Rail("Blinker & lane changes", R.drawable.ic_steering, "tablet:blinker"), new Rail("New ideas", R.drawable.ic_star, "tablet:ideas"), new Rail("Voice alerts", R.drawable.ic_info, "tablet:voice"), new Rail("Voice studio", R.drawable.ic_info, "tablet:voicestudio"), new Rail("Terminal", R.drawable.ic_terminal, "native:terminal"), new Rail("Files", R.drawable.ic_files, "activity:files"), new Rail("Storage", R.drawable.ic_data, "tablet:storage"), new Rail("Backup & restore", R.drawable.ic_data, "tablet:backup"), new Rail("About", R.drawable.ic_info, "tablet:about")})), TuplesKt.to("Drives", CollectionsKt.listOf(new Rail[]{new Rail("Last drive", R.drawable.ic_info, "journal:last"), new Rail("Your driving", R.drawable.ic_info, "journal:trends"), new Rail("Alert history", R.drawable.ic_info, "journal:alerts"), new Rail("Takeover spots", R.drawable.ic_info, "journal:spots"), new Rail("Driver profiles", R.drawable.ic_info, "profiles")}))}));
+        areaArr[2] = new Area("Tablet", "Settings", R.drawable.ic_tablet, (List) CollectionsKt.listOf(new Pair[]{TuplesKt.to(null, CollectionsKt.listOf(new Rail[]{new Rail("Connection", R.drawable.ic_link, "tablet:connection"), new Rail("Navigation map", R.drawable.ic_pin, "tablet:nav"), new Rail("Camera & view", R.drawable.ic_camera, "tablet:view"), new Rail("Street maps", R.drawable.ic_pin, "tablet:maps"), new Rail("GPS & sensors", R.drawable.ic_pin, "activity:sensors"), new Rail("Lane pictures", R.drawable.ic_camera, "activity:lanepics"), new Rail("Lane road data", R.drawable.ic_pin, "roaddata"), new Rail("Bookmarks", R.drawable.ic_pin, "bookmarks"), new Rail("RTK GPS", R.drawable.ic_pin, "tablet:rtk"), new Rail("Braking log", R.drawable.ic_speed, "tablet:braking"), new Rail("Blinker & lane changes", R.drawable.ic_steering, "tablet:blinker"), new Rail("New ideas", R.drawable.ic_star, "tablet:ideas"), new Rail("Voice alerts", R.drawable.ic_info, "tablet:voice"), new Rail("Voice studio", R.drawable.ic_info, "tablet:voicestudio"), new Rail("Terminal", R.drawable.ic_terminal, "native:terminal"), new Rail("Files", R.drawable.ic_files, "activity:files"), new Rail("Storage", R.drawable.ic_data, "tablet:storage"), new Rail("Backup & restore", R.drawable.ic_data, "tablet:backup"), new Rail("About", R.drawable.ic_info, "tablet:about")})), TuplesKt.to("Drives", CollectionsKt.listOf(new Rail[]{new Rail("Last drive", R.drawable.ic_info, "journal:last"), new Rail("Your driving", R.drawable.ic_info, "journal:trends"), new Rail("Alert history", R.drawable.ic_info, "journal:alerts"), new Rail("Takeover spots", R.drawable.ic_info, "journal:spots"), new Rail("Driver profiles", R.drawable.ic_info, "profiles")}))}));
         int i = R.drawable.ic_view;
         List listOf = CollectionsKt.listOf(new Rail("Theme", R.drawable.ic_sun, "tablet:theme"));
         Iterable $this$map$iv = UiSettings.Companion.getITEMS();
@@ -947,7 +947,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         }
         areaArr[3] = new Area("Tablet", "Display", i, CollectionsKt.listOf(TuplesKt.to(null, CollectionsKt.plus((Collection) listOf, destination$iv$iv3))));
         areaArr[4] = new Area("Device", "Tools", R.drawable.ic_tools, CollectionsKt.listOf(TuplesKt.to(null, galaxyToolRails())));
-        return CollectionsKt.listOf((Object[]) areaArr);
+        return CollectionsKt.listOf(areaArr);
     }
 
     /* VF: from Vineflower (jadx: ) */
@@ -1756,7 +1756,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             showArea(contains ? 1 : 0, page2);
             return;
         }
-        if (this.areaIndex != contains) {
+        if (this.areaIndex != (contains ? 1 : 0)) {
             showArea(contains ? 1 : 0, galaxyRailFor(page));
         }
         GALAXY_SUB_TITLES.put(page, title);
@@ -3405,7 +3405,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         }
 
         var3 = var41;
-        Pair var17 = var16.browserTabs(var3, 2, new SettingsActivity$$ExternalSyntheticLambda95(var37, var34, var31, var10, this, var1, var26, var4));
+        Pair var17 = var16.browserTabs((List) var3, 2, new SettingsActivity$$ExternalSyntheticLambda95(var37, var34, var31, var10, this, var1, var26, var4));
         View var22 = (View)var17.component1();
         var34.element = ((Function1)var17.component2());
         if (!var5) {
@@ -3942,12 +3942,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         if (arrayList.isEmpty()) {
             arrayList.add(settingsActivity.offline("No settings match \"" + lowerCase + "\"."));
         }
-        final ComboPage comboPage = new ComboPage(settingsActivity, arrayList);
+        final ComboPage comboPage = settingsActivity.new ComboPage(settingsActivity, arrayList);
         View view = togglesPage$inset(settingsActivity, pageBox$default(settingsActivity, comboPage, true, false, 4, null));
         view.setTag(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda99
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.togglesPage$lambda$132$lambda$131$lambda$130(SettingsActivity.ComboPage.this, settingsActivity);
+                SettingsActivity.togglesPage$lambda$132$lambda$131$lambda$130(comboPage, settingsActivity);
             }
         });
         Unit unit = Unit.INSTANCE;
@@ -4596,7 +4596,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 destination$iv$iv.add(element$iv$iv);
             }
         }
-        for (final UiSettings.Item item : (Item) destination$iv$iv) {
+        for (final UiSettings.Item item : (Iterable<UiSettings.Item>) destination$iv$iv) {
             toggleCard(col, item.getTitle(), null, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda191
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
@@ -4824,7 +4824,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 destination$iv$iv.add(element$iv$iv);
             }
         }
-        for (final UiSettings.Item item : (Item) destination$iv$iv) {
+        for (final UiSettings.Item item : (Iterable<UiSettings.Item>) destination$iv$iv) {
             toggleCard(col, item.getTitle(), null, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda100
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
@@ -5339,7 +5339,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit tabletMapsPage$refresh$lambda$184;
-                                tabletMapsPage$refresh$lambda$184 = SettingsActivity.tabletMapsPage$refresh$lambda$184(it4);
+                                tabletMapsPage$refresh$lambda$184 = SettingsActivity.tabletMapsPage$refresh$lambda$184(st);
                                 return tabletMapsPage$refresh$lambda$184;
                             }
                         }, 2, null));
@@ -5353,7 +5353,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit tabletMapsPage$refresh$lambda$185;
-                                tabletMapsPage$refresh$lambda$185 = SettingsActivity.tabletMapsPage$refresh$lambda$185(it4);
+                                tabletMapsPage$refresh$lambda$185 = SettingsActivity.tabletMapsPage$refresh$lambda$185(st);
                                 return tabletMapsPage$refresh$lambda$185;
                             }
                         }));
@@ -5483,7 +5483,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             var3 = "not connected";
         }
 
-        var var25 = (View & LinearLayout)CarUi.row$default(var8, "Comma", var3, 0, null, null, 28, null).component1();
+        LinearLayout var25 = (LinearLayout)CarUi.row$default(var8, "Comma", var3, 0, null, null, 28, null).component1();
         CarUi var19 = this.ui;
         CarUi var9 = var19;
         if (var19 == null) {
@@ -5528,7 +5528,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             }
         }
 
-        var var27 = (View & LinearLayout)CarUi.row$default(var20, "Device", var12, 0, null, null, 28, null).component1();
+        LinearLayout var27 = (LinearLayout)CarUi.row$default(var20, "Device", var12, 0, null, null, 28, null).component1();
         CarUi var21 = this.ui;
         CarUi var13 = var21;
         if (var21 == null) {
@@ -5543,7 +5543,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             var14 = null;
         }
 
-        var var28 = (View & LinearLayout)CarUi.row$default(
+        LinearLayout var28 = (LinearLayout)CarUi.row$default(
                 var14,
                 "Link",
                 "USB tether (usb0), Wi-Fi as fallback; moves back to USB by itself when the cable returns. The tablet finds the comma by broadcast on port 8091.",
@@ -5718,6 +5718,8 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                         } else {
                             str2 = k.getWords();
                         }
+                    } else {
+                        str2 = "No RTK receiver reported by the comma (needs the comma update with rtk.py, and the receiver on the hub).";
                     }
                     textView.setText(str2);
                 }
@@ -5743,7 +5745,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                     }
                     textView3.setText(joinToString$default);
                 }
-                handler = this.handler;
+                handler = SettingsActivity.this.handler;
                 handler.postDelayed(this, 1000L);
             }
         });
@@ -7204,7 +7206,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                         textView12.setText(lastAction);
                     }
                 }
-                handler = this.handler;
+                handler = SettingsActivity.this.handler;
                 handler.postDelayed(this, 1000L);
             }
         });
@@ -7611,18 +7613,18 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 Boolean allowed = GpsBridge.INSTANCE.permitted();
                 TextView textView = gpsVal;
                 if (textView != null) {
-                    if (GpsBridge.INSTANCE.enabled(Context.this)) {
-                        if (!Intrinsics.areEqual((Object) allowed, (Object) false)) {
-                            if (GpsBridge.INSTANCE.getLastFixMs() <= 0 || gAge >= 3) {
-                                str = "allowed · " + GpsBridge.INSTANCE.getStatus() + (GpsBridge.INSTANCE.getLastFixMs() > 0 ? " (last fix " + gAge + "s ago)" : " (nothing from the comma yet)");
-                            } else {
-                                str = GpsBridge.INSTANCE.getStatus() + " (" + GpsBridge.INSTANCE.getFixes() + " fixes)";
-                            }
-                        }
+                    if (!GpsBridge.INSTANCE.enabled(SettingsActivity.this)) {
+                        str = "not shared (the map still has it)";
+                    } else if (Intrinsics.areEqual((Object) allowed, (Object) false)) {
+                        str = "NOT ALLOWED: StarView isn't the mock location app (Android reset it?). Developer options › Select mock location app › StarView";
+                    } else if (GpsBridge.INSTANCE.getLastFixMs() <= 0 || gAge >= 3) {
+                        str = "allowed · " + GpsBridge.INSTANCE.getStatus() + (GpsBridge.INSTANCE.getLastFixMs() > 0 ? " (last fix " + gAge + "s ago)" : " (nothing from the comma yet)");
+                    } else {
+                        str = GpsBridge.INSTANCE.getStatus() + " (" + GpsBridge.INSTANCE.getFixes() + " fixes)";
                     }
                     textView.setText(str);
                 }
-                handler = this.handler;
+                handler = SettingsActivity.this.handler;
                 handler.postDelayed(this, 1000L);
             }
         });
@@ -9466,11 +9468,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 carUi6 = carUi9;
             }
             final var settingsActivity$f2 = settingsActivity;
+            final var str$f5 = str;
             r.addView(CarUi.button$default(carUi6, "▶ Play", false, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda123
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$340;
-                    tabletVoicePage$fill$lambda$340 = SettingsActivity.tabletVoicePage$fill$lambda$340(p, list, settingsActivity$f2, str);
+                    tabletVoicePage$fill$lambda$340 = SettingsActivity.tabletVoicePage$fill$lambda$340(p, list, settingsActivity$f2, str$f5);
                     return tabletVoicePage$fill$lambda$340;
                 }
             }, 2, null));
@@ -9481,11 +9484,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 carUi10 = null;
             }
             final var settingsActivity$f1 = settingsActivity;
+            final var str$f4 = str;
             r.addView(carUi10.button(chosen ? "In use" : "Use", chosen, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda124
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$341;
-                    tabletVoicePage$fill$lambda$341 = SettingsActivity.tabletVoicePage$fill$lambda$341(p, list, settingsActivity$f1, str);
+                    tabletVoicePage$fill$lambda$341 = SettingsActivity.tabletVoicePage$fill$lambda$341(p, list, settingsActivity$f1, str$f4);
                     return tabletVoicePage$fill$lambda$341;
                 }
             }));
@@ -9656,11 +9660,12 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             }
             LinearLayout rs2 = rs;
             final var settingsActivity$f = settingsActivity;
+            final var str$f3 = str;
             r2.addView(carUi25.button(chosen2 ? "In use" : "Use", chosen2, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda129
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit tabletVoicePage$fill$lambda$351;
-                    tabletVoicePage$fill$lambda$351 = SettingsActivity.tabletVoicePage$fill$lambda$351(v, list, settingsActivity$f, str);
+                    tabletVoicePage$fill$lambda$351 = SettingsActivity.tabletVoicePage$fill$lambda$351(v, list, settingsActivity$f, str$f3);
                     return tabletVoicePage$fill$lambda$351;
                 }
             }));
@@ -10269,16 +10274,17 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void tabletVoiceStudioPage$job$lambda$377(Function0 $work, Ref.BooleanRef $busy, SettingsActivity this$0, final TextView $stopBtn, final TextView $status, final Ref.ObjectRef $fillVoices) {
-        final String err;
+        String err0;
         try {
-            err = (String) $work.invoke();
+            err0 = (String) $work.invoke();
         } catch (Throwable e) {
             String message = e.getMessage();
             if (message == null) {
                 message = e.toString();
             }
-            err = message;
+            err0 = message;
         }
+        final String err = err0;
         $busy.element = false;
         this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda3
             @Override // java.lang.Runnable
