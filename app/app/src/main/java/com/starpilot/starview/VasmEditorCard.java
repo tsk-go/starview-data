@@ -365,7 +365,7 @@ public final class VasmEditorCard extends LinearLayout {
         final /* synthetic */ VasmEditorCard this$0;
 
         /* VF: from Vineflower (jadx: ) */
-        public Board(Context var1, Context var2) {
+        public Board(VasmEditorCard var1, Context var2) {
             super(var2);
             Intrinsics.checkNotNullParameter(var2, "ctx");
             this.this$0 = var1;
@@ -404,7 +404,7 @@ public final class VasmEditorCard extends LinearLayout {
                 c.restore();
             }
             float dot = Math.max(5.0f, w / 320.0f) * 1.6f;
-            for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(this.this$0.camRight, Integer.valueOf(Color.rgb(94, 229, 238))), TuplesKt.to(this.this$0.camLeft, Integer.valueOf(Color.rgb(255, 184, 101)))})) {
+            for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(this.this$0.camRight, Integer.valueOf(Color.rgb(94, 229, 238))), TuplesKt.to(this.this$0.camLeft, Integer.valueOf(Color.rgb(255, 184, 101)))})) {
                 ArrayList list = (ArrayList) pair.component1();
                 int col = ((Number) pair.component2()).intValue();
                 if (!list.isEmpty()) {

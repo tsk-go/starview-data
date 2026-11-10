@@ -634,7 +634,7 @@ public final class AmySynth {
         }
         float[] wl = new float[n];
         float[] wr = new float[n];
-        for (Pair pair : (Iterable<Pair>) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Double.valueOf(29.0d), Float.valueOf(0.16f)), TuplesKt.to(Double.valueOf(47.0d), Float.valueOf(0.12f)), TuplesKt.to(Double.valueOf(83.0d), Float.valueOf(0.08f)), TuplesKt.to(Double.valueOf(131.0d), Float.valueOf(0.05f)), TuplesKt.to(Double.valueOf(197.0d), Float.valueOf(0.03f))})) {
+        for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Double.valueOf(29.0d), Float.valueOf(0.16f)), TuplesKt.to(Double.valueOf(47.0d), Float.valueOf(0.12f)), TuplesKt.to(Double.valueOf(83.0d), Float.valueOf(0.08f)), TuplesKt.to(Double.valueOf(131.0d), Float.valueOf(0.05f)), TuplesKt.to(Double.valueOf(197.0d), Float.valueOf(0.03f))})) {
             double ms = ((Number) pair.component1()).doubleValue();
             float g2 = ((Number) pair.component2()).floatValue();
             delayAdd(wl, l, ms, g2);

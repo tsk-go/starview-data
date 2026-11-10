@@ -495,6 +495,15 @@ public final class LaneSuggest {
         return this.armed;
     }
 
+    /* recovered: the original JVM name (callers taken from Vineflower use it) */
+
+    public final int getExitTry() {
+
+        return getExitTries();
+
+    }
+
+
     /* renamed from: getExitTry, reason: from getter */
     public final int getExitTries() {
         return this.exitTries;

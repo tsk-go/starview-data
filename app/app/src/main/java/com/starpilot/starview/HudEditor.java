@@ -279,7 +279,7 @@ public final class HudEditor extends FrameLayout {
         int i3 = 10;
         tabs.setPadding(0, this.ui.dp(14), 0, this.ui.dp(10));
         int i4 = 0;
-        for (String label : (Iterable<String>) CollectionsKt.listOf((Object[]) new String[]{"Widgets", "Edit widget"})) {
+        for (String label : (Iterable<String>) (Iterable) CollectionsKt.listOf((Object[]) new String[]{"Widgets", "Edit widget"})) {
             final int i5 = i4;
             i4 += i;
             TextView b = new TextView(ctx);
@@ -779,7 +779,7 @@ public final class HudEditor extends FrameLayout {
         final /* synthetic */ HudEditor this$0;
 
         /* VF: from Vineflower (jadx: ) */
-        public Preview(Context var1, Context var2) {
+        public Preview(HudEditor var1, Context var2) {
             super(var2);
             Intrinsics.checkNotNullParameter(var2, "ctx");
             this.this$0 = var1;

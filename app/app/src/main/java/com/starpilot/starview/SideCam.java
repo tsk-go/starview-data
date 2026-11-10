@@ -230,7 +230,7 @@ public final class SideCam {
         boolean onBlinker = t.pBool("PIPPreviewShowOnBlinker", false);
         boolean onBsm = t.pBool("PIPPreviewShowOnBSM", false);
         ArrayList out = new ArrayList(2);
-        for (Triple triple : (Iterable<Triple>) CollectionsKt.listOf((Object[]) new Triple[]{new Triple("right", Boolean.valueOf(t.getRightBlinker()), Boolean.valueOf(t.getRightBlindspot())), new Triple("left", Boolean.valueOf(t.getLeftBlinker()), Boolean.valueOf(t.getLeftBlindspot()))})) {
+        for (Triple triple : (Iterable<Triple>) (Iterable) CollectionsKt.listOf((Object[]) new Triple[]{new Triple("right", Boolean.valueOf(t.getRightBlinker()), Boolean.valueOf(t.getRightBlindspot())), new Triple("left", Boolean.valueOf(t.getLeftBlinker()), Boolean.valueOf(t.getLeftBlindspot()))})) {
             String side = (String) triple.component1();
             boolean blinker = ((Boolean) triple.component2()).booleanValue();
             boolean bsm = ((Boolean) triple.component3()).booleanValue();

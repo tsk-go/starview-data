@@ -52,6 +52,15 @@ public final class WheelButton extends View {
         this.t = telemetry;
     }
 
+    /* recovered: the original JVM name (callers taken from Vineflower use it) */
+
+    public final boolean isDown() {
+
+        return getIsDown();
+
+    }
+
+
     /* renamed from: isDown, reason: from getter */
     public final boolean getIsDown() {
         return this.isDown;

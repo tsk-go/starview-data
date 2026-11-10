@@ -175,6 +175,15 @@ public final class GalaxyApi {
             return this.parentKey;
         }
 
+        /* recovered: the original JVM name (callers taken from Vineflower use it) */
+
+        public final boolean isParentToggle() {
+
+            return getIsParentToggle();
+
+        }
+
+
         /* renamed from: isParentToggle, reason: from getter */
         public final boolean getIsParentToggle() {
             return this.isParentToggle;

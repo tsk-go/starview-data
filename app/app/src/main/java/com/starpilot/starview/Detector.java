@@ -1029,6 +1029,15 @@ public final class Detector {
         return this.wideSrc.getFps();
     }
 
+    /* recovered: the original JVM name (callers taken from Vineflower use it) */
+
+    public final boolean isRunning() {
+
+        return getRunning();
+
+    }
+
+
     /* renamed from: isRunning, reason: from getter */
     public final boolean getRunning() {
         return this.running;
@@ -1823,7 +1832,7 @@ public final class Detector {
 
     /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void track(Detector.Source var1, List<Detector.Det> var2, Detector.Frame var3) {
-        E var75 = null; // declarations Vineflower left out
+        Object var75 = null; // declarations Vineflower left out
         Iterable var21 = var2;
         var var20 = new ArrayList();
 

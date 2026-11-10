@@ -1846,7 +1846,7 @@ public final class GxPersonalitiesPage extends GxPage {
             GalaxyApi.Param p = it.next();
             if (StringsKt.contains((CharSequence) p.getKey(), (CharSequence) "Jerk", false) && CollectionsKt.contains(this.profileKeys.values(), p.getParentKey())) {
                 keys.add(p.getKey());
-                for (String n : (Iterable<String>) CollectionsKt.listOf((Object[]) new String[]{"requires_capability", "disabled_when_key_true", "requires_nonempty_key"})) {
+                for (String n : (Iterable<String>) (Iterable) CollectionsKt.listOf((Object[]) new String[]{"requires_capability", "disabled_when_key_true", "requires_nonempty_key"})) {
                     String it2 = p.str(n);
                     if (it2 != null) {
                         keys.add(it2);
@@ -2579,7 +2579,7 @@ public final class GxPersonalitiesPage extends GxPage {
         private final Paint txt;
 
         /* VF: from Vineflower (jadx: ) */
-        public Graph(String var1, String var2, String var3) {
+        public Graph(GxPersonalitiesPage var1, String var2, String var3) {
             super((Context)var1.getAct());
             Intrinsics.checkNotNullParameter(var2, "profile");
             Intrinsics.checkNotNullParameter(var3, "category");
