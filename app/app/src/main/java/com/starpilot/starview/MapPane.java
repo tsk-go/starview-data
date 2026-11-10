@@ -116,10 +116,15 @@ public final class MapPane extends FrameLayout {
     private final MapTiles tiles;
     private final TextView tiltBtn;
     private final TextView voiceBtn;
+    /** the small card on top of the road view (next turn + a little map); tapping it opens the full navigation screen */
+    private boolean mini;
 
     /* compiled from: MapPane.kt */
     public interface Host {
         void closeMap();
+
+        /** the small next-turn card was tapped: open the full navigation screen */
+        void expandMap();
 
         DataClient getData();
 
@@ -1259,6 +1264,7 @@ public final class MapPane extends FrameLayout {
             var60.height = var23;
             var48.setLayoutParams((android.view.ViewGroup.LayoutParams)var60);
         }
+        applyMini();
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1402,10 +1408,74 @@ public final class MapPane extends FrameLayout {
         return Unit.INSTANCE;
     }
 
+    public final boolean getMini() {
+        return this.mini;
+    }
+
+    /** Switches between the small next-turn card (true) and the full navigation screen (false). */
+    public final void setMini(boolean m) {
+        if (this.mini == m) {
+            return;
+        }
+        this.mini = m;
+        if (m) {
+            closeSheet();
+            this.map.follow();
+        }
+        setClipToOutline(m);
+        if (m) {
+            final float r = dp(18.0f);
+            setOutlineProvider(new android.view.ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, android.graphics.Outline outline) {
+                    outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), r);
+                }
+            });
+            setElevation(dp(10.0f));
+        } else {
+            setOutlineProvider(android.view.ViewOutlineProvider.BACKGROUND);
+            setElevation(0.0f);
+        }
+        this.side.setVisibility(m ? 8 : 0);
+        refreshBars();
+        applyMini();
+    }
+
+    private final void applyMini() {
+        if (!this.mini) {
+            return;
+        }
+        this.side.setVisibility(8);
+        this.bottomBar.setVisibility(8);
+        this.faster.setVisibility(8);
+        this.info.setVisibility(8);
+        this.note.setVisibility(8);
+        this.sheet.setVisibility(8);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent e) {
+        if (this.mini) {
+            return true;
+        }
+        return super.onInterceptTouchEvent(e);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        if (this.mini) {
+            if (e.getActionMasked() == MotionEvent.ACTION_UP) {
+                this.host.expandMap();
+            }
+            return true;
+        }
+        return super.onTouchEvent(e);
+    }
+
     public final void showInfo(String text) {
         Intrinsics.checkNotNullParameter(text, "text");
         this.info.setText(text);
-        this.info.setVisibility(0);
+        this.info.setVisibility(this.mini ? 8 : 0);
         removeCallbacks(this.hideInfo);
         postDelayed(this.hideInfo, 6000L);
     }

@@ -7427,7 +7427,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             carUi8 = null;
         }
         col.addView(header, CarUi.lp$default(carUi8, 0, 0, 3, null));
-        toggleCard(col, "Open the map when a route starts", "Also a destination set in Galaxy or on the comma.", new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda229
+        toggleCard(col, "Show the next-turn card when a route starts", "On top of the road view; tap it for the full navigation screen. Also a destination set in Galaxy or on the comma.", new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda229
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 boolean tabletNavPage$lambda$254;

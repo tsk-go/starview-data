@@ -75,7 +75,7 @@ class UiSettings(ctx: Context) {
       Item("scene_view", "Scene view", false, "Internal"),
       Item("map_open", "Map open", false, "Internal"),
       Item("battery_saver", "Battery saver", false, "Internal"),
-      Item("map_auto_open", "Open the map when a route starts", true, "Internal"),
+      Item("map_auto_open", "Show the next-turn card when a route starts", true, "Internal"),
       Item("map_traffic", "Live traffic on every road", true, "Internal"),
       Item("map_north_up", "North up", false, "Internal"),
       Item("scene_cars", "Scene: show other cars, people and traffic lights", false, "Camera"),

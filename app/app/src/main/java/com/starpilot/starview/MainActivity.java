@@ -6672,7 +6672,7 @@ public final class MainActivity extends AppCompatActivity {
     /* JADX INFO: Access modifiers changed from: private */
     public final boolean getMapOpen() {
         MapPane mapPane = this.mapPane;
-        return mapPane != null && mapPane.getVisibility() == 0;
+        return mapPane != null && mapPane.getVisibility() == 0 && !mapPane.getMini();
     }
 
     private final boolean getMapRight() {
@@ -6890,32 +6890,33 @@ public final class MainActivity extends AppCompatActivity {
         return RangesKt.coerceIn(MathKt.roundToInt(f * uiSettings.getFloat("map_frac", 0.4f)), RangesKt.coerceAtMost(dp(260), total / 2), MathKt.roundToInt(total * 0.72f));
     }
 
+    /** Places the navigation pane: full screen, or the card at the top centre. The road view keeps the whole screen. */
     private final void layoutMap(int w) {
         MapPane pane = this.mapPane;
+        FrameLayout frameLayout = this.root;
+        if (frameLayout != null) {
+            ViewGroup.LayoutParams layoutParams = frameLayout.getLayoutParams();
+            if (layoutParams instanceof FrameLayout.LayoutParams) {
+                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) layoutParams;
+                if (lp.getMarginStart() != 0 || lp.getMarginEnd() != 0) {
+                    lp.setMarginStart(0);
+                    lp.setMarginEnd(0);
+                    frameLayout.setLayoutParams(lp);
+                }
+            }
+        }
         if (pane == null) {
             return;
         }
-        int g = getMapRight() ? 8388613 : 8388611;
-        pane.setLayoutParams(new FrameLayout.LayoutParams(w, -1, g));
-        FrameLayout frameLayout = this.root;
-        FrameLayout frameLayout2 = null;
-        if (frameLayout == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("root");
-            frameLayout = null;
+        if (!pane.getMini()) {
+            pane.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
+            return;
         }
-        ViewGroup.LayoutParams layoutParams = frameLayout.getLayoutParams();
-        Intrinsics.checkNotNull(layoutParams, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) layoutParams;
-        lp.setMarginStart(getMapRight() ? 0 : w);
-        lp.setMarginEnd(getMapRight() ? w : 0);
-        FrameLayout frameLayout3 = this.root;
-        if (frameLayout3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("root");
-        } else {
-            frameLayout2 = frameLayout3;
-        }
-        frameLayout2.setLayoutParams(lp);
-        placeDivider(w);
+        FrameLayout frameLayout2 = this.outer;
+        int total = (frameLayout2 == null || frameLayout2.getWidth() <= 0) ? getResources().getDisplayMetrics().widthPixels : frameLayout2.getWidth();
+        FrameLayout.LayoutParams lp2 = new FrameLayout.LayoutParams(Math.min(dp(520), Math.round(total * 0.46f)), dp(240), 49);
+        lp2.topMargin = dp(12);
+        pane.setLayoutParams(lp2);
     }
 
     private final void placeDivider(int w) {
@@ -6935,12 +6936,12 @@ public final class MainActivity extends AppCompatActivity {
         view.setTranslationX((getMapRight() ? total - w : w) - dp(14));
     }
 
-    public final void openMap() {
+    /** The navigation pane, made on first use (the full screen and the small next-turn card are the same view). */
+    private final MapPane ensurePane() {
         if (this.outer == null) {
-            return;
+            return null;
         }
         MapPane pane = this.mapPane;
-        DataClient dataClient = null;
         if (pane == null) {
             pane = new MapPane(this, new MapPane.Host() { // from class: com.starpilot.starview.MainActivity$openMap$1
                 @Override // com.starpilot.starview.MapPane.Host
@@ -6990,6 +6991,11 @@ public final class MainActivity extends AppCompatActivity {
                 }
 
                 @Override // com.starpilot.starview.MapPane.Host
+                public void expandMap() {
+                    MainActivity.this.openMap();
+                }
+
+                @Override // com.starpilot.starview.MapPane.Host
                 public void navigateTo(String name, String address, double lat, double lon) {
                     Intrinsics.checkNotNullParameter(name, "name");
                     Intrinsics.checkNotNullParameter(address, "address");
@@ -7015,43 +7021,84 @@ public final class MainActivity extends AppCompatActivity {
             }
             frameLayout.addView(mapPane, frameLayout2.indexOfChild(view), new FrameLayout.LayoutParams(mapWidth(), -1));
         }
+        return pane;
+    }
+
+    /** Full navigation screen over the road view (routes, steps, search, favorites, options, end). */
+    public final void openMap() {
+        MapPane pane = ensurePane();
+        if (pane == null) {
+            return;
+        }
+        pane.setMini(false);
         pane.setVisibility(0);
         View view2 = this.divider;
-        if (view2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("divider");
-            view2 = null;
+        if (view2 != null) {
+            view2.setVisibility(8);
         }
-        view2.setVisibility(0);
         UiSettings uiSettings = this.settings;
         if (uiSettings == null) {
             Intrinsics.throwUninitializedPropertyAccessException("settings");
             uiSettings = null;
         }
         uiSettings.set("map_open", true);
-        layoutMap(mapWidth());
-        Nav nav = Nav.INSTANCE;
-        DataClient dataClient2 = this.data;
-        if (dataClient2 == null) {
+        layoutMap(0);
+        DataClient dataClient = this.data;
+        if (dataClient == null) {
             Intrinsics.throwUninitializedPropertyAccessException("data");
-        } else {
-            dataClient = dataClient2;
+            dataClient = null;
         }
-        nav.refresh(dataClient);
+        Nav.INSTANCE.refresh(dataClient);
     }
 
+    /** The small next-turn card on top of the road view, while a route is set. Tapping it opens the full screen. */
+    public final void showMini() {
+        MapPane pane = ensurePane();
+        if (pane == null) {
+            return;
+        }
+        pane.setMini(true);
+        pane.setVisibility(0);
+        View view2 = this.divider;
+        if (view2 != null) {
+            view2.setVisibility(8);
+        }
+        UiSettings uiSettings = this.settings;
+        if (uiSettings == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("settings");
+            uiSettings = null;
+        }
+        uiSettings.set("map_open", false);
+        layoutMap(0);
+    }
+
+    /** No route any more: a card left over goes away (a new route shows it again, see navTick's map_auto_open). */
+    private final void syncMini() {
+        MapPane pane = this.mapPane;
+        if (!Nav.INSTANCE.getActive() && pane != null && pane.getVisibility() == 0 && pane.getMini()) {
+            hidePane();
+        }
+    }
+
+    /** Leaves the full navigation screen: back to the next-turn card while a route is set, else nothing. */
     public final void closeMap() {
+        if (Nav.INSTANCE.getActive()) {
+            showMini();
+        } else {
+            hidePane();
+        }
+    }
+
+    private final void hidePane() {
         MapPane pane = this.mapPane;
         if (pane == null) {
             return;
         }
         pane.setVisibility(8);
         View view = this.divider;
-        FrameLayout frameLayout = null;
-        if (view == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("divider");
-            view = null;
+        if (view != null) {
+            view.setVisibility(8);
         }
-        view.setVisibility(8);
         UiSettings uiSettings = this.settings;
         if (uiSettings == null) {
             Intrinsics.throwUninitializedPropertyAccessException("settings");
@@ -7059,23 +7106,7 @@ public final class MainActivity extends AppCompatActivity {
         }
         uiSettings.set("map_open", false);
         pane.getTiles().clearMemory();
-        FrameLayout frameLayout2 = this.root;
-        if (frameLayout2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("root");
-            frameLayout2 = null;
-        }
-        ViewGroup.LayoutParams layoutParams = frameLayout2.getLayoutParams();
-        Intrinsics.checkNotNull(layoutParams, "null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) layoutParams;
-        lp.setMarginStart(0);
-        lp.setMarginEnd(0);
-        FrameLayout frameLayout3 = this.root;
-        if (frameLayout3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("root");
-        } else {
-            frameLayout = frameLayout3;
-        }
-        frameLayout.setLayoutParams(lp);
+        layoutMap(0);
     }
 
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
@@ -7083,7 +7114,7 @@ public final class MainActivity extends AppCompatActivity {
         String var19 = null; // declarations Vineflower left out
         MapPane var9 = this.mapPane;
         UiSettings var10 = null;
-        if (var9 != null && this.getMapOpen()) {
+        if (var9 != null && var9.getVisibility() == 0) {
             var9.tick(var1);
         } else {
             Nav var11 = Nav.INSTANCE;
@@ -7158,13 +7189,14 @@ public final class MainActivity extends AppCompatActivity {
                     }
 
                     if (var10.get("map_auto_open")) {
-                        this.openMap();
+                        this.showMini();
                     }
                 }
             }
 
             this.lastNavDest = var19;
         }
+        syncMini();
     }
 
     private final void pivotToAnchor(View v) {
