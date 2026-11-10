@@ -142,6 +142,8 @@ public final class VoiceDsp {
                         n2 = n;
                         k1 = k12;
                         t = t2;
+                    } else {
+                        break;
                     }
                 }
             } else {
