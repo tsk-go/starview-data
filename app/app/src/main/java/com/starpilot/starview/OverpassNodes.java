@@ -31,7 +31,7 @@ public class OverpassNodes {
     private final ConcurrentHashMap<String, Boolean> done;
 
     /* renamed from: http$delegate, reason: from kotlin metadata */
-    private final Lazy http;
+    private final Lazy http$delegate;
     private final String kind;
     private final ExecutorService pool;
     private final String query;
@@ -45,7 +45,7 @@ public class OverpassNodes {
         this.kind = kind;
         this.done = new ConcurrentHashMap<>();
         this.pool = Executors.newSingleThreadExecutor();
-        this.http = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.OverpassNodes$$ExternalSyntheticLambda0
+        this.http$delegate = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.OverpassNodes$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 OkHttpClient http_delegate$lambda$0;
@@ -56,7 +56,7 @@ public class OverpassNodes {
     }
 
     private final OkHttpClient getHttp() {
-        return (OkHttpClient) this.http.getValue();
+        return (OkHttpClient) this.http$delegate.getValue();
     }
 
     /* JADX INFO: Access modifiers changed from: private */

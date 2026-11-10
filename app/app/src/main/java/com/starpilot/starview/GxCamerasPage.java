@@ -848,17 +848,17 @@ public final class GxCamerasPage extends GxPage {
             var5 = CarUi.Companion.getDIM();
         }
 
-        var10 = new TextView((Context)this.getAct());
+        TextView var10s = new TextView((Context)this.getAct());
         Locale var17 = Locale.US;
         Intrinsics.checkNotNullExpressionValue(var17, "US");
         String var18 = ((String) var8).toUpperCase(var17);
         Intrinsics.checkNotNullExpressionValue(var18, "toUpperCase(...)");
-        ((TextView) var10).setText(var18);
-        ((TextView) var10).setTextSize(14.0F);
-        ((TextView) var10).setTypeface(Typeface.DEFAULT_BOLD);
-        ((TextView) var10).setTextColor(var5);
-        var10.setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 10, var5));
-        ((TextView) var10).setPadding(this.getUi().dp(12), this.getUi().dp(5), this.getUi().dp(12), this.getUi().dp(5));
+        ((TextView) var10s).setText(var18);
+        ((TextView) var10s).setTextSize(14.0F);
+        ((TextView) var10s).setTypeface(Typeface.DEFAULT_BOLD);
+        ((TextView) var10s).setTextColor(var5);
+        var10s.setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 10, var5));
+        ((TextView) var10s).setPadding(this.getUi().dp(12), this.getUi().dp(5), this.getUi().dp(12), this.getUi().dp(5));
         TextView var19 = new TextView((Context)this.getAct());
         var19.setText(var3);
         var19.setTextSize(17.0F);
@@ -871,9 +871,9 @@ public final class GxCamerasPage extends GxPage {
             Unit var20 = Unit.INSTANCE;
             var7.addView(var14, (android.view.ViewGroup.LayoutParams)var9);
             var19.setPadding(0, 0, this.getUi().dp(12), 0);
-            var7.addView((View)var10);
+            var7.addView((View)var10s);
         } else {
-            var7.addView((View)var10);
+            var7.addView((View)var10s);
             var7.addView((View)var19, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
         }
 

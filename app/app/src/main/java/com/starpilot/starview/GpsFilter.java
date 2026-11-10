@@ -269,7 +269,7 @@ public final class GpsFilter {
                 }
 
                 double var16;
-                if ((var28 != 0) && (var7 != 0) > 0.0F) {
+                if ((var28 != 0) && var7 > 0.0F) {
                     var16 = var7;
                 } else {
                     var16 = 10.0;

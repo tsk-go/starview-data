@@ -43,7 +43,7 @@ public final class Galaxy7 {
     private final Handler main;
 
     /* renamed from: slow$delegate, reason: from kotlin metadata */
-    private final Lazy slow;
+    private final Lazy slow$delegate;
 
     public /* synthetic */ Galaxy7(String str, DefaultConstructorMarker defaultConstructorMarker) {
         this(str);
@@ -73,7 +73,7 @@ public final class Galaxy7 {
         this.main = new Handler(Looper.getMainLooper());
         this.cookie = "";
         this.json = MediaType.Companion.get("application/json");
-        this.slow = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.Galaxy7$$ExternalSyntheticLambda1
+        this.slow$delegate = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.Galaxy7$$ExternalSyntheticLambda1
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 OkHttpClient slow_delegate$lambda$7;
@@ -214,7 +214,7 @@ public final class Galaxy7 {
     }
 
     private final OkHttpClient getSlow() {
-        return (OkHttpClient) this.slow.getValue();
+        return (OkHttpClient) this.slow$delegate.getValue();
     }
 
     /* JADX INFO: Access modifiers changed from: private */

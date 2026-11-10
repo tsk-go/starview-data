@@ -1680,7 +1680,7 @@ public final class OsmRoads {
             }
 
             byte var20 = -1;
-            if ((var25 != 0) && (var3 != 0) > -0.5) {
+            if ((var25 != 0) && var3 > -0.5) {
                 var25 = laneIndex$count(var3);
             } else {
                 var25 = -1;

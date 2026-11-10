@@ -147,7 +147,7 @@ public final class MainActivity extends AppCompatActivity {
     private String favKey;
 
     /* renamed from: floating$delegate, reason: from kotlin metadata */
-    private final Lazy floating;
+    private final Lazy floating$delegate;
     private int frameH;
     private int frameW;
     AetherGaugeView gauge;
@@ -226,7 +226,7 @@ public final class MainActivity extends AppCompatActivity {
     TextView statusTv;
 
     /* renamed from: storageHttp$delegate, reason: from kotlin metadata */
-    private final Lazy storageHttp;
+    private final Lazy storageHttp$delegate;
     private boolean surfaceReady;
     Function0<Unit> tabletModePusher;
     int tick;
@@ -413,7 +413,7 @@ public final class MainActivity extends AppCompatActivity {
         this.pickBackup = registerForActivityResult2;
         this.backupArmed = true;
         this.visible = true;
-        this.storageHttp = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda2
+        this.storageHttp$delegate = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda2
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 OkHttpClient storageHttp_delegate$lambda$162;
@@ -422,7 +422,7 @@ public final class MainActivity extends AppCompatActivity {
             }
         });
         this.lastWs = -1.0f;
-        this.floating = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda3
+        this.floating$delegate = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda3
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 List floating_delegate$lambda$172;
@@ -3605,7 +3605,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private final OkHttpClient getStorageHttp() {
-        return (OkHttpClient) this.storageHttp.getValue();
+        return (OkHttpClient) this.storageHttp$delegate.getValue();
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -4193,7 +4193,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private final List<View> getFloating() {
-        return (List) this.floating.getValue();
+        return (List) this.floating$delegate.getValue();
     }
 
     /* JADX INFO: Access modifiers changed from: private */

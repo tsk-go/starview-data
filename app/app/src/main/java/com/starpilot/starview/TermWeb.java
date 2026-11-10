@@ -65,7 +65,7 @@ public final class TermWeb {
         private final Context ctx;
 
         /* renamed from: http$delegate, reason: from kotlin metadata */
-        private final Lazy http;
+        private final Lazy http$delegate;
         private final WebView web;
 
         public Bridge(Context ctx, WebView web) {
@@ -73,7 +73,7 @@ public final class TermWeb {
             Intrinsics.checkNotNullParameter(web, "web");
             this.ctx = ctx;
             this.web = web;
-            this.http = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.TermWeb$Bridge$$ExternalSyntheticLambda5
+            this.http$delegate = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.TermWeb$Bridge$$ExternalSyntheticLambda5
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     OkHttpClient http_delegate$lambda$0;
@@ -145,7 +145,7 @@ public final class TermWeb {
         }
 
         private final OkHttpClient getHttp() {
-            return (OkHttpClient) this.http.getValue();
+            return (OkHttpClient) this.http$delegate.getValue();
         }
 
         /* JADX INFO: Access modifiers changed from: private */

@@ -132,7 +132,7 @@ public final class GxTuningPage extends GxPage {
     private LinearLayout plotsStatus;
 
     /* renamed from: prefs$delegate, reason: from kotlin metadata */
-    private final Lazy prefs;
+    private final Lazy prefs$delegate;
     private LinearLayout profilesBox;
     private JSONObject report;
     private LinearLayout reportBox;
@@ -818,7 +818,7 @@ public final class GxTuningPage extends GxPage {
                         var2 = var6 * 1000;
                     }
 
-                    var1 = var1.format(new Date((long)var2));
+                    var1 = ((DateFormat) var1).format(new Date((long)var2));
                     Intrinsics.checkNotNullExpressionValue(var1, "format(...)");
                     return ((String) var1);
                 }
@@ -2223,7 +2223,7 @@ public final class GxTuningPage extends GxPage {
                     var3 = 0;
                 }
 
-                if ((var3 != 0) && (var1 != 0) > 1.0E9) {
+                if ((var3 != 0) && var1 > 1.0E9) {
                     var22 = this.fmtDate(var1);
                 } else {
                     var22 = "";
@@ -2255,7 +2255,7 @@ public final class GxTuningPage extends GxPage {
                     String var73 = this.s(var70, "key");
                     if (Intrinsics.areEqual(var73, this.activePathKey())) {
                         this.text("Active path", (ViewGroup)var9, 15.0F, CarUi.Companion.getACCENT(), true);
-                    } else if (var22.size() > 1) {
+                    } else if (((List) var22).size() > 1) {
                         GxPage var71 = this;
                         Pair var78 = TuplesKt.to("Use this path", new GxTuningPage$$ExternalSyntheticLambda48(this, var73));
                         ViewGroup var74 = (ViewGroup)var9;
@@ -2292,18 +2292,18 @@ public final class GxTuningPage extends GxPage {
 
                 var7 = this.card((ViewGroup)var22);
                 GxPage.text$default(this, "Finding decisions save immediately and regenerate trial profiles.", (ViewGroup)var7, 0.0F, 0, false, 28, null);
-                var22 = new EditText((Context)this.getAct());
-                ((EditText) var22).setText(this.fbNotes);
-                var22.setHint("Optional tuning notes");
-                var22.setTextSize(18.0F);
-                var22.setTextColor(CarUi.Companion.getTEXT());
-                var22.setHintTextColor(CarUi.Companion.getDIM());
-                var22.setInputType(147457);
-                var22.setMinLines(2);
-                ((EditText) var22).setGravity(8388659);
-                var22.setBackground((Drawable)this.getUi().rounded(Color.rgb(6, 8, 11), 12, Color.rgb(50, 55, 66)));
-                var22.setPadding(this.getUi().dp(14), this.getUi().dp(10), this.getUi().dp(14), this.getUi().dp(10));
-                var22.addTextChangedListener(new TextWatcher() {
+                EditText var22s = new EditText((Context)this.getAct());
+                ((EditText) var22s).setText(this.fbNotes);
+                var22s.setHint("Optional tuning notes");
+                var22s.setTextSize(18.0F);
+                var22s.setTextColor(CarUi.Companion.getTEXT());
+                var22s.setHintTextColor(CarUi.Companion.getDIM());
+                var22s.setInputType(147457);
+                var22s.setMinLines(2);
+                ((EditText) var22s).setGravity(8388659);
+                var22s.setBackground((Drawable)this.getUi().rounded(Color.rgb(6, 8, 11), 12, Color.rgb(50, 55, 66)));
+                var22s.setPadding(this.getUi().dp(14), this.getUi().dp(10), this.getUi().dp(14), this.getUi().dp(10));
+                var22s.addTextChangedListener(new TextWatcher() {
                     final GxTuningPage this$0 = GxTuningPage.this;
 
                     public void afterTextChanged(Editable var1) {
@@ -2331,7 +2331,7 @@ public final class GxTuningPage extends GxPage {
                     public void onTextChanged(CharSequence var1, int var2, int var3x, int var4) {
                     }
                 });
-                View var51 = (View)var22;
+                View var51 = (View)var22s;
                 Object var31 = new LayoutParams(-1, -2);
                 var31.topMargin = this.getUi().dp(8);
                 Unit var62 = Unit.INSTANCE;
@@ -3595,7 +3595,7 @@ public final class GxTuningPage extends GxPage {
     }
 
     private final SharedPreferences getPrefs() {
-        return (SharedPreferences) this.prefs.getValue();
+        return (SharedPreferences) this.prefs$delegate.getValue();
     }
 
     /* JADX INFO: Access modifiers changed from: private */
