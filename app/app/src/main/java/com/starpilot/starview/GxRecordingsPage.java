@@ -976,7 +976,7 @@ public final class GxRecordingsPage extends GxPage {
                     }
                 }
 
-                if (!var31) {
+                if (var31 == 0) {
                     return var8;
                 }
 
@@ -1624,7 +1624,7 @@ public final class GxRecordingsPage extends GxPage {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit openLogs$lambda$82(final GxRecordingsPage this$0, final GxRecordingsRoute $r, String err, JSONObject o) {
-        final List segs;
+        List segs0;
         String gxRecordingsBytes;
         String gxRecordingsBytes2;
         if (err != null || o == null) {
@@ -1632,9 +1632,10 @@ public final class GxRecordingsPage extends GxPage {
             return Unit.INSTANCE;
         }
         JSONArray optJSONArray = o.optJSONArray("segments");
-        if (optJSONArray == null || (segs = this$0.objects(optJSONArray)) == null) {
-            segs = CollectionsKt.emptyList();
+        if (optJSONArray == null || (segs0 = this$0.objects(optJSONArray)) == null) {
+            segs0 = CollectionsKt.emptyList();
         }
+        final List segs = segs0;
         Sheet s = new Sheet(this$0, $r.getDisplayName() + " Logs", true);
         GxRecordingsPage gxRecordingsPage = this$0;
         String str = segs.size() + " segment" + (segs.size() == 1 ? "" : "s");
@@ -1738,7 +1739,7 @@ public final class GxRecordingsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit openLogs$lambda$82$lambda$79$lambda$78$lambda$77;
-                openLogs$lambda$82$lambda$79$lambda$78$lambda$77 = GxRecordingsPage.openLogs$lambda$82$lambda$79$lambda$78$lambda$77(GxRecordingsPage.Sheet.this, this$0, $r, t, seg, n, ((Integer) obj).intValue());
+                openLogs$lambda$82$lambda$79$lambda$78$lambda$77 = GxRecordingsPage.openLogs$lambda$82$lambda$79$lambda$78$lambda$77($ms, this$0, $r, t, seg, n, ((Integer) obj).intValue());
                 return openLogs$lambda$82$lambda$79$lambda$78$lambda$77;
             }
         });
@@ -3605,7 +3606,7 @@ public final class GxRecordingsPage extends GxPage {
         if (StringsKt.isBlank(path)) {
             return;
         }
-        Bitmap cached = get(path);
+        Bitmap cached = this.thumbCache.get(path);
         if (cached != null) {
             iv.setImageBitmap(cached);
             ph.setVisibility(8);
@@ -3622,7 +3623,7 @@ public final class GxRecordingsPage extends GxPage {
         while (this.thumbActive < 2 && !this.thumbQueue.isEmpty()) {
             final ThumbJob j = this.thumbQueue.removeFirst();
             if (j.getValid().invoke().booleanValue() && getHost() != null) {
-                Bitmap cached = get(j.getPath());
+                Bitmap cached = this.thumbCache.get(j.getPath());
                 if (cached != null) {
                     j.getIv().setImageBitmap(cached);
                     j.getPh().setVisibility(8);
@@ -3665,69 +3666,45 @@ public final class GxRecordingsPage extends GxPage {
         }).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:14:0x0098  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* recovered by hand from the bytecode (jadx lost its try blocks) */
     public static final void fetchThumb$lambda$126(GxRecordingsPage this$0, String $u, final Function1 $then) {
-        Object m1191constructorimpl;
-        Response execute;
-        ResponseBody body;
-        byte[] data;
-        Bitmap decodeByteArray;
+        Object res;
         try {
             Result.Companion companion = Result.Companion;
+            Response r = GxPage.Companion.client(30L).newCall(new Request.Builder().url($u).build()).execute();
+            Throwable cause = null;
+            Bitmap decoded;
             try {
-                execute = GxPage.Companion.client(30L).newCall(new Request.Builder().url($u).build()).execute();
-            } catch (Throwable th) {
-                th = th;
-                Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
-                final Bitmap bmp = (Bitmap) (KtCompat.isFailure(m1191constructorimpl) ? null : m1191constructorimpl);
-                this$0.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda43
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        $then.invoke(bmp);
+                ResponseBody body;
+                byte[] data;
+                if (!r.isSuccessful() || (body = r.body()) == null || (data = body.bytes()) == null) {
+                    decoded = null;
+                } else {
+                    BitmapFactory.Options o = new BitmapFactory.Options();
+                    o.inJustDecodeBounds = true;
+                    BitmapFactory.decodeByteArray(data, 0, data.length, o);
+                    int s = 1;
+                    while (o.outWidth / (s * 2) >= 400) {
+                        s *= 2;
                     }
-                });
-            }
-        } catch (Throwable th2) {
-            th = th2;
-        }
-        Throwable execute$c = null;
-        try {
-            Response r = execute;
-            if (!r.isSuccessful() || (body = r.body()) == null || (data = body.bytes()) == null) {
-                decodeByteArray = null;
-            } else {
-                BitmapFactory.Options o = new BitmapFactory.Options();
-                o.inJustDecodeBounds = true;
-                BitmapFactory.decodeByteArray(data, 0, data.length, o);
-                int s = 1;
-                while (o.outWidth / (s * 2) >= 400) {
-                    s *= 2;
+                    int length = data.length;
+                    BitmapFactory.Options o2 = new BitmapFactory.Options();
+                    o2.inSampleSize = s;
+                    decoded = BitmapFactory.decodeByteArray(data, 0, length, o2);
                 }
-                int length = data.length;
-                BitmapFactory.Options $this$fetchThumb_u24lambda_u24126_u24lambda_u24124_u24lambda_u24123_u24lambda_u24122_u24lambda_u24121 = new BitmapFactory.Options();
-                $this$fetchThumb_u24lambda_u24126_u24lambda_u24124_u24lambda_u24123_u24lambda_u24122_u24lambda_u24121.inSampleSize = s;
-                Unit unit = Unit.INSTANCE;
-                decodeByteArray = BitmapFactory.decodeByteArray(data, 0, length, $this$fetchThumb_u24lambda_u24126_u24lambda_u24124_u24lambda_u24123_u24lambda_u24122_u24lambda_u24121);
+            } catch (Throwable th) {
+                cause = th;
+                throw th;
+            } finally {
+                CloseableKt.closeFinally(r, cause);
             }
-            m1191constructorimpl = KtCompat.resultOf(decodeByteArray);
-            final Bitmap bmp2 = (Bitmap) (KtCompat.isFailure(m1191constructorimpl) ? null : m1191constructorimpl);
-            this$0.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda43
-                @Override // java.lang.Runnable
-                public final void run() {
-                    $then.invoke(bmp2);
-                }
-            });
-        } catch (Throwable execute$t) {
-            execute$c = execute$t;
-            throw execute$t;
-        } finally {
-            CloseableKt.closeFinally(execute, execute$c);
+            res = KtCompat.resultOf(decoded);
+        } catch (Throwable th) {
+            Result.Companion companion2 = Result.Companion;
+            res = KtCompat.resultOf(ResultKt.createFailure(th));
         }
+        final Bitmap bmp = (Bitmap) (KtCompat.isFailure(res) ? null : res);
+        this$0.getMain().post(() -> $then.invoke(bmp));
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -3793,64 +3770,50 @@ public final class GxRecordingsPage extends GxPage {
         return c;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
+    /* recovered by hand (jadx lost its try blocks) */
     public static final void stream$lambda$135(final Call call, GxRecordingsPage gxRecordingsPage, Function1 function1, final Function1 function12) {
-        Response execute;
-        Response response;
-        BufferedSource source;
         final Ref.ObjectRef objectRef = new Ref.ObjectRef();
         try {
-            execute = call.execute();
+            Response response = call.execute();
+            Throwable cause = null;
             try {
-                response = execute;
+                if (!response.isSuccessful()) {
+                    throw new IllegalStateException("HTTP " + response.code());
+                }
+                BufferedSource source;
+                ResponseBody body = response.body();
+                if (body == null || (source = body.source()) == null) {
+                    throw new IllegalStateException("empty reply");
+                }
+                StringBuilder sb = new StringBuilder();
+                while (true) {
+                    String line = source.readUtf8Line();
+                    if (line == null) {
+                        break;
+                    }
+                    if (line.length() == 0) {
+                        stream$lambda$135$lambda$133$flush(sb, gxRecordingsPage, call, function1);
+                    } else if (StringsKt.startsWith(line, "data:", false)) {
+                        if (sb.length() > 0) {
+                            sb.append('\n');
+                        }
+                        String substring = line.substring(5);
+                        Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
+                        sb.append(StringsKt.trimStart((CharSequence) substring).toString());
+                    }
+                }
+                stream$lambda$135$lambda$133$flush(sb, gxRecordingsPage, call, function1);
+            } catch (Throwable th) {
+                cause = th;
+                throw th;
             } finally {
+                CloseableKt.closeFinally(response, cause);
             }
         } catch (Exception e) {
             String message = e.getMessage();
-            T t = message;
-            if (message == null) {
-                t = e.toString();
-            }
-            objectRef.element = t;
+            objectRef.element = message == null ? e.toString() : message;
         }
-        if (!response.isSuccessful()) {
-            throw new IllegalStateException("HTTP " + response.code());
-        }
-        ResponseBody body = response.body();
-        if (body == null || (source = body.getSource()) == null) {
-            throw new IllegalStateException("empty reply");
-        }
-        StringBuilder sb = new StringBuilder();
-        while (true) {
-            String readUtf8Line = source.readUtf8Line();
-            if (readUtf8Line == null) {
-                break;
-            }
-            boolean z = true;
-            if (readUtf8Line.length() == 0) {
-                stream$lambda$135$lambda$133$flush(sb, gxRecordingsPage, call, function1);
-            } else if (StringsKt.startsWith(readUtf8Line, "data:", false)) {
-                if (sb.length() <= 0) {
-                    z = false;
-                }
-                if (z) {
-                    sb.append('\n');
-                }
-                String substring = readUtf8Line.substring(5);
-                Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
-                sb.append(StringsKt.trimStart((CharSequence) substring).toString());
-            }
-        }
-        stream$lambda$135$lambda$133$flush(sb, gxRecordingsPage, call, function1);
-        Unit unit = Unit.INSTANCE;
-        CloseableKt.closeFinally(execute, null);
-        gxRecordingsPage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxRecordingsPage$$ExternalSyntheticLambda27
-            @Override // java.lang.Runnable
-            public final void run() {
-                GxRecordingsPage.stream$lambda$135$lambda$134(call, function12, objectRef);
-            }
-        });
+        gxRecordingsPage.getMain().post(() -> GxRecordingsPage.stream$lambda$135$lambda$134(call, function12, objectRef));
     }
 
     private static final void stream$lambda$135$lambda$133$flush(StringBuilder sb, GxRecordingsPage this$0, final Call c, final Function1<? super JSONObject, Unit> function1) {
@@ -3882,7 +3845,7 @@ public final class GxRecordingsPage extends GxPage {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void stream$lambda$135$lambda$133$flush$lambda$132(Call $c, Function1 $onData, JSONObject $o) {
-        if ($c.getCanceled()) {
+        if ($c.isCanceled()) {
             return;
         }
         $onData.invoke($o);
@@ -3890,7 +3853,7 @@ public final class GxRecordingsPage extends GxPage {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void stream$lambda$135$lambda$134(Call $c, Function1 $onDone, Ref.ObjectRef $err) {
-        if ($c.getCanceled()) {
+        if ($c.isCanceled()) {
             return;
         }
         $onDone.invoke($err.element);
