@@ -202,171 +202,83 @@ public final class Bookmarks {
         FilesKt.deleteRecursively(item.getDir());
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:13:0x003f A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:17:0x001d A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public final Pair<String, Integer> export(Context ctx, boolean onlyNew) {
-        Throwable th;
-        Throwable th2;
-        Throwable th3;
-        OutputStream os;
-        Throwable th4;
-        boolean z;
         Intrinsics.checkNotNullParameter(ctx, "ctx");
-        int i = 0;
         try {
-            Iterable $this$filter$iv = list(ctx);
-            Collection destination$iv$iv = new ArrayList();
-            for (Object element$iv$iv : $this$filter$iv) {
-                Item it = (Item) element$iv$iv;
-                if (onlyNew && it.getJson().optBoolean("exported")) {
-                    z = false;
-                    if (!z) {
-                        destination$iv$iv.add(element$iv$iv);
-                    }
-                }
-                z = true;
-                if (!z) {
+            List<Item> all = list(ctx);
+            ArrayList<Item> items = new ArrayList();
+            for (Item it : all) {
+                if (!onlyNew || !it.getJson().optBoolean("exported")) {
+                    items.add(it);
                 }
             }
-            List items = (List) destination$iv$iv;
             if (items.isEmpty()) {
                 return TuplesKt.to(onlyNew ? "No new bookmarks since the last export." : "No bookmarks yet.", 0);
             }
             String name = "bookmarks_" + new SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.US).format(new Date()) + ".zip";
-            ContentValues $this$export_u24lambda_u246 = new ContentValues();
-            $this$export_u24lambda_u246.put("_display_name", name);
-            $this$export_u24lambda_u246.put("mime_type", "application/zip");
-            $this$export_u24lambda_u246.put("relative_path", "Download/StarView/Bookmarks");
-            ContentValues cv = $this$export_u24lambda_u246;
-            Uri insert = ctx.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, cv);
-            try {
-                if (insert == null) {
-                    throw new IllegalStateException("couldn't create " + name);
-                }
-                Uri uri = insert;
-                OutputStream openOutputStream = ctx.getContentResolver().openOutputStream(uri);
-                Intrinsics.checkNotNull(openOutputStream);
-                FileInputStream fileInputStream = openOutputStream;
-                try {
-                    OutputStream os2 = fileInputStream;
-                    ZipOutputStream zipOutputStream = new ZipOutputStream(os2);
-                    try {
-                        ZipOutputStream z2 = zipOutputStream;
-                        Iterator it2 = items.iterator();
-                        while (it2.hasNext()) {
-                            Item it3 = (Item) it2.next();
-                            File[] listFiles = it3.getDir().listFiles();
-                            if (listFiles == null) {
-                                try {
-                                    listFiles = new File[i];
-                                } catch (Throwable th5) {
-                                    th2 = th5;
-                                    try {
-                                        throw th2;
-                                    } catch (Throwable th6) {
-                                        try {
-                                            CloseableKt.closeFinally(zipOutputStream, th2);
-                                            throw th6;
-                                        } catch (Throwable th7) {
-                                            th3 = th7;
-                                            th = th3;
-                                            try {
-                                                throw th;
-                                            } finally {
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            int length = listFiles.length;
-                            int i2 = 0;
-                            while (i2 < length) {
-                                File f = listFiles[i2];
-                                Iterator it4 = it2;
-                                String name2 = f.getName();
-                                Intrinsics.checkNotNullExpressionValue(name2, "getName(...)");
-                                int i3 = length;
-                                ContentValues cv2 = cv;
-                                Uri uri2 = uri;
-                                try {
-                                    if (StringsKt.endsWith(name2, ".tmp", false)) {
-                                        os = os2;
-                                    } else {
-                                        z2.putNextEntry(new ZipEntry(it3.getId() + "/" + f.getName()));
-                                        Intrinsics.checkNotNull(f);
-                                        fileInputStream = new FileInputStream(f);
-                                        try {
-                                            FileInputStream s = fileInputStream;
-                                            os = os2;
-                                            try {
-                                                ByteStreamsKt.copyTo(s, z2, 8192);
-                                                try {
-                                                    CloseableKt.closeFinally(fileInputStream, null);
-                                                    z2.closeEntry();
-                                                } catch (Throwable th8) {
-                                                    th2 = th8;
-                                                    throw th2;
-                                                }
-                                            } catch (Throwable th9) {
-                                                th4 = th9;
-                                                try {
-                                                    throw th;
-                                                } finally {
-                                                }
-                                            }
-                                        } catch (Throwable th10) {
-                                            th4 = th10;
-                                        }
-                                    }
-                                    i2++;
-                                    it2 = it4;
-                                    os2 = os;
-                                    length = i3;
-                                    cv = cv2;
-                                    uri = uri2;
-                                } catch (Throwable th11) {
-                                    th2 = th11;
-                                }
-                            }
-                            i = 0;
-                        }
-                        Unit unit = Unit.INSTANCE;
-                        try {
-                            CloseableKt.closeFinally(zipOutputStream, null);
-                            Unit unit2 = Unit.INSTANCE;
-                            CloseableKt.closeFinally(fileInputStream, null);
-                            Iterator it5 = items.iterator();
-                            while (it5.hasNext()) {
-                                update((Item) it5.next(), new Function1() { // from class: com.starpilot.starview.Bookmarks$$ExternalSyntheticLambda1
-                                    @Override // kotlin.jvm.functions.Function1
-                                    public final Object invoke(Object obj) {
-                                        Unit export$lambda$10;
-                                        export$lambda$10 = Bookmarks.export$lambda$10((JSONObject) obj);
-                                        return export$lambda$10;
-                                    }
-                                });
-                            }
-                            return TuplesKt.to(null, Integer.valueOf(items.size()));
-                        } catch (Throwable th12) {
-                            th3 = th12;
-                            th = th3;
-                            throw th;
-                        }
-                    } catch (Throwable th13) {
-                        th2 = th13;
-                    }
-                } catch (Throwable th14) {
-                    th = th14;
-                }
-            } catch (Exception e) {
-                e = e;
-                return TuplesKt.to("Couldn't export: " + e.getMessage(), 0);
+            ContentValues cv = new ContentValues();
+            cv.put("_display_name", name);
+            cv.put("mime_type", "application/zip");
+            cv.put("relative_path", "Download/StarView/Bookmarks");
+            Uri uri = ctx.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, cv);
+            if (uri == null) {
+                throw new IllegalStateException("couldn't create " + name);
             }
-        } catch (Exception e2) {
-            e = e2;
+            OutputStream os = ctx.getContentResolver().openOutputStream(uri);
+            Intrinsics.checkNotNull(os);
+            Throwable osCause = null;
+            try {
+                ZipOutputStream z = new ZipOutputStream(os);
+                Throwable zCause = null;
+                try {
+                    for (Item it2 : items) {
+                        File[] files = it2.getDir().listFiles();
+                        if (files == null) {
+                            files = new File[0];
+                        }
+                        for (File f : files) {
+                            String fn = f.getName();
+                            Intrinsics.checkNotNullExpressionValue(fn, "getName(...)");
+                            if (!StringsKt.endsWith(fn, ".tmp", false)) {
+                                z.putNextEntry(new ZipEntry(it2.getId() + "/" + f.getName()));
+                                Intrinsics.checkNotNull(f);
+                                FileInputStream in = new FileInputStream(f);
+                                Throwable inCause = null;
+                                try {
+                                    ByteStreamsKt.copyTo(in, z, 8192);
+                                } catch (Throwable th) {
+                                    inCause = th;
+                                    throw th;
+                                } finally {
+                                    CloseableKt.closeFinally(in, inCause);
+                                }
+                                z.closeEntry();
+                            }
+                        }
+                    }
+                } catch (Throwable th2) {
+                    zCause = th2;
+                    throw th2;
+                } finally {
+                    CloseableKt.closeFinally(z, zCause);
+                }
+            } catch (Throwable th3) {
+                osCause = th3;
+                throw th3;
+            } finally {
+                CloseableKt.closeFinally(os, osCause);
+            }
+            for (Item it3 : items) {
+                update(it3, new Function1() { // from class: com.starpilot.starview.Bookmarks$$ExternalSyntheticLambda1
+                    @Override // kotlin.jvm.functions.Function1
+                    public final Object invoke(Object obj) {
+                        return Bookmarks.export$lambda$10((JSONObject) obj);
+                    }
+                });
+            }
+            return TuplesKt.to(null, Integer.valueOf(items.size()));
+        } catch (Exception e) {
+            return TuplesKt.to("Couldn't export: " + e.getMessage(), 0);
         }
     }
 

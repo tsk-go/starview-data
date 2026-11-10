@@ -204,9 +204,8 @@ public final class GalaxySettingsView extends FrameLayout {
 
             /* VF: from Vineflower (jadx: ) */
             public Unplaced(Set<String> var1) {
-                Intrinsics.checkNotNullParameter(var1, "placed");
                 super(null);
-        super(var1);
+                Intrinsics.checkNotNullParameter(var1, "placed");
                 this.placed = var1;
             }
 
@@ -225,6 +224,7 @@ public final class GalaxySettingsView extends FrameLayout {
         Function1<? super LinearLayout, Unit> var5,
         Function2<? super String, ? super LinearLayout, Unit> var6
     ) {
+        super(var1);
         Intrinsics.checkNotNullParameter(var1, "ctx");
         Intrinsics.checkNotNullParameter(var2, "ui");
         Intrinsics.checkNotNullParameter(var3, "root");
@@ -671,7 +671,7 @@ public final class GalaxySettingsView extends FrameLayout {
                         destination$iv$iv.add(element$iv$iv);
                     }
                 }
-                for (final GalaxyRow r3 : (GalaxyRow) destination$iv$iv) {
+                for (final GalaxyRow r3 : (Iterable<GalaxyRow>) (List) destination$iv$iv) {
                     linkCard$default(this, r3.getLabel(), r3.getValue(), r3.getAvailable(), false, SettingIcons.INSTANCE.forPage(r3.getPage()), new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda31
                         @Override // kotlin.jvm.functions.Function0
                         public final Object invoke() {
@@ -1352,12 +1352,12 @@ public final class GalaxySettingsView extends FrameLayout {
 
             @Override // android.widget.SeekBar.OnSeekBarChangeListener
             public void onStartTrackingTouch(SeekBar sb) {
-                this.touching = true;
+                GalaxySettingsView.this.touching = true;
             }
 
             @Override // android.widget.SeekBar.OnSeekBarChangeListener
             public void onStopTrackingTouch(SeekBar sb) {
-                this.touching = false;
+                GalaxySettingsView.this.touching = false;
                 GalaxySettingsView.sliderRow$commit(shown$default, r, GalaxySettingsView.this, bounds, round, seekBar.getProgress());
             }
         });
