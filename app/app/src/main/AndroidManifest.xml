@@ -18,6 +18,8 @@
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
   <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+  <!-- Settings > About > Check for updates: installs the newer StarView from GitHub (the system asks to confirm) -->
+  <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
   <application
     android:label="StarView"
@@ -75,5 +77,6 @@
     <activity android:name=".SensorsActivity" android:exported="false" android:screenOrientation="fullUser" android:theme="@style/Theme.StarView" />
     <activity android:name=".DestinationActivity" android:exported="false" android:screenOrientation="fullUser" android:windowSoftInputMode="adjustResize|stateVisible" android:theme="@style/Theme.StarView" />
     <activity android:name=".SettingsActivity" android:exported="false" android:screenOrientation="fullUser" android:windowSoftInputMode="adjustResize" android:theme="@style/Theme.StarView" />
+    <receiver android:name=".AppUpdateReceiver" android:exported="false" />
   </application>
 </manifest>
