@@ -701,15 +701,17 @@ public final class DevicePanel extends ScrollView {
         return data != null && data.getConnected();
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void setParam$default(DevicePanel devicePanel, String str, Object obj, boolean z, Function1 function1, int i, Object obj2) {
-        if ((i & 4) != 0) {
-            z = false;
+    /* VF: from Vineflower (jadx: ) */
+    static void setParam$default(DevicePanel var0, String var1, Object var2, boolean var3, Function1 var4, int var5, Object var6) {
+        if ((var5 & 4) != 0) {
+            var3 = false;
         }
-        if ((i & 8) != 0) {
-            function1 = null;
+
+        if ((var5 & 8) != 0) {
+            var4 = null;
         }
-        devicePanel.setParam(str, obj, z, function1);
+
+        var0.setParam(var1, var2, var3, var4);
     }
 
     private final void setParam(String key, Object value, boolean memory, final Function1<? super JSONObject, Unit> then) {
@@ -739,15 +741,17 @@ public final class DevicePanel extends ScrollView {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void call$default(DevicePanel devicePanel, String str, Map map, Function1 function1, int i, Object obj) {
-        if ((i & 2) != 0) {
-            map = MapsKt.emptyMap();
+    /* VF: from Vineflower (jadx: ) */
+    static void call$default(DevicePanel var0, String var1, Map var2, Function1 var3, int var4, Object var5) {
+        if ((var4 & 2) != 0) {
+            var2 = MapsKt.emptyMap();
         }
-        if ((i & 4) != 0) {
-            function1 = null;
+
+        if ((var4 & 4) != 0) {
+            var3 = null;
         }
-        devicePanel.call(str, map, function1);
+
+        var0.call(var1, var2, var3);
     }
 
     private final void call(String action, Map<String, ? extends Object> args, final Function1<? super JSONObject, Unit> then) {

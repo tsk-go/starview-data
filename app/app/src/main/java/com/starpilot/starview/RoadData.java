@@ -388,7 +388,7 @@ public final class RoadData {
     /*
         Code decompiled incorrectly, please refer to instructions dump.
     */
-    public final String m1072import(Context ctx, Uri uri) {
+    public final String importFile(Context ctx, Uri uri) {
         String str;
         FileOutputStream fileOutputStream;
         Hpms.Pack p;

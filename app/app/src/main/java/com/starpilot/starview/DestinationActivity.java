@@ -54,6 +54,7 @@ import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.widget.LinearLayout.LayoutParams;
 
 /* compiled from: DestinationActivity.kt */
 public final class DestinationActivity extends AppCompatActivity {
@@ -245,221 +246,237 @@ public final class DestinationActivity extends AppCompatActivity {
         super.attachBaseContext(NarrowDensity.INSTANCE.wrap(base, 1000, 0.62f));
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:20:0x0051, code lost:
-    
-        if ((r3 == 0.0d) == false) goto L26;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:30:0x007a, code lost:
-    
-        if ((r5.length() >= 10 ? 1 : null) != null) goto L36;
-     */
-    @Override // androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    protected void onCreate(Bundle savedInstanceState) {
-        EditText editText;
-        super.onCreate(savedInstanceState);
-        double lat = getIntent().getDoubleExtra("lat", Double.NaN);
-        double lon = getIntent().getDoubleExtra("lon", Double.NaN);
-        if ((Double.isInfinite(lat) || Double.isNaN(lat)) ? false : true) {
-            if ((Double.isInfinite(lon) || Double.isNaN(lon)) ? false : true) {
-                if (lat == 0.0d) {
-                }
-                this.here = TuplesKt.to(Double.valueOf(lat), Double.valueOf(lon));
-            }
-        }
-        String it = getIntent().getStringExtra("route");
-        if (it != null) {
-        }
-        it = null;
-        this.route = it;
-        LinearLayout root = new LinearLayout(this);
-        root.setOrientation(1);
-        root.setBackgroundColor(Color.rgb(11, 13, 18));
-        root.setPadding(dp(20), dp(16), dp(20), dp(8));
-        LinearLayout head = new LinearLayout(this);
-        head.setOrientation(0);
-        head.setGravity(16);
-        TextView $this$onCreate_u24lambda_u244 = new TextView(this);
-        $this$onCreate_u24lambda_u244.setText("‹");
-        $this$onCreate_u24lambda_u244.setTextSize(34.0f);
-        $this$onCreate_u24lambda_u244.setTextColor(-1);
-        $this$onCreate_u24lambda_u244.setPadding(dp(4), 0, dp(16), dp(4));
-        $this$onCreate_u24lambda_u244.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda22
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                DestinationActivity.this.finish();
-            }
-        });
-        head.addView($this$onCreate_u24lambda_u244);
-        final EditText $this$onCreate_u24lambda_u247 = new EditText(this);
-        $this$onCreate_u24lambda_u247.setHint("Search places or addresses");
-        $this$onCreate_u24lambda_u247.setHintTextColor(Color.rgb(128, 134, 144));
-        $this$onCreate_u24lambda_u247.setTextColor(-1);
-        $this$onCreate_u24lambda_u247.setTextSize(20.0f);
-        $this$onCreate_u24lambda_u247.setInputType(8193);
-        $this$onCreate_u24lambda_u247.setImeOptions(3);
-        $this$onCreate_u24lambda_u247.setSingleLine(true);
-        GradientDrawable $this$onCreate_u24lambda_u247_u24lambda_u245 = new GradientDrawable();
-        $this$onCreate_u24lambda_u247_u24lambda_u245.setCornerRadius(dp(14));
-        $this$onCreate_u24lambda_u247_u24lambda_u245.setColor(Color.rgb(27, 31, 39));
-        $this$onCreate_u24lambda_u247.setBackground($this$onCreate_u24lambda_u247_u24lambda_u245);
-        $this$onCreate_u24lambda_u247.setPadding(dp(16), dp(12), dp(16), dp(12));
-        $this$onCreate_u24lambda_u247.setOnEditorActionListener(new TextView.OnEditorActionListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda23
-            @Override // android.widget.TextView.OnEditorActionListener
-            public final boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                boolean onCreate$lambda$7$lambda$6;
-                onCreate$lambda$7$lambda$6 = DestinationActivity.onCreate$lambda$7$lambda$6(DestinationActivity.this, $this$onCreate_u24lambda_u247, textView, i, keyEvent);
-                return onCreate$lambda$7$lambda$6;
-            }
-        });
-        $this$onCreate_u24lambda_u247.addTextChangedListener(new TextWatcher() { // from class: com.starpilot.starview.DestinationActivity$onCreate$3$3
-            @Override // android.text.TextWatcher
-            public void beforeTextChanged(CharSequence s, int a, int b, int c) {
-            }
-
-            @Override // android.text.TextWatcher
-            public void onTextChanged(CharSequence s, int a, int b, int c) {
-            }
-
-            @Override // android.text.TextWatcher
-            public void afterTextChanged(Editable s) {
-                DestinationActivity destinationActivity = DestinationActivity.this;
-                String obj = s != null ? s.toString() : null;
-                if (obj == null) {
-                    obj = "";
-                }
-                destinationActivity.search(obj, false);
-            }
-        });
-        this.edit = $this$onCreate_u24lambda_u247;
-        EditText editText2 = this.edit;
-        if (editText2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("edit");
-            editText2 = null;
-        }
-        head.addView(editText2, new LinearLayout.LayoutParams(0, -2, 1.0f));
-        TextView $this$onCreate_u24lambda_u249 = new TextView(this);
-        $this$onCreate_u24lambda_u249.setText("✕");
-        $this$onCreate_u24lambda_u249.setTextSize(22.0f);
-        $this$onCreate_u24lambda_u249.setTextColor(Color.rgb(154, 161, 172));
-        $this$onCreate_u24lambda_u249.setPadding(dp(14), 0, dp(4), 0);
-        $this$onCreate_u24lambda_u249.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                DestinationActivity.onCreate$lambda$9$lambda$8(DestinationActivity.this, view);
-            }
-        });
-        head.addView($this$onCreate_u24lambda_u249);
-        root.addView(head);
-        LinearLayout chips = new LinearLayout(this);
-        chips.setOrientation(0);
-        chips.setPadding(0, dp(12), 0, dp(2));
-        this.alongBtn = chip("", new Function0() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda2
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit onCreate$lambda$11;
-                onCreate$lambda$11 = DestinationActivity.onCreate$lambda$11(DestinationActivity.this);
-                return onCreate$lambda$11;
-            }
-        });
-        if (this.route != null) {
-            TextView textView = this.alongBtn;
-            if (textView == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("alongBtn");
-                textView = null;
-            }
-            chips.addView(textView, chipLp());
-            paintAlong();
-        }
-        for (Pair<String, String> pair : QUICK) {
-            final String key = pair.component1();
-            final String label = pair.component2();
-            chips.addView(chip(label, new Function0() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda3
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit onCreate$lambda$12;
-                    onCreate$lambda$12 = DestinationActivity.onCreate$lambda$12(DestinationActivity.this, key, label);
-                    return onCreate$lambda$12;
-                }
-            }), chipLp());
-        }
-        HorizontalScrollView $this$onCreate_u24lambda_u2413 = new HorizontalScrollView(this);
-        $this$onCreate_u24lambda_u2413.setHorizontalScrollBarEnabled(false);
-        $this$onCreate_u24lambda_u2413.addView(chips);
-        root.addView($this$onCreate_u24lambda_u2413);
-        TextView $this$onCreate_u24lambda_u2414 = new TextView(this);
-        $this$onCreate_u24lambda_u2414.setTextColor(Color.rgb(143, 163, 199));
-        $this$onCreate_u24lambda_u2414.setTextSize(14.0f);
-        $this$onCreate_u24lambda_u2414.setPadding(dp(4), dp(10), dp(4), dp(4));
-        this.status = $this$onCreate_u24lambda_u2414;
-        TextView textView2 = this.status;
-        if (textView2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("status");
-            textView2 = null;
-        }
-        root.addView(textView2);
-        LinearLayout $this$onCreate_u24lambda_u2415 = new LinearLayout(this);
-        $this$onCreate_u24lambda_u2415.setOrientation(1);
-        this.list = $this$onCreate_u24lambda_u2415;
-        ScrollView $this$onCreate_u24lambda_u2416 = new ScrollView(this);
-        LinearLayout linearLayout = this.list;
-        if (linearLayout == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("list");
-            linearLayout = null;
-        }
-        $this$onCreate_u24lambda_u2416.addView(linearLayout);
-        root.addView($this$onCreate_u24lambda_u2416, new LinearLayout.LayoutParams(-1, 0, 1.0f));
-        setContentView(root);
-        String q = getIntent().getStringExtra("query");
-        if (q != null) {
-            if (StringsKt.isBlank(q)) {
-                q = null;
-            }
-            if (q != null) {
-                EditText editText3 = this.edit;
-                if (editText3 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("edit");
-                    editText3 = null;
-                }
-                editText3.setText(q);
-                EditText editText4 = this.edit;
-                if (editText4 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("edit");
-                    editText4 = null;
-                }
-                editText4.setSelection(q.length());
-                search(q, true);
-            }
-        }
-        this.favorites = places(new JSONArray((Collection) Favorites.INSTANCE.getList()), "name");
-        DataClient data = Link.INSTANCE.getData();
-        if (data != null) {
-            data.request("nav_list", kotlin.collections.MapsKt.emptyMap(), new Function1() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda4
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj) {
-                    Unit onCreate$lambda$19;
-                    onCreate$lambda$19 = DestinationActivity.onCreate$lambda$19(DestinationActivity.this, (JSONObject) obj);
-                    return onCreate$lambda$19;
-                }
-            });
-        }
-        render();
-        EditText editText5 = this.edit;
-        if (editText5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("edit");
-            editText = null;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    @Override
+    protected void onCreate(Bundle var1) {
+        Object var11 = null; // declarations Vineflower left out
+        super.onCreate(var1);
+        double var4 = this.getIntent().getDoubleExtra("lat", Double.NaN);
+        double var2 = this.getIntent().getDoubleExtra("lon", Double.NaN);
+        boolean var6;
+        if (!Double.isInfinite(var4) && !Double.isNaN(var4)) {
+            var6 = true;
         } else {
-            editText = editText5;
+            var6 = false;
         }
-        editText.requestFocus();
-        this.ui.postDelayed(new Runnable() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda5
-            @Override // java.lang.Runnable
-            public final void run() {
-                DestinationActivity.onCreate$lambda$20(DestinationActivity.this);
+
+        if (var6) {
+            if (!Double.isInfinite(var2) && !Double.isNaN(var2)) {
+                var6 = true;
+            } else {
+                var6 = false;
             }
-        }, 250L);
+
+            label102:
+            if (var6) {
+                if (var4 == 0.0) {
+                    var6 = true;
+                } else {
+                    var6 = false;
+                }
+
+                if (var6) {
+                    if (var2 == 0.0) {
+                        var6 = true;
+                    } else {
+                        var6 = false;
+                    }
+
+                    if (var6) {
+                        break label102;
+                    }
+                }
+
+                this.here = TuplesKt.to(var4, var2);
+            }
+        }
+
+        label94: {
+            var11 = this.getIntent().getStringExtra("route");
+            if (var11 != null) {
+                if (var11.length() >= 10) {
+                    var6 = true;
+                } else {
+                    var6 = false;
+                }
+
+                if (var6) {
+                    break label94;
+                }
+            }
+
+            var11 = null;
+        }
+
+        this.route = var11;
+        LinearLayout var8 = new LinearLayout((Context)this);
+        var8.setOrientation(1);
+        var8.setBackgroundColor(Color.rgb(11, 13, 18));
+        var8.setPadding(this.dp(20), this.dp(16), this.dp(20), this.dp(8));
+        LinearLayout var9 = new LinearLayout((Context)this);
+        var9.setOrientation(0);
+        var9.setGravity(16);
+        TextView var12 = new TextView((Context)this);
+        var12.setText("‹");
+        var12.setTextSize(34.0F);
+        var12.setTextColor(-1);
+        var12.setPadding(this.dp(4), 0, this.dp(16), this.dp(4));
+        var12.setOnClickListener(new DestinationActivity$$ExternalSyntheticLambda22(this));
+        var9.addView((View)var12);
+        EditText var13 = new EditText((Context)this);
+        var13.setHint("Search places or addresses");
+        var13.setHintTextColor(Color.rgb(128, 134, 144));
+        var13.setTextColor(-1);
+        var13.setTextSize(20.0F);
+        var13.setInputType(8193);
+        var13.setImeOptions(3);
+        var13.setSingleLine(true);
+        GradientDrawable var7 = new GradientDrawable();
+        var7.setCornerRadius(this.dp(14));
+        var7.setColor(Color.rgb(27, 31, 39));
+        var13.setBackground((Drawable)var7);
+        var13.setPadding(this.dp(16), this.dp(12), this.dp(16), this.dp(12));
+        var13.setOnEditorActionListener(new DestinationActivity$$ExternalSyntheticLambda23(this, var13));
+        var13.addTextChangedListener(new TextWatcher() {
+            final DestinationActivity this$0 = DestinationActivity.this;
+
+            public void afterTextChanged(Editable var1) {
+                DestinationActivity var3 = this.this$0;
+                String var4x;
+                if (var1 != null) {
+                    var4x = var1.toString();
+                } else {
+                    var4x = null;
+                }
+
+                String var2x = var4x;
+                if (var4x == null) {
+                    var2x = "";
+                }
+
+                var3.search(var2x, false);
+            }
+
+            public void beforeTextChanged(CharSequence var1, int var2x, int var3, int var4x) {
+            }
+
+            public void onTextChanged(CharSequence var1, int var2x, int var3, int var4x) {
+            }
+        });
+        this.edit = var13;
+        EditText var30 = this.edit;
+        EditText var14 = var30;
+        if (var30 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("edit");
+            var14 = null;
+        }
+
+        var9.addView((View)var14, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
+        TextView var15 = new TextView((Context)this);
+        var15.setText("✕");
+        var15.setTextSize(22.0F);
+        var15.setTextColor(Color.rgb(154, 161, 172));
+        var15.setPadding(this.dp(14), 0, this.dp(4), 0);
+        var15.setOnClickListener(new DestinationActivity$$ExternalSyntheticLambda1(this));
+        var9.addView((View)var15);
+        var8.addView((View)var9);
+        var9 = new LinearLayout((Context)this);
+        var9.setOrientation(0);
+        var9.setPadding(0, this.dp(12), 0, this.dp(2));
+        this.alongBtn = this.chip("", new DestinationActivity$$ExternalSyntheticLambda2(this));
+        if (this.route != null) {
+            TextView var31 = this.alongBtn;
+            TextView var16 = var31;
+            if (var31 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("alongBtn");
+                var16 = null;
+            }
+
+            var9.addView((View)var16, (android.view.ViewGroup.LayoutParams)this.chipLp());
+            this.paintAlong();
+        }
+
+        for (Pair var10 : QUICK) {
+            String var32 = (String)var10.component1();
+            String var41 = (String)var10.component2();
+            var9.addView(
+                (View)this.chip(var41, new DestinationActivity$$ExternalSyntheticLambda3(this, var32, var41)), (android.view.ViewGroup.LayoutParams)this.chipLp()
+            );
+        }
+
+        HorizontalScrollView var18 = new HorizontalScrollView((Context)this);
+        var18.setHorizontalScrollBarEnabled(false);
+        var18.addView((View)var9);
+        var8.addView((View)var18);
+        TextView var19 = new TextView((Context)this);
+        var19.setTextColor(Color.rgb(143, 163, 199));
+        var19.setTextSize(14.0F);
+        var19.setPadding(this.dp(4), this.dp(10), this.dp(4), this.dp(4));
+        this.status = var19;
+        TextView var33 = this.status;
+        TextView var20 = var33;
+        if (var33 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("status");
+            var20 = null;
+        }
+
+        var8.addView((View)var20);
+        LinearLayout var21 = new LinearLayout((Context)this);
+        var21.setOrientation(1);
+        this.list = var21;
+        ScrollView var40 = new ScrollView((Context)this);
+        LinearLayout var34 = this.list;
+        LinearLayout var22 = var34;
+        if (var34 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("list");
+            var22 = null;
+        }
+
+        var40.addView((View)var22);
+        var8.addView((View)var40, (android.view.ViewGroup.LayoutParams)(new LayoutParams(-1, 0, 1.0F)));
+        this.setContentView((View)var8);
+        String var23 = this.getIntent().getStringExtra("query");
+        if (var23 != null) {
+            if (StringsKt.isBlank(var23)) {
+                var23 = null;
+            }
+
+            if (var23 != null) {
+                EditText var37 = this.edit;
+                EditText var35 = var37;
+                if (var37 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("edit");
+                    var35 = null;
+                }
+
+                var35.setText(var23);
+                EditText var38 = this.edit;
+                EditText var36 = var38;
+                if (var38 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("edit");
+                    var36 = null;
+                }
+
+                var36.setSelection(var23.length());
+                this.search(var23, true);
+            }
+        }
+
+        this.favorites = this.places(new JSONArray(Favorites.INSTANCE.getList()), "name");
+        DataClient var24 = Link.INSTANCE.getData();
+        if (var24 != null) {
+            var24.request("nav_list", kotlin.collections.MapsKt.emptyMap(), new DestinationActivity$$ExternalSyntheticLambda4(this));
+        }
+
+        this.render();
+        EditText var25 = this.edit;
+        if (var25 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("edit");
+            var25 = null;
+        }
+
+        var25.requestFocus();
+        this.ui.postDelayed(new DestinationActivity$$ExternalSyntheticLambda5(this), 250L);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -969,173 +986,277 @@ public final class DestinationActivity extends AppCompatActivity {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:12:0x0086  */
-    /* JADX WARN: Removed duplicated region for block: B:16:0x0097 A[Catch: Exception -> 0x0090, TryCatch #0 {Exception -> 0x0090, blocks: (B:14:0x008a, B:16:0x0097, B:17:0x009d, B:18:0x00ad, B:20:0x00b3, B:22:0x00c1, B:27:0x00cc, B:33:0x00d0, B:34:0x00eb, B:36:0x00f1, B:38:0x0100, B:39:0x0133, B:42:0x013d, B:46:0x0152, B:47:0x015b, B:49:0x0163, B:55:0x0182, B:51:0x0176), top: B:13:0x008a }] */
-    /* JADX WARN: Removed duplicated region for block: B:20:0x00b3 A[Catch: Exception -> 0x0090, TryCatch #0 {Exception -> 0x0090, blocks: (B:14:0x008a, B:16:0x0097, B:17:0x009d, B:18:0x00ad, B:20:0x00b3, B:22:0x00c1, B:27:0x00cc, B:33:0x00d0, B:34:0x00eb, B:36:0x00f1, B:38:0x0100, B:39:0x0133, B:42:0x013d, B:46:0x0152, B:47:0x015b, B:49:0x0163, B:55:0x0182, B:51:0x0176), top: B:13:0x008a }] */
-    /* JADX WARN: Removed duplicated region for block: B:36:0x00f1 A[Catch: Exception -> 0x0090, TryCatch #0 {Exception -> 0x0090, blocks: (B:14:0x008a, B:16:0x0097, B:17:0x009d, B:18:0x00ad, B:20:0x00b3, B:22:0x00c1, B:27:0x00cc, B:33:0x00d0, B:34:0x00eb, B:36:0x00f1, B:38:0x0100, B:39:0x0133, B:42:0x013d, B:46:0x0152, B:47:0x015b, B:49:0x0163, B:55:0x0182, B:51:0x0176), top: B:13:0x008a }] */
-    /* JADX WARN: Removed duplicated region for block: B:81:0x009c  */
-    /* JADX WARN: Removed duplicated region for block: B:85:0x0093  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final void androidSearch$lambda$48(final DestinationActivity this$0, Pair $pos, String $q, final int $seq) {
-        List r;
-        List list;
-        Geocoder g;
-        List list2;
-        List r2;
-        List list3;
-        int i;
-        boolean z;
-        int i2;
-        Geocoder g2;
-        List r3;
-        String name;
-        int i3;
-        try {
-            g = new Geocoder(this$0, Locale.getDefault());
-            if ($pos != null) {
-                double dLon = 0.45d / RangesKt.coerceAtLeast(Math.cos(Math.toRadians(((Number) $pos.getFirst()).doubleValue())), 0.2d);
-                list2 = g.getFromLocationName($q, 8, ((Number) $pos.getFirst()).doubleValue() - 0.45d, ((Number) $pos.getSecond()).doubleValue() - dLon, ((Number) $pos.getFirst()).doubleValue() + 0.45d, ((Number) $pos.getSecond()).doubleValue() + dLon);
-            } else {
-                list2 = null;
-            }
-            r2 = list2;
-            list3 = r2;
-            i = 0;
-        } catch (Exception e) {
-        }
-        if (list3 != null) {
-            if (!list3.isEmpty()) {
-                z = false;
-                if (!z) {
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public static final void androidSearch$lambda$48(DestinationActivity var0, Pair var1, String var2, int var3) {
+        ArrayList var38 = null; ArrayList var41 = null; Object var42 = null; boolean var48 = false; Object var49 = null; Object var50 = null; Object var56 = null; // declarations Vineflower left out
+        label223: {
+            label225: {
+                Geocoder var9;
+                try {
+                    var9 = new Geocoder((Context)var0, Locale.getDefault());
+                } catch (Exception var35) {
+                    break label225;
+                }
+
+                List var36;
+                if (var1 != null) {
                     try {
-                        r2 = g.getFromLocationName($q, 8);
-                    } catch (Exception e2) {
-                        r = null;
-                        list = r;
-                        final List found = list;
-                        this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda9
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                DestinationActivity.androidSearch$lambda$48$lambda$47($seq, this$0, found);
-                            }
-                        });
+                        double var4 = 0.45 / RangesKt.coerceAtLeast(Math.cos(Math.toRadians(((Number)var1.getFirst()).doubleValue())), 0.2);
+                        var36 = var9.getFromLocationName(
+                            var2,
+                            8,
+                            ((Number)var1.getFirst()).doubleValue() - 0.45,
+                            ((Number)var1.getSecond()).doubleValue() - var4,
+                            ((Number)var1.getFirst()).doubleValue() + 0.45,
+                            ((Number)var1.getSecond()).doubleValue() + var4
+                        );
+                    } catch (Exception var34) {
+                        break label225;
+                    }
+                } else {
+                    var36 = null;
+                }
+
+                Collection var10;
+                try {
+                    var10 = var36;
+                } catch (Exception var33) {
+                    break label225;
+                }
+
+                int var6;
+                label210: {
+                    if (var10 != null) {
+                        boolean var8;
+                        try {
+                            var8 = var10.isEmpty();
+                        } catch (Exception var32) {
+                            break label225;
+                        }
+
+                        if (!var8) {
+                            var6 = 0;
+                            break label210;
+                        }
+                    }
+
+                    var6 = 1;
+                }
+
+                if ((var6 != 0)) {
+                    try {
+                        var36 = var9.getFromLocationName(var2, 8);
+                    } catch (Exception var31) {
+                        break label225;
                     }
                 }
-                List $this$filter$iv = r2 != null ? CollectionsKt.emptyList() : r2;
-                Collection destination$iv$iv = new ArrayList();
-                for (Object element$iv$iv : $this$filter$iv) {
-                    Address it = (Address) element$iv$iv;
-                    if (it.hasLatitude() && it.hasLongitude()) {
-                        destination$iv$iv.add(element$iv$iv);
+
+                List var39;
+                if (var36 == null) {
+                    try {
+                        var39 = CollectionsKt.emptyList();
+                    } catch (Exception var30) {
+                        break label225;
+                    }
+                } else {
+                    var39 = var36;
+                }
+
+                Iterator var11;
+                try {
+                    Iterable var53 = var39;
+                    ArrayList var40 = new ArrayList();
+                    var41 = var40;
+                    var11 = var53.iterator();
+                } catch (Exception var28) {
+                    break label225;
+                }
+
+                while (true) {
+                    Object var12;
+                    label190: {
+                        label189: {
+                            try {
+                                if (!var11.hasNext()) {
+                                    break;
+                                }
+
+                                var12 = var11.next();
+                                Address var54 = (Address)var12;
+                                if (var54.hasLatitude() && var54.hasLongitude()) {
+                                    break label189;
+                                }
+                            } catch (Exception var29) {
+                                break label225;
+                            }
+
+                            var6 = (((boolean)false) ? 1 : 0);
+                            break label190;
+                        }
+
+                        var6 = (((boolean)true) ? 1 : 0);
+                    }
+
+                    if ((var6 != 0)) {
+                        try {
+                            var41.add(var12);
+                        } catch (Exception var27) {
+                            break label225;
+                        }
                     }
                 }
-                Iterable $this$map$iv = (List) destination$iv$iv;
-                Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-                for (Object item$iv$iv : $this$map$iv) {
-                    Address a = (Address) item$iv$iv;
-                    String addressLine = a.getAddressLine(i);
-                    if (addressLine == null) {
-                        String[] strArr = new String[2];
-                        strArr[i] = a.getThoroughfare();
-                        i2 = 1;
-                        strArr[1] = a.getLocality();
-                        addressLine = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", "", "", -1, "...", null);
-                    } else {
-                        i2 = 1;
-                    }
-                    String line = addressLine;
-                    String featureName = a.getFeatureName();
-                    if (featureName == null) {
-                        featureName = "";
-                    }
-                    String fn = featureName;
+
+                try {
+                    var42 = var41;
+                } catch (Exception var26) {
+                    break label225;
+                }
+
+                Iterator var13;
+                ArrayList var57;
+                try {
+                    Iterable var43 = var42;
+                    ArrayList var55 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var43, 10));
+                    var57 = var55;
+                    var13 = var43.iterator();
+                } catch (Exception var25) {
+                    break label225;
+                }
+
+                Geocoder var37 = var9;
+
+                while (true) {
+                    byte var7 = 0;
+
+                    Address var14;
                     try {
-                        if ((fn.length() > 0 ? i2 : i) != 0) {
-                            CharSequence $this$any$iv = fn;
-                            while (true) {
-                                g2 = g;
-                                if (i >= $this$any$iv.length()) {
-                                    i3 = 0;
-                                    break;
+                        if (!var13.hasNext()) {
+                            break;
+                        }
+
+                        var14 = (Address)var13.next();
+                        var56 = var14.getAddressLine(0);
+                    } catch (Exception var21) {
+                        break label225;
+                    }
+
+                    if (var56 == null) {
+                        try {
+                            var56 = CollectionsKt.joinToString(CollectionsKt.listOfNotNull(new String[]{var14.getThoroughfare(), var14.getLocality()}), ", ", "", "", -1, "...", null);
+                        } catch (Exception var20) {
+                            break label225;
+                        }
+                    }
+
+                    try {
+                        var49 = var14.getFeatureName();
+                    } catch (Exception var19) {
+                        break label225;
+                    }
+
+                    var2 = var49;
+                    if (var49 == null) {
+                        var2 = "";
+                    }
+
+                    label159: {
+                        label158: {
+                            try {
+                                if (var2.length() > 0) {
+                                    break label158;
                                 }
-                                CharSequence $this$any$iv2 = $this$any$iv;
-                                char element$iv = $this$any$iv2.charAt(i);
-                                if (Character.isLetter(element$iv)) {
-                                    i3 = i2;
-                                    break;
-                                } else {
-                                    i++;
-                                    $this$any$iv = $this$any$iv2;
-                                    g = g2;
-                                }
+                            } catch (Exception var24) {
+                                break label225;
                             }
-                            if (i3 != 0) {
-                                r3 = r2;
-                                if (!StringsKt.startsWith(line, fn, false)) {
-                                    name = fn;
-                                    destination$iv$iv2.add(new Place(name, line, a.getLatitude(), a.getLongitude(), null, 0.0d, null, false, 240, null));
-                                    r2 = r3;
-                                    g = g2;
-                                    i = 0;
+
+                            var6 = (((boolean)false) ? 1 : 0);
+                            break label159;
+                        }
+
+                        var6 = (((boolean)true) ? 1 : 0);
+                    }
+
+                    label228: {
+                        if ((var6 != 0)) {
+                            try {
+                                var50 = var2;
+                            } catch (Exception var18) {
+                                break label225;
+                            }
+
+                            var6 = var7;
+
+                            label148: {
+                                while (true) {
+                                    label145: {
+                                        try {
+                                            if (var6 < var50.length()) {
+                                                if (Character.isLetter(var50.charAt(var6))) {
+                                                    break;
+                                                }
+                                                break label145;
+                                            }
+                                        } catch (Exception var23) {
+                                            break label225;
+                                        }
+
+                                        var48 = false;
+                                        break label148;
+                                    }
+
+                                    var6++;
+                                }
+
+                                var48 = true;
+                            }
+
+                            if (var48) {
+                                var9 = var37;
+
+                                try {
+                                    if (!StringsKt.startsWith(var56, var2, false)) {
+                                        break label228;
+                                    }
+                                } catch (Exception var22) {
+                                    break label225;
                                 }
                             } else {
-                                r3 = r2;
+                                var9 = var37;
                             }
                         } else {
-                            g2 = g;
-                            r3 = r2;
+                            var9 = var37;
                         }
-                        name = StringsKt.substringBefore(line, ",", line);
-                        destination$iv$iv2.add(new Place(name, line, a.getLatitude(), a.getLongitude(), null, 0.0d, null, false, 240, null));
-                        r2 = r3;
-                        g = g2;
-                        i = 0;
-                    } catch (Exception e3) {
-                        list = r;
-                        final List found2 = list;
-                        this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda9
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                DestinationActivity.androidSearch$lambda$48$lambda$47($seq, this$0, found2);
-                            }
-                        });
+
+                        try {
+                            var2 = StringsKt.substringBefore(var56, ",", var56);
+                        } catch (Exception var17) {
+                            break label225;
+                        }
+
+                        var37 = var9;
                     }
-                    r = null;
+
+                    try {
+                        DestinationActivity.Place var52 = new DestinationActivity.Place(
+                            var2, var56, var14.getLatitude(), var14.getLongitude(), null, 0.0, null, false, 240, null
+                        );
+                        var57.add(var52);
+                    } catch (Exception var16) {
+                        break label225;
+                    }
                 }
-                r = null;
-                list = (List) destination$iv$iv2;
-                final List found22 = list;
-                this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda9
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        DestinationActivity.androidSearch$lambda$48$lambda$47($seq, this$0, found22);
-                    }
-                });
+
+                try {
+                    var38 = var57;
+                    break label223;
+                } catch (Exception var15) {
+                }
             }
+
+            var38 = null;
         }
-        z = true;
-        if (!z) {
-        }
-        List $this$filter$iv2 = r2 != null ? CollectionsKt.emptyList() : r2;
-        Collection destination$iv$iv3 = new ArrayList();
-        while (r12.hasNext()) {
-        }
-        Iterable $this$map$iv2 = (List) destination$iv$iv3;
-        Collection destination$iv$iv22 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv2, 10));
-        while (r12.hasNext()) {
-        }
-        r = null;
-        list = (List) destination$iv$iv22;
-        final List found222 = list;
-        this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.DestinationActivity$$ExternalSyntheticLambda9
-            @Override // java.lang.Runnable
-            public final void run() {
-                DestinationActivity.androidSearch$lambda$48$lambda$47($seq, this$0, found222);
-            }
-        });
+
+        var0.ui.post(new DestinationActivity$$ExternalSyntheticLambda9(var3, var0, var38));
     }
 
     /* JADX INFO: Access modifiers changed from: private */

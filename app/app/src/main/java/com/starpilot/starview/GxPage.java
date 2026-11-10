@@ -75,6 +75,11 @@ import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.view.ViewGroup.LayoutParams;
+import java.util.Map.Entry;
+import kotlin.jvm.internal.Ref.ObjectRef;
 
 /* compiled from: GxKit.kt */
 public abstract class GxPage extends FrameLayout {
@@ -95,26 +100,26 @@ public abstract class GxPage extends FrameLayout {
 
     public abstract void build();
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxPage(Activity act, GxHost gx) {
-        super(act);
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(gx, "gx");
-        this.act = act;
-        this.gx = gx;
-        this.ui = new CarUi(this.act, false, 2, null);
+    /* VF: from Vineflower (jadx: ) */
+    public GxPage(Activity var1, GxHost var2) {
+        super((Context)var1);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "gx");
+        this.act = var1;
+        this.gx = var2;
+        this.ui = new CarUi((Context)this.act, false, 2, null);
         this.main = new Handler(Looper.getMainLooper());
-        NestedScrollView $this$scroll_u24lambda_u240 = new NestedScrollView(this.act);
-        $this$scroll_u24lambda_u240.setFillViewport(true);
-        this.scroll = $this$scroll_u24lambda_u240;
-        LinearLayout $this$col_u24lambda_u241 = new LinearLayout(this.act);
-        $this$col_u24lambda_u241.setOrientation(1);
-        $this$col_u24lambda_u241.setPadding(this.ui.dp(10), this.ui.dp(4), this.ui.dp(24), this.ui.dp(60));
-        this.col = $this$col_u24lambda_u241;
+        NestedScrollView var3 = new NestedScrollView((Context)this.act);
+        var3.setFillViewport(true);
+        this.scroll = var3;
+        LinearLayout var4 = new LinearLayout((Context)this.act);
+        var4.setOrientation(1);
+        var4.setPadding(this.ui.dp(10), this.ui.dp(4), this.ui.dp(24), this.ui.dp(60));
+        this.col = var4;
         this.polls = new ArrayList<>();
         this.pollRunners = new ArrayList<>();
-        this.scroll.addView(this.col, new FrameLayout.LayoutParams(-1, -2));
-        addView(this.scroll, new FrameLayout.LayoutParams(-1, -1));
+        this.scroll.addView((View)this.col, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -2)));
+        this.addView((View)this.scroll, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
     }
 
     public final Activity getAct() {
@@ -672,15 +677,17 @@ public abstract class GxPage extends FrameLayout {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void upload$default(GxPage gxPage, String str, List list, Map map, Function2 function2, int i, Object obj) {
-        if (obj != null) {
+    /* VF: from Vineflower (jadx: ) */
+    public static void upload$default(GxPage var0, String var1, List var2, Map var3, Function2 var4, int var5, Object var6) {
+        if (var6 == null) {
+            if ((var5 & 4) != 0) {
+                var3 = MapsKt.emptyMap();
+            }
+
+            var0.upload(var1, var2, var3, var4);
+        } else {
             throw new UnsupportedOperationException("Super calls with default arguments not supported in this target, function: upload");
         }
-        if ((i & 4) != 0) {
-            map = MapsKt.emptyMap();
-        }
-        gxPage.upload(str, list, map, function2);
     }
 
     public final void upload(String path, List<Triple<String, String, Pair<byte[], String>>> files, Map<String, String> fields, final Function2<? super String, ? super JSONObject, Unit> then) {
@@ -906,21 +913,22 @@ public abstract class GxPage extends FrameLayout {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final void download$lambda$29$lambda$28(GxPage this$0, Ref.ObjectRef $msg) {
-        this$0.toast((String) $msg.element);
+    /* VF: from Vineflower (jadx: ) */
+    public static final void download$lambda$29$lambda$28(GxPage var0, ObjectRef var1) {
+        var0.toast((String)var1.element);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void loadImage$default(GxPage gxPage, String str, ImageView imageView, Function1 function1, int i, Object obj) {
-        if (obj != null) {
+    /* VF: from Vineflower (jadx: ) */
+    public static void loadImage$default(GxPage var0, String var1, ImageView var2, Function1 var3, int var4, Object var5) {
+        if (var5 == null) {
+            if ((var4 & 4) != 0) {
+                var3 = null;
+            }
+
+            var0.loadImage(var1, var2, var3);
+        } else {
             throw new UnsupportedOperationException("Super calls with default arguments not supported in this target, function: loadImage");
         }
-        if ((i & 4) != 0) {
-            function1 = null;
-        }
-        gxPage.loadImage(str, imageView, function1);
     }
 
     public final void loadImage(final String path, final ImageView into, final Function1<? super Bitmap, Unit> then) {
@@ -1001,15 +1009,17 @@ public abstract class GxPage extends FrameLayout {
         return (api == null || (string = api.string(key)) == null) ? "" : string;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void putParam$default(GxPage gxPage, String str, Object obj, Function1 function1, int i, Object obj2) {
-        if (obj2 != null) {
+    /* VF: from Vineflower (jadx: ) */
+    public static void putParam$default(GxPage var0, String var1, Object var2, Function1 var3, int var4, Object var5) {
+        if (var5 == null) {
+            if ((var4 & 4) != 0) {
+                var3 = null;
+            }
+
+            var0.putParam(var1, var2, var3);
+        } else {
             throw new UnsupportedOperationException("Super calls with default arguments not supported in this target, function: putParam");
         }
-        if ((i & 4) != 0) {
-            function1 = null;
-        }
-        gxPage.putParam(str, obj, function1);
     }
 
     public final void putParam(String key, Object value, final Function1<? super String, Unit> then) {
@@ -1413,50 +1423,56 @@ public abstract class GxPage extends FrameLayout {
         return gxPage.choice(str, str2, list, i, viewGroup, function1);
     }
 
-    /* JADX WARN: Type inference failed for: r1v4, types: [T, kotlin.jvm.functions.Function1] */
-    public final Function1<Integer, Unit> choice(String title, String desc, List<String> labels, int selected, ViewGroup into, final Function1<? super Integer, Unit> onPick) {
-        Function1 function1;
-        Intrinsics.checkNotNullParameter(title, "title");
-        Intrinsics.checkNotNullParameter(labels, "labels");
-        Intrinsics.checkNotNullParameter(into, "into");
-        Intrinsics.checkNotNullParameter(onPick, "onPick");
-        LinearLayout c = card(into);
-        text$default(this, title, c, 21.0f, CarUi.Companion.getTEXT(), false, 16, null);
-        String str = desc;
-        if (!(str == null || StringsKt.isBlank(str))) {
-            text$default(this, desc, c, 0.0f, 0, false, 28, null);
-        }
-        final Ref.ObjectRef paint = new Ref.ObjectRef();
-        Pair<LinearLayout, Function1<Integer, Unit>> chips = this.ui.chips(labels, new Function1() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda7
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit choice$lambda$45;
-                choice$lambda$45 = GxPage.choice$lambda$45(paint, onPick, ((Integer) obj).intValue());
-                return choice$lambda$45;
-            }
-        });
-        LinearLayout bar = chips.component1();
-        paint.element = (Function1) chips.component2();
-        bar.setPadding(0, this.ui.dp(10), 0, 0);
-        c.addView(bar);
-        if (paint.element == 0) {
-            Intrinsics.throwUninitializedPropertyAccessException("paint");
-            function1 = null;
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public final Function1<Integer, Unit> choice(String var1, String var2, List<String> var3, int var4, ViewGroup var5, Function1<? super Integer, Unit> var6) {
+        Intrinsics.checkNotNullParameter(var1, "title");
+        Intrinsics.checkNotNullParameter(var3, "labels");
+        Intrinsics.checkNotNullParameter(var5, "into");
+        Intrinsics.checkNotNullParameter(var6, "onPick");
+        LinearLayout var8 = this.card(var5);
+        text$default(this, var1, (ViewGroup)var8, 21.0F, CarUi.Companion.getTEXT(), false, 16, null);
+        CharSequence var9 = var2;
+        boolean var7;
+        if (var9 != null && !StringsKt.isBlank(var9)) {
+            var7 = false;
         } else {
-            function1 = (Function1) paint.element;
+            var7 = true;
         }
-        function1.invoke(Integer.valueOf(selected));
-        if (paint.element != 0) {
-            return (Function1) paint.element;
+
+        if (!var7) {
+            text$default(this, var2, (ViewGroup)var8, 0.0F, 0, false, 28, null);
         }
-        Intrinsics.throwUninitializedPropertyAccessException("paint");
-        return null;
+
+        ObjectRef var16 = new ObjectRef();
+        Pair var14 = this.ui.chips(var3, new GxPage$$ExternalSyntheticLambda7(var16, var6));
+        LinearLayout var10 = (LinearLayout)var14.component1();
+        var16.element = (T)((Function1)var14.component2());
+        var10.setPadding(0, this.ui.dp(10), 0, 0);
+        var8.addView((View)var10);
+        Function1 var11 = var16.element;
+        Object var15 = null;
+        if (var11 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("paint");
+            var11 = null;
+        } else {
+            var11 = (Function1)var16.element;
+        }
+
+        var11.invoke(var4);
+        if (var16.element == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("paint");
+            var11 = (Function1)var15;
+        } else {
+            var11 = (Function1)var16.element;
+        }
+
+        return var11;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit choice$lambda$45(Ref.ObjectRef $paint, Function1 $onPick, int i) {
         Function1 function1;
-        if ($paint.element == 0) {
+        if (!$paint.element) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
             function1 = null;
         } else {
@@ -1665,67 +1681,50 @@ public abstract class GxPage extends FrameLayout {
         return iv;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ Function1 tabs$default(GxPage gxPage, List list, int i, Function1 function1, Function2 function2, int i2, Object obj) {
-        if (obj != null) {
+    /* VF: from Vineflower (jadx: ) */
+    public static Function1 tabs$default(GxPage var0, List var1, int var2, Function1 var3, Function2 var4, int var5, Object var6) {
+        if (var6 == null) {
+            if ((var5 & 2) != 0) {
+                var2 = 0;
+            }
+
+            if ((var5 & 4) != 0) {
+                var3 = null;
+            }
+
+            return var0.tabs(var1, var2, var3, var4);
+        } else {
             throw new UnsupportedOperationException("Super calls with default arguments not supported in this target, function: tabs");
         }
-        if ((i2 & 2) != 0) {
-            i = 0;
-        }
-        if ((i2 & 4) != 0) {
-            function1 = null;
-        }
-        return gxPage.tabs(list, i, function1, function2);
     }
 
-    /* JADX WARN: Type inference failed for: r7v3, types: [T, com.starpilot.starview.GxPage$$ExternalSyntheticLambda29] */
-    /* JADX WARN: Type inference failed for: r9v1, types: [T, kotlin.jvm.functions.Function1] */
-    public final Function1<Integer, Unit> tabs(List<String> labels, int initial, final Function1<? super Integer, Unit> onSelect, final Function2<? super Integer, ? super LinearLayout, Unit> build) {
-        Intrinsics.checkNotNullParameter(labels, "labels");
-        Intrinsics.checkNotNullParameter(build, "build");
-        final Ref.ObjectRef paintTabs = new Ref.ObjectRef();
-        final Ref.ObjectRef selectRef = new Ref.ObjectRef();
-        Pair<View, Function1<Integer, Unit>> browserTabs = this.ui.browserTabs(labels, 1, new Function1() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda28
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit tabs$lambda$61;
-                tabs$lambda$61 = GxPage.tabs$lambda$61(selectRef, ((Integer) obj).intValue());
-                return tabs$lambda$61;
-            }
-        });
-        View strip = browserTabs.component1();
-        paintTabs.element = (Function1) browserTabs.component2();
-        this.col.addView(strip, new LinearLayout.LayoutParams(-1, -2));
-        final LinearLayout $this$tabs_u24lambda_u2462 = new LinearLayout(this.act);
-        $this$tabs_u24lambda_u2462.setOrientation(1);
-        $this$tabs_u24lambda_u2462.setBackground(this.ui.corners(CarUi.Companion.getSECTION(), 0, 0, 14, 14));
-        $this$tabs_u24lambda_u2462.setPadding(this.ui.dp(14), this.ui.dp(14), this.ui.dp(14), this.ui.dp(6));
-        this.col.addView($this$tabs_u24lambda_u2462, new LinearLayout.LayoutParams(-1, -2));
-        final HashMap boxes = new HashMap();
-        selectRef.element = new Function1() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda29
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit tabs$lambda$66;
-                tabs$lambda$66 = GxPage.tabs$lambda$66(paintTabs, boxes, onSelect, this, $this$tabs_u24lambda_u2462, build, ((Integer) obj).intValue());
-                return tabs$lambda$66;
-            }
-        };
-        tabs$select(paintTabs, boxes, onSelect, this, $this$tabs_u24lambda_u2462, build, RangesKt.coerceIn(initial, 0, labels.size() - 1));
-        return new Function1() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda30
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit tabs$lambda$67;
-                tabs$lambda$67 = GxPage.tabs$lambda$67(paintTabs, boxes, onSelect, this, $this$tabs_u24lambda_u2462, build, ((Integer) obj).intValue());
-                return tabs$lambda$67;
-            }
-        };
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public final Function1<Integer, Unit> tabs(
+        List<String> var1, int var2, Function1<? super Integer, Unit> var3, Function2<? super Integer, ? super LinearLayout, Unit> var4
+    ) {
+        Intrinsics.checkNotNullParameter(var1, "labels");
+        Intrinsics.checkNotNullParameter(var4, "build");
+        ObjectRef var5 = new ObjectRef();
+        ObjectRef var6 = new ObjectRef();
+        Pair var8 = this.ui.browserTabs(var1, 1, new GxPage$$ExternalSyntheticLambda28(var6));
+        View var7 = (View)var8.component1();
+        var5.element = (T)((Function1)var8.component2());
+        this.col.addView(var7, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
+        LinearLayout var10 = new LinearLayout((Context)this.act);
+        var10.setOrientation(1);
+        var10.setBackground((Drawable)this.ui.corners(CarUi.Companion.getSECTION(), 0, 0, 14, 14));
+        var10.setPadding(this.ui.dp(14), this.ui.dp(14), this.ui.dp(14), this.ui.dp(6));
+        this.col.addView((View)var10, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
+        HashMap var9 = new HashMap();
+        var6.element = (T)(new GxPage$$ExternalSyntheticLambda29(var5, var9, var3, this, var10, var4));
+        tabs$select(var5, var9, var3, this, var10, var4, RangesKt.coerceIn(var2, 0, var1.size() - 1));
+        return new GxPage$$ExternalSyntheticLambda30(var5, var9, var3, this, var10, var4);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit tabs$lambda$61(Ref.ObjectRef $selectRef, int i) {
         Function1 function1;
-        if ($selectRef.element == 0) {
+        if (!$selectRef.element) {
             Intrinsics.throwUninitializedPropertyAccessException("selectRef");
             function1 = null;
         } else {
@@ -1735,59 +1734,52 @@ public abstract class GxPage extends FrameLayout {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:21:0x00d9  */
-    /* JADX WARN: Removed duplicated region for block: B:24:? A[RETURN, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private static final void tabs$select(Ref.ObjectRef<Function1<Integer, Unit>> objectRef, HashMap<Integer, LinearLayout> hashMap, Function1<? super Integer, Unit> function1, GxPage this$0, LinearLayout holder, Function2<? super Integer, ? super LinearLayout, Unit> function2, int i) {
-        Function1<Integer, Unit> function12;
-        LinearLayout linearLayout;
-        if (objectRef.element == null) {
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private static final void tabs$select(
+        ObjectRef<Function1<Integer, Unit>> var0,
+        HashMap<Integer, LinearLayout> var1,
+        Function1<? super Integer, Unit> var2,
+        GxPage var3,
+        LinearLayout var4,
+        Function2<? super Integer, ? super LinearLayout, Unit> var5,
+        int var6
+    ) {
+        Function1 var9;
+        if (var0.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paintTabs");
-            function12 = null;
+            var9 = null;
         } else {
-            function12 = objectRef.element;
+            var9 = (Function1)var0.element;
         }
-        function12.invoke(Integer.valueOf(i));
-        Iterator<Map.Entry<Integer, LinearLayout>> it = hashMap.entrySet().iterator();
-        while (it.hasNext()) {
-            LinearLayout b = it.next().getValue();
-            b.setVisibility(8);
+
+        var9.invoke(var6);
+        Iterator var10 = var1.entrySet().iterator();
+
+        while (var10.hasNext()) {
+            ((LinearLayout)((java.util.Map.Entry)var10.next()).getValue()).setVisibility(8);
         }
-        HashMap<Integer, LinearLayout> $this$getOrPut$iv = hashMap;
-        Integer valueOf = Integer.valueOf(i);
-        LinearLayout linearLayout2 = $this$getOrPut$iv.get(valueOf);
-        if (linearLayout2 == null) {
-            LinearLayout $this$tabs_u24select_u24lambda_u2465_u24lambda_u2463 = new LinearLayout(this$0.act);
-            $this$tabs_u24select_u24lambda_u2465_u24lambda_u2463.setOrientation(1);
-            holder.addView($this$tabs_u24select_u24lambda_u2465_u24lambda_u2463, new LinearLayout.LayoutParams(-1, -2));
+
+        Map var12 = var1;
+        Integer var7 = var6;
+        Object var11 = var12.get(var7);
+        if (var11 == null) {
+            var11 = new LinearLayout((Context)var3.act);
+            var11.setOrientation(1);
+            var4.addView((View)var11, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
+
             try {
-            } catch (Exception e) {
-                e = e;
+                var5.invoke(var6, var11);
+            } catch (Exception var8) {
+                Log.e("StarView/Gx", "tab " + var6, var8);
+                var11.addView((View)var3.empty("This tab failed to build:\n" + var8));
             }
-            try {
-                function2.invoke(Integer.valueOf(i), $this$tabs_u24select_u24lambda_u2465_u24lambda_u2463);
-            } catch (Exception e2) {
-                e = e2;
-                Log.e("StarView/Gx", "tab " + i, e);
-                $this$tabs_u24select_u24lambda_u2465_u24lambda_u2463.addView(this$0.empty("This tab failed to build:\n" + e));
-                linearLayout = $this$tabs_u24select_u24lambda_u2465_u24lambda_u2463;
-                $this$getOrPut$iv.put(valueOf, linearLayout);
-                LinearLayout b2 = linearLayout;
-                b2.setVisibility(0);
-                if (function1 == null) {
-                }
-            }
-            linearLayout = $this$tabs_u24select_u24lambda_u2465_u24lambda_u2463;
-            $this$getOrPut$iv.put(valueOf, linearLayout);
-        } else {
-            linearLayout = linearLayout2;
+
+            var12.put(var7, var11);
         }
-        LinearLayout b22 = linearLayout;
-        b22.setVisibility(0);
-        if (function1 == null) {
-            function1.invoke(Integer.valueOf(i));
+
+        ((LinearLayout)var11).setVisibility(0);
+        if (var2 != null) {
+            var2.invoke(var6);
         }
     }
 

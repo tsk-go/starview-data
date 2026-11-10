@@ -10,12 +10,12 @@ public final class FlowRow extends ViewGroup {
     private final int hGap;
     private final int vGap;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public FlowRow(Context ctx, int hGap, int vGap) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        this.hGap = hGap;
-        this.vGap = vGap;
+    /* VF: from Vineflower (jadx: ) */
+    public FlowRow(Context var1, int var2, int var3) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        this.hGap = var2;
+        this.vGap = var3;
     }
 
     @Override // android.view.View

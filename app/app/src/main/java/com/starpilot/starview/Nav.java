@@ -1409,12 +1409,13 @@ public final class Nav {
         return new Line(mx, my3, cum3, from, to, lv, inc, steps, CollectionsKt.toDoubleArray(vAt), vText);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void choose$default(Nav nav, DataClient dataClient, int i, Function1 function1, int i2, Object obj) {
-        if ((i2 & 4) != 0) {
-            function1 = null;
+    /* VF: from Vineflower (jadx: ) */
+    public static void choose$default(Nav var0, DataClient var1, int var2, Function1 var3, int var4, Object var5) {
+        if ((var4 & 4) != 0) {
+            var3 = null;
         }
-        nav.choose(dataClient, i, function1);
+
+        var0.choose(var1, var2, var3);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1443,12 +1444,13 @@ public final class Nav {
         });
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void setOptions$default(Nav nav, DataClient dataClient, JSONObject jSONObject, Function1 function1, int i, Object obj) {
-        if ((i & 4) != 0) {
-            function1 = null;
+    /* VF: from Vineflower (jadx: ) */
+    public static void setOptions$default(Nav var0, DataClient var1, JSONObject var2, Function1 var3, int var4, Object var5) {
+        if ((var4 & 4) != 0) {
+            var3 = null;
         }
-        nav.setOptions(dataClient, jSONObject, function1);
+
+        var0.setOptions(var1, var2, var3);
     }
 
     public final void setOptions(final DataClient data, JSONObject patch, final Function1<? super String, Unit> then) {
@@ -1481,12 +1483,13 @@ public final class Nav {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void cancel$default(Nav nav, DataClient dataClient, Function1 function1, int i, Object obj) {
-        if ((i & 2) != 0) {
-            function1 = null;
+    /* VF: from Vineflower (jadx: ) */
+    public static void cancel$default(Nav var0, DataClient var1, Function1 var2, int var3, Object var4) {
+        if ((var3 & 2) != 0) {
+            var2 = null;
         }
-        nav.cancel(dataClient, function1);
+
+        var0.cancel(var1, var2);
     }
 
     /* JADX INFO: Access modifiers changed from: private */

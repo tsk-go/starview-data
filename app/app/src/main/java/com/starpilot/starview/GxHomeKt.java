@@ -29,39 +29,61 @@ public final class GxHomeKt {
     private static final DateTimeFormatter gxHomeDateFmt = DateTimeFormatter.ofPattern("MMM d", Locale.US);
     private static final DateTimeFormatter gxHomeTimeFmt = DateTimeFormatter.ofPattern("h:mm a", Locale.US);
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:13:0x006b  */
-    /* JADX WARN: Removed duplicated region for block: B:16:? A[RETURN, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final double gxHomeNum(Object v) {
-        double d;
-        if (v != null && !Intrinsics.areEqual(v, JSONObject.NULL)) {
-            if (v instanceof Number) {
-                d = ((Number) v).doubleValue();
-            } else if (v instanceof Boolean) {
-                if (((Boolean) v).booleanValue()) {
-                    d = 1.0d;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public static final double gxHomeNum(Object var0) {
+        double var1;
+        double var3;
+        boolean var6;
+        label48: {
+            var6 = true;
+            var3 = 0.0;
+            if (var0 != null && !Intrinsics.areEqual(var0, JSONObject.NULL)) {
+                if (var0 instanceof Number) {
+                    var1 = ((Number)var0).doubleValue();
+                    break label48;
                 }
-            } else if (v instanceof String) {
-                String obj = StringsKt.trim((CharSequence) v).toString();
-                if (obj.length() == 0) {
-                    obj = "0";
-                }
-                Double doubleOrNull = StringsKt.toDoubleOrNull(obj);
-                if (doubleOrNull != null) {
-                    d = doubleOrNull.doubleValue();
+
+                if (var0 instanceof Boolean) {
+                    if ((Boolean)var0) {
+                        var1 = 1.0;
+                        break label48;
+                    }
+                } else if (var0 instanceof String) {
+                    var0 = StringsKt.trim(var0).toString();
+                    boolean var5;
+                    if (var0.length() == 0) {
+                        var5 = true;
+                    } else {
+                        var5 = false;
+                    }
+
+                    if (var5) {
+                        var0 = "0";
+                    }
+
+                    Double var8 = StringsKt.toDoubleOrNull(var0);
+                    if (var8 != null) {
+                        var1 = var8;
+                        break label48;
+                    }
                 }
             }
-            if (Double.isInfinite(d) && !Double.isNaN(d)) {
-                return 0.0d;
-            }
-            return d;
+
+            var1 = 0.0;
         }
-        d = 0.0d;
-        if (Double.isInfinite(d) && !Double.isNaN(d)) {
+
+        boolean var9;
+        if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
+            var9 = var6;
+        } else {
+            var9 = false;
         }
+
+        if (var9) {
+            var3 = var1;
+        }
+
+        return var3;
     }
 
     /* JADX INFO: Access modifiers changed from: private */

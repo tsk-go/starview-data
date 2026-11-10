@@ -15,6 +15,9 @@ import kotlin.TuplesKt;
 import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
+import android.graphics.Paint.Align;
+import android.graphics.Paint.Style;
+import java.util.Iterator;
 
 /* compiled from: BigUiViews.kt */
 public final class DevSidebarView extends View {
@@ -23,22 +26,22 @@ public final class DevSidebarView extends View {
     public Telemetry t;
     private final Paint tp;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public DevSidebarView(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Paint $this$box_u24lambda_u240 = new Paint(1);
-        $this$box_u24lambda_u240.setStyle(Paint.Style.STROKE);
-        $this$box_u24lambda_u240.setColor(Color.argb(85, 255, 255, 255));
-        this.box = $this$box_u24lambda_u240;
-        Paint $this$bg_u24lambda_u241 = new Paint(1);
-        $this$bg_u24lambda_u241.setColor(Color.argb(200, 0, 0, 0));
-        this.bg = $this$bg_u24lambda_u241;
-        Paint $this$tp_u24lambda_u242 = new Paint(1);
-        $this$tp_u24lambda_u242.setColor(-1);
-        $this$tp_u24lambda_u242.setTextAlign(Paint.Align.CENTER);
-        $this$tp_u24lambda_u242.setTypeface(Typeface.create(Typeface.DEFAULT, 1));
-        this.tp = $this$tp_u24lambda_u242;
+    /* VF: from Vineflower (jadx: ) */
+    public DevSidebarView(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Paint var3 = new Paint(1);
+        var3.setStyle(android.graphics.Paint.Style.STROKE);
+        var3.setColor(Color.argb(85, 255, 255, 255));
+        this.box = var3;
+        Paint var4 = new Paint(1);
+        var4.setColor(Color.argb(200, 0, 0, 0));
+        this.bg = var4;
+        Paint var5 = new Paint(1);
+        var5.setColor(-1);
+        var5.setTextAlign(android.graphics.Paint.Align.CENTER);
+        var5.setTypeface(Typeface.create(Typeface.DEFAULT, 1));
+        this.tp = var5;
     }
 
     public /* synthetic */ DevSidebarView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {
@@ -109,71 +112,61 @@ public final class DevSidebarView extends View {
         return rows$shown(f, i, str);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    @Override // android.view.View
-    protected void onDraw(Canvas c) {
-        float gap;
-        float dpf;
-        int n;
-        float rr;
-        float dpf2;
-        float dpf3;
-        Intrinsics.checkNotNullParameter(c, "c");
-        if (this.t == null) {
-            return;
-        }
-        int i = 1;
-        List<Pair> rows = rows$default(this, 0L, 1, null);
-        gap = BigUiViewsKt.dpf(this, 6.0f);
-        int n2 = rows.size();
-        float h = (getHeight() - ((n2 - 1) * gap)) / n2;
-        Paint paint = this.box;
-        dpf = BigUiViewsKt.dpf(this, 1.5f);
-        paint.setStrokeWidth(dpf);
-        int i2 = 0;
-        for (Pair r : rows) {
-            int i3 = i2;
-            i2 += i;
-            float top = i3 * (h + gap);
-            List rows2 = rows;
-            RectF rect = new RectF(this.box.getStrokeWidth(), this.box.getStrokeWidth() + top, getWidth() - this.box.getStrokeWidth(), (top + h) - this.box.getStrokeWidth());
-            float rr2 = Math.min(rect.height(), rect.width()) * 0.3f;
-            c.drawRoundRect(rect, rr2, rr2, this.bg);
-            c.drawRoundRect(rect, rr2, rr2, this.box);
-            int i4 = 1;
-            int i5 = 0;
-            for (String line : CollectionsKt.listOf((Object[]) new String[]{r.getFirst(), r.getSecond()})) {
-                int j = i5;
-                i5 += i4;
-                float size = h * 0.26f;
-                float gap2 = gap;
-                this.tp.setTextSize(size);
+    /* VF: from Vineflower (jadx: ) */
+    protected void onDraw(Canvas var1) {
+        Intrinsics.checkNotNullParameter(var1, "c");
+        if (this.t != null) {
+            List var12 = rows$default(this, 0L, 1, null);
+            float var3 = BigUiViewsKt.dpf(this, 6.0F);
+            int var10 = var12.size();
+            float var5 = (this.getHeight() - (var10 - 1) * var3) / var10;
+            this.box.setStrokeWidth(BigUiViewsKt.dpf(this, 1.5F));
+            Iterator var13 = var12.iterator();
+            int var8 = 0;
+
+            while (var13.hasNext()) {
+                int var11 = var8 + 1;
+                Pair var15 = (Pair)var13.next();
+                float var6 = var8 * (var5 + var3);
+                RectF var14 = new RectF(
+                    this.box.getStrokeWidth(),
+                    this.box.getStrokeWidth() + var6,
+                    this.getWidth() - this.box.getStrokeWidth(),
+                    var6 + var5 - this.box.getStrokeWidth()
+                );
+                float var2 = Math.min(var14.height(), var14.width()) * 0.3F;
+                var1.drawRoundRect(var14, var2, var2, this.bg);
+                var1.drawRoundRect(var14, var2, var2, this.box);
+                Iterator var20 = CollectionsKt.listOf(new String[]{(String)var15.getFirst(), (String)var15.getSecond()}).iterator();
+                int var9 = 0;
+
                 while (true) {
-                    float measureText = this.tp.measureText(line);
-                    float width = rect.width();
-                    n = n2;
-                    rr = rr2;
-                    dpf2 = BigUiViewsKt.dpf(this, 10.0f);
-                    if (measureText <= width - dpf2) {
+                    var10 = var9;
+                    if (!var20.hasNext()) {
+                        var10 = var10;
+                        var8 = var11;
                         break;
                     }
-                    dpf3 = BigUiViewsKt.dpf(this, 8.0f);
-                    if (size <= dpf3) {
-                        break;
+
+                    var9++;
+                    String var16 = (String)var20.next();
+                    float var4 = var5 * 0.26F;
+                    this.tp.setTextSize(var4);
+
+                    while (this.tp.measureText(var16) > var14.width() - BigUiViewsKt.dpf(this, 10.0F) && var4 > BigUiViewsKt.dpf(this, 8.0F)) {
+                        this.tp.setTextSize(--var4);
                     }
-                    size -= 1.0f;
-                    this.tp.setTextSize(size);
-                    n2 = n;
-                    rr2 = rr;
+
+                    float var7 = var14.centerX();
+                    if (var10 == 0) {
+                        var4 = 0.4F;
+                    } else {
+                        var4 = 0.78F;
+                    }
+
+                    var1.drawText(var16, var7, var4 * var5 + var6, this.tp);
                 }
-                c.drawText(line, rect.centerX(), ((j == 0 ? 0.4f : 0.78f) * h) + top, this.tp);
-                gap = gap2;
-                n2 = n;
-                rr2 = rr;
-                i4 = 1;
             }
-            rows = rows2;
-            i = 1;
         }
     }
 }

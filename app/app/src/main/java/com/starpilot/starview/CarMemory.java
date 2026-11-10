@@ -279,33 +279,46 @@ public final class CarMemory {
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:27:0x0063 A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:30:? A[LOOP:0: B:8:0x0018->B:30:?, LOOP_END, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final boolean beside(int side) {
-        Car it;
-        Iterable $this$any$iv = this.ghosts;
-        if (($this$any$iv instanceof Collection) && ((Collection) $this$any$iv).isEmpty()) {
-            return false;
-        }
-        for (Object element$iv : $this$any$iv) {
-            Car it2 = (Car) element$iv;
-            double y = it2.getY();
-            if (side >= 0 ? y < 0.0d : y > 0.0d) {
-                double x = it2.getX();
-                if ((-10.0d <= x && x <= 5.0d) && Math.abs(it2.getY()) <= 5.0d) {
-                    it = 1;
-                    if (it == null) {
-                        return true;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public final boolean beside(int var1) {
+        var var7 = this.ghosts;
+        boolean var6 = var7 instanceof Collection;
+        boolean var5 = false;
+        if (!var6 || !((Collection)var7).isEmpty()) {
+            for (CarMemory.Car var12 : var7) {
+                double var2 = var12.getY();
+                boolean var4;
+                if (var1 < 0 ? !(var2 > 0.0) : !(var2 < 0.0)) {
+                    var4 = false;
+                } else {
+                    var4 = true;
+                }
+
+                label40: {
+                    if (var4) {
+                        var2 = var12.getX();
+                        if (-10.0 <= var2 && var2 <= 5.0) {
+                            var4 = true;
+                        } else {
+                            var4 = false;
+                        }
+
+                        if (var4 && Math.abs(var12.getY()) <= 5.0) {
+                            var4 = true;
+                            break label40;
+                        }
                     }
+
+                    var4 = false;
+                }
+
+                if (var4) {
+                    var5 = true;
+                    break;
                 }
             }
-            it = null;
-            if (it == null) {
-            }
         }
-        return false;
+
+        return var5;
     }
 }

@@ -24,22 +24,23 @@ import kotlin.text.StringsKt;
 public final class RoadDataView extends CardPage {
     private final RoadDataView$poll$1 poll;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    /* JADX WARN: Type inference failed for: r0v2, types: [com.starpilot.starview.RoadDataView$poll$1] */
-    public RoadDataView(Context ctx, CarUi ui) {
-        super(ctx, ui);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
-        this.poll = new Runnable() { // from class: com.starpilot.starview.RoadDataView$poll$1
-            @Override // java.lang.Runnable
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public RoadDataView(Context var1, CarUi var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
+        this.poll = new Runnable() {
+            final RoadDataView this$0 = RoadDataView.this;
+
+            @Override
             public void run() {
-                RoadDataView.this.paint();
+                this.this$0.paint();
                 if (RoadData.INSTANCE.getBusy()) {
-                    RoadDataView.this.getMain().postDelayed(this, 1000L);
+                    this.this$0.getMain().postDelayed(this, 1000L);
                 }
             }
         };
-        paint();
+        this.paint();
     }
 
     @Override // com.starpilot.starview.CardPage
@@ -212,7 +213,7 @@ public final class RoadDataView extends CardPage {
         RoadData roadData = RoadData.INSTANCE;
         Context context = this$0.getContext();
         Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
-        final String err = roadData.m1072import(context, $uri);
+        final String err = roadData.importFile(context, $uri);
         this$0.getMain().post(new Runnable() { // from class: com.starpilot.starview.RoadDataView$$ExternalSyntheticLambda1
             @Override // java.lang.Runnable
             public final void run() {

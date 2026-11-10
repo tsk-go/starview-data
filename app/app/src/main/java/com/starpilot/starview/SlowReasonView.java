@@ -29,6 +29,7 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.StringCompanionObject;
 import kotlin.text.StringsKt;
+import android.graphics.Paint.Align;
 
 /* compiled from: SlowReasonView.kt */
 public final class SlowReasonView extends View {
@@ -42,37 +43,32 @@ public final class SlowReasonView extends View {
     private final Paint title;
     private final TextPaint tp;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public SlowReasonView(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        this.d = getResources().getDisplayMetrics().density;
-        Paint $this$bg_u24lambda_u240 = new Paint(1);
-        $this$bg_u24lambda_u240.setColor(Color.argb(200, 0, 0, 0));
-        this.bg = $this$bg_u24lambda_u240;
+    /* VF: from Vineflower (jadx: ) */
+    public SlowReasonView(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        this.d = this.getResources().getDisplayMetrics().density;
+        Paint var3 = new Paint(1);
+        var3.setColor(Color.argb(200, 0, 0, 0));
+        this.bg = var3;
         this.bar = new Paint(1);
-        Paint $this$title_u24lambda_u241 = new Paint(1);
-        $this$title_u24lambda_u241.setColor(-1);
-        $this$title_u24lambda_u241.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$title_u24lambda_u241.setTextSize(this.d * 21.0f);
-        this.title = $this$title_u24lambda_u241;
-        Paint $this$sub_u24lambda_u242 = new Paint(1);
-        $this$sub_u24lambda_u242.setColor(Color.rgb(200, 208, 222));
-        $this$sub_u24lambda_u242.setTextSize(this.d * 15.0f);
-        this.sub = $this$sub_u24lambda_u242;
-        Paint $this$acc_u24lambda_u243 = new Paint(1);
-        $this$acc_u24lambda_u243.setColor(-1);
-        $this$acc_u24lambda_u243.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$acc_u24lambda_u243.setTextSize(this.d * 17.0f);
-        $this$acc_u24lambda_u243.setTextAlign(Paint.Align.RIGHT);
-        this.acc = $this$acc_u24lambda_u243;
+        Paint var4 = new Paint(1);
+        var4.setColor(-1);
+        var4.setTypeface(Typeface.DEFAULT_BOLD);
+        var4.setTextSize(this.d * 21.0F);
+        this.title = var4;
+        Paint var5 = new Paint(1);
+        var5.setColor(Color.rgb(200, 208, 222));
+        var5.setTextSize(this.d * 15.0F);
+        this.sub = var5;
+        Paint var6 = new Paint(1);
+        var6.setColor(-1);
+        var6.setTypeface(Typeface.DEFAULT_BOLD);
+        var6.setTextSize(this.d * 17.0F);
+        var6.setTextAlign(android.graphics.Paint.Align.RIGHT);
+        this.acc = var6;
         this.tp = new TextPaint(1);
-        setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SlowReasonView$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                SlowReasonView.this.showHistory();
-            }
-        });
+        this.setOnClickListener(new SlowReasonView$$ExternalSyntheticLambda0(this));
     }
 
     public /* synthetic */ SlowReasonView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {

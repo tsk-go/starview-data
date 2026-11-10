@@ -73,45 +73,47 @@ public final class GxModelsKt {
         return format;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:22:0x0089, code lost:
-    
-        if (r4 == null) goto L25;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final String gxModelsFileSizeText(JSONObject m) {
-        String str;
-        Double installed = gxModelsSafeBytes(m, "fileSizeBytes");
-        Double declared = gxModelsSafeBytes(m, "declaredSizeBytes");
-        Double downloaded = gxModelsSafeBytes(m, "downloadedBytes");
-        if (m.optBoolean("partial") || Intrinsics.areEqual(m.optString("sizeStatus"), "partial")) {
-            String str2 = "unknown";
-            if (downloaded != null) {
-                double it = downloaded.doubleValue();
-                str = gxModelsFormatBytes(it);
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final String gxModelsFileSizeText(JSONObject var0) {
+        String var11 = null; String var8 = null; // declarations Vineflower left out
+        Double var4 = gxModelsSafeBytes(var0, "fileSizeBytes");
+        Double var5 = gxModelsSafeBytes(var0, "declaredSizeBytes");
+        Double var3 = gxModelsSafeBytes(var0, "downloadedBytes");
+        if (var0.optBoolean("partial") || Intrinsics.areEqual(var0.optString("sizeStatus"), "partial")) {
+            label39: {
+                var11 = "unknown";
+                if (var3 != null) {
+                    String var9 = gxModelsFormatBytes(var3.doubleValue());
+                    var8 = var9;
+                    if (var9 != null) {
+                        break label39;
+                    }
+                }
+
+                var8 = "unknown";
             }
-            str = "unknown";
-            if (declared != null) {
-                double it2 = declared.doubleValue();
-                String gxModelsFormatBytes = gxModelsFormatBytes(it2);
-                if (gxModelsFormatBytes != null) {
-                    str2 = gxModelsFormatBytes;
+
+            String var10 = var11;
+            if (var5 != null) {
+                double var1 = var5.doubleValue();
+                var10 = gxModelsFormatBytes(var1);
+                if (var10 == null) {
+                    var10 = var11;
                 }
             }
-            return "Partial: " + str + " / " + str2;
-        }
-        if (installed != null && declared != null && !Intrinsics.areEqual(installed, declared)) {
-            return gxModelsFormatBytes(installed.doubleValue()) + " · size mismatch";
-        }
-        if (installed != null) {
-            return gxModelsFormatBytes(installed.doubleValue());
-        }
-        if (declared == null) {
+
+            return "Partial: " + var8 + " / " + var10;
+        } else if (var4 != null && var5 != null && !Intrinsics.areEqual(var4, var5)) {
+            String var7 = gxModelsFormatBytes(var4);
+            return var7 + " · size mismatch";
+        } else if (var4 != null) {
+            return gxModelsFormatBytes(var4);
+        } else if (var5 != null) {
+            String var6 = gxModelsFormatBytes(var5);
+            return var6 + " · declared";
+        } else {
             return "Unavailable";
         }
-        return gxModelsFormatBytes(declared.doubleValue()) + " · declared";
     }
 
     /* JADX INFO: Access modifiers changed from: private */

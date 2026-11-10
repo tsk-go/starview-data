@@ -22,6 +22,7 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.json.JSONObject;
+import android.graphics.Paint.Align;
 
 /* compiled from: BlinkerCardView.kt */
 public final class BlinkerCardView extends View {
@@ -40,43 +41,41 @@ public final class BlinkerCardView extends View {
     public Telemetry t;
     private final Paint txt;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    /* JADX WARN: Type inference failed for: r0v14, types: [com.starpilot.starview.BlinkerCardView$repeat$1] */
-    public BlinkerCardView(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        this.d = getResources().getDisplayMetrics().density;
-        Paint $this$bg_u24lambda_u240 = new Paint(1);
-        $this$bg_u24lambda_u240.setColor(Color.argb(200, 0, 0, 0));
-        this.bg = $this$bg_u24lambda_u240;
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public BlinkerCardView(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        this.d = this.getResources().getDisplayMetrics().density;
+        Paint var3 = new Paint(1);
+        var3.setColor(Color.argb(200, 0, 0, 0));
+        this.bg = var3;
         this.p = new Paint(1);
-        Paint $this$txt_u24lambda_u241 = new Paint(1);
-        $this$txt_u24lambda_u241.setColor(Color.rgb(200, 208, 222));
-        $this$txt_u24lambda_u241.setTextSize(this.d * 13.0f);
-        $this$txt_u24lambda_u241.setTextAlign(Paint.Align.CENTER);
-        this.txt = $this$txt_u24lambda_u241;
-        Paint $this$big_u24lambda_u242 = new Paint(1);
-        $this$big_u24lambda_u242.setColor(-1);
-        $this$big_u24lambda_u242.setTextSize(this.d * 15.0f);
-        $this$big_u24lambda_u242.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$big_u24lambda_u242.setTextAlign(Paint.Align.CENTER);
-        this.big = $this$big_u24lambda_u242;
+        Paint var4 = new Paint(1);
+        var4.setColor(Color.rgb(200, 208, 222));
+        var4.setTextSize(this.d * 13.0F);
+        var4.setTextAlign(android.graphics.Paint.Align.CENTER);
+        this.txt = var4;
+        Paint var5 = new Paint(1);
+        var5.setColor(-1);
+        var5.setTextSize(this.d * 15.0F);
+        var5.setTypeface(Typeface.DEFAULT_BOLD);
+        var5.setTextAlign(android.graphics.Paint.Align.CENTER);
+        this.big = var5;
         this.leftR = new RectF();
         this.rightR = new RectF();
         this.pointers = new HashMap<>();
         this.main = new Handler(Looper.getMainLooper());
         this.sent = "off";
         this.status = "hold a button to signal";
-        this.repeat = new Runnable() { // from class: com.starpilot.starview.BlinkerCardView$repeat$1
-            @Override // java.lang.Runnable
+        this.repeat = new Runnable() {
+            final BlinkerCardView this$0 = BlinkerCardView.this;
+
+            @Override
             public void run() {
-                String h;
-                Handler handler;
-                h = BlinkerCardView.this.held();
-                if (Intrinsics.areEqual(h, "left") || Intrinsics.areEqual(h, "right")) {
-                    BlinkerCardView.this.send(h);
-                    handler = BlinkerCardView.this.main;
-                    handler.postDelayed(this, 250L);
+                String var1x = this.this$0.held();
+                if (Intrinsics.areEqual(var1x, "left") || Intrinsics.areEqual(var1x, "right")) {
+                    this.this$0.send(var1x);
+                    this.this$0.main.postDelayed(this, 250L);
                 }
             }
         };
@@ -160,41 +159,43 @@ public final class BlinkerCardView extends View {
         invalidate();
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:16:0x006f, code lost:
-    
-        return true;
-     */
-    @Override // android.view.View
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public boolean onTouchEvent(MotionEvent e) {
-        Intrinsics.checkNotNullParameter(e, "e");
-        int i = e.getActionIndex();
-        switch (e.getActionMasked()) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public boolean onTouchEvent(MotionEvent var1) {
+        Intrinsics.checkNotNullParameter(var1, "e");
+        int var3 = var1.getActionIndex();
+        switch (var1.getActionMasked()) {
             case 0:
             case 5:
-                int side = this.leftR.contains(e.getX(i), e.getY(i)) ? -1 : this.rightR.contains(e.getX(i), e.getY(i)) ? 1 : 0;
-                if (side != 0) {
-                    this.pointers.put(Integer.valueOf(e.getPointerId(i)), Integer.valueOf(side));
-                    performHapticFeedback(1);
-                    update();
-                    break;
+                byte var2;
+                if (this.leftR.contains(var1.getX(var3), var1.getY(var3))) {
+                    var2 = -1;
+                } else if (this.rightR.contains(var1.getX(var3), var1.getY(var3))) {
+                    var2 = 1;
+                } else {
+                    var2 = 0;
+                }
+
+                if (var2 != 0) {
+                    this.pointers.put(var1.getPointerId(var3), Integer.valueOf(var2));
+                    this.performHapticFeedback(1);
+                    this.update();
                 }
                 break;
             case 1:
             case 6:
-                if (this.pointers.remove(Integer.valueOf(e.getPointerId(i))) != null) {
-                    update();
-                    break;
+                if (this.pointers.remove(var1.getPointerId(var3)) != null) {
+                    this.update();
                 }
+            case 2:
+            case 4:
+            default:
                 break;
             case 3:
                 this.pointers.clear();
-                update();
-                break;
+                this.update();
         }
+
+        return true;
     }
 
     @Override // android.view.View

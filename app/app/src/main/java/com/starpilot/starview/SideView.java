@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
+import android.graphics.Paint.Style;
 
 /* compiled from: SideCam.kt */
 public final class SideView extends View {
@@ -19,15 +20,15 @@ public final class SideView extends View {
     private String side;
     public Telemetry t;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public SideView(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
+    /* VF: from Vineflower (jadx: ) */
+    public SideView(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
         this.side = "left";
         this.p = new Paint(3);
-        Paint $this$ring_u24lambda_u240 = new Paint(1);
-        $this$ring_u24lambda_u240.setStyle(Paint.Style.STROKE);
-        this.ring = $this$ring_u24lambda_u240;
+        Paint var3 = new Paint(1);
+        var3.setStyle(android.graphics.Paint.Style.STROKE);
+        this.ring = var3;
     }
 
     public /* synthetic */ SideView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {

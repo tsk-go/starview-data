@@ -1821,440 +1821,392 @@ public final class Detector {
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:253:0x0691  */
-    /* JADX WARN: Removed duplicated region for block: B:256:0x0694 A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:28:0x00c8  */
-    /* JADX WARN: Removed duplicated region for block: B:31:0x00cb A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void track(Source src, List<Det> all, final Frame f) {
-        float f2;
-        String str;
-        String str2;
-        float f3;
-        String str3;
-        List byAge;
-        boolean z;
-        Iterator it;
-        boolean still;
-        Object element$iv;
-        char c;
-        Iterator it2;
-        String str4;
-        Iterable $this$filter$iv;
-        boolean z2;
-        boolean z3;
-        Collection destination$iv$iv = new ArrayList();
-        Iterator it3 = all.iterator();
-        while (true) {
-            f2 = 0.35f;
-            if (!it3.hasNext()) {
-                break;
-            }
-            Object element$iv$iv = it3.next();
-            if (((Det) element$iv$iv).getScore() >= 0.35f) {
-                destination$iv$iv.add(element$iv$iv);
-            }
-        }
-        List<Det> raw = (List) destination$iv$iv;
-        List<Det> $this$filter$iv2 = all;
-        Collection destination$iv$iv2 = new ArrayList();
-        for (Object element$iv$iv2 : $this$filter$iv2) {
-            Det w = (Det) element$iv$iv2;
-            if (w.getScore() < f2) {
-                List $this$none$iv = raw;
-                if (($this$none$iv instanceof Collection) && $this$none$iv.isEmpty()) {
-                    $this$filter$iv = $this$filter$iv2;
-                    z3 = true;
-                } else {
-                    Iterator it4 = $this$none$iv.iterator();
-                    while (true) {
-                        if (!it4.hasNext()) {
-                            $this$filter$iv = $this$filter$iv2;
-                            z3 = true;
-                            break;
-                        }
-                        Object element$iv2 = it4.next();
-                        Det it5 = (Det) element$iv2;
-                        $this$filter$iv = $this$filter$iv2;
-                        if (group(it5.getCls()) == group(w.getCls()) && iou(it5, w) > 0.45f) {
-                            z3 = false;
-                            break;
-                        }
-                        $this$filter$iv2 = $this$filter$iv;
-                    }
-                }
-                if (z3) {
-                    z2 = true;
-                    if (!z2) {
-                        destination$iv$iv2.add(element$iv$iv2);
-                    }
-                    $this$filter$iv2 = $this$filter$iv;
-                    f2 = 0.35f;
-                }
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void track(Detector.Source var1, List<Detector.Det> var2, Detector.Frame var3) {
+        Object var75 = null; // declarations Vineflower left out
+        Iterable var21 = var2;
+        var var20 = new ArrayList();
+
+        for (Object var22 : var21) {
+            boolean var13;
+            if (((Detector.Det)var22).getScore() >= 0.35F) {
+                var13 = true;
             } else {
-                $this$filter$iv = $this$filter$iv2;
+                var13 = false;
             }
-            z2 = false;
-            if (!z2) {
+
+            if (var13) {
+                var20.add(var22);
             }
-            $this$filter$iv2 = $this$filter$iv;
-            f2 = 0.35f;
         }
-        List weak = (List) destination$iv$iv2;
-        long now = System.nanoTime();
-        float dt = src.getLastTrackNs() == 0 ? 0.05f : RangesKt.coerceIn((now - src.getLastTrackNs()) / 1.0E9f, 0.01f, 0.5f);
-        src.setLastTrackNs(now);
-        ArrayList tracks = src.getTracks();
-        ArrayList pairs = new ArrayList();
-        Iterator<Track> it6 = tracks.iterator();
-        String str5 = "iterator(...)";
-        Intrinsics.checkNotNullExpressionValue(it6, "iterator(...)");
-        while (true) {
-            str = "next(...)";
-            if (!it6.hasNext()) {
-                break;
-            }
-            Track next = it6.next();
-            Intrinsics.checkNotNullExpressionValue(next, "next(...)");
-            Track tr = next;
-            float tw = tr.getX1() - tr.getX0();
-            float th = tr.getY1() - tr.getY0();
-            float px = tr.getCx() + (tr.getVx() * dt);
-            float py = tr.getCy() + (tr.getVy() * dt);
-            float norm = Math.max(Math.max(tw, th), 24.0f);
-            Iterator it7 = raw.iterator();
-            while (it7.hasNext()) {
-                Iterator<Track> it8 = it6;
-                Det d = (Det) it7.next();
-                float th2 = th;
-                Iterator it9 = it7;
-                if (group(d.getCls()) == group(tr.getCls())) {
-                    float dw = d.getX1() - d.getX0();
-                    float ratio = dw / Math.max(tw, 1.0f);
-                    if (ratio < 0.5f) {
-                        th = th2;
-                        it6 = it8;
-                        it7 = it9;
-                        now = now;
-                    } else if (ratio > 2.0f) {
-                        th = th2;
-                        it6 = it8;
-                        it7 = it9;
+
+        List var27 = var20;
+        Iterable var32 = var2;
+        var var89 = new ArrayList();
+
+        for (Object var23 : var32) {
+            int var60;
+            label295: {
+                Detector.Det var67 = (Detector.Det)var23;
+                Iterable var68;
+                if (var67.getScore() < 0.35F) {
+                    var var24 = var27;
+                    if (var24 instanceof Collection && ((Collection)var24).isEmpty()) {
+                        var60 = (((boolean)true) ? 1 : 0);
                     } else {
-                        long now2 = now;
-                        ArrayList tracks2 = tracks;
-                        float dist = ((float) Math.hypot(((d.getX0() + d.getX1()) / 2.0f) - px, ((d.getY0() + d.getY1()) / 2.0f) - py)) / norm;
-                        if (dist < 0.9f) {
-                            pairs.add(new Detector$track$Pair(tr, d, dist));
-                        }
-                        tracks = tracks2;
-                        th = th2;
-                        it6 = it8;
-                        it7 = it9;
-                        now = now2;
-                    }
-                } else {
-                    th = th2;
-                    it6 = it8;
-                    it7 = it9;
-                    now = now;
-                }
-            }
-            now = now;
-        }
-        long now3 = now;
-        ArrayList tracks3 = tracks;
-        ArrayList $this$sortBy$iv = pairs;
-        if ($this$sortBy$iv.size() > 1) {
-            CollectionsKt.sortWith($this$sortBy$iv, new Comparator() { // from class: com.starpilot.starview.Detector$track$$inlined$sortBy$1
-                /* JADX WARN: Multi-variable type inference failed */
-                @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
-                    Detector$track$Pair it10 = (Detector$track$Pair) t;
-                    Detector$track$Pair it11 = (Detector$track$Pair) t2;
-                    return ComparisonsKt.compareValues(Float.valueOf(it10.getCost()), Float.valueOf(it11.getCost()));
-                }
-            });
-        }
-        HashSet usedT = new HashSet();
-        HashSet usedD = new HashSet();
-        Iterator it10 = pairs.iterator();
-        Intrinsics.checkNotNullExpressionValue(it10, "iterator(...)");
-        while (it10.hasNext()) {
-            Object next2 = it10.next();
-            Intrinsics.checkNotNullExpressionValue(next2, str);
-            Detector$track$Pair pr = (Detector$track$Pair) next2;
-            if (!usedT.contains(pr.getTr()) && !usedD.contains(pr.getD())) {
-                track$take(usedT, usedD, dt, now3, this, pr.getTr(), pr.getD(), 0.7f, true);
-                tracks3 = tracks3;
-                pairs = pairs;
-                str = str;
-                str5 = str5;
-            }
-        }
-        String str6 = str;
-        String str7 = str5;
-        ArrayList tracks4 = tracks3;
-        long now4 = now3;
-        if (weak.isEmpty()) {
-            str2 = str6;
-            f3 = 1.0f;
-            str3 = str7;
-        } else {
-            Iterator<Track> it11 = tracks4.iterator();
-            String str8 = str7;
-            Intrinsics.checkNotNullExpressionValue(it11, str8);
-            while (it11.hasNext()) {
-                Track next3 = it11.next();
-                String str9 = str6;
-                Intrinsics.checkNotNullExpressionValue(next3, str9);
-                Track tr2 = next3;
-                if (usedT.contains(tr2) || tr2.getHits() < need(tr2.getCls())) {
-                    weak = weak;
-                    str6 = str9;
-                    it11 = it11;
-                } else if (tr2.getWeak() >= 6) {
-                    str6 = str9;
-                } else {
-                    float tw2 = tr2.getX1() - tr2.getX0();
-                    float th3 = tr2.getY1() - tr2.getY0();
-                    float px2 = tr2.getCx() + (tr2.getVx() * dt);
-                    float py2 = tr2.getCy() + (tr2.getVy() * dt);
-                    float norm2 = Math.max(Math.max(tw2, th3), 24.0f);
-                    Iterator it12 = weak.iterator();
-                    Det best = null;
-                    float bc = 0.6f;
-                    while (it12.hasNext()) {
-                        Det d2 = (Det) it12.next();
-                        if (usedD.contains(d2)) {
-                            it2 = it12;
-                            str4 = str9;
-                        } else if (group(d2.getCls()) != group(tr2.getCls())) {
-                            it2 = it12;
-                            str4 = str9;
-                        } else {
-                            float ratio2 = (d2.getX1() - d2.getX0()) / Math.max(tw2, 1.0f);
-                            if (ratio2 < 0.67f) {
-                                it2 = it12;
-                                str4 = str9;
-                            } else if (ratio2 > 1.5f) {
-                                it2 = it12;
-                                str4 = str9;
+                        Iterator var106 = var24.iterator();
+
+                        while (true) {
+                            if (!var106.hasNext()) {
+                                var60 = (((boolean)true) ? 1 : 0);
+                                break;
+                            }
+
+                            Detector.Det var25 = (Detector.Det)var106.next();
+                            var60 = this.group(var25.getCls());
+                            boolean var58;
+                            if (var60 == this.group(var67.getCls()) && this.iou(var25, var67) > 0.45F) {
+                                var58 = true;
                             } else {
-                                str4 = str9;
-                                it2 = it12;
-                                float c2 = ((float) Math.hypot(((d2.getX0() + d2.getX1()) / 2.0f) - px2, ((d2.getY0() + d2.getY1()) / 2.0f) - py2)) / norm2;
-                                if (c2 < bc) {
-                                    bc = c2;
-                                    best = d2;
-                                    it12 = it2;
-                                    str9 = str4;
-                                }
+                                var58 = false;
+                            }
+
+                            if (var58) {
+                                var60 = (((boolean)false) ? 1 : 0);
+                                break;
                             }
                         }
-                        it12 = it2;
-                        str9 = str4;
                     }
-                    String str10 = str9;
-                    if (best != null) {
-                        track$take(usedT, usedD, dt, now4, this, tr2, best, 0.5f, false);
-                        str8 = str8;
-                        weak = weak;
-                        str6 = str10;
-                        it11 = it11;
-                    } else {
-                        weak = weak;
-                        str6 = str10;
-                        it11 = it11;
-                    }
-                }
-            }
-            str2 = str6;
-            f3 = 1.0f;
-            str3 = str8;
-        }
-        Iterator<Track> it13 = tracks4.iterator();
-        Intrinsics.checkNotNullExpressionValue(it13, str3);
-        while (it13.hasNext()) {
-            Track next4 = it13.next();
-            Intrinsics.checkNotNullExpressionValue(next4, str2);
-            Track tr3 = next4;
-            if (!usedT.contains(tr3)) {
-                tr3.setMisses(tr3.getMisses() + 1);
-                float sx = tr3.getVx() * dt;
-                float sy = tr3.getVy() * dt;
-                tr3.setX0(tr3.getX0() + sx);
-                tr3.setX1(tr3.getX1() + sx);
-                tr3.setY0(tr3.getY0() + sy);
-                tr3.setY1(tr3.getY1() + sy);
-                tr3.setVx(tr3.getVx() * 0.9f);
-                tr3.setVy(tr3.getVy() * 0.9f);
-            }
-        }
-        for (Det d3 : raw) {
-            if (!usedD.contains(d3)) {
-                long j = this.nextId;
-                this.nextId = 1 + j;
-                Track it14 = new Track(j, d3.getCls());
-                it14.setX0(d3.getX0());
-                it14.setY0(d3.getY0());
-                it14.setX1(d3.getX1());
-                it14.setY1(d3.getY1());
-                it14.setScore(d3.getScore());
-                it14.setHits(1);
-                long now5 = now4;
-                it14.setLastNs(now5);
-                if (isVehicle(d3.getCls())) {
-                    float[] kinds = it14.getKinds();
-                    switch (d3.getCls()) {
-                        case 5:
-                            c = 2;
-                            break;
-                        case 6:
-                        default:
-                            c = 0;
-                            break;
-                        case 7:
-                            c = 1;
-                            break;
-                    }
-                    kinds[c] = f3;
-                }
-                tracks4.add(it14);
-                now4 = now5;
-            }
-        }
-        long now6 = now4;
-        Telemetry telemetry = this.telemetry;
-        final boolean still2 = (telemetry != null ? telemetry.getVEgo() : 0.0f) < f3;
-        CollectionsKt.removeAll((List) tracks4, new Function1() { // from class: com.starpilot.starview.Detector$$ExternalSyntheticLambda2
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                boolean track$lambda$28;
-                track$lambda$28 = Detector.track$lambda$28(Detector.this, still2, f, (Detector.Track) obj);
-                return Boolean.valueOf(track$lambda$28);
-            }
-        });
-        final Comparator comparator = new Comparator() { // from class: com.starpilot.starview.Detector$track$$inlined$compareByDescending$1
-            /* JADX WARN: Multi-variable type inference failed */
-            @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
-                Detector.Track it15 = (Detector.Track) t2;
-                Integer valueOf = Integer.valueOf(it15.getHits());
-                Detector.Track it16 = (Detector.Track) t;
-                return ComparisonsKt.compareValues(valueOf, Integer.valueOf(it16.getHits()));
-            }
-        };
-        List byAge2 = CollectionsKt.sortedWith(tracks4, new Comparator() { // from class: com.starpilot.starview.Detector$track$$inlined$thenBy$1
-            /* JADX WARN: Multi-variable type inference failed */
-            @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
-                int previousCompare = comparator.compare(t, t2);
-                if (previousCompare != 0) {
-                    return previousCompare;
-                }
-                Detector.Track it15 = (Detector.Track) t;
-                Long valueOf = Long.valueOf(it15.getId());
-                Detector.Track it16 = (Detector.Track) t2;
-                return ComparisonsKt.compareValues(valueOf, Long.valueOf(it16.getId()));
-            }
-        });
-        ArrayList kept = new ArrayList();
-        Iterator it15 = byAge2.iterator();
-        while (it15.hasNext()) {
-            Track t = (Track) it15.next();
-            ArrayList $this$firstOrNull$iv = kept;
-            Iterator it16 = $this$firstOrNull$iv.iterator();
-            while (true) {
-                if (it16.hasNext()) {
-                    element$iv = it16.next();
-                    Track it17 = (Track) element$iv;
-                    it = it15;
-                    still = still2;
-                    if (!(group(it17.getCls()) == group(t.getCls()) && boxIou(it17, t) > 0.6f)) {
-                        it15 = it;
-                        still2 = still;
+
+                    var68 = var32;
+                    if ((var60 != 0)) {
+                        var60 = 1;
+                        break label295;
                     }
                 } else {
-                    it = it15;
-                    still = still2;
-                    element$iv = null;
+                    var68 = var32;
                 }
+
+                var60 = 0;
+                var32 = var68;
             }
-            Track k = (Track) element$iv;
-            if (k == null) {
-                kept.add(t);
-                it15 = it;
-                still2 = still;
-            } else if (k.getMisses() <= 0 || t.getMisses() != 0) {
-                it15 = it;
-                still2 = still;
-            } else {
-                k.setX0(t.getX0());
-                k.setY0(t.getY0());
-                k.setX1(t.getX1());
-                k.setY1(t.getY1());
-                k.setVx(t.getVx());
-                k.setVy(t.getVy());
-                k.setMisses(0);
-                k.setLastNs(t.getLastNs());
-                it15 = it;
-                still2 = still;
-                now6 = now6;
+
+            if ((var60 != 0)) {
+                var89.add(var23);
             }
         }
-        if (kept.size() < tracks4.size()) {
-            tracks4.retainAll(CollectionsKt.toSet(kept));
+
+        List var81 = var89;
+        long var15 = System.nanoTime();
+        float var5;
+        if (var1.getLastTrackNs() == 0L) {
+            var5 = 0.05F;
+        } else {
+            var5 = RangesKt.coerceIn((float)(var15 - var1.getLastTrackNs()) / 1.0E9F, 0.01F, 0.5F);
         }
-        ArrayList $this$filter$iv3 = tracks4;
-        int $i$f$filter = 0;
-        Collection destination$iv$iv3 = new ArrayList();
-        for (Object element$iv$iv3 : $this$filter$iv3) {
-            Track it18 = (Track) element$iv$iv3;
-            Iterable $this$filter$iv4 = $this$filter$iv3;
-            int hits = it18.getHits();
-            int $i$f$filter2 = $i$f$filter;
-            int $i$f$filter3 = it18.getCls();
-            if (hits >= need($i$f$filter3)) {
-                byAge = byAge2;
-                if (it18.getMisses() <= (it18.getHits() >= 8 ? 7 : 4)) {
-                    z = true;
-                    if (!z) {
-                        destination$iv$iv3.add(element$iv$iv3);
+
+        var1.setLastTrackNs(var15);
+        ArrayList var33 = var1.getTracks();
+        ArrayList var111 = new ArrayList();
+        Iterator var69 = var33.iterator();
+        String var97 = "iterator(...)";
+        Intrinsics.checkNotNullExpressionValue(var69, "iterator(...)");
+
+        while (true) {
+            boolean var19 = var69.hasNext();
+            String var26 = "next(...)";
+            if (!var19) {
+                List var70 = var111;
+                if (var70.size() > 1) {
+                    CollectionsKt.sortWith(var70, new Comparator() {
+                        @Override
+                        public final int compare(T var1, T var2x) {
+                            return ComparisonsKt.compareValues(((Detector$track$Pair)var1).getCost(), ((Detector$track$Pair)var2x).getCost());
+                        }
+                    });
+                }
+
+                HashSet var29 = new HashSet();
+                HashSet var28 = new HashSet();
+                Iterator var30 = var111.iterator();
+                Intrinsics.checkNotNullExpressionValue(var30, "iterator(...)");
+                ArrayList var109 = var33;
+                String var71 = var26;
+
+                while (var30.hasNext()) {
+                    var97 = (String)var30.next();
+                    Intrinsics.checkNotNullExpressionValue(var97, var71);
+                    Detector$track$Pair var99 = (Detector$track$Pair)var97;
+                    if (!var29.contains(var99.getTr()) && !var28.contains(var99.getD())) {
+                        track$take(var29, var28, var5, var15, this, var99.getTr(), var99.getD(), 0.7F, true);
                     }
-                    $this$filter$iv3 = $this$filter$iv4;
-                    $i$f$filter = $i$f$filter2;
-                    byAge2 = byAge;
                 }
-            } else {
-                byAge = byAge2;
+
+                String var36;
+                String var82;
+                if (!var81.isEmpty()) {
+                    Iterator var100 = var33.iterator();
+                    Intrinsics.checkNotNullExpressionValue(var100, var97);
+                    var36 = var71;
+                    Iterator var72 = var100;
+
+                    while (var72.hasNext()) {
+                        var97 = (String)var72.next();
+                        Intrinsics.checkNotNullExpressionValue(var97, var36);
+                        Detector.Track var117 = (Detector.Track)var97;
+                        if (!var29.contains(var117) && var117.getHits() >= this.need(var117.getCls()) && var117.getWeak() < 6) {
+                            float var50 = var117.getX1() - var117.getX0();
+                            float var46 = var117.getY1();
+                            float var42 = var117.getY0();
+                            float var51 = var117.getCx();
+                            float var54 = var117.getVx();
+                            float var52 = var117.getCy();
+                            float var53 = var117.getVy();
+                            float var56 = Math.max(Math.max(var50, var46 - var42), 24.0F);
+                            Iterator var102 = var81.iterator();
+                            Detector.Det var112 = null;
+                            var42 = 0.6F;
+
+                            while (var102.hasNext()) {
+                                Detector.Det var115 = (Detector.Det)var102.next();
+                                if (!var28.contains(var115) && this.group(var115.getCls()) == this.group(var117.getCls())) {
+                                    var46 = (var115.getX1() - var115.getX0()) / Math.max(var50, 1.0F);
+                                    if (!(var46 < 0.67F) && !(var46 > 1.5F)) {
+                                        var46 = (float)Math.hypot(
+                                                (var115.getX0() + var115.getX1()) / 2.0F - (var51 + var54 * var5),
+                                                (var115.getY0() + var115.getY1()) / 2.0F - (var52 + var53 * var5)
+                                            )
+                                            / var56;
+                                        if (var46 < var42) {
+                                            var42 = var46;
+                                            var112 = var115;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (var112 != null) {
+                                track$take(var29, var28, var5, var15, this, var117, var112, 0.5F, false);
+                            }
+                        }
+                    }
+
+                    var82 = var97;
+                } else {
+                    var82 = var97;
+                    var36 = var71;
+                }
+
+                Iterator var73 = var33.iterator();
+                Intrinsics.checkNotNullExpressionValue(var73, var82);
+
+                while (var73.hasNext()) {
+                    var21 = (Iterable)var73.next();
+                    Intrinsics.checkNotNullExpressionValue(var21, var36);
+                    Detector.Track var84 = (Detector.Track)var21;
+                    if (!var29.contains(var84)) {
+                        var84.setMisses(var84.getMisses() + 1);
+                        float var44 = var84.getVx() * var5;
+                        float var49 = var84.getVy() * var5;
+                        var84.setX0(var84.getX0() + var44);
+                        var84.setX1(var84.getX1() + var44);
+                        var84.setY0(var84.getY0() + var49);
+                        var84.setY1(var84.getY1() + var49);
+                        var84.setVx(var84.getVx() * 0.9F);
+                        var84.setVy(var84.getVy() * 0.9F);
+                    }
+                }
+
+                for (Detector.Det var37 : var27) {
+                    if (!var28.contains(var37)) {
+                        long var17 = (long)(this.nextId++);
+                        Detector.Track var85 = new Detector.Track(var17, var37.getCls());
+                        var85.setX0(var37.getX0());
+                        var85.setY0(var37.getY0());
+                        var85.setX1(var37.getX1());
+                        var85.setY1(var37.getY1());
+                        var85.setScore(var37.getScore());
+                        var85.setHits(1);
+                        var85.setLastNs(var15);
+                        if (this.isVehicle(var37.getCls())) {
+                            float[] var74 = var85.getKinds();
+                            byte var61;
+                            switch (var37.getCls()) {
+                                case 5:
+                                    var61 = 2;
+                                    break;
+                                case 6:
+                                default:
+                                    var61 = 0;
+                                    break;
+                                case 7:
+                                    var61 = 1;
+                            }
+
+                            var74[var61] = 1.0F;
+                        }
+
+                        var109.add(var85);
+                    }
+                }
+
+                Telemetry var38 = this.telemetry;
+                float var45;
+                if (var38 != null) {
+                    var45 = var38.getVEgo();
+                } else {
+                    var45 = 0.0F;
+                }
+
+                if (var45 < 1.0F) {
+                    var19 = true;
+                } else {
+                    var19 = false;
+                }
+
+                CollectionsKt.removeAll(var109, new Detector$$ExternalSyntheticLambda2(this, var19, var3));
+                List var86 = CollectionsKt.sortedWith(var109, new Comparator() {
+                    final Comparator $this_thenBy = new Comparator() {
+                    @Override
+                    public final int compare(T var1, T var2) {
+                        return ComparisonsKt.compareValues(((Detector.Track)var2).getHits(), ((Detector.Track)var1).getHits());
+                    }
+                };
+
+                    @Override
+                    public final int compare(T var1, T var2) {
+                        int var3 = this.$this_thenBy.compare(var1, var2);
+                        if (var3 == 0) {
+                            var3 = ComparisonsKt.compareValues(((Detector.Track)var1).getId(), ((Detector.Track)var2).getId());
+                        }
+
+                        return var3;
+                    }
+                });
+                var89 = new ArrayList();
+
+                for (Detector.Track var103 : var86) {
+                    Iterator var113 = var89.iterator();
+
+                    boolean var62;
+                    do {
+                        if (!var113.hasNext()) {
+                            var75 = null;
+                            break;
+                        }
+
+                        var75 = var113.next();
+                        Detector.Track var116 = (Detector.Track)var75;
+                        if (this.group(var116.getCls()) == this.group(var103.getCls()) && this.boxIou(var116, var103) > 0.6F) {
+                            var62 = true;
+                        } else {
+                            var62 = false;
+                        }
+                    } while (!var62);
+
+                    Detector.Track var76 = (Detector.Track)var75;
+                    if (var76 == null) {
+                        var89.add(var103);
+                    } else if (var76.getMisses() > 0 && var103.getMisses() == 0) {
+                        var76.setX0(var103.getX0());
+                        var76.setY0(var103.getY0());
+                        var76.setX1(var103.getX1());
+                        var76.setY1(var103.getY1());
+                        var76.setVx(var103.getVx());
+                        var76.setVy(var103.getVy());
+                        var76.setMisses(0);
+                        var76.setLastNs(var103.getLastNs());
+                    }
+                }
+
+                if (var89.size() < var109.size()) {
+                    var109.retainAll(CollectionsKt.toSet(var89));
+                }
+
+                Iterable var77 = var109;
+                var19 = false;
+                var89 = new ArrayList();
+
+                for (Object var87 : var77) {
+                    byte var64;
+                    label199: {
+                        Detector.Track var110 = (Detector.Track)var87;
+                        if (var110.getHits() >= this.need(var110.getCls())) {
+                            int var14 = var110.getMisses();
+                            if (var110.getHits() >= 8) {
+                                var64 = 7;
+                            } else {
+                                var64 = 4;
+                            }
+
+                            if (var14 <= var64) {
+                                var64 = 1;
+                                break label199;
+                            }
+                        }
+
+                        var64 = 0;
+                    }
+
+                    if ((var64 != 0)) {
+                        var89.add(var87);
+                    }
+                }
+
+                List var78 = var89;
+                Iterable var40 = var78;
+                var89 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var40, 10));
+
+                for (Detector.Track var105 : var40) {
+                    var89.add(
+                        new Detector.Det(this.vehicleCls(var105), var105.getScore(), var105.getX0(), var105.getY0(), var105.getX1(), var105.getY1(), var105.getId())
+                    );
+                }
+
+                var2 = var89;
+                var1.setDets(var2);
+                this.groundObjects(var1, var78, var3);
+                this.mergeObjects();
+                if (!var1.getWide()) {
+                    try {
+                        this.ideasFrame(var78, var3);
+                    } catch (Exception var31) {
+                    }
+                }
+
+                return;
             }
-            z = false;
-            if (!z) {
+
+            Object var90 = var69.next();
+            Intrinsics.checkNotNullExpressionValue(var90, "next(...)");
+            Detector.Track var114 = (Detector.Track)var90;
+            float var10 = var114.getX1() - var114.getX0();
+            float var4 = var114.getY1() - var114.getY0();
+            float var9 = var114.getCx();
+            float var8 = var114.getVx();
+            float var7 = var114.getCy();
+            float var11 = var114.getVy();
+            float var6 = Math.max(Math.max(var10, var4), 24.0F);
+            Iterator var107 = var27.iterator();
+            Iterator var34 = var107;
+
+            while (var34.hasNext()) {
+                Detector.Det var108 = (Detector.Det)var34.next();
+                if (this.group(var108.getCls()) == this.group(var114.getCls())) {
+                    float var12 = (var108.getX1() - var108.getX0()) / Math.max(var10, 1.0F);
+                    if (!(var12 < 0.5F) && !(var12 > 2.0F)) {
+                        var12 = (float)Math.hypot(
+                                (var108.getX0() + var108.getX1()) / 2.0F - (var9 + var8 * var5), (var108.getY0() + var108.getY1()) / 2.0F - (var7 + var11 * var5)
+                            )
+                            / var6;
+                        if (var12 < 0.9F) {
+                            var111.add(new Detector$track$Pair(var114, var108, var12));
+                        }
+                    }
+                }
             }
-            $this$filter$iv3 = $this$filter$iv4;
-            $i$f$filter = $i$f$filter2;
-            byAge2 = byAge;
-        }
-        List shown = (List) destination$iv$iv3;
-        List $this$map$iv = shown;
-        Collection destination$iv$iv4 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        for (Object item$iv$iv : $this$map$iv) {
-            Track it19 = (Track) item$iv$iv;
-            destination$iv$iv4.add(new Det(vehicleCls(it19), it19.getScore(), it19.getX0(), it19.getY0(), it19.getX1(), it19.getY1(), it19.getId()));
-            $this$map$iv = $this$map$iv;
-        }
-        src.setDets((List) destination$iv$iv4);
-        groundObjects(src, shown, f);
-        mergeObjects();
-        if (src.getWide()) {
-            return;
-        }
-        try {
-            ideasFrame(shown, f);
-        } catch (Exception e) {
+
+            var33 = var33;
         }
     }
 
@@ -2313,140 +2265,166 @@ public final class Detector {
         return it.getMisses() > (it.getHits() < this$0.need(it.getCls()) ? 1 : $still ? 12 : 10) || it.getX1() < 0.0f || it.getX0() > ((float) $f.getW()) || it.getY0() > ((float) $f.getH());
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:22:0x007f A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:26:0x002f A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void ideasFrame(List<Track> shown, Frame f) {
-        boolean z;
-        long now;
-        boolean z2;
-        Object minElem$iv;
-        Track it;
-        long now2 = System.currentTimeMillis();
-        LeadLamps ll = Ideas.INSTANCE.getSense().getLeadLamps();
-        if (ll.getEnabled()) {
-            List<Track> $this$filter$iv = shown;
-            Collection destination$iv$iv = new ArrayList();
-            for (Object element$iv$iv : $this$filter$iv) {
-                Track it2 = (Track) element$iv$iv;
-                if (isVehicle(it2.getCls()) && !Float.isNaN(it2.getGx())) {
-                    float gx = it2.getGx();
-                    if ((3.0f <= gx && gx <= 50.0f) && Math.abs(it2.getGy()) < 1.5f && it2.getMisses() == 0) {
-                        it = 1;
-                        if (it == null) {
-                            destination$iv$iv.add(element$iv$iv);
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void ideasFrame(List<Detector.Track> var1, Detector.Frame var2) {
+        long var11 = System.currentTimeMillis();
+        LeadLamps var17 = Ideas.INSTANCE.getSense().getLeadLamps();
+        if (var17.getEnabled()) {
+            Iterable var16 = var1;
+            var var15 = new ArrayList();
+
+            for (Object var19 : var16) {
+                boolean var32;
+                label276: {
+                    Detector.Track var42 = (Detector.Track)var19;
+                    if (this.isVehicle(var42.getCls()) && !Float.isNaN(var42.getGx())) {
+                        float var3 = var42.getGx();
+                        if (3.0F <= var3 && var3 <= 50.0F) {
+                            var32 = true;
+                        } else {
+                            var32 = false;
+                        }
+
+                        if (var32 && Math.abs(var42.getGy()) < 1.5F && var42.getMisses() == 0) {
+                            var32 = true;
+                            break label276;
                         }
                     }
+
+                    var32 = false;
                 }
-                it = null;
-                if (it == null) {
+
+                if (var32) {
+                    var15.add(var19);
                 }
             }
-            Iterable $this$minByOrNull$iv = (List) destination$iv$iv;
-            Iterator iterator$iv = $this$minByOrNull$iv.iterator();
-            if (iterator$iv.hasNext()) {
-                minElem$iv = iterator$iv.next();
-                if (iterator$iv.hasNext()) {
-                    Track it3 = (Track) minElem$iv;
-                    float minValue$iv = it3.getGx();
-                    do {
-                        Object e$iv = iterator$iv.next();
-                        Track it4 = (Track) e$iv;
-                        float v$iv = it4.getGx();
-                        if (Float.compare(minValue$iv, v$iv) > 0) {
-                            minElem$iv = e$iv;
-                            minValue$iv = v$iv;
-                        }
-                    } while (iterator$iv.hasNext());
-                }
+
+            List var37 = var15;
+            Iterator var49 = var37.iterator();
+            Object var38;
+            if (!var49.hasNext()) {
+                var38 = null;
             } else {
-                minElem$iv = null;
-            }
-            Track lead = (Track) minElem$iv;
-            if (lead != null) {
-                Pair<Float, Float> sideLamps = sideLamps(f, lead.getX0(), lead.getY0(), lead.getX1(), lead.getY1());
-                float l = sideLamps.component1().floatValue();
-                float r = sideLamps.component2().floatValue();
-                z = false;
-                ll.feed(lead.getId(), now2, l, r);
-                now2 = now2;
-            } else {
-                z = false;
-            }
-        } else {
-            z = false;
-        }
-        if (WantIdeas.INSTANCE.getSchoolBus()) {
-            for (Track b : shown) {
-                if (b.getCls() == 5 && !Float.isNaN(b.getGx())) {
-                    float gx2 = b.getGx();
-                    if (((3.0f > gx2 || gx2 > 70.0f) ? z : true) && Math.abs(b.getGy()) <= 8.0f) {
-                        if (b.getMisses() <= 0) {
-                            Triple<Float, Float, Float> busLook = busLook(f, b.getX0(), b.getY0(), b.getX1(), b.getY1());
-                            float yf = busLook.component1().floatValue();
-                            float rl = busLook.component2().floatValue();
-                            float rr = busLook.component3().floatValue();
-                            this.schoolBus.feed(b.getId(), now2, b.getGx(), yf, rl, rr);
-                            now2 = now2;
-                            z = false;
-                        }
-                    }
-                }
-                z = false;
-            }
-        }
-        long now3 = now2;
-        if (WantIdeas.INSTANCE.getWipers()) {
-            wiperWatch(f, now3);
-        }
-        boolean wantShadow = ShadowWatch.INSTANCE.getWanted();
-        DayView dv = Ideas.INSTANCE.getMemory().getDayView();
-        if (wantShadow || (dv.getWanted() && now3 - this.ideasDayMs > 1000)) {
-            float[] grid = new float[32 * 9];
-            for (int j = 0; j < 9; j++) {
-                for (int i = 0; i < 32; i++) {
-                    int u = RangesKt.coerceIn((int) (((i + 0.5f) / 32) * f.getW()), 0, f.getW() - 1);
-                    int v = RangesKt.coerceIn((int) ((f.getH() / 2) + ((((j + 0.5f) / 9) * f.getH()) / 2)), 0, f.getH() - 1);
-                    grid[(j * 32) + i] = f.getY()[(f.getYStride() * v) + u] & 255;
-                }
-            }
-            if (wantShadow) {
-                ShadowWatch shadowWatch = ShadowWatch.INSTANCE;
-                List<Track> $this$any$iv = shown;
-                if (!($this$any$iv instanceof Collection) || !$this$any$iv.isEmpty()) {
-                    Iterator it5 = $this$any$iv.iterator();
+                var38 = var49.next();
+                if (var49.hasNext()) {
+                    float var4 = ((Detector.Track)var38).getGx();
+
                     while (true) {
-                        if (!it5.hasNext()) {
-                            z2 = false;
+                        var16 = (Iterable)var49.next();
+                        float var5 = ((Detector.Track)var16).getGx();
+                        float var25 = var4;
+                        if (Float.compare(var4, var5) > 0) {
+                            var38 = var16;
+                            var25 = var5;
+                        }
+
+                        if (!var49.hasNext()) {
                             break;
                         }
-                        Object element$iv = it5.next();
-                        Track it6 = (Track) element$iv;
-                        Track it7 = it6.getCls() == 0 ? 1 : null;
-                        if (it7 != null) {
-                            z2 = true;
-                            break;
-                        }
+
+                        var4 = var25;
                     }
-                } else {
-                    z2 = false;
                 }
-                now = now3;
-                shadowWatch.feed(grid, 32, z2, now3);
-            } else {
-                now = now3;
             }
-            if (!dv.getWanted() || now - this.ideasDayMs <= 1000) {
-                return;
+
+            var38 = (Detector.Track)var38;
+            if (var38 != null) {
+                kotlin.Pair var44 = this.sideLamps(
+                    var2, ((Detector.Track)var38).getX0(), ((Detector.Track)var38).getY0(), ((Detector.Track)var38).getX1(), ((Detector.Track)var38).getY1()
+                );
+                float var26 = ((Number)var44.component1()).floatValue();
+                float var29 = ((Number)var44.component2()).floatValue();
+                var17.feed(((Detector.Track)var38).getId(), var11, var26, var29);
             }
-            this.ideasDayMs = now;
-            Bitmap bmp = colour(f);
-            try {
-                dv.feed(bmp, (float) ArraysKt.average(grid), now);
-            } finally {
-                bmp.recycle();
+        }
+
+        long var13 = var11;
+        if (WantIdeas.INSTANCE.getSchoolBus()) {
+            Iterator var47 = var1.iterator();
+
+            while (true) {
+                var13 = var11;
+                if (!var47.hasNext()) {
+                    break;
+                }
+
+                Detector.Track var40 = (Detector.Track)var47.next();
+                if (var40.getCls() == 5 && !Float.isNaN(var40.getGx())) {
+                    float var27 = var40.getGx();
+                    boolean var33;
+                    if (3.0F <= var27 && var27 <= 70.0F) {
+                        var33 = true;
+                    } else {
+                        var33 = false;
+                    }
+
+                    if (var33 && !(Math.abs(var40.getGy()) > 8.0F) && var40.getMisses() <= 0) {
+                        Triple var45 = this.busLook(var2, var40.getX0(), var40.getY0(), var40.getX1(), var40.getY1());
+                        float var30 = ((Number)var45.component1()).floatValue();
+                        float var31 = ((Number)var45.component2()).floatValue();
+                        var27 = ((Number)var45.component3()).floatValue();
+                        this.schoolBus.feed(var40.getId(), var11, var40.getGx(), var30, var31, var27);
+                    }
+                }
+            }
+        }
+
+        if (WantIdeas.INSTANCE.getWipers()) {
+            this.wiperWatch(var2, var13);
+        }
+
+        boolean var10 = ShadowWatch.INSTANCE.getWanted();
+        DayView var46 = Ideas.INSTANCE.getMemory().getDayView();
+        if (var10 || var46.getWanted() && var13 - this.ideasDayMs > 1000L) {
+            float[] var41 = new float[32 * 9];
+
+            for (int var34 = 0; var34 < 9; var34++) {
+                for (int var7 = 0; var7 < 32; var7++) {
+                    int var8 = RangesKt.coerceIn((int)((var7 + 0.5F) / 32 * var2.getW()), 0, var2.getW() - 1);
+                    int var9 = RangesKt.coerceIn((int)(var2.getH() / 2 + (var34 + 0.5F) / 9 * var2.getH() / 2), 0, var2.getH() - 1);
+                    var41[var34 * 32 + var7] = var2.getY()[var2.getYStride() * var9 + var8] & 255;
+                }
+            }
+
+            if (var10) {
+                ShadowWatch var48 = ShadowWatch.INSTANCE;
+                var var22 = var1;
+                if (var22 instanceof Collection && ((Collection)var22).isEmpty()) {
+                    var10 = false;
+                } else {
+                    label299: {
+                        Iterator var23 = var22.iterator();
+
+                        while (var23.hasNext()) {
+                            boolean var35;
+                            if (((Detector.Track)var23.next()).getCls() == 0) {
+                                var35 = true;
+                            } else {
+                                var35 = false;
+                            }
+
+                            if (var35) {
+                                var10 = true;
+                                break label299;
+                            }
+                        }
+
+                        var10 = false;
+                    }
+                }
+
+                var48.feed(var41, 32, var10, var13);
+            }
+
+            if (var46.getWanted() && var13 - this.ideasDayMs > 1000L) {
+                this.ideasDayMs = var13;
+                Bitmap var24 = this.colour(var2);
+
+                try {
+                    var46.feed(var24, (float)ArraysKt.average(var41), var13);
+                } finally {
+                    var24.recycle();
+                }
             }
         }
     }
@@ -2774,567 +2752,608 @@ public final class Detector {
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:335:0x0a6d  */
-    /* JADX WARN: Removed duplicated region for block: B:339:0x0aa1  */
-    /* JADX WARN: Removed duplicated region for block: B:350:0x0b1a  */
-    /* JADX WARN: Removed duplicated region for block: B:353:0x0b4a  */
-    /* JADX WARN: Removed duplicated region for block: B:356:0x0b4d  */
-    /* JADX WARN: Removed duplicated region for block: B:358:0x0b25  */
-    /* JADX WARN: Removed duplicated region for block: B:363:0x0b08  */
-    /* JADX WARN: Removed duplicated region for block: B:364:0x0a72  */
-    /* JADX WARN: Removed duplicated region for block: B:48:0x03f6  */
-    /* JADX WARN: Removed duplicated region for block: B:63:0x051d  */
-    /* JADX WARN: Removed duplicated region for block: B:66:0x0547  */
-    /* JADX WARN: Removed duplicated region for block: B:74:0x05a2 A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:81:0x0576 A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:90:0x0521  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void groundObjects(Source src, List<Track> shown, Frame f) {
-        List parked;
-        float[] rowVote;
-        Iterator it;
-        float v;
-        Boolean bool;
-        int facing;
-        float lm;
-        int lampOut;
-        float len;
-        float v2;
-        Telemetry t;
-        float gy;
-        Projection.Companion.GroundInverse hom;
-        Track tr;
-        float gx;
-        float gw;
-        int lamp;
-        float hdgMeas;
-        boolean moving;
-        float gx2;
-        float gy2;
-        Track tr2;
-        Detector detector = this;
-        Telemetry telemetry = detector.telemetry;
-        if (telemetry == null) {
-            return;
-        }
-        Telemetry t2 = telemetry;
-        if (!t2.getCalValid()) {
-            src.setObjects(CollectionsKt.emptyList());
-            src.setAtMs(System.currentTimeMillis());
-            return;
-        }
-        Projection.Companion.GroundInverse hom2 = Projection.Companion.groundInverse(t2.getCalRpy(), t2.getCalHeight(), f.getW(), f.getH(), src.getWide());
-        src.setFovTan(hom2.getCx() / hom2.getF());
-        ArrayList out = new ArrayList();
-        ArrayList pend = new ArrayList();
-        ArrayList oCand = new ArrayList();
-        Iterator<Track> it2 = shown.iterator();
-        while (true) {
-            if (!it2.hasNext()) {
-                ArrayList out2 = out;
-                Iterable oCand2 = oCand;
-                if (!((Collection) oCand2).isEmpty()) {
-                    long nowNs = System.nanoTime();
-                    Iterable $this$filter$iv = oCand2;
-                    Collection destination$iv$iv = new ArrayList();
-                    for (Object element$iv$iv : $this$filter$iv) {
-                        if (nowNs - ((OCand) element$iv$iv).getTr().getONs() > 150000000) {
-                            destination$iv$iv.add(element$iv$iv);
-                        }
-                    }
-                    Iterable $this$sortedBy$iv = (List) destination$iv$iv;
-                    List<OCand> pick = CollectionsKt.take(CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.Detector$groundObjects$$inlined$sortedBy$1
-                        /* JADX WARN: Multi-variable type inference failed */
-                        @Override // java.util.Comparator
-                        public final int compare(T t3, T t4) {
-                            Detector.OCand it3 = (Detector.OCand) t3;
-                            Detector.OCand it4 = (Detector.OCand) t4;
-                            return ComparisonsKt.compareValues(Long.valueOf(it3.getTr().getONs()), Long.valueOf(it4.getTr().getONs()));
-                        }
-                    }), 3);
-                    for (OCand c : pick) {
-                        Track tr3 = c.getTr();
-                        float[] p = detector.orient.classify(f.getY(), f.getU(), f.getV(), f.getYStride(), f.getUvStride(), f.getUvPixStride(), f.getW(), f.getH(), tr3.getX0(), tr3.getY0(), tr3.getX1(), tr3.getY1(), c.getAspK());
-                        if (p != null) {
-                            tr3.setONs(nowNs);
-                            tr3.setON(tr3.getON() + 1);
-                            for (int k = 0; k < 16; k++) {
-                                float[] oHist = tr3.getOHist();
-                                oHist[k] = oHist[k] * 0.85f;
-                            }
-                            int k2 = 0;
-                            while (k2 < 16) {
-                                float h = detector.wrap(CarOrient.Companion.getCENTRES()[k2] + c.getBearing() + 1.5707964f);
-                                float idx = ((((((h + 3.1415927f) / 6.2831855f) * 16) - 0.5f) % 16) + 16) % 16;
-                                long nowNs2 = nowNs;
-                                int lo = ((int) Math.floor(idx)) % 16;
-                                int hi = (lo + 1) % 16;
-                                float w = idx - ((float) Math.floor(idx));
-                                float[] oHist2 = tr3.getOHist();
-                                oHist2[lo] = oHist2[lo] + (p[k2] * (1 - w));
-                                float[] oHist3 = tr3.getOHist();
-                                oHist3[hi] = oHist3[hi] + (p[k2] * w);
-                                k2++;
-                                nowNs = nowNs2;
-                            }
-                        }
-                    }
-                }
-                Iterable $this$filter$iv2 = pend;
-                Collection destination$iv$iv2 = new ArrayList();
-                for (Object element$iv$iv2 : $this$filter$iv2) {
-                    Pend it3 = (Pend) element$iv$iv2;
-                    if ((!detector.isVehicle(it3.getCls()) || it3.getCls() == 5 || it3.getMoving() || Float.isNaN(it3.getTr().getGx())) ? false : true) {
-                        destination$iv$iv2.add(element$iv$iv2);
-                    }
-                }
-                List<Pend> parked2 = (List) destination$iv$iv2;
-                float[] rowVote2 = new float[parked2.size()];
-                int size = parked2.size();
-                for (int i = 0; i < size; i++) {
-                    int size2 = parked2.size();
-                    for (int j = i + 1; j < size2; j++) {
-                        Track a = ((Pend) parked2.get(i)).getTr();
-                        Track b = ((Pend) parked2.get(j)).getTr();
-                        float dx = Math.abs(a.getGx() - b.getGx());
-                        float dy = Math.abs(a.getGy() - b.getGy());
-                        if (dx < 3.5f) {
-                            if (1.8f <= dy && dy <= 4.3f) {
-                                v2 = 1.0f;
-                                rowVote2[i] = rowVote2[i] + v2;
-                                rowVote2[j] = rowVote2[j] + v2;
-                            }
-                        }
-                        if (dy < 1.5f) {
-                            if (2.0f <= dx && dx <= 4.3f) {
-                                v2 = -1.0f;
-                                rowVote2[i] = rowVote2[i] + v2;
-                                rowVote2[j] = rowVote2[j] + v2;
-                            }
-                        }
-                        v2 = 0.0f;
-                        rowVote2[i] = rowVote2[i] + v2;
-                        rowVote2[j] = rowVote2[j] + v2;
-                    }
-                }
-                Iterator it4 = pend.iterator();
-                Intrinsics.checkNotNullExpressionValue(it4, "iterator(...)");
-                while (it4.hasNext()) {
-                    Object next = it4.next();
-                    Intrinsics.checkNotNullExpressionValue(next, "next(...)");
-                    Track tr4 = ((Pend) next).getTr();
-                    tr4.setRowEv(tr4.getRowEv() * 0.93f);
-                }
-                int i2 = 0;
-                for (Pend p2 : parked2) {
-                    int i3 = i2;
-                    i2++;
-                    if (p2.getMeasured()) {
-                        Track tr5 = p2.getTr();
-                        tr5.setRowEv(tr5.getRowEv() + RangesKt.coerceIn(rowVote2[i3], -1.0f, 1.0f));
-                    }
-                }
-                Iterator it5 = pend.iterator();
-                Intrinsics.checkNotNullExpressionValue(it5, "iterator(...)");
-                while (it5.hasNext()) {
-                    Object next2 = it5.next();
-                    Intrinsics.checkNotNullExpressionValue(next2, "next(...)");
-                    Pend p3 = (Pend) next2;
-                    Track tr6 = p3.getTr();
-                    int cls = p3.getCls();
-                    boolean moving2 = p3.getMoving();
-                    float speed = p3.getSpeed();
-                    p3.getLamp();
-                    float[] hv = tr6.getHVotes();
-                    float b0 = detector.atan2(tr6.getGy(), tr6.getGx());
-                    if (moving2) {
-                        parked = parked2;
-                        v = detector.atan2(tr6.getGvy(), tr6.getGvx());
-                        rowVote = rowVote2;
-                        it = it5;
-                        float sn = ((float) Math.rint(v / 1.5707964f)) * 1.5707964f;
-                        if (Math.abs(detector.wrap(v - sn)) < 0.4f) {
-                            v = detector.wrap(sn);
-                        }
-                    } else {
-                        parked = parked2;
-                        rowVote = rowVote2;
-                        it = it5;
-                        if (detector.isVehicle(cls) && cls != 5 && detector.orientReady(tr6)) {
-                            v = detector.orientHeading(tr6);
-                        } else if (!detector.isVehicle(cls) || hv[0] + hv[1] + hv[2] + hv[3] <= 2.5f) {
-                            v = Float.NaN;
-                        } else {
-                            float score = tr6.getAxisEv() + (tr6.getRowEv() * 1.5f);
-                            Boolean prev = tr6.getAlong();
-                            if (score > 0.6f) {
-                                bool = true;
-                            } else if (score < -0.6f) {
-                                bool = false;
-                            } else if (prev == null) {
-                                bool = Boolean.valueOf(Math.abs(tr6.getGy()) < 8.0f);
-                            } else {
-                                bool = prev;
-                            }
-                            tr6.setAlong(bool);
-                            v = Intrinsics.areEqual((Object) tr6.getAlong(), (Object) true) ? hv[0] >= hv[2] ? 0.0f : 3.1415927f : hv[1] >= hv[3] ? 1.5707964f : -1.5707964f;
-                        }
-                    }
-                    if (!Float.isNaN(v) && detector.isVehicle(cls)) {
-                        float rel = Math.abs(detector.wrap(v - b0));
-                        int face = (rel <= 1.1f || rel >= 2.05f) ? rel >= 2.05f ? 1 : 0 : 2;
-                        int k3 = 0;
-                        while (true) {
-                            float rel2 = rel;
-                            if (k3 < 3) {
-                                float[] votes = tr6.getVotes();
-                                votes[k3] = votes[k3] * 0.97f;
-                                k3++;
-                                rel = rel2;
-                            } else {
-                                float[] votes2 = tr6.getVotes();
-                                votes2[face] = votes2[face] + 1.0f;
-                            }
-                        }
-                    }
-                    float[] v3 = tr6.getVotes();
-                    if (v3[2] > 3.0f && v3[2] > Math.max(v3[0], v3[1]) * 1.5f) {
-                        facing = 2;
-                        float[] lv = tr6.getLampVotes();
-                        lm = Math.max(lv[0], Math.max(lv[1], lv[2]));
-                        if (lm >= 0.8f) {
-                            lampOut = -1;
-                        } else if (lm == lv[0]) {
-                            lampOut = 0;
-                        } else {
-                            lampOut = (lm > lv[1] ? 1 : (lm == lv[1] ? 0 : -1)) == 0 ? 1 : 2;
-                            float ccx = tr6.getGx();
-                            float ccy = tr6.getGy();
-                            if (detector.isVehicle(cls)) {
-                                float b2 = detector.atan2(tr6.getGy(), tr6.getGx());
-                                float rel3 = Float.isNaN(v) ? 0.0f : detector.wrap(v - b2);
-                                switch (cls) {
-                                    case 5:
-                                        len = 11.0f;
-                                        break;
-                                    case 6:
-                                    default:
-                                        len = 4.7f;
-                                        break;
-                                    case 7:
-                                        len = 5.8f;
-                                        break;
-                                }
-                                float wid = cls == 5 ? 2.5f : 1.9f;
-                                float depth = ((Math.abs((float) Math.cos(rel3)) * len) + (Math.abs((float) Math.sin(rel3)) * wid)) / 2.0f;
-                                ccx += ((float) Math.cos(b2)) * depth;
-                                ccy += ((float) Math.sin(b2)) * depth;
-                            }
-                            out2.add(new Obj(src.getWide() ? (-tr6.getId()) - 1000000 : tr6.getId(), cls, tr6.getGx(), tr6.getGy(), tr6.getGw(), facing, lampOut, cls, src.getWide(), v, ccx, ccy, moving2, speed, tr6.getGvx(), tr6.getGvy(), tr6.getVelN() >= 3));
-                            detector = this;
-                            parked2 = parked;
-                            rowVote2 = rowVote;
-                            it5 = it;
-                        }
-                        float ccx2 = tr6.getGx();
-                        float ccy2 = tr6.getGy();
-                        if (detector.isVehicle(cls)) {
-                        }
-                        out2.add(new Obj(src.getWide() ? (-tr6.getId()) - 1000000 : tr6.getId(), cls, tr6.getGx(), tr6.getGy(), tr6.getGw(), facing, lampOut, cls, src.getWide(), v, ccx2, ccy2, moving2, speed, tr6.getGvx(), tr6.getGvy(), tr6.getVelN() >= 3));
-                        detector = this;
-                        parked2 = parked;
-                        rowVote2 = rowVote;
-                        it5 = it;
-                    }
-                    facing = (v3[1] <= 3.0f || v3[1] <= v3[0] * 2.0f) ? 0 : 1;
-                    float[] lv2 = tr6.getLampVotes();
-                    lm = Math.max(lv2[0], Math.max(lv2[1], lv2[2]));
-                    if (lm >= 0.8f) {
-                    }
-                    float ccx22 = tr6.getGx();
-                    float ccy22 = tr6.getGy();
-                    if (detector.isVehicle(cls)) {
-                    }
-                    out2.add(new Obj(src.getWide() ? (-tr6.getId()) - 1000000 : tr6.getId(), cls, tr6.getGx(), tr6.getGy(), tr6.getGw(), facing, lampOut, cls, src.getWide(), v, ccx22, ccy22, moving2, speed, tr6.getGvx(), tr6.getGvy(), tr6.getVelN() >= 3));
-                    detector = this;
-                    parked2 = parked;
-                    rowVote2 = rowVote;
-                    it5 = it;
-                }
-                src.setObjects(out2);
-                src.setAtMs(System.currentTimeMillis());
-                return;
-            }
-            Track tr7 = it2.next();
-            int cls2 = detector.vehicleCls(tr7);
-            float wPx = tr7.getX1() - tr7.getX0();
-            ArrayList out3 = out;
-            float hPx = tr7.getY1() - tr7.getY0();
-            ArrayList pend2 = pend;
-            float uc = (tr7.getX0() + tr7.getX1()) / 2.0f;
-            int lamp2 = -1;
-            float hdgMeas2 = Float.NaN;
-            switch (cls2) {
-                case 9:
-                case 11:
-                    float d = (hom2.getF() * (cls2 == 9 ? 1.0f : 0.75f)) / Math.max(hPx, 1.0f);
-                    if (d < 3.0f) {
-                        out = out3;
-                        pend = pend2;
-                        break;
-                    } else if (d > 120.0f) {
-                        out = out3;
-                        pend = pend2;
-                        break;
-                    } else {
-                        if (hom2.getFisheye()) {
-                            float ang = (uc - hom2.getCx()) / hom2.getF();
-                            gx2 = ((float) Math.cos(ang)) * d;
-                            gy2 = ((float) Math.sin(ang)) * d;
-                        } else {
-                            gx2 = d;
-                            gy2 = ((uc - hom2.getCx()) / hom2.getF()) * d;
-                        }
-                        if (cls2 == 9) {
-                            tr2 = tr7;
-                            t = t2;
-                            lamp2 = lampColour(f, tr7.getX0(), tr7.getY0(), tr7.getX1(), tr7.getY1());
-                        } else {
-                            tr2 = tr7;
-                            t = t2;
-                        }
-                        Unit unit = Unit.INSTANCE;
-                        hom = hom2;
-                        gx = gx2;
-                        gy = gy2;
-                        gw = 0.5f;
-                        lamp = lamp2;
-                        hdgMeas = Float.NaN;
-                        tr = tr2;
-                        if (!Float.isNaN(tr.getGx()) && (tr.getMisses() != 0 || tr.getHits() > detector.need(cls2))) {
-                            float a2 = RangesKt.coerceIn(0.6f - (tr.getGx() * 0.01f), 0.2f, 0.6f);
-                            tr.setGx(tr.getGx() + ((gx - tr.getGx()) * a2));
-                            tr.setGy(tr.getGy() + ((gy - tr.getGy()) * a2));
-                            tr.setGw(tr.getGw() + ((gw - tr.getGw()) * a2));
-                            long nowNs3 = System.nanoTime();
-                            ArrayList oCand3 = oCand;
-                            long baseNs = (long) (Math.max(0.25f, gx / 80.0f) * 1.0E9f);
-                            if (tr.getMisses() != 0 && gx < 90.0f) {
-                                if (!Float.isNaN(tr.getMx()) && nowNs3 - tr.getMNs() > baseNs) {
-                                    float dts = (nowNs3 - tr.getMNs()) / 1.0E9f;
-                                    if (dts < 2.5f) {
-                                        float ve = t.getVEgo();
-                                        float vx = ((gx - tr.getMx()) / dts) + ve;
-                                        float vy = (gy - tr.getMy()) / dts;
-                                        tr.setGvx(tr.getGvx() + ((vx - tr.getGvx()) * 0.3f));
-                                        tr.setGvy(tr.getGvy() + ((vy - tr.getGvy()) * 0.3f));
-                                        float sp = (float) Math.hypot(tr.getGvx(), tr.getGvy());
-                                        if (sp > 45.0f) {
-                                            tr.setGvx(tr.getGvx() * (45.0f / sp));
-                                            tr.setGvy(tr.getGvy() * (45.0f / sp));
-                                        }
-                                        tr.setVelN(tr.getVelN() + 1);
-                                    }
-                                    tr.setMx(gx);
-                                    tr.setMy(gy);
-                                    tr.setMNs(nowNs3);
-                                } else if (Float.isNaN(tr.getMx()) || nowNs3 - tr.getMNs() > 2500000000L) {
-                                    tr.setMx(gx);
-                                    tr.setMy(gy);
-                                    tr.setMNs(nowNs3);
-                                }
-                            }
-                            float speed2 = (float) Math.hypot(tr.getGvx(), tr.getGvy());
-                            float bb = detector.atan2(gy, gx);
-                            float vr = (tr.getGvx() * ((float) Math.cos(bb))) + (tr.getGvy() * ((float) Math.sin(bb)));
-                            float vt = ((-tr.getGvx()) * ((float) Math.sin(bb))) + (tr.getGvy() * ((float) Math.cos(bb)));
-                            float radialNoise = (!src.getWide() ? 0.16f : 0.08f) * RangesKt.coerceAtLeast(tr.getGx(), 0.0f);
-                            float effSpeed = (float) Math.hypot(vt, Math.max(0.0f, Math.abs(vr) - radialNoise));
-                            if (tr.getHits() >= 6) {
-                                if (effSpeed > (src.getWide() ? 3.5f : 3.0f)) {
-                                    moving = true;
-                                    pend = pend2;
-                                    pend.add(new Pend(tr, cls2, lamp, moving, speed2, !Float.isNaN(hdgMeas)));
-                                    if (lamp >= 0) {
-                                        for (int k4 = 0; k4 < 3; k4++) {
-                                            float[] lampVotes = tr.getLampVotes();
-                                            lampVotes[k4] = lampVotes[k4] * 0.6f;
-                                        }
-                                        float[] lampVotes2 = tr.getLampVotes();
-                                        lampVotes2[lamp] = lampVotes2[lamp] + 1.0f;
-                                        out = out3;
-                                        oCand = oCand3;
-                                        t2 = t;
-                                        hom2 = hom;
-                                        break;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void groundObjects(Detector.Source var1, List<Detector.Track> var2, Detector.Frame var3) {
+        Detector.Track var158 = null; // declarations Vineflower left out
+        Telemetry var30 = this.telemetry;
+        if (var30 != null) {
+            if (!var30.getCalValid()) {
+                var1.setObjects(CollectionsKt.emptyList());
+                var1.setAtMs(System.currentTimeMillis());
+            } else {
+                Projection.Companion.GroundInverse var31 = Projection.Companion
+                    .groundInverse(var30.getCalRpy(), var30.getCalHeight(), var3.getW(), var3.getH(), var1.getWide());
+                var1.setFovTan(var31.getCx() / var31.getF());
+                ArrayList var33 = new ArrayList();
+                ArrayList var29 = new ArrayList();
+                ArrayList var32 = new ArrayList();
+                Iterator var35 = var2.iterator();
+                ArrayList var37 = var33;
+
+                while (true) {
+                    float var6;
+                    float var9;
+                    int var17;
+                    int var18;
+                    float var50;
+                    float var62;
+                    float var84;
+                    label482:
+                    while (true) {
+                        boolean var22 = var35.hasNext();
+                        var9 = 3.5F;
+                        if (!var22) {
+                            if (!var32.isEmpty()) {
+                                long var135 = System.nanoTime();
+                                Iterable var144 = var32;
+                                var var138 = new ArrayList();
+
+                                for (Object var149 : var144) {
+                                    boolean var112;
+                                    if (var135 - ((Detector.OCand)var149).getTr().getONs() > 150000000L) {
+                                        var112 = true;
                                     } else {
-                                        for (int k5 = 0; k5 < 3; k5++) {
-                                            float[] lampVotes3 = tr.getLampVotes();
-                                            lampVotes3[k5] = lampVotes3[k5] * 0.8f;
-                                        }
-                                        out = out3;
-                                        oCand = oCand3;
-                                        t2 = t;
-                                        hom2 = hom;
+                                        var112 = false;
+                                    }
+
+                                    if (var112) {
+                                        var138.add(var149);
+                                    }
+                                }
+
+                                List var139 = var138;
+
+                                for (Detector.OCand var160 : CollectionsKt.take(CollectionsKt.sortedWith(var139, new Comparator() {
+                                    @Override
+                                    public final int compare(T var1, T var2x) {
+                                        return ComparisonsKt.compareValues(((Detector.OCand)var1).getTr().getONs(), ((Detector.OCand)var2x).getTr().getONs());
+                                    }
+                                }), 3)) {
+                                    Detector.Track var150 = var160.getTr();
+                                    float[] var140 = this.orient
+                                        .classify(
+                                            var3.getY(),
+                                            var3.getU(),
+                                            var3.getV(),
+                                            var3.getYStride(),
+                                            var3.getUvStride(),
+                                            var3.getUvPixStride(),
+                                            var3.getW(),
+                                            var3.getH(),
+                                            var150.getX0(),
+                                            var150.getY0(),
+                                            var150.getX1(),
+                                            var150.getY1(),
+                                            var160.getAspK()
+                                        );
+                                    if (var140 == null) {
                                         break;
                                     }
+
+                                    var150.setONs(var135);
+                                    var150.setON(var150.getON() + 1);
+
+                                    for (int var113 = 0; var113 < 16; var113++) {
+                                        float[] var168 = var150.getOHist();
+                                        var168[var113] *= 0.85F;
+                                    }
+
+                                    for (int var114 = 0; var114 < 16; var114++) {
+                                        var50 = (
+                                                (
+                                                            (
+                                                                        this.wrap(CarOrient.Companion.getCENTRES()[var114] + var160.getBearing() + (float) (Math.PI / 2))
+                                                                            + (float) Math.PI
+                                                                    )
+                                                                    / (float) (Math.PI * 2)
+                                                                    * 16
+                                                                - 0.5F
+                                                        )
+                                                        % 16
+                                                    + 16
+                                            )
+                                            % 16;
+                                        int var19 = (int)((float)Math.floor(var50)) % 16;
+                                        var18 = (var19 + 1) % 16;
+                                        var50 -= (float)Math.floor(var50);
+                                        float[] var169 = var150.getOHist();
+                                        var169[var19] += var140[var114] * (1 - var50);
+                                        var169 = var150.getOHist();
+                                        var169[var18] += var140[var114] * var50;
+                                    }
                                 }
                             }
-                            moving = false;
-                            pend = pend2;
-                            pend.add(new Pend(tr, cls2, lamp, moving, speed2, !Float.isNaN(hdgMeas)));
-                            if (lamp >= 0) {
-                            }
-                        }
-                        tr.setGx(gx);
-                        tr.setGy(gy);
-                        tr.setGw(gw);
-                        long nowNs32 = System.nanoTime();
-                        ArrayList oCand32 = oCand;
-                        long baseNs2 = (long) (Math.max(0.25f, gx / 80.0f) * 1.0E9f);
-                        if (tr.getMisses() != 0) {
-                        }
-                        float speed22 = (float) Math.hypot(tr.getGvx(), tr.getGvy());
-                        float bb2 = detector.atan2(gy, gx);
-                        float vr2 = (tr.getGvx() * ((float) Math.cos(bb2))) + (tr.getGvy() * ((float) Math.sin(bb2)));
-                        float vt2 = ((-tr.getGvx()) * ((float) Math.sin(bb2))) + (tr.getGvy() * ((float) Math.cos(bb2)));
-                        float radialNoise2 = (!src.getWide() ? 0.16f : 0.08f) * RangesKt.coerceAtLeast(tr.getGx(), 0.0f);
-                        float effSpeed2 = (float) Math.hypot(vt2, Math.max(0.0f, Math.abs(vr2) - radialNoise2));
-                        if (tr.getHits() >= 6) {
-                        }
-                        moving = false;
-                        pend = pend2;
-                        pend.add(new Pend(tr, cls2, lamp, moving, speed22, !Float.isNaN(hdgMeas)));
-                        if (lamp >= 0) {
-                        }
-                    }
-                    break;
-                case 10:
-                default:
-                    t = t2;
-                    if (!src.getWide() || !detector.isVehicle(cls2) || tr7.getY1() <= f.getH() * 0.92f || tr7.getX1() - tr7.getX0() <= f.getW() * 0.4f) {
-                        float[] g = hom2.ground(uc, Math.min(tr7.getY1(), f.getH()));
-                        if (g == null) {
-                            out = out3;
-                            pend = pend2;
-                            t2 = t;
-                            break;
-                        } else if (g[0] < 1.5f || g[0] > 100.0f) {
-                            pend = pend2;
-                            out = out3;
-                            t2 = t;
-                            break;
-                        } else if (Math.abs(g[1]) > 40.0f) {
-                            out = out3;
-                            pend = pend2;
-                            t2 = t;
-                            break;
-                        } else if (g[0] < 4.0f && Math.abs(g[1]) < 1.8f) {
-                            out = out3;
-                            pend = pend2;
-                            t2 = t;
-                            break;
-                        } else {
-                            float gx3 = g[0];
-                            float gy3 = g[1];
-                            float gw2 = hom2.getFisheye() ? (wPx / hom2.getF()) * ((float) Math.hypot(g[0], g[1])) : (g[0] * wPx) / hom2.getF();
-                            if (detector.isVehicle(cls2) && (gw2 < 0.9f || gw2 > 12.0f)) {
-                                out = out3;
-                                pend = pend2;
-                                t2 = t;
-                                break;
-                            } else {
-                                boolean cut = tr7.getX0() < ((float) f.getW()) * 0.015f || tr7.getX1() > ((float) f.getW()) * 0.985f || tr7.getY1() > ((float) f.getH()) * 0.97f || tr7.getY0() < ((float) f.getH()) * 0.01f;
-                                if (detector.isVehicle(cls2) && !cut && tr7.getMisses() == 0) {
-                                    float th = hom2.offAxis(uc, (tr7.getY0() + tr7.getY1()) / 2.0f);
-                                    float aspK = (!hom2.getFisheye() || th <= 0.05f) ? 1.0f : th / ((float) Math.sin(th));
-                                    gy = gy3;
-                                    hom = hom2;
-                                    gx = gx3;
-                                    Cue c2 = vehicleCue(f, tr7.getX0(), tr7.getY0(), tr7.getX1(), tr7.getY1(), detector.atan2(gy3, gx3), cls2, aspK);
-                                    tr = tr7;
-                                    tr.setAxisEv((tr7.getAxisEv() * 0.93f) + c2.getEv());
-                                    for (int k6 = 0; k6 < 4; k6++) {
-                                        float[] hVotes = tr.getHVotes();
-                                        hVotes[k6] = hVotes[k6] * 0.93f;
-                                    }
-                                    float[] hVotes2 = tr.getHVotes();
-                                    int alongBin = c2.getAlongBin();
-                                    hVotes2[alongBin] = hVotes2[alongBin] + 1.0f;
-                                    float[] hVotes3 = tr.getHVotes();
-                                    int acrossBin = c2.getAcrossBin();
-                                    hVotes3[acrossBin] = hVotes3[acrossBin] + c2.getAcrossW();
-                                    if (detector.useOrient && cls2 != 5 && hPx >= 16.0f) {
-                                        oCand.add(new OCand(tr, detector.atan2(gy, gx), aspK));
-                                    }
-                                    hdgMeas2 = 0.0f;
+
+                            Iterable var141 = var29;
+                            var var38 = new ArrayList();
+
+                            for (Object var151 : var141) {
+                                Detector.Pend var142 = (Detector.Pend)var151;
+                                boolean var115;
+                                if (this.isVehicle(var142.getCls()) && var142.getCls() != 5 && !var142.getMoving() && !Float.isNaN(var142.getTr().getGx())) {
+                                    var115 = true;
                                 } else {
-                                    gy = gy3;
-                                    hom = hom2;
-                                    tr = tr7;
-                                    gx = gx3;
+                                    var115 = false;
                                 }
-                                Unit unit2 = Unit.INSTANCE;
-                                gw = gw2;
-                                lamp = -1;
-                                hdgMeas = hdgMeas2;
-                                if (!Float.isNaN(tr.getGx())) {
-                                    float a22 = RangesKt.coerceIn(0.6f - (tr.getGx() * 0.01f), 0.2f, 0.6f);
-                                    tr.setGx(tr.getGx() + ((gx - tr.getGx()) * a22));
-                                    tr.setGy(tr.getGy() + ((gy - tr.getGy()) * a22));
-                                    tr.setGw(tr.getGw() + ((gw - tr.getGw()) * a22));
-                                    long nowNs322 = System.nanoTime();
-                                    ArrayList oCand322 = oCand;
-                                    long baseNs22 = (long) (Math.max(0.25f, gx / 80.0f) * 1.0E9f);
-                                    if (tr.getMisses() != 0) {
+
+                                if (var115) {
+                                    var38.add(var151);
+                                }
+                            }
+
+                            List var148 = var38;
+                            float[] var143 = new float[var148.size()];
+                            var17 = 0;
+
+                            for (int var20 = var148.size(); var17 < var20; var17++) {
+                                var18 = var17 + 1;
+
+                                for (int var21 = var148.size(); var18 < var21; var18++) {
+                                    label547: {
+                                        Detector.Track var39 = ((Detector.Pend)var148.get(var17)).getTr();
+                                        Detector.Track var152 = ((Detector.Pend)var148.get(var18)).getTr();
+                                        var62 = Math.abs(var39.getGx() - var152.getGx());
+                                        var50 = Math.abs(var39.getGy() - var152.getGy());
+                                        if (var62 < 3.5F) {
+                                            boolean var128;
+                                            if (1.8F <= var50 && var50 <= 4.3F) {
+                                                var128 = true;
+                                            } else {
+                                                var128 = false;
+                                            }
+
+                                            if (var128) {
+                                                var50 = 1.0F;
+                                                break label547;
+                                            }
+                                        }
+
+                                        if (var50 < 1.5F) {
+                                            boolean var129;
+                                            if (2.0F <= var62 && var62 <= 4.3F) {
+                                                var129 = true;
+                                            } else {
+                                                var129 = false;
+                                            }
+
+                                            if (var129) {
+                                                var50 = -1.0F;
+                                                break label547;
+                                            }
+                                        }
+
+                                        var50 = 0.0F;
                                     }
-                                    float speed222 = (float) Math.hypot(tr.getGvx(), tr.getGvy());
-                                    float bb22 = detector.atan2(gy, gx);
-                                    float vr22 = (tr.getGvx() * ((float) Math.cos(bb22))) + (tr.getGvy() * ((float) Math.sin(bb22)));
-                                    float vt22 = ((-tr.getGvx()) * ((float) Math.sin(bb22))) + (tr.getGvy() * ((float) Math.cos(bb22)));
-                                    float radialNoise22 = (!src.getWide() ? 0.16f : 0.08f) * RangesKt.coerceAtLeast(tr.getGx(), 0.0f);
-                                    float effSpeed22 = (float) Math.hypot(vt22, Math.max(0.0f, Math.abs(vr22) - radialNoise22));
-                                    if (tr.getHits() >= 6) {
+
+                                    var143[var17] += var50;
+                                    var143[var18] += var50;
+                                }
+                            }
+
+                            Iterator var40 = var29.iterator();
+                            Intrinsics.checkNotNullExpressionValue(var40, "iterator(...)");
+
+                            while (var40.hasNext()) {
+                                Detector.Track var153 = (Detector.Track)var40.next();
+                                Intrinsics.checkNotNullExpressionValue(var153, "next(...)");
+                                var153 = ((Detector.Pend)var153).getTr();
+                                var153.setRowEv(var153.getRowEv() * 0.93F);
+                            }
+
+                            Iterator var41 = var148.iterator();
+                            var17 = 0;
+
+                            while (true) {
+                                var18 = var17;
+                                if (!var41.hasNext()) {
+                                    Iterator var137 = var29.iterator();
+                                    Intrinsics.checkNotNullExpressionValue(var137, "iterator(...)");
+
+                                    while (var137.hasNext()) {
+                                        Detector.Pend var42 = (Detector.Pend)var137.next();
+                                        Intrinsics.checkNotNullExpressionValue(var42, "next(...)");
+                                        var42 = var42;
+                                        Detector.Track var157 = var42.getTr();
+                                        int var131 = var42.getCls();
+                                        boolean var23 = var42.getMoving();
+                                        float var102 = var42.getSpeed();
+                                        var42.getLamp();
+                                        float[] var161 = var157.getHVotes();
+                                        var6 = this.atan2(var157.getGy(), var157.getGx());
+                                        if (var23) {
+                                            var62 = this.atan2(var157.getGvy(), var157.getGvx());
+                                            var84 = (float)Math.rint(var62 / (float) (Math.PI / 2)) * (float) (Math.PI / 2);
+                                            var50 = var62;
+                                            if (Math.abs(this.wrap(var62 - var84)) < 0.4F) {
+                                                var50 = this.wrap(var84);
+                                            }
+                                        } else if (this.isVehicle(var131) && var131 != 5 && this.orientReady(var157)) {
+                                            var50 = this.orientHeading(var157);
+                                        } else if (this.isVehicle(var131) && var161[0] + var161[1] + var161[2] + var161[3] > 2.5F) {
+                                            var50 = var157.getAxisEv() + var157.getRowEv() * 1.5F;
+                                            Boolean var44 = var157.getAlong();
+                                            if (var50 > 0.6F) {
+                                                var44 = true;
+                                            } else if (var50 < -0.6F) {
+                                                var44 = false;
+                                            } else if (var44 == null) {
+                                                if (Math.abs(var157.getGy()) < 8.0F) {
+                                                    var22 = true;
+                                                } else {
+                                                    var22 = false;
+                                                }
+
+                                                var44 = var22;
+                                            }
+
+                                            var157.setAlong(var44);
+                                            if (Intrinsics.areEqual(var157.getAlong(), true)) {
+                                                if (var161[0] >= var161[2]) {
+                                                    var50 = 0.0F;
+                                                } else {
+                                                    var50 = (float) Math.PI;
+                                                }
+                                            } else if (var161[1] >= var161[3]) {
+                                                var50 = (float) (Math.PI / 2);
+                                            } else {
+                                                var50 = -(float) (Math.PI / 2);
+                                            }
+                                        } else {
+                                            var50 = Float.NaN;
+                                        }
+
+                                        if (!Float.isNaN(var50) && this.isVehicle(var131)) {
+                                            var62 = Math.abs(this.wrap(var50 - var6));
+                                            byte var118;
+                                            if (var62 > 1.1F && var62 < 2.05F) {
+                                                var118 = 2;
+                                            } else if (var62 >= 2.05F) {
+                                                var118 = 1;
+                                            } else {
+                                                var118 = 0;
+                                            }
+
+                                            for (int var124 = 0; var124 < 3; var124++) {
+                                                float[] var45 = var157.getVotes();
+                                                var45[var124] *= 0.97F;
+                                            }
+
+                                            float[] var46 = var157.getVotes();
+                                            var46[var118]++;
+                                        }
+
+                                        float[] var47 = var157.getVotes();
+                                        byte var119;
+                                        if (var47[2] > 3.0F && var47[2] > Math.max(var47[0], var47[1]) * 1.5F) {
+                                            var119 = 2;
+                                        } else if (var47[1] > 3.0F && var47[1] > var47[0] * 2.0F) {
+                                            var119 = 1;
+                                        } else {
+                                            var119 = 0;
+                                        }
+
+                                        float[] var48 = var157.getLampVotes();
+                                        var62 = Math.max(var48[0], Math.max(var48[1], var48[2]));
+                                        byte var125;
+                                        if (var62 < 0.8F) {
+                                            var125 = -1;
+                                        } else {
+                                            boolean var126;
+                                            if (var62 == var48[0]) {
+                                                var126 = true;
+                                            } else {
+                                                var126 = false;
+                                            }
+
+                                            if (var126) {
+                                                var125 = 0;
+                                            } else {
+                                                if (var62 == var48[1]) {
+                                                    var126 = true;
+                                                } else {
+                                                    var126 = false;
+                                                }
+
+                                                if (var126) {
+                                                    var125 = 1;
+                                                } else {
+                                                    var125 = 2;
+                                                }
+                                            }
+                                        }
+
+                                        float var94 = var157.getGx();
+                                        var9 = var157.getGy();
+                                        if (this.isVehicle(var131)) {
+                                            float var104 = this.atan2(var157.getGy(), var157.getGx());
+                                            if (Float.isNaN(var50)) {
+                                                var6 = 0.0F;
+                                            } else {
+                                                var6 = this.wrap(var50 - var104);
+                                            }
+
+                                            switch (var131) {
+                                                case 5:
+                                                    var62 = 11.0F;
+                                                    break;
+                                                case 6:
+                                                default:
+                                                    var62 = 4.7F;
+                                                    break;
+                                                case 7:
+                                                    var62 = 5.8F;
+                                            }
+
+                                            if (var131 == 5) {
+                                                var84 = 2.5F;
+                                            } else {
+                                                var84 = 1.9F;
+                                            }
+
+                                            var6 = (Math.abs((float)Math.cos(var6)) * var62 + Math.abs((float)Math.sin(var6)) * var84) / 2.0F;
+                                            var62 = var94 + (float)Math.cos(var104) * var6;
+                                            var6 = var9 + (float)Math.sin(var104) * var6;
+                                        } else {
+                                            var6 = var9;
+                                            var62 = var94;
+                                        }
+
+                                        long var136;
+                                        if (var1.getWide()) {
+                                            var136 = -var157.getId() - 1000000L;
+                                        } else {
+                                            var136 = var157.getId();
+                                        }
+
+                                        var9 = var157.getGx();
+                                        var84 = var157.getGy();
+                                        float var106 = var157.getGw();
+                                        boolean var24 = var1.getWide();
+                                        float var105 = var157.getGvx();
+                                        var94 = var157.getGvy();
+                                        if (var157.getVelN() >= 3) {
+                                            var22 = true;
+                                        } else {
+                                            var22 = false;
+                                        }
+
+                                        var37.add(
+                                            new Detector.Obj(
+                                                var136, var131, var9, var84, var106, var119, var125, var131, var24, var50, var62, var6, var23, var102, var105, var94, var22
+                                            )
+                                        );
                                     }
-                                    moving = false;
-                                    pend = pend2;
-                                    pend.add(new Pend(tr, cls2, lamp, moving, speed222, !Float.isNaN(hdgMeas)));
-                                    if (lamp >= 0) {
+
+                                    var1.setObjects(var37);
+                                    var1.setAtMs(System.currentTimeMillis());
+                                    return;
+                                }
+
+                                int var130 = var17 + 1;
+                                Detector.Pend var155 = (Detector.Pend)var41.next();
+                                var17 = var130;
+                                if (var155.getMeasured()) {
+                                    Detector.Track var156 = var155.getTr();
+                                    var156.setRowEv(var156.getRowEv() + RangesKt.coerceIn(var143[var18], -1.0F, 1.0F));
+                                    var17 = var130;
+                                }
+                            }
+                        }
+
+                        var158 = (Detector.Track)var35.next();
+                        var18 = this.vehicleCls(var158);
+                        var50 = var158.getX1() - var158.getX0();
+                        var84 = var158.getY1() - var158.getY0();
+                        float var10 = (var158.getX0() + var158.getX1()) / 2.0F;
+                        var17 = -1;
+                        var62 = Float.NaN;
+                        switch (var18) {
+                            case 9:
+                            case 11:
+                                var62 = var31.getF();
+                                if (var18 == 9) {
+                                    var50 = 1.0F;
+                                } else {
+                                    var50 = 0.75F;
+                                }
+
+                                var50 = var62 * var50 / Math.max(var84, 1.0F);
+                                if (var50 < 3.0F || var50 > 120.0F) {
+                                    continue;
+                                }
+
+                                if (var31.getFisheye()) {
+                                    var6 = (var10 - var31.getCx()) / var31.getF();
+                                    var62 = (float)Math.cos(var6);
+                                    var6 = (float)Math.sin(var6);
+                                    var62 *= var50;
+                                    var50 = var6 * var50;
+                                } else {
+                                    var6 = (var10 - var31.getCx()) / var31.getF();
+                                    var62 = var50;
+                                    var50 = var6 * var50;
+                                }
+
+                                if (var18 == 9) {
+                                    var17 = this.lampColour(var3, var158.getX0(), var158.getY0(), var158.getX1(), var158.getY1());
+                                }
+
+                                Unit var164 = Unit.INSTANCE;
+                                var6 = var62;
+                                var62 = var50;
+                                var84 = 0.5F;
+                                var50 = Float.NaN;
+                                break label482;
+                            case 10:
+                        }
+
+                        if (!var1.getWide()
+                            || !this.isVehicle(var18)
+                            || !(var158.getY1() > var3.getH() * 0.92F)
+                            || !(var158.getX1() - var158.getX0() > var3.getW() * 0.4F)) {
+                            float[] var34 = var31.ground(var10, Math.min(var158.getY1(), (float)var3.getH()));
+                            if (var34 != null
+                                && !(var34[0] < 1.5F)
+                                && !(var34[0] > 100.0F)
+                                && !(Math.abs(var34[1]) > 40.0F)
+                                && (!(var34[0] < 4.0F) || !(Math.abs(var34[1]) < 1.8F))) {
+                                var6 = var34[0];
+                                float var8 = var34[1];
+                                if (var31.getFisheye()) {
+                                    var50 = var50 / var31.getF() * (float)Math.hypot(var34[0], var34[1]);
+                                } else {
+                                    var50 = var34[0] * var50 / var31.getF();
+                                }
+
+                                if (!this.isVehicle(var18) || !(var50 < 0.9F) && !(var50 > 12.0F)) {
+                                    int var107;
+                                    if (!(var158.getX0() < var3.getW() * 0.015F)
+                                        && !(var158.getX1() > var3.getW() * 0.985F)
+                                        && !(var158.getY1() > var3.getH() * 0.97F)
+                                        && !(var158.getY0() < var3.getH() * 0.01F)) {
+                                        var107 = 0;
+                                    } else {
+                                        var107 = 1;
                                     }
+
+                                    if (this.isVehicle(var18) && !var107 && var158.getMisses() == 0) {
+                                        var62 = var31.offAxis(var10, (var158.getY0() + var158.getY1()) / 2.0F);
+                                        if (var31.getFisheye() && var62 > 0.05F) {
+                                            var62 /= (float)Math.sin(var62);
+                                        } else {
+                                            var62 = 1.0F;
+                                        }
+
+                                        Detector.Cue var162 = this.vehicleCue(
+                                            var3, var158.getX0(), var158.getY0(), var158.getX1(), var158.getY1(), this.atan2(var8, var6), var18, var62
+                                        );
+                                        var10 = var158.getAxisEv();
+                                        float var11 = var162.getEv();
+                                        var158.setAxisEv(var10 * 0.93F + var11);
+
+                                        for (int var108 = 0; var108 < 4; var108++) {
+                                            float[] var36 = var158.getHVotes();
+                                            var36[var108] *= 0.93F;
+                                        }
+
+                                        float[] var171 = var158.getHVotes();
+                                        var107 = var162.getAlongBin();
+                                        var171[(((var107 != 0)) ? 1 : 0)]++;
+                                        var171 = var158.getHVotes();
+                                        var107 = var162.getAcrossBin();
+                                        var171[(((var107 != 0)) ? 1 : 0)] += var162.getAcrossW();
+                                        if (this.useOrient && var18 != 5 && var84 >= 16.0F) {
+                                            var32.add(new Detector.OCand(var158, this.atan2(var8, var6), var62));
+                                        }
+
+                                        var62 = 0.0F;
+                                    }
+
+                                    Unit var163 = Unit.INSTANCE;
+                                    var84 = var50;
+                                    var17 = -1;
+                                    var50 = var62;
+                                    var62 = var8;
                                     break;
                                 }
-                                tr.setGx(gx);
-                                tr.setGy(gy);
-                                tr.setGw(gw);
-                                long nowNs3222 = System.nanoTime();
-                                ArrayList oCand3222 = oCand;
-                                long baseNs222 = (long) (Math.max(0.25f, gx / 80.0f) * 1.0E9f);
-                                if (tr.getMisses() != 0) {
-                                }
-                                float speed2222 = (float) Math.hypot(tr.getGvx(), tr.getGvy());
-                                float bb222 = detector.atan2(gy, gx);
-                                float vr222 = (tr.getGvx() * ((float) Math.cos(bb222))) + (tr.getGvy() * ((float) Math.sin(bb222)));
-                                float vt222 = ((-tr.getGvx()) * ((float) Math.sin(bb222))) + (tr.getGvy() * ((float) Math.cos(bb222)));
-                                float radialNoise222 = (!src.getWide() ? 0.16f : 0.08f) * RangesKt.coerceAtLeast(tr.getGx(), 0.0f);
-                                float effSpeed222 = (float) Math.hypot(vt222, Math.max(0.0f, Math.abs(vr222) - radialNoise222));
-                                if (tr.getHits() >= 6) {
-                                }
-                                moving = false;
-                                pend = pend2;
-                                pend.add(new Pend(tr, cls2, lamp, moving, speed2222, !Float.isNaN(hdgMeas)));
-                                if (lamp >= 0) {
-                                }
                             }
                         }
-                    } else {
-                        out = out3;
-                        pend = pend2;
-                        t2 = t;
-                        break;
                     }
-                    break;
+
+                    if (Float.isNaN(var158.getGx()) || var158.getMisses() == 0 && var158.getHits() <= this.need(var18)) {
+                        var158.setGx(var6);
+                        var158.setGy(var62);
+                        var158.setGw(var84);
+                    } else {
+                        float var91 = RangesKt.coerceIn(0.6F - var158.getGx() * 0.01F, 0.2F, 0.6F);
+                        var158.setGx(var158.getGx() + (var6 - var158.getGx()) * var91);
+                        var158.setGy(var158.getGy() + (var62 - var158.getGy()) * var91);
+                        var158.setGw(var158.getGw() + (var84 - var158.getGw()) * var91);
+                    }
+
+                    long var27 = System.nanoTime();
+                    long var25 = (long)(Math.max(0.25F, var6 / 80.0F) * 1.0E9F);
+                    if (var158.getMisses() == 0 && var6 < 90.0F) {
+                        if (!Float.isNaN(var158.getMx()) && var27 - var158.getMNs() > var25) {
+                            float var99 = (float)(var27 - var158.getMNs()) / 1.0E9F;
+                            if (var99 < 2.5F) {
+                                var84 = var30.getVEgo();
+                                float var92 = (var6 - var158.getMx()) / var99;
+                                var99 = (var62 - var158.getMy()) / var99;
+                                var158.setGvx(var158.getGvx() + (var92 + var84 - var158.getGvx()) * 0.3F);
+                                var158.setGvy(var158.getGvy() + (var99 - var158.getGvy()) * 0.3F);
+                                var84 = (float)Math.hypot(var158.getGvx(), var158.getGvy());
+                                if (var84 > 45.0F) {
+                                    var158.setGvx(var158.getGvx() * (45.0F / var84));
+                                    var158.setGvy(var158.getGvy() * (45.0F / var84));
+                                }
+
+                                var158.setVelN(var158.getVelN() + 1);
+                            }
+
+                            var158.setMx(var6);
+                            var158.setMy(var62);
+                            var158.setMNs(var27);
+                        } else if (Float.isNaN(var158.getMx()) || var27 - var158.getMNs() > 2500000000L) {
+                            var158.setMx(var6);
+                            var158.setMy(var62);
+                            var158.setMNs(var27);
+                        }
+                    }
+
+                    var84 = (float)Math.hypot(var158.getGvx(), var158.getGvy());
+                    var62 = this.atan2(var62, var6);
+                    float var93 = var158.getGvx();
+                    float var103 = (float)Math.cos(var62);
+                    float var13 = var158.getGvy();
+                    float var14 = (float)Math.sin(var62);
+                    float var12 = -var158.getGvx();
+                    float var101 = (float)Math.sin(var62);
+                    var6 = var158.getGvy();
+                    float var15 = (float)Math.cos(var62);
+                    if (var1.getWide()) {
+                        var62 = 0.16F;
+                    } else {
+                        var62 = 0.08F;
+                    }
+
+                    boolean var132;
+                    label510: {
+                        float var16 = RangesKt.coerceAtLeast(var158.getGx(), 0.0F);
+                        var6 = (float)Math.hypot(var12 * var101 + var6 * var15, Math.max(0.0F, Math.abs(var93 * var103 + var13 * var14) - var62 * var16));
+                        if (var158.getHits() >= 6) {
+                            if (var1.getWide()) {
+                                var62 = var9;
+                            } else {
+                                var62 = 3.0F;
+                            }
+
+                            if (var6 > var62) {
+                                var132 = true;
+                                break label510;
+                            }
+                        }
+
+                        var132 = false;
+                    }
+
+                    Detector.Pend var165 = new Detector.Pend(var158, var18, var17, var132, var84, Float.isNaN(var50) ^ true);
+                    var29.add(var165);
+                    if (var17 >= 0) {
+                        for (int var120 = 0; var120 < 3; var120++) {
+                            float[] var167 = var158.getLampVotes();
+                            var167[var120] *= 0.6F;
+                        }
+
+                        float[] var159 = var158.getLampVotes();
+                        var159[var17]++;
+                    } else {
+                        for (int var111 = 0; var111 < 3; var111++) {
+                            float[] var166 = var158.getLampVotes();
+                            var166[var111] *= 0.8F;
+                        }
+                    }
+                }
             }
         }
     }
@@ -3419,21 +3438,112 @@ public final class Detector {
         return (float) Math.atan2(y, x);
     }
 
-    /*  JADX ERROR: NullPointerException in pass: InitCodeVariables
-        java.lang.NullPointerException: Cannot invoke "jadx.core.dex.instructions.args.SSAVar.getPhiList()" because "resultVar" is null
-        	at jadx.core.dex.visitors.InitCodeVariables.collectConnectedVars(InitCodeVariables.java:119)
-        	at jadx.core.dex.visitors.InitCodeVariables.setCodeVar(InitCodeVariables.java:82)
-        	at jadx.core.dex.visitors.InitCodeVariables.initCodeVar(InitCodeVariables.java:74)
-        	at jadx.core.dex.visitors.InitCodeVariables.initCodeVars(InitCodeVariables.java:48)
-        	at jadx.core.dex.visitors.InitCodeVariables.visit(InitCodeVariables.java:29)
-        */
-    /* JADX INFO: Access modifiers changed from: private */
-    public final com.starpilot.starview.Detector.Cue vehicleCue(com.starpilot.starview.Detector.Frame r32, float r33, float r34, float r35, float r36, float r37, int r38, float r39) {
-        /*
-            Method dump skipped, instructions count: 504
-            To view this dump add '--comments-level debug' option
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.starpilot.starview.Detector.vehicleCue(com.starpilot.starview.Detector$Frame, float, float, float, float, float, int, float):com.starpilot.starview.Detector$Cue");
+    /* VF: from Vineflower (jadx: ) */
+    public final Detector.Cue vehicleCue(Detector.Frame var1, float var2, float var3, float var4, float var5, float var6, int var7, float var8) {
+        float var9 = Math.max((var4 - var2) / Math.max(1.0F, var5 - var3) * var8, 0.2F);
+        Float var17 = 1.9F;
+        Triple var18;
+        switch (var7) {
+            case 5:
+                var18 = new Triple(11.0F, 2.5F, 3.2F);
+                break;
+            case 6:
+            default:
+                var18 = new Triple(4.7F, var17, 1.5F);
+                break;
+            case 7:
+                var18 = new Triple(5.8F, 2.0F, var17);
+        }
+
+        float var10 = ((Number)var18.component1()).floatValue();
+        float var12 = ((Number)var18.component2()).floatValue();
+        float var13 = ((Number)var18.component3()).floatValue();
+        float var11 = (float) Math.PI / 2;
+        var8 = vehicleCue$predicted(var6, var12, var10, var13, 0.0F);
+        var11 = vehicleCue$predicted(var6, var12, var10, var13, var11);
+        var10 = Math.abs((float)Math.log(var11 / var8));
+        var11 = Math.abs((float)Math.log(var9 / var11));
+        var8 = Math.abs((float)Math.log(var9 / var8));
+        if (var10 < 0.15F) {
+            var8 = 0.0F;
+        } else {
+            var8 = RangesKt.coerceIn((var11 - var8) / var10, -1.0F, 1.0F) * Math.min(1.0F, (var10 - 0.15F) / 0.3F);
+        }
+
+        Triple var39 = this.redThirds(var1, var2, var3, var4, var5);
+        var10 = ((Number)var39.component1()).floatValue();
+        var11 = ((Number)var39.component2()).floatValue();
+        float var24 = ((Number)var39.component3()).floatValue();
+        var11 = Math.min(var10, Math.min(var11, var24));
+        var10 -= var11;
+        var13 = var24 - var11;
+        kotlin.Pair var40 = this.headlightEnds(var1, var2, var3, var4, var5);
+        var11 = ((Number)var40.component1()).floatValue();
+        var12 = ((Number)var40.component2()).floatValue();
+        var8 = var8;
+        if (var10 > 8.0F) {
+            var8 = var8;
+            if (var13 > 8.0F) {
+                var8 = var8;
+                if (Math.min(var10, var13) > Math.max(var10, var13) * 0.5F) {
+                    var8 += 0.8F;
+                }
+            }
+        }
+
+        var9 = var8;
+        if (var11 > 50.0F) {
+            var9 = var8;
+            if (var12 > 50.0F) {
+                var9 = var8;
+                if (Math.abs(var11 - var12) < 25.0F) {
+                    var9 = var8 + 0.5F;
+                }
+            }
+        }
+
+        var8 = var9;
+        if (this.symmetry(var1, var2, var3, var4, var5) > 0.55F) {
+            var8 = var9 + 0.6F;
+        }
+
+        boolean var16 = this.tailLights(var1, var2, var3, var4, var5);
+        int var15 = 0;
+        byte var14;
+        if (var16) {
+            var14 = 0;
+        } else {
+            var14 = 2;
+        }
+
+        if (var7 == 2) {
+            var15 = this.roofProfile(var1, var2, var3, var4, var5);
+        }
+
+        byte var20 = 1;
+        if (var10 > 10.0F && var10 > var13 * 1.5F) {
+            var2 = 1.0F;
+        } else if (var13 > 10.0F && var13 > 1.5F * var10) {
+            var2 = 1.0F;
+            var20 = 3;
+        } else if (var11 > 40.0F && var11 > var12 + 30.0F) {
+            var2 = 1.0F;
+            var20 = 3;
+        } else if (var12 > 40.0F && var12 > var11 + 30.0F) {
+            var2 = 1.0F;
+        } else if (var15 > 0) {
+            var2 = 1.0F;
+            var20 = 3;
+        } else if (var15 < 0) {
+            var2 = 1.0F;
+        } else {
+            var2 = 0.3F;
+            if (!(var6 >= 0.0F)) {
+                var20 = 3;
+            }
+        }
+
+        return new Detector.Cue(var8, var14, var20, var2);
     }
 
     private static final float vehicleCue$predicted(float $b, float wid, float len, float hgt, float h) {

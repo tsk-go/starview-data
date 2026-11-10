@@ -20,6 +20,7 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt;
 import kotlin.ranges.RangesKt;
+import android.graphics.PorterDuff.Mode;
 
 /* compiled from: BigUiViews.kt */
 public final class MiciDistanceView extends View {
@@ -42,23 +43,31 @@ public final class MiciDistanceView extends View {
     private final PorterDuffColorFilter red;
     public Telemetry t;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public MiciDistanceView(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        this.car = bmp(R.drawable.mici_car);
-        this.carGreen = bmp(R.drawable.mici_car_green);
-        this.bars = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(bmp(R.drawable.mici_distance_1), bmp(R.drawable.mici_distance_1_green)), TuplesKt.to(bmp(R.drawable.mici_distance_2), bmp(R.drawable.mici_distance_2_green)), TuplesKt.to(bmp(R.drawable.mici_distance_3), bmp(R.drawable.mici_distance_3_green))});
-        Float valueOf = Float.valueOf(35.0f);
-        this.carSize = TuplesKt.to(TuplesKt.to(valueOf, Float.valueOf(27.0f)), TuplesKt.to(Float.valueOf(50.0f), Float.valueOf(42.0f)));
-        this.barSizes = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(TuplesKt.to(Float.valueOf(32.0f), Float.valueOf(7.0f)), TuplesKt.to(Float.valueOf(60.0f), valueOf)), TuplesKt.to(TuplesKt.to(Float.valueOf(40.0f), Float.valueOf(9.0f)), TuplesKt.to(Float.valueOf(68.0f), Float.valueOf(37.0f))), TuplesKt.to(TuplesKt.to(Float.valueOf(48.0f), Float.valueOf(11.0f)), TuplesKt.to(Float.valueOf(76.0f), Float.valueOf(39.0f)))});
-        this.barY = new float[]{122.0f, 136.0f, 152.0f};
+    /* VF: from Vineflower (jadx: ) */
+    public MiciDistanceView(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        this.car = this.bmp(R.drawable.mici_car);
+        this.carGreen = this.bmp(R.drawable.mici_car_green);
+        Pair var5 = TuplesKt.to(this.bmp(R.drawable.mici_distance_1), this.bmp(R.drawable.mici_distance_1_green));
+        Pair var3 = TuplesKt.to(this.bmp(R.drawable.mici_distance_2), this.bmp(R.drawable.mici_distance_2_green));
+        this.bars = CollectionsKt.listOf(new Pair[]{var5, var3, TuplesKt.to(this.bmp(R.drawable.mici_distance_3), this.bmp(R.drawable.mici_distance_3_green))});
+        Float var4 = 35.0F;
+        this.carSize = TuplesKt.to(TuplesKt.to(var4, 27.0F), TuplesKt.to(50.0F, 42.0F));
+        this.barSizes = CollectionsKt.listOf(
+            new Pair[]{
+                TuplesKt.to(TuplesKt.to(32.0F, 7.0F), TuplesKt.to(60.0F, var4)),
+                TuplesKt.to(TuplesKt.to(40.0F, 9.0F), TuplesKt.to(68.0F, 37.0F)),
+                TuplesKt.to(TuplesKt.to(48.0F, 11.0F), TuplesKt.to(76.0F, 39.0F))
+            }
+        );
+        this.barY = new float[]{122.0F, 136.0F, 152.0F};
         this.p = new Paint(3);
-        this.red = new PorterDuffColorFilter(Color.rgb(200, 32, 48), PorterDuff.Mode.MULTIPLY);
+        this.red = new PorterDuffColorFilter(Color.rgb(200, 32, 48), android.graphics.PorterDuff.Mode.MULTIPLY);
         this.barOn = new float[3];
         this.barGreen = new float[3];
         this.lastPersonality = -1;
-        this.changedAtS = -10.0d;
+        this.changedAtS = -10.0;
     }
 
     public /* synthetic */ MiciDistanceView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {

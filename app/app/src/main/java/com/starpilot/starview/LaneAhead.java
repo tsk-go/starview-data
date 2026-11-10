@@ -247,134 +247,156 @@ public final class LaneAhead {
         return d.getFrom() + " → " + d.getTo() + " lanes in " + far;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Removed duplicated region for block: B:35:0x011e  */
-    /* JADX WARN: Removed duplicated region for block: B:43:0x0103  */
-    /* JADX WARN: Removed duplicated region for block: B:44:0x0106  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void update(long nowMs, final double odo, final double lat, final double lon, final double headingRad, float vEgo, LaneBrain b, LaneBrain.Frame f) {
-        Drop d;
-        boolean z;
-        int i;
-        long j;
-        String hpmsName;
-        boolean inIt;
-        double lead;
-        Stage stage;
-        Function2<? super String, ? super Boolean, Unit> function2;
-        String str;
-        Intrinsics.checkNotNullParameter(b, "b");
-        sideFromCamera(odo, b, f);
-        Drop d2 = this.drop;
-        if (d2 != null) {
-            double m = d2.getAtOdo() - odo;
-            if (m < -60.0d) {
-                if (d2.getSide() != 0) {
-                    b.roadLaneEnded(d2.getSide(), nowMs);
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public final void update(long var1, double var3, double var5, double var7, double var9, float var11, LaneBrain var12, LaneBrain.Frame var13) {
+        String var32 = null; // declarations Vineflower left out
+        Intrinsics.checkNotNullParameter(var12, "b");
+        this.sideFromCamera(var3, var12, var13);
+        LaneAhead.Drop var21 = this.drop;
+        Boolean var20 = true;
+        if (var21 != null) {
+            double var14 = var21.getAtOdo() - var3;
+            if (var14 < -60.0) {
+                if (var21.getSide() != 0) {
+                    var12.roadLaneEnded(var21.getSide(), var1);
                 }
-                Function2<? super String, ? super Boolean, Unit> function22 = this.onEvent;
-                if (function22 != null) {
-                    int from = d2.getFrom();
-                    int to = d2.getTo();
-                    if (d2.getSide() != 0) {
-                        String lowerCase = Companion.sideName(d2.getSide()).toLowerCase(Locale.ROOT);
-                        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                        str = " (" + lowerCase + " lane ended)";
+
+                Function2 var22 = this.onEvent;
+                if (var22 != null) {
+                    int var19 = var21.getFrom();
+                    int var18 = var21.getTo();
+                    String var26;
+                    if (var21.getSide() != 0) {
+                        String var25 = Companion.sideName(var21.getSide()).toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(var25, "toLowerCase(...)");
+                        var26 = " (" + var25 + " lane ended)";
                     } else {
-                        str = "";
+                        var26 = "";
                     }
-                    function22.invoke("passed: " + from + " → " + to + " lanes" + str, true);
+
+                    var22.invoke("passed: " + var19 + " → " + var18 + " lanes" + var26, var20);
                 }
+
                 this.drop = null;
-                this.stage = Stage.NONE;
+                this.stage = LaneAhead.Stage.NONE;
             } else {
-                if (d2.getSide() != 0) {
-                    Pair<Integer, Double> sideLanes = b.sideLanes(d2.getSide());
-                    int n = sideLanes.component1().intValue();
-                    double c = sideLanes.component2().doubleValue();
-                    if (n == 0 && c >= 0.6d) {
-                        inIt = true;
-                        lead = Math.max(183.0d, vEgo * 8.0d);
-                        if (m < 61.0d || !inIt) {
-                            stage = m >= lead ? Stage.PREPARE : Stage.WATCHING;
+                int var37;
+                label130: {
+                    if (var21.getSide() != 0) {
+                        Pair var27 = var12.sideLanes(var21.getSide());
+                        var37 = ((Number)var27.component1()).intValue();
+                        double var16 = ((Number)var27.component2()).doubleValue();
+                        boolean var36;
+                        if (var37 == 0 && var16 >= 0.6) {
+                            var36 = true;
                         } else {
-                            stage = Stage.URGENT;
+                            var36 = false;
                         }
-                        this.stage = stage;
-                        if (this.stage == Stage.PREPARE && !d2.getPrepared()) {
-                            d2.setPrepared(true);
-                            function2 = this.onEvent;
-                            if (function2 != null) {
-                                function2.invoke("lane ends ahead, " + Companion.dist(m, false) + ": " + text(odo, false) + (inIt ? " - we're in it" : ""), true);
-                            }
+
+                        if (var36) {
+                            var37 = 1;
+                            break label130;
                         }
                     }
+
+                    var37 = 0;
                 }
-                inIt = false;
-                lead = Math.max(183.0d, vEgo * 8.0d);
-                if (m < 61.0d) {
+
+                double var34 = Math.max(183.0, var11 * 8.0);
+                LaneAhead.Stage var28;
+                if (var14 < 61.0 && var37) {
+                    var28 = LaneAhead.Stage.URGENT;
+                } else if (var14 < var34) {
+                    var28 = LaneAhead.Stage.PREPARE;
+                } else {
+                    var28 = LaneAhead.Stage.WATCHING;
                 }
-                if (m >= lead) {
-                }
-                this.stage = stage;
-                if (this.stage == Stage.PREPARE) {
-                    d2.setPrepared(true);
-                    function2 = this.onEvent;
-                    if (function2 != null) {
+
+                this.stage = var28;
+                if (this.stage == LaneAhead.Stage.PREPARE && !var21.getPrepared()) {
+                    var21.setPrepared(true);
+                    Function2 var45 = this.onEvent;
+                    if (var45 != null) {
+                        String var23 = Companion.dist(var14, false);
+                        String var44 = this.text(var3, false);
+                        String var29;
+                        if ((var37 != 0)) {
+                            var29 = " - we're in it";
+                        } else {
+                            var29 = "";
+                        }
+
+                        var45.invoke("lane ends ahead, " + var23 + ": " + var44 + var29, var20);
                     }
                 }
             }
         }
-        Triple<Double, ? extends List<Sample>, Integer> triple = this.result;
-        if (triple != null) {
-            double lookOdo = triple.component1().doubleValue();
-            List samples = triple.component2();
-            int curLanes = triple.component3().intValue();
+
+        Triple var30 = this.result;
+        if (var30 != null) {
+            double var33 = ((Number)var30.component1()).doubleValue();
+            List var43 = (List)var30.component2();
+            int var38 = ((Number)var30.component3()).intValue();
             this.result = null;
-            d = d2;
-            z = 1;
-            i = 0;
-            apply(lookOdo, samples, curLanes, odo);
-        } else {
-            d = d2;
-            z = 1;
-            i = 0;
+            this.apply(var33, var43, var38, var3);
         }
-        if (vEgo >= 2.0f) {
-            if (((Double.isInfinite(lat) || Double.isNaN(lat)) ? i : z) != 0) {
-                if (((Double.isInfinite(lon) || Double.isNaN(lon)) ? i : z) != 0) {
-                    if (((Double.isInfinite(headingRad) || Double.isNaN(headingRad)) ? i : z) != 0) {
-                        if (this.busy) {
+
+        if (!(var11 < 2.0F)) {
+            int var39;
+            if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
+                var39 = 1;
+            } else {
+                var39 = 0;
+            }
+
+            if ((var39 != 0)) {
+                if (!Double.isInfinite(var7) && !Double.isNaN(var7)) {
+                    var39 = (((boolean)true) ? 1 : 0);
+                } else {
+                    var39 = (((boolean)false) ? 1 : 0);
+                }
+
+                if ((var39 != 0)) {
+                    if (!Double.isInfinite(var9) && !Double.isNaN(var9)) {
+                        var39 = (((boolean)true) ? 1 : 0);
+                    } else {
+                        var39 = (((boolean)false) ? 1 : 0);
+                    }
+
+                    if (var39 && !this.busy) {
+                        if (var3 - this.lastLookOdo < 150.0 && var1 - this.lastLookMs < 20000L) {
                             return;
                         }
-                        if (odo - this.lastLookOdo < 150.0d) {
-                            j = nowMs;
-                            if (j - this.lastLookMs < 20000) {
-                                return;
+
+                        label92: {
+                            this.lastLookOdo = var3;
+                            this.lastLookMs = var1;
+                            LaneBrain.RoadInfo var31 = var12.getInfo();
+                            if (var31 != null) {
+                                var32 = var31.getHpmsName();
+                                if (var32 != null) {
+                                    break label92;
+                                }
                             }
+
+                            var32 = "";
+                        }
+
+                        if (Intrinsics.areEqual(var12.getModel().getSrc(), "HPMS")) {
+                            var39 = var12.getModel().getLanes();
                         } else {
-                            j = nowMs;
+                            var39 = 0;
                         }
-                        this.lastLookOdo = odo;
-                        this.lastLookMs = j;
-                        LaneBrain.RoadInfo info = b.getInfo();
-                        final String prefer = (info == null || (hpmsName = info.getHpmsName()) == null) ? "" : hpmsName;
-                        int cur = Intrinsics.areEqual(b.getModel().getSrc(), "HPMS") ? b.getModel().getLanes() : i;
-                        Function3 src = this.profileSource;
-                        if (src != null) {
-                            apply(odo, src.invoke(Double.valueOf(lat), Double.valueOf(lon), Double.valueOf(headingRad)), cur, odo);
+
+                        Function3 var24 = this.profileSource;
+                        if (var24 != null) {
+                            this.apply(var3, (List<LaneAhead.Sample>)var24.invoke(var5, var7, var9), (((var39 != 0)) ? 1 : 0), var3);
                             return;
                         }
-                        this.busy = z;
-                        final int i2 = cur;
-                        this.worker.execute(new Runnable() { // from class: com.starpilot.starview.LaneAhead$$ExternalSyntheticLambda0
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                LaneAhead.update$lambda$4(LaneAhead.this, lat, lon, headingRad, odo, i2, prefer);
-                            }
-                        });
+
+                        this.busy = true;
+                        this.worker.execute(new LaneAhead$$ExternalSyntheticLambda0(this, var5, var7, var9, var3, var39, var32));
+                        return;
                     }
                 }
             }
@@ -509,133 +531,227 @@ public final class LaneAhead {
         return TuplesKt.to(valueOf, lowerCase + " lane ends ahead (" + d.getFrom() + " → " + d.getTo() + " lanes)");
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:167:0x0253  */
-    /* JADX WARN: Removed duplicated region for block: B:27:0x0065  */
-    /* JADX WARN: Removed duplicated region for block: B:38:0x009c  */
-    /* JADX WARN: Removed duplicated region for block: B:42:0x00a7  */
-    /* JADX WARN: Removed duplicated region for block: B:56:0x00dd  */
-    /* JADX WARN: Removed duplicated region for block: B:58:0x00e3  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void sideFromCamera(double odo, LaneBrain b, LaneBrain.Frame f) {
-        double gl;
-        float edgeR;
-        double gr;
-        float yl;
-        int i;
-        Drop d = this.drop;
-        if (f == null) {
-            return;
-        }
-        float edgeL = f.getEdgeL();
-        double d2 = Double.NaN;
-        if ((Float.isInfinite(edgeL) || Float.isNaN(edgeL)) ? false : true) {
-            float yl2 = f.getYL();
-            if (((Float.isInfinite(yl2) || Float.isNaN(yl2)) ? false : true) && f.getPL() > 0.4f) {
-                gl = f.getEdgeL() - Math.abs(f.getYL());
-                edgeR = f.getEdgeR();
-                if (Float.isInfinite(edgeR) && !Float.isNaN(edgeR)) {
-                    float yr = f.getYR();
-                    if (((Float.isInfinite(yr) || Float.isNaN(yr)) ? false : true) && f.getPR() > 0.4f) {
-                        gr = f.getEdgeR() - Math.abs(f.getYR());
-                        yl = f.getYL();
-                        if (Float.isInfinite(yl) && !Float.isNaN(yl)) {
-                            float yr2 = f.getYR();
-                            if (((Float.isInfinite(yr2) || Float.isNaN(yr2)) ? false : true) && f.getPL() > 0.4f && f.getPR() > 0.4f) {
-                                d2 = f.getYR() - f.getYL();
-                            }
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void sideFromCamera(double var1, LaneBrain var3, LaneBrain.Frame var4) {
+        LaneAhead.Drop var18 = this.drop;
+        if (var4 != null) {
+            float var15 = var4.getEdgeL();
+            int var16;
+            if (!Float.isInfinite(var15) && !Float.isNaN(var15)) {
+                var16 = 1;
+            } else {
+                var16 = 0;
+            }
+
+            double var5;
+            double var11;
+            label273: {
+                var11 = Double.NaN;
+                if ((var16 != 0)) {
+                    var15 = var4.getYL();
+                    if (!Float.isInfinite(var15) && !Float.isNaN(var15)) {
+                        var16 = (((boolean)true) ? 1 : 0);
+                    } else {
+                        var16 = (((boolean)false) ? 1 : 0);
+                    }
+
+                    if (var16 && var4.getPL() > 0.4F) {
+                        var5 = var4.getEdgeL() - Math.abs(var4.getYL());
+                        break label273;
+                    }
+                }
+
+                var5 = Double.NaN;
+            }
+
+            var15 = var4.getEdgeR();
+            if (!Float.isInfinite(var15) && !Float.isNaN(var15)) {
+                var16 = (((boolean)true) ? 1 : 0);
+            } else {
+                var16 = (((boolean)false) ? 1 : 0);
+            }
+
+            double var7;
+            label257: {
+                if ((var16 != 0)) {
+                    var15 = var4.getYR();
+                    if (!Float.isInfinite(var15) && !Float.isNaN(var15)) {
+                        var16 = (((boolean)true) ? 1 : 0);
+                    } else {
+                        var16 = (((boolean)false) ? 1 : 0);
+                    }
+
+                    if (var16 && var4.getPR() > 0.4F) {
+                        var7 = var4.getEdgeR() - Math.abs(var4.getYR());
+                        break label257;
+                    }
+                }
+
+                var7 = Double.NaN;
+            }
+
+            var15 = var4.getYL();
+            if (!Float.isInfinite(var15) && !Float.isNaN(var15)) {
+                var16 = (((boolean)true) ? 1 : 0);
+            } else {
+                var16 = (((boolean)false) ? 1 : 0);
+            }
+
+            double var9 = var11;
+            if ((var16 != 0)) {
+                var15 = var4.getYR();
+                if (!Float.isInfinite(var15) && !Float.isNaN(var15)) {
+                    var16 = (((boolean)true) ? 1 : 0);
+                } else {
+                    var16 = (((boolean)false) ? 1 : 0);
+                }
+
+                var9 = var11;
+                if ((var16 != 0)) {
+                    var9 = var11;
+                    if (var4.getPL() > 0.4F) {
+                        var9 = var11;
+                        if (var4.getPR() > 0.4F) {
+                            var9 = var4.getYR() - var4.getYL();
                         }
-                        double w = d2;
-                        if (f.getOpChange() != 0) {
-                            this.gaps.clear();
-                            return;
+                    }
+                }
+            }
+
+            if (var4.getOpChange() != 0) {
+                this.gaps.clear();
+            } else {
+                if (this.gaps.isEmpty() || var1 - this.gaps.last()[0] >= 5.0) {
+                    this.gaps.addLast(new double[]{var1, var5, var7, var9, var4.getYL(), var4.getYR()});
+                }
+
+                while (!this.gaps.isEmpty() && var1 - ((double[])this.gaps.first())[0] > 220.0) {
+                    this.gaps.removeFirst();
+                }
+
+                if (var18 != null && var18.getSide() == 0 && !(var18.getAtOdo() - var1 > 450.0) && this.gaps.size() >= 20) {
+                    var7 = var3.getLaneW();
+                    var5 = sideFromCamera$trend(this, 1);
+                    var1 = sideFromCamera$trend(this, 2);
+                    var11 = sideFromCamera$trend(this, 3);
+                    double var13 = sideFromCamera$trend(this, 4);
+                    var9 = sideFromCamera$trend(this, 5);
+                    if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
+                        var16 = (((boolean)true) ? 1 : 0);
+                    } else {
+                        var16 = (((boolean)false) ? 1 : 0);
+                    }
+
+                    if (var16 && var1 < var7 * -0.6 && !(var5 < var7 * -0.3)) {
+                        var16 = 1;
+                    } else {
+                        boolean var38;
+                        if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
+                            var38 = true;
+                        } else {
+                            var38 = false;
                         }
-                        if (this.gaps.isEmpty() || odo - this.gaps.last()[0] >= 5.0d) {
-                            this.gaps.addLast(new double[]{odo, gl, gr, w, f.getYL(), f.getYR()});
-                        }
-                        while (!this.gaps.isEmpty() && odo - this.gaps.first()[0] > 220.0d) {
-                            this.gaps.removeFirst();
-                        }
-                        if (d == null || d.getSide() != 0 || d.getAtOdo() - odo > 450.0d) {
-                            return;
-                        }
-                        if (this.gaps.size() < 20) {
-                            return;
-                        }
-                        double lw = b.getLaneW();
-                        double dl = sideFromCamera$trend(this, 1);
-                        double dr = sideFromCamera$trend(this, 2);
-                        double dw = sideFromCamera$trend(this, 3);
-                        double dyl = sideFromCamera$trend(this, 4);
-                        double dyr = sideFromCamera$trend(this, 5);
-                        if (!((Double.isInfinite(dr) || Double.isNaN(dr)) ? false : true) || dr >= lw * (-0.6d) || dl < lw * (-0.3d)) {
-                            if (!((Double.isInfinite(dl) || Double.isNaN(dl)) ? false : true) || dl >= lw * (-0.6d) || dr < (-0.3d) * lw) {
-                                if (((Double.isInfinite(dw) || Double.isNaN(dw)) ? false : true) && dw < -0.5d) {
-                                    if ((Double.isInfinite(dyr) || Double.isNaN(dyr)) ? false : true) {
-                                        if ((Double.isInfinite(dyl) || Double.isNaN(dyl)) ? false : true) {
-                                            if ((-dyr) > Math.abs(dyl) + 0.3d) {
-                                                i = 1;
-                                            }
-                                            if ((Double.isInfinite(dw) && !Double.isNaN(dw)) && dw < -0.5d) {
-                                                if (Double.isInfinite(dyr) && !Double.isNaN(dyr)) {
-                                                    if (((Double.isInfinite(dyl) || Double.isNaN(dyl)) ? false : true) && dyl > Math.abs(dyr) + 0.3d) {
-                                                        i = -1;
-                                                    }
-                                                }
-                                            }
-                                            i = 0;
+
+                        if (var38 && var5 < var7 * -0.6 && !(var1 < -0.3 * var7)) {
+                            var16 = -1;
+                        } else {
+                            label296: {
+                                if (!Double.isInfinite(var11) && !Double.isNaN(var11)) {
+                                    var38 = true;
+                                } else {
+                                    var38 = false;
+                                }
+
+                                if (var38 && var11 < -0.5) {
+                                    if (!Double.isInfinite(var9) && !Double.isNaN(var9)) {
+                                        var38 = true;
+                                    } else {
+                                        var38 = false;
+                                    }
+
+                                    if (var38) {
+                                        if (!Double.isInfinite(var13) && !Double.isNaN(var13)) {
+                                            var38 = true;
+                                        } else {
+                                            var38 = false;
+                                        }
+
+                                        if (var38 && -var9 > Math.abs(var13) + 0.3) {
+                                            var16 = 1;
+                                            break label296;
                                         }
                                     }
                                 }
-                                if (Double.isInfinite(dw) && !Double.isNaN(dw)) {
-                                    if (Double.isInfinite(dyr) && !Double.isNaN(dyr)) {
+
+                                if (!Double.isInfinite(var11) && !Double.isNaN(var11)) {
+                                    var38 = true;
+                                } else {
+                                    var38 = false;
+                                }
+
+                                if (var38 && var11 < -0.5) {
+                                    if (!Double.isInfinite(var9) && !Double.isNaN(var9)) {
+                                        var38 = true;
+                                    } else {
+                                        var38 = false;
+                                    }
+
+                                    if (var38) {
+                                        if (!Double.isInfinite(var13) && !Double.isNaN(var13)) {
+                                            var38 = true;
+                                        } else {
+                                            var38 = false;
+                                        }
+
+                                        if (var38 && var13 > Math.abs(var9) + 0.3) {
+                                            var16 = -1;
+                                            break label296;
+                                        }
                                     }
                                 }
-                                i = 0;
-                            } else {
-                                i = -1;
+
+                                var16 = 0;
                             }
+                        }
+                    }
+
+                    if ((var16 != 0)) {
+                        if (var16 <= 0) {
+                            var1 = var5;
+                        }
+
+                        boolean var17;
+                        if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
+                            var17 = true;
                         } else {
-                            i = 1;
+                            var17 = false;
                         }
-                        int side = i;
-                        if (side != 0) {
-                            double it = side > 0 ? dr : dl;
-                            boolean edge = (!Double.isInfinite(it) && !Double.isNaN(it)) && it < lw * (-0.6d);
-                            d.setSide(side);
-                            d.setSideWhy(edge ? "road edge closing in" : "our lane narrowing");
-                            Function2<? super String, ? super Boolean, Unit> function2 = this.onEvent;
-                            if (function2 != null) {
-                                String lowerCase = Companion.sideName(side).toLowerCase(Locale.ROOT);
-                                Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                                function2.invoke("the " + lowerCase + " lane ends (camera: " + d.getSideWhy() + ")", true);
-                                return;
-                            }
-                            return;
+
+                        if (var17 && var1 < var7 * -0.6) {
+                            var17 = true;
+                        } else {
+                            var17 = false;
                         }
-                        return;
+
+                        var18.setSide((((var16 != 0)) ? 1 : 0));
+                        String var20;
+                        if (var17) {
+                            var20 = "road edge closing in";
+                        } else {
+                            var20 = "our lane narrowing";
+                        }
+
+                        var18.setSideWhy(var20);
+                        Function2 var22 = this.onEvent;
+                        if (var22 != null) {
+                            String var21 = Companion.sideName((((var16 != 0)) ? 1 : 0)).toLowerCase(Locale.ROOT);
+                            Intrinsics.checkNotNullExpressionValue(var21, "toLowerCase(...)");
+                            String var47 = var18.getSideWhy();
+                            var22.invoke("the " + var21 + " lane ends (camera: " + var47 + ")", true);
+                        }
                     }
                 }
-                gr = Double.NaN;
-                yl = f.getYL();
-                if (Float.isInfinite(yl) && !Float.isNaN(yl)) {
-                }
-                double w2 = d2;
-                if (f.getOpChange() != 0) {
-                }
             }
-        }
-        gl = Double.NaN;
-        edgeR = f.getEdgeR();
-        if (Float.isInfinite(edgeR) && !Float.isNaN(edgeR)) {
-        }
-        gr = Double.NaN;
-        yl = f.getYL();
-        if (Float.isInfinite(yl) && !Float.isNaN(yl)) {
-        }
-        double w22 = d2;
-        if (f.getOpChange() != 0) {
         }
     }
 
@@ -712,269 +828,253 @@ public final class LaneAhead {
         return null;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:104:0x0371, code lost:
-    
-        r12 = r39;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:49:0x01b6  */
-    /* JADX WARN: Removed duplicated region for block: B:52:0x01b9 A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:74:0x02d5  */
-    /* JADX WARN: Removed duplicated region for block: B:77:0x02d9 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final List<Pair<Double, double[]>> roadPath(double lat, double lon, double headingRad) {
-        String str;
-        String str2;
-        int i;
-        double dir;
-        double e;
-        Object minElem$iv;
-        OsmRoads.Way next;
-        Iterable $this$mapNotNull$iv;
-        String str3;
-        Pair pair;
-        int i0;
-        HashSet seen;
-        Iterable $this$filter$iv;
-        int $i$f$filter;
-        int $i$f$filter2;
-        OsmRoads.Way way;
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+    private final List<Pair<Double, double[]>> roadPath(double var1, double var3, double var5) {
         if (Double.isNaN(OsmRoads.INSTANCE.getLat0())) {
             return null;
-        }
-        Pair<Double, Double> local = OsmRoads.INSTANCE.toLocal(lat, lon);
-        double e2 = local.component1().doubleValue();
-        double n = local.component2().doubleValue();
-        OsmRoads.Match mt = OsmRoads.INSTANCE.matchSeg(e2, n, headingRad);
-        if (mt == null) {
-            return null;
-        }
-        OsmRoads.Match it = mt.getDist() < 20.0d ? 1 : null;
-        if (it == null) {
-            mt = null;
-        }
-        if (mt == null) {
-            return null;
-        }
-        OsmRoads.Way way2 = mt.getWay();
-        if (StringsKt.endsWith(way2.getKind(), "_link", false)) {
-            return null;
-        }
-        ArrayList line = new ArrayList();
-        double dir2 = headingRad;
-        String str4 = "_link";
-        char c = 0;
-        List pts = roadPath$ordered(way2, e2, n, dir2);
-        HashSet seen2 = new HashSet();
-        double total = 0.0d;
-        while (true) {
-            seen2.add(Long.valueOf(way2.getId()));
-            for (double[] p : pts) {
-                if (line.isEmpty()) {
-                    way = way2;
+        } else {
+            Pair var18 = OsmRoads.INSTANCE.toLocal(var1, var3);
+            double var9 = ((Number)var18.component1()).doubleValue();
+            var3 = ((Number)var18.component2()).doubleValue();
+            OsmRoads.Match var50 = OsmRoads.INSTANCE.matchSeg(var9, var3, var5);
+            if (var50 != null) {
+                int var13;
+                if (var50.getDist() < 20.0) {
+                    var13 = 1;
                 } else {
-                    way = way2;
-                    total += Math.hypot(p[c] - ((double[]) CollectionsKt.last((List) line))[c], p[1] - ((double[]) CollectionsKt.last((List) line))[1]);
+                    var13 = 0;
                 }
-                line.add(p);
-                way2 = way;
-                c = 0;
-            }
-            OsmRoads.Way way3 = way2;
-            str = "get(...)";
-            if (total <= 1050.0d && line.size() >= 2) {
-                double[] end = (double[]) CollectionsKt.last((List) line);
-                Object obj = line.get(line.size() - 2);
-                Intrinsics.checkNotNullExpressionValue(obj, "get(...)");
-                double[] prev = (double[]) obj;
-                List pts2 = pts;
-                double d = end[1] - prev[1];
-                double total2 = total;
-                double total3 = end[0] - prev[0];
-                double dir3 = Math.atan2(d, total3);
-                Iterable $this$filter$iv2 = OsmRoads.INSTANCE.near(end[0], end[1], 15.0d);
-                int $i$f$filter3 = 0;
-                Collection destination$iv$iv = new ArrayList();
-                for (Object element$iv$iv : $this$filter$iv2) {
-                    OsmRoads.Way it2 = (OsmRoads.Way) element$iv$iv;
-                    double[] prev2 = prev;
-                    if (seen2.contains(Long.valueOf(it2.getId()))) {
-                        seen = seen2;
-                        $this$filter$iv = $this$filter$iv2;
-                        $i$f$filter = $i$f$filter3;
-                    } else {
-                        seen = seen2;
-                        $this$filter$iv = $this$filter$iv2;
-                        $i$f$filter = $i$f$filter3;
-                        if (!StringsKt.endsWith(it2.getKind(), str4, false)) {
-                            if (way3.getName().length() > 0 ? OsmRoads.INSTANCE.sameStreet(it2.getName(), way3.getName()) : Intrinsics.areEqual(it2.getKind(), way3.getKind())) {
-                                $i$f$filter2 = 1;
-                                if ($i$f$filter2 == 0) {
-                                    destination$iv$iv.add(element$iv$iv);
+
+                if (!var13) {
+                    var50 = null;
+                }
+
+                if (var50 != null) {
+                    OsmRoads.Way var21 = var50.getWay();
+                    if (StringsKt.endsWith(var21.getKind(), "_link", false)) {
+                        return null;
+                    }
+
+                    ArrayList var25 = new ArrayList();
+                    String var51 = "_link";
+                    List var20 = roadPath$ordered(var21, var9, var3, var5);
+                    HashSet var19 = new HashSet();
+                    var3 = 0.0;
+
+                    String var24;
+                    while (true) {
+                        var19.add(var21.getId());
+
+                        for (double[] var23 : var20) {
+                            if (!var25.isEmpty()) {
+                                var3 += Math.hypot(var23[0] - ((double[])CollectionsKt.last(var25))[0], var23[1] - ((double[])CollectionsKt.last(var25))[1]);
+                            }
+
+                            var25.add(var23);
+                        }
+
+                        var24 = "get(...)";
+                        if (var3 > 1050.0 || var25.size() < 2) {
+                            break;
+                        }
+
+                        double[] var26 = CollectionsKt.last(var25);
+                        Object var68 = var25.get(var25.size() - 2);
+                        Intrinsics.checkNotNullExpressionValue(var68, "get(...)");
+                        var68 = (double[])var68;
+                        var1 = var26[1];
+                        var5 = (double)((Object[])var68)[1];
+                        var1 = Math.atan2(var1 - var5, var26[0] - ((Object[])var68)[0]);
+                        Iterable var73 = OsmRoads.INSTANCE.near(var26[0], var26[1], 15.0);
+                        boolean var16 = false;
+                        var var28 = new ArrayList();
+
+                        for (Object var30 : var73) {
+                            label179: {
+                                OsmRoads.Way var29 = (OsmRoads.Way)var30;
+                                if (!var19.contains(var29.getId()) && !StringsKt.endsWith(var29.getKind(), var51, false)) {
+                                    if (var21.getName().length() > 0) {
+                                        var13 = (((boolean)true) ? 1 : 0);
+                                    } else {
+                                        var13 = (((boolean)false) ? 1 : 0);
+                                    }
+
+                                    boolean var17;
+                                    if ((var13 != 0)) {
+                                        var17 = OsmRoads.INSTANCE.sameStreet(var29.getName(), var21.getName());
+                                    } else {
+                                        var17 = Intrinsics.areEqual(var29.getKind(), var21.getKind());
+                                    }
+
+                                    if (var17) {
+                                        var13 = (((boolean)true) ? 1 : 0);
+                                        break label179;
+                                    }
                                 }
-                                $this$filter$iv2 = $this$filter$iv;
-                                $i$f$filter3 = $i$f$filter;
-                                prev = prev2;
-                                seen2 = seen;
+
+                                var13 = (((boolean)false) ? 1 : 0);
+                            }
+
+                            if ((var13 != 0)) {
+                                var28.add(var30);
                             }
                         }
-                    }
-                    $i$f$filter2 = 0;
-                    if ($i$f$filter2 == 0) {
-                    }
-                    $this$filter$iv2 = $this$filter$iv;
-                    $i$f$filter3 = $i$f$filter;
-                    prev = prev2;
-                    seen2 = seen;
-                }
-                HashSet seen3 = seen2;
-                Iterable $this$mapNotNull$iv2 = (List) destination$iv$iv;
-                Collection destination$iv$iv2 = new ArrayList();
-                Iterable $this$mapNotNullTo$iv$iv = $this$mapNotNull$iv2;
-                for (Object element$iv$iv$iv : $this$mapNotNullTo$iv$iv) {
-                    OsmRoads.Way c2 = (OsmRoads.Way) element$iv$iv$iv;
-                    List pts3 = pts2;
-                    Iterable $this$mapNotNullTo$iv$iv2 = $this$mapNotNullTo$iv$iv;
-                    double dir4 = dir3;
-                    if (Math.hypot(c2.getE()[0] - end[0], c2.getN()[0] - end[1]) < 15.0d) {
-                        $this$mapNotNull$iv = $this$mapNotNull$iv2;
-                        i0 = 0;
-                    } else {
-                        $this$mapNotNull$iv = $this$mapNotNull$iv2;
-                        if (Math.hypot(c2.getE()[c2.getE().length - 1] - end[0], c2.getN()[c2.getN().length - 1] - end[1]) < 15.0d) {
-                            i0 = c2.getE().length - 1;
+
+                        List var65 = var28;
+                        var73 = var65;
+                        var var76 = new ArrayList();
+
+                        for (OsmRoads.Way var52 : var73) {
+                            label200: {
+                                if (Math.hypot(var52.getE()[0] - var26[0], var52.getN()[0] - var26[1]) < 15.0) {
+                                    var13 = 0;
+                                } else {
+                                    if (!(Math.hypot(var52.getE()[var52.getE().length - 1] - var26[0], var52.getN()[var52.getN().length - 1] - var26[1]) < 15.0)) {
+                                        var18 = null;
+                                        break label200;
+                                    }
+
+                                    var13 = var52.getE().length - 1;
+                                }
+
+                                if (var52.getOneway() != 0) {
+                                    boolean var14;
+                                    if (var52.getOneway() > 0) {
+                                        var14 = true;
+                                    } else {
+                                        var14 = false;
+                                    }
+
+                                    boolean var15;
+                                    if (!var13) {
+                                        var15 = true;
+                                    } else {
+                                        var15 = false;
+                                    }
+
+                                    if (var14 != var15) {
+                                        var18 = null;
+                                        break label200;
+                                    }
+                                }
+
+                                int var48;
+                                if (!var13) {
+                                    var48 = 1;
+                                } else {
+                                    var48 = var52.getE().length - 2;
+                                }
+
+                                double var7 = Math.abs(Math.atan2(var52.getN()[var48] - var52.getN()[(((var13 != 0)) ? 1 : 0)], var52.getE()[var48] - var52.getE()[var13]) - var1);
+                                var5 = var7;
+                                if (var7 > Math.PI) {
+                                    var5 = (Math.PI * 2) - var7;
+                                }
+
+                                if (var5 > Math.toRadians(35.0)) {
+                                    var18 = null;
+                                } else {
+                                    var18 = TuplesKt.to(var52, var5);
+                                }
+                            }
+
+                            if (var18 != null) {
+                                var76.add(var18);
+                            }
+                        }
+
+                        List var54 = var76;
+                        Iterable var55 = var54;
+                        Iterator var75 = var55.iterator();
+                        if (!var75.hasNext()) {
+                            var18 = null;
                         } else {
-                            str3 = str4;
-                            pair = null;
-                            if (pair != null) {
-                                destination$iv$iv2.add(pair);
+                            var18 = (Pair)var75.next();
+                            if (var75.hasNext()) {
+                                var5 = ((Number)var18.getSecond()).doubleValue();
+                                var21 = var18;
+
+                                do {
+                                    var68 = var75.next();
+                                    double var11 = ((Number)((Pair)var68).getSecond()).doubleValue();
+                                    double var39 = var5;
+                                    var18 = var21;
+                                    if (Double.compare(var5, var11) > 0) {
+                                        var18 = (Pair)var68;
+                                        var39 = var11;
+                                    }
+
+                                    var5 = var39;
+                                    var21 = var18;
+                                } while (var75.hasNext());
                             }
-                            $this$mapNotNull$iv2 = $this$mapNotNull$iv;
-                            pts2 = pts3;
-                            $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv2;
-                            dir3 = dir4;
-                            str4 = str3;
+                        }
+
+                        var18 = var18;
+                        if (var18 == null) {
+                            break;
+                        }
+
+                        var21 = (OsmRoads.Way)var18.getFirst();
+                        if (var21 == null) {
+                            break;
+                        }
+
+                        var68 = CollectionsKt.drop(roadPath$ordered(var21, var26[0], var26[1], var1), 1);
+                        var51 = var51;
+                        var20 = (List)var68;
+                    }
+
+                    ArrayList var67 = new ArrayList();
+                    double var40 = 0.0;
+                    double var42 = 100.0;
+                    int var49 = 1;
+                    var13 = var25.size();
+                    var1 = var42;
+
+                    for (String var58 = var24; var49 < var13; var49++) {
+                        Object var60 = var25.get(var49 - 1);
+                        Intrinsics.checkNotNullExpressionValue(var60, var58);
+                        double[] var64 = (double[])var60;
+                        var60 = var25.get(var49);
+                        Intrinsics.checkNotNullExpressionValue(var60, var58);
+                        var60 = (double[])var60;
+                        var9 = Math.hypot(((Object[])var60)[0] - var64[0], ((Object[])var60)[1] - var64[1]);
+                        if (!(var9 < 0.01)) {
+                            while (var40 + var9 >= var1 && var1 <= 1000.0) {
+                                var42 = (var1 - var40) / var9;
+                                Pair var72 = OsmRoads.INSTANCE
+                                    .toLatLon(var64[0] + (((Object[])var60)[0] - var64[0]) * var42, var64[1] + (((Object[])var60)[1] - var64[1]) * var42);
+                                var67.add(
+                                    TuplesKt.to(
+                                        var1,
+                                        new double[]{
+                                            ((Number)var72.component1()).doubleValue(),
+                                            ((Number)var72.component2()).doubleValue(),
+                                            Math.atan2(((Object[])var60)[1] - var64[1], ((Object[])var60)[0] - var64[0])
+                                        }
+                                    )
+                                );
+                                var1 += 100.0;
+                            }
+
+                            var40 += var9;
                         }
                     }
-                    if (c2.getOneway() != 0) {
-                        if ((c2.getOneway() > 0) != (i0 == 0)) {
-                            str3 = str4;
-                            pair = null;
-                            if (pair != null) {
-                            }
-                            $this$mapNotNull$iv2 = $this$mapNotNull$iv;
-                            pts2 = pts3;
-                            $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv2;
-                            dir3 = dir4;
-                            str4 = str3;
-                        }
+
+                    ArrayList var59;
+                    if (!var67.isEmpty()) {
+                        var59 = var67;
+                    } else {
+                        var59 = null;
                     }
-                    int i1 = i0 == 0 ? 1 : c2.getE().length - 2;
-                    double d2 = Math.atan2(c2.getN()[i1] - c2.getN()[i0], c2.getE()[i1] - c2.getE()[i0]);
-                    double bend = Math.abs(d2 - dir4);
-                    if (bend > 3.141592653589793d) {
-                        bend = 6.283185307179586d - bend;
-                    }
-                    str3 = str4;
-                    pair = bend > Math.toRadians(35.0d) ? null : TuplesKt.to(c2, Double.valueOf(bend));
-                    if (pair != null) {
-                    }
-                    $this$mapNotNull$iv2 = $this$mapNotNull$iv;
-                    pts2 = pts3;
-                    $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv2;
-                    dir3 = dir4;
-                    str4 = str3;
+
+                    return var59;
                 }
-                String str5 = str4;
-                double dir5 = dir3;
-                Iterable $this$minByOrNull$iv = (List) destination$iv$iv2;
-                Iterator iterator$iv = $this$minByOrNull$iv.iterator();
-                if (iterator$iv.hasNext()) {
-                    minElem$iv = iterator$iv.next();
-                    if (iterator$iv.hasNext()) {
-                        Pair it3 = (Pair) minElem$iv;
-                        double minValue$iv = ((Number) it3.getSecond()).doubleValue();
-                        do {
-                            Object e$iv = iterator$iv.next();
-                            Pair it4 = (Pair) e$iv;
-                            double v$iv = ((Number) it4.getSecond()).doubleValue();
-                            if (Double.compare(minValue$iv, v$iv) > 0) {
-                                minElem$iv = e$iv;
-                                minValue$iv = v$iv;
-                            }
-                        } while (iterator$iv.hasNext());
-                    }
-                } else {
-                    minElem$iv = null;
-                }
-                Pair pair2 = (Pair) minElem$iv;
-                if (pair2 == null || (next = (OsmRoads.Way) pair2.getFirst()) == null) {
-                    break;
-                }
-                pts = CollectionsKt.drop(roadPath$ordered(next, end[0], end[1], dir5), 1);
-                total = total2;
-                way2 = next;
-                seen2 = seen3;
-                dir2 = dir5;
-                str4 = str5;
-                c = 0;
             }
+
+            return null;
         }
-        ArrayList out = new ArrayList();
-        double seg = 0.0d;
-        double want = 100.0d;
-        int k = 1;
-        int size = line.size();
-        while (k < size) {
-            Object obj2 = line.get(k - 1);
-            Intrinsics.checkNotNullExpressionValue(obj2, str);
-            double[] a = (double[]) obj2;
-            Object obj3 = line.get(k);
-            Intrinsics.checkNotNullExpressionValue(obj3, str);
-            double[] bb = (double[]) obj3;
-            double acc = seg;
-            double want2 = want;
-            double seg2 = Math.hypot(bb[0] - a[0], bb[1] - a[1]);
-            if (seg2 >= 0.01d) {
-                want = want2;
-                while (acc + seg2 >= want && want <= 1000.0d) {
-                    double t = (want - acc) / seg2;
-                    String str6 = str;
-                    int i2 = size;
-                    double dir6 = dir2;
-                    Pair<Double, Double> latLon = OsmRoads.INSTANCE.toLatLon(a[0] + ((bb[0] - a[0]) * t), a[1] + ((bb[1] - a[1]) * t));
-                    double plat = latLon.component1().doubleValue();
-                    double plon = latLon.component2().doubleValue();
-                    out.add(TuplesKt.to(Double.valueOf(want), new double[]{plat, plon, Math.atan2(bb[1] - a[1], bb[0] - a[0])}));
-                    want += 100.0d;
-                    str = str6;
-                    size = i2;
-                    a = a;
-                    dir2 = dir6;
-                    e2 = e2;
-                    bb = bb;
-                }
-                str2 = str;
-                i = size;
-                dir = dir2;
-                e = e2;
-                seg = acc + seg2;
-            } else {
-                str2 = str;
-                i = size;
-                dir = dir2;
-                e = e2;
-                seg = acc;
-                want = want2;
-            }
-            k++;
-            str = str2;
-            size = i;
-            dir2 = dir;
-            e2 = e;
-        }
-        return !out.isEmpty() ? out : null;
     }
 
     private static final List<double[]> roadPath$ordered(OsmRoads.Way way, double fromE, double fromN, double dir) {

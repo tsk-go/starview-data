@@ -1,0 +1,37 @@
+package com.starpilot.starview;
+
+import android.widget.FrameLayout;
+import java.util.ArrayList;
+import java.util.HashMap;
+import kotlin.jvm.internal.Ref.IntRef;
+import kotlin.jvm.internal.Ref.ObjectRef;
+
+// recovered: R8's synthetic lambda class (used by methods taken from Vineflower)
+public final class SettingsActivity$$ExternalSyntheticLambda97 implements Runnable {
+   public final IntRef f$0;
+   public final ObjectRef f$1;
+   public final HashMap f$2;
+   public final FrameLayout f$3;
+   public final SettingsActivity f$4;
+   public final GalaxyApi f$5;
+   public final ArrayList f$6;
+   public final String f$7;
+
+   public SettingsActivity$$ExternalSyntheticLambda97(
+      IntRef var1, ObjectRef var2, HashMap var3, FrameLayout var4, SettingsActivity var5, GalaxyApi var6, ArrayList var7, String var8
+   ) {
+      this.f$0 = var1;
+      this.f$1 = var2;
+      this.f$2 = var3;
+      this.f$3 = var4;
+      this.f$4 = var5;
+      this.f$5 = var6;
+      this.f$6 = var7;
+      this.f$7 = var8;
+   }
+
+   @Override
+   public final void run() {
+      SettingsActivity.subTabbedCatalog$lambda$106(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7);
+   }
+}

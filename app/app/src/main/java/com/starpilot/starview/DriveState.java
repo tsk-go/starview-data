@@ -57,15 +57,17 @@ public final class DriveState {
         return false;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ String mode$default(DriveState driveState, boolean z, Function0 function0, int i, Object obj) {
-        if ((i & 1) != 0) {
-            z = false;
+    /* VF: from Vineflower (jadx: ) */
+    public static String mode$default(DriveState var0, boolean var1, Function0 var2, int var3, Object var4) {
+        if ((var3 & 1) != 0) {
+            var1 = false;
         }
-        if ((i & 2) != 0) {
-            function0 = null;
+
+        if ((var3 & 2) != 0) {
+            var2 = null;
         }
-        return driveState.mode(z, function0);
+
+        return var0.mode(var1, var2);
     }
 
     public final String mode(boolean force, final Function0<Unit> onChange) {
@@ -118,12 +120,13 @@ public final class DriveState {
         return Intrinsics.areEqual(mode$default(this, false, null, 3, null), "onroad");
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void request$default(DriveState driveState, Activity activity, String str, Function1 function1, int i, Object obj) {
-        if ((i & 4) != 0) {
-            function1 = null;
+    /* VF: from Vineflower (jadx: ) */
+    public static void request$default(DriveState var0, Activity var1, String var2, Function1 var3, int var4, Object var5) {
+        if ((var4 & 4) != 0) {
+            var3 = null;
         }
-        driveState.request(activity, str, function1);
+
+        var0.request(var1, var2, var3);
     }
 
     public final void request(final Activity act, String mode, final Function1<? super Boolean, Unit> then) {
@@ -166,12 +169,13 @@ public final class DriveState {
         return restarting;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void restart$default(DriveState driveState, Activity activity, Function1 function1, int i, Object obj) {
-        if ((i & 2) != 0) {
-            function1 = null;
+    /* VF: from Vineflower (jadx: ) */
+    public static void restart$default(DriveState var0, Activity var1, Function1 var2, int var3, Object var4) {
+        if ((var3 & 2) != 0) {
+            var2 = null;
         }
-        driveState.restart(activity, function1);
+
+        var0.restart(var1, var2);
     }
 
     public final void restart(final Activity act, final Function1<? super Boolean, Unit> then) {

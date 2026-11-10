@@ -32,15 +32,15 @@ public final class DmView extends View {
     public Telemetry t;
     private float yawF;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public DmView(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        this.bg = BitmapFactory.decodeResource(getResources(), R.drawable.dm_background);
-        this.person = BitmapFactory.decodeResource(getResources(), R.drawable.dm_person);
-        this.cone = BitmapFactory.decodeResource(getResources(), R.drawable.dm_cone);
+    /* VF: from Vineflower (jadx: ) */
+    public DmView(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        this.bg = BitmapFactory.decodeResource(this.getResources(), R.drawable.dm_background);
+        this.person = BitmapFactory.decodeResource(this.getResources(), R.drawable.dm_person);
+        this.cone = BitmapFactory.decodeResource(this.getResources(), R.drawable.dm_cone);
         this.p = new Paint(3);
-        this.greenF = 1.0f;
+        this.greenF = 1.0F;
     }
 
     public /* synthetic */ DmView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {

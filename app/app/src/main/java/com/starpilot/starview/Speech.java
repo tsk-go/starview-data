@@ -118,12 +118,13 @@ public final class Speech {
         getPrefs().edit().putString("engine", v ? "amy" : "tts").apply();
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void init$default(Speech speech, Context context, Function0 function0, int i, Object obj) {
-        if ((i & 2) != 0) {
-            function0 = null;
+    /* VF: from Vineflower (jadx: ) */
+    public static void init$default(Speech var0, Context var1, Function0 var2, int var3, Object var4) {
+        if ((var3 & 2) != 0) {
+            var2 = null;
         }
-        speech.init(context, function0);
+
+        var0.init(var1, var2);
     }
 
     public final void init(Context ctx, final Function0<Unit> then) {
@@ -264,80 +265,69 @@ public final class Speech {
         return it.getName();
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-     */
-    /* JADX WARN: Removed duplicated region for block: B:10:0x0096  */
-    /* JADX WARN: Removed duplicated region for block: B:14:0x0099  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final String label(Voice v) {
-        String where;
-        Intrinsics.checkNotNullParameter(v, "v");
-        String country = v.getLocale().getCountry();
-        if (country != null) {
-            switch (country.hashCode()) {
-                case 2100:
-                    if (country.equals("AU")) {
-                        where = "Australian";
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public final String label(Voice var1) {
+        String var6;
+        label42: {
+            Intrinsics.checkNotNullParameter(var1, "v");
+            var6 = var1.getLocale().getCountry();
+            if (var6 != null) {
+                switch (var6.hashCode()) {
+                    case 2100:
+                        if (var6.equals("AU")) {
+                            var6 = "Australian";
+                            break label42;
+                        }
                         break;
-                    }
-                    break;
-                case 2142:
-                    if (country.equals("CA")) {
-                        where = "Canadian";
+                    case 2142:
+                        if (var6.equals("CA")) {
+                            var6 = "Canadian";
+                            break label42;
+                        }
                         break;
-                    }
-                    break;
-                case 2267:
-                    if (country.equals("GB")) {
-                        where = "British";
+                    case 2267:
+                        if (var6.equals("GB")) {
+                            var6 = "British";
+                            break label42;
+                        }
                         break;
-                    }
-                    break;
-                case 2341:
-                    if (country.equals("IN")) {
-                        where = "Indian";
+                    case 2341:
+                        if (var6.equals("IN")) {
+                            var6 = "Indian";
+                            break label42;
+                        }
                         break;
-                    }
-                    break;
-                case 2489:
-                    if (country.equals("NG")) {
-                        where = "Nigerian";
+                    case 2489:
+                        if (var6.equals("NG")) {
+                            var6 = "Nigerian";
+                            break label42;
+                        }
                         break;
-                    }
-                    break;
-                case 2718:
-                    if (country.equals("US")) {
-                        where = "American";
-                        break;
-                    }
-                    break;
+                    case 2718:
+                        if (var6.equals("US")) {
+                            var6 = "American";
+                            break label42;
+                        }
+                }
             }
-            String name = v.getName();
-            Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-            String name2 = v.getName();
-            Intrinsics.checkNotNullExpressionValue(name2, "getName(...)");
-            String id = StringsKt.substringBefore(StringsKt.substringAfter(name, "-x-", name2), "-", (StringsKt.substringAfter(name, "-x-", name2)));
-            String upperCase = id.toUpperCase(Locale.ROOT);
-            Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
-            return where + " · " + upperCase + (!v.isNetworkConnectionRequired() ? " · needs internet" : "");
+
+            var6 = var1.getLocale().getDisplayCountry();
         }
-        where = v.getLocale().getDisplayCountry();
-        String name3 = v.getName();
-        Intrinsics.checkNotNullExpressionValue(name3, "getName(...)");
-        String name22 = v.getName();
-        Intrinsics.checkNotNullExpressionValue(name22, "getName(...)");
-        String id2 = StringsKt.substringBefore(StringsKt.substringAfter(name3, "-x-", name22), "-", (StringsKt.substringAfter(name3, "-x-", name22)));
-        String upperCase2 = id2.toUpperCase(Locale.ROOT);
-        Intrinsics.checkNotNullExpressionValue(upperCase2, "toUpperCase(...)");
-        return where + " · " + upperCase2 + (!v.isNetworkConnectionRequired() ? " · needs internet" : "");
+
+        String var3 = var1.getName();
+        Intrinsics.checkNotNullExpressionValue(var3, "getName(...)");
+        String var4 = var1.getName();
+        Intrinsics.checkNotNullExpressionValue(var4, "getName(...)");
+        var3 = StringsKt.substringBefore(StringsKt.substringAfter(var3, "-x-", var4), "-", (StringsKt.substringAfter(var3, "-x-", var4))).toUpperCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(var3, "toUpperCase(...)");
+        String var5;
+        if (var1.isNetworkConnectionRequired()) {
+            var5 = " · needs internet";
+        } else {
+            var5 = "";
+        }
+
+        return var6 + " · " + var3 + var5;
     }
 
     public static /* synthetic */ void speak$default(Speech speech, String str, boolean z, int i, Object obj) {

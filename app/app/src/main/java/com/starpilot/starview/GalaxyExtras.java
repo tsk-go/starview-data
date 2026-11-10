@@ -33,6 +33,8 @@ import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 
 /* compiled from: GalaxyExtras.kt */
 public final class GalaxyExtras {
@@ -71,119 +73,106 @@ public final class GalaxyExtras {
         refresh(box);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:28:0x008d  */
-    /* JADX WARN: Removed duplicated region for block: B:31:0x010a  */
-    /* JADX WARN: Removed duplicated region for block: B:34:0x0123  */
-    /* JADX WARN: Removed duplicated region for block: B:48:0x00d3  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private static final void soundPacks$draw(LinearLayout box, CarUi $ui, Handler main, final Galaxy7 g, final Context $ctx, final JSONObject o, String err) {
-        int i;
-        int i2;
-        int i3;
-        int i4;
-        JSONArray packs;
-        String desc;
-        int i5;
-        box.removeAllViews();
-        if (o == null) {
-            box.addView($ui.note(err == null ? "Loading…" : err));
-            return;
-        }
-        final JSONObject job = o.optJSONObject("job");
-        int i6 = 0;
-        boolean running = job != null && SetsKt.setOf((Object[]) new String[]{"downloading", "verifying"}).contains(job.optString("state"));
-        JSONArray optJSONArray = o.optJSONArray("packs");
-        if (optJSONArray == null) {
-            optJSONArray = new JSONArray();
-        }
-        JSONArray packs2 = optJSONArray;
-        int length = packs2.length();
-        int i7 = 0;
-        while (i7 < length) {
-            JSONObject p = packs2.getJSONObject(i7);
-            final String id = p.optString("id");
-            boolean installed = p.optBoolean("installed");
-            if (running) {
-                if (Intrinsics.areEqual(job != null ? job.optString("pack") : null, id)) {
-                    i = 1;
-                    i2 = i;
-                    if (i2 == 0) {
-                        Intrinsics.checkNotNull(job);
-                        i3 = i7;
-                        i4 = length;
-                        packs = packs2;
-                        desc = job.optString("state") + "… " + ((int) ((job.optLong("bytes") * 100.0d) / RangesKt.coerceAtLeast(job.optLong("total"), 1L))) + " %";
-                    } else {
-                        i3 = i7;
-                        i4 = length;
-                        packs = packs2;
-                        desc = installed ? "Installed - choose it with Sound Pack above" : null;
-                    }
-                    String optString = p.optString("name", id);
-                    Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
-                    LinearLayout r = (LinearLayout) CarUi.row$default($ui, optString, desc, 0, null, null, 28, null).component1();
-                    if (i2 == 0) {
-                        i5 = 0;
-                        r.addView(CarUi.button$default($ui, "Cancel", false, new Function0() { // from class: com.starpilot.starview.GalaxyExtras$$ExternalSyntheticLambda6
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit soundPacks$draw$lambda$2;
-                                soundPacks$draw$lambda$2 = GalaxyExtras.soundPacks$draw$lambda$2(g, job, $ctx);
-                                return soundPacks$draw$lambda$2;
-                            }
-                        }, 2, null));
-                    } else {
-                        i5 = 0;
-                        if (!installed) {
-                            TextView $this$soundPacks_u24draw_u24lambda_u245 = CarUi.button$default($ui, "Install", false, new Function0() { // from class: com.starpilot.starview.GalaxyExtras$$ExternalSyntheticLambda7
-                                @Override // kotlin.jvm.functions.Function0
-                                public final Object invoke() {
-                                    Unit soundPacks$draw$lambda$4;
-                                    soundPacks$draw$lambda$4 = GalaxyExtras.soundPacks$draw$lambda$4(o, $ctx, g, id);
-                                    return soundPacks$draw$lambda$4;
-                                }
-                            }, 2, null);
-                            $this$soundPacks_u24draw_u24lambda_u245.setAlpha(running ? 0.45f : 1.0f);
-                            $this$soundPacks_u24draw_u24lambda_u245.setEnabled(!running);
-                            r.addView($this$soundPacks_u24draw_u24lambda_u245);
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private static final void soundPacks$draw(LinearLayout var0, CarUi var1, Handler var2, Galaxy7 var3, Context var4, JSONObject var5, String var6) {
+        var0.removeAllViews();
+        if (var5 == null) {
+            if (var6 == null) {
+                var6 = "Loading…";
+            }
+
+            var0.addView((View)var1.note(var6));
+        } else {
+            JSONObject var15 = var5.optJSONObject("job");
+            boolean var8;
+            if (var15 != null && SetsKt.setOf(new String[]{"downloading", "verifying"}).contains(var15.optString("state"))) {
+                var8 = true;
+            } else {
+                var8 = false;
+            }
+
+            JSONArray var14 = var5.optJSONArray("packs");
+            JSONArray var19 = var14;
+            if (var14 == null) {
+                var19 = new JSONArray();
+            }
+
+            int var9 = var19.length();
+            int var10 = 0;
+
+            for (JSONArray var25 = var19; var10 < var9; var10++) {
+                boolean var11;
+                boolean var13;
+                String var16;
+                JSONObject var17;
+                label74: {
+                    var17 = var25.getJSONObject(var10);
+                    var16 = var17.optString("id");
+                    var13 = var17.optBoolean("installed");
+                    if (var8) {
+                        if (var15 != null) {
+                            var6 = var15.optString("pack");
+                        } else {
+                            var6 = null;
+                        }
+
+                        if (Intrinsics.areEqual(var6, var16)) {
+                            var11 = true;
+                            break label74;
                         }
                     }
-                    box.addView(r, CarUi.lp$default($ui, i5, i5, 3, null));
-                    i7 = i3 + 1;
-                    i6 = i5;
-                    length = i4;
-                    packs2 = packs;
+
+                    var11 = false;
                 }
+
+                if (var11) {
+                    Intrinsics.checkNotNull(var15);
+                    var6 = var15.optString("state");
+                    int var12 = (int)(var15.optLong("bytes") * 100.0 / RangesKt.coerceAtLeast(var15.optLong("total"), 1L));
+                    var6 = var6 + "… " + var12 + " %";
+                } else if (var13) {
+                    var6 = "Installed - choose it with Sound Pack above";
+                } else {
+                    var6 = null;
+                }
+
+                String var27 = var17.optString("name", var16);
+                Intrinsics.checkNotNullExpressionValue(var27, "optString(...)");
+                LinearLayout var23 = (LinearLayout)CarUi.row$default(var1, var27, var6, 0, null, null, 28, null).component1();
+                if (var11) {
+                    var23.addView((View)CarUi.button$default(var1, "Cancel", false, new GalaxyExtras$$ExternalSyntheticLambda6(var3, var15, var4), 2, null));
+                } else if (!var13) {
+                    TextView var26 = CarUi.button$default(var1, "Install", false, new GalaxyExtras$$ExternalSyntheticLambda7(var5, var4, var3, var16), 2, null);
+                    float var7;
+                    if (var8) {
+                        var7 = 0.45F;
+                    } else {
+                        var7 = 1.0F;
+                    }
+
+                    var26.setAlpha(var7);
+                    if (!var8) {
+                        var13 = true;
+                    } else {
+                        var13 = false;
+                    }
+
+                    var26.setEnabled(var13);
+                    var23.addView((View)var26);
+                }
+
+                var0.addView((View)var23, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var1, 0, 0, 3, null));
             }
-            i = i6;
-            i2 = i;
-            if (i2 == 0) {
+
+            if (var15 != null && Intrinsics.areEqual(var15.optString("state"), "failed")) {
+                String var18 = var15.optString("error");
+                var0.addView((View)var1.note("Last download failed: " + var18));
             }
-            String optString2 = p.optString("name", id);
-            Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
-            LinearLayout r2 = (LinearLayout) CarUi.row$default($ui, optString2, desc, 0, null, null, 28, null).component1();
-            if (i2 == 0) {
+
+            if (var8 && var0.isAttachedToWindow()) {
+                var2.postDelayed(new GalaxyExtras$$ExternalSyntheticLambda8(), 1000L);
             }
-            box.addView(r2, CarUi.lp$default($ui, i5, i5, 3, null));
-            i7 = i3 + 1;
-            i6 = i5;
-            length = i4;
-            packs2 = packs;
         }
-        if (job != null && Intrinsics.areEqual(job.optString("state"), "failed")) {
-            box.addView($ui.note("Last download failed: " + job.optString("error")));
-        }
-        if (!running || !box.isAttachedToWindow()) {
-            return;
-        }
-        main.postDelayed(new Runnable() { // from class: com.starpilot.starview.GalaxyExtras$$ExternalSyntheticLambda8
-            @Override // java.lang.Runnable
-            public final void run() {
-                GalaxyExtras.soundPacks$draw$lambda$6();
-            }
-        }, 1000L);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -438,40 +427,36 @@ public final class GalaxyExtras {
         private final CarUi ui;
         private boolean visible;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        /* JADX WARN: Type inference failed for: r0v7, types: [com.starpilot.starview.GalaxyExtras$QuickSelect$poll$1] */
-        public QuickSelect(Context ctx, CarUi ui) {
-            super(ctx);
-            Intrinsics.checkNotNullParameter(ctx, "ctx");
-            Intrinsics.checkNotNullParameter(ui, "ui");
-            this.ui = ui;
+        /* VF: from Vineflower (jadx: Type inference failed) */
+        public QuickSelect(Context var1, CarUi var2) {
+            super(var1);
+            Intrinsics.checkNotNullParameter(var1, "ctx");
+            Intrinsics.checkNotNullParameter(var2, "ui");
+            this.ui = var2;
             this.g = Galaxy7.Companion.current();
-            LinearLayout $this$col_u24lambda_u240 = new LinearLayout(ctx);
-            $this$col_u24lambda_u240.setOrientation(1);
-            $this$col_u24lambda_u240.setPadding(this.ui.dp(10), this.ui.dp(4), this.ui.dp(24), this.ui.dp(60));
-            this.col = $this$col_u24lambda_u240;
+            LinearLayout var4 = new LinearLayout(var1);
+            var4.setOrientation(1);
+            var4.setPadding(this.ui.dp(10), this.ui.dp(4), this.ui.dp(24), this.ui.dp(60));
+            this.col = var4;
             this.last = "";
             this.main = new Handler(Looper.getMainLooper());
-            this.poll = new Runnable() { // from class: com.starpilot.starview.GalaxyExtras$QuickSelect$poll$1
-                @Override // java.lang.Runnable
+            this.poll = new Runnable() {
+                final GalaxyExtras.QuickSelect this$0 = GalaxyExtras.QuickSelect.this;
+
+                @Override
                 public void run() {
-                    boolean z;
-                    boolean z2;
-                    Handler handler;
-                    z = GalaxyExtras.QuickSelect.this.visible;
-                    if (z) {
-                        z2 = GalaxyExtras.QuickSelect.this.saving;
-                        if (!z2) {
-                            GalaxyExtras.QuickSelect.this.load();
+                    if (this.this$0.visible) {
+                        if (!this.this$0.saving) {
+                            this.this$0.load();
                         }
-                        handler = GalaxyExtras.QuickSelect.this.main;
-                        handler.postDelayed(this, 3000L);
+
+                        this.this$0.main.postDelayed(this, 3000L);
                     }
                 }
             };
-            ScrollView $this$_init__u24lambda_u241 = new ScrollView(ctx);
-            $this$_init__u24lambda_u241.addView(this.col);
-            addView($this$_init__u24lambda_u241, new FrameLayout.LayoutParams(-1, -1));
+            ScrollView var3 = new ScrollView(var1);
+            var3.addView((View)this.col);
+            this.addView((View)var3, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
         }
 
         public final void show() {
@@ -801,106 +786,112 @@ public final class GalaxyExtras {
             this$0.update($i, put);
         }
 
-        /* JADX WARN: Code restructure failed: missing block: B:42:0x00a8, code lost:
-        
-            if (r8 != null) goto L47;
-         */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        private final void update(int i, JSONObject patch) {
-            Galaxy7 gx;
-            JSONArray src;
-            JSONArray src2;
-            int i2;
-            Object obj;
-            String str;
-            JSONObject d = this.data;
-            if (d == null || (gx = this.g) == null || !d.optBoolean("editable") || this.saving || (src = d.optJSONArray("slots")) == null) {
-                return;
-            }
-            JSONArray slots = new JSONArray();
-            int k = 0;
-            int length = src.length();
-            while (k < length) {
-                JSONObject s = new JSONObject(src.getJSONObject(k).toString());
-                if (k != i) {
-                    src2 = src;
-                    i2 = length;
-                } else {
-                    if (!patch.has("key")) {
-                        src2 = src;
-                        i2 = length;
-                    } else {
-                        String nk = patch.isNull("key") ? null : patch.optString("key");
-                        Iterable $this$firstOrNull$iv = options();
-                        Iterator it = $this$firstOrNull$iv.iterator();
-                        while (true) {
-                            if (it.hasNext()) {
-                                Object element$iv = it.next();
-                                JSONObject it2 = (JSONObject) element$iv;
-                                src2 = src;
-                                if (Intrinsics.areEqual(it2.optString("key"), nk)) {
-                                    obj = element$iv;
-                                    break;
+        /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+        private final void update(int var1, JSONObject var2) {
+        String var16 = null; // declarations Vineflower left out
+            JSONObject var10 = this.data;
+            if (var10 != null) {
+                Galaxy7 var9 = this.g;
+                if (var9 != null) {
+                    if (var10.optBoolean("editable") && !this.saving) {
+                        JSONArray var5 = var10.optJSONArray("slots");
+                        if (var5 != null) {
+                            JSONArray var11 = new JSONArray();
+                            int var4 = 0;
+                            int var3 = var5.length();
+
+                            while (var4 < var3) {
+                                JSONObject var12 = new JSONObject(var5.getJSONObject(var4).toString());
+                                JSONArray var17;
+                                if (var4 != var1) {
+                                    var17 = var5;
+                                } else {
+                                    if (var2.has("key")) {
+                                        String var6;
+                                        if (var2.isNull("key")) {
+                                            var6 = null;
+                                        } else {
+                                            var6 = var2.optString("key");
+                                        }
+
+                                        Iterator var7 = this.options().iterator();
+
+                                        Object var8;
+                                        do {
+                                            if (!var7.hasNext()) {
+                                                var8 = null;
+                                                break;
+                                            }
+
+                                            var8 = var7.next();
+                                        } while (!Intrinsics.areEqual(((JSONObject)var8).optString("key"), var6));
+
+                                        JSONArray var19 = var5;
+                                        JSONObject var13 = (JSONObject)var8;
+                                        if (var6 != null && var13 == null) {
+                                            return;
+                                        }
+
+                                        label71: {
+                                            var12.remove("value");
+                                            if (var13 != null) {
+                                                String var15 = var13.optString("label");
+                                                if (var15 != null) {
+                                                    var8 = StringsKt.take(var15, 32);
+                                                    var16 = (String)var8;
+                                                    if (var8 != null) {
+                                                        break label71;
+                                                    }
+                                                }
+                                            }
+
+                                            var16 = "";
+                                        }
+
+                                        var12.put("label", var16);
+                                        if (var13 == null) {
+                                            var12.put("enabled", false);
+                                            var12.put("show_onroad", false);
+                                        }
+
+                                        var5 = var5;
+                                        if (Intrinsics.areEqual(var6, "__starpilot_controller_action__:set_speed")) {
+                                            var12.put("value", 50);
+                                            var5 = var19;
+                                        }
+                                    }
+
+                                    Iterator var20 = var2.keys();
+                                    Intrinsics.checkNotNullExpressionValue(var20, "keys(...)");
+
+                                    while (true) {
+                                        var17 = var5;
+                                        if (!var20.hasNext()) {
+                                            break;
+                                        }
+
+                                        String var18 = (String)var20.next();
+                                        var12.put(var18, var2.get(var18));
+                                    }
                                 }
-                                src = src2;
-                            } else {
-                                src2 = src;
-                                obj = null;
-                                break;
+
+                                if (!Intrinsics.areEqual(var12.optString("key"), "__starpilot_controller_action__:set_speed")) {
+                                    var12.remove("value");
+                                }
+
+                                var11.put(var12);
+                                var4++;
+                                var5 = var17;
                             }
-                        }
-                        JSONObject opt = (JSONObject) obj;
-                        if (nk != null && opt == null) {
-                            return;
-                        }
-                        s.remove("value");
-                        if (opt != null) {
-                            i2 = length;
-                            String optString = opt.optString("label");
-                            if (optString != null) {
-                                str = StringsKt.take(optString, 32);
-                            }
-                        } else {
-                            i2 = length;
-                        }
-                        str = "";
-                        s.put("label", str);
-                        if (opt == null) {
-                            s.put("enabled", false);
-                            s.put("show_onroad", false);
-                        }
-                        if (Intrinsics.areEqual(nk, "__starpilot_controller_action__:set_speed")) {
-                            s.put("value", 50);
+
+                            this.saving = true;
+                            var2 = new JSONObject().put("revision", var10.optString("revision")).put("slots", var11);
+                            Intrinsics.checkNotNullExpressionValue(var2, "put(...)");
+                            var9.post("/api/favorites/slots", var2, new GalaxyExtras$QuickSelect$$ExternalSyntheticLambda6(this));
                         }
                     }
-                    Iterator<String> keys = patch.keys();
-                    Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
-                    while (keys.hasNext()) {
-                        String f = keys.next();
-                        s.put(f, patch.get(f));
-                    }
                 }
-                if (!Intrinsics.areEqual(s.optString("key"), "__starpilot_controller_action__:set_speed")) {
-                    s.remove("value");
-                }
-                slots.put(s);
-                k++;
-                length = i2;
-                src = src2;
             }
-            this.saving = true;
-            JSONObject put = new JSONObject().put("revision", d.optString("revision")).put("slots", slots);
-            Intrinsics.checkNotNullExpressionValue(put, "put(...)");
-            gx.post("/api/favorites/slots", put, new Function2() { // from class: com.starpilot.starview.GalaxyExtras$QuickSelect$$ExternalSyntheticLambda6
-                @Override // kotlin.jvm.functions.Function2
-                public final Object invoke(Object obj2, Object obj3) {
-                    Unit update$lambda$21;
-                    update$lambda$21 = GalaxyExtras.QuickSelect.update$lambda$21(GalaxyExtras.QuickSelect.this, (JSONObject) obj2, (String) obj3);
-                    return update$lambda$21;
-                }
-            });
         }
 
         /* JADX INFO: Access modifiers changed from: private */

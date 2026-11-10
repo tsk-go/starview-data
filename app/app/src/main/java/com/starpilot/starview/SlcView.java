@@ -22,6 +22,8 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt;
 import kotlin.text.StringsKt;
 import org.capnproto.SlcPeek;
+import android.graphics.Paint.Align;
+import org.capnproto.SlcPeek.Slc;
 
 /* compiled from: HudViews.kt */
 public final class SlcView extends View {
@@ -32,15 +34,15 @@ public final class SlcView extends View {
     public Telemetry t;
     private final Paint tp;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public SlcView(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
+    /* VF: from Vineflower (jadx: ) */
+    public SlcView(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
         this.p = new Paint(1);
-        Paint $this$tp_u24lambda_u240 = new Paint(1);
-        $this$tp_u24lambda_u240.setTextAlign(Paint.Align.CENTER);
-        $this$tp_u24lambda_u240.setTypeface(Typeface.DEFAULT_BOLD);
-        this.tp = $this$tp_u24lambda_u240;
+        Paint var3 = new Paint(1);
+        var3.setTextAlign(android.graphics.Paint.Align.CENTER);
+        var3.setTypeface(Typeface.DEFAULT_BOLD);
+        this.tp = var3;
         this.bounds = new Rect();
     }
 
@@ -116,101 +118,125 @@ public final class SlcView extends View {
         private Companion() {
         }
 
-        /* JADX WARN: Removed duplicated region for block: B:28:0x0071  */
-        /* JADX WARN: Removed duplicated region for block: B:40:0x0093  */
-        /* JADX WARN: Removed duplicated region for block: B:56:0x00ba  */
-        /* JADX WARN: Removed duplicated region for block: B:59:0x00da  */
-        /* JADX WARN: Removed duplicated region for block: B:63:0x00bd  */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public final Shown shown(SlcPeek.Slc s, boolean metric, float vEgo) {
-            float adjusted;
-            int adj;
-            boolean pending;
-            int arrow;
-            String str;
-            Intrinsics.checkNotNullParameter(s, "s");
-            float k = metric ? 3.6f : 2.2369363f;
-            boolean valid = Intrinsics.areEqual(s.kind, "valid");
-            float posted = valid ? s.speedMps : s.hasAccepted ? s.acceptedMps : Float.NaN;
-            int i = 0;
-            String str2 = null;
-            if (!((Float.isInfinite(posted) || Float.isNaN(posted)) ? false : true) || posted <= 0.0f) {
-                return null;
+        /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+        public final SlcView.Shown shown(Slc var1, boolean var2, float var3) {
+            Intrinsics.checkNotNullParameter(var1, "s");
+            float var5;
+            if (var2) {
+                var5 = 3.6F;
+            } else {
+                var5 = 2.2369363F;
             }
-            if (valid) {
-                float f = s.adjustedMps;
-                if (((Float.isInfinite(f) || Float.isNaN(f)) ? false : true) && s.adjustedMps > 0.0f) {
-                    adjusted = s.adjustedMps;
-                    adj = MathKt.roundToInt(adjusted * k) - MathKt.roundToInt(posted * k);
-                    if (valid) {
-                        float f2 = s.pendingMps;
-                        if (((Float.isInfinite(f2) || Float.isNaN(f2)) ? false : true) && s.pendingMps > 0.0f && !s.autoAdoptionPending) {
-                            pending = true;
-                            if (pending) {
-                                if ((Float.isInfinite(adjusted) || Float.isNaN(adjusted)) ? false : true) {
-                                    if (!(adjusted == vEgo)) {
-                                        if (adjusted <= vEgo) {
-                                            arrow = 1;
-                                            if (valid) {
-                                                str = "LAST";
-                                            } else {
-                                                str = (String) SlcView.LABELS.get(s.source);
-                                                if (str == null) {
-                                                    str = "SPEED";
-                                                }
-                                            }
-                                            String str3 = str;
-                                            String valueOf = String.valueOf(MathKt.roundToInt(posted * k));
-                                            if (adj != 0) {
-                                                str2 = String.format("%+d", Arrays.copyOf(new Object[]{Integer.valueOf(adj)}, 1));
-                                                Intrinsics.checkNotNullExpressionValue(str2, "format(...)");
-                                            }
-                                            return new Shown(str3, valueOf, str2, arrow, s.driverOverride, pending);
-                                        }
-                                        i = -1;
-                                    }
-                                }
-                            }
-                            arrow = i;
-                            if (valid) {
-                            }
-                            String str32 = str;
-                            String valueOf2 = String.valueOf(MathKt.roundToInt(posted * k));
-                            if (adj != 0) {
-                            }
-                            return new Shown(str32, valueOf2, str2, arrow, s.driverOverride, pending);
+
+            boolean var12 = Intrinsics.areEqual(var1.kind, "valid");
+            float var4;
+            if (var12) {
+                var4 = var1.speedMps;
+            } else if (var1.hasAccepted) {
+                var4 = var1.acceptedMps;
+            } else {
+                var4 = Float.NaN;
+            }
+
+            var2 = Float.isInfinite(var4);
+            byte var10 = 0;
+            int var8;
+            if (!var2 && !Float.isNaN(var4)) {
+                var8 = 1;
+            } else {
+                var8 = 0;
+            }
+
+            String var14 = null;
+            if (var8 && !(var4 <= 0.0F)) {
+                float var18;
+                label101: {
+                    if (var12) {
+                        var18 = var1.adjustedMps;
+                        if (!Float.isInfinite(var18) && !Float.isNaN(var18)) {
+                            var8 = (((boolean)true) ? 1 : 0);
+                        } else {
+                            var8 = (((boolean)false) ? 1 : 0);
+                        }
+
+                        if (var8 && var1.adjustedMps > 0.0F) {
+                            var18 = var1.adjustedMps;
+                            break label101;
                         }
                     }
-                    pending = false;
-                    if (pending) {
-                    }
-                    arrow = i;
-                    if (valid) {
-                    }
-                    String str322 = str;
-                    String valueOf22 = String.valueOf(MathKt.roundToInt(posted * k));
-                    if (adj != 0) {
-                    }
-                    return new Shown(str322, valueOf22, str2, arrow, s.driverOverride, pending);
+
+                    var18 = var1.offsetMps + var4;
                 }
+
+                int var11;
+                label90: {
+                    var11 = MathKt.roundToInt(var18 * var5) - MathKt.roundToInt(var4 * var5);
+                    if (var12) {
+                        float var7 = var1.pendingMps;
+                        if (!Float.isInfinite(var7) && !Float.isNaN(var7)) {
+                            var8 = (((boolean)true) ? 1 : 0);
+                        } else {
+                            var8 = (((boolean)false) ? 1 : 0);
+                        }
+
+                        if (var8 && var1.pendingMps > 0.0F && !var1.autoAdoptionPending) {
+                            var2 = true;
+                            break label90;
+                        }
+                    }
+
+                    var2 = false;
+                }
+
+                var8 = var10;
+                if (var2) {
+                    boolean var9;
+                    if (!Float.isInfinite(var18) && !Float.isNaN(var18)) {
+                        var9 = true;
+                    } else {
+                        var9 = false;
+                    }
+
+                    var8 = var10;
+                    if (var9) {
+                        if (var18 == var3) {
+                            var9 = true;
+                        } else {
+                            var9 = false;
+                        }
+
+                        var8 = var10;
+                        if (!var9) {
+                            if (var18 > var3) {
+                                var8 = -1;
+                            } else {
+                                var8 = 1;
+                            }
+                        }
+                    }
+                }
+
+                String var13;
+                if (!var12) {
+                    var13 = "LAST";
+                } else {
+                    String var15 = SlcView.LABELS.get(var1.source);
+                    var13 = var15;
+                    if (var15 == null) {
+                        var13 = "SPEED";
+                    }
+                }
+
+                int var23 = MathKt.roundToInt(var4 * var5);
+                if (var11 != 0) {
+                    var14 = String.format("%+d", Arrays.copyOf(new Object[]{var11}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var14, "format(...)");
+                }
+
+                return new SlcView.Shown(var13, String.valueOf(var23), var14, (((var8 != 0)) ? 1 : 0), var1.driverOverride, var2);
+            } else {
+                return null;
             }
-            adjusted = s.offsetMps + posted;
-            adj = MathKt.roundToInt(adjusted * k) - MathKt.roundToInt(posted * k);
-            if (valid) {
-            }
-            pending = false;
-            if (pending) {
-            }
-            arrow = i;
-            if (valid) {
-            }
-            String str3222 = str;
-            String valueOf222 = String.valueOf(MathKt.roundToInt(posted * k));
-            if (adj != 0) {
-            }
-            return new Shown(str3222, valueOf222, str2, arrow, s.driverOverride, pending);
         }
     }
 

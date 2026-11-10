@@ -112,34 +112,36 @@ public final /* data */ class RtkSensor {
         private Companion() {
         }
 
-        /* JADX WARN: Multi-variable type inference failed */
-        /* JADX WARN: Type inference failed for: r2v7, types: [java.util.List] */
-        public final RtkSensor parse(JSONObject o) {
-            ArrayList arrayList;
-            if (o == null) {
+        /* VF: from Vineflower (jadx: Type inference failed) */
+        public final RtkSensor parse(JSONObject var1) {
+            if (var1 == null) {
                 return null;
-            }
-            JSONArray f = o.optJSONArray("faults");
-            String optString = o.optString("type", "?");
-            Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
-            boolean optBoolean = o.optBoolean("used");
-            boolean optBoolean2 = o.optBoolean("ready");
-            String optString2 = o.optString("calib", "");
-            Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
-            int optInt = o.optInt("hz", 0);
-            if (f == null) {
-                arrayList = CollectionsKt.emptyList();
             } else {
-                Iterable $this$map$iv = RangesKt.until(0, f.length());
-                Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-                Iterator<Integer> it = $this$map$iv.iterator();
-                while (it.hasNext()) {
-                    int item$iv$iv = ((IntIterator) it).nextInt();
-                    destination$iv$iv.add(f.optString(item$iv$iv));
+                JSONArray var7 = var1.optJSONArray("faults");
+                String var5 = var1.optString("type", "?");
+                Intrinsics.checkNotNullExpressionValue(var5, "optString(...)");
+                boolean var3 = var1.optBoolean("used");
+                boolean var4 = var1.optBoolean("ready");
+                String var6 = var1.optString("calib", "");
+                Intrinsics.checkNotNullExpressionValue(var6, "optString(...)");
+                int var2 = var1.optInt("hz", 0);
+                List var9;
+                if (var7 == null) {
+                    var9 = CollectionsKt.emptyList();
+                } else {
+                    Iterable var8 = RangesKt.until(0, var7.length());
+                    var var10 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var8, 10));
+                    Iterator var11 = var8.iterator();
+
+                    while (var11.hasNext()) {
+                        var10.add(var7.optString(((IntIterator)var11).nextInt()));
+                    }
+
+                    var9 = var10;
                 }
-                arrayList = (List) destination$iv$iv;
+
+                return new RtkSensor(var5, var3, var4, var6, var2, var9);
             }
-            return new RtkSensor(optString, optBoolean, optBoolean2, optString2, optInt, arrayList);
         }
     }
 

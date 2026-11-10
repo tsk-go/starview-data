@@ -45,6 +45,9 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.view.ViewGroup.LayoutParams;
 
 /* compiled from: GxCameras.kt */
 public final class GxCamerasPage extends GxPage {
@@ -107,11 +110,11 @@ public final class GxCamerasPage extends GxPage {
     private TextView vUndoBtn;
     private GxCamerasRegionView vView;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxCamerasPage(Activity act, GxHost gx) {
-        super(act, gx);
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(gx, "gx");
+    /* VF: from Vineflower (jadx: ) */
+    public GxCamerasPage(Activity var1, GxHost var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "gx");
         this.sEvent = new JSONObject();
         this.sEventSig = "?";
         this.sHistory = CollectionsKt.emptyList();
@@ -386,12 +389,13 @@ public final class GxCamerasPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void saveSentryParam$default(GxCamerasPage gxCamerasPage, String str, Object obj, Function0 function0, int i, Object obj2) {
-        if ((i & 4) != 0) {
-            function0 = null;
+    /* VF: from Vineflower (jadx: ) */
+    static void saveSentryParam$default(GxCamerasPage var0, String var1, Object var2, Function0 var3, int var4, Object var5) {
+        if ((var4 & 4) != 0) {
+            var3 = null;
         }
-        gxCamerasPage.saveSentryParam(str, obj, function0);
+
+        var0.saveSentryParam(var1, var2, var3);
     }
 
     private final void saveSentryParam(String key, Object value, final Function0<Unit> after) {
@@ -796,97 +800,94 @@ public final class GxCamerasPage extends GxPage {
         }
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    static /* synthetic */ void kindLine$default(GxCamerasPage gxCamerasPage, LinearLayout linearLayout, JSONObject jSONObject, String str, Function0 function0, int i, Object obj) {
-        if ((i & 8) != 0) {
-            function0 = null;
+    /* VF: from Vineflower (jadx: ) */
+    static void kindLine$default(GxCamerasPage var0, LinearLayout var1, JSONObject var2, String var3, Function0 var4, int var5, Object var6) {
+        if ((var5 & 8) != 0) {
+            var4 = null;
         }
-        gxCamerasPage.kindLine(linearLayout, jSONObject, str, function0);
+
+        var0.kindLine(var1, var2, var3, var4);
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    private final void kindLine(LinearLayout into, JSONObject ev, String title, final Function0<Unit> onDelete) {
-        int color;
-        int i;
-        LinearLayout line = new LinearLayout(getAct());
-        line.setOrientation(0);
-        line.setGravity(16);
-        line.setPadding(0, 0, 0, getUi().dp(6));
-        String str$default = GxPage.str$default(this, ev, "kind", null, 2, null);
-        if (StringsKt.isBlank(str$default)) {
-            str$default = "event";
+    /* VF: from Vineflower (jadx: ) */
+    private final void kindLine(LinearLayout var1, JSONObject var2, String var3, Function0<Unit> var4) {
+        LinearLayout var7 = new LinearLayout((Context)this.getAct());
+        var7.setOrientation(0);
+        var7.setGravity(16);
+        var7.setPadding(0, 0, 0, this.getUi().dp(6));
+        CharSequence var6 = GxPage.str$default(this, var2, "kind", null, 2, null);
+        TextView var10 = var6;
+        if (StringsKt.isBlank(var6)) {
+            var10 = "event";
         }
-        String kind = str$default;
-        switch (kind.hashCode()) {
-            case -906020504:
-                if (kind.equals("selfie")) {
-                    color = CarUi.Companion.getACCENT();
+
+        int var5;
+        String var8;
+        label35: {
+            var8 = (String)var10;
+            switch (var8.hashCode()) {
+                case -906020504:
+                    if (var8.equals("selfie")) {
+                        var5 = CarUi.Companion.getACCENT();
+                        break label35;
+                    }
                     break;
-                }
-                color = CarUi.Companion.getDIM();
-                break;
-            case 92895825:
-                if (kind.equals("alarm")) {
-                    color = GxCamerasKt.GX_CAM_RED;
+                case 92895825:
+                    if (var8.equals("alarm")) {
+                        var5 = GxCamerasKt.GX_CAM_RED;
+                        break label35;
+                    }
                     break;
-                }
-                color = CarUi.Companion.getDIM();
-                break;
-            case 1124446108:
-                if (kind.equals("warning")) {
-                    color = CarUi.Companion.getWARN();
-                    break;
-                }
-                color = CarUi.Companion.getDIM();
-                break;
-            default:
-                color = CarUi.Companion.getDIM();
-                break;
+                case 1124446108:
+                    if (var8.equals("warning")) {
+                        var5 = CarUi.Companion.getWARN();
+                        break label35;
+                    }
+            }
+
+            var5 = CarUi.Companion.getDIM();
         }
-        TextView $this$kindLine_u24lambda_u2431 = new TextView(getAct());
-        Locale US = Locale.US;
-        Intrinsics.checkNotNullExpressionValue(US, "US");
-        String upperCase = kind.toUpperCase(US);
-        Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
-        $this$kindLine_u24lambda_u2431.setText(upperCase);
-        $this$kindLine_u24lambda_u2431.setTextSize(14.0f);
-        $this$kindLine_u24lambda_u2431.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$kindLine_u24lambda_u2431.setTextColor(color);
-        $this$kindLine_u24lambda_u2431.setBackground(getUi().rounded(CarUi.Companion.getCARD_ON(), 10, Integer.valueOf(color)));
-        $this$kindLine_u24lambda_u2431.setPadding(getUi().dp(12), getUi().dp(5), getUi().dp(12), getUi().dp(5));
-        TextView t = new TextView(getAct());
-        t.setText(title);
-        t.setTextSize(17.0f);
-        t.setTextColor(CarUi.Companion.getTEXT());
-        t.setPadding(getUi().dp(12), 0, 0, 0);
-        if (onDelete != null) {
-            t.setTypeface(Typeface.DEFAULT_BOLD);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, -2, 1.0f);
-            Unit unit = Unit.INSTANCE;
-            line.addView(t, layoutParams);
-            t.setPadding(0, 0, getUi().dp(12), 0);
-            line.addView($this$kindLine_u24lambda_u2431);
+
+        var10 = new TextView((Context)this.getAct());
+        Locale var17 = Locale.US;
+        Intrinsics.checkNotNullExpressionValue(var17, "US");
+        String var18 = var8.toUpperCase(var17);
+        Intrinsics.checkNotNullExpressionValue(var18, "toUpperCase(...)");
+        var10.setText(var18);
+        var10.setTextSize(14.0F);
+        var10.setTypeface(Typeface.DEFAULT_BOLD);
+        var10.setTextColor(var5);
+        var10.setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 10, var5));
+        var10.setPadding(this.getUi().dp(12), this.getUi().dp(5), this.getUi().dp(12), this.getUi().dp(5));
+        TextView var19 = new TextView((Context)this.getAct());
+        var19.setText(var3);
+        var19.setTextSize(17.0F);
+        var19.setTextColor(CarUi.Companion.getTEXT());
+        var19.setPadding(this.getUi().dp(12), 0, 0, 0);
+        if (var4 != null) {
+            var19.setTypeface(Typeface.DEFAULT_BOLD);
+            View var14 = (View)var19;
+            android.widget.LinearLayout.LayoutParams var9 = new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F);
+            Unit var20 = Unit.INSTANCE;
+            var7.addView(var14, (android.view.ViewGroup.LayoutParams)var9);
+            var19.setPadding(0, 0, this.getUi().dp(12), 0);
+            var7.addView((View)var10);
         } else {
-            line.addView($this$kindLine_u24lambda_u2431);
-            line.addView(t, new LinearLayout.LayoutParams(0, -2, 1.0f));
+            var7.addView((View)var10);
+            var7.addView((View)var19, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
         }
-        if (onDelete != null) {
-            TextView $this$kindLine_u24lambda_u2435 = CarUi.button$default(getUi(), "Delete", false, new Function0() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda70
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit kindLine$lambda$34;
-                    kindLine$lambda$34 = GxCamerasPage.kindLine$lambda$34(onDelete);
-                    return kindLine$lambda$34;
-                }
-            }, 2, null);
-            i = GxCamerasKt.GX_CAM_RED;
-            $this$kindLine_u24lambda_u2435.setTextColor(i);
-            LinearLayout.LayoutParams $this$kindLine_u24lambda_u2436 = new LinearLayout.LayoutParams(-2, -2);
-            $this$kindLine_u24lambda_u2436.leftMargin = getUi().dp(12);
-            Unit unit2 = Unit.INSTANCE;
-            line.addView($this$kindLine_u24lambda_u2435, $this$kindLine_u24lambda_u2436);
+
+        if (var4 != null) {
+            var10 = CarUi.button$default(this.getUi(), "Delete", false, new GxCamerasPage$$ExternalSyntheticLambda70(var4), 2, null);
+            var10.setTextColor(GxCamerasKt.GX_CAM_RED);
+            View var15 = (View)var10;
+            android.widget.LinearLayout.LayoutParams var16 = new android.widget.LinearLayout.LayoutParams(-2, -2);
+            var16.leftMargin = this.getUi().dp(12);
+            Unit var13 = Unit.INSTANCE;
+            var7.addView(var15, (android.view.ViewGroup.LayoutParams)var16);
         }
-        into.addView(line);
+
+        var1.addView((View)var7);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1529,7 +1530,7 @@ public final class GxCamerasPage extends GxPage {
                     } else {
                         objectRef2.element = BitmapFactory.decodeByteArray(bArr2, 0, bArr2.length);
                     }
-                    if (objectRef.element == 0) {
+                    if (!objectRef.element) {
                         objectRef.element = "Failed to decode image";
                     }
                     Unit unit = Unit.INSTANCE;
@@ -1561,7 +1562,7 @@ public final class GxCamerasPage extends GxPage {
                     }
                     t = "HTTP " + response.code();
                     objectRef.element = t;
-                    if (objectRef.element == 0 && objectRef2.element == 0) {
+                    if (!objectRef.element && !objectRef2.element) {
                         objectRef.element = "Failed to decode image";
                     }
                     Unit unit2 = Unit.INSTANCE;
@@ -2286,42 +2287,49 @@ public final class GxCamerasPage extends GxPage {
         return $this$vSave_u24scale_u24lambda_u2494;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x003b, code lost:
-    
-        if (r1 == null) goto L18;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit vSave$lambda$97(GxCamerasPage this$0, String e, JSONObject o) {
-        String str;
-        String optString;
-        this$0.vSaving = false;
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Failed to save";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit vSave$lambda$97(GxCamerasPage var0, String var1, JSONObject var2) {
+        var0.vSaving = false;
+        if (var1 != null) {
+            CharSequence var9 = var1;
+            Object var6 = var9;
+            if (StringsKt.isBlank(var9)) {
+                var6 = "Failed to save";
             }
-            this$0.vError(str2);
-            this$0.vPaint();
+
+            var0.vError((String)var6);
+            var0.vPaint();
+            return Unit.INSTANCE;
+        } else {
+            label24: {
+                var0.vConfigSaved = true;
+                var0.vConfigExists = true;
+                if (var2 != null) {
+                    var1 = var2.optString("message");
+                    if (var1 != null) {
+                        CharSequence var7 = var1;
+                        CharSequence var4 = var7;
+                        if (StringsKt.isBlank(var7)) {
+                            var4 = null;
+                        }
+
+                        String var8 = (String)var4;
+                        var1 = var8;
+                        if (var8 != null) {
+                            break label24;
+                        }
+                    }
+                }
+
+                var1 = "Annotation config saved! V-ASM is now enabled.";
+            }
+
+            var0.vSuccess(var1);
+            var0.toast("Annotation config saved! V-ASM is now enabled.");
+            var0.loadVasmConfig();
+            var0.vPaint();
             return Unit.INSTANCE;
         }
-        this$0.vConfigSaved = true;
-        this$0.vConfigExists = true;
-        if (o != null && (optString = o.optString("message")) != null) {
-            String str3 = optString;
-            if (StringsKt.isBlank(str3)) {
-                str3 = null;
-            }
-            str = str3;
-        }
-        str = "Annotation config saved! V-ASM is now enabled.";
-        this$0.vSuccess(str);
-        this$0.toast("Annotation config saved! V-ASM is now enabled.");
-        this$0.loadVasmConfig();
-        this$0.vPaint();
-        return Unit.INSTANCE;
     }
 
     private final void vDelete() {
@@ -2356,61 +2364,73 @@ public final class GxCamerasPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:26:0x0069, code lost:
-    
-        if (r3 == null) goto L28;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit vDelete$lambda$101$lambda$100(GxCamerasPage this$0, String e, JSONObject o) {
-        String str;
-        String optString;
-        this$0.vSaving = false;
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Failed to delete";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit vDelete$lambda$101$lambda$100(GxCamerasPage var0, String var1, JSONObject var2) {
+        var0.vSaving = false;
+        if (var1 != null) {
+            CharSequence var13 = var1;
+            Object var11 = var13;
+            if (StringsKt.isBlank(var13)) {
+                var11 = "Failed to delete";
             }
-            this$0.vError(str2);
-            this$0.vPaint();
+
+            var0.vError((String)var11);
+            var0.vPaint();
+            return Unit.INSTANCE;
+        } else {
+            GxCamerasRegionView var4 = var0.vView;
+            Object var3 = null;
+            GxCamerasRegionView var5 = var4;
+            if (var4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("vView");
+                var5 = null;
+            }
+
+            var5.getLeft().clear();
+            var4 = var0.vView;
+            GxCamerasRegionView var6 = var4;
+            if (var4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("vView");
+                var6 = null;
+            }
+
+            var6.getRight().clear();
+            var4 = var0.vView;
+            GxCamerasRegionView var7 = var4;
+            if (var4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("vView");
+                var7 = null;
+            }
+
+            label31: {
+                var7.setAnnotating(null);
+                var0.vConfigSaved = false;
+                var0.vConfigExists = false;
+                var0.vConfig = null;
+                if (var2 != null) {
+                    var1 = var2.optString("message");
+                    if (var1 != null) {
+                        var1 = var1;
+                        if (StringsKt.isBlank(var1)) {
+                            var1 = (String)var3;
+                        }
+
+                        String var12 = var1;
+                        var1 = var12;
+                        if (var12 != null) {
+                            break label31;
+                        }
+                    }
+                }
+
+                var1 = "Annotation config cleared.";
+            }
+
+            var0.vSuccess(var1);
+            var0.toast("Annotation config cleared.");
+            var0.vPaint();
             return Unit.INSTANCE;
         }
-        GxCamerasRegionView gxCamerasRegionView = this$0.vView;
-        String str3 = null;
-        if (gxCamerasRegionView == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vView");
-            gxCamerasRegionView = null;
-        }
-        gxCamerasRegionView.getLeft().clear();
-        GxCamerasRegionView gxCamerasRegionView2 = this$0.vView;
-        if (gxCamerasRegionView2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vView");
-            gxCamerasRegionView2 = null;
-        }
-        gxCamerasRegionView2.getRight().clear();
-        GxCamerasRegionView gxCamerasRegionView3 = this$0.vView;
-        if (gxCamerasRegionView3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vView");
-            gxCamerasRegionView3 = null;
-        }
-        gxCamerasRegionView3.setAnnotating(null);
-        this$0.vConfigSaved = false;
-        this$0.vConfigExists = false;
-        this$0.vConfig = null;
-        if (o != null && (optString = o.optString("message")) != null) {
-            String str4 = optString;
-            if (!StringsKt.isBlank(str4)) {
-                str3 = str4;
-            }
-            str = str3;
-        }
-        str = "Annotation config cleared.";
-        this$0.vSuccess(str);
-        this$0.toast("Annotation config cleared.");
-        this$0.vPaint();
-        return Unit.INSTANCE;
     }
 
     private final void loadVasmConfig() {
@@ -2880,227 +2900,260 @@ public final class GxCamerasPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:102:0x01be  */
-    /* JADX WARN: Removed duplicated region for block: B:105:0x01c2  */
-    /* JADX WARN: Removed duplicated region for block: B:106:0x01b3  */
-    /* JADX WARN: Removed duplicated region for block: B:109:0x0197  */
-    /* JADX WARN: Removed duplicated region for block: B:113:0x00e9  */
-    /* JADX WARN: Removed duplicated region for block: B:115:0x00b5  */
-    /* JADX WARN: Removed duplicated region for block: B:45:0x00aa  */
-    /* JADX WARN: Removed duplicated region for block: B:48:0x00b2  */
-    /* JADX WARN: Removed duplicated region for block: B:51:0x00c0  */
-    /* JADX WARN: Removed duplicated region for block: B:58:0x00d4  */
-    /* JADX WARN: Removed duplicated region for block: B:61:0x00dc  */
-    /* JADX WARN: Removed duplicated region for block: B:64:0x00e6  */
-    /* JADX WARN: Removed duplicated region for block: B:67:0x00f5  */
-    /* JADX WARN: Removed duplicated region for block: B:70:0x0104  */
-    /* JADX WARN: Removed duplicated region for block: B:73:0x0112  */
-    /* JADX WARN: Removed duplicated region for block: B:76:0x0125  */
-    /* JADX WARN: Removed duplicated region for block: B:97:0x01a8  */
-    /* JADX WARN: Removed duplicated region for block: B:99:0x01b0  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void pPaint() {
-        int i;
-        int i2;
-        boolean any;
-        TextView textView;
-        TextView textView2;
-        TextView textView3;
-        TextView textView4;
-        TextView textView5;
-        TextView textView6;
-        TextView textView7;
-        TextView textView8;
-        GxCamerasPipView gxCamerasPipView;
-        if (this.pView == null) {
-            return;
-        }
-        GxCamerasPipView gxCamerasPipView2 = this.pView;
-        GxCamerasPipView gxCamerasPipView3 = null;
-        if (gxCamerasPipView2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("pView");
-            gxCamerasPipView2 = null;
-        }
-        String arm = gxCamerasPipView2.getArmSide();
-        TextView textView9 = this.pLeftBtn;
-        if (textView9 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("pLeftBtn");
-            textView9 = null;
-        }
-        i = GxCamerasKt.GX_CAM_BLUE;
-        tint(textView9, i, Intrinsics.areEqual(arm, "left"));
-        TextView textView10 = this.pRightBtn;
-        if (textView10 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("pRightBtn");
-            textView10 = null;
-        }
-        i2 = GxCamerasKt.GX_CAM_ORANGE;
-        tint(textView10, i2, Intrinsics.areEqual(arm, "right"));
-        TextView textView11 = this.pLeftBtn;
-        if (textView11 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("pLeftBtn");
-            textView11 = null;
-        }
-        GxCamerasPipView gxCamerasPipView4 = this.pView;
-        if (gxCamerasPipView4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("pView");
-            gxCamerasPipView4 = null;
-        }
-        textView11.setText(gxCamerasPipView4.getLeftC() != null ? "Move Left Side of Vehicle - Left Here" : "Set Left Side of Vehicle - Left Here");
-        TextView textView12 = this.pRightBtn;
-        if (textView12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("pRightBtn");
-            textView12 = null;
-        }
-        GxCamerasPipView gxCamerasPipView5 = this.pView;
-        if (gxCamerasPipView5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("pView");
-            gxCamerasPipView5 = null;
-        }
-        textView12.setText(gxCamerasPipView5.getRightC() != null ? "Move Right Side of Vehicle - Right Here" : "Set Right Side of Vehicle - Right Here");
-        GxCamerasPipView gxCamerasPipView6 = this.pView;
-        if (gxCamerasPipView6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("pView");
-            gxCamerasPipView6 = null;
-        }
-        if (gxCamerasPipView6.getLeftC() == null) {
-            GxCamerasPipView gxCamerasPipView7 = this.pView;
-            if (gxCamerasPipView7 == null) {
+        if (this.pView != null) {
+            GxCamerasPipView var5 = this.pView;
+            Object var6 = null;
+            GxCamerasPipView var4 = var5;
+            if (var5 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("pView");
-                gxCamerasPipView7 = null;
+                var4 = null;
             }
-            if (gxCamerasPipView7.getRightC() == null) {
-                any = false;
-                textView = this.pSaveBtn;
-                if (textView == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pSaveBtn");
-                    textView = null;
-                }
-                textView.setText(!this.pLoading ? "Saving..." : "Save Mask");
-                textView2 = this.pSaveBtn;
-                if (textView2 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pSaveBtn");
-                    textView2 = null;
-                }
-                textView2.setEnabled(this.pLoading && any);
-                textView3 = this.pSaveBtn;
-                if (textView3 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pSaveBtn");
-                    textView3 = null;
-                }
-                textView4 = this.pSaveBtn;
-                if (textView4 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pSaveBtn");
-                    textView4 = null;
-                }
-                textView3.setAlpha(!textView4.isEnabled() ? 1.0f : 0.45f);
-                textView5 = this.pDeleteBtn;
-                if (textView5 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pDeleteBtn");
-                    textView5 = null;
-                }
-                showIf(textView5, this.pConfigExists);
-                textView6 = this.pDeleteBtn;
-                if (textView6 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pDeleteBtn");
-                    textView6 = null;
-                }
-                textView6.setEnabled(true ^ this.pLoading);
-                textView7 = this.pSnapBtn;
-                if (textView7 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pSnapBtn");
-                    textView7 = null;
-                }
-                busy(textView7, this.pSnapLoading, "Get a new Snapshot", "Loading...");
-                if (arm == null) {
-                    int c = Intrinsics.areEqual(arm, "left") ? GxCamerasKt.GX_CAM_BLUE : GxCamerasKt.GX_CAM_ORANGE;
-                    TextView textView13 = this.pArmNote;
-                    if (textView13 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("pArmNote");
-                        textView13 = null;
-                    }
-                    textView13.setText((Intrinsics.areEqual(arm, "left") ? "LEFT SIDE OF VEHICLE - LEFT HERE" : "RIGHT SIDE OF VEHICLE - RIGHT HERE") + "\nTap the matching side of the mirrored preview");
-                    TextView textView14 = this.pArmNote;
-                    if (textView14 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("pArmNote");
-                        textView14 = null;
-                    }
-                    textView14.setTextColor(c);
-                    TextView textView15 = this.pArmNote;
-                    if (textView15 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("pArmNote");
-                        textView15 = null;
-                    }
-                    textView15.setBackground(getUi().rounded(CarUi.Companion.getCARD(), 12, Integer.valueOf(c)));
-                    TextView textView16 = this.pArmNote;
-                    if (textView16 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("pArmNote");
-                        textView16 = null;
-                    }
-                    textView16.setVisibility(0);
-                } else {
-                    TextView textView17 = this.pArmNote;
-                    if (textView17 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("pArmNote");
-                        textView17 = null;
-                    }
-                    textView17.setVisibility(8);
-                }
-                textView8 = this.pCaption;
-                if (textView8 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pCaption");
-                    textView8 = null;
-                }
-                textView8.setText(arm == null ? "Tap the window to place its center point." : "Place a center point on each window, then use the zoom control below.");
-                gxCamerasPipView = this.pView;
-                if (gxCamerasPipView != null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pView");
-                } else {
-                    gxCamerasPipView3 = gxCamerasPipView;
-                }
-                gxCamerasPipView3.invalidate();
+
+            String var8 = var4.getArmSide();
+            TextView var29 = this.pLeftBtn;
+            TextView var10 = var29;
+            if (var29 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pLeftBtn");
+                var10 = null;
             }
+
+            this.tint(var10, GxCamerasKt.GX_CAM_BLUE, Intrinsics.areEqual(var8, "left"));
+            TextView var30 = this.pRightBtn;
+            TextView var11 = var30;
+            if (var30 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pRightBtn");
+                var11 = null;
+            }
+
+            this.tint(var11, GxCamerasKt.GX_CAM_ORANGE, Intrinsics.areEqual(var8, "right"));
+            TextView var31 = this.pLeftBtn;
+            TextView var12 = var31;
+            if (var31 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pLeftBtn");
+                var12 = null;
+            }
+
+            GxCamerasPipView var7 = this.pView;
+            var5 = var7;
+            if (var7 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pView");
+                var5 = null;
+            }
+
+            String var33;
+            if (var5.getLeftC() != null) {
+                var33 = "Move Left Side of Vehicle - Left Here";
+            } else {
+                var33 = "Set Left Side of Vehicle - Left Here";
+            }
+
+            var12.setText(var33);
+            TextView var34 = this.pRightBtn;
+            TextView var13 = var34;
+            if (var34 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pRightBtn");
+                var13 = null;
+            }
+
+            var7 = this.pView;
+            var5 = var7;
+            if (var7 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pView");
+                var5 = null;
+            }
+
+            String var36;
+            if (var5.getRightC() != null) {
+                var36 = "Move Right Side of Vehicle - Right Here";
+            } else {
+                var36 = "Set Right Side of Vehicle - Right Here";
+            }
+
+            var13.setText(var36);
+            var5 = this.pView;
+            var4 = var5;
+            if (var5 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pView");
+                var4 = null;
+            }
+
+            int var2;
+            label145: {
+                if (var4.getLeftC() == null) {
+                    var5 = this.pView;
+                    var4 = var5;
+                    if (var5 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("pView");
+                        var4 = null;
+                    }
+
+                    if (var4.getRightC() == null) {
+                        var2 = 0;
+                        break label145;
+                    }
+                }
+
+                var2 = 1;
+            }
+
+            TextView var39 = this.pSaveBtn;
+            TextView var16 = var39;
+            if (var39 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pSaveBtn");
+                var16 = null;
+            }
+
+            String var40;
+            if (this.pLoading) {
+                var40 = "Saving...";
+            } else {
+                var40 = "Save Mask";
+            }
+
+            var16.setText(var40);
+            TextView var41 = this.pSaveBtn;
+            TextView var17 = var41;
+            if (var41 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pSaveBtn");
+                var17 = null;
+            }
+
+            boolean var3;
+            if (!this.pLoading && var2) {
+                var3 = true;
+            } else {
+                var3 = false;
+            }
+
+            var17.setEnabled(var3);
+            TextView var42 = this.pSaveBtn;
+            TextView var18 = var42;
+            if (var42 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pSaveBtn");
+                var18 = null;
+            }
+
+            TextView var56 = this.pSaveBtn;
+            TextView var43 = var56;
+            if (var56 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pSaveBtn");
+                var43 = null;
+            }
+
+            float var1;
+            if (var43.isEnabled()) {
+                var1 = 1.0F;
+            } else {
+                var1 = 0.45F;
+            }
+
+            var18.setAlpha(var1);
+            TextView var44 = this.pDeleteBtn;
+            TextView var19 = var44;
+            if (var44 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pDeleteBtn");
+                var19 = null;
+            }
+
+            this.showIf((View)var19, this.pConfigExists);
+            TextView var45 = this.pDeleteBtn;
+            TextView var20 = var45;
+            if (var45 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pDeleteBtn");
+                var20 = null;
+            }
+
+            var20.setEnabled(true ^ this.pLoading);
+            TextView var46 = this.pSnapBtn;
+            TextView var21 = var46;
+            if (var46 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pSnapBtn");
+                var21 = null;
+            }
+
+            this.busy(var21, this.pSnapLoading, "Get a new Snapshot", "Loading...");
+            if (var8 != null) {
+                if (Intrinsics.areEqual(var8, "left")) {
+                    var2 = GxCamerasKt.GX_CAM_BLUE;
+                } else {
+                    var2 = GxCamerasKt.GX_CAM_ORANGE;
+                }
+
+                TextView var47 = this.pArmNote;
+                TextView var22 = var47;
+                if (var47 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pArmNote");
+                    var22 = null;
+                }
+
+                String var48;
+                if (Intrinsics.areEqual(var8, "left")) {
+                    var48 = "LEFT SIDE OF VEHICLE - LEFT HERE";
+                } else {
+                    var48 = "RIGHT SIDE OF VEHICLE - RIGHT HERE";
+                }
+
+                var22.setText(var48 + "\nTap the matching side of the mirrored preview");
+                TextView var49 = this.pArmNote;
+                TextView var23 = var49;
+                if (var49 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pArmNote");
+                    var23 = null;
+                }
+
+                var23.setTextColor(var2);
+                TextView var50 = this.pArmNote;
+                TextView var24 = var50;
+                if (var50 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pArmNote");
+                    var24 = null;
+                }
+
+                var24.setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD(), 12, var2));
+                TextView var51 = this.pArmNote;
+                TextView var25 = var51;
+                if (var51 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pArmNote");
+                    var25 = null;
+                }
+
+                var25.setVisibility(0);
+            } else {
+                TextView var52 = this.pArmNote;
+                TextView var26 = var52;
+                if (var52 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pArmNote");
+                    var26 = null;
+                }
+
+                var26.setVisibility(8);
+            }
+
+            TextView var53 = this.pCaption;
+            TextView var27 = var53;
+            if (var53 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pCaption");
+                var27 = null;
+            }
+
+            String var54;
+            if (var8 != null) {
+                var54 = "Tap the window to place its center point.";
+            } else {
+                var54 = "Place a center point on each window, then use the zoom control below.";
+            }
+
+            var27.setText(var54);
+            var4 = this.pView;
+            if (var4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("pView");
+                var4 = (GxCamerasPipView)var6;
+            }
+
+            var4.invalidate();
         }
-        any = true;
-        textView = this.pSaveBtn;
-        if (textView == null) {
-        }
-        textView.setText(!this.pLoading ? "Saving..." : "Save Mask");
-        textView2 = this.pSaveBtn;
-        if (textView2 == null) {
-        }
-        textView2.setEnabled(this.pLoading && any);
-        textView3 = this.pSaveBtn;
-        if (textView3 == null) {
-        }
-        textView4 = this.pSaveBtn;
-        if (textView4 == null) {
-        }
-        textView3.setAlpha(!textView4.isEnabled() ? 1.0f : 0.45f);
-        textView5 = this.pDeleteBtn;
-        if (textView5 == null) {
-        }
-        showIf(textView5, this.pConfigExists);
-        textView6 = this.pDeleteBtn;
-        if (textView6 == null) {
-        }
-        textView6.setEnabled(true ^ this.pLoading);
-        textView7 = this.pSnapBtn;
-        if (textView7 == null) {
-        }
-        busy(textView7, this.pSnapLoading, "Get a new Snapshot", "Loading...");
-        if (arm == null) {
-        }
-        textView8 = this.pCaption;
-        if (textView8 == null) {
-        }
-        textView8.setText(arm == null ? "Tap the window to place its center point." : "Place a center point on each window, then use the zoom control below.");
-        gxCamerasPipView = this.pView;
-        if (gxCamerasPipView != null) {
-        }
-        gxCamerasPipView3.invalidate();
     }
 
     private final void pArm(String side) {

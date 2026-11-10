@@ -824,191 +824,125 @@ public final class OsmRoads {
         }
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:52:0x0145, code lost:
-    
-        if (r1.equals("reverse") == false) goto L62;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:53:0x0163, code lost:
-    
-        r11 = -1;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:61:0x014e, code lost:
-    
-        if (r1.equals("true") == false) goto L62;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:64:0x0157, code lost:
-    
-        if (r1.equals("yes") == false) goto L62;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:66:0x0160, code lost:
-    
-        if (r1.equals("-1") == false) goto L62;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:68:0x016b, code lost:
-    
-        if (r1.equals("1") == false) goto L62;
-     */
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-     */
-    /* JADX WARN: Removed duplicated region for block: B:56:0x01bb  */
-    /* JADX WARN: Removed duplicated region for block: B:59:0x01c2  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final int parse$app_debug(String text) {
-        JSONArray els;
-        int i;
-        int i2;
-        Intrinsics.checkNotNullParameter(text, "text");
-        JSONArray els2 = new JSONObject(text).optJSONArray("elements");
-        char c = 0;
-        if (els2 == null) {
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+    public final int parse$app_debug(String var1) {
+        int var22 = 0; // declarations Vineflower left out
+        Intrinsics.checkNotNullParameter(var1, "text");
+        JSONArray var21 = new JSONObject(var1).optJSONArray("elements");
+        if (var21 == null) {
             return 0;
-        }
-        int added = 0;
-        int i3 = 0;
-        int length = els2.length();
-        while (i3 < length) {
-            JSONObject o = els2.optJSONObject(i3);
-            if (o == null) {
-                els = els2;
-                i = length;
-            } else if (!Intrinsics.areEqual(o.optString("type"), "way")) {
-                els = els2;
-                i = length;
-            } else {
-                long id = o.optLong("id");
-                if (ways.containsKey(Long.valueOf(id))) {
-                    els = els2;
-                    i = length;
-                } else {
-                    JSONObject tags = o.optJSONObject("tags");
-                    if (tags == null) {
-                        els = els2;
-                        i = length;
-                    } else {
-                        String it = tags.optString("highway");
-                        if (Intrinsics.areEqual(it, "footway") && Intrinsics.areEqual(tags.optString("footway"), "sidewalk")) {
-                            it = "sidewalk";
-                        }
-                        String kind = it;
-                        if (KINDS.contains(kind) || Intrinsics.areEqual(kind, "sidewalk")) {
-                            String svc = tags.optString("service");
-                            if (Intrinsics.areEqual(kind, "service")) {
-                                String[] strArr = new String[4];
-                                strArr[c] = "driveway";
-                                strArr[1] = "parking_aisle";
-                                strArr[2] = "drive-through";
-                                strArr[3] = "emergency_access";
-                                if (SetsKt.setOf((Object[]) strArr).contains(svc)) {
-                                    els = els2;
-                                    i = length;
+        } else {
+            int var9 = 0;
+            int var8 = 0;
+
+            for (int var7 = var21.length(); var8 < var7; var8++) {
+                JSONObject var15 = var21.optJSONObject(var8);
+                if (var15 != null && Intrinsics.areEqual(var15.optString("type"), "way")) {
+                    long var12 = var15.optLong("id");
+                    if (!ways.containsKey(var12)) {
+                        JSONObject var17 = var15.optJSONObject("tags");
+                        if (var17 != null) {
+                            String var16 = var17.optString("highway");
+                            String var14 = var16;
+                            if (Intrinsics.areEqual(var16, "footway")) {
+                                var14 = var16;
+                                if (Intrinsics.areEqual(var17.optString("footway"), "sidewalk")) {
+                                    var14 = "sidewalk";
                                 }
                             }
-                            JSONArray g = o.optJSONArray("geometry");
-                            if (g == null) {
-                                els = els2;
-                                i = length;
-                            } else if (g.length() < 2) {
-                                els = els2;
-                                i = length;
-                            } else {
-                                double[] e = new double[g.length()];
-                                double[] n = new double[g.length()];
-                                int j = 0;
-                                int length2 = g.length();
-                                while (j < length2) {
-                                    JSONObject p = g.getJSONObject(j);
-                                    JSONArray els3 = els2;
-                                    int i4 = length;
-                                    Pair<Double, Double> local = toLocal(p.getDouble("lat"), p.getDouble("lon"));
-                                    double x = local.component1().doubleValue();
-                                    double y = local.component2().doubleValue();
-                                    e[j] = x;
-                                    n[j] = y;
-                                    j++;
-                                    length2 = length2;
-                                    els2 = els3;
-                                    length = i4;
-                                    o = o;
-                                }
-                                els = els2;
-                                i = length;
-                                String optString = tags.optString("oneway");
-                                if (optString != null) {
-                                    switch (optString.hashCode()) {
-                                        case 49:
-                                            break;
-                                        case 1444:
-                                            break;
-                                        case 119527:
-                                            break;
-                                        case 3569038:
-                                            break;
-                                        case 1099846370:
-                                            break;
+
+                            if (KINDS.contains(var14) || Intrinsics.areEqual(var14, "sidewalk")) {
+                                var16 = var17.optString("service");
+                                if (!Intrinsics.areEqual(var14, "service")
+                                    || !SetsKt.setOf(new String[]{"driveway", "parking_aisle", "drive-through", "emergency_access"}).contains(var16)) {
+                                    JSONArray var19 = var15.optJSONArray("geometry");
+                                    if (var19 != null && var19.length() >= 2) {
+                                        double[] var28 = new double[var19.length()];
+                                        double[] var18 = new double[var19.length()];
+                                        int var11 = 0;
+
+                                        for (int var10 = var19.length(); var11 < var10; var11++) {
+                                            JSONObject var20 = var19.getJSONObject(var11);
+                                            Pair var32 = this.toLocal(var20.getDouble("lat"), var20.getDouble("lon"));
+                                            double var2 = ((Number)var32.component1()).doubleValue();
+                                            double var4 = ((Number)var32.component2()).doubleValue();
+                                            var28[var11] = var2;
+                                            var18[var11] = var4;
+                                        }
+
+                                        label100: {
+                                            label99: {
+                                                label98: {
+                                                    String var25 = var17.optString("oneway");
+                                                    if (var25 != null) {
+                                                        switch (var25.hashCode()) {
+                                                            case 49:
+                                                                if (var25.equals("1")) {
+                                                                    break label98;
+                                                                }
+                                                                break;
+                                                            case 1444:
+                                                                if (var25.equals("-1")) {
+                                                                    break label99;
+                                                                }
+                                                                break;
+                                                            case 119527:
+                                                                if (var25.equals("yes")) {
+                                                                    break label98;
+                                                                }
+                                                                break;
+                                                            case 3569038:
+                                                                if (var25.equals("true")) {
+                                                                    break label98;
+                                                                }
+                                                                break;
+                                                            case 1099846370:
+                                                                if (var25.equals("reverse")) {
+                                                                    break label99;
+                                                                }
+                                                        }
+                                                    }
+
+                                                    if (!Intrinsics.areEqual(var14, "motorway") && !Intrinsics.areEqual(var17.optString("junction"), "roundabout")) {
+                                                        var22 = 0;
+                                                        break label100;
+                                                    }
+                                                }
+
+                                                var22 = 1;
+                                                break label100;
+                                            }
+
+                                            var22 = -1;
+                                        }
+
+                                        Map var31 = ways;
+                                        String var26 = var17.optString("name", var17.optString("ref", ""));
+                                        Intrinsics.checkNotNullExpressionValue(var26, "optString(...)");
+                                        Intrinsics.checkNotNull(var14);
+                                        float var6 = this.widthOf(var14, var22, var17);
+                                        String var29 = var17.optString("lanes");
+                                        Intrinsics.checkNotNullExpressionValue(var29, "optString(...)");
+                                        Integer var30 = StringsKt.toIntOrNull(var29);
+                                        if (var30 != null) {
+                                            var11 = var30;
+                                        } else {
+                                            var11 = 0;
+                                        }
+
+                                        var31.put(var12, new OsmRoads.Way(var12, var26, var14, var22, var6, var28, var18, var11));
+                                        var9++;
+                                        var7 = var7;
                                     }
-                                    int ow = i2;
-                                    ConcurrentHashMap<Long, Way> concurrentHashMap = ways;
-                                    Long valueOf = Long.valueOf(id);
-                                    String optString2 = tags.optString("name", tags.optString("ref", ""));
-                                    Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
-                                    Intrinsics.checkNotNull(kind);
-                                    float widthOf = widthOf(kind, ow, tags);
-                                    String optString3 = tags.optString("lanes");
-                                    Intrinsics.checkNotNullExpressionValue(optString3, "optString(...)");
-                                    Integer intOrNull = StringsKt.toIntOrNull(optString3);
-                                    concurrentHashMap.put(valueOf, new Way(id, optString2, kind, ow, widthOf, e, n, intOrNull != null ? intOrNull.intValue() : 0));
-                                    added++;
                                 }
-                                if (!Intrinsics.areEqual(kind, "motorway") && !Intrinsics.areEqual(tags.optString("junction"), "roundabout")) {
-                                    i2 = 0;
-                                    int ow2 = i2;
-                                    ConcurrentHashMap<Long, Way> concurrentHashMap2 = ways;
-                                    Long valueOf2 = Long.valueOf(id);
-                                    String optString22 = tags.optString("name", tags.optString("ref", ""));
-                                    Intrinsics.checkNotNullExpressionValue(optString22, "optString(...)");
-                                    Intrinsics.checkNotNull(kind);
-                                    float widthOf2 = widthOf(kind, ow2, tags);
-                                    String optString32 = tags.optString("lanes");
-                                    Intrinsics.checkNotNullExpressionValue(optString32, "optString(...)");
-                                    Integer intOrNull2 = StringsKt.toIntOrNull(optString32);
-                                    concurrentHashMap2.put(valueOf2, new Way(id, optString22, kind, ow2, widthOf2, e, n, intOrNull2 != null ? intOrNull2.intValue() : 0));
-                                    added++;
-                                }
-                                i2 = 1;
-                                int ow22 = i2;
-                                ConcurrentHashMap<Long, Way> concurrentHashMap22 = ways;
-                                Long valueOf22 = Long.valueOf(id);
-                                String optString222 = tags.optString("name", tags.optString("ref", ""));
-                                Intrinsics.checkNotNullExpressionValue(optString222, "optString(...)");
-                                Intrinsics.checkNotNull(kind);
-                                float widthOf22 = widthOf(kind, ow22, tags);
-                                String optString322 = tags.optString("lanes");
-                                Intrinsics.checkNotNullExpressionValue(optString322, "optString(...)");
-                                Integer intOrNull22 = StringsKt.toIntOrNull(optString322);
-                                concurrentHashMap22.put(valueOf22, new Way(id, optString222, kind, ow22, widthOf22, e, n, intOrNull22 != null ? intOrNull22.intValue() : 0));
-                                added++;
                             }
-                        } else {
-                            els = els2;
-                            i = length;
                         }
                     }
                 }
             }
-            i3++;
-            els2 = els;
-            length = i;
-            c = 0;
+
+            return var9;
         }
-        return added;
     }
 
     public final float widthOf(String kind, int oneway, JSONObject tags) {
@@ -1026,101 +960,124 @@ public final class OsmRoads {
         return widthOf(kind, oneway, intValue, floatOrNull, optString3);
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:27:0x00a1, code lost:
-    
-        if (r15.equals("unclassified") == false) goto L75;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:28:0x00ab, code lost:
-    
-        if (r16 == 0) goto L46;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:29:0x00ad, code lost:
-    
-        return 9.0f;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:30:0x00b0, code lost:
-    
-        return 10.0f;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:32:0x00a8, code lost:
-    
-        if (r15.equals("residential") == false) goto L75;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:60:0x006e, code lost:
-    
-        if (r5 != false) goto L23;
-     */
-    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */
-    /* JADX WARN: Removed duplicated region for block: B:19:0x007b  */
-    /* JADX WARN: Removed duplicated region for block: B:21:0x0087  */
-    /* JADX WARN: Removed duplicated region for block: B:54:0x00fe A[ORIG_RETURN, RETURN] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final float widthOf(String kind, int oneway, int lanes, Float widthTag, String parkingTag) {
-        Intrinsics.checkNotNullParameter(kind, "kind");
-        Intrinsics.checkNotNullParameter(parkingTag, "parkingTag");
-        if (widthTag != null) {
-            float it = widthTag.floatValue();
-            if (2.0f <= it && it <= 40.0f) {
-                return it;
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+    public final float widthOf(String var1, int var2, int var3, Float var4, String var5) {
+        Intrinsics.checkNotNullParameter(var1, "kind");
+        Intrinsics.checkNotNullParameter(var5, "parkingTag");
+        boolean var8 = true;
+        if (var4 != null) {
+            float var6 = var4.floatValue();
+            boolean var7;
+            if (2.0F <= var6 && var6 <= 40.0F) {
+                var7 = true;
+            } else {
+                var7 = false;
+            }
+
+            if (var7) {
+                return var6;
             }
         }
-        int parkSides = 2;
-        boolean urban = SetsKt.setOf((Object[]) new String[]{"residential", "tertiary", "secondary", "primary", "unclassified", "living_street"}).contains(kind);
-        if (!Intrinsics.areEqual(parkingTag, "no")) {
-            if (!(parkingTag.length() > 0)) {
+
+        byte var13;
+        label109: {
+            byte var9 = 2;
+            boolean var10 = SetsKt.setOf(new String[]{"residential", "tertiary", "secondary", "primary", "unclassified", "living_street"}).contains(var1);
+            if (!Intrinsics.areEqual(var5, "no")) {
+                boolean var12;
+                if (var5.length() > 0) {
+                    var12 = true;
+                } else {
+                    var12 = false;
+                }
+
+                if (var12 || var10) {
+                    var13 = var9;
+                    break label109;
+                }
             }
-            if (!(1 > lanes && lanes < 11)) {
-                return (lanes * 3.2f) + (parkSides * 2.3f);
-            }
-            switch (kind.hashCode()) {
+
+            var13 = 0;
+        }
+
+        if (1 > var3 || var3 >= 11) {
+            var8 = false;
+        }
+
+        if (var8) {
+            return var3 * 3.2F + var13 * 2.3F;
+        } else {
+            switch (var1.hashCode()) {
                 case -2014090663:
-                    return !kind.equals("living_street") ? 6.5f : 7.0f;
+                    if (var1.equals("living_street")) {
+                        return 7.0F;
+                    }
+
+                    return 6.5F;
                 case -1174796206:
-                    if (kind.equals("tertiary")) {
-                        return 12.0f;
+                    if (var1.equals("tertiary")) {
+                        return 12.0F;
                     }
-                    break;
+
+                    return 6.5F;
                 case -817598092:
-                    if (kind.equals("secondary")) {
-                        return 13.0f;
+                    if (var1.equals("secondary")) {
+                        return 13.0F;
                     }
-                    break;
+
+                    return 6.5F;
                 case -314765822:
-                    if (kind.equals("primary")) {
-                        return 15.0f;
+                    if (var1.equals("primary")) {
+                        return 15.0F;
                     }
-                    break;
+
+                    return 6.5F;
                 case -151535014:
-                    if (kind.equals("motorway")) {
-                        return 11.0f;
+                    if (var1.equals("motorway")) {
+                        return 11.0F;
                     }
-                    break;
+
+                    return 6.5F;
                 case 110640564:
-                    if (kind.equals("trunk")) {
-                        return 14.0f;
+                    if (var1.equals("trunk")) {
+                        return 14.0F;
                     }
-                    break;
+
+                    return 6.5F;
                 case 218164128:
-                    if (kind.equals("sidewalk")) {
-                        return 0.0f;
+                    if (var1.equals("sidewalk")) {
+                        return 0.0F;
                     }
-                    break;
+
+                    return 6.5F;
                 case 1098352388:
+                    if (!var1.equals("residential")) {
+                        return 6.5F;
+                    }
                     break;
                 case 1840151916:
-                    break;
-                case 1984153269:
-                    if (kind.equals("service")) {
-                        return 5.0f;
+                    if (!var1.equals("unclassified")) {
+                        return 6.5F;
                     }
                     break;
+                case 1984153269:
+                    if (var1.equals("service")) {
+                        return 5.0F;
+                    }
+
+                    return 6.5F;
+                default:
+                    return 6.5F;
             }
-        }
-        parkSides = 0;
-        if (!(1 > lanes && lanes < 11)) {
+
+            float var11;
+            if (var2 != 0) {
+                var11 = 9.0F;
+            } else {
+                var11 = 10.0F;
+            }
+
+            return var11;
         }
     }
 
@@ -1128,57 +1085,68 @@ public final class OsmRoads {
         return new Pair<>(Double.valueOf(lat0 + (n / 110540.0d)), Double.valueOf(lon0 + (e / kx)));
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:33:0x00d7, code lost:
-    
-        if (r0 != false) goto L31;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final Set<String> nameTokens(String name) {
-        Intrinsics.checkNotNullParameter(name, "name");
-        String lowerCase = name.toLowerCase(Locale.ROOT);
-        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-        String replace = new Regex("[^a-z0-9 ]").replace(lowerCase, " ");
-        boolean z = true;
-        Iterable $this$filter$iv = StringsKt.split((CharSequence) replace, new char[]{' '}, false, 0);
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv) {
-            if (!StringsKt.isBlank((String) element$iv$iv)) {
-                destination$iv$iv.add(element$iv$iv);
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public final Set<String> nameTokens(String var1) {
+        boolean var16 = false; // declarations Vineflower left out
+        Intrinsics.checkNotNullParameter(var1, "name");
+        var1 = var1.toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
+        CharSequence var8 = var1;
+        CharSequence var9 = new Regex("[^a-z0-9 ]").replace(var8, " ");
+        boolean var3 = true;
+        Iterable var4 = StringsKt.split(var9, new char[]{' '}, false, 0);
+        var var10 = new ArrayList();
+
+        for (Object var5 : var4) {
+            if (!StringsKt.isBlank((String & CharSequence)var5)) {
+                var10.add(var5);
             }
         }
-        Iterable $this$map$iv = (List) destination$iv$iv;
-        Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        for (Object item$iv$iv : $this$map$iv) {
-            String it = (String) item$iv$iv;
-            String str = ABBR.get(it);
-            if (str != null) {
-                it = str;
+
+        List var11 = var10;
+        Iterable var12 = var11;
+        var var20 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var12, 10));
+
+        for (String var13 : var12) {
+            String var18 = ABBR.get(var13);
+            if (var18 != null) {
+                var13 = var18;
             }
-            destination$iv$iv2.add(it);
+
+            var20.add(var13);
         }
-        Set all = CollectionsKt.toSet((List) destination$iv$iv2);
-        Set core = SetsKt.minus(all, (Iterable) DIRS);
-        if (core.size() < 2) {
-            if (core.size() == 1) {
-                CharSequence $this$any$iv = (CharSequence) CollectionsKt.first(core);
-                int i = 0;
-                while (true) {
-                    if (i >= $this$any$iv.length()) {
-                        z = false;
-                        break;
-                    }
-                    char element$iv = $this$any$iv.charAt(i);
-                    if (Character.isDigit(element$iv)) {
-                        break;
-                    }
-                    i++;
+
+        List var14 = var20;
+        Set var15 = CollectionsKt.toSet(var14);
+        Set var19 = SetsKt.minus(var15, DIRS);
+        if (var19.size() < 2) {
+            if (var19.size() != 1) {
+                return var15;
+            }
+
+            CharSequence var21 = CollectionsKt.first(var19);
+            int var2 = 0;
+
+            while (true) {
+                if (var2 >= var21.length()) {
+                    var16 = false;
+                    break;
                 }
+
+                if (Character.isDigit(var21.charAt(var2))) {
+                    var16 = var3;
+                    break;
+                }
+
+                var2++;
             }
-            return all;
+
+            if (!var16) {
+                return var15;
+            }
         }
-        return core;
+
+        return var19;
     }
 
     public final boolean sameStreet(String a, String b) {
@@ -1347,331 +1315,331 @@ public final class OsmRoads {
         return best2;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:213:0x03c9, code lost:
-    
-        r41 = "get(...)";
-        r8 = r7;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final List<Pair<Double, String>> crossStreetsAhead(double e, double n, double yaw, double maxM) {
-        double bd;
-        int bi;
-        String str;
-        OsmRoads osmRoads;
-        int k;
-        String str2;
-        int i;
-        Iterator<Way> it;
-        int i2;
-        boolean z;
-        double sx;
-        int i3;
-        int k2;
-        String str3;
-        int i4;
-        int last;
-        Iterator it2;
-        Match m;
-        OsmRoads osmRoads2 = this;
-        Match it3 = matchSeg(e, n, yaw);
-        if (it3 != null) {
-            if ((it3.getDist() < 15.0d ? 1 : null) == null) {
-                it3 = null;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public final List<Pair<Double, String>> crossStreetsAhead(double var1, double var3, double var5, double var7) {
+        OsmRoads.Match var32 = this.matchSeg(var1, var3, var5);
+        if (var32 != null) {
+            int var23;
+            if (var32.getDist() < 15.0) {
+                var23 = 1;
+            } else {
+                var23 = 0;
             }
-            if (it3 != null) {
-                Match m2 = it3;
-                ArrayList px = new ArrayList();
-                ArrayList py = new ArrayList();
-                HashSet chain = new HashSet();
-                Way w = m2.getWay();
-                chain.add(Long.valueOf(w.getId()));
-                int k3 = 0;
-                int length = w.getE().length - 1;
-                int bi2 = 0;
-                double bd2 = Double.MAX_VALUE;
-                while (k3 < length) {
-                    double ax = w.getE()[k3];
-                    double ay = w.getN()[k3];
-                    double dx = w.getE()[k3 + 1] - ax;
-                    double dy = w.getN()[k3 + 1] - ay;
-                    double len2 = (dx * dx) + (dy * dy);
-                    if (len2 >= 0.01d) {
-                        double t = RangesKt.coerceIn((((e - ax) * dx) + ((n - ay) * dy)) / len2, 0.0d, 1.0d);
-                        m = m2;
-                        double d = Math.hypot(e - (ax + (t * dx)), n - (ay + (t * dy)));
-                        if (d < bd2) {
-                            bi2 = k3;
-                            bd2 = d;
+
+            if (!var23) {
+                var32 = null;
+            }
+
+            if (var32 != null) {
+                ArrayList var38 = new ArrayList();
+                ArrayList var39 = new ArrayList();
+                HashSet var37 = new HashSet();
+                OsmRoads.Way var35 = var32.getWay();
+                var37.add(var35.getId());
+                int var24 = 0;
+                int var25 = var35.getE().length;
+                var23 = 0;
+                double var9 = Double.MAX_VALUE;
+
+                while (var24 < var25 - 1) {
+                    double var11 = var35.getE()[var24];
+                    double var17 = var35.getN()[var24];
+                    double var13 = var35.getE()[var24 + 1] - var11;
+                    double var15 = var35.getN()[var24 + 1] - var17;
+                    double var19 = var13 * var13 + var15 * var15;
+                    if (!(var19 < 0.01)) {
+                        var19 = RangesKt.coerceIn(((var1 - var11) * var13 + (var3 - var17) * var15) / var19, 0.0, 1.0);
+                        var13 = Math.hypot(var1 - (var11 + var19 * var13), var3 - (var17 + var19 * var15));
+                        var11 = var9;
+                        if (var13 < var9) {
+                            var23 = var24;
+                            var11 = var13;
                         }
                     } else {
-                        m = m2;
+                        var11 = var9;
                     }
-                    k3++;
-                    m2 = m;
+
+                    var24++;
+                    var9 = var11;
                 }
-                Match m3 = m2;
-                boolean fwd0 = Math.cos(Math.atan2(w.getN()[bi2 + 1] - w.getN()[bi2], w.getE()[bi2 + 1] - w.getE()[bi2]) - yaw) >= 0.0d;
-                IntRange verts = fwd0 ? RangesKt.until(bi2 + 1, w.getE().length) : RangesKt.downTo(bi2, 0);
-                px.add(Double.valueOf(e));
-                py.add(Double.valueOf(n));
-                double len = 0.0d;
-                Way w2 = w;
-                IntProgression verts2 = verts;
-                int hops = 0;
+
+                int var88;
+                if (Math.cos(Math.atan2(var35.getN()[var23 + 1] - var35.getN()[(((var23 != 0)) ? 1 : 0)], var35.getE()[var23 + 1] - var35.getE()[var23]) - var5) >= 0.0) {
+                    var88 = 1;
+                } else {
+                    var88 = 0;
+                }
+
+                IntProgression var104;
+                if ((var88 != 0)) {
+                    var104 = RangesKt.until(var23 + 1, var35.getE().length);
+                } else {
+                    var104 = RangesKt.downTo(var23, 0);
+                }
+
+                var38.add(var1);
+                var39.add(var3);
+                var5 = 0.0;
+                var25 = 0;
+
                 while (true) {
-                    int k4 = verts2.getFirst();
-                    int last2 = verts2.getLast();
-                    int step = verts2.getStep();
-                    if ((step > 0 && k4 <= last2) || (step < 0 && last2 <= k4)) {
+                    double var55;
+                    label233: {
+                        int var26;
+                        int var28;
+                        int var29;
+                        double var61;
+                        label290: {
+                            int var27 = var104.getFirst();
+                            var28 = var104.getLast();
+                            var29 = var104.getStep();
+                            if (var29 > 0) {
+                                var26 = var27;
+                                var61 = var5;
+                                var88 = var23;
+                                var55 = var9;
+                                if (var27 <= var28) {
+                                    break label290;
+                                }
+                            }
+
+                            if (var29 >= 0 || var28 > var27) {
+                                var55 = var5;
+                                break label233;
+                            }
+
+                            var55 = var9;
+                            var88 = var23;
+                            var61 = var5;
+                            var26 = var27;
+                        }
+
                         while (true) {
-                            bd = bd2;
-                            bi = bi2;
-                            len += Math.hypot(w2.getE()[k4] - ((Number) CollectionsKt.last((List) px)).doubleValue(), w2.getN()[k4] - ((Number) CollectionsKt.last((List) py)).doubleValue());
-                            px.add(Double.valueOf(w2.getE()[k4]));
-                            py.add(Double.valueOf(w2.getN()[k4]));
-                            if (len >= maxM || k4 == last2) {
+                            double var69 = var35.getE()[var26];
+                            var9 = CollectionsKt.last(var38).doubleValue();
+                            double var74 = var35.getN()[var26];
+                            double var78 = CollectionsKt.last(var39).doubleValue();
+                            var61 += Math.hypot(var69 - var9, var74 - var78);
+                            var38.add(var35.getE()[var26]);
+                            var39.add(var35.getN()[var26]);
+                            var55 = var61;
+                            var23 = var88;
+                            var9 = var55;
+                            if (var61 >= var7) {
                                 break;
                             }
-                            k4 += step;
-                            bi2 = bi;
-                            bd2 = bd;
+
+                            var55 = var61;
+                            var23 = var88;
+                            var9 = var55;
+                            if (var26 == var28) {
+                                break;
+                            }
+
+                            var26 += var29;
+                            var55 = var55;
                         }
-                    } else {
-                        bd = bd2;
-                        bi = bi2;
                     }
-                    double len3 = len;
-                    if (len3 >= maxM || hops >= 8) {
-                        break;
-                    }
-                    if (px.size() < 2) {
-                        str = "get(...)";
-                        osmRoads = osmRoads2;
-                        break;
-                    }
-                    double ex = ((Number) CollectionsKt.last((List) px)).doubleValue();
-                    double ey = ((Number) CollectionsKt.last((List) py)).doubleValue();
-                    Object obj = py.get(py.size() - 2);
-                    Intrinsics.checkNotNullExpressionValue(obj, "get(...)");
-                    double doubleValue = ey - ((Number) obj).doubleValue();
-                    Object obj2 = px.get(px.size() - 2);
-                    Intrinsics.checkNotNullExpressionValue(obj2, "get(...)");
-                    double hd = Math.atan2(doubleValue, ex - ((Number) obj2).doubleValue());
-                    Way next = null;
-                    boolean nf = true;
-                    double best = Double.MAX_VALUE;
-                    int hops2 = hops;
-                    str = "get(...)";
-                    int i5 = 2;
-                    for (Way o : near(ex, ey, 6.0d)) {
-                        if (chain.contains(Long.valueOf(o.getId())) || Intrinsics.areEqual(o.getKind(), "sidewalk") || Intrinsics.areEqual(o.getKind(), "service")) {
-                            len3 = len3;
-                            i5 = 2;
-                        } else {
-                            int last3 = o.getE().length - 1;
-                            Pair[] pairArr = new Pair[i5];
-                            pairArr[0] = TuplesKt.to(0, true);
-                            pairArr[1] = TuplesKt.to(Integer.valueOf(last3), false);
-                            Iterator it4 = CollectionsKt.listOf((Object[]) pairArr).iterator();
-                            while (it4.hasNext()) {
-                                Pair pair = (Pair) it4.next();
-                                int end = ((Number) pair.component1()).intValue();
-                                boolean f = ((Boolean) pair.component2()).booleanValue();
-                                Way next2 = next;
-                                double len4 = len3;
-                                if (Math.hypot(o.getE()[end] - ex, o.getN()[end] - ey) > 4.0d) {
-                                    last = last3;
-                                    it2 = it4;
-                                } else if ((f || o.getOneway() <= 0) && (!f || o.getOneway() >= 0)) {
-                                    double[] e2 = o.getE();
-                                    double nx = f ? e2[1] - o.getE()[0] : e2[last3 - 1] - o.getE()[last3];
-                                    double[] n2 = o.getN();
-                                    double ny = f ? n2[1] - o.getN()[0] : n2[last3 - 1] - o.getN()[last3];
-                                    last = last3;
-                                    it2 = it4;
-                                    double dh = Math.abs(Math.IEEEremainder(Math.atan2(ny, nx) - hd, 6.283185307179586d));
-                                    if (dh <= Math.toRadians(35.0d)) {
-                                        double score = (sameStreet(o.getName(), w2.getName()) ? 0.0d : 0.3d) + dh;
-                                        if (score < best) {
-                                            best = score;
-                                            nf = f;
-                                            next = o;
-                                            last3 = last;
-                                            len3 = len4;
-                                            it4 = it2;
+
+                    var5 = var55;
+                    if (!(var55 >= var7) && var25 < 8 && var38.size() >= 2) {
+                        double var79 = CollectionsKt.last(var38).doubleValue();
+                        double var75 = CollectionsKt.last(var39).doubleValue();
+                        OsmRoads.Way var105 = (OsmRoads.Way)var39.get(var39.size() - 2);
+                        Intrinsics.checkNotNullExpressionValue(var105, "get(...)");
+                        var55 = ((Number)var105).doubleValue();
+                        var105 = var38.get(var38.size() - 2);
+                        Intrinsics.checkNotNullExpressionValue(var105, "get(...)");
+                        double var21 = Math.atan2(var75 - var55, var79 - ((Number)var105).doubleValue());
+                        var105 = null;
+                        boolean var30 = true;
+                        var55 = Double.MAX_VALUE;
+
+                        for (OsmRoads.Way var36 : this.near(var79, var75, 6.0)) {
+                            if (!var37.contains(var36.getId())
+                                && !Intrinsics.areEqual(var36.getKind(), "sidewalk")
+                                && !Intrinsics.areEqual(var36.getKind(), "service")) {
+                                var88 = var36.getE().length - 1;
+
+                                for (Pair var41 : CollectionsKt.listOf(new Pair[]{TuplesKt.to(0, true), TuplesKt.to(var88, false)})) {
+                                    int var96 = ((Number)var41.component1()).intValue();
+                                    boolean var31 = (Boolean)var41.component2();
+                                    if (!(Math.hypot(var36.getE()[var96] - var79, var36.getN()[var96] - var75) > 4.0)
+                                        && (var31 || var36.getOneway() <= 0)
+                                        && (!var31 || var36.getOneway() >= 0)) {
+                                        double[] var121 = var36.getE();
+                                        double var62;
+                                        if (var31) {
+                                            var62 = var121[1] - var36.getE()[0];
+                                        } else {
+                                            var62 = var121[var88 - 1] - var36.getE()[(((var88 != 0)) ? 1 : 0)];
+                                        }
+
+                                        double[] var122 = var36.getN();
+                                        double var70;
+                                        if (var31) {
+                                            var70 = var122[1] - var36.getN()[0];
+                                        } else {
+                                            var70 = var122[var88 - 1] - var36.getN()[(((var88 != 0)) ? 1 : 0)];
+                                        }
+
+                                        var70 = Math.abs(Math.IEEEremainder(Math.atan2(var70, var62) - var21, Math.PI * 2));
+                                        if (!(var70 > Math.toRadians(35.0))) {
+                                            if (this.sameStreet(var36.getName(), var35.getName())) {
+                                                var62 = 0.0;
+                                            } else {
+                                                var62 = 0.3;
+                                            }
+
+                                            var62 += var70;
+                                            if (var62 < var55) {
+                                                var55 = var62;
+                                                var30 = var31;
+                                                var105 = var36;
+                                            }
                                         }
                                     }
-                                } else {
-                                    last = last3;
-                                    it2 = it4;
                                 }
-                                next = next2;
-                                last3 = last;
-                                len3 = len4;
-                                it4 = it2;
                             }
-                            next = next;
-                            len3 = len3;
-                            i5 = 2;
+                        }
+
+                        if (var105 != null) {
+                            var35 = var105;
+                            var37.add(var105.getId());
+                            var25++;
+                            double[] var108 = var105.getE();
+                            if (var30) {
+                                var104 = RangesKt.until(1, var108.length);
+                            } else {
+                                var104 = RangesKt.downTo(var108.length - 2, 0);
+                            }
+                            continue;
                         }
                     }
-                    osmRoads = this;
-                    double len5 = len3;
-                    if (next == null) {
-                        break;
-                    }
-                    w2 = next;
-                    chain.add(Long.valueOf(w2.getId()));
-                    hops = hops2 + 1;
-                    double[] e3 = w2.getE();
-                    verts2 = nf ? RangesKt.until(1, e3.length) : RangesKt.downTo(e3.length - 2, 0);
-                    osmRoads2 = osmRoads;
-                    bi2 = bi;
-                    bd2 = bd;
-                    len = len5;
+                    break;
                 }
-                double[] cum = new double[px.size()];
-                int size = px.size();
-                for (int k5 = 1; k5 < size; k5++) {
-                    double d2 = cum[k5 - 1];
-                    double doubleValue2 = ((Number) px.get(k5)).doubleValue();
-                    Object obj3 = px.get(k5 - 1);
-                    String str4 = str;
-                    Intrinsics.checkNotNullExpressionValue(obj3, str4);
-                    double doubleValue3 = doubleValue2 - ((Number) obj3).doubleValue();
-                    double doubleValue4 = ((Number) py.get(k5)).doubleValue();
-                    Object obj4 = py.get(k5 - 1);
-                    Intrinsics.checkNotNullExpressionValue(obj4, str4);
-                    cum[k5] = d2 + Math.hypot(doubleValue3, doubleValue4 - ((Number) obj4).doubleValue());
+
+                String var112 = "get(...)";
+                double[] var119 = new double[var38.size()];
+                var23 = 1;
+
+                for (int var91 = var38.size(); var23 < var91; var23++) {
+                    var9 = var119[var23 - 1];
+                    double var65 = ((Number)var38.get((((var23 != 0)) ? 1 : 0))).doubleValue();
+                    Object var109 = var38.get(var23 - 1);
+                    Intrinsics.checkNotNullExpressionValue(var109, "get(...)");
+                    double var58 = ((Number)var109).doubleValue();
+                    var5 = ((Number)var39.get((((var23 != 0)) ? 1 : 0))).doubleValue();
+                    var109 = var39.get(var23 - 1);
+                    Intrinsics.checkNotNullExpressionValue(var109, "get(...)");
+                    var119[(((var23 != 0)) ? 1 : 0)] = var9 + Math.hypot(var65 - var58, var5 - ((Number)var109).doubleValue());
                 }
-                String ourName = m3.getWay().getName();
-                ArrayList out = new ArrayList();
-                Iterator<Way> it5 = near(e, n, maxM + 30.0d).iterator();
-                while (it5.hasNext()) {
-                    Way o2 = it5.next();
-                    if (chain.contains(Long.valueOf(o2.getId())) || Intrinsics.areEqual(o2.getKind(), "sidewalk")) {
-                        osmRoads = this;
-                        it5 = it5;
-                    } else if (!Intrinsics.areEqual(o2.getKind(), "service")) {
-                        if (!(ourName.length() > 0) || !osmRoads.sameStreet(o2.getName(), ourName)) {
-                            int size2 = px.size() - 1;
-                            int k6 = 0;
-                            while (k6 < size2) {
-                                Object obj5 = px.get(k6);
-                                String str5 = str;
-                                Intrinsics.checkNotNullExpressionValue(obj5, str5);
-                                double ax2 = ((Number) obj5).doubleValue();
-                                Object obj6 = py.get(k6);
-                                Intrinsics.checkNotNullExpressionValue(obj6, str5);
-                                double ay2 = ((Number) obj6).doubleValue();
-                                Object obj7 = px.get(k6 + 1);
-                                Intrinsics.checkNotNullExpressionValue(obj7, str5);
-                                double bx = ((Number) obj7).doubleValue();
-                                Object obj8 = py.get(k6 + 1);
-                                Intrinsics.checkNotNullExpressionValue(obj8, str5);
-                                double by = ((Number) obj8).doubleValue();
-                                double sx2 = bx - ax2;
-                                String ourName2 = ourName;
-                                double sy = by - ay2;
-                                double sl = Math.hypot(sx2, sy);
-                                if (sl >= 0.01d) {
-                                    int length2 = o2.getE().length - 1;
-                                    it = it5;
-                                    int j = 0;
-                                    while (j < length2) {
-                                        double cx = o2.getE()[j];
-                                        double cy = o2.getN()[j];
-                                        double tx = o2.getE()[j + 1] - cx;
-                                        double ty = o2.getN()[j + 1] - cy;
-                                        double den = (sx2 * ty) - (sy * tx);
-                                        if (Math.abs(den) <= 1.0E-9d) {
-                                            sx = sx2;
-                                            i3 = length2;
-                                            k2 = k6;
-                                            str3 = str5;
-                                            i4 = size2;
-                                        } else {
-                                            double u = (((cx - ax2) * ty) - ((cy - ay2) * tx)) / den;
-                                            double v = (((cx - ax2) * sy) - ((cy - ay2) * sx2)) / den;
-                                            if (0.0d <= u && u <= 1.0d) {
-                                                if (0.0d <= v && v <= 1.0d) {
-                                                    sx = sx2;
-                                                    i3 = length2;
-                                                    k2 = k6;
-                                                    str3 = str5;
-                                                    i4 = size2;
-                                                    crossStreetsAhead$add(maxM, out, cum[k6] + (u * sl), o2.getName());
+
+                String var113 = var32.getWay().getName();
+                ArrayList var120 = new ArrayList();
+
+                for (OsmRoads.Way var123 : this.near(var1, var3, var7 + 30.0)) {
+                    if (!var37.contains(var123.getId()) && !Intrinsics.areEqual(var123.getKind(), "sidewalk") && !Intrinsics.areEqual(var123.getKind(), "service")) {
+                        int var85;
+                        if (var113.length() > 0) {
+                            var85 = 1;
+                        } else {
+                            var85 = 0;
+                        }
+
+                        if (!var85 || !this.sameStreet(var123.getName(), var113)) {
+                            var85 = var38.size() - 1;
+
+                            for (int var92 = 0; var92 < var85; var92++) {
+                                Object var114 = var38.get(var92);
+                                Intrinsics.checkNotNullExpressionValue(var114, var112);
+                                var5 = ((Number)var114).doubleValue();
+                                var114 = var39.get(var92);
+                                Intrinsics.checkNotNullExpressionValue(var114, var112);
+                                var3 = ((Number)var114).doubleValue();
+                                var114 = var38.get(var92 + 1);
+                                Intrinsics.checkNotNullExpressionValue(var114, var112);
+                                var1 = ((Number)var114).doubleValue();
+                                var114 = var39.get(var92 + 1);
+                                Intrinsics.checkNotNullExpressionValue(var114, var112);
+                                var9 = ((Number)var114).doubleValue();
+                                var1 -= var5;
+                                var9 -= var3;
+                                double var59 = Math.hypot(var1, var9);
+                                if (!(var59 < 0.01)) {
+                                    var25 = var123.getE().length - 1;
+
+                                    for (int var97 = 0; var97 < var25; var97++) {
+                                        double var66 = var123.getE()[var97];
+                                        double var72 = var123.getN()[var97];
+                                        double var82 = var123.getE()[var97 + 1] - var66;
+                                        double var80 = var123.getN()[var97 + 1] - var72;
+                                        double var76 = var1 * var80 - var9 * var82;
+                                        if (Math.abs(var76) > 1.0E-9) {
+                                            var80 = ((var66 - var5) * var80 - (var72 - var3) * var82) / var76;
+                                            var66 = ((var66 - var5) * var9 - (var72 - var3) * var1) / var76;
+                                            boolean var99;
+                                            if (0.0 <= var80 && var80 <= 1.0) {
+                                                var99 = true;
+                                            } else {
+                                                var99 = false;
+                                            }
+
+                                            if (var99) {
+                                                if (0.0 <= var66 && var66 <= 1.0) {
+                                                    var99 = true;
+                                                } else {
+                                                    var99 = false;
+                                                }
+
+                                                if (var99) {
+                                                    crossStreetsAhead$add(var7, var120, var119[var92] + var80 * var59, var123.getName());
                                                 }
                                             }
-                                            sx = sx2;
-                                            i3 = length2;
-                                            k2 = k6;
-                                            str3 = str5;
-                                            i4 = size2;
                                         }
-                                        j++;
-                                        length2 = i3;
-                                        sx2 = sx;
-                                        k6 = k2;
-                                        str5 = str3;
-                                        size2 = i4;
                                     }
-                                    double sx3 = sx2;
-                                    k = k6;
-                                    str2 = str5;
-                                    i = size2;
-                                    boolean z2 = false;
-                                    int[] iArr = {0, o2.getE().length - 1};
-                                    int i6 = 0;
-                                    while (i6 < 2) {
-                                        int end2 = iArr[i6];
-                                        double t2 = (((o2.getE()[end2] - ax2) * sx3) + ((o2.getN()[end2] - ay2) * sy)) / (sl * sl);
-                                        if (!((0.0d > t2 || t2 > 1.0d) ? z2 : true)) {
-                                            i2 = i6;
-                                            z = z2;
-                                        } else if (Math.hypot(o2.getE()[end2] - (ax2 + (t2 * sx3)), o2.getN()[end2] - (ay2 + (t2 * sy))) < 6.0d) {
-                                            i2 = i6;
-                                            z = false;
-                                            crossStreetsAhead$add(maxM, out, (t2 * sl) + cum[k], o2.getName());
+
+                                    int var102 = var123.getE().length;
+                                    boolean var87 = false;
+
+                                    for (int var98 = 0; var98 < 2; var98++) {
+                                        int var103 = new int[]{0, var102 - 1}[var98];
+                                        double var68 = ((var123.getE()[var103] - var5) * var1 + (var123.getN()[var103] - var3) * var9) / (var59 * var59);
+                                        boolean var101;
+                                        if (0.0 <= var68 && var68 <= 1.0) {
+                                            var101 = true;
                                         } else {
-                                            i2 = i6;
-                                            z = false;
+                                            var101 = var87;
                                         }
-                                        i6 = i2 + 1;
-                                        z2 = z;
+
+                                        if (var101) {
+                                            if (Math.hypot(var123.getE()[var103] - (var5 + var68 * var1), var123.getN()[var103] - (var3 + var68 * var9)) < 6.0) {
+                                                double var73 = var119[var92];
+                                                var114 = var123.getName();
+                                                var87 = false;
+                                                crossStreetsAhead$add(var7, var120, var68 * var59 + var73, (String)var114);
+                                            } else {
+                                                var87 = false;
+                                            }
+                                        }
                                     }
-                                } else {
-                                    k = k6;
-                                    str2 = str5;
-                                    i = size2;
-                                    it = it5;
+
+                                    var85 = var85;
                                 }
-                                k6 = k + 1;
-                                ourName = ourName2;
-                                it5 = it;
-                                str = str2;
-                                size2 = i;
                             }
-                            osmRoads = this;
-                            it5 = it5;
                         }
                     }
                 }
-                ArrayList $this$sortedBy$iv = out;
-                return CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.OsmRoads$crossStreetsAhead$$inlined$sortedBy$1
-                    /* JADX WARN: Multi-variable type inference failed */
-                    @Override // java.util.Comparator
-                    public final int compare(T t3, T t4) {
-                        Pair it6 = (Pair) t3;
-                        Double d3 = (Double) it6.getFirst();
-                        Pair it7 = (Pair) t4;
-                        return ComparisonsKt.compareValues(d3, (Double) it7.getFirst());
+
+                return CollectionsKt.sortedWith(var120, new Comparator() {
+                    @Override
+                    public final int compare(T var1, T var2) {
+                        return ComparisonsKt.compareValues((T)((Double & Comparable)((Pair)var1).getFirst()), (T)((Double & Comparable)((Pair)var2).getFirst()));
                     }
                 });
             }
         }
+
         return CollectionsKt.emptyList();
     }
 
@@ -1757,74 +1725,118 @@ public final class OsmRoads {
         return osmRoads.laneIndex(i, z, d, d2, d3, d4, z4, z5);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:34:0x004f  */
-    /* JADX WARN: Removed duplicated region for block: B:62:0x00a0  */
-    /* JADX WARN: Removed duplicated region for block: B:64:0x00aa  */
-    /* JADX WARN: Removed duplicated region for block: B:66:0x00af  */
-    /* JADX WARN: Removed duplicated region for block: B:70:0x00a2  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final int laneIndex(int lanes, boolean yellowLeft, double dLeftLine, double dLeftEdge, double dRightLine, double dRightEdge, boolean leftDashed, boolean rightDashed) {
-        double gl;
-        double gr;
-        int fromL;
-        int idx;
-        boolean z = false;
-        if (lanes <= 1 || yellowLeft) {
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public final int laneIndex(int var1, boolean var2, double var3, double var5, double var7, double var9, boolean var11, boolean var12) {
+        boolean var19 = false;
+        if (var1 <= 1) {
             return 0;
-        }
-        int hi = lanes - 1;
-        int lo = leftDashed ? 1 : 0;
-        if (rightDashed) {
-            hi = lanes - 2;
-        }
-        if (lo > hi) {
-            hi = lo;
-        }
-        double d = Double.NaN;
-        if ((Double.isInfinite(dLeftEdge) || Double.isNaN(dLeftEdge)) ? false : true) {
-            if ((Double.isInfinite(dLeftLine) || Double.isNaN(dLeftLine)) ? false : true) {
-                gl = dLeftEdge - dLeftLine;
-                if (Double.isInfinite(dRightEdge) && !Double.isNaN(dRightEdge)) {
-                    if ((Double.isInfinite(dRightLine) || Double.isNaN(dRightLine)) ? false : true) {
-                        d = dRightEdge - dRightLine;
+        } else if (var2) {
+            return 0;
+        } else {
+            byte var15 = 0;
+            int var16 = var1 - 1;
+            if (var11) {
+                var15 = 1;
+            }
+
+            if (var12) {
+                var16 = var1 - 2;
+            }
+
+            int var17 = var16;
+            if (var15 > var16) {
+                var17 = var15;
+            }
+
+            int var25;
+            if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
+                var25 = 1;
+            } else {
+                var25 = 0;
+            }
+
+            double var13;
+            label110: {
+                var13 = Double.NaN;
+                if ((var25 != 0)) {
+                    if (!Double.isInfinite(var3) && !Double.isNaN(var3)) {
+                        var25 = (((boolean)true) ? 1 : 0);
+                    } else {
+                        var25 = (((boolean)false) ? 1 : 0);
+                    }
+
+                    if ((var25 != 0)) {
+                        var3 = var5 - var3;
+                        break label110;
                     }
                 }
-                gr = d;
-                fromL = ((Double.isInfinite(gl) && !Double.isNaN(gl)) || gl <= -0.5d) ? -1 : laneIndex$count(gl);
-                if (!Double.isInfinite(gr) && !Double.isNaN(gr)) {
-                    z = true;
-                }
-                int fromR = (z || gr <= -0.5d) ? -1 : (lanes - 1) - laneIndex$count(gr);
-                if (fromL < 0) {
-                    idx = fromL;
-                } else {
-                    idx = fromR >= 0 ? fromR : -1;
-                }
-                if (idx < 0) {
-                    return RangesKt.coerceIn(idx, lo, hi);
-                }
-                if (lo == hi) {
-                    return lo;
-                }
-                return -1;
+
+                var3 = Double.NaN;
             }
-        }
-        gl = Double.NaN;
-        if (Double.isInfinite(dRightEdge) && !Double.isNaN(dRightEdge)) {
-        }
-        gr = d;
-        if (Double.isInfinite(gl) && !Double.isNaN(gl)) {
-        }
-        if (!Double.isInfinite(gr)) {
-            z = true;
-        }
-        if (z) {
-        }
-        if (fromL < 0) {
-        }
-        if (idx < 0) {
+
+            if (!Double.isInfinite(var9) && !Double.isNaN(var9)) {
+                var25 = (((boolean)true) ? 1 : 0);
+            } else {
+                var25 = (((boolean)false) ? 1 : 0);
+            }
+
+            var5 = var13;
+            if ((var25 != 0)) {
+                if (!Double.isInfinite(var7) && !Double.isNaN(var7)) {
+                    var25 = (((boolean)true) ? 1 : 0);
+                } else {
+                    var25 = (((boolean)false) ? 1 : 0);
+                }
+
+                var5 = var13;
+                if ((var25 != 0)) {
+                    var5 = var9 - var7;
+                }
+            }
+
+            if (!Double.isInfinite(var3) && !Double.isNaN(var3)) {
+                var25 = (((boolean)true) ? 1 : 0);
+            } else {
+                var25 = (((boolean)false) ? 1 : 0);
+            }
+
+            byte var20 = -1;
+            if (var25 && var3 > -0.5) {
+                var25 = laneIndex$count(var3);
+            } else {
+                var25 = -1;
+            }
+
+            boolean var18 = var19;
+            if (!Double.isInfinite(var5)) {
+                var18 = var19;
+                if (!Double.isNaN(var5)) {
+                    var18 = true;
+                }
+            }
+
+            if (var18 && var5 > -0.5) {
+                var1 = var1 - 1 - laneIndex$count(var5);
+            } else {
+                var1 = -1;
+            }
+
+            if (var25 >= 0) {
+                var1 = (((var25 != 0)) ? 1 : 0);
+            } else if (var1 < 0) {
+                var1 = -1;
+            }
+
+            if (var1 >= 0) {
+                var1 = RangesKt.coerceIn(var1, var15, var17);
+            } else {
+                var1 = var20;
+                if (var15 == var17) {
+                    var1 = var15;
+                }
+            }
+
+            return var1;
         }
     }
 
@@ -2218,264 +2230,323 @@ public final class OsmRoads {
             return this.guess.length() > 0;
         }
 
-        /* JADX WARN: Code restructure failed: missing block: B:137:0x0505, code lost:
-        
-            if ((0.0f <= r2 && r2 <= 25.0f) != false) goto L117;
-         */
-        /* JADX WARN: Removed duplicated region for block: B:143:0x051b  */
-        /* JADX WARN: Removed duplicated region for block: B:145:0x0529  */
-        /* JADX WARN: Removed duplicated region for block: B:166:0x058b A[RETURN] */
-        /* JADX WARN: Removed duplicated region for block: B:167:0x058c  */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public final void add(double ox, double oy, double oyaw, Fix f, long nowNs, double vox, double voy) {
-            boolean z;
-            boolean bearingOk;
-            Align align;
-            Double d;
-            double d2;
-            Pair sh;
-            double nty;
-            double ntx;
-            Intrinsics.checkNotNullParameter(f, "f");
+        /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+        public final void add(double var1, double var3, double var5, OsmRoads.Fix var7, long var8, double var10, double var12) {
+        Object var110 = null; // declarations Vineflower left out
+            Intrinsics.checkNotNullParameter(var7, "f");
             this.lagResid = Double.NaN;
-            int i = 1;
-            boolean gap = this.lastSeenNs != 0 && nowNs - this.lastSeenNs > 30000000000L;
-            this.lastSeenNs = nowNs;
-            if (Double.isNaN(OsmRoads.INSTANCE.getLat0()) || f.getHAcc() <= 0.0f) {
-                return;
+            long var45 = this.lastSeenNs;
+            boolean var43 = false;
+            boolean var41;
+            if (var45 != 0L && var8 - this.lastSeenNs > 30000000000L) {
+                var41 = true;
+            } else {
+                var41 = false;
             }
-            if (f.getHAcc() > 30.0f) {
-                return;
-            }
-            Pair<Double, Double> local = OsmRoads.INSTANCE.toLocal(f.getLat(), f.getLon());
-            double e = local.component1().doubleValue();
-            double n = local.component2().doubleValue();
-            double w = 1.0d / RangesKt.coerceAtLeast(f.getHAcc() * f.getHAcc(), 1.0f);
-            double moved = this.pts.isEmpty() ? Double.MAX_VALUE : Math.hypot(ox - this.pts.last().getOx(), oy - this.pts.last().getOy());
-            if (!this.ok || moved > 0.5d) {
-                if (0.05d <= moved && moved <= 0.5d) {
-                    return;
+
+            this.lastSeenNs = var8;
+            if (!Double.isNaN(OsmRoads.INSTANCE.getLat0()) && var7.getHAcc() > 0.0F && !(var7.getHAcc() > 30.0F)) {
+                Pair var47 = OsmRoads.INSTANCE.toLocal(var7.getLat(), var7.getLon());
+                double var18 = ((Number)var47.component1()).doubleValue();
+                double var20 = ((Number)var47.component2()).doubleValue();
+                double var14 = RangesKt.coerceAtLeast(var7.getHAcc() * var7.getHAcc(), 1.0F);
+                double var16 = 1.0;
+                double var22 = 1.0 / var14;
+                if (this.pts.isEmpty()) {
+                    var14 = Double.MAX_VALUE;
+                } else {
+                    var14 = Math.hypot(var1 - this.pts.last().getOx(), var3 - this.pts.last().getOy());
                 }
-                if (this.ok && !getGuessing()) {
-                    Pair apply$default = apply$default(this, ox, oy, 0.0d, 0.0d, 0.0d, 28, null);
-                    double pe = ((Number) apply$default.component1()).doubleValue();
-                    double pn = ((Number) apply$default.component2()).doubleValue();
-                    double miss = Math.hypot(e - pe, n - pn);
-                    if (miss > Math.max(10.0d, f.getHAcc() * 3.0d)) {
-                        if (this.rejectSince == 0) {
-                            this.rejectSince = nowNs;
-                        }
-                        this.rejectMiss = miss;
-                        this.rejected++;
-                        if (gap || nowNs - this.rejectSince >= 10000000000L) {
-                            this.pts.clear();
+
+                if (!this.ok || !(var14 <= 0.5)) {
+                    boolean var42;
+                    if (0.05 <= var14 && var14 <= 0.5) {
+                        var42 = true;
+                    } else {
+                        var42 = false;
+                    }
+
+                    if (!var42) {
+                        if (this.ok && !this.getGuessing()) {
+                            var47 = apply$default(this, var1, var3, 0.0, 0.0, 0.0, 28, null);
+                            double var24 = Math.hypot(var18 - ((Number)var47.component1()).doubleValue(), var20 - ((Number)var47.component2()).doubleValue());
+                            if (var24 > Math.max(10.0, var7.getHAcc() * 3.0)) {
+                                if (this.rejectSince == 0L) {
+                                    this.rejectSince = var8;
+                                }
+
+                                this.rejectMiss = var24;
+                                this.rejected++;
+                                if (!var41 && var8 - this.rejectSince < 10000000000L) {
+                                    return;
+                                }
+
+                                this.pts.clear();
+                                this.rejectSince = 0L;
+                                this.tx = var18 - (Math.cos(this.th) * var1 - Math.sin(this.th) * var3);
+                                this.ty = var20 - (Math.sin(this.th) * var1 + Math.cos(this.th) * var3);
+                                this.jumps++;
+                                this.pts.addLast(new OsmRoads.Align.P(var1, var3, var18, var20, var22, var8, 0.0, 0.0, 192, null));
+                                this.spread = 0.0;
+                                this.resid = var7.getHAcc();
+                                return;
+                            }
+
                             this.rejectSince = 0L;
-                            this.tx = e - ((Math.cos(this.th) * ox) - (Math.sin(this.th) * oy));
-                            this.ty = n - ((Math.sin(this.th) * ox) + (Math.cos(this.th) * oy));
-                            this.jumps++;
-                            this.pts.addLast(new P(ox, oy, e, n, w, nowNs, 0.0d, 0.0d, 192, null));
-                            this.spread = 0.0d;
-                            this.resid = f.getHAcc();
-                            return;
                         }
-                        return;
-                    }
-                    i = 1;
-                    this.rejectSince = 0L;
-                }
-                while (!this.pts.isEmpty() && (nowNs - this.pts.first().getTNs() > 25000000000L || this.pts.size() >= 400)) {
-                    this.pts.removeFirst();
-                }
-                if (this.pts.isEmpty() || moved > 0.5d) {
-                    this.pts.addLast(new P(ox, oy, e, n, w, nowNs, vox, voy));
-                } else {
-                    this.pts.set(this.pts.size() - i, new P(ox, oy, e, n, w, nowNs, vox, voy));
-                }
-                double nth = this.th;
-                P first = this.pts.first();
-                P last = this.pts.last();
-                this.spread = Math.hypot(last.getOx() - first.getOx(), last.getOy() - first.getOy());
-                if (this.spread >= 25.0d && this.pts.size() >= 8) {
-                    double px = 0.0d;
-                    double qx = 0.0d;
-                    double qy = 0.0d;
-                    Iterator it = this.pts.iterator();
-                    double sw = 0.0d;
-                    double py = 0.0d;
-                    while (it.hasNext()) {
-                        P p = (P) it.next();
-                        py += p.getW();
-                        px += p.getW() * p.getOx();
-                        sw += p.getW() * p.getOy();
-                        qx += p.getW() * p.getE();
-                        qy += p.getW() * p.getN();
-                    }
-                    double px2 = px / py;
-                    double py2 = sw / py;
-                    double qx2 = qx / py;
-                    double qy2 = qy / py;
-                    Iterator it2 = this.pts.iterator();
-                    double sxy = 0.0d;
-                    double sxx = 0.0d;
-                    while (it2.hasNext()) {
-                        P p2 = (P) it2.next();
-                        double ax = p2.getOx() - px2;
-                        double ay = p2.getOy() - py2;
-                        double bx = p2.getE() - qx2;
-                        double by = p2.getN() - qy2;
-                        sxx += p2.getW() * ((ax * bx) + (ay * by));
-                        sxy += p2.getW() * ((ax * by) - (ay * bx));
-                    }
-                    double nth2 = Math.atan2(sxy, sxx);
-                    this.guess = "";
-                    double ntx2 = qx2 - ((Math.cos(nth2) * px2) - (Math.sin(nth2) * py2));
-                    nty = qy2 - ((Math.sin(nth2) * px2) + (Math.cos(nth2) * py2));
-                    Iterator it3 = this.pts.iterator();
-                    double r = 0.0d;
-                    while (it3.hasNext()) {
-                        P p3 = (P) it3.next();
-                        Pair<Double, Double> apply = apply(p3.getOx(), p3.getOy(), nth2, ntx2, nty);
-                        double ae = apply.component1().doubleValue();
-                        double an = apply.component2().doubleValue();
-                        r += Math.hypot(ae - p3.getE(), an - p3.getN());
-                        sxx = sxx;
-                    }
-                    this.resid = r / this.pts.size();
-                    Align $this$add_u24lambda_u240 = this;
-                    double sv = 0.0d;
-                    double swv = 0.0d;
-                    Iterator it4 = $this$add_u24lambda_u240.pts.iterator();
-                    while (it4.hasNext()) {
-                        P p4 = (P) it4.next();
-                        double v = Math.hypot(p4.getVx(), p4.getVy());
-                        sv += p4.getW();
-                        swv += p4.getW() * v;
-                        sxy = sxy;
-                    }
-                    double vm = swv / sv;
-                    double num = 0.0d;
-                    double den = 0.0d;
-                    double c = Math.cos(nth2);
-                    double sn = Math.sin(nth2);
-                    Iterator it5 = $this$add_u24lambda_u240.pts.iterator();
-                    while (it5.hasNext()) {
-                        P p5 = (P) it5.next();
-                        double swv2 = swv;
-                        double swv3 = p5.getVx();
-                        Iterator it6 = it5;
-                        double v2 = Math.hypot(swv3, p5.getVy());
-                        if (v2 >= 0.5d) {
-                            double ue = ((p5.getVx() * c) - (p5.getVy() * sn)) / v2;
-                            double un = ((p5.getVx() * sn) + (p5.getVy() * c)) / v2;
-                            Pair<Double, Double> apply2 = $this$add_u24lambda_u240.apply(p5.getOx(), p5.getOy(), nth2, ntx2, nty);
-                            double ae2 = apply2.component1().doubleValue();
-                            double an2 = apply2.component2().doubleValue();
-                            double along = ((p5.getE() - ae2) * ue) + ((p5.getN() - an2) * un);
-                            num += p5.getW() * along * (v2 - vm);
-                            den += p5.getW() * (v2 - vm) * (v2 - vm);
-                            it5 = it6;
-                            swv = swv2;
+
+                        while (!this.pts.isEmpty() && (var8 - this.pts.first().getTNs() > 25000000000L || this.pts.size() >= 400)) {
+                            this.pts.removeFirst();
+                        }
+
+                        if (!this.pts.isEmpty() && !(var14 > 0.5)) {
+                            this.pts.set(this.pts.size() - 1, new OsmRoads.Align.P(var1, var3, var18, var20, var22, var8, var10, var12));
                         } else {
-                            it5 = it6;
-                            swv = swv2;
+                            this.pts.addLast(new OsmRoads.Align.P(var1, var3, var18, var20, var22, var8, var10, var12));
                         }
-                    }
-                    if (den > 2.0d * sv) {
-                        $this$add_u24lambda_u240.lagResid = RangesKt.coerceIn((-num) / den, -1.0d, 1.0d);
-                    }
-                    Unit unit = Unit.INSTANCE;
-                    align = this;
-                    nth = nth2;
-                    ntx = ntx2;
-                } else {
-                    float bearingDeg = f.getBearingDeg();
-                    if ((Float.isInfinite(bearingDeg) || Float.isNaN(bearingDeg)) ? false : true) {
-                        if (f.getSpeed() <= 3.0f) {
-                            float bearingAcc = f.getBearingAcc();
-                            if ((Float.isInfinite(bearingAcc) || Float.isNaN(bearingAcc)) ? false : true) {
-                                float bearingAcc2 = f.getBearingAcc();
+
+                        var10 = this.th;
+                        OsmRoads.Align.P var109 = this.pts.first();
+                        OsmRoads.Align.P var48 = this.pts.last();
+                        this.spread = Math.hypot(var48.getOx() - var109.getOx(), var48.getOy() - var109.getOy());
+                        if (this.spread >= 25.0 && this.pts.size() >= 8) {
+                            var12 = 0.0;
+                            var3 = 0.0;
+                            var1 = 0.0;
+                            Iterator var64 = this.pts.iterator();
+                            var10 = 0.0;
+                            var5 = 0.0;
+
+                            while (var64.hasNext()) {
+                                OsmRoads.Align.P var112 = (OsmRoads.Align.P)var64.next();
+                                var5 += var112.getW();
+                                var12 += var112.getW() * var112.getOx();
+                                var10 += var112.getW() * var112.getOy();
+                                var3 += var112.getW() * var112.getE();
+                                var1 += var112.getW() * var112.getN();
                             }
-                        }
-                        z = true;
-                        bearingOk = z;
-                        boolean wasGuessing = getGuessing();
-                        align = this;
-                        align.guess = "";
-                        if (!bearingOk) {
-                            nth = Math.toRadians(90.0d - f.getBearingDeg()) - oyaw;
-                        } else if (!align.ok || wasGuessing) {
-                            float bearingDeg2 = f.getBearingDeg();
-                            if ((Float.isInfinite(bearingDeg2) || Float.isNaN(bearingDeg2)) ? false : true) {
-                                float bearingAcc3 = f.getBearingAcc();
-                                if (((Float.isInfinite(bearingAcc3) || Float.isNaN(bearingAcc3)) ? false : true) && f.getBearingAcc() < 90.0f) {
-                                    d2 = Math.toRadians(90.0d - f.getBearingDeg());
-                                    d = Double.valueOf(d2);
-                                    Double hint = d;
-                                    sh = OsmRoads.INSTANCE.streetHeading(e, n, hint);
-                                    if (sh == null) {
-                                        return;
-                                    }
-                                    nth = sh.getSecond().doubleValue() - oyaw;
-                                    String name = sh.getFirst().getName();
-                                    if (name.length() == 0) {
-                                        name = sh.getFirst().getKind();
-                                    }
-                                    align.guess = name;
+
+                            var18 = var12 / var5;
+                            var10 /= var5;
+                            var12 = var3 / var5;
+                            var5 = var1 / var5;
+                            Iterator var113 = this.pts.iterator();
+                            var1 = 0.0;
+                            var3 = 0.0;
+
+                            while (var113.hasNext()) {
+                                OsmRoads.Align.P var65 = (OsmRoads.Align.P)var113.next();
+                                var14 = var65.getOx() - var18;
+                                var22 = var65.getOy() - var10;
+                                var20 = var65.getE() - var12;
+                                double var94 = var65.getN() - var5;
+                                var3 += var65.getW() * (var14 * var20 + var22 * var94);
+                                var1 += var65.getW() * (var14 * var94 - var22 * var20);
+                            }
+
+                            var14 = Math.atan2(var1, var3);
+                            this.guess = "";
+                            var12 -= Math.cos(var14) * var18 - Math.sin(var14) * var10;
+                            var18 = var5 - (Math.sin(var14) * var18 + Math.cos(var14) * var10);
+                            Iterator var114 = this.pts.iterator();
+                            var5 = 0.0;
+
+                            while (var114.hasNext()) {
+                                var48 = (OsmRoads.Align.P)var114.next();
+                                Pair var66 = this.apply(var48.getOx(), var48.getOy(), var14, var12, var18);
+                                var10 = ((Number)var66.component1()).doubleValue();
+                                var20 = ((Number)var66.component2()).doubleValue();
+                                var5 += Math.hypot(var10 - var48.getE(), var20 - var48.getN());
+                            }
+
+                            this.resid = var5 / this.pts.size();
+                            OsmRoads.Align var115 = this;
+                            var3 = 0.0;
+                            var10 = 0.0;
+                            Iterator var67 = var115.pts.iterator();
+                            var1 = var10;
+
+                            while (var67.hasNext()) {
+                                var48 = (OsmRoads.Align.P)var67.next();
+                                var10 = Math.hypot(var48.getVx(), var48.getVy());
+                                var3 += var48.getW();
+                                var1 += var48.getW() * var10;
+                            }
+
+                            double var95 = var1 / var3;
+                            var10 = 0.0;
+                            var5 = 0.0;
+                            var22 = Math.cos(var14);
+                            var20 = Math.sin(var14);
+
+                            for (OsmRoads.Align.P var49 : var115.pts) {
+                                double var26 = Math.hypot(var49.getVx(), var49.getVy());
+                                if (!(var26 < 0.5)) {
+                                    double var36 = (var49.getVx() * var22 - var49.getVy() * var20) / var26;
+                                    double var32 = (var49.getVx() * var20 + var49.getVy() * var22) / var26;
+                                    Pair var119 = var115.apply(var49.getOx(), var49.getOy(), var14, var12, var18);
+                                    double var28 = ((Number)var119.component1()).doubleValue();
+                                    double var30 = ((Number)var119.component2()).doubleValue();
+                                    double var34 = var49.getE();
+                                    double var38 = var49.getN();
+                                    var10 += var49.getW() * ((var34 - var28) * var36 + (var38 - var30) * var32) * (var26 - var95);
+                                    var5 += var49.getW() * (var26 - var95) * (var26 - var95);
                                 }
                             }
-                            if (align.ok) {
-                                d2 = align.th + oyaw;
-                                d = Double.valueOf(d2);
-                                Double hint2 = d;
-                                sh = OsmRoads.INSTANCE.streetHeading(e, n, hint2);
-                                if (sh == null) {
-                                }
+
+                            if (var5 > 2.0 * var3) {
+                                var115.lagResid = RangesKt.coerceIn(-var10 / var5, -1.0, 1.0);
+                            }
+
+                            Unit var69 = Unit.INSTANCE;
+                            var10 = var14;
+                            var3 = var12;
+                            var1 = var18;
+                        } else {
+                            float var40 = var7.getBearingDeg();
+                            if (!Float.isInfinite(var40) && !Float.isNaN(var40)) {
+                                var41 = true;
                             } else {
-                                d = null;
-                                Double hint22 = d;
-                                sh = OsmRoads.INSTANCE.streetHeading(e, n, hint22);
-                                if (sh == null) {
-                                }
+                                var41 = false;
                             }
+
+                            label238: {
+                                label292: {
+                                    if (var41) {
+                                        if (var7.getSpeed() > 3.0F) {
+                                            break label292;
+                                        }
+
+                                        var40 = var7.getBearingAcc();
+                                        if (!Float.isInfinite(var40) && !Float.isNaN(var40)) {
+                                            var41 = true;
+                                        } else {
+                                            var41 = false;
+                                        }
+
+                                        if (var41) {
+                                            var40 = var7.getBearingAcc();
+                                            if (0.0F <= var40 && var40 <= 25.0F) {
+                                                var41 = true;
+                                            } else {
+                                                var41 = false;
+                                            }
+
+                                            if (var41) {
+                                                break label292;
+                                            }
+                                        }
+                                    }
+
+                                    var41 = false;
+                                    break label238;
+                                }
+
+                                var41 = true;
+                            }
+
+                            boolean var44 = this.getGuessing();
+                            this.guess = "";
+                            if (var41) {
+                                var10 = Math.toRadians(90.0 - var7.getBearingDeg()) - var5;
+                            } else if (!this.ok || var44) {
+                                var40 = var7.getBearingDeg();
+                                if (!Float.isInfinite(var40) && !Float.isNaN(var40)) {
+                                    var41 = true;
+                                } else {
+                                    var41 = false;
+                                }
+
+                                label205: {
+                                    label287: {
+                                        if (var41) {
+                                            var40 = var7.getBearingAcc();
+                                            if (!Float.isInfinite(var40) && !Float.isNaN(var40)) {
+                                                var41 = true;
+                                            } else {
+                                                var41 = false;
+                                            }
+
+                                            if (var41 && var7.getBearingAcc() < 90.0F) {
+                                                var10 = Math.toRadians(90.0 - var7.getBearingDeg());
+                                                break label287;
+                                            }
+                                        }
+
+                                        if (!this.ok) {
+                                            var110 = null;
+                                            break label205;
+                                        }
+
+                                        var10 = this.th + var5;
+                                    }
+
+                                    var110 = var10;
+                                }
+
+                                Pair var116 = OsmRoads.INSTANCE.streetHeading(var18, var20, var110);
+                                if (var116 == null) {
+                                    return;
+                                }
+
+                                var10 = ((Number)var116.getSecond()).doubleValue() - var5;
+                                var var111 = ((OsmRoads.Way)var116.getFirst()).getName();
+                                if (var111.length() == 0) {
+                                    var41 = true;
+                                } else {
+                                    var41 = false;
+                                }
+
+                                if (var41) {
+                                    var111 = ((OsmRoads.Way)var116.getFirst()).getKind();
+                                }
+
+                                this.guess = var111;
+                            }
+
+                            var12 = Math.cos(var10);
+                            var14 = Math.sin(var10);
+                            var5 = var20 - (Math.sin(var10) * var1 + Math.cos(var10) * var3);
+                            this.resid = var7.getHAcc();
+                            var3 = var18 - (var12 * var1 - var14 * var3);
+                            var1 = var5;
                         }
-                        double ntx3 = e - ((Math.cos(nth) * ox) - (Math.sin(nth) * oy));
-                        nty = n - ((Math.sin(nth) * ox) + (Math.cos(nth) * oy));
-                        align.resid = f.getHAcc();
-                        ntx = ntx3;
+
+                        if (!this.ok) {
+                            this.th = var10;
+                            this.tx = var3;
+                            this.ty = var1;
+                            this.ok = true;
+                            this.jumps++;
+                        } else {
+                            label156: {
+                                var10 = Math.IEEEremainder(var10 - this.th, Math.PI * 2);
+                                if (!(Math.abs(var10) > 0.5)) {
+                                    var41 = var43;
+                                    if (!(Math.hypot(var3 - this.tx, var1 - this.ty) > 40.0)) {
+                                        break label156;
+                                    }
+                                }
+
+                                var41 = true;
+                            }
+
+                            if (var41) {
+                                var5 = var16;
+                            } else {
+                                var5 = 0.05;
+                            }
+
+                            if (var41) {
+                                this.jumps++;
+                            }
+
+                            this.th += var5 * var10;
+                            this.tx = this.tx + (var3 - this.tx) * var5;
+                            this.ty = this.ty + (var1 - this.ty) * var5;
+                        }
                     }
-                    z = false;
-                    bearingOk = z;
-                    boolean wasGuessing2 = getGuessing();
-                    align = this;
-                    align.guess = "";
-                    if (!bearingOk) {
-                    }
-                    double ntx32 = e - ((Math.cos(nth) * ox) - (Math.sin(nth) * oy));
-                    nty = n - ((Math.sin(nth) * ox) + (Math.cos(nth) * oy));
-                    align.resid = f.getHAcc();
-                    ntx = ntx32;
                 }
-                if (!align.ok) {
-                    align.th = nth;
-                    align.tx = ntx;
-                    align.ty = nty;
-                    align.ok = true;
-                    align.jumps++;
-                    return;
-                }
-                double dth = Math.IEEEremainder(nth - align.th, 6.283185307179586d);
-                boolean jump = Math.abs(dth) > 0.5d || Math.hypot(ntx - align.tx, nty - align.ty) > 40.0d;
-                double k = jump ? 1.0d : 0.05d;
-                if (jump) {
-                    align.jumps++;
-                }
-                align.th += k * dth;
-                double d3 = align.tx;
-                double nth3 = align.tx;
-                align.tx = d3 + ((ntx - nth3) * k);
-                align.ty += (nty - align.ty) * k;
             }
         }
 

@@ -144,36 +144,57 @@ public final class SideCam {
                 }
             }
 
-            /* JADX WARN: Removed duplicated region for block: B:32:0x006f  */
-            /* JADX WARN: Removed duplicated region for block: B:34:0x0076  */
-            /*
-                Code decompiled incorrectly, please refer to instructions dump.
-            */
-            private static final float[] parse$center(JSONObject o, float size, int w, int h, String k) {
-                boolean z;
-                if (o.isNull(k)) {
+            /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+            private static final float[] parse$center(JSONObject var0, float var1, int var2, int var3, String var4) {
+        boolean var10 = false; // declarations Vineflower left out
+                if (var0.isNull(var4)) {
                     return null;
-                }
-                JSONArray a = o.getJSONArray(k);
-                if (!(a.length() == 2)) {
-                    throw new IllegalArgumentException("Failed requirement.".toString());
-                }
-                float x = (float) a.getDouble(0);
-                float y = (float) a.getDouble(1);
-                if ((Float.isInfinite(x) || Float.isNaN(x)) ? false : true) {
-                    if ((Float.isInfinite(y) || Float.isNaN(y)) ? false : true) {
-                        float f = 2;
-                        if (x - (size / f) >= 0.0f && (size / f) + x <= w && y - (size / f) >= 0.0f && (size / f) + y <= h) {
-                            z = true;
-                            if (z) {
-                                throw new IllegalArgumentException("Failed requirement.".toString());
+                } else {
+                    JSONArray var9 = var0.getJSONArray(var4);
+                    boolean var8;
+                    if (var9.length() == 2) {
+                        var8 = true;
+                    } else {
+                        var8 = false;
+                    }
+
+                    if (!var8) {
+                        throw new IllegalArgumentException("Failed requirement.".toString());
+                    } else {
+                        float var6 = (float)var9.getDouble(0);
+                        float var7 = (float)var9.getDouble(1);
+                        if (!Float.isInfinite(var6) && !Float.isNaN(var6)) {
+                            var8 = true;
+                        } else {
+                            var8 = false;
+                        }
+
+                        label47: {
+                            if (var8) {
+                                if (!Float.isInfinite(var7) && !Float.isNaN(var7)) {
+                                    var8 = true;
+                                } else {
+                                    var8 = false;
+                                }
+
+                                if (var8) {
+                                    float var5 = 2;
+                                    if (var6 - var1 / var5 >= 0.0F && var1 / var5 + var6 <= var2 && var7 - var1 / var5 >= 0.0F && var1 / var5 + var7 <= var3) {
+                                        var10 = true;
+                                        break label47;
+                                    }
+                                }
                             }
-                            return new float[]{x, y};
+
+                            var10 = false;
+                        }
+
+                        if (var10) {
+                            return new float[]{var6, var7};
+                        } else {
+                            throw new IllegalArgumentException("Failed requirement.".toString());
                         }
                     }
-                }
-                z = false;
-                if (z) {
                 }
             }
         }

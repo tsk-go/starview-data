@@ -116,12 +116,13 @@ public final class Favorites {
         }
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    public static /* synthetic */ void load$default(Favorites favorites, DataClient dataClient, Function0 function0, int i, Object obj) {
-        if ((i & 2) != 0) {
-            function0 = null;
+    /* VF: from Vineflower (jadx: ) */
+    public static void load$default(Favorites var0, DataClient var1, Function0 var2, int var3, Object var4) {
+        if ((var3 & 2) != 0) {
+            var2 = null;
         }
-        favorites.load(dataClient, function0);
+
+        var0.load(var1, var2);
     }
 
     public final void load(DataClient data, final Function0<Unit> then) {

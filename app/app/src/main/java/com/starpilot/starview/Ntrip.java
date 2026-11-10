@@ -332,141 +332,148 @@ public final class Ntrip {
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:29:0x0098  */
-    /* JADX WARN: Removed duplicated region for block: B:32:0x00a1  */
-    /* JADX WARN: Removed duplicated region for block: B:35:0x00a9 A[ADDED_TO_REGION] */
-    /* JADX WARN: Removed duplicated region for block: B:42:0x00bf A[ADDED_TO_REGION] */
-    /* JADX WARN: Removed duplicated region for block: B:71:0x0104  */
-    /* JADX WARN: Removed duplicated region for block: B:75:0x010d A[ADDED_TO_REGION] */
-    /* JADX WARN: Removed duplicated region for block: B:79:0x012f A[ADDED_TO_REGION, ORIG_RETURN, RETURN] */
-    /* JADX WARN: Removed duplicated region for block: B:9:0x0065  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void tick(Context ctx) {
-        Config it;
-        boolean ready;
-        boolean want;
-        Thread thread2;
-        String str;
-        RtkStatus rtkStatus;
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public final void tick(Context var1) {
+        Config var13 = null; // declarations Vineflower left out
+        Intrinsics.checkNotNullParameter(var1, "ctx");
         if (logFile == null) {
-            logFile = new File(ctx.getFilesDir(), "ntrip_log.txt");
+            logFile = new File(var1.getFilesDir(), "ntrip_log.txt");
         }
-        Context applicationContext = ctx.getApplicationContext();
-        Intrinsics.checkNotNullExpressionValue(applicationContext, "getApplicationContext(...)");
-        watchNetwork(applicationContext);
-        final Config c = config(ctx);
-        DataClient dc = Link.INSTANCE.getData();
-        boolean onlyWanted = backupOnly(ctx);
-        final Config b = backup(ctx);
-        boolean z = false;
-        if ((b.getOn() || onlyWanted) && !StringsKt.isBlank(b.getHost())) {
-            int port = b.getPort();
-            if (1 <= port && port < 65536) {
-                it = 1;
-                if (it == null) {
-                    b = null;
+
+        boolean var5;
+        boolean var6;
+        boolean var7;
+        DataClient var12;
+        int var18;
+        Ntrip.Config var24;
+        label151: {
+            Context var11 = var1.getApplicationContext();
+            Intrinsics.checkNotNullExpressionValue(var11, "getApplicationContext(...)");
+            this.watchNetwork(var11);
+            var24 = this.config(var1);
+            var12 = Link.INSTANCE.getData();
+            var7 = this.backupOnly(var1);
+            var13 = this.backup(var1);
+            boolean var8 = var13.getOn();
+            var5 = false;
+            var6 = false;
+            if ((var8 || var7) && !StringsKt.isBlank(var13.getHost())) {
+                var18 = var13.getPort();
+                boolean var17;
+                if (1 <= var18 && var18 < 65536) {
+                    var17 = true;
+                } else {
+                    var17 = false;
                 }
-                final boolean only = b == null && onlyWanted;
-                ready = !c.getComplete() || only;
-                if (c.getOn() && ready && dc != null && dc.getConnected()) {
-                    rtkStatus = rtk;
-                    if (rtkStatus == null && rtkStatus.getConnected()) {
-                        want = true;
-                        long now = System.currentTimeMillis();
-                        if (want) {
-                            wantedAtMs = now;
-                        }
-                        boolean keep = !c.getOn() && ready && thread != null && now - wantedAtMs < 120000;
-                        if (want && !keep) {
-                            if (thread != null) {
-                                if (c.getOn() && ready) {
-                                    note("comma or receiver gone for 2 minutes - hanging up on the caster");
-                                }
-                                restart();
-                            }
-                            if (!c.getOn()) {
-                                str = "off";
-                            } else if (!ready) {
-                                str = "caster, port and mountpoint needed";
-                            } else if (rtk == null) {
-                                str = "no RTK receiver on the comma";
-                            } else {
-                                RtkStatus rtkStatus2 = rtk;
-                                if (rtkStatus2 != null && rtkStatus2.getConnected()) {
-                                    z = true;
-                                }
-                                str = !z ? "RTK receiver unplugged" : "waiting for the comma";
-                            }
-                            setState(str);
-                            return;
-                        }
-                        thread2 = thread;
-                        if (thread2 != null && thread2.isAlive()) {
-                            z = true;
-                        }
-                        if (z || !want) {
-                            return;
-                        }
-                        generation++;
-                        final int gen = generation;
-                        Thread $this$tick_u24lambda_u247 = new Thread(new Runnable() { // from class: com.starpilot.starview.Ntrip$$ExternalSyntheticLambda4
-                            @Override // java.lang.Runnable
-                            public final void run() {
-                                Ntrip.tick$lambda$6(c, gen, b, only);
-                            }
-                        }, "starview-ntrip");
-                        $this$tick_u24lambda_u247.setDaemon(true);
-                        $this$tick_u24lambda_u247.start();
-                        thread = $this$tick_u24lambda_u247;
-                        return;
+
+                if (var17) {
+                    var18 = 1;
+                    break label151;
+                }
+            }
+
+            var18 = 0;
+        }
+
+        if (!var18) {
+            var13 = null;
+        }
+
+        if (var13 != null && var7) {
+            var7 = true;
+        } else {
+            var7 = false;
+        }
+
+        boolean var19;
+        if (!var24.getComplete() && !var7) {
+            var19 = false;
+        } else {
+            var19 = true;
+        }
+
+        boolean var22;
+        label119: {
+            if (var24.getOn() && var19 && var12 != null && var12.getConnected()) {
+                RtkStatus var25 = rtk;
+                if (var25 != null && var25.getConnected()) {
+                    var22 = true;
+                } else {
+                    var22 = false;
+                }
+
+                if (var22) {
+                    var22 = true;
+                    break label119;
+                }
+            }
+
+            var22 = false;
+        }
+
+        long var9 = System.currentTimeMillis();
+        if (var22) {
+            wantedAtMs = var9;
+        }
+
+        boolean var4;
+        if (var24.getOn() && var19 && thread != null && var9 - wantedAtMs < 120000L) {
+            var4 = true;
+        } else {
+            var4 = false;
+        }
+
+        if (!var22 && !var4) {
+            if (thread != null) {
+                if (var24.getOn() && var19) {
+                    this.note("comma or receiver gone for 2 minutes - hanging up on the caster");
+                }
+
+                this.restart();
+            }
+
+            String var15;
+            if (!var24.getOn()) {
+                var15 = "off";
+            } else if (!var19) {
+                var15 = "caster, port and mountpoint needed";
+            } else if (rtk == null) {
+                var15 = "no RTK receiver on the comma";
+            } else {
+                RtkStatus var16 = rtk;
+                var19 = var6;
+                if (var16 != null) {
+                    var19 = var6;
+                    if (var16.getConnected()) {
+                        var19 = true;
                     }
                 }
-                want = false;
-                long now2 = System.currentTimeMillis();
-                if (want) {
-                }
-                if (c.getOn()) {
-                }
-                if (want) {
-                }
-                thread2 = thread;
-                if (thread2 != null) {
-                    z = true;
-                }
-                if (z) {
-                    return;
+
+                if (!var19) {
+                    var15 = "RTK receiver unplugged";
                 } else {
-                    return;
+                    var15 = "waiting for the comma";
                 }
             }
-        }
-        it = null;
-        if (it == null) {
-        }
-        if (b == null) {
-        }
-        if (c.getComplete()) {
-        }
-        if (c.getOn()) {
-            rtkStatus = rtk;
-            if (rtkStatus == null && rtkStatus.getConnected()) {
+
+            this.setState(var15);
+        } else {
+            Thread var26 = thread;
+            var19 = var5;
+            if (var26 != null) {
+                var19 = var5;
+                if (var26.isAlive()) {
+                    var19 = true;
+                }
             }
-        }
-        want = false;
-        long now22 = System.currentTimeMillis();
-        if (want) {
-        }
-        if (c.getOn()) {
-        }
-        if (want) {
-        }
-        thread2 = thread;
-        if (thread2 != null) {
-        }
-        if (z) {
+
+            if (!var19 && var22) {
+                generation++;
+                Thread var14 = new Thread(new Ntrip$$ExternalSyntheticLambda4(var24, generation, var13, var7), "starview-ntrip");
+                var14.setDaemon(true);
+                var14.start();
+                thread = var14;
+            }
         }
     }
 

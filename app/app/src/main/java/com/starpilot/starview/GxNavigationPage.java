@@ -62,6 +62,9 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.content.Context;
+import android.widget.LinearLayout.LayoutParams;
+import java.util.Map.Entry;
 
 /* compiled from: GxNavigation.kt */
 public final class GxNavigationPage extends GxPage {
@@ -165,11 +168,11 @@ public final class GxNavigationPage extends GxPage {
     private TextView vSaved;
     private TextView vStorage;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxNavigationPage(Activity act, GxHost gx) {
-        super(act, gx);
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(gx, "gx");
+    /* VF: from Vineflower (jadx: ) */
+    public GxNavigationPage(Activity var1, GxHost var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "gx");
         this.needsOffroad = true;
         this.navLoading = true;
         this.navError = "";
@@ -181,15 +184,10 @@ public final class GxNavigationPage extends GxPage {
         this.routes = CollectionsKt.emptyList();
         this.selectedRouteId = "main";
         this.suggestions = CollectionsKt.emptyList();
-        String uuid = UUID.randomUUID().toString();
-        Intrinsics.checkNotNullExpressionValue(uuid, "toString(...)");
-        this.sessionToken = uuid;
-        this.searchRunner = new Runnable() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda55
-            @Override // java.lang.Runnable
-            public final void run() {
-                GxNavigationPage.searchRunner$lambda$22(GxNavigationPage.this);
-            }
-        };
+        String var5 = UUID.randomUUID().toString();
+        Intrinsics.checkNotNullExpressionValue(var5, "toString(...)");
+        this.sessionToken = var5;
+        this.searchRunner = new GxNavigationPage$$ExternalSyntheticLambda55(this);
         this.mapsLoadingCatalog = true;
         this.mapsLoadingStatus = true;
         this.mapsError = "";
@@ -206,7 +204,11 @@ public final class GxNavigationPage extends GxPage {
         this.expandedGroups = new HashSet<>();
         this.regionSwitches = new HashMap<>();
         this.groupRows = new HashMap<>();
-        this.keyMeta = CollectionsKt.listOf((Object[]) new KeyMeta[]{new KeyMeta("amap1", "amap1", "", 39, "AMap / Gaode 1", "amap1Key"), new KeyMeta("amap2", "amap2", "", 39, "AMap / Gaode 2", "amap2Key"), new KeyMeta("public", "public", "pk.", 80, "Public Mapbox", "mapboxPublic"), new KeyMeta("secret", "secret", "sk.", 80, "Secret Mapbox", "mapboxSecret")});
+        GxNavigationPage.KeyMeta var6 = new GxNavigationPage.KeyMeta("amap1", "amap1", "", 39, "AMap / Gaode 1", "amap1Key");
+        GxNavigationPage.KeyMeta var3 = new GxNavigationPage.KeyMeta("amap2", "amap2", "", 39, "AMap / Gaode 2", "amap2Key");
+        GxNavigationPage.KeyMeta var7 = new GxNavigationPage.KeyMeta("public", "public", "pk.", 80, "Public Mapbox", "mapboxPublic");
+        GxNavigationPage.KeyMeta var4 = new GxNavigationPage.KeyMeta("secret", "secret", "sk.", 80, "Secret Mapbox", "mapboxSecret");
+        this.keyMeta = CollectionsKt.listOf(new GxNavigationPage.KeyMeta[]{var6, var3, var7, var4});
         this.savedKeys = new HashMap<>();
         this.keysLoading = true;
         this.keysError = "";
@@ -384,72 +386,109 @@ public final class GxNavigationPage extends GxPage {
         return null;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    private final String labelFor(JSONObject p) {
-        String str;
-        String str$default;
-        Iterable $this$map$iv = CollectionsKt.listOf((Object[]) new String[]{"full_address", "place_name", "name", "address"});
-        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        Iterator it = $this$map$iv.iterator();
+    /* VF: from Vineflower (jadx: ) */
+    private final String labelFor(JSONObject var1) {
+        Object var11 = null; // declarations Vineflower left out
+        Iterable var4 = CollectionsKt.listOf(new String[]{"full_address", "place_name", "name", "address"});
+        var var7 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var4, 10));
+        Iterator var8 = var4.iterator();
+
         while (true) {
-            String str2 = "";
-            str = null;
-            if (!it.hasNext()) {
-                break;
+            boolean var3 = var8.hasNext();
+            String var5 = "";
+            Object var13 = null;
+            Iterator var6 = null;
+            if (!var3) {
+                List var10 = var7;
+                var6 = var10.iterator();
+
+                boolean var2;
+                do {
+                    if (!var6.hasNext()) {
+                        var11 = var13;
+                        break;
+                    }
+
+                    var11 = var6.next();
+                    if (((String)var11).length() > 0) {
+                        var2 = true;
+                    } else {
+                        var2 = false;
+                    }
+                } while (!var2);
+
+                String var12 = (String)var11;
+                if (var12 == null) {
+                    var12 = var5;
+                }
+
+                return var12;
             }
-            Object item$iv$iv = it.next();
-            String it2 = (String) item$iv$iv;
-            if (p != null && (str$default = GxPage.str$default(this, p, it2, null, 2, null)) != null) {
-                str = StringsKt.trim((CharSequence) str$default).toString();
+
+            String var9 = (String)var8.next();
+            var13 = var6;
+            if (var1 != null) {
+                var9 = GxPage.str$default(this, var1, var9, null, 2, null);
+                var13 = var6;
+                if (var9 != null) {
+                    var13 = StringsKt.trim(var9).toString();
+                }
             }
-            if (str != null) {
-                str2 = str;
+
+            if (var13 == null) {
+                var13 = var5;
             }
-            destination$iv$iv.add(str2);
+
+            var7.add(var13);
         }
-        Iterable $this$firstOrNull$iv = (List) destination$iv$iv;
-        Iterator it3 = $this$firstOrNull$iv.iterator();
-        while (true) {
-            if (!it3.hasNext()) {
-                break;
-            }
-            Object next = it3.next();
-            String it4 = (String) next;
-            if (it4.length() > 0) {
-                str = next;
-                break;
-            }
-        }
-        String str3 = str;
-        return str3 == null ? "" : str3;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:16:0x0050 A[ORIG_RETURN, RETURN] */
-    /* JADX WARN: Removed duplicated region for block: B:18:? A[RETURN, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final String primaryOf(JSONObject p) {
-        String str$default;
-        String str$default2;
-        String obj;
-        String str = null;
-        if (p != null && (str$default2 = GxPage.str$default(this, p, "name", null, 2, null)) != null && (obj = StringsKt.trim((CharSequence) str$default2).toString()) != null) {
-            String str2 = obj;
-            if (str2.length() == 0) {
-                str2 = null;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final String primaryOf(JSONObject var1) {
+        String var9;
+        label33: {
+            Object var4 = null;
+            if (var1 != null) {
+                var9 = GxPage.str$default(this, var1, "name", null, 2, null);
+                if (var9 != null) {
+                    var9 = StringsKt.trim(var9).toString();
+                    if (var9 != null) {
+                        var9 = var9;
+                        boolean var2;
+                        if (var9.length() == 0) {
+                            var2 = true;
+                        } else {
+                            var2 = false;
+                        }
+
+                        if (var2) {
+                            var9 = null;
+                        }
+
+                        var9 = var9;
+                        if (var9 != null) {
+                            break label33;
+                        }
+                    }
+                }
             }
-            String str3 = str2;
-            if (str3 != null) {
-                str = str3;
-                return str != null ? "" : str;
+
+            var9 = (String)var4;
+            if (var1 != null) {
+                String var5 = GxPage.str$default(this, var1, "text", null, 2, null);
+                var9 = (String)var4;
+                if (var5 != null) {
+                    var9 = StringsKt.trim(var5).toString();
+                }
             }
         }
-        if (p != null && (str$default = GxPage.str$default(this, p, "text", null, 2, null)) != null) {
-            str = StringsKt.trim((CharSequence) str$default).toString();
+
+        String var6 = var9;
+        if (var9 == null) {
+            var6 = "";
         }
-        if (str != null) {
-        }
+
+        return var6;
     }
 
     private final String secondaryLabel(JSONObject p) {
@@ -1084,71 +1123,123 @@ public final class GxNavigationPage extends GxPage {
         renderDest();
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:31:0x0093, code lost:
-    
-        if ((129.2d <= r10 && r10 <= 146.0d) == false) goto L38;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:32:0x00d4, code lost:
-    
-        r7 = 1;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:45:0x00b4, code lost:
-    
-        if ((122.8d <= r10 && r10 <= 131.5d) == false) goto L49;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:56:0x00d2, code lost:
-    
-        if ((136.0d <= r10 && r10 <= 154.0d) != false) goto L60;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final List<Pair<String, String>> searchContext(String q) {
-        CharSequence $this$any$iv;
-        String $this$any$iv2 = q;
-        boolean inJapan = false;
-        int i = 0;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final List<Pair<String, String>> searchContext(String var1) {
+        boolean var15 = false; // declarations Vineflower left out
+        CharSequence var13 = var1;
+        boolean var10 = false;
+        int var6 = 0;
+
         while (true) {
-            if (i < $this$any$iv2.length()) {
-                char element$iv = $this$any$iv2.charAt(i);
-                char it = (12352 > element$iv || element$iv >= 12544) ? (char) 0 : (char) 1;
-                if (it != 0) {
-                    $this$any$iv = 1;
-                    break;
-                }
-                i++;
-            } else {
-                $this$any$iv = null;
+            if (var6 >= var13.length()) {
+                var15 = false;
                 break;
             }
-        }
-        boolean japaneseLang = new Regex("^(?:main_)?ja(?:[-_]|$)", RegexOption.IGNORE_CASE).containsMatchIn(this.language) || Intrinsics.areEqual(Locale.getDefault().getLanguage(), "ja");
-        Pair p = this.lastPosition;
-        if (p != null) {
-            double lat = p.component1().doubleValue();
-            double lon = p.component2().doubleValue();
-            if (30.0d <= lat && lat <= 45.8d) {
+
+            char var7 = var13.charAt(var6);
+            boolean var16;
+            if (12352 <= var7 && var7 < 12544) {
+                var16 = true;
+            } else {
+                var16 = false;
             }
-            if (lat >= 24.0d && lat < 30.0d) {
+
+            if (var16) {
+                var15 = true;
+                break;
             }
-            if (lat >= 20.0d && lat < 30.0d) {
+
+            var6++;
+        }
+
+        boolean var17;
+        if (!new Regex("^(?:main_)?ja(?:[-_]|$)", RegexOption.IGNORE_CASE).containsMatchIn(this.language)
+            && !Intrinsics.areEqual(Locale.getDefault().getLanguage(), "ja")) {
+            var17 = false;
+        } else {
+            var17 = true;
+        }
+
+        Pair var12 = this.lastPosition;
+        boolean var9 = var10;
+        if (var12 != null) {
+            double var4 = ((Number)var12.component1()).doubleValue();
+            double var2 = ((Number)var12.component2()).doubleValue();
+            boolean var8;
+            if (30.0 <= var4 && var4 <= 45.8) {
+                var8 = true;
+            } else {
+                var8 = false;
             }
-            int i2 = 0;
-            if (i2 != 0) {
-                inJapan = true;
+
+            label110: {
+                label146: {
+                    if (var8) {
+                        if (129.2 <= var2 && var2 <= 146.0) {
+                            var8 = true;
+                        } else {
+                            var8 = false;
+                        }
+
+                        if (var8) {
+                            break label146;
+                        }
+                    }
+
+                    if (var4 >= 24.0 && var4 < 30.0) {
+                        if (122.8 <= var2 && var2 <= 131.5) {
+                            var8 = true;
+                        } else {
+                            var8 = false;
+                        }
+
+                        if (var8) {
+                            break label146;
+                        }
+                    }
+
+                    if (var4 >= 20.0 && var4 < 30.0) {
+                        if (136.0 <= var2 && var2 <= 154.0) {
+                            var8 = true;
+                        } else {
+                            var8 = false;
+                        }
+
+                        if (var8) {
+                            break label146;
+                        }
+                    }
+
+                    var8 = false;
+                    break label110;
+                }
+
+                var8 = true;
+            }
+
+            var9 = var10;
+            if (var8) {
+                var9 = true;
             }
         }
-        ArrayList out = new ArrayList();
-        if (inJapan || (($this$any$iv != null || japaneseLang) && p == null)) {
-            out.add(TuplesKt.to("language", "ja"));
-            out.add(TuplesKt.to("country", "jp"));
-        } else if ($this$any$iv != null || japaneseLang) {
-            out.add(TuplesKt.to("language", "ja"));
+
+        ArrayList var11 = new ArrayList();
+        if (!var9 && (!var15 && !var17 || var12 != null)) {
+            if (var15 || var17) {
+                var11.add(TuplesKt.to("language", "ja"));
+            }
+        } else {
+            var11.add(TuplesKt.to("language", "ja"));
+            var11.add(TuplesKt.to("country", "jp"));
         }
-        if (p != null) {
-            out.add(TuplesKt.to("proximity", p.getSecond() + "," + p.getFirst()));
+
+        if (var12 != null) {
+            Object var14 = var12.getSecond();
+            Object var22 = var12.getFirst();
+            var11.add(TuplesKt.to("proximity", var14 + "," + var22));
         }
-        return out;
+
+        return var11;
     }
 
     private final void search(String value) {
@@ -1759,225 +1850,305 @@ public final class GxNavigationPage extends GxPage {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:9:0x0023  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit previewDestination$lambda$71(GxNavigationPage this$0, JSONObject $place, String $preferredRouteId, Pair $to, String str, JSONObject o) {
-        List rs;
-        String str2;
-        JSONArray optJSONArray;
-        boolean z;
-        if (this$0.destination != $place) {
-            JSONObject it = this$0.destination;
-            if (it != null && this$0.sameSpot(this$0.coordsOf(it), $to)) {
-                z = true;
-                if (!z) {
-                    return Unit.INSTANCE;
-                }
-            }
-            z = false;
-            if (!z) {
-            }
-        }
-        if (o == null || (optJSONArray = o.optJSONArray("routes")) == null || (rs = this$0.objects(optJSONArray)) == null) {
-            rs = CollectionsKt.emptyList();
-        }
-        String str3 = "main";
-        Object obj = null;
-        if (!rs.isEmpty()) {
-            if ($preferredRouteId == null) {
-                String str$default = GxPage.str$default(this$0, $place, "routeId", null, 2, null);
-                if (str$default.length() == 0) {
-                    String str4 = this$0.selectedRouteId;
-                    if (!(str4.length() == 0)) {
-                        str3 = str4;
-                    }
-                    str$default = str3;
-                }
-                str2 = str$default;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public static final Unit previewDestination$lambda$71(GxNavigationPage var0, JSONObject var1, String var2, Pair var3, String var4, JSONObject var5) {
+        Object var13 = null; List var17 = null; // declarations Vineflower left out
+        JSONObject var18 = var0.destination;
+        boolean var8 = true;
+        byte var7 = 0;
+        if (var18 != var1) {
+            JSONObject var19 = var0.destination;
+            boolean var6;
+            if (var19 != null && var0.sameSpot(var0.coordsOf(var19), var3)) {
+                var6 = true;
             } else {
-                str2 = $preferredRouteId;
+                var6 = false;
             }
-            String want = str2;
-            Iterable $this$firstOrNull$iv = CollectionsKt.getIndices(rs);
-            Iterator<Integer> it2 = $this$firstOrNull$iv.iterator();
-            while (true) {
-                if (!it2.hasNext()) {
-                    break;
-                }
-                Object element$iv = it2.next();
-                if (Intrinsics.areEqual(this$0.routeIdOf(((Number) element$iv).intValue()), want)) {
-                    obj = element$iv;
-                    break;
-                }
+
+            if (!var6) {
+                return Unit.INSTANCE;
             }
-            Integer num = (Integer) obj;
-            int idx = num != null ? num.intValue() : 0;
-            this$0.routes = rs;
-            this$0.selectRoute(idx);
-        } else {
-            this$0.routeSummary = null;
-            this$0.routes = CollectionsKt.emptyList();
-            this$0.selectedRouteId = "main";
         }
-        this$0.renderDest();
+
+        label65: {
+            if (var5 != null) {
+                JSONArray var16 = var5.optJSONArray("routes");
+                if (var16 != null) {
+                    List var20 = var0.objects(var16);
+                    var17 = var20;
+                    if (var20 != null) {
+                        break label65;
+                    }
+                }
+            }
+
+            var17 = CollectionsKt.emptyList();
+        }
+
+        boolean var9 = var17.isEmpty();
+        String var22 = "main";
+        Object var21 = null;
+        if (!var9) {
+            String var12;
+            if (var2 == null) {
+                var var10 = GxPage.str$default(var0, var1, "routeId", null, 2, null);
+                boolean var24;
+                if (var10.length() == 0) {
+                    var24 = true;
+                } else {
+                    var24 = false;
+                }
+
+                if (var24) {
+                    var var11 = var0.selectedRouteId;
+                    if (var11.length() == 0) {
+                        var24 = var8;
+                    } else {
+                        var24 = false;
+                    }
+
+                    if (var24) {
+                        var11 = var22;
+                    }
+
+                    var10 = var11;
+                }
+
+                var12 = var10;
+            } else {
+                var12 = var2;
+            }
+
+            Iterator var23 = CollectionsKt.getIndices(var17).iterator();
+
+            while (true) {
+                if (!var23.hasNext()) {
+                    var13 = var21;
+                    break;
+                }
+
+                Object var15 = var23.next();
+                if (Intrinsics.areEqual(var0.routeIdOf(((Number)var15).intValue()), var12)) {
+                    var13 = var15;
+                    break;
+                }
+            }
+
+            Integer var14 = (Integer)var13;
+            int var26 = var7;
+            if (var14 != null) {
+                var26 = var14;
+            }
+
+            var0.routes = var17;
+            var0.selectRoute(var26);
+        } else {
+            var0.routeSummary = null;
+            var0.routes = CollectionsKt.emptyList();
+            var0.selectedRouteId = "main";
+        }
+
+        var0.renderDest();
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
+    /* VF: from Vineflower (jadx: ) */
     private final void renderDest() {
-        int i;
-        int i2;
-        Object obj;
-        ViewGroup viewGroup;
-        if (this.destBox == null) {
-            return;
-        }
-        LinearLayout linearLayout = this.destBox;
-        if (linearLayout == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("destBox");
-            linearLayout = null;
-        }
-        linearLayout.removeAllViews();
-        JSONObject jSONObject = this.destination;
-        if (jSONObject == null) {
-            return;
-        }
-        ViewGroup viewGroup2 = this.destBox;
-        if (viewGroup2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("destBox");
-            viewGroup2 = null;
-        }
-        String str = "Destination";
-        header("Destination", viewGroup2);
-        ViewGroup viewGroup3 = this.destBox;
-        if (viewGroup3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("destBox");
-            viewGroup3 = null;
-        }
-        LinearLayout card = card(viewGroup3);
-        String str$default = GxPage.str$default(this, jSONObject, "name", null, 2, null);
-        if ((str$default.length() == 0) != false) {
-            String query = getQuery();
-            if ((query.length() == 0) == false) {
-                str = query;
-            }
-            str$default = str;
-        }
-        text(str$default, card, 24.0f, CarUi.Companion.getTEXT(), true);
-        String str$default2 = GxPage.str$default(this, jSONObject, "place_name", null, 2, null);
-        if ((str$default2.length() > 0) != false && !StringsKt.equals(str$default2, GxPage.str$default(this, jSONObject, "name", null, 2, null), true)) {
-            GxPage.text$default(this, str$default2, card, 0.0f, 0, false, 28, null);
-        }
-        Triple<Double, Double, String> triple = this.routeSummary;
-        if (triple != null) {
-            i = 0;
-            i2 = 1;
-            text("Distance  " + fmtDistance(triple.getFirst().doubleValue()) + "     Duration  " + fmtDuration(triple.getSecond().doubleValue()) + "     ETA  " + fmtEta(triple.getSecond().doubleValue()), card, 19.0f, CarUi.Companion.getACCENT(), true);
-        } else {
-            i = 0;
-            i2 = 1;
-            if (this.lastPosition == null) {
-                GxPage.text$default(this, "The car's position is unknown, so no route preview is shown.", card, 0.0f, 0, false, 28, null);
-            }
-        }
-        int i3 = favoriteOf(jSONObject) != null ? i2 : i;
-        ArrayList arrayList = new ArrayList();
-        if (this.navigationStarted) {
-            arrayList.add(TuplesKt.to("Cancel Navigation", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda63
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit renderDest$lambda$74;
-                    renderDest$lambda$74 = GxNavigationPage.renderDest$lambda$74(GxNavigationPage.this);
-                    return renderDest$lambda$74;
-                }
-            }));
-        } else {
-            arrayList.add(TuplesKt.to(this.loadingRoute ? "Calculating..." : "Start Navigation", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda64
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit renderDest$lambda$75;
-                    renderDest$lambda$75 = GxNavigationPage.renderDest$lambda$75(GxNavigationPage.this);
-                    return renderDest$lambda$75;
-                }
-            }));
-        }
-        arrayList.add(TuplesKt.to(i3 != 0 ? "Remove from favorites" : "Add to favorites", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda65
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit renderDest$lambda$76;
-                renderDest$lambda$76 = GxNavigationPage.renderDest$lambda$76(GxNavigationPage.this);
-                return renderDest$lambda$76;
-            }
-        }));
-        Pair[] pairArr = (Pair[]) arrayList.toArray(new Pair[i]);
-        LinearLayout buttons = buttons((Pair[]) Arrays.copyOf(pairArr, pairArr.length), card, (this.navigationStarted ? 1 : 0) ^ i2);
-        if (this.navigationStarted) {
-            View childAt = buttons.getChildAt(i);
-            TextView textView = childAt instanceof TextView ? (TextView) childAt : null;
-            if (textView != null) {
-                textView.setTextColor(CarUi.Companion.getWARN());
-            }
-        } else {
-            View childAt2 = buttons.getChildAt(i);
-            setOn(childAt2 instanceof TextView ? (TextView) childAt2 : null, (this.loadingRoute || !getHasRoutingKey()) ? i : i2);
-        }
-        if (this.routes.size() > i2) {
-            List<? extends JSONObject> list = this.routes;
-            int i4 = 0;
-            List<String> arrayList2 = new ArrayList<>(CollectionsKt.collectionSizeOrDefault(list, 10));
-            List<? extends JSONObject> list2 = list;
-            int i5 = 0;
-            int i6 = 0;
-            for (Object obj2 : list2) {
-                int i7 = i6 + 1;
-                if (i6 < 0) {
-                    CollectionsKt.throwIndexOverflow();
-                }
-                JSONObject jSONObject2 = (JSONObject) obj2;
-                arrayList2.add("Route " + (i6 + 1) + "\n" + fmtDistance(jSONObject2.optDouble("distance", 0.0d)) + " · " + fmtDuration(jSONObject2.optDouble("duration", 0.0d)));
-                i6 = i7;
-                list = list;
-                list2 = list2;
-                i5 = i5;
-                i4 = i4;
-            }
-            List<String> list3 = arrayList2;
-            IntRange indices = CollectionsKt.getIndices(this.routes);
-            Iterator<Integer> it = indices.iterator();
-            while (true) {
-                if (!it.hasNext()) {
-                    obj = null;
-                    break;
-                }
-                obj = it.next();
-                IntRange intRange = indices;
-                if (Intrinsics.areEqual(routeIdOf(((Number) obj).intValue()), this.selectedRouteId)) {
-                    break;
-                } else {
-                    indices = intRange;
-                }
-            }
-            Integer num = (Integer) obj;
-            int intValue = num != null ? num.intValue() : 0;
-            String str2 = this.navigationStarted ? "Picking another route here only changes the preview; tap Start Navigation again to send it." : null;
-            ViewGroup viewGroup4 = this.destBox;
-            if (viewGroup4 == null) {
+        LinearLayout var32 = null; // declarations Vineflower left out
+        if (this.destBox != null) {
+            LinearLayout var5 = this.destBox;
+            LinearLayout var4 = var5;
+            if (var5 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("destBox");
-                viewGroup = null;
-            } else {
-                viewGroup = viewGroup4;
+                var4 = null;
             }
-            choice("Choose a route", str2, list3, intValue, viewGroup, new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda67
-                @Override // kotlin.jvm.functions.Function1
-                public final Object invoke(Object obj3) {
-                    Unit renderDest$lambda$79;
-                    renderDest$lambda$79 = GxNavigationPage.renderDest$lambda$79(GxNavigationPage.this, ((Integer) obj3).intValue());
-                    return renderDest$lambda$79;
+
+            var4.removeAllViews();
+            JSONObject var7 = this.destination;
+            if (var7 != null) {
+                var5 = this.destBox;
+                var4 = var5;
+                if (var5 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("destBox");
+                    var4 = null;
                 }
-            });
+
+                ViewGroup var17 = (ViewGroup)var4;
+                String var36 = "Destination";
+                this.header("Destination", var17);
+                LinearLayout var6 = this.destBox;
+                var4 = var6;
+                if (var6 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("destBox");
+                    var4 = null;
+                }
+
+                var6 = this.card((ViewGroup)var4);
+                var var19 = GxPage.str$default(this, var7, "name", null, 2, null);
+                boolean var1;
+                if (var19.length() == 0) {
+                    var1 = true;
+                } else {
+                    var1 = false;
+                }
+
+                if (var1) {
+                    var var20 = this.getQuery();
+                    if (var20.length() == 0) {
+                        var1 = (boolean)true;
+                    } else {
+                        var1 = (boolean)false;
+                    }
+
+                    if (var1) {
+                        var20 = var36;
+                    }
+
+                    var19 = var20;
+                }
+
+                this.text(var19, (ViewGroup)var6, 24.0F, CarUi.Companion.getTEXT(), true);
+                String var21 = GxPage.str$default(this, var7, "place_name", null, 2, null);
+                if (var21.length() > 0) {
+                    var1 = (boolean)true;
+                } else {
+                    var1 = (boolean)false;
+                }
+
+                if (var1 && !StringsKt.equals(var21, GxPage.str$default(this, var7, "name", null, 2, null), true)) {
+                    GxPage.text$default(this, var21, (ViewGroup)var6, 0.0F, 0, false, 28, null);
+                }
+
+                Triple var8 = this.routeSummary;
+                if (var8 != null) {
+                    String var37 = this.fmtDistance(((Number)var8.getFirst()).doubleValue());
+                    String var22 = this.fmtDuration(((Number)var8.getSecond()).doubleValue());
+                    String var47 = this.fmtEta(((Number)var8.getSecond()).doubleValue());
+                    this.text("Distance  " + var37 + "     Duration  " + var22 + "     ETA  " + var47, (ViewGroup)var6, 19.0F, CarUi.Companion.getACCENT(), true);
+                } else if (this.lastPosition == null) {
+                    GxPage.text$default(this, "The car's position is unknown, so no route preview is shown.", (ViewGroup)var6, 0.0F, 0, false, 28, null);
+                }
+
+                if (this.favoriteOf(var7) != null) {
+                    var1 = (boolean)true;
+                } else {
+                    var1 = (boolean)false;
+                }
+
+                ArrayList var38 = new ArrayList();
+                if (this.navigationStarted) {
+                    var38.add(TuplesKt.to("Cancel Navigation", new GxNavigationPage$$ExternalSyntheticLambda63(this)));
+                } else {
+                    String var23;
+                    if (this.loadingRoute) {
+                        var23 = "Calculating...";
+                    } else {
+                        var23 = "Start Navigation";
+                    }
+
+                    var38.add(TuplesKt.to(var23, new GxNavigationPage$$ExternalSyntheticLambda64(this)));
+                }
+
+                String var24;
+                if (var1) {
+                    var24 = "Remove from favorites";
+                } else {
+                    var24 = "Add to favorites";
+                }
+
+                var38.add(TuplesKt.to(var24, new GxNavigationPage$$ExternalSyntheticLambda65(this)));
+                Pair[] var25 = var38.toArray(new Pair[0]);
+                var4 = this.buttons(Arrays.copyOf(var25, var25.length), (ViewGroup)var6, this.navigationStarted ^ true);
+                if (this.navigationStarted) {
+                    View var27 = var4.getChildAt(0);
+                    TextView var28;
+                    if (var27 instanceof TextView) {
+                        var28 = (TextView)var27;
+                    } else {
+                        var28 = null;
+                    }
+
+                    if (var28 != null) {
+                        var28.setTextColor(CarUi.Companion.getWARN());
+                    }
+                } else {
+                    View var29 = var4.getChildAt(0);
+                    TextView var30;
+                    if (var29 instanceof TextView) {
+                        var30 = (TextView)var29;
+                    } else {
+                        var30 = null;
+                    }
+
+                    boolean var2;
+                    if (!this.loadingRoute && this.getHasRoutingKey()) {
+                        var2 = true;
+                    } else {
+                        var2 = false;
+                    }
+
+                    this.setOn(var30, var2);
+                }
+
+                if (this.routes.size() > 1) {
+                    Iterable var39 = this.routes;
+                    boolean var15 = false;
+                    var var45 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var39, 10));
+                    boolean var3 = false;
+                    var1 = false;
+
+                    for (Object var48 : var39) {
+                        if (var1 < 0) {
+                            CollectionsKt.throwIndexOverflow();
+                        }
+
+                        JSONObject var9 = (JSONObject)var48;
+                        String var49 = this.fmtDistance(var9.optDouble("distance", 0.0));
+                        String var50 = this.fmtDuration(var9.optDouble("duration", 0.0));
+                        var45.add("Route " + (var1 + 1) + "\n" + var49 + " · " + var50);
+                        var1++;
+                    }
+
+                    List var44 = var45;
+                    Iterable var31 = CollectionsKt.getIndices(this.routes);
+                    Iterator var46 = var31.iterator();
+
+                    while (true) {
+                        if (!var46.hasNext()) {
+                            var32 = null;
+                            break;
+                        }
+
+                        var5 = (LinearLayout)var46.next();
+                        if (Intrinsics.areEqual(this.routeIdOf(((Number)var5).intValue()), this.selectedRouteId)) {
+                            var32 = var5;
+                            break;
+                        }
+                    }
+
+                    Integer var33 = (Integer)var32;
+                    if (var33 != null) {
+                        var1 = var33;
+                    } else {
+                        var1 = false;
+                    }
+
+                    String var34;
+                    if (this.navigationStarted) {
+                        var34 = "Picking another route here only changes the preview; tap Start Navigation again to send it.";
+                    } else {
+                        var34 = null;
+                    }
+
+                    var5 = this.destBox;
+                    if (var5 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("destBox");
+                        var5 = null;
+                    }
+
+                    this.choice("Choose a route", var34, var44, ((var1) ? 1 : 0), (ViewGroup)var5, new GxNavigationPage$$ExternalSyntheticLambda67(this));
+                }
+            }
         }
     }
 
@@ -2306,144 +2477,156 @@ public final class GxNavigationPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:42:0x0122  */
-    /* JADX WARN: Removed duplicated region for block: B:45:0x0125 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void renderRecents() {
-        Iterable $this$filter$iv;
-        String key;
-        HashSet seen;
-        boolean z;
-        boolean z2;
-        String lowerCase;
-        if (this.recentBox == null) {
-            return;
-        }
-        LinearLayout linearLayout = this.recentBox;
-        if (linearLayout == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("recentBox");
-            linearLayout = null;
-        }
-        linearLayout.removeAllViews();
-        if (this.navLoading) {
-            return;
-        }
-        HashSet seen2 = new HashSet();
-        for (JSONObject f : this.favorites) {
-            Pair c = coordsOf(f);
-            if (c != null) {
-                lowerCase = c.getFirst() + ":" + c.getSecond();
-            } else {
-                lowerCase = labelFor(f).toLowerCase(Locale.ROOT);
-                Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-            }
-            seen2.add(lowerCase);
-        }
-        Iterable $this$filter$iv2 = this.recentDestinations;
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv2) {
-            JSONObject p = (JSONObject) element$iv$iv;
-            Pair c2 = coordsOf(p);
-            if (c2 != null) {
-                $this$filter$iv = $this$filter$iv2;
-                key = c2.getFirst() + ":" + c2.getSecond();
-            } else {
-                $this$filter$iv = $this$filter$iv2;
-                key = labelFor(p).toLowerCase(Locale.ROOT);
-                Intrinsics.checkNotNullExpressionValue(key, "toLowerCase(...)");
-            }
-            if ((key.length() > 0) && seen2.add(key)) {
-                Iterable $this$none$iv = this.favorites;
-                seen = seen2;
-                if (($this$none$iv instanceof Collection) && ((Collection) $this$none$iv).isEmpty()) {
-                    z2 = true;
-                } else {
-                    Iterator it = $this$none$iv.iterator();
-                    while (true) {
-                        if (!it.hasNext()) {
-                            z2 = true;
-                            break;
-                        }
-                        Object element$iv = it.next();
-                        Iterator it2 = it;
-                        JSONObject it3 = (JSONObject) element$iv;
-                        String key2 = key;
-                        if (sameSpot(coordsOf(it3), c2)) {
-                            z2 = false;
-                            break;
-                        } else {
-                            it = it2;
-                            key = key2;
-                        }
-                    }
-                }
-                if (z2) {
-                    z = true;
-                    if (!z) {
-                        destination$iv$iv.add(element$iv$iv);
-                    }
-                    $this$filter$iv2 = $this$filter$iv;
-                    seen2 = seen;
-                }
-            } else {
-                seen = seen2;
-            }
-            z = false;
-            if (!z) {
-            }
-            $this$filter$iv2 = $this$filter$iv;
-            seen2 = seen;
-        }
-        List<JSONObject> list = CollectionsKt.take((List) destination$iv$iv, 10);
-        if (list.isEmpty()) {
-            return;
-        }
-        LinearLayout linearLayout2 = this.recentBox;
-        if (linearLayout2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("recentBox");
-            linearLayout2 = null;
-        }
-        header("Recent destinations", linearLayout2);
-        for (final JSONObject p2 : list) {
-            GxNavigationPage gxNavigationPage = this;
-            String str$default = GxPage.str$default(this, p2, "name", null, 2, null);
-            if (str$default.length() == 0) {
-                String str$default2 = GxPage.str$default(this, p2, "place_name", null, 2, null);
-                if (str$default2.length() == 0) {
-                    str$default2 = "Destination";
-                }
-                str$default = str$default2;
-            }
-            String str = str$default;
-            String secondaryLabel = secondaryLabel(p2);
-            if (secondaryLabel.length() == 0) {
-                secondaryLabel = null;
-            }
-            String str2 = secondaryLabel;
-            LinearLayout linearLayout3 = this.recentBox;
-            if (linearLayout3 == null) {
+        if (this.recentBox != null) {
+            LinearLayout var3 = this.recentBox;
+            LinearLayout var2 = var3;
+            if (var3 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("recentBox");
-                linearLayout3 = null;
+                var2 = null;
             }
-            GxPage.Row r = GxPage.row$default(gxNavigationPage, str, str2, linearLayout3, 0, 8, null);
-            clickable(r, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda15
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit renderRecents$lambda$99;
-                    renderRecents$lambda$99 = GxNavigationPage.renderRecents$lambda$99(GxNavigationPage.this, p2);
-                    return renderRecents$lambda$99;
+
+            var2.removeAllViews();
+            if (!this.navLoading) {
+                HashSet var4 = new HashSet();
+
+                for (JSONObject var5 : this.favorites) {
+                    Pair var15 = this.coordsOf(var5);
+                    String var17;
+                    if (var15 != null) {
+                        var5 = (JSONObject)var15.getFirst();
+                        Object var16 = var15.getSecond();
+                        var17 = var5 + ":" + var16;
+                    } else {
+                        var17 = this.labelFor(var5).toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(var17, "toLowerCase(...)");
+                    }
+
+                    var4.add(var17);
                 }
-            });
-            GxPage.Row.button$default(r, "Go", false, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda16
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit renderRecents$lambda$100;
-                    renderRecents$lambda$100 = GxNavigationPage.renderRecents$lambda$100(GxNavigationPage.this, p2);
-                    return renderRecents$lambda$100;
+
+                Iterable var29 = this.recentDestinations;
+                var var7 = new ArrayList();
+
+                for (Object var8 : var29) {
+                    JSONObject var18 = (JSONObject)var8;
+                    Pair var9 = this.coordsOf(var18);
+                    String var20;
+                    if (var9 != null) {
+                        Object var35 = var9.getFirst();
+                        Object var19 = var9.getSecond();
+                        var20 = var35 + ":" + var19;
+                    } else {
+                        var20 = this.labelFor(var18).toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(var20, "toLowerCase(...)");
+                    }
+
+                    boolean var1;
+                    if (var20.length() > 0) {
+                        var1 = true;
+                    } else {
+                        var1 = false;
+                    }
+
+                    label116: {
+                        if (var1 && var4.add(var20)) {
+                            var var36 = this.favorites;
+                            if (var36 instanceof Collection && ((Collection)var36).isEmpty()) {
+                                var1 = true;
+                            } else {
+                                Iterator var37 = var36.iterator();
+
+                                while (true) {
+                                    if (!var37.hasNext()) {
+                                        var1 = true;
+                                        break;
+                                    }
+
+                                    if (this.sameSpot(this.coordsOf((JSONObject)var37.next()), var9)) {
+                                        var1 = false;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (var1) {
+                                var1 = true;
+                                break label116;
+                            }
+                        }
+
+                        var1 = false;
+                    }
+
+                    if (var1) {
+                        var7.add(var8);
+                    }
                 }
-            }, 2, null);
+
+                List var21 = var7;
+                List var32 = CollectionsKt.take(var21, 10);
+                if (!var32.isEmpty()) {
+                    var3 = this.recentBox;
+                    var2 = var3;
+                    if (var3 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("recentBox");
+                        var2 = null;
+                    }
+
+                    this.header("Recent destinations", (ViewGroup)var2);
+
+                    for (JSONObject var33 : var32) {
+                        GxPage var39 = this;
+                        var var23 = GxPage.str$default(this, var33, "name", null, 2, null);
+                        boolean var12;
+                        if (var23.length() == 0) {
+                            var12 = true;
+                        } else {
+                            var12 = false;
+                        }
+
+                        if (var12) {
+                            var var24 = GxPage.str$default(this, var33, "place_name", null, 2, null);
+                            if (var24.length() == 0) {
+                                var12 = true;
+                            } else {
+                                var12 = false;
+                            }
+
+                            if (var12) {
+                                var24 = "Destination";
+                            }
+
+                            var23 = var24;
+                        }
+
+                        String var40 = var23;
+                        var var25 = this.secondaryLabel(var33);
+                        if (var25.length() == 0) {
+                            var12 = true;
+                        } else {
+                            var12 = false;
+                        }
+
+                        if (var12) {
+                            var25 = null;
+                        }
+
+                        String var41 = var25;
+                        var3 = this.recentBox;
+                        var2 = var3;
+                        if (var3 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("recentBox");
+                            var2 = null;
+                        }
+
+                        GxPage.Row var27 = GxPage.row$default(var39, var40, var41, (ViewGroup)var2, 0, 8, null);
+                        this.clickable(var27, new GxNavigationPage$$ExternalSyntheticLambda15(this, var33));
+                        GxPage.Row.button$default(var27, "Go", false, new GxNavigationPage$$ExternalSyntheticLambda16(this, var33), 2, null);
+                    }
+                }
+            }
         }
     }
 
@@ -2903,401 +3086,680 @@ public final class GxNavigationPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:177:0x02fb, code lost:
-    
-        if (r10 > 0.0d) goto L215;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:181:0x030b  */
-    /* JADX WARN: Removed duplicated region for block: B:183:0x0313  */
-    /* JADX WARN: Removed duplicated region for block: B:186:0x031c  */
-    /* JADX WARN: Removed duplicated region for block: B:244:0x0548  */
-    /* JADX WARN: Removed duplicated region for block: B:256:0x057e  */
-    /* JADX WARN: Removed duplicated region for block: B:259:0x058d  */
-    /* JADX WARN: Removed duplicated region for block: B:261:0x0593  */
-    /* JADX WARN: Removed duplicated region for block: B:283:0x05de  */
-    /* JADX WARN: Removed duplicated region for block: B:286:0x05ea  */
-    /* JADX WARN: Removed duplicated region for block: B:289:0x0661  */
-    /* JADX WARN: Removed duplicated region for block: B:292:0x066d  */
-    /* JADX WARN: Removed duplicated region for block: B:295:0x0681  */
-    /* JADX WARN: Removed duplicated region for block: B:298:0x069c  */
-    /* JADX WARN: Removed duplicated region for block: B:300:0x06a3  */
-    /* JADX WARN: Removed duplicated region for block: B:304:0x06e1  */
-    /* JADX WARN: Removed duplicated region for block: B:315:0x0715 A[LOOP:2: B:313:0x070f->B:315:0x0715, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:318:0x069f  */
-    /* JADX WARN: Removed duplicated region for block: B:319:0x0674  */
-    /* JADX WARN: Removed duplicated region for block: B:320:0x05ef  */
-    /* JADX WARN: Removed duplicated region for block: B:334:0x05d7  */
-    /* JADX WARN: Removed duplicated region for block: B:335:0x0590  */
-    /* JADX WARN: Removed duplicated region for block: B:349:0x053d  */
-    /* JADX WARN: Removed duplicated region for block: B:350:0x0315  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     private final void paintMaps() {
-        TextView textView;
-        double est;
-        boolean z;
-        boolean showProgress;
-        LinearLayout linearLayout;
-        Function1<? super Integer, Unit> function1;
-        LinearLayout linearLayout2;
-        HorizontalScrollView hs;
-        boolean z2;
-        TextView textView2;
-        String joinToString$default;
-        TextView textView3;
-        TextView textView4;
-        String str$default;
-        Iterator<Map.Entry<String, Pair<GxPage.Row, JSONObject>>> it;
-        if (this.vDownloader == null) {
-            return;
-        }
-        TextView textView5 = this.mapsErrorNote;
-        if (textView5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsErrorNote");
-            textView5 = null;
-        }
-        textView5.setText(this.mapsError);
-        TextView textView6 = this.mapsErrorNote;
-        if (textView6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsErrorNote");
-            textView6 = null;
-        }
-        textView6.setVisibility(this.mapsError.length() == 0 ? 8 : 0);
-        JSONObject st = this.mapsStatus;
-        JSONObject p = this.mapsProgress;
-        TextView textView7 = this.vDownloader;
-        if (textView7 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vDownloader");
-            textView7 = null;
-        }
-        textView7.setText(!this.mapsLoadingStatus ? isDownloading() ? st.optBoolean("cancelling") ? "Cancelling" : "Downloading" : "Idle" : "Checking...");
-        TextView textView8 = this.vSaved;
-        if (textView8 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vSaved");
-            textView8 = null;
-        }
-        textView8.setText(this.mapsLoadingStatus ? "Checking..." : String.valueOf(st.optInt("selectedCount", 0)));
-        Double valueOf = Double.valueOf(p.optDouble("estimatedDownloadBytes", 0.0d));
-        double it2 = valueOf.doubleValue();
-        if (!((Double.isInfinite(it2) || Double.isNaN(it2)) ? false : true)) {
-            valueOf = null;
-        }
-        double est2 = valueOf != null ? valueOf.doubleValue() : 0.0d;
-        TextView textView9 = this.vEstimate;
-        if (textView9 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vEstimate");
-            textView9 = null;
-        }
-        textView9.setText((getSelectionDirty() || est2 <= 0.0d) ? !this.selectedDraft.isEmpty() ? "Not yet available" : "Select regions" : "~" + gxBytes(est2) + " additional");
-        TextView textView10 = this.vLastUpdate;
-        if (textView10 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vLastUpdate");
-            textView = null;
-        } else {
-            textView = textView10;
-        }
-        TextView textView11 = textView;
-        String str$default2 = GxPage.str$default(this, st, "lastUpdate", null, 2, null);
-        if (str$default2.length() == 0) {
-            str$default2 = "Never";
-        }
-        textView11.setText(str$default2);
-        TextView textView12 = this.vStorage;
-        if (textView12 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("vStorage");
-            textView12 = null;
-        }
-        textView12.setText(st.optBoolean("storageKnown") ? gxBytes(st.optDouble("storageBytes", 0.0d)) : "Calculating…");
-        TextView textView13 = this.nOnroad;
-        if (textView13 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("nOnroad");
-            textView13 = null;
-        }
-        textView13.setVisibility(isOnroad() ? 0 : 8);
-        TextView textView14 = this.nSelDirty;
-        if (textView14 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("nSelDirty");
-            textView14 = null;
-        }
-        textView14.setVisibility(getSelectionDirty() ? 0 : 8);
-        TextView textView15 = this.nSchDirty;
-        if (textView15 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("nSchDirty");
-            textView15 = null;
-        }
-        textView15.setVisibility(getScheduleDirty() ? 0 : 8);
-        boolean canDownload = (this.mapsLoadingStatus || this.mapsActionBusy || isOnroad() || isDownloading() || this.selectedDraft.isEmpty()) ? false : true;
-        boolean canCancel = (this.mapsLoadingStatus || this.mapsActionBusy || !isDownloading()) ? false : true;
-        boolean canRemove = (this.mapsLoadingStatus || this.mapsActionBusy || isDownloading() || isOnroad() || !st.optBoolean("mapsPresent")) ? false : true;
-        LinearLayout linearLayout3 = this.mapsBar;
-        if (linearLayout3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
-            linearLayout3 = null;
-        }
-        View childAt = linearLayout3.getChildAt(0);
-        TextView b = childAt instanceof TextView ? (TextView) childAt : null;
-        if (b != null) {
-            b.setText(isDownloading() ? st.optBoolean("cancelling") ? "Cancelling..." : "Cancel Download" : "Download Maps");
-            setOn(b, canDownload || canCancel);
-            Unit unit = Unit.INSTANCE;
-            Unit unit2 = Unit.INSTANCE;
-        }
-        LinearLayout linearLayout4 = this.mapsBar;
-        if (linearLayout4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
-            linearLayout4 = null;
-        }
-        View childAt2 = linearLayout4.getChildAt(1);
-        setOn(childAt2 instanceof TextView ? (TextView) childAt2 : null, canRemove);
-        LinearLayout linearLayout5 = this.mapsBar;
-        if (linearLayout5 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
-            linearLayout5 = null;
-        }
-        View childAt3 = linearLayout5.getChildAt(2);
-        TextView b2 = childAt3 instanceof TextView ? (TextView) childAt3 : null;
-        if (b2 != null) {
-            b2.setText(this.mapsSavingSelection ? "Saving..." : "Save Selection");
-            setOn(b2, (this.mapsSavingSelection || this.mapsLoadingCatalog || !getSelectionDirty()) ? false : true);
-            Unit unit3 = Unit.INSTANCE;
-            Unit unit4 = Unit.INSTANCE;
-        }
-        LinearLayout linearLayout6 = this.mapsBar;
-        if (linearLayout6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
-            linearLayout6 = null;
-        }
-        View childAt4 = linearLayout6.getChildAt(3);
-        setOn(childAt4 instanceof TextView ? (TextView) childAt4 : null, getSelectionDirty() || getScheduleDirty());
-        LinearLayout linearLayout7 = this.mapsBar;
-        if (linearLayout7 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
-            linearLayout7 = null;
-        }
-        View childAt5 = linearLayout7.getChildAt(4);
-        setOn(childAt5 instanceof TextView ? (TextView) childAt5 : null, !this.selectedDraft.isEmpty());
-        boolean completed = p.optBoolean("completed");
-        boolean cancelled = p.optBoolean("cancelled");
-        if (!this.mapsLoadingStatus) {
-            if (isDownloading() || completed || cancelled) {
-                est = est2;
+        if (this.vDownloader != null) {
+            TextView var12 = this.mapsErrorNote;
+            TextView var11 = var12;
+            if (var12 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("mapsErrorNote");
+                var11 = null;
+            }
+
+            var11.setText(this.mapsError);
+            var12 = this.mapsErrorNote;
+            var11 = var12;
+            if (var12 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("mapsErrorNote");
+                var11 = null;
+            }
+
+            int var5;
+            if (this.mapsError.length() == 0) {
+                var5 = 1;
             } else {
-                est = est2;
+                var5 = 0;
             }
-            z = true;
-            showProgress = z;
-            linearLayout = this.progCard;
-            if (linearLayout == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("progCard");
-                linearLayout = null;
+
+            if ((var5 != 0)) {
+                var5 = 8;
+            } else {
+                var5 = 0;
             }
-            linearLayout.setVisibility(!showProgress ? 0 : 8);
-            if (!showProgress) {
-                Double valueOf2 = Double.valueOf(p.optDouble("percent", 0.0d));
-                double it3 = valueOf2.doubleValue();
-                if (!((Double.isInfinite(it3) || Double.isNaN(it3)) ? false : true)) {
-                    valueOf2 = null;
-                }
-                double pct = valueOf2 != null ? valueOf2.doubleValue() : 0.0d;
-                TextView textView16 = this.progTitle;
-                if (textView16 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("progTitle");
-                    textView16 = null;
-                }
-                textView16.setText((isDownloading() ? "Download Progress" : completed ? "Last Download" : cancelled ? "Download Cancelled" : "Download Estimate") + "  ·  " + Math.round(pct) + "%");
-                ProgressBar progressBar = this.progBar;
-                if (progressBar == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("progBar");
-                    progressBar = null;
-                }
-                setProgress(progressBar, pct);
-                TextView textView17 = this.pEstimate;
-                if (textView17 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pEstimate");
-                    textView17 = null;
-                }
-                textView17.setText("Estimate: " + (est > 0.0d ? "~" + gxBytes(est) + " additional storage" : "Storage estimate unavailable"));
-                double dl = p.optDouble("downloadedBytes", 0.0d);
-                TextView textView18 = this.pStored;
-                if (textView18 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pStored");
-                    textView18 = null;
-                }
-                textView18.setText("Stored: " + (dl > 0.0d ? gxBytes(dl) + " added storage" : "Storage reconciles after completion"));
-                int tf = p.optInt("totalFiles", 0);
-                TextView textView19 = this.pFiles;
-                if (textView19 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pFiles");
-                    textView19 = null;
-                }
-                textView19.setText("Files: " + (tf > 0 ? p.optInt("downloadedFiles", 0) + " / " + tf + " files" : "Waiting for map service..."));
-                double eta = p.optDouble("etaSeconds", 0.0d);
-                TextView textView20 = this.pEta;
-                if (textView20 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pEta");
-                    textView20 = null;
-                }
-                textView20.setText("ETA: " + ((!isDownloading() || eta <= 0.0d) ? "ETA unavailable until files start arriving" : "About " + gxDuration(eta) + " remaining"));
-                String loc = GxPage.str$default(this, p, "primaryLocation", null, 2, null);
-                TextView textView21 = this.pRegion;
-                if (textView21 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pRegion");
-                    textView21 = null;
-                }
-                textView21.setText("Current region: " + loc);
-                TextView textView22 = this.pRegion;
-                if (textView22 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("pRegion");
-                    textView22 = null;
-                }
-                textView22.setVisibility(loc.length() == 0 ? 8 : 0);
+
+            var11.setVisibility((((var5 != 0)) ? 1 : 0));
+            JSONObject var14 = this.mapsStatus;
+            JSONObject var13 = this.mapsProgress;
+            var11 = this.vDownloader;
+            var12 = var11;
+            if (var11 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("vDownloader");
+                var12 = null;
             }
-            function1 = this.paintSchedule;
-            if (function1 != null) {
-                List $this$indexOfFirst$iv = this.scheduleOptions;
-                int index$iv = 0;
-                Iterator<Pair<String, String>> it4 = $this$indexOfFirst$iv.iterator();
-                while (true) {
-                    if (!it4.hasNext()) {
-                        index$iv = -1;
-                        break;
-                    }
-                    Pair item$iv = it4.next();
-                    if (Intrinsics.areEqual(item$iv.getFirst(), this.scheduleDraft)) {
-                        break;
+
+            CharSequence var48;
+            if (this.mapsLoadingStatus) {
+                var48 = "Checking...";
+            } else {
+                String var49;
+                if (this.isDownloading()) {
+                    if (var14.optBoolean("cancelling")) {
+                        var49 = "Cancelling";
                     } else {
-                        index$iv++;
+                        var49 = "Downloading";
                     }
+                } else {
+                    var49 = "Idle";
                 }
-                function1.invoke(Integer.valueOf(index$iv));
-                Unit unit5 = Unit.INSTANCE;
+
+                var48 = var49;
             }
-            linearLayout2 = this.scheduleBox;
-            if (linearLayout2 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("scheduleBox");
-                linearLayout2 = null;
+
+            var12.setText(var48);
+            var12 = this.vSaved;
+            var11 = var12;
+            if (var12 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("vSaved");
+                var11 = null;
             }
-            View childAt6 = linearLayout2.getChildAt(1);
-            hs = !(childAt6 instanceof HorizontalScrollView) ? (HorizontalScrollView) childAt6 : null;
-            if (hs == null) {
-                z2 = false;
-                View childAt7 = hs.getChildAt(0);
-                LinearLayout linearLayout8 = childAt7 instanceof LinearLayout ? (LinearLayout) childAt7 : null;
-                View childAt8 = linearLayout8 != null ? linearLayout8.getChildAt(0) : null;
-                TextView b3 = childAt8 instanceof TextView ? (TextView) childAt8 : null;
-                if (b3 != null) {
-                    b3.setText(this.mapsSavingSchedule ? "Applying..." : "Apply");
-                    setOn(b3, !this.mapsSavingSchedule && getScheduleDirty());
-                    Unit unit6 = Unit.INSTANCE;
-                    Unit unit7 = Unit.INSTANCE;
-                }
+
+            CharSequence var110;
+            if (this.mapsLoadingStatus) {
+                var110 = "Checking...";
             } else {
-                z2 = false;
+                var110 = String.valueOf(var14.optInt("selectedCount", 0));
             }
-            textView2 = this.selRegionsText;
-            if (textView2 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("selRegionsText");
-                textView2 = null;
+
+            var11.setText(var110);
+            Double var51 = var13.optDouble("estimatedDownloadBytes", 0.0);
+            double var1 = var51.doubleValue();
+            int var22;
+            if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
+                var22 = 1;
+            } else {
+                var22 = 0;
             }
-            if (this.selectedDraft.isEmpty()) {
-                Iterable $this$map$iv = this.selectedDraft;
-                Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-                for (Object item$iv$iv : $this$map$iv) {
-                    String it5 = (String) item$iv$iv;
-                    String str = this.tokenLabels.get(it5);
-                    if (str != null) {
-                        it5 = str;
+
+            if (!var22) {
+                var51 = null;
+            }
+
+            if (var51 != null) {
+                var1 = var51;
+            } else {
+                var1 = 0.0;
+            }
+
+            var11 = this.vEstimate;
+            var12 = var11;
+            if (var11 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("vEstimate");
+                var12 = null;
+            }
+
+            String var53;
+            if (!this.getSelectionDirty() && var1 > 0.0) {
+                String var54 = this.gxBytes(var1);
+                var53 = "~" + var54 + " additional";
+            } else if (!this.selectedDraft.isEmpty()) {
+                var53 = "Not yet available";
+            } else {
+                var53 = "Select regions";
+            }
+
+            CharSequence var55 = var53;
+            var12.setText(var55);
+            var11 = this.vLastUpdate;
+            if (var11 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("vLastUpdate");
+                var11 = null;
+            }
+
+            var12 = GxPage.str$default(this, var14, "lastUpdate", null, 2, null);
+            if (var12.length() == 0) {
+                var22 = (((boolean)true) ? 1 : 0);
+            } else {
+                var22 = (((boolean)false) ? 1 : 0);
+            }
+
+            if ((var22 != 0)) {
+                var12 = "Never";
+            }
+
+            var11.setText((CharSequence)var12);
+            var12 = this.vStorage;
+            var11 = var12;
+            if (var12 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("vStorage");
+                var11 = null;
+            }
+
+            String var114;
+            if (var14.optBoolean("storageKnown")) {
+                var114 = this.gxBytes(var14.optDouble("storageBytes", 0.0));
+            } else {
+                var114 = "Calculating…";
+            }
+
+            var11.setText(var114);
+            var12 = this.nOnroad;
+            var11 = var12;
+            if (var12 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("nOnroad");
+                var11 = null;
+            }
+
+            if (this.isOnroad()) {
+                var22 = 0;
+            } else {
+                var22 = 8;
+            }
+
+            var11.setVisibility((((var22 != 0)) ? 1 : 0));
+            var12 = this.nSelDirty;
+            var11 = var12;
+            if (var12 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("nSelDirty");
+                var11 = null;
+            }
+
+            if (this.getSelectionDirty()) {
+                var22 = 0;
+            } else {
+                var22 = 8;
+            }
+
+            var11.setVisibility((((var22 != 0)) ? 1 : 0));
+            var12 = this.nSchDirty;
+            var11 = var12;
+            if (var12 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("nSchDirty");
+                var11 = null;
+            }
+
+            if (this.getScheduleDirty()) {
+                var22 = 0;
+            } else {
+                var22 = 8;
+            }
+
+            var11.setVisibility((((var22 != 0)) ? 1 : 0));
+            int var27;
+            if (!this.mapsLoadingStatus && !this.mapsActionBusy && !this.isOnroad() && !this.isDownloading() && !this.selectedDraft.isEmpty()) {
+                var27 = 1;
+            } else {
+                var27 = 0;
+            }
+
+            int var6;
+            if (!this.mapsLoadingStatus && !this.mapsActionBusy && this.isDownloading()) {
+                var6 = 1;
+            } else {
+                var6 = 0;
+            }
+
+            boolean var7;
+            if (!this.mapsLoadingStatus && !this.mapsActionBusy && !this.isDownloading() && !this.isOnroad() && var14.optBoolean("mapsPresent")) {
+                var7 = true;
+            } else {
+                var7 = false;
+            }
+
+            LinearLayout var118 = this.mapsBar;
+            LinearLayout var61 = var118;
+            if (var118 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
+                var61 = null;
+            }
+
+            View var62 = var61.getChildAt(0);
+            if (var62 instanceof TextView) {
+                var12 = (TextView)var62;
+            } else {
+                var12 = null;
+            }
+
+            if (var12 != null) {
+                String var63;
+                if (this.isDownloading()) {
+                    if (var14.optBoolean("cancelling")) {
+                        var63 = "Cancelling...";
+                    } else {
+                        var63 = "Cancel Download";
                     }
-                    destination$iv$iv.add(it5);
+                } else {
+                    var63 = "Download Maps";
                 }
-                Iterable $this$sortedBy$iv = (List) destination$iv$iv;
-                joinToString$default = CollectionsKt.joinToString(CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.GxNavigationPage$paintMaps$$inlined$sortedBy$1
-                    /* JADX WARN: Multi-variable type inference failed */
-                    @Override // java.util.Comparator
-                    public final int compare(T t, T t2) {
-                        String it6 = (String) t;
-                        String lowerCase = it6.toLowerCase(Locale.ROOT);
-                        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                        String it7 = (String) t2;
-                        String lowerCase2 = it7.toLowerCase(Locale.ROOT);
-                        Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
-                        return ComparisonsKt.compareValues(lowerCase, lowerCase2);
+
+                var12.setText(var63);
+                boolean var8;
+                if (!var27 && !var6) {
+                    var8 = false;
+                } else {
+                    var8 = true;
+                }
+
+                this.setOn(var12, var8);
+                Unit var64 = Unit.INSTANCE;
+                Unit var65 = Unit.INSTANCE;
+            }
+
+            LinearLayout var120 = this.mapsBar;
+            LinearLayout var66 = var120;
+            if (var120 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
+                var66 = null;
+            }
+
+            View var67 = var66.getChildAt(1);
+            if (var67 instanceof TextView) {
+                var11 = (TextView)var67;
+            } else {
+                var11 = null;
+            }
+
+            this.setOn(var11, var7);
+            LinearLayout var121 = this.mapsBar;
+            LinearLayout var69 = var121;
+            if (var121 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
+                var69 = null;
+            }
+
+            View var70 = var69.getChildAt(2);
+            if (var70 instanceof TextView) {
+                var11 = (TextView)var70;
+            } else {
+                var11 = null;
+            }
+
+            if (var11 != null) {
+                String var122;
+                if (this.mapsSavingSelection) {
+                    var122 = "Saving...";
+                } else {
+                    var122 = "Save Selection";
+                }
+
+                var11.setText(var122);
+                if (!this.mapsSavingSelection && !this.mapsLoadingCatalog && this.getSelectionDirty()) {
+                    var7 = true;
+                } else {
+                    var7 = false;
+                }
+
+                this.setOn(var11, var7);
+                Unit var72 = Unit.INSTANCE;
+                Unit var73 = Unit.INSTANCE;
+            }
+
+            LinearLayout var123 = this.mapsBar;
+            LinearLayout var74 = var123;
+            if (var123 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
+                var74 = null;
+            }
+
+            View var75 = var74.getChildAt(3);
+            if (var75 instanceof TextView) {
+                var11 = (TextView)var75;
+            } else {
+                var11 = null;
+            }
+
+            if (!this.getSelectionDirty() && !this.getScheduleDirty()) {
+                var7 = false;
+            } else {
+                var7 = true;
+            }
+
+            this.setOn(var11, var7);
+            LinearLayout var124 = this.mapsBar;
+            LinearLayout var77 = var124;
+            if (var124 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("mapsBar");
+                var77 = null;
+            }
+
+            View var78 = var77.getChildAt(4);
+            if (var78 instanceof TextView) {
+                var11 = (TextView)var78;
+            } else {
+                var11 = null;
+            }
+
+            this.setOn(var11, this.selectedDraft.isEmpty() ^ true);
+            boolean var45 = var13.optBoolean("completed");
+            var7 = var13.optBoolean("cancelled");
+            if (this.mapsLoadingStatus || !this.isDownloading() && !var45 && !var7 && !(var1 > 0.0)) {
+                var27 = (((boolean)false) ? 1 : 0);
+            } else {
+                var27 = (((boolean)true) ? 1 : 0);
+            }
+
+            LinearLayout var125 = this.progCard;
+            LinearLayout var80 = var125;
+            if (var125 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("progCard");
+                var80 = null;
+            }
+
+            if ((var27 != 0)) {
+                var6 = (byte)0;
+            } else {
+                var6 = (byte)8;
+            }
+
+            var80.setVisibility((((var6 != 0)) ? 1 : 0));
+            if ((var27 != 0)) {
+                Double var81 = var13.optDouble("percent", 0.0);
+                double var3 = var81.doubleValue();
+                if (!Double.isInfinite(var3) && !Double.isNaN(var3)) {
+                    var27 = (((boolean)true) ? 1 : 0);
+                } else {
+                    var27 = (((boolean)false) ? 1 : 0);
+                }
+
+                if (!var27) {
+                    var81 = null;
+                }
+
+                if (var81 != null) {
+                    var3 = var81;
+                } else {
+                    var3 = 0.0;
+                }
+
+                var11 = this.progTitle;
+                var12 = var11;
+                if (var11 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("progTitle");
+                    var12 = null;
+                }
+
+                String var83;
+                if (this.isDownloading()) {
+                    var83 = "Download Progress";
+                } else if (var45) {
+                    var83 = "Last Download";
+                } else if (var7) {
+                    var83 = "Download Cancelled";
+                } else {
+                    var83 = "Download Estimate";
+                }
+
+                long var9 = Math.round(var3);
+                var12.setText(var83 + "  ·  " + var9 + "%");
+                ProgressBar var127 = this.progBar;
+                ProgressBar var84 = var127;
+                if (var127 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("progBar");
+                    var84 = null;
+                }
+
+                this.setProgress(var84, var3);
+                var12 = this.pEstimate;
+                var11 = var12;
+                if (var12 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pEstimate");
+                    var11 = null;
+                }
+
+                String var130;
+                if (var1 > 0.0) {
+                    String var129 = this.gxBytes(var1);
+                    var130 = "~" + var129 + " additional storage";
+                } else {
+                    var130 = "Storage estimate unavailable";
+                }
+
+                var11.setText("Estimate: " + var130);
+                var1 = var13.optDouble("downloadedBytes", 0.0);
+                var12 = this.pStored;
+                var11 = var12;
+                if (var12 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pStored");
+                    var11 = null;
+                }
+
+                String var133;
+                if (var1 > 0.0) {
+                    String var132 = this.gxBytes(var1);
+                    var133 = var132 + " added storage";
+                } else {
+                    var133 = "Storage reconciles after completion";
+                }
+
+                var11.setText("Stored: " + var133);
+                var6 = var13.optInt("totalFiles", 0);
+                var12 = this.pFiles;
+                var11 = var12;
+                if (var12 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pFiles");
+                    var11 = null;
+                }
+
+                String var135;
+                if (var6 > 0) {
+                    var27 = var13.optInt("downloadedFiles", 0);
+                    var135 = var27 + " / " + var6 + " files";
+                } else {
+                    var135 = "Waiting for map service...";
+                }
+
+                var11.setText("Files: " + var135);
+                var1 = var13.optDouble("etaSeconds", 0.0);
+                var12 = this.pEta;
+                var11 = var12;
+                if (var12 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pEta");
+                    var11 = null;
+                }
+
+                String var137;
+                if (this.isDownloading() && var1 > 0.0) {
+                    String var138 = this.gxDuration(var1);
+                    var137 = "About " + var138 + " remaining";
+                } else {
+                    var137 = "ETA unavailable until files start arriving";
+                }
+
+                var11.setText("ETA: " + var137);
+                String var156 = GxPage.str$default(this, var13, "primaryLocation", null, 2, null);
+                var12 = this.pRegion;
+                var11 = var12;
+                if (var12 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pRegion");
+                    var11 = null;
+                }
+
+                var11.setText("Current region: " + var156);
+                var12 = this.pRegion;
+                var11 = var12;
+                if (var12 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("pRegion");
+                    var11 = null;
+                }
+
+                int var31;
+                if (var156.length() == 0) {
+                    var31 = 1;
+                } else {
+                    var31 = 0;
+                }
+
+                if ((var31 != 0)) {
+                    var31 = 8;
+                } else {
+                    var31 = 0;
+                }
+
+                var11.setVisibility((((var31 != 0)) ? 1 : 0));
+            }
+
+            Function1 var91 = this.paintSchedule;
+            if (var91 != null) {
+                List var141 = this.scheduleOptions;
+                var27 = 0;
+                Iterator var142 = var141.iterator();
+
+                while (true) {
+                    if (!var142.hasNext()) {
+                        var27 = -1;
+                        break;
+                    }
+
+                    if (Intrinsics.areEqual(((Pair)var142.next()).getFirst(), this.scheduleDraft)) {
+                        break;
+                    }
+
+                    var27++;
+                }
+
+                var91.invoke(var27);
+                Unit var92 = Unit.INSTANCE;
+            }
+
+            LinearLayout var143 = this.scheduleBox;
+            LinearLayout var93 = var143;
+            if (var143 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("scheduleBox");
+                var93 = null;
+            }
+
+            View var94 = var93.getChildAt(1);
+            HorizontalScrollView var95;
+            if (var94 instanceof HorizontalScrollView) {
+                var95 = (HorizontalScrollView)var94;
+            } else {
+                var95 = null;
+            }
+
+            if (var95 != null) {
+                View var96 = var95.getChildAt(0);
+                LinearLayout var97;
+                if (var96 instanceof LinearLayout) {
+                    var97 = (LinearLayout)var96;
+                } else {
+                    var97 = null;
+                }
+
+                View var98;
+                if (var97 != null) {
+                    var98 = var97.getChildAt(0);
+                } else {
+                    var98 = null;
+                }
+
+                if (var98 instanceof TextView) {
+                    var11 = (TextView)var98;
+                } else {
+                    var11 = null;
+                }
+
+                if (var11 != null) {
+                    String var144;
+                    if (this.mapsSavingSchedule) {
+                        var144 = "Applying...";
+                    } else {
+                        var144 = "Apply";
+                    }
+
+                    var11.setText(var144);
+                    if (!this.mapsSavingSchedule && this.getScheduleDirty()) {
+                        var7 = true;
+                    } else {
+                        var7 = false;
+                    }
+
+                    this.setOn(var11, var7);
+                    Unit var100 = Unit.INSTANCE;
+                    Unit var101 = Unit.INSTANCE;
+                }
+            }
+
+            var12 = this.selRegionsText;
+            var11 = var12;
+            if (var12 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("selRegionsText");
+                var11 = null;
+            }
+
+            CharSequence var146;
+            if (this.selectedDraft.isEmpty()) {
+                var146 = "No regions selected.";
+            } else {
+                Iterable var147 = this.selectedDraft;
+                var var15 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var147, 10));
+
+                for (String var157 : var147) {
+                    String var148 = this.tokenLabels.get(var157);
+                    if (var148 == null) {
+                        var148 = var157;
+                    }
+
+                    var15.add(var148);
+                }
+
+                List var149 = var15;
+                Iterable var150 = var149;
+                var146 = CollectionsKt.joinToString(CollectionsKt.sortedWith(var150, new Comparator() {
+                    @Override
+                    public final int compare(T var1, T var2) {
+                        var1 = var1.toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
+                        Comparable var4 = var1;
+                        var2 = var2.toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
+                        return ComparisonsKt.compareValues(var4, var2);
                     }
                 }), ", ", "", "", -1, "...", null);
             }
-            textView2.setText(joinToString$default);
-            textView3 = this.selRegionsText;
-            if (textView3 == null) {
+
+            var11.setText(var146);
+            var12 = this.selRegionsText;
+            var11 = var12;
+            if (var12 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("selRegionsText");
-                textView3 = null;
+                var11 = null;
             }
-            textView3.setTextColor(!this.selectedDraft.isEmpty() ? CarUi.Companion.getDIM() : CarUi.Companion.getTEXT());
-            textView4 = this.schedNote;
-            if (textView4 == null) {
+
+            if (this.selectedDraft.isEmpty()) {
+                var27 = CarUi.Companion.getDIM();
+            } else {
+                var27 = CarUi.Companion.getTEXT();
+            }
+
+            var11.setTextColor(var27);
+            var12 = this.schedNote;
+            var11 = var12;
+            if (var12 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("schedNote");
-                textView4 = null;
+                var11 = null;
             }
-            str$default = GxPage.str$default(this, st, "scheduleLabel", null, 2, null);
-            if (str$default.length() != 0 ? true : z2) {
-                str$default = "Monthly";
+
+            var12 = GxPage.str$default(this, var14, "scheduleLabel", null, 2, null);
+            int var35;
+            if (var12.length() == 0) {
+                var35 = 1;
+            } else {
+                var35 = 0;
             }
-            textView4.setText("Saved schedule: " + ((Object) str$default) + " · Draft regions: " + this.selectedDraft.size());
-            for (Map.Entry<String, Switch> entry : this.regionSwitches.entrySet()) {
-                String tok = entry.getKey();
-                Switch sw = entry.getValue();
-                boolean on = this.selectedDraft.contains(tok);
-                if (sw.isChecked() != on) {
-                    sw.setChecked(on);
+
+            if ((var35 != 0)) {
+                var12 = "Monthly";
+            }
+
+            var35 = this.selectedDraft.size();
+            var11.setText("Saved schedule: " + var12 + " · Draft regions: " + var35);
+
+            for (java.util.Map.Entry var158 : this.regionSwitches.entrySet()) {
+                String var154 = (String)var158.getKey();
+                Switch var159 = (Switch)var158.getValue();
+                var7 = this.selectedDraft.contains(var154);
+                if (var159.isChecked() != var7) {
+                    var159.setChecked(var7);
                 }
             }
-            it = this.groupRows.entrySet().iterator();
-            while (it.hasNext()) {
-                Pair pr = it.next().getValue();
-                pr.getFirst().setDesc(groupSelectedCount(pr.getSecond()) + " selected");
+
+            Iterator var160 = this.groupRows.entrySet().iterator();
+
+            while (var160.hasNext()) {
+                Pair var106 = (Pair)((java.util.Map.Entry)var160.next()).getValue();
+                GxPage.Row var155 = (GxPage.Row)var106.getFirst();
+                var35 = this.groupSelectedCount((JSONObject)var106.getSecond());
+                var155.setDesc(var35 + " selected");
             }
-        }
-        est = est2;
-        z = false;
-        showProgress = z;
-        linearLayout = this.progCard;
-        if (linearLayout == null) {
-        }
-        linearLayout.setVisibility(!showProgress ? 0 : 8);
-        if (!showProgress) {
-        }
-        function1 = this.paintSchedule;
-        if (function1 != null) {
-        }
-        linearLayout2 = this.scheduleBox;
-        if (linearLayout2 == null) {
-        }
-        View childAt62 = linearLayout2.getChildAt(1);
-        if (!(childAt62 instanceof HorizontalScrollView)) {
-        }
-        if (hs == null) {
-        }
-        textView2 = this.selRegionsText;
-        if (textView2 == null) {
-        }
-        if (this.selectedDraft.isEmpty()) {
-        }
-        textView2.setText(joinToString$default);
-        textView3 = this.selRegionsText;
-        if (textView3 == null) {
-        }
-        textView3.setTextColor(!this.selectedDraft.isEmpty() ? CarUi.Companion.getDIM() : CarUi.Companion.getTEXT());
-        textView4 = this.schedNote;
-        if (textView4 == null) {
-        }
-        str$default = GxPage.str$default(this, st, "scheduleLabel", null, 2, null);
-        if (str$default.length() != 0 ? true : z2) {
-        }
-        textView4.setText("Saved schedule: " + ((Object) str$default) + " · Draft regions: " + this.selectedDraft.size());
-        while (r4.hasNext()) {
-        }
-        it = this.groupRows.entrySet().iterator();
-        while (it.hasNext()) {
         }
     }
 
@@ -3328,262 +3790,264 @@ public final class GxNavigationPage extends GxPage {
         return count$iv;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:41:0x0161  */
-    /* JADX WARN: Removed duplicated region for block: B:44:0x0164 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     public final void renderCatalog() {
-        LinearLayout linearLayout;
-        Iterable emptyList;
-        Iterator<? extends JSONObject> it;
-        List emptyList2;
-        Iterable emptyList3;
-        Iterable $this$mapNotNullTo$iv$iv;
-        Iterable $this$filter$iv;
-        String str;
-        int $i$f$mapNotNullTo;
-        Iterable $this$forEach$iv$iv$iv;
-        boolean z;
-        LinearLayout linearLayout2;
-        if (this.catalogBox == null) {
-            return;
-        }
-        LinearLayout linearLayout3 = this.catalogBox;
-        if (linearLayout3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
-            linearLayout3 = null;
-        }
-        linearLayout3.removeAllViews();
-        this.regionSwitches.clear();
-        this.groupRows.clear();
-        if (this.mapsLoadingCatalog) {
-            LinearLayout linearLayout4 = this.catalogBox;
-            if (linearLayout4 == null) {
+        List var48 = null; // declarations Vineflower left out
+        if (this.catalogBox != null) {
+            LinearLayout var6 = this.catalogBox;
+            LinearLayout var5 = var6;
+            if (var6 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
-                linearLayout2 = null;
-            } else {
-                linearLayout2 = linearLayout4;
+                var5 = null;
             }
-            linearLayout2.addView(empty("Loading map catalog..."));
-            return;
-        }
-        String q = StringsKt.trim((CharSequence) this.mapsSearch).toString().toLowerCase(Locale.ROOT);
-        String str2 = "toLowerCase(...)";
-        Intrinsics.checkNotNullExpressionValue(q, "toLowerCase(...)");
-        boolean any = false;
-        Iterator<? extends JSONObject> it2 = this.mapsSections.iterator();
-        while (it2.hasNext()) {
-            JSONObject s = it2.next();
-            JSONArray optJSONArray = s.optJSONArray("groups");
-            if (optJSONArray == null || (emptyList = objects(optJSONArray)) == null) {
-                emptyList = CollectionsKt.emptyList();
-            }
-            Iterable $this$mapNotNull$iv = emptyList;
-            int $i$f$mapNotNull = 0;
-            Collection destination$iv$iv = new ArrayList();
-            Iterable $this$mapNotNullTo$iv$iv2 = $this$mapNotNull$iv;
-            int $i$f$mapNotNullTo2 = 0;
-            Iterable $this$forEach$iv$iv$iv2 = $this$mapNotNullTo$iv$iv2;
-            Iterator it3 = $this$forEach$iv$iv$iv2.iterator();
-            while (true) {
-                it = it2;
-                if (!it3.hasNext()) {
-                    break;
-                }
-                Object element$iv$iv$iv = it3.next();
-                JSONObject g = (JSONObject) element$iv$iv$iv;
-                JSONArray optJSONArray2 = g.optJSONArray("regions");
-                if (optJSONArray2 == null || (emptyList3 = objects(optJSONArray2)) == null) {
-                    emptyList3 = CollectionsKt.emptyList();
-                }
-                Iterable $this$filter$iv2 = emptyList3;
-                Iterable $this$mapNotNull$iv2 = $this$mapNotNull$iv;
-                Collection destination$iv$iv2 = new ArrayList();
-                for (Object element$iv$iv : $this$filter$iv2) {
-                    int $i$f$mapNotNull2 = $i$f$mapNotNull;
-                    JSONObject r = (JSONObject) element$iv$iv;
-                    if (q.length() == 0) {
-                        $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv2;
-                        $this$filter$iv = $this$filter$iv2;
-                        str = str2;
-                        $i$f$mapNotNullTo = $i$f$mapNotNullTo2;
-                        $this$forEach$iv$iv$iv = $this$forEach$iv$iv$iv2;
-                    } else {
-                        $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv2;
-                        $this$filter$iv = $this$filter$iv2;
-                        $i$f$mapNotNullTo = $i$f$mapNotNullTo2;
-                        $this$forEach$iv$iv$iv = $this$forEach$iv$iv$iv2;
-                        String lowerCase = (GxPage.str$default(this, r, "label", null, 2, null) + " " + GxPage.str$default(this, r, "code", null, 2, null) + " " + GxPage.str$default(this, r, "token", null, 2, null)).toLowerCase(Locale.ROOT);
-                        Intrinsics.checkNotNullExpressionValue(lowerCase, str2);
-                        str = str2;
-                        if (!StringsKt.contains((CharSequence) lowerCase, (CharSequence) q, false)) {
-                            z = false;
-                            if (!z) {
-                                destination$iv$iv2.add(element$iv$iv);
-                            }
-                            str2 = str;
-                            $i$f$mapNotNull = $i$f$mapNotNull2;
-                            $this$forEach$iv$iv$iv2 = $this$forEach$iv$iv$iv;
-                            $this$mapNotNullTo$iv$iv2 = $this$mapNotNullTo$iv$iv;
-                            $this$filter$iv2 = $this$filter$iv;
-                            $i$f$mapNotNullTo2 = $i$f$mapNotNullTo;
-                        }
-                    }
-                    z = true;
-                    if (!z) {
-                    }
-                    str2 = str;
-                    $i$f$mapNotNull = $i$f$mapNotNull2;
-                    $this$forEach$iv$iv$iv2 = $this$forEach$iv$iv$iv;
-                    $this$mapNotNullTo$iv$iv2 = $this$mapNotNullTo$iv$iv;
-                    $this$filter$iv2 = $this$filter$iv;
-                    $i$f$mapNotNullTo2 = $i$f$mapNotNullTo;
-                }
-                int $i$f$mapNotNull3 = $i$f$mapNotNull;
-                Iterable $this$mapNotNullTo$iv$iv3 = $this$mapNotNullTo$iv$iv2;
-                String str3 = str2;
-                int $i$f$mapNotNullTo3 = $i$f$mapNotNullTo2;
-                Iterable $this$forEach$iv$iv$iv3 = $this$forEach$iv$iv$iv2;
-                List regs = (List) destination$iv$iv2;
-                Pair pair = regs.isEmpty() ? null : TuplesKt.to(g, regs);
-                if (pair != null) {
-                    destination$iv$iv.add(pair);
-                }
-                str2 = str3;
-                it2 = it;
-                $this$mapNotNull$iv = $this$mapNotNull$iv2;
-                $i$f$mapNotNull = $i$f$mapNotNull3;
-                $this$forEach$iv$iv$iv2 = $this$forEach$iv$iv$iv3;
-                $this$mapNotNullTo$iv$iv2 = $this$mapNotNullTo$iv$iv3;
-                $i$f$mapNotNullTo2 = $i$f$mapNotNullTo3;
-            }
-            String str4 = str2;
-            List<Pair> groups = (List) destination$iv$iv;
-            if (groups.isEmpty()) {
-                str2 = str4;
-                it2 = it;
-            } else {
-                String str5 = GxPage.str$default(this, s, "title", null, 2, null) + "  (" + groups.size() + ")";
-                LinearLayout linearLayout5 = this.catalogBox;
-                if (linearLayout5 == null) {
+
+            var5.removeAllViews();
+            this.regionSwitches.clear();
+            this.groupRows.clear();
+            if (this.mapsLoadingCatalog) {
+                var5 = this.catalogBox;
+                if (var5 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
-                    linearLayout5 = null;
+                    var5 = null;
                 }
-                header(str5, linearLayout5);
-                for (Pair pair2 : groups) {
-                    JSONObject g2 = (JSONObject) pair2.component1();
-                    List<JSONObject> regs2 = (List) pair2.component2();
-                    final String key = GxPage.str$default(this, s, "key", null, 2, null) + ":" + GxPage.str$default(this, g2, "key", null, 2, null);
-                    boolean open = (q.length() > 0) || this.expandedGroups.contains(key);
-                    GxNavigationPage gxNavigationPage = this;
-                    String str$default = GxPage.str$default(this, g2, "title", null, 2, null);
-                    String str6 = groupSelectedCount(g2) + " selected";
-                    LinearLayout linearLayout6 = this.catalogBox;
-                    if (linearLayout6 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
-                        linearLayout6 = null;
+
+                var5.addView((View)this.empty("Loading map catalog..."));
+            } else {
+                String var13 = StringsKt.trim(this.mapsSearch).toString().toLowerCase(Locale.ROOT);
+                String var29 = "toLowerCase(...)";
+                Intrinsics.checkNotNullExpressionValue(var13, "toLowerCase(...)");
+                int var1 = 0;
+
+                for (JSONObject var12 : this.mapsSections) {
+                    List var34;
+                    label122: {
+                        JSONArray var7 = var12.optJSONArray("groups");
+                        if (var7 != null) {
+                            List var8 = this.objects(var7);
+                            var34 = var8;
+                            if (var8 != null) {
+                                break label122;
+                            }
+                        }
+
+                        var34 = CollectionsKt.emptyList();
                     }
-                    GxPage.Row r2 = GxPage.row$default(gxNavigationPage, str$default, str6, linearLayout6, 0, 8, null);
-                    this.groupRows.put(key, TuplesKt.to(r2, g2));
-                    final Function0 toggleOpen = new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda17
-                        @Override // kotlin.jvm.functions.Function0
-                        public final Object invoke() {
-                            Unit renderCatalog$lambda$132;
-                            renderCatalog$lambda$132 = GxNavigationPage.renderCatalog$lambda$132(GxNavigationPage.this, key);
-                            return renderCatalog$lambda$132;
-                        }
-                    };
-                    if (q.length() == 0) {
-                        clickable(r2, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda18
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit renderCatalog$lambda$133;
-                                renderCatalog$lambda$133 = GxNavigationPage.renderCatalog$lambda$133(toggleOpen);
-                                return renderCatalog$lambda$133;
-                            }
-                        });
-                        GxPage.Row.button$default(r2, open ? "Hide" : "Show", false, new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda19
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit renderCatalog$lambda$134;
-                                renderCatalog$lambda$134 = GxNavigationPage.renderCatalog$lambda$134(toggleOpen);
-                                return renderCatalog$lambda$134;
-                            }
-                        }, 2, null);
-                    }
-                    if (open) {
-                        LinearLayout $this$renderCatalog_u24lambda_u24135 = new LinearLayout(getAct());
-                        $this$renderCatalog_u24lambda_u24135.setOrientation(1);
-                        $this$renderCatalog_u24lambda_u24135.setPadding(getUi().dp(28), 0, 0, getUi().dp(8));
-                        LinearLayout linearLayout7 = this.catalogBox;
-                        if (linearLayout7 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
-                            linearLayout7 = null;
-                        }
-                        linearLayout7.addView($this$renderCatalog_u24lambda_u24135, new LinearLayout.LayoutParams(-1, -2));
-                        JSONArray optJSONArray3 = g2.optJSONArray("regions");
-                        if (optJSONArray3 == null || (emptyList2 = objects(optJSONArray3)) == null) {
-                            emptyList2 = CollectionsKt.emptyList();
-                        }
-                        final List allRegs = emptyList2;
-                        boolean z2 = true;
-                        GxPage.buttons$default(this, new Pair[]{TuplesKt.to("Select All", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda20
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit renderCatalog$lambda$136;
-                                renderCatalog$lambda$136 = GxNavigationPage.renderCatalog$lambda$136(allRegs, this);
-                                return renderCatalog$lambda$136;
-                            }
-                        }), TuplesKt.to("Clear", new Function0() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda21
-                            @Override // kotlin.jvm.functions.Function0
-                            public final Object invoke() {
-                                Unit renderCatalog$lambda$137;
-                                renderCatalog$lambda$137 = GxNavigationPage.renderCatalog$lambda$137(allRegs, this);
-                                return renderCatalog$lambda$137;
-                            }
-                        })}, $this$renderCatalog_u24lambda_u24135, false, 4, null);
-                        for (JSONObject reg : regs2) {
-                            final String tok = GxPage.str$default(this, reg, "token", null, 2, null);
-                            String str$default2 = GxPage.str$default(this, reg, "label", null, 2, null);
-                            String key2 = GxPage.str$default(this, reg, "code", null, 2, null);
-                            if (key2.length() == 0 ? z2 : false) {
-                                key2 = null;
-                            }
-                            Switch sw = toggle(str$default2, key2, this.selectedDraft.contains(tok), $this$renderCatalog_u24lambda_u24135, new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda23
-                                @Override // kotlin.jvm.functions.Function1
-                                public final Object invoke(Object obj) {
-                                    Unit renderCatalog$lambda$139;
-                                    renderCatalog$lambda$139 = GxNavigationPage.renderCatalog$lambda$139(GxNavigationPage.this, tok, ((Boolean) obj).booleanValue());
-                                    return renderCatalog$lambda$139;
+
+                    Iterable var10 = var34;
+                    boolean var4 = false;
+                    var var15 = new ArrayList();
+                    Iterable var9 = var10;
+                    boolean var3 = false;
+
+                    for (JSONObject var16 : var10) {
+                        List var39;
+                        label130: {
+                            JSONArray var38 = var16.optJSONArray("regions");
+                            if (var38 != null) {
+                                List var11 = this.objects(var38);
+                                var39 = var11;
+                                if (var11 != null) {
+                                    break label130;
                                 }
-                            }).component2();
-                            this.regionSwitches.put(tok, sw);
-                            r2 = r2;
-                            key = key;
-                            g2 = g2;
-                            s = s;
-                            z2 = true;
+                            }
+
+                            var39 = CollectionsKt.emptyList();
                         }
+
+                        Iterable var58 = var39;
+                        var var18 = new ArrayList();
+                        Iterator var17 = var58.iterator();
+                        String var40 = var29;
+
+                        while (var17.hasNext()) {
+                            var9 = (Iterable)var17.next();
+                            JSONObject var21 = (JSONObject)var9;
+                            boolean var2;
+                            if (var13.length() == 0) {
+                                var2 = true;
+                            } else {
+                                var2 = false;
+                            }
+
+                            label140: {
+                                if (!var2) {
+                                    String var19 = GxPage.str$default(this, var21, "label", null, 2, null);
+                                    String var20 = GxPage.str$default(this, var21, "code", null, 2, null);
+                                    String var80 = GxPage.str$default(this, var21, "token", null, 2, null);
+                                    var19 = (var19 + " " + var20 + " " + var80).toLowerCase(Locale.ROOT);
+                                    Intrinsics.checkNotNullExpressionValue(var19, var40);
+                                    if (!StringsKt.contains(var19, var13, false)) {
+                                        var2 = false;
+                                        break label140;
+                                    }
+                                }
+
+                                var2 = true;
+                            }
+
+                            if (var2) {
+                                var18.add(var9);
+                            }
+                        }
+
+                        List var51 = var18;
+                        Pair var52;
+                        if (var51.isEmpty()) {
+                            var52 = null;
+                        } else {
+                            var52 = TuplesKt.to(var16, var51);
+                        }
+
+                        if (var52 != null) {
+                            var15.add(var52);
+                        }
+
+                        var9 = var9;
+                        var29 = var40;
+                    }
+
+                    List var53 = var15;
+                    if (!var53.isEmpty()) {
+                        String var35 = GxPage.str$default(this, var12, "title", null, 2, null);
+                        var1 = var53.size();
+                        String var55 = var35 + "  (" + var1 + ")";
+                        LinearLayout var41 = this.catalogBox;
+                        LinearLayout var36 = var41;
+                        if (var41 == null) {
+                            Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
+                            var36 = null;
+                        }
+
+                        this.header(var55, (ViewGroup)var36);
+                        Iterator var70 = var53.iterator();
+                        JSONObject var37 = var12;
+
+                        while (var70.hasNext()) {
+                            Pair var42 = (Pair)var70.next();
+                            JSONObject var54 = (JSONObject)var42.component1();
+                            List var73 = (List)var42.component2();
+                            String var43 = GxPage.str$default(this, var37, "key", null, 2, null);
+                            String var56 = GxPage.str$default(this, var54, "key", null, 2, null);
+                            String var57 = var43 + ":" + var56;
+                            boolean var23;
+                            if (var13.length() > 0) {
+                                var23 = true;
+                            } else {
+                                var23 = false;
+                            }
+
+                            if (!var23 && !this.expandedGroups.contains(var57)) {
+                                var23 = false;
+                            } else {
+                                var23 = true;
+                            }
+
+                            GxPage var75 = this;
+                            String var71 = GxPage.str$default(this, var54, "title", null, 2, null);
+                            int var27 = this.groupSelectedCount(var54);
+                            String var64 = var27 + " selected";
+                            LinearLayout var59 = this.catalogBox;
+                            var41 = var59;
+                            if (var59 == null) {
+                                Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
+                                var41 = null;
+                            }
+
+                            GxPage.Row var60 = GxPage.row$default(var75, var71, var64, (ViewGroup)var41, 0, 8, null);
+                            this.groupRows.put(var57, TuplesKt.to(var60, var54));
+                            GxNavigationPage$$ExternalSyntheticLambda17 var65 = new GxNavigationPage$$ExternalSyntheticLambda17(this, var57);
+                            boolean var28;
+                            if (var13.length() == 0) {
+                                var28 = true;
+                            } else {
+                                var28 = false;
+                            }
+
+                            if (var28) {
+                                this.clickable(var60, new GxNavigationPage$$ExternalSyntheticLambda18(var65));
+                                String var45;
+                                if (var23) {
+                                    var45 = "Hide";
+                                } else {
+                                    var45 = "Show";
+                                }
+
+                                GxPage.Row.button$default(var60, var45, false, new GxNavigationPage$$ExternalSyntheticLambda19(var65), 2, null);
+                            }
+
+                            if (var23) {
+                                LinearLayout var72 = new LinearLayout((Context)this.getAct());
+                                var72.setOrientation(1);
+                                var72.setPadding(this.getUi().dp(28), 0, 0, this.getUi().dp(8));
+                                LinearLayout var66 = this.catalogBox;
+                                var41 = var66;
+                                if (var66 == null) {
+                                    Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
+                                    var41 = null;
+                                }
+
+                                label174: {
+                                    var41.addView((View)var72, (android.view.ViewGroup.LayoutParams)(new LayoutParams(-1, -2)));
+                                    JSONArray var47 = var54.optJSONArray("regions");
+                                    if (var47 != null) {
+                                        List var67 = this.objects(var47);
+                                        var48 = var67;
+                                        if (var67 != null) {
+                                            break label174;
+                                        }
+                                    }
+
+                                    var48 = CollectionsKt.emptyList();
+                                }
+
+                                var75 = this;
+                                Pair var68 = TuplesKt.to("Select All", new GxNavigationPage$$ExternalSyntheticLambda20(var48, this));
+                                Pair var78 = TuplesKt.to("Clear", new GxNavigationPage$$ExternalSyntheticLambda21(var48, this));
+                                ViewGroup var49 = (ViewGroup)var72;
+                                GxPage.buttons$default(var75, new Pair[]{var68, var78}, var49, false, 4, null);
+
+                                for (JSONObject var61 : var73) {
+                                    String var74 = GxPage.str$default(this, var61, "token", null, 2, null);
+                                    String var77 = GxPage.str$default(this, var61, "label", null, 2, null);
+                                    var var62 = GxPage.str$default(this, var61, "code", null, 2, null);
+                                    if (var62.length() == 0) {
+                                        var23 = true;
+                                    } else {
+                                        var23 = false;
+                                    }
+
+                                    if (var23) {
+                                        var62 = null;
+                                    }
+
+                                    Switch var63 = this.toggle(
+                                            var77,
+                                            var62,
+                                            this.selectedDraft.contains(var74),
+                                            (ViewGroup)var72,
+                                            new GxNavigationPage$$ExternalSyntheticLambda23(this, var74)
+                                        )
+                                        .component2();
+                                    this.regionSwitches.put(var74, var63);
+                                }
+                            }
+                        }
+
+                        var1 = 1;
                     }
                 }
-                any = true;
-                str2 = str4;
-                it2 = it;
+
+                if (!var1) {
+                    var5 = this.catalogBox;
+                    if (var5 == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
+                        var5 = null;
+                    }
+
+                    var5.addView((View)this.empty("No regions match the current search."));
+                }
             }
         }
-        if (any) {
-            return;
-        }
-        LinearLayout linearLayout8 = this.catalogBox;
-        if (linearLayout8 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("catalogBox");
-            linearLayout = null;
-        } else {
-            linearLayout = linearLayout8;
-        }
-        linearLayout.addView(empty("No regions match the current search."));
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -4270,43 +4734,51 @@ public final class GxNavigationPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:15:0x002e, code lost:
-    
-        if (r0 == null) goto L16;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit keyRow$lambda$162$lambda$161$lambda$160(GxNavigationPage this$0, KeyMeta $m, String e, JSONObject o) {
-        String str;
-        String optString;
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Delete failed...";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit keyRow$lambda$162$lambda$161$lambda$160(GxNavigationPage var0, GxNavigationPage.KeyMeta var1, String var2, JSONObject var3) {
+        if (var2 != null) {
+            CharSequence var8 = var2;
+            Object var4 = var8;
+            if (StringsKt.isBlank(var8)) {
+                var4 = "Delete failed...";
             }
-            this$0.toast(str2);
+
+            var0.toast((String)var4);
+            return Unit.INSTANCE;
+        } else {
+            label31: {
+                if (var3 != null) {
+                    var2 = var3.optString("message");
+                    if (var2 != null) {
+                        CharSequence var9 = var2;
+                        CharSequence var6 = var9;
+                        if (StringsKt.isBlank(var9)) {
+                            var6 = null;
+                        }
+
+                        String var10 = (String)var6;
+                        var2 = var10;
+                        if (var10 != null) {
+                            break label31;
+                        }
+                    }
+                }
+
+                var2 = "Deleted!";
+            }
+
+            var0.toast(var2);
+            var0.savedKeys.put(var1.getKind(), "");
+            if (Intrinsics.areEqual(var1.getKind(), "public")) {
+                var0.mapboxPublic = "";
+            } else if (Intrinsics.areEqual(var1.getKind(), "secret")) {
+                var0.mapboxSecret = "";
+            }
+
+            var0.renderKeys();
+            var0.renderNavAfterKeys();
             return Unit.INSTANCE;
         }
-        if (o != null && (optString = o.optString("message")) != null) {
-            String str3 = optString;
-            if (StringsKt.isBlank(str3)) {
-                str3 = null;
-            }
-            str = str3;
-        }
-        str = "Deleted!";
-        this$0.toast(str);
-        this$0.savedKeys.put($m.getKind(), "");
-        if (Intrinsics.areEqual($m.getKind(), "public")) {
-            this$0.mapboxPublic = "";
-        } else if (Intrinsics.areEqual($m.getKind(), "secret")) {
-            this$0.mapboxSecret = "";
-        }
-        this$0.renderKeys();
-        this$0.renderNavAfterKeys();
-        return Unit.INSTANCE;
     }
 
     private final void editKey(final KeyMeta m) {
@@ -4343,43 +4815,51 @@ public final class GxNavigationPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:15:0x002e, code lost:
-    
-        if (r0 == null) goto L16;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit editKey$lambda$166$lambda$165(GxNavigationPage this$0, KeyMeta $m, String $value, String e, JSONObject o) {
-        String str;
-        String optString;
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Save failed...";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit editKey$lambda$166$lambda$165(GxNavigationPage var0, GxNavigationPage.KeyMeta var1, String var2, String var3, JSONObject var4) {
+        if (var3 != null) {
+            CharSequence var6 = var3;
+            Object var5 = var6;
+            if (StringsKt.isBlank(var6)) {
+                var5 = "Save failed...";
             }
-            this$0.toast(str2);
+
+            var0.toast((String)var5);
+            return Unit.INSTANCE;
+        } else {
+            label31: {
+                if (var4 != null) {
+                    var3 = var4.optString("message");
+                    if (var3 != null) {
+                        CharSequence var10 = var3;
+                        CharSequence var8 = var10;
+                        if (StringsKt.isBlank(var10)) {
+                            var8 = null;
+                        }
+
+                        String var11 = (String)var8;
+                        var3 = var11;
+                        if (var11 != null) {
+                            break label31;
+                        }
+                    }
+                }
+
+                var3 = "Saved!";
+            }
+
+            var0.toast(var3);
+            var0.savedKeys.put(var1.getKind(), var2);
+            if (Intrinsics.areEqual(var1.getKind(), "public")) {
+                var0.mapboxPublic = var2;
+            } else if (Intrinsics.areEqual(var1.getKind(), "secret")) {
+                var0.mapboxSecret = var2;
+            }
+
+            var0.renderKeys();
+            var0.renderNavAfterKeys();
             return Unit.INSTANCE;
         }
-        if (o != null && (optString = o.optString("message")) != null) {
-            String str3 = optString;
-            if (StringsKt.isBlank(str3)) {
-                str3 = null;
-            }
-            str = str3;
-        }
-        str = "Saved!";
-        this$0.toast(str);
-        this$0.savedKeys.put($m.getKind(), $value);
-        if (Intrinsics.areEqual($m.getKind(), "public")) {
-            this$0.mapboxPublic = $value;
-        } else if (Intrinsics.areEqual($m.getKind(), "secret")) {
-            this$0.mapboxSecret = $value;
-        }
-        this$0.renderKeys();
-        this$0.renderNavAfterKeys();
-        return Unit.INSTANCE;
     }
 
     private final void renderNavAfterKeys() {
@@ -4486,176 +4966,293 @@ public final class GxNavigationPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:53:0x0286  */
-    /* JADX WARN: Removed duplicated region for block: B:56:0x0295  */
-    /* JADX WARN: Removed duplicated region for block: B:59:0x029d  */
-    /* JADX WARN: Removed duplicated region for block: B:69:0x02be  */
-    /* JADX WARN: Removed duplicated region for block: B:72:0x02cd  */
-    /* JADX WARN: Removed duplicated region for block: B:74:0x02d6  */
-    /* JADX WARN: Removed duplicated region for block: B:91:? A[RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:92:0x02d2  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     private final void paintSpeed() {
-        TextView textView;
-        String str;
-        TextView textView2;
-        String str2;
-        int i;
-        TextView textView3;
-        TextView textView4;
-        LinearLayout linearLayout;
-        TextView textView5;
-        JSONObject d = this.speedObj;
-        boolean enabled = d.optBoolean("visionEnabled");
-        TextView textView6 = this.sStatus;
-        if (textView6 == null) {
+        JSONObject var14 = this.speedObj;
+        boolean var7 = var14.optBoolean("visionEnabled");
+        TextView var11 = this.sStatus;
+        TextView var10 = var11;
+        if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("sStatus");
-            textView6 = null;
+            var10 = null;
         }
-        textView6.setText(this.speedLoading ? "Checking..." : this.speedStatus);
-        TextView textView7 = this.sVision;
-        if (textView7 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("sVision");
-            textView = null;
+
+        CharSequence var45;
+        if (this.speedLoading) {
+            var45 = "Checking...";
         } else {
-            textView = textView7;
+            var45 = this.speedStatus;
         }
-        if (!this.speedLoading) {
-            String str$default = GxPage.str$default(this, d, "visionStatus", null, 2, null);
-            if (str$default.length() == 0) {
-                str$default = enabled ? "Idle" : "Disabled";
-            }
-            String out = str$default;
-            String stream = GxPage.str$default(this, d, "visionStream", null, 2, null);
-            if (stream.length() > 0) {
-                out = out + " on " + stream;
-            }
-            Double valueOf = Double.valueOf(d.optDouble("visionDisplaySpeed", 0.0d));
-            double it = valueOf.doubleValue();
-            if (!((Double.isInfinite(it) || Double.isNaN(it)) ? false : true)) {
-                valueOf = null;
-            }
-            double spd = valueOf != null ? valueOf.doubleValue() : 0.0d;
-            if (spd > 0.0d) {
-                String valueOf2 = ((spd % 1.0d) > 0.0d ? 1 : ((spd % 1.0d) == 0.0d ? 0 : -1)) == 0 ? String.valueOf((long) spd) : String.valueOf(spd);
-                String str$default2 = GxPage.str$default(this, d, "visionSpeedUnit", null, 2, null);
-                if (str$default2.length() == 0) {
-                    str$default2 = "mph";
-                }
-                String out2 = out + " (" + valueOf2 + " " + ((Object) str$default2);
-                Double valueOf3 = Double.valueOf(d.optDouble("visionConfidence", 0.0d));
-                double it2 = valueOf3.doubleValue();
-                if (!((Double.isInfinite(it2) || Double.isNaN(it2)) ? false : true)) {
-                    valueOf3 = null;
-                }
-                double conf = valueOf3 != null ? valueOf3.doubleValue() : 0.0d;
-                if (conf > 0.0d) {
-                    out2 = out2 + ", " + Math.round(100 * conf) + "%";
-                }
-                out = out2 + ")";
-            }
-            str = out;
-        }
-        textView.setText(str);
-        TextView textView8 = this.sVision;
-        if (textView8 == null) {
+
+        var10.setText(var45);
+        var11 = this.sVision;
+        if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("sVision");
-            textView8 = null;
+            var11 = null;
         }
-        textView8.setMaxWidth(getUi().dp(520));
-        GxPage.Row row = this.sDebugRow;
-        if (row == null) {
+
+        CharSequence var30;
+        if (this.speedLoading) {
+            var30 = "Checking...";
+        } else {
+            var var31 = GxPage.str$default(this, var14, "visionStatus", null, 2, null);
+            boolean var3;
+            if (var31.length() == 0) {
+                var3 = true;
+            } else {
+                var3 = false;
+            }
+
+            if (var3) {
+                if (var7) {
+                    var31 = "Idle";
+                } else {
+                    var31 = "Disabled";
+                }
+            }
+
+            String var12 = var31;
+            String var13 = GxPage.str$default(this, var14, "visionStream", null, 2, null);
+            if (var13.length() > 0) {
+                var3 = true;
+            } else {
+                var3 = false;
+            }
+
+            String var32 = var12;
+            if (var3) {
+                var32 = var12 + " on " + var13;
+            }
+
+            Double var56 = var14.optDouble("visionDisplaySpeed", 0.0);
+            double var1 = var56.doubleValue();
+            if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
+                var3 = true;
+            } else {
+                var3 = false;
+            }
+
+            if (!var3) {
+                var56 = null;
+            }
+
+            if (var56 != null) {
+                var1 = var56;
+            } else {
+                var1 = 0.0;
+            }
+
+            if (var1 > 0.0) {
+                if (var1 % 1.0 == 0.0) {
+                    var3 = true;
+                } else {
+                    var3 = false;
+                }
+
+                if (var3) {
+                    var12 = String.valueOf((long)var1);
+                } else {
+                    var12 = String.valueOf(var1);
+                }
+
+                var13 = GxPage.str$default(this, var14, "visionSpeedUnit", null, 2, null);
+                if (var13.length() == 0) {
+                    var3 = true;
+                } else {
+                    var3 = false;
+                }
+
+                if (var3) {
+                    var13 = "mph";
+                }
+
+                var12 = var32 + " (" + var12 + " " + var13;
+                Double var33 = var14.optDouble("visionConfidence", 0.0);
+                var1 = var33.doubleValue();
+                if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
+                    var3 = true;
+                } else {
+                    var3 = false;
+                }
+
+                if (!var3) {
+                    var33 = null;
+                }
+
+                if (var33 != null) {
+                    var1 = var33;
+                } else {
+                    var1 = 0.0;
+                }
+
+                String var34 = var12;
+                if (var1 > 0.0) {
+                    long var8 = Math.round(100 * var1);
+                    var34 = var12 + ", " + var8 + "%";
+                }
+
+                var32 = var34 + ")";
+            }
+
+            var30 = var32;
+        }
+
+        var11.setText(var30);
+        var11 = this.sVision;
+        var10 = var11;
+        if (var11 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sVision");
+            var10 = null;
+        }
+
+        var10.setMaxWidth(this.getUi().dp(520));
+        GxPage.Row var48 = this.sDebugRow;
+        GxPage.Row var36 = var48;
+        if (var48 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("sDebugRow");
-            row = null;
+            var36 = null;
         }
-        row.setVisible(!this.speedLoading && enabled);
-        int bm = d.optInt("visionBookmarkCount", 0);
-        TextView textView9 = this.sDebug;
-        if (textView9 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("sDebug");
-            textView2 = null;
+
+        boolean var6;
+        if (!this.speedLoading && var7) {
+            var6 = true;
         } else {
-            textView2 = textView9;
+            var6 = false;
         }
-        String str$default3 = GxPage.str$default(this, d, "visionDebugSession", null, 2, null);
-        if (str$default3.length() == 0) {
-            str$default3 = "No active session";
+
+        var36.setVisible(var6);
+        int var4 = var14.optInt("visionBookmarkCount", 0);
+        var10 = this.sDebug;
+        if (var10 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sDebug");
+            var10 = null;
         }
-        if (bm > 0) {
-            str2 = ", " + bm + " bookmark" + (bm != 1 ? "s" : "");
+
+        var11 = GxPage.str$default(this, var14, "visionDebugSession", null, 2, null);
+        int var23;
+        if (var11.length() == 0) {
+            var23 = 1;
+        } else {
+            var23 = 0;
         }
-        textView2.setText(((Object) str$default3) + str2);
-        String ev = GxPage.str$default(this, d, "visionLastEvent", null, 2, null);
-        TextView textView10 = this.sLastEvent;
-        if (textView10 == null) {
+
+        if ((var23 != 0)) {
+            var11 = "No active session";
+        }
+
+        String var62 = "";
+        Object var59 = var62;
+        if (var4 > 0) {
+            if (var4 != 1) {
+                var62 = "s";
+            }
+
+            var59 = ", " + var4 + " bookmark" + var62;
+        }
+
+        var10.setText(var11 + var59);
+        var59 = GxPage.str$default(this, var14, "visionLastEvent", null, 2, null);
+        var11 = this.sLastEvent;
+        var10 = var11;
+        if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("sLastEvent");
-            textView10 = null;
+            var10 = null;
         }
-        textView10.setText(ev);
-        TextView textView11 = this.sLastEvent;
-        if (textView11 == null) {
+
+        var10.setText((CharSequence)var59);
+        var11 = this.sLastEvent;
+        var10 = var11;
+        if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("sLastEvent");
-            textView11 = null;
+            var10 = null;
         }
-        int i2 = 8;
-        if (!this.speedLoading && enabled) {
-            if (ev.length() > 0) {
-                i = 0;
-                textView11.setVisibility(i);
-                textView3 = this.sReason;
-                if (textView3 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("sReason");
-                    textView3 = null;
+
+        byte var5;
+        label183: {
+            var6 = this.speedLoading;
+            var5 = 8;
+            if (!var6 && var7) {
+                boolean var24;
+                if (((CharSequence)var59).length() > 0) {
+                    var24 = true;
+                } else {
+                    var24 = false;
                 }
-                textView3.setText(this.speedReason);
-                textView4 = this.sReason;
-                if (textView4 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("sReason");
-                    textView4 = null;
+
+                if (var24) {
+                    var23 = 0;
+                    break label183;
                 }
-                if (!this.speedLoading) {
-                    if ((this.speedReason.length() > 0) && !Intrinsics.areEqual(this.speedReason, this.speedStatus)) {
-                        i2 = 0;
-                    }
+            }
+
+            var23 = 8;
+        }
+
+        var10.setVisibility((((var23 != 0)) ? 1 : 0));
+        var11 = this.sReason;
+        var10 = var11;
+        if (var11 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sReason");
+            var10 = null;
+        }
+
+        var10.setText(this.speedReason);
+        var11 = this.sReason;
+        var10 = var11;
+        if (var11 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sReason");
+            var10 = null;
+        }
+
+        byte var27 = var5;
+        if (!this.speedLoading) {
+            boolean var26;
+            if (this.speedReason.length() > 0) {
+                var26 = true;
+            } else {
+                var26 = false;
+            }
+
+            var27 = var5;
+            if (var26) {
+                var27 = var5;
+                if (!Intrinsics.areEqual(this.speedReason, this.speedStatus)) {
+                    var27 = 0;
                 }
-                textView4.setVisibility(i2);
-                linearLayout = this.sBar;
-                if (linearLayout == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("sBar");
-                    linearLayout = null;
-                }
-                View childAt = linearLayout.getChildAt(1);
-                textView5 = !(childAt instanceof TextView) ? (TextView) childAt : null;
-                if (textView5 == null) {
-                    TextView b = textView5;
-                    b.setText((this.speedProcessing || this.speedSubmitting) ? "Processing..." : "Process Now");
-                    setOn(b, (this.speedSubmitting || this.speedProcessing || !this.canProcessNow) ? false : true);
-                    return;
-                }
-                return;
             }
         }
-        i = 8;
-        textView11.setVisibility(i);
-        textView3 = this.sReason;
-        if (textView3 == null) {
+
+        var10.setVisibility(var27);
+        LinearLayout var54 = this.sBar;
+        LinearLayout var42 = var54;
+        if (var54 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("sBar");
+            var42 = null;
         }
-        textView3.setText(this.speedReason);
-        textView4 = this.sReason;
-        if (textView4 == null) {
+
+        View var43 = var42.getChildAt(1);
+        if (var43 instanceof TextView) {
+            var10 = (TextView)var43;
+        } else {
+            var10 = null;
         }
-        if (!this.speedLoading) {
-        }
-        textView4.setVisibility(i2);
-        linearLayout = this.sBar;
-        if (linearLayout == null) {
-        }
-        View childAt2 = linearLayout.getChildAt(1);
-        if (!(childAt2 instanceof TextView)) {
-        }
-        if (textView5 == null) {
+
+        if (var10 != null) {
+            String var55;
+            if (!this.speedProcessing && !this.speedSubmitting) {
+                var55 = "Process Now";
+            } else {
+                var55 = "Processing...";
+            }
+
+            var10.setText(var55);
+            if (!this.speedSubmitting && !this.speedProcessing && this.canProcessNow) {
+                var6 = true;
+            } else {
+                var6 = false;
+            }
+
+            this.setOn(var10, var6);
         }
     }
 

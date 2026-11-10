@@ -38,6 +38,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt;
 import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
+import android.graphics.Paint.Style;
+import android.graphics.PathEffect;
+import android.view.ViewGroup.LayoutParams;
 
 /* compiled from: HudEditor.kt */
 public final class HudEditor extends FrameLayout {
@@ -55,35 +58,35 @@ public final class HudEditor extends FrameLayout {
     private final ArrayDeque<String> undo;
     private TextView undoBtn;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public HudEditor(Context ctx, FrameLayout root, HudLayout layout, Function0<Unit> onChange, Function0<Unit> onDone) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(root, "root");
-        Intrinsics.checkNotNullParameter(layout, "layout");
-        Intrinsics.checkNotNullParameter(onChange, "onChange");
-        Intrinsics.checkNotNullParameter(onDone, "onDone");
-        this.root = root;
-        this.layout = layout;
-        this.onChange = onChange;
-        this.onDone = onDone;
-        this.ui = new CarUi(ctx, false, 2, null);
-        this.d = ctx.getResources().getDisplayMetrics().density;
+    /* VF: from Vineflower (jadx: ) */
+    public HudEditor(Context var1, FrameLayout var2, HudLayout var3, Function0<Unit> var4, Function0<Unit> var5) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "root");
+        Intrinsics.checkNotNullParameter(var3, "layout");
+        Intrinsics.checkNotNullParameter(var4, "onChange");
+        Intrinsics.checkNotNullParameter(var5, "onDone");
+        this.root = var2;
+        this.layout = var3;
+        this.onChange = var4;
+        this.onDone = var5;
+        this.ui = new CarUi(var1, false, 2, null);
+        this.d = var1.getResources().getDisplayMetrics().density;
         this.undo = new ArrayDeque<>();
-        this.preview = new Preview(this, ctx);
-        LinearLayout $this$content_u24lambda_u240 = new LinearLayout(ctx);
-        $this$content_u24lambda_u240.setOrientation(1);
-        this.content = $this$content_u24lambda_u240;
+        this.preview = new HudEditor.Preview(this, var1);
+        LinearLayout var6 = new LinearLayout(var1);
+        var6.setOrientation(1);
+        this.content = var6;
         this.tabBtns = new ArrayList<>();
-        setBackgroundColor(CarUi.Companion.getBG());
-        setClickable(true);
-        setTranslationZ(dpf(120.0f));
-        LinearLayout row = new LinearLayout(ctx);
-        row.setOrientation(0);
-        row.addView(this.preview, new LinearLayout.LayoutParams(0, -1, 0.58f));
-        row.addView(panel(ctx), new LinearLayout.LayoutParams(0, -1, 0.42f));
-        addView(row, new FrameLayout.LayoutParams(-1, -1));
-        refresh();
+        this.setBackgroundColor(CarUi.Companion.getBG());
+        this.setClickable(true);
+        this.setTranslationZ(this.dpf(120.0F));
+        LinearLayout var7 = new LinearLayout(var1);
+        var7.setOrientation(0);
+        var7.addView(this.preview, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -1, 0.58F)));
+        var7.addView(this.panel(var1), (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -1, 0.42F)));
+        this.addView((View)var7, (android.view.ViewGroup.LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
+        this.refresh();
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -775,39 +778,39 @@ public final class HudEditor extends FrameLayout {
         private float startW;
         final /* synthetic */ HudEditor this$0;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public Preview(HudEditor this$0, Context ctx) {
-            super(ctx);
-            Intrinsics.checkNotNullParameter(ctx, "ctx");
-            this.this$0 = this$0;
+        /* VF: from Vineflower (jadx: ) */
+        public Preview(Context var1, Context var2) {
+            super(var2);
+            Intrinsics.checkNotNullParameter(var2, "ctx");
+            this.this$0 = var1;
             this.frame = new RectF();
-            this.k = 1.0f;
+            this.k = 1.0F;
             this.bg = new Paint(1);
-            Paint $this$line_u24lambda_u240 = new Paint(1);
-            $this$line_u24lambda_u240.setStyle(Paint.Style.STROKE);
-            this.line = $this$line_u24lambda_u240;
-            Paint $this$dash_u24lambda_u241 = new Paint(1);
-            HudEditor hudEditor = this.this$0;
-            $this$dash_u24lambda_u241.setStyle(Paint.Style.STROKE);
-            $this$dash_u24lambda_u241.setStrokeWidth(hudEditor.dpf(1.5f));
-            $this$dash_u24lambda_u241.setPathEffect(new DashPathEffect(new float[]{hudEditor.dpf(7.0f), hudEditor.dpf(5.0f)}, 0.0f));
-            $this$dash_u24lambda_u241.setColor(Color.argb(150, 255, 255, 255));
-            this.dash = $this$dash_u24lambda_u241;
-            Paint $this$selP_u24lambda_u242 = new Paint(1);
-            HudEditor hudEditor2 = this.this$0;
-            $this$selP_u24lambda_u242.setStyle(Paint.Style.STROKE);
-            $this$selP_u24lambda_u242.setStrokeWidth(hudEditor2.dpf(3.0f));
-            $this$selP_u24lambda_u242.setColor(CarUi.Companion.getACCENT());
-            this.selP = $this$selP_u24lambda_u242;
+            Paint var3 = new Paint(1);
+            var3.setStyle(android.graphics.Paint.Style.STROKE);
+            this.line = var3;
+            Paint var7 = new Paint(1);
+            var1 = this.this$0;
+            var7.setStyle(android.graphics.Paint.Style.STROKE);
+            var7.setStrokeWidth(var1.dpf(1.5F));
+            var7.setPathEffect((PathEffect)(new DashPathEffect(new float[]{var1.dpf(7.0F), var1.dpf(5.0F)}, 0.0F)));
+            var7.setColor(Color.argb(150, 255, 255, 255));
+            this.dash = var7;
+            Paint var8 = new Paint(1);
+            var1 = this.this$0;
+            var8.setStyle(android.graphics.Paint.Style.STROKE);
+            var8.setStrokeWidth(var1.dpf(3.0F));
+            var8.setColor(CarUi.Companion.getACCENT());
+            this.selP = var8;
             this.fill = new Paint(1);
-            Paint $this$label_u24lambda_u243 = new Paint(1);
-            HudEditor hudEditor3 = this.this$0;
-            $this$label_u24lambda_u243.setColor(-1);
-            $this$label_u24lambda_u243.setTextSize(hudEditor3.dpf(12.0f));
-            $this$label_u24lambda_u243.setTypeface(Typeface.DEFAULT_BOLD);
-            this.label = $this$label_u24lambda_u243;
+            Paint var9 = new Paint(1);
+            var1 = this.this$0;
+            var9.setColor(-1);
+            var9.setTextSize(var1.dpf(12.0F));
+            var9.setTypeface(Typeface.DEFAULT_BOLD);
+            this.label = var9;
             this.road = new Path();
-            this.startScale = 1.0f;
+            this.startScale = 1.0F;
         }
 
         private final RectF box(HudLayout.Item it) {

@@ -38,6 +38,12 @@ import kotlin.text.Regex;
 import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import kotlin.jvm.internal.Ref.ObjectRef;
 
 /* compiled from: GxVehicle.kt */
 public final class GxBluetoothPage extends GxPage {
@@ -95,11 +101,11 @@ public final class GxBluetoothPage extends GxPage {
     private String wcSpeedUnit;
     private boolean wcTesting;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxBluetoothPage(Activity act, GxHost gx) {
-        super(act, gx);
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(gx, "gx");
+    /* VF: from Vineflower (jadx: ) */
+    public GxBluetoothPage(Activity var1, GxHost var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "gx");
         this.needsOffroad = true;
         this.btBusy = "";
         this.btSelectedAudio = "";
@@ -116,8 +122,8 @@ public final class GxBluetoothPage extends GxPage {
         this.wcOptions = CollectionsKt.emptyList();
         this.wcJoystick = "";
         this.wcSpeedUnit = "mph";
-        this.wcSpeedMin = 5.0d;
-        this.wcSpeedMax = 90.0d;
+        this.wcSpeedMin = 5.0;
+        this.wcSpeedMax = 90.0;
         this.wcError = "";
         this.wcRaw = "";
         this.wcSig = "";
@@ -291,47 +297,63 @@ public final class GxBluetoothPage extends GxPage {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:21:0x008e, code lost:
-    
-        if (r0 != null) goto L25;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit btRefresh$lambda$8(GxBluetoothPage this$0, String e, JSONObject p) {
-        String str;
-        String str$default;
-        List<JSONObject> emptyList;
-        this$0.btInflight = false;
-        if (e != null || p == null) {
-            this$0.btAvailable = false;
-            if (p != null && (str$default = GxPage.str$default(this$0, p, "error", null, 2, null)) != null) {
-                String str2 = str$default;
-                if (StringsKt.isBlank(str2)) {
-                    str2 = null;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit btRefresh$lambda$8(GxBluetoothPage var0, String var1, JSONObject var2) {
+        List var5 = null; // declarations Vineflower left out
+        var0.btInflight = false;
+        if (var1 == null && var2 != null) {
+            label33: {
+                var0.btAvailable = var2.optBoolean("available");
+                var0.btEnabled = var2.optBoolean("enabled");
+                var0.btDiscovering = var2.optBoolean("discovering");
+                var0.btOffroad = var2.optBoolean("offroad");
+                var0.btSelectedAudio = GxPage.str$default(var0, var2, "selected_audio", null, 2, null);
+                var0.btPairingAddress = GxPage.str$default(var0, var2, "pairing_address", null, 2, null);
+                JSONArray var4 = var2.optJSONArray("devices");
+                if (var4 != null) {
+                    List var9 = var0.objects(var4);
+                    var5 = var9;
+                    if (var9 != null) {
+                        break label33;
+                    }
                 }
-                str = str2;
+
+                var5 = CollectionsKt.emptyList();
             }
-            str = e == null ? "Bluetooth service unavailable" : e;
-            this$0.btError = str;
+
+            var0.btDevices = var5;
+            var0.btPrompt = var2.optJSONObject("prompt");
+            var0.btError = GxPage.str$default(var0, var2, "error", null, 2, null);
         } else {
-            this$0.btAvailable = p.optBoolean("available");
-            this$0.btEnabled = p.optBoolean("enabled");
-            this$0.btDiscovering = p.optBoolean("discovering");
-            this$0.btOffroad = p.optBoolean("offroad");
-            this$0.btSelectedAudio = GxPage.str$default(this$0, p, "selected_audio", null, 2, null);
-            this$0.btPairingAddress = GxPage.str$default(this$0, p, "pairing_address", null, 2, null);
-            JSONArray optJSONArray = p.optJSONArray("devices");
-            if (optJSONArray == null || (emptyList = this$0.objects(optJSONArray)) == null) {
-                emptyList = CollectionsKt.emptyList();
+            label28: {
+                var0.btAvailable = false;
+                if (var2 != null) {
+                    String var6 = GxPage.str$default(var0, var2, "error", null, 2, null);
+                    if (var6 != null) {
+                        CharSequence var3 = var6;
+                        CharSequence var7 = var3;
+                        if (StringsKt.isBlank(var3)) {
+                            var7 = null;
+                        }
+
+                        String var8 = (String)var7;
+                        if (var8 != null) {
+                            var1 = var8;
+                            break label28;
+                        }
+                    }
+                }
+
+                if (var1 == null) {
+                    var1 = "Bluetooth service unavailable";
+                }
             }
-            this$0.btDevices = emptyList;
-            this$0.btPrompt = p.optJSONObject("prompt");
-            this$0.btError = GxPage.str$default(this$0, p, "error", null, 2, null);
+
+            var0.btError = var1;
         }
-        this$0.btLoaded = true;
-        this$0.btPaint();
+
+        var0.btLoaded = true;
+        var0.btPaint();
         return Unit.INSTANCE;
     }
 
@@ -745,104 +767,97 @@ public final class GxBluetoothPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    /* VF: from Vineflower (jadx: ) */
     private final void paintPrompt() {
-        String str;
-        Object obj;
-        EditText e;
-        LinearLayout linearLayout = this.btPromptBox;
-        LinearLayout linearLayout2 = null;
-        if (linearLayout == null) {
+        LinearLayout var4 = this.btPromptBox;
+        Object var3 = null;
+        LinearLayout var2 = var4;
+        if (var4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("btPromptBox");
-            linearLayout = null;
+            var2 = null;
         }
-        linearLayout.removeAllViews();
+
+        var2.removeAllViews();
         this.btPairEdit = null;
-        JSONObject p = this.btPrompt;
-        if (p == null) {
-            return;
-        }
-        String kind = GxPage.str$default(this, p, "kind", null, 2, null);
-        LinearLayout linearLayout3 = this.btPromptBox;
-        if (linearLayout3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("btPromptBox");
-        } else {
-            linearLayout2 = linearLayout3;
-        }
-        LinearLayout c = card(linearLayout2);
-        c.setBackground(getUi().rounded(CarUi.Companion.getCARD_ON(), 14, Integer.valueOf(CarUi.Companion.getACCENT())));
-        GxBluetoothPage gxBluetoothPage = this;
-        String str$default = GxPage.str$default(this, p, "name", null, 2, null);
-        if (StringsKt.isBlank(str$default)) {
-            str$default = "Bluetooth device";
-        }
-        GxPage.text$default(gxBluetoothPage, "Pairing request · " + ((Object) str$default), c, 21.0f, CarUi.Companion.getTEXT(), false, 16, null);
-        GxBluetoothPage gxBluetoothPage2 = this;
-        switch (kind.hashCode()) {
-            case -1385570183:
-                if (kind.equals("authorization")) {
-                    str = "Allow this device to connect?";
-                    break;
-                }
-                str = "Follow the instructions on the device.";
-                break;
-            case -792038226:
-                if (kind.equals("passkey")) {
-                    str = "Enter the device passkey.";
-                    break;
-                }
-                str = "Follow the instructions on the device.";
-                break;
-            case 110997:
-                if (kind.equals("pin")) {
-                    str = "Enter the PIN supplied by the device.";
-                    break;
-                }
-                str = "Follow the instructions on the device.";
-                break;
-            case 2099153973:
-                if (kind.equals("confirmation")) {
-                    str = "Confirm the pairing request.";
-                    break;
-                }
-                str = "Follow the instructions on the device.";
-                break;
-            default:
-                str = "Follow the instructions on the device.";
-                break;
-        }
-        GxPage.text$default(gxBluetoothPage2, str, c, 17.0f, 0, false, 24, null);
-        String passkey = GxPage.str$default(this, p, "value", null, 2, null);
-        if (StringsKt.isBlank(passkey)) {
-            obj = "pin";
-        } else {
-            obj = "pin";
-            text("Passkey: " + passkey, c, 24.0f, CarUi.Companion.getACCENT(), true);
-        }
-        if (needsPairValue(p)) {
-            e = GxVehicleKt.gxVehicleEdit(this, Intrinsics.areEqual(kind, obj) ? "PIN" : "Passkey", "", 2);
-            c.addView(e, new LinearLayout.LayoutParams(-1, -2));
-            this.btPairEdit = e;
-        }
-        if (p.optBoolean("display_only")) {
-            return;
-        }
-        boolean busy = Intrinsics.areEqual(this.btBusy, "pairing_response");
-        GxVehicleKt.gxVehicleButtons(this, c, CollectionsKt.listOf((Object[]) new Triple[]{new Triple("Allow", Boolean.valueOf(!busy), new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda20
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit paintPrompt$lambda$22;
-                paintPrompt$lambda$22 = GxBluetoothPage.paintPrompt$lambda$22(GxBluetoothPage.this);
-                return paintPrompt$lambda$22;
+        JSONObject var17 = this.btPrompt;
+        if (var17 != null) {
+            String var6 = GxPage.str$default(this, var17, "kind", null, 2, null);
+            var2 = this.btPromptBox;
+            if (var2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("btPromptBox");
+                var2 = (LinearLayout)var3;
             }
-        }), new Triple("Cancel", Boolean.valueOf(!busy), new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda21
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit paintPrompt$lambda$23;
-                paintPrompt$lambda$23 = GxBluetoothPage.paintPrompt$lambda$23(GxBluetoothPage.this);
-                return paintPrompt$lambda$23;
+
+            LinearLayout var5 = this.card((ViewGroup)var2);
+            var5.setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 14, CarUi.Companion.getACCENT()));
+            GxPage var7 = this;
+            var3 = GxPage.str$default(this, var17, "name", null, 2, null);
+            Object var9 = var3;
+            if (StringsKt.isBlank((CharSequence)var3)) {
+                var9 = "Bluetooth device";
             }
-        })}), true);
+
+            label53: {
+                GxPage.text$default(var7, "Pairing request · " + var9, (ViewGroup)var5, 21.0F, CarUi.Companion.getTEXT(), false, 16, null);
+                var3 = this;
+                switch (var6.hashCode()) {
+                    case -1385570183:
+                        if (var6.equals("authorization")) {
+                            var9 = "Allow this device to connect?";
+                            break label53;
+                        }
+                        break;
+                    case -792038226:
+                        if (var6.equals("passkey")) {
+                            var9 = "Enter the device passkey.";
+                            break label53;
+                        }
+                        break;
+                    case 110997:
+                        if (var6.equals("pin")) {
+                            var9 = "Enter the PIN supplied by the device.";
+                            break label53;
+                        }
+                        break;
+                    case 2099153973:
+                        if (var6.equals("confirmation")) {
+                            var9 = "Confirm the pairing request.";
+                            break label53;
+                        }
+                }
+
+                var9 = "Follow the instructions on the device.";
+            }
+
+            GxPage.text$default((GxPage)var3, (String)var9, (ViewGroup)var5, 17.0F, 0, false, 24, null);
+            var9 = GxPage.str$default(this, var17, "value", null, 2, null);
+            if (!StringsKt.isBlank((CharSequence)var9)) {
+                this.text("Passkey: " + var9, (ViewGroup)var5, 24.0F, CarUi.Companion.getACCENT(), true);
+            }
+
+            if (this.needsPairValue(var17)) {
+                var3 = this;
+                if (Intrinsics.areEqual(var6, "pin")) {
+                    var9 = "PIN";
+                } else {
+                    var9 = "Passkey";
+                }
+
+                var9 = GxVehicleKt.gxVehicleEdit((GxPage)var3, (String)var9, "", 2);
+                var5.addView((View)var9, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
+                this.btPairEdit = (EditText)var9;
+            }
+
+            if (!var17.optBoolean("display_only")) {
+                boolean var1 = Intrinsics.areEqual(this.btBusy, "pairing_response");
+                GxVehicleKt.gxVehicleButtons(this, (ViewGroup)var5, CollectionsKt.listOf(
+                        new Triple[]{
+                            new Triple<>("Allow", var1 ^ true, new GxBluetoothPage$$ExternalSyntheticLambda20(this)),
+                            new Triple<>("Cancel", var1 ^ true, new GxBluetoothPage$$ExternalSyntheticLambda21(this))
+                        }
+                    ), true);
+            }
+        }
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -1165,309 +1180,358 @@ public final class GxBluetoothPage extends GxPage {
         return sb.append(str).append(i).toString();
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:144:0x04e6, code lost:
-    
-        if (r0 != null) goto L156;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     private final void wcPaint() {
-        Iterable $this$none$iv;
-        String key;
-        String str;
-        boolean canTest;
-        String str$default;
-        String str2;
-        int i;
-        Integer valueOf;
-        String str3;
-        StringBuilder append;
-        String str4;
-        String sb;
-        int i2;
-        LinearLayout linearLayout = this.wcBox;
-        if (linearLayout == null) {
-            return;
-        }
-        LinearLayout box = linearLayout;
-        String sig = this.wcRaw + "|" + this.wcBusy + "|" + this.wcError + "|" + this.wcLoaded;
-        if (Intrinsics.areEqual(sig, this.wcSig)) {
-            return;
-        }
-        this.wcSig = sig;
-        box.removeAllViews();
-        if (!this.wcLoaded) {
-            box.addView(empty("Loading..."));
-            return;
-        }
-        if (!this.wcOffroad) {
-            GxVehicleKt.gxVehicleNotice(this, "Mappings can only be changed while offroad. Mapped buttons continue working onroad.", CarUi.Companion.getWARN(), box);
-        }
-        if (!StringsKt.isBlank(this.wcError)) {
-            String str5 = this.wcError;
-            i2 = GxVehicleKt.GX_VEHICLE_ERR;
-            GxVehicleKt.gxVehicleNotice(this, str5, i2, box);
-        }
-        if (!this.wcAvailable && this.wcMappings.isEmpty()) {
-            note("The wheel control service is starting.", box);
-        }
-        boolean z = true;
-        boolean canTest2 = (wcDisabled() || this.wcMappings.isEmpty()) ? false : true;
-        GxBluetoothPage gxBluetoothPage = this;
-        LinearLayout linearLayout2 = box;
-        Triple[] tripleArr = new Triple[2];
-        tripleArr[0] = new Triple(this.wcTesting ? "Stop Testing" : "Test Buttons", Boolean.valueOf(canTest2), new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda29
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit wcPaint$lambda$37;
-                wcPaint$lambda$37 = GxBluetoothPage.wcPaint$lambda$37(GxBluetoothPage.this);
-                return wcPaint$lambda$37;
-            }
-        });
-        tripleArr[1] = new Triple("Clear All", Boolean.valueOf(canTest2), new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda30
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit wcPaint$lambda$39;
-                wcPaint$lambda$39 = GxBluetoothPage.wcPaint$lambda$39(GxBluetoothPage.this);
-                return wcPaint$lambda$39;
-            }
-        });
-        GxVehicleKt.gxVehicleButtons(gxBluetoothPage, linearLayout2, CollectionsKt.listOf((Object[]) tripleArr), true);
-        if (this.wcTesting) {
-            LinearLayout c = card(box);
-            JSONObject lt = this.wcLastTested;
-            if (lt == null) {
-                valueOf = Integer.valueOf(CarUi.Companion.getDIM());
-                str3 = "Waiting for a button";
-            } else if (lt.optBoolean("mapped")) {
-                valueOf = Integer.valueOf(CarUi.Companion.getACCENT());
-                str3 = "Successful";
-            } else {
-                i = GxVehicleKt.GX_VEHICLE_ERR;
-                valueOf = Integer.valueOf(i);
-                str3 = "Not mapped";
-            }
-            Pair pair = TuplesKt.to(str3, valueOf);
-            String label = (String) pair.component1();
-            int color = ((Number) pair.component2()).intValue();
-            c.setBackground(getUi().rounded(CarUi.Companion.getCARD(), 14, Integer.valueOf(color)));
-            text(label, c, 21.0f, color, true);
-            GxBluetoothPage gxBluetoothPage2 = this;
-            if (lt == null) {
-                sb = "Press a button to verify its mapping. Controller inputs are temporarily consumed while testing is enabled.";
-            } else {
-                String str$default2 = GxPage.str$default(this, lt, "device_name", null, 2, null);
-                if (StringsKt.isBlank(str$default2)) {
-                    str$default2 = "External input";
-                }
-                String device = str$default2;
-                String button = eventName(lt);
-                if (lt.optBoolean("mapped")) {
-                    Object opt = lt.opt("slot");
-                    Number number = opt instanceof Number ? (Number) opt : null;
-                    append = new StringBuilder().append(button).append(" on ").append(device).append(" is mapped to ").append(targetName(number != null ? number.intValue() : 0));
-                    str4 = ".";
+        LinearLayout var95 = null; // declarations Vineflower left out
+        LinearLayout var10 = this.wcBox;
+        if (var10 != null) {
+            String var11 = this.wcRaw;
+            String var8 = this.wcBusy;
+            String var9 = this.wcError;
+            boolean var5 = this.wcLoaded;
+            var11 = var11 + "|" + var8 + "|" + var9 + "|" + var5;
+            if (!Intrinsics.areEqual(var11, this.wcSig)) {
+                this.wcSig = var11;
+                var10.removeAllViews();
+                if (!this.wcLoaded) {
+                    var10.addView((View)this.empty("Loading..."));
                 } else {
-                    append = new StringBuilder().append(button).append(" on ").append(device);
-                    str4 = " does not have a mapping.";
-                }
-                sb = append.append(str4).toString();
-            }
-            GxPage.text$default(gxBluetoothPage2, sb, c, 17.0f, 0, false, 24, null);
-        }
-        Switch sw = toggle("Disconnect controllers when offroad", "After two minutes offroad, paired controllers disconnect to save battery and reconnect when the car starts. Bluetooth and audio-only devices stay connected.", this.wcDisconnectOffroad, box, new Function1() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda31
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit wcPaint$lambda$41;
-                wcPaint$lambda$41 = GxBluetoothPage.wcPaint$lambda$41(GxBluetoothPage.this, ((Boolean) obj).booleanValue());
-                return wcPaint$lambda$41;
-            }
-        }).component2();
-        GxVehicleKt.gxVehicleEnable(sw, !wcDisabled());
-        header("Connected input devices", box);
-        note("Favorite buttons are the default, with controller-only actions available below. Only the selected gamepad controls Joystick Mode.", box);
-        if (this.wcDevices.isEmpty()) {
-            note("Connect or pair a controller, macropad, or keyboard.", box);
-        }
-        for (JSONObject d : this.wcDevices) {
-            boolean joy = d.optBoolean("joystick_capable");
-            GxBluetoothPage gxBluetoothPage3 = this;
-            String str$default3 = GxPage.str$default(this, d, "name", null, 2, null);
-            if (StringsKt.isBlank(str$default3)) {
-                str$default3 = GxPage.str$default(this, d, "device_id", null, 2, null);
-            }
-            GxPage.Row r = GxPage.row$default(gxBluetoothPage3, str$default3, joy ? "Buttons and joystick axes" : "Buttons only", box, 0, 8, null);
-            if (joy) {
-                final String id = GxPage.str$default(this, d, "device_id", null, 2, null);
-                final boolean sel = Intrinsics.areEqual(id, this.wcJoystick);
-                GxVehicleKt.gxVehicleEnable(r.button(sel ? "Enabled for Joystick Mode" : "Enable for Joystick Mode", sel, new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda32
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit wcPaint$lambda$43;
-                        wcPaint$lambda$43 = GxBluetoothPage.wcPaint$lambda$43(GxBluetoothPage.this, id, sel);
-                        return wcPaint$lambda$43;
+                    if (!this.wcOffroad) {
+                        GxVehicleKt.gxVehicleNotice(this, "Mappings can only be changed while offroad. Mapped buttons continue working onroad.", CarUi.Companion.getWARN(), (ViewGroup)var10);
                     }
-                }), !wcDisabled());
-            }
-        }
-        header("On-screen Favorites", box);
-        note("These remain linked to the three Favorite Slots shown elsewhere in StarPilot.", box);
-        int i3 = 0;
-        for (JSONObject s : this.wcSlots) {
-            final int i4 = i3;
-            int i5 = i3 + 1;
-            boolean conf = configured(s);
-            String str6 = "Favorite #" + (i4 + 1);
-            if (conf) {
-                String str$default4 = GxPage.str$default(this, s, "label", null, 2, null);
-                if (StringsKt.isBlank(str$default4)) {
-                    str$default4 = GxPage.str$default(this, s, "key", null, 2, null);
-                }
-                str2 = str$default4;
-            } else {
-                str2 = "Not configured";
-            }
-            LinearLayout c2 = slotCard(box, str6, str2, conf ? listenLabel(i4) : null, (!conf || wcDisabled() || this.wcTesting) ? false : true, new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda33
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit wcPaint$lambda$45;
-                    wcPaint$lambda$45 = GxBluetoothPage.wcPaint$lambda$45(GxBluetoothPage.this, i4);
-                    return wcPaint$lambda$45;
-                }
-            });
-            GxPage.text$default(this, conf ? "Pressing any mapped button will run this favorite." : "Choose and enable this slot in Toggles → Favorites.", c2, 0.0f, 0, false, 28, null);
-            slotTail(c2, i4);
-            i3 = i5;
-        }
-        Iterable $this$none$iv2 = CollectionsKt.take(this.wcSlots, 3);
-        if (!($this$none$iv2 instanceof Collection) || !((Collection) $this$none$iv2).isEmpty()) {
-            Iterator it = $this$none$iv2.iterator();
-            while (true) {
-                if (!it.hasNext()) {
-                    $this$none$iv = 1;
-                    break;
-                }
-                Object element$iv = it.next();
-                JSONObject it2 = (JSONObject) element$iv;
-                if (configured(it2)) {
-                    $this$none$iv = null;
-                    break;
-                }
-            }
-        } else {
-            $this$none$iv = 1;
-        }
-        if ($this$none$iv != null) {
-            note("Choose and enable these slots in Toggles to map buttons to them.", box);
-            GxPage.buttons$default(this, new Pair[]{TuplesKt.to("Open Favorites", new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda34
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit wcPaint$lambda$47;
-                    wcPaint$lambda$47 = GxBluetoothPage.wcPaint$lambda$47(GxBluetoothPage.this);
-                    return wcPaint$lambda$47;
-                }
-            })}, box, false, 4, null);
-        }
-        header("Controller-only Actions", box);
-        note("Ten additional actions for physical buttons. These never appear as on-screen Favorites.", box);
-        int i6 = 0;
-        for (JSONObject s2 : this.wcControllerSlots) {
-            final int i7 = i6;
-            int i8 = i6 + 1;
-            final int target = i7 + 3;
-            final String key2 = GxPage.str$default(this, s2, "key", null, 2, null);
-            JSONObject opt2 = optionByKey(key2);
-            String key3 = "Controller Action #" + (i7 + 1);
-            if (s2.optBoolean("enabled")) {
-                String str$default5 = GxPage.str$default(this, s2, "label", null, 2, null);
-                if (StringsKt.isBlank(str$default5)) {
-                    str$default5 = "Configured";
-                }
-                key = str$default5;
-            } else {
-                key = "Not configured";
-            }
-            LinearLayout box2 = box;
-            String sig2 = sig;
-            LinearLayout c3 = slotCard(box, key3, key, listenLabel(target), (!s2.optBoolean("enabled") || wcDisabled() || this.wcTesting) ? false : z, new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda35
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit wcPaint$lambda$49;
-                    wcPaint$lambda$49 = GxBluetoothPage.wcPaint$lambda$49(GxBluetoothPage.this, target);
-                    return wcPaint$lambda$49;
-                }
-            });
-            if (opt2 != null && (str$default = GxPage.str$default(this, opt2, "label", null, 2, null)) != null) {
-                String str7 = str$default;
-                if (StringsKt.isBlank(str7)) {
-                    str7 = null;
-                }
-                str = str7;
-            }
-            String str$default6 = GxPage.str$default(this, s2, "label", null, 2, null);
-            if (StringsKt.isBlank(str$default6)) {
-                String str8 = key2;
-                if (StringsKt.isBlank(str8)) {
-                    str8 = "Not configured";
-                }
-                str$default6 = str8;
-            }
-            str = str$default6;
-            String actLabel = str;
-            GxVehicleKt.gxVehicleButtons$default(this, c3, CollectionsKt.listOf(new Triple(actLabel + " · Choose action", Boolean.valueOf(!wcDisabled()), new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda1
-                @Override // kotlin.jvm.functions.Function0
-                public final Object invoke() {
-                    Unit wcPaint$lambda$53;
-                    wcPaint$lambda$53 = GxBluetoothPage.wcPaint$lambda$53(GxBluetoothPage.this, i7);
-                    return wcPaint$lambda$53;
-                }
-            })), false, 8, null);
-            boolean speed = Intrinsics.areEqual(opt2 != null ? GxPage.str$default(this, opt2, "value_type", null, 2, null) : null, "speed");
-            if (speed) {
-                final double cur = slotValue(s2, opt2);
-                LinearLayout $this$wcPaint_u24lambda_u2454 = new LinearLayout(getAct());
-                $this$wcPaint_u24lambda_u2454.setOrientation(0);
-                $this$wcPaint_u24lambda_u2454.setGravity(16);
-                TextView $this$wcPaint_u24lambda_u2455 = new TextView(getAct());
-                String actLabel2 = this.wcSpeedUnit;
-                canTest = canTest2;
-                $this$wcPaint_u24lambda_u2455.setText("Set speed (" + actLabel2 + ")");
-                $this$wcPaint_u24lambda_u2455.setTextColor(CarUi.Companion.getTEXT());
-                $this$wcPaint_u24lambda_u2455.setTextSize(18.0f);
-                $this$wcPaint_u24lambda_u2454.addView($this$wcPaint_u24lambda_u2455, new LinearLayout.LayoutParams(0, -2, 1.0f));
-                TextView $this$wcPaint_u24lambda_u2456 = new TextView(getAct());
-                $this$wcPaint_u24lambda_u2456.setText(fmtNum(cur));
-                $this$wcPaint_u24lambda_u2456.setTextColor(CarUi.Companion.getTEXT());
-                $this$wcPaint_u24lambda_u2456.setTextSize(22.0f);
-                $this$wcPaint_u24lambda_u2456.setTypeface(Typeface.DEFAULT_BOLD);
-                $this$wcPaint_u24lambda_u2456.setPadding(getUi().dp(12), 0, getUi().dp(12), 0);
-                $this$wcPaint_u24lambda_u2454.addView($this$wcPaint_u24lambda_u2456);
-                TextView b = CarUi.button$default(getUi(), "Change", false, new Function0() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda2
-                    @Override // kotlin.jvm.functions.Function0
-                    public final Object invoke() {
-                        Unit wcPaint$lambda$58;
-                        wcPaint$lambda$58 = GxBluetoothPage.wcPaint$lambda$58(GxBluetoothPage.this, cur, i7, key2);
-                        return wcPaint$lambda$58;
+
+                    if (!StringsKt.isBlank(this.wcError)) {
+                        GxVehicleKt.gxVehicleNotice(this, this.wcError, GxVehicleKt.GX_VEHICLE_ERR, (ViewGroup)var10);
                     }
-                }, 2, null);
-                GxVehicleKt.gxVehicleEnable(b, !wcDisabled());
-                $this$wcPaint_u24lambda_u2454.addView(b);
-                LinearLayout linearLayout3 = $this$wcPaint_u24lambda_u2454;
-                LinearLayout.LayoutParams $this$wcPaint_u24lambda_u2459 = new LinearLayout.LayoutParams(-1, -2);
-                $this$wcPaint_u24lambda_u2459.bottomMargin = getUi().dp(6);
-                Unit unit = Unit.INSTANCE;
-                c3.addView(linearLayout3, $this$wcPaint_u24lambda_u2459);
-            } else {
-                canTest = canTest2;
+
+                    if (!this.wcAvailable && this.wcMappings.isEmpty()) {
+                        this.note("The wheel control service is starting.", (ViewGroup)var10);
+                    }
+
+                    if (!this.wcDisabled() && !this.wcMappings.isEmpty()) {
+                        var5 = true;
+                    } else {
+                        var5 = false;
+                    }
+
+                    GxPage var12 = this;
+                    ViewGroup var57 = (ViewGroup)var10;
+                    if (this.wcTesting) {
+                        var8 = "Stop Testing";
+                    } else {
+                        var8 = "Test Buttons";
+                    }
+
+                    Triple var13 = new Triple<>(var8, var5, new GxBluetoothPage$$ExternalSyntheticLambda29(this));
+                    Triple var27 = new Triple<>("Clear All", var5, new GxBluetoothPage$$ExternalSyntheticLambda30(this));
+                    List var28 = CollectionsKt.listOf(new Triple[]{var13, var27});
+                    GxVehicleKt.gxVehicleButtons(var12, var57, var28, true);
+                    if (this.wcTesting) {
+                        LinearLayout var81 = this.card((ViewGroup)var10);
+                        JSONObject var14 = this.wcLastTested;
+                        Integer var29;
+                        if (var14 == null) {
+                            var29 = CarUi.Companion.getDIM();
+                            var9 = "Waiting for a button";
+                        } else if (var14.optBoolean("mapped")) {
+                            var29 = CarUi.Companion.getACCENT();
+                            var9 = "Successful";
+                        } else {
+                            var29 = GxVehicleKt.GX_VEHICLE_ERR;
+                            var9 = "Not mapped";
+                        }
+
+                        Pair var30 = TuplesKt.to(var9, var29);
+                        var9 = (String)var30.component1();
+                        int var3 = ((Number)var30.component2()).intValue();
+                        var81.setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD(), 14, var3));
+                        this.text(var9, (ViewGroup)var81, 21.0F, var3, true);
+                        GxPage var86 = this;
+                        if (var14 == null) {
+                            var8 = "Press a button to verify its mapping. Controller inputs are temporarily consumed while testing is enabled.";
+                        } else {
+                            CharSequence var60 = GxPage.str$default(this, var14, "device_name", null, 2, null);
+                            var8 = var60;
+                            if (StringsKt.isBlank(var60)) {
+                                var8 = "External input";
+                            }
+
+                            String var15 = var8;
+                            var9 = this.eventName(var14);
+                            StringBuilder var62;
+                            if (var14.optBoolean("mapped")) {
+                                var8 = (String)var14.opt("slot");
+                                Number var34;
+                                if (var8 instanceof Number) {
+                                    var34 = (Number)var8;
+                                } else {
+                                    var34 = null;
+                                }
+
+                                if (var34 != null) {
+                                    var3 = var34.intValue();
+                                } else {
+                                    var3 = 0;
+                                }
+
+                                var8 = this.targetName(var3);
+                                var62 = new StringBuilder().append(var9).append(" on ").append(var15).append(" is mapped to ").append(var8);
+                                var8 = ".";
+                            } else {
+                                var62 = new StringBuilder().append(var9).append(" on ").append(var15);
+                                var8 = " does not have a mapping.";
+                            }
+
+                            var8 = var62.append(var8).toString();
+                        }
+
+                        GxPage.text$default(var86, var8, (ViewGroup)var81, 17.0F, 0, false, 24, null);
+                    }
+
+                    GxVehicleKt.gxVehicleEnable((View & Switch)this.toggle(
+                                "Disconnect controllers when offroad",
+                                "After two minutes offroad, paired controllers disconnect to save battery and reconnect when the car starts. Bluetooth and audio-only devices stay connected.",
+                                this.wcDisconnectOffroad,
+                                (ViewGroup)var10,
+                                new GxBluetoothPage$$ExternalSyntheticLambda31(this)
+                            )
+                            .component2(), this.wcDisabled() ^ true);
+                    this.header("Connected input devices", (ViewGroup)var10);
+                    this.note(
+                        "Favorite buttons are the default, with controller-only actions available below. Only the selected gamepad controls Joystick Mode.",
+                        (ViewGroup)var10
+                    );
+                    if (this.wcDevices.isEmpty()) {
+                        this.note("Connect or pair a controller, macropad, or keyboard.", (ViewGroup)var10);
+                    }
+
+                    for (JSONObject var87 : this.wcDevices) {
+                        boolean var6 = var87.optBoolean("joystick_capable");
+                        GxPage var92 = this;
+                        CharSequence var63 = GxPage.str$default(this, var87, "name", null, 2, null);
+                        var8 = var63;
+                        if (StringsKt.isBlank(var63)) {
+                            var8 = GxPage.str$default(this, var87, "device_id", null, 2, null);
+                        }
+
+                        var9 = var8;
+                        if (var6) {
+                            var8 = "Buttons and joystick axes";
+                        } else {
+                            var8 = "Buttons only";
+                        }
+
+                        GxPage.Row var65 = GxPage.row$default(var92, var9, var8, (ViewGroup)var10, 0, 8, null);
+                        if (var6) {
+                            String var88 = GxPage.str$default(this, var87, "device_id", null, 2, null);
+                            var6 = Intrinsics.areEqual(var88, this.wcJoystick);
+                            if (var6) {
+                                var8 = "Enabled for Joystick Mode";
+                            } else {
+                                var8 = "Enable for Joystick Mode";
+                            }
+
+                            GxVehicleKt.gxVehicleEnable((View)var65.button(var8, var6, new GxBluetoothPage$$ExternalSyntheticLambda32(this, var88, var6)), this.wcDisabled() ^ true);
+                        }
+                    }
+
+                    this.header("On-screen Favorites", (ViewGroup)var10);
+                    this.note("These remain linked to the three Favorite Slots shown elsewhere in StarPilot.", (ViewGroup)var10);
+                    Iterator var83 = this.wcSlots.iterator();
+
+                    for (int var18 = 0; var83.hasNext(); var18++) {
+                        JSONObject var93 = (JSONObject)var83.next();
+                        boolean var7 = this.configured(var93);
+                        String var89 = "Favorite #" + (var18 + 1);
+                        if (var7) {
+                            CharSequence var66 = GxPage.str$default(this, var93, "label", null, 2, null);
+                            var8 = var66;
+                            if (StringsKt.isBlank(var66)) {
+                                var8 = GxPage.str$default(this, var93, "key", null, 2, null);
+                            }
+
+                            var8 = var8;
+                        } else {
+                            var8 = "Not configured";
+                        }
+
+                        if (var7) {
+                            var9 = this.listenLabel(var18);
+                        } else {
+                            var9 = null;
+                        }
+
+                        boolean var23;
+                        if (var7 && !this.wcDisabled() && !this.wcTesting) {
+                            var23 = true;
+                        } else {
+                            var23 = false;
+                        }
+
+                        LinearLayout var68 = this.slotCard(var10, var89, var8, var9, var23, new GxBluetoothPage$$ExternalSyntheticLambda33(this, var18));
+                        GxPage var90 = this;
+                        if (var7) {
+                            var8 = "Pressing any mapped button will run this favorite.";
+                        } else {
+                            var8 = "Choose and enable this slot in Toggles → Favorites.";
+                        }
+
+                        GxPage.text$default(var90, var8, (ViewGroup)var68, 0.0F, 0, false, 28, null);
+                        this.slotTail(var68, var18);
+                    }
+
+                    var var43 = CollectionsKt.take(this.wcSlots, 3);
+                    boolean var19;
+                    if (var43 instanceof Collection && ((Collection)var43).isEmpty()) {
+                        var19 = true;
+                    } else {
+                        Iterator var44 = var43.iterator();
+
+                        while (true) {
+                            if (!var44.hasNext()) {
+                                var19 = true;
+                                break;
+                            }
+
+                            if (this.configured((JSONObject)var44.next())) {
+                                var19 = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (var19) {
+                        this.note("Choose and enable these slots in Toggles to map buttons to them.", (ViewGroup)var10);
+                        var12 = this;
+                        Pair var69 = TuplesKt.to("Open Favorites", new GxBluetoothPage$$ExternalSyntheticLambda34(this));
+                        ViewGroup var45 = (ViewGroup)var10;
+                        GxPage.buttons$default(var12, new Pair[]{var69}, var45, false, 4, null);
+                    }
+
+                    this.header("Controller-only Actions", (ViewGroup)var10);
+                    this.note("Ten additional actions for physical buttons. These never appear as on-screen Favorites.", (ViewGroup)var10);
+                    Iterator var85 = this.wcControllerSlots.iterator();
+
+                    for (int var20 = 0; var85.hasNext(); var20++) {
+                        JSONObject var96 = (JSONObject)var85.next();
+                        int var4 = var20 + 3;
+                        String var91 = GxPage.str$default(this, var96, "key", null, 2, null);
+                        JSONObject var16 = this.optionByKey(var91);
+                        String var94 = "Controller Action #" + (var20 + 1);
+                        if (var96.optBoolean("enabled")) {
+                            CharSequence var71 = GxPage.str$default(this, var96, "label", null, 2, null);
+                            var8 = var71;
+                            if (StringsKt.isBlank(var71)) {
+                                var8 = "Configured";
+                            }
+
+                            var8 = var8;
+                        } else {
+                            var8 = "Not configured";
+                        }
+
+                        var11 = this.listenLabel(var4);
+                        boolean var24;
+                        if (var96.optBoolean("enabled") && !this.wcDisabled() && !this.wcTesting) {
+                            var24 = true;
+                        } else {
+                            var24 = false;
+                        }
+
+                        label249: {
+                            var95 = this.slotCard(var10, var94, var8, var11, var24, new GxBluetoothPage$$ExternalSyntheticLambda35(this, var4));
+                            if (var16 != null) {
+                                var8 = GxPage.str$default(this, var16, "label", null, 2, null);
+                                if (var8 != null) {
+                                    CharSequence var73 = var8;
+                                    CharSequence var49 = var73;
+                                    if (StringsKt.isBlank(var73)) {
+                                        var49 = null;
+                                    }
+
+                                    var8 = (String)var49;
+                                    if (var8 != null) {
+                                        break label249;
+                                    }
+                                }
+                            }
+
+                            CharSequence var74 = GxPage.str$default(this, var96, "label", null, 2, null);
+                            var8 = var74;
+                            if (StringsKt.isBlank(var74)) {
+                                CharSequence var75 = var91;
+                                var8 = var75;
+                                if (StringsKt.isBlank(var75)) {
+                                    var8 = "Not configured";
+                                }
+
+                                var8 = var8;
+                            }
+
+                            var8 = var8;
+                        }
+
+                        GxVehicleKt.gxVehicleButtons$default(
+                            this,
+                            (ViewGroup)var95,
+                            CollectionsKt.listOf(
+                                new Triple<>(var8 + " · Choose action", this.wcDisabled() ^ true, new GxBluetoothPage$$ExternalSyntheticLambda1(this, var20))
+                            ),
+                            false,
+                            8,
+                            null
+                        );
+                        if (var16 != null) {
+                            var8 = GxPage.str$default(this, var16, "value_type", null, 2, null);
+                        } else {
+                            var8 = null;
+                        }
+
+                        var24 = Intrinsics.areEqual(var8, "speed");
+                        if (var24) {
+                            double var1 = this.slotValue(var96, var16);
+                            LinearLayout var54 = new LinearLayout((Context)this.getAct());
+                            var54.setOrientation(0);
+                            var54.setGravity(16);
+                            TextView var76 = new TextView((Context)this.getAct());
+                            String var97 = this.wcSpeedUnit;
+                            var76.setText("Set speed (" + var97 + ")");
+                            var76.setTextColor(CarUi.Companion.getTEXT());
+                            var76.setTextSize(18.0F);
+                            var54.addView((View)var76, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
+                            TextView var77 = new TextView((Context)this.getAct());
+                            var77.setText(this.fmtNum(var1));
+                            var77.setTextColor(CarUi.Companion.getTEXT());
+                            var77.setTextSize(22.0F);
+                            var77.setTypeface(Typeface.DEFAULT_BOLD);
+                            var77.setPadding(this.getUi().dp(12), 0, this.getUi().dp(12), 0);
+                            var54.addView((View)var77);
+                            TextView var78 = CarUi.button$default(
+                                this.getUi(), "Change", false, new GxBluetoothPage$$ExternalSyntheticLambda2(this, var1, var20, var91), 2, null
+                            );
+                            GxVehicleKt.gxVehicleEnable((View)var78, this.wcDisabled() ^ true);
+                            var54.addView((View)var78);
+                            View var98 = (View)var54;
+                            android.widget.LinearLayout.LayoutParams var55 = new android.widget.LinearLayout.LayoutParams(-1, -2);
+                            var55.bottomMargin = this.getUi().dp(6);
+                            Unit var79 = Unit.INSTANCE;
+                            var95.addView(var98, (android.view.ViewGroup.LayoutParams)var55);
+                        }
+
+                        GxPage var80 = this;
+                        if (var24) {
+                            var8 = "Uses the current mph/km/h setting and applies while openpilot is engaged on software-controlled cruise.";
+                        } else if (Intrinsics.areEqual(var91, "__starpilot_controller_action__:selfie")) {
+                            var8 = "Captures in the background and saves the driver-camera image in Galaxy → Sentry Mode.";
+                        } else {
+                            var8 = "Controller-only action. It does not create an on-screen Favorite button.";
+                        }
+
+                        GxPage.text$default(var80, var8, (ViewGroup)var95, 0.0F, 0, false, 28, null);
+                        this.slotTail(var95, var4);
+                    }
+                }
             }
-            GxPage.text$default(this, speed ? "Uses the current mph/km/h setting and applies while openpilot is engaged on software-controlled cruise." : Intrinsics.areEqual(key2, "__starpilot_controller_action__:selfie") ? "Captures in the background and saves the driver-camera image in Galaxy → Sentry Mode." : "Controller-only action. It does not create an on-screen Favorite button.", c3, 0.0f, 0, false, 28, null);
-            slotTail(c3, target);
-            i6 = i8;
-            canTest2 = canTest;
-            box = box2;
-            sig = sig2;
-            z = true;
         }
     }
 
@@ -1698,46 +1762,43 @@ public final class GxBluetoothPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:11:0x0022, code lost:
-    
-        if (r3.equals("__starpilot_controller_action__:cycle_driving_personality") == false) goto L22;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:8:0x0019, code lost:
-    
-        if (r3.equals("__starpilot_favorite_action__:toggle_traffic_mode") == false) goto L22;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:9:0x0025, code lost:
-    
-        return "CustomPersonalities";
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final String anchorKey(String key) {
-        switch (key.hashCode()) {
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final String anchorKey(String var1) {
+        int var2 = var1.hashCode();
+        String var3 = "ConditionalExperimental";
+        switch (var2) {
             case -1223291282:
-                if (key.equals("ConditionalExperimental")) {
-                    return "ConditionalExperimental";
+                if (!var1.equals("ConditionalExperimental")) {
+                    return var1;
                 }
-                return key;
+                break;
             case -1119957410:
-                if (key.equals("ConditionalChill")) {
-                    return "ConditionalExperimental";
+                if (!var1.equals("ConditionalChill")) {
+                    return var1;
                 }
-                return key;
+                break;
             case -878798333:
-                break;
-            case -370744618:
-                break;
-            case 499325643:
-                if (key.equals("ExperimentalMode")) {
-                    return "ConditionalExperimental";
+                if (!var1.equals("__starpilot_controller_action__:cycle_driving_personality")) {
+                    return var1;
                 }
-                return key;
+
+                return "CustomPersonalities";
+            case -370744618:
+                if (!var1.equals("__starpilot_favorite_action__:toggle_traffic_mode")) {
+                    return var1;
+                }
+
+                return "CustomPersonalities";
+            case 499325643:
+                if (!var1.equals("ExperimentalMode")) {
+                    return var1;
+                }
+                break;
             default:
-                return key;
+                return var1;
         }
+
+        return var3;
     }
 
     private final String category(JSONObject o) {
@@ -1755,133 +1816,182 @@ public final class GxBluetoothPage extends GxPage {
         return str$default;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:22:0x00c3, code lost:
-    
-        if (r4 != null) goto L32;
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r0v37, types: [T, android.app.AlertDialog] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void pickAction(final int i) {
-        Object element$iv;
-        String str;
-        AlertDialog alertDialog;
-        String str$default;
-        if (wcDisabled()) {
-            return;
-        }
-        final List options = this.wcOptions;
-        JSONObject jSONObject = (JSONObject) CollectionsKt.getOrNull(this.wcControllerSlots, i);
-        if (jSONObject == null) {
-            jSONObject = new JSONObject();
-        }
-        JSONObject slot = jSONObject;
-        final String key = GxPage.str$default(this, slot, "key", null, 2, null);
-        List $this$firstOrNull$iv = options;
-        Iterator it = $this$firstOrNull$iv.iterator();
-        while (true) {
-            if (!it.hasNext()) {
-                element$iv = null;
-                break;
-            }
-            element$iv = it.next();
-            JSONObject it2 = (JSONObject) element$iv;
-            if (Intrinsics.areEqual(GxPage.str$default(this, it2, "key", null, 2, null), key)) {
-                break;
-            }
-        }
-        JSONObject sel = (JSONObject) element$iv;
-        final HashSet expanded = new HashSet();
-        LinearLayout $this$pickAction_u24lambda_u2474 = new LinearLayout(getAct());
-        $this$pickAction_u24lambda_u2474.setOrientation(1);
-        $this$pickAction_u24lambda_u2474.setPadding(getUi().dp(22), getUi().dp(4), getUi().dp(22), 0);
-        TextView $this$pickAction_u24lambda_u2478 = new TextView(getAct());
-        if (sel != null && (str$default = GxPage.str$default(this, sel, "label", null, 2, null)) != null) {
-            String str2 = str$default;
-            if (StringsKt.isBlank(str2)) {
-                str2 = null;
-            }
-            str = str2;
-        }
-        String str$default2 = GxPage.str$default(this, slot, "label", null, 2, null);
-        if (StringsKt.isBlank(str$default2)) {
-            String str3 = key;
-            if (StringsKt.isBlank(str3)) {
-                str3 = "Not configured";
-            }
-            str$default2 = str3;
-        }
-        str = str$default2;
-        $this$pickAction_u24lambda_u2478.setText("Current: " + str + (((key.length() > 0) && sel == null) ? " (unavailable)" : ""));
-        $this$pickAction_u24lambda_u2478.setTextColor(CarUi.Companion.getDIM());
-        $this$pickAction_u24lambda_u2478.setTextSize(16.0f);
-        $this$pickAction_u24lambda_u2474.addView($this$pickAction_u24lambda_u2478);
-        final EditText search = GxVehicleKt.gxVehicleEdit$default(this, "Search by name, setting or description", "", 0, 8, null);
-        $this$pickAction_u24lambda_u2474.addView(search);
-        final TextView $this$pickAction_u24lambda_u2479 = new TextView(getAct());
-        $this$pickAction_u24lambda_u2479.setTextColor(CarUi.Companion.getDIM());
-        $this$pickAction_u24lambda_u2479.setTextSize(14.0f);
-        $this$pickAction_u24lambda_u2479.setPadding(0, getUi().dp(4), 0, getUi().dp(4));
-        $this$pickAction_u24lambda_u2474.addView($this$pickAction_u24lambda_u2479);
-        final LinearLayout $this$pickAction_u24lambda_u2480 = new LinearLayout(getAct());
-        $this$pickAction_u24lambda_u2480.setOrientation(1);
-        final ScrollView $this$pickAction_u24lambda_u2481 = new ScrollView(getAct());
-        $this$pickAction_u24lambda_u2481.addView($this$pickAction_u24lambda_u2480);
-        $this$pickAction_u24lambda_u2474.addView($this$pickAction_u24lambda_u2481, new LinearLayout.LayoutParams(-1, (int) (getAct().getResources().getDisplayMetrics().heightPixels * 0.5d)));
-        final Ref.ObjectRef dialog = new Ref.ObjectRef();
-        List $this$map$iv = options;
-        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        for (Object item$iv$iv : $this$map$iv) {
-            JSONObject it3 = (JSONObject) item$iv$iv;
-            destination$iv$iv.add(category(it3));
-        }
-        Set cats = CollectionsKt.toSet((List) destination$iv$iv);
-        Iterable $this$filter$iv = this.wcSectionOrder;
-        Collection destination$iv$iv2 = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv) {
-            Iterable $this$filter$iv2 = $this$filter$iv;
-            String it4 = (String) element$iv$iv;
-            if (cats.contains(it4)) {
-                destination$iv$iv2.add(element$iv$iv);
-            }
-            $this$filter$iv = $this$filter$iv2;
-        }
-        ArrayList arrayList = (List) destination$iv$iv2;
-        List $this$map$iv2 = options;
-        Collection destination$iv$iv3 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv2, 10));
-        for (Object item$iv$iv2 : $this$map$iv2) {
-            Iterable $this$map$iv3 = $this$map$iv2;
-            JSONObject it5 = (JSONObject) item$iv$iv2;
-            destination$iv$iv3.add(category(it5));
-            $this$map$iv2 = $this$map$iv3;
-        }
-        final List catOrder = CollectionsKt.distinct(CollectionsKt.plus((Collection) arrayList, destination$iv$iv3));
-        search.addTextChangedListener(new TextWatcher() { // from class: com.starpilot.starview.GxBluetoothPage$pickAction$2
-            @Override // android.text.TextWatcher
-            public void beforeTextChanged(CharSequence s, int a, int b, int c) {
+    /* VF: from Vineflower (jadx: Code restructure failed;Type inference failed;incorrect) */
+    private final void pickAction(int var1) {
+        String var19 = null; LinearLayout var38 = null; // declarations Vineflower left out
+        if (!this.wcDisabled()) {
+            List var6 = this.wcOptions;
+            JSONObject var4 = CollectionsKt.getOrNull(this.wcControllerSlots, var1);
+            JSONObject var3 = var4;
+            if (var4 == null) {
+                var3 = new JSONObject();
             }
 
-            @Override // android.text.TextWatcher
-            public void onTextChanged(CharSequence s, int a, int b, int c) {
+            String var7 = GxPage.str$default(this, var3, "key", null, 2, null);
+            Iterator var5 = var6.iterator();
+
+            JSONObject var8;
+            do {
+                if (!var5.hasNext()) {
+                    var4 = null;
+                    break;
+                }
+
+                var4 = (JSONObject)var5.next();
+                var8 = var4;
+            } while (!Intrinsics.areEqual(GxPage.str$default(this, var8, "key", null, 2, null), var7));
+
+            HashSet var9;
+            TextView var10;
+            JSONObject var11;
+            label98: {
+                var11 = var4;
+                var9 = new HashSet();
+                var38 = new LinearLayout((Context)this.getAct());
+                var38.setOrientation(1);
+                var38.setPadding(this.getUi().dp(22), this.getUi().dp(4), this.getUi().dp(22), 0);
+                var10 = new TextView((Context)this.getAct());
+                if (var11 != null) {
+                    String var29 = GxPage.str$default(this, var11, "label", null, 2, null);
+                    if (var29 != null) {
+                        CharSequence var36 = var29;
+                        CharSequence var30 = var36;
+                        if (StringsKt.isBlank(var36)) {
+                            var30 = null;
+                        }
+
+                        String var31 = (String)var30;
+                        if (var31 != null) {
+                            var19 = var31;
+                            break label98;
+                        }
+                    }
+                }
+
+                CharSequence var32 = GxPage.str$default(this, var3, "label", null, 2, null);
+                var3 = var32;
+                if (StringsKt.isBlank(var32)) {
+                    CharSequence var33 = var7;
+                    var3 = var33;
+                    if (StringsKt.isBlank(var33)) {
+                        var3 = "Not configured";
+                    }
+
+                    var3 = (String)var3;
+                }
+
+                var19 = (String)var3;
             }
 
-            @Override // android.text.TextWatcher
-            public void afterTextChanged(Editable s) {
-                GxBluetoothPage.pickAction$render($this$pickAction_u24lambda_u2480, search, options, $this$pickAction_u24lambda_u2479, catOrder, expanded, this, key, dialog, i);
-                $this$pickAction_u24lambda_u2481.scrollTo(0, 0);
+            boolean var2;
+            if (var7.length() > 0) {
+                var2 = true;
+            } else {
+                var2 = false;
             }
-        });
-        dialog.element = new AlertDialog.Builder(getAct()).setTitle("Controller Action #" + (i + 1)).setView($this$pickAction_u24lambda_u2474).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).create();
-        pickAction$render($this$pickAction_u24lambda_u2480, search, options, $this$pickAction_u24lambda_u2479, catOrder, expanded, this, key, dialog, i);
-        if (dialog.element == 0) {
-            Intrinsics.throwUninitializedPropertyAccessException("dialog");
-            alertDialog = null;
-        } else {
-            alertDialog = (AlertDialog) dialog.element;
+
+            String var34;
+            if (var2 && var11 == null) {
+                var34 = " (unavailable)";
+            } else {
+                var34 = "";
+            }
+
+            var10.setText("Current: " + var19 + var34);
+            var10.setTextColor(CarUi.Companion.getDIM());
+            var10.setTextSize(16.0F);
+            var38.addView((View)var10);
+            EditText var40 = GxVehicleKt.gxVehicleEdit$default(this, "Search by name, setting or description", "", 0, 8, null);
+            var38.addView((View)var40);
+            TextView var12 = new TextView((Context)this.getAct());
+            var12.setTextColor(CarUi.Companion.getDIM());
+            var12.setTextSize(14.0F);
+            var12.setPadding(0, this.getUi().dp(4), 0, this.getUi().dp(4));
+            var38.addView((View)var12);
+            LinearLayout var37 = new LinearLayout((Context)this.getAct());
+            var37.setOrientation(1);
+            ScrollView var35 = new ScrollView((Context)this.getAct());
+            var35.addView((View)var37);
+            var38.addView(
+                (View)var35,
+                (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, (int)(this.getAct().getResources().getDisplayMetrics().heightPixels * 0.5)))
+            );
+            ObjectRef var39 = new ObjectRef();
+            Iterable var13 = var6;
+            var var20 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var13, 10));
+            Iterator var41 = var13.iterator();
+
+            while (var41.hasNext()) {
+                var20.add(this.category((JSONObject)var41.next()));
+            }
+
+            List var21 = var20;
+            Set var14 = CollectionsKt.toSet(var21);
+            Iterable var22 = this.wcSectionOrder;
+            var var42 = new ArrayList();
+
+            for (Object var16 : var22) {
+                if (var14.contains((String)var16)) {
+                    var42.add(var16);
+                }
+            }
+
+            List var23 = var42;
+            Collection var43 = var23;
+            Iterable var24 = var6;
+            var var44 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var24, 10));
+            Iterator var45 = var24.iterator();
+
+            while (var45.hasNext()) {
+                var44.add(this.category((JSONObject)var45.next()));
+            }
+
+            List var25 = var44;
+            List var26 = CollectionsKt.distinct(CollectionsKt.plus(var43, var25));
+            var40.addTextChangedListener(
+                new TextWatcher() {
+                    final List<String> $catOrder = var26;
+                    final TextView $count = var12;
+                    final ObjectRef<AlertDialog> $dialog = var39;
+                    final HashSet<String> $expanded = var9;
+                    final int $i = var1;
+                    final String $key = var7;
+                    final List<JSONObject> $options = var6;
+                    final LinearLayout $results = var37;
+                    final EditText $search = var40;
+                    final ScrollView $sv = var35;
+                    final GxBluetoothPage this$0 = GxBluetoothPage.this;
+
+                    public void afterTextChanged(Editable var1) {
+                        GxBluetoothPage.pickAction$render(
+                            this.$results, this.$search, this.$options, this.$count, this.$catOrder, this.$expanded, this.this$0, this.$key, this.$dialog, this.$i
+                        );
+                        this.$sv.scrollTo(0, 0);
+                    }
+
+                    public void beforeTextChanged(CharSequence var1, int var2x, int var3x, int var4x) {
+                    }
+
+                    public void onTextChanged(CharSequence var1, int var2x, int var3x, int var4x) {
+                    }
+                }
+            );
+            var39.element = (T)new Builder((Context)this.getAct())
+                .setTitle("Controller Action #" + (var1 + 1))
+                .setView((View)var38)
+                .setNegativeButton("Cancel", null)
+                .create();
+            pickAction$render(var37, var40, var6, var12, var26, var9, this, var7, var39, var1);
+            AlertDialog var27;
+            if (var39.element == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("dialog");
+                var27 = null;
+            } else {
+                var27 = (AlertDialog)var39.element;
+            }
+
+            var27.show();
         }
-        alertDialog.show();
     }
 
     private static final View pickAction$optionButton(final GxBluetoothPage this$0, String key, final Ref.ObjectRef<AlertDialog> objectRef, final int $i, JSONObject o, String detail) {
@@ -1925,222 +2035,224 @@ public final class GxBluetoothPage extends GxPage {
         return $this$pickAction_u24optionButton_u24lambda_u2485;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final void pickAction$optionButton$lambda$88(Ref.ObjectRef $dialog, GxBluetoothPage this$0, int $i, String $k, View it) {
-        AlertDialog alertDialog;
-        if ($dialog.element == 0) {
+    /* VF: from Vineflower (jadx: ) */
+    public static final void pickAction$optionButton$lambda$88(ObjectRef var0, GxBluetoothPage var1, int var2, String var3, View var4) {
+        AlertDialog var5;
+        if (var0.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("dialog");
-            alertDialog = null;
+            var5 = null;
         } else {
-            alertDialog = (AlertDialog) $dialog.element;
+            var5 = (AlertDialog)var0.element;
         }
-        alertDialog.dismiss();
-        this$0.onActionSelect($i, $k);
+
+        var5.dismiss();
+        var1.onActionSelect(var2, var3);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:70:0x0247  */
-    /* JADX WARN: Removed duplicated region for block: B:73:0x02fc  */
-    /* JADX WARN: Removed duplicated region for block: B:91:0x024a  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final void pickAction$render(final LinearLayout results, final EditText search, final List<? extends JSONObject> list, final TextView count, final List<String> list2, final HashSet<String> hashSet, final GxBluetoothPage this$0, final String key, final Ref.ObjectRef<AlertDialog> objectRef, final int $i) {
-        char c;
-        int i;
-        int i2;
-        Iterable $this$filter$iv;
-        String str;
-        Iterable $this$filterTo$iv$iv;
-        int i3;
-        boolean z;
-        GxBluetoothPage gxBluetoothPage = this$0;
-        results.removeAllViews();
-        String lowerCase = StringsKt.trim((CharSequence) search.getText().toString()).toString().toLowerCase(Locale.ROOT);
-        String str2 = "toLowerCase(...)";
-        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-        String q = lowerCase;
-        int i4 = 0;
-        Iterable $this$filter$iv2 = new Regex("\\s+").split(q, 0);
-        Collection destination$iv$iv = new ArrayList();
-        Iterator it = $this$filter$iv2.iterator();
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public static final void pickAction$render(
+        LinearLayout var0,
+        EditText var1,
+        List<? extends JSONObject> var2,
+        TextView var3,
+        List<String> var4,
+        HashSet<String> var5,
+        GxBluetoothPage var6,
+        String var7,
+        ObjectRef<AlertDialog> var8,
+        int var9
+    ) {
+        var0.removeAllViews();
+        String var20 = StringsKt.trim(var1.getText().toString()).toString().toLowerCase(Locale.ROOT);
+        String var17 = "toLowerCase(...)";
+        Intrinsics.checkNotNullExpressionValue(var20, "toLowerCase(...)");
+        CharSequence var16 = var20;
+        Regex var18 = new Regex("\\s+");
+        int var11 = 0;
+        Iterable var47 = var18.split(var16, 0);
+        var var38 = new ArrayList();
+        Iterator var48 = var47.iterator();
+
         while (true) {
-            if (!it.hasNext()) {
-                break;
-            }
-            Object element$iv$iv = it.next();
-            String it2 = (String) element$iv$iv;
-            if ((it2.length() <= 0 ? (char) 0 : (char) 1) != 0) {
-                destination$iv$iv.add(element$iv$iv);
-            }
-        }
-        Iterable words = (List) destination$iv$iv;
-        List<? extends JSONObject> $this$filter$iv3 = list;
-        Collection destination$iv$iv2 = new ArrayList();
-        Iterable $this$filterTo$iv$iv2 = $this$filter$iv3;
-        for (Object element$iv$iv2 : $this$filterTo$iv$iv2) {
-            JSONObject o = (JSONObject) element$iv$iv2;
-            String[] strArr = new String[6];
-            strArr[i4] = GxPage.str$default(gxBluetoothPage, o, "label", null, 2, null);
-            strArr[c] = GxPage.str$default(gxBluetoothPage, o, "key", null, 2, null);
-            strArr[2] = GxPage.str$default(gxBluetoothPage, o, "description", null, 2, null);
-            strArr[3] = GxPage.str$default(gxBluetoothPage, o, "picker_label", null, 2, null);
-            strArr[4] = GxPage.str$default(gxBluetoothPage, o, "picker_description", null, 2, null);
-            strArr[5] = gxBluetoothPage.category(o);
-            String hay = CollectionsKt.joinToString(CollectionsKt.listOf((Object[]) strArr), " ", "", "", -1, "...", null).toLowerCase(Locale.ROOT);
-            Intrinsics.checkNotNullExpressionValue(hay, str2);
-            Iterable $this$all$iv = words;
-            if (!($this$all$iv instanceof Collection) || !((Collection) $this$all$iv).isEmpty()) {
-                Iterator it3 = $this$all$iv.iterator();
-                while (true) {
-                    if (it3.hasNext()) {
-                        Object element$iv = it3.next();
-                        String it4 = (String) element$iv;
-                        $this$filter$iv = $this$filter$iv3;
-                        str = str2;
-                        $this$filterTo$iv$iv = $this$filterTo$iv$iv2;
-                        Iterable $this$all$iv2 = $this$all$iv;
-                        i3 = 0;
-                        if (!StringsKt.contains((CharSequence) hay, (CharSequence) it4, false)) {
-                            z = false;
-                            break;
-                        }
-                        i4 = 0;
-                        $this$filterTo$iv$iv2 = $this$filterTo$iv$iv;
-                        $this$filter$iv3 = $this$filter$iv;
-                        str2 = str;
-                        $this$all$iv = $this$all$iv2;
+            boolean var15 = var48.hasNext();
+            byte var10 = 1;
+            if (!var15) {
+                List var22 = var38;
+                Iterable var49 = var2;
+                var var23 = new ArrayList();
+                Iterable var39 = var49;
+                Iterator var24 = var49.iterator();
+                var10 = (byte)var11;
+
+                while (var24.hasNext()) {
+                    Object var25 = var24.next();
+                    JSONObject var52 = (JSONObject)var25;
+                    String[] var21 = new String[6];
+                    var21[var10] = GxPage.str$default(var6, var52, "label", null, 2, null);
+                    var21[1] = GxPage.str$default(var6, var52, "key", null, 2, null);
+                    var21[2] = GxPage.str$default(var6, var52, "description", null, 2, null);
+                    var21[3] = GxPage.str$default(var6, var52, "picker_label", null, 2, null);
+                    var21[4] = GxPage.str$default(var6, var52, "picker_description", null, 2, null);
+                    var21[5] = var6.category(var52);
+                    String var27 = CollectionsKt.joinToString(CollectionsKt.listOf(var21), " ", "", "", -1, "...", null)
+                        .toLowerCase(Locale.ROOT);
+                    Intrinsics.checkNotNullExpressionValue(var27, var17);
+                    var var60 = var22;
+                    boolean var33;
+                    Iterable var40;
+                    Iterable var43;
+                    String var50;
+                    if (var60 instanceof Collection && ((Collection)var60).isEmpty()) {
+                        var33 = true;
+                        var43 = var39;
+                        var40 = var49;
+                        var50 = var17;
                     } else {
-                        $this$filter$iv = $this$filter$iv3;
-                        str = str2;
-                        $this$filterTo$iv$iv = $this$filterTo$iv$iv2;
-                        i3 = i4;
-                        z = true;
-                        break;
-                    }
-                }
-            } else {
-                $this$filter$iv = $this$filter$iv3;
-                str = str2;
-                $this$filterTo$iv$iv = $this$filterTo$iv$iv2;
-                i3 = i4;
-                z = true;
-            }
-            if (z) {
-                destination$iv$iv2.add(element$iv$iv2);
-            }
-            i4 = i3;
-            $this$filterTo$iv$iv2 = $this$filterTo$iv$iv;
-            $this$filter$iv3 = $this$filter$iv;
-            str2 = str;
-            c = 1;
-        }
-        int i5 = 6;
-        int i6 = i4;
-        List matches = (List) destination$iv$iv2;
-        int i7 = 1;
-        count.setText(matches.size() + " " + (matches.size() == 1 ? "action" : "actions"));
-        int i8 = i6;
-        results.addView(pickAction$optionButton(this$0, key, objectRef, $i, null, "Clear this assignment"));
-        for (final String cat : list2) {
-            List $this$filter$iv4 = matches;
-            Collection destination$iv$iv3 = new ArrayList();
-            for (Object element$iv$iv3 : $this$filter$iv4) {
-                JSONObject it5 = (JSONObject) element$iv$iv3;
-                if (Intrinsics.areEqual(gxBluetoothPage.category(it5), cat)) {
-                    destination$iv$iv3.add(element$iv$iv3);
-                }
-            }
-            List<JSONObject> items = (List) destination$iv$iv3;
-            if (items.isEmpty()) {
-                gxBluetoothPage = this$0;
-                q = q;
-            } else {
-                if ((q.length() > 0 ? i7 : i8) == 0 && !hashSet.contains(cat)) {
-                    i = i8;
-                    i2 = i;
-                    TextView $this$pickAction_u24render_u24lambda_u2495 = new TextView(this$0.getAct());
-                    $this$pickAction_u24render_u24lambda_u2495.setText((i2 == 0 ? "▾" : "▸") + "  " + cat + " (" + items.size() + ")");
-                    $this$pickAction_u24render_u24lambda_u2495.setTextColor(CarUi.Companion.getTEXT());
-                    $this$pickAction_u24render_u24lambda_u2495.setTextSize(18.0f);
-                    $this$pickAction_u24render_u24lambda_u2495.setTypeface(Typeface.DEFAULT_BOLD);
-                    $this$pickAction_u24render_u24lambda_u2495.setMinHeight(this$0.getUi().dp(56));
-                    $this$pickAction_u24render_u24lambda_u2495.setGravity(16);
-                    $this$pickAction_u24render_u24lambda_u2495.setPadding(this$0.getUi().dp(i5), this$0.getUi().dp(8), this$0.getUi().dp(i5), this$0.getUi().dp(8));
-                    final String str3 = q;
-                    String q2 = q;
-                    int i9 = i5;
-                    int i10 = i7;
-                    $this$pickAction_u24render_u24lambda_u2495.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda3
-                        @Override // android.view.View.OnClickListener
-                        public final void onClick(View view) {
-                            GxBluetoothPage.pickAction$render$lambda$95$lambda$94(str3, hashSet, cat, results, search, list, count, list2, this$0, key, objectRef, $i, view);
-                        }
-                    });
-                    results.addView($this$pickAction_u24render_u24lambda_u2495);
-                    if (i2 != 0) {
-                        for (JSONObject o2 : items) {
-                            String[] strArr2 = new String[2];
-                            strArr2[0] = cat;
-                            strArr2[i10] = GxPage.str$default(this$0, o2, "description", null, 2, null);
-                            Iterable $this$filter$iv5 = CollectionsKt.listOf((Object[]) strArr2);
-                            Collection destination$iv$iv4 = new ArrayList();
-                            for (Object element$iv$iv4 : $this$filter$iv5) {
-                                String it6 = (String) element$iv$iv4;
-                                if (!StringsKt.isBlank(it6)) {
-                                    destination$iv$iv4.add(element$iv$iv4);
-                                }
+                        Iterator var26 = var60.iterator();
+
+                        while (true) {
+                            if (!var26.hasNext()) {
+                                var50 = var17;
+                                var43 = var39;
+                                var33 = true;
+                                var40 = var49;
+                                break;
                             }
-                            results.addView(pickAction$optionButton(this$0, key, objectRef, $i, o2, CollectionsKt.joinToString((List) destination$iv$iv4, " · ", "", "", -1, "...", null)));
+
+                            String var53 = (String)var26.next();
+                            CharSequence var28 = var27;
+                            CharSequence var29 = var53;
+                            var10 = 0;
+                            if (!StringsKt.contains(var28, var29, false)) {
+                                var33 = false;
+                                var43 = var39;
+                                var40 = var49;
+                                var50 = var17;
+                                break;
+                            }
+
+                            var10 = 0;
+                            var17 = var17;
                         }
                     }
-                    gxBluetoothPage = this$0;
-                    i8 = 0;
-                    i5 = i9;
-                    q = q2;
-                    i7 = i10;
-                }
-                i = i7;
-                i2 = i;
-                TextView $this$pickAction_u24render_u24lambda_u24952 = new TextView(this$0.getAct());
-                $this$pickAction_u24render_u24lambda_u24952.setText((i2 == 0 ? "▾" : "▸") + "  " + cat + " (" + items.size() + ")");
-                $this$pickAction_u24render_u24lambda_u24952.setTextColor(CarUi.Companion.getTEXT());
-                $this$pickAction_u24render_u24lambda_u24952.setTextSize(18.0f);
-                $this$pickAction_u24render_u24lambda_u24952.setTypeface(Typeface.DEFAULT_BOLD);
-                $this$pickAction_u24render_u24lambda_u24952.setMinHeight(this$0.getUi().dp(56));
-                $this$pickAction_u24render_u24lambda_u24952.setGravity(16);
-                $this$pickAction_u24render_u24lambda_u24952.setPadding(this$0.getUi().dp(i5), this$0.getUi().dp(8), this$0.getUi().dp(i5), this$0.getUi().dp(8));
-                final String str32 = q;
-                String q22 = q;
-                int i92 = i5;
-                int i102 = i7;
-                $this$pickAction_u24render_u24lambda_u24952.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxBluetoothPage$$ExternalSyntheticLambda3
-                    @Override // android.view.View.OnClickListener
-                    public final void onClick(View view) {
-                        GxBluetoothPage.pickAction$render$lambda$95$lambda$94(str32, hashSet, cat, results, search, list, count, list2, this$0, key, objectRef, $i, view);
+
+                    if (var33) {
+                        var23.add(var25);
                     }
-                });
-                results.addView($this$pickAction_u24render_u24lambda_u24952);
-                if (i2 != 0) {
+
+                    var17 = var50;
+                    var49 = var40;
+                    var39 = var43;
                 }
-                gxBluetoothPage = this$0;
-                i8 = 0;
-                i5 = i92;
-                q = q22;
-                i7 = i102;
+
+                byte var12 = 6;
+                List var51 = var23;
+                int var14 = var51.size();
+                var11 = var51.size();
+                int var13 = 1;
+                String var41;
+                if (var11 == 1) {
+                    var41 = "action";
+                } else {
+                    var41 = "actions";
+                }
+
+                var3.setText(var14 + " " + var41);
+                var0.addView(pickAction$optionButton(var6, var7, var8, var9, null, "Clear this assignment"));
+                Iterator var58 = var4.iterator();
+                byte var35 = var10;
+                String var42 = var20;
+                var10 = (byte)var13;
+
+                while (var58.hasNext()) {
+                    var20 = (String)var58.next();
+                    Iterable var61 = var51;
+                    var var44 = new ArrayList();
+
+                    for (Object var65 : var61) {
+                        if (Intrinsics.areEqual(var6.category((JSONObject)var65), var20)) {
+                            var44.add(var65);
+                        }
+                    }
+
+                    List var63 = var44;
+                    if (!var63.isEmpty()) {
+                        if (var42.length() > 0) {
+                            var13 = var10;
+                        } else {
+                            var13 = var35;
+                        }
+
+                        if (var13 != 0 || var5.contains(var20)) {
+                            var35 = var10;
+                        }
+
+                        TextView var66 = new TextView((Context)var6.getAct());
+                        if (var35 != 0) {
+                            var17 = "▾";
+                        } else {
+                            var17 = "▸";
+                        }
+
+                        var13 = var63.size();
+                        var66.setText(var17 + "  " + var20 + " (" + var13 + ")");
+                        var66.setTextColor(CarUi.Companion.getTEXT());
+                        var66.setTextSize(18.0F);
+                        var66.setTypeface(Typeface.DEFAULT_BOLD);
+                        var66.setMinHeight(var6.getUi().dp(56));
+                        var66.setGravity(16);
+                        var66.setPadding(var6.getUi().dp(var12), var6.getUi().dp(8), var6.getUi().dp(var12), var6.getUi().dp(8));
+                        var66.setOnClickListener(
+                            new GxBluetoothPage$$ExternalSyntheticLambda3(var42, var5, var20, var0, var1, var2, var3, var4, var6, var7, var8, var9)
+                        );
+                        var0.addView((View)var66);
+                        if (var35 != 0) {
+                            for (JSONObject var46 : var63) {
+                                String[] var67 = new String[]{var20, null};
+                                var67[var10] = GxPage.str$default(var6, var46, "description", null, 2, null);
+                                Iterable var70 = CollectionsKt.listOf(var67);
+                                var var68 = new ArrayList();
+
+                                for (Object var72 : var70) {
+                                    if (!StringsKt.isBlank((String & CharSequence)var72)) {
+                                        var68.add(var72);
+                                    }
+                                }
+
+                                var22 = var68;
+                                var0.addView(
+                                    pickAction$optionButton(
+                                        var6, var7, var8, var9, var46, CollectionsKt.joinToString(var22, " · ", "", "", -1, "...", null)
+                                    )
+                                );
+                            }
+                        }
+
+                        var35 = 0;
+                    }
+                }
+
+                if (var51.isEmpty()) {
+                    TextView var30 = new TextView((Context)var6.getAct());
+                    var30.setText("No matching actions. Try another search or category.");
+                    var30.setTextColor(CarUi.Companion.getDIM());
+                    var30.setTextSize(16.0F);
+                    var30.setPadding(var35, var6.getUi().dp(10), var35, var6.getUi().dp(10));
+                    var0.addView((View)var30);
+                }
+
+                return;
+            }
+
+            Object var19 = var48.next();
+            if (((String)var19).length() <= 0) {
+                var10 = 0;
+            }
+
+            if ((var10 != 0)) {
+                var38.add(var19);
             }
         }
-        int i11 = i8;
-        if (!matches.isEmpty()) {
-            return;
-        }
-        TextView $this$pickAction_u24render_u24lambda_u2497 = new TextView(this$0.getAct());
-        $this$pickAction_u24render_u24lambda_u2497.setText("No matching actions. Try another search or category.");
-        $this$pickAction_u24render_u24lambda_u2497.setTextColor(CarUi.Companion.getDIM());
-        $this$pickAction_u24render_u24lambda_u2497.setTextSize(16.0f);
-        $this$pickAction_u24render_u24lambda_u2497.setPadding(i11, this$0.getUi().dp(10), i11, this$0.getUi().dp(10));
-        results.addView($this$pickAction_u24render_u24lambda_u2497);
     }
 
     /* JADX INFO: Access modifiers changed from: private */

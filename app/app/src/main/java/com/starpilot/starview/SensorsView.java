@@ -24,6 +24,11 @@ import kotlin.collections.CollectionsKt;
 import kotlin.collections.MapsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref;
+import android.graphics.Paint.Join;
+import android.graphics.Paint.Style;
+import java.util.Map.Entry;
+import kotlin.Pair;
+import kotlin.jvm.internal.Ref.FloatRef;
 
 /* compiled from: SensorsActivity.kt */
 public final class SensorsView extends View {
@@ -45,49 +50,56 @@ public final class SensorsView extends View {
     private final LinkedHashMap<String, ArrayList<float[]>> trails;
     private final Paint txt;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public SensorsView(Context ctx) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        this.d = getResources().getDisplayMetrics().density;
+    /* VF: from Vineflower (jadx: ) */
+    public SensorsView(Context var1) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        this.d = this.getResources().getDisplayMetrics().density;
         this.lat0 = Double.NaN;
         this.lon0 = Double.NaN;
         this.trails = new LinkedHashMap<>();
         this.lastAdd = new HashMap<>();
         this.dr = new ArrayList<>();
-        this.colors = MapsKt.mapOf(TuplesKt.to("ublox", Integer.valueOf(Color.rgb(111, 227, 161))), TuplesKt.to("android", Integer.valueOf(Color.rgb(90, 170, 255))), TuplesKt.to("qcomdiag", Integer.valueOf(Color.rgb(200, 140, 255))), TuplesKt.to("map", -1));
+        this.colors = MapsKt.mapOf(
+            new Pair[]{
+                TuplesKt.to("ublox", Color.rgb(111, 227, 161)),
+                TuplesKt.to("android", Color.rgb(90, 170, 255)),
+                TuplesKt.to("qcomdiag", Color.rgb(200, 140, 255)),
+                TuplesKt.to("map", -1)
+            }
+        );
         this.drColor = Color.rgb(255, 170, 60);
-        Paint $this$txt_u24lambda_u240 = new Paint(1);
-        $this$txt_u24lambda_u240.setColor(Color.rgb(223, 230, 243));
-        $this$txt_u24lambda_u240.setTextSize(14 * this.d);
-        this.txt = $this$txt_u24lambda_u240;
-        Paint $this$dim_u24lambda_u241 = new Paint(this.txt);
-        $this$dim_u24lambda_u241.setColor(Color.rgb(140, 155, 180));
-        $this$dim_u24lambda_u241.setTextSize(this.d * 12.5f);
-        this.dim = $this$dim_u24lambda_u241;
-        Paint $this$head_u24lambda_u242 = new Paint(this.txt);
-        $this$head_u24lambda_u242.setColor(-1);
-        $this$head_u24lambda_u242.setTextSize(16 * this.d);
-        $this$head_u24lambda_u242.setFakeBoldText(true);
-        this.head = $this$head_u24lambda_u242;
-        Paint $this$big_u24lambda_u243 = new Paint(this.txt);
-        $this$big_u24lambda_u243.setTextSize(22 * this.d);
-        $this$big_u24lambda_u243.setFakeBoldText(true);
-        this.big = $this$big_u24lambda_u243;
-        Paint $this$line_u24lambda_u244 = new Paint(1);
-        $this$line_u24lambda_u244.setStyle(Paint.Style.STROKE);
-        $this$line_u24lambda_u244.setStrokeWidth(this.d * 2.5f);
-        $this$line_u24lambda_u244.setStrokeJoin(Paint.Join.ROUND);
-        this.line = $this$line_u24lambda_u244;
+        Paint var2 = new Paint(1);
+        var2.setColor(Color.rgb(223, 230, 243));
+        var2.setTextSize(14 * this.d);
+        this.txt = var2;
+        Paint var3 = new Paint(this.txt);
+        var3.setColor(Color.rgb(140, 155, 180));
+        var3.setTextSize(this.d * 12.5F);
+        this.dim = var3;
+        Paint var4 = new Paint(this.txt);
+        var4.setColor(-1);
+        var4.setTextSize(16 * this.d);
+        var4.setFakeBoldText(true);
+        this.head = var4;
+        Paint var5 = new Paint(this.txt);
+        var5.setTextSize(22 * this.d);
+        var5.setFakeBoldText(true);
+        this.big = var5;
+        Paint var6 = new Paint(1);
+        var6.setStyle(android.graphics.Paint.Style.STROKE);
+        var6.setStrokeWidth(this.d * 2.5F);
+        var6.setStrokeJoin(android.graphics.Paint.Join.ROUND);
+        this.line = var6;
         this.fill = new Paint(1);
-        Paint $this$grid_u24lambda_u245 = new Paint();
-        $this$grid_u24lambda_u245.setColor(Color.rgb(32, 38, 52));
-        $this$grid_u24lambda_u245.setStrokeWidth(1.0f);
-        this.grid = $this$grid_u24lambda_u245;
-        Paint $this$panel_u24lambda_u246 = new Paint();
-        $this$panel_u24lambda_u246.setColor(Color.rgb(18, 22, 31));
-        this.panel = $this$panel_u24lambda_u246;
-        setBackgroundColor(Color.rgb(11, 13, 18));
+        Paint var7 = new Paint();
+        var7.setColor(Color.rgb(32, 38, 52));
+        var7.setStrokeWidth(1.0F);
+        this.grid = var7;
+        Paint var8 = new Paint();
+        var8.setColor(Color.rgb(18, 22, 31));
+        this.panel = var8;
+        this.setBackgroundColor(Color.rgb(11, 13, 18));
     }
 
     private final Telemetry getT() {
@@ -122,7 +134,7 @@ public final class SensorsView extends View {
     	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visit(SwitchOverStringVisitor.java:60)
      */
     /* renamed from: short, reason: not valid java name */
-    private final String m1087short(String src) {
+    private final String shortName(String src) {
         switch (src.hashCode()) {
             case -861391249:
                 if (src.equals("android")) {
@@ -148,110 +160,173 @@ public final class SensorsView extends View {
         return src;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r14v22 */
-    /* JADX WARN: Type inference failed for: r14v23 */
-    /* JADX WARN: Type inference failed for: r14v8 */
-    private final void update(Telemetry tm, long now) {
-        Object next;
-        ArrayList<float[]> arrayList;
-        ArrayList<float[]> arrayList2;
-        Iterator<Map.Entry<String, GpsFixInfo>> it = tm.getGpsFixes().entrySet().iterator();
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    private final void update(Telemetry var1, long var2) {
+        Iterator var19 = var1.getGpsFixes().entrySet().iterator();
+
         while (true) {
-            if (!it.hasNext()) {
-                break;
-            }
-            Map.Entry<String, GpsFixInfo> next2 = it.next();
-            String key = next2.getKey();
-            GpsFixInfo value = next2.getValue();
-            if (value.getHasFix() && now - value.getAtNs() <= 3000000000L) {
-                double lat = value.getLat();
-                if (((Double.isInfinite(lat) || Double.isNaN(lat)) ? false : true) && Math.abs(value.getLat()) >= 1.0d) {
-                    if (Double.isNaN(this.lat0)) {
-                        this.lat0 = value.getLat();
-                        this.lon0 = value.getLon();
-                    }
-                    Long l = this.lastAdd.get(key);
-                    if (now - (l != null ? l.longValue() : 0L) >= 200000000) {
-                        this.lastAdd.put(key, Long.valueOf(now));
-                        LinkedHashMap<String, ArrayList<float[]>> linkedHashMap = this.trails;
-                        String source = value.getSource();
-                        ArrayList<float[]> arrayList3 = linkedHashMap.get(source);
-                        if (arrayList3 == null) {
-                            arrayList2 = new ArrayList<>();
-                            linkedHashMap.put(source, arrayList2);
-                        } else {
-                            arrayList2 = arrayList3;
-                        }
-                        ArrayList<float[]> arrayList4 = arrayList2;
-                        arrayList4.add(en(value.getLat(), value.getLon()));
-                        if (arrayList4.size() > 4000) {
-                            arrayList4.remove(0);
-                        }
-                    }
-                }
-            }
-        }
-        double outLat = GpsBridge.INSTANCE.getOutLat();
-        double outLon = GpsBridge.INSTANCE.getOutLon();
-        if (((Double.isInfinite(outLat) || Double.isNaN(outLat)) ? false : true) && !Double.isNaN(this.lat0)) {
-            Long l2 = this.lastAdd.get("map");
-            if (now - (l2 != null ? l2.longValue() : 0L) >= 200000000) {
-                this.lastAdd.put("map", Long.valueOf(now));
-                LinkedHashMap<String, ArrayList<float[]>> linkedHashMap2 = this.trails;
-                ArrayList<float[]> arrayList5 = linkedHashMap2.get("map");
-                if (arrayList5 == null) {
-                    arrayList = new ArrayList<>();
-                    linkedHashMap2.put("map", arrayList);
+            boolean var17 = var19.hasNext();
+            int var12 = 1;
+            if (!var17) {
+                double var30 = GpsBridge.INSTANCE.getOutLat();
+                double var6 = GpsBridge.INSTANCE.getOutLon();
+                if (!Double.isInfinite(var30) && !Double.isNaN(var30)) {
+                    var12 = (((boolean)true) ? 1 : 0);
                 } else {
-                    arrayList = arrayList5;
+                    var12 = (((boolean)false) ? 1 : 0);
                 }
-                ArrayList<float[]> arrayList6 = arrayList;
-                arrayList6.add(en(outLat, outLon));
-                if (arrayList6.size() > 4000) {
-                    arrayList6.remove(0);
+
+                if (var12 && !Double.isNaN(this.lat0)) {
+                    Long var41 = this.lastAdd.get("map");
+                    long var37;
+                    if (var41 != null) {
+                        var37 = var41;
+                    } else {
+                        var37 = 0L;
+                    }
+
+                    if (var2 - var37 >= 200000000L) {
+                        this.lastAdd.put("map", var2);
+                        Map var49 = this.trails;
+                        ArrayList var42 = (ArrayList)var49.get("map");
+                        if (var42 == null) {
+                            var42 = new ArrayList();
+                            var49.put("map", var42);
+                        }
+
+                        var42 = var42;
+                        var42.add(this.en(var30, var6));
+                        if (var42.size() > 4000) {
+                            var42.remove(0);
+                        }
+                    }
                 }
-            }
-        }
-        double[] at = Odometry.INSTANCE.at(now);
-        if (this.anchor == null) {
-            Collection<GpsFixInfo> values = tm.getGpsFixes().values();
-            Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
-            ArrayList arrayList7 = new ArrayList();
-            for (Object obj : values) {
-                GpsFixInfo gpsFixInfo = (GpsFixInfo) obj;
-                if (Intrinsics.areEqual(gpsFixInfo.getService(), "gpsLocationExternal") && gpsFixInfo.getHasFix() && now - gpsFixInfo.getAtNs() < 1000000000 && gpsFixInfo.getSpeed() > 2.5f) {
-                    arrayList7.add(obj);
+
+                double[] var50 = Odometry.INSTANCE.at(var2);
+                if (this.anchor == null) {
+                    Collection var23 = var1.getGpsFixes().values();
+                    Intrinsics.checkNotNullExpressionValue(var23, "<get-values>(...)");
+                    Iterable var44 = var23;
+                    var var24 = new ArrayList();
+
+                    for (Object var52 : var44) {
+                        GpsFixInfo var45 = (GpsFixInfo)var52;
+                        if (Intrinsics.areEqual(var45.getService(), "gpsLocationExternal")
+                            && var45.getHasFix()
+                            && var2 - var45.getAtNs() < 1000000000L
+                            && var45.getSpeed() > 2.5F) {
+                            var12 = (((boolean)true) ? 1 : 0);
+                        } else {
+                            var12 = (((boolean)false) ? 1 : 0);
+                        }
+
+                        if ((var12 != 0)) {
+                            var24.add(var52);
+                        }
+                    }
+
+                    List var25 = var24;
+                    Iterable var26 = var25;
+                    Iterator var53 = var26.iterator();
+                    Object var27;
+                    if (!var53.hasNext()) {
+                        var27 = null;
+                    } else {
+                        var27 = var53.next();
+                        if (var53.hasNext()) {
+                            int var13 = Intrinsics.areEqual(((GpsFixInfo)var27).getSource(), "ublox") ^ 1;
+
+                            while (true) {
+                                var44 = (Iterable)var53.next();
+                                int var14 = Intrinsics.areEqual(((GpsFixInfo)var44).getSource(), "ublox") ^ 1;
+                                var12 = var13;
+                                if (var13 > var14) {
+                                    var27 = var44;
+                                    var12 = var14;
+                                }
+
+                                if (!var53.hasNext()) {
+                                    break;
+                                }
+
+                                var13 = var12;
+                            }
+                        }
+                    }
+
+                    var27 = (GpsFixInfo)var27;
+                    if (var27 != null && !Double.isNaN(this.lat0)) {
+                        float[] var47 = this.en(((GpsFixInfo)var27).getLat(), ((GpsFixInfo)var27).getLon());
+                        var30 = Math.toRadians(90.0 - ((GpsFixInfo)var27).getBearing());
+                        this.anchor = new double[]{var47[0], var47[1], var30 - var50[2], var50[0], var50[1]};
+                    }
                 }
-            }
-            // the u-blox fix first, else the first one
-            next = null;
-            int bestKey = Integer.MAX_VALUE;
-            for (Object o : arrayList7) {
-                int k = !Intrinsics.areEqual(((GpsFixInfo) o).getSource(), "ublox") ? 1 : 0;
-                if (k < bestKey) {
-                    bestKey = k;
-                    next = o;
+
+                double[] var29 = this.anchor;
+                if (var29 != null) {
+                    Long var48 = this.lastAdd.get("dr");
+                    long var38;
+                    if (var48 != null) {
+                        var38 = var48;
+                    } else {
+                        var38 = 0L;
+                    }
+
+                    if (var2 - var38 >= 200000000L) {
+                        this.lastAdd.put("dr", var2);
+                        double var8 = var50[0] - var29[3];
+                        var30 = var50[1] - var29[4];
+                        double var10 = Math.cos(var29[2]);
+                        var6 = Math.sin(var29[2]);
+                        this.dr.add(new float[]{(float)(var29[0] + var10 * var8 - var6 * var30), (float)(var29[1] + var6 * var8 + var10 * var30)});
+                        if (this.dr.size() > 4000) {
+                            this.dr.remove(0);
+                        }
+                    }
                 }
+
+                return;
             }
-            GpsFixInfo gpsFixInfo2 = (GpsFixInfo) next;
-            if (gpsFixInfo2 != null && !Double.isNaN(this.lat0)) {
-                float[] en = en(gpsFixInfo2.getLat(), gpsFixInfo2.getLon());
-                this.anchor = new double[]{en[0], en[1], Math.toRadians(90.0d - gpsFixInfo2.getBearing()) - at[2], at[0], at[1]};
-            }
-        }
-        double[] dArr = this.anchor;
-        if (dArr != null) {
-            Long l3 = this.lastAdd.get("dr");
-            if (now - (l3 != null ? l3.longValue() : 0L) >= 200000000) {
-                this.lastAdd.put("dr", Long.valueOf(now));
-                double d = at[0] - dArr[3];
-                double d2 = at[1] - dArr[4];
-                double cos = Math.cos(dArr[2]);
-                double sin = Math.sin(dArr[2]);
-                this.dr.add(new float[]{(float) ((dArr[0] + (cos * d)) - (sin * d2)), (float) (dArr[1] + (sin * d) + (cos * d2))});
-                if (this.dr.size() > 4000) {
-                    this.dr.remove(0);
+
+            java.util.Map.Entry var20 = (java.util.Map.Entry)var19.next();
+            String var18 = (String)var20.getKey();
+            GpsFixInfo var51 = (GpsFixInfo)var20.getValue();
+            if (var51.getHasFix() && var2 - var51.getAtNs() <= 3000000000L) {
+                double var4 = var51.getLat();
+                if (Double.isInfinite(var4) || Double.isNaN(var4)) {
+                    var12 = 0;
+                }
+
+                if (var12 && !(Math.abs(var51.getLat()) < 1.0)) {
+                    if (Double.isNaN(this.lat0)) {
+                        this.lat0 = var51.getLat();
+                        this.lon0 = var51.getLon();
+                    }
+
+                    Long var21 = this.lastAdd.get(var18);
+                    long var15;
+                    if (var21 != null) {
+                        var15 = var21;
+                    } else {
+                        var15 = 0L;
+                    }
+
+                    if (var2 - var15 >= 200000000L) {
+                        this.lastAdd.put(var18, var2);
+                        Map var22 = this.trails;
+                        String var54 = var51.getSource();
+                        var18 = (String)var22.get(var54);
+                        if (var18 == null) {
+                            var18 = new ArrayList();
+                            var22.put(var54, var18);
+                        }
+
+                        ArrayList var40 = (ArrayList)var18;
+                        var40.add(this.en(var51.getLat(), var51.getLon()));
+                        if (var40.size() > 4000) {
+                            var40.remove(0);
+                        }
+                    }
                 }
             }
         }
@@ -280,276 +355,265 @@ public final class SensorsView extends View {
         postInvalidateDelayed(100L);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:114:0x0496  */
-    /* JADX WARN: Removed duplicated region for block: B:118:0x04d5  */
-    /* JADX WARN: Removed duplicated region for block: B:128:0x0534  */
-    /* JADX WARN: Removed duplicated region for block: B:131:0x05bf  */
-    /* JADX WARN: Removed duplicated region for block: B:134:0x05d1  */
-    /* JADX WARN: Removed duplicated region for block: B:135:0x0562  */
-    /* JADX WARN: Removed duplicated region for block: B:91:0x03ef  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void drawMap(Canvas cv, RectF r, Telemetry tm, long now) {
-        float cx;
-        float cN;
-        float cE;
-        Iterator<Map.Entry<String, GpsFixInfo>> it;
-        float[] it2;
-        Iterator<String> it3;
-        StringBuilder append;
-        String str;
-        float f = 14;
-        cv.drawRoundRect(r, this.d * f, this.d * f, this.panel);
-        Collection<ArrayList<float[]>> values = this.trails.values();
-        Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
-        List all = CollectionsKt.plus((Collection) CollectionsKt.flatten(values), (Iterable) this.dr);
-        if (all.isEmpty()) {
-            cv.drawText("waiting for a GPS fix…", r.left + (16 * this.d), r.top + (30 * this.d), this.dim);
-            return;
-        }
-        Iterator it4 = all.iterator();
-        if (!it4.hasNext()) {
-            throw new NoSuchElementException();
-        }
-        float[] it5 = (float[]) it4.next();
-        float f2 = it5[0];
-        while (it4.hasNext()) {
-            float[] it6 = (float[]) it4.next();
-            f2 = Math.min(f2, it6[0]);
-        }
-        float minE = f2;
-        Iterator it7 = all.iterator();
-        if (!it7.hasNext()) {
-            throw new NoSuchElementException();
-        }
-        float[] it8 = (float[]) it7.next();
-        float f3 = it8[0];
-        while (it7.hasNext()) {
-            float[] it9 = (float[]) it7.next();
-            f3 = Math.max(f3, it9[0]);
-        }
-        float maxE = f3;
-        Iterator it10 = all.iterator();
-        if (!it10.hasNext()) {
-            throw new NoSuchElementException();
-        }
-        float[] it11 = (float[]) it10.next();
-        float f4 = it11[1];
-        while (it10.hasNext()) {
-            float[] it12 = (float[]) it10.next();
-            f4 = Math.min(f4, it12[1]);
-        }
-        float minN = f4;
-        Iterator it13 = all.iterator();
-        if (!it13.hasNext()) {
-            throw new NoSuchElementException();
-        }
-        float[] it14 = (float[]) it13.next();
-        float f5 = it14[1];
-        while (it13.hasNext()) {
-            float[] it15 = (float[]) it13.next();
-            f5 = Math.max(f5, it15[1]);
-        }
-        float maxN = f5;
-        float span = Math.max(60.0f, Math.max(maxE - minE, maxN - minN)) * 1.15f;
-        float f6 = 2;
-        float cx2 = (minE + maxE) / f6;
-        float cE2 = (minN + maxN) / f6;
-        float wb = 18;
-        float m = wb * this.d;
-        float scale = Math.min(r.width() - (f6 * m), r.height() - (f6 * m)) / span;
-        float cx3 = r.centerX();
-        float cy = r.centerY();
-        cv.save();
-        cv.clipRect(r);
-        float scale2 = 9.8E-45f;
-        Iterable $this$first$iv = CollectionsKt.listOf((Object[]) new Float[]{Float.valueOf(5.0f), Float.valueOf(10.0f), Float.valueOf(20.0f), Float.valueOf(50.0f), Float.valueOf(100.0f), Float.valueOf(200.0f), Float.valueOf(500.0f), Float.valueOf(1000.0f), Float.valueOf(2000.0f), Float.valueOf(5000.0f)});
-        int $i$f$first = 0;
-        for (Object element$iv : $this$first$iv) {
-            float it16 = ((Number) element$iv).floatValue();
-            if (it16 * scale > ((float) 60) * this.d) {
-                float step = ((Number) element$iv).floatValue();
-                float g = ((float) Math.floor((cx2 - span) / step)) * step;
-                while (g < cx2 + span) {
-                    float drawMap$X = drawMap$X(cx3, cx2, scale, g);
-                    float f7 = r.top;
-                    float drawMap$X2 = drawMap$X(cx3, cx2, scale, g);
-                    float scale3 = r.bottom;
-                    cv.drawLine(drawMap$X, f7, drawMap$X2, scale3, this.grid);
-                    g += step;
-                    cy = cy;
-                    scale = scale;
-                    all = all;
-                    cx3 = cx3;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void drawMap(Canvas var1, RectF var2, Telemetry var3, long var4) {
+        float var12 = 14;
+        var1.drawRoundRect(var2, this.d * var12, this.d * var12, this.panel);
+        Collection var23 = this.trails.values();
+        Intrinsics.checkNotNullExpressionValue(var23, "<get-values>(...)");
+        List var64 = CollectionsKt.plus(CollectionsKt.flatten(var23), this.dr);
+        if (var64.isEmpty()) {
+            var1.drawText("waiting for a GPS fix…", var2.left + 16 * this.d, var2.top + 30 * this.d, this.dim);
+        } else {
+            Iterator var24 = var64.iterator();
+            if (!var24.hasNext()) {
+                throw new NoSuchElementException();
+            } else {
+                float var8 = ((float[])var24.next())[0];
+
+                while (var24.hasNext()) {
+                    var8 = Math.min(var8, ((float[])var24.next())[0]);
                 }
-                float cx4 = cx3;
-                float scale4 = scale;
-                float cy2 = cy;
-                for (float g2 = ((float) Math.floor((cE2 - span) / step)) * step; g2 < cE2 + span; g2 += step) {
-                    cv.drawLine(r.left, drawMap$Y(cy2, cE2, scale4, g2), r.right, drawMap$Y(cy2, cE2, scale4, g2), this.grid);
-                }
-                float cN2 = cE2;
-                float cE3 = cx2;
-                float f8 = f;
-                drawMap$poly(this, cv, cx4, cx2, scale4, cy2, cE2, this.dr, this.drColor, true);
-                for (Map.Entry<String, ArrayList<float[]>> entry : this.trails.entrySet()) {
-                    String src = entry.getKey();
-                    ArrayList pts = entry.getValue();
-                    if (!Intrinsics.areEqual(src, "map")) {
-                        ArrayList arrayList = pts;
-                        Integer num = this.colors.get(src);
-                        drawMap$poly(this, cv, cx4, cE3, scale4, cy2, cN2, arrayList, num != null ? num.intValue() : -3355444, false);
+
+                var24 = var64.iterator();
+                if (!var24.hasNext()) {
+                    throw new NoSuchElementException();
+                } else {
+                    float var9 = ((float[])var24.next())[0];
+
+                    while (var24.hasNext()) {
+                        var9 = Math.max(var9, ((float[])var24.next())[0]);
                     }
-                }
-                ArrayList it17 = this.trails.get("map");
-                if (it17 != null) {
-                    this.line.setStrokeWidth(this.d * 1.6f);
-                    drawMap$poly(this, cv, cx4, cE3, scale4, cy2, cN2, it17, -1, false);
-                    this.line.setStrokeWidth(this.d * 2.5f);
-                    Unit unit = Unit.INSTANCE;
-                    Unit unit2 = Unit.INSTANCE;
-                }
-                float wb2 = GpsBridge.INSTANCE.getOutBearing();
-                if ((Float.isInfinite(wb2) || Float.isNaN(wb2)) ? false : true) {
-                    double outLat = GpsBridge.INSTANCE.getOutLat();
-                    if (((Double.isInfinite(outLat) || Double.isNaN(outLat)) ? false : true) && !Double.isNaN(this.lat0)) {
-                        float[] p = en(GpsBridge.INSTANCE.getOutLat(), GpsBridge.INSTANCE.getOutLon());
-                        cx = cx4;
-                        cE = cE3;
-                        float px = drawMap$X(cx, cE, scale4, p[0]);
-                        cN = cN2;
-                        float py = drawMap$Y(cy2, cN, scale4, p[1]);
-                        cv.save();
-                        cv.rotate(wb2, px, py);
-                        Path a = new Path();
-                        a.moveTo(px, py - (11 * this.d));
-                        float f9 = 7;
-                        a.lineTo((this.d * 6.5f) + px, (this.d * f9) + py);
-                        a.lineTo(px, (this.d * 3.5f) + py);
-                        a.lineTo(px - (this.d * 6.5f), (f9 * this.d) + py);
-                        a.close();
-                        this.fill.setColor(-1);
-                        this.fill.setAlpha(255);
-                        cv.drawPath(a, this.fill);
-                        cv.restore();
-                        it = tm.getGpsFixes().entrySet().iterator();
-                        while (it.hasNext()) {
-                            GpsFixInfo f10 = it.next().getValue();
-                            if (f10.getHasFix() && now - f10.getAtNs() <= 3000000000L) {
-                                if (!Double.isNaN(this.lat0)) {
-                                    float[] p2 = en(f10.getLat(), f10.getLon());
-                                    Integer num2 = this.colors.get(f10.getSource());
-                                    int col = num2 != null ? num2.intValue() : -3355444;
-                                    this.fill.setColor(col);
-                                    this.fill.setAlpha(40);
-                                    cv.drawCircle(drawMap$X(cx, cE, scale4, p2[0]), drawMap$Y(cy2, cN, scale4, p2[1]), Math.max(4 * this.d, f10.getHAcc() * scale4), this.fill);
-                                    this.fill.setAlpha(255);
-                                    cv.drawCircle(drawMap$X(cx, cE, scale4, p2[0]), drawMap$Y(cy2, cN, scale4, p2[1]), 5 * this.d, this.fill);
-                                    it = it;
+
+                    var24 = var64.iterator();
+                    if (!var24.hasNext()) {
+                        throw new NoSuchElementException();
+                    } else {
+                        float var10 = ((float[])var24.next())[1];
+
+                        while (var24.hasNext()) {
+                            var10 = Math.min(var10, ((float[])var24.next())[1]);
+                        }
+
+                        var24 = var64.iterator();
+                        if (!var24.hasNext()) {
+                            throw new NoSuchElementException();
+                        } else {
+                            float var11 = ((float[])var24.next())[1];
+
+                            while (var24.hasNext()) {
+                                var11 = Math.max(var11, ((float[])var24.next())[1]);
+                            }
+
+                            float var17 = Math.max(60.0F, Math.max(var9 - var8, var11 - var10)) * 1.15F;
+                            float var14 = 2;
+                            float var13 = (var8 + var9) / var14;
+                            var8 = (var10 + var11) / var14;
+                            float var15 = 18;
+                            var9 = var15 * this.d;
+                            var10 = Math.min(var2.width() - var14 * var9, var2.height() - var14 * var9) / var17;
+                            var14 = var2.centerX();
+                            var9 = var2.centerY();
+                            var1.save();
+                            var1.clipRect(var2);
+                            int var20 = 7;
+                            Iterable var78 = CollectionsKt.listOf(new Float[]{5.0F, 10.0F, 20.0F, 50.0F, 100.0F, 200.0F, 500.0F, 1000.0F, 2000.0F, 5000.0F});
+                            boolean var22 = false;
+                            var24 = var78.iterator();
+                            var12 = var8;
+                            var8 = var14;
+
+                            while (var24.hasNext()) {
+                                java.util.Map.Entry var25 = (java.util.Map.Entry)var24.next();
+                                boolean var21;
+                                if (((Number)var25).floatValue() * var10 > 60 * this.d) {
+                                    var21 = true;
+                                } else {
+                                    var21 = false;
+                                }
+
+                                if (var21) {
+                                    float var16 = ((Number)var25).floatValue();
+
+                                    for (float var51 = (float)Math.floor((var13 - var17) / var16) * var16; var51 < var13 + var17; var51 += var16) {
+                                        var1.drawLine(drawMap$X(var8, var13, var10, var51), var2.top, drawMap$X(var8, var13, var10, var51), var2.bottom, this.grid);
+                                    }
+
+                                    for (float var52 = (float)Math.floor((var8 - var17) / var16) * var16; var52 < var12 + var17; var52 += var16) {
+                                        var1.drawLine(var2.left, drawMap$Y(var9, var12, var10, var52), var2.right, drawMap$Y(var9, var12, var10, var52), this.grid);
+                                    }
+
+                                    drawMap$poly(this, var1, var8, var13, var10, var9, var12, this.dr, this.drColor, true);
+
+                                    for (Object var25$it : (Iterable) this.trails.entrySet()) {
+                                        var25 = (java.util.Map.Entry) var25$it;
+                                        String var80 = (String)var25.getKey();
+                                        var25 = (ArrayList)var25.getValue();
+                                        if (!Intrinsics.areEqual(var80, "map")) {
+                                            List var86 = (List)var25;
+                                            Integer var81 = this.colors.get(var80);
+                                            if (var81 != null) {
+                                                var20 = var81;
+                                            } else {
+                                                var20 = -3355444;
+                                            }
+
+                                            drawMap$poly(this, var1, var8, var13, var10, var9, var12, var86, var20, false);
+                                        }
+                                    }
+
+                                    ArrayList var66 = this.trails.get("map");
+                                    if (var66 != null) {
+                                        this.line.setStrokeWidth(this.d * 1.6F);
+                                        drawMap$poly(this, var1, var8, var13, var10, var9, var12, var66, -1, false);
+                                        this.line.setStrokeWidth(this.d * 2.5F);
+                                        Unit var67 = Unit.INSTANCE;
+                                        Unit var68 = Unit.INSTANCE;
+                                    }
+
+                                    float var18 = GpsBridge.INSTANCE.getOutBearing();
+                                    int var58;
+                                    if (!Float.isInfinite(var18) && !Float.isNaN(var18)) {
+                                        var58 = 1;
+                                    } else {
+                                        var58 = 0;
+                                    }
+
+                                    if ((var58 != 0)) {
+                                        double var6 = GpsBridge.INSTANCE.getOutLat();
+                                        if (!Double.isInfinite(var6) && !Double.isNaN(var6)) {
+                                            var58 = (((boolean)true) ? 1 : 0);
+                                        } else {
+                                            var58 = (((boolean)false) ? 1 : 0);
+                                        }
+
+                                        if (var58 && !Double.isNaN(this.lat0)) {
+                                            float[] var69 = this.en(GpsBridge.INSTANCE.getOutLat(), GpsBridge.INSTANCE.getOutLon());
+                                            var14 = drawMap$X(var8, var13, var10, var69[0]);
+                                            var17 = drawMap$Y(var9, var12, var10, var69[1]);
+                                            var1.save();
+                                            var1.rotate(var18, var14, var17);
+                                            Path var70 = new Path();
+                                            var70.moveTo(var14, var17 - 11 * this.d);
+                                            var18 = this.d;
+                                            float var19 = 7;
+                                            var70.lineTo(var18 * 6.5F + var14, this.d * var19 + var17);
+                                            var70.lineTo(var14, this.d * 3.5F + var17);
+                                            var70.lineTo(var14 - this.d * 6.5F, var19 * this.d + var17);
+                                            var70.close();
+                                            this.fill.setColor(-1);
+                                            this.fill.setAlpha(255);
+                                            var1.drawPath(var70, this.fill);
+                                            var1.restore();
+                                        }
+                                    }
+
+                                    Iterator var26 = var3.getGpsFixes().entrySet().iterator();
+
+                                    while (var26.hasNext()) {
+                                        GpsFixInfo var82 = (GpsFixInfo)((java.util.Map.Entry)var26.next()).getValue();
+                                        if (var82.getHasFix() && var4 - var82.getAtNs() <= 3000000000L && !Double.isNaN(this.lat0)) {
+                                            float[] var87 = this.en(var82.getLat(), var82.getLon());
+                                            Integer var71 = this.colors.get(var82.getSource());
+                                            if (var71 != null) {
+                                                var58 = var71;
+                                            } else {
+                                                var58 = -3355444;
+                                            }
+
+                                            this.fill.setColor(var58);
+                                            this.fill.setAlpha(40);
+                                            var1.drawCircle(
+                                                drawMap$X(var8, var13, var10, var87[0]),
+                                                drawMap$Y(var9, var12, var10, var87[1]),
+                                                Math.max(4 * this.d, var82.getHAcc() * var10),
+                                                this.fill
+                                            );
+                                            this.fill.setAlpha(255);
+                                            var1.drawCircle(drawMap$X(var8, var13, var10, var87[0]), drawMap$Y(var9, var12, var10, var87[1]), 5 * this.d, this.fill);
+                                        }
+                                    }
+
+                                    float[] var27 = CollectionsKt.lastOrNull(this.dr);
+                                    if (var27 != null) {
+                                        this.fill.setColor(this.drColor);
+                                        var1.drawCircle(drawMap$X(var8, var13, var10, var27[0]), drawMap$Y(var9, var12, var10, var27[1]), this.d * 4.5F, this.fill);
+                                        Unit var28 = Unit.INSTANCE;
+                                        Unit var29 = Unit.INSTANCE;
+                                    }
+
+                                    var1.restore();
+                                    var8 = var2.top;
+                                    var9 = 22;
+                                    var12 = this.d;
+                                    Iterator var30 = this.trails.keySet().iterator();
+
+                                    for (var8 += var12 * var9; var30.hasNext(); var8 += this.d * var15) {
+                                        var23 = (Collection)var30.next();
+                                        Intrinsics.checkNotNullExpressionValue(var23, "next(...)");
+                                        String var73 = (String)var23;
+                                        Paint var83 = this.fill;
+                                        Integer var88 = this.colors.get(var73);
+                                        if (var88 != null) {
+                                            var58 = var88;
+                                        } else {
+                                            var58 = -3355444;
+                                        }
+
+                                        var83.setColor(var58);
+                                        var12 = var2.left;
+                                        var14 = this.d;
+                                        var13 = 5;
+                                        var1.drawCircle(var12 + var14 * var15, var8 - this.d * var13, var13 * this.d, this.fill);
+                                        var1.drawText(this.shortName(var73), var2.left + 30 * this.d, var8, this.dim);
+                                    }
+
+                                    if (!this.dr.isEmpty()) {
+                                        this.fill.setColor(this.drColor);
+                                        var11 = var2.left;
+                                        var12 = this.d;
+                                        var13 = 5;
+                                        var1.drawCircle(var11 + var12 * var15, var8 - this.d * var13, var13 * this.d, this.fill);
+                                        var1.drawText("wheels + gyro only (no GPS after its start point)", var2.left + 30 * this.d, var8, this.dim);
+                                    } else {
+                                        var1.drawText("dead reckoning starts once the car moves", var2.left + var12 * this.d, var8, this.dim);
+                                    }
+
+                                    this.line.setColor(Color.rgb(200, 210, 230));
+                                    this.line.setPathEffect(null);
+                                    var11 = var2.left;
+                                    var8 = 16;
+                                    var1.drawLine(
+                                        this.d * var8 + var11,
+                                        var2.bottom - this.d * var8,
+                                        var2.left + this.d * var8 + var16 * var10,
+                                        var2.bottom - this.d * var8,
+                                        this.line
+                                    );
+                                    String var31;
+                                    StringBuilder var74;
+                                    if (var16 >= 1000.0F) {
+                                        var58 = (int)(var16 / 1000);
+                                        var74 = new StringBuilder().append(var58);
+                                        var31 = " km";
+                                    } else {
+                                        var58 = (int)var16;
+                                        var74 = new StringBuilder().append(var58);
+                                        var31 = " m";
+                                    }
+
+                                    var1.drawText(var74.append(var31).toString(), var2.left + var8 * this.d, var2.bottom - var9 * this.d, this.dim);
+                                    var1.drawText("N ↑", var2.right - 40 * this.d, var2.top + 24 * this.d, this.head);
+                                    return;
                                 }
                             }
+
+                            throw new NoSuchElementException("Collection contains no element matching the predicate.");
                         }
-                        it2 = (float[]) CollectionsKt.lastOrNull((List) this.dr);
-                        if (it2 != null) {
-                            this.fill.setColor(this.drColor);
-                            cv.drawCircle(drawMap$X(cx, cE, scale4, it2[0]), drawMap$Y(cy2, cN, scale4, it2[1]), this.d * 4.5f, this.fill);
-                            Unit unit3 = Unit.INSTANCE;
-                            Unit unit4 = Unit.INSTANCE;
-                        }
-                        cv.restore();
-                        float f11 = 22;
-                        float ly = r.top + (this.d * f11);
-                        float ly2 = ly;
-                        for (it3 = this.trails.keySet().iterator(); it3.hasNext(); it3 = it3) {
-                            String next = it3.next();
-                            Intrinsics.checkNotNullExpressionValue(next, "next(...)");
-                            String src2 = next;
-                            Paint paint = this.fill;
-                            Integer num3 = this.colors.get(src2);
-                            paint.setColor(num3 != null ? num3.intValue() : -3355444);
-                            float f12 = 5;
-                            cv.drawCircle(r.left + (this.d * wb), ly2 - (this.d * f12), f12 * this.d, this.fill);
-                            cv.drawText(m1087short(src2), r.left + (30 * this.d), ly2, this.dim);
-                            ly2 += this.d * wb;
-                        }
-                        if (this.dr.isEmpty()) {
-                            this.fill.setColor(this.drColor);
-                            float f13 = 5;
-                            cv.drawCircle(r.left + (this.d * wb), ly2 - (this.d * f13), f13 * this.d, this.fill);
-                            cv.drawText("wheels + gyro only (no GPS after its start point)", r.left + (30 * this.d), ly2, this.dim);
-                        } else {
-                            cv.drawText("dead reckoning starts once the car moves", r.left + (f8 * this.d), ly2, this.dim);
-                        }
-                        float sb = step * scale4;
-                        this.line.setColor(Color.rgb(200, 210, 230));
-                        this.line.setPathEffect(null);
-                        float f14 = 16;
-                        float f15 = (this.d * f14) + r.left;
-                        float f16 = r.bottom - (this.d * f14);
-                        float f17 = r.left;
-                        float ly3 = this.d;
-                        cv.drawLine(f15, f16, f17 + (ly3 * f14) + sb, r.bottom - (this.d * f14), this.line);
-                        if (step < 1000.0f) {
-                            append = new StringBuilder().append((int) (step / 1000));
-                            str = " km";
-                        } else {
-                            append = new StringBuilder().append((int) step);
-                            str = " m";
-                        }
-                        cv.drawText(append.append(str).toString(), r.left + (f14 * this.d), r.bottom - (f11 * this.d), this.dim);
-                        cv.drawText("N ↑", r.right - (40 * this.d), r.top + (24 * this.d), this.head);
-                        return;
                     }
                 }
-                cx = cx4;
-                cN = cN2;
-                cE = cE3;
-                it = tm.getGpsFixes().entrySet().iterator();
-                while (it.hasNext()) {
-                }
-                it2 = (float[]) CollectionsKt.lastOrNull((List) this.dr);
-                if (it2 != null) {
-                }
-                cv.restore();
-                float f112 = 22;
-                float ly4 = r.top + (this.d * f112);
-                float ly22 = ly4;
-                while (it3.hasNext()) {
-                }
-                if (this.dr.isEmpty()) {
-                }
-                float sb2 = step * scale4;
-                this.line.setColor(Color.rgb(200, 210, 230));
-                this.line.setPathEffect(null);
-                float f142 = 16;
-                float f152 = (this.d * f142) + r.left;
-                float f162 = r.bottom - (this.d * f142);
-                float f172 = r.left;
-                float ly32 = this.d;
-                cv.drawLine(f152, f162, f172 + (ly32 * f142) + sb2, r.bottom - (this.d * f142), this.line);
-                if (step < 1000.0f) {
-                }
-                cv.drawText(append.append(str).toString(), r.left + (f142 * this.d), r.bottom - (f112 * this.d), this.dim);
-                cv.drawText("N ↑", r.right - (40 * this.d), r.top + (24 * this.d), this.head);
-                return;
             }
-            float cN3 = cE2;
-            float cN4 = cx2;
-            float cE4 = cx3;
-            int cx5 = $i$f$first;
-            float $i$f$first2 = scale2;
-            cy = cy;
-            scale = scale;
-            all = all;
-            scale2 = $i$f$first2;
-            $i$f$first = cx5;
-            cx3 = cE4;
-            cx2 = cN4;
-            cE2 = cN3;
-            f = f;
         }
-        throw new NoSuchElementException("Collection contains no element matching the predicate.");
     }
 
     private static final float drawMap$X(float cx, float cE, float scale, float e) {
@@ -574,164 +638,248 @@ public final class SensorsView extends View {
         $cv.drawPath(p, this$0.line);
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    private final void drawInfo(Canvas cv, RectF r, Telemetry tm, long now) {
-        String it;
-        String str;
-        String str2;
-        String str3;
-        int i;
-        float f = 14;
-        cv.drawRoundRect(r, this.d * f, f * this.d, this.panel);
-        Ref.FloatRef y = new Ref.FloatRef();
-        y.element = r.top + (28 * this.d);
-        float x = r.left + (16 * this.d);
-        int i2 = 1;
-        boolean mph = !tm.isMetric();
-        drawInfo$ln(this, cv, x, y, "Turned since Reset  (+ left, − right)", this.head, 30.0f);
-        drawInfo$ln(this, cv, x, y, "gyro " + drawInfo$deg(tm.getTurnGyroDeg()) + "    steering " + drawInfo$deg(tm.getTurnSteerDeg()) + "    GPS " + drawInfo$deg(tm.getTurnGpsDeg()) + "    map " + drawInfo$deg(GpsBridge.INSTANCE.getTurnSentDeg()), this.big, 26.0f);
-        String it2 = tm.getTurnGpsSrc();
-        if (it2 == null || (it = m1087short(it2)) == null) {
-            it = "waiting";
+    /* VF: from Vineflower (jadx: ) */
+    private final void drawInfo(Canvas var1, RectF var2, Telemetry var3, long var4) {
+        String var22 = null; String var34 = null; // declarations Vineflower left out
+        boolean var12;
+        FloatRef var14;
+        float var47;
+        label114: {
+            float var8 = 14;
+            var1.drawRoundRect(var2, this.d * var8, var8 * this.d, this.panel);
+            var14 = new FloatRef();
+            var14.element = var2.top + 28 * this.d;
+            var47 = var2.left + 16 * this.d;
+            var12 = var3.isMetric() ^ true;
+            drawInfo$ln(this, var1, var47, var14, "Turned since Reset  (+ left, − right)", this.head, 30.0F);
+            String var17 = drawInfo$deg(var3.getTurnGyroDeg());
+            String var15 = drawInfo$deg(var3.getTurnSteerDeg());
+            String var20 = drawInfo$deg(var3.getTurnGpsDeg());
+            String var16 = drawInfo$deg(GpsBridge.INSTANCE.getTurnSentDeg());
+            drawInfo$ln(this, var1, var47, var14, "gyro " + var17 + "    steering " + var15 + "    GPS " + var20 + "    map " + var16, this.big, 26.0F);
+            String var21 = var3.getTurnGpsSrc();
+            if (var21 != null) {
+                var15 = this.shortName(var21);
+                var22 = var15;
+                if (var15 != null) {
+                    break label114;
+                }
+            }
+
+            var22 = "waiting";
         }
-        drawInfo$ln(this, cv, x, y, "all count only above 3.4 mph (map = the heading the tablet's map gets).  One full circle ≈ ±360° on each.  GPS course: " + it, this.dim, 28.0f);
-        drawInfo$ln(this, cv, x, y, "GPS", this.head, 24.0f);
-        Set<String> keySet = tm.getGpsFixes().keySet();
-        Intrinsics.checkNotNullExpressionValue(keySet, "<get-keys>(...)");
-        List keys = CollectionsKt.sorted(keySet);
-        if (keys.isEmpty()) {
-            drawInfo$ln$default(this, cv, x, y, "no GPS messages from the comma", this.dim, 0.0f, 64, null);
+
+        drawInfo$ln(
+            this,
+            var1,
+            var47,
+            var14,
+            "all count only above 3.4 mph (map = the heading the tablet's map gets).  One full circle ≈ ±360° on each.  GPS course: " + var22,
+            this.dim,
+            28.0F
+        );
+        drawInfo$ln(this, var1, var47, var14, "GPS", this.head, 24.0F);
+        Set var23 = var3.getGpsFixes().keySet();
+        Intrinsics.checkNotNullExpressionValue(var23, "<get-keys>(...)");
+        List var24 = CollectionsKt.sorted(var23);
+        if (var24.isEmpty()) {
+            drawInfo$ln$default(this, var1, var47, var14, "no GPS messages from the comma", this.dim, 0.0F, 64, null);
         }
-        Iterator it3 = keys.iterator();
+
+        Iterator var54 = var24.iterator();
+
         while (true) {
-            if (!it3.hasNext()) {
-                break;
-            }
-            String k = (String) it3.next();
-            GpsFixInfo f2 = tm.getGpsFixes().get(k);
-            if (f2 != null) {
-                double age = (now - f2.getAtNs()) / 1.0E9d;
-                int i3 = age > 3.0d ? i2 : 0;
-                float speed = f2.getSpeed();
-                String spd = (mph ? new StringBuilder().append(drawInfo$f1(speed * 2.237f)).append(" mph") : new StringBuilder().append(drawInfo$f1(speed * 3.6f)).append(" km/h")).toString();
-                String m1087short = m1087short(f2.getSource());
-                String format = String.format("%.1f", Arrays.copyOf(new Object[]{Float.valueOf(tm.hz(k))}, i2));
-                Intrinsics.checkNotNullExpressionValue(format, "format(...)");
-                if (i3 != 0) {
-                    str3 = String.format("silent for %.0f s", Arrays.copyOf(new Object[]{Double.valueOf(age)}, i2));
-                    Intrinsics.checkNotNullExpressionValue(str3, "format(...)");
-                } else {
-                    str3 = !f2.getHasFix() ? "NO FIX (" + f2.getSats() + " sats)" : "FIX  " + f2.getSats() + " sats  ±" + drawInfo$f1(f2.getHAcc()) + " m";
-                }
-                String head1 = m1087short + "  ·  " + format + " Hz  ·  " + str3;
-                Paint $this$drawInfo_u24lambda_u2419 = this.txt;
-                if (i3 == 0 && f2.getHasFix()) {
-                    Integer num = this.colors.get(f2.getSource());
-                    i = num != null ? num.intValue() : Color.rgb(223, 230, 243);
-                    $this$drawInfo_u24lambda_u2419.setColor(i);
-                    Unit unit = Unit.INSTANCE;
-                    drawInfo$ln(this, cv, x, y, head1, $this$drawInfo_u24lambda_u2419, 19.0f);
-                    this.txt.setColor(Color.rgb(223, 230, 243));
-                    if (f2.getHasFix() || i3 != 0) {
-                        Ref.FloatRef y2 = y;
-                        y2.element += 4 * this.d;
-                        y = y2;
-                        i2 = 1;
-                    } else {
-                        String format2 = String.format("   %.6f, %.6f   " + spd + "   course " + drawInfo$f1(f2.getBearing()) + "° ±" + drawInfo$f1(f2.getBAcc()) + "°", Arrays.copyOf(new Object[]{Double.valueOf(f2.getLat()), Double.valueOf(f2.getLon())}, 2));
-                        Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
-                        drawInfo$ln(this, cv, x, y, format2, this.dim, 22.0f);
-                        y = y;
-                        i2 = 1;
+            boolean var13 = var54.hasNext();
+            boolean var11 = false;
+            if (!var13) {
+                label92: {
+                    var14.element = var14.element + 4 * this.d;
+                    String var33 = GpsBridge.INSTANCE.getOutKind();
+                    switch (var33.hashCode()) {
+                        case 3214:
+                            if (var33.equals("dr")) {
+                                var34 = "wheels + gyro (GPS gap or ignored)";
+                                break label92;
+                            }
+                            break;
+                        case 3198773:
+                            if (var33.equals("held")) {
+                                var34 = "held still (car stopped)";
+                                break label92;
+                            }
+                            break;
+                        case 3314326:
+                            if (var33.equals("last")) {
+                                var34 = "last known position";
+                                break label92;
+                            }
+                            break;
+                        case 3322092:
+                            if (var33.equals("live")) {
+                                var34 = "the GPS (checked)";
+                                break label92;
+                            }
                     }
+
+                    var34 = "nothing yet";
                 }
-                i = Color.rgb(255, 150, 120);
-                $this$drawInfo_u24lambda_u2419.setColor(i);
-                Unit unit2 = Unit.INSTANCE;
-                drawInfo$ln(this, cv, x, y, head1, $this$drawInfo_u24lambda_u2419, 19.0f);
+
+                float var48 = GpsBridge.INSTANCE.getOutBearing();
+                boolean var52;
+                if (!Float.isInfinite(var48) && !Float.isNaN(var48)) {
+                    var52 = true;
+                } else {
+                    var52 = false;
+                }
+
+                String var56;
+                if (var52) {
+                    String var55 = String.format("%.0f", Arrays.copyOf(new Object[]{GpsBridge.INSTANCE.getOutBearing()}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var55, "format(...)");
+                    var56 = "   ·   heading " + var55 + "°";
+                } else {
+                    var56 = "";
+                }
+
+                String var63 = GpsBridge.INSTANCE.getFilter().getStatus();
+                var4 = GpsBridge.INSTANCE.getFilter().getRejected();
+                drawInfo$ln(this, var1, var47, var14, "The map gets: " + var34 + var56 + "   ·   " + var63 + "   ·   ignored jumps: " + var4, this.txt, 24.0F);
+                var14.element = var14.element + 6 * this.d;
+                drawInfo$ln(this, var1, var47, var14, "Comma motion sensors", this.head, 24.0F);
+                float[] var35 = var3.getPoseGyro();
+                String var57 = drawInfo$f1((float)Math.toDegrees((double)Odometry.INSTANCE.getGyroSign() * var35[2]));
+                String var36;
+                if (var3.getPoseOK() && var3.getPoseValid()) {
+                    var36 = "OK";
+                } else {
+                    var36 = "NOT OK";
+                }
+
+                var63 = String.format("%.0f", Arrays.copyOf(new Object[]{var3.hz("livePose")}, 1));
+                Intrinsics.checkNotNullExpressionValue(var63, "format(...)");
+                drawInfo$ln$default(
+                    this, var1, var47, var14, "turn rate (locationd, bias removed): " + var57 + "°/s   " + var36 + "   " + var63 + " Hz", this.dim, 0.0F, 64, null
+                );
+                String var37 = drawInfo$f2(var3.getPoseAccel()[0]);
+                var63 = drawInfo$f2(var3.getPoseAccel()[1]);
+                String var58 = drawInfo$f2(var3.getPoseAccel()[2]);
+                drawInfo$ln$default(
+                    this, var1, var47, var14, "acceleration (locationd): fwd " + var37 + "  side " + var63 + "  vert " + var58 + " m/s²", this.dim, 0.0F, 64, null
+                );
+                String var73 = drawInfo$f2(var3.getGyroRaw()[0]);
+                var63 = drawInfo$f2(var3.getGyroRaw()[1]);
+                String var69 = drawInfo$f2(var3.getGyroRaw()[2]);
+                String var59 = var3.getGyroSrc();
+                String var38 = String.format("%.0f", Arrays.copyOf(new Object[]{var3.hz("gyroscope")}, 1));
+                Intrinsics.checkNotNullExpressionValue(var38, "format(...)");
+                drawInfo$ln$default(
+                    this,
+                    var1,
+                    var47,
+                    var14,
+                    "raw gyroscope: " + var73 + " " + var63 + " " + var69 + " rad/s  " + var59 + "  " + var38 + " Hz",
+                    this.dim,
+                    0.0F,
+                    64,
+                    null
+                );
+                var63 = drawInfo$f2(var3.getAccelRaw()[0]);
+                String var60 = drawInfo$f2(var3.getAccelRaw()[1]);
+                var69 = drawInfo$f2(var3.getAccelRaw()[2]);
+                String var39 = var3.getAccelSrc();
+                var73 = String.format("%.0f", Arrays.copyOf(new Object[]{var3.hz("accelerometer")}, 1));
+                Intrinsics.checkNotNullExpressionValue(var73, "format(...)");
+                drawInfo$ln(
+                    this, var1, var47, var14, "raw accelerometer: " + var63 + " " + var60 + " " + var69 + " m/s²  " + var39 + "  " + var73 + " Hz", this.dim, 28.0F
+                );
+                drawInfo$ln(this, var1, var47, var14, "Car", this.head, 24.0F);
+                var48 = var3.getVEgo();
+                StringBuilder var41;
+                if (var12) {
+                    String var40 = drawInfo$f1(var48 * 2.237F);
+                    var41 = new StringBuilder().append(var40).append(" mph");
+                } else {
+                    String var42 = drawInfo$f1(var48 * 3.6F);
+                    var41 = new StringBuilder().append(var42).append(" km/h");
+                }
+
+                String var61 = var41.toString();
+                String var43 = drawInfo$f1(var3.getSteeringAngleDeg());
+                String var45 = drawInfo$f1((float)Math.toDegrees(var3.getYawRate()));
+                drawInfo$ln$default(
+                    this, var1, var47, var14, "wheel speed " + var61 + "   steering " + var43 + "°   yaw rate " + var45 + "°/s", this.dim, 0.0F, 64, null
+                );
+                String var44 = Odometry.INSTANCE.getYawSrc();
+                drawInfo$ln$default(this, var1, var47, var14, "dead reckoning turns with: " + var44, this.dim, 0.0F, 64, null);
+                return;
+            }
+
+            String var19 = (String)var54.next();
+            GpsFixInfo var62 = var3.getGpsFixes().get(var19);
+            if (var62 != null) {
+                double var6 = (var4 - var62.getAtNs()) / 1.0E9;
+                if (var6 > 3.0) {
+                    var11 = true;
+                }
+
+                float var9 = var62.getSpeed();
+                StringBuilder var26;
+                if (var12) {
+                    String var25 = drawInfo$f1(var9 * 2.237F);
+                    var26 = new StringBuilder().append(var25).append(" mph");
+                } else {
+                    String var27 = drawInfo$f1(var9 * 3.6F);
+                    var26 = new StringBuilder().append(var27).append(" km/h");
+                }
+
+                String var68 = var26.toString();
+                String var18 = this.shortName(var62.getSource());
+                var19 = String.format("%.1f", Arrays.copyOf(new Object[]{var3.hz(var19)}, 1));
+                Intrinsics.checkNotNullExpressionValue(var19, "format(...)");
+                String var28;
+                if (var11) {
+                    var28 = String.format("silent for %.0f s", Arrays.copyOf(new Object[]{var6}, 1));
+                    Intrinsics.checkNotNullExpressionValue(var28, "format(...)");
+                } else if (!var62.getHasFix()) {
+                    int var10 = var62.getSats();
+                    var28 = "NO FIX (" + var10 + " sats)";
+                } else {
+                    int var50 = var62.getSats();
+                    String var29 = drawInfo$f1(var62.getHAcc());
+                    var28 = "FIX  " + var50 + " sats  ±" + var29 + " m";
+                }
+
+                var18 = var18 + "  ·  " + var19 + " Hz  ·  " + var28;
+                Paint var30 = this.txt;
+                int var51;
+                if (!var11 && var62.getHasFix()) {
+                    Integer var76 = this.colors.get(var62.getSource());
+                    if (var76 != null) {
+                        var51 = var76;
+                    } else {
+                        var51 = Color.rgb(223, 230, 243);
+                    }
+                } else {
+                    var51 = Color.rgb(255, 150, 120);
+                }
+
+                var30.setColor(var51);
+                Unit var77 = Unit.INSTANCE;
+                drawInfo$ln(this, var1, var47, var14, var18, var30, 19.0F);
                 this.txt.setColor(Color.rgb(223, 230, 243));
-                if (f2.getHasFix()) {
+                if (var62.getHasFix() && !var11) {
+                    String var31 = drawInfo$f1(var62.getBearing());
+                    var18 = drawInfo$f1(var62.getBAcc());
+                    String var32 = String.format(
+                        "   %.6f, %.6f   " + var68 + "   course " + var31 + "° ±" + var18 + "°", Arrays.copyOf(new Object[]{var62.getLat(), var62.getLon()}, 2)
+                    );
+                    Intrinsics.checkNotNullExpressionValue(var32, "format(...)");
+                    drawInfo$ln(this, var1, var47, var14, var32, this.dim, 22.0F);
+                } else {
+                    var14.element = var14.element + 4 * this.d;
                 }
-                Ref.FloatRef y22 = y;
-                y22.element += 4 * this.d;
-                y = y22;
-                i2 = 1;
             }
         }
-        Ref.FloatRef y3 = y;
-        int i4 = i2;
-        y3.element += 4 * this.d;
-        String outKind = GpsBridge.INSTANCE.getOutKind();
-        switch (outKind.hashCode()) {
-            case 3214:
-                if (outKind.equals("dr")) {
-                    str = "wheels + gyro (GPS gap or ignored)";
-                    break;
-                }
-                str = "nothing yet";
-                break;
-            case 3198773:
-                if (outKind.equals("held")) {
-                    str = "held still (car stopped)";
-                    break;
-                }
-                str = "nothing yet";
-                break;
-            case 3314326:
-                if (outKind.equals("last")) {
-                    str = "last known position";
-                    break;
-                }
-                str = "nothing yet";
-                break;
-            case 3322092:
-                if (outKind.equals("live")) {
-                    str = "the GPS (checked)";
-                    break;
-                }
-                str = "nothing yet";
-                break;
-            default:
-                str = "nothing yet";
-                break;
-        }
-        float outBearing = GpsBridge.INSTANCE.getOutBearing();
-        if (((Float.isInfinite(outBearing) || Float.isNaN(outBearing)) ? 0 : i4) != 0) {
-            String format3 = String.format("%.0f", Arrays.copyOf(new Object[]{Float.valueOf(GpsBridge.INSTANCE.getOutBearing())}, i4));
-            Intrinsics.checkNotNullExpressionValue(format3, "format(...)");
-            str2 = "   ·   heading " + format3 + "°";
-        } else {
-            str2 = "";
-        }
-        drawInfo$ln(this, cv, x, y3, "The map gets: " + str + str2 + "   ·   " + GpsBridge.INSTANCE.getFilter().getStatus() + "   ·   ignored jumps: " + GpsBridge.INSTANCE.getFilter().getRejected(), this.txt, 24.0f);
-        y3.element += 6 * this.d;
-        drawInfo$ln(this, cv, x, y3, "Comma motion sensors", this.head, 24.0f);
-        float[] gz = tm.getPoseGyro();
-        String drawInfo$f1 = drawInfo$f1((float) Math.toDegrees(Odometry.INSTANCE.getGyroSign() * gz[2]));
-        String str4 = (tm.getPoseOK() && tm.getPoseValid()) ? "OK" : "NOT OK";
-        String format4 = String.format("%.0f", Arrays.copyOf(new Object[]{Float.valueOf(tm.hz("livePose"))}, i4));
-        Intrinsics.checkNotNullExpressionValue(format4, "format(...)");
-        drawInfo$ln$default(this, cv, x, y3, "turn rate (locationd, bias removed): " + drawInfo$f1 + "°/s   " + str4 + "   " + format4 + " Hz", this.dim, 0.0f, 64, null);
-        drawInfo$ln$default(this, cv, x, y3, "acceleration (locationd): fwd " + drawInfo$f2(tm.getPoseAccel()[0]) + "  side " + drawInfo$f2(tm.getPoseAccel()[i4]) + "  vert " + drawInfo$f2(tm.getPoseAccel()[2]) + " m/s²", this.dim, 0.0f, 64, null);
-        String drawInfo$f2 = drawInfo$f2(tm.getGyroRaw()[0]);
-        String drawInfo$f22 = drawInfo$f2(tm.getGyroRaw()[i4]);
-        String drawInfo$f23 = drawInfo$f2(tm.getGyroRaw()[2]);
-        String gyroSrc = tm.getGyroSrc();
-        String format5 = String.format("%.0f", Arrays.copyOf(new Object[]{Float.valueOf(tm.hz("gyroscope"))}, i4));
-        Intrinsics.checkNotNullExpressionValue(format5, "format(...)");
-        drawInfo$ln$default(this, cv, x, y3, "raw gyroscope: " + drawInfo$f2 + " " + drawInfo$f22 + " " + drawInfo$f23 + " rad/s  " + gyroSrc + "  " + format5 + " Hz", this.dim, 0.0f, 64, null);
-        String drawInfo$f24 = drawInfo$f2(tm.getAccelRaw()[0]);
-        String drawInfo$f25 = drawInfo$f2(tm.getAccelRaw()[i4]);
-        String drawInfo$f26 = drawInfo$f2(tm.getAccelRaw()[2]);
-        String accelSrc = tm.getAccelSrc();
-        String format6 = String.format("%.0f", Arrays.copyOf(new Object[]{Float.valueOf(tm.hz("accelerometer"))}, i4));
-        Intrinsics.checkNotNullExpressionValue(format6, "format(...)");
-        drawInfo$ln(this, cv, x, y3, "raw accelerometer: " + drawInfo$f24 + " " + drawInfo$f25 + " " + drawInfo$f26 + " m/s²  " + accelSrc + "  " + format6 + " Hz", this.dim, 28.0f);
-        drawInfo$ln(this, cv, x, y3, "Car", this.head, 24.0f);
-        float vEgo = tm.getVEgo();
-        String v = (mph ? new StringBuilder().append(drawInfo$f1(vEgo * 2.237f)).append(" mph") : new StringBuilder().append(drawInfo$f1(vEgo * 3.6f)).append(" km/h")).toString();
-        drawInfo$ln$default(this, cv, x, y3, "wheel speed " + v + "   steering " + drawInfo$f1(tm.getSteeringAngleDeg()) + "°   yaw rate " + drawInfo$f1((float) Math.toDegrees(tm.getYawRate())) + "°/s", this.dim, 0.0f, 64, null);
-        drawInfo$ln$default(this, cv, x, y3, "dead reckoning turns with: " + Odometry.INSTANCE.getYawSrc(), this.dim, 0.0f, 64, null);
     }
 
     private static final void drawInfo$ln(SensorsView this$0, Canvas $cv, float x, Ref.FloatRef y, String s, Paint p, float gap) {

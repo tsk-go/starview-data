@@ -1518,12 +1518,12 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                         if (t.s("car_memory")) {
                                                                             carMemory2 = this.this$0.carMemory;
                                                                         }
-                                                                        z12 = i12;
+                                                                        z12 = (i12) != 0;
                                                                         if (!t.getRightBlindspot()) {
                                                                             if (t.s("car_memory")) {
                                                                                 carMemory = this.this$0.carMemory;
                                                                             }
-                                                                            z13 = i12;
+                                                                            z13 = (i12) != 0;
                                                                             active = Replay.INSTANCE.getActive();
                                                                             z14 = this.this$0.replayWas;
                                                                             if (active != z14) {
@@ -2160,12 +2160,12 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                                                                                         if (!t.getStarted()) {
                                                                                                                                             z19 = this.this$0.homeShown;
                                                                                                                                         }
-                                                                                                                                        z18 = 1;
+                                                                                                                                        z18 = true;
                                                                                                                                         mainActivity11.syncFavBar(z18);
                                                                                                                                     }
                                                                                                                                 }
                                                                                                                             }
-                                                                                                                            z18 = i342;
+                                                                                                                            z18 = (i342) != 0;
                                                                                                                             mainActivity11.syncFavBar(z18);
                                                                                                                         }
                                                                                                                         textView20 = this.this$0.mapBtn;
@@ -3930,7 +3930,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                             handler.postDelayed(this, 50L);
                                                                             return;
                                                                         }
-                                                                        z13 = 1;
+                                                                        z13 = true;
                                                                         active = Replay.INSTANCE.getActive();
                                                                         z14 = this.this$0.replayWas;
                                                                         if (active != z14) {
@@ -3943,10 +3943,10 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                         if (!dataClient4.getConnected()) {
                                                                         }
                                                                     }
-                                                                    z12 = 1;
+                                                                    z12 = true;
                                                                     if (!t.getRightBlindspot()) {
                                                                     }
-                                                                    z13 = 1;
+                                                                    z13 = true;
                                                                     active = Replay.INSTANCE.getActive();
                                                                     z14 = this.this$0.replayWas;
                                                                     if (active != z14) {
@@ -4020,10 +4020,10 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                             }
                                                             if (!t.getLeftBlindspot()) {
                                                             }
-                                                            z12 = 1;
+                                                            z12 = true;
                                                             if (!t.getRightBlindspot()) {
                                                             }
-                                                            z13 = 1;
+                                                            z13 = true;
                                                             active = Replay.INSTANCE.getActive();
                                                             z14 = this.this$0.replayWas;
                                                             if (active != z14) {
@@ -4097,10 +4097,10 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                     }
                                                     if (!t.getLeftBlindspot()) {
                                                     }
-                                                    z12 = 1;
+                                                    z12 = true;
                                                     if (!t.getRightBlindspot()) {
                                                     }
-                                                    z13 = 1;
+                                                    z13 = true;
                                                     active = Replay.INSTANCE.getActive();
                                                     z14 = this.this$0.replayWas;
                                                     if (active != z14) {
@@ -4180,10 +4180,10 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                             }
                                             if (!t.getLeftBlindspot()) {
                                             }
-                                            z12 = 1;
+                                            z12 = true;
                                             if (!t.getRightBlindspot()) {
                                             }
-                                            z13 = 1;
+                                            z13 = true;
                                             active = Replay.INSTANCE.getActive();
                                             z14 = this.this$0.replayWas;
                                             if (active != z14) {
@@ -4332,10 +4332,10 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                     }
                                     if (!t.getLeftBlindspot()) {
                                     }
-                                    z12 = 1;
+                                    z12 = true;
                                     if (!t.getRightBlindspot()) {
                                     }
-                                    z13 = 1;
+                                    z13 = true;
                                     active = Replay.INSTANCE.getActive();
                                     z14 = this.this$0.replayWas;
                                     if (active != z14) {
@@ -4564,10 +4564,10 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                 }
                                 if (!t.getLeftBlindspot()) {
                                 }
-                                z12 = 1;
+                                z12 = true;
                                 if (!t.getRightBlindspot()) {
                                 }
-                                z13 = 1;
+                                z13 = true;
                                 active = Replay.INSTANCE.getActive();
                                 z14 = this.this$0.replayWas;
                                 if (active != z14) {
@@ -4812,10 +4812,10 @@ public final class MainActivity$uiTick$1 implements Runnable {
                         }
                         if (!t.getLeftBlindspot()) {
                         }
-                        z12 = 1;
+                        z12 = true;
                         if (!t.getRightBlindspot()) {
                         }
-                        z13 = 1;
+                        z13 = true;
                         active = Replay.INSTANCE.getActive();
                         z14 = this.this$0.replayWas;
                         if (active != z14) {
@@ -5044,10 +5044,10 @@ public final class MainActivity$uiTick$1 implements Runnable {
                     }
                     if (!t.getLeftBlindspot()) {
                     }
-                    z12 = 1;
+                    z12 = true;
                     if (!t.getRightBlindspot()) {
                     }
-                    z13 = 1;
+                    z13 = true;
                     active = Replay.INSTANCE.getActive();
                     z14 = this.this$0.replayWas;
                     if (active != z14) {
@@ -5314,10 +5314,10 @@ public final class MainActivity$uiTick$1 implements Runnable {
         }
         if (!t.getLeftBlindspot()) {
         }
-        z12 = 1;
+        z12 = true;
         if (!t.getRightBlindspot()) {
         }
-        z13 = 1;
+        z13 = true;
         active = Replay.INSTANCE.getActive();
         z14 = this.this$0.replayWas;
         if (active != z14) {

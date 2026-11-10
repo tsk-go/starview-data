@@ -53,11 +53,11 @@ public final class Galaxy7 {
     public static final class Error extends Exception {
         private final int code;
 
-        /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-        public Error(int code, String message) {
-            super(message);
-            Intrinsics.checkNotNullParameter(message, "message");
-            this.code = code;
+        /* VF: from Vineflower (jadx: ) */
+        public Error(int var1, String var2) {
+            super(var2);
+            Intrinsics.checkNotNullParameter(var2, "message");
+            this.code = var1;
         }
 
         public final int getCode() {

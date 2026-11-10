@@ -30,11 +30,11 @@ public final class GxGalaxyPage extends GxPage {
     private boolean tsInstalled;
     private boolean tsLoaded;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxGalaxyPage(Activity act, GxHost gx) {
-        super(act, gx);
-        Intrinsics.checkNotNullParameter(act, "act");
-        Intrinsics.checkNotNullParameter(gx, "gx");
+    /* VF: from Vineflower (jadx: ) */
+    public GxGalaxyPage(Activity var1, GxHost var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "act");
+        Intrinsics.checkNotNullParameter(var2, "gx");
         this.loading = true;
         this.gUrl = "";
         this.tsAuthUrl = "";
@@ -239,42 +239,55 @@ public final class GxGalaxyPage extends GxPage {
         }, 8, null);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:22:0x004f, code lost:
-    
-        if (r0 != null) goto L25;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit pair$lambda$9(GxGalaxyPage this$0, String e, JSONObject o) {
-        String str;
-        String str2;
-        String str$default;
-        this$0.submitting = false;
-        if (e != null) {
-            String str3 = e;
-            if (StringsKt.isBlank(str3)) {
-                str3 = "Network error — is the device reachable?";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit pair$lambda$9(GxGalaxyPage var0, String var1, JSONObject var2) {
+        var0.submitting = false;
+        if (var1 != null) {
+            CharSequence var8 = var1;
+            Object var3 = var8;
+            if (StringsKt.isBlank(var8)) {
+                var3 = "Network error — is the device reachable?";
             }
-            this$0.toast(str3);
+
+            var0.toast((String)var3);
         } else {
-            this$0.paired = true;
-            if (o == null || (str = GxPage.str$default(this$0, o, "url", null, 2, null)) == null) {
-                str = "";
-            }
-            this$0.gUrl = str;
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str4 = str$default;
-                if (StringsKt.isBlank(str4)) {
-                    str4 = null;
+            label34: {
+                var0.paired = true;
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "url", null, 2, null);
+                    if (var1 != null) {
+                        break label34;
+                    }
                 }
-                str2 = str4;
+
+                var1 = "";
             }
-            str2 = "Paired!";
-            this$0.toast(str2);
+
+            label29: {
+                var0.gUrl = var1;
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "message", null, 2, null);
+                    if (var1 != null) {
+                        CharSequence var9 = var1;
+                        CharSequence var6 = var9;
+                        if (StringsKt.isBlank(var9)) {
+                            var6 = null;
+                        }
+
+                        var1 = (String)var6;
+                        if (var1 != null) {
+                            break label29;
+                        }
+                    }
+                }
+
+                var1 = "Paired!";
+            }
+
+            var0.toast(var1);
         }
-        this$0.paintPair();
+
+        var0.paintPair();
         return Unit.INSTANCE;
     }
 
@@ -307,38 +320,44 @@ public final class GxGalaxyPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:18:0x003c, code lost:
-    
-        if (r0 != null) goto L19;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit unpair$lambda$13$lambda$12(GxGalaxyPage this$0, String e, JSONObject o) {
-        String str;
-        String str$default;
-        this$0.submitting = false;
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Network error — is the device reachable?";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit unpair$lambda$13$lambda$12(GxGalaxyPage var0, String var1, JSONObject var2) {
+        var0.submitting = false;
+        if (var1 != null) {
+            CharSequence var7 = var1;
+            Object var3 = var7;
+            if (StringsKt.isBlank(var7)) {
+                var3 = "Network error — is the device reachable?";
             }
-            this$0.toast(str2);
+
+            var0.toast((String)var3);
         } else {
-            this$0.paired = false;
-            this$0.gUrl = "";
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str3 = str$default;
-                if (StringsKt.isBlank(str3)) {
-                    str3 = null;
+            label25: {
+                var0.paired = false;
+                var0.gUrl = "";
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "message", null, 2, null);
+                    if (var1 != null) {
+                        CharSequence var8 = var1;
+                        CharSequence var5 = var8;
+                        if (StringsKt.isBlank(var8)) {
+                            var5 = null;
+                        }
+
+                        var1 = (String)var5;
+                        if (var1 != null) {
+                            break label25;
+                        }
+                    }
                 }
-                str = str3;
+
+                var1 = "Unpaired!";
             }
-            str = "Unpaired!";
-            this$0.toast(str);
+
+            var0.toast(var1);
         }
-        this$0.paintPair();
+
+        var0.paintPair();
         return Unit.INSTANCE;
     }
 
@@ -505,45 +524,58 @@ public final class GxGalaxyPage extends GxPage {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x0036, code lost:
-    
-        if (r0 != null) goto L18;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit install$lambda$21(GxGalaxyPage this$0, String e, JSONObject o) {
-        String str;
-        String auth;
-        String str$default;
-        this$0.tsBusy = false;
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Failed to install Tailscale.";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit install$lambda$21(GxGalaxyPage var0, String var1, JSONObject var2) {
+        var0.tsBusy = false;
+        if (var1 != null) {
+            CharSequence var9 = var1;
+            Object var4 = var9;
+            if (StringsKt.isBlank(var9)) {
+                var4 = "Failed to install Tailscale.";
             }
-            this$0.toast(str2);
+
+            var0.toast((String)var4);
         } else {
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str3 = str$default;
-                if (StringsKt.isBlank(str3)) {
-                    str3 = null;
+            label38: {
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "message", null, 2, null);
+                    if (var1 != null) {
+                        CharSequence var3 = var1;
+                        CharSequence var6 = var3;
+                        if (StringsKt.isBlank(var3)) {
+                            var6 = null;
+                        }
+
+                        var1 = (String)var6;
+                        if (var1 != null) {
+                            break label38;
+                        }
+                    }
                 }
-                str = str3;
+
+                var1 = "Tailscale setup started.";
             }
-            str = "Tailscale setup started.";
-            this$0.toast(str);
-            if (o == null || (auth = GxPage.str$default(this$0, o, "auth_url", null, 2, null)) == null) {
-                auth = "";
+
+            label31: {
+                var0.toast(var1);
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "auth_url", null, 2, null);
+                    if (var1 != null) {
+                        break label31;
+                    }
+                }
+
+                var1 = "";
             }
-            if (!StringsKt.isBlank(auth) && !Intrinsics.areEqual(auth, "null")) {
-                this$0.tsAuthUrl = auth;
-                this$0.open(auth);
+
+            if (!StringsKt.isBlank(var1) && !Intrinsics.areEqual(var1, "null")) {
+                var0.tsAuthUrl = var1;
+                var0.open(var1);
             }
         }
-        this$0.paintTs();
-        this$0.loadTs();
+
+        var0.paintTs();
+        var0.loadTs();
         return Unit.INSTANCE;
     }
 
@@ -577,38 +609,44 @@ public final class GxGalaxyPage extends GxPage {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:18:0x003a, code lost:
-    
-        if (r0 != null) goto L19;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static final Unit uninstall$lambda$25$lambda$24(GxGalaxyPage this$0, String e, JSONObject o) {
-        String str;
-        String str$default;
-        this$0.tsBusy = false;
-        if (e != null) {
-            String str2 = e;
-            if (StringsKt.isBlank(str2)) {
-                str2 = "Failed to uninstall Tailscale.";
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public static final Unit uninstall$lambda$25$lambda$24(GxGalaxyPage var0, String var1, JSONObject var2) {
+        var0.tsBusy = false;
+        if (var1 != null) {
+            CharSequence var7 = var1;
+            Object var3 = var7;
+            if (StringsKt.isBlank(var7)) {
+                var3 = "Failed to uninstall Tailscale.";
             }
-            this$0.toast(str2);
+
+            var0.toast((String)var3);
         } else {
-            this$0.tsAuthUrl = "";
-            if (o != null && (str$default = GxPage.str$default(this$0, o, "message", null, 2, null)) != null) {
-                String str3 = str$default;
-                if (StringsKt.isBlank(str3)) {
-                    str3 = null;
+            label25: {
+                var0.tsAuthUrl = "";
+                if (var2 != null) {
+                    var1 = GxPage.str$default(var0, var2, "message", null, 2, null);
+                    if (var1 != null) {
+                        CharSequence var8 = var1;
+                        CharSequence var5 = var8;
+                        if (StringsKt.isBlank(var8)) {
+                            var5 = null;
+                        }
+
+                        var1 = (String)var5;
+                        if (var1 != null) {
+                            break label25;
+                        }
+                    }
                 }
-                str = str3;
+
+                var1 = "Tailscale uninstalled.";
             }
-            str = "Tailscale uninstalled.";
-            this$0.toast(str);
+
+            var0.toast(var1);
         }
-        this$0.paintTs();
-        this$0.loadTs();
+
+        var0.paintTs();
+        var0.loadTs();
         return Unit.INSTANCE;
     }
 }

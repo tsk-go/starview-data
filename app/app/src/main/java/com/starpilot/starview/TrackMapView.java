@@ -23,6 +23,13 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
+import android.graphics.Paint.Cap;
+import android.graphics.Paint.Join;
+import android.graphics.Paint.Style;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.ScaleGestureDetector.OnScaleGestureListener;
+import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
 
 /* compiled from: TrackMapView.kt */
 public final class TrackMapView extends View {
@@ -47,162 +54,127 @@ public final class TrackMapView extends View {
     private final Paint txt;
     private double zoom;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    /* JADX WARN: Multi-variable type inference failed */
-    public TrackMapView(Context ctx, List<DriveTrack.Pt> pts, long segStartMs, Function1<? super Long, Unit> onPick) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(pts, "pts");
-        Intrinsics.checkNotNullParameter(onPick, "onPick");
-        this.pts = pts;
-        this.segStartMs = segStartMs;
-        this.onPick = onPick;
-        this.d = getResources().getDisplayMetrics().density;
-        MapTiles $this$tiles_u24lambda_u242 = new MapTiles(ctx, new Function0() { // from class: com.starpilot.starview.TrackMapView$$ExternalSyntheticLambda1
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit tiles$lambda$1;
-                tiles$lambda$1 = TrackMapView.tiles$lambda$1(TrackMapView.this);
-                return tiles$lambda$1;
-            }
-        });
-        $this$tiles_u24lambda_u242.setHost(Link.INSTANCE.getHost());
-        $this$tiles_u24lambda_u242.setDirectKey(Nav.INSTANCE.getTileKey());
-        this.tiles = $this$tiles_u24lambda_u242;
-        int size = this.pts.size();
-        double[] dArr = new double[size];
-        for (int i = 0; i < size; i++) {
-            dArr[i] = Nav.INSTANCE.mercX(this.pts.get(i).getLon());
+    /* VF: from Vineflower (jadx: ) */
+    public TrackMapView(Context var1, List<DriveTrack.Pt> var2, long var3, Function1<? super Long, Unit> var5) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "pts");
+        Intrinsics.checkNotNullParameter(var5, "onPick");
+        this.pts = var2;
+        this.segStartMs = var3;
+        this.onPick = var5;
+        this.d = this.getResources().getDisplayMetrics().density;
+        MapTiles var9 = new MapTiles(var1, new TrackMapView$$ExternalSyntheticLambda1(this));
+        var9.setHost(Link.INSTANCE.getHost());
+        var9.setDirectKey(Nav.INSTANCE.getTileKey());
+        this.tiles = var9;
+        int var8 = this.pts.size();
+        double[] var10 = new double[var8];
+        byte var7 = 0;
+
+        for (int var6 = 0; var6 < var8; var6++) {
+            var10[var6] = Nav.INSTANCE.mercX(this.pts.get(var6).getLon());
         }
-        this.mx = dArr;
-        int size2 = this.pts.size();
-        double[] dArr2 = new double[size2];
-        for (int i2 = 0; i2 < size2; i2++) {
-            dArr2[i2] = Nav.INSTANCE.mercY(this.pts.get(i2).getLat());
+
+        this.mx = var10;
+        var8 = this.pts.size();
+        double[] var11 = new double[var8];
+
+        for (int var17 = var7; var17 < var8; var17++) {
+            var11[var17] = Nav.INSTANCE.mercY(this.pts.get(var17).getLat());
         }
-        this.my = dArr2;
-        this.cx = 0.5d;
-        this.cy = 0.5d;
-        this.zoom = 14.0d;
+
+        this.my = var11;
+        this.cx = 0.5;
+        this.cy = 0.5;
+        this.zoom = 14.0;
         this.nowMs = Long.MIN_VALUE;
-        Paint $this$line_u24lambda_u243 = new Paint(1);
-        $this$line_u24lambda_u243.setStyle(Paint.Style.STROKE);
-        $this$line_u24lambda_u243.setStrokeWidth(this.d * 5.0f);
-        $this$line_u24lambda_u243.setColor(-13664019);
-        $this$line_u24lambda_u243.setStrokeCap(Paint.Cap.ROUND);
-        $this$line_u24lambda_u243.setStrokeJoin(Paint.Join.ROUND);
-        this.line = $this$line_u24lambda_u243;
-        Paint $this$seg_u24lambda_u244 = new Paint(1);
-        $this$seg_u24lambda_u244.setColor(-1);
-        $this$seg_u24lambda_u244.setStyle(Paint.Style.FILL);
-        this.seg = $this$seg_u24lambda_u244;
-        Paint $this$dot_u24lambda_u245 = new Paint(1);
-        $this$dot_u24lambda_u245.setColor(-16121);
-        $this$dot_u24lambda_u245.setStyle(Paint.Style.FILL);
-        this.dot = $this$dot_u24lambda_u245;
-        Paint $this$ring_u24lambda_u246 = new Paint(1);
-        $this$ring_u24lambda_u246.setColor(-16777216);
-        $this$ring_u24lambda_u246.setStyle(Paint.Style.STROKE);
-        $this$ring_u24lambda_u246.setStrokeWidth(this.d * 2.0f);
-        this.ring = $this$ring_u24lambda_u246;
-        Paint $this$txt_u24lambda_u247 = new Paint(1);
-        $this$txt_u24lambda_u247.setColor(-1);
-        $this$txt_u24lambda_u247.setTextSize(this.d * 13.0f);
-        $this$txt_u24lambda_u247.setShadowLayer(this.d * 3.0f, 0.0f, 0.0f, -16777216);
-        this.txt = $this$txt_u24lambda_u247;
+        Paint var12 = new Paint(1);
+        var12.setStyle(android.graphics.Paint.Style.STROKE);
+        var12.setStrokeWidth(this.d * 5.0F);
+        var12.setColor(-13664019);
+        var12.setStrokeCap(android.graphics.Paint.Cap.ROUND);
+        var12.setStrokeJoin(android.graphics.Paint.Join.ROUND);
+        this.line = var12;
+        Paint var13 = new Paint(1);
+        var13.setColor(-1);
+        var13.setStyle(android.graphics.Paint.Style.FILL);
+        this.seg = var13;
+        Paint var14 = new Paint(1);
+        var14.setColor(-16121);
+        var14.setStyle(android.graphics.Paint.Style.FILL);
+        this.dot = var14;
+        Paint var15 = new Paint(1);
+        var15.setColor(-16777216);
+        var15.setStyle(android.graphics.Paint.Style.STROKE);
+        var15.setStrokeWidth(this.d * 2.0F);
+        this.ring = var15;
+        Paint var16 = new Paint(1);
+        var16.setColor(-1);
+        var16.setTextSize(this.d * 13.0F);
+        var16.setShadowLayer(this.d * 3.0F, 0.0F, 0.0F, -16777216);
+        this.txt = var16;
         this.tileP = new Paint(2);
-        this.scaler = new ScaleGestureDetector(ctx, new ScaleGestureDetector.SimpleOnScaleGestureListener() { // from class: com.starpilot.starview.TrackMapView$scaler$1
-            @Override // android.view.ScaleGestureDetector.SimpleOnScaleGestureListener, android.view.ScaleGestureDetector.OnScaleGestureListener
-            public boolean onScale(ScaleGestureDetector det) {
-                double d;
-                Intrinsics.checkNotNullParameter(det, "det");
-                TrackMapView trackMapView = TrackMapView.this;
-                d = TrackMapView.this.zoom;
-                trackMapView.zoom = RangesKt.coerceIn(d + (Math.log(det.getScaleFactor()) / Math.log(2.0d)), 3.0d, 18.5d);
-                TrackMapView.this.invalidate();
+        this.scaler = new ScaleGestureDetector(var1, (OnScaleGestureListener)(new SimpleOnScaleGestureListener() {
+            final TrackMapView this$0 = TrackMapView.this;
+
+            public boolean onScale(ScaleGestureDetector var1) {
+                Intrinsics.checkNotNullParameter(var1, "det");
+                this.this$0.zoom = RangesKt.coerceIn(this.this$0.zoom + Math.log(var1.getScaleFactor()) / Math.log(2.0), 3.0, 18.5);
+                this.this$0.invalidate();
                 return true;
             }
-        });
-        this.gest = new GestureDetector(ctx, new GestureDetector.SimpleOnGestureListener() { // from class: com.starpilot.starview.TrackMapView$gest$1
-            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnGestureListener
-            public boolean onDown(MotionEvent e) {
-                Intrinsics.checkNotNullParameter(e, "e");
+        }));
+        this.gest = new GestureDetector(var1, (OnGestureListener)(new SimpleOnGestureListener() {
+            final TrackMapView this$0 = TrackMapView.this;
+
+            public boolean onDoubleTap(MotionEvent var1) {
+                Intrinsics.checkNotNullParameter(var1, "e");
+                this.this$0.zoom = RangesKt.coerceAtMost(this.this$0.zoom + 1, 18.5);
+                this.this$0.invalidate();
                 return true;
             }
 
-            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnGestureListener
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
-                double d;
-                double world;
-                double d2;
-                double world2;
-                Intrinsics.checkNotNullParameter(e2, "e2");
-                TrackMapView trackMapView = TrackMapView.this;
-                d = TrackMapView.this.cx;
-                world = TrackMapView.this.world();
-                trackMapView.cx = d + (dx / world);
-                TrackMapView trackMapView2 = TrackMapView.this;
-                d2 = TrackMapView.this.cy;
-                world2 = TrackMapView.this.world();
-                trackMapView2.cy = d2 + (dy / world2);
-                TrackMapView.this.invalidate();
+            public boolean onDown(MotionEvent var1) {
+                Intrinsics.checkNotNullParameter(var1, "e");
                 return true;
             }
 
-            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnDoubleTapListener
-            public boolean onDoubleTap(MotionEvent e) {
-                double d;
-                Intrinsics.checkNotNullParameter(e, "e");
-                TrackMapView trackMapView = TrackMapView.this;
-                d = TrackMapView.this.zoom;
-                trackMapView.zoom = RangesKt.coerceAtMost(d + 1, 18.5d);
-                TrackMapView.this.invalidate();
+            public boolean onScroll(MotionEvent var1, MotionEvent var2x, float var3x, float var4) {
+                Intrinsics.checkNotNullParameter(var2x, "e2");
+                this.this$0.cx = this.this$0.cx + var3x / this.this$0.world();
+                this.this$0.cy = this.this$0.cy + var4 / this.this$0.world();
+                this.this$0.invalidate();
                 return true;
             }
 
-            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnDoubleTapListener
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                float f;
-                List list;
-                List list2;
-                Function1 function1;
-                List list3;
-                double[] dArr3;
-                float sx;
-                double[] dArr4;
-                float sy;
-                Intrinsics.checkNotNullParameter(e, "e");
-                int best = -1;
-                f = TrackMapView.this.d;
-                float bd = f * 40.0f;
-                list = TrackMapView.this.pts;
-                int size3 = list.size();
-                for (int i3 = 0; i3 < size3; i3++) {
-                    TrackMapView trackMapView = TrackMapView.this;
-                    dArr3 = TrackMapView.this.mx;
-                    sx = trackMapView.sx(dArr3[i3]);
-                    double x = sx - e.getX();
-                    TrackMapView trackMapView2 = TrackMapView.this;
-                    dArr4 = TrackMapView.this.my;
-                    sy = trackMapView2.sy(dArr4[i3]);
-                    float dd = (float) Math.hypot(x, sy - e.getY());
-                    if (dd < bd) {
-                        bd = dd;
-                        best = i3;
+            public boolean onSingleTapConfirmed(MotionEvent var1) {
+                Intrinsics.checkNotNullParameter(var1, "e");
+                int var6 = -1;
+                float var2x = this.this$0.d * 40.0F;
+                int var5x = 0;
+                int var7x = this.this$0.pts.size();
+
+                while (var5x < var7x) {
+                    float var4 = (float)Math.hypot(this.this$0.sx(this.this$0.mx[var5x]) - var1.getX(), this.this$0.sy(this.this$0.my[var5x]) - var1.getY());
+                    float var3x = var2x;
+                    if (var4 < var2x) {
+                        var3x = var4;
+                        var6 = var5x;
                     }
+
+                    var5x++;
+                    var2x = var3x;
                 }
-                if (best >= 0) {
-                    TrackMapView trackMapView3 = TrackMapView.this;
-                    list2 = TrackMapView.this.pts;
-                    trackMapView3.setNowMs(((DriveTrack.Pt) list2.get(best)).getT());
-                    function1 = TrackMapView.this.onPick;
-                    list3 = TrackMapView.this.pts;
-                    function1.invoke(Long.valueOf(((DriveTrack.Pt) list3.get(best)).getT()));
-                    return true;
+
+                if (var6 >= 0) {
+                    this.this$0.setNowMs(this.this$0.pts.get(var6).getT());
+                    this.this$0.onPick.invoke(this.this$0.pts.get(var6).getT());
                 }
+
                 return true;
             }
-        });
+        }));
     }
 
     /* JADX INFO: Access modifiers changed from: private */

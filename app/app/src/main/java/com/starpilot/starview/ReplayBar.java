@@ -19,6 +19,7 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 import org.json.JSONObject;
+import android.graphics.Paint.Align;
 
 /* compiled from: Replay.kt */
 public final class ReplayBar extends View {
@@ -35,48 +36,53 @@ public final class ReplayBar extends View {
     private final Paint track;
     private final Paint txt;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public ReplayBar(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        this.d = getResources().getDisplayMetrics().density;
-        Paint $this$bg_u24lambda_u240 = new Paint(1);
-        $this$bg_u24lambda_u240.setColor(Color.argb(215, 18, 20, 26));
-        this.bg = $this$bg_u24lambda_u240;
-        Paint $this$pill_u24lambda_u241 = new Paint(1);
-        $this$pill_u24lambda_u241.setColor(Color.rgb(205, 40, 40));
-        this.pill = $this$pill_u24lambda_u241;
-        Paint $this$txt_u24lambda_u242 = new Paint(1);
-        $this$txt_u24lambda_u242.setColor(-1);
-        $this$txt_u24lambda_u242.setTextSize(this.d * 15.0f);
-        $this$txt_u24lambda_u242.setTypeface(Typeface.DEFAULT_BOLD);
-        this.txt = $this$txt_u24lambda_u242;
-        Paint $this$small_u24lambda_u243 = new Paint(1);
-        $this$small_u24lambda_u243.setColor(Color.rgb(200, 205, 215));
-        $this$small_u24lambda_u243.setTextSize(this.d * 13.0f);
-        this.small = $this$small_u24lambda_u243;
-        Paint $this$btn_u24lambda_u244 = new Paint(1);
-        $this$btn_u24lambda_u244.setColor(-1);
-        $this$btn_u24lambda_u244.setTextSize(this.d * 17.0f);
-        $this$btn_u24lambda_u244.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$btn_u24lambda_u244.setTextAlign(Paint.Align.CENTER);
-        this.btn = $this$btn_u24lambda_u244;
-        Paint $this$btnBg_u24lambda_u245 = new Paint(1);
-        $this$btnBg_u24lambda_u245.setColor(Color.argb(70, 255, 255, 255));
-        this.btnBg = $this$btnBg_u24lambda_u245;
-        Paint $this$track_u24lambda_u246 = new Paint(1);
-        $this$track_u24lambda_u246.setColor(Color.argb(80, 255, 255, 255));
-        this.track = $this$track_u24lambda_u246;
-        Paint $this$done_u24lambda_u247 = new Paint(1);
-        $this$done_u24lambda_u247.setColor(Color.rgb(230, 70, 70));
-        this.done = $this$done_u24lambda_u247;
-        this.keys = CollectionsKt.listOf((Object[]) new String[]{"back", "play", "fwd", "speed", "stop"});
-        Iterable $this$associateWith$iv = this.keys;
-        LinkedHashMap result$iv = new LinkedHashMap(RangesKt.coerceAtLeast(MapsKt.mapCapacity(CollectionsKt.collectionSizeOrDefault($this$associateWith$iv, 10)), 16));
-        for (Object element$iv$iv : $this$associateWith$iv) {
-            result$iv.put(element$iv$iv, new RectF());
+    /* VF: from Vineflower (jadx: ) */
+    public ReplayBar(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        this.d = this.getResources().getDisplayMetrics().density;
+        Paint var6 = new Paint(1);
+        var6.setColor(Color.argb(215, 18, 20, 26));
+        this.bg = var6;
+        Paint var7 = new Paint(1);
+        var7.setColor(Color.rgb(205, 40, 40));
+        this.pill = var7;
+        Paint var8 = new Paint(1);
+        var8.setColor(-1);
+        var8.setTextSize(this.d * 15.0F);
+        var8.setTypeface(Typeface.DEFAULT_BOLD);
+        this.txt = var8;
+        Paint var9 = new Paint(1);
+        var9.setColor(Color.rgb(200, 205, 215));
+        var9.setTextSize(this.d * 13.0F);
+        this.small = var9;
+        Paint var10 = new Paint(1);
+        var10.setColor(-1);
+        var10.setTextSize(this.d * 17.0F);
+        var10.setTypeface(Typeface.DEFAULT_BOLD);
+        var10.setTextAlign(android.graphics.Paint.Align.CENTER);
+        this.btn = var10;
+        Paint var11 = new Paint(1);
+        var11.setColor(Color.argb(70, 255, 255, 255));
+        this.btnBg = var11;
+        Paint var12 = new Paint(1);
+        var12.setColor(Color.argb(80, 255, 255, 255));
+        this.track = var12;
+        Paint var13 = new Paint(1);
+        var13.setColor(Color.rgb(230, 70, 70));
+        this.done = var13;
+        this.keys = CollectionsKt.listOf(new String[]{"back", "play", "fwd", "speed", "stop"});
+        Iterable var16 = this.keys;
+        LinkedHashMap var14 = new LinkedHashMap(RangesKt.coerceAtLeast(MapsKt.mapCapacity(CollectionsKt.collectionSizeOrDefault(var16, 10)), 16));
+
+        for (Object var3 : var16) {
+            Map var5 = var14;
+            String var4 = (String)var3;
+            var5.put(var3, new RectF());
         }
-        this.rects = result$iv;
+
+        Map var15 = var14;
+        this.rects = var15;
         this.bar = new RectF();
     }
 
@@ -89,119 +95,147 @@ public final class ReplayBar extends View {
         setMeasuredDimension((int) (560 * this.d), (int) (78 * this.d));
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Removed duplicated region for block: B:52:0x020e  */
-    /* JADX WARN: Removed duplicated region for block: B:54:0x0214  */
-    /* JADX WARN: Removed duplicated region for block: B:57:0x021a  */
-    /* JADX WARN: Removed duplicated region for block: B:58:0x0210  */
-    @Override // android.view.View
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    protected void onDraw(Canvas c) {
-        double pos;
-        String str;
-        String str2;
-        String label;
-        Intrinsics.checkNotNullParameter(c, "c");
-        JSONObject s = Replay.INSTANCE.getStatus();
-        if (s == null) {
-            return;
-        }
-        float w = getWidth();
-        float pad = this.d * 10.0f;
-        c.drawRoundRect(new RectF(0.0f, 0.0f, w, getHeight()), this.d * 16.0f, this.d * 16.0f, this.bg);
-        RectF p = new RectF(pad, pad, (this.d * 78.0f) + pad, (this.d * 26.0f) + pad);
-        c.drawRoundRect(p, this.d * 13.0f, this.d * 13.0f, this.pill);
-        this.txt.setTextAlign(Paint.Align.CENTER);
-        c.drawText("REPLAY", p.centerX(), p.centerY() + (this.d * 5.0f), this.txt);
-        this.txt.setTextAlign(Paint.Align.LEFT);
-        double pos2 = Replay.position$default(Replay.INSTANCE, 0L, 1, null);
-        double dur = s.optDouble("dur", 0.0d);
-        double speed = s.optDouble("speed", 1.0d);
-        String clock = Replay.INSTANCE.clock(pos2);
-        String clock2 = Replay.INSTANCE.clock(dur);
-        if (speed == 1.0d) {
-            pos = pos2;
-            str = "";
-            str2 = str;
-        } else {
-            str = "";
-            pos = pos2;
-            str2 = "  ·  " + (((speed % 1.0d) > 0.0d ? 1 : ((speed % 1.0d) == 0.0d ? 0 : -1)) == 0 ? Integer.valueOf((int) speed) : Double.valueOf(speed)) + "x";
-        }
-        String head = clock + " / " + clock2 + str2;
-        c.drawText(head, p.right + (this.d * 10.0f), p.centerY() + (this.d * 5.0f), this.txt);
-        String sub = s.optBoolean("loading") ? "loading…" : s.optBoolean("paused") ? "paused" : !s.optBoolean("video") ? "no video in this part" : str;
-        if (sub.length() > 0) {
-            c.drawText(sub, p.right + (this.d * 10.0f), p.bottom + (this.d * 16.0f), this.small);
-        }
-        float bw = this.d * 46.0f;
-        float bh = this.d * 32.0f;
-        float x = (w - pad) - bw;
-        Iterator it = CollectionsKt.reversed(this.keys).iterator();
-        float x2 = x;
-        while (it.hasNext()) {
-            Iterator it2 = it;
-            String k = (String) it.next();
-            String sub2 = sub;
-            RectF r = (RectF) MapsKt.getValue(this.rects, k);
-            double dur2 = dur;
-            r.set(x2, pad, x2 + bw, pad + bh);
-            float x3 = x2 - ((this.d * 6.0f) + bw);
-            c.drawRoundRect(r, this.d * 10.0f, this.d * 10.0f, this.btnBg);
-            switch (k.hashCode()) {
-                case 101811:
-                    if (k.equals("fwd")) {
-                        label = "+30";
-                        break;
-                    }
-                    label = (((speed % 1.0d) > 0.0d ? 1 : ((speed % 1.0d) == 0.0d ? 0 : -1)) == 0 ? Integer.valueOf((int) speed) : Double.valueOf(speed)) + "x";
-                    break;
-                case 3015911:
-                    if (k.equals("back")) {
-                        label = "−10";
-                        break;
-                    }
-                    label = (((speed % 1.0d) > 0.0d ? 1 : ((speed % 1.0d) == 0.0d ? 0 : -1)) == 0 ? Integer.valueOf((int) speed) : Double.valueOf(speed)) + "x";
-                    break;
-                case 3443508:
-                    if (k.equals("play")) {
-                        if (!s.optBoolean("paused")) {
-                            label = "❚❚";
-                            break;
-                        } else {
-                            label = "▶";
-                            break;
-                        }
-                    }
-                    label = (((speed % 1.0d) > 0.0d ? 1 : ((speed % 1.0d) == 0.0d ? 0 : -1)) == 0 ? Integer.valueOf((int) speed) : Double.valueOf(speed)) + "x";
-                    break;
-                case 3540994:
-                    if (k.equals("stop")) {
-                        label = "✕";
-                        break;
-                    }
-                    label = (((speed % 1.0d) > 0.0d ? 1 : ((speed % 1.0d) == 0.0d ? 0 : -1)) == 0 ? Integer.valueOf((int) speed) : Double.valueOf(speed)) + "x";
-                    break;
-                default:
-                    label = (((speed % 1.0d) > 0.0d ? 1 : ((speed % 1.0d) == 0.0d ? 0 : -1)) == 0 ? Integer.valueOf((int) speed) : Double.valueOf(speed)) + "x";
-                    break;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    protected void onDraw(Canvas var1) {
+        Object var29 = null; // declarations Vineflower left out
+        Intrinsics.checkNotNullParameter(var1, "c");
+        JSONObject var16 = Replay.INSTANCE.getStatus();
+        if (var16 != null) {
+            float var11 = this.getWidth();
+            float var10 = this.d * 10.0F;
+            var1.drawRoundRect(new RectF(0.0F, 0.0F, var11, this.getHeight()), this.d * 16.0F, this.d * 16.0F, this.bg);
+            RectF var17 = new RectF(var10, var10, this.d * 78.0F + var10, this.d * 26.0F + var10);
+            var1.drawRoundRect(var17, this.d * 13.0F, this.d * 13.0F, this.pill);
+            this.txt.setTextAlign(android.graphics.Paint.Align.CENTER);
+            var1.drawText("REPLAY", var17.centerX(), var17.centerY() + this.d * 5.0F, this.txt);
+            this.txt.setTextAlign(android.graphics.Paint.Align.LEFT);
+            double var6 = Replay.position$default(Replay.INSTANCE, 0L, 1, null);
+            double var2 = var16.optDouble("dur", 0.0);
+            double var4 = var16.optDouble("speed", 1.0);
+            String var19 = Replay.INSTANCE.clock(var6);
+            String var18 = Replay.INSTANCE.clock(var2);
+            boolean var14;
+            if (var4 == 1.0) {
+                var14 = true;
+            } else {
+                var14 = false;
             }
-            c.drawText(label, r.centerX(), r.centerY() + (this.d * 6.0f), this.btn);
-            sub = sub2;
-            it = it2;
-            dur = dur2;
-            x2 = x3;
-            s = s;
+
+            String var23;
+            if (!var14) {
+                if (var4 % 1.0 == 0.0) {
+                    var14 = true;
+                } else {
+                    var14 = false;
+                }
+
+                if (var14) {
+                    var23 = (int)var4;
+                } else {
+                    var23 = var4;
+                }
+
+                var23 = "  ·  " + var23 + "x";
+            } else {
+                var23 = "";
+            }
+
+            var1.drawText(var19 + " / " + var18 + var23, var17.right + this.d * 10.0F, var17.centerY() + this.d * 5.0F, this.txt);
+            if (var16.optBoolean("loading")) {
+                var23 = "loading…";
+            } else if (var16.optBoolean("paused")) {
+                var23 = "paused";
+            } else if (!var16.optBoolean("video")) {
+                var23 = "no video in this part";
+            } else {
+                var23 = "";
+            }
+
+            if (var23.length() > 0) {
+                var14 = true;
+            } else {
+                var14 = false;
+            }
+
+            if (var14) {
+                var1.drawText(var23, var17.right + this.d * 10.0F, var17.bottom + this.d * 16.0F, this.small);
+            }
+
+            float var9 = this.d * 46.0F;
+            float var12 = this.d;
+            Iterator var28 = CollectionsKt.reversed(this.keys).iterator();
+            float var8 = var11 - var10 - var9;
+
+            while (var28.hasNext()) {
+                float var13;
+                label100: {
+                    var23 = (String)var28.next();
+                    var29 = MapsKt.getValue(this.rects, var23);
+                    var29.set(var8, var10, var8 + var9, var10 + var12 * 32.0F);
+                    var13 = this.d;
+                    var1.drawRoundRect(var29, this.d * 10.0F, this.d * 10.0F, this.btnBg);
+                    switch (var23.hashCode()) {
+                        case 101811:
+                            if (var23.equals("fwd")) {
+                                var23 = "+30";
+                                break label100;
+                            }
+                            break;
+                        case 3015911:
+                            if (var23.equals("back")) {
+                                var23 = "−10";
+                                break label100;
+                            }
+                            break;
+                        case 3443508:
+                            if (var23.equals("play")) {
+                                if (var16.optBoolean("paused")) {
+                                    var23 = "▶";
+                                } else {
+                                    var23 = "❚❚";
+                                }
+                                break label100;
+                            }
+                            break;
+                        case 3540994:
+                            if (var23.equals("stop")) {
+                                var23 = "✕";
+                                break label100;
+                            }
+                    }
+
+                    if (var4 % 1.0 == 0.0) {
+                        var14 = true;
+                    } else {
+                        var14 = false;
+                    }
+
+                    if (var14) {
+                        var23 = (int)var4;
+                    } else {
+                        var23 = var4;
+                    }
+
+                    var23 = var23 + "x";
+                }
+
+                var1.drawText(var23, var29.centerX(), var29.centerY() + this.d * 6.0F, this.btn);
+                var8 -= var13 * 6.0F + var9;
+            }
+
+            this.bar.set(var10, this.getHeight() - var10 - this.d * 8.0F, var11 - var10, this.getHeight() - var10);
+            var1.drawRoundRect(this.bar, this.d * 4.0F, this.d * 4.0F, this.track);
+            if (var2 > 0.0) {
+                var1.drawRoundRect(
+                    new RectF(this.bar.left, this.bar.top, this.bar.left + this.bar.width() * RangesKt.coerceIn((float)(var6 / var2), 0.0F, 1.0F), this.bar.bottom),
+                    this.d * 4.0F,
+                    this.d * 4.0F,
+                    this.done
+                );
+            }
+
+            this.postInvalidateDelayed(250L);
         }
-        double dur3 = dur;
-        this.bar.set(pad, (getHeight() - pad) - (this.d * 8.0f), w - pad, getHeight() - pad);
-        c.drawRoundRect(this.bar, this.d * 4.0f, this.d * 4.0f, this.track);
-        if (dur3 > 0.0d) {
-            c.drawRoundRect(new RectF(this.bar.left, this.bar.top, this.bar.left + (this.bar.width() * RangesKt.coerceIn((float) (pos / dur3), 0.0f, 1.0f)), this.bar.bottom), this.d * 4.0f, this.d * 4.0f, this.done);
-        }
-        postInvalidateDelayed(250L);
     }
 
     @Override // android.view.View

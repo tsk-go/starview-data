@@ -82,6 +82,9 @@ import okhttp3.ResponseBody;
 import okio.BufferedSink;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.text.TextUtils.TruncateAt;
+import android.widget.LinearLayout.LayoutParams;
+import kotlin.jvm.internal.Ref.ObjectRef;
 
 /* compiled from: FilesActivity.kt */
 public final class FilesActivity extends AppCompatActivity {
@@ -396,146 +399,94 @@ public final class FilesActivity extends AppCompatActivity {
             this.sortKey = str;
         }
 
-        /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-        private final List<Entry> sorted(List<Entry> list) {
-            Comparator comparator;
-            String str = this.sortKey;
-            switch (str.hashCode()) {
-                case 3076014:
-                    if (str.equals("date")) {
-                        comparator = new Comparator() { // from class: com.starpilot.starview.FilesActivity$Pane$sorted$$inlined$compareBy$2
-                            /* JADX WARN: Multi-variable type inference failed */
-                            @Override // java.util.Comparator
-                            public final int compare(T t, T t2) {
-                                FilesActivity.Entry it = (FilesActivity.Entry) t;
-                                Long valueOf = Long.valueOf(it.getMtime());
-                                FilesActivity.Entry it2 = (FilesActivity.Entry) t2;
-                                return ComparisonsKt.compareValues(valueOf, Long.valueOf(it2.getMtime()));
-                            }
-                        };
-                        break;
-                    }
-                    comparator = new Comparator() { // from class: com.starpilot.starview.FilesActivity$Pane$sorted$$inlined$compareBy$4
-                        /* JADX WARN: Multi-variable type inference failed */
-                        @Override // java.util.Comparator
-                        public final int compare(T t, T t2) {
-                            FilesActivity.Entry it = (FilesActivity.Entry) t;
-                            String lowerCase = it.getName().toLowerCase(Locale.ROOT);
-                            Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                            FilesActivity.Entry it2 = (FilesActivity.Entry) t2;
-                            String lowerCase2 = it2.getName().toLowerCase(Locale.ROOT);
-                            Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
-                            return ComparisonsKt.compareValues(lowerCase, lowerCase2);
-                        }
-                    };
-                    break;
-                case 3530753:
-                    if (str.equals("size")) {
-                        comparator = new Comparator() { // from class: com.starpilot.starview.FilesActivity$Pane$sorted$$inlined$compareBy$1
-                            /* JADX WARN: Multi-variable type inference failed */
-                            @Override // java.util.Comparator
-                            public final int compare(T t, T t2) {
-                                FilesActivity.Entry it = (FilesActivity.Entry) t;
-                                Long valueOf = Long.valueOf(it.getSize());
-                                FilesActivity.Entry it2 = (FilesActivity.Entry) t2;
-                                return ComparisonsKt.compareValues(valueOf, Long.valueOf(it2.getSize()));
-                            }
-                        };
-                        break;
-                    }
-                    comparator = new Comparator() { // from class: com.starpilot.starview.FilesActivity$Pane$sorted$$inlined$compareBy$4
-                        /* JADX WARN: Multi-variable type inference failed */
-                        @Override // java.util.Comparator
-                        public final int compare(T t, T t2) {
-                            FilesActivity.Entry it = (FilesActivity.Entry) t;
-                            String lowerCase = it.getName().toLowerCase(Locale.ROOT);
-                            Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                            FilesActivity.Entry it2 = (FilesActivity.Entry) t2;
-                            String lowerCase2 = it2.getName().toLowerCase(Locale.ROOT);
-                            Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
-                            return ComparisonsKt.compareValues(lowerCase, lowerCase2);
-                        }
-                    };
-                    break;
-                case 3575610:
-                    if (str.equals("type")) {
-                        final Comparator comparator2 = new Comparator() { // from class: com.starpilot.starview.FilesActivity$Pane$sorted$$inlined$compareBy$3
-                            /* JADX WARN: Multi-variable type inference failed */
-                            @Override // java.util.Comparator
-                            public final int compare(T t, T t2) {
-                                FilesActivity.Entry it = (FilesActivity.Entry) t;
-                                String lowerCase = StringsKt.substringAfterLast(it.getName(), '.', "").toLowerCase(Locale.ROOT);
-                                Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                                FilesActivity.Entry it2 = (FilesActivity.Entry) t2;
-                                String lowerCase2 = StringsKt.substringAfterLast(it2.getName(), '.', "").toLowerCase(Locale.ROOT);
-                                Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
-                                return ComparisonsKt.compareValues(lowerCase, lowerCase2);
-                            }
-                        };
-                        comparator = new Comparator() { // from class: com.starpilot.starview.FilesActivity$Pane$sorted$$inlined$thenBy$1
-                            /* JADX WARN: Multi-variable type inference failed */
-                            @Override // java.util.Comparator
-                            public final int compare(T t, T t2) {
-                                int previousCompare = comparator2.compare(t, t2);
-                                if (previousCompare != 0) {
-                                    return previousCompare;
+        /* VF: from Vineflower (jadx: ) */
+        private final List<FilesActivity.Entry> sorted(List<FilesActivity.Entry> var1) {
+            Comparator var5;
+            label28: {
+                String var2 = this.sortKey;
+                switch (var2.hashCode()) {
+                    case 3076014:
+                        if (var2.equals("date")) {
+                            var5 = new Comparator() {
+                                @Override
+                                public final int compare(T var1, T var2x) {
+                                    return ComparisonsKt.compareValues(((FilesActivity.Entry)var1).getMtime(), ((FilesActivity.Entry)var2x).getMtime());
                                 }
-                                FilesActivity.Entry it = (FilesActivity.Entry) t;
-                                String lowerCase = it.getName().toLowerCase(Locale.ROOT);
-                                Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                                FilesActivity.Entry it2 = (FilesActivity.Entry) t2;
-                                String lowerCase2 = it2.getName().toLowerCase(Locale.ROOT);
-                                Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
-                                return ComparisonsKt.compareValues(lowerCase, lowerCase2);
-                            }
-                        };
+                            };
+                            break label28;
+                        }
                         break;
+                    case 3530753:
+                        if (var2.equals("size")) {
+                            var5 = new Comparator() {
+                                @Override
+                                public final int compare(T var1, T var2) {
+                                    return ComparisonsKt.compareValues(((FilesActivity.Entry)var1).getSize(), ((FilesActivity.Entry)var2).getSize());
+                                }
+                            };
+                            break label28;
+                        }
+                        break;
+                    case 3575610:
+                        if (var2.equals("type")) {
+                            var5 = new Comparator() {
+                                final Comparator $this_thenBy = new Comparator() {
+                                @Override
+                                public final int compare(T var1, T var2) {
+                                    var1 = StringsKt.substringAfterLast(((FilesActivity.Entry)var1).getName(), '.', "").toLowerCase(Locale.ROOT);
+                                    Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
+                                    Comparable var4 = var1;
+                                    var2 = StringsKt.substringAfterLast(((FilesActivity.Entry)var2).getName(), '.', "").toLowerCase(Locale.ROOT);
+                                    Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
+                                    return ComparisonsKt.compareValues(var4, var2);
+                                }
+                            };
+
+                                @Override
+                                public final int compare(T var1, T var2) {
+                                    int var3 = this.$this_thenBy.compare(var1, var2);
+                                    if (var3 == 0) {
+                                        var1 = ((FilesActivity.Entry)var1).getName().toLowerCase(Locale.ROOT);
+                                        Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
+                                        Comparable var5 = var1;
+                                        var2 = ((FilesActivity.Entry)var2).getName().toLowerCase(Locale.ROOT);
+                                        Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
+                                        var3 = ComparisonsKt.compareValues(var5, var2);
+                                    }
+
+                                    return var3;
+                                }
+                            };
+                            break label28;
+                        }
+                }
+
+                var5 = new Comparator() {
+                    @Override
+                    public final int compare(T var1, T var2) {
+                        var1 = ((FilesActivity.Entry)var1).getName().toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
+                        Comparable var4 = var1;
+                        var2 = ((FilesActivity.Entry)var2).getName().toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
+                        return ComparisonsKt.compareValues(var4, var2);
                     }
-                    comparator = new Comparator() { // from class: com.starpilot.starview.FilesActivity$Pane$sorted$$inlined$compareBy$4
-                        /* JADX WARN: Multi-variable type inference failed */
-                        @Override // java.util.Comparator
-                        public final int compare(T t, T t2) {
-                            FilesActivity.Entry it = (FilesActivity.Entry) t;
-                            String lowerCase = it.getName().toLowerCase(Locale.ROOT);
-                            Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                            FilesActivity.Entry it2 = (FilesActivity.Entry) t2;
-                            String lowerCase2 = it2.getName().toLowerCase(Locale.ROOT);
-                            Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
-                            return ComparisonsKt.compareValues(lowerCase, lowerCase2);
-                        }
-                    };
-                    break;
-                default:
-                    comparator = new Comparator() { // from class: com.starpilot.starview.FilesActivity$Pane$sorted$$inlined$compareBy$4
-                        /* JADX WARN: Multi-variable type inference failed */
-                        @Override // java.util.Comparator
-                        public final int compare(T t, T t2) {
-                            FilesActivity.Entry it = (FilesActivity.Entry) t;
-                            String lowerCase = it.getName().toLowerCase(Locale.ROOT);
-                            Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                            FilesActivity.Entry it2 = (FilesActivity.Entry) t2;
-                            String lowerCase2 = it2.getName().toLowerCase(Locale.ROOT);
-                            Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
-                            return ComparisonsKt.compareValues(lowerCase, lowerCase2);
-                        }
-                    };
-                    break;
+                };
             }
-            Comparator cmp = comparator;
-            Comparator dirsFirst = new Comparator() { // from class: com.starpilot.starview.FilesActivity$Pane$sorted$$inlined$compareBy$5
-                /* JADX WARN: Multi-variable type inference failed */
-                @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
-                    FilesActivity.Entry it = (FilesActivity.Entry) t;
-                    Boolean valueOf = Boolean.valueOf(!it.getDir());
-                    FilesActivity.Entry it2 = (FilesActivity.Entry) t2;
-                    return ComparisonsKt.compareValues(valueOf, Boolean.valueOf(!it2.getDir()));
+
+            Comparator var3 = new Comparator() {
+                @Override
+                public final int compare(T var1, T var2) {
+                    return ComparisonsKt.compareValues(((FilesActivity.Entry)var1).getDir() ^ true, ((FilesActivity.Entry)var2).getDir() ^ true);
                 }
             };
-            List<Entry> list2 = list;
-            Comparator reversed = this.sortAsc ? cmp : cmp.reversed();
-            Intrinsics.checkNotNull(reversed);
-            return CollectionsKt.sortedWith(list2, ComparisonsKt.then(dirsFirst, reversed));
+            Iterable var4 = var1;
+            if (!this.sortAsc) {
+                var5 = var5.reversed();
+            }
+
+            Intrinsics.checkNotNull(var5);
+            return CollectionsKt.sortedWith(var4, ComparisonsKt.then(var3, var5));
         }
 
         public final void setSort(String key) {
@@ -551,29 +502,52 @@ public final class FilesActivity extends AppCompatActivity {
             updateSortBar();
         }
 
-        /* JADX WARN: Multi-variable type inference failed */
+        /* VF: from Vineflower (jadx: ) */
         private final void updateSortBar() {
-            String str;
-            for (Map.Entry<String, TextView> entry : this.sortBtns.entrySet()) {
-                String key = entry.getKey();
-                TextView value = entry.getValue();
-                boolean areEqual = Intrinsics.areEqual(key, this.sortKey);
-                if ((key.length() > 0) == true) {
-                    StringBuilder sb = new StringBuilder();
-                    String valueOf = String.valueOf(key.charAt(0));
-                    Intrinsics.checkNotNull(valueOf, "null cannot be cast to non-null type java.lang.String");
-                    String upperCase = valueOf.toUpperCase(Locale.ROOT);
-                    Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
-                    StringBuilder append = sb.append((Object) upperCase);
-                    String substring = key.substring(1);
-                    Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
-                    str = append.append(substring).toString();
+            for (Map.Entry var4 : this.sortBtns.entrySet()) {
+                String var5 = (String)var4.getKey();
+                TextView var7 = (TextView)var4.getValue();
+                byte var3 = ((Intrinsics.areEqual(var5, this.sortKey)) ? 1 : 0);
+                int var2;
+                if (var5.length() > 0) {
+                    var2 = 1;
                 } else {
-                    str = key;
+                    var2 = 0;
                 }
-                value.setText(str + (areEqual ? this.sortAsc ? " ▲" : " ▼" : ""));
-                value.setTextColor(areEqual ? Color.rgb(111, 227, 161) : this.this$0.dim);
-                value.setTypeface(null, areEqual ? 1 : 0);
+
+                if ((var2 != 0)) {
+                    StringBuilder var10 = new StringBuilder();
+                    char var1 = var5.charAt(0);
+                    String var8 = String.valueOf(var1);
+                    Intrinsics.checkNotNull(var8, "null cannot be cast to non-null type java.lang.String");
+                    var8 = var8.toUpperCase(Locale.ROOT);
+                    Intrinsics.checkNotNullExpressionValue(var8, "toUpperCase(...)");
+                    StringBuilder var11 = var10.append(var8);
+                    var5 = var5.substring(1);
+                    Intrinsics.checkNotNullExpressionValue(var5, "substring(...)");
+                    var5 = var11.append(var5).toString();
+                }
+
+                String var12;
+                if (var3 != 0) {
+                    if (this.sortAsc) {
+                        var12 = " ▲";
+                    } else {
+                        var12 = " ▼";
+                    }
+                } else {
+                    var12 = "";
+                }
+
+                var7.setText(var5 + var12);
+                if (var3 != 0) {
+                    var2 = Color.rgb(111, 227, 161);
+                } else {
+                    var2 = this.this$0.dim;
+                }
+
+                var7.setTextColor(var2);
+                var7.setTypeface(null, var3);
             }
         }
 
@@ -1068,34 +1042,29 @@ public final class FilesActivity extends AppCompatActivity {
             this$0.refresh();
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        /* JADX WARN: Type inference failed for: r4v0, types: [T, java.lang.String] */
-        public static final void deleteSelected$lambda$47$lambda$46(List $names, final FilesActivity this$0, final Pane this$1) {
-            final Ref.ObjectRef err = new Ref.ObjectRef();
-            Iterator it = $names.iterator();
-            while (it.hasNext()) {
-                String n = (String) it.next();
+        /* VF: from Vineflower (jadx: Type inference failed) */
+        public static final void deleteSelected$lambda$47$lambda$46(List var0, FilesActivity var1, FilesActivity.Pane var2) {
+            ObjectRef var3 = new ObjectRef();
+
+            for (String var4 : var0) {
                 try {
-                    JSONObject put = new JSONObject().put("op", "delete").put("path", this$0.join(this$1.path, n));
-                    Intrinsics.checkNotNullExpressionValue(put, "put(...)");
-                    this$0.opSync(put);
-                } catch (Exception e) {
-                    err.element = e.getMessage();
+                    JSONObject var5 = new JSONObject();
+                    JSONObject var8 = var5.put("op", "delete").put("path", var1.join(var2.path, var4));
+                    Intrinsics.checkNotNullExpressionValue(var8, "put(...)");
+                    var1.opSync(var8);
+                } catch (Exception var6) {
+                    var3.element = (T)var6.getMessage();
                 }
             }
-            this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda13
-                @Override // java.lang.Runnable
-                public final void run() {
-                    FilesActivity.Pane.deleteSelected$lambda$47$lambda$46$lambda$45(this$1, err, this$0);
-                }
-            });
+
+            var1.ui.post(new FilesActivity$Pane$$ExternalSyntheticLambda13(var2, var3, var1));
         }
 
         /* JADX INFO: Access modifiers changed from: private */
         public static final void deleteSelected$lambda$47$lambda$46$lambda$45(Pane this$0, Ref.ObjectRef $err, FilesActivity this$1) {
             this$0.selected.clear();
             this$0.refresh();
-            if ($err.element != 0) {
+            if ($err.element) {
                 this$1.toast("delete: " + $err.element);
             }
         }
@@ -2858,11 +2827,10 @@ public final class FilesActivity extends AppCompatActivity {
         handler.post(runnable);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    public static final Unit startCopy$lambda$51$lambda$36(Ref.ObjectRef $applyAll, Clash it) {
-        Intrinsics.checkNotNullParameter(it, "it");
-        $applyAll.element = it;
+    /* VF: from Vineflower (jadx: ) */
+    public static final Unit startCopy$lambda$51$lambda$36(ObjectRef var0, FilesActivity.Clash var1) {
+        Intrinsics.checkNotNullParameter(var1, "it");
+        var0.element = (T)var1;
         return Unit.INSTANCE;
     }
 
@@ -3007,20 +2975,16 @@ public final class FilesActivity extends AppCompatActivity {
         }
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r0v2, types: [T, com.starpilot.starview.FilesActivity$Clash] */
-    private final Clash askClash(final String name, final boolean srcDir, final boolean dstDir, final String side, final String folder, final Function1<? super Clash, Unit> setAll) {
-        final CountDownLatch latch = new CountDownLatch(1);
-        final Ref.ObjectRef result = new Ref.ObjectRef();
-        result.element = Clash.CANCEL;
-        this.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda18
-            @Override // java.lang.Runnable
-            public final void run() {
-                FilesActivity.askClash$lambda$60(FilesActivity.this, dstDir, srcDir, name, side, folder, result, setAll, latch);
-            }
-        });
-        latch.await();
-        return (Clash) result.element;
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    private final FilesActivity.Clash askClash(
+        String var1, boolean var2, boolean var3, String var4, String var5, Function1<? super FilesActivity.Clash, Unit> var6
+    ) {
+        CountDownLatch var7 = new CountDownLatch(1);
+        ObjectRef var8 = new ObjectRef();
+        var8.element = (T)FilesActivity.Clash.CANCEL;
+        this.ui.post(new FilesActivity$$ExternalSyntheticLambda18(this, var3, var2, var1, var4, var5, var8, var6, var7));
+        var7.await();
+        return (FilesActivity.Clash)var8.element;
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -3067,42 +3031,41 @@ public final class FilesActivity extends AppCompatActivity {
         $this$askClash_u24lambda_u2460_u24lambda_u2453.addView($this$askClash_u24lambda_u2460_u24lambda_u2459_u24lambda_u2458);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Type inference failed for: r4v1, types: [T, com.starpilot.starview.FilesActivity$Clash] */
-    public static final void askClash$lambda$60$lambda$54(Ref.ObjectRef $result, CheckBox $all, Function1 $setAll, CountDownLatch $latch, DialogInterface dialogInterface, int i) {
-        $result.element = Clash.REPLACE;
-        if ($all.isChecked()) {
-            $setAll.invoke($result.element);
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public static final void askClash$lambda$60$lambda$54(ObjectRef var0, CheckBox var1, Function1 var2, CountDownLatch var3, DialogInterface var4, int var5) {
+        var0.element = (T)FilesActivity.Clash.REPLACE;
+        if (var1.isChecked()) {
+            var2.invoke(var0.element);
         }
-        $latch.countDown();
+
+        var3.countDown();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Type inference failed for: r4v1, types: [T, com.starpilot.starview.FilesActivity$Clash] */
-    public static final void askClash$lambda$60$lambda$55(Ref.ObjectRef $result, CheckBox $all, Function1 $setAll, CountDownLatch $latch, DialogInterface dialogInterface, int i) {
-        $result.element = Clash.KEEP_BOTH;
-        if ($all.isChecked()) {
-            $setAll.invoke($result.element);
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public static final void askClash$lambda$60$lambda$55(ObjectRef var0, CheckBox var1, Function1 var2, CountDownLatch var3, DialogInterface var4, int var5) {
+        var0.element = (T)FilesActivity.Clash.KEEP_BOTH;
+        if (var1.isChecked()) {
+            var2.invoke(var0.element);
         }
-        $latch.countDown();
+
+        var3.countDown();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Type inference failed for: r4v1, types: [T, com.starpilot.starview.FilesActivity$Clash] */
-    public static final void askClash$lambda$60$lambda$56(Ref.ObjectRef $result, CheckBox $all, Function1 $setAll, CountDownLatch $latch, DialogInterface dialogInterface, int i) {
-        $result.element = Clash.SKIP;
-        if ($all.isChecked()) {
-            $setAll.invoke($result.element);
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public static final void askClash$lambda$60$lambda$56(ObjectRef var0, CheckBox var1, Function1 var2, CountDownLatch var3, DialogInterface var4, int var5) {
+        var0.element = (T)FilesActivity.Clash.SKIP;
+        if (var1.isChecked()) {
+            var2.invoke(var0.element);
         }
-        $latch.countDown();
+
+        var3.countDown();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Type inference failed for: r0v0, types: [T, com.starpilot.starview.FilesActivity$Clash] */
-    public static final void askClash$lambda$60$lambda$59$lambda$58$lambda$57(Ref.ObjectRef $result, AlertDialog $dlg, CountDownLatch $latch, View it) {
-        $result.element = Clash.CANCEL;
-        $dlg.dismiss();
-        $latch.countDown();
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    public static final void askClash$lambda$60$lambda$59$lambda$58$lambda$57(ObjectRef var0, AlertDialog var1, CountDownLatch var2, View var3) {
+        var0.element = (T)FilesActivity.Clash.CANCEL;
+        var1.dismiss();
+        var2.countDown();
     }
 
     private final String freeName(String name, boolean dir, Set<String> taken) {
@@ -3587,82 +3550,84 @@ public final class FilesActivity extends AppCompatActivity {
         }
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r10v0 */
-    /* JADX WARN: Type inference failed for: r10v1, types: [boolean, int] */
-    /* JADX WARN: Type inference failed for: r10v3 */
-    private final void buildQueue(List<Job> jobs) {
-        LinearLayout linearLayout;
-        LinearLayout linearLayout2 = this.queueList;
-        if (linearLayout2 == null) {
+    /* VF: from Vineflower (jadx: Type inference failed) */
+    private final void buildQueue(List<FilesActivity.Job> var1) {
+        LinearLayout var4 = this.queueList;
+        LinearLayout var3 = var4;
+        if (var4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("queueList");
-            linearLayout2 = null;
+            var3 = null;
         }
-        linearLayout2.removeAllViews();
+
+        var3.removeAllViews();
         this.queueRows.clear();
-        int i = 0;
-        for (Job j : jobs) {
-            int i2 = i;
-            int i3 = i + 1;
-            if (i2 >= 300) {
-                LinearLayout linearLayout3 = this.queueList;
-                if (linearLayout3 == null) {
+        Iterator var5 = var1.iterator();
+
+        for (int var2 = 0; var5.hasNext(); var2++) {
+            FilesActivity.Job var6 = (FilesActivity.Job)var5.next();
+            if (var2 >= 300) {
+                var3 = this.queueList;
+                if (var3 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("queueList");
-                    linearLayout = null;
-                } else {
-                    linearLayout = linearLayout3;
+                    var3 = null;
                 }
-                TextView textView = new TextView(this);
-                textView.setText("… and " + (jobs.size() - 300) + " more files");
-                textView.setTextColor(this.dim);
-                textView.setTextSize(12.0f);
-                textView.setPadding(dp(6), dp(4), 0, dp(4));
-                linearLayout.addView(textView);
-                return;
+
+                TextView var23 = new TextView((Context)this);
+                var2 = var1.size();
+                var23.setText("… and " + (var2 - 300) + " more files");
+                var23.setTextColor(this.dim);
+                var23.setTextSize(12.0F);
+                var23.setPadding(this.dp(6), this.dp(4), 0, this.dp(4));
+                var3.addView((View)var23);
+                break;
             }
-            FileKinds fileKinds = FileKinds.INSTANCE;
-            String name = new File(j.getSrcPath()).getName();
-            Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-            FileKinds.Kind kind = fileKinds.of(name, false);
-            LinearLayout linearLayout4 = new LinearLayout(this);
-            linearLayout4.setOrientation(0);
-            linearLayout4.setGravity(16);
-            linearLayout4.setPadding(dp(6), dp(4), dp(6), dp(4));
-            View $this$buildQueue_u24lambda_u2486 = new View(this);
-            $this$buildQueue_u24lambda_u2486.setBackground(SvIcon.drawable$default(SvIcon.INSTANCE, kind.getIcon(), kind.getColor(), 0, 4, null));
-            LinearLayout.LayoutParams $this$buildQueue_u24lambda_u2487 = new LinearLayout.LayoutParams(dp(18), dp(18));
-            $this$buildQueue_u24lambda_u2487.rightMargin = dp(8);
-            Unit unit = Unit.INSTANCE;
-            linearLayout4.addView($this$buildQueue_u24lambda_u2486, $this$buildQueue_u24lambda_u2487);
-            TextView $this$buildQueue_u24lambda_u2488 = new TextView(this);
-            $this$buildQueue_u24lambda_u2488.setText(new File(j.getSrcPath()).getName());
-            $this$buildQueue_u24lambda_u2488.setTextColor(-1);
-            $this$buildQueue_u24lambda_u2488.setTextSize(13.0f);
-            $this$buildQueue_u24lambda_u2488.setMaxLines(1);
-            $this$buildQueue_u24lambda_u2488.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-            linearLayout4.addView($this$buildQueue_u24lambda_u2488, new LinearLayout.LayoutParams(0, -2, 1.0f));
-            ProgressBar progressBar = new ProgressBar(this, null, 16842872);
-            progressBar.setMax(1000);
-            progressBar.setProgress(0);
-            LinearLayout.LayoutParams $this$buildQueue_u24lambda_u2490 = new LinearLayout.LayoutParams(dp(140), -2);
-            $this$buildQueue_u24lambda_u2490.leftMargin = dp(10);
-            $this$buildQueue_u24lambda_u2490.rightMargin = dp(10);
-            Unit unit2 = Unit.INSTANCE;
-            linearLayout4.addView(progressBar, $this$buildQueue_u24lambda_u2490);
-            TextView $this$buildQueue_u24lambda_u2491 = new TextView(this);
-            $this$buildQueue_u24lambda_u2491.setText("waiting · " + fmtSize(j.getSize()));
-            $this$buildQueue_u24lambda_u2491.setTextColor(this.dim);
-            $this$buildQueue_u24lambda_u2491.setTextSize(12.0f);
-            $this$buildQueue_u24lambda_u2491.setMinWidth(dp(120));
-            linearLayout4.addView($this$buildQueue_u24lambda_u2491);
-            LinearLayout linearLayout5 = this.queueList;
-            if (linearLayout5 == null) {
+
+            FileKinds var18 = FileKinds.INSTANCE;
+            String var11 = new File(var6.getSrcPath()).getName();
+            Intrinsics.checkNotNullExpressionValue(var11, "getName(...)");
+            FileKinds.Kind var19 = var18.of(var11, false);
+            LinearLayout var7 = new LinearLayout((Context)this);
+            var7.setOrientation(0);
+            var7.setGravity(16);
+            var7.setPadding(this.dp(6), this.dp(4), this.dp(6), this.dp(4));
+            View var12 = new View((Context)this);
+            var12.setBackground(SvIcon.drawable$default(SvIcon.INSTANCE, var19.getIcon(), var19.getColor(), 0, 4, null));
+            android.widget.LinearLayout.LayoutParams var20 = new LayoutParams(this.dp(18), this.dp(18));
+            var20.rightMargin = this.dp(8);
+            Unit var8 = Unit.INSTANCE;
+            var7.addView(var12, (android.view.ViewGroup.LayoutParams)var20);
+            TextView var13 = new TextView((Context)this);
+            var13.setText(new File(var6.getSrcPath()).getName());
+            var13.setTextColor(-1);
+            var13.setTextSize(13.0F);
+            var13.setMaxLines(1);
+            var13.setEllipsize(TruncateAt.MIDDLE);
+            var7.addView((View)var13, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
+            ProgressBar var24 = new ProgressBar((Context)this, null, 16842872);
+            var24.setMax(1000);
+            var24.setProgress(0);
+            View var21 = (View)var24;
+            android.widget.LinearLayout.LayoutParams var14 = new LayoutParams(this.dp(140), -2);
+            var14.leftMargin = this.dp(10);
+            var14.rightMargin = this.dp(10);
+            Unit var9 = Unit.INSTANCE;
+            var7.addView(var21, (android.view.ViewGroup.LayoutParams)var14);
+            TextView var25 = new TextView((Context)this);
+            String var15 = this.fmtSize(var6.getSize());
+            var25.setText("waiting · " + var15);
+            var25.setTextColor(this.dim);
+            var25.setTextSize(12.0F);
+            var25.setMinWidth(this.dp(120));
+            var7.addView((View)var25);
+            var4 = this.queueList;
+            var3 = var4;
+            if (var4 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("queueList");
-                linearLayout5 = null;
+                var3 = null;
             }
-            linearLayout5.addView(linearLayout4);
-            this.queueRows.add(new QRow(this, j, linearLayout4, $this$buildQueue_u24lambda_u2491, progressBar));
-            i = i3;
+
+            var3.addView((View)var7);
+            this.queueRows.add(new FilesActivity.QRow(this, var6, var7, var25, var24));
         }
     }
 

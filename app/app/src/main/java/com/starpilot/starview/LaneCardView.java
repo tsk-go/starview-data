@@ -39,6 +39,10 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.StringCompanionObject;
+import android.graphics.Paint.Align;
+import android.graphics.Paint.Style;
+import android.graphics.PathEffect;
+import android.text.TextUtils.TruncateAt;
 
 /* compiled from: LaneCardView.kt */
 public final class LaneCardView extends View {
@@ -74,48 +78,41 @@ public final class LaneCardView extends View {
     private final RectF undoR;
     private Function0<Triple<Double, Double, Float>> where;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public LaneCardView(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        this.where = new Function0() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda1
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Triple where$lambda$0;
-                where$lambda$0 = LaneCardView.where$lambda$0();
-                return where$lambda$0;
-            }
-        };
-        this.d = getResources().getDisplayMetrics().density;
-        Paint $this$bg_u24lambda_u241 = new Paint(1);
-        $this$bg_u24lambda_u241.setColor(Color.argb(200, 0, 0, 0));
-        this.bg = $this$bg_u24lambda_u241;
+    /* VF: from Vineflower (jadx: ) */
+    public LaneCardView(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        this.where = new LaneCardView$$ExternalSyntheticLambda1();
+        this.d = this.getResources().getDisplayMetrics().density;
+        Paint var4 = new Paint(1);
+        var4.setColor(Color.argb(200, 0, 0, 0));
+        this.bg = var4;
         this.box = new Paint(1);
-        TextPaint $this$big_u24lambda_u242 = new TextPaint(1);
-        $this$big_u24lambda_u242.setColor(-1);
-        $this$big_u24lambda_u242.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$big_u24lambda_u242.setTextSize(this.d * 24.0f);
-        this.big = $this$big_u24lambda_u242;
-        TextPaint $this$small_u24lambda_u243 = new TextPaint(1);
-        $this$small_u24lambda_u243.setColor(Color.rgb(200, 208, 222));
-        $this$small_u24lambda_u243.setTextSize(this.d * 13.5f);
-        this.small = $this$small_u24lambda_u243;
-        TextPaint $this$dim_u24lambda_u244 = new TextPaint(1);
-        $this$dim_u24lambda_u244.setColor(Color.rgb(150, 160, 178));
-        $this$dim_u24lambda_u244.setTextSize(this.d * 12.5f);
-        this.dim = $this$dim_u24lambda_u244;
-        TextPaint $this$stat_u24lambda_u245 = new TextPaint(1);
-        $this$stat_u24lambda_u245.setColor(Color.rgb(225, 230, 240));
-        $this$stat_u24lambda_u245.setTextSize(this.d * 13.0f);
-        $this$stat_u24lambda_u245.setTypeface(Typeface.DEFAULT_BOLD);
-        this.stat = $this$stat_u24lambda_u245;
-        TextPaint $this$btnText_u24lambda_u246 = new TextPaint(1);
-        $this$btnText_u24lambda_u246.setColor(-1);
-        $this$btnText_u24lambda_u246.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$btnText_u24lambda_u246.setTextSize(this.d * 24.0f);
-        $this$btnText_u24lambda_u246.setTextAlign(Paint.Align.CENTER);
-        this.btnText = $this$btnText_u24lambda_u246;
-        this.prefs = ctx.getSharedPreferences("lane_card", 0);
+        TextPaint var5 = new TextPaint(1);
+        var5.setColor(-1);
+        var5.setTypeface(Typeface.DEFAULT_BOLD);
+        var5.setTextSize(this.d * 24.0F);
+        this.big = var5;
+        TextPaint var6 = new TextPaint(1);
+        var6.setColor(Color.rgb(200, 208, 222));
+        var6.setTextSize(this.d * 13.5F);
+        this.small = var6;
+        TextPaint var7 = new TextPaint(1);
+        var7.setColor(Color.rgb(150, 160, 178));
+        var7.setTextSize(this.d * 12.5F);
+        this.dim = var7;
+        TextPaint var8 = new TextPaint(1);
+        var8.setColor(Color.rgb(225, 230, 240));
+        var8.setTextSize(this.d * 13.0F);
+        var8.setTypeface(Typeface.DEFAULT_BOLD);
+        this.stat = var8;
+        TextPaint var9 = new TextPaint(1);
+        var9.setColor(-1);
+        var9.setTypeface(Typeface.DEFAULT_BOLD);
+        var9.setTextSize(this.d * 24.0F);
+        var9.setTextAlign(android.graphics.Paint.Align.CENTER);
+        this.btnText = var9;
+        this.prefs = var1.getSharedPreferences("lane_card", 0);
         this.nRight = this.prefs.getInt("right", 0);
         this.nWrong = this.prefs.getInt("wrong", 0);
         this.flash = "";
@@ -125,28 +122,16 @@ public final class LaneCardView extends View {
         this.undoR = new RectF();
         this.fixR = new RectF();
         this.topR = new RectF();
-        TextPaint $this$fixText_u24lambda_u247 = new TextPaint(1);
-        $this$fixText_u24lambda_u247.setColor(-1);
-        $this$fixText_u24lambda_u247.setTypeface(Typeface.DEFAULT_BOLD);
-        $this$fixText_u24lambda_u247.setTextSize(this.d * 16.0f);
-        $this$fixText_u24lambda_u247.setTextAlign(Paint.Align.CENTER);
-        this.fixText = $this$fixText_u24lambda_u247;
+        TextPaint var3 = new TextPaint(1);
+        var3.setColor(-1);
+        var3.setTypeface(Typeface.DEFAULT_BOLD);
+        var3.setTextSize(this.d * 16.0F);
+        var3.setTextAlign(android.graphics.Paint.Align.CENTER);
+        this.fixText = var3;
         this.lastOk = true;
         this.UNDO_MS = 8000L;
-        setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda2
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                LaneCardView.this.showHistory();
-            }
-        });
-        setOnLongClickListener(new View.OnLongClickListener() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda3
-            @Override // android.view.View.OnLongClickListener
-            public final boolean onLongClick(View view) {
-                boolean _init_$lambda$9;
-                _init_$lambda$9 = LaneCardView._init_$lambda$9(LaneCardView.this, view);
-                return _init_$lambda$9;
-            }
-        });
+        this.setOnClickListener(new LaneCardView$$ExternalSyntheticLambda2(this));
+        this.setOnLongClickListener(new LaneCardView$$ExternalSyntheticLambda3(this));
     }
 
     public /* synthetic */ LaneCardView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {
@@ -254,452 +239,509 @@ public final class LaneCardView extends View {
         c.drawText(TextUtils.ellipsize(text, p, w, TextUtils.TruncateAt.END).toString(), this.d * 14.0f, y, p);
     }
 
-    /* JADX WARN: Can't wrap try/catch for region: R(61:5|(1:7)(1:248)|8|(1:247)(1:12)|13|(1:15)(1:(1:245)(1:246))|16|(1:243)(1:20)|21|(1:23)(1:242)|24|(1:241)(1:28)|29|(8:31|(1:239)(1:35)|36|(2:38|(4:40|41|(3:43|(10:(1:45)(1:235)|(2:47|(7:49|50|(1:52)(1:232)|53|(1:231)(1:56)|57|(2:59|(3:61|62|(1:64)(1:65))(4:225|226|62|(0)(0)))(2:227|(4:229|226|62|(0)(0))(3:230|62|(0)(0)))))(1:234)|233|50|(0)(0)|53|(0)|231|57|(0)(0))|66)(1:236)|67))(1:238)|237|41|(0)(0)|67)(1:240)|68|(1:70)(1:224)|(1:72)|73|(3:75|(1:77)(1:222)|78)(1:223)|79|(1:85)|(1:87)(1:221)|(1:91)|92|(1:94)(32:218|(1:220)|96|(3:98|(1:100)(1:103)|(1:102))|104|(1:106)(1:217)|(1:108)|109|(1:111)(2:(6:204|(1:206)(1:215)|(1:208)|209|(1:211)(1:214)|212)|216)|112|(1:114)(1:202)|115|(1:117)(1:201)|118|119|120|(1:197)|124|(1:126)(1:196)|(3:128|(1:130)(1:179)|131)(9:180|(1:182)(1:195)|183|(1:185)(1:194)|186|(1:188)(1:193)|189|(1:191)|192)|132|(1:134)(1:178)|135|(1:137)(1:177)|138|(1:140)(1:176)|141|(1:143)(1:175)|144|(1:148)|149|(4:165|(1:167)(1:174)|168|(2:170|171)(2:172|173))(7:(1:153)(1:164)|154|(1:156)(1:163)|157|(1:159)(1:162)|160|161))|95|96|(0)|104|(0)(0)|(0)|109|(0)(0)|112|(0)(0)|115|(0)(0)|118|119|120|(1:122)|197|124|(0)(0)|(0)(0)|132|(0)(0)|135|(0)(0)|138|(0)(0)|141|(0)(0)|144|(2:146|148)|149|(0)|165|(0)(0)|168|(0)(0)) */
-    /* JADX WARN: Code restructure failed: missing block: B:200:0x05d1, code lost:
-    
-        r0 = kotlin.TuplesKt.to("", false);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:213:0x0511, code lost:
-    
-        if (r0 == null) goto L157;
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Removed duplicated region for block: B:106:0x046a  */
-    /* JADX WARN: Removed duplicated region for block: B:108:0x046f  */
-    /* JADX WARN: Removed duplicated region for block: B:111:0x04b1  */
-    /* JADX WARN: Removed duplicated region for block: B:114:0x0524  */
-    /* JADX WARN: Removed duplicated region for block: B:117:0x0553  */
-    /* JADX WARN: Removed duplicated region for block: B:126:0x05f4  */
-    /* JADX WARN: Removed duplicated region for block: B:128:0x05fa  */
-    /* JADX WARN: Removed duplicated region for block: B:134:0x077f  */
-    /* JADX WARN: Removed duplicated region for block: B:137:0x079a  */
-    /* JADX WARN: Removed duplicated region for block: B:140:0x07dc  */
-    /* JADX WARN: Removed duplicated region for block: B:143:0x0800  */
-    /* JADX WARN: Removed duplicated region for block: B:167:0x08bd  */
-    /* JADX WARN: Removed duplicated region for block: B:170:0x0903  */
-    /* JADX WARN: Removed duplicated region for block: B:172:0x0939  */
-    /* JADX WARN: Removed duplicated region for block: B:174:0x08c8  */
-    /* JADX WARN: Removed duplicated region for block: B:175:0x0803  */
-    /* JADX WARN: Removed duplicated region for block: B:176:0x07de  */
-    /* JADX WARN: Removed duplicated region for block: B:177:0x07a3  */
-    /* JADX WARN: Removed duplicated region for block: B:178:0x0781  */
-    /* JADX WARN: Removed duplicated region for block: B:180:0x0653  */
-    /* JADX WARN: Removed duplicated region for block: B:196:0x05f6  */
-    /* JADX WARN: Removed duplicated region for block: B:201:0x0556  */
-    /* JADX WARN: Removed duplicated region for block: B:202:0x0542  */
-    /* JADX WARN: Removed duplicated region for block: B:203:0x04d3  */
-    /* JADX WARN: Removed duplicated region for block: B:217:0x046c  */
-    /* JADX WARN: Removed duplicated region for block: B:227:0x01ec  */
-    /* JADX WARN: Removed duplicated region for block: B:232:0x0181  */
-    /* JADX WARN: Removed duplicated region for block: B:236:0x0240  */
-    /* JADX WARN: Removed duplicated region for block: B:43:0x015f  */
-    /* JADX WARN: Removed duplicated region for block: B:52:0x017e  */
-    /* JADX WARN: Removed duplicated region for block: B:59:0x01cd  */
-    /* JADX WARN: Removed duplicated region for block: B:64:0x022f A[LOOP:0: B:44:0x0163->B:64:0x022f, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:65:0x023d A[EDGE_INSN: B:65:0x023d->B:66:0x023d BREAK  A[LOOP:0: B:44:0x0163->B:64:0x022f], SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:98:0x0436  */
-    @Override // android.view.View
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    protected void onDraw(Canvas c) {
-        int total;
-        float pad;
-        float f;
-        float w;
-        int m;
-        LaneBrain tr;
-        String str;
-        LaneBrain.Event last;
-        String str2;
-        String str3;
-        String str4;
-        float pad2;
-        String ah;
-        int i;
-        int i2;
-        int i3;
-        float cy;
-        long now;
-        float scoreW;
-        int i4;
-        char c2;
-        int i5;
-        int rgb;
-        Function0<Pair<String, Boolean>> function0;
-        String str5;
-        int extraFromR;
-        int extraFromL;
-        int extraFromL2;
-        int lanes;
-        int i6;
-        DashPathEffect dashPathEffect;
-        int rgb2;
-        int i7;
-        Intrinsics.checkNotNullParameter(c, "c");
-        LaneBrain tr2 = this.tracker;
-        if (tr2 == null) {
-            return;
-        }
-        float w2 = getWidth();
-        float h = getHeight();
-        float pad3 = this.d * 14.0f;
-        c.drawRoundRect(new RectF(0.0f, 0.0f, w2, h), this.d * 16.0f, this.d * 16.0f, this.bg);
-        Pair<Integer, Double> laneFromLeft = tr2.laneFromLeft();
-        int n = laneFromLeft.component1().intValue();
-        double conf = laneFromLeft.component2().doubleValue();
-        Pair<Integer, String> laneCount = tr2.laneCount();
-        int m2 = laneCount.component1().intValue();
-        String mSrc = laneCount.component2();
-        int total2 = m2 > 0 ? Math.max(m2, n) : 0;
-        this.box.setColor((n <= 0 || conf >= 0.6d) ? confColor(conf) : Color.rgb(130, 138, 150));
-        c.drawRoundRect(new RectF(0.0f, 0.0f, this.d * 6.0f, h), this.d * 3.0f, this.d * 3.0f, this.box);
-        String title = tr2.label();
-        LaneBrain.RoadModel rm = tr2.getModel();
-        int lanes2 = total2 > 0 ? total2 : n > 0 ? n + 1 : 0;
-        float diagW = 1 <= lanes2 && lanes2 < 9 ? (lanes2 * 18.0f * this.d) + ((lanes2 - 1) * 4.0f * this.d) + pad3 : 0.0f;
-        float h2 = 2;
-        c.drawText(TextUtils.ellipsize(title, this.big, (w2 - (pad3 * h2)) - diagW, TextUtils.TruncateAt.END).toString(), pad3, this.d * 32.0f, this.big);
-        if (!(1 <= lanes2 && lanes2 < 9)) {
-            total = total2;
-            pad = pad3;
-            f = h2;
-            w = w2;
-            m = m2;
-            tr = tr2;
-        } else {
-            float bw = this.d * 18.0f;
-            float gap = this.d * 4.0f;
-            float bh = this.d * 26.0f;
-            int extraFromL3 = (rm.getLanes() <= 0 || total2 != rm.getTotal()) ? 0 : rm.getExtraL();
-            if (rm.getLanes() > 0) {
-                m = m2;
-                if (total2 == rm.getTotal()) {
-                    extraFromR = rm.getExtraR();
-                    total = total2;
-                    float x = ((w2 - pad3) - (lanes2 * bw)) - ((lanes2 - 1) * gap);
-                    float y = this.d * 12.0f;
-                    tr = tr2;
-                    int i8 = 1;
-                    if (1 > lanes2) {
-                        w = w2;
-                        float w3 = x;
-                        while (true) {
-                            boolean ours = i8 == n;
-                            if (i8 > extraFromL3) {
-                                extraFromL = extraFromL3;
-                                int extraFromL4 = lanes2 - extraFromR;
-                                if (i8 <= extraFromL4) {
-                                    extraFromL2 = 0;
-                                    int n2 = n;
-                                    int extraFromR2 = extraFromR;
-                                    this.box.setStyle(!ours ? Paint.Style.FILL : Paint.Style.STROKE);
-                                    pad = pad3;
-                                    this.box.setStrokeWidth(this.d * 2.0f);
-                                    Paint paint = this.box;
-                                    if (extraFromL2 != 0 || ours) {
-                                        lanes = lanes2;
-                                        f = h2;
-                                        i6 = i8;
-                                        dashPathEffect = null;
-                                    } else {
-                                        f = h2;
-                                        lanes = lanes2;
-                                        i6 = i8;
-                                        dashPathEffect = new DashPathEffect(new float[]{this.d * 4.0f, this.d * 3.0f}, 0.0f);
-                                    }
-                                    paint.setPathEffect(dashPathEffect);
-                                    Paint paint2 = this.box;
-                                    if (ours) {
-                                        if (extraFromL2 != 0) {
-                                            rgb2 = Color.rgb(255, 196, 0);
-                                            paint2.setColor(rgb2);
-                                            c.drawRoundRect(new RectF(w3, y, w3 + bw, y + bh), this.d * 4.0f, this.d * 4.0f, this.box);
-                                            w3 += bw + gap;
-                                            i7 = i6;
-                                            lanes2 = lanes;
-                                            if (i7 != lanes2) {
-                                            }
-                                        } else {
-                                            rgb2 = Color.rgb(120, 130, 146);
-                                            paint2.setColor(rgb2);
-                                            c.drawRoundRect(new RectF(w3, y, w3 + bw, y + bh), this.d * 4.0f, this.d * 4.0f, this.box);
-                                            w3 += bw + gap;
-                                            i7 = i6;
-                                            lanes2 = lanes;
-                                            if (i7 != lanes2) {
-                                            }
-                                        }
-                                    } else if (conf < 0.6d) {
-                                        rgb2 = Color.rgb(130, 138, 150);
-                                        paint2.setColor(rgb2);
-                                        c.drawRoundRect(new RectF(w3, y, w3 + bw, y + bh), this.d * 4.0f, this.d * 4.0f, this.box);
-                                        w3 += bw + gap;
-                                        i7 = i6;
-                                        lanes2 = lanes;
-                                        if (i7 != lanes2) {
-                                            break;
-                                        }
-                                        i8 = i7 + 1;
-                                        extraFromL3 = extraFromL;
-                                        n = n2;
-                                        pad3 = pad;
-                                        extraFromR = extraFromR2;
-                                        h2 = f;
-                                    } else {
-                                        rgb2 = confColor(conf);
-                                        paint2.setColor(rgb2);
-                                        c.drawRoundRect(new RectF(w3, y, w3 + bw, y + bh), this.d * 4.0f, this.d * 4.0f, this.box);
-                                        w3 += bw + gap;
-                                        i7 = i6;
-                                        lanes2 = lanes;
-                                        if (i7 != lanes2) {
-                                        }
-                                    }
-                                }
-                            } else {
-                                extraFromL = extraFromL3;
-                            }
-                            extraFromL2 = 1;
-                            int n22 = n;
-                            int extraFromR22 = extraFromR;
-                            this.box.setStyle(!ours ? Paint.Style.FILL : Paint.Style.STROKE);
-                            pad = pad3;
-                            this.box.setStrokeWidth(this.d * 2.0f);
-                            Paint paint3 = this.box;
-                            if (extraFromL2 != 0) {
-                            }
-                            lanes = lanes2;
-                            f = h2;
-                            i6 = i8;
-                            dashPathEffect = null;
-                            paint3.setPathEffect(dashPathEffect);
-                            Paint paint22 = this.box;
-                            if (ours) {
-                            }
-                        }
-                    } else {
-                        pad = pad3;
-                        f = h2;
-                        w = w2;
-                    }
-                    this.box.setStyle(Paint.Style.FILL);
-                    this.box.setPathEffect(null);
-                }
+    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
+    protected void onDraw(Canvas var1) {
+        Object var122 = null; Object var123 = null; Pair var129 = null; // declarations Vineflower left out
+        Intrinsics.checkNotNullParameter(var1, "c");
+        LaneBrain var33 = this.tracker;
+        if (var33 != null) {
+            float var11 = this.getWidth();
+            float var12 = this.getHeight();
+            float var8 = this.d * 14.0F;
+            var1.drawRoundRect(new RectF(0.0F, 0.0F, var11, var12), this.d * 16.0F, this.d * 16.0F, this.bg);
+            Pair var28 = var33.laneFromLeft();
+            int var21 = ((Number)var28.component1()).intValue();
+            double var2 = ((Number)var28.component2()).doubleValue();
+            var28 = var33.laneCount();
+            int var18 = ((Number)var28.component1()).intValue();
+            String var29 = (String)var28.component2();
+            int var19;
+            if (var18 > 0) {
+                var19 = Math.max(var18, var21);
             } else {
-                m = m2;
+                var19 = 0;
             }
-            extraFromR = 0;
-            total = total2;
-            float x2 = ((w2 - pad3) - (lanes2 * bw)) - ((lanes2 - 1) * gap);
-            float y2 = this.d * 12.0f;
-            tr = tr2;
-            int i82 = 1;
-            if (1 > lanes2) {
-            }
-            this.box.setStyle(Paint.Style.FILL);
-            this.box.setPathEffect(null);
-        }
-        float lineW = w - (f * pad);
-        LaneBrain tr3 = tr;
-        Pair<Integer, Double> side = tr3.side(-1);
-        int sl = side.component1().intValue();
-        double ql = side.component2().doubleValue();
-        Pair<Integer, Double> side2 = tr3.side(1);
-        int sr = side2.component1().intValue();
-        double qr = side2.component2().doubleValue();
-        double d = 100;
-        line(c, "lanes left of us: " + sl + " (" + ((int) (ql * d)) + "%)  ·  right: " + sr + " (" + ((int) (d * qr)) + "%)", this.small, this.d * 56.0f, lineW);
-        String joinToString$default = CollectionsKt.joinToString(CollectionsKt.take(tr3.getWhy(), 2), "  ·  ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda0
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                CharSequence onDraw$lambda$10;
-                onDraw$lambda$10 = LaneCardView.onDraw$lambda$10(LaneCardView.this, (LaneBrain.Event) obj);
-                return onDraw$lambda$10;
-            }
-        });
-        if (joinToString$default.length() == 0) {
-            joinToString$default = "nothing seen yet";
-        }
-        line(c, "why: " + ((Object) joinToString$default), this.small, this.d * 74.0f, lineW);
-        LaneBrain.Road road = tr3.getRoad();
-        LaneBrain.RoadInfo inf = tr3.getInfo();
-        StringBuilder $this$onDraw_u24lambda_u2412 = new StringBuilder();
-        $this$onDraw_u24lambda_u2412.append("road: ");
-        if (rm.getLanes() > 0) {
-            str = rm.getLanes() + " lane" + (rm.getLanes() == 1 ? "" : "s") + " (" + rm.getSrc() + ")";
-        } else {
-            str = "count not known";
-        }
-        $this$onDraw_u24lambda_u2412.append(str);
-        if (inf != null && inf.getHpmsLanes() > 0 && !Intrinsics.areEqual(rm.getSrc(), "HPMS")) {
-            $this$onDraw_u24lambda_u2412.append(" · HPMS " + inf.getHpmsLanes());
-        }
-        if ((road != null ? road.getLanesOurWay() : 0) > 0 && !Intrinsics.areEqual(rm.getSrc(), "map")) {
-            Intrinsics.checkNotNull(road);
-            $this$onDraw_u24lambda_u2412.append(" · map " + road.getLanesOurWay());
-        }
-        if (!rm.getTunnel()) {
-            str5 = rm.getBridge() ? " · bridge" : " · tunnel";
-            if (inf != null) {
-                if (inf.getExtraWhy().length() > 0) {
-                    $this$onDraw_u24lambda_u2412.append(" · " + inf.getExtraWhy());
-                }
-            }
-            if (mSrc.length() <= 0) {
-                $this$onDraw_u24lambda_u2412.append("  → " + mSrc);
-            }
-            String roadTxt = $this$onDraw_u24lambda_u2412.toString();
-            Intrinsics.checkNotNullExpressionValue(roadTxt, "toString(...)");
-            line(c, roadTxt, this.dim, 91.0f * this.d, lineW);
-            last = tr3.getEvents().firstOrNull();
-            if (last == null) {
-                str2 = last.getText() + " · " + ago(last.getAtMs());
+
+            Paint var90 = this.box;
+            if (var21 > 0 && var2 < 0.6) {
+                var18 = Color.rgb(130, 138, 150);
             } else {
-                if (road != null) {
-                    String name = road.getName();
-                    if (name.length() == 0) {
-                        name = road.getKind();
-                    }
-                    str2 = "on " + ((Object) name) + (road.getOneway() ? " (one-way)" : "");
-                }
-                str2 = "waiting for a turn, a ramp or a lane line";
+                var18 = this.confColor(var2);
             }
-            String ev = str2;
-            if (tr3.getLastCameraMs() <= 0) {
-                str3 = " · ";
-                str4 = "camera confirmed " + ago(tr3.getLastCameraMs());
+
+            var90.setColor(var18);
+            var1.drawRoundRect(new RectF(0.0F, 0.0F, this.d * 6.0F, var12), this.d * 3.0F, this.d * 3.0F, this.box);
+            String var91 = var33.label();
+            LaneBrain.RoadModel var30 = var33.getModel();
+            if (var19 > 0) {
+                var18 = var19;
+            } else if (var21 > 0) {
+                var18 = var21 + 1;
             } else {
-                str3 = " · ";
-                str4 = "camera: nothing yet";
+                var18 = 0;
             }
-            String cam = str4;
-            String hp = !Hpms.INSTANCE.files().isEmpty() ? "  ·  no road data (Settings › Lanes)" : "";
-            String roadTxt2 = str3;
-            pad2 = pad;
-            line(c, cam + "  ·  lane known " + tr3.knownPct() + "% of " + ((int) (tr3.getDriveS() / 60)) + " min" + hp, this.small, 109.0f * this.d, lineW);
-            function0 = this.ahead;
-            if (function0 != null || (r0 = function0.invoke()) == null) {
-                Pair<String, Boolean> pair = TuplesKt.to("", false);
+
+            int var20;
+            if (1 <= var18 && var18 < 9) {
+                var20 = 1;
+            } else {
+                var20 = 0;
             }
-            ah = pair.component1();
-            boolean urgent = pair.component2().booleanValue();
-            if (!(ah.length() <= 0)) {
-                TextPaint textPaint = this.stat;
-                if (urgent) {
-                    c2 = 255;
-                    rgb = Color.rgb(255, 90, 80);
-                    i5 = 0;
+
+            float var10;
+            if ((var20 != 0)) {
+                var10 = var18 * 18.0F * this.d + (var18 - 1) * 4.0F * this.d + var8;
+            } else {
+                var10 = 0.0F;
+            }
+
+            CharSequence var92 = var91;
+            TextPaint var31 = this.big;
+            float var9 = 2;
+            var1.drawText(TextUtils.ellipsize(var92, var31, var11 - var8 * var9 - var10, TruncateAt.END).toString(), var8, this.d * 32.0F, (Paint)this.big);
+            if (1 <= var18 && var18 < 9) {
+                var20 = (((boolean)true) ? 1 : 0);
+            } else {
+                var20 = (((boolean)false) ? 1 : 0);
+            }
+
+            if ((var20 != 0)) {
+                float var16 = this.d * 18.0F;
+                float var14 = this.d * 4.0F;
+                float var15 = this.d;
+                if (var30.getLanes() > 0 && var19 == var30.getTotal()) {
+                    var20 = var30.getExtraL();
                 } else {
-                    c2 = 255;
-                    i5 = 0;
-                    rgb = Color.rgb(255, 196, 0);
+                    var20 = 0;
                 }
-                textPaint.setColor(rgb);
-                line(c, "⚠ " + ah, this.stat, this.d * 129.0f, lineW);
-                this.stat.setColor(Color.rgb(225, 230, 240));
-                i = i5;
-                i2 = 1;
+
+                if (var30.getLanes() > 0 && var19 == var30.getTotal()) {
+                    var19 = var30.getExtraR();
+                } else {
+                    var19 = 0;
+                }
+
+                var10 = var18;
+                float var17 = var18 - 1;
+                float var13 = this.d * 12.0F;
+                int var22 = 1;
+                if (1 <= var18) {
+                    var10 = var11 - var8 - var10 * var16 - var17 * var14;
+                    int var23 = var18;
+
+                    while (true) {
+                        int var50;
+                        if (var22 == var21) {
+                            var50 = 1;
+                        } else {
+                            var50 = 0;
+                        }
+
+                        boolean var24;
+                        if (var22 > var20 && var22 <= var23 - var19) {
+                            var24 = false;
+                        } else {
+                            var24 = true;
+                        }
+
+                        Paint var132 = this.box;
+                        android.graphics.Paint.Style var93;
+                        if ((var50 != 0)) {
+                            var93 = android.graphics.Paint.Style.FILL;
+                        } else {
+                            var93 = android.graphics.Paint.Style.STROKE;
+                        }
+
+                        var132.setStyle(var93);
+                        Paint var94 = this.box;
+                        var94.setStrokeWidth(this.d * 2.0F);
+                        Paint var133 = this.box;
+                        PathEffect var95;
+                        if (var24 && !var50) {
+                            var95 = (PathEffect)(new DashPathEffect(new float[]{this.d * 4.0F, this.d * 3.0F}, 0.0F));
+                        } else {
+                            var95 = null;
+                        }
+
+                        var133.setPathEffect(var95);
+                        Paint var96 = this.box;
+                        if ((var50 != 0)) {
+                            if (var2 < 0.6) {
+                                var50 = Color.rgb(130, 138, 150);
+                            } else {
+                                var50 = this.confColor(var2);
+                            }
+                        } else if (var24) {
+                            var50 = Color.rgb(255, 196, 0);
+                        } else {
+                            var50 = Color.rgb(120, 130, 146);
+                        }
+
+                        var96.setColor(var50);
+                        var1.drawRoundRect(new RectF(var10, var13, var10 + var16, var13 + var15 * 26.0F), this.d * 4.0F, this.d * 4.0F, this.box);
+                        var10 += var16 + var14;
+                        if (var22 == var23) {
+                            break;
+                        }
+
+                        var22++;
+                        var23 = var23;
+                    }
+                }
+
+                this.box.setStyle(android.graphics.Paint.Style.FILL);
+                this.box.setPathEffect(null);
+            }
+
+            var10 = var11 - var9 * var8;
+            var28 = var33.side(-1);
+            var20 = ((Number)var28.component1()).intValue();
+            var2 = ((Number)var28.component2()).doubleValue();
+            var28 = var33.side(1);
+            var18 = ((Number)var28.component1()).intValue();
+            double var6 = ((Number)var28.component2()).doubleValue();
+            double var4 = 100;
+            var21 = (int)(var2 * var4);
+            var19 = (int)(var4 * var6);
+            this.line(var1, "lanes left of us: " + var20 + " (" + var21 + "%)  ·  right: " + var18 + " (" + var19 + "%)", this.small, this.d * 56.0F, var10);
+            var28 = CollectionsKt.joinToString(CollectionsKt.take(var33.getWhy(), 2), "  ·  ", "", "", -1, "...", new LaneCardView$$ExternalSyntheticLambda0(this));
+            int var53;
+            if (var28.length() == 0) {
+                var53 = 1;
             } else {
-                i = 0;
-                i2 = 1;
-                line(c, "Drive: " + tr3.getNChanges() + " lane change" + (tr3.getNChanges() == 1 ? "" : "s") + (tr3.getNUndone() > 0 ? " (" + tr3.getNUndone() + " undone)" : "") + roadTxt2 + tr3.getNTurns() + " turn" + (tr3.getNTurns() == 1 ? "" : "s") + roadTxt2 + tr3.getNRamps() + " ramp" + (tr3.getNRamps() == 1 ? "" : "s"), this.stat, this.d * 129.0f, lineW);
+                var53 = 0;
             }
-            float f2 = f;
-            float w4 = w;
-            i3 = i2;
-            line(c, ev, this.dim, this.d * 147.0f, lineW);
-            float r = this.d * 22.0f;
-            cy = (h - (this.d * 8.0f)) - r;
-            this.noR.set((w4 - pad2) - (f2 * r), cy - r, w4 - pad2, cy + r);
-            this.okR.set((this.noR.left - (this.d * 12.0f)) - (f2 * r), cy - r, this.noR.left - (this.d * 12.0f), cy + r);
-            this.fixR.set((this.okR.left - (this.d * 12.0f)) - (this.d * 64.0f), cy - r, this.okR.left - (this.d * 12.0f), cy + r);
-            this.box.setColor(this.pressed != 3 ? -1 : Color.rgb(52, 92, 170));
-            c.drawRoundRect(this.fixR, r, r, this.box);
-            this.fixText.setColor(this.pressed != 3 ? Color.rgb(52, 92, 170) : -1);
-            c.drawText("Fix", this.fixR.centerX(), this.fixR.centerY() + (this.d * 6.0f), this.fixText);
-            this.topR.set(0.0f, 0.0f, w4, this.d * 44.0f);
-            onDraw$button(this, c, this.okR, Color.rgb(34, 150, 74), "✓", this.pressed != i3 ? i3 : i);
-            onDraw$button(this, c, this.noR, Color.rgb(200, 52, 52), "✗", this.pressed != -1 ? i3 : i);
-            int tot = this.nRight + this.nWrong;
-            now = System.currentTimeMillis();
-            scoreW = (this.fixR.left - pad2) - (this.d * 8.0f);
-            this.undoR.set(0.0f, cy - r, this.fixR.left - (this.d * 4.0f), cy + r);
-            if (this.lastCounted && now - this.lastCheckMs < this.UNDO_MS) {
-                i = i3;
+
+            if ((var53 != 0)) {
+                var28 = "nothing seen yet";
             }
-            i4 = i;
-            if (now - this.flashMs >= 2500 || i4 != 0) {
-                this.stat.setColor(!this.flashOk ? Color.rgb(90, 220, 120) : Color.rgb(255, 120, 110));
-                c.drawText(TextUtils.ellipsize(this.flash, this.stat, scoreW, TextUtils.TruncateAt.END).toString(), pad2, cy - (this.d * 3.0f), this.stat);
-                this.stat.setColor(Color.rgb(225, 230, 240));
-                if (i4 == 0) {
-                    c.drawText("tap here to undo (" + (((this.UNDO_MS - (now - this.lastCheckMs)) / 1000) + 1) + "s)", pad2, (this.d * 14.0f) + cy, this.dim);
-                    return;
+
+            this.line(var1, "why: " + var28, this.small, this.d * 74.0F, var10);
+            LaneBrain.Road var134 = var33.getRoad();
+            LaneBrain.RoadInfo var35 = var33.getInfo();
+            StringBuilder var34 = new StringBuilder();
+            var34.append("road: ");
+            var53 = var30.getLanes();
+            String var32 = "s";
+            String var101;
+            if (var53 > 0) {
+                var53 = var30.getLanes();
+                String var100;
+                if (var30.getLanes() == 1) {
+                    var100 = "";
+                } else {
+                    var100 = "s";
                 }
-                return;
+
+                String var36 = var30.getSrc();
+                var101 = var53 + " lane" + var100 + " (" + var36 + ")";
+            } else {
+                var101 = "count not known";
             }
-            String txt = tot == 0 ? "is the lane right? tap ✓ or ✗ (stopped / passenger)" : "your checks: " + this.nRight + " of " + tot + " right (" + ((this.nRight * 100) / tot) + "%)";
-            c.drawText(TextUtils.ellipsize(txt, tot == 0 ? this.dim : this.stat, scoreW, TextUtils.TruncateAt.END).toString(), pad2, (this.d * 5.0f) + cy, tot == 0 ? this.dim : this.stat);
-            return;
-        }
-        $this$onDraw_u24lambda_u2412.append(str5);
-        if (inf != null) {
-        }
-        if (mSrc.length() <= 0) {
-        }
-        String roadTxt3 = $this$onDraw_u24lambda_u2412.toString();
-        Intrinsics.checkNotNullExpressionValue(roadTxt3, "toString(...)");
-        line(c, roadTxt3, this.dim, 91.0f * this.d, lineW);
-        last = tr3.getEvents().firstOrNull();
-        if (last == null) {
-        }
-        String ev2 = str2;
-        if (tr3.getLastCameraMs() <= 0) {
-        }
-        String cam2 = str4;
-        String hp2 = !Hpms.INSTANCE.files().isEmpty() ? "  ·  no road data (Settings › Lanes)" : "";
-        String roadTxt22 = str3;
-        pad2 = pad;
-        line(c, cam2 + "  ·  lane known " + tr3.knownPct() + "% of " + ((int) (tr3.getDriveS() / 60)) + " min" + hp2, this.small, 109.0f * this.d, lineW);
-        function0 = this.ahead;
-        if (function0 != null) {
-        }
-        Pair<String, Boolean> pair2 = TuplesKt.to("", false);
-        ah = pair2.component1();
-        boolean urgent2 = pair2.component2().booleanValue();
-        if (!(ah.length() <= 0)) {
-        }
-        float f22 = f;
-        float w42 = w;
-        i3 = i2;
-        line(c, ev2, this.dim, this.d * 147.0f, lineW);
-        float r2 = this.d * 22.0f;
-        cy = (h - (this.d * 8.0f)) - r2;
-        this.noR.set((w42 - pad2) - (f22 * r2), cy - r2, w42 - pad2, cy + r2);
-        this.okR.set((this.noR.left - (this.d * 12.0f)) - (f22 * r2), cy - r2, this.noR.left - (this.d * 12.0f), cy + r2);
-        this.fixR.set((this.okR.left - (this.d * 12.0f)) - (this.d * 64.0f), cy - r2, this.okR.left - (this.d * 12.0f), cy + r2);
-        this.box.setColor(this.pressed != 3 ? -1 : Color.rgb(52, 92, 170));
-        c.drawRoundRect(this.fixR, r2, r2, this.box);
-        this.fixText.setColor(this.pressed != 3 ? Color.rgb(52, 92, 170) : -1);
-        c.drawText("Fix", this.fixR.centerX(), this.fixR.centerY() + (this.d * 6.0f), this.fixText);
-        this.topR.set(0.0f, 0.0f, w42, this.d * 44.0f);
-        onDraw$button(this, c, this.okR, Color.rgb(34, 150, 74), "✓", this.pressed != i3 ? i3 : i);
-        onDraw$button(this, c, this.noR, Color.rgb(200, 52, 52), "✗", this.pressed != -1 ? i3 : i);
-        int tot2 = this.nRight + this.nWrong;
-        now = System.currentTimeMillis();
-        scoreW = (this.fixR.left - pad2) - (this.d * 8.0f);
-        this.undoR.set(0.0f, cy - r2, this.fixR.left - (this.d * 4.0f), cy + r2);
-        if (this.lastCounted) {
-            i = i3;
-        }
-        i4 = i;
-        if (now - this.flashMs >= 2500) {
-        }
-        this.stat.setColor(!this.flashOk ? Color.rgb(90, 220, 120) : Color.rgb(255, 120, 110));
-        c.drawText(TextUtils.ellipsize(this.flash, this.stat, scoreW, TextUtils.TruncateAt.END).toString(), pad2, cy - (this.d * 3.0f), this.stat);
-        this.stat.setColor(Color.rgb(225, 230, 240));
-        if (i4 == 0) {
+
+            var34.append(var101);
+            if (var35 != null && var35.getHpmsLanes() > 0 && !Intrinsics.areEqual(var30.getSrc(), "HPMS")) {
+                var53 = var35.getHpmsLanes();
+                var34.append(" · HPMS " + var53);
+            }
+
+            if (var134 != null) {
+                var53 = var134.getLanesOurWay();
+            } else {
+                var53 = 0;
+            }
+
+            if (var53 > 0 && !Intrinsics.areEqual(var30.getSrc(), "map")) {
+                Intrinsics.checkNotNull(var134);
+                var53 = var134.getLanesOurWay();
+                var34.append(" · map " + var53);
+            }
+
+            label290: {
+                String var102;
+                if (var30.getTunnel()) {
+                    var102 = " · tunnel";
+                } else {
+                    if (!var30.getBridge()) {
+                        break label290;
+                    }
+
+                    var102 = " · bridge";
+                }
+
+                var34.append(var102);
+            }
+
+            if (var35 != null) {
+                boolean var59;
+                if (var35.getExtraWhy().length() > 0) {
+                    var59 = true;
+                } else {
+                    var59 = false;
+                }
+
+                if (var59) {
+                    String var103 = var35.getExtraWhy();
+                    var34.append(" · " + var103);
+                }
+            }
+
+            int var60;
+            if (var29.length() > 0) {
+                var60 = 1;
+            } else {
+                var60 = 0;
+            }
+
+            if ((var60 != 0)) {
+                var34.append("  → " + var29);
+            }
+
+            String var104 = var34.toString();
+            Intrinsics.checkNotNullExpressionValue(var104, "toString(...)");
+            this.line(var1, var104, this.dim, 91.0F * this.d, var10);
+            LaneBrain.Event var105 = var33.getEvents().firstOrNull();
+            String var107;
+            if (var105 != null) {
+                var29 = var105.getText();
+                String var106 = this.ago(var105.getAtMs());
+                var107 = var29 + " · " + var106;
+            } else {
+                label280: {
+                    if (var134 != null) {
+                        var28 = var134.getName();
+                        if (var28.length() == 0) {
+                            var60 = (((boolean)true) ? 1 : 0);
+                        } else {
+                            var60 = (((boolean)false) ? 1 : 0);
+                        }
+
+                        if ((var60 != 0)) {
+                            var28 = var134.getKind();
+                        }
+
+                        if (var134.getOneway()) {
+                            var29 = " (one-way)";
+                        } else {
+                            var29 = "";
+                        }
+
+                        var29 = "on " + var28 + var29;
+                        var107 = var29;
+                        if (var29 != null) {
+                            break label280;
+                        }
+                    }
+
+                    var107 = "waiting for a turn, a ramp or a lane line";
+                }
+            }
+
+            if (var33.getLastCameraMs() > 0L) {
+                var29 = this.ago(var33.getLastCameraMs());
+                var29 = "camera confirmed " + var29;
+            } else {
+                var29 = "camera: nothing yet";
+            }
+
+            String var128;
+            if (Hpms.INSTANCE.files().isEmpty()) {
+                var128 = "  ·  no road data (Settings › Lanes)";
+            } else {
+                var128 = "";
+            }
+
+            var19 = var33.knownPct();
+            var60 = (int)(var33.getDriveS() / 60);
+            this.line(var1, var29 + "  ·  lane known " + var19 + "% of " + var60 + " min" + var128, this.small, 109.0F * this.d, var10);
+
+            label358: {
+                try {
+                    var123 = this.ahead;
+                } catch (Exception var39) {
+                    var122 = TuplesKt.to("", false);
+                    break label358;
+                }
+
+                if (var123 != null) {
+                    try {
+                        var129 = (Pair)var123.invoke();
+                    } catch (Exception var38) {
+                        var122 = TuplesKt.to("", false);
+                        break label358;
+                    }
+
+                    var122 = var129;
+                    if (var129 != null) {
+                        break label358;
+                    }
+                }
+
+                try {
+                    var122 = TuplesKt.to("", false);
+                } catch (Exception var37) {
+                    var122 = TuplesKt.to("", false);
+                }
+            }
+
+            String var130 = (String)var122.component1();
+            boolean var25 = (Boolean)var122.component2();
+            int var63;
+            if (var130.length() > 0) {
+                var63 = 1;
+            } else {
+                var63 = 0;
+            }
+
+            if ((var63 != 0)) {
+                TextPaint var124 = this.stat;
+                if (var25) {
+                    var63 = Color.rgb(255, 90, 80);
+                } else {
+                    var63 = Color.rgb(255, 196, 0);
+                }
+
+                var124.setColor(var63);
+                this.line(var1, "⚠ " + var130, this.stat, this.d * 129.0F, var10);
+                this.stat.setColor(Color.rgb(225, 230, 240));
+            } else {
+                var63 = var33.getNChanges();
+                if (var33.getNChanges() == 1) {
+                    var29 = "";
+                } else {
+                    var29 = "s";
+                }
+
+                String var131;
+                if (var33.getNUndone() > 0) {
+                    var19 = var33.getNUndone();
+                    var131 = " (" + var19 + " undone)";
+                } else {
+                    var131 = "";
+                }
+
+                var19 = var33.getNTurns();
+                String var135;
+                if (var33.getNTurns() == 1) {
+                    var135 = "";
+                } else {
+                    var135 = "s";
+                }
+
+                var20 = var33.getNRamps();
+                if (var33.getNRamps() == 1) {
+                    var32 = "";
+                }
+
+                this.line(
+                    var1,
+                    "Drive: " + var63 + " lane change" + var29 + var131 + " · " + var19 + " turn" + var135 + " · " + var20 + " ramp" + var32,
+                    this.stat,
+                    this.d * 129.0F,
+                    var10
+                );
+            }
+
+            int var77 = 0;
+            this.line(var1, var107, this.dim, this.d * 147.0F, var10);
+            var10 = this.d * 22.0F;
+            var12 = var12 - this.d * 8.0F - var10;
+            this.noR.set(var11 - var8 - var9 * var10, var12 - var10, var11 - var8, var12 + var10);
+            this.okR.set(this.noR.left - this.d * 12.0F - var9 * var10, var12 - var10, this.noR.left - this.d * 12.0F, var12 + var10);
+            this.fixR.set(this.okR.left - this.d * 12.0F - this.d * 64.0F, var12 - var10, this.okR.left - this.d * 12.0F, var12 + var10);
+            Paint var109 = this.box;
+            if (this.pressed == 3) {
+                var63 = -1;
+            } else {
+                var63 = Color.rgb(52, 92, 170);
+            }
+
+            var109.setColor(var63);
+            var1.drawRoundRect(this.fixR, var10, var10, this.box);
+            TextPaint var110 = this.fixText;
+            if (this.pressed == 3) {
+                var63 = Color.rgb(52, 92, 170);
+            } else {
+                var63 = -1;
+            }
+
+            var110.setColor(var63);
+            var1.drawText("Fix", this.fixR.centerX(), this.fixR.centerY() + this.d * 6.0F, (Paint)this.fixText);
+            this.topR.set(0.0F, 0.0F, var11, this.d * 44.0F);
+            RectF var111 = this.okR;
+            var63 = Color.rgb(34, 150, 74);
+            if (this.pressed == 1) {
+                var25 = true;
+            } else {
+                var25 = false;
+            }
+
+            onDraw$button(this, var1, var111, (((var63 != 0)) ? 1 : 0), "✓", var25);
+            RectF var112 = this.noR;
+            var63 = Color.rgb(200, 52, 52);
+            if (this.pressed == -1) {
+                var25 = true;
+            } else {
+                var25 = false;
+            }
+
+            onDraw$button(this, var1, var112, (((var63 != 0)) ? 1 : 0), "✗", var25);
+            var20 = this.nRight + this.nWrong;
+            long var26 = System.currentTimeMillis();
+            var9 = this.fixR.left - var8 - this.d * 8.0F;
+            this.undoR.set(0.0F, var12 - var10, this.fixR.left - this.d * 4.0F, var12 + var10);
+            int var70 = var77;
+            if (this.lastCounted) {
+                var70 = var77;
+                if (var26 - this.lastCheckMs < this.UNDO_MS) {
+                    var70 = 1;
+                }
+            }
+
+            if (var26 - this.flashMs >= 2500L && !var70) {
+                String var114;
+                if (!var20) {
+                    var114 = "is the lane right? tap ✓ or ✗ (stopped / passenger)";
+                } else {
+                    var77 = this.nRight;
+                    var70 = this.nRight * 100 / var20;
+                    var114 = "your checks: " + var77 + " of " + var20 + " right (" + var70 + "%)";
+                }
+
+                CharSequence var126 = var114;
+                TextPaint var115;
+                if (!var20) {
+                    var115 = this.dim;
+                } else {
+                    var115 = this.stat;
+                }
+
+                var29 = TextUtils.ellipsize(var126, var115, var9, TruncateAt.END).toString();
+                var9 = this.d;
+                TextPaint var116;
+                if (!var20) {
+                    var116 = this.dim;
+                } else {
+                    var116 = this.stat;
+                }
+
+                var1.drawText(var29, var8, var9 * 5.0F + var12, (Paint)var116);
+            } else {
+                TextPaint var113 = this.stat;
+                if (this.flashOk) {
+                    var77 = Color.rgb(90, 220, 120);
+                } else {
+                    var77 = Color.rgb(255, 120, 110);
+                }
+
+                var113.setColor(var77);
+                var1.drawText(TextUtils.ellipsize(this.flash, this.stat, var9, TruncateAt.END).toString(), var8, var12 - this.d * 3.0F, (Paint)this.stat);
+                this.stat.setColor(Color.rgb(225, 230, 240));
+                if ((var70 != 0)) {
+                    var26 = (this.UNDO_MS - (var26 - this.lastCheckMs)) / 1000;
+                    var1.drawText("tap here to undo (" + (var26 + 1L) + "s)", var8, this.d * 14.0F + var12, (Paint)this.dim);
+                }
+            }
         }
     }
 

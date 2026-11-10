@@ -33,6 +33,10 @@ import kotlin.math.MathKt;
 import kotlin.ranges.RangesKt;
 import kotlin.reflect.KFunction;
 import kotlin.text.StringsKt;
+import android.graphics.Bitmap.Config;
+import android.graphics.Paint.Align;
+import android.graphics.Paint.Cap;
+import android.graphics.Paint.Style;
 
 /* compiled from: OverlayView.kt */
 public final class OverlayView extends View {
@@ -62,56 +66,58 @@ public final class OverlayView extends View {
     private final LaneTracks tracks;
     private UiStatus uiStatus;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public OverlayView(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
+    /* VF: from Vineflower (jadx: ) */
+    public OverlayView(Context var1, AttributeSet var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
         this.proj = new Projection();
         this.uiStatus = UiStatus.DISENGAGED;
-        Paint $this$fill_u24lambda_u240 = new Paint(1);
-        $this$fill_u24lambda_u240.setStyle(Paint.Style.FILL);
-        this.fill = $this$fill_u24lambda_u240;
-        Paint $this$stroke_u24lambda_u241 = new Paint(1);
-        $this$stroke_u24lambda_u241.setStyle(Paint.Style.STROKE);
-        this.stroke = $this$stroke_u24lambda_u241;
-        Paint $this$text_u24lambda_u242 = new Paint(1);
-        $this$text_u24lambda_u242.setColor(-1);
-        $this$text_u24lambda_u242.setTextAlign(Paint.Align.CENTER);
-        $this$text_u24lambda_u242.setTypeface(Typeface.DEFAULT_BOLD);
-        this.text = $this$text_u24lambda_u242;
-        Paint $this$textOutline_u24lambda_u243 = new Paint(1);
-        $this$textOutline_u24lambda_u243.setColor(-16777216);
-        $this$textOutline_u24lambda_u243.setTextAlign(Paint.Align.CENTER);
-        $this$textOutline_u24lambda_u243.setStyle(Paint.Style.STROKE);
-        $this$textOutline_u24lambda_u243.setStrokeWidth(3.0f);
-        $this$textOutline_u24lambda_u243.setTypeface(Typeface.DEFAULT_BOLD);
-        this.textOutline = $this$textOutline_u24lambda_u243;
+        Paint var4 = new Paint(1);
+        var4.setStyle(android.graphics.Paint.Style.FILL);
+        this.fill = var4;
+        Paint var5 = new Paint(1);
+        var5.setStyle(android.graphics.Paint.Style.STROKE);
+        this.stroke = var5;
+        Paint var6 = new Paint(1);
+        var6.setColor(-1);
+        var6.setTextAlign(android.graphics.Paint.Align.CENTER);
+        var6.setTypeface(Typeface.DEFAULT_BOLD);
+        this.text = var6;
+        Paint var7 = new Paint(1);
+        var7.setColor(-16777216);
+        var7.setTextAlign(android.graphics.Paint.Align.CENTER);
+        var7.setStyle(android.graphics.Paint.Style.STROKE);
+        var7.setStrokeWidth(3.0F);
+        var7.setTypeface(Typeface.DEFAULT_BOLD);
+        this.textOutline = var7;
         this.path = new Path();
         this.tmp = new float[2];
-        this.blendThrottle = 1.0f;
-        this.tracks = new LaneTracks(0.0f, 1, null);
-        Bitmap createBitmap = Bitmap.createBitmap(16, 1, Bitmap.Config.ARGB_8888);
-        Intrinsics.checkNotNullExpressionValue(createBitmap, "createBitmap(...)");
-        this.ambBmp = createBitmap;
+        this.blendThrottle = 1.0F;
+        this.tracks = new LaneTracks(0.0F, 1, null);
+        Bitmap var8 = Bitmap.createBitmap(16, 1, android.graphics.Bitmap.Config.ARGB_8888);
+        Intrinsics.checkNotNullExpressionValue(var8, "createBitmap(...)");
+        this.ambBmp = var8;
         this.ambPaint = new Paint(2);
         this.ambFade = new Paint();
-        float[] fArr = new float[96];
-        for (int i = 0; i < 96; i++) {
-            fArr[i] = -1.0f;
+        float[] var9 = new float[96];
+
+        for (int var3 = 0; var3 < 96; var3++) {
+            var9[var3] = -1.0F;
         }
-        this.ambNow = fArr;
-        Paint $this$detBox_u24lambda_u246 = new Paint(1);
-        $this$detBox_u24lambda_u246.setStyle(Paint.Style.STROKE);
-        $this$detBox_u24lambda_u246.setStrokeWidth(4.0f);
-        this.detBox = $this$detBox_u24lambda_u246;
-        Paint $this$detText_u24lambda_u247 = new Paint(1);
-        $this$detText_u24lambda_u247.setColor(-1);
-        $this$detText_u24lambda_u247.setTextSize(26.0f);
-        $this$detText_u24lambda_u247.setFakeBoldText(true);
-        this.detText = $this$detText_u24lambda_u247;
-        Paint $this$detBg_u24lambda_u248 = new Paint();
-        $this$detBg_u24lambda_u248.setStyle(Paint.Style.FILL);
-        this.detBg = $this$detBg_u24lambda_u248;
+
+        this.ambNow = var9;
+        Paint var10 = new Paint(1);
+        var10.setStyle(android.graphics.Paint.Style.STROKE);
+        var10.setStrokeWidth(4.0F);
+        this.detBox = var10;
+        Paint var11 = new Paint(1);
+        var11.setColor(-1);
+        var11.setTextSize(26.0F);
+        var11.setFakeBoldText(true);
+        this.detText = var11;
+        Paint var12 = new Paint();
+        var12.setStyle(android.graphics.Paint.Style.FILL);
+        this.detBg = var12;
     }
 
     public /* synthetic */ OverlayView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {
@@ -188,32 +194,57 @@ public final class OverlayView extends View {
         this.proj.update();
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:20:0x0065  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
     public final boolean updateCalibration() {
-        boolean changed;
-        float[] rpy = getT().getCalRpy();
-        if (this.proj.getRpy()[0] == ((double) rpy[0])) {
-            if (this.proj.getRpy()[1] == ((double) rpy[1])) {
-                if (this.proj.getRpy()[2] == ((double) rpy[2])) {
-                    if (this.proj.getPathOffsetZ() == ((double) getT().getCalHeight())) {
-                        changed = false;
-                        if (changed) {
-                            this.proj.setRpy(new double[]{rpy[0], rpy[1], rpy[2]});
-                            this.proj.setPathOffsetZ(getT().getCalHeight());
-                            this.proj.update();
+        float[] var3 = this.getT().getCalRpy();
+        boolean var1;
+        if (this.proj.getRpy()[0] == var3[0]) {
+            var1 = true;
+        } else {
+            var1 = false;
+        }
+
+        boolean var2;
+        label40: {
+            if (var1) {
+                if (this.proj.getRpy()[1] == var3[1]) {
+                    var1 = true;
+                } else {
+                    var1 = false;
+                }
+
+                if (var1) {
+                    if (this.proj.getRpy()[2] == var3[2]) {
+                        var1 = true;
+                    } else {
+                        var1 = false;
+                    }
+
+                    if (var1) {
+                        if (this.proj.getPathOffsetZ() == this.getT().getCalHeight()) {
+                            var1 = true;
+                        } else {
+                            var1 = false;
                         }
-                        return changed;
+
+                        if (var1) {
+                            var2 = false;
+                            break label40;
+                        }
                     }
                 }
             }
+
+            var2 = true;
         }
-        changed = true;
-        if (changed) {
+
+        if (var2) {
+            this.proj.setRpy(new double[]{var3[0], var3[1], var3[2]});
+            this.proj.setPathOffsetZ(this.getT().getCalHeight());
+            this.proj.update();
         }
-        return changed;
+
+        return var2;
     }
 
     public final boolean getSceneMode() {
@@ -253,238 +284,232 @@ public final class OverlayView extends View {
         drawTorqueBar(c, dt);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:49:0x024b A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:71:0x023e A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void drawModel(Canvas c, float dt) {
-        int n;
-        double d;
-        float rew;
-        float llw;
-        double maxDist;
-        float pwv;
-        boolean metric;
-        int n2;
-        boolean z;
-        float f;
-        Shader shader;
-        Shader shader2;
-        int i;
-        float[] outer;
-        float[] poly;
-        LaneTracks.Line nearL;
-        double d2;
-        float[] poly2;
-        LaneTracks.PathState state;
-        int i2;
-        ModelSnapshot m = getT().getModel();
-        if (m != null && (n = m.getPosX().length) >= 2) {
-            Lead lead = getT().getLeadOne();
-            boolean metric2 = getT().isMetric();
-            Pair<Boolean, Float> drawModel$custom = drawModel$custom(this, "PathWidth", 6.1f);
-            boolean cpw = drawModel$custom.component1().booleanValue();
-            float pwv2 = drawModel$custom.component2().floatValue();
-            Pair<Boolean, Float> drawModel$custom2 = drawModel$custom(this, "LaneLinesWidth", 4.0f);
-            boolean cll = drawModel$custom2.component1().booleanValue();
-            float llw2 = drawModel$custom2.component2().floatValue();
-            Pair<Boolean, Float> drawModel$custom3 = drawModel$custom(this, "RoadEdgesWidth", 2.0f);
-            boolean cre = drawModel$custom3.component1().booleanValue();
-            float rew2 = drawModel$custom3.component2().floatValue();
-            Pair<Boolean, Float> drawModel$custom4 = drawModel$custom(this, "PathEdgeWidth", 20.0f);
-            drawModel$custom4.component1().booleanValue();
-            float pew = drawModel$custom4.component2().floatValue();
-            double pathHalf = cpw ? halfM(pwv2, metric2) : 0.9d;
-            double d3 = 0.025d;
-            if (cll) {
-                d = smallHalfM(llw2, metric2);
-            } else {
-                d = 0.025d;
-            }
-            double laneHalf = d;
-            if (cre) {
-                d3 = smallHalfM(rew2, metric2);
-            }
-            double edgeHalf = d3;
-            float edgePct = getT().s("path_edges") ? RangesKt.coerceIn(pew / 100.0f, 0.0f, 1.0f) : 0.0f;
-            double unclippedMax = RangesKt.coerceIn(m.getPosX()[n - 1], 10.0d, 100.0d);
-            if (!lead.getStatus()) {
-                rew = rew2;
-                llw = llw2;
-                maxDist = unclippedMax;
-            } else {
-                double leadD = lead.getDRel() * 2.0d;
-                rew = rew2;
-                llw = llw2;
-                maxDist = RangesKt.coerceIn(leadD - Math.min(leadD * 0.35d, 10.0d), 0.0d, unclippedMax);
-            }
-            int maxIdx = lastIdxBelow(m.getPosX(), maxDist);
-            double z2 = this.proj.getPathOffsetZ();
-            int laneColor = Companion.parseColor(Telemetry.pStr$default(getT(), "LaneLinesColor", null, 2, null), -1);
-            int lcDir = getT().s("lane_centering_cue") ? LaneCentering.direction$default(LaneCentering.INSTANCE, getT(), 0L, 2, null) : 0;
-            LaneTracks.update$default(this.tracks, m, getT(), 0.05f, false, null, 16, null);
-            LaneTracks.PathState state2 = LaneTracks.Companion.pathState(getT());
-            int i3 = 255;
-            if (!getT().s("lane_lines")) {
-                pwv = pwv2;
-                metric = metric2;
-                n2 = n;
-            } else {
-                Triple<LaneTracks.Line, LaneTracks.Line, LaneTracks.Line> inner = this.tracks.inner();
-                LaneTracks.Line leftL = inner.component1();
-                LaneTracks.Line rightL = inner.component2();
-                LaneTracks.Line nearL2 = inner.component3();
-                Iterator<LaneTracks.Line> it = this.tracks.getLines().iterator();
-                Intrinsics.checkNotNullExpressionValue(it, "iterator(...)");
-                while (it.hasNext()) {
-                    LaneTracks.Line next = it.next();
-                    Intrinsics.checkNotNullExpressionValue(next, "next(...)");
-                    LaneTracks.Line l = next;
-                    float pwv3 = pwv2;
-                    int a = MathKt.roundToInt(l.getAlpha() * 0.7f * i3);
-                    if (a > 2) {
-                        boolean effortLine = l == nearL2 && state2 == LaneTracks.PathState.ENGAGED;
-                        boolean metric3 = metric2;
-                        int n3 = n;
-                        double alpha = l.getAlpha() * laneHalf;
-                        if (effortLine) {
-                            nearL = nearL2;
-                            if (this.tracks.getEffort() > 0.55f) {
-                                d2 = 1.8d;
-                                double w = alpha * d2;
-                                poly2 = this.proj.ribbon(l.getX(), l.getY(), l.getZ(), w, 0.0d, lastIdxBelow(l.getX(), unclippedMax), true);
-                                if (poly2 != null) {
-                                    nearL2 = nearL;
-                                    pwv2 = pwv3;
-                                    metric2 = metric3;
-                                    n = n3;
-                                    i3 = 255;
-                                } else {
-                                    boolean lcLine = (lcDir > 0 && l == rightL) || (lcDir < 0 && l == leftL);
-                                    int col = lcLine ? Color.rgb(0, 176, 220) : laneColor;
-                                    if (effortLine) {
-                                        col = LaneTracks.Companion.effortColor(col, this.tracks.getEffort());
-                                    }
-                                    this.fill.setShader(null);
-                                    Paint paint = this.fill;
-                                    Companion_ companion = Companion;
-                                    if (effortLine) {
-                                        state = state2;
-                                        if (this.tracks.getEffort() > 0.55f) {
-                                            i2 = Math.max(a, 220);
-                                            paint.setColor(companion.withAlpha(col, i2));
-                                            drawPoly(c, poly2, this.fill);
-                                            nearL2 = nearL;
-                                            pwv2 = pwv3;
-                                            metric2 = metric3;
-                                            n = n3;
-                                            state2 = state;
-                                            i3 = 255;
-                                        }
-                                    } else {
-                                        state = state2;
-                                    }
-                                    i2 = a;
-                                    paint.setColor(companion.withAlpha(col, i2));
-                                    drawPoly(c, poly2, this.fill);
-                                    nearL2 = nearL;
-                                    pwv2 = pwv3;
-                                    metric2 = metric3;
-                                    n = n3;
-                                    state2 = state;
-                                    i3 = 255;
-                                }
-                            }
-                        } else {
-                            nearL = nearL2;
-                        }
-                        d2 = 1.0d;
-                        double w2 = alpha * d2;
-                        poly2 = this.proj.ribbon(l.getX(), l.getY(), l.getZ(), w2, 0.0d, lastIdxBelow(l.getX(), unclippedMax), true);
-                        if (poly2 != null) {
-                        }
-                    } else {
-                        pwv2 = pwv3;
-                        i3 = 255;
-                    }
-                }
-                pwv = pwv2;
-                metric = metric2;
-                n2 = n;
-            }
-            if (getT().s("road_edges")) {
-                int i4 = 0;
-                int length = m.getEdgeX().length;
-                while (i4 < length) {
-                    float std = i4 < m.getEdgeStd().length ? m.getEdgeStd()[i4] : 1.0f;
-                    int a2 = MathKt.roundToInt(RangesKt.coerceIn(1.0f - std, 0.0f, 1.0f) * 255);
-                    if (a2 > 2 && (poly = this.proj.ribbon(m.getEdgeX()[i4], m.getEdgeY()[i4], m.getEdgeZ()[i4], edgeHalf, 0.0d, lastIdxBelow(m.getEdgeX()[i4], unclippedMax), true)) != null) {
-                        this.fill.setShader(null);
-                        this.fill.setColor(Color.argb(a2, 255, 0, 0));
-                        drawPoly(c, poly, this.fill);
-                    }
-                    i4++;
-                }
-                z = false;
-                f = 0.0f;
-                shader = null;
-            } else {
-                z = false;
-                f = 0.0f;
-                shader = null;
-            }
-            float[] inner2 = this.proj.ribbon(m.getPosX(), m.getPosY(), m.getPosZ(), pathHalf * (1 - edgePct), z2, maxIdx, false);
-            if (inner2 != null) {
-                shader2 = shader;
-                drawPathFill(c, inner2, m, maxIdx, dt);
-                if (edgePct > f && (outer = this.proj.ribbon(m.getPosX(), m.getPosY(), m.getPosZ(), pathHalf, z2, maxIdx, false)) != null) {
-                    drawPathEdges(c, outer, inner2);
-                }
-            } else {
-                shader2 = shader;
-            }
-            if (getT().s("radar_tracks")) {
-                float[] tr = getT().getTracks();
-                this.fill.setShader(shader2);
-                int i5 = 0;
-                while (i5 + 1 < tr.length) {
-                    float d4 = tr[i5];
-                    float yRel = tr[i5 + 1];
-                    int i6 = i5 + 2;
-                    float[] tr2 = tr;
-                    int zi = lastIdxBelow(m.getPosX(), d4);
-                    float[] posZ = m.getPosZ();
-                    double zz = zi >= 0 && zi < posZ.length ? posZ[zi] : f;
-                    float[] inner3 = inner2;
-                    ModelSnapshot m2 = m;
-                    if (this.proj.map(d4, -yRel, zz + z2, this.tmp)) {
-                        float x = RangesKt.coerceIn(this.tmp[0], 0.0f, getWidth());
-                        float y = RangesKt.coerceIn(this.tmp[1], 0.0f, getHeight());
-                        this.fill.setColor(Color.argb(170, 0, 0, 0));
-                        c.drawCircle(x, y, dp(4.5f), this.fill);
-                        this.fill.setColor(Color.argb(230, 255, 40, 40));
-                        c.drawCircle(x, y, dp(3.5f), this.fill);
-                    }
-                    i5 = i6;
-                    tr = tr2;
-                    m = m2;
-                    inner2 = inner3;
-                    f = 0.0f;
-                }
-            }
-            if (getT().s("lead_marker")) {
-                float thr = getT().pInt("LeadDetectionThreshold", 35) / 100.0f;
-                if (getT().getLeadOne().getStatus()) {
-                    i = 201;
-                    drawLead(c, getT().getLeadOne(), z2, getT().getLeadOne().getModelProb() < thr ? -1 : Color.rgb(201, 34, 49), true);
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void drawModel(Canvas var1, float var2) {
+        ModelSnapshot var35 = this.getT().getModel();
+        if (var35 != null) {
+            int var21 = var35.getPosX().length;
+            if (var21 >= 2) {
+                Lead var33 = this.getT().getLeadOne();
+                boolean var29 = this.getT().isMetric();
+                Pair var34 = drawModel$custom(this, "PathWidth", 6.1F);
+                boolean var32 = (Boolean)var34.component1();
+                float var17 = ((Number)var34.component2()).floatValue();
+                var34 = drawModel$custom(this, "LaneLinesWidth", 4.0F);
+                boolean var30 = (Boolean)var34.component1();
+                float var20 = ((Number)var34.component2()).floatValue();
+                var34 = drawModel$custom(this, "RoadEdgesWidth", 2.0F);
+                boolean var31 = (Boolean)var34.component1();
+                float var19 = ((Number)var34.component2()).floatValue();
+                var34 = drawModel$custom(this, "PathEdgeWidth", 20.0F);
+                var34.component1();
+                float var18 = ((Number)var34.component2()).floatValue();
+                double var3;
+                if (var32) {
+                    var3 = this.halfM(var17, var29);
                 } else {
-                    i = 201;
+                    var3 = 0.9;
                 }
-                if (!getT().getLeadTwo().getStatus() || Math.abs(getT().getLeadTwo().getDRel() - getT().getLeadOne().getDRel()) <= 3.0d) {
-                    return;
+
+                double var7 = 0.025;
+                double var5;
+                if (var30) {
+                    var5 = this.smallHalfM(var20, var29);
+                } else {
+                    var5 = 0.025;
                 }
-                drawLead(c, getT().getLeadTwo(), z2, Color.rgb(i, 34, 49), false);
+
+                if (var31) {
+                    var7 = this.smallHalfM(var19, var29);
+                }
+
+                if (this.getT().s("path_edges")) {
+                    var18 = RangesKt.coerceIn(var18 / 100.0F, 0.0F, 1.0F);
+                } else {
+                    var18 = 0.0F;
+                }
+
+                double var11 = RangesKt.coerceIn(var35.getPosX()[var21 - 1], 10.0, 100.0);
+                double var46;
+                if (var33.getStatus()) {
+                    var46 = var33.getDRel() * 2.0;
+                    var46 = RangesKt.coerceIn(var46 - Math.min(var46 * 0.35, 10.0), 0.0, var11);
+                } else {
+                    var46 = var11;
+                }
+
+                int var28 = this.lastIdxBelow(var35.getPosX(), var46);
+                double var13 = this.proj.getPathOffsetZ();
+                int var26 = Companion.parseColor(Telemetry.pStr$default(this.getT(), "LaneLinesColor", null, 2, null), -1);
+                int var23;
+                if (this.getT().s("lane_centering_cue")) {
+                    var23 = LaneCentering.direction$default(LaneCentering.INSTANCE, this.getT(), 0L, 2, null);
+                } else {
+                    var23 = 0;
+                }
+
+                LaneTracks.update$default(this.tracks, var35, this.getT(), 0.05F, false, null, 16, null);
+                LaneTracks.PathState var70 = LaneTracks.Companion.pathState(this.getT());
+                if (this.getT().s("lane_lines")) {
+                    Triple var62 = this.tracks.inner();
+                    LaneTracks.Line var37 = (LaneTracks.Line)var62.component1();
+                    LaneTracks.Line var36 = (LaneTracks.Line)var62.component2();
+                    LaneTracks.Line var63 = (LaneTracks.Line)var62.component3();
+                    Iterator var38 = this.tracks.getLines().iterator();
+                    Intrinsics.checkNotNullExpressionValue(var38, "iterator(...)");
+
+                    while (var38.hasNext()) {
+                        Object var39 = var38.next();
+                        Intrinsics.checkNotNullExpressionValue(var39, "next(...)");
+                        LaneTracks.Line var40 = (LaneTracks.Line)var39;
+                        int var27 = MathKt.roundToInt(var40.getAlpha() * 0.7F * 255);
+                        if (var27 > 2) {
+                            boolean var24;
+                            if (var40 == var63 && var70 == LaneTracks.PathState.ENGAGED) {
+                                var24 = true;
+                            } else {
+                                var24 = false;
+                            }
+
+                            double var15 = var40.getAlpha();
+                            if (var24 && this.tracks.getEffort() > 0.55F) {
+                                var46 = 1.8;
+                            } else {
+                                var46 = 1.0;
+                            }
+
+                            var39 = this.proj
+                                .ribbon(var40.getX(), var40.getY(), var40.getZ(), var15 * var5 * var46, 0.0, this.lastIdxBelow(var40.getX(), var11), true);
+                            if (var39 != null) {
+                                int var22;
+                                if ((var23 <= 0 || var40 != var36) && (var23 >= 0 || var40 != var37)) {
+                                    var22 = 0;
+                                } else {
+                                    var22 = 1;
+                                }
+
+                                if ((var22 != 0)) {
+                                    var22 = Color.rgb(0, 176, 220);
+                                } else {
+                                    var22 = var26;
+                                }
+
+                                int var25 = (((var22 != 0)) ? 1 : 0);
+                                if (var24) {
+                                    var25 = LaneTracks.Companion.effortColor((((var22 != 0)) ? 1 : 0), this.tracks.getEffort());
+                                }
+
+                                this.fill.setShader(null);
+                                Paint var41 = this.fill;
+                                OverlayView.Companion var77 = Companion;
+                                if (var24 && this.tracks.getEffort() > 0.55F) {
+                                    var22 = Math.max(var27, 220);
+                                } else {
+                                    var22 = var27;
+                                }
+
+                                var41.setColor(var77.withAlpha(var25, var22));
+                                this.drawPoly(var1, (float[])var39, this.fill);
+                            }
+                        }
+                    }
+                }
+
+                if (this.getT().s("road_edges")) {
+                    var21 = 0;
+
+                    for (int var58 = ((Object[])var35.getEdgeX()).length; var21 < var58; var21++) {
+                        if (var21 < var35.getEdgeStd().length) {
+                            var17 = var35.getEdgeStd()[var21];
+                        } else {
+                            var17 = 1.0F;
+                        }
+
+                        var23 = MathKt.roundToInt(RangesKt.coerceIn(1.0F - var17, 0.0F, 1.0F) * 255);
+                        if (var23 > 2) {
+                            float[] var64 = this.proj
+                                .ribbon(
+                                    var35.getEdgeX()[var21],
+                                    var35.getEdgeY()[var21],
+                                    var35.getEdgeZ()[var21],
+                                    var7,
+                                    0.0,
+                                    this.lastIdxBelow(var35.getEdgeX()[var21], var11),
+                                    true
+                                );
+                            if (var64 != null) {
+                                this.fill.setShader(null);
+                                this.fill.setColor(Color.argb(var23, 255, 0, 0));
+                                this.drawPoly(var1, var64, this.fill);
+                            }
+                        }
+                    }
+                }
+
+                float[] var65 = this.proj.ribbon(var35.getPosX(), var35.getPosY(), var35.getPosZ(), var3 * (1 - var18), var13, var28, false);
+                if (var65 != null) {
+                    this.drawPathFill(var1, var65, var35, var28, var2);
+                    if (var18 > 0.0F) {
+                        float[] var71 = this.proj.ribbon(var35.getPosX(), var35.getPosY(), var35.getPosZ(), var3, var13, var28, false);
+                        if (var71 != null) {
+                            this.drawPathEdges(var1, var71, var65);
+                        }
+                    }
+                }
+
+                if (this.getT().s("radar_tracks")) {
+                    float[] var74 = this.getT().getTracks();
+                    this.fill.setShader(null);
+                    byte var54 = 0;
+                    ModelSnapshot var72 = var35;
+
+                    for (float[] var73 = var74; var54 + 1 < var73.length; var54 += 2) {
+                        var18 = var73[var54];
+                        var17 = var73[var54 + 1];
+                        var23 = this.lastIdxBelow(var72.getPosX(), var18);
+                        var74 = var72.getPosZ();
+                        boolean var59;
+                        if (var23 >= 0 && var23 < var74.length) {
+                            var59 = true;
+                        } else {
+                            var59 = false;
+                        }
+
+                        if (var59) {
+                            var2 = var74[var23];
+                        } else {
+                            var2 = 0.0F;
+                        }
+
+                        var3 = var2;
+                        if (this.proj.map(var18, -var17, var3 + var13, this.tmp)) {
+                            var17 = RangesKt.coerceIn(this.tmp[0], 0.0F, this.getWidth());
+                            var2 = RangesKt.coerceIn(this.tmp[1], 0.0F, this.getHeight());
+                            this.fill.setColor(Color.argb(170, 0, 0, 0));
+                            var1.drawCircle(var17, var2, this.dp(4.5F), this.fill);
+                            this.fill.setColor(Color.argb(230, 255, 40, 40));
+                            var1.drawCircle(var17, var2, this.dp(3.5F), this.fill);
+                        }
+                    }
+                }
+
+                if (this.getT().s("lead_marker")) {
+                    var2 = this.getT().pInt("LeadDetectionThreshold", 35) / 100.0F;
+                    if (this.getT().getLeadOne().getStatus()) {
+                        var33 = this.getT().getLeadOne();
+                        if (this.getT().getLeadOne().getModelProb() < var2) {
+                            var21 = -1;
+                        } else {
+                            var21 = Color.rgb(201, 34, 49);
+                        }
+
+                        this.drawLead(var1, var33, var13, var21, true);
+                    }
+
+                    if (this.getT().getLeadTwo().getStatus() && Math.abs(this.getT().getLeadTwo().getDRel() - this.getT().getLeadOne().getDRel()) > 3.0) {
+                        this.drawLead(var1, this.getT().getLeadTwo(), var13, Color.rgb(201, 34, 49), false);
+                    }
+                }
             }
         }
     }
@@ -755,152 +780,165 @@ public final class OverlayView extends View {
         this.detector = detector;
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:14:0x0058, code lost:
-    
-        if (r7.equals("truck") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:15:0x00a3, code lost:
-    
-        r7 = android.graphics.Color.rgb(255, 170, 60);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:19:0x0061, code lost:
-    
-        if (r7.equals("light") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:20:0x006d, code lost:
-    
-        r7 = android.graphics.Color.rgb(90, 220, 120);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:23:0x006a, code lost:
-    
-        if (r7.equals("stop") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:25:0x007c, code lost:
-    
-        if (r7.equals("moto") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:26:0x00b5, code lost:
-    
-        r7 = android.graphics.Color.rgb(255, 80, 120);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:29:0x0085, code lost:
-    
-        if (r7.equals("bike") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:35:0x00a0, code lost:
-    
-        if (r7.equals("bus") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:37:0x00b2, code lost:
-    
-        if (r7.equals("person") == false) goto L42;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void drawDetections(Canvas c) {
-        int col;
-        Detector d = this.detector;
-        if (d != null && System.nanoTime() - d.getDetsAtNs() <= 1000000000) {
-            float s = (float) this.proj.getVideoScale();
-            float tx = (float) this.proj.getVideoTx();
-            float ty = (float) this.proj.getVideoTy();
-            for (Detector.Det o : d.getDets()) {
-                String name = o.getName();
-                switch (name.hashCode()) {
-                    case -991716523:
-                        break;
-                    case 97920:
-                        break;
-                    case 98260:
-                        if (name.equals("car")) {
-                            col = Color.rgb(64, 160, 255);
-                            break;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final void drawDetections(Canvas var1) {
+        Detector var8 = this.detector;
+        if (var8 != null) {
+            if (System.nanoTime() - var8.getDetsAtNs() <= 1000000000L) {
+                float var3 = (float)this.proj.getVideoScale();
+                float var5 = (float)this.proj.getVideoTx();
+                float var6 = (float)this.proj.getVideoTy();
+
+                for (Detector.Det var10 : var8.getDets()) {
+                    int var7;
+                    label58: {
+                        label57: {
+                            label56: {
+                                label55: {
+                                    String var11 = var10.getName();
+                                    switch (var11.hashCode()) {
+                                        case -991716523:
+                                            if (var11.equals("person")) {
+                                                break label55;
+                                            }
+                                            break;
+                                        case 97920:
+                                            if (var11.equals("bus")) {
+                                                break label56;
+                                            }
+                                            break;
+                                        case 98260:
+                                            if (var11.equals("car")) {
+                                                var7 = Color.rgb(64, 160, 255);
+                                                break label58;
+                                            }
+                                            break;
+                                        case 3023841:
+                                            if (var11.equals("bike")) {
+                                                break label55;
+                                            }
+                                            break;
+                                        case 3357597:
+                                            if (var11.equals("moto")) {
+                                                break label55;
+                                            }
+                                            break;
+                                        case 3540994:
+                                            if (var11.equals("stop")) {
+                                                break label57;
+                                            }
+                                            break;
+                                        case 102970646:
+                                            if (var11.equals("light")) {
+                                                break label57;
+                                            }
+                                            break;
+                                        case 110640223:
+                                            if (var11.equals("truck")) {
+                                                break label56;
+                                            }
+                                    }
+
+                                    var7 = -1;
+                                    break label58;
+                                }
+
+                                var7 = Color.rgb(255, 80, 120);
+                                break label58;
+                            }
+
+                            var7 = Color.rgb(255, 170, 60);
+                            break label58;
                         }
-                        col = -1;
-                        break;
-                    case 3023841:
-                        break;
-                    case 3357597:
-                        break;
-                    case 3540994:
-                        break;
-                    case 102970646:
-                        break;
-                    case 110640223:
-                        break;
-                    default:
-                        col = -1;
-                        break;
+
+                        var7 = Color.rgb(90, 220, 120);
+                    }
+
+                    this.detBox.setColor(var7);
+                    this.detBg.setColor(var7);
+                    float var2 = var10.getX0() * var3 + var5;
+                    float var4 = var10.getY0() * var3 + var6;
+                    var1.drawRect(var2, var4, var10.getX1() * var3 + var5, var10.getY1() * var3 + var6, this.detBox);
+                    String var14 = var10.getName();
+                    var7 = (int)(var10.getScore() * 100);
+                    String var13 = var14 + " " + var7;
+                    var1.drawRect(var2, var4 - 32.0F, var2 + (this.detText.measureText(var13) + 12.0F), var4, this.detBg);
+                    var1.drawText(var13, 6.0F + var2, var4 - 8.0F, this.detText);
                 }
-                this.detBox.setColor(col);
-                this.detBg.setColor(col);
-                float l = (o.getX0() * s) + tx;
-                float tp = (o.getY0() * s) + ty;
-                float r = (o.getX1() * s) + tx;
-                float b = (o.getY1() * s) + ty;
-                c.drawRect(l, tp, r, b, this.detBox);
-                String label = o.getName() + " " + ((int) (o.getScore() * 100));
-                float w = this.detText.measureText(label) + 12.0f;
-                c.drawRect(l, tp - 32.0f, l + w, tp, this.detBg);
-                c.drawText(label, 6.0f + l, tp - 8.0f, this.detText);
-                d = d;
             }
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:17:0x0059 A[RETURN] */
-    /* JADX WARN: Removed duplicated region for block: B:19:0x005a  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void drawLead(Canvas c, Lead l, double z, int color, boolean showMetrics) {
-        double zAt;
-        ModelSnapshot m = getT().getModel();
-        if (m != null) {
-            if (!(m.getPosX().length == 0)) {
-                int i = lastIdxBelow(m.getPosX(), l.getDRel());
-                float[] posZ = m.getPosZ();
-                zAt = i >= 0 && i < posZ.length ? posZ[i] : 0.0f;
-                if (this.proj.map(l.getDRel(), -l.getYRel(), zAt + z, this.tmp)) {
-                    return;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void drawLead(Canvas var1, Lead var2, double var3, int var5, boolean var6) {
+        double var7;
+        label43: {
+            ModelSnapshot var17 = this.getT().getModel();
+            if (var17 != null) {
+                boolean var15;
+                if (var17.getPosX().length == 0) {
+                    var15 = true;
+                } else {
+                    var15 = false;
                 }
-                float fillA = 0.0f;
-                if (l.getDRel() < 40.0f) {
-                    float fillA2 = (1.0f - (l.getDRel() / 40.0f)) * 255.0f;
-                    float fillA3 = l.getVRel();
-                    if (fillA3 < 0.0f) {
-                        fillA2 += ((-l.getVRel()) / 10.0f) * 255.0f;
+
+                if (!var15) {
+                    int var16 = this.lastIdxBelow(var17.getPosX(), var2.getDRel());
+                    float[] var23 = var17.getPosZ();
+                    if (var16 >= 0 && var16 < var23.length) {
+                        var15 = true;
+                    } else {
+                        var15 = false;
                     }
-                    fillA = Math.min(fillA2, 255.0f);
+
+                    float var9;
+                    if (var15) {
+                        var9 = var23[var16];
+                    } else {
+                        var9 = 0.0F;
+                    }
+
+                    var7 = var9;
+                    break label43;
                 }
-                float scale = getResources().getDisplayMetrics().density / 2.0f;
-                float sz = RangesKt.coerceIn(750.0f / ((l.getDRel() / 3.0f) + 30.0f), 15.0f, 30.0f) * 2.35f * scale;
-                float x = RangesKt.coerceIn(this.tmp[0], 0.0f, getWidth() - (sz / 2));
-                float y = Math.min(this.tmp[1], getHeight() - (0.6f * sz));
-                float gxo = sz / 5;
-                float gyo = sz / 10;
-                this.path.rewind();
-                this.path.moveTo(x + (sz * 1.35f) + gxo, y + sz + gyo);
-                this.path.lineTo(x, y - gyo);
-                this.path.lineTo((x - (sz * 1.35f)) - gxo, y + sz + gyo);
-                this.path.close();
-                this.fill.setShader(null);
-                this.fill.setColor(Color.rgb(218, 202, 37));
-                c.drawPath(this.path, this.fill);
-                this.path.rewind();
-                this.path.moveTo((sz * 1.25f) + x, y + sz);
-                this.path.lineTo(x, y);
-                this.path.lineTo(x - (1.25f * sz), y + sz);
-                this.path.close();
-                this.fill.setColor(Companion.withAlpha(color, MathKt.roundToInt(fillA)));
-                c.drawPath(this.path, this.fill);
-                return;
             }
+
+            var7 = 0.0;
         }
-        zAt = 0.0d;
-        if (this.proj.map(l.getDRel(), -l.getYRel(), zAt + z, this.tmp)) {
+
+        if (this.proj.map(var2.getDRel(), -var2.getYRel(), var7 + var3, this.tmp)) {
+            float var18 = 0.0F;
+            if (var2.getDRel() < 40.0F) {
+                float var10 = (1.0F - var2.getDRel() / 40.0F) * 255.0F;
+                var18 = var10;
+                if (var2.getVRel() < 0.0F) {
+                    var18 = var10 + -var2.getVRel() / 10.0F * 255.0F;
+                }
+
+                var18 = Math.min(var18, 255.0F);
+            }
+
+            float var20 = this.getResources().getDisplayMetrics().density / 2.0F;
+            float var12 = RangesKt.coerceIn(750.0F / (var2.getDRel() / 3.0F + 30.0F), 15.0F, 30.0F) * 2.35F * var20;
+            var20 = RangesKt.coerceIn(this.tmp[0], 0.0F, this.getWidth() - var12 / 2);
+            float var11 = Math.min(this.tmp[1], this.getHeight() - 0.6F * var12);
+            float var13 = var12 / 5;
+            float var14 = var12 / 10;
+            this.path.rewind();
+            this.path.moveTo(var20 + var12 * 1.35F + var13, var11 + var12 + var14);
+            this.path.lineTo(var20, var11 - var14);
+            this.path.lineTo(var20 - var12 * 1.35F - var13, var11 + var12 + var14);
+            this.path.close();
+            this.fill.setShader(null);
+            this.fill.setColor(Color.rgb(218, 202, 37));
+            var1.drawPath(this.path, this.fill);
+            this.path.rewind();
+            this.path.moveTo(var12 * 1.25F + var20, var11 + var12);
+            this.path.lineTo(var20, var11);
+            this.path.lineTo(var20 - 1.25F * var12, var11 + var12);
+            this.path.close();
+            this.fill.setColor(Companion.withAlpha(var5, MathKt.roundToInt(var18)));
+            var1.drawPath(this.path, this.fill);
         }
     }
 
@@ -983,62 +1021,67 @@ public final class OverlayView extends View {
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:17:0x00dc  */
-    /* JADX WARN: Removed duplicated region for block: B:19:0x00e3  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void drawTorqueBar(Canvas c, float dt) {
-        int col;
-        int i;
-        boolean z;
-        Paint paint;
-        float f;
-        float torque = RangesKt.coerceIn(getT().getOutTorque(), -1.0f, 1.0f);
-        this.torqueSmooth = (0.25f * torque) + (this.torqueSmooth * 0.75f);
-        float r = getWidth() * 1.25f;
-        float cx = getWidth() / 2.0f;
-        float cy = (getHeight() + r) - dp(22.0f);
-        boolean active = getT().getEnabled() && !getT().getPauseLateral();
-        this.stroke.setStrokeCap(Paint.Cap.ROUND);
-        this.stroke.setColor(Color.argb(active ? 100 : 45, 255, 255, 255));
-        this.stroke.setStrokeWidth(dp(5.0f));
-        RectF oval = new RectF(cx - r, cy - r, cx + r, cy + r);
-        c.drawArc(oval, (-90.0f) - 12.7f, 12.7f * 2, false, this.stroke);
-        float u = Math.abs(this.torqueSmooth);
-        if (u > 0.01f) {
-            if (u > 0.75f) {
-                i = 115;
-            } else if (u > 0.5f) {
-                i = 200;
-            } else {
-                col = -1;
-                this.stroke.setColor(Companion.withAlpha(col, 235));
-                this.stroke.setStrokeWidth(dp(9.0f));
-                float sweep = 12.7f * u;
-                if (this.torqueSmooth > 0.0f) {
-                    z = false;
-                    paint = this.stroke;
-                    f = -90.0f;
-                } else {
-                    f = (-90.0f) - sweep;
-                    z = false;
-                    paint = this.stroke;
-                }
-                c.drawArc(oval, f, sweep, z, paint);
-            }
-            col = Color.rgb(255, i, 0);
-            this.stroke.setColor(Companion.withAlpha(col, 235));
-            this.stroke.setStrokeWidth(dp(9.0f));
-            float sweep2 = 12.7f * u;
-            if (this.torqueSmooth > 0.0f) {
-            }
-            c.drawArc(oval, f, sweep2, z, paint);
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void drawTorqueBar(Canvas var1, float var2) {
+        this.torqueSmooth = 0.25F * RangesKt.coerceIn(this.getT().getOutTorque(), -1.0F, 1.0F) + this.torqueSmooth * 0.75F;
+        float var3 = this.getWidth() * 1.25F;
+        float var4 = this.getWidth() / 2.0F;
+        float var5 = this.getHeight() + var3 - this.dp(22.0F);
+        int var7;
+        if (this.getT().getEnabled() && !this.getT().getPauseLateral()) {
+            var7 = 1;
+        } else {
+            var7 = 0;
         }
+
+        this.stroke.setStrokeCap(android.graphics.Paint.Cap.ROUND);
+        Paint var8 = this.stroke;
+        if ((var7 != 0)) {
+            var7 = (byte)100;
+        } else {
+            var7 = (byte)45;
+        }
+
+        var8.setColor(Color.argb(var7, 255, 255, 255));
+        this.stroke.setStrokeWidth(this.dp(5.0F));
+        RectF var9 = new RectF(var4 - var3, var5 - var3, var4 + var3, var5 + var3);
+        var1.drawArc(var9, -90.0F - 12.7F, 12.7F * 2, false, this.stroke);
+        var2 = Math.abs(this.torqueSmooth);
+        if (var2 > 0.01F) {
+            label30: {
+                short var13;
+                if (var2 > 0.75F) {
+                    var13 = 115;
+                } else {
+                    if (!(var2 > 0.5F)) {
+                        var7 = -1;
+                        break label30;
+                    }
+
+                    var13 = 200;
+                }
+
+                var7 = Color.rgb(255, var13, 0);
+            }
+
+            this.stroke.setColor(Companion.withAlpha((((var7 != 0)) ? 1 : 0), 235));
+            this.stroke.setStrokeWidth(this.dp(9.0F));
+            float var6 = 12.7F * var2;
+            if (this.torqueSmooth > 0.0F) {
+                var2 = -90.0F - var6;
+                var8 = this.stroke;
+            } else {
+                var8 = this.stroke;
+                var2 = -90.0F;
+            }
+
+            var1.drawArc(var9, var2, var6, false, var8);
+        }
+
         this.fill.setShader(null);
         this.fill.setColor(Color.argb(230, 182, 182, 182));
-        c.drawCircle(cx, cy - r, dp(4.0f), this.fill);
-        this.stroke.setStrokeCap(Paint.Cap.BUTT);
+        var1.drawCircle(var4, var5 - var3, this.dp(4.0F), this.fill);
+        this.stroke.setStrokeCap(android.graphics.Paint.Cap.BUTT);
     }
 
     private final float interp(float x, float x0, float x1, float y0, float y1) {

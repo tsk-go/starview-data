@@ -1239,95 +1239,128 @@ public final class LaneBrain {
         }
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:40:0x01e1, code lost:
-    
-        if (r1 == null) goto L80;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void roadUpdate(Frame f, long now) {
-        String str;
-        String str2;
-        boolean z;
-        double d;
-        String str3;
-        int i;
-        String str4;
-        String name;
-        Road r = f.getRoad();
-        Road was = this.road;
-        if (r != null) {
-            this.road = r;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final void roadUpdate(LaneBrain.Frame var1, long var2) {
+        String var15 = null; String var21 = null; // declarations Vineflower left out
+        LaneBrain.Road var9 = var1.getRoad();
+        LaneBrain.Road var10 = this.road;
+        if (var9 != null) {
+            this.road = var9;
         }
-        this.info = f.getInfo();
-        RoadModel old = this.model;
-        this.model = roadModel(this.road, this.info);
-        if (this.model.getLanes() != old.getLanes() || this.model.getExtraL() != old.getExtraL() || this.model.getExtraR() != old.getExtraR() || (r != null && was != null && !Intrinsics.areEqual(r.getName(), was.getName()))) {
-            this.roadChangeMs = now;
+
+        this.info = var1.getInfo();
+        LaneBrain.RoadModel var7 = this.model;
+        this.model = this.roadModel(this.road, this.info);
+        if (this.model.getLanes() != var7.getLanes()
+            || this.model.getExtraL() != var7.getExtraL()
+            || this.model.getExtraR() != var7.getExtraR()
+            || var9 != null && var10 != null && !Intrinsics.areEqual(var9.getName(), var10.getName())) {
+            this.roadChangeMs = var2;
         }
-        if (old.getLanes() > 0 || this.model.getLanes() > 0) {
-            if (!roadUpdate$ours(this, now, -1, this.model.getExtraL() - old.getExtraL())) {
-                lanesOnSide(-1, this.model.getExtraL() - old.getExtraL());
+
+        if (var7.getLanes() > 0 || this.model.getLanes() > 0) {
+            if (!roadUpdate$ours(this, var2, -1, this.model.getExtraL() - var7.getExtraL())) {
+                this.lanesOnSide(-1, this.model.getExtraL() - var7.getExtraL());
             }
-            if (!roadUpdate$ours(this, now, 1, this.model.getExtraR() - old.getExtraR())) {
-                lanesOnSide(1, this.model.getExtraR() - old.getExtraR());
+
+            if (!roadUpdate$ours(this, var2, 1, this.model.getExtraR() - var7.getExtraR())) {
+                this.lanesOnSide(1, this.model.getExtraR() - var7.getExtraR());
             }
-            if (this.model.getExtraL() != old.getExtraL() || this.model.getExtraR() != old.getExtraR()) {
-                if (this.model.getExtraL() + this.model.getExtraR() > old.getExtraL() + old.getExtraR()) {
-                    String extraText = extraText();
-                    RoadInfo roadInfo = this.info;
-                    if (roadInfo == null || (str2 = roadInfo.getExtraWhy()) == null) {
-                        str2 = "map";
-                    }
-                    str = extraText + " (" + str2 + ")";
+
+            if (this.model.getExtraL() != var7.getExtraL() || this.model.getExtraR() != var7.getExtraR()) {
+                String var16;
+                if (this.model.getExtraL() + this.model.getExtraR() <= var7.getExtraL() + var7.getExtraR()) {
+                    var16 = "extra lane ended";
                 } else {
-                    str = "extra lane ended";
+                    String var11;
+                    label97: {
+                        var11 = this.extraText();
+                        LaneBrain.RoadInfo var14 = this.info;
+                        if (var14 != null) {
+                            String var8 = var14.getExtraWhy();
+                            var15 = var8;
+                            if (var8 != null) {
+                                break label97;
+                            }
+                        }
+
+                        var15 = "map";
+                    }
+
+                    var16 = var11 + " (" + var15 + ")";
                 }
-                note(now, str);
+
+                this.note(var2, var16);
             }
         }
-        if (r == null) {
-            z = true;
-        } else if (was == null || was.getId() != r.getId()) {
-            if (was != null && (!Intrinsics.areEqual(was.getName(), r.getName()) || was.getHighway() != r.getHighway() || was.getRamp() != r.getRamp())) {
+
+        if (var9 != null && (var10 == null || var10.getId() != var9.getId())) {
+            if (var10 != null
+                && (!Intrinsics.areEqual(var10.getName(), var9.getName()) || var10.getHighway() != var9.getHighway() || var10.getRamp() != var9.getRamp())) {
                 this.memory.clear();
-                blur(600.0d);
+                this.blur(600.0);
             }
+
             if (this.model.getLanes() == 1) {
-                z = true;
-                restart(-1, 0, 0.85d, now, this.model.getSrc() + ": 1 lane our way");
-            } else {
-                z = true;
+                String var17 = this.model.getSrc();
+                this.restart(-1, 0, 0.85, var2, var17 + ": 1 lane our way");
             }
-        } else {
-            z = true;
         }
-        if (f.getEntrySide() != 0) {
-            this.entrySide = f.getEntrySide();
-            this.entryMs = now;
-            this.roadChangeMs = now;
-            if (f.getEntrySide() < 0) {
-                d = 0.75d;
-                str3 = "joined from a left ramp";
-                i = -1;
+
+        if (var1.getEntrySide() != 0) {
+            this.entrySide = var1.getEntrySide();
+            this.entryMs = var2;
+            this.roadChangeMs = var2;
+            double var4;
+            byte var6;
+            String var18;
+            if (var1.getEntrySide() < 0) {
+                var4 = 0.75;
+                var18 = "joined from a left ramp";
+                var6 = -1;
             } else {
-                d = 0.6d;
-                str3 = "joined from a right ramp";
-                i = 1;
+                var4 = 0.6;
+                var18 = "joined from a right ramp";
+                var6 = 1;
             }
-            restart(i, 0, d, now, str3);
+
+            this.restart(var6, 0, var4, var2, var18);
             this.nRamps++;
-            String str5 = f.getEntrySide() < 0 ? "LEFT" : "RIGHT";
-            if (r != null && (name = r.getName()) != null) {
-                String str6 = name;
-                if (str6.length() == 0 ? z : false) {
-                    str6 = r.getKind();
-                }
-                str4 = str6;
+            String var12;
+            if (var1.getEntrySide() < 0) {
+                var12 = "LEFT";
+            } else {
+                var12 = "RIGHT";
             }
-            str4 = "?";
-            log(now, "highway entry from the " + str5 + " (" + str4 + ")");
+
+            label73: {
+                if (var9 != null) {
+                    String var19 = var9.getName();
+                    if (var19 != null) {
+                        var var20 = var19;
+                        boolean var13;
+                        if (var20.length() == 0) {
+                            var13 = true;
+                        } else {
+                            var13 = false;
+                        }
+
+                        if (var13) {
+                            var20 = var9.getKind();
+                        }
+
+                        String var22 = var20;
+                        var21 = var22;
+                        if (var22 != null) {
+                            break label73;
+                        }
+                    }
+                }
+
+                var21 = "?";
+            }
+
+            this.log(var2, "highway entry from the " + var12 + " (" + var21 + ")");
         }
     }
 
@@ -1391,77 +1424,95 @@ public final class LaneBrain {
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:34:0x0089  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void detectLaneChange(Frame f, long now) {
-        boolean ok;
-        Pending it;
-        int dir;
-        if (f.getOpChange() != 0 || this.opDir != 0) {
-            return;
-        }
-        if (f.getPL() > 0.25f && f.getPR() > 0.25f) {
-            float yl = f.getYL();
-            if ((Float.isInfinite(yl) || Float.isNaN(yl)) ? false : true) {
-                float yr = f.getYR();
-                if (((Float.isInfinite(yr) || Float.isNaN(yr)) ? false : true) && f.getYL() < 0.3f && f.getYR() > -0.3f) {
-                    float yr2 = f.getYR() - f.getYL();
-                    if (2.3f <= yr2 && yr2 <= 4.9f) {
-                        ok = true;
-                        if (ok) {
-                            float w = f.getYR() - f.getYL();
-                            float c = (f.getYL() + f.getYR()) / 2.0f;
-                            if (Math.abs(c) < 0.6f) {
-                                this.laneW += (RangesKt.coerceIn(w, 2.6f, 4.2f) - this.laneW) * 0.02f;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void detectLaneChange(LaneBrain.Frame var1, long var2) {
+        if (var1.getOpChange() == 0 && this.opDir == 0) {
+            boolean var8;
+            label119: {
+                if (var1.getPL() > 0.25F && var1.getPR() > 0.25F) {
+                    float var4 = var1.getYL();
+                    boolean var7;
+                    if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
+                        var7 = true;
+                    } else {
+                        var7 = false;
+                    }
+
+                    if (var7) {
+                        var4 = var1.getYR();
+                        if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
+                            var7 = true;
+                        } else {
+                            var7 = false;
+                        }
+
+                        if (var7 && var1.getYL() < 0.3F && var1.getYR() > -0.3F) {
+                            var4 = var1.getYR() - var1.getYL();
+                            if (2.3F <= var4 && var4 <= 4.9F) {
+                                var7 = true;
+                            } else {
+                                var7 = false;
                             }
-                            if (this.prevMs > 0 && now - this.prevMs < 700) {
-                                float dc = c - this.prevC;
-                                if (dc >= (-0.55f) * w || Math.abs(this.prevYL) >= 1.3f || Math.abs(f.getYR() - this.prevYL) >= 0.9f) {
-                                    dir = (dc <= 0.55f * w || Math.abs(this.prevYR) >= 1.3f || Math.abs(f.getYL() - this.prevYR) >= 0.9f) ? 0 : 1;
-                                } else {
-                                    dir = -1;
-                                }
-                                if (dir != 0) {
-                                    Pending pd = this.pending;
-                                    if (pd != null && pd.getDir() == (-dir) && now - pd.getAtMs() < 1500) {
-                                        this.pending = null;
-                                        if (now - pd.getAtMs() > 300) {
-                                            this.nUndone++;
-                                            log(now, "lane change " + dirName(pd.getDir()) + " undone - not counted");
-                                        }
-                                    } else {
-                                        if (pd != null) {
-                                            apply(pd, "lines");
-                                        }
-                                        this.pending = new Pending(dir, now);
-                                    }
-                                }
+
+                            if (var7) {
+                                var8 = true;
+                                break label119;
                             }
-                            this.prevC = c;
-                            this.prevYL = f.getYL();
-                            this.prevYR = f.getYR();
-                            this.prevMs = now;
                         }
-                        it = this.pending;
-                        if (it != null || now - it.getAtMs() < 600) {
-                        }
-                        if (now - it.getAtMs() >= 1500 || ok) {
-                            apply(it, "lines");
-                            this.pending = null;
-                            return;
-                        }
-                        return;
                     }
                 }
+
+                var8 = false;
             }
-        }
-        ok = false;
-        if (ok) {
-        }
-        it = this.pending;
-        if (it != null) {
+
+            if (var8) {
+                float var5 = var1.getYR() - var1.getYL();
+                float var13 = (var1.getYL() + var1.getYR()) / 2.0F;
+                if (Math.abs(var13) < 0.6F) {
+                    this.laneW = this.laneW + (RangesKt.coerceIn(var5, 2.6F, 4.2F) - this.laneW) * 0.02F;
+                }
+
+                if (this.prevMs > 0L && var2 - this.prevMs < 700L) {
+                    float var6 = var13 - this.prevC;
+                    byte var16;
+                    if (var6 < -0.55F * var5 && Math.abs(this.prevYL) < 1.3F && Math.abs(var1.getYR() - this.prevYL) < 0.9F) {
+                        var16 = -1;
+                    } else if (var6 > 0.55F * var5 && Math.abs(this.prevYR) < 1.3F && Math.abs(var1.getYL() - this.prevYR) < 0.9F) {
+                        var16 = 1;
+                    } else {
+                        var16 = 0;
+                    }
+
+                    if (var16 != 0) {
+                        LaneBrain.Pending var9 = this.pending;
+                        if (var9 != null && var9.getDir() == -var16 && var2 - var9.getAtMs() < 1500L) {
+                            this.pending = null;
+                            if (var2 - var9.getAtMs() > 300L) {
+                                this.nUndone++;
+                                String var17 = this.dirName(var9.getDir());
+                                this.log(var2, "lane change " + var17 + " undone - not counted");
+                            }
+                        } else {
+                            if (var9 != null) {
+                                this.apply(var9, "lines");
+                            }
+
+                            this.pending = new LaneBrain.Pending(var16, var2);
+                        }
+                    }
+                }
+
+                this.prevC = var13;
+                this.prevYL = var1.getYL();
+                this.prevYR = var1.getYR();
+                this.prevMs = var2;
+            }
+
+            LaneBrain.Pending var10 = this.pending;
+            if (var10 != null && var2 - var10.getAtMs() >= 600L && (var2 - var10.getAtMs() >= 1500L || var8)) {
+                this.apply(var10, "lines");
+                this.pending = null;
+            }
         }
     }
 
@@ -1575,34 +1626,62 @@ public final class LaneBrain {
         return Double.NaN;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:30:0x007b  */
-    /* JADX WARN: Removed duplicated region for block: B:32:0x0081  */
-    /* JADX WARN: Removed duplicated region for block: B:44:0x007e  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void camNote(Frame f, long now) {
-        boolean ok;
-        if (f.getPL() > 0.4f && f.getPR() > 0.4f) {
-            float yl = f.getYL();
-            if ((Float.isInfinite(yl) || Float.isNaN(yl)) ? false : true) {
-                float yr = f.getYR();
-                if (((Float.isInfinite(yr) || Float.isNaN(yr)) ? false : true) && f.getYL() < 0.3f && f.getYR() > -0.3f) {
-                    float yr2 = f.getYR() - f.getYL();
-                    if (2.3f <= yr2 && yr2 <= 4.9f) {
-                        ok = true;
-                        this.camLog.addLast(new double[]{now, !ok ? 1.0d : 0.0d, ok ? Math.abs((f.getYL() + f.getYR()) / 2.0d) : 0.0d});
-                        while (!this.camLog.isEmpty() && now - this.camLog.first()[0] > 15000.0d) {
-                            this.camLog.removeFirst();
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void camNote(LaneBrain.Frame var1, long var2) {
+        boolean var17;
+        label70: {
+            if (var1.getPL() > 0.4F && var1.getPR() > 0.4F) {
+                float var10 = var1.getYL();
+                if (!Float.isInfinite(var10) && !Float.isNaN(var10)) {
+                    var17 = true;
+                } else {
+                    var17 = false;
+                }
+
+                if (var17) {
+                    var10 = var1.getYR();
+                    if (!Float.isInfinite(var10) && !Float.isNaN(var10)) {
+                        var17 = true;
+                    } else {
+                        var17 = false;
+                    }
+
+                    if (var17 && var1.getYL() < 0.3F && var1.getYR() > -0.3F) {
+                        var10 = var1.getYR() - var1.getYL();
+                        if (2.3F <= var10 && var10 <= 4.9F) {
+                            var17 = true;
+                        } else {
+                            var17 = false;
                         }
-                        return;
+
+                        if (var17) {
+                            var17 = true;
+                            break label70;
+                        }
                     }
                 }
             }
+
+            var17 = false;
         }
-        ok = false;
-        this.camLog.addLast(new double[]{now, !ok ? 1.0d : 0.0d, ok ? Math.abs((f.getYL() + f.getYR()) / 2.0d) : 0.0d});
-        while (!this.camLog.isEmpty()) {
+
+        ArrayDeque var12 = this.camLog;
+        double var8 = var2;
+        double var6 = 0.0;
+        double var4;
+        if (var17) {
+            var4 = 1.0;
+        } else {
+            var4 = 0.0;
+        }
+
+        if (var17) {
+            var6 = Math.abs((var1.getYL() + var1.getYR()) / 2.0);
+        }
+
+        var12.addLast(new double[]{var8, var4, var6});
+
+        while (!this.camLog.isEmpty() && var2 - ((double[])this.camLog.first())[0] > 15000.0) {
             this.camLog.removeFirst();
         }
     }
@@ -1779,136 +1858,234 @@ public final class LaneBrain {
         return (this.model.getTunnel() || this.model.getBridge()) ? false : true;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:77:0x0133  */
-    /* JADX WARN: Removed duplicated region for block: B:87:0x0135  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void paint(Frame f, long now) {
-        boolean z;
-        Integer vote;
-        LaneMarks.Mark lm = f.getLeftMark();
-        LaneMarks.Mark rm = f.getRightMark();
-        if (lm != null && lm.getKind() != 0) {
-            boolean yellow = lm.getYellow() && (lm.getKind() == 3 || lm.getKind() == 2);
-            Integer vote2 = vote(this.vYellow, yellow ? 1 : 0, now, 1000L);
-            if (vote2 != null && vote2.intValue() == 1) {
-                see(-1, 0, 0.9d, now, "yellow line on the left");
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private final void paint(LaneBrain.Frame var1, long var2) {
+        LaneMarks.Mark var7 = var1.getLeftMark();
+        LaneMarks.Mark var6 = var1.getRightMark();
+        if (var7 != null && var7.getKind() != 0) {
+            boolean var5;
+            if (!var7.getYellow() || var7.getKind() != 3 && var7.getKind() != 2) {
+                var5 = false;
+            } else {
+                var5 = true;
             }
-            Integer vote3 = vote(this.vDashL, (lm.getYellow() || lm.getKind() != 2) ? 0 : 1, now, 1500L);
-            if (vote3 != null && vote3.intValue() == 1) {
-                atLeast(-1, 1, 0.6d, now, "dashed line on the left");
+
+            LaneBrain.Vote var8 = this.vYellow;
+            if (var5) {
+                var5 = true;
+            } else {
+                var5 = false;
+            }
+
+            Integer var24 = this.vote(var8, ((var5) ? 1 : 0), var2, 1000L);
+            if (var24 != null && var24 == 1) {
+                this.see(-1, 0, 0.9, var2, "yellow line on the left");
+            }
+
+            var8 = this.vDashL;
+            if (!var7.getYellow() && var7.getKind() == 2) {
+                var5 = true;
+            } else {
+                var5 = false;
+            }
+
+            Integer var20 = this.vote(var8, ((var5) ? 1 : 0), var2, 1500L);
+            if (var20 != null && var20 == 1) {
+                this.atLeast(-1, 1, 0.6, var2, "dashed line on the left");
             }
         }
-        if (rm != null && rm.getKind() != 0) {
-            Integer vote4 = vote(this.vDashR, (rm.getYellow() || rm.getKind() != 2) ? 0 : 1, now, 1500L);
-            if (vote4 != null && vote4.intValue() == 1) {
-                atLeast(1, 1, 0.6d, now, "dashed line on the right");
+
+        if (var6 != null && var6.getKind() != 0) {
+            LaneBrain.Vote var21 = this.vDashR;
+            byte var14;
+            if (!var6.getYellow() && var6.getKind() == 2) {
+                var14 = 1;
+            } else {
+                var14 = 0;
             }
-            Road road = this.road;
-            if ((road != null && road.getHighway()) && solidMeansEdge() && !rm.getYellow() && !rm.getDouble() && rm.getKind() == 3) {
-                float edgeR = f.getEdgeR();
-                if ((Float.isInfinite(edgeR) || Float.isNaN(edgeR)) ? false : true) {
-                    float yr = f.getYR();
-                    if (((Float.isInfinite(yr) || Float.isNaN(yr)) ? false : true) && f.getEdgeR() - Math.abs(f.getYR()) < 1.6f) {
-                        z = true;
-                        boolean solidEdge = z;
-                        vote = vote(this.vSolidR, !solidEdge ? 1 : 0, now, 1500L);
-                        if (vote == null && vote.intValue() == 1) {
-                            see(1, 0, 0.75d, now, "solid edge line, road edge past it");
+
+            Integer var22 = this.vote(var21, var14, var2, 1500L);
+            if (var22 != null && var22 == 1) {
+                this.atLeast(1, 1, 0.6, var2, "dashed line on the right");
+            }
+
+            LaneBrain.Road var23 = this.road;
+            boolean var15;
+            if (var23 != null && var23.getHighway()) {
+                var15 = true;
+            } else {
+                var15 = false;
+            }
+
+            label97: {
+                if (var15 && this.solidMeansEdge() && !var6.getYellow() && !var6.getDouble() && var6.getKind() == 3) {
+                    float var4 = var1.getEdgeR();
+                    if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
+                        var15 = (boolean)true;
+                    } else {
+                        var15 = (boolean)false;
+                    }
+
+                    if (var15) {
+                        var4 = var1.getYR();
+                        if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
+                            var15 = (boolean)true;
+                        } else {
+                            var15 = (boolean)false;
                         }
-                        return;
+
+                        if (var15 && var1.getEdgeR() - Math.abs(var1.getYR()) < 1.6F) {
+                            var15 = (boolean)true;
+                            break label97;
+                        }
                     }
                 }
+
+                var15 = (boolean)false;
             }
-            z = false;
-            boolean solidEdge2 = z;
-            vote = vote(this.vSolidR, !solidEdge2 ? 1 : 0, now, 1500L);
-            if (vote == null) {
-                return;
+
+            LaneBrain.Vote var9 = this.vSolidR;
+            if (var15) {
+                var15 = true;
+            } else {
+                var15 = false;
             }
-            see(1, 0, 0.75d, now, "solid edge line, road edge past it");
+
+            Integer var10 = this.vote(var9, ((var15) ? 1 : 0), var2, 1500L);
+            if (var10 != null && var10 == 1) {
+                this.see(1, 0, 0.75, var2, "solid edge line, road edge past it");
+            }
         }
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:18:0x003d, code lost:
-    
-        if ((r0 != null && r0.getYellow()) == false) goto L28;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final void outerLines(Frame f, long now) {
-        Road it;
-        if (centred(f)) {
-            Road it2 = this.road;
-            boolean z = true;
-            if (it2 != null) {
-                it = (it2.getOneway() || it2.getHighway()) ? 1 : null;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final void outerLines(LaneBrain.Frame var1, long var2) {
+        if (this.centred(var1)) {
+            LaneBrain.Road var6 = this.road;
+            boolean var5 = true;
+            boolean var4;
+            if (var6 != null) {
+                if (!var6.getOneway() && !var6.getHighway()) {
+                    var4 = false;
+                } else {
+                    var4 = true;
+                }
+            } else if (var1.getVEgo() > 17.0F) {
+                var4 = true;
             } else {
-                it = f.getVEgo() > 17.0f ? 1 : null;
+                var4 = false;
             }
-            if (it != null) {
-                LaneMarks.Mark leftMark = f.getLeftMark();
+
+            label39: {
+                if (var4) {
+                    LaneMarks.Mark var9 = var1.getLeftMark();
+                    if (var9 != null && var9.getYellow()) {
+                        var4 = true;
+                    } else {
+                        var4 = false;
+                    }
+
+                    if (!var4) {
+                        var4 = var5;
+                        break label39;
+                    }
+                }
+
+                var4 = false;
             }
-            z = false;
-            boolean leftOurs = z;
-            if (leftOurs) {
-                outerLines$side(this, now, -1, this.vOuterL, f.getPL(), f.getYL(), f.getPL2(), f.getYL2(), f.getEdgeL());
+
+            if (var4) {
+                outerLines$side(this, var2, -1, this.vOuterL, var1.getPL(), var1.getYL(), var1.getPL2(), var1.getYL2(), var1.getEdgeL());
             } else {
                 this.vOuterL.clear();
             }
-            outerLines$side(this, now, 1, this.vOuterR, f.getPR(), f.getYR(), f.getPR2(), f.getYR2(), f.getEdgeR());
+
+            outerLines$side(this, var2, 1, this.vOuterR, var1.getPR(), var1.getYR(), var1.getPR2(), var1.getYR2(), var1.getEdgeR());
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:38:0x00ad  */
-    /* JADX WARN: Removed duplicated region for block: B:42:0x00b0  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private static final void outerLines$side(LaneBrain this$0, long $now, int s, Vote vt, float pIn, float yIn, float pOut, float yOut, float edge) {
-        int reading;
-        Integer vote;
-        if (pIn >= 0.5f) {
-            if (!((Float.isInfinite(pOut) || Float.isNaN(pOut)) ? false : true)) {
-                return;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private static final void outerLines$side(
+        LaneBrain var0, long var1, int var3, LaneBrain.Vote var4, float var5, float var6, float var7, float var8, float var9
+    ) {
+        if (!(var5 < 0.5F)) {
+            boolean var12;
+            if (!Float.isInfinite(var7) && !Float.isNaN(var7)) {
+                var12 = true;
+            } else {
+                var12 = false;
             }
-            float inner = Math.abs(yIn);
-            float outer = Math.abs(yOut);
-            if (pOut > 0.6f) {
-                if ((Float.isInfinite(yOut) || Float.isNaN(yOut)) ? false : true) {
-                    float f = outer - inner;
-                    if (2.3f <= f && f <= 4.6f) {
-                        if (!((Float.isInfinite(edge) || Float.isNaN(edge)) ? false : true) || edge - outer > -0.3f) {
-                            reading = 1;
-                            vote = this$0.vote(vt, reading, $now, 1500L);
-                            if (vote == null || vote.intValue() != 0) {
-                                if (vote == null && vote.intValue() == 1) {
-                                    this$0.atLeast(s, 1, 0.7d, $now, "a lane line one lane over on the " + Companion.sideName(s));
-                                }
-                                return;
+
+            if (var12) {
+                label122: {
+                    var5 = Math.abs(var6);
+                    var6 = Math.abs(var8);
+                    if (var7 > 0.6F) {
+                        boolean var19;
+                        if (!Float.isInfinite(var8) && !Float.isNaN(var8)) {
+                            var19 = true;
+                        } else {
+                            var19 = false;
+                        }
+
+                        if (var19) {
+                            var8 = var6 - var5;
+                            if (2.3F <= var8 && var8 <= 4.6F) {
+                                var19 = true;
+                            } else {
+                                var19 = false;
                             }
-                            this$0.see(s, 0, !this$0.solidMeansEdge() ? 0.75d : 0.55d, $now, "no lane line past ours on the " + Companion.sideName(s) + ", road edge right there");
-                            return;
+
+                            if (var19) {
+                                if (!Float.isInfinite(var9) && !Float.isNaN(var9)) {
+                                    var19 = true;
+                                } else {
+                                    var19 = false;
+                                }
+
+                                if (!var19 || var9 - var6 > -0.3F) {
+                                    var12 = true;
+                                    break label122;
+                                }
+                            }
                         }
                     }
+
+                    if (!(var7 < 0.15F)) {
+                        return;
+                    }
+
+                    boolean var22;
+                    if (!Float.isInfinite(var9) && !Float.isNaN(var9)) {
+                        var22 = true;
+                    } else {
+                        var22 = false;
+                    }
+
+                    if (!var22 || !(var9 - var5 < 1.6F)) {
+                        return;
+                    }
+
+                    var12 = false;
                 }
-            }
-            if (pOut < 0.15f) {
-                if (!((Float.isInfinite(edge) || Float.isNaN(edge)) ? false : true) || edge - inner >= 1.6f) {
-                    return;
+
+                Integer var13 = var0.vote(var4, ((var12) ? 1 : 0), var1, 1500L);
+                if (var13 != null && var13 == 0) {
+                    double var10;
+                    if (var0.solidMeansEdge()) {
+                        var10 = 0.75;
+                    } else {
+                        var10 = 0.55;
+                    }
+
+                    String var15 = Companion.sideName(var3);
+                    var0.see(var3, 0, var10, var1, "no lane line past ours on the " + var15 + ", road edge right there");
+                } else if (var13 != null && var13 == 1) {
+                    String var14 = Companion.sideName(var3);
+                    var0.atLeast(var3, 1, 0.7, var1, "a lane line one lane over on the " + var14);
                 }
-                reading = 0;
-                vote = this$0.vote(vt, reading, $now, 1500L);
-                if (vote == null) {
-                    this$0.see(s, 0, !this$0.solidMeansEdge() ? 0.75d : 0.55d, $now, "no lane line past ours on the " + Companion.sideName(s) + ", road edge right there");
-                    return;
-                }
-                if (vote == null) {
-                    return;
-                }
-                this$0.atLeast(s, 1, 0.7d, $now, "a lane line one lane over on the " + Companion.sideName(s));
+
+                return;
             }
         }
     }
@@ -1940,69 +2117,101 @@ public final class LaneBrain {
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:39:0x0075  */
-    /* JADX WARN: Removed duplicated region for block: B:47:0x00c7  */
-    /* JADX WARN: Removed duplicated region for block: B:49:0x00cf  */
-    /* JADX WARN: Removed duplicated region for block: B:54:0x0108  */
-    /* JADX WARN: Removed duplicated region for block: B:64:0x00ca  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private static final void edges$side$12(LaneBrain this$0, float smax, long $now, int s, Vote vt, float edge, float line, float pLine, LaneMarks.Mark mark, float pOut) {
-        boolean z;
-        int lo;
-        int hi;
-        Integer vote;
-        int b;
-        if (!((Float.isInfinite(edge) || Float.isNaN(edge)) ? false : true)) {
-            return;
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    private static final void edges$side$12(
+        LaneBrain var0, float var1, long var2, int var4, LaneBrain.Vote var5, float var6, float var7, float var8, LaneMarks.Mark var9, float var10
+    ) {
+        boolean var17 = Float.isInfinite(var6);
+        int var16 = 0;
+        int var15;
+        if (!var17 && !Float.isNaN(var6)) {
+            var15 = 1;
+        } else {
+            var15 = 0;
         }
-        if (!((Float.isInfinite(line) || Float.isNaN(line)) ? false : true) || pLine < 0.3f) {
-            return;
-        }
-        float g = edge - Math.abs(line);
-        if (g < -0.5f) {
-            return;
-        }
-        if (mark != null && mark.getKind() == 3 && !mark.getYellow() && !mark.getDouble() && this$0.solidMeansEdge()) {
-            if (!((Float.isInfinite(pOut) || Float.isNaN(pOut)) ? false : true) || pOut < 0.3f) {
-                z = true;
-                boolean loneSolid = z;
-                lo = loneSolid ? 0 : RangesKt.coerceAtLeast((int) Math.ceil((g - smax) / this$0.laneW), 0);
-                hi = RangesKt.coerceAtMost((int) Math.floor((0.4f + g) / this$0.laneW), 5);
-                if (hi < lo && (vote = this$0.vote(vt, (lo * 10) + hi, $now, 2500L)) != null) {
-                    int v = vote.intValue();
-                    int a = v / 10;
-                    b = v % 10;
-                    double c = !this$0.model.getTunnel() ? 0.5d : 0.65d;
-                    if (b != 0) {
-                        this$0.see(s, 0, this$0.solidMeansEdge() ? 0.65d : 0.5d, $now, "road edge right past our " + Companion.sideName(s) + " line");
-                        return;
-                    } else {
-                        if (a == b) {
-                            this$0.see(s, a, c * 0.75d, $now, Companion.sideName(s) + " road edge " + a + " lane" + (a > 1 ? "s" : "") + " away");
-                            return;
+
+        if ((var15 != 0)) {
+            if (!Float.isInfinite(var7) && !Float.isNaN(var7)) {
+                var15 = (((boolean)true) ? 1 : 0);
+            } else {
+                var15 = (((boolean)false) ? 1 : 0);
+            }
+
+            if (var15 && !(var8 < 0.3F)) {
+                var6 -= Math.abs(var7);
+                if (var6 < -0.5F) {
+                    return;
+                }
+
+                label116: {
+                    if (var9 != null && var9.getKind() == 3 && !var9.getYellow() && !var9.getDouble() && var0.solidMeansEdge()) {
+                        if (!Float.isInfinite(var10) && !Float.isNaN(var10)) {
+                            var15 = (((boolean)true) ? 1 : 0);
+                        } else {
+                            var15 = (((boolean)false) ? 1 : 0);
                         }
-                        this$0.seeRange(s, a, b, c, $now, Companion.sideName(s) + " road edge " + a + "-" + b + " lanes away (shoulder width unknown)");
-                        return;
+
+                        if (!var15 || !(var10 >= 0.3F)) {
+                            var15 = (((boolean)true) ? 1 : 0);
+                            break label116;
+                        }
+                    }
+
+                    var15 = (((boolean)false) ? 1 : 0);
+                }
+
+                if ((var15 != 0)) {
+                    var15 = var16;
+                } else {
+                    var15 = RangesKt.coerceAtLeast((int)Math.ceil((var6 - var1) / var0.laneW), 0);
+                }
+
+                var16 = RangesKt.coerceAtMost((int)Math.floor((0.4F + var6) / var0.laneW), 5);
+                if (var16 < var15) {
+                    return;
+                }
+
+                Integer var18 = var0.vote(var5, var15 * 10 + var16, var2, 2500L);
+                if (var18 != null) {
+                    var16 = var18.intValue();
+                    var15 = var16 / 10;
+                    var16 %= 10;
+                    var17 = var0.model.getTunnel();
+                    double var13 = 0.65;
+                    double var11;
+                    if (var17) {
+                        var11 = 0.5;
+                    } else {
+                        var11 = 0.65;
+                    }
+
+                    if (var16 == 0) {
+                        if (var0.solidMeansEdge()) {
+                            var11 = var13;
+                        } else {
+                            var11 = 0.5;
+                        }
+
+                        String var19 = Companion.sideName(var4);
+                        var0.see(var4, 0, var11, var2, "road edge right past our " + var19 + " line");
+                    } else if (var15 == var16) {
+                        String var23 = Companion.sideName(var4);
+                        String var20;
+                        if (var15 > 1) {
+                            var20 = "s";
+                        } else {
+                            var20 = "";
+                        }
+
+                        var0.see(var4, (((var15 != 0)) ? 1 : 0), var11 * 0.75, var2, var23 + " road edge " + var15 + " lane" + var20 + " away");
+                    } else {
+                        String var21 = Companion.sideName(var4);
+                        var0.seeRange(var4, (((var15 != 0)) ? 1 : 0), var16, var11, var2, var21 + " road edge " + var15 + "-" + var16 + " lanes away (shoulder width unknown)");
                     }
                 }
+
                 return;
             }
-        }
-        z = false;
-        boolean loneSolid2 = z;
-        lo = loneSolid2 ? 0 : RangesKt.coerceAtLeast((int) Math.ceil((g - smax) / this$0.laneW), 0);
-        hi = RangesKt.coerceAtMost((int) Math.floor((0.4f + g) / this$0.laneW), 5);
-        if (hi < lo) {
-            return;
-        }
-        int v2 = vote.intValue();
-        int a2 = v2 / 10;
-        b = v2 % 10;
-        if (!this$0.model.getTunnel()) {
-        }
-        if (b != 0) {
         }
     }
 
@@ -2132,117 +2341,135 @@ public final class LaneBrain {
         answer();
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:68:0x016f  */
-    /* JADX WARN: Removed duplicated region for block: B:81:0x0187  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void setCount(int m0, int lane, boolean remember, long now, int extraL, int extraR, String kind, String kindR) {
-        String str;
-        int m;
-        Road r;
-        RoadModel roadModel;
-        int m2;
-        boolean z;
-        StringBuilder sb;
-        StringBuilder append;
-        String str2;
-        Intrinsics.checkNotNullParameter(kind, "kind");
-        Intrinsics.checkNotNullParameter(kindR, "kindR");
-        Road r2 = this.road;
-        if (m0 <= 0) {
-            if (r2 != null && this.myCounts.remove(Long.valueOf(r2.getId())) != null) {
-                Function0<Unit> function0 = this.onCountsChanged;
-                if (function0 != null) {
-                    function0.invoke();
+    /* VF: from Vineflower (jadx: Removed duplicated region;incorrect) */
+    public final void setCount(int var1, int var2, boolean var3, long var4, int var6, int var7, String var8, String var9) {
+        Intrinsics.checkNotNullParameter(var8, "kind");
+        Intrinsics.checkNotNullParameter(var9, "kindR");
+        LaneBrain.Road var19 = this.road;
+        boolean var14 = false;
+        boolean var12 = false;
+        if (var1 <= 0) {
+            if (var19 != null && this.myCounts.remove(var19.getId()) != null) {
+                Function0 var28 = this.onCountsChanged;
+                if (var28 != null) {
+                    var28.invoke();
                 }
-                String name = r2.getName();
-                if (name.length() == 0) {
-                    name = r2.getKind();
+
+                Object var29 = var19.getName();
+                boolean var20 = var12;
+                if (var29.length() == 0) {
+                    var20 = true;
                 }
-                log(now, "your count for " + ((Object) name) + " forgotten");
-            }
-            this.model = roadModel(this.road, this.info);
-            answer();
-            return;
-        }
-        if (r2 != null && remember) {
-            this.myCounts.put(Long.valueOf(r2.getId()), Integer.valueOf(m0));
-            Function0<Unit> function02 = this.onCountsChanged;
-            if (function02 != null) {
-                function02.invoke();
-            }
-        }
-        int m3 = m0 + extraL + extraR;
-        if (1 <= lane && lane <= m3) {
-            int l = 0;
-            while (l < 6) {
-                int rr = 0;
-                while (rr < 6) {
-                    this.p[l][rr] = (l == lane + (-1) && rr == m3 - lane) ? 0.97d : 8.571428571428571E-4d;
-                    rr++;
+
+                if (var20) {
+                    var29 = var19.getKind();
                 }
-                l++;
+
+                this.log(var4, "your count for " + var29 + " forgotten");
             }
-            norm();
-            this.holdUntil = (extraL + extraR > 0 ? 60000L : 120000L) + now;
-            note(now, "you: lane " + lane + " of " + m3);
-        }
-        RoadModel rm = roadModel(this.road, this.info);
-        if (extraL + extraR <= 0 || rm.getExtraL() + rm.getExtraR() != 0) {
-            str = " of ";
-            m = m3;
-            r = r2;
-            roadModel = rm;
+
+            this.model = this.roadModel(this.road, this.info);
+            this.answer();
         } else {
-            String str3 = kindR;
-            if (str3.length() == 0) {
-                str3 = kind;
-            }
-            str = " of ";
-            m = m3;
-            r = r2;
-            roadModel = new RoadModel(m0, "your count", 0.97d, extraL, extraR, kind, str3, rm.getTunnel(), rm.getBridge());
-        }
-        this.model = roadModel;
-        answer();
-        if (1 <= lane) {
-            m2 = m;
-            if (lane <= m2) {
-                z = true;
-                if (z) {
-                    sb = new StringBuilder();
-                    append = sb.append(m2).append(" lanes");
-                } else {
-                    sb = new StringBuilder();
-                    append = sb.append("lane ").append(lane).append(str).append(m2);
+            if (var19 != null && var3) {
+                this.myCounts.put(var19.getId(), var1);
+                Function0 var18 = this.onCountsChanged;
+                if (var18 != null) {
+                    var18.invoke();
                 }
-                String sb2 = append.toString();
-                if (r == null && remember) {
-                    String name2 = r.getName();
-                    if (name2.length() == 0) {
-                        r16 = true;
-                    }
-                    if (r16) {
-                        name2 = r.getKind();
-                    }
-                    str2 = " - " + m0 + " remembered for " + ((Object) name2);
-                } else {
-                    str2 = "";
-                }
-                log(now, "you set " + sb2 + str2);
             }
-        } else {
-            m2 = m;
+
+            int var15 = var1 + var6 + var7;
+            if (1 <= var2 && var2 <= var15) {
+                var12 = true;
+            } else {
+                var12 = false;
+            }
+
+            if (var12) {
+                for (int var33 = 0; var33 < 6; var33++) {
+                    for (int var13 = 0; var13 < 6; var13++) {
+                        double[] var35 = this.p[var33];
+                        double var10;
+                        if (var33 == var2 - 1 && var13 == var15 - var2) {
+                            var10 = 0.97;
+                        } else {
+                            var10 = 8.571428571428571E-4;
+                        }
+
+                        var35[var13] = var10;
+                    }
+                }
+
+                this.norm();
+                long var16;
+                if (var6 + var7 > 0) {
+                    var16 = 60000L;
+                } else {
+                    var16 = 120000L;
+                }
+
+                this.holdUntil = var16 + var4;
+                this.note(var4, "you: lane " + var2 + " of " + var15);
+            }
+
+            LaneBrain.RoadModel var36 = this.roadModel(this.road, this.info);
+            LaneBrain.RoadModel var23;
+            if (var6 + var7 > 0 && var36.getExtraL() + var36.getExtraR() == 0) {
+                var9 = var9;
+                if (var9.length() == 0) {
+                    var12 = true;
+                } else {
+                    var12 = false;
+                }
+
+                if (var12) {
+                    var9 = var8;
+                }
+
+                var23 = new LaneBrain.RoadModel(var1, "your count", 0.97, var6, var7, var8, var9, var36.getTunnel(), var36.getBridge());
+            } else {
+                var23 = var36;
+            }
+
+            this.model = var23;
+            this.answer();
+            boolean var22;
+            if (1 <= var2 && var2 <= var15) {
+                var22 = true;
+            } else {
+                var22 = false;
+            }
+
+            StringBuilder var24;
+            StringBuilder var25;
+            if (var22) {
+                var24 = new StringBuilder();
+                var25 = var24.append("lane ").append(var2).append(" of ").append(var15);
+            } else {
+                var24 = new StringBuilder();
+                var25 = var24.append(var15).append(" lanes");
+            }
+
+            var9 = var25.toString();
+            if (var19 != null && var3) {
+                Object var27 = var19.getName();
+                boolean var21 = var14;
+                if (var27.length() == 0) {
+                    var21 = true;
+                }
+
+                if (var21) {
+                    var27 = var19.getKind();
+                }
+
+                var8 = " - " + var1 + " remembered for " + var27;
+            } else {
+                var8 = "";
+            }
+
+            this.log(var4, "you set " + var9 + var8);
         }
-        z = false;
-        if (z) {
-        }
-        String sb22 = append.toString();
-        if (r == null) {
-        }
-        str2 = "";
-        log(now, "you set " + sb22 + str2);
     }
 
     public final String getModelText() {

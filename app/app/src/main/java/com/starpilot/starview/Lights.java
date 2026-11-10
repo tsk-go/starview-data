@@ -87,97 +87,109 @@ public final class Lights {
         }
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:88:0x022c, code lost:
-    
-        if ((r27 - r4.getThird().longValue() < 3000 ? 1 : 0) != 0) goto L78;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void see(Ideas.Here h, List<Detector.Obj> objs, long nowMs) {
-        Triple it;
-        Iterator<Detector.Obj> it2;
-        ArrayList<Long> arrayList;
-        ArrayList<Integer> arrayList2;
-        Intrinsics.checkNotNullParameter(objs, "objs");
-        if (h == null || Double.isNaN(h.getYaw())) {
-            return;
-        }
-        Pair nearestRed = null;
-        Iterator<Detector.Obj> it3 = objs.iterator();
-        while (it3.hasNext()) {
-            Detector.Obj o = it3.next();
-            if (o.getCls() == 9 && o.getLamp() >= 0 && !o.getWideCam()) {
-                float x = o.getX();
-                if (5.0f <= x && x <= 130.0f) {
-                    if (Math.abs(o.getY()) > 12.0f) {
-                        it2 = it3;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    public final void see(Ideas.Here var1, List<Detector.Obj> var2, long var3) {
+        Intrinsics.checkNotNullParameter(var2, "objs");
+        if (var1 != null && !Double.isNaN(var1.getYaw())) {
+            Pair var30 = null;
+
+            for (Detector.Obj var34 : var2) {
+                if (var34.getCls() == 9 && var34.getLamp() >= 0 && !var34.getWideCam()) {
+                    float var23 = var34.getX();
+                    int var24;
+                    if (5.0F <= var23 && var23 <= 130.0F) {
+                        var24 = 1;
                     } else {
-                        double e = (o.getX() * Math.cos(h.getYaw())) + (o.getY() * Math.sin(h.getYaw()));
-                        double n = (o.getX() * Math.sin(h.getYaw())) - (o.getY() * Math.cos(h.getYaw()));
-                        double lat = h.getLat() + (n / 111195.0d);
-                        double lon = h.getLon() + (e / (Math.cos(Math.toRadians(h.getLat())) * 111320.0d));
-                        String key = Math.round(lat / 3.0E-4d) + "_" + Math.round(lon / 4.0E-4d) + "_" + (((int) ((h.getHdgDeg() + 45) / 90)) % 4);
-                        Integer prev = this.lastLamp.put(key, Integer.valueOf(o.getLamp()));
-                        if (prev == null) {
-                            it2 = it3;
-                        } else if (prev.intValue() == 0 && o.getLamp() == 2) {
-                            Map $this$getOrPut$iv = this.seen;
-                            ArrayList<Long> arrayList3 = $this$getOrPut$iv.get(key);
-                            if (arrayList3 == null) {
-                                arrayList = new ArrayList<>();
-                                $this$getOrPut$iv.put(key, arrayList);
-                            } else {
-                                arrayList = arrayList3;
+                        var24 = 0;
+                    }
+
+                    if (var24 && !(Math.abs(var34.getY()) > 12.0F)) {
+                        double var9 = var34.getX();
+                        double var7 = Math.cos(var1.getYaw());
+                        double var11 = var34.getY();
+                        double var13 = Math.sin(var1.getYaw());
+                        double var19 = var34.getX();
+                        double var17 = Math.sin(var1.getYaw());
+                        double var21 = var34.getY();
+                        double var15 = Math.cos(var1.getYaw());
+                        double var5 = var1.getLat();
+                        var15 = (var19 * var17 - var21 * var15) / 111195.0;
+                        var17 = var1.getLon();
+                        var7 = (var9 * var7 + var11 * var13) / (Math.cos(Math.toRadians(var1.getLat())) * 111320.0);
+                        long var26 = Math.round((var5 + var15) / 3.0E-4);
+                        long var28 = Math.round((var17 + var7) / 4.0E-4);
+                        var24 = (int)((var1.getHdgDeg() + 45) / 90);
+                        String var32 = var26 + "_" + var28 + "_" + var24 % 4;
+                        Integer var33 = this.lastLamp.put(var32, var34.getLamp());
+                        if (var33 != null && var33 == 0 && var34.getLamp() == 2) {
+                            Map var35 = this.seen;
+                            Object var31 = var35.get(var32);
+                            if (var31 == null) {
+                                var31 = new ArrayList();
+                                var35.put(var32, var31);
                             }
-                            arrayList.add(Long.valueOf(nowMs));
+
+                            ((ArrayList)var31).add(var3);
                             this.dirty = true;
-                            Long remove = this.redSince.remove(key);
-                            if (remove != null) {
-                                long st = remove.longValue();
-                                it2 = it3;
-                                int len = (int) ((nowMs - st) / 1000);
-                                if (8 <= len && len < 241) {
-                                    Map $this$getOrPut$iv2 = this.redLens;
-                                    ArrayList<Integer> arrayList4 = $this$getOrPut$iv2.get(key);
-                                    if (arrayList4 == null) {
-                                        arrayList2 = new ArrayList<>();
-                                        $this$getOrPut$iv2.put(key, arrayList2);
-                                    } else {
-                                        arrayList2 = arrayList4;
-                                    }
-                                    arrayList2.add(Integer.valueOf(len));
+                            var31 = this.redSince.remove(var32);
+                            if (var31 != null) {
+                                int var25 = (int)((var3 - ((Number)var31).longValue()) / 1000);
+                                boolean var42;
+                                if (8 <= var25 && var25 < 241) {
+                                    var42 = true;
+                                } else {
+                                    var42 = false;
                                 }
-                            } else {
-                                it2 = it3;
+
+                                if (var42) {
+                                    var35 = this.redLens;
+                                    var31 = var35.get(var32);
+                                    if (var31 == null) {
+                                        var31 = new ArrayList();
+                                        var35.put(var32, var31);
+                                    }
+
+                                    ((ArrayList)var31).add(var25);
+                                }
                             }
-                        } else {
-                            it2 = it3;
                         }
-                        if (prev != null && prev.intValue() != 0 && o.getLamp() == 0) {
-                            this.redSince.put(key, Long.valueOf(nowMs));
+
+                        if (var33 != null && var33 != 0 && var34.getLamp() == 0) {
+                            this.redSince.put(var32, var3);
                         }
-                        if (o.getLamp() == 0 && (nearestRed == null || o.getX() < ((Number) nearestRed.getSecond()).doubleValue())) {
-                            nearestRed = TuplesKt.to(key, Double.valueOf(o.getX()));
-                            it3 = it2;
+
+                        if (var34.getLamp() == 0 && (var30 == null || var34.getX() < ((Number)var30.getSecond()).doubleValue())) {
+                            var30 = TuplesKt.to(var32, (double)var34.getX());
                         }
                     }
-                    it3 = it2;
                 }
             }
-            it2 = it3;
-            it3 = it2;
-        }
-        if (nearestRed != null) {
-            Pair it4 = nearestRed;
-            it = new Triple(it4.getFirst(), it4.getSecond(), Long.valueOf(nowMs));
-        } else {
-            it = this.redAhead;
-            if (it != null) {
+
+            Triple var36;
+            if (var30 != null) {
+                var36 = new Triple<>(var30.getFirst(), var30.getSecond(), var3);
+            } else {
+                label67: {
+                    var36 = this.redAhead;
+                    if (var36 != null) {
+                        boolean var43;
+                        if (var3 - ((Number)var36.getThird()).longValue() < 3000L) {
+                            var43 = true;
+                        } else {
+                            var43 = false;
+                        }
+
+                        if (var43) {
+                            break label67;
+                        }
+                    }
+
+                    var36 = null;
+                }
             }
-            it = null;
+
+            this.redAhead = var36;
         }
-        this.redAhead = it;
     }
 
     public final Pair<Integer, Long> fit(List<Long> times, long nowMs) {

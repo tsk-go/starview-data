@@ -34,13 +34,13 @@ public final class BookmarksView extends CardPage {
     private final SimpleDateFormat fmt;
     private MediaPlayer player;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public BookmarksView(Context ctx, CarUi ui) {
-        super(ctx, ui);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(ui, "ui");
+    /* VF: from Vineflower (jadx: ) */
+    public BookmarksView(Context var1, CarUi var2) {
+        super(var1, var2);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "ui");
         this.fmt = new SimpleDateFormat("EEE MMM d, h:mm:ss a", Locale.US);
-        paint();
+        this.paint();
     }
 
     @Override // com.starpilot.starview.CardPage

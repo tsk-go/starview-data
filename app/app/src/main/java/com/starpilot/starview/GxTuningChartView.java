@@ -15,6 +15,9 @@ import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.StringCompanionObject;
 import kotlin.ranges.RangesKt;
+import android.graphics.Paint.Cap;
+import android.graphics.Paint.Join;
+import android.graphics.Paint.Style;
 
 /* compiled from: GxTuning.kt */
 final class GxTuningChartView extends View {
@@ -32,41 +35,43 @@ final class GxTuningChartView extends View {
     private final Paint stroke;
     private final String unit;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxTuningChartView(Context ctx, List<Pair<String, Integer>> series, String unit, int rangeDigits, double rangeFloor, double rangeMult, double roundDiv, List<GxTuningSample> samples) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        Intrinsics.checkNotNullParameter(series, "series");
-        Intrinsics.checkNotNullParameter(unit, "unit");
-        Intrinsics.checkNotNullParameter(samples, "samples");
-        this.series = series;
-        this.unit = unit;
-        this.rangeDigits = rangeDigits;
-        this.rangeFloor = rangeFloor;
-        this.rangeMult = rangeMult;
-        this.roundDiv = roundDiv;
-        this.samples = samples;
-        this.d = ctx.getResources().getDisplayMetrics().density;
-        Paint $this$grid_u24lambda_u240 = new Paint(1);
-        $this$grid_u24lambda_u240.setStrokeWidth(this.d);
-        $this$grid_u24lambda_u240.setColor(Color.argb(64, 128, 128, 128));
-        this.grid = $this$grid_u24lambda_u240;
-        Paint $this$axis_u24lambda_u241 = new Paint(1);
-        $this$axis_u24lambda_u241.setStrokeWidth(this.d);
-        $this$axis_u24lambda_u241.setColor(Color.rgb(170, 170, 170));
-        this.axis = $this$axis_u24lambda_u241;
-        Paint $this$label_u24lambda_u242 = new Paint(1);
-        $this$label_u24lambda_u242.setColor(CarUi.Companion.getDIM());
-        $this$label_u24lambda_u242.setTextSize(13 * this.d);
-        this.label = $this$label_u24lambda_u242;
-        Paint $this$stroke_u24lambda_u243 = new Paint(1);
-        $this$stroke_u24lambda_u243.setStyle(Paint.Style.STROKE);
-        $this$stroke_u24lambda_u243.setStrokeWidth(this.d * 2.2f);
-        $this$stroke_u24lambda_u243.setStrokeJoin(Paint.Join.ROUND);
-        $this$stroke_u24lambda_u243.setStrokeCap(Paint.Cap.ROUND);
-        this.stroke = $this$stroke_u24lambda_u243;
+    /* VF: from Vineflower (jadx: ) */
+    public GxTuningChartView(
+        Context var1, List<Pair<String, Integer>> var2, String var3, int var4, double var5, double var7, double var9, List<GxTuningSample> var11
+    ) {
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        Intrinsics.checkNotNullParameter(var2, "series");
+        Intrinsics.checkNotNullParameter(var3, "unit");
+        Intrinsics.checkNotNullParameter(var11, "samples");
+        super(var1);
+        this.series = var2;
+        this.unit = var3;
+        this.rangeDigits = var4;
+        this.rangeFloor = var5;
+        this.rangeMult = var7;
+        this.roundDiv = var9;
+        this.samples = var11;
+        this.d = var1.getResources().getDisplayMetrics().density;
+        Paint var12 = new Paint(1);
+        var12.setStrokeWidth(this.d);
+        var12.setColor(Color.argb(64, 128, 128, 128));
+        this.grid = var12;
+        Paint var13 = new Paint(1);
+        var13.setStrokeWidth(this.d);
+        var13.setColor(Color.rgb(170, 170, 170));
+        this.axis = var13;
+        Paint var14 = new Paint(1);
+        var14.setColor(CarUi.Companion.getDIM());
+        var14.setTextSize(13 * this.d);
+        this.label = var14;
+        Paint var15 = new Paint(1);
+        var15.setStyle(android.graphics.Paint.Style.STROKE);
+        var15.setStrokeWidth(this.d * 2.2F);
+        var15.setStrokeJoin(android.graphics.Paint.Join.ROUND);
+        var15.setStrokeCap(android.graphics.Paint.Cap.ROUND);
+        this.stroke = var15;
         this.path = new Path();
-        setBackgroundColor(Color.rgb(6, 8, 11));
+        this.setBackgroundColor(Color.rgb(6, 8, 11));
     }
 
     private final String fmt(double v) {

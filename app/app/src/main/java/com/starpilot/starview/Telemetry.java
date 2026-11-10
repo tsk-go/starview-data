@@ -1797,84 +1797,90 @@ public final class Telemetry {
         return (Long) $tmp0.invoke(p0, p1);
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:20:0x0055, code lost:
-    
-        if (r1.equals("false") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:22:?, code lost:
-    
-        return false;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:24:0x005e, code lost:
-    
-        if (r1.equals("true") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:26:?, code lost:
-    
-        return true;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:28:0x0067, code lost:
-    
-        if (r1.equals("yes") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:30:0x0070, code lost:
-    
-        if (r1.equals("no") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:32:0x0079, code lost:
-    
-        if (r1.equals("1") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:34:0x0087, code lost:
-    
-        if (r1.equals("0") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:36:0x0090, code lost:
-    
-        if (r1.equals("") == false) goto L42;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final Boolean truthy(Object v) {
-        if (v == null) {
-            return null;
-        }
-        if (v instanceof Boolean) {
-            return (Boolean) v;
-        }
-        if (v instanceof Number) {
-            return Boolean.valueOf(!(((Number) v).doubleValue() == 0.0d));
-        }
-        if (!(v instanceof String)) {
-            return null;
-        }
-        String lowerCase = StringsKt.trim((CharSequence) v).toString().toLowerCase(Locale.ROOT);
-        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-        switch (lowerCase.hashCode()) {
-            case 0:
-                break;
-            case 48:
-                break;
-            case 49:
-                break;
-            case 3521:
-                break;
-            case 119527:
-                break;
-            case 3569038:
-                break;
-            case 97196323:
-                break;
-            default:
-                Double doubleOrNull = StringsKt.toDoubleOrNull((String) v);
-                if (doubleOrNull == null) {
-                    return null;
+    /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
+    private final Boolean truthy(Object var1) {
+        Object var5 = null;
+        if (var1 == null) {
+            var1 = (Boolean)var5;
+        } else if (var1 instanceof Boolean) {
+            var1 = var1;
+        } else {
+            boolean var4 = var1 instanceof Number;
+            boolean var2 = false;
+            boolean var3 = false;
+            if (var4) {
+                var2 = var3;
+                if (((Number)var1).doubleValue() == 0.0) {
+                    var2 = true;
                 }
-                double it = doubleOrNull.doubleValue();
-                return Boolean.valueOf(!(it == 0.0d));
+
+                var1 = var2 ^ true;
+            } else if (var1 instanceof String) {
+                label66: {
+                    label67: {
+                        String var6 = StringsKt.trim((String & CharSequence)var1).toString().toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(var6, "toLowerCase(...)");
+                        switch (var6.hashCode()) {
+                            case 0:
+                                if (var6.equals("")) {
+                                    break label67;
+                                }
+                                break;
+                            case 48:
+                                if (var6.equals("0")) {
+                                    break label67;
+                                }
+                                break;
+                            case 49:
+                                if (var6.equals("1")) {
+                                    break label66;
+                                }
+                                break;
+                            case 3521:
+                                if (var6.equals("no")) {
+                                    break label67;
+                                }
+                                break;
+                            case 119527:
+                                if (var6.equals("yes")) {
+                                    break label66;
+                                }
+                                break;
+                            case 3569038:
+                                if (var6.equals("true")) {
+                                    break label66;
+                                }
+                                break;
+                            case 97196323:
+                                if (var6.equals("false")) {
+                                    break label67;
+                                }
+                        }
+
+                        Double var9 = StringsKt.toDoubleOrNull((String)var1);
+                        var1 = (Boolean)var5;
+                        if (var9 != null) {
+                            if (var9.doubleValue() == 0.0) {
+                                var2 = true;
+                            }
+
+                            var1 = var2 ^ true;
+                        }
+
+                        return var1;
+                    }
+
+                    var1 = false;
+                    return var1;
+                }
+
+                var1 = true;
+            } else {
+                var1 = (Boolean)var5;
+            }
         }
+
+        return var1;
     }
 
     public final boolean pBool(String key, boolean def) {
@@ -1961,50 +1967,42 @@ public final class Telemetry {
         private Companion() {
         }
 
-        /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
-        java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
-        	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterative(DepthRegionTraversal.java:31)
-        	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visit(SwitchOverStringVisitor.java:60)
-         */
-        public final String chestnutWhy(String why) {
-            Intrinsics.checkNotNullParameter(why, "why");
-            switch (why.hashCode()) {
+        /* VF: from Vineflower (jadx: ) */
+        public final String chestnutWhy(String var1) {
+            Intrinsics.checkNotNullParameter(var1, "why");
+            switch (var1.hashCode()) {
                 case -2048289183:
-                    if (why.equals("PcieUnavailable")) {
-                        return "PCIe unavailable";
+                    if (var1.equals("PcieUnavailable")) {
+                        var1 = "PCIe unavailable";
                     }
                     break;
                 case -1165913466:
-                    if (why.equals("UpdateFailed")) {
-                        return "update failed (check the USB cable)";
+                    if (var1.equals("UpdateFailed")) {
+                        var1 = "update failed (check the USB cable)";
                     }
                     break;
                 case -1159837099:
-                    if (why.equals("NotDetected")) {
-                        return "not found on USB (check USB and 12 V)";
+                    if (var1.equals("NotDetected")) {
+                        var1 = "not found on USB (check USB and 12 V)";
                     }
                     break;
                 case -220507009:
-                    if (why.equals("ModelError")) {
-                        return "model error (restart the car to retry)";
+                    if (var1.equals("ModelError")) {
+                        var1 = "model error (restart the car to retry)";
                     }
                     break;
                 case -70825853:
-                    if (why.equals("Overheated")) {
-                        return "overheated (needs airflow)";
+                    if (var1.equals("Overheated")) {
+                        var1 = "overheated (needs airflow)";
                     }
                     break;
                 case 1513838981:
-                    if (why.equals("UsbSlow")) {
-                        return "USB link too slow (check the eGPU's cable / hub port)";
+                    if (var1.equals("UsbSlow")) {
+                        var1 = "USB link too slow (check the eGPU's cable / hub port)";
                     }
-                    break;
             }
-            return why;
+
+            return var1;
         }
     }
 

@@ -36,35 +36,14 @@ final class GxCamerasPipView extends GxCamerasSnapView {
     private boolean tracking;
     private float zoom;
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public GxCamerasPipView(Context ctx) {
-        super(ctx);
-        Intrinsics.checkNotNullParameter(ctx, "ctx");
-        this.zoom = 240.0f;
-        this.onChanged = new Function0() { // from class: com.starpilot.starview.GxCamerasPipView$$ExternalSyntheticLambda0
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit unit;
-                unit = Unit.INSTANCE;
-                return unit;
-            }
-        };
-        this.onPlaced = new Function0() { // from class: com.starpilot.starview.GxCamerasPipView$$ExternalSyntheticLambda1
-            @Override // kotlin.jvm.functions.Function0
-            public final Object invoke() {
-                Unit unit;
-                unit = Unit.INSTANCE;
-                return unit;
-            }
-        };
-        this.onWrongHalf = new Function1() { // from class: com.starpilot.starview.GxCamerasPipView$$ExternalSyntheticLambda2
-            @Override // kotlin.jvm.functions.Function1
-            public final Object invoke(Object obj) {
-                Unit onWrongHalf$lambda$2;
-                onWrongHalf$lambda$2 = GxCamerasPipView.onWrongHalf$lambda$2((String) obj);
-                return onWrongHalf$lambda$2;
-            }
-        };
+    /* VF: from Vineflower (jadx: ) */
+    public GxCamerasPipView(Context var1) {
+        super(var1);
+        Intrinsics.checkNotNullParameter(var1, "ctx");
+        this.zoom = 240.0F;
+        this.onChanged = new GxCamerasPipView$$ExternalSyntheticLambda0();
+        this.onPlaced = new GxCamerasPipView$$ExternalSyntheticLambda1();
+        this.onWrongHalf = new GxCamerasPipView$$ExternalSyntheticLambda2();
     }
 
     public final float[] getLeftC() {
