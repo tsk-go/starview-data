@@ -1561,7 +1561,7 @@ public final class OsmRoads {
             hi = c;
         }
         double cl = Math.max(!Double.isInfinite(lLo) && !Double.isNaN(lLo) ? (-h) + lLo : Double.NEGATIVE_INFINITY, !Double.isInfinite(rHi) && !Double.isNaN(rHi) ? h - rHi : Double.NEGATIVE_INFINITY);
-        double ch = Math.min(!Double.isInfinite(rLo) && !Double.isNaN(rLo) ? h - rLo : Double.POSITIVE_INFINITY, (Double.isInfinite(lHi) || Double.isNaN(lHi)) ? false : true ? (-h) + lHi : Double.POSITIVE_INFINITY);
+        double ch = Math.min(!Double.isInfinite(rLo) && !Double.isNaN(rLo) ? h - rLo : Double.POSITIVE_INFINITY, (!Double.isInfinite(lHi) && !Double.isNaN(lHi)) ? (-h) + lHi : Double.POSITIVE_INFINITY);
         if (cl > ch) {
             double c2 = (cl + ch) / 2;
             return new Pair<>(Double.valueOf(c2), Double.valueOf(c2));

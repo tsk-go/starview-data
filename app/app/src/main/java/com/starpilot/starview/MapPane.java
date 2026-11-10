@@ -496,7 +496,7 @@ public final class MapPane extends FrameLayout {
             return GpsBridge.INSTANCE.getOutLat();
         }
         double gpsLat = getT().getGpsLat();
-        return (Double.isInfinite(gpsLat) || Double.isNaN(gpsLat)) ? false : true ? getT().getGpsLat() : lastKnown()[0];
+        return (!Double.isInfinite(gpsLat) && !Double.isNaN(gpsLat)) ? getT().getGpsLat() : lastKnown()[0];
     }
 
     public final double carLon() {

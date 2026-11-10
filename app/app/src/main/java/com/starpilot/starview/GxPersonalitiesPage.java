@@ -795,7 +795,7 @@ public final class GxPersonalitiesPage extends GxPage {
 
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     public static final Unit load$lambda$23$lambda$22(GxPersonalitiesPage var0, String var1, JSONObject var2, boolean var3) {
-        LinkedHashMap var40 = null; ArrayList var41 = null; Object var42 = null; Object var43 = null; IllegalStateException var46 = null; Object var54 = null; ArrayList var64 = null; Object var66 = null; Object var75 = null; Object var76 = null; Object var78 = null; // declarations Vineflower left out
+        LinkedHashMap var40 = null; ArrayList var41 = null; List var42 = null; Iterator var43 = null; IllegalStateException var46 = null; Iterator var54 = null; ArrayList var64 = null; List var66 = null; GalaxyApi var75 = null; Iterator var76 = null; List var78 = null; // declarations Vineflower left out
         label230: {
             label240: {
                 Exception var5;
@@ -2710,9 +2710,9 @@ public final class GxPersonalitiesPage extends GxPage {
             }
             cv.drawText("Speed (" + this.this$0.speedUnit() + ")", X(150.0d), Y(121.0d), this.txt);
             onDraw$poly(cv, this, points(this.this$0.reference(this.profile, this.category)), this.refP);
-            List pts = points(this.this$0.draft(this.profile, this.category));
+            List<Pair<Double, Double>> pts = points(this.this$0.draft(this.profile, this.category));
             onDraw$poly(cv, this, pts, this.lineP);
-            for (Pair<Double, Double> pair : ((Pair<Double,Double>) pts)) {
+            for (Pair<Double, Double> pair : pts) {
                 double x = pair.component1().doubleValue();
                 double y = pair.component2().doubleValue();
                 cv.drawCircle(X(x), Y(y), this.s * 4.5f, this.dot);
@@ -2806,7 +2806,7 @@ public final class GxPersonalitiesPage extends GxPage {
                         return false;
                     }
                     float x = ((e.getX() - this.ox) / this.s) - 30;
-                    List pts = points(this.this$0.draft(this.profile, this.category));
+                    List<Pair<Double, Double>> pts = points(this.this$0.draft(this.profile, this.category));
                     if (pts.isEmpty()) {
                         return false;
                     }

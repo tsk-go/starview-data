@@ -433,7 +433,7 @@ public final class LaneAhead {
                 double d0 = ((Number) pair.component1()).doubleValue();
                 double[] p = (double[]) pair.component2();
                 try {
-                    m = Hpms.INSTANCE.match(p[0], p[1], p[2], false, (r24 & 16) != 0 ? 45.0d : 0.0d, (r24 & 32) != 0 ? "" : $prefer);
+                    m = Hpms.match$default(Hpms.INSTANCE, p[0], p[1], p[2], Boolean.valueOf(false), 0.0d, $prefer, 16, null);
                 } catch (Exception e2) {
                     m = null;
                 }
@@ -767,7 +767,7 @@ public final class LaneAhead {
             double[] it2 = (double[]) element$iv$iv$iv;
             Double valueOf = Double.valueOf(it2[k]);
             double v = valueOf.doubleValue();
-            Double d = (Double.isInfinite(v) || Double.isNaN(v)) ? false : true ? valueOf : null;
+            Double d = (!Double.isInfinite(v) && !Double.isNaN(v)) ? valueOf : null;
             if (d != null) {
                 destination$iv$iv.add(d);
             }
@@ -850,14 +850,14 @@ public final class LaneAhead {
                 }
 
                 if (var50 != null) {
-                    Object var21 = var50.getWay();
+                    OsmRoads.Way var21 = var50.getWay();
                     if (StringsKt.endsWith(var21.getKind(), "_link", false)) {
                         return null;
                     }
 
                     ArrayList var25 = new ArrayList();
                     String var51 = "_link";
-                    List var20 = roadPath$ordered(((Way) var21), var9, var3, var5);
+                    List var20 = roadPath$ordered(var21, var9, var3, var5);
                     HashSet var19 = new HashSet();
                     var3 = 0.0;
 
@@ -883,8 +883,8 @@ public final class LaneAhead {
                         Intrinsics.checkNotNullExpressionValue(var68, "get(...)");
                         var68 = (double[])var68;
                         var1 = var26[1];
-                        var5 = (double)((Object[])var68)[1];
-                        var1 = Math.atan2(var1 - var5, var26[0] - ((Object[])var68)[0]);
+                        var5 = (double)((double[])var68)[1];
+                        var1 = Math.atan2(var1 - var5, var26[0] - ((double[])var68)[0]);
                         Iterable var73 = OsmRoads.INSTANCE.near(var26[0], var26[1], 15.0);
                         boolean var16 = false;
                         var var28 = new ArrayList();
@@ -1020,7 +1020,7 @@ public final class LaneAhead {
                             break;
                         }
 
-                        var68 = CollectionsKt.drop(roadPath$ordered(((Way) var21), var26[0], var26[1], var1), 1);
+                        var68 = CollectionsKt.drop(roadPath$ordered(var21, var26[0], var26[1], var1), 1);
                         var51 = var51;
                         var20 = (List)var68;
                     }
@@ -1039,19 +1039,19 @@ public final class LaneAhead {
                         var60 = var25.get(var49);
                         Intrinsics.checkNotNullExpressionValue(var60, var58);
                         var60 = (double[])var60;
-                        var9 = Math.hypot(((Object[])var60)[0] - var64[0], ((Object[])var60)[1] - var64[1]);
+                        var9 = Math.hypot(((double[])var60)[0] - var64[0], ((double[])var60)[1] - var64[1]);
                         if (!(var9 < 0.01)) {
                             while (var40 + var9 >= var1 && var1 <= 1000.0) {
                                 var42 = (var1 - var40) / var9;
                                 Pair var72 = OsmRoads.INSTANCE
-                                    .toLatLon(var64[0] + (((Object[])var60)[0] - var64[0]) * var42, var64[1] + (((Object[])var60)[1] - var64[1]) * var42);
+                                    .toLatLon(var64[0] + (((double[])var60)[0] - var64[0]) * var42, var64[1] + (((double[])var60)[1] - var64[1]) * var42);
                                 var67.add(
                                     TuplesKt.to(
                                         var1,
                                         new double[]{
                                             ((Number)var72.component1()).doubleValue(),
                                             ((Number)var72.component2()).doubleValue(),
-                                            Math.atan2(((Object[])var60)[1] - var64[1], ((Object[])var60)[0] - var64[0])
+                                            Math.atan2(((double[])var60)[1] - var64[1], ((double[])var60)[0] - var64[0])
                                         }
                                     )
                                 );
@@ -1185,7 +1185,7 @@ public final class LaneAhead {
                     Sample it2 = (Sample) item$iv$iv;
                     destination$iv$iv2.add(Integer.valueOf(it2.getLanes()));
                 }
-                Integer num = (Integer) CollectionsKt.maxOrNull(destination$iv$iv2);
+                Integer num = (Integer) CollectionsKt.maxOrNull((Iterable<Integer>) destination$iv$iv2);
                 if (num == null) {
                     return null;
                 }
