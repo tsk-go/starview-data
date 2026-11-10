@@ -189,7 +189,7 @@ public final class GalaxyRow {
         SELECT,
         READOUT;
 
-        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(values());
 
         public static EnumEntries<Control> getEntries() {
             return $ENTRIES;

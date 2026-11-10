@@ -149,10 +149,10 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     private final ActivityResultLauncher<String[]> pickAny;
     private final ActivityResultLauncher<String[]> pickModel;
     private FrameLayout root;
-    private final SettingsActivity$ticker$1 ticker;
+    private final Runnable ticker;
     private View togglesSearch;
     private CarUi ui;
-    private final SettingsActivity$valuePoll$1 valuePoll;
+    private final Runnable valuePoll;
     private String webReturn;
     public static final Companion Companion = new Companion(null);
     private static final Set<String> PLACED_PAGES = SetsKt.setOf((Object[]) new String[]{"lane", "lane_change", "torque", "aol", "profiles", "conditional", "curve", "traffic", "aggressive", "standard", "relaxed", "slc", "vehicle", "wheel", "sounds", "sentry", "vasm", "data", "developer", "display", "appearance", "pip"});
@@ -1470,7 +1470,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     }
 
     private final View homeAreas() {
-        final SettingsActivity settingsActivity = this;
+        SettingsActivity settingsActivity = this;
         GridLayout grid = new GridLayout(settingsActivity);
         grid.setColumnCount(3);
         grid.setRowCount(2);
@@ -1491,7 +1491,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             int r = quad.getR();
             int c = quad.getC();
             String sub = quad.getSub();
-            Area a = all.get(i2);
+            Area a = ((Area) all.get(i2));
             CarUi carUi = settingsActivity.ui;
             if (carUi == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("ui");
@@ -1563,7 +1563,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             Iterator<Pair<String, List<Rail>>> it2 = a.getRails().iterator();
             while (it2.hasNext()) {
                 List rs = it2.next().component2();
-                for (Rail r : rs) {
+                for (Rail r : ((Rail) rs)) {
                     String label = r.getLabel();
                     String str = a.getTitle() + " · " + a.getSub();
                     String it3 = r.getPage();
@@ -1723,7 +1723,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         boolean contains = SetsKt.setOf((Object[]) new String[]{"display", "appearance", "pip", "favorites"}).contains(page);
         List<Pair<String, List<Rail>>> rails = areas().get(contains ? 1 : 0).getRails();
         ArrayList arrayList = new ArrayList();
-        Iterator<T> it = rails.iterator();
+        Iterator it = rails.iterator();
         while (it.hasNext()) {
             CollectionsKt.addAll(arrayList, (Iterable) ((Pair) it.next()).getSecond());
         }
@@ -2322,7 +2322,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     private final void showArea(int index, String firstPage) {
         CarUi carUi;
         Object obj;
-        final SettingsActivity settingsActivity = this;
+        SettingsActivity settingsActivity = this;
         Area a = areas().get(index);
         View view = settingsActivity.current;
         GxPage gxPage = view instanceof GxPage ? (GxPage) view : null;
@@ -2447,7 +2447,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 }
                 rail.addView(carUi13.header(section));
             }
-            for (final Rail r : rails) {
+            for (final Rail r : ((Rail) rails)) {
                 SettingIcons.Icon ic = r.getSv();
                 CarUi carUi14 = settingsActivity.ui;
                 if (carUi14 == null) {
@@ -2570,7 +2570,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             return;
         }
         Map $this$getOrPut$iv = this.panels;
-        View view2 = $this$getOrPut$iv.get(page);
+        View view2 = ((View) $this$getOrPut$iv.get(page));
         if (view2 == null) {
             view = buildPage(page);
             $this$getOrPut$iv.put(page, view);
@@ -3088,8 +3088,8 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 }
 
                 var6 = this.offline((String)var6);
-                this.handler.postDelayed(new SettingsActivity$$ExternalSyntheticLambda158(this, var6, var1), 1500L);
-                return var6;
+                this.handler.postDelayed(new SettingsActivity$$ExternalSyntheticLambda158(this, ((View) var6), var1), 1500L);
+                return ((View) var6);
             } else {
                 List var15 = var31.getParams();
                 boolean var3;
@@ -3412,7 +3412,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         var3 = var41;
         Pair var17 = var16.browserTabs(var3, 2, new SettingsActivity$$ExternalSyntheticLambda95(var37, var34, var31, var10, this, var1, var26, var4));
         View var22 = (View)var17.component1();
-        var34.element = (T)((Function1)var17.component2());
+        var34.element = ((Function1)var17.component2());
         if (!var5) {
             CarUi var18 = this.ui;
             if (var18 == null) {
@@ -3654,7 +3654,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
 
                 var53.setBackground((Drawable)var32.corners(CarUi.Companion.getSECTION(), 0, 0, 14, 14));
                 var8.addView((View)var53, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F)));
-                var51.element = (T)(new SettingsActivity$$ExternalSyntheticLambda10(var48, var50, new HashMap(), var49, this, var53));
+                var51.element = (new SettingsActivity$$ExternalSyntheticLambda10(var48, var50, new HashMap(), var49, this, var53));
                 var9.addTextChangedListener(
                     new TextWatcher() {
                         final TextView $clear = var10;
@@ -3808,7 +3808,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     }
 
     /* JADX INFO: Access modifiers changed from: private */
-    public static final void togglesPage$lambda$132(EditText editText, Ref.ObjectRef objectRef, Ref.IntRef intRef, Function1 function1, GalaxyApi galaxyApi, final SettingsActivity settingsActivity, FrameLayout frameLayout) {
+    public static final void togglesPage$lambda$132(EditText editText, Ref.ObjectRef objectRef, Ref.IntRef intRef, Function1 function1, GalaxyApi galaxyApi, SettingsActivity settingsActivity, FrameLayout frameLayout) {
         Iterator<GalaxyApi.Category> it;
         String str;
         List<GalaxyApi.Param> list;
@@ -4484,7 +4484,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         List var21 = var20;
         Pair var15 = var14.chips(var21, new SettingsActivity$$ExternalSyntheticLambda188(var6, var4, var33));
         LinearLayout var26 = (LinearLayout)var15.component1();
-        var33.element = (T)((Function1)var15.component2());
+        var33.element = ((Function1)var15.component2());
         CarUi var22 = this.ui;
         CarUi var16 = var22;
         if (var22 == null) {
@@ -4601,7 +4601,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 destination$iv$iv.add(element$iv$iv);
             }
         }
-        for (final UiSettings.Item item : (List) destination$iv$iv) {
+        for (final UiSettings.Item item : (Item) destination$iv$iv) {
             toggleCard(col, item.getTitle(), null, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda191
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
@@ -4829,7 +4829,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 destination$iv$iv.add(element$iv$iv);
             }
         }
-        for (final UiSettings.Item item : (List) destination$iv$iv) {
+        for (final UiSettings.Item item : (Item) destination$iv$iv) {
             toggleCard(col, item.getTitle(), null, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda100
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
@@ -5163,7 +5163,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         CarUi carUi5;
         CarUi carUi6;
         CarUi carUi7;
-        final SettingsActivity settingsActivity = this$0;
+        SettingsActivity settingsActivity = this$0;
         col.removeAllViews();
         CarUi carUi8 = settingsActivity.ui;
         if (carUi8 == null) {
@@ -5233,7 +5233,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 destination$iv$iv.add(element$iv$iv);
             }
         }
-        final List<MapdMaps.State> mine2 = (List) destination$iv$iv;
+        List<MapdMaps.State> mine2 = (List) destination$iv$iv;
         long free = this$0.getFilesDir().getUsableSpace();
         CarUi carUi15 = settingsActivity.ui;
         if (carUi15 == null) {
@@ -6145,7 +6145,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 str = "";
             }
             destination$iv$iv.add(name + "   " + place + "   " + format + str);
-            $this$map$iv2 = $this$map$iv;
+            $this$map$iv2 = ((List) $this$map$iv);
             k = k2;
             $this$mapTo$iv$iv2 = $this$mapTo$iv$iv;
             $i$f$map = $i$f$map2;
@@ -6352,7 +6352,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit backupCasterSection$lambda$236;
-                backupCasterSection$lambda$236 = SettingsActivity.backupCasterSection$lambda$236(rmd, this);
+                backupCasterSection$lambda$236 = SettingsActivity.backupCasterSection$lambda$236(rmd, SettingsActivity.this);
                 return backupCasterSection$lambda$236;
             }
         }, 2, null));
@@ -6911,7 +6911,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda235
             @Override // android.widget.CompoundButton.OnCheckedChangeListener
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                SettingsActivity.rtkFusionSection$lambda$247(painting, sw, this, compoundButton, z);
+                SettingsActivity.rtkFusionSection$lambda$247(painting, sw, SettingsActivity.this, compoundButton, z);
             }
         });
         rsp.addView(sw);
@@ -7081,7 +7081,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                         textView7.setText(RtkTools.INSTANCE.mountAngles(k));
                     }
                     List needs = RtkTools.INSTANCE.needs(k);
-                    Iterator<T> it5 = needViews.iterator();
+                    Iterator it5 = needViews.iterator();
                     int i2 = 0;
                     int i3 = 0;
                     while (true) {
@@ -7125,7 +7125,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                         int i6 = i5;
                         i5++;
                         RtkTools.Step step = (RtkTools.Step) it6.next();
-                        Triple<LinearLayout, TextView, BarView> triple = stepViews.get(i6);
+                        Triple<LinearLayout, TextView, BarView> triple = ((Triple<LinearLayout,TextView,BarView>) stepViews.get(i6));
                         LinearLayout r5 = triple.component1();
                         TextView d4 = triple.component2();
                         BarView bar2 = triple.component3();
@@ -7510,7 +7510,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             carUi12 = null;
         }
         col.addView(note2, CarUi.lp$default(carUi12, 0, 0, 3, null));
-        for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "Turn-by-turn directions and alerts"), TuplesKt.to("alerts", "Alerts only"), TuplesKt.to("off", "Off")})) {
+        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "Turn-by-turn directions and alerts"), TuplesKt.to("alerts", "Alerts only"), TuplesKt.to("off", "Off")}))) {
             final String v = (String) pair.component1();
             String title = (String) pair.component2();
             toggleCard(col, title, null, new Function0() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda238
@@ -7524,7 +7524,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit tabletNavPage$lambda$263;
-                    tabletNavPage$lambda$263 = SettingsActivity.tabletNavPage$lambda$263(s, v, this, ((Boolean) obj).booleanValue());
+                    tabletNavPage$lambda$263 = SettingsActivity.tabletNavPage$lambda$263(s, v, SettingsActivity.this, ((Boolean) obj).booleanValue());
                     return tabletNavPage$lambda$263;
                 }
             });
@@ -7615,7 +7615,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 Boolean allowed = GpsBridge.INSTANCE.permitted();
                 TextView textView = gpsVal;
                 if (textView != null) {
-                    if (GpsBridge.INSTANCE.enabled(this)) {
+                    if (GpsBridge.INSTANCE.enabled(Context.this)) {
                         if (!Intrinsics.areEqual((Object) allowed, (Object) false)) {
                             if (GpsBridge.INSTANCE.getLastFixMs() <= 0 || gAge >= 3) {
                                 str = "allowed · " + GpsBridge.INSTANCE.getStatus() + (GpsBridge.INSTANCE.getLastFixMs() > 0 ? " (last fix " + gAge + "s ago)" : " (nothing from the comma yet)");
@@ -8080,7 +8080,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit newIdeasPage$lambda$278;
-                    newIdeasPage$lambda$278 = SettingsActivity.newIdeasPage$lambda$278(s, idea, this, ((Boolean) obj).booleanValue());
+                    newIdeasPage$lambda$278 = SettingsActivity.newIdeasPage$lambda$278(s, idea, SettingsActivity.this, ((Boolean) obj).booleanValue());
                     return newIdeasPage$lambda$278;
                 }
             });
@@ -9184,7 +9184,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit tabletVoicePage$lambda$335;
-                tabletVoicePage$lambda$335 = SettingsActivity.tabletVoicePage$lambda$335(am, st, maxV, this, d2);
+                tabletVoicePage$lambda$335 = SettingsActivity.tabletVoicePage$lambda$335(am, st, maxV, SettingsActivity.this, d2);
                 return tabletVoicePage$lambda$335;
             }
         }, 2, null));
@@ -9206,7 +9206,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit tabletVoicePage$lambda$336;
-                tabletVoicePage$lambda$336 = SettingsActivity.tabletVoicePage$lambda$336(am, st, maxV, this, d2);
+                tabletVoicePage$lambda$336 = SettingsActivity.tabletVoicePage$lambda$336(am, st, maxV, SettingsActivity.this, d2);
                 return tabletVoicePage$lambda$336;
             }
         }, 2, null));
@@ -9228,7 +9228,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit tabletVoicePage$lambda$337;
-                tabletVoicePage$lambda$337 = SettingsActivity.tabletVoicePage$lambda$337(maxV, am, st, this, d2);
+                tabletVoicePage$lambda$337 = SettingsActivity.tabletVoicePage$lambda$337(maxV, am, st, SettingsActivity.this, d2);
                 return tabletVoicePage$lambda$337;
             }
         }, 2, null));
@@ -9274,7 +9274,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         sv.setTag(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda170
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.tabletVoicePage$fill(list, this, sampleText);
+                SettingsActivity.tabletVoicePage$fill(list, SettingsActivity.this, sampleText);
             }
         });
         return sv;
@@ -9442,8 +9442,8 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         CarUi carUi5;
         CarUi carUi6;
         CarUi carUi7;
-        final SettingsActivity settingsActivity = this$0;
-        final String str = sampleText;
+        SettingsActivity settingsActivity = this$0;
+        String str = sampleText;
         list.removeAllViews();
         List packs = AmyVoice.INSTANCE.packs();
         AmyVoice.Pack act = Speech.INSTANCE.getUseAmy() ? AmyVoice.INSTANCE.active() : null;
@@ -9620,7 +9620,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             list.addView(note2, CarUi.lp$default(carUi22, 0, 0, 3, null));
             return;
         }
-        for (final Voice v : vs) {
+        for (final Voice v : (Iterable) (Voice) ((Voice) vs)) {
             boolean chosen2 = act == null && Intrinsics.areEqual(v.getName(), Speech.INSTANCE.getVoiceName());
             CarUi carUi23 = settingsActivity.ui;
             if (carUi23 == null) {
@@ -9798,7 +9798,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         LinearLayout var7 = (LinearLayout)var1.component2();
         SharedPreferences var6 = this.getSharedPreferences("speech", 0);
         ObjectRef var5 = new ObjectRef();
-        var5.element = (T)(new VoiceStudio.Style(var6.getFloat("st_expr", 0.667F), var6.getFloat("st_rhythm", 0.8F), 1.08F));
+        var5.element = (new VoiceStudio.Style(var6.getFloat("st_expr", 0.667F), var6.getFloat("st_rhythm", 0.8F), 1.08F));
         ObjectRef var4 = new ObjectRef();
         String var2 = "all";
         String var17 = var6.getString("st_filter", "all");
@@ -9806,7 +9806,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             var17 = var2;
         }
 
-        var4.element = (T)var17;
+        var4.element = var17;
         BooleanRef var9 = new BooleanRef();
         AtomicBoolean var8 = new AtomicBoolean(false);
         CarUi var36 = this.ui;
@@ -9964,8 +9964,8 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
 
         var7.addView(var58, (android.view.ViewGroup.LayoutParams)CarUi.lp$default(var32, 0, 0, 3, null));
         ObjectRef var50 = new ObjectRef();
-        var50.element = (T)CollectionsKt.emptyList();
-        var53.element = (T)(new SettingsActivity$$ExternalSyntheticLambda220(
+        var50.element = CollectionsKt.emptyList();
+        var53.element = (new SettingsActivity$$ExternalSyntheticLambda220(
             var57,
             this,
             var50,
@@ -10145,7 +10145,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
 
     /* VF: from Vineflower (jadx: Type inference failed) */
     public static final Unit tabletVoiceStudioPage$lambda$365(ObjectRef var0, SharedPreferences var1, float var2) {
-        var0.element = (T)VoiceStudio.Style.copy$default((VoiceStudio.Style)var0.element, var2, 0.0F, 0.0F, 6, null);
+        var0.element = VoiceStudio.Style.copy$default((VoiceStudio.Style)var0.element, var2, 0.0F, 0.0F, 6, null);
         var1.edit().putFloat("st_expr", var2).apply();
         return Unit.INSTANCE;
     }
@@ -10159,7 +10159,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
 
     /* VF: from Vineflower (jadx: Type inference failed) */
     public static final Unit tabletVoiceStudioPage$lambda$368(ObjectRef var0, SharedPreferences var1, float var2) {
-        var0.element = (T)VoiceStudio.Style.copy$default((VoiceStudio.Style)var0.element, 0.0F, var2, 0.0F, 5, null);
+        var0.element = VoiceStudio.Style.copy$default((VoiceStudio.Style)var0.element, 0.0F, var2, 0.0F, 5, null);
         var1.edit().putFloat("st_rhythm", var2).apply();
         return Unit.INSTANCE;
     }
@@ -10177,7 +10177,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
             carUi = carUi4;
         }
         LinearLayout rf = (LinearLayout) CarUi.row$default(carUi, "Show", "Filter the list", 0, null, null, 28, null).component1();
-        for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "All"), TuplesKt.to("US", "American"), TuplesKt.to("GB", "British"), TuplesKt.to("many", "Many speakers"), TuplesKt.to("have", "Downloaded")})) {
+        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("all", "All"), TuplesKt.to("US", "American"), TuplesKt.to("GB", "British"), TuplesKt.to("many", "Many speakers"), TuplesKt.to("have", "Downloaded")}))) {
             final String k = (String) pair.component1();
             String lab = (String) pair.component2();
             CarUi carUi5 = this$0.ui;
@@ -10218,7 +10218,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     public static final Unit tabletVoiceStudioPage$fillFilter$lambda$371(
         ObjectRef var0, String var1, SharedPreferences var2, ObjectRef var3, LinearLayout var4, SettingsActivity var5
     ) {
-        var0.element = (T)var1;
+        var0.element = var1;
         var2.edit().putString("st_filter", var1).apply();
         tabletVoiceStudioPage$fillFilter(var4, var5, var0, var2, var3);
         Function0 var6;
@@ -10367,7 +10367,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
                 if (!var15) {
                     List var27 = var26;
 
-                    for (VoiceStudio.Voice var45 : var27) {
+                    for (VoiceStudio.Voice var45 : (Iterable) (Voice) ((Voice) var27)) {
                         var14 = VoiceStudio.INSTANCE.downloaded((Context)var1, var45.getKey());
                         LinearLayout var20 = new LinearLayout((Context)var1);
                         var20.setOrientation(var12);
@@ -10870,7 +10870,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     /* VF: from Vineflower (jadx: Type inference failed) */
     public static final void tabletVoiceStudioPage$loadCat$lambda$399(ObjectRef var0, SettingsActivity var1, boolean var2, TextView var3, ObjectRef var4) {
         try {
-            var0.element = (T)VoiceStudio.INSTANCE.catalog((Context)var1, var2);
+            var0.element = VoiceStudio.INSTANCE.catalog((Context)var1, var2);
             int var5 = ((List)var0.element).size();
             StringBuilder var8 = new StringBuilder();
             tabletVoiceStudioPage$say(var1, var3, var8.append(var5).append(" English voices").toString());
@@ -10939,7 +10939,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
         box.setTag(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda240
             @Override // java.lang.Runnable
             public final void run() {
-                SettingsActivity.techStreamPage$lambda$407(w, this, h);
+                SettingsActivity.techStreamPage$lambda$407(w, SettingsActivity.this, h);
             }
         });
         return box;

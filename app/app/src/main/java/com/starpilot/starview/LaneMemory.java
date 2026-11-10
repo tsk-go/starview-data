@@ -311,7 +311,7 @@ public final class LaneMemory {
             CollectionsKt.sortWith($this$sortBy$iv, new Comparator() { // from class: com.starpilot.starview.LaneMemory$pruneMarks$$inlined$sortBy$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     LaneMemory.Mark it = (LaneMemory.Mark) t;
                     LaneMemory.Mark it2 = (LaneMemory.Mark) t2;
                     return ComparisonsKt.compareValues(Float.valueOf(it.getY()), Float.valueOf(it2.getY()));
@@ -477,7 +477,7 @@ public final class LaneMemory {
                     final float $ourLine$inlined = var2;
 
                     @Override
-                    public final int compare(T var1, T var2x) {
+                    public final int compare(Object var1, Object var2x) {
                         return ComparisonsKt.compareValues(
                             Math.abs(((LaneMemory.Mark)var1).getY() - this.$ourLine$inlined), Math.abs(((LaneMemory.Mark)var2x).getY() - this.$ourLine$inlined)
                         );
@@ -486,7 +486,7 @@ public final class LaneMemory {
             );
             var6 = false;
 
-            for (LaneMemory.Mark var33 : var26) {
+            for (LaneMemory.Mark var33 : ((Mark) var26)) {
                 var3 = Math.abs(var33.getY() - var2);
                 if (!(var3 < 2.3F)) {
                     if (var3 > 4.6F) {
@@ -536,7 +536,7 @@ public final class LaneMemory {
                 var30 = (LaneMemory.Mark)var40.next();
                 if (var40.hasNext()) {
                     float var19 = Math.abs(var30.getY());
-                    var11 = var30;
+                    var11 = ((Iterable) var30);
 
                     do {
                         Object var38 = var40.next();
@@ -548,7 +548,7 @@ public final class LaneMemory {
                             var3 = var5;
                         }
 
-                        var11 = var30;
+                        var11 = ((Iterable) var30);
                         var19 = var3;
                     } while (var40.hasNext());
                 }

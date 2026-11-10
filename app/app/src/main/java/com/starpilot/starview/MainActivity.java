@@ -681,11 +681,11 @@ public final class MainActivity extends AppCompatActivity {
             var1 = var0;
         }
 
-        var9.element = (T)SharedPlace.parse$default(var6, var1, null, 2, null);
+        var9.element = SharedPlace.parse$default(var6, var1, null, 2, null);
         if (!((SharedPlace.Place)var9.element).getHasCoords() && var4 != null && SharedPlace.INSTANCE.isShort(var4)) {
             var1 = SharedPlace.INSTANCE.follow(var4);
             if (var1 != null) {
-                var9.element = (T)SharedPlace.INSTANCE.parse(var0, var1);
+                var9.element = SharedPlace.INSTANCE.parse(var0, var1);
             }
         }
 
@@ -1379,7 +1379,7 @@ public final class MainActivity extends AppCompatActivity {
                 return onCreate$lambda$57;
             }
         });
-        final File countsFile = new File(getFilesDir(), "lane_counts.json");
+        File countsFile = new File(getFilesDir(), "lane_counts.json");
         try {
             JSONObject j = new JSONObject(FilesKt.readText(countsFile, kotlin.text.Charsets.UTF_8));
             Iterator<String> keys = j.keys();
@@ -2451,7 +2451,7 @@ public final class MainActivity extends AppCompatActivity {
             }
 
             if (var7.getConnected()) {
-                var1.element = (T)var2;
+                var1.element = var2;
                 DataClient var6 = var0.data;
                 if (var6 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("data");
@@ -2704,7 +2704,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override // android.view.View.OnTouchListener
             public final boolean onTouch(View view, MotionEvent motionEvent) {
                 boolean wireControls$lambda$136;
-                wireControls$lambda$136 = MainActivity.wireControls$lambda$136(navDownNs, this, view, motionEvent);
+                wireControls$lambda$136 = MainActivity.wireControls$lambda$136(navDownNs, MainActivity.this, view, motionEvent);
                 return wireControls$lambda$136;
             }
         });
@@ -2789,7 +2789,7 @@ public final class MainActivity extends AppCompatActivity {
                 MainActivity.wireControls$lambda$144(MainActivity.this, view);
             }
         });
-        for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Integer.valueOf(R.id.dsDefault), "default"), TuplesKt.to(Integer.valueOf(R.id.dsOnroad), "onroad"), TuplesKt.to(Integer.valueOf(R.id.dsOffroad), "offroad")})) {
+        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Integer.valueOf(R.id.dsDefault), "default"), TuplesKt.to(Integer.valueOf(R.id.dsOnroad), "onroad"), TuplesKt.to(Integer.valueOf(R.id.dsOffroad), "offroad")}))) {
             int id = ((Number) pair.component1()).intValue();
             final String mode = (String) pair.component2();
             ((Button) findViewById(id)).setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda83
@@ -3288,7 +3288,7 @@ public final class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda17
             @Override // java.lang.Runnable
             public final void run() {
-                MainActivity.connectTo$lambda$157(h, p, this);
+                MainActivity.connectTo$lambda$157(h, p, MainActivity.this);
             }
         }).start();
     }
@@ -4549,7 +4549,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit sendSaver$lambda$187;
-                sendSaver$lambda$187 = MainActivity.sendSaver$lambda$187(on, report, this, (JSONObject) obj);
+                sendSaver$lambda$187 = MainActivity.sendSaver$lambda$187(on, report, MainActivity.this, (JSONObject) obj);
                 return sendSaver$lambda$187;
             }
         });
@@ -4703,7 +4703,7 @@ public final class MainActivity extends AppCompatActivity {
                 var48 = null;
             }
 
-            var48.setImageBitmap(var26);
+            var48.setImageBitmap(((Bitmap) var26));
             ImageView var49 = this.ideasDay;
             ImageView var27 = var49;
             if (var49 == null) {
@@ -5118,7 +5118,7 @@ public final class MainActivity extends AppCompatActivity {
 
         ArrayList var395;
         try {
-            Collection var287 = var159;
+            Collection var287 = ((Collection) var159);
             JSONArray var161 = new JSONArray(var287);
             var162 = var21.put("lanes_left_probabilities", var161);
             var288 = var20.marg(1);
@@ -5177,7 +5177,7 @@ public final class MainActivity extends AppCompatActivity {
             return;
         }
 
-        Iterable var168 = var294;
+        Iterable var168 = ((Iterable) var294);
         boolean var8 = false;
 
         try {
@@ -5357,7 +5357,7 @@ public final class MainActivity extends AppCompatActivity {
                     break;
                 }
 
-                Iterable var190 = var313;
+                Iterable var190 = ((Iterable) var313);
                 var8 = false;
 
                 try {
@@ -5398,7 +5398,7 @@ public final class MainActivity extends AppCompatActivity {
                 }
 
                 try {
-                    Collection var196 = var194;
+                    Collection var196 = ((Collection) var194);
                     JSONArray var319 = new JSONArray(var196);
                     var21.put("events_last_2_min", var319);
                     var21.put("ahead", this.laneAhead.text(var20.getOdo(), false))
@@ -5481,7 +5481,7 @@ public final class MainActivity extends AppCompatActivity {
                     }
 
                     try {
-                        Collection var206 = var204;
+                        Collection var206 = ((Collection) var204);
                         JSONArray var329 = new JSONArray(var206);
                         var19.put("route_next_lanes", var377.put("lanes", var329));
                     } catch (Exception var61) {
@@ -5802,7 +5802,7 @@ public final class MainActivity extends AppCompatActivity {
                     break;
                 }
 
-                LaneSuggestView var235 = var352;
+                LaneSuggestView var235 = ((LaneSuggestView) var352);
                 if (var352 == null) {
                     try {
                         Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
@@ -5865,7 +5865,7 @@ public final class MainActivity extends AppCompatActivity {
                     break;
                 }
 
-                LaneSuggestView var242 = var358;
+                LaneSuggestView var242 = ((LaneSuggestView) var358);
                 if (var358 == null) {
                     try {
                         Intrinsics.throwUninitializedPropertyAccessException("laneSuggest");
@@ -6004,7 +6004,7 @@ public final class MainActivity extends AppCompatActivity {
                     break;
                 }
 
-                BookmarkCard var258 = var369;
+                BookmarkCard var258 = ((BookmarkCard) var369);
                 if (var369 == null) {
                     try {
                         Intrinsics.throwUninitializedPropertyAccessException("bookmarkCard");
@@ -6028,7 +6028,7 @@ public final class MainActivity extends AppCompatActivity {
                     break;
                 }
 
-                ImageView var261 = var372;
+                ImageView var261 = ((ImageView) var372);
                 if (var372 == null) {
                     try {
                         Intrinsics.throwUninitializedPropertyAccessException("bookmarkBtn");
@@ -6486,7 +6486,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit doorCommand$lambda$212;
-                doorCommand$lambda$212 = MainActivity.doorCommand$lambda$212(cmd, this, (JSONObject) obj);
+                doorCommand$lambda$212 = MainActivity.doorCommand$lambda$212(cmd, MainActivity.this, (JSONObject) obj);
                 return doorCommand$lambda$212;
             }
         });
@@ -7475,7 +7475,7 @@ public final class MainActivity extends AppCompatActivity {
             textView4 = null;
         }
         textViewArr[2] = textView4;
-        for (TextView tv : CollectionsKt.listOf((Object[]) textViewArr)) {
+        for (TextView tv : (Iterable) (TextView) ((TextView) CollectionsKt.listOf((Object[]) textViewArr))) {
             tv.setTextColor(fg);
             tv.setShadowLayer(n ? 12.0f : 0.0f, 0.0f, 0.0f, -16777216);
         }
@@ -7493,7 +7493,7 @@ public final class MainActivity extends AppCompatActivity {
                 textView6 = null;
             }
             textViewArr2[1] = textView6;
-            for (TextView tv2 : CollectionsKt.listOf((Object[]) textViewArr2)) {
+            for (TextView tv2 : (Iterable) (TextView) ((TextView) CollectionsKt.listOf((Object[]) textViewArr2))) {
                 tv2.setTextColor(fg);
                 tv2.setShadowLayer(n ? 2.0f : 0.0f, 2.0f, 2.0f, Color.argb(170, 0, 0, 0));
             }

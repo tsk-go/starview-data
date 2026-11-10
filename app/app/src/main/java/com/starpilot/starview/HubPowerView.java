@@ -35,7 +35,7 @@ import java.util.Iterator;
 /* compiled from: HubPower.kt */
 public final class HubPowerView extends CardPage {
     private String err;
-    private final HubPowerView$poll$1 poll;
+    private final Runnable poll;
     private boolean shown;
     private JSONObject status;
     private final SimpleDateFormat timeFmt;

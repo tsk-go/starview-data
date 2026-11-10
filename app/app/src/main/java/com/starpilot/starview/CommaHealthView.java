@@ -33,7 +33,7 @@ import android.view.ViewGroup.LayoutParams;
 public final class CommaHealthView extends CardPage {
     private final LinearLayout hw;
     private final LinearLayout model;
-    private final CommaHealthView$poll$1 poll;
+    private final Runnable poll;
     private final LinearLayout procs;
     private boolean shown;
     private final LinearLayout summary;
@@ -319,20 +319,20 @@ public final class CommaHealthView extends CardPage {
             Iterable var28 = var27;
             var23 = CollectionsKt.take(CollectionsKt.sortedWith(var28, new Comparator() {
                 @Override
-                public final int compare(T var1, T var2x) {
+                public final int compare(Object var1, Object var2x) {
                     return ComparisonsKt.compareValues(((JSONObject)var2x).optDouble("memoryMiB", 0.0), ((JSONObject)var1).optDouble("memoryMiB", 0.0));
                 }
             }), 10);
         }
 
-        JSONObject var57 = CollectionsKt.firstOrNull(var23);
+        JSONObject var57 = ((JSONObject) CollectionsKt.firstOrNull(var23));
         String var37 = "memoryMiB";
         double var40 = 1.0;
         if (var57 != null) {
             var40 = var57.optDouble("memoryMiB", 1.0);
         }
 
-        for (JSONObject var74 : var23) {
+        for (JSONObject var74 : (Iterable) (JSONObject) ((JSONObject) var23)) {
             double var7 = var74.optDouble(var37, 0.0);
             LinearLayout var70 = this.procs;
             LinearLayout var69 = new LinearLayout(this.getContext());
@@ -510,6 +510,6 @@ public final class CommaHealthView extends CardPage {
             var10 = "–";
         }
 
-        var21.addView((View)CardPage.line$default(var23, "Network: " + var10, 0, 0.0F, 6, null));
+        var21.addView((View)CardPage.line$default(((CardPage) var23), "Network: " + var10, 0, 0.0F, 6, null));
     }
 }

@@ -51,7 +51,7 @@ public final class DoorsBeltsView extends CardPage {
     private JSONObject live;
     private String liveErr;
     private LinearLayout nowCard;
-    private final DoorsBeltsView$poll$1 poll;
+    private final Runnable poll;
     private final int red;
     private final SimpleDateFormat shortFmt;
     private boolean shown;
@@ -529,7 +529,7 @@ public final class DoorsBeltsView extends CardPage {
                                 var71,
                                 new Comparator() {
                                     @Override
-                                    public final int compare(T var1, T var2) {
+                                    public final int compare(Object var1, Object var2) {
                                         return ComparisonsKt.compareValues(
                                             (T)((Integer & Comparable)((java.util.Map.Entry)var2).getValue()), (T)((Integer & Comparable)((java.util.Map.Entry)var1).getValue())
                                         );
@@ -544,15 +544,15 @@ public final class DoorsBeltsView extends CardPage {
                             java.util.Map.Entry var103 = (java.util.Map.Entry)var88.next();
                             Intrinsics.checkNotNullExpressionValue(var103, "next(...)");
                             var103 = var103;
-                            Integer var126 = (Integer)var103.getKey();
+                            Object var126 = (Integer)var103.getKey();
                             Intrinsics.checkNotNullExpressionValue(var126, "component1(...)");
                             var126 = (String)var126;
                             var103 = (java.util.Map.Entry)var103.getValue();
                             Intrinsics.checkNotNullExpressionValue(var103, "component2(...)");
-                            Integer var26 = (Integer)var103;
+                            Object var26 = (Integer)var103;
                             String var146 = this.nameOf((String)var126);
                             String var106;
-                            if (var26 == 1) {
+                            if (var26) {
                                 var106 = "";
                             } else {
                                 var106 = var10;
@@ -619,11 +619,11 @@ public final class DoorsBeltsView extends CardPage {
                                 final JSONObject $c$inlined = var18;
 
                                 @Override
-                                public final int compare(T var1, T var2) {
+                                public final int compare(Object var1, Object var2) {
                                     var2 = var2;
-                                    Comparable var5 = this.$c$inlined.optInt(var2);
+                                    Comparable var5 = this.$c$inlined.optInt(((String) var2));
                                     var1 = var1;
-                                    return ComparisonsKt.compareValues(var5, this.$c$inlined.optInt(var1));
+                                    return ComparisonsKt.compareValues(var5, this.$c$inlined.optInt(((String) var1)));
                                 }
                             });
                             var var152 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var130, 10));
@@ -865,138 +865,84 @@ public final class DoorsBeltsView extends CardPage {
         return Unit.INSTANCE;
     }
 
-    /* VF: from Vineflower (jadx: Code restructure failed;Type inference failed;incorrect) */
     private final void paintNow() {
-        LinearLayout var6 = this.nowCard;
-        if (var6 != null) {
-            var6.removeAllViews();
-            var6.addView(this.title("Right now", "eye", "device"));
-            JSONObject var3 = this.status;
-            if (var3 != null) {
-                JSONObject var2 = this.live;
-                if (!var3.optBoolean("carOn")) {
-                    var6.addView((View)CardPage.line$default(this, "Shows every switch live with the car on and in Park.", 0, 0.0F, 6, null));
-                } else if (var2 == null) {
-                    CardPage var22 = this;
-                    String var21 = this.liveErr;
-                    String var20 = var21;
-                    if (var21 == null) {
-                        var20 = "Reading…";
-                    }
-
-                    var6.addView((View)CardPage.line$default(var22, var20, 0, 0.0F, 6, null));
-                } else {
-                    JSONObject var7 = var2.optJSONObject("words");
-                    LinearLayout var8 = new LinearLayout(this.getContext());
-                    var8.setOrientation(1);
-
-                    for (JSONObject var10 : this.items()) {
-                        String var5 = var10.optString("id");
-                        CarUi.Companion var14 = null;
-                        String var4 = var14;
-                        if (var7 != null) {
-                            var5 = var7.optString(var5);
-                            var4 = var14;
-                            if (var5 != null) {
-                                boolean var1;
-                                if (var5.length() > 0) {
-                                    var1 = true;
-                                } else {
-                                    var1 = false;
-                                }
-
-                                if (var1 && !Intrinsics.areEqual(var5, "null")) {
-                                    var1 = true;
-                                } else {
-                                    var1 = false;
-                                }
-
-                                var4 = var14;
-                                if (var1) {
-                                    var4 = var5;
-                                }
-                            }
-                        }
-
-                        var14 = var10.optString("source");
-                        LinearLayout var24 = new LinearLayout(this.getContext());
-                        var24.setOrientation(0);
-                        var24.setGravity(16);
-                        var24.setPadding(0, this.getUi().dp(3), 0, this.getUi().dp(3));
-                        TextView var11 = new TextView(var24.getContext());
-                        var11.setText(var10.optString("name"));
-                        var11.setTextColor(CarUi.Companion.getTEXT());
-                        var11.setTextSize(17.0F);
-                        var24.addView((View)var11, (android.view.ViewGroup.LayoutParams)(new LayoutParams(this.getUi().dp(260), -2)));
-                        TextView var25 = new TextView(var24.getContext());
-                        if (var4 != null) {
-                            var14 = var4;
-                        } else {
-                            label82: {
-                                label81: {
-                                    if (var14 != null) {
-                                        switch (var14.hashCode()) {
-                                            case -1282241876:
-                                                if (var14.equals("not on bus")) {
-                                                    var14 = "not on the comma's bus";
-                                                    break label82;
-                                                }
-                                                break;
-                                            case 0:
-                                                if (var14.equals("")) {
-                                                    break label81;
-                                                }
-                                                break;
-                                            case 3392903:
-                                                if (var14.equals("null")) {
-                                                    break label81;
-                                                }
-                                        }
-                                    }
-
-                                    var14 = "–";
-                                    break label82;
-                                }
-
-                                var14 = "not learned";
-                            }
-
-                            var14 = (CharSequence)var14;
-                        }
-
-                        var25.setText((CharSequence)var14);
-                        int var13;
-                        if (Intrinsics.areEqual(var4, "open")) {
-                            var13 = CarUi.Companion.getWARN();
-                        } else if (Intrinsics.areEqual(var4, "buckled")) {
-                            var13 = CarUi.Companion.getACCENT();
-                        } else {
-                            var14 = CarUi.Companion;
-                            if (var4 == null) {
-                                var13 = var14.getDIM();
-                            } else {
-                                var13 = var14.getTEXT();
-                            }
-                        }
-
-                        var25.setTextColor(var13);
-                        var25.setTextSize(17.0F);
-                        Typeface var19;
-                        if (var4 != null) {
-                            var19 = Typeface.DEFAULT_BOLD;
-                        } else {
-                            var19 = Typeface.DEFAULT;
-                        }
-
-                        var25.setTypeface(var19);
-                        var24.addView((View)var25);
-                        var8.addView((View)var24);
-                    }
-
-                    var6.addView((View)var8);
+        String str;
+        String str2;
+        int dim;
+        String s2;
+        LinearLayout c = this.nowCard;
+        if (c == null) {
+            return;
+        }
+        c.removeAllViews();
+        c.addView(title("Right now", "eye", "device"));
+        JSONObject s = this.status;
+        if (s == null) {
+            return;
+        }
+        JSONObject lv = this.live;
+        if (!s.optBoolean("carOn")) {
+            c.addView(CardPage.line$default(this, "Shows every switch live with the car on and in Park.", 0, 0.0f, 6, null));
+            return;
+        }
+        if (lv == null) {
+            DoorsBeltsView doorsBeltsView = this;
+            String str3 = this.liveErr;
+            if (str3 == null) {
+                str3 = "Reading…";
+            }
+            c.addView(CardPage.line$default(doorsBeltsView, str3, 0, 0.0f, 6, null));
+            return;
+        }
+        JSONObject words = lv.optJSONObject("words");
+        LinearLayout grid = new LinearLayout(getContext());
+        grid.setOrientation(1);
+        for (JSONObject it : items()) {
+            String id = it.optString("id");
+            String w = null;
+            if (words != null) {
+                String s2 = words.optString(id);
+                if (s2 != null && s2.length() > 0 && !Intrinsics.areEqual(s2, "null")) {
+                    w = s2;
                 }
             }
+            String src = it.optString("source");
+            LinearLayout row = new LinearLayout(getContext());
+            row.setOrientation(0);
+            row.setGravity(16);
+            row.setPadding(0, getUi().dp(3), 0, getUi().dp(3));
+            TextView name = new TextView(row.getContext());
+            name.setText(it.optString("name"));
+            name.setTextColor(CarUi.Companion.getTEXT());
+            name.setTextSize(17.0f);
+            row.addView(name, new LinearLayout.LayoutParams(getUi().dp(260), -2));
+            TextView val = new TextView(row.getContext());
+            String shown;
+            if (w != null) {
+                shown = w;
+            } else if ("not on bus".equals(src)) {
+                shown = "not on the comma's bus";
+            } else if ("".equals(src) || "null".equals(src)) {
+                shown = "not learned";
+            } else {
+                shown = "–";
+            }
+            val.setText(shown);
+            int col;
+            if (Intrinsics.areEqual(w, "open")) {
+                col = CarUi.Companion.getWARN();
+            } else if (Intrinsics.areEqual(w, "buckled")) {
+                col = CarUi.Companion.getACCENT();
+            } else {
+                col = w == null ? CarUi.Companion.getDIM() : CarUi.Companion.getTEXT();
+            }
+            val.setTextColor(col);
+            val.setTextSize(17.0f);
+            val.setTypeface(w != null ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+            row.addView(val);
+            grid.addView(row);
         }
+        c.addView(grid);
     }
 
     private final void openLearn() {
@@ -1130,8 +1076,8 @@ public final class DoorsBeltsView extends CardPage {
                     if (phase.equals("summary")) {
                         Map $this$filterValues$iv = getFound();
                         LinkedHashMap result$iv = new LinkedHashMap();
-                        for (Map.Entry entry$iv : $this$filterValues$iv.entrySet()) {
-                            JSONObject it = entry$iv.getValue();
+                        for (Map.Entry entry$iv : (Iterable) (Entry) ((Entry) $this$filterValues$iv.entrySet())) {
+                            JSONObject it = ((JSONObject) entry$iv.getValue());
                             JSONObject it2 = it != null ? 1 : null;
                             if (it2 != null) {
                                 result$iv.put(entry$iv.getKey(), entry$iv.getValue());
@@ -1167,7 +1113,7 @@ public final class DoorsBeltsView extends CardPage {
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit paint$lambda$21;
-                                paint$lambda$21 = DoorsBeltsView.Learn.paint$lambda$21(DoorsBeltsView.this, this);
+                                paint$lambda$21 = DoorsBeltsView.Learn.paint$lambda$21(DoorsBeltsView.this, DoorsBeltsView.Learn.this);
                                 return paint$lambda$21;
                             }
                         }), CarUi.button$default(ui2, "Cancel", false, new Function0() { // from class: com.starpilot.starview.DoorsBeltsView$Learn$$ExternalSyntheticLambda2
@@ -1257,7 +1203,7 @@ public final class DoorsBeltsView extends CardPage {
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit paint$lambda$2;
-                                paint$lambda$2 = DoorsBeltsView.Learn.paint$lambda$2(DoorsBeltsView.this, this);
+                                paint$lambda$2 = DoorsBeltsView.Learn.paint$lambda$2(DoorsBeltsView.this, DoorsBeltsView.Learn.this);
                                 return paint$lambda$2;
                             }
                         }), CarUi.button$default(ui5, "Cancel", false, new Function0() { // from class: com.starpilot.starview.DoorsBeltsView$Learn$$ExternalSyntheticLambda5
@@ -1310,7 +1256,7 @@ public final class DoorsBeltsView extends CardPage {
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit paint$lambda$12;
-                        paint$lambda$12 = DoorsBeltsView.Learn.paint$lambda$12(DoorsBeltsView.this, this);
+                        paint$lambda$12 = DoorsBeltsView.Learn.paint$lambda$12(DoorsBeltsView.this, DoorsBeltsView.Learn.this);
                         return paint$lambda$12;
                     }
                 }), CarUi.button$default(ui7, "Cancel", false, new Function0() { // from class: com.starpilot.starview.DoorsBeltsView$Learn$$ExternalSyntheticLambda10
@@ -1335,14 +1281,14 @@ public final class DoorsBeltsView extends CardPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit paint$lambda$6;
-                    paint$lambda$6 = DoorsBeltsView.Learn.paint$lambda$6(DoorsBeltsView.this, this);
+                    paint$lambda$6 = DoorsBeltsView.Learn.paint$lambda$6(DoorsBeltsView.this, DoorsBeltsView.Learn.this);
                     return paint$lambda$6;
                 }
             }), CarUi.button$default(ui9, "Skip", false, new Function0() { // from class: com.starpilot.starview.DoorsBeltsView$Learn$$ExternalSyntheticLambda7
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit paint$lambda$8;
-                    paint$lambda$8 = DoorsBeltsView.Learn.paint$lambda$8(DoorsBeltsView.this, this);
+                    paint$lambda$8 = DoorsBeltsView.Learn.paint$lambda$8(DoorsBeltsView.this, DoorsBeltsView.Learn.this);
                     return paint$lambda$8;
                 }
             }, 2, null), CarUi.button$default(ui10, "Cancel", false, new Function0() { // from class: com.starpilot.starview.DoorsBeltsView$Learn$$ExternalSyntheticLambda8

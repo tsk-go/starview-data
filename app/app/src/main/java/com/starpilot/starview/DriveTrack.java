@@ -185,7 +185,7 @@ public final class DriveTrack {
             CollectionsKt.sortWith($this$sortBy$iv, new Comparator() { // from class: com.starpilot.starview.DriveTrack$between$$inlined$sortBy$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     DriveTrack.Pt it = (DriveTrack.Pt) t;
                     DriveTrack.Pt it2 = (DriveTrack.Pt) t2;
                     return ComparisonsKt.compareValues(Long.valueOf(it.getT()), Long.valueOf(it2.getT()));

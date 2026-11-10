@@ -20,55 +20,14 @@ public final /* data */ class OfflineTtsZipVoiceModelConfig {
         this(null, null, null, null, null, null, 0.0f, 0.0f, 0.0f, 0.0f, 1023, null);
     }
 
-    /* renamed from: component1, reason: from getter */
-    public final String getTokens() {
-        return this.tokens;
-    }
 
-    /* renamed from: component10, reason: from getter */
-    public final float getGuidanceScale() {
-        return this.guidanceScale;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final String getEncoder() {
-        return this.encoder;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final String getDecoder() {
-        return this.decoder;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final String getVocoder() {
-        return this.vocoder;
-    }
 
-    /* renamed from: component5, reason: from getter */
-    public final String getDataDir() {
-        return this.dataDir;
-    }
 
-    /* renamed from: component6, reason: from getter */
-    public final String getLexicon() {
-        return this.lexicon;
-    }
 
-    /* renamed from: component7, reason: from getter */
-    public final float getFeatScale() {
-        return this.featScale;
-    }
 
-    /* renamed from: component8, reason: from getter */
-    public final float getTShift() {
-        return this.tShift;
-    }
-
-    /* renamed from: component9, reason: from getter */
-    public final float getTargetRms() {
-        return this.targetRms;
-    }
 
     public final OfflineTtsZipVoiceModelConfig copy(String tokens, String encoder, String decoder, String vocoder, String dataDir, String lexicon, float featScale, float tShift, float targetRms, float guidanceScale) {
         Intrinsics.checkNotNullParameter(tokens, "tokens");

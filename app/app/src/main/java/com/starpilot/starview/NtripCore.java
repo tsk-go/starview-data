@@ -573,7 +573,7 @@ public final class NtripCore {
             final Comparator comparator = new Comparator() { // from class: com.starpilot.starview.NtripCore$sourcetable$$inlined$compareBy$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     NtripCore.Mount it = (NtripCore.Mount) t;
                     double d = it.milesFrom(lat0, lon0);
                     if (Double.isNaN(d)) {
@@ -588,7 +588,7 @@ public final class NtripCore {
             return CollectionsKt.sortedWith(out, new Comparator() { // from class: com.starpilot.starview.NtripCore$sourcetable$$inlined$thenBy$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     int previousCompare = comparator.compare(t, t2);
                     if (previousCompare != 0) {
                         return previousCompare;
@@ -604,7 +604,7 @@ public final class NtripCore {
         return CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.NtripCore$sourcetable$$inlined$sortedBy$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 NtripCore.Mount it = (NtripCore.Mount) t;
                 NtripCore.Mount it2 = (NtripCore.Mount) t2;
                 return ComparisonsKt.compareValues(it.getName(), it2.getName());

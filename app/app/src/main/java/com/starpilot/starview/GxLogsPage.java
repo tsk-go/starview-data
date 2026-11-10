@@ -345,7 +345,7 @@ public final class GxLogsPage extends GxPage {
             new Thread(new Runnable() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda12
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxLogsPage.getJsonAccept$lambda$10(h, path, this, then);
+                    GxLogsPage.getJsonAccept$lambda$10(h, path, GxLogsPage.this, then);
                 }
             }).start();
         }
@@ -580,14 +580,14 @@ public final class GxLogsPage extends GxPage {
                 List g = m.getGroupValues();
                 Calendar $this$parseLogDate_u24lambda_u2424_u24lambda_u2423 = Calendar.getInstance();
                 $this$parseLogDate_u24lambda_u2424_u24lambda_u2423.setLenient(true);
-                int parseInt = Integer.parseInt(g.get(1));
-                int parseInt2 = Integer.parseInt(g.get(2)) - 1;
-                int parseInt3 = Integer.parseInt(g.get(3));
-                Integer intOrNull = StringsKt.toIntOrNull(g.get(4));
+                int parseInt = Integer.parseInt(((String) g.get(1)));
+                int parseInt2 = Integer.parseInt(((String) g.get(2))) - 1;
+                int parseInt3 = Integer.parseInt(((String) g.get(3)));
+                Integer intOrNull = StringsKt.toIntOrNull(((String) g.get(4)));
                 int intValue = intOrNull != null ? intOrNull.intValue() : 0;
-                Integer intOrNull2 = StringsKt.toIntOrNull(g.get(5));
+                Integer intOrNull2 = StringsKt.toIntOrNull(((String) g.get(5)));
                 int intValue2 = intOrNull2 != null ? intOrNull2.intValue() : 0;
-                Integer intOrNull3 = StringsKt.toIntOrNull(g.get(6));
+                Integer intOrNull3 = StringsKt.toIntOrNull(((String) g.get(6)));
                 $this$parseLogDate_u24lambda_u2424_u24lambda_u2423.set(parseInt, parseInt2, parseInt3, intValue, intValue2, intOrNull3 != null ? intOrNull3.intValue() : 0);
                 $this$parseLogDate_u24lambda_u2424_u24lambda_u2423.set(14, 0);
                 m1191constructorimpl = KtCompat.resultOf($this$parseLogDate_u24lambda_u2424_u24lambda_u2423.getTime());
@@ -1262,7 +1262,7 @@ public final class GxLogsPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tmuxRename$lambda$57;
-                tmuxRename$lambda$57 = GxLogsPage.tmuxRename$lambda$57(old, this, (String) obj);
+                tmuxRename$lambda$57 = GxLogsPage.tmuxRename$lambda$57(old, GxLogsPage.this, (String) obj);
                 return tmuxRename$lambda$57;
             }
         }, 24, null);
@@ -1272,7 +1272,7 @@ public final class GxLogsPage extends GxPage {
     public static final Unit tmuxRename$lambda$57(String var0, GxLogsPage var1, String var2) {
         Intrinsics.checkNotNullParameter(var2, "input");
         ObjectRef var4 = new ObjectRef();
-        var4.element = (T)StringsKt.trim(var2).toString();
+        var4.element = StringsKt.trim(var2).toString();
         boolean var3;
         if (((CharSequence)var4.element).length() == 0) {
             var3 = true;
@@ -1283,7 +1283,7 @@ public final class GxLogsPage extends GxPage {
         if (!var3 && !Intrinsics.areEqual(var4.element, var0)) {
             if (!StringsKt.endsWith((String)var4.element, ".json", false)) {
                 Object var7 = var4.element;
-                var4.element = (T)(var7 + ".json");
+                var4.element = (var7 + ".json");
             }
 
             if (Intrinsics.areEqual(var4.element, var0)) {
@@ -1453,7 +1453,7 @@ public final class GxLogsPage extends GxPage {
                 i6 = 4;
                 sp = null;
             }
-            this.monTiles.put(s.getFirst(), new MonTile($this$buildMonitor_u24lambda_u2462, v, sm, bar, sp));
+            this.monTiles.put(((String) s.getFirst()), new MonTile($this$buildMonitor_u24lambda_u2462, v, sm, bar, sp));
             line2 = line;
             str = str2;
             i7 = i9;
@@ -1556,7 +1556,7 @@ public final class GxLogsPage extends GxPage {
         LinearLayout head = new LinearLayout(getAct());
         head.setOrientation(0);
         head.setPadding(0, getUi().dp(4), 0, getUi().dp(8));
-        Iterator<T> it2 = this.monSortCols.iterator();
+        Iterator it2 = this.monSortCols.iterator();
         int i10 = 0;
         while (it2.hasNext()) {
             int i11 = i10;
@@ -2023,7 +2023,7 @@ public final class GxLogsPage extends GxPage {
     }
 
     private final void monPaintSortBar() {
-        Iterator<T> it = this.monSortCols.iterator();
+        Iterator it = this.monSortCols.iterator();
         int i = 0;
         while (it.hasNext()) {
             int i2 = i;
@@ -2893,7 +2893,7 @@ public final class GxLogsPage extends GxPage {
         }
         Iterator<? extends JSONObject> it3 = this.tsSections.iterator();
         while (it3.hasNext()) {
-            final JSONObject s = it3.next();
+            JSONObject s = it3.next();
             List items = tsVisible(s);
             if (items.isEmpty()) {
                 z = false;
@@ -3137,7 +3137,7 @@ public final class GxLogsPage extends GxPage {
             if (!items.isEmpty()) {
                 lines.add("");
                 lines.add(GxPage.str$default(this, s, "title", null, 2, null));
-                for (JSONObject i : items) {
+                for (JSONObject i : (Iterable) (JSONObject) ((JSONObject) items)) {
                     String learned = tsFormatLearned(tsVal(i, "learnedValue"));
                     String str$default = GxPage.str$default(this, i, "label", null, 2, null);
                     String tsFormat = tsFormat(tsVal(i, "value"));

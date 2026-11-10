@@ -1551,8 +1551,8 @@ public final class Telemetry {
         Rate putIfAbsent;
         Intrinsics.checkNotNullParameter(key, "key");
         ConcurrentMap $this$getOrPut$iv = this.rates;
-        Rate rate = $this$getOrPut$iv.get(key);
-        if (rate == null && (putIfAbsent = $this$getOrPut$iv.putIfAbsent(key, (rate = new Rate()))) != null) {
+        Rate rate = ((Rate) $this$getOrPut$iv.get(key));
+        if (rate == null && (putIfAbsent = ((Rate) $this$getOrPut$iv.putIfAbsent(key, (rate = new Rate())))) != null) {
             rate = putIfAbsent;
         }
         rate.tick(System.nanoTime());
@@ -1867,11 +1867,11 @@ public final class Telemetry {
                             var1 = var2 ^ true;
                         }
 
-                        return var1;
+                        return ((Boolean) var1);
                     }
 
                     var1 = false;
-                    return var1;
+                    return ((Boolean) var1);
                 }
 
                 var1 = true;
@@ -1880,7 +1880,7 @@ public final class Telemetry {
             }
         }
 
-        return var1;
+        return ((Boolean) var1);
     }
 
     public final boolean pBool(String key, boolean def) {
@@ -2759,7 +2759,7 @@ public final class Telemetry {
                     ArrayList arrayList = new ArrayList(size);
                     while (i < size) {
                         int i10 = i;
-                        Log.UbloxGnss.SatReport.SatInfo.Reader v5 = svs.get(i10);
+                        Log.UbloxGnss.SatReport.SatInfo.Reader v5 = ((Reader) svs.get(i10));
                         arrayList.add(new GnssSat(v5.getGnssId() & 255, v5.getSvId() & 255, v5.getCno() & 255, v5.getElevationDeg(), v5.getAzimuthDeg(), v5.getFlagsBitfield()));
                         i++;
                         u = u;
@@ -2775,7 +2775,7 @@ public final class Telemetry {
                 float[] arr = new float[n * 2];
                 ArrayList rt = new ArrayList(n);
                 for (int i11 = 0; i11 < n; i11++) {
-                    Car.RadarData.RadarPoint.Reader q2 = pts.get(i11);
+                    Car.RadarData.RadarPoint.Reader q2 = ((Reader) pts.get(i11));
                     arr[i11 * 2] = q2.getDRel();
                     arr[(i11 * 2) + 1] = q2.getYRel();
                     rt.add(new RadarTrack(q2.getTrackId(), q2.getDRel(), q2.getYRel(), q2.getVRel(), q2.getMeasured()));

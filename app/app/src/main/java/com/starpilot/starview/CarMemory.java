@@ -262,7 +262,7 @@ public final class CarMemory {
         if (x <= 110.0d && Math.abs(y) <= 9.0d) {
             Map $this$getOrPut$iv = this.byId;
             Long valueOf = Long.valueOf(id);
-            Car car2 = $this$getOrPut$iv.get(valueOf);
+            Car car2 = ((Car) $this$getOrPut$iv.get(valueOf));
             if (car2 == null) {
                 car = new Car(id);
                 $this$getOrPut$iv.put(valueOf, car);

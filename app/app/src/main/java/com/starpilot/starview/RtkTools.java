@@ -55,7 +55,7 @@ public final class RtkTools {
         WAITING,
         OFF;
 
-        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(values());
 
         public static EnumEntries<State> getEntries() {
             return $ENTRIES;

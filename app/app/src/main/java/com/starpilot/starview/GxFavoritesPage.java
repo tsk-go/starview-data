@@ -663,14 +663,14 @@ public final class GxFavoritesPage extends GxPage {
     private final void updateSlot(int var1, boolean var2, Function1<? super GxFavoritesPage.Slot, GxFavoritesPage.Slot> var3) {
         if (!this.saving) {
             GxFavoritesPage.Slot var6 = this.slots.get(var1);
-            JSONObject var9 = (JSONObject)var3.invoke(var6);
-            List var5 = var9;
+            Object var9 = (JSONObject)var3.invoke(var6);
+            Object var5 = var9;
             if (var2) {
                 var2 = Intrinsics.areEqual(((GxFavoritesPage.Slot)var9).getKey(), this.setSpeed);
                 var5 = (GxFavoritesPage.Slot)var9;
                 if (var2) {
                     if (Intrinsics.areEqual(var6.getKey(), this.setSpeed)) {
-                        var9 = var6.getValue();
+                        var9 = ((JSONObject) var6.getValue());
                     } else {
                         var9 = 30;
                     }
@@ -681,14 +681,14 @@ public final class GxFavoritesPage extends GxPage {
                 var5 = GxFavoritesPage.Slot.copy$default((GxFavoritesPage.Slot)var5, false, false, null, var9, null, 23, null);
             }
 
-            GxFavoritesPage.Slot var7 = (GxFavoritesPage.Slot)var5;
+            Object var7 = (GxFavoritesPage.Slot)var5;
             if (((GxFavoritesPage.Slot)var5).getKey() == null) {
                 var9 = "";
             } else {
                 label39: {
                     var9 = this.optionByKey(((GxFavoritesPage.Slot)var5).getKey());
                     if (var9 != null) {
-                        String var13 = var9.optString("label");
+                        String var13 = ((JSONObject) var9).optString("label");
                         if (var13 != null) {
                             var var14 = var13;
                             boolean var4;
@@ -715,10 +715,10 @@ public final class GxFavoritesPage extends GxPage {
                 }
             }
 
-            GxFavoritesPage.Slot var15 = GxFavoritesPage.Slot.copy$default(var7, false, false, null, null, (String)var9, 15, null);
+            GxFavoritesPage.Slot var15 = GxFavoritesPage.Slot.copy$default(((Slot) var7), false, false, null, null, (String)var9, 15, null);
             var5 = CollectionsKt.toMutableList(this.slots);
-            var5.set(var1, var15);
-            this.slots = var5;
+            ((List) var5).set(var1, var15);
+            this.slots = ((List<Slot>) var5);
             this.saveSlots();
         }
     }
@@ -742,7 +742,7 @@ public final class GxFavoritesPage extends GxPage {
             if (var4 != null) {
                 var2 = var4.optJSONObject("updated");
                 if (var2 != null) {
-                    var0.mergeValues(var2);
+                    var0.mergeValues(((JSONObject) var2));
                 }
             }
 
@@ -750,7 +750,7 @@ public final class GxFavoritesPage extends GxPage {
                 if (var4 != null) {
                     var2 = var4.optString("message");
                     if (var2 != null) {
-                        CharSequence var12 = var2;
+                        CharSequence var12 = ((CharSequence) var2);
                         CharSequence var9 = var12;
                         if (StringsKt.isBlank(var12)) {
                             var9 = null;
@@ -767,7 +767,7 @@ public final class GxFavoritesPage extends GxPage {
                 var2 = "Parameter '" + var1 + "' updated.";
             }
 
-            var0.toast(var2);
+            var0.toast(((String) var2));
             GalaxyApi var5 = var0.getApi();
             if (var5 != null) {
                 GalaxyApi.refreshValues$default(var5, null, 1, null);
@@ -1273,7 +1273,7 @@ public final class GxFavoritesPage extends GxPage {
             }
         } while (!var2);
 
-        GalaxyApi.Category var27 = var20;
+        GalaxyApi.Category var27 = ((Category) var20);
         var20 = var27;
         if (var27 == null) {
             if (Intrinsics.areEqual(var4, "LongitudinalControlMode")) {
@@ -1468,7 +1468,7 @@ public final class GxFavoritesPage extends GxPage {
 
             @Override // android.text.TextWatcher
             public void afterTextChanged(Editable s) {
-                GxFavoritesPage.chooseControl$renderList($this$chooseControl_u24lambda_u2465, $this$chooseControl_u24lambda_u2463, cats, $this$chooseControl_u24lambda_u2464, this, layoutOrder, expanded, cur, dlg, index, $this$chooseControl_u24lambda_u2469);
+                GxFavoritesPage.chooseControl$renderList($this$chooseControl_u24lambda_u2465, $this$chooseControl_u24lambda_u2463, cats, $this$chooseControl_u24lambda_u2464, GxFavoritesPage.this, layoutOrder, expanded, cur, dlg, index, $this$chooseControl_u24lambda_u2469);
                 $this$chooseControl_u24lambda_u2466.scrollTo(0, 0);
             }
         });
@@ -1581,302 +1581,128 @@ public final class GxFavoritesPage extends GxPage {
         return Slot.copy$default(it, false, false, str, null, null, 27, null);
     }
 
-    /* VF: from Vineflower (jadx: Removed duplicated region;Type inference failed;incorrect) */
-    public static final void chooseControl$renderList(
-        LinearLayout var0,
-        EditText var1,
-        Map<JSONObject, ? extends Pair<String, ? extends List<String>>> var2,
-        TextView var3,
-        GxFavoritesPage var4,
-        List<String> var5,
-        HashSet<String> var6,
-        String var7,
-        AlertDialog var8,
-        int var9,
-        HashMap<String, Integer> var10
-    ) {
-        var0.removeAllViews();
-        String var17 = StringsKt.trim(var1.getText().toString()).toString();
-        Locale var15 = Locale.ROOT;
-        String var16 = "ROOT";
-        Intrinsics.checkNotNullExpressionValue(var15, "ROOT");
-        var17 = var17.toLowerCase(var15);
-        String var32 = "toLowerCase(...)";
-        Intrinsics.checkNotNullExpressionValue(var17, "toLowerCase(...)");
-        CharSequence var49 = var17;
-        Regex var18 = new Regex("\\s+");
-        Iterable var55 = var18.split(var49, 0);
-        var var50 = new ArrayList();
-
-        for (Object var56 : var55) {
-            boolean var11;
-            if (((String)var56).length() > 0) {
-                var11 = true;
-            } else {
-                var11 = false;
-            }
-
-            if (var11) {
-                var50.add(var56);
+    public static final void chooseControl$renderList(final LinearLayout list, final EditText search, final Map<JSONObject, ? extends Pair<String, ? extends List<String>>> map, final TextView count, final GxFavoritesPage this$0, final List<String> list2, final HashSet<String> hashSet, final String cur, final AlertDialog dlg, final int $index, final HashMap<String, Integer> hashMap) {
+        list.removeAllViews();
+        String needle = StringsKt.trim((CharSequence) search.getText().toString()).toString().toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(needle, "toLowerCase(...)");
+        final List<String> q = new ArrayList<>();
+        for (String w : new Regex("\\s+").split(needle, 0)) {
+            if (w.length() > 0) {
+                q.add(w);
             }
         }
+        // every search word somewhere in the control's label, key, descriptions, category or path
+        List<JSONObject> matches = new ArrayList<>();
+        for (JSONObject o : map.keySet()) {
+            Pair<String, ? extends List<String>> cp = map.get(o);
+            Intrinsics.checkNotNull(cp);
+            String cn = cp.component1();
+            List<String> path = cp.component2();
+            String hay = CollectionsKt.joinToString$default(CollectionsKt.plus((Collection) CollectionsKt.listOf(new String[]{o.optString("label"), o.optString("key"), o.optString("description"), o.optString("picker_label"), o.optString("picker_description"), cn}), (Iterable) path), " ", null, null, 0, null, null, 62, null).toLowerCase(Locale.ROOT);
+            Intrinsics.checkNotNullExpressionValue(hay, "toLowerCase(...)");
+            boolean all = true;
+            for (String w : q) {
+                if (!StringsKt.contains$default((CharSequence) hay, (CharSequence) w, false, 2, (Object) null)) {
+                    all = false;
+                    break;
+                }
+            }
+            if (all) {
+                matches.add(o);
+            }
+        }
+        count.setText(this$0.saving ? "Selection is currently unavailable." : matches.size() + " " + (matches.size() == 1 ? "control" : "controls"));
+        chooseControl$item(this$0, list, cur, dlg, $index, null, "");
+        List<String> catsOfMatches = new ArrayList<>();
+        for (JSONObject o : matches) {
+            Pair<String, ? extends List<String>> cp = map.get(o);
+            Intrinsics.checkNotNull(cp);
+            catsOfMatches.add(cp.getFirst());
+        }
+        Set available = CollectionsKt.toSet(catsOfMatches);
+        List<String> known = new ArrayList<>();
+        for (String c : list2) {
+            if (available.contains(c)) {
+                known.add(c);
+            }
+        }
+        List<String> orderedCats = CollectionsKt.distinct(CollectionsKt.plus((Collection) known, (Iterable) available));
+        for (final String cn2 : orderedCats) {
+            List<JSONObject> items = new ArrayList<>();
+            for (JSONObject o : matches) {
+                Pair<String, ? extends List<String>> cp = map.get(o);
+                Intrinsics.checkNotNull(cp);
+                if (Intrinsics.areEqual(cp.getFirst(), cn2)) {
+                    items.add(o);
+                }
+            }
+            if (items.isEmpty()) {
+                continue;
+            }
+            boolean open = !q.isEmpty() || hashSet.contains(cn2);
+            TextView head = new TextView(this$0.getAct());
+            head.setText((open ? "▾" : "▸") + "  " + cn2 + " (" + items.size() + ")");
+            head.setTextSize(18.0f);
+            head.setTextColor(CarUi.Companion.getACCENT());
+            head.setTypeface(Typeface.DEFAULT_BOLD);
+            head.setMinHeight(this$0.getUi().dp(56));
+            head.setGravity(16);
+            head.setPadding(this$0.getUi().dp(6), this$0.getUi().dp(6), this$0.getUi().dp(6), this$0.getUi().dp(6));
+            head.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda13
+                @Override // android.view.View.OnClickListener
+                public final void onClick(View view) {
+                    GxFavoritesPage.chooseControl$renderList$lambda$86(q, hashSet, cn2, list, search, map, count, this$0, list2, cur, dlg, $index, hashMap, view);
+                }
+            });
+            list.addView(head);
+            if (!open) {
+                continue;
+            }
+            // in a category: by the first path step's place in the settings, then by the whole path
+            final Comparator<JSONObject> byFirst = new Comparator<JSONObject>() {
+                private int rank(JSONObject o) {
+                    Pair<String, ? extends List<String>> cp = map.get(o);
+                    Intrinsics.checkNotNull(cp);
+                    List<String> p = cp.getSecond();
+                    if (p.isEmpty()) {
+                        return -1;
+                    }
+                    Integer n = hashMap.get(p.get(0));
+                    return n != null ? n.intValue() : Integer.MAX_VALUE;
+                }
 
-        List var21 = var50;
-        Iterable var51 = var2.keySet();
-        boolean var14 = false;
-        var var23 = new ArrayList();
-
-        for (Object var24 : var51) {
-            JSONObject var57 = (JSONObject)var24;
-            Object var68 = var2.get(var57);
-            Intrinsics.checkNotNull(var68);
-            Pair var20 = (Pair)var68;
-            var68 = (String)var20.component1();
-            List var25 = (List)var20.component2();
-            String[] var75 = new String[]{
-                var57.optString("label"),
-                var57.optString("key"),
-                var57.optString("description"),
-                var57.optString("picker_label"),
-                var57.optString("picker_description"),
-                (String)var68
+                @Override // java.util.Comparator
+                public final int compare(JSONObject a, JSONObject b) {
+                    return ComparisonsKt.compareValues(Integer.valueOf(rank(a)), Integer.valueOf(rank(b)));
+                }
             };
-            String var58 = CollectionsKt.joinToString(CollectionsKt.plus(CollectionsKt.listOf(var75), var25), " ", "", "", -1, "...", null);
-            var68 = Locale.ROOT;
-            Intrinsics.checkNotNullExpressionValue(var68, var16);
-            String var26 = var58.toLowerCase((Locale)var68);
-            Intrinsics.checkNotNullExpressionValue(var26, var32);
-            var var76 = var21;
-            boolean var29;
-            Iterable var34;
-            if (var76 instanceof Collection && ((Collection)var76).isEmpty()) {
-                var17 = var16;
-                var29 = true;
-                var34 = var51;
-                var16 = var32;
-            } else {
-                Iterator var86 = var76.iterator();
-
-                while (true) {
-                    if (!var86.hasNext()) {
-                        var29 = true;
-                        var17 = var16;
-                        var16 = var32;
-                        var34 = var51;
-                        break;
+            List<JSONObject> sorted = CollectionsKt.sortedWith(items, new Comparator<JSONObject>() {
+                @Override // java.util.Comparator
+                public final int compare(JSONObject a, JSONObject b) {
+                    int c = byFirst.compare(a, b);
+                    if (c != 0) {
+                        return c;
                     }
-
-                    String var59 = (String)var86.next();
-                    CharSequence var27 = var26;
-                    CharSequence var33 = var59;
-                    if (!StringsKt.contains(var27, var33, false)) {
-                        var29 = false;
-                        var34 = var51;
-                        var16 = var32;
-                        var17 = var16;
-                        break;
-                    }
-
-                    var32 = var32;
-                    var16 = var16;
-                    var51 = var51;
+                    Pair<String, ? extends List<String>> pa = map.get(a);
+                    Intrinsics.checkNotNull(pa);
+                    Pair<String, ? extends List<String>> pb = map.get(b);
+                    Intrinsics.checkNotNull(pb);
+                    return ComparisonsKt.compareValues(CollectionsKt.joinToString$default(pa.getSecond(), "/", null, null, 0, null, null, 62, null), CollectionsKt.joinToString$default(pb.getSecond(), "/", null, null, 0, null, null, 62, null));
                 }
-            }
-
-            if (var29) {
-                var23.add(var24);
-            }
-
-            var16 = var17;
-            var51 = var34;
-            var32 = var16;
-        }
-
-        byte var30 = 6;
-        List var54 = var23;
-        CharSequence var35;
-        if (var4.saving) {
-            var35 = "Selection is currently unavailable.";
-        } else {
-            int var12 = var54.size();
-            String var36;
-            if (var54.size() == 1) {
-                var36 = "control";
-            } else {
-                var36 = "controls";
-            }
-
-            var35 = var12 + " " + var36;
-        }
-
-        var3.setText(var35);
-        chooseControl$item(var4, var0, var7, var8, var9, null, "");
-        Iterable var41 = var54;
-        var var37 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var41, 10));
-        Iterator var42 = var41.iterator();
-
-        while (var42.hasNext()) {
-            Object var64 = var2.get((JSONObject)var42.next());
-            Intrinsics.checkNotNull(var64);
-            var37.add((String)((Pair)var64).getFirst());
-        }
-
-        List var38 = var37;
-        Set var39 = CollectionsKt.toSet(var38);
-        Iterable var65 = var5;
-        var var43 = new ArrayList();
-
-        for (Object var66 : var65) {
-            if (var39.contains((String)var66)) {
-                var43.add(var66);
+            });
+            for (JSONObject o2 : sorted) {
+                Pair<String, ? extends List<String>> cp = map.get(o2);
+                Intrinsics.checkNotNull(cp);
+                chooseControl$item(this$0, list, cur, dlg, $index, o2, CollectionsKt.joinToString$default(CollectionsKt.plus((Collection) CollectionsKt.listOf(cn2), (Iterable) cp.getSecond()), " · ", null, null, 0, null, null, 62, null));
             }
         }
-
-        List var44 = var43;
-
-        for (String var74 : CollectionsKt.distinct(CollectionsKt.plus(var44, var39))) {
-            Iterable var77 = var54;
-            var var45 = new ArrayList();
-
-            for (Object var81 : var77) {
-                Object var84 = var2.get((JSONObject)var81);
-                Intrinsics.checkNotNull(var84);
-                if (Intrinsics.areEqual(((Pair)var84).getFirst(), var74)) {
-                    var45.add(var81);
-                }
-            }
-
-            List var82 = var45;
-            if (!var82.isEmpty()) {
-                boolean var31;
-                if (var21.isEmpty() && !var6.contains(var74)) {
-                    var31 = false;
-                } else {
-                    var31 = true;
-                }
-
-                TextView var79 = new TextView((Context)var4.getAct());
-                if (var31) {
-                    var16 = "▾";
-                } else {
-                    var16 = "▸";
-                }
-
-                int var13 = var82.size();
-                var79.setText(var16 + "  " + var74 + " (" + var13 + ")");
-                var79.setTextSize(18.0F);
-                var79.setTextColor(CarUi.Companion.getACCENT());
-                var79.setTypeface(Typeface.DEFAULT_BOLD);
-                var79.setMinHeight(var4.getUi().dp(56));
-                var79.setGravity(16);
-                var79.setPadding(var4.getUi().dp(var30), var4.getUi().dp(var30), var4.getUi().dp(var30), var4.getUi().dp(var30));
-                var79.setOnClickListener(
-                    new GxFavoritesPage$$ExternalSyntheticLambda13(var21, var6, var74, var0, var1, var2, var3, var4, var5, var7, var8, var9, var10)
-                );
-                var0.addView((View)var79);
-                if (var31) {
-                    for (JSONObject var85 : CollectionsKt.sortedWith(
-                        var82,
-                        new Comparator() {
-                            final Map $cats$inlined = var2;
-                            final Comparator $this_thenBy = new Comparator(var2, var10) {
-                            final Map $cats$inlined;
-                            final HashMap $paramOrder$inlined;
-
-                            {
-                                GxFavoritesPage.this.$cats$inlined = var1;
-                                GxFavoritesPage.this.$paramOrder$inlined = var2x;
-                            }
-
-                            @Override
-                            public final int compare(T var1, T var2) {
-                                var1 = (JSONObject)var1;
-                                var1 = GxFavoritesPage.this.$cats$inlined.get(var1);
-                                Intrinsics.checkNotNull(var1);
-                                var1 = (List)((Pair)var1).getSecond();
-                                boolean var5 = var1.isEmpty();
-                                int var4 = Integer.MAX_VALUE;
-                                Integer var6 = -1;
-                                Comparable var10;
-                                if (var5) {
-                                    var10 = var6;
-                                } else {
-                                    Integer var11 = (Integer)GxFavoritesPage.this.$paramOrder$inlined.get(var1.get(0));
-                                    int var3;
-                                    if (var11 != null) {
-                                        var3 = var11;
-                                    } else {
-                                        var3 = Integer.MAX_VALUE;
-                                    }
-
-                                    var10 = var3;
-                                }
-
-                                var2 = (JSONObject)var2;
-                                var2 = GxFavoritesPage.this.$cats$inlined.get(var2);
-                                Intrinsics.checkNotNull(var2);
-                                var2 = (List)((Pair)var2).getSecond();
-                                Comparable var15;
-                                if (var2.isEmpty()) {
-                                    var15 = var6;
-                                } else {
-                                    Integer var16 = (Integer)GxFavoritesPage.this.$paramOrder$inlined.get(var2.get(0));
-                                    int var17 = var4;
-                                    if (var16 != null) {
-                                        var17 = var16;
-                                    }
-
-                                    var15 = var17;
-                                }
-
-                                return ComparisonsKt.compareValues((T)var10, (T)var15);
-                            }
-                        };
-
-                            @Override
-                            public final int compare(T var1, T var2x) {
-                                int var3x = this.$this_thenBy.compare(var1, (Comparable)var2x);
-                                if (var3x == 0) {
-                                    var1 = (JSONObject)var1;
-                                    var1 = this.$cats$inlined.get(var1);
-                                    Intrinsics.checkNotNull(var1);
-                                    var1 = CollectionsKt.joinToString((Iterable)((Pair)var1).getSecond(), "/", "", "", -1, "...", null);
-                                    var2x = (JSONObject)var2x;
-                                    var2x = this.$cats$inlined.get(var2x);
-                                    Intrinsics.checkNotNull(var2x);
-                                    var3x = ComparisonsKt.compareValues(
-                                        var1, CollectionsKt.joinToString((Iterable)((Pair)var2x).getSecond(), "/", "", "", -1, "...", null)
-                                    );
-                                }
-
-                                return var3x;
-                            }
-                        }
-                    )) {
-                        Collection var47 = CollectionsKt.listOf(var74);
-                        Object var83 = var2.get(var85);
-                        Intrinsics.checkNotNull(var83);
-                        chooseControl$item(
-                            var4,
-                            var0,
-                            var7,
-                            var8,
-                            var9,
-                            var85,
-                            CollectionsKt.joinToString(CollectionsKt.plus(var47, (Iterable)((Pair)var83).getSecond()), " · ", "", "", -1, "...", null)
-                        );
-                    }
-                }
-            }
-        }
-
-        if (var54.isEmpty()) {
-            TextView var28 = new TextView((Context)var4.getAct());
-            var28.setText("No matching controls. Try another search.");
-            var28.setTextSize(16.0F);
-            var28.setTextColor(CarUi.Companion.getDIM());
-            var28.setPadding(0, var4.getUi().dp(10), 0, var4.getUi().dp(10));
-            var0.addView((View)var28);
+        if (matches.isEmpty()) {
+            TextView none = new TextView(this$0.getAct());
+            none.setText("No matching controls. Try another search.");
+            none.setTextSize(16.0f);
+            none.setTextColor(CarUi.Companion.getDIM());
+            none.setPadding(0, this$0.getUi().dp(10), 0, this$0.getUi().dp(10));
+            list.addView(none);
         }
     }
 

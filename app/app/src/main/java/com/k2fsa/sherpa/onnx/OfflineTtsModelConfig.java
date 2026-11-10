@@ -20,55 +20,14 @@ public final /* data */ class OfflineTtsModelConfig {
         this(null, null, null, null, null, null, null, 0, false, null, 1023, null);
     }
 
-    /* renamed from: component1, reason: from getter */
-    public final OfflineTtsVitsModelConfig getVits() {
-        return this.vits;
-    }
 
-    /* renamed from: component10, reason: from getter */
-    public final String getProvider() {
-        return this.provider;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final OfflineTtsMatchaModelConfig getMatcha() {
-        return this.matcha;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final OfflineTtsKokoroModelConfig getKokoro() {
-        return this.kokoro;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final OfflineTtsZipVoiceModelConfig getZipvoice() {
-        return this.zipvoice;
-    }
 
-    /* renamed from: component5, reason: from getter */
-    public final OfflineTtsKittenModelConfig getKitten() {
-        return this.kitten;
-    }
 
-    /* renamed from: component6, reason: from getter */
-    public final OfflineTtsPocketModelConfig getPocket() {
-        return this.pocket;
-    }
 
-    /* renamed from: component7, reason: from getter */
-    public final OfflineTtsSupertonicModelConfig getSupertonic() {
-        return this.supertonic;
-    }
 
-    /* renamed from: component8, reason: from getter */
-    public final int getNumThreads() {
-        return this.numThreads;
-    }
-
-    /* renamed from: component9, reason: from getter */
-    public final boolean getDebug() {
-        return this.debug;
-    }
 
     public final OfflineTtsModelConfig copy(OfflineTtsVitsModelConfig vits, OfflineTtsMatchaModelConfig matcha, OfflineTtsKokoroModelConfig kokoro, OfflineTtsZipVoiceModelConfig zipvoice, OfflineTtsKittenModelConfig kitten, OfflineTtsPocketModelConfig pocket, OfflineTtsSupertonicModelConfig supertonic, int numThreads, boolean debug, String provider) {
         Intrinsics.checkNotNullParameter(vits, "vits");

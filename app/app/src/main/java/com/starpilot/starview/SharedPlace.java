@@ -134,14 +134,14 @@ public final class SharedPlace {
             boolean var4 = true;
             if (!var5) {
                 List var61 = var6;
-                String var59 = CollectionsKt.getOrNull(var61, 0);
+                String var59 = ((String) CollectionsKt.getOrNull(var61, 0));
                 String var51 = "";
                 String var46 = var59;
                 if (var59 == null) {
                     var46 = "";
                 }
 
-                String var62 = CollectionsKt.getOrNull(var61, 1);
+                String var62 = ((String) CollectionsKt.getOrNull(var61, 1));
                 var59 = var62;
                 if (var62 == null) {
                     var59 = "";
@@ -177,11 +177,11 @@ public final class SharedPlace {
                 var1 = NUM;
                 Regex var16 = new Regex("!3d" + var52 + "!4d" + var1);
                 Intrinsics.checkNotNull(var64);
-                if (!parse$take(var11, var10, var16.find(var64, 0))) {
+                if (!parse$take(var11, var10, var16.find(((CharSequence) var64), 0))) {
                     label150: {
                         String var53 = NUM;
                         var1 = NUM;
-                        var18 = (new Regex("^geo:" + var53 + "," + var1)).find(var64, 0);
+                        var18 = (new Regex("^geo:" + var53 + "," + var1)).find(((CharSequence) var64), 0);
                         if (var18 != null) {
                             boolean var37;
                             if (Double.parseDouble(var18.getGroupValues().get(1)) == 0.0) {
@@ -215,18 +215,18 @@ public final class SharedPlace {
                         var18 = null;
                     }
 
-                    if (!parse$take(var11, var10, var18)) {
+                    if (!parse$take(var11, var10, ((MatchResult) var18))) {
                         String var54 = NUM;
                         var1 = NUM;
                         if (!parse$take(
-                            var11, var10, (new Regex("[?&](?:q|ll|query|destination|daddr|sll)=" + var54 + ",\\s*" + var1)).find(var64, 0)
+                            var11, var10, (new Regex("[?&](?:q|ll|query|destination|daddr|sll)=" + var54 + ",\\s*" + var1)).find(((CharSequence) var64), 0)
                         )) {
                             String var55 = NUM;
                             var1 = NUM;
-                            if (!parse$take(var11, var10, (new Regex("geo:0,0\\?q=" + var55 + "," + var1)).find(var64, 0))) {
+                            if (!parse$take(var11, var10, (new Regex("geo:0,0\\?q=" + var55 + "," + var1)).find(((CharSequence) var64), 0))) {
                                 String var56 = NUM;
                                 var1 = NUM;
-                                parse$take(var11, var10, (new Regex("@" + var56 + "," + var1)).find(var64, 0));
+                                parse$take(var11, var10, (new Regex("@" + var56 + "," + var1)).find(((CharSequence) var64), 0));
                             }
                         }
                     }
@@ -241,16 +241,16 @@ public final class SharedPlace {
 
                 Object var23;
                 if (var40) {
-                    var23 = (new Regex("/place/([^/@]+)")).find(var64, 0);
+                    var23 = (new Regex("/place/([^/@]+)")).find(((CharSequence) var64), 0);
                     if (var23 != null) {
                         var23 = StringsKt.replace(var23.getGroupValues().get(1), '+', ' ', false);
                     } else {
-                        var23 = (new Regex("\\(([^)]+)\\)\\s*$")).find(var64, 0);
+                        var23 = (new Regex("\\(([^)]+)\\)\\s*$")).find(((CharSequence) var64), 0);
                         if (var23 != null) {
                             var23 = var23.getGroupValues().get(1);
                         } else {
                             label134: {
-                                var23 = (new Regex("[?&](?:q|query|address|daddr)=([^&]+)")).find(var64, 0);
+                                var23 = (new Regex("[?&](?:q|query|address|daddr)=([^&]+)")).find(((CharSequence) var64), 0);
                                 if (var23 != null) {
                                     List var26 = var23.getGroupValues();
                                     if (var26 != null) {
@@ -292,7 +292,7 @@ public final class SharedPlace {
 
                     var47 = var23;
                     if (var40) {
-                        MatchResult var32 = (new Regex("[?&]q=([^&(]+)")).find(var64, 0);
+                        MatchResult var32 = (new Regex("[?&]q=([^&(]+)")).find(((CharSequence) var64), 0);
                         var47 = var23;
                         if (var32 != null) {
                             var47 = StringsKt.trim(StringsKt.replace(var32.getGroupValues().get(1), '+', ' ', false)).toString();

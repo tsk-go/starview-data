@@ -157,7 +157,7 @@ public final class VoiceNote {
             Thread $this$start_u24lambda_u243 = new Thread(new Runnable() { // from class: com.starpilot.starview.VoiceNote$$ExternalSyntheticLambda1
                 @Override // java.lang.Runnable
                 public final void run() {
-                    VoiceNote.start$lambda$2(out, this, r, rate);
+                    VoiceNote.start$lambda$2(out, VoiceNote.this, r, rate);
                 }
             });
             $this$start_u24lambda_u243.start();

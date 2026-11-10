@@ -261,7 +261,7 @@ public final class SettingsHomeView extends LinearLayout {
             $this$showHistory_u24lambda_u2416.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SettingsHomeView$$ExternalSyntheticLambda6
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
-                    SettingsHomeView.showHistory$lambda$16$lambda$15($this$showHistory_u24lambda_u2416, past, this, view);
+                    SettingsHomeView.showHistory$lambda$16$lambda$15($this$showHistory_u24lambda_u2416, past, SettingsHomeView.this, view);
                 }
             });
             head.addView($this$showHistory_u24lambda_u2416);
@@ -271,7 +271,7 @@ public final class SettingsHomeView extends LinearLayout {
             this.results.addView(this.ui.note("What you search for here is kept on the tablet, so it's one tap next time."));
             return;
         }
-        for (final SearchHistory.Item h : past) {
+        for (final SearchHistory.Item h : ((Item) past)) {
             CarUi carUi = this.ui;
             String text = h.getText();
             String str = h.getCount() > 1 ? "searched " + h.getCount() + " times" : "searched once";

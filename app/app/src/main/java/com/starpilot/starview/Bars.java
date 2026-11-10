@@ -61,7 +61,7 @@ public final class Bars extends View {
         float m = Math.max(maxOrNull != null ? maxOrNull.floatValue() : 1.0f, 0.001f);
         float slot = w / Math.max(this.values.size(), 1);
         float bw = slot * 0.6f;
-        Iterator<T> it2 = this.values.iterator();
+        Iterator it2 = this.values.iterator();
         int i2 = 0;
         while (it2.hasNext()) {
             int i3 = i2;

@@ -409,7 +409,7 @@ public final class FilesActivity extends AppCompatActivity {
                         if (var2.equals("date")) {
                             var5 = new Comparator() {
                                 @Override
-                                public final int compare(T var1, T var2x) {
+                                public final int compare(Object var1, Object var2x) {
                                     return ComparisonsKt.compareValues(((FilesActivity.Entry)var1).getMtime(), ((FilesActivity.Entry)var2x).getMtime());
                                 }
                             };
@@ -420,7 +420,7 @@ public final class FilesActivity extends AppCompatActivity {
                         if (var2.equals("size")) {
                             var5 = new Comparator() {
                                 @Override
-                                public final int compare(T var1, T var2) {
+                                public final int compare(Object var1, Object var2) {
                                     return ComparisonsKt.compareValues(((FilesActivity.Entry)var1).getSize(), ((FilesActivity.Entry)var2).getSize());
                                 }
                             };
@@ -432,10 +432,10 @@ public final class FilesActivity extends AppCompatActivity {
                             var5 = new Comparator() {
                                 final Comparator $this_thenBy = new Comparator() {
                                 @Override
-                                public final int compare(T var1, T var2) {
+                                public final int compare(Object var1, Object var2) {
                                     var1 = StringsKt.substringAfterLast(((FilesActivity.Entry)var1).getName(), '.', "").toLowerCase(Locale.ROOT);
                                     Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-                                    Comparable var4 = var1;
+                                    Comparable var4 = ((Comparable) var1);
                                     var2 = StringsKt.substringAfterLast(((FilesActivity.Entry)var2).getName(), '.', "").toLowerCase(Locale.ROOT);
                                     Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
                                     return ComparisonsKt.compareValues(var4, var2);
@@ -443,12 +443,12 @@ public final class FilesActivity extends AppCompatActivity {
                             };
 
                                 @Override
-                                public final int compare(T var1, T var2) {
+                                public final int compare(Object var1, Object var2) {
                                     int var3 = this.$this_thenBy.compare(var1, var2);
                                     if (var3 == 0) {
                                         var1 = ((FilesActivity.Entry)var1).getName().toLowerCase(Locale.ROOT);
                                         Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-                                        Comparable var5 = var1;
+                                        Comparable var5 = ((Comparable) var1);
                                         var2 = ((FilesActivity.Entry)var2).getName().toLowerCase(Locale.ROOT);
                                         Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
                                         var3 = ComparisonsKt.compareValues(var5, var2);
@@ -463,10 +463,10 @@ public final class FilesActivity extends AppCompatActivity {
 
                 var5 = new Comparator() {
                     @Override
-                    public final int compare(T var1, T var2) {
+                    public final int compare(Object var1, Object var2) {
                         var1 = ((FilesActivity.Entry)var1).getName().toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-                        Comparable var4 = var1;
+                        Comparable var4 = ((Comparable) var1);
                         var2 = ((FilesActivity.Entry)var2).getName().toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
                         return ComparisonsKt.compareValues(var4, var2);
@@ -476,7 +476,7 @@ public final class FilesActivity extends AppCompatActivity {
 
             Comparator var3 = new Comparator() {
                 @Override
-                public final int compare(T var1, T var2) {
+                public final int compare(Object var1, Object var2) {
                     return ComparisonsKt.compareValues(((FilesActivity.Entry)var1).getDir() ^ true, ((FilesActivity.Entry)var2).getDir() ^ true);
                 }
             };
@@ -635,7 +635,7 @@ public final class FilesActivity extends AppCompatActivity {
             $this$build_u24lambda_u2423.setTextSize(12.0f);
             $this$build_u24lambda_u2423.setPadding(0, 0, filesActivity4.dp(8), 0);
             sortBar.addView($this$build_u24lambda_u2423);
-            for (final String k : CollectionsKt.listOf((Object[]) new String[]{"name", "size", "date", "type"})) {
+            for (final String k : ((String) CollectionsKt.listOf((Object[]) new String[]{"name", "size", "date", "type"}))) {
                 TextView $this$build_u24lambda_u2425 = new TextView(this.this$0);
                 FilesActivity filesActivity5 = this.this$0;
                 $this$build_u24lambda_u2425.setTextSize(f);
@@ -762,7 +762,7 @@ public final class FilesActivity extends AppCompatActivity {
                     executorService.execute(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda16
                         @Override // java.lang.Runnable
                         public final void run() {
-                            FilesActivity.Pane.refresh$lambda$32(FilesActivity.this, h, this);
+                            FilesActivity.Pane.refresh$lambda$32(FilesActivity.this, h, FilesActivity.Pane.this);
                         }
                     });
                     return;
@@ -1046,14 +1046,14 @@ public final class FilesActivity extends AppCompatActivity {
         public static final void deleteSelected$lambda$47$lambda$46(List var0, FilesActivity var1, FilesActivity.Pane var2) {
             ObjectRef var3 = new ObjectRef();
 
-            for (String var4 : var0) {
+            for (String var4 : ((String) var0)) {
                 try {
                     JSONObject var5 = new JSONObject();
                     JSONObject var8 = var5.put("op", "delete").put("path", var1.join(var2.path, var4));
                     Intrinsics.checkNotNullExpressionValue(var8, "put(...)");
                     var1.opSync(var8);
                 } catch (Exception var6) {
-                    var3.element = (T)var6.getMessage();
+                    var3.element = var6.getMessage();
                 }
             }
 
@@ -1125,7 +1125,7 @@ public final class FilesActivity extends AppCompatActivity {
             executorService.execute(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda18
                 @Override // java.lang.Runnable
                 public final void run() {
-                    FilesActivity.Pane.openSelected$lambda$58(kind, this, filesActivity, full, e);
+                    FilesActivity.Pane.openSelected$lambda$58(kind, FilesActivity.Pane.this, filesActivity, full, e);
                 }
             });
         }
@@ -1279,7 +1279,7 @@ public final class FilesActivity extends AppCompatActivity {
             title.setItems(charSequenceArr, new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda14
                 @Override // android.content.DialogInterface.OnClickListener
                 public final void onClick(DialogInterface dialogInterface, int i) {
-                    FilesActivity.Pane.goToPathDialog$lambda$61(shortcuts, this, filesActivity, dialogInterface, i);
+                    FilesActivity.Pane.goToPathDialog$lambda$61(shortcuts, FilesActivity.Pane.this, filesActivity, dialogInterface, i);
                 }
             }).show();
         }
@@ -2075,7 +2075,7 @@ public final class FilesActivity extends AppCompatActivity {
         String str5;
         String str6;
         String str7;
-        final Pane pane2 = $dst;
+        Pane pane2 = $dst;
         String t = $h;
         Pane pane3 = $src;
         String str8 = "rel";
@@ -2108,9 +2108,9 @@ public final class FilesActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    final ArrayList<Job> jobs = new ArrayList();
+                    ArrayList<Job> jobs = new ArrayList();
                     ArrayList dirs2 = new ArrayList();
-                    final Ref.ObjectRef applyAll2 = new Ref.ObjectRef();
+                    Ref.ObjectRef applyAll2 = new Ref.ObjectRef();
                     Iterator it2 = $names.iterator();
                     while (it2.hasNext()) {
                         try {
@@ -2505,13 +2505,13 @@ public final class FilesActivity extends AppCompatActivity {
                                 Boolean.valueOf(new File(dd).mkdirs());
                             }
                         }
-                        final long total = 0;
+                        long total = 0;
                         for (Job it7 : jobs) {
                             total += it7.getSize();
                         }
                         final Ref.LongRef doneBytes = new Ref.LongRef();
                         final long t0 = System.nanoTime();
-                        final CountDownLatch latch = new CountDownLatch(1);
+                        CountDownLatch latch = new CountDownLatch(1);
                         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda1
                             @Override // java.lang.Runnable
                             public final void run() {
@@ -2830,7 +2830,7 @@ public final class FilesActivity extends AppCompatActivity {
     /* VF: from Vineflower (jadx: ) */
     public static final Unit startCopy$lambda$51$lambda$36(ObjectRef var0, FilesActivity.Clash var1) {
         Intrinsics.checkNotNullParameter(var1, "it");
-        var0.element = (T)var1;
+        var0.element = var1;
         return Unit.INSTANCE;
     }
 
@@ -2968,7 +2968,7 @@ public final class FilesActivity extends AppCompatActivity {
         SKIP,
         CANCEL;
 
-        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(values());
 
         public static EnumEntries<Clash> getEntries() {
             return $ENTRIES;
@@ -2981,7 +2981,7 @@ public final class FilesActivity extends AppCompatActivity {
     ) {
         CountDownLatch var7 = new CountDownLatch(1);
         ObjectRef var8 = new ObjectRef();
-        var8.element = (T)FilesActivity.Clash.CANCEL;
+        var8.element = FilesActivity.Clash.CANCEL;
         this.ui.post(new FilesActivity$$ExternalSyntheticLambda18(this, var3, var2, var1, var4, var5, var8, var6, var7));
         var7.await();
         return (FilesActivity.Clash)var8.element;
@@ -3033,7 +3033,7 @@ public final class FilesActivity extends AppCompatActivity {
 
     /* VF: from Vineflower (jadx: Type inference failed) */
     public static final void askClash$lambda$60$lambda$54(ObjectRef var0, CheckBox var1, Function1 var2, CountDownLatch var3, DialogInterface var4, int var5) {
-        var0.element = (T)FilesActivity.Clash.REPLACE;
+        var0.element = FilesActivity.Clash.REPLACE;
         if (var1.isChecked()) {
             var2.invoke(var0.element);
         }
@@ -3043,7 +3043,7 @@ public final class FilesActivity extends AppCompatActivity {
 
     /* VF: from Vineflower (jadx: Type inference failed) */
     public static final void askClash$lambda$60$lambda$55(ObjectRef var0, CheckBox var1, Function1 var2, CountDownLatch var3, DialogInterface var4, int var5) {
-        var0.element = (T)FilesActivity.Clash.KEEP_BOTH;
+        var0.element = FilesActivity.Clash.KEEP_BOTH;
         if (var1.isChecked()) {
             var2.invoke(var0.element);
         }
@@ -3053,7 +3053,7 @@ public final class FilesActivity extends AppCompatActivity {
 
     /* VF: from Vineflower (jadx: Type inference failed) */
     public static final void askClash$lambda$60$lambda$56(ObjectRef var0, CheckBox var1, Function1 var2, CountDownLatch var3, DialogInterface var4, int var5) {
-        var0.element = (T)FilesActivity.Clash.SKIP;
+        var0.element = FilesActivity.Clash.SKIP;
         if (var1.isChecked()) {
             var2.invoke(var0.element);
         }
@@ -3063,7 +3063,7 @@ public final class FilesActivity extends AppCompatActivity {
 
     /* VF: from Vineflower (jadx: Type inference failed) */
     public static final void askClash$lambda$60$lambda$59$lambda$58$lambda$57(ObjectRef var0, AlertDialog var1, CountDownLatch var2, View var3) {
-        var0.element = (T)FilesActivity.Clash.CANCEL;
+        var0.element = FilesActivity.Clash.CANCEL;
         var1.dismiss();
         var2.countDown();
     }
@@ -3234,7 +3234,7 @@ public final class FilesActivity extends AppCompatActivity {
                 AtomicBoolean atomicBoolean;
                 Intrinsics.checkNotNullParameter(sink, "sink");
                 FileInputStream fileInputStream = new FileInputStream(f);
-                FilesActivity filesActivity = this;
+                FilesActivity filesActivity = FilesActivity.this;
                 Function1<Long, Unit> function1 = progress;
                 try {
                     FileInputStream ins = fileInputStream;
@@ -3367,7 +3367,7 @@ public final class FilesActivity extends AppCompatActivity {
             dlg.getButton(-1).setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.FilesActivity$$ExternalSyntheticLambda31
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
-                    FilesActivity.showPreview$lambda$78($this$showPreview_u24lambda_u2471, this, e, side, full, pane, dlg, view);
+                    FilesActivity.showPreview$lambda$78($this$showPreview_u24lambda_u2471, FilesActivity.this, e, side, full, pane, dlg, view);
                 }
             });
         }
@@ -3506,7 +3506,7 @@ public final class FilesActivity extends AppCompatActivity {
         DONE,
         FAILED;
 
-        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(values());
 
         public static EnumEntries<QState> getEntries() {
             return $ENTRIES;
@@ -3550,84 +3550,78 @@ public final class FilesActivity extends AppCompatActivity {
         }
     }
 
-    /* VF: from Vineflower (jadx: Type inference failed) */
-    private final void buildQueue(List<FilesActivity.Job> var1) {
-        LinearLayout var4 = this.queueList;
-        LinearLayout var3 = var4;
-        if (var4 == null) {
+    private final void buildQueue(List<Job> jobs) {
+        LinearLayout linearLayout;
+        LinearLayout linearLayout2 = this.queueList;
+        if (linearLayout2 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("queueList");
-            var3 = null;
+            linearLayout2 = null;
         }
-
-        var3.removeAllViews();
+        linearLayout2.removeAllViews();
         this.queueRows.clear();
-        Iterator var5 = var1.iterator();
-
-        for (int var2 = 0; var5.hasNext(); var2++) {
-            FilesActivity.Job var6 = (FilesActivity.Job)var5.next();
-            if (var2 >= 300) {
-                var3 = this.queueList;
-                if (var3 == null) {
+        int i = 0;
+        for (Job j : jobs) {
+            int i2 = i;
+            int i3 = i + 1;
+            if (i2 >= 300) {
+                LinearLayout linearLayout3 = this.queueList;
+                if (linearLayout3 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("queueList");
-                    var3 = null;
+                    linearLayout = null;
+                } else {
+                    linearLayout = linearLayout3;
                 }
-
-                TextView var23 = new TextView((Context)this);
-                var2 = var1.size();
-                var23.setText("… and " + (var2 - 300) + " more files");
-                var23.setTextColor(this.dim);
-                var23.setTextSize(12.0F);
-                var23.setPadding(this.dp(6), this.dp(4), 0, this.dp(4));
-                var3.addView((View)var23);
-                break;
+                TextView textView = new TextView(this);
+                textView.setText("… and " + (jobs.size() - 300) + " more files");
+                textView.setTextColor(this.dim);
+                textView.setTextSize(12.0f);
+                textView.setPadding(dp(6), dp(4), 0, dp(4));
+                linearLayout.addView(textView);
+                return;
             }
-
-            FileKinds var18 = FileKinds.INSTANCE;
-            String var11 = new File(var6.getSrcPath()).getName();
-            Intrinsics.checkNotNullExpressionValue(var11, "getName(...)");
-            FileKinds.Kind var19 = var18.of(var11, false);
-            LinearLayout var7 = new LinearLayout((Context)this);
-            var7.setOrientation(0);
-            var7.setGravity(16);
-            var7.setPadding(this.dp(6), this.dp(4), this.dp(6), this.dp(4));
-            View var12 = new View((Context)this);
-            var12.setBackground(SvIcon.drawable$default(SvIcon.INSTANCE, var19.getIcon(), var19.getColor(), 0, 4, null));
-            android.widget.LinearLayout.LayoutParams var20 = new LayoutParams(this.dp(18), this.dp(18));
-            var20.rightMargin = this.dp(8);
-            Unit var8 = Unit.INSTANCE;
-            var7.addView(var12, (android.view.ViewGroup.LayoutParams)var20);
-            TextView var13 = new TextView((Context)this);
-            var13.setText(new File(var6.getSrcPath()).getName());
-            var13.setTextColor(-1);
-            var13.setTextSize(13.0F);
-            var13.setMaxLines(1);
-            var13.setEllipsize(TruncateAt.MIDDLE);
-            var7.addView((View)var13, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
-            ProgressBar var24 = new ProgressBar((Context)this, null, 16842872);
-            var24.setMax(1000);
-            var24.setProgress(0);
-            View var21 = (View)var24;
-            android.widget.LinearLayout.LayoutParams var14 = new LayoutParams(this.dp(140), -2);
-            var14.leftMargin = this.dp(10);
-            var14.rightMargin = this.dp(10);
-            Unit var9 = Unit.INSTANCE;
-            var7.addView(var21, (android.view.ViewGroup.LayoutParams)var14);
-            TextView var25 = new TextView((Context)this);
-            String var15 = this.fmtSize(var6.getSize());
-            var25.setText("waiting · " + var15);
-            var25.setTextColor(this.dim);
-            var25.setTextSize(12.0F);
-            var25.setMinWidth(this.dp(120));
-            var7.addView((View)var25);
-            var4 = this.queueList;
-            var3 = var4;
-            if (var4 == null) {
+            FileKinds fileKinds = FileKinds.INSTANCE;
+            String name = new File(j.getSrcPath()).getName();
+            Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
+            FileKinds.Kind kind = fileKinds.of(name, false);
+            LinearLayout linearLayout4 = new LinearLayout(this);
+            linearLayout4.setOrientation(0);
+            linearLayout4.setGravity(16);
+            linearLayout4.setPadding(dp(6), dp(4), dp(6), dp(4));
+            View $this$buildQueue_u24lambda_u2486 = new View(this);
+            $this$buildQueue_u24lambda_u2486.setBackground(SvIcon.drawable$default(SvIcon.INSTANCE, kind.getIcon(), kind.getColor(), 0, 4, null));
+            LinearLayout.LayoutParams $this$buildQueue_u24lambda_u2487 = new LinearLayout.LayoutParams(dp(18), dp(18));
+            $this$buildQueue_u24lambda_u2487.rightMargin = dp(8);
+            Unit unit = Unit.INSTANCE;
+            linearLayout4.addView($this$buildQueue_u24lambda_u2486, $this$buildQueue_u24lambda_u2487);
+            TextView $this$buildQueue_u24lambda_u2488 = new TextView(this);
+            $this$buildQueue_u24lambda_u2488.setText(new File(j.getSrcPath()).getName());
+            $this$buildQueue_u24lambda_u2488.setTextColor(-1);
+            $this$buildQueue_u24lambda_u2488.setTextSize(13.0f);
+            $this$buildQueue_u24lambda_u2488.setMaxLines(1);
+            $this$buildQueue_u24lambda_u2488.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+            linearLayout4.addView($this$buildQueue_u24lambda_u2488, new LinearLayout.LayoutParams(0, -2, 1.0f));
+            ProgressBar progressBar = new ProgressBar(this, null, 16842872);
+            progressBar.setMax(1000);
+            progressBar.setProgress(0);
+            LinearLayout.LayoutParams $this$buildQueue_u24lambda_u2490 = new LinearLayout.LayoutParams(dp(140), -2);
+            $this$buildQueue_u24lambda_u2490.leftMargin = dp(10);
+            $this$buildQueue_u24lambda_u2490.rightMargin = dp(10);
+            Unit unit2 = Unit.INSTANCE;
+            linearLayout4.addView(progressBar, $this$buildQueue_u24lambda_u2490);
+            TextView $this$buildQueue_u24lambda_u2491 = new TextView(this);
+            $this$buildQueue_u24lambda_u2491.setText("waiting · " + fmtSize(j.getSize()));
+            $this$buildQueue_u24lambda_u2491.setTextColor(this.dim);
+            $this$buildQueue_u24lambda_u2491.setTextSize(12.0f);
+            $this$buildQueue_u24lambda_u2491.setMinWidth(dp(120));
+            linearLayout4.addView($this$buildQueue_u24lambda_u2491);
+            LinearLayout linearLayout5 = this.queueList;
+            if (linearLayout5 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("queueList");
-                var3 = null;
+                linearLayout5 = null;
             }
-
-            var3.addView((View)var7);
-            this.queueRows.add(new FilesActivity.QRow(this, var6, var7, var25, var24));
+            linearLayout5.addView(linearLayout4);
+            this.queueRows.add(new QRow(this, j, linearLayout4, $this$buildQueue_u24lambda_u2491, progressBar));
+            i = i3;
         }
     }
 

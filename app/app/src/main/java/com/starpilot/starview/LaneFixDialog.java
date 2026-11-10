@@ -1024,8 +1024,8 @@ public final class LaneFixDialog {
         var27.setGravity(16);
         ObjectRef var24 = new ObjectRef();
         ObjectRef var22 = new ObjectRef();
-        var22.element = (T)(new LaneFixDialog$$ExternalSyntheticLambda9(var28, var23, var27, var21, var25, var4, var22, var24, var1, var16, var5));
-        var24.element = (T)(new LaneFixDialog.RoadView(var1, var23, new LaneFixDialog$$ExternalSyntheticLambda11(var22)));
+        var22.element = (new LaneFixDialog$$ExternalSyntheticLambda9(var28, var23, var27, var21, var25, var4, var22, var24, var1, var16, var5));
+        var24.element = (new LaneFixDialog.RoadView(var1, var23, new LaneFixDialog$$ExternalSyntheticLambda11(var22)));
         LinearLayout var26 = new LinearLayout(var1);
         var26.addView((View)show$side(var1, var16, var23, var22, var24, var5, -1));
         LaneFixDialog.RoadView var39;
@@ -1270,7 +1270,7 @@ public final class LaneFixDialog {
     public static final Unit show$lambda$11(LinearLayout $wayRow, final Road $road, LinearLayout $otherRow, CheckBox $keep, TextView $say, String $street, final Ref.ObjectRef $paint, final Ref.ObjectRef $roadView, Context $ctx, float $d, int $grey) {
         String str;
         $wayRow.removeAllViews();
-        for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("one", "One-way"), TuplesKt.to("divided", "Divided highway"), TuplesKt.to("two", "Two-way street")})) {
+        for (Pair pair : ((Pair) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("one", "One-way"), TuplesKt.to("divided", "Divided highway"), TuplesKt.to("two", "Two-way street")}))) {
             final String k = (String) pair.component1();
             String t = (String) pair.component2();
             $wayRow.addView(show$chip$default($ctx, $d, t, Intrinsics.areEqual($road.getWay(), k), false, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda3
@@ -1285,7 +1285,7 @@ public final class LaneFixDialog {
         $otherRow.removeAllViews();
         if (Intrinsics.areEqual($road.getWay(), "two")) {
             $otherRow.addView(show$label$default($grey, $ctx, $d, "Lanes the other way:  ", 15.0f, 0, 32, null));
-            final int k2 = 1;
+            int k2 = 1;
             while (k2 < 5) {
                 $otherRow.addView(show$chip($ctx, $d, String.valueOf(k2), $road.getOther() == k2, false, new Function0() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda4
                     @Override // kotlin.jvm.functions.Function0
@@ -1321,7 +1321,7 @@ public final class LaneFixDialog {
             var0.setOther(0);
         }
 
-        Function0 var4 = var2.element;
+        Function0 var4 = ((Function0) var2.element);
         Object var7 = null;
         if (var4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
@@ -1350,7 +1350,7 @@ public final class LaneFixDialog {
         }
 
         var0.setOther(var1);
-        Function0 var5 = var2.element;
+        Function0 var5 = ((Function0) var2.element);
         Object var4 = null;
         if (var5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
@@ -1411,7 +1411,7 @@ public final class LaneFixDialog {
     /* VF: from Vineflower (jadx: ) */
     public static final void show$pm$lambda$16$lambda$14(Function0 var0, ObjectRef var1, ObjectRef var2, View var3) {
         var0.invoke();
-        Function0 var4 = var1.element;
+        Function0 var4 = ((Function0) var1.element);
         Object var7 = null;
         if (var4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
@@ -1486,7 +1486,7 @@ public final class LaneFixDialog {
         }
 
         var0.addExtra(var4, var1.getSide());
-        Function0 var5 = var2.element;
+        Function0 var5 = ((Function0) var2.element);
         Object var8 = null;
         if (var5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");

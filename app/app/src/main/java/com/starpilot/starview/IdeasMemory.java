@@ -353,7 +353,7 @@ public final class IdeasMemory {
             if (both && t.getEnabled()) {
                 if (!((m == null || m.getLaneChangeOff()) ? false : true)) {
                     Map $this$getOrPut$iv = this.lanes;
-                    float[] fArr2 = $this$getOrPut$iv.get(k);
+                    float[] fArr2 = ((float[]) $this$getOrPut$iv.get(k));
                     if (fArr2 == null) {
                         fArr = new float[2];
                         $this$getOrPut$iv.put(k, fArr);

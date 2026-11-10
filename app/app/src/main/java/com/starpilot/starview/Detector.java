@@ -1430,7 +1430,7 @@ public final class Detector {
                 @Override // java.util.concurrent.Callable
                 public final Object call() {
                     Unit fill$lambda$21$lambda$20;
-                    fill$lambda$21$lambda$20 = Detector.fill$lambda$21$lambda$20(nextInt, i4, f, min, i5, zArr, fArr2, iArr, iArr2, this);
+                    fill$lambda$21$lambda$20 = Detector.fill$lambda$21$lambda$20(nextInt, i4, f, min, i5, zArr, fArr2, iArr, iArr2, Detector.this);
                     return fill$lambda$21$lambda$20;
                 }
             });
@@ -1920,7 +1920,7 @@ public final class Detector {
                 if (var70.size() > 1) {
                     CollectionsKt.sortWith(var70, new Comparator() {
                         @Override
-                        public final int compare(T var1, T var2x) {
+                        public final int compare(Object var1, Object var2x) {
                             return ComparisonsKt.compareValues(((Detector$track$Pair)var1).getCost(), ((Detector$track$Pair)var2x).getCost());
                         }
                     });
@@ -1936,9 +1936,9 @@ public final class Detector {
                 while (var30.hasNext()) {
                     var97 = (String)var30.next();
                     Intrinsics.checkNotNullExpressionValue(var97, var71);
-                    Detector$track$Pair var99 = (Detector$track$Pair)var97;
-                    if (!var29.contains(var99.getTr()) && !var28.contains(var99.getD())) {
-                        track$take(var29, var28, var5, var15, this, var99.getTr(), var99.getD(), 0.7F, true);
+                    Object var99 = (Detector$track$Pair)var97;
+                    if (!var29.contains(((Detector$track$Pair) var99).getTr()) && !var28.contains(((Detector$track$Pair) var99).getD())) {
+                        track$take(var29, var28, var5, var15, this, ((Detector$track$Pair) var99).getTr(), ((Detector$track$Pair) var99).getD(), 0.7F, true);
                     }
                 }
 
@@ -1953,15 +1953,15 @@ public final class Detector {
                     while (var72.hasNext()) {
                         var97 = (String)var72.next();
                         Intrinsics.checkNotNullExpressionValue(var97, var36);
-                        Detector.Track var117 = (Detector.Track)var97;
-                        if (!var29.contains(var117) && var117.getHits() >= this.need(var117.getCls()) && var117.getWeak() < 6) {
-                            float var50 = var117.getX1() - var117.getX0();
-                            float var46 = var117.getY1();
-                            float var42 = var117.getY0();
-                            float var51 = var117.getCx();
-                            float var54 = var117.getVx();
-                            float var52 = var117.getCy();
-                            float var53 = var117.getVy();
+                        Object var117 = (Detector.Track)var97;
+                        if (!var29.contains(var117) && ((Detector.Track) var117).getHits() >= this.need(((Detector.Track) var117).getCls()) && ((Detector.Track) var117).getWeak() < 6) {
+                            float var50 = ((Detector.Track) var117).getX1() - ((Detector.Track) var117).getX0();
+                            float var46 = ((Detector.Track) var117).getY1();
+                            float var42 = ((Detector.Track) var117).getY0();
+                            float var51 = ((Detector.Track) var117).getCx();
+                            float var54 = ((Detector.Track) var117).getVx();
+                            float var52 = ((Detector.Track) var117).getCy();
+                            float var53 = ((Detector.Track) var117).getVy();
                             float var56 = Math.max(Math.max(var50, var46 - var42), 24.0F);
                             Iterator var102 = var81.iterator();
                             Detector.Det var112 = null;
@@ -1969,7 +1969,7 @@ public final class Detector {
 
                             while (var102.hasNext()) {
                                 Detector.Det var115 = (Detector.Det)var102.next();
-                                if (!var28.contains(var115) && this.group(var115.getCls()) == this.group(var117.getCls())) {
+                                if (!var28.contains(var115) && this.group(var115.getCls()) == this.group(((Detector.Track) var117).getCls())) {
                                     var46 = (var115.getX1() - var115.getX0()) / Math.max(var50, 1.0F);
                                     if (!(var46 < 0.67F) && !(var46 > 1.5F)) {
                                         var46 = (float)Math.hypot(
@@ -1986,7 +1986,7 @@ public final class Detector {
                             }
 
                             if (var112 != null) {
-                                track$take(var29, var28, var5, var15, this, var117, var112, 0.5F, false);
+                                track$take(var29, var28, var5, var15, this, ((Track) var117), var112, 0.5F, false);
                             }
                         }
                     }
@@ -2003,21 +2003,21 @@ public final class Detector {
                 while (var73.hasNext()) {
                     var21 = (Iterable)var73.next();
                     Intrinsics.checkNotNullExpressionValue(var21, var36);
-                    Detector.Track var84 = (Detector.Track)var21;
+                    Object var84 = (Detector.Track)var21;
                     if (!var29.contains(var84)) {
-                        var84.setMisses(var84.getMisses() + 1);
-                        float var44 = var84.getVx() * var5;
-                        float var49 = var84.getVy() * var5;
-                        var84.setX0(var84.getX0() + var44);
-                        var84.setX1(var84.getX1() + var44);
-                        var84.setY0(var84.getY0() + var49);
-                        var84.setY1(var84.getY1() + var49);
-                        var84.setVx(var84.getVx() * 0.9F);
-                        var84.setVy(var84.getVy() * 0.9F);
+                        ((Detector.Track) var84).setMisses(((Detector.Track) var84).getMisses() + 1);
+                        float var44 = ((Detector.Track) var84).getVx() * var5;
+                        float var49 = ((Detector.Track) var84).getVy() * var5;
+                        ((Detector.Track) var84).setX0(((Detector.Track) var84).getX0() + var44);
+                        ((Detector.Track) var84).setX1(((Detector.Track) var84).getX1() + var44);
+                        ((Detector.Track) var84).setY0(((Detector.Track) var84).getY0() + var49);
+                        ((Detector.Track) var84).setY1(((Detector.Track) var84).getY1() + var49);
+                        ((Detector.Track) var84).setVx(((Detector.Track) var84).getVx() * 0.9F);
+                        ((Detector.Track) var84).setVy(((Detector.Track) var84).getVy() * 0.9F);
                     }
                 }
 
-                for (Detector.Det var37 : var27) {
+                for (Detector.Det var37 : ((Det) var27)) {
                     if (!var28.contains(var37)) {
                         long var17 = (long)(this.nextId++);
                         Detector.Track var85 = new Detector.Track(var17, var37.getCls());
@@ -2068,13 +2068,13 @@ public final class Detector {
                 List var86 = CollectionsKt.sortedWith(var109, new Comparator() {
                     final Comparator $this_thenBy = new Comparator() {
                     @Override
-                    public final int compare(T var1, T var2) {
+                    public final int compare(Object var1, Object var2) {
                         return ComparisonsKt.compareValues(((Detector.Track)var2).getHits(), ((Detector.Track)var1).getHits());
                     }
                 };
 
                     @Override
-                    public final int compare(T var1, T var2) {
+                    public final int compare(Object var1, Object var2) {
                         int var3 = this.$this_thenBy.compare(var1, var2);
                         if (var3 == 0) {
                             var3 = ComparisonsKt.compareValues(((Detector.Track)var1).getId(), ((Detector.Track)var2).getId());
@@ -2085,7 +2085,7 @@ public final class Detector {
                 });
                 var89 = new ArrayList();
 
-                for (Detector.Track var103 : var86) {
+                for (Detector.Track var103 : ((Track) var86)) {
                     Iterator var113 = var89.iterator();
 
                     boolean var62;
@@ -2157,7 +2157,7 @@ public final class Detector {
                 Iterable var40 = var78;
                 var89 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var40, 10));
 
-                for (Detector.Track var105 : var40) {
+                for (Detector.Track var105 : ((Track) var40)) {
                     var89.add(
                         new Detector.Det(this.vehicleCls(var105), var105.getScore(), var105.getX0(), var105.getY0(), var105.getX1(), var105.getY1(), var105.getId())
                     );
@@ -2803,9 +2803,9 @@ public final class Detector {
 
                                 List var139 = var138;
 
-                                for (Detector.OCand var160 : CollectionsKt.take(CollectionsKt.sortedWith(var139, new Comparator() {
+                                for (Detector.OCand var160 : (Iterable<Detector.OCand>) CollectionsKt.take(CollectionsKt.sortedWith(var139, new Comparator() {
                                     @Override
-                                    public final int compare(T var1, T var2x) {
+                                    public final int compare(Object var1, Object var2x) {
                                         return ComparisonsKt.compareValues(((Detector.OCand)var1).getTr().getONs(), ((Detector.OCand)var2x).getTr().getONs());
                                     }
                                 }), 3)) {
@@ -3937,7 +3937,7 @@ public final class Detector {
             CollectionsKt.sortWith($this$sortByDescending$iv, new Comparator() { // from class: com.starpilot.starview.Detector$decode$$inlined$sortByDescending$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     Detector.Det it4 = (Detector.Det) t2;
                     Detector.Det it5 = (Detector.Det) t;
                     return ComparisonsKt.compareValues(Float.valueOf(it4.getScore()), Float.valueOf(it5.getScore()));

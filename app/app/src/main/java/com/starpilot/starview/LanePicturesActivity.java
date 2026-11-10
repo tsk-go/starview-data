@@ -564,7 +564,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
                     } else {
                         int var27 = 0;
 
-                        for (LaneShots.Shot var88 : var60) {
+                        for (LaneShots.Shot var88 : ((Shot) var60)) {
                             var88 = this.marks.get(var88.getName());
                             Intrinsics.checkNotNull(var88);
                             int var33;
@@ -596,7 +596,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
                         } else {
                             var28 = 0;
 
-                            for (LaneShots.Shot var62 : var53) {
+                            for (LaneShots.Shot var62 : ((Shot) var53)) {
                                 var8 = this.marks.get(var62.getName());
                                 Intrinsics.checkNotNull(var8);
                                 int var38;
@@ -630,13 +630,13 @@ public final class LanePicturesActivity extends AppCompatActivity {
             }
 
             String var11 = (String)var42.next();
-            Iterable var9 = this.all;
+            Object var9 = this.all;
             var var10 = new ArrayList();
 
-            for (Object var12 : var9) {
+            for (Object var12 : (Iterable) var9) {
                 var9 = ((LaneShots.Shot)var12).getDrive();
                 boolean var1;
-                if (var9.length() == 0) {
+                if (((String) var9).length() == 0) {
                     var1 = true;
                 } else {
                     var1 = false;
@@ -685,7 +685,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
             } else {
                 int var17 = 0;
 
-                for (LaneShots.Shot var76 : var9) {
+                for (LaneShots.Shot var76 : ((Shot) var9)) {
                     Integer var77 = this.marks.get(var76.getName());
                     int var2;
                     if (var77 != null && var77 == 0) {
@@ -714,7 +714,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
             } else {
                 var18 = 0;
 
-                for (LaneShots.Shot var78 : var9) {
+                for (LaneShots.Shot var78 : ((Shot) var9)) {
                     Object var79 = this.marks.get(var78.getName());
                     Intrinsics.checkNotNull(var79);
                     boolean var3;
@@ -1566,7 +1566,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
                 var19 = CollectionsKt.first(var24);
             }
 
-            var0.pick(var19);
+            var0.pick(((String) var19));
         }
     }
 }

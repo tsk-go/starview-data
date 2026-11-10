@@ -80,7 +80,7 @@ public final class LastDriveView extends CardPage {
                 LinearLayout tl = card();
                 add(tl);
                 tl.addView(title("What happened", "history", "tablet"));
-                for (JSONObject e : CollectionsKt.takeLast(evs2, 40)) {
+                for (JSONObject e : (Iterable) (JSONObject) ((JSONObject) CollectionsKt.takeLast(evs2, 40))) {
                     LastDriveView lastDriveView2 = this;
                     simpleDateFormat2 = JournalPagesKt.timeFmt;
                     String format2 = simpleDateFormat2.format(new Date(e.optLong("t")));

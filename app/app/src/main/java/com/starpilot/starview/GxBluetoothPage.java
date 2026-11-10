@@ -1186,7 +1186,7 @@ public final class GxBluetoothPage extends GxPage {
         LinearLayout var10 = this.wcBox;
         if (var10 != null) {
             String var11 = this.wcRaw;
-            String var8 = this.wcBusy;
+            Object var8 = this.wcBusy;
             String var9 = this.wcError;
             boolean var5 = this.wcLoaded;
             var11 = var11 + "|" + var8 + "|" + var9 + "|" + var5;
@@ -1256,12 +1256,12 @@ public final class GxBluetoothPage extends GxPage {
                                 var8 = "External input";
                             }
 
-                            String var15 = var8;
+                            String var15 = ((String) var8);
                             var9 = this.eventName(var14);
                             StringBuilder var62;
                             if (var14.optBoolean("mapped")) {
                                 var8 = (String)var14.opt("slot");
-                                Number var34;
+                                Object var34;
                                 if (var8 instanceof Number) {
                                     var34 = (Number)var8;
                                 } else {
@@ -1269,7 +1269,7 @@ public final class GxBluetoothPage extends GxPage {
                                 }
 
                                 if (var34 != null) {
-                                    var3 = var34.intValue();
+                                    var3 = ((Number) var34).intValue();
                                 } else {
                                     var3 = 0;
                                 }
@@ -1285,7 +1285,7 @@ public final class GxBluetoothPage extends GxPage {
                             var8 = var62.append(var8).toString();
                         }
 
-                        GxPage.text$default(var86, var8, (ViewGroup)var81, 17.0F, 0, false, 24, null);
+                        GxPage.text$default(var86, ((String) var8), (ViewGroup)var81, 17.0F, 0, false, 24, null);
                     }
 
                     GxVehicleKt.gxVehicleEnable((View & Switch)this.toggle(
@@ -1314,14 +1314,14 @@ public final class GxBluetoothPage extends GxPage {
                             var8 = GxPage.str$default(this, var87, "device_id", null, 2, null);
                         }
 
-                        var9 = var8;
+                        var9 = ((String) var8);
                         if (var6) {
                             var8 = "Buttons and joystick axes";
                         } else {
                             var8 = "Buttons only";
                         }
 
-                        GxPage.Row var65 = GxPage.row$default(var92, var9, var8, (ViewGroup)var10, 0, 8, null);
+                        GxPage.Row var65 = GxPage.row$default(var92, var9, ((String) var8), (ViewGroup)var10, 0, 8, null);
                         if (var6) {
                             String var88 = GxPage.str$default(this, var87, "device_id", null, 2, null);
                             var6 = Intrinsics.areEqual(var88, this.wcJoystick);
@@ -1331,7 +1331,7 @@ public final class GxBluetoothPage extends GxPage {
                                 var8 = "Enable for Joystick Mode";
                             }
 
-                            GxVehicleKt.gxVehicleEnable((View)var65.button(var8, var6, new GxBluetoothPage$$ExternalSyntheticLambda32(this, var88, var6)), this.wcDisabled() ^ true);
+                            GxVehicleKt.gxVehicleEnable((View)var65.button(((String) var8), var6, new GxBluetoothPage$$ExternalSyntheticLambda32(this, var88, var6)), this.wcDisabled() ^ true);
                         }
                     }
 
@@ -1368,7 +1368,7 @@ public final class GxBluetoothPage extends GxPage {
                             var23 = false;
                         }
 
-                        LinearLayout var68 = this.slotCard(var10, var89, var8, var9, var23, new GxBluetoothPage$$ExternalSyntheticLambda33(this, var18));
+                        LinearLayout var68 = this.slotCard(var10, var89, ((String) var8), var9, var23, new GxBluetoothPage$$ExternalSyntheticLambda33(this, var18));
                         GxPage var90 = this;
                         if (var7) {
                             var8 = "Pressing any mapped button will run this favorite.";
@@ -1376,7 +1376,7 @@ public final class GxBluetoothPage extends GxPage {
                             var8 = "Choose and enable this slot in Toggles → Favorites.";
                         }
 
-                        GxPage.text$default(var90, var8, (ViewGroup)var68, 0.0F, 0, false, 28, null);
+                        GxPage.text$default(var90, ((String) var8), (ViewGroup)var68, 0.0F, 0, false, 28, null);
                         this.slotTail(var68, var18);
                     }
 
@@ -1439,11 +1439,11 @@ public final class GxBluetoothPage extends GxPage {
                         }
 
                         label249: {
-                            var95 = this.slotCard(var10, var94, var8, var11, var24, new GxBluetoothPage$$ExternalSyntheticLambda35(this, var4));
+                            var95 = this.slotCard(var10, var94, ((String) var8), var11, var24, new GxBluetoothPage$$ExternalSyntheticLambda35(this, var4));
                             if (var16 != null) {
                                 var8 = GxPage.str$default(this, var16, "label", null, 2, null);
                                 if (var8 != null) {
-                                    CharSequence var73 = var8;
+                                    CharSequence var73 = ((CharSequence) var8);
                                     CharSequence var49 = var73;
                                     if (StringsKt.isBlank(var73)) {
                                         var49 = null;
@@ -1527,7 +1527,7 @@ public final class GxBluetoothPage extends GxPage {
                             var8 = "Controller-only action. It does not create an on-screen Favorite button.";
                         }
 
-                        GxPage.text$default(var80, var8, (ViewGroup)var95, 0.0F, 0, false, 28, null);
+                        GxPage.text$default(var80, ((String) var8), (ViewGroup)var95, 0.0F, 0, false, 28, null);
                         this.slotTail(var95, var4);
                     }
                 }
@@ -1709,7 +1709,7 @@ public final class GxBluetoothPage extends GxPage {
             GxPage.text$default(this, "No buttons mapped.", c, 15.0f, CarUi.Companion.getDIM(), false, 16, null);
             return;
         }
-        for (final JSONObject m : ms) {
+        for (final JSONObject m : (Iterable) (JSONObject) ((JSONObject) ms)) {
             LinearLayout line = new LinearLayout(getAct());
             boolean z = false;
             line.setOrientation(0);
@@ -1818,16 +1818,16 @@ public final class GxBluetoothPage extends GxPage {
 
     /* VF: from Vineflower (jadx: Code restructure failed;Type inference failed;incorrect) */
     private final void pickAction(int var1) {
-        String var19 = null; LinearLayout var38 = null; // declarations Vineflower left out
+        Object var19 = null; LinearLayout var38 = null; // declarations Vineflower left out
         if (!this.wcDisabled()) {
             List var6 = this.wcOptions;
             JSONObject var4 = CollectionsKt.getOrNull(this.wcControllerSlots, var1);
-            JSONObject var3 = var4;
+            Object var3 = var4;
             if (var4 == null) {
                 var3 = new JSONObject();
             }
 
-            String var7 = GxPage.str$default(this, var3, "key", null, 2, null);
+            String var7 = GxPage.str$default(this, ((JSONObject) var3), "key", null, 2, null);
             Iterator var5 = var6.iterator();
 
             JSONObject var8;
@@ -1868,7 +1868,7 @@ public final class GxBluetoothPage extends GxPage {
                     }
                 }
 
-                CharSequence var32 = GxPage.str$default(this, var3, "label", null, 2, null);
+                CharSequence var32 = GxPage.str$default(this, ((JSONObject) var3), "label", null, 2, null);
                 var3 = var32;
                 if (StringsKt.isBlank(var32)) {
                     CharSequence var33 = var7;
@@ -1976,7 +1976,7 @@ public final class GxBluetoothPage extends GxPage {
                     }
                 }
             );
-            var39.element = (T)new Builder((Context)this.getAct())
+            var39.element = new Builder((Context)this.getAct())
                 .setTitle("Controller Action #" + (var1 + 1))
                 .setView((View)var38)
                 .setNegativeButton("Cancel", null)
@@ -2207,7 +2207,7 @@ public final class GxBluetoothPage extends GxPage {
                         );
                         var0.addView((View)var66);
                         if (var35 != 0) {
-                            for (JSONObject var46 : var63) {
+                            for (JSONObject var46 : (Iterable) (JSONObject) ((JSONObject) var63)) {
                                 String[] var67 = new String[]{var20, null};
                                 var67[var10] = GxPage.str$default(var6, var46, "description", null, 2, null);
                                 Iterable var70 = CollectionsKt.listOf(var67);

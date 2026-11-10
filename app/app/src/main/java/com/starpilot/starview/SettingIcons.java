@@ -137,7 +137,7 @@ public final class SettingIcons {
         if (it == null) {
             return new Icon("new", "device", false);
         }
-        return new Icon(it.getFirst(), it.getSecond(), false, 4, null);
+        return new Icon(((String) it.getFirst()), ((String) it.getSecond()), false, 4, null);
     }
 
     public static /* synthetic */ Icon forRow$default(SettingIcons settingIcons, String str, String str2, String str3, GalaxyRow.Control control, int i, Object obj) {
@@ -158,7 +158,7 @@ public final class SettingIcons {
         Intrinsics.checkNotNullParameter(label, "label");
         Intrinsics.checkNotNullParameter(linkPage, "linkPage");
         if ((linkPage.length() > 0) && (it = PAGES.get(linkPage)) != null) {
-            return new Icon(it.getFirst(), it.getSecond(), false, 4, null);
+            return new Icon(((String) it.getFirst()), ((String) it.getSecond()), false, 4, null);
         }
         String g = group(page);
         Iterable $this$firstOrNull$iv = RULES;

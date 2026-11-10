@@ -372,7 +372,7 @@ public final class LaneMapLog {
         if ($this$sortedBy$iv == null || (fs = ArraysKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.LaneMapLog$prune$$inlined$sortedBy$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 File it = (File) t;
                 File it2 = (File) t2;
                 return ComparisonsKt.compareValues(it.getName(), it2.getName());
@@ -490,7 +490,7 @@ public final class LaneMapLog {
                 List fs2 = $this$sortedBy$iv != null ? ArraysKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.LaneMapLog$Export$toDownloads$$inlined$sortedBy$1
                     /* JADX WARN: Multi-variable type inference failed */
                     @Override // java.util.Comparator
-                    public final int compare(T t, T t2) {
+                    public final int compare(Object t, Object t2) {
                         File it3 = (File) t;
                         File it4 = (File) t2;
                         return ComparisonsKt.compareValues(it3.getName(), it4.getName());

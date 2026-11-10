@@ -671,7 +671,7 @@ public final class GxPersonalitiesPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit fetchContext$lambda$18;
-                    fetchContext$lambda$18 = GxPersonalitiesPage.fetchContext$lambda$18(then, a, this, apply, ((Boolean) obj).booleanValue());
+                    fetchContext$lambda$18 = GxPersonalitiesPage.fetchContext$lambda$18(then, a, GxPersonalitiesPage.this, apply, ((Boolean) obj).booleanValue());
                     return fetchContext$lambda$18;
                 }
             });
@@ -954,7 +954,7 @@ public final class GxPersonalitiesPage extends GxPage {
                             break label227;
                         }
 
-                        Iterable var60 = var78;
+                        Iterable var60 = ((Iterable) var78);
 
                         Iterator var12;
                         try {
@@ -1846,7 +1846,7 @@ public final class GxPersonalitiesPage extends GxPage {
             GalaxyApi.Param p = it.next();
             if (StringsKt.contains((CharSequence) p.getKey(), (CharSequence) "Jerk", false) && CollectionsKt.contains(this.profileKeys.values(), p.getParentKey())) {
                 keys.add(p.getKey());
-                for (String n : CollectionsKt.listOf((Object[]) new String[]{"requires_capability", "disabled_when_key_true", "requires_nonempty_key"})) {
+                for (String n : ((String) CollectionsKt.listOf((Object[]) new String[]{"requires_capability", "disabled_when_key_true", "requires_nonempty_key"}))) {
                     String it2 = p.str(n);
                     if (it2 != null) {
                         keys.add(it2);
@@ -2065,7 +2065,7 @@ public final class GxPersonalitiesPage extends GxPage {
         LinearLayout top;
         String gxHomeFmt5;
         String gxHomeFmt6;
-        final String pk = key(p);
+        String pk = key(p);
         String label = Intrinsics.areEqual(p, "traffic") ? "Traffic Mode" : label(p);
         LinearLayout linearLayout = this.content;
         if (linearLayout == null) {
@@ -2141,12 +2141,12 @@ public final class GxPersonalitiesPage extends GxPage {
             i2 = 0;
         }
         Object obj2 = "following";
-        final boolean open2 = this.advancedOpen.contains(p);
+        boolean open2 = this.advancedOpen.contains(p);
         TextView adv = CarUi.button$default(getUi(), open2 ? "Advanced  ▲" : "Advanced  ▼", false, new Function0() { // from class: com.starpilot.starview.GxPersonalitiesPage$$ExternalSyntheticLambda22
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit renderProfile$lambda$64;
-                renderProfile$lambda$64 = GxPersonalitiesPage.renderProfile$lambda$64(open2, this, p);
+                renderProfile$lambda$64 = GxPersonalitiesPage.renderProfile$lambda$64(open2, GxPersonalitiesPage.this, p);
                 return renderProfile$lambda$64;
             }
         }, 2, null);
@@ -2209,7 +2209,7 @@ public final class GxPersonalitiesPage extends GxPage {
                     List sp = speeds(cat2);
                     ArrayList views = new ArrayList();
                     LinearLayout linearLayout3 = null;
-                    Iterator<T> it4 = dr2.iterator();
+                    Iterator it4 = dr2.iterator();
                     int i3 = 0;
                     while (it4.hasNext()) {
                         final int i4 = i3;
@@ -2710,7 +2710,7 @@ public final class GxPersonalitiesPage extends GxPage {
             onDraw$poly(cv, this, points(this.this$0.reference(this.profile, this.category)), this.refP);
             List pts = points(this.this$0.draft(this.profile, this.category));
             onDraw$poly(cv, this, pts, this.lineP);
-            for (Pair<Double, Double> pair : pts) {
+            for (Pair<Double, Double> pair : ((Pair<Double,Double>) pts)) {
                 double x = pair.component1().doubleValue();
                 double y = pair.component2().doubleValue();
                 cv.drawCircle(X(x), Y(y), this.s * 4.5f, this.dot);

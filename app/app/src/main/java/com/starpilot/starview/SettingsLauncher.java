@@ -190,7 +190,7 @@ public final class SettingsLauncher extends FrameLayout {
 
     private final void paintDots() {
         this.dots.removeAllViews();
-        final int i = 0;
+        int i = 0;
         int childCount = this.pager.getChildCount();
         while (i < childCount) {
             LinearLayout linearLayout = this.dots;
@@ -382,7 +382,7 @@ public final class SettingsLauncher extends FrameLayout {
         title.setItems((CharSequence[]) $this$toTypedArray$iv.toArray(new String[0]), new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsLauncher$$ExternalSyntheticLambda1
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i2) {
-                SettingsLauncher.editShortcut$lambda$31(opts, this, p, s, dialogInterface, i2);
+                SettingsLauncher.editShortcut$lambda$31(opts, SettingsLauncher.this, p, s, dialogInterface, i2);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }
@@ -618,7 +618,7 @@ public final class SettingsLauncher extends FrameLayout {
             List list$iv$iv = (List) answer$iv$iv$iv;
             list$iv$iv.add(element$iv$iv);
         }
-        for (Map.Entry entry : destination$iv$iv.entrySet()) {
+        for (Map.Entry entry : ((Entry) destination$iv$iv.entrySet())) {
             String where = (String) entry.getKey();
             Iterable group = (List) entry.getValue();
             LinearLayout linearLayout2 = this.drawerList;
@@ -630,10 +630,10 @@ public final class SettingsLauncher extends FrameLayout {
             $this$fillDrawer_u24lambda_u2442.setPadding(this.ui.dp(6), this.ui.dp(16), this.ui.dp(6), this.ui.dp(6));
             linearLayout2.addView($this$fillDrawer_u24lambda_u2442);
             Iterable $this$sortedBy$iv = group;
-            for (final SettingsIndex.Entry e : CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.SettingsLauncher$fillDrawer$$inlined$sortedBy$1
+            for (final SettingsIndex.Entry e : (Iterable<SettingsIndex.Entry>) CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.SettingsLauncher$fillDrawer$$inlined$sortedBy$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     SettingsIndex.Entry it4 = (SettingsIndex.Entry) t;
                     String lowerCase = it4.getLabel().toLowerCase(Locale.ROOT);
                     Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");

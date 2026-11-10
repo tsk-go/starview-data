@@ -18,45 +18,12 @@ public final /* data */ class OfflineTtsMatchaModelConfig {
         this(null, null, null, null, null, null, 0.0f, 0.0f, 255, null);
     }
 
-    /* renamed from: component1, reason: from getter */
-    public final String getAcousticModel() {
-        return this.acousticModel;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final String getVocoder() {
-        return this.vocoder;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final String getLexicon() {
-        return this.lexicon;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final String getTokens() {
-        return this.tokens;
-    }
 
-    /* renamed from: component5, reason: from getter */
-    public final String getDataDir() {
-        return this.dataDir;
-    }
 
-    /* renamed from: component6, reason: from getter */
-    public final String getDictDir() {
-        return this.dictDir;
-    }
 
-    /* renamed from: component7, reason: from getter */
-    public final float getNoiseScale() {
-        return this.noiseScale;
-    }
-
-    /* renamed from: component8, reason: from getter */
-    public final float getLengthScale() {
-        return this.lengthScale;
-    }
 
     public final OfflineTtsMatchaModelConfig copy(String acousticModel, String vocoder, String lexicon, String tokens, String dataDir, String dictDir, float noiseScale, float lengthScale) {
         Intrinsics.checkNotNullParameter(acousticModel, "acousticModel");

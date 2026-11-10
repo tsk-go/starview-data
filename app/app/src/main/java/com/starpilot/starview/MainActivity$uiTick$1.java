@@ -1816,7 +1816,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                                             if (!(Math.abs(it3.getSecond().doubleValue() - md2) < 200.0d)) {
                                                                                                 it3 = null;
                                                                                             }
-                                                                                            emptyList = (it3 == null || (first = it3.getFirst()) == null) ? null : first.getLanes();
+                                                                                            emptyList = (it3 == null || (first = ((Step) it3.getFirst())) == null) ? null : first.getLanes();
                                                                                         }
                                                                                     }
                                                                                 } else {
@@ -1885,7 +1885,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                                                         it5 = null;
                                                                                                     }
                                                                                                     if (it5 != null) {
-                                                                                                        Nav.Step first2 = it5.getFirst();
+                                                                                                        Nav.Step first2 = ((Step) it5.getFirst());
                                                                                                         if (first2 != null) {
                                                                                                             emptyList2 = first2.getLanes();
                                                                                                         }
@@ -2770,7 +2770,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                                                                                             }).entrySet();
                                                                                                                                             String counts = CollectionsKt.joinToString(CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.MainActivity$uiTick$1$run$lambda$27$$inlined$sortedByDescending$1
                                                                                                                                                 @Override // java.util.Comparator
-                                                                                                                                                public final int compare(T t3, T t4) {
+                                                                                                                                                public final int compare(Object t3, Object t4) {
                                                                                                                                                     Map.Entry it7 = (Map.Entry) t4;
                                                                                                                                                     Integer num = (Integer) it7.getValue();
                                                                                                                                                     Map.Entry it8 = (Map.Entry) t3;

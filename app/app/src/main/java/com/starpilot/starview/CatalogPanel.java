@@ -612,7 +612,7 @@ public final class CatalogPanel extends ScrollView {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit addLink$lambda$17;
-                    addLink$lambda$17 = CatalogPanel.addLink$lambda$17(r, this, p);
+                    addLink$lambda$17 = CatalogPanel.addLink$lambda$17(r, CatalogPanel.this, p);
                     return addLink$lambda$17;
                 }
             }));
@@ -877,7 +877,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit addToggle$lambda$32;
-                addToggle$lambda$32 = CatalogPanel.addToggle$lambda$32(r, this, p, sw, descTv);
+                addToggle$lambda$32 = CatalogPanel.addToggle$lambda$32(r, CatalogPanel.this, p, sw, descTv);
                 return addToggle$lambda$32;
             }
         }));
@@ -1020,7 +1020,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit addNumeric$lambda$47;
-                addNumeric$lambda$47 = CatalogPanel.addNumeric$lambda$47(r, this, p, tv, descTv);
+                addNumeric$lambda$47 = CatalogPanel.addNumeric$lambda$47(r, CatalogPanel.this, p, tv, descTv);
                 return addNumeric$lambda$47;
             }
         }));
@@ -1182,10 +1182,10 @@ public final class CatalogPanel extends ScrollView {
         var8.setPadding(0, this.ui.dp(10), 0, 0);
         var3.addView((View)var8);
         ObjectRef var12 = new ObjectRef();
-        var12.element = (T)var1.getOptions();
+        var12.element = var1.getOptions();
         ObjectRef var6 = new ObjectRef();
         ObjectRef var10 = new ObjectRef();
-        var10.element = (T)"";
+        var10.element = "";
         IntRef var7 = new IntRef();
         var7.element = -2;
         ObjectRef var9 = new ObjectRef();
@@ -1224,7 +1224,7 @@ public final class CatalogPanel extends ScrollView {
                 LinearLayout var10 = (LinearLayout)var12.component1();
                 Function1 var13 = (Function1)var12.component2();
                 var0.addView((View)var10);
-                var1.element = (T)var13;
+                var1.element = var13;
             } else {
                 TextView var16 = CarUi.button$default(var3.ui, "Choose…", false, new CatalogPanel$$ExternalSyntheticLambda29(var3, var4, var2, var5), 2, null);
                 TextView var7 = var3.value();
@@ -1236,7 +1236,7 @@ public final class CatalogPanel extends ScrollView {
                 var6.addView((View)var7, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
                 var6.addView((View)var16);
                 var0.addView((View)var6);
-                var1.element = (T)(new CatalogPanel$$ExternalSyntheticLambda30(var7, var2, var3, var4));
+                var1.element = (new CatalogPanel$$ExternalSyntheticLambda30(var7, var2, var3, var4));
             }
         }
     }
@@ -1328,10 +1328,10 @@ public final class CatalogPanel extends ScrollView {
             CharSequence var19 = var12;
             var12 = new Regex("\\{(\\w+)}").replace(var19, new CatalogPanel$$ExternalSyntheticLambda26(var1));
             if (!Intrinsics.areEqual(var12, var8.element)) {
-                var8.element = (T)var12;
+                var8.element = var12;
                 List var16 = var1.optionCache.get(var12);
                 if (var16 != null) {
-                    var3.element = (T)var16;
+                    var3.element = var16;
                     addDropdown$rebuild(var9, var5, var3, var1, var2);
                 } else {
                     var1.api.options(var12, new CatalogPanel$$ExternalSyntheticLambda27(var1, var12, var3, var9, var5, var2));
@@ -1395,7 +1395,7 @@ public final class CatalogPanel extends ScrollView {
     ) {
         Intrinsics.checkNotNullParameter(var6, "o");
         var0.optionCache.put(var1, var6);
-        var2.element = (T)var6;
+        var2.element = var6;
         addDropdown$rebuild(var3, var4, var2, var0, var5);
         var0.syncAll();
         return Unit.INSTANCE;
@@ -1461,7 +1461,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit addColor$lambda$72;
-                addColor$lambda$72 = CatalogPanel.addColor$lambda$72($this$addColor_u24lambda_u2465, this, p, paintedColor, swatches, presets, descTv2);
+                addColor$lambda$72 = CatalogPanel.addColor$lambda$72($this$addColor_u24lambda_u2465, CatalogPanel.this, p, paintedColor, swatches, presets, descTv2);
                 return addColor$lambda$72;
             }
         }));
@@ -1499,7 +1499,6 @@ public final class CatalogPanel extends ScrollView {
         return Unit.INSTANCE;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
     public static final Unit addColor$lambda$72(LinearLayout $outer, CatalogPanel this$0, GalaxyApi.Param $p, Ref.ObjectRef $paintedColor, ArrayList $swatches, List $presets, TextView $descTv) {
         CatalogPanelKt.vis($outer, this$0.visible($p));
         String cur = StringsKt.trim((CharSequence) this$0.api.string($p.getKey())).toString().toUpperCase(Locale.ROOT);
@@ -1560,7 +1559,7 @@ public final class CatalogPanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit buildLongitudinalMode$lambda$76;
-                buildLongitudinalMode$lambda$76 = CatalogPanel.buildLongitudinalMode$lambda$76(paint, this);
+                buildLongitudinalMode$lambda$76 = CatalogPanel.buildLongitudinalMode$lambda$76(paint, CatalogPanel.this);
                 return buildLongitudinalMode$lambda$76;
             }
         }));

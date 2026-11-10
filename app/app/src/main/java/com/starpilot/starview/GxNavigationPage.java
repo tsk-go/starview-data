@@ -586,32 +586,11 @@ public final class GxNavigationPage extends GxPage {
         new Thread(new Runnable() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda76
             @Override // java.lang.Runnable
             public final void run() {
-                GxNavigationPage.extGet$lambda$19(u, this, then);
+                GxNavigationPage.extGet$lambda$19(u, GxNavigationPage.this, then);
             }
         }).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:24:0x007f, code lost:
-    
-        if (r6 == 0) goto L27;
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r3v1, types: [T] */
-    /* JADX WARN: Type inference failed for: r3v12 */
-    /* JADX WARN: Type inference failed for: r3v13 */
-    /* JADX WARN: Type inference failed for: r6v10 */
-    /* JADX WARN: Type inference failed for: r6v11 */
-    /* JADX WARN: Type inference failed for: r6v14, types: [java.lang.String] */
-    /* JADX WARN: Type inference failed for: r6v21, types: [T] */
-    /* JADX WARN: Type inference failed for: r6v25, types: [java.lang.String] */
-    /* JADX WARN: Type inference failed for: r6v28 */
-    /* JADX WARN: Type inference failed for: r6v34 */
-    /* JADX WARN: Type inference failed for: r6v35 */
-    /* JADX WARN: Type inference failed for: r6v4, types: [T] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public static final void extGet$lambda$19(String str, GxNavigationPage gxNavigationPage, final Function2 function2) {
         final Ref.ObjectRef objectRef = new Ref.ObjectRef();
         final Ref.ObjectRef objectRef2 = new Ref.ObjectRef();
@@ -1262,7 +1241,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit search$lambda$38;
-                search$lambda$38 = GxNavigationPage.search$lambda$38(req, this, (String) obj, (JSONObject) obj2);
+                search$lambda$38 = GxNavigationPage.search$lambda$38(req, GxNavigationPage.this, (String) obj, (JSONObject) obj2);
                 return search$lambda$38;
             }
         });
@@ -1723,7 +1702,7 @@ public final class GxNavigationPage extends GxPage {
         JSONObject put = jSONObject.put("name", str$default).put("longitude", c.getSecond().doubleValue()).put("latitude", c.getFirst().doubleValue());
         Triple<Double, Double, String> triple = this.routeSummary;
         if (triple == null || (str = triple.getThird()) == null) {
-            str = JSONObject.NULL;
+            str = ((String) JSONObject.NULL);
         }
         JSONObject body = put.put("routeId", str);
         GxPage.send$default(this, "POST", "/api/navigation/favorite", body, 0L, new Function2() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda37
@@ -2126,7 +2105,7 @@ public final class GxNavigationPage extends GxPage {
                         }
                     }
 
-                    Integer var33 = (Integer)var32;
+                    Object var33 = (Integer)var32;
                     if (var33 != null) {
                         var1 = var33;
                     } else {
@@ -2200,10 +2179,10 @@ public final class GxNavigationPage extends GxPage {
         }
         header("Favorite destinations", linearLayout2);
         Iterable $this$sortedBy$iv = this.favorites;
-        for (final JSONObject f : CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.GxNavigationPage$renderFavorites$$inlined$sortedBy$1
+        for (final JSONObject f : (Iterable<JSONObject>) CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.GxNavigationPage$renderFavorites$$inlined$sortedBy$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 JSONObject it = (JSONObject) t;
                 String lowerCase = GxPage.str$default(GxNavigationPage.this, it, "name", null, 2, null).toLowerCase(Locale.ROOT);
                 Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
@@ -2357,7 +2336,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit renameFavorite$lambda$91;
-                renameFavorite$lambda$91 = GxNavigationPage.renameFavorite$lambda$91(old, f, this, (String) obj);
+                renameFavorite$lambda$91 = GxNavigationPage.renameFavorite$lambda$91(old, f, GxNavigationPage.this, (String) obj);
                 return renameFavorite$lambda$91;
             }
         }, 8, null);
@@ -2414,7 +2393,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit homeWork$lambda$93;
-                homeWork$lambda$93 = GxNavigationPage.homeWork$lambda$93(f, home, work, this, ((Integer) obj).intValue());
+                homeWork$lambda$93 = GxNavigationPage.homeWork$lambda$93(f, home, work, GxNavigationPage.this, ((Integer) obj).intValue());
                 return homeWork$lambda$93;
             }
         });
@@ -2576,7 +2555,7 @@ public final class GxNavigationPage extends GxPage {
 
                     this.header("Recent destinations", (ViewGroup)var2);
 
-                    for (JSONObject var33 : var32) {
+                    for (JSONObject var33 : (Iterable) (JSONObject) ((JSONObject) var32)) {
                         GxPage var39 = this;
                         var var23 = GxPage.str$default(this, var33, "name", null, 2, null);
                         boolean var12;
@@ -2972,7 +2951,7 @@ public final class GxNavigationPage extends GxPage {
             Pair it = (Pair) item$iv$iv;
             destination$iv$iv.add((String) it.getSecond());
         }
-        ArrayList arrayList = (List) destination$iv$iv;
+        ArrayList arrayList = (ArrayList) destination$iv$iv;
         List $this$indexOfFirst$iv = this.scheduleOptions;
         int index$iv = 0;
         Iterator<Pair<String, String>> it2 = $this$indexOfFirst$iv.iterator();
@@ -3089,8 +3068,8 @@ public final class GxNavigationPage extends GxPage {
     /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     private final void paintMaps() {
         if (this.vDownloader != null) {
-            TextView var12 = this.mapsErrorNote;
-            TextView var11 = var12;
+            Object var12 = this.mapsErrorNote;
+            TextView var11 = ((TextView) var12);
             if (var12 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("mapsErrorNote");
                 var11 = null;
@@ -3098,7 +3077,7 @@ public final class GxNavigationPage extends GxPage {
 
             var11.setText(this.mapsError);
             var12 = this.mapsErrorNote;
-            var11 = var12;
+            var11 = ((TextView) var12);
             if (var12 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("mapsErrorNote");
                 var11 = null;
@@ -3147,7 +3126,7 @@ public final class GxNavigationPage extends GxPage {
 
             var12.setText(var48);
             var12 = this.vSaved;
-            var11 = var12;
+            var11 = ((TextView) var12);
             if (var12 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("vSaved");
                 var11 = null;
@@ -3218,7 +3197,7 @@ public final class GxNavigationPage extends GxPage {
 
             var11.setText((CharSequence)var12);
             var12 = this.vStorage;
-            var11 = var12;
+            var11 = ((TextView) var12);
             if (var12 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("vStorage");
                 var11 = null;
@@ -3233,7 +3212,7 @@ public final class GxNavigationPage extends GxPage {
 
             var11.setText(var114);
             var12 = this.nOnroad;
-            var11 = var12;
+            var11 = ((TextView) var12);
             if (var12 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("nOnroad");
                 var11 = null;
@@ -3247,7 +3226,7 @@ public final class GxNavigationPage extends GxPage {
 
             var11.setVisibility((((var22 != 0)) ? 1 : 0));
             var12 = this.nSelDirty;
-            var11 = var12;
+            var11 = ((TextView) var12);
             if (var12 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("nSelDirty");
                 var11 = null;
@@ -3261,7 +3240,7 @@ public final class GxNavigationPage extends GxPage {
 
             var11.setVisibility((((var22 != 0)) ? 1 : 0));
             var12 = this.nSchDirty;
-            var11 = var12;
+            var11 = ((TextView) var12);
             if (var12 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("nSchDirty");
                 var11 = null;
@@ -3329,7 +3308,7 @@ public final class GxNavigationPage extends GxPage {
                     var8 = true;
                 }
 
-                this.setOn(var12, var8);
+                this.setOn(((TextView) var12), var8);
                 Unit var64 = Unit.INSTANCE;
                 Unit var65 = Unit.INSTANCE;
             }
@@ -3489,7 +3468,7 @@ public final class GxNavigationPage extends GxPage {
 
                 this.setProgress(var84, var3);
                 var12 = this.pEstimate;
-                var11 = var12;
+                var11 = ((TextView) var12);
                 if (var12 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("pEstimate");
                     var11 = null;
@@ -3506,7 +3485,7 @@ public final class GxNavigationPage extends GxPage {
                 var11.setText("Estimate: " + var130);
                 var1 = var13.optDouble("downloadedBytes", 0.0);
                 var12 = this.pStored;
-                var11 = var12;
+                var11 = ((TextView) var12);
                 if (var12 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("pStored");
                     var11 = null;
@@ -3523,7 +3502,7 @@ public final class GxNavigationPage extends GxPage {
                 var11.setText("Stored: " + var133);
                 var6 = var13.optInt("totalFiles", 0);
                 var12 = this.pFiles;
-                var11 = var12;
+                var11 = ((TextView) var12);
                 if (var12 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("pFiles");
                     var11 = null;
@@ -3540,7 +3519,7 @@ public final class GxNavigationPage extends GxPage {
                 var11.setText("Files: " + var135);
                 var1 = var13.optDouble("etaSeconds", 0.0);
                 var12 = this.pEta;
-                var11 = var12;
+                var11 = ((TextView) var12);
                 if (var12 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("pEta");
                     var11 = null;
@@ -3557,7 +3536,7 @@ public final class GxNavigationPage extends GxPage {
                 var11.setText("ETA: " + var137);
                 String var156 = GxPage.str$default(this, var13, "primaryLocation", null, 2, null);
                 var12 = this.pRegion;
-                var11 = var12;
+                var11 = ((TextView) var12);
                 if (var12 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("pRegion");
                     var11 = null;
@@ -3565,7 +3544,7 @@ public final class GxNavigationPage extends GxPage {
 
                 var11.setText("Current region: " + var156);
                 var12 = this.pRegion;
-                var11 = var12;
+                var11 = ((TextView) var12);
                 if (var12 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("pRegion");
                     var11 = null;
@@ -3669,7 +3648,7 @@ public final class GxNavigationPage extends GxPage {
             }
 
             var12 = this.selRegionsText;
-            var11 = var12;
+            var11 = ((TextView) var12);
             if (var12 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("selRegionsText");
                 var11 = null;
@@ -3682,7 +3661,7 @@ public final class GxNavigationPage extends GxPage {
                 Iterable var147 = this.selectedDraft;
                 var var15 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var147, 10));
 
-                for (String var157 : var147) {
+                for (String var157 : ((String) var147)) {
                     String var148 = this.tokenLabels.get(var157);
                     if (var148 == null) {
                         var148 = var157;
@@ -3695,10 +3674,10 @@ public final class GxNavigationPage extends GxPage {
                 Iterable var150 = var149;
                 var146 = CollectionsKt.joinToString(CollectionsKt.sortedWith(var150, new Comparator() {
                     @Override
-                    public final int compare(T var1, T var2) {
+                    public final int compare(Object var1, Object var2) {
                         var1 = var1.toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-                        Comparable var4 = var1;
+                        Comparable var4 = ((Comparable) var1);
                         var2 = var2.toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
                         return ComparisonsKt.compareValues(var4, var2);
@@ -3708,7 +3687,7 @@ public final class GxNavigationPage extends GxPage {
 
             var11.setText(var146);
             var12 = this.selRegionsText;
-            var11 = var12;
+            var11 = ((TextView) var12);
             if (var12 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("selRegionsText");
                 var11 = null;
@@ -3722,7 +3701,7 @@ public final class GxNavigationPage extends GxPage {
 
             var11.setTextColor(var27);
             var12 = this.schedNote;
-            var11 = var12;
+            var11 = ((TextView) var12);
             if (var12 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("schedNote");
                 var11 = null;
@@ -3839,7 +3818,7 @@ public final class GxNavigationPage extends GxPage {
                     Iterable var9 = var10;
                     boolean var3 = false;
 
-                    for (JSONObject var16 : var10) {
+                    for (JSONObject var16 : (Iterable) (JSONObject) ((JSONObject) var10)) {
                         List var39;
                         label130: {
                             JSONArray var38 = var16.optJSONArray("regions");
@@ -4006,7 +3985,7 @@ public final class GxNavigationPage extends GxPage {
                                 ViewGroup var49 = (ViewGroup)var72;
                                 GxPage.buttons$default(var75, new Pair[]{var68, var78}, var49, false, 4, null);
 
-                                for (JSONObject var61 : var73) {
+                                for (JSONObject var61 : (Iterable) (JSONObject) ((JSONObject) var73)) {
                                     String var74 = GxPage.str$default(this, var61, "token", null, 2, null);
                                     String var77 = GxPage.str$default(this, var61, "label", null, 2, null);
                                     var var62 = GxPage.str$default(this, var61, "code", null, 2, null);
@@ -4020,14 +3999,13 @@ public final class GxNavigationPage extends GxPage {
                                         var62 = null;
                                     }
 
-                                    Switch var63 = this.toggle(
+                                    Switch var63 = (Switch) this.toggle(
                                             var77,
                                             var62,
                                             this.selectedDraft.contains(var74),
                                             (ViewGroup)var72,
                                             new GxNavigationPage$$ExternalSyntheticLambda23(this, var74)
-                                        )
-                                        .component2();
+                                        ).component2();
                                     this.regionSwitches.put(var74, var63);
                                 }
                             }
@@ -4786,7 +4764,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit editKey$lambda$166;
-                editKey$lambda$166 = GxNavigationPage.editKey$lambda$166(m, this, (String) obj);
+                editKey$lambda$166 = GxNavigationPage.editKey$lambda$166(m, GxNavigationPage.this, (String) obj);
                 return editKey$lambda$166;
             }
         }, 16, null);
@@ -4970,8 +4948,8 @@ public final class GxNavigationPage extends GxPage {
     private final void paintSpeed() {
         JSONObject var14 = this.speedObj;
         boolean var7 = var14.optBoolean("visionEnabled");
-        TextView var11 = this.sStatus;
-        TextView var10 = var11;
+        Object var11 = this.sStatus;
+        TextView var10 = ((TextView) var11);
         if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("sStatus");
             var10 = null;
@@ -5099,7 +5077,7 @@ public final class GxNavigationPage extends GxPage {
 
         var11.setText(var30);
         var11 = this.sVision;
-        var10 = var11;
+        var10 = ((TextView) var11);
         if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("sVision");
             var10 = null;
@@ -5153,7 +5131,7 @@ public final class GxNavigationPage extends GxPage {
         var10.setText(var11 + var59);
         var59 = GxPage.str$default(this, var14, "visionLastEvent", null, 2, null);
         var11 = this.sLastEvent;
-        var10 = var11;
+        var10 = ((TextView) var11);
         if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("sLastEvent");
             var10 = null;
@@ -5161,7 +5139,7 @@ public final class GxNavigationPage extends GxPage {
 
         var10.setText((CharSequence)var59);
         var11 = this.sLastEvent;
-        var10 = var11;
+        var10 = ((TextView) var11);
         if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("sLastEvent");
             var10 = null;
@@ -5190,7 +5168,7 @@ public final class GxNavigationPage extends GxPage {
 
         var10.setVisibility((((var23 != 0)) ? 1 : 0));
         var11 = this.sReason;
-        var10 = var11;
+        var10 = ((TextView) var11);
         if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("sReason");
             var10 = null;
@@ -5198,7 +5176,7 @@ public final class GxNavigationPage extends GxPage {
 
         var10.setText(this.speedReason);
         var11 = this.sReason;
-        var10 = var11;
+        var10 = ((TextView) var11);
         if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("sReason");
             var10 = null;

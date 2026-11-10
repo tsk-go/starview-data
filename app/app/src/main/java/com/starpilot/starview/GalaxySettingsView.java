@@ -65,7 +65,7 @@ public final class GalaxySettingsView extends FrameLayout {
     private final Handler main;
     private final Function2<String, String, Unit> openWeb;
     private final Function2<String, LinearLayout, Unit> pageExtras;
-    private final GalaxySettingsView$poll$1 poll;
+    private final Runnable poll;
     private final Root root;
     private final ScrollView scroll;
     private final ArrayList<String> stack;
@@ -613,7 +613,7 @@ public final class GalaxySettingsView extends FrameLayout {
             emptyList = CollectionsKt.emptyList();
         }
         List hubRows = emptyList;
-        for (GalaxyRow r : hubRows) {
+        for (GalaxyRow r : ((GalaxyRow) hubRows)) {
             if (r.getPage().length() > 0) {
                 this.titles.put(r.getPage(), r.getLabel());
             }
@@ -621,7 +621,7 @@ public final class GalaxySettingsView extends FrameLayout {
         Iterator<Entry> it4 = this.root.getEntries().iterator();
         int count = 0;
         while (it4.hasNext()) {
-            final Entry e = it4.next();
+            Entry e = it4.next();
             if (e instanceof Entry.Hub) {
                 for (final String p : ((Entry.Hub) e).getPages()) {
                     List $this$firstOrNull$iv = hubRows;
@@ -684,7 +684,7 @@ public final class GalaxySettingsView extends FrameLayout {
                         destination$iv$iv.add(element$iv$iv);
                     }
                 }
-                for (final GalaxyRow r3 : (List) destination$iv$iv) {
+                for (final GalaxyRow r3 : (GalaxyRow) destination$iv$iv) {
                     linkCard$default(this, r3.getLabel(), r3.getValue(), r3.getAvailable(), false, SettingIcons.INSTANCE.forPage(r3.getPage()), new Function0() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda31
                         @Override // kotlin.jvm.functions.Function0
                         public final Object invoke() {
@@ -807,7 +807,7 @@ public final class GalaxySettingsView extends FrameLayout {
                 this.vasmCard = var6;
             }
 
-            GalaxyRow var32 = CollectionsKt.getOrNull(var9, var4);
+            GalaxyRow var32 = ((GalaxyRow) CollectionsKt.getOrNull(var9, var4));
             boolean var5;
             if (var32 != null && var32.getAvailable()) {
                 var5 = true;
@@ -818,7 +818,7 @@ public final class GalaxySettingsView extends FrameLayout {
             var6.update(var1, var5);
         }
 
-        String var22 = var1.optString("title");
+        Object var22 = var1.optString("title");
         String var33 = var1.optString("subtitle");
         boolean var20 = var1.optBoolean("vehicleIdentified");
         String var8 = CollectionsKt.joinToString(var9, "\n", "", "", -1, "...", new GalaxySettingsView$$ExternalSyntheticLambda10());
@@ -837,7 +837,7 @@ public final class GalaxySettingsView extends FrameLayout {
                 var2 = 0;
             }
 
-            this.lastShown = var22;
+            this.lastShown = ((String) var22);
             var33 = var1.optString("page");
             Map var10 = this.titles;
             CharSequence var36 = var1.optString("title");
@@ -864,12 +864,12 @@ public final class GalaxySettingsView extends FrameLayout {
 
             var22 = var1.optString("subtitle");
             Intrinsics.checkNotNull(var22);
-            if (StringsKt.isBlank(var22)) {
+            if (StringsKt.isBlank(((CharSequence) var22))) {
                 var22 = null;
             }
 
             if (var22 != null) {
-                this.col.addView((View)this.ui.note(var22), (android.view.ViewGroup.LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
+                this.col.addView((View)this.ui.note(((String) var22)), (android.view.ViewGroup.LayoutParams)CarUi.lp$default(this.ui, 0, 0, 3, null));
             }
 
             if (!var1.optBoolean("vehicleIdentified", true)) {
@@ -1159,7 +1159,7 @@ public final class GalaxySettingsView extends FrameLayout {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit defaultButton$lambda$40;
-                    defaultButton$lambda$40 = GalaxySettingsView.defaultButton$lambda$40(r, this);
+                    defaultButton$lambda$40 = GalaxySettingsView.defaultButton$lambda$40(r, GalaxySettingsView.this);
                     return defaultButton$lambda$40;
                 }
             }, 2, null);
@@ -1189,7 +1189,7 @@ public final class GalaxySettingsView extends FrameLayout {
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.GalaxySettingsView$$ExternalSyntheticLambda6
             @Override // android.widget.CompoundButton.OnCheckedChangeListener
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                GalaxySettingsView.switchRow$lambda$43(r, this, compoundButton, z);
+                GalaxySettingsView.switchRow$lambda$43(r, GalaxySettingsView.this, compoundButton, z);
             }
         });
         row.addView(sw);
@@ -1250,7 +1250,7 @@ public final class GalaxySettingsView extends FrameLayout {
             ObjectRef var12 = new ObjectRef();
             Pair var6 = this.ui.chips(var1.getChoices(), new GalaxySettingsView$$ExternalSyntheticLambda20(var1, this, var12));
             LinearLayout var5 = (LinearLayout)var6.component1();
-            var12.element = (T)((Function1)var6.component2());
+            var12.element = ((Function1)var6.component2());
             var5.setPadding(0, this.ui.dp(10), 0, 0);
             var15.addView((View)var5);
             Function1 var13;
@@ -1371,7 +1371,7 @@ public final class GalaxySettingsView extends FrameLayout {
             @Override // android.widget.SeekBar.OnSeekBarChangeListener
             public void onStopTrackingTouch(SeekBar sb) {
                 this.touching = false;
-                GalaxySettingsView.sliderRow$commit(shown$default, r, this, bounds, round, seekBar.getProgress());
+                GalaxySettingsView.sliderRow$commit(shown$default, r, GalaxySettingsView.this, bounds, round, seekBar.getProgress());
             }
         });
         LinearLayout linearLayout3 = new LinearLayout(getContext());
@@ -1382,7 +1382,7 @@ public final class GalaxySettingsView extends FrameLayout {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit sliderRow$lambda$55;
-                sliderRow$lambda$55 = GalaxySettingsView.sliderRow$lambda$55(r, this, seekBar, shown$default, bounds, round);
+                sliderRow$lambda$55 = GalaxySettingsView.sliderRow$lambda$55(r, GalaxySettingsView.this, seekBar, shown$default, bounds, round);
                 return sliderRow$lambda$55;
             }
         }));
@@ -1395,7 +1395,7 @@ public final class GalaxySettingsView extends FrameLayout {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit sliderRow$lambda$57;
-                sliderRow$lambda$57 = GalaxySettingsView.sliderRow$lambda$57(r, this, seekBar, i, shown$default, bounds, round);
+                sliderRow$lambda$57 = GalaxySettingsView.sliderRow$lambda$57(r, GalaxySettingsView.this, seekBar, i, shown$default, bounds, round);
                 return sliderRow$lambda$57;
             }
         }));
@@ -1480,7 +1480,7 @@ public final class GalaxySettingsView extends FrameLayout {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit actionRow$lambda$61;
-                    actionRow$lambda$61 = GalaxySettingsView.actionRow$lambda$61(r, this);
+                    actionRow$lambda$61 = GalaxySettingsView.actionRow$lambda$61(r, GalaxySettingsView.this);
                     return actionRow$lambda$61;
                 }
             }, 2, null));
@@ -1677,7 +1677,7 @@ public final class GalaxySettingsView extends FrameLayout {
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit reviewDraft$lambda$74(final GalaxySettingsView this$0, JSONObject o, String err) {
         String optString;
-        final String intent = null;
+        String intent = null;
         if (o != null && (optString = o.optString("intent")) != null) {
             String str = optString;
             if (!StringsKt.isBlank(str)) {
@@ -1742,7 +1742,7 @@ public final class GalaxySettingsView extends FrameLayout {
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit review$lambda$79(final GalaxySettingsView this$0, GalaxyRow $r, JSONObject o, String err) {
         String optString;
-        final String intent = null;
+        String intent = null;
         if (o != null && (optString = o.optString("intent")) != null) {
             String str = optString;
             if (!StringsKt.isBlank(str)) {

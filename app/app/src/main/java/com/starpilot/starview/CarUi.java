@@ -194,130 +194,80 @@ public final class CarUi {
         return $this$corners_u24lambda_u243;
     }
 
-    /* VF: from Vineflower (jadx: Type inference failed) */
-    public final Pair<View, Function1<Integer, Unit>> browserTabs(List<String> var1, int var2, Function1<? super Integer, Unit> var3) {
-        Intrinsics.checkNotNullParameter(var1, "labels");
-        Intrinsics.checkNotNullParameter(var3, "onPick");
-        boolean var10;
-        if (var2 == 1) {
-            var10 = true;
+    public final Pair<View, Function1<Integer, Unit>> browserTabs(List<String> labels, int level, final Function1<? super Integer, Unit> onPick) {
+        FlowRow flowRow;
+        ViewGroup view;
+        char c;
+        ViewGroup.LayoutParams layoutParams;
+        Intrinsics.checkNotNullParameter(labels, "labels");
+        Intrinsics.checkNotNullParameter(onPick, "onPick");
+        final boolean big = level == 1;
+        final ArrayList tabs = new ArrayList();
+        if (big) {
+            LinearLayout $this$browserTabs_u24lambda_u244 = new LinearLayout(this.ctx);
+            $this$browserTabs_u24lambda_u244.setOrientation(0);
+            $this$browserTabs_u24lambda_u244.setPadding(dp(8), dp(8), dp(8), 0);
+            flowRow = $this$browserTabs_u24lambda_u244;
         } else {
-            var10 = false;
+            FlowRow $this$browserTabs_u24lambda_u245 = new FlowRow(this.ctx, dp(2), dp(4));
+            $this$browserTabs_u24lambda_u245.setPadding(dp(14), dp(12), dp(14), 0);
+            flowRow = $this$browserTabs_u24lambda_u245;
         }
-
-        ArrayList var12 = new ArrayList();
-        ViewGroup var30;
-        if (var10) {
-            LinearLayout var11 = new LinearLayout(this.ctx);
-            var11.setOrientation(0);
-            var11.setPadding(this.dp(8), this.dp(8), this.dp(8), 0);
-            var30 = (ViewGroup)var11;
+        ViewGroup strip = flowRow;
+        int i = 0;
+        for (String l : labels) {
+            final int i2 = i;
+            i++;
+            TextView textView = new TextView(this.ctx);
+            textView.setText(l);
+            textView.setTextSize(big ? 18.0f : 15.0f);
+            textView.setGravity(17);
+            textView.setTextColor(TAB_TEXT);
+            textView.setSingleLine(true);
+            textView.setPadding(dp(big ? 20 : 16), dp(big ? 14 : 10), dp(big ? 20 : 16), dp(big ? 15 : 11));
+            textView.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda4
+                @Override // android.view.View.OnClickListener
+                public final void onClick(View view2) {
+                    CarUi.browserTabs$lambda$7$lambda$6(Function1.this, i2, view2);
+                }
+            });
+            tabs.add(textView);
+            TextView textView2 = textView;
+            if (big) {
+                LinearLayout.LayoutParams $this$browserTabs_u24lambda_u248 = new LinearLayout.LayoutParams(-2, -2);
+                c = 2;
+                $this$browserTabs_u24lambda_u248.rightMargin = dp(2);
+                Unit unit = Unit.INSTANCE;
+                layoutParams = $this$browserTabs_u24lambda_u248;
+            } else {
+                c = 2;
+                layoutParams = new ViewGroup.LayoutParams(-2, -2);
+            }
+            strip.addView(textView2, layoutParams);
+        }
+        final int selBg = big ? SECTION : PAGE;
+        final int edge = big ? ACCENT : PAGE_EDGE;
+        final int r = big ? 14 : 10;
+        Function1 paint = new Function1() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda5
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit browserTabs$lambda$12;
+                browserTabs$lambda$12 = CarUi.browserTabs$lambda$12(tabs, CarUi.this, edge, r, selBg, big, ((Integer) obj).intValue());
+                return browserTabs$lambda$12;
+            }
+        };
+        if (big) {
+            HorizontalScrollView $this$browserTabs_u24lambda_u2413 = new HorizontalScrollView(this.ctx);
+            $this$browserTabs_u24lambda_u2413.setHorizontalScrollBarEnabled(false);
+            $this$browserTabs_u24lambda_u2413.setFillViewport(true);
+            $this$browserTabs_u24lambda_u2413.setBackground(corners(STRIP, 14, 14, 0, 0));
+            $this$browserTabs_u24lambda_u2413.addView(strip);
+            view = $this$browserTabs_u24lambda_u2413;
         } else {
-            FlowRow var31 = new FlowRow(this.ctx, this.dp(2), this.dp(4));
-            var31.setPadding(this.dp(14), this.dp(12), this.dp(14), 0);
-            var30 = var31;
+            strip.setBackgroundColor(SECTION);
+            view = strip;
         }
-
-        Iterator var13 = var1.iterator();
-        var2 = 0;
-
-        while (var13.hasNext()) {
-            int var6 = var2 + 1;
-            String var16 = (String)var13.next();
-            TextView var14 = new TextView(this.ctx);
-            var14.setText(var16);
-            float var4;
-            if (var10) {
-                var4 = 18.0F;
-            } else {
-                var4 = 15.0F;
-            }
-
-            var14.setTextSize(var4);
-            var14.setGravity(17);
-            var14.setTextColor(TAB_TEXT);
-            var14.setSingleLine(true);
-            byte var22;
-            if (var10) {
-                var22 = 20;
-            } else {
-                var22 = 16;
-            }
-
-            int var7 = this.dp(var22);
-            if (var10) {
-                var22 = 14;
-            } else {
-                var22 = 10;
-            }
-
-            int var8 = this.dp(var22);
-            if (var10) {
-                var22 = 20;
-            } else {
-                var22 = 16;
-            }
-
-            int var9 = this.dp(var22);
-            if (var10) {
-                var22 = 15;
-            } else {
-                var22 = 11;
-            }
-
-            var14.setPadding(var7, var8, var9, this.dp(var22));
-            var14.setOnClickListener(new CarUi$$ExternalSyntheticLambda4(var3, var2));
-            var12.add(var14);
-            View var32 = (View)var14;
-            android.view.ViewGroup.LayoutParams var18;
-            if (var10) {
-                android.widget.LinearLayout.LayoutParams var15 = new LayoutParams(-2, -2);
-                var15.rightMargin = this.dp(2);
-                Unit var17 = Unit.INSTANCE;
-                var18 = (android.view.ViewGroup.LayoutParams)var15;
-            } else {
-                var18 = new android.view.ViewGroup.LayoutParams(-2, -2);
-            }
-
-            var30.addView(var32, var18);
-            var2 = var6;
-        }
-
-        if (var10) {
-            var2 = SECTION;
-        } else {
-            var2 = PAGE;
-        }
-
-        int var28;
-        if (var10) {
-            var28 = ACCENT;
-        } else {
-            var28 = PAGE_EDGE;
-        }
-
-        byte var29;
-        if (var10) {
-            var29 = 14;
-        } else {
-            var29 = 10;
-        }
-
-        CarUi$$ExternalSyntheticLambda5 var27 = new CarUi$$ExternalSyntheticLambda5(var12, this, var28, var29, var2, var10);
-        View var20;
-        if (var10) {
-            HorizontalScrollView var19 = new HorizontalScrollView(this.ctx);
-            var19.setHorizontalScrollBarEnabled(false);
-            var19.setFillViewport(true);
-            var19.setBackground((Drawable)this.corners(STRIP, 14, 14, 0, 0));
-            var19.addView((View)var30);
-            var20 = (View)var19;
-        } else {
-            var30.setBackgroundColor(SECTION);
-            var20 = (View)var30;
-        }
-
-        return TuplesKt.to(var20, var27);
+        return TuplesKt.to(view, paint);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -592,7 +542,7 @@ public final class CarUi {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit chips$lambda$38;
-                chips$lambda$38 = CarUi.chips$lambda$38(views, this, ((Integer) obj).intValue());
+                chips$lambda$38 = CarUi.chips$lambda$38(views, CarUi.this, ((Integer) obj).intValue());
                 return chips$lambda$38;
             }
         };

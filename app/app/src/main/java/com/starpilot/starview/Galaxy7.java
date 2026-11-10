@@ -390,7 +390,7 @@ public final class Galaxy7 {
         this.io.execute(new Runnable() { // from class: com.starpilot.starview.Galaxy7$$ExternalSyntheticLambda4
             @Override // java.lang.Runnable
             public final void run() {
-                Galaxy7.async$lambda$16(work, this, done);
+                Galaxy7.async$lambda$16(work, Galaxy7.this, done);
             }
         });
     }

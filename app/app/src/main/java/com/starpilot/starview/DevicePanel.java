@@ -426,7 +426,7 @@ public final class DevicePanel extends ScrollView {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit button$lambda$20;
-                button$lambda$20 = DevicePanel.button$lambda$20($this$button_u24lambda_u2418, label, enabled, value, $this$button_u24lambda_u2416, row, visible, descFn, tb, this);
+                button$lambda$20 = DevicePanel.button$lambda$20($this$button_u24lambda_u2418, label, enabled, value, $this$button_u24lambda_u2416, row, visible, descFn, tb, DevicePanel.this);
                 return button$lambda$20;
             }
         });
@@ -520,7 +520,7 @@ public final class DevicePanel extends ScrollView {
         bar.setPadding(0, dp(8), 0, 0);
         List<String> $this$mapIndexed$iv = options;
         Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$mapIndexed$iv, 10));
-        final int index$iv$iv = 0;
+        int index$iv$iv = 0;
         for (Object item$iv$iv : $this$mapIndexed$iv) {
             int index$iv$iv2 = index$iv$iv + 1;
             if (index$iv$iv < 0) {
@@ -761,7 +761,7 @@ public final class DevicePanel extends ScrollView {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit call$lambda$42;
-                    call$lambda$42 = DevicePanel.call$lambda$42(then, this, (JSONObject) obj);
+                    call$lambda$42 = DevicePanel.call$lambda$42(then, DevicePanel.this, (JSONObject) obj);
                     return call$lambda$42;
                 }
             });
@@ -832,7 +832,7 @@ public final class DevicePanel extends ScrollView {
         new AlertDialog.Builder(this.act).setTitle(title).setView($this$input_u24lambda_u2444).setPositiveButton("OK", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DevicePanel$$ExternalSyntheticLambda166
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                DevicePanel.input$lambda$45($this$input_u24lambda_u2444, minLen, this, onDone, dialogInterface, i);
+                DevicePanel.input$lambda$45($this$input_u24lambda_u2444, minLen, DevicePanel.this, onDone, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }

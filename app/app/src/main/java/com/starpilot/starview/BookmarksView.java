@@ -85,7 +85,7 @@ public final class BookmarksView extends CardPage {
             head.addView(line("No bookmarks yet.", CarUi.Companion.getTEXT(), 16.0f));
             return;
         }
-        for (final Bookmarks.Item it : items) {
+        for (final Bookmarks.Item it : ((Item) items)) {
             LinearLayout c3 = card();
             add(c3);
             TextView $this$paint_u24lambda_u245 = new TextView(getContext());
@@ -280,7 +280,7 @@ public final class BookmarksView extends CardPage {
         new AlertDialog.Builder(getContext()).setTitle("Bookmark note").setView($this$edit_u24lambda_u2416).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.BookmarksView$$ExternalSyntheticLambda7
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                BookmarksView.edit$lambda$18(it, this, $this$edit_u24lambda_u2416, dialogInterface, i);
+                BookmarksView.edit$lambda$18(it, BookmarksView.this, $this$edit_u24lambda_u2416, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }

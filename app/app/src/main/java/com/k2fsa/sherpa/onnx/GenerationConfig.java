@@ -20,40 +20,11 @@ public final /* data */ class GenerationConfig {
         this(0.0f, 0.0f, 0, null, 0, null, 0, null, 255, null);
     }
 
-    /* renamed from: component1, reason: from getter */
-    public final float getSilenceScale() {
-        return this.silenceScale;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final float getSpeed() {
-        return this.speed;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final int getSid() {
-        return this.sid;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final float[] getReferenceAudio() {
-        return this.referenceAudio;
-    }
 
-    /* renamed from: component5, reason: from getter */
-    public final int getReferenceSampleRate() {
-        return this.referenceSampleRate;
-    }
 
-    /* renamed from: component6, reason: from getter */
-    public final String getReferenceText() {
-        return this.referenceText;
-    }
-
-    /* renamed from: component7, reason: from getter */
-    public final int getNumSteps() {
-        return this.numSteps;
-    }
 
     public final Map<String, String> component8() {
         return this.extra;

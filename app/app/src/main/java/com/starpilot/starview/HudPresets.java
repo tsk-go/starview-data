@@ -146,7 +146,7 @@ public final class HudPresets {
         Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
         Sequence $this$associateWith$iv = SequencesKt.asSequence(keys);
         LinkedHashMap result$iv = new LinkedHashMap();
-        for (Object element$iv$iv : $this$associateWith$iv) {
+        for (Object element$iv$iv : (Iterable) $this$associateWith$iv) {
             String it = (String) element$iv$iv;
             result$iv.put(element$iv$iv, o.getString(it));
         }

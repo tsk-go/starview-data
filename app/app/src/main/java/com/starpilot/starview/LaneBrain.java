@@ -2608,7 +2608,7 @@ public final class LaneBrain {
         this.camLog.clear();
         this.roadChangeMs = 0L;
         this.rtkDoubtMs = 0L;
-        for (Vote v : CollectionsKt.listOf((Object[]) new Vote[]{this.vYellow, this.vDashL, this.vDashR, this.vSolidR, this.vOuterL, this.vOuterR, this.vEdgeL, this.vEdgeR})) {
+        for (Vote v : ((Vote) CollectionsKt.listOf((Object[]) new Vote[]{this.vYellow, this.vDashL, this.vDashR, this.vSolidR, this.vOuterL, this.vOuterR, this.vEdgeL, this.vEdgeR}))) {
             v.clear();
         }
         this.carsL.clear();

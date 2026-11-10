@@ -22,7 +22,7 @@ import kotlin.text.StringsKt;
 
 /* compiled from: RoadData.kt */
 public final class RoadDataView extends CardPage {
-    private final RoadDataView$poll$1 poll;
+    private final Runnable poll;
 
     /* VF: from Vineflower (jadx: Type inference failed) */
     public RoadDataView(Context var1, CarUi var2) {
@@ -55,7 +55,7 @@ public final class RoadDataView extends CardPage {
         getCol().removeAllViews();
         Map files = Hpms.INSTANCE.files();
         long j = 0;
-        for (File it : files.values()) {
+        for (File it : (Iterable) (File) ((File) files.values())) {
             j += it.length();
         }
         long bytes = j;

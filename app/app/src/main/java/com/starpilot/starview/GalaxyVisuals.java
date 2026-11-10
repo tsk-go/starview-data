@@ -260,7 +260,7 @@ public final class GalaxyVisuals {
                                     var36 = SetsKt.emptySet();
                                 }
 
-                                return var36;
+                                return ((Set<Integer>) var36);
                             }
 
                             try {
@@ -281,7 +281,7 @@ public final class GalaxyVisuals {
                                 var34 = SetsKt.emptySet();
                             }
 
-                            return var34;
+                            return ((Set<Integer>) var34);
                         }
 
                         try {
@@ -302,7 +302,7 @@ public final class GalaxyVisuals {
                             var32 = SetsKt.emptySet();
                         }
 
-                        return var32;
+                        return ((Set<Integer>) var32);
                     }
 
                     try {
@@ -343,7 +343,7 @@ public final class GalaxyVisuals {
                 var40 = SetsKt.emptySet();
             }
 
-            return var40;
+            return ((Set<Integer>) var40);
         }
 
         try {
@@ -353,7 +353,7 @@ public final class GalaxyVisuals {
             var41 = SetsKt.emptySet();
         }
 
-        return var41;
+        return ((Set<Integer>) var41);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -568,7 +568,7 @@ public final class GalaxyVisuals {
         int i2 = 12;
         FlowRow grid = new FlowRow(ctx, ui.dp(12), ui.dp(12));
         int w = ui.dp(330);
-        for (Map.Entry entry : byButton.entrySet()) {
+        for (Map.Entry entry : ((Entry) byButton.entrySet())) {
             String b2 = (String) entry.getKey();
             List<Pair> list = (List) entry.getValue();
             LinearLayout c = card(ctx, ui);
@@ -758,7 +758,7 @@ public final class GalaxyVisuals {
         return CollectionsKt.plus((Collection) CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.GalaxyVisuals$faderPositions$$inlined$sortedBy$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 String it6 = (String) t;
                 Double valueOf = Double.valueOf(Double.parseDouble(StringsKt.trim((CharSequence) StringsKt.removeSuffix(it6, (CharSequence) "%")).toString()));
                 String it7 = (String) t2;
@@ -1504,7 +1504,7 @@ public final class GalaxyVisuals {
             float h = getHeight();
             float top = 26 * d;
             float bottom = h - (30 * d);
-            Iterator<T> it = bandsView.bands.iterator();
+            Iterator it = bandsView.bands.iterator();
             if (!it.hasNext()) {
                 throw new NoSuchElementException();
             }
@@ -1515,7 +1515,7 @@ public final class GalaxyVisuals {
                 doubleValue = Math.max(doubleValue, ((Number) it3.getSecond()).doubleValue());
             }
             double hi = Math.max(doubleValue, 1.0d);
-            Iterator<T> it4 = bandsView.bands.iterator();
+            Iterator it4 = bandsView.bands.iterator();
             if (!it4.hasNext()) {
                 throw new NoSuchElementException();
             }
@@ -1533,7 +1533,7 @@ public final class GalaxyVisuals {
             float f = 2;
             float zero2 = zero;
             c.drawRect(0.0f, zero - (d / f), y, zero + (d / f), bandsView.p);
-            Iterator<T> it7 = bandsView.bands.iterator();
+            Iterator it7 = bandsView.bands.iterator();
             int i2 = 0;
             while (it7.hasNext()) {
                 int i3 = i2;
@@ -1743,13 +1743,13 @@ public final class GalaxyVisuals {
                 Iterable $this$minByOrNull$iv = CollectionsKt.getIndices(this.positions);
                 Iterator iterator$iv = $this$minByOrNull$iv.iterator();
                 if (iterator$iv.hasNext()) {
-                    num = iterator$iv.next();
+                    num = ((Integer) iterator$iv.next());
                     if (iterator$iv.hasNext()) {
                         int it2 = num.intValue();
                         Double doubleOrNull2 = StringsKt.toDoubleOrNull(StringsKt.trim((CharSequence) StringsKt.removeSuffix(this.positions.get(it2), (CharSequence) "%")).toString());
                         double minValue$iv = Math.abs((doubleOrNull2 != null ? doubleOrNull2.doubleValue() : 1.0E9d) - x);
                         do {
-                            Integer next = iterator$iv.next();
+                            Integer next = ((Integer) iterator$iv.next());
                             int it3 = next.intValue();
                             Double doubleOrNull3 = StringsKt.toDoubleOrNull(StringsKt.trim((CharSequence) StringsKt.removeSuffix(this.positions.get(it3), (CharSequence) "%")).toString());
                             double v$iv = Math.abs((doubleOrNull3 != null ? doubleOrNull3.doubleValue() : 1.0E9d) - x);

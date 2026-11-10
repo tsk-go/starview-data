@@ -37,30 +37,9 @@ public final /* data */ class OfflineTtsKittenModelConfig {
         return offlineTtsKittenModelConfig.copy(str, str5, str6, str7, f);
     }
 
-    /* renamed from: component1, reason: from getter */
-    public final String getModel() {
-        return this.model;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final String getVoices() {
-        return this.voices;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final String getTokens() {
-        return this.tokens;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final String getDataDir() {
-        return this.dataDir;
-    }
-
-    /* renamed from: component5, reason: from getter */
-    public final float getLengthScale() {
-        return this.lengthScale;
-    }
 
     public final OfflineTtsKittenModelConfig copy(String model, String voices, String tokens, String dataDir, float lengthScale) {
         Intrinsics.checkNotNullParameter(model, "model");

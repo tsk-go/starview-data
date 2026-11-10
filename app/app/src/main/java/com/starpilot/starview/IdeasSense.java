@@ -308,7 +308,7 @@ public final class IdeasSense {
         }
         Iterator it5 = this.people.entrySet().iterator();
         while (it5.hasNext()) {
-            Map.Entry<Long, Person> next = it5.next();
+            Map.Entry<Long, Person> next = ((Entry<Long,Person>) it5.next());
             Intrinsics.checkNotNullExpressionValue(next, "next(...)");
             Map.Entry<Long, Person> entry = next;
             Long key = entry.getKey();
@@ -339,7 +339,7 @@ public final class IdeasSense {
         Intrinsics.checkNotNullExpressionValue(gi, "iterator(...)");
         Ghost nearest = null;
         while (gi.hasNext()) {
-            Ghost next2 = gi.next();
+            Ghost next2 = ((Ghost) gi.next());
             Intrinsics.checkNotNullExpressionValue(next2, "next(...)");
             Ghost g = next2;
             g.setX(g.getX() - ((float) (dt * v)));

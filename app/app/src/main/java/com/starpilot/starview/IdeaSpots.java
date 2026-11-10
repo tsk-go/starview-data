@@ -397,7 +397,7 @@ public final class IdeaSpots {
                 CollectionsKt.sortWith($this$sortBy$iv, new Comparator() { // from class: com.starpilot.starview.IdeaSpots$around$$inlined$sortBy$1
                     /* JADX WARN: Multi-variable type inference failed */
                     @Override // java.util.Comparator
-                    public final int compare(T t, T t2) {
+                    public final int compare(Object t, Object t2) {
                         IdeaSpots.Seen it3 = (IdeaSpots.Seen) t;
                         IdeaSpots.Seen it4 = (IdeaSpots.Seen) t2;
                         return ComparisonsKt.compareValues(Double.valueOf(it3.getAhead()), Double.valueOf(it4.getAhead()));

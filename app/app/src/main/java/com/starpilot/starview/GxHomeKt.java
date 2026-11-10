@@ -61,7 +61,7 @@ public final class GxHomeKt {
                         var0 = "0";
                     }
 
-                    Double var8 = StringsKt.toDoubleOrNull(var0);
+                    Double var8 = StringsKt.toDoubleOrNull(((String) var0));
                     if (var8 != null) {
                         var1 = var8;
                         break label48;

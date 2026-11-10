@@ -317,7 +317,7 @@ public abstract class GxPage extends FrameLayout {
             new Thread(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda5
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxPage.call$lambda$8(body, method, h, path, timeoutS, this, then);
+                    GxPage.call$lambda$8(body, method, h, path, timeoutS, GxPage.this, then);
                 }
             }).start();
         }
@@ -705,7 +705,7 @@ public abstract class GxPage extends FrameLayout {
             String field = triple.component1();
             String name = triple.component2();
             Pair data = triple.component3();
-            b.addFormDataPart(field, name, RequestBody.Companion.create(data.getFirst(), MediaType.Companion.get(data.getSecond()), 0, data.getFirst().length));
+            b.addFormDataPart(field, name, RequestBody.Companion.create(data.getFirst(), MediaType.Companion.get(((String) data.getSecond())), 0, data.getFirst().length));
         }
         json("POST", path, b.build(), 120L, new Function2() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function2
@@ -785,7 +785,7 @@ public abstract class GxPage extends FrameLayout {
             Result.Companion companion4 = Result.Companion;
             obj = KtCompat.resultOf(ResultKt.createFailure(th2));
         }
-        final String str2 = (String) (KtCompat.isFailure(obj) ? null : obj);
+        String str2 = (String) (KtCompat.isFailure(obj) ? null : obj);
         if (str2 == null && (str2 = uri.getLastPathSegment()) == null) {
             str2 = "file";
         }
@@ -827,7 +827,7 @@ public abstract class GxPage extends FrameLayout {
         new Thread(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda4
             @Override // java.lang.Runnable
             public final void run() {
-                GxPage.download$lambda$29(h, path, fileName, this, mime);
+                GxPage.download$lambda$29(h, path, fileName, GxPage.this, mime);
             }
         }).start();
     }
@@ -1446,10 +1446,10 @@ public abstract class GxPage extends FrameLayout {
         ObjectRef var16 = new ObjectRef();
         Pair var14 = this.ui.chips(var3, new GxPage$$ExternalSyntheticLambda7(var16, var6));
         LinearLayout var10 = (LinearLayout)var14.component1();
-        var16.element = (T)((Function1)var14.component2());
+        var16.element = ((Function1)var14.component2());
         var10.setPadding(0, this.ui.dp(10), 0, 0);
         var8.addView((View)var10);
-        Function1 var11 = var16.element;
+        Function1 var11 = ((Function1) var16.element);
         Object var15 = null;
         if (var11 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
@@ -1708,7 +1708,7 @@ public abstract class GxPage extends FrameLayout {
         ObjectRef var6 = new ObjectRef();
         Pair var8 = this.ui.browserTabs(var1, 1, new GxPage$$ExternalSyntheticLambda28(var6));
         View var7 = (View)var8.component1();
-        var5.element = (T)((Function1)var8.component2());
+        var5.element = ((Function1)var8.component2());
         this.col.addView(var7, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
         LinearLayout var10 = new LinearLayout((Context)this.act);
         var10.setOrientation(1);
@@ -1716,7 +1716,7 @@ public abstract class GxPage extends FrameLayout {
         var10.setPadding(this.ui.dp(14), this.ui.dp(14), this.ui.dp(14), this.ui.dp(6));
         this.col.addView((View)var10, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
         HashMap var9 = new HashMap();
-        var6.element = (T)(new GxPage$$ExternalSyntheticLambda29(var5, var9, var3, this, var10, var4));
+        var6.element = (new GxPage$$ExternalSyntheticLambda29(var5, var9, var3, this, var10, var4));
         tabs$select(var5, var9, var3, this, var10, var4, RangesKt.coerceIn(var2, 0, var1.size() - 1));
         return new GxPage$$ExternalSyntheticLambda30(var5, var9, var3, this, var10, var4);
     }
@@ -1920,7 +1920,7 @@ public abstract class GxPage extends FrameLayout {
     public static final void pickMany$lambda$77(Function1 $then, boolean[] $arr, DialogInterface dialogInterface, int i) {
         Iterable $this$filter$iv = ArraysKt.getIndices($arr);
         Collection destination$iv$iv = new ArrayList();
-        for (Integer num : $this$filter$iv) {
+        for (Integer num : ((Integer) $this$filter$iv)) {
             int it = num.intValue();
             if ($arr[it]) {
                 destination$iv$iv.add(num);

@@ -192,7 +192,7 @@ public final class AmyVoice {
             Iterable $this$sortedBy$iv = CollectionsKt.sortedWith((List) destination$iv$iv, new Comparator() { // from class: com.starpilot.starview.AmyVoice$packs$$inlined$sortedBy$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
-                public final int compare(T t, T t2) {
+                public final int compare(Object t, Object t2) {
                     File it4 = (File) t;
                     File it5 = (File) t2;
                     return ComparisonsKt.compareValues(Long.valueOf(it4.lastModified()), Long.valueOf(it5.lastModified()));

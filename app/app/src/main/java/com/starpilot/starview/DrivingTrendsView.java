@@ -77,7 +77,7 @@ public final class DrivingTrendsView extends CardPage {
             while (it2.hasNext()) {
                 destination$iv$iv.add(Float.valueOf((float) ((Number) ((Pair) it2.next()).getFirst()).doubleValue()));
             }
-            ArrayList arrayList = (List) destination$iv$iv;
+            ArrayList arrayList = (ArrayList) destination$iv$iv;
             Iterable $this$map$iv4 = CollectionsKt.getIndices(weekly);
             Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv4, 10));
             Iterator<Integer> it3 = $this$map$iv4.iterator();
@@ -93,7 +93,7 @@ public final class DrivingTrendsView extends CardPage {
                 destination$iv$iv2.add(str2);
                 $this$map$iv4 = $this$map$iv2;
             }
-            ArrayList arrayList2 = (List) destination$iv$iv2;
+            ArrayList arrayList2 = (ArrayList) destination$iv$iv2;
             int rgb = Color.rgb(127, 180, 255);
             List $this$map$iv5 = weekly;
             int $i$f$map2 = 0;
@@ -115,7 +115,7 @@ public final class DrivingTrendsView extends CardPage {
                     str = "";
                 }
                 destination$iv$iv3.add(str);
-                $this$map$iv5 = $this$map$iv;
+                $this$map$iv5 = ((List) $this$map$iv);
                 $this$mapTo$iv$iv2 = $this$mapTo$iv$iv;
                 $i$f$map2 = $i$f$map;
             }

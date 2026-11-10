@@ -132,7 +132,7 @@ public final class LaneSuggest {
         CHANGING,
         RESULT;
 
-        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(values());
 
         public static EnumEntries<State> getEntries() {
             return $ENTRIES;
@@ -672,7 +672,7 @@ public final class LaneSuggest {
                         LaneSuggest.State var43 = this.state;
                         var6 = LaneSuggest.WhenMappings.$EnumSwitchMapping$0[var43.ordinal()];
                         Object var19 = null;
-                        Integer var47 = null;
+                        Object var47 = null;
                         String var44 = "pass";
                         switch (var6) {
                             case 1:
@@ -983,7 +983,7 @@ public final class LaneSuggest {
                                     return;
                                 }
 
-                                String var46;
+                                Object var46;
                                 if (!var1.getEngaged()) {
                                     var46 = "openpilot disengaged - stopped";
                                 } else if (var1.getBrake()) {
@@ -1030,7 +1030,7 @@ public final class LaneSuggest {
                                 }
 
                                 if (var46 != null) {
-                                    this.finish(var46, var13);
+                                    this.finish(((String) var46), var13);
                                     return;
                                 }
 

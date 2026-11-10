@@ -62,9 +62,9 @@ public final class SettingsIndex {
 
         for (Object var4$it : (Iterable) var4) {
             var4 = (Iterable) var4$it;
-            GalaxyRow var6 = (GalaxyRow)var4;
+            Object var6 = (GalaxyRow)var4;
             boolean var3;
-            if (!GalaxyRow.Companion.isPipCrop(var6) && var6.getControl() != GalaxyRow.Control.GROUP && var6.getControl() != GalaxyRow.Control.ACTION) {
+            if (!GalaxyRow.Companion.isPipCrop(((GalaxyRow) var6)) && ((GalaxyRow) var6).getControl() != GalaxyRow.Control.GROUP && ((GalaxyRow) var6).getControl() != GalaxyRow.Control.ACTION) {
                 var3 = true;
             } else {
                 var3 = false;
@@ -142,7 +142,7 @@ public final class SettingsIndex {
 
         ArrayList var37 = new ArrayList();
 
-        for (GalaxyRow var9 : var28) {
+        for (GalaxyRow var9 : ((GalaxyRow) var28)) {
             if (var37.size() < 2 && var9 != var35) {
                 if (StringsKt.toDoubleOrNull(var9.getValue()) != null) {
                     var22 = true;
@@ -371,7 +371,7 @@ public final class SettingsIndex {
         final Comparator comparator = new Comparator() { // from class: com.starpilot.starview.SettingsIndex$search$$inlined$compareByDescending$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 SettingsIndex.Entry it2 = (SettingsIndex.Entry) t2;
                 String lowerCase2 = it2.getLabel().toLowerCase(Locale.ROOT);
                 Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
@@ -385,7 +385,7 @@ public final class SettingsIndex {
         Iterable $this$distinctBy$iv = CollectionsKt.sortedWith((List) destination$iv$iv2, new Comparator() { // from class: com.starpilot.starview.SettingsIndex$search$$inlined$thenBy$1
             /* JADX WARN: Multi-variable type inference failed */
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
+            public final int compare(Object t, Object t2) {
                 int previousCompare = comparator.compare(t, t2);
                 if (previousCompare != 0) {
                     return previousCompare;
