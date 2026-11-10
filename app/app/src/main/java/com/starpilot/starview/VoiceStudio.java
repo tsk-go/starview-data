@@ -112,11 +112,8 @@ public final class VoiceStudio {
         return str;
     }
 
+    /* recovered by hand from the bytecode (jadx lost its use blocks) */
     public final String installEngine(Context c, Uri uri, Function1<? super String, Unit> progress) {
-        Throwable th;
-        ZipInputStream z;
-        InputStream ins;
-        Throwable th2;
         Intrinsics.checkNotNullParameter(c, "c");
         Intrinsics.checkNotNullParameter(uri, "uri");
         Intrinsics.checkNotNullParameter(progress, "progress");
@@ -128,97 +125,67 @@ public final class VoiceStudio {
         tmp.mkdirs();
         int n = 0;
         try {
-            InputStream openInputStream = c.getContentResolver().openInputStream(uri);
-            if (openInputStream == null) {
+            InputStream ins = c.getContentResolver().openInputStream(uri);
+            if (ins == null) {
                 return "Couldn't open that file";
             }
-            InputStream inputStream = openInputStream;
-            Throwable inputStream$c = null;
+            Throwable insCause = null;
             try {
-                InputStream ins2 = inputStream;
-                ZipInputStream zipInputStream = new ZipInputStream(ins2 instanceof BufferedInputStream ? (BufferedInputStream) ins2 : new BufferedInputStream(ins2, 8192));
+                ZipInputStream z = new ZipInputStream(ins instanceof BufferedInputStream ? (BufferedInputStream) ins : new BufferedInputStream(ins, 8192));
+                Throwable zCause = null;
                 try {
-                    z = zipInputStream;
-                } catch (Throwable th3) {
-                    th = th3;
-                }
-                while (true) {
-                    ZipEntry e = z.getNextEntry();
-                    if (e == null) {
-                        break;
-                    }
-                    String name = e.getName();
-                    Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-                    String rel = StringsKt.removePrefix(name, (CharSequence) "voicekit/");
-                    if ((rel.length() == 0) || StringsKt.contains((CharSequence) rel, (CharSequence) "..", false)) {
-                        ins = ins2;
-                    } else if (e.isDirectory()) {
-                        ins = ins2;
-                    } else {
+                    while (true) {
+                        ZipEntry e = z.getNextEntry();
+                        if (e == null) {
+                            break;
+                        }
+                        String name = e.getName();
+                        Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
+                        String rel = StringsKt.removePrefix(name, (CharSequence) "voicekit/");
+                        if (rel.length() == 0 || StringsKt.contains((CharSequence) rel, (CharSequence) "..", false) || e.isDirectory()) {
+                            continue;
+                        }
                         File f = new File(tmp, rel);
                         File parentFile = f.getParentFile();
                         if (parentFile != null) {
-                            try {
-                                parentFile.mkdirs();
-                            } catch (Throwable th4) {
-                                th = th4;
-                            }
+                            parentFile.mkdirs();
                         }
-                        FileOutputStream fileOutputStream = new FileOutputStream(f);
+                        FileOutputStream out = new FileOutputStream(f);
+                        Throwable outCause = null;
                         try {
-                            FileOutputStream it = fileOutputStream;
-                            ins = ins2;
-                            try {
-                                ByteStreamsKt.copyTo(z, it, 8192);
-                                try {
-                                    CloseableKt.closeFinally(fileOutputStream, null);
-                                    n++;
-                                    if (n % 50 == 0) {
-                                        progress.invoke("Unpacking… " + n + " files");
-                                    }
-                                } catch (Throwable th5) {
-                                    th = th5;
-                                }
-                            } catch (Throwable th6) {
-                                th2 = th6;
-                                try {
-                                    throw th2;
-                                } catch (Throwable th7) {
-                                    CloseableKt.closeFinally(fileOutputStream, th2);
-                                    throw th7;
-                                }
-                            }
-                        } catch (Throwable th8) {
-                            th2 = th8;
+                            ByteStreamsKt.copyTo(z, out, 8192);
+                        } catch (Throwable th) {
+                            outCause = th;
+                            throw th;
+                        } finally {
+                            CloseableKt.closeFinally(out, outCause);
+                        }
+                        n++;
+                        if (n % 50 == 0) {
+                            progress.invoke("Unpacking… " + n + " files");
                         }
                     }
-                    ins2 = ins;
-                    th = th4;
-                    try {
-                        throw th;
-                    } catch (Throwable th9) {
-                        CloseableKt.closeFinally(zipInputStream, th);
-                        throw th9;
-                    }
+                } catch (Throwable th) {
+                    zCause = th;
+                    throw th;
+                } finally {
+                    CloseableKt.closeFinally(z, zCause);
                 }
-                Unit unit = Unit.INSTANCE;
-                CloseableKt.closeFinally(zipInputStream, null);
-                Unit unit2 = Unit.INSTANCE;
-                if (!new File(tmp, "lib/libsherpa-onnx-jni.so").isFile() || !new File(tmp, "espeak-ng-data/phontab").isFile()) {
-                    FilesKt.deleteRecursively(tmp);
-                    return "That zip isn't StarView-Voice-engine.zip";
-                }
-                FilesKt.deleteRecursively(kit(c));
-                if (tmp.renameTo(kit(c))) {
-                    return null;
-                }
-                return "Couldn't save it";
-            } catch (Throwable inputStream$t) {
-                inputStream$c = inputStream$t;
-                throw inputStream$t;
+            } catch (Throwable th) {
+                insCause = th;
+                throw th;
             } finally {
-                CloseableKt.closeFinally(inputStream, inputStream$c);
+                CloseableKt.closeFinally(ins, insCause);
             }
+            if (!new File(tmp, "lib/libsherpa-onnx-jni.so").isFile() || !new File(tmp, "espeak-ng-data/phontab").isFile()) {
+                FilesKt.deleteRecursively(tmp);
+                return "That zip isn't StarView-Voice-engine.zip";
+            }
+            FilesKt.deleteRecursively(kit(c));
+            if (tmp.renameTo(kit(c))) {
+                return null;
+            }
+            return "Couldn't save it";
         } catch (Exception e2) {
             FilesKt.deleteRecursively(tmp);
             return "Not the engine zip (" + e2.getMessage() + ")";
@@ -554,14 +521,16 @@ public final class VoiceStudio {
     public final long downloadedBytes(Context c) {
         Intrinsics.checkNotNullParameter(c, "c");
         long j = 0;
-        for (File it : SequencesKt.filter(FilesKt.walk(new File(c.getFilesDir(), "piper"), kotlin.io.FileWalkDirection.TOP_DOWN), new Function1() { // from class: com.starpilot.starview.VoiceStudio$$ExternalSyntheticLambda4
+        Iterator files = SequencesKt.filter(FilesKt.walk(new File(c.getFilesDir(), "piper"), kotlin.io.FileWalkDirection.TOP_DOWN), new Function1() { // from class: com.starpilot.starview.VoiceStudio$$ExternalSyntheticLambda4
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 boolean downloadedBytes$lambda$10;
                 downloadedBytes$lambda$10 = VoiceStudio.downloadedBytes$lambda$10((File) obj);
                 return Boolean.valueOf(downloadedBytes$lambda$10);
             }
-        })) {
+        }).iterator();
+        while (files.hasNext()) {
+            File it = (File) files.next();
             j += it.length();
         }
         return j;
@@ -779,11 +748,8 @@ public final class VoiceStudio {
         return (List) destination$iv$iv;
     }
 
+    /* recovered by hand from the bytecode (jadx lost its try/finally) */
     public final String make(Context c, Voice v, int sid, Style st, String label, AtomicBoolean cancel, Function2<? super Integer, ? super Integer, Unit> progress) {
-        File tmp;
-        List<Pair> ps;
-        int i;
-        int i2;
         Intrinsics.checkNotNullParameter(c, "c");
         Intrinsics.checkNotNullParameter(v, "v");
         Intrinsics.checkNotNullParameter(st, "st");
@@ -791,71 +757,40 @@ public final class VoiceStudio {
         Intrinsics.checkNotNullParameter(cancel, "cancel");
         Intrinsics.checkNotNullParameter(progress, "progress");
         String id = new Regex("[^A-Za-z0-9_-]").replace(v.getKey() + (v.getSpeakers() > 1 ? "_s" + sid : "") + "_" + (System.currentTimeMillis() / 1000), "_");
-        String str = "voices/";
-        File tmp2 = new File(c.getFilesDir(), "voices/" + id + ".tmp");
-        FilesKt.deleteRecursively(tmp2);
-        tmp2.mkdirs();
+        File tmp = new File(c.getFilesDir(), "voices/" + id + ".tmp");
+        FilesKt.deleteRecursively(tmp);
+        tmp.mkdirs();
         try {
-            ps = phrases(c);
-            i = 0;
-            i2 = 0;
-        } catch (Throwable th) {
-            e = th;
-            tmp = tmp2;
-        }
-        for (Pair p : ps) {
-            int i3 = i2;
-            int i4 = i2 + 1;
-            if (cancel.get()) {
-                try {
-                    FilesKt.deleteRecursively(tmp2);
+            List<Pair<String, String>> ps = phrases(c);
+            int i = 0;
+            for (Pair<String, String> p : ps) {
+                int idx = i;
+                i = idx + 1;
+                if (cancel.get()) {
+                    FilesKt.deleteRecursively(tmp);
                     return "Cancelled";
-                } catch (Throwable th2) {
-                    e = th2;
-                    tmp = tmp2;
                 }
-            } else {
-                int i5 = i;
-                File tmp3 = tmp2;
-                String str2 = str;
-                try {
-                    float[] clip = say(c, v.getKey(), sid, st, CollectionsKt.listOf(p.getSecond())).get(i5);
-                    tmp = tmp3;
-                    try {
-                        FilesKt.writeBytes(new File(tmp, p.getFirst() + ".wav"), VoiceDsp.INSTANCE.wav16(clip, 24000));
-                        progress.invoke(Integer.valueOf(i3 + 1), Integer.valueOf(ps.size()));
-                        tmp2 = tmp;
-                        i = i5;
-                        i2 = i4;
-                        str = str2;
-                    } catch (Throwable th3) {
-                        e = th3;
-                    }
-                } catch (Throwable th4) {
-                    e = th4;
-                    tmp = tmp3;
-                }
+                float[] clip = say(c, v.getKey(), sid, st, CollectionsKt.listOf(p.getSecond())).get(0);
+                FilesKt.writeBytes(new File(tmp, p.getFirst() + ".wav"), VoiceDsp.INSTANCE.wav16(clip, 24000));
+                progress.invoke(Integer.valueOf(idx + 1), Integer.valueOf(ps.size()));
             }
-            try {
+            FilesKt.writeText(new File(tmp, "label.txt"), label, kotlin.text.Charsets.UTF_8);
+            File file = new File(tmp, "style.json");
+            String jSONObject = new JSONObject().put("voice", v.getKey()).put("speaker", sid).put("expressive", st.getExpressive()).put("rhythm", st.getRhythm()).put("pace", st.getPace()).toString();
+            Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
+            FilesKt.writeText(file, jSONObject, kotlin.text.Charsets.UTF_8);
+            File dst = new File(c.getFilesDir(), "voices/" + id);
+            if (!tmp.renameTo(dst)) {
                 FilesKt.deleteRecursively(tmp);
-                return "Couldn't make the voice: " + e.getMessage();
-            } finally {
-                freeEngine();
+                return "Couldn't save it";
             }
+            AmyVoice.INSTANCE.use("gen:" + id);
+            return null;
+        } catch (Throwable e) {
+            FilesKt.deleteRecursively(tmp);
+            return "Couldn't make the voice: " + e.getMessage();
+        } finally {
+            freeEngine();
         }
-        File tmp4 = tmp2;
-        FilesKt.writeText(new File(tmp4, "label.txt"), label, kotlin.text.Charsets.UTF_8);
-        File file = new File(tmp4, "style.json");
-        String jSONObject = new JSONObject().put("voice", v.getKey()).put("speaker", sid).put("expressive", st.getExpressive()).put("rhythm", st.getRhythm()).put("pace", st.getPace()).toString();
-        Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
-        FilesKt.writeText(file, jSONObject, kotlin.text.Charsets.UTF_8);
-        File dst = new File(c.getFilesDir(), str + id);
-        if (!tmp4.renameTo(dst)) {
-            FilesKt.deleteRecursively(tmp4);
-            return "Couldn't save it";
-        }
-        AmyVoice.INSTANCE.use("gen:" + id);
-        freeEngine();
-        return null;
     }
 }
