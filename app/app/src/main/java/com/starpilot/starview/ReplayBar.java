@@ -129,13 +129,14 @@ public final class ReplayBar extends View {
                     var14 = false;
                 }
 
+                Object var23o;
                 if (var14) {
-                    var23 = (int)var4;
+                    var23o = Integer.valueOf((int)var4);
                 } else {
-                    var23 = var4;
+                    var23o = Double.valueOf(var4);
                 }
 
-                var23 = "  ·  " + var23 + "x";
+                var23 = "  ·  " + var23o + "x";
             } else {
                 var23 = "";
             }
@@ -171,7 +172,7 @@ public final class ReplayBar extends View {
                 label100: {
                     var23 = (String)var28.next();
                     var29 = MapsKt.getValue(this.rects, var23);
-                    var29.set(var8, var10, var8 + var9, var10 + var12 * 32.0F);
+                    ((RectF) var29).set(var8, var10, var8 + var9, var10 + var12 * 32.0F);
                     var13 = this.d;
                     var1.drawRoundRect(((RectF) var29), this.d * 10.0F, this.d * 10.0F, this.btnBg);
                     switch (var23.hashCode()) {
@@ -210,16 +211,17 @@ public final class ReplayBar extends View {
                         var14 = false;
                     }
 
+                    Object var23o2;
                     if (var14) {
-                        var23 = (int)var4;
+                        var23o2 = Integer.valueOf((int)var4);
                     } else {
-                        var23 = var4;
+                        var23o2 = Double.valueOf(var4);
                     }
 
-                    var23 = var23 + "x";
+                    var23 = var23o2 + "x";
                 }
 
-                var1.drawText(var23, var29.centerX(), var29.centerY() + this.d * 6.0F, this.btn);
+                var1.drawText(var23, ((RectF) var29).centerX(), ((RectF) var29).centerY() + this.d * 6.0F, this.btn);
                 var8 -= var13 * 6.0F + var9;
             }
 
@@ -290,6 +292,7 @@ public final class ReplayBar extends View {
                         float f = this.bar.left;
                         float f2 = this.bar.right;
                         float x = e.getX();
+                        boolean r9 = false;
                         if (f <= x && x <= f2) {
                             r9 = true;
                         }
