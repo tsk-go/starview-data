@@ -272,6 +272,7 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
   private val path = Path()
   private val labelBoxes = ArrayList<RectF>()
   private var scale = Float.NaN          // px per metre, eased toward the speed's zoom
+  private val redraw = Runnable { invalidate() }   // one pending redraw at most
 
   private companion object {
     const val EARTH = 40075016.686
@@ -281,6 +282,9 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
 
   override fun onDraw(c: Canvas) {
     if (!::t.isInitialized) return
+    // redraw 5x a second while it is on screen (also while there is no position yet)
+    removeCallbacks(redraw)
+    if (visibility == VISIBLE && !NavOverlay.editing) postDelayed(redraw, 200)
     val w = width.toFloat(); val h = height.toFloat()
     if (w <= 0f || h <= 0f) return
     val u = h / 250f                                  // 1 dp at the default 250 dp height (the editor scales the view)
@@ -369,7 +373,6 @@ class NavMapView(ctx: Context, attrs: AttributeSet? = null) : View(ctx, attrs) {
     }
 
     car(c, cx, cy, u)
-    if (visibility == VISIBLE && !NavOverlay.editing) postInvalidateDelayed(200)
   }
 
   private fun car(c: Canvas, cx: Float, cy: Float, u: Float) {
