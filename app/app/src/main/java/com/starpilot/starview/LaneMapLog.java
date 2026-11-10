@@ -463,125 +463,71 @@ public final class LaneMapLog {
             return new Triple<>(valueOf, Long.valueOf(j2), Long.valueOf(bytes));
         }
 
-        /* JADX WARN: Removed duplicated region for block: B:13:0x0039  */
-        /* JADX WARN: Removed duplicated region for block: B:16:0x003d A[Catch: Exception -> 0x015c, TryCatch #3 {Exception -> 0x015c, blocks: (B:3:0x0008, B:5:0x0019, B:6:0x0027, B:8:0x002d, B:16:0x003d, B:18:0x0090, B:60:0x011a, B:74:0x013b, B:75:0x013e, B:78:0x013f, B:79:0x015b, B:70:0x0138), top: B:2:0x0008, inners: #5 }] */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
+        /* recovered by hand (jadx lost its use blocks and inverted the empty check) */
         public final String toDownloads(Context ctx) {
-            boolean z;
-            Throwable th;
-            Throwable th2;
-            Throwable th3;
-            FileInputStream it;
-            Iterator it2;
-            List fs;
-            ContentValues cv;
             Intrinsics.checkNotNullParameter(ctx, "ctx");
             try {
-                Object[] $this$sortedBy$iv = LaneMapLog.Companion.dir(ctx).listFiles(new FileFilter() { // from class: com.starpilot.starview.LaneMapLog$Export$$ExternalSyntheticLambda1
+                File[] files = LaneMapLog.Companion.dir(ctx).listFiles(new FileFilter() { // from class: com.starpilot.starview.LaneMapLog$Export$$ExternalSyntheticLambda1
                     @Override // java.io.FileFilter
                     public final boolean accept(File file) {
-                        boolean downloads$lambda$3;
-                        downloads$lambda$3 = LaneMapLog.Export.toDownloads$lambda$3(file);
-                        return downloads$lambda$3;
+                        return LaneMapLog.Export.toDownloads$lambda$3(file);
                     }
                 });
-                List fs2 = $this$sortedBy$iv != null ? ArraysKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.LaneMapLog$Export$toDownloads$$inlined$sortedBy$1
-                    /* JADX WARN: Multi-variable type inference failed */
+                List fs = files != null ? ArraysKt.sortedWith(files, new Comparator() { // from class: com.starpilot.starview.LaneMapLog$Export$toDownloads$$inlined$sortedBy$1
                     @Override // java.util.Comparator
                     public final int compare(Object t, Object t2) {
-                        File it3 = (File) t;
-                        File it4 = (File) t2;
-                        return ComparisonsKt.compareValues(it3.getName(), it4.getName());
+                        return ComparisonsKt.compareValues(((File) t).getName(), ((File) t2).getName());
                     }
                 }) : null;
-                List list = fs2;
-                if (list != null && !list.isEmpty()) {
-                    z = false;
-                    if (!z) {
-                        return "No lane traces yet - they're logged while driving with an RTK fix.";
-                    }
-                    String name = "lanemap_" + new SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.US).format(new Date()) + ".zip";
-                    ContentValues $this$toDownloads_u24lambda_u245 = new ContentValues();
-                    $this$toDownloads_u24lambda_u245.put("_display_name", name);
-                    $this$toDownloads_u24lambda_u245.put("mime_type", "application/zip");
-                    $this$toDownloads_u24lambda_u245.put("relative_path", "Download/StarView/Lane data");
-                    ContentValues cv2 = $this$toDownloads_u24lambda_u245;
-                    Uri uri = ctx.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, cv2);
-                    if (uri == null) {
-                        throw new IllegalStateException("couldn't create " + name);
-                    }
-                    OutputStream openOutputStream = ctx.getContentResolver().openOutputStream(uri);
-                    Intrinsics.checkNotNull(openOutputStream);
-                    FileInputStream fileInputStream = openOutputStream;
+                if (fs == null || fs.isEmpty()) {
+                    return "No lane traces yet - they're logged while driving with an RTK fix.";
+                }
+                String name = "lanemap_" + new SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.US).format(new Date()) + ".zip";
+                ContentValues cv = new ContentValues();
+                cv.put("_display_name", name);
+                cv.put("mime_type", "application/zip");
+                cv.put("relative_path", "Download/StarView/Lane data");
+                Uri uri = ctx.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, cv);
+                if (uri == null) {
+                    throw new IllegalStateException("couldn't create " + name);
+                }
+                OutputStream os = ctx.getContentResolver().openOutputStream(uri);
+                Intrinsics.checkNotNull(os);
+                Throwable osCause = null;
+                try {
+                    ZipOutputStream z = new ZipOutputStream(os);
+                    Throwable zCause = null;
                     try {
-                        try {
-                            OutputStream os = fileInputStream;
-                            fileInputStream = new ZipOutputStream(os);
+                        Iterator it = fs.iterator();
+                        while (it.hasNext()) {
+                            File f = (File) it.next();
+                            z.putNextEntry(new ZipEntry(f.getName()));
+                            Intrinsics.checkNotNull(f);
+                            FileInputStream in = new FileInputStream(f);
+                            Throwable inCause = null;
                             try {
-                                ZipOutputStream z2 = fileInputStream;
-                                Iterator it3 = fs2.iterator();
-                                while (it3.hasNext()) {
-                                    File f = (File) it3.next();
-                                    z2.putNextEntry(new ZipEntry(f.getName()));
-                                    Intrinsics.checkNotNull(f);
-                                    fileInputStream = new FileInputStream(f);
-                                    try {
-                                        it = fileInputStream;
-                                        it2 = it3;
-                                        fs = fs2;
-                                        cv = cv2;
-                                    } catch (Throwable th4) {
-                                        th3 = th4;
-                                    }
-                                    try {
-                                        ByteStreamsKt.copyTo(it, z2, 8192);
-                                        try {
-                                            CloseableKt.closeFinally(fileInputStream, null);
-                                            z2.closeEntry();
-                                            cv2 = cv;
-                                            it3 = it2;
-                                            fs2 = fs;
-                                        } catch (Throwable th5) {
-                                            th2 = th5;
-                                            try {
-                                                throw th;
-                                            } finally {
-                                            }
-                                        }
-                                    } catch (Throwable th6) {
-                                        th3 = th6;
-                                        try {
-                                            throw th;
-                                        } finally {
-                                        }
-                                    }
-                                }
-                                Unit unit = Unit.INSTANCE;
-                                CloseableKt.closeFinally(fileInputStream, null);
-                                Unit unit2 = Unit.INSTANCE;
-                                CloseableKt.closeFinally(fileInputStream, null);
-                                return null;
-                            } catch (Throwable th7) {
-                                th2 = th7;
-                            }
-                        } catch (Throwable th8) {
-                            th = th8;
-                            try {
+                                ByteStreamsKt.copyTo(in, z, 8192);
+                            } catch (Throwable th) {
+                                inCause = th;
                                 throw th;
                             } finally {
-                                CloseableKt.closeFinally(fileInputStream, th);
+                                CloseableKt.closeFinally(in, inCause);
                             }
+                            z.closeEntry();
                         }
-                    } catch (Throwable th9) {
-                        th = th9;
+                    } catch (Throwable th) {
+                        zCause = th;
                         throw th;
+                    } finally {
+                        CloseableKt.closeFinally(z, zCause);
                     }
+                } catch (Throwable th) {
+                    osCause = th;
+                    throw th;
+                } finally {
+                    CloseableKt.closeFinally(os, osCause);
                 }
-                z = true;
-                if (!z) {
-                }
+                return null;
             } catch (Exception e) {
                 return "Couldn't export: " + e.getMessage();
             }
