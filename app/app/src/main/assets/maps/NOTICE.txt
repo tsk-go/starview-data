@@ -1,0 +1,2 @@
+us_states.json: state bounding boxes and download rows (settings/download_menu.json) from pfeiferj/mapd (https://github.com/pfeiferj/mapd), MIT License, Copyright (c) 2025 Jacob Pfeifer.
+Street map data: (c) OpenStreetMap contributors, ODbL, served by map-data.pfeifer.dev.

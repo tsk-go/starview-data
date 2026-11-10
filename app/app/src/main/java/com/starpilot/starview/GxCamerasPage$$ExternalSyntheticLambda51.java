@@ -1,0 +1,20 @@
+package com.starpilot.starview;
+
+import kotlin.jvm.functions.Function1;
+
+// $VF: synthetic class
+public final class GxCamerasPage$$ExternalSyntheticLambda51 implements Function1 {
+   public final GxCamerasPage f$0;
+   public final String f$1;
+
+   // $VF: synthetic method
+   public GxCamerasPage$$ExternalSyntheticLambda51(GxCamerasPage var1, String var2) {
+      this.f$0 = var1;
+      this.f$1 = var2;
+   }
+
+   @Override
+   public final Object invoke(Object var1) {
+      return GxCamerasPage.$r8$lambda$zJok_0C0Lj64gCiVjLLe_4x223U(this.f$0, this.f$1, (String)var1);
+   }
+}

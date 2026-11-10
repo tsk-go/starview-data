@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+  <uses-permission android:name="android.permission.INTERNET" />
+  <!-- voice notes on bookmarks, voice commands -->
+  <uses-permission android:name="android.permission.RECORD_AUDIO" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+  <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <!-- LinkService keeps the comma link alive in the background -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <!-- comma GPS -> tablet: StarView acts as the mock location app (GpsBridge) -->
+  <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" tools:ignore="MockLocation,ProtectedPermissions" />
+  <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+  <application
+    android:label="StarView"
+    android:icon="@mipmap/ic_launcher"
+    android:usesCleartextTraffic="true"
+    android:theme="@style/Theme.StarView"
+    android:requestLegacyExternalStorage="true"
+    android:largeHeap="true"
+    android:allowBackup="false">
+    <!-- download the QR scanner module at install time, so the first pairing scan opens instantly -->
+    <meta-data android:name="com.google.mlkit.vision.DEPENDENCIES" android:value="barcode_ui" />
+    <activity
+      android:name=".MainActivity"
+      android:exported="true"
+      android:screenOrientation="fullUser"
+      android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboardHidden|density|uiMode"
+      android:launchMode="singleTask">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+      <!-- a place shared from Google / Apple Maps or any app -> StarView route -->
+      <intent-filter android:label="StarView route">
+        <action android:name="android.intent.action.SEND" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="text/plain" />
+      </intent-filter>
+      <intent-filter android:label="StarView route">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="geo" />
+      </intent-filter>
+      <intent-filter android:label="StarView route">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="https" />
+        <data android:host="maps.app.goo.gl" />
+        <data android:host="maps.google.com" />
+        <data android:host="maps.apple.com" />
+      </intent-filter>
+      <intent-filter android:label="StarView route">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="https" />
+        <data android:host="www.google.com" android:pathPrefix="/maps" />
+        <data android:host="goo.gl" android:pathPrefix="/maps" />
+      </intent-filter>
+    </activity>
+    <service android:name=".LinkService" android:exported="false" android:foregroundServiceType="connectedDevice" />
+    <activity android:name=".FilesActivity" android:exported="false" android:screenOrientation="fullUser" android:theme="@style/Theme.StarView" />
+    <activity android:name=".LanePicturesActivity" android:exported="false" android:screenOrientation="fullUser" android:theme="@style/Theme.StarView" />
+    <activity android:name=".SensorsActivity" android:exported="false" android:screenOrientation="fullUser" android:theme="@style/Theme.StarView" />
+    <activity android:name=".DestinationActivity" android:exported="false" android:screenOrientation="fullUser" android:windowSoftInputMode="adjustResize|stateVisible" android:theme="@style/Theme.StarView" />
+    <activity android:name=".SettingsActivity" android:exported="false" android:screenOrientation="fullUser" android:windowSoftInputMode="adjustResize" android:theme="@style/Theme.StarView" />
+  </application>
+</manifest>
