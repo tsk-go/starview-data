@@ -309,7 +309,7 @@ public final class GxTuningPage extends GxPage {
     @Override // com.starpilot.starview.GxPage
     public void build() {
         GxPage.header$default(this, "Tuning, Plots & Testing", null, 2, null);
-        GxPage.tabs$default(this, CollectionsKt.listOf((Object[]) new String[]{"Lateral Tuning", "Plots", "Testing Ground", "Maneuvers"}), 0, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda59
+        GxPage.tabs$default(this, CollectionsKt.listOf(new String[]{"Lateral Tuning", "Plots", "Testing Ground", "Maneuvers"}), 0, new Function1() { // from class: com.starpilot.starview.GxTuningPage$$ExternalSyntheticLambda59
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$0;
@@ -2037,7 +2037,7 @@ public final class GxTuningPage extends GxPage {
         JSONObject current = obj(rep, "currentParams");
         JSONObject trial = obj(this.activeTrial, "appliedGenericParams");
         boolean angle = angleControl();
-        List<Pair> pairs = angle ? CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Auto steer delay", "UseAutoSteerDelay"), TuplesKt.to("Steer delay", "SteerDelay"), TuplesKt.to("Steer ratio", "SteerRatio")}) : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Lat accel", "SteerLatAccel"), TuplesKt.to("Friction", "SteerFriction"), TuplesKt.to("Auto steer delay", "UseAutoSteerDelay"), TuplesKt.to("Steer delay", "SteerDelay"), TuplesKt.to("Steer ratio", "SteerRatio"), TuplesKt.to("KP", "SteerKP")});
+        List<Pair> pairs = angle ? CollectionsKt.listOf(new Pair[]{TuplesKt.to("Auto steer delay", "UseAutoSteerDelay"), TuplesKt.to("Steer delay", "SteerDelay"), TuplesKt.to("Steer ratio", "SteerRatio")}) : CollectionsKt.listOf(new Pair[]{TuplesKt.to("Lat accel", "SteerLatAccel"), TuplesKt.to("Friction", "SteerFriction"), TuplesKt.to("Auto steer delay", "UseAutoSteerDelay"), TuplesKt.to("Steer delay", "SteerDelay"), TuplesKt.to("Steer ratio", "SteerRatio"), TuplesKt.to("KP", "SteerKP")});
         ArrayList rows = new ArrayList();
         for (Pair pair : pairs) {
             String label = (String) pair.component1();
@@ -4353,7 +4353,7 @@ public final class GxTuningPage extends GxPage {
                     }
                     notice$default(this, linearLayout10, s(lv, "lastError"), 0, "Source Error:", 4, null);
                 }
-                for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Your lateral tuning is", computeQuality(this.latQ)), TuplesKt.to("Your longitudinal tuning is", computeQuality(this.lonQ))})) {
+                for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf(new Pair[]{TuplesKt.to("Your lateral tuning is", computeQuality(this.latQ)), TuplesKt.to("Your longitudinal tuning is", computeQuality(this.lonQ))})) {
                     String base = (String) pair.component1();
                     Quality q = (Quality) pair.component2();
                     if (Intrinsics.areEqual(q.getLabel(), "na")) {
@@ -5466,7 +5466,7 @@ public final class GxTuningPage extends GxPage {
                 Intrinsics.throwUninitializedPropertyAccessException("latBox");
                 linearLayout18 = null;
             }
-            bullets(linearLayout18, CollectionsKt.listOf((Object[]) new String[]{"Find a large, empty, straight, flat road or lot with no traffic.", "Press Start / Arm here, then engage openpilot and set the requested speed manually.", "Keep full supervision and be ready to steer or disengage immediately at all times.", "Do not touch the wheel during a run. Steering input or speed drift can reset the current maneuver.", "When the status says complete, collect logs and generate the HTML report if needed."}), true);
+            bullets(linearLayout18, CollectionsKt.listOf(new String[]{"Find a large, empty, straight, flat road or lot with no traffic.", "Press Start / Arm here, then engage openpilot and set the requested speed manually.", "Keep full supervision and be ready to steer or disengage immediately at all times.", "Do not touch the wheel during a run. Steering input or speed drift can reset the current maneuver.", "When the status says complete, collect logs and generate the HTML report if needed."}), true);
             LinearLayout linearLayout19 = this.latBox;
             if (linearLayout19 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("latBox");
@@ -5723,7 +5723,7 @@ public final class GxTuningPage extends GxPage {
                 Intrinsics.throwUninitializedPropertyAccessException("lonBox");
                 linearLayout32 = null;
             }
-            bullets(linearLayout32, CollectionsKt.listOf((Object[]) new String[]{"Find a large, empty, straight road or lot with no traffic.", "Press Start / Arm, then engage openpilot with SET.", "Keep full supervision and be ready to disengage at all times.", "Review the platform caveats first. Low-speed maneuvers can be skipped automatically on cars that do not fully stop.", "When the status says complete, collect the logs and generate your HTML report."}), true);
+            bullets(linearLayout32, CollectionsKt.listOf(new String[]{"Find a large, empty, straight road or lot with no traffic.", "Press Start / Arm, then engage openpilot with SET.", "Keep full supervision and be ready to disengage at all times.", "Review the platform caveats first. Low-speed maneuvers can be skipped automatically on cars that do not fully stop.", "When the status says complete, collect the logs and generate your HTML report."}), true);
             LinearLayout linearLayout33 = this.lonBox;
             if (linearLayout33 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("lonBox");

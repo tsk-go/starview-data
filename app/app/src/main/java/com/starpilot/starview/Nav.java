@@ -1532,7 +1532,7 @@ public final class Nav {
     public final String voiceMode(UiSettings s) {
         Intrinsics.checkNotNullParameter(s, "s");
         String it = s.getStr("nav_voice", "all");
-        return SetsKt.setOf((Object[]) new String[]{"all", "alerts", "off"}).contains(it) ? it : "all";
+        return SetsKt.setOf(new String[]{"all", "alerts", "off"}).contains(it) ? it : "all";
     }
 
     public final void track(double lat, double lon, float vEgo, boolean metric, boolean speak, String mode) {

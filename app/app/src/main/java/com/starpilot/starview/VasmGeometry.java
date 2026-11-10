@@ -14,7 +14,7 @@ import org.json.JSONObject;
 /* compiled from: GalaxyVasm.kt */
 public final class VasmGeometry {
     public static final VasmGeometry INSTANCE = new VasmGeometry();
-    private static final List<Pair<Integer, Integer>> FORMATS = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(1928, 1208), TuplesKt.to(1344, 760)});
+    private static final List<Pair<Integer, Integer>> FORMATS = CollectionsKt.listOf(new Pair[]{TuplesKt.to(1928, 1208), TuplesKt.to(1344, 760)});
 
     private VasmGeometry() {
     }

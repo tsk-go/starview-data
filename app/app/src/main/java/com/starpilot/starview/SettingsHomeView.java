@@ -360,7 +360,7 @@ public final class SettingsHomeView extends LinearLayout {
             }
             CarUi carUi = this.ui;
             String label = e.getLabel();
-            Iterable $this$filter$iv = CollectionsKt.listOf((Object[]) new String[]{e.getWhere(), e.getValue()});
+            Iterable $this$filter$iv = CollectionsKt.listOf(new String[]{e.getWhere(), e.getValue()});
             Collection destination$iv$iv = new ArrayList();
             for (Object element$iv$iv : $this$filter$iv) {
                 String it = (String) element$iv$iv;

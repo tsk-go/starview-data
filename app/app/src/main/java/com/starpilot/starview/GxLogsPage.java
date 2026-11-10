@@ -179,7 +179,7 @@ public final class GxLogsPage extends GxPage {
     @Override // com.starpilot.starview.GxPage
     public void build() {
         GxPage.header$default(this, "Logs & Diagnostics", null, 2, null);
-        this.selectTab = tabs(CollectionsKt.listOf((Object[]) new String[]{"Troubleshoot", "Error Logs", "Tmux Live Log", "System Monitor", "Get Help via Discord"}), this.tab, new Function1() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda1
+        this.selectTab = tabs(CollectionsKt.listOf(new String[]{"Troubleshoot", "Error Logs", "Tmux Live Log", "System Monitor", "Get Help via Discord"}), this.tab, new Function1() { // from class: com.starpilot.starview.GxLogsPage$$ExternalSyntheticLambda1
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$0;
@@ -1397,7 +1397,7 @@ public final class GxLogsPage extends GxPage {
         int i5 = 1;
         int i6 = 4;
         String str = "vram";
-        List<Pair> specs = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("cpu", "CPU"), TuplesKt.to("mem", "Memory"), TuplesKt.to("procs", "Processes"), TuplesKt.to("storage", "Storage"), TuplesKt.to("cpuTemp", "Onboard CPU temperature"), TuplesKt.to("gpuTemp", "Onboard GPU temperature"), TuplesKt.to("hotspot", "eGPU hotspot temperature"), TuplesKt.to("edge", "eGPU temperature"), TuplesKt.to("vram", "eGPU VRAM")});
+        List<Pair> specs = CollectionsKt.listOf(new Pair[]{TuplesKt.to("cpu", "CPU"), TuplesKt.to("mem", "Memory"), TuplesKt.to("procs", "Processes"), TuplesKt.to("storage", "Storage"), TuplesKt.to("cpuTemp", "Onboard CPU temperature"), TuplesKt.to("gpuTemp", "Onboard GPU temperature"), TuplesKt.to("hotspot", "eGPU hotspot temperature"), TuplesKt.to("edge", "eGPU temperature"), TuplesKt.to("vram", "eGPU VRAM")});
         LinearLayout line2 = null;
         int i7 = 0;
         for (Pair s : specs) {
@@ -1497,8 +1497,8 @@ public final class GxLogsPage extends GxPage {
                 return buildMonitor$lambda$68;
             }
         });
-        final List scopes = CollectionsKt.listOf((Object[]) new String[]{"comma", "users", "all"});
-        List<String> listOf = CollectionsKt.listOf((Object[]) new String[]{"Comma processes", "Apps and services", "All processes"});
+        final List scopes = CollectionsKt.listOf(new String[]{"comma", "users", "all"});
+        List<String> listOf = CollectionsKt.listOf(new String[]{"Comma processes", "Apps and services", "All processes"});
         LinearLayout linearLayout4 = this.monBody;
         if (linearLayout4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("monBody");

@@ -1481,7 +1481,7 @@ public final class GxFavoritesPage extends GxPage {
         if (o == null) {
             dt = "Clear this assignment";
         } else {
-            Iterable $this$filter$iv = CollectionsKt.listOf((Object[]) new String[]{detail, o.optString("description")});
+            Iterable $this$filter$iv = CollectionsKt.listOf(new String[]{detail, o.optString("description")});
             Collection destination$iv$iv = new ArrayList();
             for (Object element$iv$iv : $this$filter$iv) {
                 String it = (String) element$iv$iv;

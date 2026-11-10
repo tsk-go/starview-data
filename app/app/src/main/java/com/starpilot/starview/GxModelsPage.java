@@ -113,7 +113,7 @@ public final class GxModelsPage extends GxPage {
         this.statusBox = GxPage.box$default(this, null, 1, null);
         GxPage.header$default(this, "Controls", null, 2, null);
         this.controlsBox = GxPage.box$default(this, null, 1, null);
-        GxPage.choice$default(this, "Sort", null, CollectionsKt.listOf((Object[]) new String[]{"Release Date", "Alphabetical"}), !Intrinsics.areEqual(this.sortMode, "release_date") ? 1 : 0, null, new Function1() { // from class: com.starpilot.starview.GxModelsPage$$ExternalSyntheticLambda29
+        GxPage.choice$default(this, "Sort", null, CollectionsKt.listOf(new String[]{"Release Date", "Alphabetical"}), !Intrinsics.areEqual(this.sortMode, "release_date") ? 1 : 0, null, new Function1() { // from class: com.starpilot.starview.GxModelsPage$$ExternalSyntheticLambda29
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$1;
@@ -121,8 +121,8 @@ public final class GxModelsPage extends GxPage {
                 return build$lambda$1;
             }
         }, 16, null);
-        final List listOf = CollectionsKt.listOf((Object[]) new String[]{"both", "gpu", "comma"});
-        GxPage.choice$default(this, "Model hardware", null, CollectionsKt.listOf((Object[]) new String[]{"Both", "GPU models only", "Comma models only"}), RangesKt.coerceAtLeast(listOf.indexOf(this.hardwareFilter), 0), null, new Function1() { // from class: com.starpilot.starview.GxModelsPage$$ExternalSyntheticLambda30
+        final List listOf = CollectionsKt.listOf(new String[]{"both", "gpu", "comma"});
+        GxPage.choice$default(this, "Model hardware", null, CollectionsKt.listOf(new String[]{"Both", "GPU models only", "Comma models only"}), RangesKt.coerceAtLeast(listOf.indexOf(this.hardwareFilter), 0), null, new Function1() { // from class: com.starpilot.starview.GxModelsPage$$ExternalSyntheticLambda30
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$3;
@@ -130,8 +130,8 @@ public final class GxModelsPage extends GxPage {
                 return build$lambda$3;
             }
         }, 16, null);
-        final List listOf2 = CollectionsKt.listOf((Object[]) new String[]{"all", "yes", "no"});
-        GxPage.choice$default(this, "Your Favorite", null, CollectionsKt.listOf((Object[]) new String[]{"All", "Yes", "No"}), 0, null, new Function1() { // from class: com.starpilot.starview.GxModelsPage$$ExternalSyntheticLambda31
+        final List listOf2 = CollectionsKt.listOf(new String[]{"all", "yes", "no"});
+        GxPage.choice$default(this, "Your Favorite", null, CollectionsKt.listOf(new String[]{"All", "Yes", "No"}), 0, null, new Function1() { // from class: com.starpilot.starview.GxModelsPage$$ExternalSyntheticLambda31
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$4;
@@ -139,7 +139,7 @@ public final class GxModelsPage extends GxPage {
                 return build$lambda$4;
             }
         }, 16, null);
-        GxPage.choice$default(this, "Community Favorite", null, CollectionsKt.listOf((Object[]) new String[]{"All", "Yes", "No"}), 0, null, new Function1() { // from class: com.starpilot.starview.GxModelsPage$$ExternalSyntheticLambda32
+        GxPage.choice$default(this, "Community Favorite", null, CollectionsKt.listOf(new String[]{"All", "Yes", "No"}), 0, null, new Function1() { // from class: com.starpilot.starview.GxModelsPage$$ExternalSyntheticLambda32
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$5;

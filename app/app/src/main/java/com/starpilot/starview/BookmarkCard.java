@@ -148,7 +148,7 @@ public final class BookmarkCard extends LinearLayout {
         this.takes = 0;
         this.title.setText("🔖  Bookmarked");
         TextView textView = this.sub;
-        Iterable $this$filter$iv = CollectionsKt.listOf((Object[]) new String[]{it.getTitle(), it.getPlace()});
+        Iterable $this$filter$iv = CollectionsKt.listOf(new String[]{it.getTitle(), it.getPlace()});
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
             String s = (String) element$iv$iv;

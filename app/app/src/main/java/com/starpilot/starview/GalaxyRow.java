@@ -410,7 +410,7 @@ public final class GalaxyRow {
 
         public final boolean isPipCrop(GalaxyRow r) {
             Intrinsics.checkNotNullParameter(r, "r");
-            return SetsKt.setOf((Object[]) new String[]{"Visual camera crop editor", "Camera crop size", "Restore default camera crop"}).contains(r.getLabel()) || new Regex("^Vehicle (left|right) crop").containsMatchIn(r.getLabel());
+            return SetsKt.setOf(new String[]{"Visual camera crop editor", "Camera crop size", "Restore default camera crop"}).contains(r.getLabel()) || new Regex("^Vehicle (left|right) crop").containsMatchIn(r.getLabel());
         }
 
         public final List<GalaxyRow> visible(String page, List<GalaxyRow> rows) {
@@ -423,7 +423,7 @@ public final class GalaxyRow {
                 boolean z = false;
                 if (!GalaxyRow.Companion.isPipCrop(r)) {
                     GalaxyRow prev = (GalaxyRow) CollectionsKt.getOrNull(rows, r.getIndex() - 1);
-                    z = (SetsKt.setOf((Object[]) new String[]{"sounds", "display"}).contains(page) && Intrinsics.areEqual(r.getRepairValue(), "Auto") && prev != null && prev.getChoices().contains("Auto") && prev.getControl() == Control.SLIDER && Intrinsics.areEqual(r.getLabel(), new StringBuilder().append("Use Auto ").append(prev.getLabel()).toString())) ? false : true;
+                    z = (SetsKt.setOf(new String[]{"sounds", "display"}).contains(page) && Intrinsics.areEqual(r.getRepairValue(), "Auto") && prev != null && prev.getChoices().contains("Auto") && prev.getControl() == Control.SLIDER && Intrinsics.areEqual(r.getLabel(), new StringBuilder().append("Use Auto ").append(prev.getLabel()).toString())) ? false : true;
                 }
                 if (z) {
                     destination$iv$iv.add(element$iv$iv);

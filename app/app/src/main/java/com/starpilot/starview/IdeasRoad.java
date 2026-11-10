@@ -81,7 +81,7 @@ public final class IdeasRoad {
         if (street != null && street.getHighway()) {
             return;
         }
-        Iterable $this$filter$iv = IdeaSpots.around$default(IdeaSpots.INSTANCE, h.getLat(), h.getLon(), h.getYaw(), SetsKt.setOf((Object[]) new String[]{"bump", "rough", "map_bump"}), 140.0d, 6.0d, 7.0d, 0, false, 384, null);
+        Iterable $this$filter$iv = IdeaSpots.around$default(IdeaSpots.INSTANCE, h.getLat(), h.getLon(), h.getYaw(), SetsKt.setOf(new String[]{"bump", "rough", "map_bump"}), 140.0d, 6.0d, 7.0d, 0, false, 384, null);
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
             IdeaSpots.Seen it = (IdeaSpots.Seen) element$iv$iv;

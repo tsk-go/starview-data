@@ -222,7 +222,7 @@ public final class Favorites {
             if (Geocoder.isPresent()) {
                 try {
                     Geocoder geocoder = new Geocoder($ctx, Locale.getDefault());
-                    Iterable $this$filter$iv = CollectionsKt.listOf((Object[]) new String[]{$name, $address});
+                    Iterable $this$filter$iv = CollectionsKt.listOf(new String[]{$name, $address});
                     Collection destination$iv$iv = new ArrayList();
                     for (Object element$iv$iv : $this$filter$iv) {
                         String it = (String) element$iv$iv;

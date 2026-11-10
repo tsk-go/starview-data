@@ -845,7 +845,7 @@ public final class GalaxyApi {
                 return true;
             }
         } else if (v instanceof String) {
-            Set of = SetsKt.setOf((Object[]) new String[]{"1", "true", "yes", "on"});
+            Set of = SetsKt.setOf(new String[]{"1", "true", "yes", "on"});
             String lowerCase = StringsKt.trim((CharSequence) v).toString().toLowerCase(Locale.ROOT);
             Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
             return of.contains(lowerCase);

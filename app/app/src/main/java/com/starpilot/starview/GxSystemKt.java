@@ -9,5 +9,5 @@ import kotlin.text.Regex;
 public final class GxSystemKt {
     static final int GxSystem_DANGER = Color.rgb(255, 105, 105);
     static final Regex GxSystem_SHA = new Regex("^[a-f0-9]{40}$");
-    static final List<String> GxSystem_CORE = CollectionsKt.listOf((Object[]) new String[]{"StarPilot", "Dom"});
+    static final List<String> GxSystem_CORE = CollectionsKt.listOf(new String[]{"StarPilot", "Dom"});
 }

@@ -351,7 +351,7 @@ public final class VideoClient {
                                 if (poll.getKey()) {
                                     String mime = poll.getHevc() ? "video/hevc" : "video/avc";
                                     if (poll.getHevc()) {
-                                        Iterable $this$map$iv = CollectionsKt.listOf((Object[]) new Integer[]{32, 33, 34});
+                                        Iterable $this$map$iv = CollectionsKt.listOf(new Integer[]{32, 33, 34});
                                         Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
                                         for (Object item$iv$iv : $this$map$iv) {
                                             int it2 = ((Number) item$iv$iv).intValue();
@@ -435,7 +435,7 @@ public final class VideoClient {
                                     } else {
                                         byte[] findNal$default2 = findNal$default(this, poll.getData(), 7, false, 4, null);
                                         if (findNal$default2 != null && (findNal$default = findNal$default(this, poll.getData(), 8, false, 4, null)) != null) {
-                                            csd = CollectionsKt.listOf((Object[]) new byte[][]{findNal$default2, findNal$default});
+                                            csd = CollectionsKt.listOf(new byte[][]{findNal$default2, findNal$default});
                                             c = MediaCodec.createDecoderByType(mime);
                                             int i2 = 0;
                                             MediaFormat fmt2 = MediaFormat.createVideoFormat(mime, poll.getW(), poll.getH());

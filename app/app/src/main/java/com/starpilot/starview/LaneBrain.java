@@ -1210,7 +1210,7 @@ public final class LaneBrain {
         detectTurn(f, now);
         checkOpChange(f, now);
         detectLaneChange(f, now);
-        this.memory.update(this.odo, CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(f.getYL2()), Float.valueOf(f.getPL2())), TuplesKt.to(Float.valueOf(f.getYL()), Float.valueOf(f.getPL())), TuplesKt.to(Float.valueOf(f.getYR()), Float.valueOf(f.getPR())), TuplesKt.to(Float.valueOf(f.getYR2()), Float.valueOf(f.getPR2()))}), f.getEdgeL(), f.getEdgeR(), (f.getOpChange() == 0 && this.opDir == 0 && f.getVEgo() >= 2.0f) ? false : true);
+        this.memory.update(this.odo, CollectionsKt.listOf(new Pair[]{TuplesKt.to(Float.valueOf(f.getYL2()), Float.valueOf(f.getPL2())), TuplesKt.to(Float.valueOf(f.getYL()), Float.valueOf(f.getPL())), TuplesKt.to(Float.valueOf(f.getYR()), Float.valueOf(f.getPR())), TuplesKt.to(Float.valueOf(f.getYR2()), Float.valueOf(f.getPR2()))}), f.getEdgeL(), f.getEdgeR(), (f.getOpChange() == 0 && this.opDir == 0 && f.getVEgo() >= 2.0f) ? false : true);
         if (f.getVEgo() >= 2.0f) {
             paint(f, now);
             outerLines(f, now);
@@ -2608,7 +2608,7 @@ public final class LaneBrain {
         this.camLog.clear();
         this.roadChangeMs = 0L;
         this.rtkDoubtMs = 0L;
-        for (Vote v : (Iterable<Vote>) (Iterable) CollectionsKt.listOf((Object[]) new Vote[]{this.vYellow, this.vDashL, this.vDashR, this.vSolidR, this.vOuterL, this.vOuterR, this.vEdgeL, this.vEdgeR})) {
+        for (Vote v : (Iterable<Vote>) (Iterable) CollectionsKt.listOf(new Vote[]{this.vYellow, this.vDashL, this.vDashR, this.vSolidR, this.vOuterL, this.vOuterR, this.vEdgeL, this.vEdgeR})) {
             v.clear();
         }
         this.carsL.clear();

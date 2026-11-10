@@ -245,7 +245,7 @@ public final class SettingsIndex {
             this.reason = reason;
             this.unit = unit;
             this.icon = icon;
-            String lowerCase = CollectionsKt.joinToString(CollectionsKt.listOf((Object[]) new String[]{this.label, this.value, this.reason, this.unit, this.where}), " ", "", "", -1, "...", null).toLowerCase(Locale.ROOT);
+            String lowerCase = CollectionsKt.joinToString(CollectionsKt.listOf(new String[]{this.label, this.value, this.reason, this.unit, this.where}), " ", "", "", -1, "...", null).toLowerCase(Locale.ROOT);
             Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
             this.search = lowerCase;
         }

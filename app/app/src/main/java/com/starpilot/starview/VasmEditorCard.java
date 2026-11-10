@@ -336,7 +336,7 @@ public final class VasmEditorCard extends LinearLayout {
         this.note.setVisibility(this.localNote.length() == 0 ? 8 : 0);
         boolean d = drawable();
         boolean has = !pts().isEmpty();
-        Iterator it = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(this.leftBtn, Boolean.valueOf(Intrinsics.areEqual(this.active, "cameraRight"))), TuplesKt.to(this.rightBtn, Boolean.valueOf(Intrinsics.areEqual(this.active, "cameraLeft")))}).iterator();
+        Iterator it = CollectionsKt.listOf(new Pair[]{TuplesKt.to(this.leftBtn, Boolean.valueOf(Intrinsics.areEqual(this.active, "cameraRight"))), TuplesKt.to(this.rightBtn, Boolean.valueOf(Intrinsics.areEqual(this.active, "cameraLeft")))}).iterator();
         while (true) {
             if (!it.hasNext()) {
                 break;
@@ -404,7 +404,7 @@ public final class VasmEditorCard extends LinearLayout {
                 c.restore();
             }
             float dot = Math.max(5.0f, w / 320.0f) * 1.6f;
-            for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(this.this$0.camRight, Integer.valueOf(Color.rgb(94, 229, 238))), TuplesKt.to(this.this$0.camLeft, Integer.valueOf(Color.rgb(255, 184, 101)))})) {
+            for (Pair pair : (Iterable<Pair>) (Iterable) CollectionsKt.listOf(new Pair[]{TuplesKt.to(this.this$0.camRight, Integer.valueOf(Color.rgb(94, 229, 238))), TuplesKt.to(this.this$0.camLeft, Integer.valueOf(Color.rgb(255, 184, 101)))})) {
                 ArrayList list = (ArrayList) pair.component1();
                 int col = ((Number) pair.component2()).intValue();
                 if (!list.isEmpty()) {

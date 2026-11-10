@@ -618,7 +618,7 @@ public final class FilesActivity extends AppCompatActivity {
             $this$build_u24lambda_u2423.setTextSize(12.0f);
             $this$build_u24lambda_u2423.setPadding(0, 0, filesActivity4.dp(8), 0);
             sortBar.addView($this$build_u24lambda_u2423);
-            for (final String k : (Iterable<String>) (Iterable) CollectionsKt.listOf((Object[]) new String[]{"name", "size", "date", "type"})) {
+            for (final String k : (Iterable<String>) (Iterable) CollectionsKt.listOf(new String[]{"name", "size", "date", "type"})) {
                 TextView $this$build_u24lambda_u2425 = new TextView(this.this$0);
                 FilesActivity filesActivity5 = this.this$0;
                 $this$build_u24lambda_u2425.setTextSize(f);
@@ -1242,7 +1242,7 @@ public final class FilesActivity extends AppCompatActivity {
             String absolutePath;
             String str = "/";
             if (this.remote) {
-                shortcuts = CollectionsKt.listOf((Object[]) new String[]{"/data", "/data/openpilot", "/data/media/0/realdata", "/data/params/d", "/data/extstorage", "/tmp", "/"});
+                shortcuts = CollectionsKt.listOf(new String[]{"/data", "/data/openpilot", "/data/media/0/realdata", "/data/params/d", "/data/extstorage", "/tmp", "/"});
             } else {
                 String[] strArr = new String[4];
                 strArr[0] = Environment.getExternalStorageDirectory().getAbsolutePath();

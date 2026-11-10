@@ -111,7 +111,7 @@ public final class HudEditor extends FrameLayout {
             destination$iv$iv.add(it.getKey());
         }
         final List keys = (List) destination$iv$iv;
-        List listOf = CollectionsKt.listOf((Object[]) new String[]{"Highway focus (only what matters)", "Everything on", "Cockpit (cards in a rail on the right)"});
+        List listOf = CollectionsKt.listOf(new String[]{"Highway focus (only what matters)", "Everything on", "Cockpit (cards in a rail on the right)"});
         Iterable $this$map$iv2 = saved.keySet();
         Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv2, 10));
         for (Object item$iv$iv2 : $this$map$iv2) {
@@ -279,7 +279,7 @@ public final class HudEditor extends FrameLayout {
         int i3 = 10;
         tabs.setPadding(0, this.ui.dp(14), 0, this.ui.dp(10));
         int i4 = 0;
-        for (String label : (Iterable<String>) (Iterable) CollectionsKt.listOf((Object[]) new String[]{"Widgets", "Edit widget"})) {
+        for (String label : (Iterable<String>) (Iterable) CollectionsKt.listOf(new String[]{"Widgets", "Edit widget"})) {
             final int i5 = i4;
             i4 += i;
             TextView b = new TextView(ctx);
@@ -711,8 +711,8 @@ public final class HudEditor extends FrameLayout {
         ArrayList ys = new ArrayList();
         char c = 1;
         float f = 2;
-        CollectionsKt.addAll(xs, CollectionsKt.listOf((Object[]) new Float[]{Float.valueOf(m), Float.valueOf((this.root.getWidth() - m) - w), Float.valueOf((this.root.getWidth() - w) / f)}));
-        CollectionsKt.addAll(ys, CollectionsKt.listOf((Object[]) new Float[]{Float.valueOf(m), Float.valueOf((this.root.getHeight() - m) - h), Float.valueOf((this.root.getHeight() - h) / f)}));
+        CollectionsKt.addAll(xs, CollectionsKt.listOf(new Float[]{Float.valueOf(m), Float.valueOf((this.root.getWidth() - m) - w), Float.valueOf((this.root.getWidth() - w) / f)}));
+        CollectionsKt.addAll(ys, CollectionsKt.listOf(new Float[]{Float.valueOf(m), Float.valueOf((this.root.getHeight() - m) - h), Float.valueOf((this.root.getHeight() - h) / f)}));
         for (HudLayout.Item o : this.layout.getItems()) {
             if (o != me && this.layout.enabled(o.getKey()) && (r = this.layout.rect(this.root, o)) != null) {
                 Float[] fArr = new Float[4];
@@ -721,7 +721,7 @@ public final class HudEditor extends FrameLayout {
                 fArr[2] = Float.valueOf(r.right + dpf(10.0f));
                 fArr[3] = Float.valueOf((r.left - w) - dpf(10.0f));
                 CollectionsKt.addAll(xs, CollectionsKt.listOf((Object[]) fArr));
-                CollectionsKt.addAll(ys, CollectionsKt.listOf((Object[]) new Float[]{Float.valueOf(r.top), Float.valueOf(r.bottom - h), Float.valueOf(r.bottom + dpf(10.0f)), Float.valueOf((r.top - h) - dpf(10.0f))}));
+                CollectionsKt.addAll(ys, CollectionsKt.listOf(new Float[]{Float.valueOf(r.top), Float.valueOf(r.bottom - h), Float.valueOf(r.bottom + dpf(10.0f)), Float.valueOf((r.top - h) - dpf(10.0f))}));
                 c = 1;
             }
         }

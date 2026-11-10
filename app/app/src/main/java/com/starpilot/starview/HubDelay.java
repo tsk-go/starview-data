@@ -9,7 +9,7 @@ public final class HubDelay {
     public static final int MAX = 300;
     public static final int MIN = 1;
     public static final HubDelay INSTANCE = new HubDelay();
-    private static final List<Integer> PRESETS = CollectionsKt.listOf((Object[]) new Integer[]{1, 5, 15, 30, 60, 120, 300});
+    private static final List<Integer> PRESETS = CollectionsKt.listOf(new Integer[]{1, 5, 15, 30, 60, 120, 300});
 
     private HubDelay() {
     }

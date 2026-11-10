@@ -587,7 +587,7 @@ public final class GalaxySettingsView extends FrameLayout {
                 }
                 Object element$iv2 = it.next();
                 Entry it2 = (Entry) element$iv2;
-                if ((((it2 instanceof Entry.Hub) && Intrinsics.areEqual(CollectionsKt.toSet(((Entry.Hub) it2).getPages()), SetsKt.setOf((Object[]) new String[]{"traffic", "aggressive", "standard", "relaxed"}))) ? 1 : null) != null) {
+                if ((((it2 instanceof Entry.Hub) && Intrinsics.areEqual(CollectionsKt.toSet(((Entry.Hub) it2).getPages()), SetsKt.setOf(new String[]{"traffic", "aggressive", "standard", "relaxed"}))) ? 1 : null) != null) {
                     $this$any$iv = 1;
                     break;
                 }

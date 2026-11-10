@@ -3371,7 +3371,7 @@ public final class Detector {
         Float valueOf;
         long now = System.currentTimeMillis();
         boolean z = false;
-        Iterable $this$filter$iv = CollectionsKt.listOf((Object[]) new Source[]{this.roadSrc, this.wideSrc});
+        Iterable $this$filter$iv = CollectionsKt.listOf(new Source[]{this.roadSrc, this.wideSrc});
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
             Source it = (Source) element$iv$iv;

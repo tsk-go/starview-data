@@ -172,7 +172,7 @@ public final class SlcActionsView extends View {
                     Intrinsics.checkNotNullExpressionValue(sessionId2, "sessionId");
                     String sessionId3 = s.sessionId;
                     Intrinsics.checkNotNullExpressionValue(sessionId3, "sessionId");
-                    return CollectionsKt.listOf((Object[]) new Control[]{new Control("accept", "Accept", sessionId2, s.decisionId, s.presentationId, pending), new Control("reject", "Decline", sessionId3, s.decisionId, s.presentationId, pending)});
+                    return CollectionsKt.listOf(new Control[]{new Control("accept", "Accept", sessionId2, s.decisionId, s.presentationId, pending), new Control("reject", "Decline", sessionId3, s.decisionId, s.presentationId, pending)});
                 }
                 if (!((Float.isInfinite(pending) || Float.isNaN(pending)) ? false : true)) {
                     float f = s.speedMps;
@@ -212,7 +212,7 @@ public final class SlcActionsView extends View {
     }
 
     private final List<RectF> boxes(int n) {
-        return n == 2 ? CollectionsKt.listOf((Object[]) new RectF[]{new RectF(0.0f, 0.0f, getWidth() / 2.0f, getHeight()), new RectF(getWidth() / 2.0f, 0.0f, getWidth(), getHeight())}) : CollectionsKt.listOf(new RectF(0.0f, 0.0f, getWidth(), getHeight()));
+        return n == 2 ? CollectionsKt.listOf(new RectF[]{new RectF(0.0f, 0.0f, getWidth() / 2.0f, getHeight()), new RectF(getWidth() / 2.0f, 0.0f, getWidth(), getHeight())}) : CollectionsKt.listOf(new RectF(0.0f, 0.0f, getWidth(), getHeight()));
     }
 
     @Override // android.view.View

@@ -18,10 +18,10 @@ public final class FileKinds {
     private static final int MEDIA = -28728;
     private static final int PACK = -22180;
     public static final FileKinds INSTANCE = new FileKinds();
-    private static final Set<String> TEXT = SetsKt.setOf((Object[]) new String[]{"txt", "log", "md", "py", "sh", "conf", "cfg", "ini", "csv", "toml", "yaml", "yml", "service", "env", "kt", "js", "html", "css", "c", "h", "cc", "cpp", "patch", "diff", "xml"});
-    private static final Set<String> IMAGE = SetsKt.setOf((Object[]) new String[]{"jpg", "jpeg", "png", "gif", "webp", "bmp"});
-    private static final Set<String> VIDEO = SetsKt.setOf((Object[]) new String[]{"mp4", "hevc", "ts", "mkv", "mov", "264", "265"});
-    private static final Set<String> ARCHIVE = SetsKt.setOf((Object[]) new String[]{"zip", "tar", "gz", "zst", "bz2", "xz", "7z", "apk", "tgz"});
+    private static final Set<String> TEXT = SetsKt.setOf(new String[]{"txt", "log", "md", "py", "sh", "conf", "cfg", "ini", "csv", "toml", "yaml", "yml", "service", "env", "kt", "js", "html", "css", "c", "h", "cc", "cpp", "patch", "diff", "xml"});
+    private static final Set<String> IMAGE = SetsKt.setOf(new String[]{"jpg", "jpeg", "png", "gif", "webp", "bmp"});
+    private static final Set<String> VIDEO = SetsKt.setOf(new String[]{"mp4", "hevc", "ts", "mkv", "mov", "264", "265"});
+    private static final Set<String> ARCHIVE = SetsKt.setOf(new String[]{"zip", "tar", "gz", "zst", "bz2", "xz", "7z", "apk", "tgz"});
 
     /* compiled from: FileKinds.kt */
     public enum Preview {
@@ -84,7 +84,7 @@ public final class FileKinds {
         if (Intrinsics.areEqual(ext, "log")) {
             return new Kind("console", -9508952, Preview.TEXT);
         }
-        if (SetsKt.setOf((Object[]) new String[]{"py", "sh", "kt", "js", "c", "h", "cc", "cpp", "patch", "diff"}).contains(ext)) {
+        if (SetsKt.setOf(new String[]{"py", "sh", "kt", "js", "c", "h", "cc", "cpp", "patch", "diff"}).contains(ext)) {
             return new Kind("code", -8604417, Preview.TEXT);
         }
         if (TEXT.contains(ext)) {

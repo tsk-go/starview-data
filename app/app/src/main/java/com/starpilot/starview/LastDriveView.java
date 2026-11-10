@@ -49,7 +49,7 @@ public final class LastDriveView extends CardPage {
             LastDriveView lastDriveView = this;
             simpleDateFormat = JournalPagesKt.dayFmt;
             String format = simpleDateFormat.format(new Date(d2.optLong("t")));
-            Iterable $this$filter$iv = CollectionsKt.listOf((Object[]) new String[]{d2.optString("from"), d2.optString("to")});
+            Iterable $this$filter$iv = CollectionsKt.listOf(new String[]{d2.optString("from"), d2.optString("to")});
             Collection destination$iv$iv = new ArrayList();
             for (Object element$iv$iv : $this$filter$iv) {
                 String it2 = (String) element$iv$iv;

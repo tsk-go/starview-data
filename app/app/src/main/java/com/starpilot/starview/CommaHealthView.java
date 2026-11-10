@@ -421,7 +421,7 @@ public final class CommaHealthView extends CardPage {
 
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     private final void paintHardware(Telemetry var1) {
-        String var10 = null; Object var21 = null; Object var23 = null; // declarations Vineflower left out
+        String var10 = null; Object var21 = null; CommaHealthView var23 = null; // declarations Vineflower left out
         boolean var3;
         String var5;
         String var6;
