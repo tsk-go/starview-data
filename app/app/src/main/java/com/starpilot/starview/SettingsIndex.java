@@ -250,20 +250,8 @@ public final class SettingsIndex {
             this.search = lowerCase;
         }
 
-        /* JADX WARN: Illegal instructions before constructor call */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
         public /* synthetic */ Entry(String str, String str2, String str3, String str4, String str5, String str6, SettingIcons.Icon icon, int i, DefaultConstructorMarker defaultConstructorMarker) {
-            this(str, str2, str3, str4, r7, r8, r9);
-            SettingIcons.Icon icon2;
-            String str7 = (i & 16) != 0 ? "" : str5;
-            String str8 = (i & 32) != 0 ? "" : str6;
-            if ((i & 64) == 0) {
-                icon2 = icon;
-            } else {
-                icon2 = null;
-            }
+            this(str, str2, str3, str4, (i & 16) != 0 ? "" : str5, (i & 32) != 0 ? "" : str6, (i & 64) != 0 ? null : icon);
         }
 
         public final String getLabel() {

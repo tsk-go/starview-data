@@ -1341,515 +1341,183 @@ public final class LaneShots {
         }
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:106:0x02c9, code lost:
-    
-        if (r21 == null) goto L130;
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Removed duplicated region for block: B:105:0x02c2  */
-    /* JADX WARN: Removed duplicated region for block: B:121:0x0313  */
-    /* JADX WARN: Removed duplicated region for block: B:123:0x0318  */
-    /* JADX WARN: Removed duplicated region for block: B:126:0x0334  */
-    /* JADX WARN: Removed duplicated region for block: B:128:0x0339  */
-    /* JADX WARN: Removed duplicated region for block: B:131:0x035f  */
-    /* JADX WARN: Removed duplicated region for block: B:142:0x039a  */
-    /* JADX WARN: Removed duplicated region for block: B:144:0x039f  */
-    /* JADX WARN: Removed duplicated region for block: B:147:0x03bb  */
-    /* JADX WARN: Removed duplicated region for block: B:149:0x03c0  */
-    /* JADX WARN: Removed duplicated region for block: B:152:0x03c5  */
-    /* JADX WARN: Removed duplicated region for block: B:154:0x03bd  */
-    /* JADX WARN: Removed duplicated region for block: B:155:0x03a4  */
-    /* JADX WARN: Removed duplicated region for block: B:156:0x039c  */
-    /* JADX WARN: Removed duplicated region for block: B:159:0x0368  */
-    /* JADX WARN: Removed duplicated region for block: B:160:0x033e  */
-    /* JADX WARN: Removed duplicated region for block: B:161:0x0336  */
-    /* JADX WARN: Removed duplicated region for block: B:162:0x031d  */
-    /* JADX WARN: Removed duplicated region for block: B:163:0x0315  */
-    /* JADX WARN: Removed duplicated region for block: B:168:0x02cc  */
-    /* JADX WARN: Removed duplicated region for block: B:173:0x0270  */
-    /* JADX WARN: Removed duplicated region for block: B:174:0x0268  */
-    /* JADX WARN: Removed duplicated region for block: B:175:0x0258  */
-    /* JADX WARN: Removed duplicated region for block: B:176:0x0250  */
-    /* JADX WARN: Removed duplicated region for block: B:177:0x023d  */
-    /* JADX WARN: Removed duplicated region for block: B:178:0x0232  */
-    /* JADX WARN: Removed duplicated region for block: B:179:0x021b  */
-    /* JADX WARN: Removed duplicated region for block: B:180:0x0213  */
-    /* JADX WARN: Removed duplicated region for block: B:181:0x0200  */
-    /* JADX WARN: Removed duplicated region for block: B:182:0x01f3  */
-    /* JADX WARN: Removed duplicated region for block: B:183:0x01d6  */
-    /* JADX WARN: Removed duplicated region for block: B:184:0x01ce  */
-    /* JADX WARN: Removed duplicated region for block: B:58:0x01cc  */
-    /* JADX WARN: Removed duplicated region for block: B:60:0x01d1  */
-    /* JADX WARN: Removed duplicated region for block: B:63:0x01f1  */
-    /* JADX WARN: Removed duplicated region for block: B:66:0x01f8  */
-    /* JADX WARN: Removed duplicated region for block: B:69:0x0211  */
-    /* JADX WARN: Removed duplicated region for block: B:71:0x0216  */
-    /* JADX WARN: Removed duplicated region for block: B:74:0x0230  */
-    /* JADX WARN: Removed duplicated region for block: B:76:0x0235  */
-    /* JADX WARN: Removed duplicated region for block: B:79:0x024e  */
-    /* JADX WARN: Removed duplicated region for block: B:81:0x0253  */
-    /* JADX WARN: Removed duplicated region for block: B:84:0x0266  */
-    /* JADX WARN: Removed duplicated region for block: B:86:0x026b  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* recovered by hand from the bytecode (jadx lost a branch here, Vineflower could not decompile it) */
     public final String export(Function1<? super String, Unit> progress) {
-        List emptyList;
-        HashSet hashSet;
-        String str;
-        String str2;
-        StringBuilder csv;
-        long LIMIT;
-        int sent;
-        Throwable th;
-        Throwable th2;
-        String sb;
-        ZipOutputStream z;
-        int i;
-        long LIMIT2;
-        HashMap rev;
-        List r;
-        String str3;
-        Iterable $this$forEach$iv;
-        String str4 = "lane_counts.json";
-        String str5 = "lane_log.txt";
-        String str6 = "\n";
+        String countsName = "lane_counts.json";
+        String logName = "lane_log.txt";
+        String nl = "\n";
         Intrinsics.checkNotNullParameter(progress, "progress");
-        int i2 = 1;
+        List rows;
         try {
-            Iterable $this$map$iv = FilesKt.readLines(this.index, kotlin.text.Charsets.UTF_8);
-            Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-            for (Object item$iv$iv : $this$map$iv) {
-                String it = (String) item$iv$iv;
-                destination$iv$iv.add(StringsKt.split((CharSequence) it, new String[]{"\t"}, false, 0));
+            List<String> lines = FilesKt.readLines(this.index, kotlin.text.Charsets.UTF_8);
+            ArrayList split = new ArrayList(CollectionsKt.collectionSizeOrDefault(lines, 10));
+            for (String it : lines) {
+                split.add(StringsKt.split((CharSequence) it, new String[]{"\t"}, false, 0));
             }
-            Collection destination$iv$iv2 = new ArrayList();
-            for (Object element$iv$iv : (List) destination$iv$iv) {
-                List it2 = (List) element$iv$iv;
-                if (it2.size() >= 5) {
-                    destination$iv$iv2.add(element$iv$iv);
+            ArrayList keep = new ArrayList();
+            for (Object it : split) {
+                if (((List) it).size() >= 5) {
+                    keep.add(it);
                 }
             }
-            emptyList = (List) destination$iv$iv2;
+            rows = keep;
         } catch (Exception e) {
-            emptyList = CollectionsKt.emptyList();
+            rows = CollectionsKt.emptyList();
         }
-        List rows = emptyList;
         if (rows.isEmpty()) {
             return "Nothing to export yet.";
         }
         File done = new File(this.ctx.getFilesDir(), "lane_exported.txt");
+        HashSet already;
         try {
-            hashSet = CollectionsKt.toHashSet(FilesKt.readLines(done, kotlin.text.Charsets.UTF_8));
-        } catch (Exception e2) {
-            hashSet = new HashSet();
+            already = CollectionsKt.toHashSet(FilesKt.readLines(done, kotlin.text.Charsets.UTF_8));
+        } catch (Exception e) {
+            already = new HashSet();
         }
-        HashSet already = hashSet;
-        HashMap rev2 = new HashMap();
-        int i3 = 2;
+        HashMap rev = new HashMap();
         try {
-            Iterable $this$forEach$iv2 = FilesKt.readLines(this.reviews, kotlin.text.Charsets.UTF_8);
-            for (Object element$iv : $this$forEach$iv2) {
-                String ln = (String) element$iv;
-                String[] strArr = new String[i2];
-                strArr[0] = "\t";
-                List p = StringsKt.split((CharSequence) ln, strArr, false, 0);
-                if (p.size() >= i3) {
-                    $this$forEach$iv = $this$forEach$iv2;
-                    rev2.put(p.get(0), p);
-                } else {
-                    $this$forEach$iv = $this$forEach$iv2;
+            for (String ln : FilesKt.readLines(this.reviews, kotlin.text.Charsets.UTF_8)) {
+                List p = StringsKt.split((CharSequence) ln, new String[]{"\t"}, false, 0);
+                if (p.size() >= 2) {
+                    rev.put(p.get(0), p);
                 }
-                $this$forEach$iv2 = $this$forEach$iv;
-                i2 = 1;
-                i3 = 2;
             }
-        } catch (Exception e3) {
+        } catch (Exception e) {
         }
-        StringBuilder csv2 = new StringBuilder("picture,time_ms,drive,why,street_id,street,card_lane,card_total,card_conf,your_mark,fix_road_lanes,fix_lane,fix_extra_left,fix_extra_right,fix_kind,fix_way,fix_other_way_lanes,road_file,wide_file,caption,skip_why,fix_kind_right,map_ramps,model_guess\n");
-        Iterator it3 = rows.iterator();
-        while (it3.hasNext()) {
-            List p2 = (List) it3.next();
-            List ans = StringsKt.split((CharSequence) (8 < p2.size() ? p2.get(8) : "0,0,0"), new String[]{","}, false, 0);
-            Iterator it4 = it3;
-            List r0 = (List) rev2.get(p2.get(0));
-            if (r0 != null) {
-                rev = rev2;
-                if (Intrinsics.areEqual(CollectionsKt.getOrNull(r0, 1), "-1")) {
-                    r = r0;
-                    String[] strArr2 = new String[24];
-                    strArr2[0] = export$q((String) p2.get(0));
-                    strArr2[1] = ((String) p2.get(2));
-                    File done2 = done;
-                    strArr2[2] = export$q((String) (!(5 >= p2.size()) ? p2.get(5) : ""));
-                    strArr2[3] = ((String) p2.get(3));
-                    String str7 = str6;
-                    strArr2[4] = !(6 >= p2.size()) ? p2.get(6) : "0";
-                    strArr2[5] = export$q((String) (!(7 >= p2.size()) ? p2.get(7) : ""));
-                    strArr2[6] = !(ans.size() <= 0) ? ans.get(0) : "0";
-                    strArr2[7] = !(1 >= ans.size()) ? ans.get(1) : "0";
-                    strArr2[8] = !(2 >= ans.size()) ? ans.get(2) : "0";
-                    if (r != null || (r13 = (String) CollectionsKt.getOrNull(r, 1)) == null) {
-                        String str8 = "";
-                    }
-                    strArr2[9] = str8;
-                    if (r != null || (r13 = (String) CollectionsKt.getOrNull(r, 2)) == null) {
-                        String str9 = "";
-                    }
-                    strArr2[10] = str9;
-                    if (r != null || (r5 = (String) CollectionsKt.getOrNull(r, 3)) == null) {
-                        String str10 = "";
-                    }
-                    strArr2[11] = str10;
-                    if (r != null || (r28 = (String) CollectionsKt.getOrNull(r, 4)) == null) {
-                        String str11 = "";
-                    }
-                    strArr2[12] = str11;
-                    if (r != null) {
-                        str3 = (String) CollectionsKt.getOrNull(r, 5);
-                    }
-                    str3 = "";
-                    strArr2[13] = str3;
-                    if (r != null || (r5 = (String) CollectionsKt.getOrNull(r, 6)) == null) {
-                        String str12 = "";
-                    }
-                    strArr2[14] = str12;
-                    if (r != null || (r5 = (String) CollectionsKt.getOrNull(r, 7)) == null) {
-                        String str13 = "";
-                    }
-                    strArr2[15] = str13;
-                    if (r != null || (r5 = (String) CollectionsKt.getOrNull(r, 8)) == null) {
-                        String str14 = "";
-                    }
-                    strArr2[16] = str14;
-                    strArr2[17] = export$q((String) (!(9 >= p2.size()) ? p2.get(9) : ""));
-                    strArr2[18] = export$q((String) (!(10 >= p2.size()) ? p2.get(10) : ""));
-                    strArr2[19] = export$q((String) p2.get(4));
-                    if (Intrinsics.areEqual(r0 == null ? (String) CollectionsKt.getOrNull(r0, 1) : null, "0") || (r9 = (String) CollectionsKt.getOrNull(r0, 2)) == null) {
-                        String str15 = "";
-                    }
-                    strArr2[20] = str15;
-                    if (r != null || (r5 = (String) CollectionsKt.getOrNull(r, 9)) == null) {
-                        String str16 = "";
-                    }
-                    strArr2[21] = str16;
-                    strArr2[22] = export$q((String) (!(11 >= p2.size()) ? p2.get(11) : ""));
-                    strArr2[23] = export$q((String) (!(12 >= p2.size()) ? p2.get(12) : ""));
-                    csv2.append(CollectionsKt.joinToString(CollectionsKt.listOf((Object[]) strArr2), ",", "", "", -1, "...", null)).append('\n');
-                    it3 = it4;
-                    rev2 = rev;
-                    done = done2;
-                    str6 = str7;
+        StringBuilder csv = new StringBuilder("picture,time_ms,drive,why,street_id,street,card_lane,card_total,card_conf,your_mark,fix_road_lanes,fix_lane,fix_extra_left,fix_extra_right,fix_kind,fix_way,fix_other_way_lanes,road_file,wide_file,caption,skip_why,fix_kind_right,map_ramps,model_guess\n");
+        for (Object o : rows) {
+            List p = (List) o;
+            List ans = StringsKt.split((CharSequence) (8 < p.size() ? (String) p.get(8) : "0,0,0"), new String[]{","}, false, 0);
+            List r0 = (List) rev.get(p.get(0));
+            // a skipped picture ("-1") keeps its reason; a reviewed one only its first two fields
+            List r = (r0 != null && Intrinsics.areEqual(CollectionsKt.getOrNull(r0, 1), "-1")) ? r0 : (r0 != null ? CollectionsKt.take(r0, 2) : null);
+            String[] f = new String[24];
+            f[0] = export$q((String) p.get(0));
+            f[1] = (String) p.get(2);
+            f[2] = export$q(5 < p.size() ? (String) p.get(5) : "");
+            f[3] = (String) p.get(3);
+            f[4] = 6 < p.size() ? (String) p.get(6) : "0";
+            f[5] = export$q(7 < p.size() ? (String) p.get(7) : "");
+            f[6] = ans.size() > 0 ? (String) ans.get(0) : "0";
+            f[7] = 1 < ans.size() ? (String) ans.get(1) : "0";
+            f[8] = 2 < ans.size() ? (String) ans.get(2) : "0";
+            for (int k = 1; k <= 8; k++) {
+                String v = r != null ? (String) CollectionsKt.getOrNull(r, k) : null;
+                f[8 + k] = v != null ? v : "";
+            }
+            f[17] = export$q(9 < p.size() ? (String) p.get(9) : "");
+            f[18] = export$q(10 < p.size() ? (String) p.get(10) : "");
+            f[19] = export$q((String) p.get(4));
+            String skipWhy = null;
+            if (Intrinsics.areEqual(r0 != null ? (String) CollectionsKt.getOrNull(r0, 1) : null, "0")) {
+                skipWhy = (String) CollectionsKt.getOrNull(r0, 2);
+            }
+            f[20] = skipWhy != null ? skipWhy : "";
+            String kindR = r != null ? (String) CollectionsKt.getOrNull(r, 9) : null;
+            f[21] = kindR != null ? kindR : "";
+            f[22] = export$q(11 < p.size() ? (String) p.get(11) : "");
+            f[23] = export$q(12 < p.size() ? (String) p.get(12) : "");
+            csv.append(CollectionsKt.joinToString(CollectionsKt.listOf(f), ",", "", "", -1, "...", null)).append('\n');
+        }
+        ArrayList fresh = new ArrayList();
+        for (Object o : rows) {
+            if (!already.contains(((List) o).get(0))) {
+                fresh.add(o);
+            }
+        }
+        ArrayList files = new ArrayList();
+        for (Object o : fresh) {
+            List p = (List) o;
+            List<String> two = CollectionsKt.listOf(new String[]{9 < p.size() ? (String) p.get(9) : "", 10 < p.size() ? (String) p.get(10) : ""});
+            ArrayList nonEmpty = new ArrayList();
+            for (String s : two) {
+                if (s.length() > 0) {
+                    nonEmpty.add(s);
                 }
-            } else {
-                rev = rev2;
             }
-            r = r0 != null ? CollectionsKt.take(r0, 2) : null;
-            String[] strArr22 = new String[24];
-            strArr22[0] = export$q((String) p2.get(0));
-            strArr22[1] = ((String) p2.get(2));
-            File done22 = done;
-            strArr22[2] = export$q((String) (!(5 >= p2.size()) ? p2.get(5) : ""));
-            strArr22[3] = ((String) p2.get(3));
-            String str72 = str6;
-            strArr22[4] = !(6 >= p2.size()) ? p2.get(6) : "0";
-            strArr22[5] = export$q((String) (!(7 >= p2.size()) ? p2.get(7) : ""));
-            strArr22[6] = !(ans.size() <= 0) ? ans.get(0) : "0";
-            strArr22[7] = !(1 >= ans.size()) ? ans.get(1) : "0";
-            strArr22[8] = !(2 >= ans.size()) ? ans.get(2) : "0";
-            if (r != null) {
+            ArrayList pairs = new ArrayList(CollectionsKt.collectionSizeOrDefault(nonEmpty, 10));
+            for (Object s : nonEmpty) {
+                pairs.add(TuplesKt.to(p.get(0), (String) s));
             }
-            String str82 = "";
-            strArr22[9] = str82;
-            if (r != null) {
-            }
-            String str92 = "";
-            strArr22[10] = str92;
-            if (r != null) {
-            }
-            String str102 = "";
-            strArr22[11] = str102;
-            if (r != null) {
-            }
-            String str112 = "";
-            strArr22[12] = str112;
-            if (r != null) {
-            }
-            str3 = "";
-            strArr22[13] = str3;
-            if (r != null) {
-            }
-            String str122 = "";
-            strArr22[14] = str122;
-            if (r != null) {
-            }
-            String str132 = "";
-            strArr22[15] = str132;
-            if (r != null) {
-            }
-            String str142 = "";
-            strArr22[16] = str142;
-            strArr22[17] = export$q((String) (!(9 >= p2.size()) ? p2.get(9) : ""));
-            strArr22[18] = export$q((String) (!(10 >= p2.size()) ? p2.get(10) : ""));
-            strArr22[19] = export$q((String) p2.get(4));
-            if (Intrinsics.areEqual(r0 == null ? (String) CollectionsKt.getOrNull(r0, 1) : null, "0")) {
-            }
-            String str152 = "";
-            strArr22[20] = str152;
-            if (r != null) {
-            }
-            String str162 = "";
-            strArr22[21] = str162;
-            strArr22[22] = export$q((String) (!(11 >= p2.size()) ? p2.get(11) : ""));
-            strArr22[23] = export$q((String) (!(12 >= p2.size()) ? p2.get(12) : ""));
-            csv2.append(CollectionsKt.joinToString(CollectionsKt.listOf((Object[]) strArr22), ",", "", "", -1, "...", null)).append('\n');
-            it3 = it4;
-            rev2 = rev;
-            done = done22;
-            str6 = str72;
+            CollectionsKt.addAll(files, pairs);
         }
-        String str17 = str6;
-        File done3 = done;
-        List $this$filter$iv = rows;
-        int $i$f$filter = 0;
-        Collection destination$iv$iv3 = new ArrayList();
-        for (Object element$iv$iv2 : $this$filter$iv) {
-            List it5 = (List) element$iv$iv2;
-            Iterable $this$filter$iv2 = $this$filter$iv;
-            int $i$f$filter2 = $i$f$filter;
-            if (!already.contains(it5.get(0))) {
-                destination$iv$iv3.add(element$iv$iv2);
-            }
-            $i$f$filter = $i$f$filter2;
-            $this$filter$iv = ((List) $this$filter$iv2);
-        }
-        Iterable list$iv$iv = (List) destination$iv$iv3;
-        int $i$f$flatMap = 0;
-        Collection destination$iv$iv4 = new ArrayList();
-        Iterable<List> $this$flatMapTo$iv$iv = list$iv$iv;
-        for (List p3 : $this$flatMapTo$iv$iv) {
-            Iterable $this$flatMap$iv = list$iv$iv;
-            int $i$f$flatMap2 = $i$f$flatMap;
-            String[] strArr3 = new String[2];
-            Iterable $this$flatMapTo$iv$iv2 = $this$flatMapTo$iv$iv;
-            strArr3[0] = 9 < p3.size() ? p3.get(9) : "";
-            strArr3[1] = 10 < p3.size() ? p3.get(10) : "";
-            Iterable $this$filter$iv3 = CollectionsKt.listOf((Object[]) strArr3);
-            Collection destination$iv$iv5 = new ArrayList();
-            for (Object element$iv$iv3 : $this$filter$iv3) {
-                Iterable $this$filter$iv4 = $this$filter$iv3;
-                String it6 = (String) element$iv$iv3;
-                if (it6.length() > 0) {
-                    destination$iv$iv5.add(element$iv$iv3);
-                }
-                $this$filter$iv3 = $this$filter$iv4;
-            }
-            Iterable $this$map$iv2 = (List) destination$iv$iv5;
-            HashSet already2 = already;
-            Collection destination$iv$iv6 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv2, 10));
-            Iterable $this$mapTo$iv$iv = $this$map$iv2;
-            for (Object item$iv$iv2 : $this$mapTo$iv$iv) {
-                String it7 = (String) item$iv$iv2;
-                destination$iv$iv6.add(TuplesKt.to(p3.get(0), it7));
-                $this$mapTo$iv$iv = $this$mapTo$iv$iv;
-                $this$map$iv2 = $this$map$iv2;
-            }
-            CollectionsKt.addAll(destination$iv$iv4, (List) destination$iv$iv6);
-            $i$f$flatMap = $i$f$flatMap2;
-            list$iv$iv = $this$flatMap$iv;
-            $this$flatMapTo$iv$iv = $this$flatMapTo$iv$iv2;
-            already = already2;
-        }
-        List files = (List) destination$iv$iv4;
         String stamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.US).format(new Date());
         int part = 0;
-        int sent2 = 0;
-        int i4 = 0;
-        long LIMIT3 = 25165824;
+        int frames = 0;
+        int i = 0;
+        long LIMIT = 25165824L;
         ArrayList newDone = new ArrayList();
-        while (true) {
-            int part2 = part + 1;
-            String name = "lane_data_" + stamp + "_part" + part2 + ".zip";
-            ContentValues $this$export_u24lambda_u2470 = new ContentValues();
-            String stamp2 = stamp;
-            int sent3 = sent2;
-            $this$export_u24lambda_u2470.put("_display_name", name);
-            int i5 = i4;
-            $this$export_u24lambda_u2470.put("mime_type", "application/zip");
-            $this$export_u24lambda_u2470.put("relative_path", "Download/StarView/Lane data");
-            Uri uri = this.ctx.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, $this$export_u24lambda_u2470);
+        do {
+            part++;
+            String name = "lane_data_" + stamp + "_part" + part + ".zip";
+            ContentValues cv = new ContentValues();
+            cv.put("_display_name", name);
+            cv.put("mime_type", "application/zip");
+            cv.put("relative_path", "Download/StarView/Lane data");
+            Uri uri = this.ctx.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, cv);
             if (uri == null) {
                 return "Couldn't create " + name;
             }
             Ref.LongRef size = new Ref.LongRef();
-            OutputStream openOutputStream = this.ctx.getContentResolver().openOutputStream(uri);
-            if (openOutputStream != null) {
-                OutputStream outputStream = openOutputStream;
+            OutputStream os = this.ctx.getContentResolver().openOutputStream(uri);
+            if (os != null) {
+                Throwable osCause = null;
                 try {
-                    OutputStream os = outputStream;
+                    ZipOutputStream z = new ZipOutputStream(os);
+                    Throwable zCause = null;
                     try {
-                        ZipOutputStream zipOutputStream = new ZipOutputStream(os);
-                        try {
-                            ZipOutputStream z2 = zipOutputStream;
-                            if (part2 == 1) {
-                                try {
-                                    sb = csv2.toString();
-                                    csv = csv2;
-                                } catch (Throwable th3) {
-                                    th2 = th3;
-                                }
-                                try {
-                                    Intrinsics.checkNotNullExpressionValue(sb, "toString(...)");
-                                    byte[] bytes = sb.getBytes(Charsets.UTF_8);
-                                    Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
-                                    z = z2;
-                                    export$lambda$72$lambda$71$put(z, size, "labels.csv", bytes);
-                                    try {
-                                        export$lambda$72$lambda$71$put(z, size, str5, FilesKt.readBytes(new File(this.ctx.getFilesDir(), str5)));
-                                    } catch (Exception e4) {
-                                    }
-                                    try {
-                                        export$lambda$72$lambda$71$put(z, size, str4, FilesKt.readBytes(new File(this.ctx.getFilesDir(), str4)));
-                                    } catch (Exception e5) {
-                                    }
-                                } catch (Throwable th4) {
-                                    th2 = th4;
-                                    try {
-                                        throw th2;
-                                    } catch (Throwable th5) {
-                                        try {
-                                            CloseableKt.closeFinally(zipOutputStream, th2);
-                                            throw th5;
-                                        } catch (Throwable th6) {
-                                            th = th6;
-                                            try {
-                                                throw th;
-                                            } catch (Throwable th7) {
-                                                CloseableKt.closeFinally(outputStream, th);
-                                                throw th7;
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                csv = csv2;
-                                z = z2;
-                            }
-                            sent = i5;
-                            while (true) {
-                                try {
-                                    if (sent >= files.size()) {
-                                        str = str4;
-                                        str2 = str5;
-                                        break;
-                                    }
-                                    str = str4;
-                                    str2 = str5;
-                                    if (size.element >= LIMIT3) {
-                                        break;
-                                    }
-                                    Pair pair = (Pair) files.get(sent);
-                                    String pic = (String) pair.component1();
-                                    String rel = (String) pair.component2();
-                                    int i6 = sent + 1;
-                                    try {
-                                        i = i6;
-                                        try {
-                                            LIMIT2 = LIMIT3;
-                                            try {
-                                                export$lambda$72$lambda$71$put(z, size, "frames/" + rel, FilesKt.readBytes(new File(getCleanDir(), rel)));
-                                                sent3++;
-                                            } catch (Exception e6) {
-                                            } catch (Throwable th8) {
-                                                th2 = th8;
-                                                throw th2;
-                                            }
-                                        } catch (Exception e7) {
-                                            LIMIT2 = LIMIT3;
-                                        } catch (Throwable th9) {
-                                            th2 = th9;
-                                        }
-                                    } catch (Exception e8) {
-                                        i = i6;
-                                        LIMIT2 = LIMIT3;
-                                    } catch (Throwable th10) {
-                                        th2 = th10;
-                                    }
-                                    int i7 = sent3;
-                                    try {
-                                        if (!Intrinsics.areEqual(CollectionsKt.lastOrNull((List) newDone), pic)) {
-                                            newDone.add(pic);
-                                        }
-                                        if (i7 % 50 == 0) {
-                                            progress.invoke("part " + part2 + ": " + i7 + " frames…");
-                                        }
-                                        sent3 = i7;
-                                        sent = i;
-                                        str4 = str;
-                                        str5 = str2;
-                                        LIMIT3 = LIMIT2;
-                                    } catch (Throwable th11) {
-                                        th2 = th11;
-                                        sent3 = i7;
-                                        throw th2;
-                                    }
-                                } catch (Throwable th12) {
-                                    th2 = th12;
-                                }
-                            }
-                            LIMIT = LIMIT3;
+                        if (part == 1) {
+                            String text = csv.toString();
+                            Intrinsics.checkNotNullExpressionValue(text, "toString(...)");
+                            byte[] bytes = text.getBytes(Charsets.UTF_8);
+                            Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
+                            export$lambda$72$lambda$71$put(z, size, "labels.csv", bytes);
                             try {
-                                Unit unit = Unit.INSTANCE;
-                                try {
-                                    CloseableKt.closeFinally(zipOutputStream, null);
-                                    Unit unit2 = Unit.INSTANCE;
-                                    CloseableKt.closeFinally(outputStream, null);
-                                    Unit unit3 = Unit.INSTANCE;
-                                    sent2 = sent3;
-                                } catch (Throwable th13) {
-                                    th = th13;
-                                    throw th;
-                                }
-                            } catch (Throwable th14) {
-                                th2 = th14;
-                                throw th2;
+                                export$lambda$72$lambda$71$put(z, size, logName, FilesKt.readBytes(new File(this.ctx.getFilesDir(), logName)));
+                            } catch (Exception e) {
                             }
-                        } catch (Throwable th15) {
-                            th2 = th15;
+                            try {
+                                export$lambda$72$lambda$71$put(z, size, countsName, FilesKt.readBytes(new File(this.ctx.getFilesDir(), countsName)));
+                            } catch (Exception e) {
+                            }
                         }
-                    } catch (Throwable th16) {
-                        th = th16;
+                        while (i < files.size() && size.element < LIMIT) {
+                            Pair pr = (Pair) files.get(i);
+                            String pic = (String) pr.component1();
+                            String rel = (String) pr.component2();
+                            i++;
+                            try {
+                                export$lambda$72$lambda$71$put(z, size, "frames/" + rel, FilesKt.readBytes(new File(getCleanDir(), rel)));
+                                frames++;
+                            } catch (Exception e) {
+                            }
+                            if (!Intrinsics.areEqual(CollectionsKt.lastOrNull((List) newDone), pic)) {
+                                newDone.add(pic);
+                            }
+                            if (frames % 50 == 0) {
+                                progress.invoke("part " + part + ": " + frames + " frames…");
+                            }
+                        }
+                    } catch (Throwable th) {
+                        zCause = th;
+                        throw th;
+                    } finally {
+                        CloseableKt.closeFinally(z, zCause);
                     }
-                } catch (Throwable th17) {
-                    th = th17;
+                } catch (Throwable th) {
+                    osCause = th;
+                    throw th;
+                } finally {
+                    CloseableKt.closeFinally(os, osCause);
                 }
-            } else {
-                str = str4;
-                str2 = str5;
-                csv = csv2;
-                LIMIT = LIMIT3;
-                sent = i5;
-                sent2 = sent3;
             }
-            if (sent >= files.size()) {
-                try {
-                    try {
-                        FilesKt.appendText(done3, CollectionsKt.joinToString(CollectionsKt.distinct(newDone), str17, "", "", -1, "...", null) + (newDone.isEmpty() ? "" : str17), kotlin.text.Charsets.UTF_8);
-                    } catch (Exception e9) {
-                    }
-                } catch (Exception e10) {
-                }
-                this.ctx.getSharedPreferences("lane_pictures", 0).edit().putLong("exported_at", System.currentTimeMillis()).apply();
-                return "Exported " + rows.size() + " labels and " + sent2 + " new frames in " + part2 + " file" + (part2 > 1 ? "s" : "") + " to Download/StarView/Lane data.";
-            }
-            i4 = sent;
-            part = part2;
-            stamp = stamp2;
-            str4 = str;
-            csv2 = csv;
-            str5 = str2;
-            LIMIT3 = LIMIT;
+        } while (i < files.size());
+        try {
+            FilesKt.appendText(done, CollectionsKt.joinToString(CollectionsKt.distinct(newDone), nl, "", "", -1, "...", null) + (newDone.isEmpty() ? "" : nl), kotlin.text.Charsets.UTF_8);
+        } catch (Exception e) {
         }
+        this.ctx.getSharedPreferences("lane_pictures", 0).edit().putLong("exported_at", System.currentTimeMillis()).apply();
+        return "Exported " + rows.size() + " labels and " + frames + " new frames in " + part + " file" + (part > 1 ? "s" : "") + " to Download/StarView/Lane data.";
     }
 
     private static final String export$q(String v) {

@@ -103,7 +103,7 @@ public class OverpassNodes {
                 StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
                 String format = String.format(Locale.US, "%.4f,%.4f,%.4f,%.4f", Arrays.copyOf(new Object[]{Double.valueOf(i * 0.01d), Double.valueOf(i2 * 0.01d), Double.valueOf((i * 0.01d) + 0.01d), Double.valueOf((i2 * 0.01d) + 0.01d)}, 4));
                 Intrinsics.checkNotNullExpressionValue(format, "format(...)");
-                Response execute = overpassNodes.getHttp().newCall(new Request.Builder().url("https://overpass-api.de/api/interpreter").header("User-Agent", "StarView (openpilot tablet display)").post(new FormBody.Builder(null, 1, 0 == true ? 1 : 0).add("data", "[out:json][timeout:25];" + str3 + "(" + format + ");out;").build()).build()).execute();
+                Response execute = overpassNodes.getHttp().newCall(new Request.Builder().url("https://overpass-api.de/api/interpreter").header("User-Agent", "StarView (openpilot tablet display)").post(new FormBody.Builder().add("data", "[out:json][timeout:25];" + str3 + "(" + format + ");out;").build()).build()).execute();
                 try {
                     Response response = execute;
                     if (!response.isSuccessful()) {

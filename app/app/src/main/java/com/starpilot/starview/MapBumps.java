@@ -96,7 +96,7 @@ public final class MapBumps {
                 String format = String.format(Locale.US, "%.4f,%.4f,%.4f,%.4f", Arrays.copyOf(new Object[]{Double.valueOf(s), Double.valueOf(w), Double.valueOf(s + 0.01d), Double.valueOf(w + 0.01d)}, 4));
                 Intrinsics.checkNotNullExpressionValue(format, "format(...)");
                 String q = "[out:json][timeout:25];node[\"traffic_calming\"~\"^(bump|hump|table|cushion|yes)$\"](" + format + ");out;";
-                Request req = new Request.Builder().url("https://overpass-api.de/api/interpreter").header("User-Agent", "StarView (openpilot tablet display)").post(new FormBody.Builder(null, 1, null).add("data", q).build()).build();
+                Request req = new Request.Builder().url("https://overpass-api.de/api/interpreter").header("User-Agent", "StarView (openpilot tablet display)").post(new FormBody.Builder().add("data", q).build()).build();
                 Response execute = getHttp().newCall(req).execute();
                 try {
                     Response r = execute;

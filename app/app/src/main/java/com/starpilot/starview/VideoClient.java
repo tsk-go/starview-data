@@ -106,18 +106,8 @@ public final class VideoClient {
             this.hevc = hevc;
         }
 
-        /* JADX WARN: Illegal instructions before constructor call */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
         public /* synthetic */ Frame(long j, long j2, long j3, boolean z, int i, int i2, byte[] bArr, long j4, boolean z2, int i3, DefaultConstructorMarker defaultConstructorMarker) {
-            this(j, j2, j3, z, i, i2, bArr, j4, r14);
-            boolean z3;
-            if ((i3 & 256) == 0) {
-                z3 = z2;
-            } else {
-                z3 = false;
-            }
+            this(j, j2, j3, z, i, i2, bArr, j4, (i3 & 256) != 0 ? false : z2);
         }
 
         public final byte[] getData() {

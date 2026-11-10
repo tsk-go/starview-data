@@ -62,18 +62,8 @@ public final class IdeaSpots {
             this.src = src;
         }
 
-        /* JADX WARN: Illegal instructions before constructor call */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
         public /* synthetic */ Spot(String str, double d, double d2, double d3, double d4, int i, long j, String str2, String str3, int i2, DefaultConstructorMarker defaultConstructorMarker) {
-            this(str, d, d2, d3, d4, i, j, str2, r15);
-            String str4;
-            if ((i2 & 256) == 0) {
-                str4 = str3;
-            } else {
-                str4 = "me";
-            }
+            this(str, d, d2, d3, d4, i, j, str2, (i2 & 256) != 0 ? "me" : str3);
         }
 
         public final int getCount() {

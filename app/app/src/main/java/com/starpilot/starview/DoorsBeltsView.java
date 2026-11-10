@@ -531,7 +531,7 @@ public final class DoorsBeltsView extends CardPage {
                                     @Override
                                     public final int compare(Object var1, Object var2) {
                                         return ComparisonsKt.compareValues(
-                                            (T)((Integer & Comparable)((java.util.Map.Entry)var2).getValue()), (T)((Integer & Comparable)((java.util.Map.Entry)var1).getValue())
+                                            ((Comparable)((java.util.Map.Entry)var2).getValue()), ((Comparable)((java.util.Map.Entry)var1).getValue())
                                         );
                                     }
                                 }

@@ -234,25 +234,8 @@ public final class OsmRoads {
             this.monoNs = monoNs;
         }
 
-        /* JADX WARN: Illegal instructions before constructor call */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
         public /* synthetic */ Fix(double d, double d2, float f, float f2, float f3, long j, float f4, double d3, long j2, int i, DefaultConstructorMarker defaultConstructorMarker) {
-            this(d, d2, f, f2, f3, j, r12, r13, r15);
-            double d4;
-            long j3;
-            float f5 = (i & 64) != 0 ? Float.NaN : f4;
-            if ((i & 128) == 0) {
-                d4 = d3;
-            } else {
-                d4 = Double.NaN;
-            }
-            if ((i & 256) == 0) {
-                j3 = j2;
-            } else {
-                j3 = 0;
-            }
+            this(d, d2, f, f2, f3, j, (i & 64) != 0 ? Float.NaN : f4, (i & 128) != 0 ? Double.NaN : d3, (i & 256) != 0 ? 0L : j2);
         }
 
         public final float getBearingAcc() {
@@ -629,199 +612,94 @@ public final class OsmRoads {
         INSTANCE.load($ty + $dy, $tx + $dx);
     }
 
-    /* JADX WARN: Can't wrap try/catch for region: R(7:(10:58|59|60|61|62|63|64|65|66|(7:68|69|70|71|72|73|(2:76|77)(1:75)))(1:108)|69|70|71|72|73|(0)(0)) */
-    /* JADX WARN: Code restructure failed: missing block: B:83:0x01e0, code lost:
-    
-        r0 = e;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:84:0x01ee, code lost:
-    
-        r1 = r0.getMessage();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:85:0x01f2, code lost:
-    
-        if (r1 == null) goto L59;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:86:0x01f4, code lost:
-    
-        r1 = r0.toString();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:87:0x01f8, code lost:
-    
-        r5 = r1;
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Removed duplicated region for block: B:31:0x028b A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:35:0x0281 A[SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:75:0x01fc A[LOOP:1: B:49:0x00fa->B:75:0x01fc, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:76:0x01fb A[SYNTHETIC] */
-    /* JADX WARN: Unreachable blocks removed: 2, instructions: 8 */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* recovered by hand from the bytecode (jadx and Vineflower could not decompile it) */
     private final void load(int ty, int tx) {
-        int i;
-        String str;
-        String str2;
-        Iterator<String> it;
-        Response execute;
-        Throwable th;
-        Response response;
-        String string;
-        String str3;
-        int i2;
-        boolean z;
         String key = key(ty, tx);
         try {
-            File file = dir;
-            if (file == null) {
+            File d = dir;
+            if (d == null) {
                 return;
             }
-            File file2 = new File(file, key + ".json");
-            try {
-                if (file2.isFile() && file2.length() > 20) {
-                    str = FilesKt.readText(file2, kotlin.text.Charsets.UTF_8);
-                    i = 0;
-                } else {
-                    tileStatus = "downloading streets…";
-                    double d = ty * 0.01d;
-                    double d2 = tx * 0.01d;
+            File f = new File(d, key + ".json");
+            String text;
+            if (f.isFile() && f.length() > 20) {
+                text = FilesKt.readText(f, kotlin.text.Charsets.UTF_8);
+            } else {
+                tileStatus = "downloading streets…";
+                double s = ty * 0.01d;
+                double w = tx * 0.01d;
+                String s1 = String.format(Locale.US, "%.4f", Arrays.copyOf(new Object[]{Double.valueOf(s)}, 1));
+                Intrinsics.checkNotNullExpressionValue(s1, "format(...)");
+                String w1 = String.format(Locale.US, "%.4f", Arrays.copyOf(new Object[]{Double.valueOf(w)}, 1));
+                Intrinsics.checkNotNullExpressionValue(w1, "format(...)");
+                String n1 = String.format(Locale.US, "%.4f", Arrays.copyOf(new Object[]{Double.valueOf(s + 0.01d)}, 1));
+                Intrinsics.checkNotNullExpressionValue(n1, "format(...)");
+                String e1 = String.format(Locale.US, "%.4f", Arrays.copyOf(new Object[]{Double.valueOf(w + 0.01d)}, 1));
+                Intrinsics.checkNotNullExpressionValue(e1, "format(...)");
+                String q = "[out:json][timeout:30];way[\"highway\"][\"area\"!=\"yes\"](" + s1 + "," + w1 + "," + n1 + "," + e1 + ");out tags geom;";
+                Iterator<String> it = URLS.iterator();
+                String err = "";
+                String body = null;
+                while (it.hasNext()) {
+                    String u = it.next();
                     try {
-                        String format = String.format(Locale.US, "%.4f", Arrays.copyOf(new Object[]{Double.valueOf(d)}, 1));
-                        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
-                        String format2 = String.format(Locale.US, "%.4f", Arrays.copyOf(new Object[]{Double.valueOf(d2)}, 1));
-                        Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
-                        String format3 = String.format(Locale.US, "%.4f", Arrays.copyOf(new Object[]{Double.valueOf(d + 0.01d)}, 1));
-                        Intrinsics.checkNotNullExpressionValue(format3, "format(...)");
-                        String format4 = String.format(Locale.US, "%.4f", Arrays.copyOf(new Object[]{Double.valueOf(d2 + 0.01d)}, 1));
-                        Intrinsics.checkNotNullExpressionValue(format4, "format(...)");
-                        String str4 = "[out:json][timeout:30];way[\"highway\"][\"area\"!=\"yes\"](" + format + "," + format2 + "," + format3 + "," + format4 + ");out tags geom;";
-                        Iterator<String> it2 = URLS.iterator();
-                        String str5 = "";
-                        String str6 = null;
-                        while (true) {
-                            if (!it2.hasNext()) {
-                                i = 0;
-                                break;
+                        Request req = new Request.Builder().url(u).header("User-Agent", "StarView/2.25 (openpilot tablet display)")
+                                .post(new FormBody.Builder().add("data", q).build()).build();
+                        Response r = getHttp().newCall(req).execute();
+                        Throwable cause = null;
+                        try {
+                            ResponseBody rb = r.body();
+                            Intrinsics.checkNotNull(rb);
+                            String b = rb.string();
+                            if (r.isSuccessful() && StringsKt.startsWith(StringsKt.trimStart((CharSequence) b).toString(), "{", false)) {
+                                body = b;
+                            } else {
+                                err = "HTTP " + r.code();
                             }
-                            try {
-                                execute = getHttp().newCall(new Request.Builder().url(it2.next()).header("User-Agent", "StarView/2.25 (openpilot tablet display)").post(new FormBody.Builder(null, 1, null == true ? 1 : 0).add("data", str4).build()).build()).execute();
-                                try {
-                                    response = execute;
-                                    ResponseBody body = response.body();
-                                    Intrinsics.checkNotNull(body);
-                                    string = body.string();
-                                } catch (Throwable th2) {
-                                    str2 = str4;
-                                    it = it2;
-                                    i = 0;
-                                    th = th2;
-                                }
-                            } catch (Exception e) {
-                                e = e;
-                                str2 = str4;
-                                it = it2;
-                                i = 0;
-                            }
-                            try {
-                                if (response.isSuccessful()) {
-                                    str2 = str4;
-                                    try {
-                                        str3 = str6;
-                                        it = it2;
-                                        String str7 = str5;
-                                        i = 0;
-                                        try {
-                                            if (StringsKt.startsWith(StringsKt.trimStart((CharSequence) string).toString(), "{", false)) {
-                                                str6 = string;
-                                                str5 = str7;
-                                                Unit unit = Unit.INSTANCE;
-                                                CloseableKt.closeFinally(execute, null);
-                                                if (str6 != null) {
-                                                    break;
-                                                }
-                                                str4 = str2;
-                                                it2 = it;
-                                            }
-                                        } catch (Throwable th3) {
-                                            th = th3;
-                                            str6 = str3;
-                                            try {
-                                                throw th;
-                                            } catch (Throwable th4) {
-                                                CloseableKt.closeFinally(execute, th);
-                                                throw th4;
-                                            }
-                                        }
-                                    } catch (Throwable th5) {
-                                        it = it2;
-                                        i = 0;
-                                        th = th5;
-                                    }
-                                } else {
-                                    str2 = str4;
-                                    str3 = str6;
-                                    it = it2;
-                                    i = 0;
-                                }
-                                Unit unit2 = Unit.INSTANCE;
-                                CloseableKt.closeFinally(execute, null);
-                                if (str6 != null) {
-                                }
-                            } catch (Throwable th6) {
-                                th = th6;
-                                throw th;
-                            }
-                            str5 = "HTTP " + response.code();
-                            str6 = str3;
+                        } catch (Throwable th) {
+                            cause = th;
+                            throw th;
+                        } finally {
+                            CloseableKt.closeFinally(r, cause);
                         }
-                        if (str6 == null) {
-                            throw new IOException(str5);
-                        }
-                        str = str6;
-                        File file3 = new File(file2.getPath() + ".tmp");
-                        FilesKt.writeText(file3, str, kotlin.text.Charsets.UTF_8);
-                        file3.renameTo(file2);
-                    } catch (Exception e2) {
-                        e = e2;
-                        Log.w("StarView/Osm", "tile " + key + ": " + e);
-                        tiles.put(key, 2);
-                        failedAt.put(key, Long.valueOf(System.currentTimeMillis()));
-                        String message = e.getMessage();
-                        tileStatus = "street download failed: " + (message != null ? StringsKt.take(message, 40) : null) + " (retrying)";
-                        return;
+                    } catch (Exception e) {
+                        String m = e.getMessage();
+                        err = m != null ? m : e.toString();
+                    }
+                    if (body != null) {
+                        break;
                     }
                 }
-                int parse$app_debug = parse$app_debug(str);
-                tiles.put(key, 1);
-                Collection<Integer> values = tiles.values();
-                Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
-                Collection<Integer> collection = values;
-                if (collection.isEmpty()) {
-                    i2 = i;
-                } else {
-                    i2 = 0;
-                    for (Integer num : collection) {
-                        if (num != null && num.intValue() == 1) {
-                            z = true;
-                            if (z) {
-                                i2++;
-                                if (i2 < 0) {
-                                    CollectionsKt.throwCountOverflow();
-                                }
-                            }
-                        }
-                        z = false;
-                        if (z) {
-                        }
-                    }
+                if (body == null) {
+                    throw new IOException(err);
                 }
-                tileStatus = i2 + " tiles, " + ways.size() + " streets" + (parse$app_debug == 0 ? " (tile " + key + " empty)" : "");
-            } catch (Exception e3) {
-                e = e3;
+                File tmp = new File(f.getPath() + ".tmp");
+                FilesKt.writeText(tmp, body, kotlin.text.Charsets.UTF_8);
+                tmp.renameTo(f);
+                text = body;
             }
-        } catch (Exception e4) {
-            e = e4;
+            int n = parse$app_debug(text);
+            tiles.put(key, 1);
+            Collection<Integer> values = tiles.values();
+            Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
+            int count = 0;
+            if (!values.isEmpty()) {
+                for (Integer v : values) {
+                    if (v != null && v.intValue() == 1) {
+                        count++;
+                        if (count < 0) {
+                            CollectionsKt.throwCountOverflow();
+                        }
+                    }
+                }
+            }
+            tileStatus = count + " tiles, " + ways.size() + " streets" + (n == 0 ? " (tile " + key + " empty)" : "");
+        } catch (Exception e) {
+            Log.w("StarView/Osm", "tile " + key + ": " + e);
+            tiles.put(key, 2);
+            failedAt.put(key, Long.valueOf(System.currentTimeMillis()));
+            String message = e.getMessage();
+            tileStatus = "street download failed: " + (message != null ? StringsKt.take(message, 40) : null) + " (retrying)";
         }
     }
 
@@ -1635,7 +1513,7 @@ public final class OsmRoads {
                 return CollectionsKt.sortedWith(var120, new Comparator() {
                     @Override
                     public final int compare(Object var1, Object var2) {
-                        return ComparisonsKt.compareValues((T)((Double & Comparable)((Pair)var1).getFirst()), (T)((Double & Comparable)((Pair)var2).getFirst()));
+                        return ComparisonsKt.compareValues(((Comparable)((Pair)var1).getFirst()), ((Comparable)((Pair)var2).getFirst()));
                     }
                 });
             }

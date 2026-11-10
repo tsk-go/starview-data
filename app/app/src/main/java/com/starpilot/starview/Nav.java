@@ -176,18 +176,8 @@ public final class Nav {
             this.lanes = lanes;
         }
 
-        /* JADX WARN: Illegal instructions before constructor call */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
         public /* synthetic */ Step(String str, String str2, String str3, String str4, String str5, double d, double d2, double d3, double d4, double d5, List list, int i, DefaultConstructorMarker defaultConstructorMarker) {
-            this(str, str2, str3, str4, str5, d, d2, d3, d4, d5, r17);
-            List list2;
-            if ((i & 1024) == 0) {
-                list2 = list;
-            } else {
-                list2 = CollectionsKt.emptyList();
-            }
+            this(str, str2, str3, str4, str5, d, d2, d3, d4, d5, (i & 1024) != 0 ? CollectionsKt.emptyList() : list);
         }
 
         public final String getModifier() {
@@ -370,24 +360,8 @@ public final class Nav {
             this.voiceText = voiceText;
         }
 
-        /* JADX WARN: Illegal instructions before constructor call */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
         public /* synthetic */ Line(double[] dArr, double[] dArr2, double[] dArr3, double[] dArr4, double[] dArr5, int[] iArr, List list, List list2, double[] dArr6, List list3, int i, DefaultConstructorMarker defaultConstructorMarker) {
-            this(dArr, dArr2, dArr3, dArr4, dArr5, iArr, list, list2, r11, r12);
-            double[] dArr7;
-            List list4;
-            if ((i & 256) == 0) {
-                dArr7 = dArr6;
-            } else {
-                dArr7 = new double[0];
-            }
-            if ((i & 512) == 0) {
-                list4 = list3;
-            } else {
-                list4 = CollectionsKt.emptyList();
-            }
+            this(dArr, dArr2, dArr3, dArr4, dArr5, iArr, list, list2, (i & 256) != 0 ? new double[0] : dArr6, (i & 512) != 0 ? CollectionsKt.emptyList() : list3);
         }
 
         public final double[] getCum() {
