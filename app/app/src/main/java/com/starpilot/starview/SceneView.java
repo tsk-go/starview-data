@@ -2396,20 +2396,19 @@ public final class SceneView extends SurfaceView {
                 this.layoutGrid = g;
                 Snap last = this.snaps.lastOrNull();
                 boolean still = last != null && this.odoDist - last.getDist() < 1.0d;
-                if (still) {
-                    Intrinsics.checkNotNull(last);
-                    if (nowNs - last.getTNs() <= 2000000000) {
-                        dark = dark2;
-                        str3 = "opacity";
-                        str4 = "layoutMi";
-                        combine(nowNs);
-                        smooth();
-                        paint(dark);
-                    }
-                }
                 dark = dark2;
                 str4 = "layoutMi";
                 str3 = "opacity";
+                boolean recent = false;
+                if (still) {
+                    Intrinsics.checkNotNull(last);
+                    recent = nowNs - last.getTNs() <= 2000000000;
+                }
+                if (recent) {
+                    combine(nowNs);
+                    smooth();
+                    paint(dark);
+                } else {
                 this.snaps.addLast(new Snap(g.getG(), this.odoX, this.odoY, this.odoYaw, nowNs, this.odoDist));
                 while (true) {
                     if (this.snaps.size() <= 48 && (this.snaps.isEmpty() || ((nowNs - this.snaps.first().getTNs() <= 10000000000L || this.odoDist - this.snaps.first().getDist() <= 30.0d) && nowNs - this.snaps.first().getTNs() <= 120000000000L))) {
@@ -2421,6 +2420,7 @@ public final class SceneView extends SurfaceView {
                 combine(nowNs);
                 smooth();
                 paint(dark);
+                }
             }
             if (this.snaps.isEmpty()) {
                 MaterialInstance materialInstance2 = this.layoutMi;
@@ -6760,11 +6760,8 @@ public final class SceneView extends SurfaceView {
             Double d = this$0.learnedW.get(Long.valueOf(p.getWay().getId()));
             if (d == null) {
                 d = this$0.hintChain.contains(Long.valueOf(p.getWay().getId())) ? this$0.learnedW.get(Long.valueOf(this$0.hintChainOf)) : null;
-                if (d == null) {
-                    width = p.getWay().getWidth();
-                }
             }
-            width = d.doubleValue();
+            width = d != null ? d.doubleValue() : p.getWay().getWidth();
         }
         return width / 2.0d;
     }

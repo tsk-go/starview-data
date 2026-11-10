@@ -216,22 +216,15 @@ public final class Ideas {
             if (f == null || System.nanoTime() - f.getTNs() > 3000000000L) {
                 return null;
             }
-            double lat3 = f.getLat();
-            double lon3 = f.getLon();
-            if (f.getSpeed() > 2.0f) {
-                float bearingDeg = f.getBearingDeg();
-                if ((Float.isInfinite(bearingDeg) || Float.isNaN(bearingDeg)) ? false : true) {
-                    double hdg3 = f.getBearingDeg();
-                    lat = lat3;
-                    lon = lon3;
-                    kind = "none";
-                    hdg = hdg3;
-                }
-            }
-            lat = lat3;
-            lon = lon3;
+            lat = f.getLat();
+            lon = f.getLon();
             kind = "none";
-            hdg = Double.NaN;
+            float bearingDeg = f.getBearingDeg();
+            if (f.getSpeed() > 2.0f && !Float.isInfinite(bearingDeg) && !Float.isNaN(bearingDeg)) {
+                hdg = f.getBearingDeg();
+            } else {
+                hdg = Double.NaN;
+            }
         }
         if (((Double.isInfinite(hdg) || Double.isNaN(hdg)) ? false : true) && v > 2.0d) {
             lastYaw = 1.5707963267948966d - Math.toRadians(hdg);

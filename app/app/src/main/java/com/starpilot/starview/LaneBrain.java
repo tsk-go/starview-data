@@ -963,12 +963,11 @@ public final class LaneBrain {
             if ((i == null || i.getHpmsSure()) ? false : true) {
                 d = 0.6d;
             } else {
-                if (!(r != null && r.getHighway())) {
-                    if (!(i != null && i.getHpmsRamp())) {
-                        d = 0.75d;
-                    }
+                if (!(r != null && r.getHighway()) && !(i != null && i.getHpmsRamp())) {
+                    d = 0.75d;
+                } else {
+                    d = 0.9d;
                 }
-                d = 0.9d;
             }
             triple = new Triple(valueOf, "HPMS", Double.valueOf(d));
         } else {

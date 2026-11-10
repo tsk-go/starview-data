@@ -1085,13 +1085,11 @@ public final class LaneShots {
         Intrinsics.checkNotNullParameter(why, "why");
         try {
             File file = this.reviews;
-            if (v == 0) {
-                if (why.length() > 0) {
-                    str = "\t" + why;
-                    FilesKt.appendText(file, name + "\t" + v + str + "\n", kotlin.text.Charsets.UTF_8);
-                }
+            if (v == 0 && why.length() > 0) {
+                str = "\t" + why;
+            } else {
+                str = "";
             }
-            str = "";
             FilesKt.appendText(file, name + "\t" + v + str + "\n", kotlin.text.Charsets.UTF_8);
         } catch (Exception e) {
         }

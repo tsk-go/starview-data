@@ -89,12 +89,11 @@ public final class GalaxyRow {
             if (this.page.length() > 0) {
                 control = Control.GROUP;
             } else {
-                if (!this.confirm) {
-                    if (!(this.repairValue.length() > 0)) {
-                        control = (this.choices.size() == 2 && this.choices.contains("Off") && this.choices.contains("On") && this.choices.contains(this.value)) ? Control.SWITCH : (bounds() == null || (StringsKt.toDoubleOrNull(this.value) == null && !(Intrinsics.areEqual(this.value, "Auto") && this.choices.contains("Auto")))) ? (this.choices.isEmpty() || !this.choices.contains(this.value)) ? Control.READOUT : Control.SELECT : Control.SLIDER;
-                    }
+                if (!this.confirm && !(this.repairValue.length() > 0)) {
+                    control = (this.choices.size() == 2 && this.choices.contains("Off") && this.choices.contains("On") && this.choices.contains(this.value)) ? Control.SWITCH : (bounds() == null || (StringsKt.toDoubleOrNull(this.value) == null && !(Intrinsics.areEqual(this.value, "Auto") && this.choices.contains("Auto")))) ? (this.choices.isEmpty() || !this.choices.contains(this.value)) ? Control.READOUT : Control.SELECT : Control.SLIDER;
+                } else {
+                    control = Control.ACTION;
                 }
-                control = Control.ACTION;
             }
         }
         this.control = control;

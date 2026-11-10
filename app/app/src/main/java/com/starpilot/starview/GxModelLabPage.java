@@ -893,32 +893,15 @@ public final class GxModelLabPage extends GxPage {
         })}, c, true);
         View childAt = bar.getChildAt(0);
         Intrinsics.checkNotNullExpressionValue(childAt, "getChildAt(...)");
-        if (!this.saving) {
-            if (se.length() == 0) {
-                z = true;
-                GxModelsKt.gxModelsEnable(childAt, z);
-                View childAt2 = bar.getChildAt(1);
-                Intrinsics.checkNotNullExpressionValue(childAt2, "getChildAt(...)");
-                if (!this.saving && !this.isOnroad && this.cfgEnabled) {
-                    z2 = true;
-                }
-                GxModelsKt.gxModelsEnable(childAt2, z2);
-                View childAt3 = bar.getChildAt(2);
-                Intrinsics.checkNotNullExpressionValue(childAt3, "getChildAt(...)");
-                GxModelsKt.gxModelsEnable(childAt3, !this.saving);
-            }
-        }
-        z = false;
+        z = !this.saving && se.length() == 0;
         GxModelsKt.gxModelsEnable(childAt, z);
-        View childAt22 = bar.getChildAt(1);
-        Intrinsics.checkNotNullExpressionValue(childAt22, "getChildAt(...)");
-        if (!this.saving) {
-            z2 = true;
-        }
-        GxModelsKt.gxModelsEnable(childAt22, z2);
-        View childAt32 = bar.getChildAt(2);
-        Intrinsics.checkNotNullExpressionValue(childAt32, "getChildAt(...)");
-        GxModelsKt.gxModelsEnable(childAt32, !this.saving);
+        View childAt2 = bar.getChildAt(1);
+        Intrinsics.checkNotNullExpressionValue(childAt2, "getChildAt(...)");
+        z2 = !this.saving && !this.isOnroad && this.cfgEnabled;
+        GxModelsKt.gxModelsEnable(childAt2, z2);
+        View childAt3 = bar.getChildAt(2);
+        Intrinsics.checkNotNullExpressionValue(childAt3, "getChildAt(...)");
+        GxModelsKt.gxModelsEnable(childAt3, !this.saving);
     }
 
     /* JADX INFO: Access modifiers changed from: private */

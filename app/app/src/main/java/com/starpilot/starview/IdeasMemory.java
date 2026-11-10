@@ -230,86 +230,37 @@ public final class IdeasMemory {
         if (Ideas.INSTANCE.on(s, "shadows") && h != null && !Double.isNaN(h.getYaw()) && nowMs - this.cornerCheckMs > 1000) {
             this.cornerCheckMs = nowMs;
             ShadowWatch shadowWatch = ShadowWatch.INSTANCE;
+            boolean near = false;
             try {
                 Pair<Double, Double> local = OsmRoads.INSTANCE.toLocal(h.getLat(), h.getLon());
                 e = local.component1().doubleValue();
                 n = local.component2().doubleValue();
                 OsmRoads.Match it3 = OsmRoads.INSTANCE.matchSeg(e, n, h.getYaw());
-                OsmRoads.Way way = null;
-                if (it3 != null) {
-                    if (!(it3.getDist() < 15.0d)) {
-                        it3 = null;
-                    }
-                    if (it3 != null) {
-                        way = it3.getWay();
-                    }
-                }
-                our = way;
-            } catch (Exception e2) {
-                z = false;
-                shadowWatch.setNearCorner(z);
-                ShadowWatch.INSTANCE.setWanted(Ideas.INSTANCE.on(s, "shadows"));
-                this.dayView.setWanted(Ideas.INSTANCE.on(s, "day_view"));
-                if (this.dayView.getWanted()) {
-                    return;
-                } else {
-                    return;
-                }
-            }
-            if (our != null) {
-                Iterable $this$any$iv = RangesKt.step(new IntRange(-1, 1), 2);
-                if (!($this$any$iv instanceof Collection) || !((Collection) $this$any$iv).isEmpty()) {
-                    Iterator it4 = $this$any$iv.iterator();
-                    while (true) {
-                        if (!it4.hasNext()) {
-                            z3 = false;
-                            break;
-                        }
-                        int element$iv = ((IntIterator) it4).nextInt();
-                        Iterable $this$any$iv2 = BlinkerTurn.INSTANCE.corners(OsmRoads.INSTANCE.near(e, n, 80.0d), our, e, n, h.getYaw(), element$iv);
-                        OsmRoads.Way our2 = our;
-                        if (!($this$any$iv2 instanceof Collection) || !((Collection) $this$any$iv2).isEmpty()) {
-                            Iterator it5 = $this$any$iv2.iterator();
-                            while (true) {
-                                if (!it5.hasNext()) {
-                                    z4 = false;
-                                    break;
-                                }
-                                Object element$iv2 = it5.next();
-                                double ahead = ((BlinkerTurn.Corner) element$iv2).getAhead();
-                                if (-5.0d <= ahead && ahead <= 40.0d) {
-                                    z4 = true;
-                                    break;
-                                }
+                our = (it3 != null && it3.getDist() < 15.0d) ? it3.getWay() : null;
+                if (our != null) {
+                    Iterator it4 = RangesKt.step(new IntRange(-1, 1), 2).iterator();
+                    search:
+                    while (it4.hasNext()) {
+                        int side = ((IntIterator) it4).nextInt();
+                        for (Object c : BlinkerTurn.INSTANCE.corners(OsmRoads.INSTANCE.near(e, n, 80.0d), our, e, n, h.getYaw(), side)) {
+                            double ahead = ((BlinkerTurn.Corner) c).getAhead();
+                            if (-5.0d <= ahead && ahead <= 40.0d) {
+                                near = true;
+                                break search;
                             }
-                        } else {
-                            z4 = false;
                         }
-                        if (z4) {
-                            z3 = true;
-                            break;
-                        }
-                        our = our2;
                     }
-                } else {
-                    z3 = false;
                 }
-                if (z3) {
-                    z2 = true;
-                    z = z2;
-                    shadowWatch.setNearCorner(z);
-                }
+            } catch (Exception e2) {
+                near = false;
             }
-            z2 = false;
-            z = z2;
-            shadowWatch.setNearCorner(z);
+            shadowWatch.setNearCorner(near);
         }
         ShadowWatch.INSTANCE.setWanted(Ideas.INSTANCE.on(s, "shadows"));
         this.dayView.setWanted(Ideas.INSTANCE.on(s, "day_view"));
-        if (this.dayView.getWanted() || h == null) {
-            return;
+        if (this.dayView.getWanted() && h != null) {
+            this.dayView.setHere(h);
         }
-        this.dayView.setHere(h);
     }
 
     private final void voiceTurnTick(Ideas.Here h, long nowMs) {
