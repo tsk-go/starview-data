@@ -7003,7 +7003,6 @@ public final class MainActivity extends AppCompatActivity {
             frameLayout.addView(mapPane, frameLayout2.indexOfChild(view), new FrameLayout.LayoutParams(mapWidth(), -1));
         }
         pane.setVisibility(0);
-        pane.bringToFront();
         UiSettings uiSettings = this.settings;
         if (uiSettings == null) {
             Intrinsics.throwUninitializedPropertyAccessException("settings");
@@ -7063,6 +7062,11 @@ public final class MainActivity extends AppCompatActivity {
     /* VF: from Vineflower (jadx: Code restructure failed;incorrect) */
     public final void navTick(long var1) {
         String var19 = null; // declarations Vineflower left out
+        // 2.85.0: the full-screen map would cover the road view's alerts: an orange / red alert closes it
+        Telemetry alertT = this.telemetry;
+        if (this.mapPane != null && getMapOpen() && alertT.getStarted() && !Intrinsics.areEqual(alertT.getAlertSize(), "none") && !Intrinsics.areEqual(alertT.getAlertStatus(), "normal")) {
+            closeMap();
+        }
         MapPane var9 = this.mapPane;
         UiSettings var10 = null;
         if (var9 != null && this.getMapOpen()) {
