@@ -104,11 +104,11 @@ public final class RoadShape {
     /* JADX WARN: Type inference failed for: r0v2, types: [T, java.util.HashMap, java.util.HashMap<java.lang.Long, java.util.List<kotlin.Pair<com.starpilot.starview.OsmRoads$Way, java.lang.Integer>>>] */
     private static final HashMap<Long, List<Pair<OsmRoads.Way, Integer>>> rounded$index(Ref.ObjectRef<HashMap<Long, List<Pair<OsmRoads.Way, Integer>>>> objectRef, List<OsmRoads.Way> list) {
         Object answer$iv;
-        HashMap it = objectRef.element;
+        HashMap<Long, List<Pair<OsmRoads.Way, Integer>>> it = objectRef.element;
         if (it != null) {
             return it;
         }
-        ?? hashMap = new HashMap();
+        HashMap<Long, List<Pair<OsmRoads.Way, Integer>>> hashMap = new HashMap<>();
         for (OsmRoads.Way w : list) {
             int length = w.getE().length;
             for (int i = 0; i < length; i++) {

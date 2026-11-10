@@ -1777,183 +1777,144 @@ public final class MapPane extends FrameLayout {
         $sv.scrollTo(0, (Intrinsics.areEqual(this$0.sheetKind, "steps") && $scrollY == 0) ? this$0.stepScroll : (Intrinsics.areEqual(this$0.sheetKind, "look") && this$0.lookFresh) ? 0 : $scrollY);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r14v0 */
-    /* JADX WARN: Type inference failed for: r14v1, types: [int] */
-    /* JADX WARN: Type inference failed for: r14v6 */
-    /* JADX WARN: Type inference failed for: r9v1, types: [android.widget.LinearLayout] */
     private final void fillRoutes(LinearLayout col) {
-        LinearLayout txt;
-        int i;
-        String msg;
         boolean metric = getT().isMetric();
-        List routes = Nav.INSTANCE.getShownRoutes();
-        ?? r14 = 0;
+        List<Nav.Route> routes = Nav.INSTANCE.getShownRoutes();
         if (routes.isEmpty()) {
-            if (Nav.INSTANCE.getInPreview()) {
-                if (Nav.INSTANCE.getPreviewError().length() > 0) {
-                    msg = "No routes: " + Nav.INSTANCE.getPreviewError();
-                    col.addView(label$default(this, msg, 15.0f, false, false, 12, null));
-                    return;
+            String msg;
+            if (Nav.INSTANCE.getInPreview() && Nav.INSTANCE.getPreviewError().length() > 0) {
+                msg = "No routes: " + Nav.INSTANCE.getPreviewError();
+            } else if (Nav.INSTANCE.getInPreview()) {
+                JSONObject pv = Nav.INSTANCE.getPreviewing();
+                String name = pv != null ? pv.optString("name") : null;
+                if (name == null) {
+                    name = "";
                 }
-            }
-            if (Nav.INSTANCE.getInPreview()) {
-                JSONObject previewing = Nav.INSTANCE.getPreviewing();
-                String optString = previewing != null ? previewing.optString("name") : null;
-                String str = optString != null ? optString : "";
-                if (str.length() == 0) {
-                    str = "there";
+                if (name.length() == 0) {
+                    name = "there";
                 }
-                msg = "Finding routes to " + ((Object) str) + "…";
+                msg = "Finding routes to " + name + "…";
+            } else if (Intrinsics.areEqual(Nav.INSTANCE.getStatus(), "routeUnavailable")) {
+                msg = "No route found. The comma tries again in 30 s.";
             } else {
-                msg = Intrinsics.areEqual(Nav.INSTANCE.getStatus(), "routeUnavailable") ? "No route found. The comma tries again in 30 s." : "Finding routes…";
+                msg = "Finding routes…";
             }
             col.addView(label$default(this, msg, 15.0f, false, false, 12, null));
             return;
         }
-        int i2 = 8;
         if (Nav.INSTANCE.getInPreview()) {
-            TextView $this$fillRoutes_u24lambda_u2489 = label$default(this, "Tap a route to see its directions. Nothing is sent to the comma until Go.", 13.0f, false, true, 4, null);
-            $this$fillRoutes_u24lambda_u2489.setPadding(0, 0, 0, dpi(8));
-            col.addView($this$fillRoutes_u24lambda_u2489);
+            TextView hint = label$default(this, "Tap a route to see its directions. Nothing is sent to the comma until Go.", 13.0f, false, true, 4, null);
+            hint.setPadding(0, 0, 0, dpi(8));
+            col.addView(hint);
         }
-        Iterator it = routes.iterator();
-        if (!it.hasNext()) {
+        Iterator<Nav.Route> rit = routes.iterator();
+        if (!rit.hasNext()) {
             throw new NoSuchElementException();
         }
-        Nav.Route it2 = (Nav.Route) it.next();
-        double durationS = it2.getDurationS();
-        while (it.hasNext()) {
-            Nav.Route it3 = (Nav.Route) it.next();
-            durationS = Math.min(durationS, it3.getDurationS());
+        double fastest = rit.next().getDurationS();
+        while (rit.hasNext()) {
+            fastest = Math.min(fastest, rit.next().getDurationS());
         }
-        double fastest = durationS;
         for (final Nav.Route r : routes) {
-            boolean sel = r.getIndex() == Nav.INSTANCE.getShownSelected() ? true : r14;
-            ?? linearLayout = new LinearLayout(getContext());
-            linearLayout.setOrientation(r14);
-            linearLayout.setPadding(dpi(12), dpi(10), dpi(12), dpi(10));
-            linearLayout.setBackground(card$default(this, sel ? 858751213 : 352321535, 14.0f, sel ? -13664019 : r14, false, 8, null));
-            View $this$fillRoutes_u24lambda_u2492 = new View(getContext());
-            $this$fillRoutes_u24lambda_u2492.setBackground(card$default(this, routeColor(sel), 6.0f, 0, false, 12, null));
-            LinearLayout.LayoutParams $this$fillRoutes_u24lambda_u2493 = new LinearLayout.LayoutParams(dpi(i2), -1);
-            $this$fillRoutes_u24lambda_u2493.setMarginEnd(dpi(12));
-            Unit unit = Unit.INSTANCE;
-            linearLayout.addView($this$fillRoutes_u24lambda_u2492, $this$fillRoutes_u24lambda_u2493);
-            LinearLayout $this$fillRoutes_u24lambda_u2494 = new LinearLayout(getContext());
-            $this$fillRoutes_u24lambda_u2494.setOrientation(1);
-            LinearLayout $this$fillRoutes_u24lambda_u2495 = new LinearLayout(getContext());
-            $this$fillRoutes_u24lambda_u2495.setOrientation(0);
-            $this$fillRoutes_u24lambda_u2495.setGravity(80);
-            $this$fillRoutes_u24lambda_u2495.addView(label$default(this, Nav.INSTANCE.durationText(r.getDurationS()), 22.0f, true, false, 8, null));
-            $this$fillRoutes_u24lambda_u2495.addView(label$default(this, "   " + Nav.distanceText$default(Nav.INSTANCE, r.getDistanceM(), metric, false, 4, null) + "  ·  arrive " + Nav.INSTANCE.etaText(r.getDurationS()), 14.0f, false, true, 4, null));
-            $this$fillRoutes_u24lambda_u2494.addView($this$fillRoutes_u24lambda_u2495);
-            ArrayList notes = new ArrayList();
+            boolean sel = r.getIndex() == Nav.INSTANCE.getShownSelected();
+            LinearLayout card = new LinearLayout(getContext());
+            card.setOrientation(0);
+            card.setPadding(dpi(12), dpi(10), dpi(12), dpi(10));
+            card.setBackground(card$default(this, sel ? 858751213 : 352321535, 14.0f, sel ? -13664019 : 0, false, 8, null));
+            View swatch = new View(getContext());
+            swatch.setBackground(card$default(this, routeColor(sel), 6.0f, 0, false, 12, null));
+            LinearLayout.LayoutParams swLp = new LinearLayout.LayoutParams(dpi(8), -1);
+            swLp.setMarginEnd(dpi(12));
+            card.addView(swatch, swLp);
+            LinearLayout body = new LinearLayout(getContext());
+            body.setOrientation(1);
+            LinearLayout top = new LinearLayout(getContext());
+            top.setOrientation(0);
+            top.setGravity(80);
+            top.addView(label$default(this, Nav.INSTANCE.durationText(r.getDurationS()), 22.0f, true, false, 8, null));
+            top.addView(label$default(this, "   " + Nav.distanceText$default(Nav.INSTANCE, r.getDistanceM(), metric, false, 4, null) + "  ·  arrive " + Nav.INSTANCE.etaText(r.getDurationS()), 14.0f, false, true, 4, null));
+            body.addView(top);
+            ArrayList<Pair<String, Integer>> tags = new ArrayList<>();
             if (r.getDurationS() - fastest >= 60.0d) {
-                txt = $this$fillRoutes_u24lambda_u2494;
-                notes.add(TuplesKt.to(Nav.INSTANCE.durationText(r.getDurationS() - fastest) + " slower", Integer.valueOf(Color.argb(190, 255, 255, 255))));
-            } else {
-                txt = $this$fillRoutes_u24lambda_u2494;
-                if (routes.size() > 1) {
-                    notes.add(TuplesKt.to("Fastest", Integer.valueOf(Color.rgb(108, 214, 140))));
-                }
+                tags.add(TuplesKt.to(Nav.INSTANCE.durationText(r.getDurationS() - fastest) + " slower", Integer.valueOf(Color.argb(190, 255, 255, 255))));
+            } else if (routes.size() > 1) {
+                tags.add(TuplesKt.to("Fastest", Integer.valueOf(Color.rgb(108, 214, 140))));
             }
-            double typicalS = r.getTypicalS();
-            if ((Double.isInfinite(typicalS) || Double.isNaN(typicalS)) ? false : true) {
-                double late = r.getDurationS() - r.getTypicalS();
-                notes.add(TuplesKt.to(late >= 120.0d ? "heavy traffic, +" + Nav.INSTANCE.durationText(late) : "usual traffic", Integer.valueOf(late >= 300.0d ? Color.rgb(255, 122, 112) : late >= 120.0d ? Color.rgb(255, 176, 64) : Color.rgb(108, 214, 140))));
+            double typical = r.getTypicalS();
+            if (!Double.isInfinite(typical) && !Double.isNaN(typical)) {
+                double extra = r.getDurationS() - r.getTypicalS();
+                String what = extra >= 120.0d ? "heavy traffic, +" + Nav.INSTANCE.durationText(extra) : "usual traffic";
+                int tc = extra >= 300.0d ? Color.rgb(255, 122, 112) : extra >= 120.0d ? Color.rgb(255, 176, 64) : Color.rgb(108, 214, 140);
+                tags.add(TuplesKt.to(what, Integer.valueOf(tc)));
             }
             if (r.getClasses().contains("toll")) {
-                notes.add(TuplesKt.to("Tolls", Integer.valueOf(Color.rgb(255, 200, 87))));
+                tags.add(TuplesKt.to("Tolls", Integer.valueOf(Color.rgb(255, 200, 87))));
             }
             if (r.getClasses().contains("motorway")) {
-                notes.add(TuplesKt.to("Highways", Integer.valueOf(Color.argb(190, 255, 255, 255))));
+                tags.add(TuplesKt.to("Highways", Integer.valueOf(Color.argb(190, 255, 255, 255))));
             }
             if (r.getClasses().contains("ferry")) {
-                notes.add(TuplesKt.to("Ferry", Integer.valueOf(Color.rgb(127, 196, 255))));
+                tags.add(TuplesKt.to("Ferry", Integer.valueOf(Color.rgb(127, 196, 255))));
             }
             if (r.getClasses().contains("restricted")) {
-                notes.add(TuplesKt.to("Restricted roads", Integer.valueOf(Color.rgb(255, 176, 64))));
+                tags.add(TuplesKt.to("Restricted roads", Integer.valueOf(Color.rgb(255, 176, 64))));
             }
             if (r.getIncidents() > 0) {
-                notes.add(TuplesKt.to(r.getIncidents() + " incident" + (r.getIncidents() > 1 ? "s" : ""), Integer.valueOf(Color.rgb(255, 122, 112))));
+                tags.add(TuplesKt.to(r.getIncidents() + " incident" + (r.getIncidents() > 1 ? "s" : ""), Integer.valueOf(Color.rgb(255, 122, 112))));
             }
             if (r.getClosed()) {
-                notes.add(TuplesKt.to("Closure on route", Integer.valueOf(Color.rgb(255, 85, 85))));
+                tags.add(TuplesKt.to("Closure on route", Integer.valueOf(Color.rgb(255, 85, 85))));
             }
             if (!Nav.INSTANCE.getInPreview() && r.getIndex() == Nav.INSTANCE.getSelected()) {
-                notes.add(0, TuplesKt.to("Driving now", Integer.valueOf(Color.rgb(127, 196, 255))));
+                tags.add(0, TuplesKt.to("Driving now", Integer.valueOf(Color.rgb(127, 196, 255))));
             }
-            LinearLayout $this$fillRoutes_u24lambda_u2496 = new LinearLayout(getContext());
-            $this$fillRoutes_u24lambda_u2496.setOrientation(0);
-            TextView $this$fillRoutes_u24lambda_u2498 = new TextView(getContext());
-            int st = 0;
-            $this$fillRoutes_u24lambda_u2498.setTextSize(13.0f);
-            $this$fillRoutes_u24lambda_u2498.setMaxLines(2);
+            LinearLayout tagRow = new LinearLayout(getContext());
+            tagRow.setOrientation(0);
+            TextView tagTv = new TextView(getContext());
+            tagTv.setTextSize(13.0f);
+            tagTv.setMaxLines(2);
             SpannableStringBuilder sb = new SpannableStringBuilder();
-            int i3 = 0;
-            Iterator it4 = notes.iterator();
-            int i4 = 0;
-            while (it4.hasNext()) {
-                int i5 = i4;
-                i4++;
-                Pair n = (Pair) it4.next();
-                if (i5 > 0) {
-                    i = st;
-                    sb.append((CharSequence) "  ·  ");
-                } else {
-                    i = st;
+            int k = 0;
+            for (Pair<String, Integer> tag : tags) {
+                if (k > 0) {
+                    sb.append("  ·  ");
                 }
-                int st2 = sb.length();
-                sb.append((CharSequence) n.getFirst());
-                sb.setSpan(new ForegroundColorSpan(((Number) n.getSecond()).intValue()), st2, sb.length(), 0);
-                it4 = it4;
-                st = i;
-                i3 = i3;
-                notes = notes;
+                k++;
+                int start = sb.length();
+                sb.append(tag.getFirst());
+                sb.setSpan(new ForegroundColorSpan(tag.getSecond().intValue()), start, sb.length(), 0);
             }
-            $this$fillRoutes_u24lambda_u2498.setText(sb);
-            $this$fillRoutes_u24lambda_u2496.addView($this$fillRoutes_u24lambda_u2498);
-            LinearLayout txt2 = txt;
-            txt2.addView($this$fillRoutes_u24lambda_u2496);
+            tagTv.setText(sb);
+            tagRow.addView(tagTv);
+            body.addView(tagRow);
             if (r.getVia().length() > 0) {
-                TextView $this$fillRoutes_u24lambda_u2499 = label$default(this, "via " + r.getVia(), 13.0f, false, true, 4, null);
-                $this$fillRoutes_u24lambda_u2499.setMaxLines(1);
-                $this$fillRoutes_u24lambda_u2499.setEllipsize(TextUtils.TruncateAt.END);
-                txt2.addView($this$fillRoutes_u24lambda_u2499);
+                TextView via = label$default(this, "via " + r.getVia(), 13.0f, false, true, 4, null);
+                via.setMaxLines(1);
+                via.setEllipsize(TextUtils.TruncateAt.END);
+                body.addView(via);
             }
-            linearLayout.addView(txt2, new LinearLayout.LayoutParams(0, -2, 1.0f));
-            linearLayout.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda46
+            card.addView(body, new LinearLayout.LayoutParams(0, -2, 1.0f));
+            card.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda46
                 @Override // android.view.View.OnClickListener
                 public final void onClick(View view) {
                     MapPane.fillRoutes$lambda$100(MapPane.this, r, view);
                 }
             });
-            LinearLayout.LayoutParams $this$fillRoutes_u24lambda_u24101 = new LinearLayout.LayoutParams(-1, -2);
-            $this$fillRoutes_u24lambda_u24101.bottomMargin = dpi(8);
-            Unit unit2 = Unit.INSTANCE;
-            col.addView((View) linearLayout, $this$fillRoutes_u24lambda_u24101);
-            i2 = 8;
-            r14 = 0;
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+            lp.bottomMargin = dpi(8);
+            col.addView(card, lp);
         }
-        JSONObject o = Nav.INSTANCE.getOptions();
-        Iterable $this$filter$iv = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("avoidTolls", "tolls"), TuplesKt.to("avoidHighways", "highways"), TuplesKt.to("avoidFerries", "ferries"), TuplesKt.to("avoidUnpaved", "unpaved roads"), TuplesKt.to("avoidCashTolls", "cash-only tolls"), TuplesKt.to("avoidTunnels", "tunnels"), TuplesKt.to("avoidBorders", "borders")});
-        Collection destination$iv$iv = new ArrayList();
-        for (Object element$iv$iv : $this$filter$iv) {
-            Pair it5 = (Pair) element$iv$iv;
-            if (o.optBoolean((String) it5.getFirst())) {
-                destination$iv$iv.add(element$iv$iv);
+        JSONObject opts = Nav.INSTANCE.getOptions();
+        List<String> avoided = new ArrayList<>();
+        for (Pair<String, String> p : CollectionsKt.listOf(new Pair[]{TuplesKt.to("avoidTolls", "tolls"), TuplesKt.to("avoidHighways", "highways"), TuplesKt.to("avoidFerries", "ferries"), TuplesKt.to("avoidUnpaved", "unpaved roads"), TuplesKt.to("avoidCashTolls", "cash-only tolls"), TuplesKt.to("avoidTunnels", "tunnels"), TuplesKt.to("avoidBorders", "borders")})) {
+            if (opts.optBoolean(p.getFirst())) {
+                avoided.add(p.getSecond());
             }
         }
-        Iterable $this$map$iv = (List) destination$iv$iv;
-        Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        for (Object item$iv$iv : $this$map$iv) {
-            Pair it6 = (Pair) item$iv$iv;
-            destination$iv$iv2.add((String) it6.getSecond());
-        }
-        List avoided = (List) destination$iv$iv2;
-        int carpool = o.optInt("carpool", 0);
-        col.addView(label$default(this, (avoided.isEmpty() ? "Avoiding nothing" : "Avoiding " + CollectionsKt.joinToString$default(avoided, ", ", null, null, 0, null, null, 62, null)) + (carpool > 0 ? " · carpool lanes (" + carpool + "+)" : " · no carpool lanes"), 13.0f, false, true, 4, null));
+        int carpool = opts.optInt("carpool", 0);
+        String a = avoided.isEmpty() ? "Avoiding nothing" : "Avoiding " + CollectionsKt.joinToString$default(avoided, ", ", null, null, 0, null, null, 62, null);
+        String cp = carpool > 0 ? " · carpool lanes (" + carpool + "+)" : " · no carpool lanes";
+        col.addView(label$default(this, a + cp, 13.0f, false, true, 4, null));
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -2039,147 +2000,76 @@ public final class MapPane extends FrameLayout {
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:49:0x01ed  */
-    /* JADX WARN: Removed duplicated region for block: B:53:0x020e  */
-    /* JADX WARN: Removed duplicated region for block: B:66:0x0271  */
-    /* JADX WARN: Type inference failed for: r6v10, types: [boolean] */
-    /* JADX WARN: Type inference failed for: r6v20 */
-    /* JADX WARN: Type inference failed for: r6v9 */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     private final void fillSteps(LinearLayout col, Nav.Line l, boolean live) {
-        LinearLayout linearLayout;
-        ?? r6;
-        String str;
-        String distanceText$default;
-        StringBuilder sb;
-        String str2;
-        int i;
-        boolean z;
         if (l.getSteps().isEmpty()) {
             col.addView(label$default(this, "No directions yet.", 15.0f, false, false, 12, null));
             return;
         }
-        int currentStep = live ? Nav.INSTANCE.currentStep(l) : -1;
+        int cur = live ? Nav.INSTANCE.currentStep(l) : -1;
         double along = live ? Nav.INSTANCE.getAlong() : Double.NaN;
-        boolean isMetric = getT().isMetric();
-        int i2 = 0;
+        boolean metric = getT().isMetric();
         this.stepScroll = 0;
-        int i3 = 0;
+        int i = 0;
         for (final Nav.Step step : l.getSteps()) {
-            int i4 = i3;
-            int i5 = i3 + 1;
-            if (currentStep < 0 || i4 >= currentStep) {
-                LinearLayout linearLayout2 = new LinearLayout(getContext());
-                linearLayout2.setOrientation(i2);
-                linearLayout2.setGravity(16);
-                linearLayout2.setPadding(dpi(10), dpi(10), dpi(10), dpi(10));
-                linearLayout2.setBackground(card$default(this, (i4 == currentStep + 1 || (currentStep < 0 && i4 == 0)) ? 858751213 : 285212671, 12.0f, 0, false, 12, null));
-                ImageView imageView = new ImageView(getContext());
-                NavIcons navIcons = NavIcons.INSTANCE;
-                Context context = imageView.getContext();
-                Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
-                Bitmap icon = navIcons.icon(context, step.getType(), step.getModifier());
-                if (icon != null) {
-                    imageView.setImageBitmap(icon);
-                }
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpi(36), dpi(36));
-                layoutParams.setMarginEnd(dpi(12));
-                Unit unit = Unit.INSTANCE;
-                linearLayout2.addView(imageView, layoutParams);
-                LinearLayout linearLayout3 = new LinearLayout(getContext());
-                linearLayout3.setOrientation(1);
-                String text = step.getText();
-                if (text.length() == 0) {
-                    text = step.getRoad();
-                }
-                linearLayout3.addView(label$default(this, text, 16.0f, i4 == currentStep + 1, false, 8, null));
-                if (!((Double.isInfinite(along) || Double.isNaN(along)) ? false : true) || step.getStartM() <= along) {
-                    linearLayout = linearLayout2;
-                    r6 = 0;
-                    z = false;
-                    if (step.getDistanceM() > 0.0d) {
-                        distanceText$default = Nav.distanceText$default(Nav.INSTANCE, step.getDistanceM(), isMetric, false, 4, null);
-                        sb = new StringBuilder();
-                        str2 = "then ";
-                    } else {
-                        str = "";
-                        String str3 = str;
-                        String[] strArr = new String[2];
-                        strArr[r6] = step.getRef();
-                        strArr[1] = StringsKt.contains$default(step.getText(), step.getRoad(), (boolean) r6, 2, (Object) null) ? "" : step.getRoad();
-                        List listOf = CollectionsKt.listOf((Object[]) strArr);
-                        ArrayList arrayList = new ArrayList();
-                        for (Object obj : listOf) {
-                            if (((String) obj).length() > 0) {
-                                arrayList.add(obj);
-                            }
-                        }
-                        List listOf2 = CollectionsKt.listOf((Object[]) new String[]{str3, CollectionsKt.joinToString$default(arrayList, " · ", null, null, 0, null, null, 62, null)});
-                        ArrayList arrayList2 = new ArrayList();
-                        for (Object obj2 : listOf2) {
-                            if (((String) obj2).length() > 0) {
-                                arrayList2.add(obj2);
-                            }
-                        }
-                        LinearLayout linearLayout4 = linearLayout;
-                        i = 0;
-                        linearLayout3.addView(label$default(this, CollectionsKt.joinToString$default(arrayList2, "   ", null, null, 0, null, null, 62, null), 13.0f, false, true, 4, null));
-                        linearLayout4.addView(linearLayout3, new LinearLayout.LayoutParams(0, -2, 1.0f));
-                        linearLayout4.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda22
-                            @Override // android.view.View.OnClickListener
-                            public final void onClick(View view) {
-                                MapPane.fillSteps$lambda$114(MapPane.this, step, view);
-                            }
-                        });
-                        LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(-1, -2);
-                        layoutParams2.bottomMargin = dpi(6);
-                        Unit unit2 = Unit.INSTANCE;
-                        col.addView(linearLayout4, layoutParams2);
-                    }
-                } else {
-                    Nav nav = Nav.INSTANCE;
-                    double startM = step.getStartM() - along;
-                    linearLayout = linearLayout2;
-                    z = false;
-                    distanceText$default = Nav.distanceText$default(nav, startM, isMetric, false, 4, null);
-                    sb = new StringBuilder();
-                    str2 = "in ";
-                }
-                str = sb.append(str2).append(distanceText$default).toString();
-                r6 = z;
-                String str32 = str;
-                String[] strArr2 = new String[2];
-                strArr2[r6] = step.getRef();
-                strArr2[1] = StringsKt.contains$default(step.getText(), step.getRoad(), (boolean) r6, 2, (Object) null) ? "" : step.getRoad();
-                List listOf3 = CollectionsKt.listOf((Object[]) strArr2);
-                ArrayList arrayList3 = new ArrayList();
-                while (r16.hasNext()) {
-                }
-                List listOf22 = CollectionsKt.listOf((Object[]) new String[]{str32, CollectionsKt.joinToString$default(arrayList3, " · ", null, null, 0, null, null, 62, null)});
-                ArrayList arrayList22 = new ArrayList();
-                while (r17.hasNext()) {
-                }
-                LinearLayout linearLayout42 = linearLayout;
-                i = 0;
-                linearLayout3.addView(label$default(this, CollectionsKt.joinToString$default(arrayList22, "   ", null, null, 0, null, null, 62, null), 13.0f, false, true, 4, null));
-                linearLayout42.addView(linearLayout3, new LinearLayout.LayoutParams(0, -2, 1.0f));
-                linearLayout42.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda22
-                    @Override // android.view.View.OnClickListener
-                    public final void onClick(View view) {
-                        MapPane.fillSteps$lambda$114(MapPane.this, step, view);
-                    }
-                });
-                LinearLayout.LayoutParams layoutParams22 = new LinearLayout.LayoutParams(-1, -2);
-                layoutParams22.bottomMargin = dpi(6);
-                Unit unit22 = Unit.INSTANCE;
-                col.addView(linearLayout42, layoutParams22);
-            } else {
-                i = i2;
+            int idx = i++;
+            if (cur >= 0 && idx < cur) {
+                continue;
             }
-            i2 = i;
-            i3 = i5;
+            LinearLayout row = new LinearLayout(getContext());
+            row.setOrientation(0);
+            row.setGravity(16);
+            row.setPadding(dpi(10), dpi(10), dpi(10), dpi(10));
+            boolean next = idx == cur + 1 || (cur < 0 && idx == 0);
+            row.setBackground(card$default(this, next ? 858751213 : 285212671, 12.0f, 0, false, 12, null));
+            ImageView icon = new ImageView(getContext());
+            NavIcons navIcons = NavIcons.INSTANCE;
+            Context context = icon.getContext();
+            Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
+            Bitmap bm = navIcons.icon(context, step.getType(), step.getModifier());
+            if (bm != null) {
+                icon.setImageBitmap(bm);
+            }
+            LinearLayout.LayoutParams iconLp = new LinearLayout.LayoutParams(dpi(36), dpi(36));
+            iconLp.setMarginEnd(dpi(12));
+            row.addView(icon, iconLp);
+            LinearLayout text = new LinearLayout(getContext());
+            text.setOrientation(1);
+            String what = step.getText();
+            if (what.length() == 0) {
+                what = step.getRoad();
+            }
+            text.addView(label$default(this, what, 16.0f, idx == cur + 1, false, 8, null));
+            String when;
+            if (!Double.isInfinite(along) && !Double.isNaN(along) && step.getStartM() > along) {
+                when = "in " + Nav.distanceText$default(Nav.INSTANCE, step.getStartM() - along, metric, false, 4, null);
+            } else if (step.getDistanceM() > 0.0d) {
+                when = "then " + Nav.distanceText$default(Nav.INSTANCE, step.getDistanceM(), metric, false, 4, null);
+            } else {
+                when = "";
+            }
+            List<String> names = new ArrayList<>();
+            for (String s : CollectionsKt.listOf(new String[]{step.getRef(), StringsKt.contains$default((CharSequence) step.getText(), (CharSequence) step.getRoad(), false, 2, (Object) null) ? "" : step.getRoad()})) {
+                if (s.length() > 0) {
+                    names.add(s);
+                }
+            }
+            List<String> parts = new ArrayList<>();
+            for (String s : CollectionsKt.listOf(new String[]{when, CollectionsKt.joinToString$default(names, " · ", null, null, 0, null, null, 62, null)})) {
+                if (s.length() > 0) {
+                    parts.add(s);
+                }
+            }
+            text.addView(label$default(this, CollectionsKt.joinToString$default(parts, "   ", null, null, 0, null, null, 62, null), 13.0f, false, true, 4, null));
+            row.addView(text, new LinearLayout.LayoutParams(0, -2, 1.0f));
+            row.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda22
+                @Override // android.view.View.OnClickListener
+                public final void onClick(View view) {
+                    MapPane.fillSteps$lambda$114(MapPane.this, step, view);
+                }
+            });
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+            lp.bottomMargin = dpi(6);
+            col.addView(row, lp);
         }
     }
 

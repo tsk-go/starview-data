@@ -137,18 +137,7 @@ public final class CarMemory {
         }
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r15v0 */
-    /* JADX WARN: Type inference failed for: r15v1, types: [boolean] */
-    /* JADX WARN: Type inference failed for: r15v4 */
     public final void update(Telemetry t, long nowMs, boolean leftBsm, boolean rightBsm) {
-        ?? r15;
-        long j;
-        boolean z;
-        long j2;
-        int i;
-        int i2;
-        RadarTrack[] radarTrackArr;
         Intrinsics.checkNotNullParameter(t, "t");
         double dt = this.lastMs == 0 ? 0.0d : RangesKt.coerceIn((nowMs - this.lastMs) / 1000.0d, 0.0d, 0.5d);
         this.lastMs = nowMs;
@@ -159,131 +148,84 @@ public final class CarMemory {
         }
         if (t.getRadarFrame() != this.lastRadarFrame) {
             this.lastRadarFrame = t.getRadarFrame();
-            RadarTrack[] radar = t.getRadar();
-            int length = radar.length;
-            int i3 = 0;
-            while (i3 < length) {
-                RadarTrack p = radar[i3];
+            for (RadarTrack p : t.getRadar()) {
                 if (p.getMeasured()) {
-                    i = length;
-                    i2 = i3;
-                    radarTrackArr = radar;
                     see(p.getId(), p.getDRel() + 2.3d, -p.getYRel(), p.getVRel(), t.getVEgo() + p.getVRel(), nowMs);
-                } else {
-                    i = length;
-                    i2 = i3;
-                    radarTrackArr = radar;
                 }
-                i3 = i2 + 1;
-                length = i;
-                radar = radarTrackArr;
             }
-            r15 = 0;
-        } else {
-            r15 = 0;
         }
-        Lead[] leadArr = new Lead[2];
-        leadArr[r15] = t.getLeadLeft();
-        leadArr[1] = t.getLeadRight();
-        int i4 = r15;
-        for (Lead l : CollectionsKt.listOf((Object[]) leadArr)) {
-            int i5 = i4;
-            int i6 = i4 + 1;
+        int li = 0;
+        for (Lead l : CollectionsKt.listOf(new Lead[]{t.getLeadLeft(), t.getLeadRight()})) {
             if (l.getStatus()) {
-                see((-200) - i5, l.getDRel() + 2.3d, -l.getYRel(), l.getVRel(), l.getVLead(), nowMs);
+                see((-200L) - li, l.getDRel() + 2.3d, -l.getYRel(), l.getVRel(), l.getVLead(), nowMs);
             }
-            i4 = i6;
+            li++;
         }
-        ArrayList out = new ArrayList();
-        Iterable values = this.byId.values();
-        Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
-        Iterable $this$filter$iv = values;
-        Collection destination$iv$iv = new ArrayList();
-        Iterator it = $this$filter$iv.iterator();
-        while (true) {
-            j = 350;
-            if (!it.hasNext()) {
-                break;
-            }
-            Object element$iv$iv = it.next();
-            Car it2 = (Car) element$iv$iv;
-            if ((nowMs - it2.getLastSeenMs() > 350 || it2.getHits() < 3) ? r15 : true) {
-                destination$iv$iv.add(element$iv$iv);
+        ArrayList<Car> out = new ArrayList<>();
+        final List<Car> fresh = new ArrayList<>();
+        for (Car c : this.byId.values()) {
+            if (nowMs - c.getLastSeenMs() <= 350 && c.getHits() >= 3) {
+                fresh.add(c);
             }
         }
-        final List fresh = (List) destination$iv$iv;
-        Collection<Car> values2 = this.byId.values();
-        Intrinsics.checkNotNullExpressionValue(values2, "<get-values>(...)");
-        CollectionsKt.removeAll(values2, new Function1() { // from class: com.starpilot.starview.CarMemory$$ExternalSyntheticLambda0
+        CollectionsKt.removeAll(this.byId.values(), new Function1() { // from class: com.starpilot.starview.CarMemory$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
-                boolean update$lambda$2;
-                update$lambda$2 = CarMemory.update$lambda$2(fresh, (CarMemory.Car) obj);
-                return Boolean.valueOf(update$lambda$2);
+                return Boolean.valueOf(CarMemory.update$lambda$2(fresh, (CarMemory.Car) obj));
             }
         });
-        Iterator it3 = this.byId.values().iterator();
-        while (it3.hasNext()) {
-            Car next = it3.next();
-            Intrinsics.checkNotNullExpressionValue(next, "next(...)");
-            Car car = next;
-            if (nowMs - car.getLastSeenMs() <= j) {
-                car.setRemembered(r15);
-            } else {
-                double abs = Math.abs(car.getY());
-                boolean beside = (!(((1.8d > abs ? 1 : (1.8d == abs ? 0 : -1)) > 0 || (abs > 6.5d ? 1 : (abs == 6.5d ? 0 : -1)) > 0) ? r15 : true) || car.getX() >= 30.0d || car.getVAbs() <= 3.0f || car.getHits() < 5) ? r15 : true;
-                if (beside) {
-                    if (car.getRemembered()) {
-                        z = true;
-                        j2 = 0;
-                    } else {
-                        z = true;
-                        car.setRemembered(true);
-                        car.setRememberedSinceMs(nowMs);
-                        j2 = 0;
-                        car.setBsmQuietSinceMs(0L);
-                    }
-                    car.setX(car.getX() + (car.getVRel() * dt));
-                    boolean bsm = car.getY() > 0.0d ? leftBsm : rightBsm;
-                    double x = car.getX();
-                    boolean inZone = (-9.0d > x || x > -1.0d) ? r15 : z;
-                    if (inZone && bsm) {
-                        car.setRememberedSinceMs(nowMs);
-                        car.setBsmQuietSinceMs(j2);
-                    } else if (!inZone) {
-                        car.setBsmQuietSinceMs(j2);
-                    } else if (car.getBsmQuietSinceMs() == j2) {
-                        car.setBsmQuietSinceMs(nowMs);
-                    }
-                    boolean gone = ((car.getBsmQuietSinceMs() == j2 || nowMs - car.getBsmQuietSinceMs() <= 800) && nowMs - car.getRememberedSinceMs() <= 8000 && car.getX() >= -25.0d && car.getX() <= 60.0d) ? r15 : z;
-                    if (gone) {
-                        it3.remove();
-                        j = 350;
-                    } else {
-                        out.add(car);
-                        j = 350;
-                    }
-                } else if (nowMs - car.getLastSeenMs() > 1500) {
-                    it3.remove();
+        Iterator<Car> it = this.byId.values().iterator();
+        while (it.hasNext()) {
+            Car car = it.next();
+            if (nowMs - car.getLastSeenMs() <= 350) {
+                car.setRemembered(false);
+                continue;
+            }
+            double ay = Math.abs(car.getY());
+            boolean beside = 1.8d <= ay && ay <= 6.5d && car.getX() < 30.0d && car.getVAbs() > 3.0f && car.getHits() >= 5;
+            if (!beside) {
+                if (nowMs - car.getLastSeenMs() > 1500) {
+                    it.remove();
                 }
+                continue;
+            }
+            if (!car.getRemembered()) {
+                car.setRemembered(true);
+                car.setRememberedSinceMs(nowMs);
+                car.setBsmQuietSinceMs(0L);
+            }
+            car.setX(car.getX() + (car.getVRel() * dt));
+            boolean bsm = car.getY() > 0.0d ? leftBsm : rightBsm;
+            double x = car.getX();
+            boolean inZone = -9.0d <= x && x <= -1.0d;
+            if (inZone && bsm) {
+                car.setRememberedSinceMs(nowMs);
+                car.setBsmQuietSinceMs(0L);
+            } else if (inZone) {
+                if (car.getBsmQuietSinceMs() == 0) {
+                    car.setBsmQuietSinceMs(nowMs);
+                }
+            } else {
+                car.setBsmQuietSinceMs(0L);
+            }
+            boolean keep = (car.getBsmQuietSinceMs() == 0 || nowMs - car.getBsmQuietSinceMs() <= 800) && nowMs - car.getRememberedSinceMs() <= 8000 && !(car.getX() < -25.0d) && !(car.getX() > 60.0d);
+            if (keep) {
+                out.add(car);
+            } else {
+                it.remove();
             }
         }
-        ArrayList $this$map$iv = out;
-        Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        for (Object item$iv$iv : $this$map$iv) {
-            Car c = (Car) item$iv$iv;
+        ArrayList<Car> ghosts = new ArrayList<>(out.size());
+        for (Car c : out) {
             Car g = new Car(c.getId());
             g.setX(c.getX());
             g.setY(c.getY());
             g.setVRel(c.getVRel());
             g.setVAbs(c.getVAbs());
             g.setRemembered(true);
-            destination$iv$iv2.add(g);
-            out = out;
-            fresh = fresh;
-            it3 = it3;
+            ghosts.add(g);
         }
-        this.ghosts = (List) destination$iv$iv2;
+        this.ghosts = ghosts;
     }
 
     /* JADX INFO: Access modifiers changed from: private */

@@ -3600,7 +3600,6 @@ public final class FilesActivity extends AppCompatActivity {
         }
         linearLayout2.removeAllViews();
         this.queueRows.clear();
-        ?? r10 = 0;
         int i = 0;
         for (Job j : jobs) {
             int i2 = i;
@@ -3617,16 +3616,16 @@ public final class FilesActivity extends AppCompatActivity {
                 textView.setText("… and " + (jobs.size() - 300) + " more files");
                 textView.setTextColor(this.dim);
                 textView.setTextSize(12.0f);
-                textView.setPadding(dp(6), dp(4), r10, dp(4));
+                textView.setPadding(dp(6), dp(4), 0, dp(4));
                 linearLayout.addView(textView);
                 return;
             }
             FileKinds fileKinds = FileKinds.INSTANCE;
             String name = new File(j.getSrcPath()).getName();
             Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-            FileKinds.Kind kind = fileKinds.of(name, r10);
+            FileKinds.Kind kind = fileKinds.of(name, false);
             LinearLayout linearLayout4 = new LinearLayout(this);
-            linearLayout4.setOrientation(r10);
+            linearLayout4.setOrientation(0);
             linearLayout4.setGravity(16);
             linearLayout4.setPadding(dp(6), dp(4), dp(6), dp(4));
             View $this$buildQueue_u24lambda_u2486 = new View(this);
@@ -3641,10 +3640,10 @@ public final class FilesActivity extends AppCompatActivity {
             $this$buildQueue_u24lambda_u2488.setTextSize(13.0f);
             $this$buildQueue_u24lambda_u2488.setMaxLines(1);
             $this$buildQueue_u24lambda_u2488.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-            linearLayout4.addView($this$buildQueue_u24lambda_u2488, new LinearLayout.LayoutParams(r10, -2, 1.0f));
+            linearLayout4.addView($this$buildQueue_u24lambda_u2488, new LinearLayout.LayoutParams(0, -2, 1.0f));
             ProgressBar progressBar = new ProgressBar(this, null, 16842872);
             progressBar.setMax(1000);
-            progressBar.setProgress(r10);
+            progressBar.setProgress(0);
             LinearLayout.LayoutParams $this$buildQueue_u24lambda_u2490 = new LinearLayout.LayoutParams(dp(140), -2);
             $this$buildQueue_u24lambda_u2490.leftMargin = dp(10);
             $this$buildQueue_u24lambda_u2490.rightMargin = dp(10);
@@ -3664,7 +3663,6 @@ public final class FilesActivity extends AppCompatActivity {
             linearLayout5.addView(linearLayout4);
             this.queueRows.add(new QRow(this, j, linearLayout4, $this$buildQueue_u24lambda_u2491, progressBar));
             i = i3;
-            r10 = 0;
         }
     }
 

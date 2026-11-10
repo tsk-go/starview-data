@@ -1240,177 +1240,146 @@ public final class Detector {
         this.loadMs = d;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r4v2, types: [java.lang.Object] */
-    /* JADX WARN: Type inference failed for: r4v25 */
-    /* JADX WARN: Type inference failed for: r4v28 */
-    /* JADX WARN: Type inference failed for: r4v4 */
-    /* JADX WARN: Type inference failed for: r4v5 */
-    /* JADX WARN: Type inference failed for: r4v6 */
-    /* JADX WARN: Type inference failed for: r9v0 */
-    /* JADX WARN: Type inference failed for: r9v1 */
-    /* JADX WARN: Type inference failed for: r9v14 */
-    /* JADX WARN: Type inference failed for: r9v15 */
-    /* JADX WARN: Type inference failed for: r9v3 */
-    /* JADX WARN: Type inference failed for: r9v4, types: [boolean, int] */
     public final void loop() {
-        Source next;
-        LaneModel laneModel;
-        Function1<? super Bitmap, Unit> function1;
-        AtomicReference<Frame> frame;
         while (this.running) {
-            ?? r9 = 0;
-            r9 = 0;
-            r9 = 0;
-            List listOf = CollectionsKt.listOf((Object[]) new Source[]{this.roadSrc, this.wideSrc});
-            ArrayList arrayList = new ArrayList();
-            for (Object obj : listOf) {
-                if ((((Source) obj).getFrame().get() != null ? 1 : null) != null) {
-                    arrayList.add(obj);
+            // take turns: of the cameras with a frame waiting, the one served longest ago
+            Source src = null;
+            for (Source s : CollectionsKt.listOf(new Source[]{this.roadSrc, this.wideSrc})) {
+                if (s.getFrame().get() != null && (src == null || s.getLastRunNs() < src.getLastRunNs())) {
+                    src = s;
                 }
             }
-            Iterator it = arrayList.iterator();
-            if (it.hasNext()) {
-                next = it.next();
-                if (it.hasNext()) {
-                    long lastRunNs = ((Source) next).getLastRunNs();
-                    boolean z = next;
-                    while (true) {
-                        Object next2 = it.next();
-                        long lastRunNs2 = ((Source) next2).getLastRunNs();
-                        next = z;
-                        if (lastRunNs > lastRunNs2) {
-                            next = next2;
-                            lastRunNs = lastRunNs2;
-                        }
-                        if (!it.hasNext()) {
-                            break;
-                        }
-                        r9 = r9 == true ? 1 : 0 ? 1 : 0;
-                        z = next;
-                    }
-                }
-            } else {
-                next = null;
-            }
-            Source source = next;
-            Frame andSet = (source == null || (frame = source.getFrame()) == null) ? null : frame.getAndSet(null);
-            if (source == null || andSet == null) {
+            Frame f = src != null ? src.getFrame().getAndSet(null) : null;
+            if (src == null || f == null) {
                 synchronized (this.lock) {
                     if (this.running && this.roadSrc.getFrame().get() == null && this.wideSrc.getFrame().get() == null) {
-                        this.lock.wait(300L);
+                        try {
+                            this.lock.wait(300L);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
-                    Unit unit = Unit.INSTANCE;
                 }
-            } else {
-                source.setLastRunNs(System.nanoTime());
-                try {
-                    ensureInterpreter();
-                    long nanoTime = System.nanoTime();
-                    float fill = fill(andSet, source.getWide());
-                    long nanoTime2 = System.nanoTime();
-                    if (this.firstRun) {
-                        this.status = "first GPU run: compiling (can take a minute the first time)…";
-                    }
-                    Interpreter interpreter = this.interp;
-                    Intrinsics.checkNotNull(interpreter);
-                    int[] iArr = this.outOrder;
-                    Intrinsics.checkNotNull(iArr);
-                    HashMap hashMap = new HashMap();
-                    int length = iArr.length;
-                    for (int i = 0; i < length; i++) {
-                        ByteBuffer third = this.outs.get(iArr[i]).getThird();
-                        third.rewind();
-                        hashMap.put(Integer.valueOf(i), third);
-                    }
-                    this.input.rewind();
-                    interpreter.runForMultipleInputsOutputs(new Object[]{this.input}, hashMap);
-                    long nanoTime3 = System.nanoTime();
-                    if (this.firstRun) {
-                        this.firstRunMs = (nanoTime3 - nanoTime2) / 1000000.0d;
-                        this.firstRun = r9;
-                    }
-                    track(source, decode$default(this, fill, andSet.getW(), andSet.getH(), 0.0f, 8, null), andSet);
-                    this.detsAtNs = System.nanoTime();
-                    if (this.snapWant == (source.getWide() ? 2 : 1)) {
-                        this.snap = grey(andSet);
-                        this.snapWide = source.getWide();
-                        this.snapWant = r9;
-                    }
-                    if (!source.getWide() && (function1 = this.shotReq) != null) {
-                        this.shotReq = null;
-                        try {
-                            Bitmap colour = colour(andSet);
-                            Bitmap copy = colour.copy(Bitmap.Config.ARGB_8888, true);
-                            try {
-                                Intrinsics.checkNotNull(copy);
-                                drawPath(copy, andSet);
-                            } catch (Exception e) {
-                            }
-                            this.lastClean = colour;
-                            Intrinsics.checkNotNull(copy);
-                            function1.invoke(copy);
-                        } catch (Exception e2) {
-                        }
-                    }
-                    if (!source.getWide() && (laneModel = this.laneModel) != null && LaneModel.wants$default(laneModel, 0L, 1, null)) {
-                        try {
-                            laneModel.feed(colour(andSet));
-                        } catch (Exception e3) {
-                        }
-                    }
-                    if (source.getWide()) {
-                        this.wideFrameNs = System.nanoTime();
-                        Function1<? super Bitmap, Unit> function12 = this.wideReq;
-                        if (function12 != null) {
-                            this.wideReq = null;
-                            try {
-                                function12.invoke(colour(andSet));
-                            } catch (Exception e4) {
-                            }
-                        }
-                    }
-                    if (System.nanoTime() - source.getAmbientNs() > 250000000) {
-                        source.setAmbientNs(System.nanoTime());
-                        source.setAmbient(ambient(andSet));
-                    }
-                    LayoutSeg layoutSeg = this.layout;
-                    if (layoutSeg != null) {
-                        Telemetry telemetry = this.telemetry;
-                        if (source.getWide() && telemetry != null && telemetry.getCalValid() && layoutSeg.wantsFrame(System.nanoTime())) {
-                            layoutSeg.feed(andSet.getY(), andSet.getU(), andSet.getV(), andSet.getYStride(), andSet.getUvStride(), andSet.getUvPixStride(), andSet.getW(), andSet.getH(), telemetry.getCalRpy(), telemetry.getCalHeight(), System.nanoTime());
-                        }
-                    }
-                    LaneMarks laneMarks = this.laneMarks;
-                    if (laneMarks != null) {
-                        Telemetry telemetry2 = this.telemetry;
-                        if (!source.getWide() && telemetry2 != null && telemetry2.getCalValid() && laneMarks.wants(System.nanoTime())) {
-                            Lead leadOne = telemetry2.getLeadOne();
-                            laneMarks.analyze(andSet.getY(), andSet.getU(), andSet.getV(), andSet.getYStride(), andSet.getUvStride(), andSet.getUvPixStride(), andSet.getW(), andSet.getH(), telemetry2.getCalRpy(), telemetry2.getModel(), leadOne.getStatus() ? leadOne.getDRel() : 0.0f, System.nanoTime());
-                        }
-                    }
-                    this.prepMs = (this.prepMs > 0.0d ? 1 : (this.prepMs == 0.0d ? 0 : -1)) == 0 ? true : r9 ? (nanoTime2 - nanoTime) / 1000000.0d : (this.prepMs * 0.8d) + (((nanoTime2 - nanoTime) / 1000000.0d) * 0.2d);
-                    this.inferMs = (this.inferMs > 0.0d ? 1 : (this.inferMs == 0.0d ? 0 : -1)) == 0 ? (nanoTime3 - nanoTime2) / 1000000.0d : (this.inferMs * 0.8d) + (((nanoTime3 - nanoTime2) / 1000000.0d) * 0.2d);
-                    this.status = "running";
-                    long nanoTime4 = System.nanoTime();
-                    this.fpsWin++;
-                    if (nanoTime4 - this.fpsT0 > 2000000000) {
-                        this.fps = (this.fpsWin * 1.0E9d) / (nanoTime4 - this.fpsT0);
-                        this.fpsWin = 0;
-                        this.fpsT0 = nanoTime4;
-                    }
-                    source.setFpsWin(source.getFpsWin() + 1);
-                    if (nanoTime4 - source.getFpsT0() > 2000000000) {
-                        source.setFps((source.getFpsWin() * 1.0E9d) / (nanoTime4 - source.getFpsT0()));
-                        source.setFpsWin(0);
-                        source.setFpsT0(nanoTime4);
-                    }
-                } finally {
+                continue;
+            }
+            src.setLastRunNs(System.nanoTime());
+            try {
+                ensureInterpreter();
+                long t0 = System.nanoTime();
+                float scale = fill(f, src.getWide());
+                long t1 = System.nanoTime();
+                if (this.firstRun) {
+                    this.status = "first GPU run: compiling (can take a minute the first time)…";
+                }
+                Interpreter it = this.interp;
+                Intrinsics.checkNotNull(it);
+                int[] order = this.outOrder;
+                Intrinsics.checkNotNull(order);
+                HashMap<Integer, Object> outMap = new HashMap<>();
+                for (int i = 0; i < order.length; i++) {
+                    ByteBuffer b = this.outs.get(order[i]).getThird();
+                    b.rewind();
+                    outMap.put(Integer.valueOf(i), b);
+                }
+                this.input.rewind();
+                it.runForMultipleInputsOutputs(new Object[]{this.input}, outMap);
+                long t2 = System.nanoTime();
+                if (this.firstRun) {
+                    this.firstRunMs = (t2 - t1) / 1000000.0d;
+                    this.firstRun = false;
+                }
+                track(src, decode$default(this, scale, f.getW(), f.getH(), 0.0f, 8, null), f);
+                this.detsAtNs = System.nanoTime();
+                if (this.snapWant == (src.getWide() ? 2 : 1)) {
+                    this.snap = grey(f);
+                    this.snapWide = src.getWide();
+                    this.snapWant = 0;
+                }
+                Function1<? super Bitmap, Unit> shot = this.shotReq;
+                if (!src.getWide() && shot != null) {
+                    this.shotReq = null;
                     try {
-                    } finally {
+                        Bitmap clean = colour(f);
+                        Bitmap drawn = clean.copy(Bitmap.Config.ARGB_8888, true);
+                        try {
+                            Intrinsics.checkNotNull(drawn);
+                            drawPath(drawn, f);
+                        } catch (Exception e) {
+                        }
+                        this.lastClean = clean;
+                        Intrinsics.checkNotNull(drawn);
+                        shot.invoke(drawn);
+                    } catch (Exception e2) {
                     }
                 }
+                LaneModel lm = this.laneModel;
+                if (!src.getWide() && lm != null && LaneModel.wants$default(lm, 0L, 1, null)) {
+                    try {
+                        lm.feed(colour(f));
+                    } catch (Exception e3) {
+                    }
+                }
+                if (src.getWide()) {
+                    this.wideFrameNs = System.nanoTime();
+                    Function1<? super Bitmap, Unit> wr = this.wideReq;
+                    if (wr != null) {
+                        this.wideReq = null;
+                        try {
+                            wr.invoke(colour(f));
+                        } catch (Exception e4) {
+                        }
+                    }
+                }
+                if (System.nanoTime() - src.getAmbientNs() > 250000000) {
+                    src.setAmbientNs(System.nanoTime());
+                    src.setAmbient(ambient(f));
+                }
+                LayoutSeg lay = this.layout;
+                if (lay != null) {
+                    Telemetry tel = this.telemetry;
+                    if (src.getWide() && tel != null && tel.getCalValid() && lay.wantsFrame(System.nanoTime())) {
+                        lay.feed(f.getY(), f.getU(), f.getV(), f.getYStride(), f.getUvStride(), f.getUvPixStride(), f.getW(), f.getH(), tel.getCalRpy(), tel.getCalHeight(), System.nanoTime());
+                    }
+                }
+                LaneMarks marks = this.laneMarks;
+                if (marks != null) {
+                    Telemetry tel2 = this.telemetry;
+                    if (!src.getWide() && tel2 != null && tel2.getCalValid() && marks.wants(System.nanoTime())) {
+                        Lead ld = tel2.getLeadOne();
+                        marks.analyze(f.getY(), f.getU(), f.getV(), f.getYStride(), f.getUvStride(), f.getUvPixStride(), f.getW(), f.getH(), tel2.getCalRpy(), tel2.getModel(), ld.getStatus() ? ld.getDRel() : 0.0f, System.nanoTime());
+                    }
+                }
+                this.prepMs = this.prepMs == 0.0d ? (t1 - t0) / 1000000.0d : (this.prepMs * 0.8d) + (((t1 - t0) / 1000000.0d) * 0.2d);
+                this.inferMs = this.inferMs == 0.0d ? (t2 - t1) / 1000000.0d : (this.inferMs * 0.8d) + (((t2 - t1) / 1000000.0d) * 0.2d);
+                this.status = "running";
+                long n = System.nanoTime();
+                this.fpsWin++;
+                if (n - this.fpsT0 > 2000000000) {
+                    this.fps = (this.fpsWin * 1.0E9d) / (n - this.fpsT0);
+                    this.fpsWin = 0;
+                    this.fpsT0 = n;
+                }
+                src.setFpsWin(src.getFpsWin() + 1);
+                if (n - src.getFpsT0() > 2000000000) {
+                    src.setFps((src.getFpsWin() * 1.0E9d) / (n - src.getFpsT0()));
+                    src.setFpsWin(0);
+                    src.setFpsT0(n);
+                }
+            } catch (Throwable e5) {
+                if (e5 instanceof ModelDownload.Missing) {
+                    String msg = e5.getMessage();
+                    this.status = msg == null ? "" : msg;
+                } else {
+                    Log.e(TAG, "detector: " + e5);
+                    this.status = "error: " + e5.getMessage();
+                }
+                release();
+                try {
+                    Thread.sleep(3000L);
+                } catch (InterruptedException e6) {
+                }
+            } finally {
+                src.getFree().add(f);
             }
         }
     }

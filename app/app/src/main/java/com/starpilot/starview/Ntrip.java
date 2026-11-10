@@ -39,6 +39,7 @@ import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.SequencesKt;
 import kotlin.text.Charsets;
+import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
 
@@ -571,57 +572,127 @@ public final class Ntrip {
         ntrip.run(config, i, config2, z);
     }
 
-    /*  JADX ERROR: JadxRuntimeException in pass: ConstructorVisitor
-        jadx.core.utils.exceptions.JadxRuntimeException: Can't remove SSA var: r16v0 ??, still in use, count: 2, list:
-          (r16v0 ?? I:??[OBJECT, ARRAY]) from 0x002d: MOVE (r9v0 ?? I:??[OBJECT, ARRAY]) = (r16v0 ?? I:??[OBJECT, ARRAY])
-          (r16v0 ?? I:com.starpilot.starview.NtripCore$BackupPlan) from 0x002a: INVOKE 
-          (r16v0 ?? I:com.starpilot.starview.NtripCore$BackupPlan)
-          (r18v0 ?? I:long)
-          (r20v0 ?? I:long)
-          (r22v0 ?? I:int)
-          (r23v0 ?? I:kotlin.jvm.internal.DefaultConstructorMarker)
-         DIRECT call: com.starpilot.starview.NtripCore.BackupPlan.<init>(long, long, int, kotlin.jvm.internal.DefaultConstructorMarker):void A[MD:(long, long, int, kotlin.jvm.internal.DefaultConstructorMarker):void (m)]
-        	at jadx.core.utils.InsnRemover.removeSsaVar(InsnRemover.java:162)
-        	at jadx.core.utils.InsnRemover.unbindResult(InsnRemover.java:127)
-        	at jadx.core.utils.InsnRemover.lambda$unbindInsns$1(InsnRemover.java:99)
-        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-        	at jadx.core.utils.InsnRemover.unbindInsns(InsnRemover.java:98)
-        	at jadx.core.utils.InsnRemover.perform(InsnRemover.java:73)
-        	at jadx.core.dex.visitors.ConstructorVisitor.replaceInvoke(ConstructorVisitor.java:59)
-        	at jadx.core.dex.visitors.ConstructorVisitor.visit(ConstructorVisitor.java:42)
-        */
-    private final void run(
-    /*  JADX ERROR: JadxRuntimeException in pass: ConstructorVisitor
-        jadx.core.utils.exceptions.JadxRuntimeException: Can't remove SSA var: r16v0 ??, still in use, count: 2, list:
-          (r16v0 ?? I:??[OBJECT, ARRAY]) from 0x002d: MOVE (r9v0 ?? I:??[OBJECT, ARRAY]) = (r16v0 ?? I:??[OBJECT, ARRAY])
-          (r16v0 ?? I:com.starpilot.starview.NtripCore$BackupPlan) from 0x002a: INVOKE 
-          (r16v0 ?? I:com.starpilot.starview.NtripCore$BackupPlan)
-          (r18v0 ?? I:long)
-          (r20v0 ?? I:long)
-          (r22v0 ?? I:int)
-          (r23v0 ?? I:kotlin.jvm.internal.DefaultConstructorMarker)
-         DIRECT call: com.starpilot.starview.NtripCore.BackupPlan.<init>(long, long, int, kotlin.jvm.internal.DefaultConstructorMarker):void A[MD:(long, long, int, kotlin.jvm.internal.DefaultConstructorMarker):void (m)]
-        	at jadx.core.utils.InsnRemover.removeSsaVar(InsnRemover.java:162)
-        	at jadx.core.utils.InsnRemover.unbindResult(InsnRemover.java:127)
-        	at jadx.core.utils.InsnRemover.lambda$unbindInsns$1(InsnRemover.java:99)
-        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-        	at jadx.core.utils.InsnRemover.unbindInsns(InsnRemover.java:98)
-        	at jadx.core.utils.InsnRemover.perform(InsnRemover.java:73)
-        	at jadx.core.dex.visitors.ConstructorVisitor.replaceInvoke(ConstructorVisitor.java:59)
-        */
-    /*  JADX ERROR: Method generation error
-        jadx.core.utils.exceptions.JadxRuntimeException: Code variable not set in r41v0 ??
-        	at jadx.core.dex.instructions.args.SSAVar.getCodeVar(SSAVar.java:238)
-        	at jadx.core.codegen.MethodGen.addMethodArguments(MethodGen.java:223)
-        	at jadx.core.codegen.MethodGen.addDefinition(MethodGen.java:168)
-        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:401)
-        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:335)
-        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$3(ClassGen.java:301)
-        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
-        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:261)
-        */
+    private final void run(Config main, int gen, Config backup, boolean backupOnly) {
+        Role role = new Role(backup, backupOnly ? new NtripCore.BackupPlan(0L, 2305843009213693951L, 1, null) : new NtripCore.BackupPlan(0L, 0L, 3, null));
+        if (backupOnly) {
+            role.getPlan().toBackup(System.currentTimeMillis());
+            note("using only the backup caster " + (backup != null ? backup.getHost() : null));
+        }
+        boolean v2 = true;
+        int mountFails = 0;
+        long delay = 5000L;
+        int busy = 0;
+        while (gen == generation) {
+            NtripCore.BackupPlan plan = role.getPlan();
+            if (backup != null && plan.timeToRetryMain(System.currentTimeMillis())) {
+                plan.toMain(System.currentTimeMillis());
+                note("trying " + main.getHost() + " again");
+            }
+            if (backup != null && plan.shouldSwitch(System.currentTimeMillis())) {
+                plan.toBackup(System.currentTimeMillis());
+                note(main.getHost() + " gave no RTK for 3 minutes - using the backup caster " + backup.getHost());
+            }
+            Config cfg;
+            if (backup != null && plan.getOnBackup()) {
+                NtripCore.Mount base = StringsKt.isBlank(backup.getMount()) ? backupMount(backup) : null;
+                if (StringsKt.isBlank(backup.getMount()) && base == null) {
+                    setState("backup: no base within 25 miles (or no fix yet)" + (backupOnly ? "" : " - trying " + main.getHost() + " again soon"));
+                    source = "";
+                    try {
+                        Thread.sleep(60000L);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                    if (plan.timeToRetryMain(System.currentTimeMillis())) {
+                        plan.toMain(System.currentTimeMillis());
+                        note("trying " + main.getHost() + " again");
+                    }
+                    continue;
+                }
+                String mount = base != null ? base.getName() : null;
+                if (mount == null) {
+                    mount = backup.getMount();
+                }
+                Config c = new Config(true, backup.getHost(), backup.getPort(), mount, backup.getUser(), backup.getPass());
+                RtkStatus r = rtk;
+                String miles = (base == null || r == null || !r.getHasFix()) ? "" : " · " + Math.round(base.milesFrom(r.getLat(), r.getLon())) + " mi";
+                source = "backup: " + backup.getHost() + " · " + c.getMount() + miles;
+                if (base != null) {
+                    role.setBase(base);
+                }
+                cfg = c;
+            } else {
+                source = backup != null ? "main: " + main.getHost() : "";
+                cfg = main;
+            }
+            setState("connecting to " + cfg.getHost() + " (NTRIP " + (v2 ? "2.0" : "1.0") + ")…");
+            long t0 = System.currentTimeMillis();
+            long b0 = bytesIn;
+            String err;
+            try {
+                stream(cfg, gen, v2, role);
+                err = null;
+            } catch (Exception e2) {
+                String m = e2.getMessage();
+                err = m != null ? m : e2.getClass().getSimpleName();
+            }
+            long got = bytesIn - b0;
+            if (backup != null) {
+                long help = role.getLastHelpMs();
+                if (!plan.getOnBackup()) {
+                    plan.mainResult(help >= t0 && System.currentTimeMillis() - help < 30000, Math.max(help, t0));
+                } else if (Intrinsics.areEqual(err, RETRY_MAIN)) {
+                    plan.toMain(System.currentTimeMillis());
+                    note("trying " + main.getHost() + " again");
+                    continue;
+                }
+                if (Intrinsics.areEqual(err, NEARER_BASE)) {
+                    note("moving to a nearer base");
+                    continue;
+                }
+                if (plan.shouldSwitch(System.currentTimeMillis())) {
+                    continue;
+                }
+            }
+            // nothing came and it was not the login: try the other NTRIP version next time
+            boolean nextV2 = v2;
+            if (got == 0 && err != null && !StringsKt.startsWith$default(err, "login refused", false, 2, (Object) null) && !StringsKt.startsWith$default(err, "account not allowed", false, 2, (Object) null)) {
+                nextV2 = !v2;
+            }
+            if (got > 0) {
+                note("connection ended after " + ((System.currentTimeMillis() - t0) / 1000) + " s, " + NtripCore.INSTANCE.size(got) + " of corrections");
+            }
+            if (gen != generation) {
+                break;
+            }
+            setState("reconnecting: " + (err == null ? "caster closed the stream" : err));
+            Log.w(TAG, state);
+            boolean isBusy = err != null && StringsKt.startsWith$default(err, "caster busy", false, 2, (Object) null);
+            busy = isBusy ? busy + 1 : 0;
+            long now = System.currentTimeMillis();
+            int mf = (err != null && StringsKt.startsWith$default(err, "mountpoint", false, 2, (Object) null)) ? mountFails + 1 : 0;
+            if (mf > 10) {
+                delay = 600000L;
+            } else if ((err == null || got > 0) && now - t0 >= 30000) {
+                delay = 3000L;
+            } else if (isBusy) {
+                delay = busy <= 15 ? 20000L : 60000L;
+            } else {
+                delay = RangesKt.coerceIn(delay * 2, 10000L, 60000L);
+            }
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e3) {
+                break;
+            }
+            mountFails = mf;
+            v2 = nextV2;
+        }
+        if (gen == generation) {
+            setState("off");
+        }
+        thread = null;
+    }
 
     private final String readLine(InputStream inp) {
         int ch;

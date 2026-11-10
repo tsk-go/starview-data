@@ -574,74 +574,55 @@ public final class GxNavigationPage extends GxPage {
         Code decompiled incorrectly, please refer to instructions dump.
     */
     public static final void extGet$lambda$19(String str, GxNavigationPage gxNavigationPage, final Function2 function2) {
-        String str2;
-        Object obj;
-        String str3;
-        String optString;
-        String optString2;
         final Ref.ObjectRef objectRef = new Ref.ObjectRef();
         final Ref.ObjectRef objectRef2 = new Ref.ObjectRef();
         try {
             Response execute = GxPage.Companion.client(20L).newCall(new Request.Builder().url(str).build()).execute();
+            Throwable thrown = null;
             try {
-                Response response = execute;
-                ResponseBody body = response.body();
-                if (body == null || (str2 = body.string()) == null) {
-                    str2 = "";
+                ResponseBody body = execute.body();
+                String text = body != null ? body.string() : null;
+                if (text == null) {
+                    text = "";
                 }
+                JSONObject obj;
                 try {
-                    Result.Companion companion = Result.Companion;
-                    obj = Result.m1191constructorimpl(new JSONObject(str2));
+                    obj = new JSONObject(text);
                 } catch (Throwable th) {
-                    Result.Companion companion2 = Result.Companion;
-                    obj = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                    obj = null;
                 }
-                boolean m1197isFailureimpl = Result.m1197isFailureimpl(obj);
-                ?? r6 = obj;
-                if (m1197isFailureimpl) {
-                    r6 = 0;
-                }
-                objectRef2.element = r6;
-                if (!response.isSuccessful()) {
-                    JSONObject jSONObject = (JSONObject) objectRef2.element;
-                    if (jSONObject != null && (optString2 = jSONObject.optString("message")) != null) {
-                        String str4 = optString2;
-                        if (StringsKt.isBlank(str4)) {
-                            str4 = null;
+                objectRef2.element = obj;
+                if (!execute.isSuccessful()) {
+                    String msg = obj != null ? obj.optString("message") : null;
+                    if (msg != null && StringsKt.isBlank(msg)) {
+                        msg = null;
+                    }
+                    if (msg == null) {
+                        String er = obj != null ? obj.optString("error") : null;
+                        if (er != null && StringsKt.isBlank(er)) {
+                            er = null;
                         }
-                        str3 = str4;
+                        msg = er;
                     }
-                    JSONObject jSONObject2 = (JSONObject) objectRef2.element;
-                    if (jSONObject2 == null || (optString = jSONObject2.optString("error")) == null) {
-                        str3 = 0;
-                    } else {
-                        String str5 = optString;
-                        if (StringsKt.isBlank(str5)) {
-                            str5 = null;
-                        }
-                        str3 = str5;
+                    if (msg == null) {
+                        msg = "HTTP " + execute.code();
                     }
-                    if (str3 == 0) {
-                        str3 = "HTTP " + response.code();
-                    }
-                    objectRef.element = str3;
+                    objectRef.element = msg;
                 }
-                Unit unit = Unit.INSTANCE;
-                CloseableKt.closeFinally(execute, null);
+            } catch (Throwable t) {
+                thrown = t;
+                throw t;
             } finally {
+                CloseableKt.closeFinally(execute, thrown);
             }
         } catch (Exception e) {
             String message = e.getMessage();
-            ?? r3 = message;
-            if (message == null) {
-                r3 = e.toString();
-            }
-            objectRef.element = r3;
+            objectRef.element = message != null ? message : e.toString();
         }
         gxNavigationPage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda33
             @Override // java.lang.Runnable
             public final void run() {
-                GxNavigationPage.extGet$lambda$19$lambda$18(Function2.this, objectRef, objectRef2);
+                GxNavigationPage.extGet$lambda$19$lambda$18(function2, objectRef, objectRef2);
             }
         });
     }

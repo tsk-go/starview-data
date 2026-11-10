@@ -224,28 +224,15 @@ public final class SensorsView extends View {
                     arrayList7.add(obj);
                 }
             }
-            Iterator it2 = arrayList7.iterator();
-            if (it2.hasNext()) {
-                next = it2.next();
-                if (it2.hasNext()) {
-                    ?? r14 = !Intrinsics.areEqual(((GpsFixInfo) next).getSource(), "ublox") ? 1 : 0;
-                    while (true) {
-                        Object next3 = it2.next();
-                        int i = !Intrinsics.areEqual(((GpsFixInfo) next3).getSource(), "ublox") ? 1 : 0;
-                        int i2 = r14;
-                        if (r14 > i) {
-                            next = next3;
-                            i2 = i;
-                        }
-                        if (!it2.hasNext()) {
-                            break;
-                        } else {
-                            r14 = i2;
-                        }
-                    }
+            // the u-blox fix first, else the first one
+            next = null;
+            int bestKey = Integer.MAX_VALUE;
+            for (Object o : arrayList7) {
+                int k = !Intrinsics.areEqual(((GpsFixInfo) o).getSource(), "ublox") ? 1 : 0;
+                if (k < bestKey) {
+                    bestKey = k;
+                    next = o;
                 }
-            } else {
-                next = null;
             }
             GpsFixInfo gpsFixInfo2 = (GpsFixInfo) next;
             if (gpsFixInfo2 != null && !Double.isNaN(this.lat0)) {

@@ -681,123 +681,72 @@ public final class GxModelLabPage extends GxPage {
         }
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r14v5 */
-    /* JADX WARN: Type inference failed for: r14v6 */
-    /* JADX WARN: Type inference failed for: r14v7 */
-    /* JADX WARN: Type inference failed for: r8v10 */
-    /* JADX WARN: Type inference failed for: r8v8 */
-    /* JADX WARN: Type inference failed for: r8v9 */
     private final void renderAvailable() {
-        int i;
-        ?? r14;
-        String str;
-        LinearLayout linearLayout = this.availBox;
-        String str2 = null;
-        LinearLayout linearLayout2 = null;
-        if (linearLayout == null) {
+        LinearLayout box = this.availBox;
+        if (box == null) {
             Intrinsics.throwUninitializedPropertyAccessException("availBox");
-            linearLayout = null;
+            box = null;
         }
-        linearLayout.removeAllViews();
+        box.removeAllViews();
         if (this.loading) {
             return;
         }
-        int optInt = this.summary.optInt("ready");
-        boolean z = false;
-        String str3 = optInt + " downloaded · " + Math.max(this.summary.optInt("published") - optInt, 0) + " available to download\nDownload eGPU-compatible small models. These are separate from the small models in Model Manager because they are compiled for the eGPU.";
-        LinearLayout linearLayout3 = this.availBox;
-        if (linearLayout3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("availBox");
-            linearLayout3 = null;
-        }
-        note(str3, linearLayout3);
+        int ready = this.summary.optInt("ready");
+        note(ready + " downloaded · " + Math.max(this.summary.optInt("published") - ready, 0) + " available to download\nDownload eGPU-compatible small models. These are separate from the small models in Model Manager because they are compiled for the eGPU.", box);
         List<JSONObject> available = available();
         if (available.isEmpty()) {
-            LinearLayout linearLayout4 = this.availBox;
-            if (linearLayout4 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("availBox");
-            } else {
-                linearLayout2 = linearLayout4;
-            }
-            linearLayout2.addView(empty("No eGPU variants are published in the model manifest."));
+            box.addView(empty("No eGPU variants are published in the model manifest."));
             return;
         }
-        int i2 = 4;
-        String gxModelsText$default = GxModelsKt.gxModelsText$default(this.download, "model", null, 4, null);
-        if (!this.saving && !this.isOnroad) {
-            if ((gxModelsText$default.length() == 0) != false) {
-                z = true;
+        String downloading = GxModelsKt.gxModelsText$default(this.download, "model", null, 4, null);
+        boolean enabled = !this.saving && !this.isOnroad && downloading.length() == 0;
+        for (JSONObject m : available) {
+            final String value = GxModelsKt.gxModelsText$default(m, "value", null, 4, null);
+            boolean installed = m.optBoolean("modelLabArtifactInstalled");
+            String series = GxModelsKt.gxModelsText$default(m, "series", null, 4, null);
+            if (StringsKt.isBlank(series)) {
+                series = "Unknown series";
             }
-        }
-        for (JSONObject jSONObject : available) {
-            final String gxModelsText$default2 = GxModelsKt.gxModelsText$default(jSONObject, "value", str2, i2, str2);
-            boolean optBoolean = jSONObject.optBoolean("modelLabArtifactInstalled");
-            String gxModelsText$default3 = GxModelsKt.gxModelsText$default(jSONObject, "series", str2, i2, str2);
-            if (StringsKt.isBlank(gxModelsText$default3)) {
-                gxModelsText$default3 = "Unknown series";
+            String version = GxModelsKt.gxModelsText$default(m, "version", null, 4, null);
+            if (StringsKt.isBlank(version)) {
+                version = "unknown version";
             }
-            String gxModelsText$default4 = GxModelsKt.gxModelsText$default(jSONObject, "version", str2, i2, str2);
-            if (StringsKt.isBlank(gxModelsText$default4)) {
-                gxModelsText$default4 = "unknown version";
+            String size = GxModelsKt.gxModelsText$default(m, "modelSize", null, 4, null);
+            if (StringsKt.isBlank(size)) {
+                size = "small";
             }
-            String gxModelsText$default5 = GxModelsKt.gxModelsText$default(jSONObject, "modelSize", str2, i2, str2);
-            if (StringsKt.isBlank(gxModelsText$default5)) {
-                gxModelsText$default5 = "small";
+            String desc = value + " · " + series + "\n" + version + " · " + size + " · " + (installed ? "eGPU variant downloaded" : "eGPU variant not downloaded");
+            String label = GxModelsKt.gxModelsText$default(m, "label", null, 4, null);
+            if (StringsKt.isBlank(label)) {
+                label = value;
             }
-            int i3 = optInt;
-            String str4 = gxModelsText$default2 + " · " + ((Object) gxModelsText$default3) + "\n" + ((Object) gxModelsText$default4) + " · " + ((Object) gxModelsText$default5) + " · " + (optBoolean ? "eGPU variant downloaded" : "eGPU variant not downloaded");
-            GxModelLabPage gxModelLabPage = this;
-            String gxModelsText$default6 = GxModelsKt.gxModelsText$default(jSONObject, "label", null, 4, null);
-            if (StringsKt.isBlank(gxModelsText$default6)) {
-                gxModelsText$default6 = gxModelsText$default2;
-            }
-            String str5 = gxModelsText$default6;
-            LinearLayout linearLayout5 = this.availBox;
-            if (linearLayout5 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("availBox");
-                linearLayout5 = null;
-            }
-            GxPage.Row row$default = GxPage.row$default(gxModelLabPage, str5, str4, linearLayout5, 0, 8, null);
-            if (optBoolean) {
-                TextView button$default = GxPage.Row.button$default(row$default, "Delete eGPU variant", false, new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda3
+            GxPage.Row row = GxPage.row$default(this, label, desc, box, 0, 8, null);
+            if (installed) {
+                TextView del = GxPage.Row.button$default(row, "Delete eGPU variant", false, new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda3
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
-                        Unit renderAvailable$lambda$34;
-                        renderAvailable$lambda$34 = GxModelLabPage.renderAvailable$lambda$34(GxModelLabPage.this, gxModelsText$default2);
-                        return renderAvailable$lambda$34;
+                        return GxModelLabPage.renderAvailable$lambda$34(GxModelLabPage.this, value);
                     }
                 }, 2, null);
-                button$default.setTextColor(CarUi.Companion.getWARN());
-                GxModelsKt.gxModelsEnable(button$default, z);
-                str2 = null;
-                optInt = i3;
-                i2 = 4;
+                del.setTextColor(CarUi.Companion.getWARN());
+                GxModelsKt.gxModelsEnable(del, enabled);
             } else {
-                if (Intrinsics.areEqual(gxModelsText$default, gxModelsText$default2)) {
-                    i = 4;
-                    r14 = null;
-                    String gxModelsText$default7 = GxModelsKt.gxModelsText$default(this.download, "progress", null, 4, null);
-                    if (StringsKt.isBlank(gxModelsText$default7)) {
-                        gxModelsText$default7 = "starting…";
+                String btn;
+                if (Intrinsics.areEqual(downloading, value)) {
+                    String prog = GxModelsKt.gxModelsText$default(this.download, "progress", null, 4, null);
+                    if (StringsKt.isBlank(prog)) {
+                        prog = "starting…";
                     }
-                    str = "Downloading · " + ((Object) gxModelsText$default7);
+                    btn = "Downloading · " + prog;
                 } else {
-                    i = 4;
-                    r14 = null;
-                    str = "Download eGPU variant";
+                    btn = "Download eGPU variant";
                 }
-                GxModelsKt.gxModelsEnable(GxPage.Row.button$default(row$default, str, false, new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda2
+                GxModelsKt.gxModelsEnable(GxPage.Row.button$default(row, btn, false, new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda2
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
-                        Unit renderAvailable$lambda$33;
-                        renderAvailable$lambda$33 = GxModelLabPage.renderAvailable$lambda$33(GxModelLabPage.this, gxModelsText$default2);
-                        return renderAvailable$lambda$33;
+                        return GxModelLabPage.renderAvailable$lambda$33(GxModelLabPage.this, value);
                     }
-                }, 2, null), z);
-                i2 = i;
-                str2 = r14;
-                optInt = i3;
+                }, 2, null), enabled);
             }
         }
     }

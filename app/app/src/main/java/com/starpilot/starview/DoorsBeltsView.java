@@ -855,65 +855,51 @@ public final class DoorsBeltsView extends CardPage {
         }
         JSONObject words = lv.optJSONObject("words");
         LinearLayout grid = new LinearLayout(getContext());
-        ?? r8 = 1;
         grid.setOrientation(1);
         for (JSONObject it : items()) {
             String id = it.optString("id");
             String w = null;
-            if (words != null && (s2 = words.optString(id)) != null) {
-                if (((!(s2.length() > 0 ? r8 : false) || Intrinsics.areEqual(s2, "null")) ? null : r8) != null) {
+            if (words != null) {
+                String s2 = words.optString(id);
+                if (s2 != null && s2.length() > 0 && !Intrinsics.areEqual(s2, "null")) {
                     w = s2;
                 }
             }
             String src = it.optString("source");
-            LinearLayout $this$paintNow_u24lambda_u2426 = new LinearLayout(getContext());
-            $this$paintNow_u24lambda_u2426.setOrientation(0);
-            $this$paintNow_u24lambda_u2426.setGravity(16);
-            $this$paintNow_u24lambda_u2426.setPadding(0, getUi().dp(3), 0, getUi().dp(3));
-            TextView $this$paintNow_u24lambda_u2426_u24lambda_u2424 = new TextView($this$paintNow_u24lambda_u2426.getContext());
-            JSONObject s3 = s;
-            $this$paintNow_u24lambda_u2426_u24lambda_u2424.setText(it.optString("name"));
-            $this$paintNow_u24lambda_u2426_u24lambda_u2424.setTextColor(CarUi.Companion.getTEXT());
-            $this$paintNow_u24lambda_u2426_u24lambda_u2424.setTextSize(17.0f);
-            $this$paintNow_u24lambda_u2426.addView($this$paintNow_u24lambda_u2426_u24lambda_u2424, new LinearLayout.LayoutParams(getUi().dp(260), -2));
-            TextView $this$paintNow_u24lambda_u2426_u24lambda_u2425 = new TextView($this$paintNow_u24lambda_u2426.getContext());
+            LinearLayout row = new LinearLayout(getContext());
+            row.setOrientation(0);
+            row.setGravity(16);
+            row.setPadding(0, getUi().dp(3), 0, getUi().dp(3));
+            TextView name = new TextView(row.getContext());
+            name.setText(it.optString("name"));
+            name.setTextColor(CarUi.Companion.getTEXT());
+            name.setTextSize(17.0f);
+            row.addView(name, new LinearLayout.LayoutParams(getUi().dp(260), -2));
+            TextView val = new TextView(row.getContext());
+            String shown;
             if (w != null) {
-                str2 = w;
+                shown = w;
+            } else if ("not on bus".equals(src)) {
+                shown = "not on the comma's bus";
+            } else if ("".equals(src) || "null".equals(src)) {
+                shown = "not learned";
             } else {
-                if (src != null) {
-                    switch (src.hashCode()) {
-                        case -1282241876:
-                            if (src.equals("not on bus")) {
-                                str = "not on the comma's bus";
-                                break;
-                            }
-                            break;
-                        case 0:
-                            break;
-                        case 3392903:
-                            break;
-                    }
-                    str2 = str;
-                }
-                str = "–";
-                str2 = str;
+                shown = "–";
             }
-            $this$paintNow_u24lambda_u2426_u24lambda_u2425.setText(str2);
+            val.setText(shown);
+            int col;
             if (Intrinsics.areEqual(w, "open")) {
-                dim = CarUi.Companion.getWARN();
+                col = CarUi.Companion.getWARN();
             } else if (Intrinsics.areEqual(w, "buckled")) {
-                dim = CarUi.Companion.getACCENT();
+                col = CarUi.Companion.getACCENT();
             } else {
-                CarUi.Companion_ companion = CarUi.Companion;
-                dim = w == null ? companion.getDIM() : companion.getTEXT();
+                col = w == null ? CarUi.Companion.getDIM() : CarUi.Companion.getTEXT();
             }
-            $this$paintNow_u24lambda_u2426_u24lambda_u2425.setTextColor(dim);
-            $this$paintNow_u24lambda_u2426_u24lambda_u2425.setTextSize(17.0f);
-            $this$paintNow_u24lambda_u2426_u24lambda_u2425.setTypeface(w != null ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
-            $this$paintNow_u24lambda_u2426.addView($this$paintNow_u24lambda_u2426_u24lambda_u2425);
-            grid.addView($this$paintNow_u24lambda_u2426);
-            r8 = 1;
-            s = s3;
+            val.setTextColor(col);
+            val.setTextSize(17.0f);
+            val.setTypeface(w != null ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+            row.addView(val);
+            grid.addView(row);
         }
         c.addView(grid);
     }
