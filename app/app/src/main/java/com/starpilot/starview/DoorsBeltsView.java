@@ -904,7 +904,7 @@ public final class DoorsBeltsView extends CardPage {
             } else if (Intrinsics.areEqual(w, "buckled")) {
                 dim = CarUi.Companion.getACCENT();
             } else {
-                CarUi.Companion companion = CarUi.Companion;
+                CarUi.Companion_ companion = CarUi.Companion;
                 dim = w == null ? companion.getDIM() : companion.getTEXT();
             }
             $this$paintNow_u24lambda_u2426_u24lambda_u2425.setTextColor(dim);
@@ -1069,7 +1069,7 @@ public final class DoorsBeltsView extends CardPage {
                                 JSONObject it3 = (JSONObject) element$iv;
                                 if (Intrinsics.areEqual(it3.optString("id"), k)) {
                                     String str2 = str + ((JSONObject) element$iv).optString("name");
-                                    CarUi.Companion companion = CarUi.Companion;
+                                    CarUi.Companion_ companion = CarUi.Companion;
                                     c.addView(doorsBeltsView.line(str2, v != null ? companion.getACCENT() : companion.getWARN(), 17.0f));
                                 }
                             }

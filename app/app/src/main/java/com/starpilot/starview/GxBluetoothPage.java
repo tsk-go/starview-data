@@ -578,7 +578,7 @@ public final class GxBluetoothPage extends GxPage {
                 LinearLayout c = card(linearLayout6);
                 GxBluetoothPage gxBluetoothPage = this;
                 LinearLayout linearLayout7 = c;
-                CarUi.Companion companion = CarUi.Companion;
+                CarUi.Companion_ companion = CarUi.Companion;
                 GxPage.text$default(gxBluetoothPage, name, linearLayout7, 21.0f, connected ? companion.getACCENT() : companion.getTEXT(), false, 16, null);
                 String str5 = str2;
                 String lsig2 = lsig;

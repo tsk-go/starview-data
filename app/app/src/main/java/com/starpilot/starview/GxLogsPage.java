@@ -2026,7 +2026,7 @@ public final class GxLogsPage extends GxPage {
                 TextView b = textView;
                 boolean on = Intrinsics.areEqual(this.monSort, c.getFirst());
                 b.setText(c.getSecond() + (on ? this.monDesc ? " ↓" : " ↑" : ""));
-                CarUi.Companion companion = CarUi.Companion;
+                CarUi.Companion_ companion = CarUi.Companion;
                 b.setTextColor(on ? companion.getACCENT() : companion.getTEXT());
             }
         }

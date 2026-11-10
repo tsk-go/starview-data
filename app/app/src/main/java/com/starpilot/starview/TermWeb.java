@@ -117,8 +117,8 @@ public final class TermWeb {
             if (h == null) {
                 return "";
             }
-            Link.ensureSession$default(Link.INSTANCE, h, 0, 2, null);
-            return Link.sessionFor$default(Link.INSTANCE, h, 0, 2, null);
+            Link.INSTANCE.ensureSession(h, Link.DAEMON_PORT);
+            return Link.INSTANCE.sessionFor(h, Link.DAEMON_PORT);
         }
 
         @JavascriptInterface

@@ -987,7 +987,7 @@ public final class GalaxyVisuals {
             $this$conditions_u24lambda_u2468.addView(chip, $this$conditions_u24lambda_u2468_u24lambda_u2464);
             TextView $this$conditions_u24lambda_u2468_u24lambda_u2465 = new TextView(ctx);
             $this$conditions_u24lambda_u2468_u24lambda_u2465.setText(r.getLabel());
-            CarUi.Companion companion = CarUi.Companion;
+            CarUi.Companion_ companion = CarUi.Companion;
             $this$conditions_u24lambda_u2468_u24lambda_u2465.setTextColor(lit ? companion.getTEXT() : companion.getDIM());
             $this$conditions_u24lambda_u2468_u24lambda_u2465.setTextSize(17.0f);
             $this$conditions_u24lambda_u2468.addView($this$conditions_u24lambda_u2468_u24lambda_u2465);

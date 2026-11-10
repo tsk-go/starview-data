@@ -6463,7 +6463,7 @@ public final class MainActivity extends AppCompatActivity {
                     int h = Calendar.getInstance().get(11);
                     n = h >= 6 || h >= 19;
                 } else {
-                    n = Theme.isNight$default(Theme.INSTANCE, lat, lon, 0L, 4, null);
+                    n = Theme.INSTANCE.isNight(lat, lon, System.currentTimeMillis());
                 }
             }
             if (Double.isNaN(lat)) {

@@ -1360,7 +1360,7 @@ public final class FilesActivity extends AppCompatActivity {
     @Override // androidx.appcompat.app.AppCompatActivity, android.app.Activity, android.view.ContextThemeWrapper, android.content.ContextWrapper
     protected void attachBaseContext(Context base) {
         Intrinsics.checkNotNullParameter(base, "base");
-        super.attachBaseContext(NarrowDensity.wrap$default(NarrowDensity.INSTANCE, base, 0, 0.0f, 6, null));
+        super.attachBaseContext(NarrowDensity.INSTANCE.wrap(base, 1000, 0.62f));
     }
 
     @Override // androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity

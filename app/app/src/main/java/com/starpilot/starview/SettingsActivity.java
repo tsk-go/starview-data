@@ -1192,7 +1192,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     @Override // androidx.appcompat.app.AppCompatActivity, android.app.Activity, android.view.ContextThemeWrapper, android.content.ContextWrapper
     protected void attachBaseContext(Context base) {
         Intrinsics.checkNotNullParameter(base, "base");
-        super.attachBaseContext(NarrowDensity.wrap$default(NarrowDensity.INSTANCE, base, 0, 0.0f, 6, null));
+        super.attachBaseContext(NarrowDensity.INSTANCE.wrap(base, 1000, 0.62f));
     }
 
     /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
@@ -5494,7 +5494,7 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit tabletMapsPage$refresh$lambda$185(MapdMaps.State $st) {
-        MapdMaps.download$default(MapdMaps.INSTANCE, $st, false, 2, null);
+        MapdMaps.INSTANCE.download($st, false);
         return Unit.INSTANCE;
     }
 
@@ -10967,8 +10967,8 @@ public final class SettingsActivity extends AppCompatActivity implements GxHost 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void techStreamPage$load$lambda$406(SettingsActivity this$0, final String $h, final WebView $w) {
         Link.INSTANCE.loadKey(this$0);
-        Link.ensureSession$default(Link.INSTANCE, $h, 0, 2, null);
-        final String s = Link.sessionFor$default(Link.INSTANCE, $h, 0, 2, null);
+        Link.INSTANCE.ensureSession($h, Link.DAEMON_PORT);
+        final String s = Link.INSTANCE.sessionFor($h, Link.DAEMON_PORT);
         this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.SettingsActivity$$ExternalSyntheticLambda83
             @Override // java.lang.Runnable
             public final void run() {

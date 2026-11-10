@@ -3498,9 +3498,9 @@ public final class GxRecordingsPage extends GxPage {
             TextView v = (TextView) it.next();
             boolean on = i2 == sel;
             CarUi ui = this$0.getUi();
-            CarUi.Companion companion = CarUi.Companion;
+            CarUi.Companion_ companion = CarUi.Companion;
             v.setBackground(ui.rounded(on ? companion.getCARD_ON() : companion.getCARD(), 12, Integer.valueOf(on ? CarUi.Companion.getACCENT() : Color.rgb(50, 55, 66))));
-            CarUi.Companion companion2 = CarUi.Companion;
+            CarUi.Companion_ companion2 = CarUi.Companion;
             v.setTextColor(on ? companion2.getACCENT() : companion2.getTEXT());
             v.setTypeface(on ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
         }

@@ -41,7 +41,7 @@ public final class CarUi {
     private final float d;
     private final boolean flat;
     private final int gap;
-    public static final Companion Companion = new Companion(null);
+    public static final Companion_ Companion = new Companion_(null);
     private static final int BG = Color.rgb(11, 13, 18);
     private static final int CARD = Color.rgb(24, 27, 34);
     private static final int CARD_ON = Color.rgb(30, 38, 47);
@@ -104,12 +104,12 @@ public final class CarUi {
     }
 
     /* compiled from: CarUi.kt */
-    public static final class Companion {
-        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+    public static final class Companion_ {
+        public /* synthetic */ Companion_(DefaultConstructorMarker defaultConstructorMarker) {
             this();
         }
 
-        private Companion() {
+        private Companion_() {
         }
 
         public final int getBG() {
@@ -201,10 +201,9 @@ public final class CarUi {
         FlowRow flowRow;
         ViewGroup view;
         char c;
-        LinearLayout.LayoutParams layoutParams;
+        ViewGroup.LayoutParams layoutParams;
         Intrinsics.checkNotNullParameter(labels, "labels");
         Intrinsics.checkNotNullParameter(onPick, "onPick");
-        ?? r8 = 1;
         final boolean big = level == 1;
         final ArrayList tabs = new ArrayList();
         if (big) {
@@ -221,13 +220,13 @@ public final class CarUi {
         int i = 0;
         for (String l : labels) {
             final int i2 = i;
-            i += r8;
+            i++;
             TextView textView = new TextView(this.ctx);
             textView.setText(l);
             textView.setTextSize(big ? 18.0f : 15.0f);
             textView.setGravity(17);
             textView.setTextColor(TAB_TEXT);
-            textView.setSingleLine(r8);
+            textView.setSingleLine(true);
             textView.setPadding(dp(big ? 20 : 16), dp(big ? 14 : 10), dp(big ? 20 : 16), dp(big ? 15 : 11));
             textView.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.CarUi$$ExternalSyntheticLambda4
                 @Override // android.view.View.OnClickListener
@@ -248,7 +247,6 @@ public final class CarUi {
                 layoutParams = new ViewGroup.LayoutParams(-2, -2);
             }
             strip.addView(textView2, layoutParams);
-            r8 = 1;
         }
         final int selBg = big ? SECTION : PAGE;
         final int edge = big ? ACCENT : PAGE_EDGE;

@@ -1551,7 +1551,7 @@ public final class GxThemePage extends GxPage {
                 $this$renderChecklist_u24lambda_u2475.setMinHeight(getUi().dp(56));
                 $this$renderChecklist_u24lambda_u2475.setPadding(getUi().dp(18), getUi().dp(8), getUi().dp(18), getUi().dp(8));
                 $this$renderChecklist_u24lambda_u2475.setBackground(getUi().rounded(on ? CarUi.Companion.getCARD_ON() : Color.rgb(16, 18, 24), 12, Integer.valueOf(on ? CarUi.Companion.getACCENT() : Color.rgb(50, 55, 66))));
-                CarUi.Companion companion = CarUi.Companion;
+                CarUi.Companion_ companion = CarUi.Companion;
                 $this$renderChecklist_u24lambda_u2475.setTextColor(on ? companion.getACCENT() : companion.getTEXT());
                 $this$renderChecklist_u24lambda_u2475.setTypeface(on ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
                 $this$renderChecklist_u24lambda_u2475.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda18
@@ -2460,9 +2460,9 @@ public final class GxThemePage extends GxPage {
             List labels2 = labels;
             $this$renderLibrary_u24lambda_u24111.setPadding(getUi().dp(18), getUi().dp(8), getUi().dp(18), getUi().dp(8));
             CarUi ui = getUi();
-            CarUi.Companion companion = CarUi.Companion;
+            CarUi.Companion_ companion = CarUi.Companion;
             $this$renderLibrary_u24lambda_u24111.setBackground(ui.rounded(on ? companion.getCARD_ON() : companion.getCARD(), 12, on ? Integer.valueOf(CarUi.Companion.getACCENT()) : null));
-            CarUi.Companion companion2 = CarUi.Companion;
+            CarUi.Companion_ companion2 = CarUi.Companion;
             $this$renderLibrary_u24lambda_u24111.setTextColor(on ? companion2.getACCENT() : companion2.getTEXT());
             $this$renderLibrary_u24lambda_u24111.setTypeface(on ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
             $this$renderLibrary_u24lambda_u24111.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda57

@@ -1184,7 +1184,7 @@ public final class GxTuningPage extends GxPage {
             }
             String str = ((Object) s) + (active ? " (Active)" : "");
             LinearLayout linearLayout5 = c;
-            CarUi.Companion companion = CarUi.Companion;
+            CarUi.Companion_ companion = CarUi.Companion;
             text(str, linearLayout5, 21.0f, active ? companion.getACCENT() : companion.getTEXT(), true);
             GxTuningPage gxTuningPage = this;
             String s2 = s(t, "carFingerprint");
@@ -4599,7 +4599,7 @@ public final class GxTuningPage extends GxPage {
                 Iterator<JSONObject> it6 = it5;
                 $this$paintTg_u24lambda_u24177.setText(slotId(slot) + ". " + s(slot, "name"));
                 $this$paintTg_u24lambda_u24177.setTextSize(18.0f);
-                CarUi.Companion companion = CarUi.Companion;
+                CarUi.Companion_ companion = CarUi.Companion;
                 $this$paintTg_u24lambda_u24177.setTextColor(on ? companion.getACCENT() : companion.getTEXT());
                 if (on) {
                     $this$paintTg_u24lambda_u24177.setTypeface(Typeface.DEFAULT_BOLD);
