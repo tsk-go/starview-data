@@ -289,7 +289,7 @@ public final class CommaHealthView extends CardPage {
                     String str8 = str7;
                     Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
                     double pct2 = pct;
-                    $this$paint_u24lambda_u2415_u24lambda_u2411.setText(StringsKt.take(StringsKt.substringAfterLast$default(optString, '/', (String) null, 2, (Object) null), 40));
+                    $this$paint_u24lambda_u2415_u24lambda_u2411.setText(StringsKt.take(StringsKt.substringAfterLast(optString, '/', optString), 40));
                     $this$paint_u24lambda_u2415_u24lambda_u2411.setTextColor(CarUi.Companion.getTEXT());
                     $this$paint_u24lambda_u2415_u24lambda_u2411.setTextSize(16.0f);
                     $this$paint_u24lambda_u2415_u24lambda_u2411.setMaxLines(1);

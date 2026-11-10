@@ -161,12 +161,12 @@ public final class GxHomeKt {
         }
         try {
             Result.Companion companion = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(OffsetDateTime.parse(s).atZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime());
+            m1191constructorimpl = KtCompat.resultOf(OffsetDateTime.parse(s).atZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime());
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = null;
         }
         LocalDateTime localDateTime = (LocalDateTime) m1191constructorimpl;
@@ -175,12 +175,12 @@ public final class GxHomeKt {
         }
         try {
             Result.Companion companion3 = Result.Companion;
-            m1191constructorimpl2 = Result.m1191constructorimpl(LocalDateTime.parse(s));
+            m1191constructorimpl2 = KtCompat.resultOf(LocalDateTime.parse(s));
         } catch (Throwable th2) {
             Result.Companion companion4 = Result.Companion;
-            m1191constructorimpl2 = Result.m1191constructorimpl(ResultKt.createFailure(th2));
+            m1191constructorimpl2 = KtCompat.resultOf(ResultKt.createFailure(th2));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl2)) {
+        if (KtCompat.isFailure(m1191constructorimpl2)) {
             m1191constructorimpl2 = null;
         }
         LocalDateTime localDateTime2 = (LocalDateTime) m1191constructorimpl2;
@@ -189,12 +189,12 @@ public final class GxHomeKt {
         }
         try {
             Result.Companion companion5 = Result.Companion;
-            m1191constructorimpl3 = Result.m1191constructorimpl(LocalDate.parse(s).atStartOfDay());
+            m1191constructorimpl3 = KtCompat.resultOf(LocalDate.parse(s).atStartOfDay());
         } catch (Throwable th3) {
             Result.Companion companion6 = Result.Companion;
-            m1191constructorimpl3 = Result.m1191constructorimpl(ResultKt.createFailure(th3));
+            m1191constructorimpl3 = KtCompat.resultOf(ResultKt.createFailure(th3));
         }
-        return (LocalDateTime) (Result.m1197isFailureimpl(m1191constructorimpl3) ? null : m1191constructorimpl3);
+        return (LocalDateTime) (KtCompat.isFailure(m1191constructorimpl3) ? null : m1191constructorimpl3);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -224,7 +224,7 @@ public final class GxHomeKt {
         Intrinsics.checkNotNullExpressionValue(ROOT, "ROOT");
         String lowerCase = a.toLowerCase(ROOT);
         Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-        List ra = SequencesKt.toList(SequencesKt.map(Regex.findAll$default(regex, lowerCase, 0, 2, null), new Function1() { // from class: com.starpilot.starview.GxHomeKt$$ExternalSyntheticLambda0
+        List ra = SequencesKt.toList(SequencesKt.map(regex.findAll(lowerCase, 0), new Function1() { // from class: com.starpilot.starview.GxHomeKt$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 String gxHomeNatural$lambda$4;
@@ -237,7 +237,7 @@ public final class GxHomeKt {
         Intrinsics.checkNotNullExpressionValue(ROOT2, "ROOT");
         String lowerCase2 = b.toLowerCase(ROOT2);
         Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
-        List rb = SequencesKt.toList(SequencesKt.map(Regex.findAll$default(regex2, lowerCase2, 0, 2, null), new Function1() { // from class: com.starpilot.starview.GxHomeKt$$ExternalSyntheticLambda1
+        List rb = SequencesKt.toList(SequencesKt.map(regex2.findAll(lowerCase2, 0), new Function1() { // from class: com.starpilot.starview.GxHomeKt$$ExternalSyntheticLambda1
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 String gxHomeNatural$lambda$5;

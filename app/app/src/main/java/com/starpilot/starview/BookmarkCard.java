@@ -178,7 +178,7 @@ public final class BookmarkCard extends LinearLayout {
                 destination$iv$iv.add(element$iv$iv);
             }
         }
-        String joinToString$default = CollectionsKt.joinToString$default((List) destination$iv$iv, "  ·  ", null, null, 0, null, null, 62, null);
+        String joinToString$default = CollectionsKt.joinToString((List) destination$iv$iv, "  ·  ", "", "", -1, "...", null);
         if (joinToString$default.length() == 0) {
             joinToString$default = "saved";
         }
@@ -215,7 +215,7 @@ public final class BookmarkCard extends LinearLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit startTalk$lambda$16;
-                startTalk$lambda$16 = BookmarkCard.startTalk$lambda$16(Bookmarks.Item.this, this, name, (String) obj);
+                startTalk$lambda$16 = BookmarkCard.startTalk$lambda$16(it, this, name, (String) obj);
                 return startTalk$lambda$16;
             }
         });
@@ -276,7 +276,7 @@ public final class BookmarkCard extends LinearLayout {
             }
             $this$mapNotNull$iv = $this$mapNotNull$iv2;
         }
-        j.put("voice_text", CollectionsKt.joinToString$default((List) destination$iv$iv, " / ", null, null, 0, null, null, 62, null));
+        j.put("voice_text", CollectionsKt.joinToString((List) destination$iv$iv, " / ", "", "", -1, "...", null));
         return Unit.INSTANCE;
     }
 

@@ -64,7 +64,7 @@ public final class ModelDownload {
         File f = file(ctx);
         if (f.length() == 17995664) {
             try {
-                z = Intrinsics.areEqual(StringsKt.trim((CharSequence) FilesKt.readText$default(mark(ctx), null, 1, null)).toString(), "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587");
+                z = Intrinsics.areEqual(StringsKt.trim((CharSequence) FilesKt.readText(mark(ctx), kotlin.text.Charsets.UTF_8)).toString(), "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587");
             } catch (Exception e) {
                 z = false;
             }
@@ -119,19 +119,19 @@ public final class ModelDownload {
                     CloseableKt.closeFinally(inputStream, null);
                     byte[] digest = md.digest();
                     Intrinsics.checkNotNullExpressionValue(digest, "digest(...)");
-                    String sha = ArraysKt.joinToString$default(digest, (CharSequence) "", (CharSequence) null, (CharSequence) null, 0, (CharSequence) null, new Function1() { // from class: com.starpilot.starview.ModelDownload$$ExternalSyntheticLambda2
+                    String sha = ArraysKt.joinToString(digest, (CharSequence) "", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.ModelDownload$$ExternalSyntheticLambda2
                         @Override // kotlin.jvm.functions.Function1
                         public final Object invoke(Object obj) {
                             CharSequence importDetector$lambda$3;
                             importDetector$lambda$3 = ModelDownload.importDetector$lambda$3(((Byte) obj).byteValue());
                             return importDetector$lambda$3;
                         }
-                    }, 30, (Object) null);
+                    });
                     if (got == 17995664 && Intrinsics.areEqual(sha, "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587")) {
                         if (!tmp.renameTo(file(ctx))) {
                             return "Couldn't save it";
                         }
-                        FilesKt.writeText$default(mark(ctx), "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587", null, 2, null);
+                        FilesKt.writeText(mark(ctx), "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587", kotlin.text.Charsets.UTF_8);
                         status = "detector model installed";
                         return null;
                     }
@@ -172,7 +172,7 @@ public final class ModelDownload {
             return false;
         }
         try {
-            z = Intrinsics.areEqual(StringsKt.trim((CharSequence) FilesKt.readText$default(mark(ctx), null, 1, null)).toString(), "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587");
+            z = Intrinsics.areEqual(StringsKt.trim((CharSequence) FilesKt.readText(mark(ctx), kotlin.text.Charsets.UTF_8)).toString(), "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587");
         } catch (Exception e) {
             z = false;
         }
@@ -285,21 +285,21 @@ public final class ModelDownload {
                         CloseableKt.closeFinally(inputStream, null);
                         byte[] digest = md.digest();
                         Intrinsics.checkNotNullExpressionValue(digest, "digest(...)");
-                        String sha = ArraysKt.joinToString$default(digest, (CharSequence) "", (CharSequence) null, (CharSequence) null, 0, (CharSequence) null, new Function1() { // from class: com.starpilot.starview.ModelDownload$$ExternalSyntheticLambda1
+                        String sha = ArraysKt.joinToString(digest, (CharSequence) "", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.ModelDownload$$ExternalSyntheticLambda1
                             @Override // kotlin.jvm.functions.Function1
                             public final Object invoke(Object obj) {
                                 CharSequence ensure$lambda$7$lambda$6;
                                 ensure$lambda$7$lambda$6 = ModelDownload.ensure$lambda$7$lambda$6(((Byte) obj).byteValue());
                                 return ensure$lambda$7$lambda$6;
                             }
-                        }, 30, (Object) null);
+                        });
                         if (got != 17995664 || !Intrinsics.areEqual(sha, "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587")) {
                             throw new IllegalStateException("download damaged (" + got + " bytes) - trying again in a minute");
                         }
                         if (!tmp.renameTo(INSTANCE.file($ctx))) {
                             throw new IllegalStateException("couldn't save it");
                         }
-                        FilesKt.writeText$default(INSTANCE.mark($ctx), "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587", null, 2, null);
+                        FilesKt.writeText(INSTANCE.mark($ctx), "bca6acaba042dba16a5020521c707603d579f2061165dd9aa76929211744a587", kotlin.text.Charsets.UTF_8);
                         status = "detector model downloaded";
                     } catch (Throwable th8) {
                         th2 = th8;

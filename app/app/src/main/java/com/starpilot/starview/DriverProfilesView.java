@@ -120,12 +120,12 @@ public final class DriverProfilesView extends CardPage {
                 Result.Companion companion = Result.Companion;
                 DriverProfilesView driverProfilesView = this;
                 Intrinsics.checkNotNull(f);
-                m1191constructorimpl = Result.m1191constructorimpl(new JSONObject(FilesKt.readText$default(f, charset, i, charset)));
+                m1191constructorimpl = KtCompat.resultOf(new JSONObject(FilesKt.readText(f, kotlin.text.Charsets.UTF_8)));
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
             }
-            if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+            if (KtCompat.isFailure(m1191constructorimpl)) {
                 m1191constructorimpl = charset;
             }
             final JSONObject o = (JSONObject) m1191constructorimpl;
@@ -200,7 +200,7 @@ public final class DriverProfilesView extends CardPage {
     public static final boolean refresh$lambda$3(File f) {
         String name = f.getName();
         Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-        return StringsKt.endsWith$default(name, ".json", false, 2, (Object) null);
+        return StringsKt.endsWith(name, ".json", false);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -266,7 +266,7 @@ public final class DriverProfilesView extends CardPage {
                 @Override // kotlin.jvm.functions.Function2
                 public final Object invoke(Object obj, Object obj2) {
                     Unit askSave$lambda$17$lambda$16;
-                    askSave$lambda$17$lambda$16 = DriverProfilesView.askSave$lambda$17$lambda$16(DriverProfilesView.this, name, (JSONObject) obj, (String) obj2);
+                    askSave$lambda$17$lambda$16 = DriverProfilesView.askSave$lambda$17$lambda$16(this$0, name, (JSONObject) obj, (String) obj2);
                     return askSave$lambda$17$lambda$16;
                 }
             });
@@ -287,7 +287,7 @@ public final class DriverProfilesView extends CardPage {
         File file = new File(this$0.getDir(), new Regex("[^A-Za-z0-9 _-]").replace($name, "_") + ".json");
         String jSONObject = o.toString();
         Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
-        FilesKt.writeText$default(file, jSONObject, null, 2, null);
+        FilesKt.writeText(file, jSONObject, kotlin.text.Charsets.UTF_8);
         this$0.toast("Saved \"" + $name + "\"");
         this$0.refresh();
         return Unit.INSTANCE;
@@ -317,7 +317,7 @@ public final class DriverProfilesView extends CardPage {
                 @Override // kotlin.jvm.functions.Function2
                 public final Object invoke(Object obj, Object obj2) {
                     Unit apply$lambda$22$lambda$21;
-                    apply$lambda$22$lambda$21 = DriverProfilesView.apply$lambda$22$lambda$21(DriverProfilesView.this, $o, (JSONObject) obj, (String) obj2);
+                    apply$lambda$22$lambda$21 = DriverProfilesView.apply$lambda$22$lambda$21(this$0, $o, (JSONObject) obj, (String) obj2);
                     return apply$lambda$22$lambda$21;
                 }
             });
@@ -348,7 +348,7 @@ public final class DriverProfilesView extends CardPage {
         }
         strArr[0] = valueOf != null ? valueOf.intValue() + " StarPilot settings changed" : null;
         strArr[1] = tab + " tablet settings";
-        this$0.toast("Applied \"" + optString + "\": " + CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", null, null, 0, null, null, 62, null));
+        this$0.toast("Applied \"" + optString + "\": " + CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", "", "", -1, "...", null));
         return Unit.INSTANCE;
     }
 }

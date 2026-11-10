@@ -110,33 +110,33 @@ public final class MainActivity extends AppCompatActivity {
     public static final String EXTRA_EDIT_MASKS = "edit_masks";
     public static final String EXTRA_OPEN_NAV = "open_nav";
     private static final String TAG = "StarView/Main";
-    private TextView alert1;
-    private TextView alert2;
-    private float alertAlpha;
-    private LinearLayout alertBox;
-    private View alertTint;
+    TextView alert1;
+    TextView alert2;
+    float alertAlpha;
+    LinearLayout alertBox;
+    View alertTint;
     private boolean askedNotify;
     private boolean backupArmed;
-    private BlinkerCardView blinkCard;
+    BlinkerCardView blinkCard;
     private ImageView bookmarkBtn;
     private BookmarkCard bookmarkCard;
-    private TextView clockTv;
-    private TextView compass;
-    private LinearLayout connectBar;
-    private TextView curveLabel;
-    private DataClient data;
+    TextView clockTv;
+    TextView compass;
+    LinearLayout connectBar;
+    TextView curveLabel;
+    DataClient data;
     private final ActivityResultLauncher<Intent> destLauncher;
-    private VideoClient detRoad;
-    private VideoClient detWide;
-    private Detector detectorRef;
-    private TextView devMetrics;
-    private DevSidebarView devSidebar;
+    VideoClient detRoad;
+    VideoClient detWide;
+    Detector detectorRef;
+    TextView devMetrics;
+    DevSidebarView devSidebar;
     private View divider;
-    private DmView dm;
-    private ImageView egpu;
-    private boolean egpuFallback;
-    private boolean egpuSeen;
-    private boolean egpuWasEngaged;
+    DmView dm;
+    ImageView egpu;
+    boolean egpuFallback;
+    boolean egpuSeen;
+    boolean egpuWasEngaged;
     private LinearLayout favBar;
     private long favHiddenUntil;
     private String favKey;
@@ -145,15 +145,15 @@ public final class MainActivity extends AppCompatActivity {
     private final Lazy floating;
     private int frameH;
     private int frameW;
-    private AetherGaugeView gauge;
-    private GpsCardView gpsCard;
-    private long gpuLoadSince;
+    AetherGaugeView gauge;
+    GpsCardView gpsCard;
+    long gpuLoadSince;
     private final Paint greyPaint;
-    private boolean homeShown;
-    private String host;
+    boolean homeShown;
+    String host;
     private EditText hostEdit;
     private HudLayout hud;
-    private HudEditor hudEditor;
+    HudEditor hudEditor;
     private Boolean hudGrey;
     private final Map<String, String> hudSettingKeys;
     private TextView ideasChip;
@@ -162,82 +162,82 @@ public final class MainActivity extends AppCompatActivity {
     private boolean ideasWasStarted;
     private LinearLayout ideasWhy;
     private long ideasWhyShownFor;
-    private LaneCardView laneCard;
-    private LaneMapLog laneMapLog;
-    private LaneSuggestView laneSuggest;
-    private boolean laneWasStarted;
-    private String lastCrash;
+    LaneCardView laneCard;
+    LaneMapLog laneMapLog;
+    LaneSuggestView laneSuggest;
+    boolean laneWasStarted;
+    String lastCrash;
     private String lastHomeKey;
     private boolean lastHudEditing;
     private String lastNavDest;
     private boolean lastThemeApplied;
-    private long lastThemeCheck;
+    long lastThemeCheck;
     private float lastWs;
-    private LayoutSeg layoutSeg;
-    private TextView mapBtn;
+    LayoutSeg layoutSeg;
+    TextView mapBtn;
     private MapPane mapPane;
-    private MaskEditor maskEditor;
-    private LinearLayout maxCard;
-    private TextView maxLabel;
+    MaskEditor maskEditor;
+    LinearLayout maxCard;
+    TextView maxLabel;
     private ImageView micBtn;
-    private TextView modeText;
-    private NavCardView navCard;
-    private boolean night;
-    private NudgeHintView nudgeHint;
-    private OffroadHome offroadHome;
-    private long onroadSinceNs;
+    TextView modeText;
+    NavCardView navCard;
+    boolean night;
+    NudgeHintView nudgeHint;
+    OffroadHome offroadHome;
+    long onroadSinceNs;
     private FrameLayout outer;
-    private OverlayView overlay;
-    private MiciDistanceView personality;
+    OverlayView overlay;
+    MiciDistanceView personality;
     private final ActivityResultLauncher<String[]> pickBackup;
-    private SideView pipLeft;
-    private SideView pipRight;
+    SideView pipLeft;
+    SideView pipRight;
     private TextView quickBtn;
     private QuickPanel quickPanel;
     private boolean reconnectPending;
-    private ReplayBar replayBar;
-    private boolean replayWas;
-    private TextView roadName;
+    ReplayBar replayBar;
+    boolean replayWas;
+    TextView roadName;
     private FrameLayout root;
     private boolean saverLinked;
     private TextView saverPill;
-    private SceneView scene;
+    SceneView scene;
     private TextView sceneBtn;
-    private boolean sceneOn;
+    boolean sceneOn;
     private boolean searching;
-    private TextView setSpeedTv;
-    private UiSettings settings;
-    private volatile SharedPlace.Place sharedPending;
-    private LinearLayout sidebar;
-    private SlcView slc;
-    private SlcActionsView slcActions;
-    private SlcSourcesView slcSources;
-    private SlowReasonView slowCard;
-    private TextView speedTv;
-    private TextView speedUnit;
-    private long standstillSinceNs;
-    private TextView statsTv;
-    private boolean statsVisible;
-    private TextView statusTv;
+    TextView setSpeedTv;
+    UiSettings settings;
+    volatile SharedPlace.Place sharedPending;
+    LinearLayout sidebar;
+    SlcView slc;
+    SlcActionsView slcActions;
+    SlcSourcesView slcSources;
+    SlowReasonView slowCard;
+    TextView speedTv;
+    TextView speedUnit;
+    long standstillSinceNs;
+    TextView statsTv;
+    boolean statsVisible;
+    TextView statusTv;
 
     /* renamed from: storageHttp$delegate, reason: from kotlin metadata */
     private final Lazy storageHttp;
     private boolean surfaceReady;
     private Function0<Unit> tabletModePusher;
-    private int tick;
+    int tick;
     private final MainActivity$uiTick$1 uiTick;
     private boolean usbProbe;
-    private VideoClient video;
-    private boolean videoConnected;
+    VideoClient video;
+    boolean videoConnected;
     private SurfaceView videoView;
-    private volatile boolean visible;
+    volatile boolean visible;
     private final ActivityResultLauncher<Intent> voiceLauncher;
-    private WeatherView weather;
-    private WheelButton wheel;
-    private TextView whereBtn;
-    private final Handler ui = new Handler(Looper.getMainLooper());
-    private final Telemetry telemetry = new Telemetry();
-    private final LaneMarks laneMarks = new LaneMarks();
+    WeatherView weather;
+    WheelButton wheel;
+    TextView whereBtn;
+    final Handler ui = new Handler(Looper.getMainLooper());
+    final Telemetry telemetry = new Telemetry();
+    final LaneMarks laneMarks = new LaneMarks();
 
     /* renamed from: stallBanner$delegate, reason: from kotlin metadata */
     private final Lazy stallBanner = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda112
@@ -258,7 +258,7 @@ public final class MainActivity extends AppCompatActivity {
             return gpuBanner_delegate$lambda$8;
         }
     });
-    private final CarMemory carMemory = new CarMemory();
+    final CarMemory carMemory = new CarMemory();
 
     /* renamed from: laneShots$delegate, reason: from kotlin metadata */
     private final Lazy laneShots = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda114
@@ -279,14 +279,14 @@ public final class MainActivity extends AppCompatActivity {
             return laneModel_delegate$lambda$10;
         }
     });
-    private final LaneBrain laneTracker = new LaneBrain();
-    private final LaneFeed laneFeed = new LaneFeed();
-    private final LaneAhead laneAhead = new LaneAhead();
-    private final GradientDrawable tintDrawable = new GradientDrawable();
-    private int port = 8090;
-    private String linkIf = "";
+    final LaneBrain laneTracker = new LaneBrain();
+    final LaneFeed laneFeed = new LaneFeed();
+    final LaneAhead laneAhead = new LaneAhead();
+    final GradientDrawable tintDrawable = new GradientDrawable();
+    int port = 8090;
+    String linkIf = "";
     private String lastStatus = "";
-    private long lastModelFrame = -1;
+    long lastModelFrame = -1;
 
     /* compiled from: MainActivity.kt */
     public /* synthetic */ class WhenMappings {
@@ -561,7 +561,7 @@ public final class MainActivity extends AppCompatActivity {
         final File f = new File(getFilesDir(), "last_crash.txt");
         if (f.exists()) {
             try {
-                str = StringsKt.take(FilesKt.readText$default(f, null, 1, null), 600);
+                str = StringsKt.take(FilesKt.readText(f, kotlin.text.Charsets.UTF_8), 600);
             } catch (Exception e) {
                 str = "";
             }
@@ -585,7 +585,7 @@ public final class MainActivity extends AppCompatActivity {
     /* JADX INFO: Access modifiers changed from: private */
     public static final void installCrashLog$lambda$13(File $f, String $ver, Thread.UncaughtExceptionHandler $prev, Thread th, Throwable e) {
         try {
-            FilesKt.writeText$default($f, new Date() + " " + $ver + " [" + th.getName() + "]\n" + Log.getStackTraceString(e), null, 2, null);
+            FilesKt.writeText($f, new Date() + " " + $ver + " [" + th.getName() + "]\n" + Log.getStackTraceString(e), kotlin.text.Charsets.UTF_8);
         } catch (Throwable th2) {
         }
         if ($prev != null) {
@@ -674,17 +674,17 @@ public final class MainActivity extends AppCompatActivity {
         String full;
         String link = SharedPlace.INSTANCE.link($text);
         if (link == null) {
-            link = StringsKt.startsWith$default($text, "geo:", false, 2, (Object) null) ? $text : null;
+            link = StringsKt.startsWith($text, "geo:", false) ? $text : null;
         }
         final Ref.ObjectRef place = new Ref.ObjectRef();
-        place.element = SharedPlace.parse$default(SharedPlace.INSTANCE, (!($subject.length() > 0) || StringsKt.contains$default((CharSequence) $text, (CharSequence) $subject, false, 2, (Object) null)) ? $text : $subject + "\n" + $text, null, 2, null);
+        place.element = SharedPlace.parse$default(SharedPlace.INSTANCE, (!($subject.length() > 0) || StringsKt.contains((CharSequence) $text, (CharSequence) $subject, false)) ? $text : $subject + "\n" + $text, null, 2, null);
         if (!((SharedPlace.Place) place.element).getHasCoords() && link != null && SharedPlace.INSTANCE.isShort(link) && (full = SharedPlace.INSTANCE.follow(link)) != null) {
             place.element = SharedPlace.INSTANCE.parse($text, full);
         }
         this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda97
             @Override // java.lang.Runnable
             public final void run() {
-                MainActivity.shareIntent$lambda$18$lambda$17(MainActivity.this, place);
+                MainActivity.shareIntent$lambda$18$lambda$17(this$0, place);
             }
         });
     }
@@ -835,7 +835,7 @@ public final class MainActivity extends AppCompatActivity {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit pickBackup$lambda$24$lambda$23;
-                    pickBackup$lambda$24$lambda$23 = MainActivity.pickBackup$lambda$24$lambda$23(MainActivity.this);
+                    pickBackup$lambda$24$lambda$23 = MainActivity.pickBackup$lambda$24$lambda$23(this$0);
                     return pickBackup$lambda$24$lambda$23;
                 }
             });
@@ -932,7 +932,7 @@ public final class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     style = AmySynth.Style.SHORT;
                 }
-                Iterable $this$map$iv = StringsKt.split$default((CharSequence) keys, new String[]{","}, false, 0, 6, (Object) null);
+                Iterable $this$map$iv = StringsKt.split((CharSequence) keys, new String[]{","}, false, 0);
                 Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
                 for (Object item$iv$iv : $this$map$iv) {
                     destination$iv$iv.add(StringsKt.trim((CharSequence) item$iv$iv).toString());
@@ -1379,7 +1379,7 @@ public final class MainActivity extends AppCompatActivity {
         });
         final File countsFile = new File(getFilesDir(), "lane_counts.json");
         try {
-            JSONObject j = new JSONObject(FilesKt.readText$default(countsFile, null, 1, null));
+            JSONObject j = new JSONObject(FilesKt.readText(countsFile, kotlin.text.Charsets.UTF_8));
             Iterator<String> keys = j.keys();
             Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
             while (keys.hasNext()) {
@@ -2124,17 +2124,17 @@ public final class MainActivity extends AppCompatActivity {
         new AlertDialog.Builder(this$0).setTitle("Restore your settings?").setMessage("StarView looks newly installed. If you made a backup (Download/StarView), pick it to bring back your layout and settings.").setPositiveButton("Choose backup…", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda10
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                MainActivity.onCreate$lambda$31$lambda$28(MainActivity.this, dialogInterface, i);
+                MainActivity.onCreate$lambda$31$lambda$28(this$0, dialogInterface, i);
             }
         }).setNegativeButton("Not now", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda12
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                MainActivity.this.backupArmed = true;
+                this$0.backupArmed = true;
             }
         }).setOnCancelListener(new DialogInterface.OnCancelListener() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda13
             @Override // android.content.DialogInterface.OnCancelListener
             public final void onCancel(DialogInterface dialogInterface) {
-                MainActivity.this.backupArmed = true;
+                this$0.backupArmed = true;
             }
         }).show();
     }
@@ -2145,12 +2145,12 @@ public final class MainActivity extends AppCompatActivity {
         try {
             Result.Companion companion = Result.Companion;
             this$0.pickBackup.launch(new String[]{"application/json", "text/plain", "application/octet-stream"});
-            m1191constructorimpl = Result.m1191constructorimpl(Unit.INSTANCE);
+            m1191constructorimpl = KtCompat.resultOf(Unit.INSTANCE);
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1194exceptionOrNullimpl(m1191constructorimpl) != null) {
+        if (KtCompat.exceptionOrNull(m1191constructorimpl) != null) {
             this$0.backupArmed = true;
         }
     }
@@ -2168,7 +2168,7 @@ public final class MainActivity extends AppCompatActivity {
         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda11
             @Override // java.lang.Runnable
             public final void run() {
-                MainActivity.onCreate$lambda$37$lambda$36(MainActivity.this);
+                MainActivity.onCreate$lambda$37$lambda$36(this$0);
             }
         });
         return Unit.INSTANCE;
@@ -2208,7 +2208,7 @@ public final class MainActivity extends AppCompatActivity {
             new AlertDialog.Builder(this$0).setTitle("Big model (eGPU) failed").setMessage("Driving on the small model" + (why.length() > 0 ? " (" + why + ")" : "") + ".\n\nRestart openpilot to reload it? The comma goes offroad and comes back by itself (about 20 s). Do it parked or stopped.").setPositiveButton("Restart", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda26
                 @Override // android.content.DialogInterface.OnClickListener
                 public final void onClick(DialogInterface dialogInterface, int i) {
-                    MainActivity.onCreate$lambda$40$lambda$38(MainActivity.this, dialogInterface, i);
+                    MainActivity.onCreate$lambda$40$lambda$38(this$0, dialogInterface, i);
                 }
             }).setNegativeButton("Not now", (DialogInterface.OnClickListener) null).show();
             return;
@@ -2394,7 +2394,7 @@ public final class MainActivity extends AppCompatActivity {
             }
             String jSONObject = j.toString();
             Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
-            FilesKt.writeText$default($countsFile, jSONObject, null, 2, null);
+            FilesKt.writeText($countsFile, jSONObject, kotlin.text.Charsets.UTF_8);
         } catch (Exception e) {
         }
         return Unit.INSTANCE;
@@ -2476,7 +2476,7 @@ public final class MainActivity extends AppCompatActivity {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void onCreate$lambda$66$lambda$65(String $s, final MainActivity this$0, boolean $ok, Ref.ObjectRef $lastTabletMode) {
-        if (!StringsKt.startsWith$default($s, "ack:", false, 2, (Object) null)) {
+        if (!StringsKt.startsWith($s, "ack:", false)) {
             this$0.setStatus($s);
             if (!$ok) {
                 $lastTabletMode.element = null;
@@ -2485,13 +2485,13 @@ public final class MainActivity extends AppCompatActivity {
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit onCreate$lambda$66$lambda$65$lambda$64;
-                        onCreate$lambda$66$lambda$65$lambda$64 = MainActivity.onCreate$lambda$66$lambda$65$lambda$64(MainActivity.this);
+                        onCreate$lambda$66$lambda$65$lambda$64 = MainActivity.onCreate$lambda$66$lambda$65$lambda$64(this$0);
                         return onCreate$lambda$66$lambda$65$lambda$64;
                     }
                 });
                 return;
             } else {
-                if (StringsKt.startsWith$default($s, "data: hello", false, 2, (Object) null)) {
+                if (StringsKt.startsWith($s, "data: hello", false)) {
                     onCreate$pushTabletMode(this$0, $lastTabletMode);
                     return;
                 }
@@ -2521,7 +2521,7 @@ public final class MainActivity extends AppCompatActivity {
         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda107
             @Override // java.lang.Runnable
             public final void run() {
-                MainActivity.this.setStatus(s);
+                this$0.setStatus(s);
             }
         });
         return Unit.INSTANCE;
@@ -2532,7 +2532,7 @@ public final class MainActivity extends AppCompatActivity {
         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda20
             @Override // java.lang.Runnable
             public final void run() {
-                MainActivity.onCreate$lambda$71$lambda$70(MainActivity.this, w, h);
+                MainActivity.onCreate$lambda$71$lambda$70(this$0, w, h);
             }
         });
         return Unit.INSTANCE;
@@ -2556,7 +2556,7 @@ public final class MainActivity extends AppCompatActivity {
         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda111
             @Override // java.lang.Runnable
             public final void run() {
-                MainActivity.this.placeVideo();
+                this$0.placeVideo();
             }
         });
         return Unit.INSTANCE;
@@ -2691,7 +2691,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override // android.view.View.OnTouchListener
             public final boolean onTouch(View view, MotionEvent motionEvent) {
                 boolean wireControls$lambda$136;
-                wireControls$lambda$136 = MainActivity.wireControls$lambda$136(Ref.LongRef.this, this, view, motionEvent);
+                wireControls$lambda$136 = MainActivity.wireControls$lambda$136(navDownNs, this, view, motionEvent);
                 return wireControls$lambda$136;
             }
         });
@@ -2703,7 +2703,7 @@ public final class MainActivity extends AppCompatActivity {
         final Runnable open = new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda89
             @Override // java.lang.Runnable
             public final void run() {
-                MainActivity.wireControls$lambda$139$lambda$137(Ref.BooleanRef.this, $this$wireControls_u24lambda_u24139);
+                MainActivity.wireControls$lambda$139$lambda$137(armed, $this$wireControls_u24lambda_u24139);
             }
         };
         OverlayView overlayView2 = $this$wireControls_u24lambda_u24139.overlay;
@@ -2854,7 +2854,7 @@ public final class MainActivity extends AppCompatActivity {
                         @Override // kotlin.jvm.functions.Function1
                         public final Object invoke(Object obj) {
                             Unit wireControls$lambda$133$lambda$132;
-                            wireControls$lambda$133$lambda$132 = MainActivity.wireControls$lambda$133$lambda$132(MainActivity.this, next, (JSONObject) obj);
+                            wireControls$lambda$133$lambda$132 = MainActivity.wireControls$lambda$133$lambda$132(mainActivity, next, (JSONObject) obj);
                             return wireControls$lambda$133$lambda$132;
                         }
                     });
@@ -3128,7 +3128,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit wireControls$lambda$146$lambda$145;
-                wireControls$lambda$146$lambda$145 = MainActivity.wireControls$lambda$146$lambda$145(MainActivity.this, (JSONObject) obj);
+                wireControls$lambda$146$lambda$145 = MainActivity.wireControls$lambda$146$lambda$145(this$0, (JSONObject) obj);
                 return wireControls$lambda$146$lambda$145;
             }
         });
@@ -3191,7 +3191,7 @@ public final class MainActivity extends AppCompatActivity {
         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda23
             @Override // java.lang.Runnable
             public final void run() {
-                MainActivity.discover$lambda$153$lambda$152(MainActivity.this, found);
+                MainActivity.discover$lambda$153$lambda$152(this$0, found);
             }
         });
     }
@@ -3206,14 +3206,14 @@ public final class MainActivity extends AppCompatActivity {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit discover$lambda$153$lambda$152$lambda$148;
-                    discover$lambda$153$lambda$152$lambda$148 = MainActivity.discover$lambda$153$lambda$152$lambda$148(MainActivity.this);
+                    discover$lambda$153$lambda$152$lambda$148 = MainActivity.discover$lambda$153$lambda$152$lambda$148(mainActivity);
                     return discover$lambda$153$lambda$152$lambda$148;
                 }
             });
             mainActivity.ui.postDelayed(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda7
                 @Override // java.lang.Runnable
                 public final void run() {
-                    MainActivity.this.discover();
+                    mainActivity.discover();
                 }
             }, 5000L);
             return;
@@ -3256,7 +3256,7 @@ public final class MainActivity extends AppCompatActivity {
             mainActivity.ui.postDelayed(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda8
                 @Override // java.lang.Runnable
                 public final void run() {
-                    MainActivity.this.discover();
+                    mainActivity.discover();
                 }
             }, 5000L);
             return;
@@ -3288,7 +3288,7 @@ public final class MainActivity extends AppCompatActivity {
         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda32
             @Override // java.lang.Runnable
             public final void run() {
-                MainActivity.connectTo$lambda$157$lambda$156(MainActivity.this, $h, auth, $p);
+                MainActivity.connectTo$lambda$157$lambda$156(this$0, $h, auth, $p);
             }
         });
     }
@@ -3303,7 +3303,7 @@ public final class MainActivity extends AppCompatActivity {
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit connectTo$lambda$157$lambda$156$lambda$155;
-                        connectTo$lambda$157$lambda$156$lambda$155 = MainActivity.connectTo$lambda$157$lambda$156$lambda$155(MainActivity.this);
+                        connectTo$lambda$157$lambda$156$lambda$155 = MainActivity.connectTo$lambda$157$lambda$156$lambda$155(this$0);
                         return connectTo$lambda$157$lambda$156$lambda$155;
                     }
                 });
@@ -3354,7 +3354,7 @@ public final class MainActivity extends AppCompatActivity {
         this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda109
             @Override // java.lang.Runnable
             public final void run() {
-                MainActivity.checkUsbReturn$lambda$160$lambda$159(MainActivity.this, found);
+                MainActivity.checkUsbReturn$lambda$160$lambda$159(this$0, found);
             }
         });
     }
@@ -3647,7 +3647,7 @@ public final class MainActivity extends AppCompatActivity {
                     this$0.ui.post(new Runnable() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda110
                         @Override // java.lang.Runnable
                         public final void run() {
-                            MainActivity.fetchStorage$lambda$165$lambda$164$lambda$163(MainActivity.this, j);
+                            MainActivity.fetchStorage$lambda$165$lambda$164$lambda$163(this$0, j);
                         }
                     });
                 }
@@ -4326,7 +4326,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit navigateTo$lambda$177$lambda$176;
-                navigateTo$lambda$177$lambda$176 = MainActivity.navigateTo$lambda$177$lambda$176(MainActivity.this, $name, (JSONObject) obj);
+                navigateTo$lambda$177$lambda$176 = MainActivity.navigateTo$lambda$177$lambda$176(this$0, $name, (JSONObject) obj);
                 return navigateTo$lambda$177$lambda$176;
             }
         });
@@ -4385,7 +4385,7 @@ public final class MainActivity extends AppCompatActivity {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit previewPlace$lambda$178(Map $place, Function0 $setAtOnce, String e) {
-        if (e != null && (StringsKt.contains$default((CharSequence) e, (CharSequence) "unknown action", false, 2, (Object) null) || (StringsKt.contains$default((CharSequence) e, (CharSequence) "Choose a place from search results", false, 2, (Object) null) && !$place.containsKey("placeId")))) {
+        if (e != null && (StringsKt.contains((CharSequence) e, (CharSequence) "unknown action", false) || (StringsKt.contains((CharSequence) e, (CharSequence) "Choose a place from search results", false) && !$place.containsKey("placeId")))) {
             Nav.INSTANCE.cancelPreview();
             $setAtOnce.invoke();
         }
@@ -4482,14 +4482,14 @@ public final class MainActivity extends AppCompatActivity {
         }
         linearLayout.setVisibility(want ? 0 : 8);
         if (want) {
-            String key = CollectionsKt.joinToString$default(pins, "|", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda14
+            String key = CollectionsKt.joinToString(pins, "|", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.MainActivity$$ExternalSyntheticLambda14
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     CharSequence syncFavBar$lambda$182;
                     syncFavBar$lambda$182 = MainActivity.syncFavBar$lambda$182((JSONObject) obj);
                     return syncFavBar$lambda$182;
                 }
-            }, 30, null) + Favorites.INSTANCE.getVersion();
+            }) + Favorites.INSTANCE.getVersion();
             if (Intrinsics.areEqual(key, this.favKey)) {
                 return;
             }
@@ -5044,7 +5044,7 @@ public final class MainActivity extends AppCompatActivity {
                 $this$filter$iv2 = $this$filter$iv3;
             }
             String str10 = str7;
-            JSONObject put4 = put3.put("alert", CollectionsKt.joinToString$default((List) destination$iv$iv7, " / ", null, null, 0, null, null, 62, null)).put("set_speed", Math.round((t.getVCruiseCluster() > 0.0f ? t.getVCruiseCluster() : t.getVCruise()) * 0.621371f) + str10).put("lead", t.getLeadOne().getStatus() ? Math.round(t.getLeadOne().getDRel() * 3.28084f) + " ft, " + Math.round(t.getLeadOne().getVLead() * 2.23694f) + str10 : "none");
+            JSONObject put4 = put3.put("alert", CollectionsKt.joinToString((List) destination$iv$iv7, " / ", "", "", -1, "...", null)).put("set_speed", Math.round((t.getVCruiseCluster() > 0.0f ? t.getVCruiseCluster() : t.getVCruise()) * 0.621371f) + str10).put("lead", t.getLeadOne().getStatus() ? Math.round(t.getLeadOne().getDRel() * 3.28084f) + " ft, " + Math.round(t.getLeadOne().getVLead() * 2.23694f) + str10 : "none");
             String str11 = "both";
             JSONObject put5 = put4.put("blinker", (t.getLeftBlinker() && t.getRightBlinker()) ? "both" : t.getLeftBlinker() ? "left" : t.getRightBlinker() ? "right" : "off");
             if (!t.getLeftBlindspot() || !t.getRightBlindspot()) {
@@ -5411,7 +5411,7 @@ public final class MainActivity extends AppCompatActivity {
                         Intrinsics.checkNotNullExpressionValue(title, "title(...)");
                         String lowerCase = title.toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
-                        if (StringsKt.contains$default((CharSequence) lowerCase, (CharSequence) a, false, 2, (Object) null)) {
+                        if (StringsKt.contains((CharSequence) lowerCase, (CharSequence) a, false)) {
                             break;
                         }
                     }

@@ -173,12 +173,12 @@ public final class NewIdeas {
     public static final boolean importNightModel$lambda$4$lambda$2(File x) {
         String name = x.getName();
         Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-        if (!StringsKt.startsWith$default(name, "lane_count", false, 2, (Object) null)) {
+        if (!StringsKt.startsWith(name, "lane_count", false)) {
             return false;
         }
         String name2 = x.getName();
         Intrinsics.checkNotNullExpressionValue(name2, "getName(...)");
-        return StringsKt.endsWith$default(name2, ".lite", false, 2, (Object) null);
+        return StringsKt.endsWith(name2, ".lite", false);
     }
 
     public final List<Idea> getALL() {

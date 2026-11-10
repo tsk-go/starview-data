@@ -24,22 +24,22 @@ public final class ToolLines {
         if (Intrinsics.areEqual(path, "/")) {
             return "/api/drives/stats";
         }
-        if (StringsKt.contains$default((CharSequence) path, (CharSequence) "recording", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) path, (CharSequence) "recording", false)) {
             return "/api/recordings/local";
         }
-        if (StringsKt.contains$default((CharSequence) path, (CharSequence) "manage_models", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) path, (CharSequence) "manage_models", false)) {
             return "/api/models/status";
         }
-        if (StringsKt.contains$default((CharSequence) path, (CharSequence) "logs", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) path, (CharSequence) "logs", false)) {
             return "/api/crash-reports";
         }
-        if (StringsKt.contains$default((CharSequence) path, (CharSequence) "bluetooth", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) path, (CharSequence) "bluetooth", false)) {
             return "/api/bluetooth/status";
         }
-        if (StringsKt.contains$default((CharSequence) path, (CharSequence) "galaxy", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) path, (CharSequence) "galaxy", false)) {
             return "/api/galaxy/status";
         }
-        if (StringsKt.contains$default((CharSequence) path, (CharSequence) "navigation", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) path, (CharSequence) "navigation", false)) {
             return "/api/navigation/offline";
         }
         return null;
@@ -87,7 +87,7 @@ public final class ToolLines {
                     String[] strArr = new String[2];
                     strArr[0] = n != null ? n.intValue() + " drives" : null;
                     strArr[1] = mi != null ? mi.longValue() + " mi" : null;
-                    String joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), " · ", null, null, 0, null, null, 62, null);
+                    String joinToString$default = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), " · ", "", "", -1, "...", null);
                     if (StringsKt.isBlank(joinToString$default)) {
                         joinToString$default = null;
                     }
@@ -98,7 +98,7 @@ public final class ToolLines {
                 obj = null;
             } else {
                 try {
-                    if (StringsKt.contains$default((CharSequence) path, (CharSequence) "recording", false, 2, (Object) null)) {
+                    if (StringsKt.contains((CharSequence) path, (CharSequence) "recording", false)) {
                         JSONArray a = o.optJSONArray("routes");
                         if (a != null) {
                             int i5 = 0;
@@ -141,7 +141,7 @@ public final class ToolLines {
                     } else {
                         Object obj2 = null;
                         try {
-                            if (StringsKt.contains$default((CharSequence) path, (CharSequence) "manage_models", false, 2, (Object) null)) {
+                            if (StringsKt.contains((CharSequence) path, (CharSequence) "manage_models", false)) {
                                 String optString = o.optString("loadedName");
                                 if (StringsKt.isBlank(optString)) {
                                     optString = o.optString("loadedId");
@@ -158,7 +158,7 @@ public final class ToolLines {
                                     str = null;
                                     obj = null;
                                 }
-                            } else if (StringsKt.contains$default((CharSequence) path, (CharSequence) "logs", false, 2, (Object) null)) {
+                            } else if (StringsKt.contains((CharSequence) path, (CharSequence) "logs", false)) {
                                 Integer valueOf2 = Integer.valueOf(o.optInt("reportCount", -1));
                                 if (!(valueOf2.intValue() >= 0)) {
                                     valueOf2 = null;
@@ -178,7 +178,7 @@ public final class ToolLines {
                                     str = null;
                                 }
                                 obj = null;
-                            } else if (StringsKt.contains$default((CharSequence) path, (CharSequence) "bluetooth", false, 2, (Object) null)) {
+                            } else if (StringsKt.contains((CharSequence) path, (CharSequence) "bluetooth", false)) {
                                 if (o.optBoolean("powered", false)) {
                                     JSONArray a2 = o.optJSONArray("devices");
                                     if (a2 != null) {
@@ -208,13 +208,13 @@ public final class ToolLines {
                                 obj = null;
                             } else {
                                 obj2 = null;
-                                if (StringsKt.contains$default((CharSequence) path, (CharSequence) "galaxy", false, 2, (Object) null)) {
+                                if (StringsKt.contains((CharSequence) path, (CharSequence) "galaxy", false)) {
                                     str = o.optBoolean("paired") ? "Remote access paired" : "Remote access not paired";
                                     obj = null;
                                 } else {
                                     obj = null;
                                     try {
-                                        if (StringsKt.contains$default((CharSequence) path, (CharSequence) "navigation", false, 2, (Object) null)) {
+                                        if (StringsKt.contains((CharSequence) path, (CharSequence) "navigation", false)) {
                                             JSONArray optJSONArray = o.optJSONArray("areas");
                                             if (optJSONArray != null) {
                                                 length = optJSONArray.length();
@@ -244,8 +244,8 @@ public final class ToolLines {
                                     } catch (Throwable th) {
                                         th = th;
                                         Result.Companion companion2 = Result.Companion;
-                                        m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
-                                        return (String) (Result.m1197isFailureimpl(m1191constructorimpl) ? obj : m1191constructorimpl);
+                                        m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
+                                        return (String) (KtCompat.isFailure(m1191constructorimpl) ? obj : m1191constructorimpl);
                                     }
                                 }
                             }
@@ -253,8 +253,8 @@ public final class ToolLines {
                             th = th2;
                             obj = obj2;
                             Result.Companion companion22 = Result.Companion;
-                            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
-                            return (String) (Result.m1197isFailureimpl(m1191constructorimpl) ? obj : m1191constructorimpl);
+                            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
+                            return (String) (KtCompat.isFailure(m1191constructorimpl) ? obj : m1191constructorimpl);
                         }
                     }
                 } catch (Throwable th3) {
@@ -262,11 +262,11 @@ public final class ToolLines {
                     obj = null;
                 }
             }
-            m1191constructorimpl = Result.m1191constructorimpl(str);
+            m1191constructorimpl = KtCompat.resultOf(str);
         } catch (Throwable th4) {
             th = th4;
             obj = null;
         }
-        return (String) (Result.m1197isFailureimpl(m1191constructorimpl) ? obj : m1191constructorimpl);
+        return (String) (KtCompat.isFailure(m1191constructorimpl) ? obj : m1191constructorimpl);
     }
 }

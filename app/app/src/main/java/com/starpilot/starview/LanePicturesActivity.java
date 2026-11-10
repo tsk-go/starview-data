@@ -366,7 +366,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
             new Thread(new Runnable() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda19
                 @Override // java.lang.Runnable
                 public final void run() {
-                    LanePicturesActivity.pickModel$lambda$23$lambda$22(LanePicturesActivity.this, uri);
+                    LanePicturesActivity.pickModel$lambda$23$lambda$22(this$0, uri);
                 }
             }).start();
         }
@@ -380,7 +380,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
         this$0.runOnUiThread(new Runnable() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda1
             @Override // java.lang.Runnable
             public final void run() {
-                LanePicturesActivity.pickModel$lambda$23$lambda$22$lambda$21(LanePicturesActivity.this, err);
+                LanePicturesActivity.pickModel$lambda$23$lambda$22$lambda$21(this$0, err);
             }
         });
     }
@@ -429,7 +429,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
         $this$btn_u24lambda_u2427.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda2
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                click.invoke();
             }
         });
         return $this$btn_u24lambda_u2427;
@@ -862,14 +862,14 @@ public final class LanePicturesActivity extends AppCompatActivity {
         } else {
             str = "  ·  marked WRONG";
         }
-        String str6 = s.getRamps().length() > 0 ? "  ·  map: " + CollectionsKt.joinToString$default(LaneRamps.INSTANCE.parse(s.getRamps()), ", ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda18
+        String str6 = s.getRamps().length() > 0 ? "  ·  map: " + CollectionsKt.joinToString(LaneRamps.INSTANCE.parse(s.getRamps()), ", ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda18
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence show$lambda$50;
                 show$lambda$50 = LanePicturesActivity.show$lambda$50((LaneRamps.Ramp) obj);
                 return show$lambda$50;
             }
-        }, 30, null) : "";
+        }) : "";
         String it2 = this.fixed.get(s.getName());
         if (it2 == null || (str3 = "  ·  you fixed it: " + it2) == null) {
             str3 = "";
@@ -1013,7 +1013,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
         if (street2.length() == 0) {
             street2 = "no street";
         }
-        laneFixDialog.show(lanePicturesActivity, "Fix lanes", 0, str, 0, false, (r34 & 64) != 0 ? 0 : saved, (r34 & 128) != 0 ? null : function0, (r34 & 256) != 0 ? null : lastFix, (r34 & 512) != 0 ? null : pic, (r34 & 1024) != 0 ? "" : ((Object) street2) + "  ·  " + StringsKt.take(StringsKt.substringBefore$default(s.getCaption(), "\n", (String) null, 2, (Object) null), 9) + "  ·  pinch to zoom  ·  picture " + (this.i + 1) + " of " + this.cur.size(), (r34 & 2048) != 0 ? CollectionsKt.emptyList() : LaneRamps.INSTANCE.parse(s.getRamps()), (r34 & 4096) != 0 ? null : new Function1() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda6
+        laneFixDialog.show(lanePicturesActivity, "Fix lanes", 0, str, 0, false, (r34 & 64) != 0 ? 0 : saved, (r34 & 128) != 0 ? null : function0, (r34 & 256) != 0 ? null : lastFix, (r34 & 512) != 0 ? null : pic, (r34 & 1024) != 0 ? "" : ((Object) street2) + "  ·  " + StringsKt.take(StringsKt.substringBefore(s.getCaption(), "\n", s.getCaption()), 9) + "  ·  pinch to zoom  ·  picture " + (this.i + 1) + " of " + this.cur.size(), (r34 & 2048) != 0 ? CollectionsKt.emptyList() : LaneRamps.INSTANCE.parse(s.getRamps()), (r34 & 4096) != 0 ? null : new Function1() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda6
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit askFix$lambda$60;
@@ -1100,7 +1100,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit exportNow$lambda$65$lambda$63;
-                    exportNow$lambda$65$lambda$63 = LanePicturesActivity.exportNow$lambda$65$lambda$63(LanePicturesActivity.this, $dlg, (String) obj);
+                    exportNow$lambda$65$lambda$63 = LanePicturesActivity.exportNow$lambda$65$lambda$63(this$0, $dlg, (String) obj);
                     return exportNow$lambda$65$lambda$63;
                 }
             });

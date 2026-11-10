@@ -284,7 +284,7 @@ public abstract class GxPage extends FrameLayout {
         Intrinsics.checkNotNullParameter(s, "s");
         String encode = URLEncoder.encode(s, "UTF-8");
         Intrinsics.checkNotNullExpressionValue(encode, "encode(...)");
-        return StringsKt.replace$default(encode, "+", "%20", false, 4, (Object) null);
+        return StringsKt.replace(encode, "+", "%20", false);
     }
 
     public static /* synthetic */ void call$default(GxPage gxPage, String str, String str2, Object obj, long j, Function3 function3, int i, Object obj2) {
@@ -366,7 +366,7 @@ public abstract class GxPage extends FrameLayout {
             gxPage.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda16
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxPage.call$lambda$8$lambda$7(GxPage.this, function3, intRef, objectRef, objectRef2);
+                    GxPage.call$lambda$8$lambda$7(gxPage, function3, intRef, objectRef, objectRef2);
                 }
             });
         }
@@ -381,7 +381,7 @@ public abstract class GxPage extends FrameLayout {
             gxPage.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda16
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxPage.call$lambda$8$lambda$7(GxPage.this, function3, intRef, objectRef, objectRef2);
+                    GxPage.call$lambda$8$lambda$7(gxPage, function3, intRef, objectRef, objectRef2);
                 }
             });
         }
@@ -405,12 +405,12 @@ public abstract class GxPage extends FrameLayout {
                         if (StringsKt.isBlank(optString)) {
                             optString = jSONObject.optString("message");
                         }
-                        m1191constructorimpl = Result.m1191constructorimpl(optString);
+                        m1191constructorimpl = KtCompat.resultOf(optString);
                     } catch (Throwable th) {
                         Result.Companion companion2 = Result.Companion;
-                        m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                        m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
                     }
-                    if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+                    if (KtCompat.isFailure(m1191constructorimpl)) {
                         m1191constructorimpl = null;
                     }
                     String str5 = (String) m1191constructorimpl;
@@ -439,14 +439,14 @@ public abstract class GxPage extends FrameLayout {
             gxPage.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda16
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxPage.call$lambda$8$lambda$7(GxPage.this, function3, intRef, objectRef, objectRef2);
+                    GxPage.call$lambda$8$lambda$7(gxPage, function3, intRef, objectRef, objectRef2);
                 }
             });
         }
         gxPage.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda16
             @Override // java.lang.Runnable
             public final void run() {
-                GxPage.call$lambda$8$lambda$7(GxPage.this, function3, intRef, objectRef, objectRef2);
+                GxPage.call$lambda$8$lambda$7(gxPage, function3, intRef, objectRef, objectRef2);
             }
         });
     }
@@ -479,12 +479,12 @@ public abstract class GxPage extends FrameLayout {
         Intrinsics.checkNotNullParameter(text, "text");
         try {
             Result.Companion companion = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(StringsKt.isBlank(text) ? null : new JSONTokener(text).nextValue());
+            m1191constructorimpl = KtCompat.resultOf(StringsKt.isBlank(text) ? null : new JSONTokener(text).nextValue());
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        Object v = Result.m1197isFailureimpl(m1191constructorimpl) ? null : m1191constructorimpl;
+        Object v = KtCompat.isFailure(m1191constructorimpl) ? null : m1191constructorimpl;
         $then.invoke(err, v);
         return Unit.INSTANCE;
     }
@@ -522,7 +522,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit json$lambda$11;
-                json$lambda$11 = GxPage.getJson$lambda$11(Function2.this, (String) obj, obj2);
+                json$lambda$11 = GxPage.getJson$lambda$11(then, (String) obj, obj2);
                 return json$lambda$11;
             }
         }, 12, null);
@@ -547,7 +547,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit array$lambda$12;
-                array$lambda$12 = GxPage.getArray$lambda$12(Function2.this, (String) obj, obj2);
+                array$lambda$12 = GxPage.getArray$lambda$12(then, (String) obj, obj2);
                 return array$lambda$12;
             }
         }, 12, null);
@@ -567,7 +567,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function3
             public final Object invoke(Object obj, Object obj2, Object obj3) {
                 Unit text$lambda$13;
-                text$lambda$13 = GxPage.getText$lambda$13(Function2.this, ((Integer) obj).intValue(), (String) obj2, (String) obj3);
+                text$lambda$13 = GxPage.getText$lambda$13(then, ((Integer) obj).intValue(), (String) obj2, (String) obj3);
                 return text$lambda$13;
             }
         }, 12, null);
@@ -617,7 +617,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit send$lambda$15;
-                send$lambda$15 = GxPage.send$lambda$15(Function2.this, (String) obj, obj2);
+                send$lambda$15 = GxPage.send$lambda$15(then, (String) obj, obj2);
                 return send$lambda$15;
             }
         });
@@ -698,13 +698,13 @@ public abstract class GxPage extends FrameLayout {
             String field = triple.component1();
             String name = triple.component2();
             Pair data = triple.component3();
-            b.addFormDataPart(field, name, RequestBody.Companion.create$default(RequestBody.Companion, data.getFirst(), MediaType.Companion.get(data.getSecond()), 0, 0, 6, (Object) null));
+            b.addFormDataPart(field, name, RequestBody.Companion.create(data.getFirst(), MediaType.Companion.get(data.getSecond()), 0, data.getFirst().length));
         }
         json("POST", path, b.build(), 120L, new Function2() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit upload$lambda$18;
-                upload$lambda$18 = GxPage.upload$lambda$18(Function2.this, (String) obj, obj2);
+                upload$lambda$18 = GxPage.upload$lambda$18(then, (String) obj, obj2);
                 return upload$lambda$18;
             }
         });
@@ -746,12 +746,12 @@ public abstract class GxPage extends FrameLayout {
             } else {
                 bArr = null;
             }
-            m1191constructorimpl = Result.m1191constructorimpl(bArr);
+            m1191constructorimpl = KtCompat.resultOf(bArr);
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = null;
         }
         final byte[] bArr2 = (byte[]) m1191constructorimpl;
@@ -773,19 +773,19 @@ public abstract class GxPage extends FrameLayout {
             } else {
                 str = null;
             }
-            obj = Result.m1191constructorimpl(str);
+            obj = KtCompat.resultOf(str);
         } catch (Throwable th2) {
             Result.Companion companion4 = Result.Companion;
-            obj = Result.m1191constructorimpl(ResultKt.createFailure(th2));
+            obj = KtCompat.resultOf(ResultKt.createFailure(th2));
         }
-        final String str2 = (String) (Result.m1197isFailureimpl(obj) ? null : obj);
+        final String str2 = (String) (KtCompat.isFailure(obj) ? null : obj);
         if (str2 == null && (str2 = uri.getLastPathSegment()) == null) {
             str2 = "file";
         }
         gxPage.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda24
             @Override // java.lang.Runnable
             public final void run() {
-                GxPage.readUri$lambda$24$lambda$23(GxPage.this, function2, bArr2, str2);
+                GxPage.readUri$lambda$24$lambda$23(gxPage, function2, bArr2, str2);
             }
         });
     }
@@ -858,7 +858,7 @@ public abstract class GxPage extends FrameLayout {
                 this$0.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda2
                     @Override // java.lang.Runnable
                     public final void run() {
-                        GxPage.download$lambda$29$lambda$28(GxPage.this, msg);
+                        GxPage.download$lambda$29$lambda$28(this$0, msg);
                     }
                 });
             }
@@ -868,7 +868,7 @@ public abstract class GxPage extends FrameLayout {
             this$0.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda2
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxPage.download$lambda$29$lambda$28(GxPage.this, msg);
+                    GxPage.download$lambda$29$lambda$28(this$0, msg);
                 }
             });
         }
@@ -890,7 +890,7 @@ public abstract class GxPage extends FrameLayout {
                 OutputStream out = outputStream;
                 ResponseBody body = r.body();
                 if (body != null && (byteStream = body.byteStream()) != null) {
-                    Long.valueOf(ByteStreamsKt.copyTo$default(byteStream, out, 0, 2, null));
+                    Long.valueOf(ByteStreamsKt.copyTo(byteStream, out, 8192));
                 }
                 CloseableKt.closeFinally(outputStream, null);
             } finally {
@@ -901,7 +901,7 @@ public abstract class GxPage extends FrameLayout {
         this$0.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda2
             @Override // java.lang.Runnable
             public final void run() {
-                GxPage.download$lambda$29$lambda$28(GxPage.this, msg);
+                GxPage.download$lambda$29$lambda$28(this$0, msg);
             }
         });
     }
@@ -950,14 +950,14 @@ public abstract class GxPage extends FrameLayout {
                 Response r = execute;
                 Bitmap decodeByteArray = (!r.isSuccessful() || (body = r.body()) == null || (it = body.bytes()) == null) ? null : BitmapFactory.decodeByteArray(it, 0, it.length);
                 CloseableKt.closeFinally(execute, null);
-                m1191constructorimpl = Result.m1191constructorimpl(decodeByteArray);
+                m1191constructorimpl = KtCompat.resultOf(decodeByteArray);
             } finally {
             }
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        final Bitmap bmp = (Bitmap) (Result.m1197isFailureimpl(m1191constructorimpl) ? null : m1191constructorimpl);
+        final Bitmap bmp = (Bitmap) (KtCompat.isFailure(m1191constructorimpl) ? null : m1191constructorimpl);
         this$0.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda17
             @Override // java.lang.Runnable
             public final void run() {
@@ -1140,7 +1140,7 @@ public abstract class GxPage extends FrameLayout {
             s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.GxPage$Row$$ExternalSyntheticLambda0
                 @Override // android.widget.CompoundButton.OnCheckedChangeListener
                 public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                    GxPage.Row.switch$lambda$4(Function1.this, compoundButton, z);
+                    GxPage.Row.switch$lambda$4(onChange, compoundButton, z);
                 }
             });
             this.view.addView(s);
@@ -1431,7 +1431,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit choice$lambda$45;
-                choice$lambda$45 = GxPage.choice$lambda$45(Ref.ObjectRef.this, onPick, ((Integer) obj).intValue());
+                choice$lambda$45 = GxPage.choice$lambda$45(paint, onPick, ((Integer) obj).intValue());
                 return choice$lambda$45;
             }
         });
@@ -1507,7 +1507,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit stepper$lambda$48;
-                stepper$lambda$48 = GxPage.stepper$lambda$48(Ref.DoubleRef.this, step, min, max, onChange, tv, fmt);
+                stepper$lambda$48 = GxPage.stepper$lambda$48(cur, step, min, max, onChange, tv, fmt);
                 return stepper$lambda$48;
             }
         }));
@@ -1516,7 +1516,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit stepper$lambda$49;
-                stepper$lambda$49 = GxPage.stepper$lambda$49(Ref.DoubleRef.this, step, min, max, onChange, tv, fmt);
+                stepper$lambda$49 = GxPage.stepper$lambda$49(cur, step, min, max, onChange, tv, fmt);
                 return stepper$lambda$49;
             }
         }));
@@ -1525,7 +1525,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit stepper$lambda$50;
-                stepper$lambda$50 = GxPage.stepper$lambda$50(Ref.DoubleRef.this, tv, fmt, ((Double) obj).doubleValue());
+                stepper$lambda$50 = GxPage.stepper$lambda$50(cur, tv, fmt, ((Double) obj).doubleValue());
                 return stepper$lambda$50;
             }
         };
@@ -1637,7 +1637,7 @@ public abstract class GxPage extends FrameLayout {
             s.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda14
                 @Override // java.lang.Runnable
                 public final void run() {
-                    NestedScrollView.this.fullScroll(130);
+                    s.fullScroll(130);
                 }
             });
         }
@@ -1690,7 +1690,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabs$lambda$61;
-                tabs$lambda$61 = GxPage.tabs$lambda$61(Ref.ObjectRef.this, ((Integer) obj).intValue());
+                tabs$lambda$61 = GxPage.tabs$lambda$61(selectRef, ((Integer) obj).intValue());
                 return tabs$lambda$61;
             }
         });
@@ -1707,7 +1707,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabs$lambda$66;
-                tabs$lambda$66 = GxPage.tabs$lambda$66(Ref.ObjectRef.this, boxes, onSelect, this, $this$tabs_u24lambda_u2462, build, ((Integer) obj).intValue());
+                tabs$lambda$66 = GxPage.tabs$lambda$66(paintTabs, boxes, onSelect, this, $this$tabs_u24lambda_u2462, build, ((Integer) obj).intValue());
                 return tabs$lambda$66;
             }
         };
@@ -1716,7 +1716,7 @@ public abstract class GxPage extends FrameLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit tabs$lambda$67;
-                tabs$lambda$67 = GxPage.tabs$lambda$67(Ref.ObjectRef.this, boxes, onSelect, this, $this$tabs_u24lambda_u2462, build, ((Integer) obj).intValue());
+                tabs$lambda$67 = GxPage.tabs$lambda$67(paintTabs, boxes, onSelect, this, $this$tabs_u24lambda_u2462, build, ((Integer) obj).intValue());
                 return tabs$lambda$67;
             }
         };
@@ -1829,7 +1829,7 @@ public abstract class GxPage extends FrameLayout {
         $this$confirm_u24lambda_u2468.setPositiveButton(yes, new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda19
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                Function0.this.invoke();
+                then.invoke();
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }
@@ -1867,7 +1867,7 @@ public abstract class GxPage extends FrameLayout {
         $this$prompt_u24lambda_u2472.setView($this$prompt_u24lambda_u2471).setPositiveButton("OK", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda15
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                GxPage.prompt$lambda$73(Function1.this, $this$prompt_u24lambda_u2470, dialogInterface, i);
+                GxPage.prompt$lambda$73(then, $this$prompt_u24lambda_u2470, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }
@@ -1890,7 +1890,7 @@ public abstract class GxPage extends FrameLayout {
         new AlertDialog.Builder(this.act).setTitle(title).setItems((CharSequence[]) $this$toTypedArray$iv.toArray(new String[0]), new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda21
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                GxPage.pick$lambda$74(Function1.this, dialogInterface, i);
+                GxPage.pick$lambda$74(then, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }
@@ -1914,7 +1914,7 @@ public abstract class GxPage extends FrameLayout {
         }).setPositiveButton("OK", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda1
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i2) {
-                GxPage.pickMany$lambda$77(Function1.this, arr, dialogInterface, i2);
+                GxPage.pickMany$lambda$77(then, arr, dialogInterface, i2);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }

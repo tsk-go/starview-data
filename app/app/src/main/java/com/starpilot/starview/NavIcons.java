@@ -79,7 +79,7 @@ public final class NavIcons {
             case 1318962443:
                 break;
         }
-        String norm2 = StringsKt.replace$default(norm, " ", "_", false, 4, (Object) null);
+        String norm2 = StringsKt.replace(norm, " ", "_", false);
         String str2 = (String) MapsKt.mapOf(TuplesKt.to("left", "left"), TuplesKt.to("right", "right"), TuplesKt.to("straight", "straight"), TuplesKt.to("slightLeft", "slight_left"), TuplesKt.to("slightRight", "slight_right"), TuplesKt.to("sharpLeft", "sharp_left"), TuplesKt.to("sharpRight", "sharp_right")).get(modifier);
         if (str2 == null) {
             str2 = "";

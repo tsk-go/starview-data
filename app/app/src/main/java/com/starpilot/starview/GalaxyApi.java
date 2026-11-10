@@ -384,13 +384,13 @@ public final class GalaxyApi {
             try {
                 Result.Companion companion = Result.Companion;
                 GalaxyApi $this$loadCatalog_u24lambda_u246 = this;
-                $this$loadCatalog_u24lambda_u246.catalog = $this$loadCatalog_u24lambda_u246.parseCatalog(FilesKt.readText$default($this$loadCatalog_u24lambda_u246.cacheFile, null, 1, null));
-                m1191constructorimpl = Result.m1191constructorimpl(Unit.INSTANCE);
+                $this$loadCatalog_u24lambda_u246.catalog = $this$loadCatalog_u24lambda_u246.parseCatalog(FilesKt.readText($this$loadCatalog_u24lambda_u246.cacheFile, kotlin.text.Charsets.UTF_8));
+                m1191constructorimpl = KtCompat.resultOf(Unit.INSTANCE);
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
             }
-            Throwable it = Result.m1194exceptionOrNullimpl(m1191constructorimpl);
+            Throwable it = KtCompat.exceptionOrNull(m1191constructorimpl);
             if (it != null) {
                 Log.w("StarView/Galaxy", "cached catalog: " + it);
             }
@@ -417,11 +417,11 @@ public final class GalaxyApi {
             String text = this$0.get("/assets/components/tools/device_settings_layout.json");
             final List parsed = this$0.parseCatalog(text);
             if (!parsed.isEmpty()) {
-                FilesKt.writeText$default(this$0.cacheFile, text, null, 2, null);
+                FilesKt.writeText(this$0.cacheFile, text, kotlin.text.Charsets.UTF_8);
                 this$0.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda6
                     @Override // java.lang.Runnable
                     public final void run() {
-                        GalaxyApi.loadCatalog$lambda$9$lambda$8(GalaxyApi.this, parsed);
+                        GalaxyApi.loadCatalog$lambda$9$lambda$8(this$0, parsed);
                     }
                 });
             }
@@ -495,25 +495,25 @@ public final class GalaxyApi {
                     it = StringsKt.trim((CharSequence) this$0.get("/api/params?key=IsOnroad")).toString();
                 } catch (Throwable th) {
                     Result.Companion companion2 = Result.Companion;
-                    m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                    m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
                 }
                 if (!Intrinsics.areEqual(it, "1") && !Intrinsics.areEqual(it, "true") && !Intrinsics.areEqual(it, "True")) {
                     z = false;
                     hashMap.put("IsOnroad", Boolean.valueOf(z));
                     m.put("IsOffroad", Boolean.valueOf(Intrinsics.areEqual(m.get("IsOnroad"), (Object) true) ? false : true));
-                    m1191constructorimpl = Result.m1191constructorimpl(Unit.INSTANCE);
-                    Result.m1190boximpl(m1191constructorimpl);
+                    m1191constructorimpl = KtCompat.resultOf(Unit.INSTANCE);
+                    KtCompat.box(m1191constructorimpl);
                 }
                 z = true;
                 hashMap.put("IsOnroad", Boolean.valueOf(z));
                 m.put("IsOffroad", Boolean.valueOf(Intrinsics.areEqual(m.get("IsOnroad"), (Object) true) ? false : true));
-                m1191constructorimpl = Result.m1191constructorimpl(Unit.INSTANCE);
-                Result.m1190boximpl(m1191constructorimpl);
+                m1191constructorimpl = KtCompat.resultOf(Unit.INSTANCE);
+                KtCompat.box(m1191constructorimpl);
             }
             this$0.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda8
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GalaxyApi.refreshValues$lambda$16$lambda$14(GalaxyApi.this, $gen, $then, m);
+                    GalaxyApi.refreshValues$lambda$16$lambda$14(this$0, $gen, $then, m);
                 }
             });
         } catch (Exception e) {
@@ -521,7 +521,7 @@ public final class GalaxyApi {
             this$0.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda9
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GalaxyApi.refreshValues$lambda$16$lambda$15(Function1.this);
+                    GalaxyApi.refreshValues$lambda$16$lambda$15($then);
                 }
             });
         }
@@ -542,12 +542,12 @@ public final class GalaxyApi {
         try {
             Result.Companion companion = Result.Companion;
             Intrinsics.checkNotNull($m, "null cannot be cast to non-null type kotlin.collections.Map<*, *>");
-            m1191constructorimpl = Result.m1191constructorimpl(new JSONObject($m).toString());
+            m1191constructorimpl = KtCompat.resultOf(new JSONObject($m).toString());
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = "";
         }
         Intrinsics.checkNotNullExpressionValue(m1191constructorimpl, "getOrDefault(...)");
@@ -654,12 +654,12 @@ public final class GalaxyApi {
         if (response.isSuccessful()) {
             try {
                 Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl2 = Result.m1191constructorimpl(new JSONObject(str3).optJSONObject("updated"));
+                m1191constructorimpl2 = KtCompat.resultOf(new JSONObject(str3).optJSONObject("updated"));
             } catch (Throwable th) {
                 Result.Companion companion3 = Result.Companion;
-                m1191constructorimpl2 = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                m1191constructorimpl2 = KtCompat.resultOf(ResultKt.createFailure(th));
             }
-            if (Result.m1197isFailureimpl(m1191constructorimpl2)) {
+            if (KtCompat.isFailure(m1191constructorimpl2)) {
                 m1191constructorimpl2 = null;
             }
             final JSONObject jSONObject2 = (JSONObject) m1191constructorimpl2;
@@ -675,18 +675,18 @@ public final class GalaxyApi {
             galaxyApi.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda5
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GalaxyApi.put$lambda$24$lambda$23(GalaxyApi.this, objectRef, str, obj, function1);
+                    GalaxyApi.put$lambda$24$lambda$23(galaxyApi, objectRef, str, obj, function1);
                 }
             });
         }
         try {
             Result.Companion companion4 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(new JSONObject(str3).optString("error"));
+            m1191constructorimpl = KtCompat.resultOf(new JSONObject(str3).optString("error"));
         } catch (Throwable th2) {
             Result.Companion companion5 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th2));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th2));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = null;
         }
         String str4 = (String) m1191constructorimpl;
@@ -705,7 +705,7 @@ public final class GalaxyApi {
         galaxyApi.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda5
             @Override // java.lang.Runnable
             public final void run() {
-                GalaxyApi.put$lambda$24$lambda$23(GalaxyApi.this, objectRef, str, obj, function1);
+                GalaxyApi.put$lambda$24$lambda$23(galaxyApi, objectRef, str, obj, function1);
             }
         });
     }
@@ -817,12 +817,12 @@ public final class GalaxyApi {
                 }
                 try {
                     Result.Companion companion2 = Result.Companion;
-                    obj = Result.m1191constructorimpl(new JSONObject(str2));
+                    obj = KtCompat.resultOf(new JSONObject(str2));
                 } catch (Throwable th) {
                     Result.Companion companion3 = Result.Companion;
-                    obj = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                    obj = KtCompat.resultOf(ResultKt.createFailure(th));
                 }
-                boolean m1197isFailureimpl = Result.m1197isFailureimpl(obj);
+                boolean m1197isFailureimpl = KtCompat.isFailure(obj);
                 T t2 = obj;
                 if (m1197isFailureimpl) {
                     t2 = 0;
@@ -856,7 +856,7 @@ public final class GalaxyApi {
         galaxyApi.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda1
             @Override // java.lang.Runnable
             public final void run() {
-                GalaxyApi.post$lambda$30$lambda$29(Function2.this, objectRef, objectRef2);
+                GalaxyApi.post$lambda$30$lambda$29(function2, objectRef, objectRef2);
             }
         });
     }
@@ -905,7 +905,7 @@ public final class GalaxyApi {
         this$0.main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyApi$$ExternalSyntheticLambda0
             @Override // java.lang.Runnable
             public final void run() {
-                Function1.this.invoke(out);
+                $then.invoke(out);
             }
         });
     }

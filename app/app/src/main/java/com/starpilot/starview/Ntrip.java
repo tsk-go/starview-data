@@ -208,7 +208,7 @@ public final class Ntrip {
     }
 
     private final void setState(String v) {
-        if (!Intrinsics.areEqual(v, state) && !StringsKt.startsWith$default(v, "receiving corrections", false, 2, (Object) null)) {
+        if (!Intrinsics.areEqual(v, state) && !StringsKt.startsWith(v, "receiving corrections", false)) {
             note(v);
         }
         state = v;
@@ -235,9 +235,9 @@ public final class Ntrip {
         File f = logFile;
         if (f != null) {
             try {
-                FilesKt.appendText$default(f, new SimpleDateFormat("yyyy-MM-dd ", Locale.US).format(new Date()) + line + "\n", null, 2, null);
+                FilesKt.appendText(f, new SimpleDateFormat("yyyy-MM-dd ", Locale.US).format(new Date()) + line + "\n", kotlin.text.Charsets.UTF_8);
                 if (f.length() > 60000) {
-                    FilesKt.writeText$default(f, CollectionsKt.joinToString$default(CollectionsKt.takeLast(FilesKt.readLines$default(f, null, 1, null), 300), "\n", null, null, 0, null, null, 62, null) + "\n", null, 2, null);
+                    FilesKt.writeText(f, CollectionsKt.joinToString(CollectionsKt.takeLast(FilesKt.readLines(f, kotlin.text.Charsets.UTF_8), 300), "\n", "", "", -1, "...", null) + "\n", kotlin.text.Charsets.UTF_8);
                 }
             } catch (Exception e) {
             }
@@ -415,7 +415,7 @@ public final class Ntrip {
                         Thread $this$tick_u24lambda_u247 = new Thread(new Runnable() { // from class: com.starpilot.starview.Ntrip$$ExternalSyntheticLambda4
                             @Override // java.lang.Runnable
                             public final void run() {
-                                Ntrip.tick$lambda$6(Ntrip.Config.this, gen, b, only);
+                                Ntrip.tick$lambda$6(c, gen, b, only);
                             }
                         }, "starview-ntrip");
                         $this$tick_u24lambda_u247.setDaemon(true);
@@ -656,7 +656,7 @@ public final class Ntrip {
             }
             // nothing came and it was not the login: try the other NTRIP version next time
             boolean nextV2 = v2;
-            if (got == 0 && err != null && !StringsKt.startsWith$default(err, "login refused", false, 2, (Object) null) && !StringsKt.startsWith$default(err, "account not allowed", false, 2, (Object) null)) {
+            if (got == 0 && err != null && !StringsKt.startsWith(err, "login refused", false) && !StringsKt.startsWith(err, "account not allowed", false)) {
                 nextV2 = !v2;
             }
             if (got > 0) {
@@ -667,10 +667,10 @@ public final class Ntrip {
             }
             setState("reconnecting: " + (err == null ? "caster closed the stream" : err));
             Log.w(TAG, state);
-            boolean isBusy = err != null && StringsKt.startsWith$default(err, "caster busy", false, 2, (Object) null);
+            boolean isBusy = err != null && StringsKt.startsWith(err, "caster busy", false);
             busy = isBusy ? busy + 1 : 0;
             long now = System.currentTimeMillis();
-            int mf = (err != null && StringsKt.startsWith$default(err, "mountpoint", false, 2, (Object) null)) ? mountFails + 1 : 0;
+            int mf = (err != null && StringsKt.startsWith(err, "mountpoint", false)) ? mountFails + 1 : 0;
             if (mf > 10) {
                 delay = 600000L;
             } else if ((err == null || got > 0) && now - t0 >= 30000) {
@@ -828,7 +828,7 @@ public final class Ntrip {
                 NtripCore.Dechunker dechunk3 = null;
                 long checkAt = connectedAt2;
                 try {
-                    if (StringsKt.startsWith$default(StringsKt.trim((CharSequence) first2).toString(), "HTTP/", false, 2, (Object) null)) {
+                    if (StringsKt.startsWith(StringsKt.trim((CharSequence) first2).toString(), "HTTP/", false)) {
                         for (int k = 0; k < 40; k++) {
                             try {
                                 String h = INSTANCE.readLine(inp3);
@@ -1186,7 +1186,7 @@ public final class Ntrip {
                 if (first == null) {
                     first = "";
                 }
-                if ((NtripCore.INSTANCE.answer(first) instanceof NtripCore.Answer.Refused) && !StringsKt.contains$default((CharSequence) text, (CharSequence) "STR;", false, 2, (Object) null)) {
+                if ((NtripCore.INSTANCE.answer(first) instanceof NtripCore.Answer.Refused) && !StringsKt.contains((CharSequence) text, (CharSequence) "STR;", false)) {
                     NtripCore.Answer answer = NtripCore.INSTANCE.answer(first);
                     Intrinsics.checkNotNull(answer, "null cannot be cast to non-null type com.starpilot.starview.NtripCore.Answer.Refused");
                     throw new IllegalStateException(((NtripCore.Answer.Refused) answer).getWhy());
@@ -1196,7 +1196,7 @@ public final class Ntrip {
                 $main.post(new Runnable() { // from class: com.starpilot.starview.Ntrip$$ExternalSyntheticLambda2
                     @Override // java.lang.Runnable
                     public final void run() {
-                        Function2.this.invoke(list, null);
+                        $done.invoke(list, null);
                     }
                 });
                 CloseableKt.closeFinally(socket2, null);
@@ -1206,7 +1206,7 @@ public final class Ntrip {
             $main.post(new Runnable() { // from class: com.starpilot.starview.Ntrip$$ExternalSyntheticLambda3
                 @Override // java.lang.Runnable
                 public final void run() {
-                    Ntrip.loadMounts$lambda$21$lambda$20(Function2.this, e);
+                    Ntrip.loadMounts$lambda$21$lambda$20($done, e);
                 }
             });
         }

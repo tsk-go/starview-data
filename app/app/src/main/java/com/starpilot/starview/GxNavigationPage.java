@@ -471,13 +471,13 @@ public final class GxNavigationPage extends GxPage {
             try {
                 Result.Companion companion = Result.Companion;
                 GxNavigationPage $this$parseArr_u24lambda_u2410 = this;
-                m1191constructorimpl = Result.m1191constructorimpl($this$parseArr_u24lambda_u2410.objects(new JSONArray((String) v)));
+                m1191constructorimpl = KtCompat.resultOf($this$parseArr_u24lambda_u2410.objects(new JSONArray((String) v)));
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
             }
             List emptyList = CollectionsKt.emptyList();
-            if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+            if (KtCompat.isFailure(m1191constructorimpl)) {
                 m1191constructorimpl = emptyList;
             }
             return (List) m1191constructorimpl;
@@ -494,12 +494,12 @@ public final class GxNavigationPage extends GxPage {
             try {
                 Result.Companion companion = Result.Companion;
                 GxNavigationPage gxNavigationPage = this;
-                m1191constructorimpl = Result.m1191constructorimpl(new JSONObject((String) v));
+                m1191constructorimpl = KtCompat.resultOf(new JSONObject((String) v));
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
             }
-            return (JSONObject) (Result.m1197isFailureimpl(m1191constructorimpl) ? null : m1191constructorimpl);
+            return (JSONObject) (KtCompat.isFailure(m1191constructorimpl) ? null : m1191constructorimpl);
         }
         return null;
     }
@@ -538,7 +538,7 @@ public final class GxNavigationPage extends GxPage {
         r.getView().setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda49
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                onClick.invoke();
             }
         });
     }
@@ -640,14 +640,14 @@ public final class GxNavigationPage extends GxPage {
                 destination$iv$iv.add(pair);
             }
         }
-        return CollectionsKt.joinToString$default((List) destination$iv$iv, "&", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda80
+        return CollectionsKt.joinToString((List) destination$iv$iv, "&", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxNavigationPage$$ExternalSyntheticLambda80
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence qs$lambda$21;
                 qs$lambda$21 = GxNavigationPage.qs$lambda$21(GxNavigationPage.this, (Pair) obj);
                 return qs$lambda$21;
             }
-        }, 30, null);
+        });
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -865,7 +865,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit loadNav$lambda$32$lambda$31;
-                loadNav$lambda$32$lambda$31 = GxNavigationPage.loadNav$lambda$32$lambda$31(GxNavigationPage.this, nav, (String) obj, (JSONObject) obj2);
+                loadNav$lambda$32$lambda$31 = GxNavigationPage.loadNav$lambda$32$lambda$31(this$0, nav, (String) obj, (JSONObject) obj2);
                 return loadNav$lambda$32$lambda$31;
             }
         });
@@ -1336,7 +1336,7 @@ public final class GxNavigationPage extends GxPage {
                     @Override // kotlin.jvm.functions.Function2
                     public final Object invoke(Object obj, Object obj2) {
                         Unit resolvePlace$geocode$lambda$49;
-                        resolvePlace$geocode$lambda$49 = GxNavigationPage.resolvePlace$geocode$lambda$49(GxNavigationPage.this, function2, primary, $place, placeLabel, (String) obj, (JSONObject) obj2);
+                        resolvePlace$geocode$lambda$49 = GxNavigationPage.resolvePlace$geocode$lambda$49(this$0, function2, primary, $place, placeLabel, (String) obj, (JSONObject) obj2);
                         return resolvePlace$geocode$lambda$49;
                     }
                 });
@@ -1473,7 +1473,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit destination$lambda$55$lambda$54;
-                destination$lambda$55$lambda$54 = GxNavigationPage.setDestination$lambda$55$lambda$54(GxNavigationPage.this, dest, rid, (String) obj, (JSONObject) obj2);
+                destination$lambda$55$lambda$54 = GxNavigationPage.setDestination$lambda$55$lambda$54(this$0, dest, rid, (String) obj, (JSONObject) obj2);
                 return destination$lambda$55$lambda$54;
             }
         }, 8, null);
@@ -1504,7 +1504,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit destination$lambda$55$lambda$54$lambda$53;
-                destination$lambda$55$lambda$54$lambda$53 = GxNavigationPage.setDestination$lambda$55$lambda$54$lambda$53(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                destination$lambda$55$lambda$54$lambda$53 = GxNavigationPage.setDestination$lambda$55$lambda$54$lambda$53(this$0, (String) obj, (JSONObject) obj2);
                 return destination$lambda$55$lambda$54$lambda$53;
             }
         });
@@ -2162,7 +2162,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit renderFavorites$lambda$89$lambda$88$lambda$87;
-                renderFavorites$lambda$89$lambda$88$lambda$87 = GxNavigationPage.renderFavorites$lambda$89$lambda$88$lambda$87(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                renderFavorites$lambda$89$lambda$88$lambda$87 = GxNavigationPage.renderFavorites$lambda$89$lambda$88$lambda$87(this$0, (String) obj, (JSONObject) obj2);
                 return renderFavorites$lambda$89$lambda$88$lambda$87;
             }
         }, 8, null);
@@ -2214,7 +2214,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit renameFavorite$lambda$91$lambda$90;
-                renameFavorite$lambda$91$lambda$90 = GxNavigationPage.renameFavorite$lambda$91$lambda$90(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                renameFavorite$lambda$91$lambda$90 = GxNavigationPage.renameFavorite$lambda$91$lambda$90(this$0, (String) obj, (JSONObject) obj2);
                 return renameFavorite$lambda$91$lambda$90;
             }
         }, 8, null);
@@ -2288,7 +2288,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit homeWork$lambda$93$lambda$92;
-                homeWork$lambda$93$lambda$92 = GxNavigationPage.homeWork$lambda$93$lambda$92(GxNavigationPage.this, i, msg, (String) obj, (JSONObject) obj2);
+                homeWork$lambda$93$lambda$92 = GxNavigationPage.homeWork$lambda$93$lambda$92(this$0, i, msg, (String) obj, (JSONObject) obj2);
                 return homeWork$lambda$93$lambda$92;
             }
         }, 8, null);
@@ -3212,7 +3212,7 @@ public final class GxNavigationPage extends GxPage {
                     destination$iv$iv.add(it5);
                 }
                 Iterable $this$sortedBy$iv = (List) destination$iv$iv;
-                joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.GxNavigationPage$paintMaps$$inlined$sortedBy$1
+                joinToString$default = CollectionsKt.joinToString(CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.GxNavigationPage$paintMaps$$inlined$sortedBy$1
                     /* JADX WARN: Multi-variable type inference failed */
                     @Override // java.util.Comparator
                     public final int compare(T t, T t2) {
@@ -3224,7 +3224,7 @@ public final class GxNavigationPage extends GxPage {
                         Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
                         return ComparisonsKt.compareValues(lowerCase, lowerCase2);
                     }
-                }), ", ", null, null, 0, null, null, 62, null);
+                }), ", ", "", "", -1, "...", null);
             }
             textView2.setText(joinToString$default);
             textView3 = this.selRegionsText;
@@ -3418,7 +3418,7 @@ public final class GxNavigationPage extends GxPage {
                         String lowerCase = (GxPage.str$default(this, r, "label", null, 2, null) + " " + GxPage.str$default(this, r, "code", null, 2, null) + " " + GxPage.str$default(this, r, "token", null, 2, null)).toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(lowerCase, str2);
                         str = str2;
-                        if (!StringsKt.contains$default((CharSequence) lowerCase, (CharSequence) q, false, 2, (Object) null)) {
+                        if (!StringsKt.contains((CharSequence) lowerCase, (CharSequence) q, false)) {
                             z = false;
                             if (!z) {
                                 destination$iv$iv2.add(element$iv$iv);
@@ -3500,7 +3500,7 @@ public final class GxNavigationPage extends GxPage {
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit renderCatalog$lambda$133;
-                                renderCatalog$lambda$133 = GxNavigationPage.renderCatalog$lambda$133(Function0.this);
+                                renderCatalog$lambda$133 = GxNavigationPage.renderCatalog$lambda$133(toggleOpen);
                                 return renderCatalog$lambda$133;
                             }
                         });
@@ -3508,7 +3508,7 @@ public final class GxNavigationPage extends GxPage {
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit renderCatalog$lambda$134;
-                                renderCatalog$lambda$134 = GxNavigationPage.renderCatalog$lambda$134(Function0.this);
+                                renderCatalog$lambda$134 = GxNavigationPage.renderCatalog$lambda$134(toggleOpen);
                                 return renderCatalog$lambda$134;
                             }
                         }, 2, null);
@@ -3976,7 +3976,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit loadKeys$lambda$150$lambda$149;
-                loadKeys$lambda$150$lambda$149 = GxNavigationPage.loadKeys$lambda$150$lambda$149(GxNavigationPage.this, (String) obj, (JSONObject) obj2);
+                loadKeys$lambda$150$lambda$149 = GxNavigationPage.loadKeys$lambda$150$lambda$149(this$0, (String) obj, (JSONObject) obj2);
                 return loadKeys$lambda$150$lambda$149;
             }
         });
@@ -4021,7 +4021,7 @@ public final class GxNavigationPage extends GxPage {
             }
             Object element$iv = it.next();
             String it2 = (String) element$iv;
-            if (StringsKt.startsWith$default(raw, it2, false, 2, (Object) null)) {
+            if (StringsKt.startsWith(raw, it2, false)) {
                 obj = element$iv;
                 break;
             }
@@ -4250,7 +4250,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit keyRow$lambda$162$lambda$161;
-                keyRow$lambda$162$lambda$161 = GxNavigationPage.keyRow$lambda$162$lambda$161(GxNavigationPage.this, $m);
+                keyRow$lambda$162$lambda$161 = GxNavigationPage.keyRow$lambda$162$lambda$161(this$0, $m);
                 return keyRow$lambda$162$lambda$161;
             }
         });
@@ -4263,7 +4263,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit keyRow$lambda$162$lambda$161$lambda$160;
-                keyRow$lambda$162$lambda$161$lambda$160 = GxNavigationPage.keyRow$lambda$162$lambda$161$lambda$160(GxNavigationPage.this, $m, (String) obj, (JSONObject) obj2);
+                keyRow$lambda$162$lambda$161$lambda$160 = GxNavigationPage.keyRow$lambda$162$lambda$161$lambda$160(this$0, $m, (String) obj, (JSONObject) obj2);
                 return keyRow$lambda$162$lambda$161$lambda$160;
             }
         }, 12, null);
@@ -4314,7 +4314,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit editKey$lambda$166;
-                editKey$lambda$166 = GxNavigationPage.editKey$lambda$166(GxNavigationPage.KeyMeta.this, this, (String) obj);
+                editKey$lambda$166 = GxNavigationPage.editKey$lambda$166(m, this, (String) obj);
                 return editKey$lambda$166;
             }
         }, 16, null);
@@ -4327,7 +4327,7 @@ public final class GxNavigationPage extends GxPage {
         if (t.length() == 0) {
             return Unit.INSTANCE;
         }
-        final String value = StringsKt.startsWith$default(t, $m.getPrefix(), false, 2, (Object) null) ? t : $m.getPrefix() + t;
+        final String value = StringsKt.startsWith(t, $m.getPrefix(), false) ? t : $m.getPrefix() + t;
         if (value.length() < $m.getMin()) {
             this$0.toast($m.getTitle() + " key is invalid or too short...");
             return Unit.INSTANCE;
@@ -4336,7 +4336,7 @@ public final class GxNavigationPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit editKey$lambda$166$lambda$165;
-                editKey$lambda$166$lambda$165 = GxNavigationPage.editKey$lambda$166$lambda$165(GxNavigationPage.this, $m, value, (String) obj, (JSONObject) obj2);
+                editKey$lambda$166$lambda$165 = GxNavigationPage.editKey$lambda$166$lambda$165(this$0, $m, value, (String) obj, (JSONObject) obj2);
                 return editKey$lambda$166$lambda$165;
             }
         }, 8, null);

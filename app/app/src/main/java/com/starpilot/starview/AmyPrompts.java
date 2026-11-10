@@ -26,7 +26,7 @@ public final class AmyPrompts {
         Intrinsics.checkNotNullParameter(why, "why");
         String side = dir < 0 ? "left" : "right";
         String dk = null;
-        MatchResult m = Regex.find$default(ROUTE, StringsKt.trim((CharSequence) why).toString(), 0, 2, null);
+        MatchResult m = ROUTE.find(StringsKt.trim((CharSequence) why).toString(), 0);
         if (m == null) {
             return CollectionsKt.listOf("ask_" + side);
         }
@@ -74,28 +74,28 @@ public final class AmyPrompts {
         String side = dir < 0 ? "left" : "right";
         String t = text.toLowerCase(Locale.ROOT);
         Intrinsics.checkNotNullExpressionValue(t, "toLowerCase(...)");
-        if (StringsKt.startsWith$default(t, "changed lanes", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(t, "changed lanes", false)) {
             return TuplesKt.to(AmySynth.Style.DONE, "done");
         }
-        if (StringsKt.startsWith$default(t, "test done", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(t, "test done", false)) {
             return TuplesKt.to(AmySynth.Style.SHORT, "test_done");
         }
-        if (StringsKt.startsWith$default(t, "openpilot disengaged", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(t, "openpilot disengaged", false)) {
             return TuplesKt.to(AmySynth.Style.STOPPED, "stop_disengaged");
         }
-        if (StringsKt.startsWith$default(t, "brake pressed", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(t, "brake pressed", false)) {
             return TuplesKt.to(AmySynth.Style.STOPPED, "stop_brake");
         }
-        if (StringsKt.startsWith$default(t, "other blinker", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(t, "other blinker", false)) {
             return TuplesKt.to(AmySynth.Style.STOPPED, "stop_blinker");
         }
-        if (!StringsKt.contains$default((CharSequence) t, (CharSequence) "blind spot", false, 2, (Object) null)) {
-            return StringsKt.startsWith$default(t, "openpilot didn't start", false, 2, (Object) null) ? TuplesKt.to(AmySynth.Style.STOPPED, "stop_nostart") : StringsKt.contains$default((CharSequence) t, (CharSequence) "too long", false, 2, (Object) null) ? TuplesKt.to(AmySynth.Style.STOPPED, "stop_toolong") : StringsKt.startsWith$default(t, "cancelled", false, 2, (Object) null) ? TuplesKt.to(AmySynth.Style.STOPPED, "stop_cancelled") : TuplesKt.to(AmySynth.Style.STOPPED, "stop_generic");
+        if (!StringsKt.contains((CharSequence) t, (CharSequence) "blind spot", false)) {
+            return StringsKt.startsWith(t, "openpilot didn't start", false) ? TuplesKt.to(AmySynth.Style.STOPPED, "stop_nostart") : StringsKt.contains((CharSequence) t, (CharSequence) "too long", false) ? TuplesKt.to(AmySynth.Style.STOPPED, "stop_toolong") : StringsKt.startsWith(t, "cancelled", false) ? TuplesKt.to(AmySynth.Style.STOPPED, "stop_cancelled") : TuplesKt.to(AmySynth.Style.STOPPED, "stop_generic");
         }
         AmySynth.Style style = AmySynth.Style.STOPPED;
-        if (StringsKt.contains$default((CharSequence) t, (CharSequence) "right", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) t, (CharSequence) "right", false)) {
             str = "right";
-        } else if (!StringsKt.contains$default((CharSequence) t, (CharSequence) "left", false, 2, (Object) null)) {
+        } else if (!StringsKt.contains((CharSequence) t, (CharSequence) "left", false)) {
             str = side;
         }
         return TuplesKt.to(style, "stop_bsm_" + str);

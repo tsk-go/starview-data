@@ -299,7 +299,7 @@ public final class SideCam {
             new Thread(new Runnable() { // from class: com.starpilot.starview.SideCam$$ExternalSyntheticLambda3
                 @Override // java.lang.Runnable
                 public final void run() {
-                    VideoClient.this.close();
+                    c.close();
                 }
             }).start();
             client = null;
@@ -332,7 +332,7 @@ public final class SideCam {
             new Thread(new Runnable() { // from class: com.starpilot.starview.SideCam$$ExternalSyntheticLambda4
                 @Override // java.lang.Runnable
                 public final void run() {
-                    VideoClient.this.close();
+                    c.close();
                 }
             }).start();
         }

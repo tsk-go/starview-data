@@ -302,12 +302,12 @@ public final class VasmEditorCard extends LinearLayout {
         if (bArr != null) {
             try {
                 Result.Companion companion = Result.Companion;
-                bitmap = Result.m1191constructorimpl(BitmapFactory.decodeByteArray(bArr, 0, bArr.length));
+                bitmap = KtCompat.resultOf(BitmapFactory.decodeByteArray(bArr, 0, bArr.length));
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                bitmap = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                bitmap = KtCompat.resultOf(ResultKt.createFailure(th));
             }
-            r1 = Result.m1197isFailureimpl(bitmap) ? null : bitmap;
+            r1 = KtCompat.isFailure(bitmap) ? null : bitmap;
         }
         Bitmap bitmap2 = r1;
         if (bitmap2 != null) {

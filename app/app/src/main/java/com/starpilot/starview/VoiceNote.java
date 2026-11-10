@@ -221,7 +221,7 @@ public final class VoiceNote {
         this$0.main.post(new Runnable() { // from class: com.starpilot.starview.VoiceNote$$ExternalSyntheticLambda3
             @Override // java.lang.Runnable
             public final void run() {
-                VoiceNote.start$lambda$2$lambda$1(VoiceNote.this);
+                VoiceNote.start$lambda$2$lambda$1(this$0);
             }
         });
     }
@@ -234,7 +234,7 @@ public final class VoiceNote {
             this$0.main.postDelayed(new Runnable() { // from class: com.starpilot.starview.VoiceNote$$ExternalSyntheticLambda0
                 @Override // java.lang.Runnable
                 public final void run() {
-                    VoiceNote.start$lambda$2$lambda$1$lambda$0(VoiceNote.this);
+                    VoiceNote.start$lambda$2$lambda$1$lambda$0(this$0);
                 }
             }, 6000L);
         }

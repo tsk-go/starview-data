@@ -127,12 +127,12 @@ public final class SlowReasonView extends View {
             StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
             String format = String.format(Locale.US, "%.1f m/s²", Arrays.copyOf(new Object[]{Float.valueOf(a)}, 1));
             Intrinsics.checkNotNullExpressionValue(format, "format(...)");
-            c.drawText(StringsKt.replace$default(format, "-", "−", false, 4, (Object) null), w - (this.d * 14.0f), this.d * 32.0f, this.acc);
+            c.drawText(StringsKt.replace(format, "-", "−", false), w - (this.d * 14.0f), this.d * 32.0f, this.acc);
         }
         this.tp.set(this.title);
         c.drawText(TextUtils.ellipsize(r2.getTitle(), this.tp, ((w - pad) - accW) - (this.d * 14.0f), TextUtils.TruncateAt.END).toString(), pad, this.d * 32.0f, this.title);
         this.tp.set(this.sub);
-        List<String> words = StringsKt.split$default((CharSequence) r2.getDetail(), new String[]{" "}, false, 0, 6, (Object) null);
+        List<String> words = StringsKt.split((CharSequence) r2.getDetail(), new String[]{" "}, false, 0);
         String line = "";
         float y = this.d * 58.0f;
         int lines = 0;
@@ -181,14 +181,14 @@ public final class SlowReasonView extends View {
             list = CollectionsKt.toList(getT().getSlow().getHistory());
         }
         final SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        final String text = list.isEmpty() ? "No braking by openpilot since StarView started." : CollectionsKt.joinToString$default(list, "\n\n", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.SlowReasonView$$ExternalSyntheticLambda1
+        final String text = list.isEmpty() ? "No braking by openpilot since StarView started." : CollectionsKt.joinToString(list, "\n\n", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.SlowReasonView$$ExternalSyntheticLambda1
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence showHistory$lambda$7;
                 showHistory$lambda$7 = SlowReasonView.showHistory$lambda$7(fmt, (SlowReason.Event) obj);
                 return showHistory$lambda$7;
             }
-        }, 30, null);
+        });
         new AlertDialog.Builder(getContext()).setTitle("Why it slowed (newest first)").setMessage(text).setPositiveButton("Close", (DialogInterface.OnClickListener) null).setNeutralButton("Copy", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SlowReasonView$$ExternalSyntheticLambda2
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
@@ -319,9 +319,9 @@ public final class SlowReasonView extends View {
             try {
                 File f = new File(ctx.getFilesDir(), "braking_log.txt");
                 if (f.length() > 1000000) {
-                    FilesKt.writeText$default(f, CollectionsKt.joinToString$default(CollectionsKt.takeLast(FilesKt.readLines$default(f, null, 1, null), 2000), "\n", null, null, 0, null, null, 62, null) + "\n", null, 2, null);
+                    FilesKt.writeText(f, CollectionsKt.joinToString(CollectionsKt.takeLast(FilesKt.readLines(f, kotlin.text.Charsets.UTF_8), 2000), "\n", "", "", -1, "...", null) + "\n", kotlin.text.Charsets.UTF_8);
                 }
-                FilesKt.appendText$default(f, new SimpleDateFormat("yyyy-MM-dd ", Locale.US).format(new Date(e.getStartMs())) + StringsKt.replace$default(line$default(this, e, new SimpleDateFormat("HH:mm:ss", Locale.US), false, 4, null), "\n", " | ", false, 4, (Object) null) + "\n", null, 2, null);
+                FilesKt.appendText(f, new SimpleDateFormat("yyyy-MM-dd ", Locale.US).format(new Date(e.getStartMs())) + StringsKt.replace(line$default(this, e, new SimpleDateFormat("HH:mm:ss", Locale.US), false, 4, null), "\n", " | ", false) + "\n", kotlin.text.Charsets.UTF_8);
             } catch (Exception e2) {
             }
         }

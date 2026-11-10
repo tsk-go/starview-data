@@ -90,7 +90,7 @@ public final class MapBumps {
             }
             File f = new File(file, k + ".json");
             if (f.isFile()) {
-                b = FilesKt.readText$default(f, null, 1, null);
+                b = FilesKt.readText(f, kotlin.text.Charsets.UTF_8);
             } else {
                 StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
                 String format = String.format(Locale.US, "%.4f,%.4f,%.4f,%.4f", Arrays.copyOf(new Object[]{Double.valueOf(s), Double.valueOf(w), Double.valueOf(s + 0.01d), Double.valueOf(w + 0.01d)}, 4));
@@ -108,7 +108,7 @@ public final class MapBumps {
                     String string = body.string();
                     CloseableKt.closeFinally(execute, null);
                     b = string;
-                    FilesKt.writeText$default(f, b, null, 2, null);
+                    FilesKt.writeText(f, b, kotlin.text.Charsets.UTF_8);
                 } finally {
                 }
             }

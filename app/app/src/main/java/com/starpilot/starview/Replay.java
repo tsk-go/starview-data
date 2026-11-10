@@ -104,7 +104,7 @@ public final class Replay {
         strArr[0] = d.optBoolean("video") ? "video" : "no video";
         strArr[1] = !d.optBoolean("full", true) ? "light log" : null;
         List extra = CollectionsKt.listOfNotNull((Object[]) strArr);
-        return day + " · " + mins + " min · " + CollectionsKt.joinToString$default(extra, " · ", null, null, 0, null, null, 62, null);
+        return day + " · " + mins + " min · " + CollectionsKt.joinToString(extra, " · ", "", "", -1, "...", null);
     }
 
     public final void pick(final Activity act) {
@@ -113,14 +113,14 @@ public final class Replay {
         if (dc == null || !dc.getConnected()) {
             new AlertDialog.Builder(act).setMessage("Not connected to the comma.").setPositiveButton("OK", (DialogInterface.OnClickListener) null).show();
         } else {
-            DataClient.request$default(dc, "replay_list", null, new Function1() { // from class: com.starpilot.starview.Replay$$ExternalSyntheticLambda1
+            dc.request("replay_list", kotlin.collections.MapsKt.emptyMap(), new Function1() { // from class: com.starpilot.starview.Replay$$ExternalSyntheticLambda1
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit pick$lambda$4;
                     pick$lambda$4 = Replay.pick$lambda$4(act, dc, (JSONObject) obj);
                     return pick$lambda$4;
                 }
-            }, 2, null);
+            });
         }
     }
 
@@ -161,7 +161,7 @@ public final class Replay {
         title.setItems((CharSequence[]) thisCollection$iv.toArray(new String[0]), new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.Replay$$ExternalSyntheticLambda2
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                Replay.pick$lambda$4$lambda$3(DataClient.this, drives, $act, dialogInterface, i);
+                Replay.pick$lambda$4$lambda$3($dc, drives, $act, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         return Unit.INSTANCE;

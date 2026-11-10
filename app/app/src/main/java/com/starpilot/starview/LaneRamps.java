@@ -96,7 +96,7 @@ public final class LaneRamps {
         // our road: our way, and the other pieces of the same street of the same kind
         List<OsmRoads.Way> mains = new ArrayList<>();
         for (OsmRoads.Way w : ways) {
-            boolean same = w.getId() == ourId || (!StringsKt.endsWith$default(w.getKind(), "_link", false, 2, (Object) null) && Intrinsics.areEqual(w.getKind(), our.getKind()) && our.getName().length() > 0 && OsmRoads.INSTANCE.sameStreet(w.getName(), our.getName()));
+            boolean same = w.getId() == ourId || (!StringsKt.endsWith(w.getKind(), "_link", false) && Intrinsics.areEqual(w.getKind(), our.getKind()) && our.getName().length() > 0 && OsmRoads.INSTANCE.sameStreet(w.getName(), our.getName()));
             if (same) {
                 mains.add(w);
             }
@@ -106,7 +106,7 @@ public final class LaneRamps {
         double hy = Math.sin(yaw);
         HashMap<Integer, Ramp> best = new HashMap<>();
         for (OsmRoads.Way w : ways) {
-            if (w.getId() == ourId || !StringsKt.endsWith$default(w.getKind(), "_link", false, 2, (Object) null) || w.getE().length < 2) {
+            if (w.getId() == ourId || !StringsKt.endsWith(w.getKind(), "_link", false) || w.getE().length < 2) {
                 continue;
             }
             for (int end = 0; end < 2; end++) {
@@ -203,14 +203,14 @@ public final class LaneRamps {
 
     public final String codes(List<Ramp> l) {
         Intrinsics.checkNotNullParameter(l, "l");
-        return CollectionsKt.joinToString$default(l, ";", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.LaneRamps$$ExternalSyntheticLambda0
+        return CollectionsKt.joinToString(l, ";", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.LaneRamps$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence codes$lambda$4;
                 codes$lambda$4 = LaneRamps.codes$lambda$4((LaneRamps.Ramp) obj);
                 return codes$lambda$4;
             }
-        }, 30, null);
+        });
     }
 
     public final List<Ramp> parse(String s) {
@@ -222,7 +222,7 @@ public final class LaneRamps {
         Intrinsics.checkNotNullParameter(s, "s");
         int i = 1;
         char c = 0;
-        Iterable $this$mapNotNull$iv2 = StringsKt.split$default((CharSequence) s, new String[]{";"}, false, 0, 6, (Object) null);
+        Iterable $this$mapNotNull$iv2 = StringsKt.split((CharSequence) s, new String[]{";"}, false, 0);
         int $i$f$mapNotNull2 = 0;
         Collection destination$iv$iv = new ArrayList();
         Iterable $this$mapNotNullTo$iv$iv2 = $this$mapNotNull$iv2;
@@ -231,7 +231,7 @@ public final class LaneRamps {
             String p = (String) element$iv$iv$iv;
             String[] strArr = new String[i];
             strArr[c] = ",";
-            List f = StringsKt.split$default((CharSequence) p, strArr, false, 0, 6, (Object) null);
+            List f = StringsKt.split((CharSequence) p, strArr, false, 0);
             if (f.size() < 3) {
                 ramp = null;
                 $this$mapNotNull$iv = $this$mapNotNull$iv2;

@@ -120,14 +120,14 @@ public final class DrivingTrendsView extends CardPage {
                 $i$f$map2 = $i$f$map;
             }
             tc.addView(new Bars(context, arrayList, arrayList2, rgb, (List) destination$iv$iv3), new LinearLayout.LayoutParams(-1, getUi().dp(170)));
-            tc.addView(CardPage.line$default(this, "Lower is better. Miles per week: " + CollectionsKt.joinToString$default(weekly, "  ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.DrivingTrendsView$$ExternalSyntheticLambda0
+            tc.addView(CardPage.line$default(this, "Lower is better. Miles per week: " + CollectionsKt.joinToString(weekly, "  ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.DrivingTrendsView$$ExternalSyntheticLambda0
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     CharSequence refresh$lambda$4;
                     refresh$lambda$4 = DrivingTrendsView.refresh$lambda$4((Pair) obj);
                     return refresh$lambda$4;
                 }
-            }, 30, null), 0, 0.0f, 6, null));
+            }), 0, 0.0f, 6, null));
         }
         Galaxy7 current = Galaxy7.Companion.current();
         if (current != null) {

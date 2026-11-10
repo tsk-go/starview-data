@@ -315,7 +315,7 @@ public final class GxFavoritesPage extends GxPage {
             @Override // java.util.Comparator
             public final int compare(Object obj, Object obj2) {
                 int sortOptions$lambda$11;
-                sortOptions$lambda$11 = GxFavoritesPage.sortOptions$lambda$11(Function2.this, obj, obj2);
+                sortOptions$lambda$11 = GxFavoritesPage.sortOptions$lambda$11(function2, obj, obj2);
                 return sortOptions$lambda$11;
             }
         });
@@ -469,7 +469,7 @@ public final class GxFavoritesPage extends GxPage {
         if (key == null) {
             key = "";
         }
-        if (!StringsKt.startsWith$default(key, this.actionPrefix, false, 2, (Object) null)) {
+        if (!StringsKt.startsWith(key, this.actionPrefix, false)) {
             JSONObject optionByKey = optionByKey(s.getKey());
             gxHomeTruthy = GxHomeKt.gxHomeTruthy(optionByKey != null ? optionByKey.opt("action") : null);
             if (!gxHomeTruthy) {
@@ -1063,7 +1063,7 @@ public final class GxFavoritesPage extends GxPage {
         Runnable r = new Runnable() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda16
             @Override // java.lang.Runnable
             public final void run() {
-                GxFavoritesPage.render$lambda$49$lambda$48(GxFavoritesPage.this, $i, v);
+                GxFavoritesPage.render$lambda$49$lambda$48(this$0, $i, v);
             }
         };
         this$0.speedTimer = r;
@@ -1428,7 +1428,7 @@ public final class GxFavoritesPage extends GxPage {
                     destination$iv$iv.add(element$iv$iv);
                 }
             }
-            dt = CollectionsKt.joinToString$default((List) destination$iv$iv, " · ", null, null, 0, null, null, 62, null);
+            dt = CollectionsKt.joinToString((List) destination$iv$iv, " · ", "", "", -1, "...", null);
         }
         if (!StringsKt.isBlank(dt)) {
             TextView $this$chooseControl_u24item_u24lambda_u2473 = new TextView(this$0.getAct());
@@ -1440,7 +1440,7 @@ public final class GxFavoritesPage extends GxPage {
         v.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda19
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                GxFavoritesPage.chooseControl$item$lambda$77(GxFavoritesPage.this, k, dlg, $index, view);
+                GxFavoritesPage.chooseControl$item$lambda$77(this$0, k, dlg, $index, view);
             }
         });
         LinearLayout.LayoutParams $this$chooseControl_u24item_u24lambda_u2478 = new LinearLayout.LayoutParams(-1, -2);
@@ -1527,11 +1527,11 @@ public final class GxFavoritesPage extends GxPage {
             Intrinsics.checkNotNull(cp);
             String cn = cp.component1();
             List<String> path = cp.component2();
-            String hay = CollectionsKt.joinToString$default(CollectionsKt.plus((Collection) CollectionsKt.listOf(new String[]{o.optString("label"), o.optString("key"), o.optString("description"), o.optString("picker_label"), o.optString("picker_description"), cn}), (Iterable) path), " ", null, null, 0, null, null, 62, null).toLowerCase(Locale.ROOT);
+            String hay = CollectionsKt.joinToString(CollectionsKt.plus((Collection) CollectionsKt.listOf(new String[]{o.optString("label"), o.optString("key"), o.optString("description"), o.optString("picker_label"), o.optString("picker_description"), cn}), (Iterable) path), " ", "", "", -1, "...", null).toLowerCase(Locale.ROOT);
             Intrinsics.checkNotNullExpressionValue(hay, "toLowerCase(...)");
             boolean all = true;
             for (String w : q) {
-                if (!StringsKt.contains$default((CharSequence) hay, (CharSequence) w, false, 2, (Object) null)) {
+                if (!StringsKt.contains((CharSequence) hay, (CharSequence) w, false)) {
                     all = false;
                     break;
                 }
@@ -1616,13 +1616,13 @@ public final class GxFavoritesPage extends GxPage {
                     Intrinsics.checkNotNull(pa);
                     Pair<String, ? extends List<String>> pb = map.get(b);
                     Intrinsics.checkNotNull(pb);
-                    return ComparisonsKt.compareValues(CollectionsKt.joinToString$default(pa.getSecond(), "/", null, null, 0, null, null, 62, null), CollectionsKt.joinToString$default(pb.getSecond(), "/", null, null, 0, null, null, 62, null));
+                    return ComparisonsKt.compareValues(CollectionsKt.joinToString(pa.getSecond(), "/", "", "", -1, "...", null), CollectionsKt.joinToString(pb.getSecond(), "/", "", "", -1, "...", null));
                 }
             });
             for (JSONObject o2 : sorted) {
                 Pair<String, ? extends List<String>> cp = map.get(o2);
                 Intrinsics.checkNotNull(cp);
-                chooseControl$item(this$0, list, cur, dlg, $index, o2, CollectionsKt.joinToString$default(CollectionsKt.plus((Collection) CollectionsKt.listOf(cn2), (Iterable) cp.getSecond()), " · ", null, null, 0, null, null, 62, null));
+                chooseControl$item(this$0, list, cur, dlg, $index, o2, CollectionsKt.joinToString(CollectionsKt.plus((Collection) CollectionsKt.listOf(cn2), (Iterable) cp.getSecond()), " · ", "", "", -1, "...", null));
             }
         }
         if (matches.isEmpty()) {

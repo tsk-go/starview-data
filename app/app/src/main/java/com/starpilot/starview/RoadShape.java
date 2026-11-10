@@ -25,7 +25,7 @@ public final class RoadShape {
 
     public final boolean spline(String kind) {
         Intrinsics.checkNotNullParameter(kind, "kind");
-        return StringsKt.startsWith$default(kind, "motorway", false, 2, (Object) null) || StringsKt.startsWith$default(kind, "trunk", false, 2, (Object) null) || StringsKt.startsWith$default(kind, "primary", false, 2, (Object) null) || StringsKt.startsWith$default(kind, "secondary", false, 2, (Object) null) || StringsKt.endsWith$default(kind, "_link", false, 2, (Object) null);
+        return StringsKt.startsWith(kind, "motorway", false) || StringsKt.startsWith(kind, "trunk", false) || StringsKt.startsWith(kind, "primary", false) || StringsKt.startsWith(kind, "secondary", false) || StringsKt.endsWith(kind, "_link", false);
     }
 
     private final long key(double e, double n) {
@@ -161,7 +161,7 @@ public final class RoadShape {
             return null;
         }
         if (u.getName().length() > 0) {
-            if ((w.getName().length() > 0) && !OsmRoads.INSTANCE.sameStreet(u.getName(), w.getName()) && !StringsKt.endsWith$default(u.getKind(), "_link", false, 2, (Object) null) && !StringsKt.endsWith$default(w.getKind(), "_link", false, 2, (Object) null)) {
+            if ((w.getName().length() > 0) && !OsmRoads.INSTANCE.sameStreet(u.getName(), w.getName()) && !StringsKt.endsWith(u.getKind(), "_link", false) && !StringsKt.endsWith(w.getKind(), "_link", false)) {
                 return null;
             }
         }

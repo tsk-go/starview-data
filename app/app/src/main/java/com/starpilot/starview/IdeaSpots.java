@@ -221,7 +221,7 @@ public final class IdeaSpots {
             if (!it.isFile()) {
                 it = null;
             }
-            if (it != null && (t = FilesKt.readText$default(it, null, 1, null)) != null) {
+            if (it != null && (t = FilesKt.readText(it, kotlin.text.Charsets.UTF_8)) != null) {
                 JSONArray a = new JSONArray(t);
                 int length = a.length();
                 for (int i = 0; i < length; i++) {
@@ -453,7 +453,7 @@ public final class IdeaSpots {
     public static final void saveSoon$lambda$7(File $f, String $text) {
         try {
             File $this$saveSoon_u24lambda_u247_u24lambda_u246 = new File($f.getPath() + ".tmp");
-            FilesKt.writeText$default($this$saveSoon_u24lambda_u247_u24lambda_u246, $text, null, 2, null);
+            FilesKt.writeText($this$saveSoon_u24lambda_u247_u24lambda_u246, $text, kotlin.text.Charsets.UTF_8);
             $this$saveSoon_u24lambda_u247_u24lambda_u246.renameTo($f);
         } catch (Exception e) {
         }
@@ -489,7 +489,7 @@ public final class IdeaSpots {
             Unit unit = Unit.INSTANCE;
             String jSONObject = put.put("spots", $this$exportFleet_u24lambda_u2410).toString();
             Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
-            FilesKt.writeText$default(file2, jSONObject, null, 2, null);
+            FilesKt.writeText(file2, jSONObject, kotlin.text.Charsets.UTF_8);
             return mine.size();
         } catch (Exception e) {
             return -1;
@@ -500,7 +500,7 @@ public final class IdeaSpots {
     public static final boolean importFleet$lambda$11(String $myName, File f) {
         String name = f.getName();
         Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-        return StringsKt.endsWith$default(name, ".json", false, 2, (Object) null) && !Intrinsics.areEqual(f.getName(), new StringBuilder().append($myName).append(".json").toString());
+        return StringsKt.endsWith(name, ".json", false) && !Intrinsics.areEqual(f.getName(), new StringBuilder().append($myName).append(".json").toString());
     }
 
     public final int importFleet(final String myName) {
@@ -526,7 +526,7 @@ public final class IdeaSpots {
         for (File f : files) {
             try {
                 Intrinsics.checkNotNull(f);
-                JSONObject o = new JSONObject(FilesKt.readText$default(f, null, 1, null));
+                JSONObject o = new JSONObject(FilesKt.readText(f, kotlin.text.Charsets.UTF_8));
                 final String from = o.optString("from", FilesKt.getNameWithoutExtension(f));
                 JSONArray a = o.optJSONArray("spots");
                 if (a != null) {

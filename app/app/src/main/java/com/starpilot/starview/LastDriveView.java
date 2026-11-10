@@ -58,7 +58,7 @@ public final class LastDriveView extends CardPage {
                     destination$iv$iv.add(element$iv$iv);
                 }
             }
-            c2.addView(CardPage.line$default(lastDriveView, format + "  ·  " + CollectionsKt.joinToString$default(CollectionsKt.distinct((List) destination$iv$iv), " → ", null, null, 0, null, null, 62, null), 0, 0.0f, 6, null));
+            c2.addView(CardPage.line$default(lastDriveView, format + "  ·  " + CollectionsKt.joinToString(CollectionsKt.distinct((List) destination$iv$iv), " → ", "", "", -1, "...", null), 0, 0.0f, 6, null));
             miles = JournalPagesKt.miles(d2.optDouble("meters"));
             dur = JournalPagesKt.dur(secs);
             c2.addView(stats(TuplesKt.to(miles, "distance"), TuplesKt.to(dur, "time"), TuplesKt.to(d2.optInt("engagedPct") + "%", "openpilot on"), TuplesKt.to(String.valueOf(d2.optInt("takeovers")), "takeovers"), TuplesKt.to(String.valueOf(d2.optInt("alerts")), "alerts"), TuplesKt.to(String.valueOf(d2.optInt("hardBrakes")), "hard brakes")));

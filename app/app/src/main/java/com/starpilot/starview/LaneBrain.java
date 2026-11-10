@@ -50,7 +50,7 @@ public final class LaneBrain {
     private long lastCameraMs;
     private int lastChangeDir;
     private long lastChangeMs;
-    private long lastMs;
+    long lastMs;
     private volatile long modelMs;
     private volatile String modelText;
     private int nChanges;
@@ -163,7 +163,7 @@ public final class LaneBrain {
         }
 
         public final boolean getRamp() {
-            return StringsKt.endsWith$default(this.kind, "_link", false, 2, (Object) null);
+            return StringsKt.endsWith(this.kind, "_link", false);
         }
     }
 
@@ -654,7 +654,7 @@ public final class LaneBrain {
                 return num.intValue();
             }
             try {
-                return new JSONObject(FilesKt.readText$default(new File(ctx.getFilesDir(), "lane_counts.json"), null, 1, null)).optInt(String.valueOf(wayId), 0);
+                return new JSONObject(FilesKt.readText(new File(ctx.getFilesDir(), "lane_counts.json"), kotlin.text.Charsets.UTF_8)).optInt(String.valueOf(wayId), 0);
             } catch (Exception e) {
                 return 0;
             }
@@ -673,11 +673,11 @@ public final class LaneBrain {
             }
             File f = new File(ctx.getFilesDir(), "lane_counts.json");
             try {
-                JSONObject j = new JSONObject(FilesKt.readText$default(f, null, 1, null));
+                JSONObject j = new JSONObject(FilesKt.readText(f, kotlin.text.Charsets.UTF_8));
                 j.remove(String.valueOf(wayId));
                 String jSONObject = j.toString();
                 Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
-                FilesKt.writeText$default(f, jSONObject, null, 2, null);
+                FilesKt.writeText(f, jSONObject, kotlin.text.Charsets.UTF_8);
             } catch (Exception e) {
             }
         }
@@ -698,14 +698,14 @@ public final class LaneBrain {
             File f = new File(ctx.getFilesDir(), "lane_counts.json");
             try {
                 try {
-                    j = new JSONObject(FilesKt.readText$default(f, null, 1, null));
+                    j = new JSONObject(FilesKt.readText(f, kotlin.text.Charsets.UTF_8));
                 } catch (Exception e) {
                     j = new JSONObject();
                 }
                 j.put(String.valueOf(wayId), m);
                 String jSONObject = j.toString();
                 Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
-                FilesKt.writeText$default(f, jSONObject, null, 2, null);
+                FilesKt.writeText(f, jSONObject, kotlin.text.Charsets.UTF_8);
             } catch (Exception e2) {
             }
         }
@@ -1151,7 +1151,7 @@ public final class LaneBrain {
             str2 = (Intrinsics.areEqual(this.model.getKindR(), "exit") ? "exit" : "merge") + " lane right";
         }
         strArr[1] = str2;
-        return CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), " + ", null, null, 0, null, null, 62, null);
+        return CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), " + ", "", "", -1, "...", null);
     }
 
     public final String label() {

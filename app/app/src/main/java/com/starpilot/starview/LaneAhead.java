@@ -758,7 +758,7 @@ public final class LaneAhead {
             return null;
         }
         OsmRoads.Way way2 = mt.getWay();
-        if (StringsKt.endsWith$default(way2.getKind(), "_link", false, 2, (Object) null)) {
+        if (StringsKt.endsWith(way2.getKind(), "_link", false)) {
             return null;
         }
         ArrayList line = new ArrayList();
@@ -807,7 +807,7 @@ public final class LaneAhead {
                         seen = seen2;
                         $this$filter$iv = $this$filter$iv2;
                         $i$f$filter = $i$f$filter3;
-                        if (!StringsKt.endsWith$default(it2.getKind(), str4, false, 2, (Object) null)) {
+                        if (!StringsKt.endsWith(it2.getKind(), str4, false)) {
                             if (way3.getName().length() > 0 ? OsmRoads.INSTANCE.sameStreet(it2.getName(), way3.getName()) : Intrinsics.areEqual(it2.getKind(), way3.getKind())) {
                                 $i$f$filter2 = 1;
                                 if ($i$f$filter2 == 0) {

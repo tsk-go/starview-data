@@ -214,7 +214,7 @@ public final class MapTiles {
         String k = Companion.key(style, z, x, y);
         Bitmap m = get(k);
         if (m != null) {
-            if (StringsKt.startsWith$default(style, "traffic", false, 2, (Object) null)) {
+            if (StringsKt.startsWith(style, "traffic", false)) {
                 long currentTimeMillis = System.currentTimeMillis();
                 Long l = this.madeAt.get(k);
             }
@@ -343,7 +343,7 @@ public final class MapTiles {
                 }
             }
             File f = file(style, z, x, y);
-            long ttl = StringsKt.startsWith$default(style, "traffic", false, 2, (Object) null) ? 900000L : 604800000L;
+            long ttl = StringsKt.startsWith(style, "traffic", false) ? 900000L : 604800000L;
             boolean fresh = false;
             if (f.exists()) {
                 if (!prefetch && get(k) == null && (it = BitmapFactory.decodeFile(f.getPath())) != null) {

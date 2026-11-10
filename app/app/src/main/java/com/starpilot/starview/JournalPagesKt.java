@@ -8,8 +8,8 @@ import kotlin.jvm.internal.StringCompanionObject;
 
 /* compiled from: JournalPages.kt */
 public final class JournalPagesKt {
-    private static final SimpleDateFormat dayFmt = new SimpleDateFormat("EEE MMM d, h:mm a", Locale.US);
-    private static final SimpleDateFormat timeFmt = new SimpleDateFormat("h:mm a", Locale.US);
+    static final SimpleDateFormat dayFmt = new SimpleDateFormat("EEE MMM d, h:mm a", Locale.US);
+    static final SimpleDateFormat timeFmt = new SimpleDateFormat("h:mm a", Locale.US);
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final String miles(double m) {

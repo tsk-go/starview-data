@@ -1476,7 +1476,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                             @Override // kotlin.jvm.functions.Function0
                                                                             public final Object invoke() {
                                                                                 String run$lambda$5;
-                                                                                run$lambda$5 = MainActivity$uiTick$1.run$lambda$5(MainActivity.this, t);
+                                                                                run$lambda$5 = MainActivity$uiTick$1.run$lambda$5(mainActivity7, t);
                                                                                 return run$lambda$5;
                                                                             }
                                                                         });
@@ -2768,7 +2768,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                                                                                                     return it7.getName();
                                                                                                                                                 }
                                                                                                                                             }).entrySet();
-                                                                                                                                            String counts = CollectionsKt.joinToString$default(CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.MainActivity$uiTick$1$run$lambda$27$$inlined$sortedByDescending$1
+                                                                                                                                            String counts = CollectionsKt.joinToString(CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.MainActivity$uiTick$1$run$lambda$27$$inlined$sortedByDescending$1
                                                                                                                                                 @Override // java.util.Comparator
                                                                                                                                                 public final int compare(T t3, T t4) {
                                                                                                                                                     Map.Entry it7 = (Map.Entry) t4;
@@ -2776,14 +2776,14 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                                                                                                     Map.Entry it8 = (Map.Entry) t3;
                                                                                                                                                     return ComparisonsKt.compareValues(num, (Integer) it8.getValue());
                                                                                                                                                 }
-                                                                                                                                            }), " ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.MainActivity$uiTick$1$$ExternalSyntheticLambda1
+                                                                                                                                            }), " ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.MainActivity$uiTick$1$$ExternalSyntheticLambda1
                                                                                                                                                 @Override // kotlin.jvm.functions.Function1
                                                                                                                                                 public final Object invoke(Object obj2) {
                                                                                                                                                     CharSequence run$lambda$27$lambda$24;
                                                                                                                                                     run$lambda$27$lambda$24 = MainActivity$uiTick$1.run$lambda$27$lambda$24((Map.Entry) obj2);
                                                                                                                                                     return run$lambda$27$lambda$24;
                                                                                                                                                 }
-                                                                                                                                            }, 30, null);
+                                                                                                                                            });
                                                                                                                                             String status4 = detector2.getStatus();
                                                                                                                                             String accel = detector2.getAccel();
                                                                                                                                             String format5 = String.format("%.0f", Arrays.copyOf(new Object[]{Double.valueOf(detector2.getInferMs())}, 1));
@@ -2893,7 +2893,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                                                                                         str7 = mainActivity12.lastCrash;
                                                                                                                                         if (str7.length() > 0) {
                                                                                                                                             str10 = mainActivity12.lastCrash;
-                                                                                                                                            $this$run_u24lambda_u2427.append("LAST CRASH  " + StringsKt.take(StringsKt.replace$default(str10, "\n", " | ", false, 4, (Object) null), 300) + "\n");
+                                                                                                                                            $this$run_u24lambda_u2427.append("LAST CRASH  " + StringsKt.take(StringsKt.replace(str10, "\n", " | ", false), 300) + "\n");
                                                                                                                                         }
                                                                                                                                         it = mainActivity12.scene;
                                                                                                                                         if (it != null) {
@@ -3995,7 +3995,7 @@ public final class MainActivity$uiTick$1 implements Runnable {
                                                                     @Override // kotlin.jvm.functions.Function0
                                                                     public final Object invoke() {
                                                                         String run$lambda$5;
-                                                                        run$lambda$5 = MainActivity$uiTick$1.run$lambda$5(MainActivity.this, t);
+                                                                        run$lambda$5 = MainActivity$uiTick$1.run$lambda$5(mainActivity72, t);
                                                                         return run$lambda$5;
                                                                     }
                                                                 });

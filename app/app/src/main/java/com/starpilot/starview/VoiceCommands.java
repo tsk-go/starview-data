@@ -108,20 +108,20 @@ public final class VoiceCommands {
         if (new Regex("^(bookmark|mark)( (this|it|here|that))?$").containsMatchIn(replace) || Intrinsics.areEqual(replace, "add a bookmark")) {
             return new Cmd(Kind.BOOKMARK, objArr2 == true ? 1 : 0, i, objArr == true ? 1 : 0);
         }
-        MatchResult find$default = Regex.find$default(new Regex("^(take me|go|drive|navigate|head|bring me|let's go)( back)?( to)? (home|work)$"), replace, 0, 2, null);
+        MatchResult find$default = (new Regex("^(take me|go|drive|navigate|head|bring me|let's go)( back)?( to)? (home|work)$")).find(replace, 0);
         if (find$default != null) {
             return new Cmd(Kind.NAVIGATE, find$default.getGroupValues().get(4));
         }
-        MatchResult find$default2 = Regex.find$default(new Regex("^(navigate|take me|drive|go|directions|route)( me)? to (.+)$"), replace, 0, 2, null);
+        MatchResult find$default2 = (new Regex("^(navigate|take me|drive|go|directions|route)( me)? to (.+)$")).find(replace, 0);
         if (find$default2 != null) {
             return new Cmd(Kind.NAVIGATE, StringsKt.trim((CharSequence) StringsKt.removePrefix(StringsKt.trim((CharSequence) find$default2.getGroupValues().get(3)).toString(), (CharSequence) "my ")).toString());
         }
-        MatchResult find$default3 = Regex.find$default(new Regex("^(take|make) (the )?(next )?(left|right)( turn)?$"), replace, 0, 2, null);
+        MatchResult find$default3 = (new Regex("^(take|make) (the )?(next )?(left|right)( turn)?$")).find(replace, 0);
         if (find$default3 != null) {
             return new Cmd(Kind.NUDGE, "turn_" + ((Object) find$default3.getGroupValues().get(4)));
         }
         if (new Regex("^(move|go|shift|scoot)( over)?( a (bit|little))?( to the)? (left|right)( a (bit|little))?$").containsMatchIn(replace)) {
-            return new Cmd(Kind.NUDGE, StringsKt.contains$default((CharSequence) replace, (CharSequence) "left", false, 2, (Object) null) ? "left" : "right");
+            return new Cmd(Kind.NUDGE, StringsKt.contains((CharSequence) replace, (CharSequence) "left", false) ? "left" : "right");
         }
         if (new Regex("^(back to the )?(center|centre|middle)( of the lane)?$").containsMatchIn(replace)) {
             return new Cmd(Kind.NUDGE, "center");

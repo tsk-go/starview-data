@@ -91,7 +91,7 @@ public final class GalaxyTools {
                     Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
                     GalaxyTools $this$parse_u24lambda_u2442 = $this$parse_u24lambda_u244;
                     int i2 = i;
-                    if (StringsKt.startsWith$default(optString, "/", false, 2, (Object) null)) {
+                    if (StringsKt.startsWith(optString, "/", false)) {
                         String optString2 = it2.optString("name");
                         Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
                         if (!StringsKt.isBlank(optString2)) {
@@ -111,8 +111,8 @@ public final class GalaxyTools {
                 } catch (Throwable th) {
                     th = th;
                     Result.Companion companion2 = Result.Companion;
-                    obj = Result.m1191constructorimpl(ResultKt.createFailure(th));
-                    return (List) (!Result.m1197isFailureimpl(obj) ? null : obj);
+                    obj = KtCompat.resultOf(ResultKt.createFailure(th));
+                    return (List) (!KtCompat.isFailure(obj) ? null : obj);
                 }
             }
             Iterable $this$map$iv2 = (List) destination$iv$iv2;
@@ -126,7 +126,7 @@ public final class GalaxyTools {
                 destination$iv$iv3.add(new Tool(optString3, optString4));
             }
             Iterable $this$sortedBy$iv = (List) destination$iv$iv3;
-            obj = Result.m1191constructorimpl(CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.GalaxyTools$parse$lambda$4$$inlined$sortedBy$1
+            obj = KtCompat.resultOf(CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.GalaxyTools$parse$lambda$4$$inlined$sortedBy$1
                 /* JADX WARN: Multi-variable type inference failed */
                 @Override // java.util.Comparator
                 public final int compare(T t, T t2) {
@@ -142,7 +142,7 @@ public final class GalaxyTools {
         } catch (Throwable th2) {
             th = th2;
         }
-        return (List) (!Result.m1197isFailureimpl(obj) ? null : obj);
+        return (List) (!KtCompat.isFailure(obj) ? null : obj);
     }
 
     public final List<Tool> list(Context ctx) {
@@ -187,21 +187,21 @@ public final class GalaxyTools {
         if (Intrinsics.areEqual(path, "/")) {
             return R.drawable.ic_info;
         }
-        if (StringsKt.contains$default((CharSequence) path, (CharSequence) "recording", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) path, (CharSequence) "recording", false)) {
             return R.drawable.ic_files;
         }
-        if (StringsKt.contains$default((CharSequence) path, (CharSequence) "bluetooth", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) path, (CharSequence) "bluetooth", false)) {
             return R.drawable.ic_link;
         }
-        if (StringsKt.contains$default((CharSequence) path, (CharSequence) "model", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) path, (CharSequence) "model", false)) {
             return R.drawable.ic_dev;
         }
-        if (StringsKt.contains$default((CharSequence) path, (CharSequence) "navigation", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) path, (CharSequence) "navigation", false)) {
             return R.drawable.ic_pin;
         }
-        if (StringsKt.contains$default((CharSequence) path, (CharSequence) "plots", false, 2, (Object) null) || StringsKt.contains$default((CharSequence) path, (CharSequence) "tuning", false, 2, (Object) null)) {
+        if (StringsKt.contains((CharSequence) path, (CharSequence) "plots", false) || StringsKt.contains((CharSequence) path, (CharSequence) "tuning", false)) {
             return R.drawable.ic_steering;
         }
-        return StringsKt.contains$default((CharSequence) path, (CharSequence) "logs", false, 2, (Object) null) ? R.drawable.ic_terminal : StringsKt.contains$default((CharSequence) path, (CharSequence) "galaxy", false, 2, (Object) null) ? R.drawable.ic_network : StringsKt.contains$default((CharSequence) path, (CharSequence) "android", false, 2, (Object) null) ? R.drawable.ic_car : R.drawable.ic_tools;
+        return StringsKt.contains((CharSequence) path, (CharSequence) "logs", false) ? R.drawable.ic_terminal : StringsKt.contains((CharSequence) path, (CharSequence) "galaxy", false) ? R.drawable.ic_network : StringsKt.contains((CharSequence) path, (CharSequence) "android", false) ? R.drawable.ic_car : R.drawable.ic_tools;
     }
 }

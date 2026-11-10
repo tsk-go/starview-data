@@ -1583,7 +1583,7 @@ public final class SceneView extends SurfaceView {
             } else {
                 engine = engine7;
             }
-            IndirectLight it = KTX1Loader.createIndirectLight$default(kTX1Loader, engine, readAsset("ibl/day_ibl.ktx"), null, 4, null).getIndirectLight();
+            IndirectLight it = kTX1Loader.createIndirectLight(engine, readAsset("ibl/day_ibl.ktx"), new KTX1Loader.Options()).getIndirectLight();
             if (it != null) {
                 it.setIntensity(1.0f);
                 Scene scene3 = this.scene;
@@ -3116,7 +3116,7 @@ public final class SceneView extends SurfaceView {
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         double updateScene$lambda$30;
-                        updateScene$lambda$30 = SceneView.updateScene$lambda$30(ModelSnapshot.this, sceneView2, ((Double) obj).doubleValue());
+                        updateScene$lambda$30 = SceneView.updateScene$lambda$30(m, sceneView2, ((Double) obj).doubleValue());
                         return Double.valueOf(updateScene$lambda$30);
                     }
                 };
@@ -3830,7 +3830,7 @@ public final class SceneView extends SurfaceView {
                         str = str14;
                         str2 = str13;
                     } else {
-                        if (StringsKt.startsWith$default(it12.getKind(), "car_", false, 2, (Object) null)) {
+                        if (StringsKt.startsWith(it12.getKind(), "car_", false)) {
                             str = str14;
                         } else {
                             str = str14;
@@ -3909,7 +3909,7 @@ public final class SceneView extends SurfaceView {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 double updateScene$lambda$30;
-                updateScene$lambda$30 = SceneView.updateScene$lambda$30(ModelSnapshot.this, sceneView2, ((Double) obj).doubleValue());
+                updateScene$lambda$30 = SceneView.updateScene$lambda$30(m, sceneView2, ((Double) obj).doubleValue());
                 return Double.valueOf(updateScene$lambda$30);
             }
         };
@@ -4312,8 +4312,8 @@ public final class SceneView extends SurfaceView {
                     it = it3;
                 } else {
                     it = it3;
-                    if (StringsKt.startsWith$default(c2.getKind(), "car_", false, 2, (Object) null)) {
-                        if (!StringsKt.startsWith$default(kindName, "car_", false, 2, (Object) null)) {
+                    if (StringsKt.startsWith(c2.getKind(), "car_", false)) {
+                        if (!StringsKt.startsWith(kindName, "car_", false)) {
                         }
                     }
                 }
@@ -4386,7 +4386,7 @@ public final class SceneView extends SurfaceView {
         while (true) {
             long j = Long.MIN_VALUE;
             if (!it.hasNext()) {
-                boolean vehicleKind = StringsKt.startsWith$default(kindName, "car_", false, 2, (Object) null) || Intrinsics.areEqual(kindName, "truck.glb") || Intrinsics.areEqual(kindName, "bus.glb");
+                boolean vehicleKind = StringsKt.startsWith(kindName, "car_", false) || Intrinsics.areEqual(kindName, "truck.glb") || Intrinsics.areEqual(kindName, "bus.glb");
                 Car car = null;
                 Iterator<Car> it2 = this.genericPool.iterator();
                 Intrinsics.checkNotNullExpressionValue(it2, "iterator(...)");
@@ -4414,7 +4414,7 @@ public final class SceneView extends SurfaceView {
                         Car c2 = next2;
                         if (c2.getId() == j) {
                             Iterator<Car> it4 = it3;
-                            if (StringsKt.startsWith$default(c2.getKind(), "car_", false, 2, (Object) null)) {
+                            if (StringsKt.startsWith(c2.getKind(), "car_", false)) {
                                 car = c2;
                                 break;
                             }
@@ -4434,7 +4434,7 @@ public final class SceneView extends SurfaceView {
                         if (!Double.isNaN(c3.getWx()) && nowMs - c3.getLastUsed() > 700) {
                             if (!Intrinsics.areEqual(c3.getKind(), kindName)) {
                                 if (vehicleKind) {
-                                    if (!StringsKt.startsWith$default(c3.getKind(), "car_", false, 2, (Object) null)) {
+                                    if (!StringsKt.startsWith(c3.getKind(), "car_", false)) {
                                     }
                                 }
                             }
@@ -6944,7 +6944,7 @@ public final class SceneView extends SurfaceView {
                                                         HashMap ends2 = ends;
                                                         Iterator it23 = it22;
                                                         long id2 = id;
-                                                        if (StringsKt.endsWith$default(u.getKind(), "_link", false, 2, (Object) null) != StringsKt.endsWith$default(w8.getKind(), "_link", false, 2, (Object) null)) {
+                                                        if (StringsKt.endsWith(u.getKind(), "_link", false) != StringsKt.endsWith(w8.getKind(), "_link", false)) {
                                                             it22 = it23;
                                                             ends = ends2;
                                                             id = id2;

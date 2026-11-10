@@ -80,7 +80,7 @@ public final class GalaxyRow {
         this.defaultValue = Companion.str(o, "defaultValue");
         this.resetAvailable = o.optBoolean("resetAvailable", false);
         this.laneStrength = Intrinsics.areEqual(Companion.str(o, "displayScale"), "lane-strength");
-        this.heading = o.optBoolean("heading", false) || StringsKt.startsWith$default(Companion.str(o, "key"), "heading:", false, 2, (Object) null);
+        this.heading = o.optBoolean("heading", false) || StringsKt.startsWith(Companion.str(o, "key"), "heading:", false);
         this.coordinate = Companion.str(o, "coordinate");
         this.previewSound = Companion.str(o, "previewSound");
         if (this.heading) {

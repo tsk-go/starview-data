@@ -207,7 +207,7 @@ public final class AmyVoice {
                     if (!it4.isFile()) {
                         it4 = null;
                     }
-                    if (it4 == null || (readText$default = FilesKt.readText$default(it4, null, 1, null)) == null || (name = StringsKt.trim((CharSequence) readText$default).toString()) == null) {
+                    if (it4 == null || (readText$default = FilesKt.readText(it4, kotlin.text.Charsets.UTF_8)) == null || (name = StringsKt.trim((CharSequence) readText$default).toString()) == null) {
                         name = d.getName();
                     }
                     Intrinsics.checkNotNull(name);
@@ -345,7 +345,7 @@ public final class AmyVoice {
         if (p == null) {
             return;
         }
-        StringsKt.startsWith$default(p.getId(), "gen:", false, 2, (Object) null);
+        StringsKt.startsWith(p.getId(), "gen:", false);
         FilesKt.deleteRecursively(p.getDir());
         setActiveId(Intrinsics.areEqual(getActiveId(), id) ? "" : getActiveId());
     }
@@ -413,7 +413,7 @@ public final class AmyVoice {
                         try {
                             String name = e.getName();
                             Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-                            String name2 = StringsKt.substringAfterLast$default(name, '/', (String) null, 2, (Object) null);
+                            String name2 = StringsKt.substringAfterLast(name, '/', name);
                             if (e.isDirectory() || !new Regex("[a-z0-9_]+\\.wav").matches(name2)) {
                                 ins = ins;
                             } else {
@@ -422,7 +422,7 @@ public final class AmyVoice {
                                     FileOutputStream it = fileOutputStream;
                                     InputStream ins2 = ins;
                                     try {
-                                        ByteStreamsKt.copyTo$default(z, it, 0, 2, null);
+                                        ByteStreamsKt.copyTo(z, it, 8192);
                                         try {
                                             CloseableKt.closeFinally(fileOutputStream, null);
                                             n++;
@@ -507,7 +507,7 @@ public final class AmyVoice {
     public static final boolean recordings$lambda$20(File f) {
         String name = f.getName();
         Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-        return StringsKt.endsWith$default(name, ".wav", false, 2, (Object) null);
+        return StringsKt.endsWith(name, ".wav", false);
     }
 
     public final int recordings(Pack p) {

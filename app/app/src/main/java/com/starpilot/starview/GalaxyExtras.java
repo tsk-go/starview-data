@@ -64,7 +64,7 @@ public final class GalaxyExtras {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit soundPacks$lambda$8;
-                soundPacks$lambda$8 = GalaxyExtras.soundPacks$lambda$8(Galaxy7.this, box, ui, main, ctx);
+                soundPacks$lambda$8 = GalaxyExtras.soundPacks$lambda$8(g, box, ui, main, ctx);
                 return soundPacks$lambda$8;
             }
         });
@@ -130,7 +130,7 @@ public final class GalaxyExtras {
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit soundPacks$draw$lambda$2;
-                                soundPacks$draw$lambda$2 = GalaxyExtras.soundPacks$draw$lambda$2(Galaxy7.this, job, $ctx);
+                                soundPacks$draw$lambda$2 = GalaxyExtras.soundPacks$draw$lambda$2(g, job, $ctx);
                                 return soundPacks$draw$lambda$2;
                             }
                         }, 2, null));
@@ -393,7 +393,7 @@ public final class GalaxyExtras {
             new AlertDialog.Builder($ctx).setMessage("Use " + $labels.get(i) + " after the next device reboot? Going back to comma restores its saved cloud identity.").setPositiveButton("Use " + $labels.get(i), new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.GalaxyExtras$$ExternalSyntheticLambda5
                 @Override // android.content.DialogInterface.OnClickListener
                 public final void onClick(DialogInterface dialogInterface, int i2) {
-                    GalaxyExtras.cloudProvider$load$lambda$17$lambda$16$lambda$15(Galaxy7.this, $ids, i, $o, $ctx, $box, $ui, dialogInterface, i2);
+                    GalaxyExtras.cloudProvider$load$lambda$17$lambda$16$lambda$15($g, $ids, i, $o, $ctx, $box, $ui, dialogInterface, i2);
                 }
             }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
             return Unit.INSTANCE;
@@ -612,7 +612,7 @@ public final class GalaxyExtras {
                     str2 = str5;
                 }
                 strArr[1] = str2;
-                String joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), " · ", null, null, 0, null, null, 62, null);
+                String joinToString$default = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), " · ", "", "", -1, "...", null);
                 if (StringsKt.isBlank(joinToString$default)) {
                     joinToString$default = null;
                 }

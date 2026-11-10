@@ -7,9 +7,9 @@ import kotlin.math.MathKt;
 public final class GxCamerasKt {
     private static final String GX_CAM_LEFT = "LEFT SIDE OF VEHICLE - LEFT HERE";
     private static final String GX_CAM_RIGHT = "RIGHT SIDE OF VEHICLE - RIGHT HERE";
-    private static final int GX_CAM_BLUE = Color.rgb(13, 110, 253);
-    private static final int GX_CAM_ORANGE = Color.rgb(253, 126, 20);
-    private static final int GX_CAM_RED = Color.rgb(255, 99, 99);
+    static final int GX_CAM_BLUE = Color.rgb(13, 110, 253);
+    static final int GX_CAM_ORANGE = Color.rgb(253, 126, 20);
+    static final int GX_CAM_RED = Color.rgb(255, 99, 99);
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final int gxCamRound(double $this$gxCamRound) {

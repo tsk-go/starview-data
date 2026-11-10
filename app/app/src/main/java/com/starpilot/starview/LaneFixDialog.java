@@ -212,7 +212,7 @@ public final class LaneFixDialog {
                     break;
             }
             String tw = str;
-            return (e.isEmpty() ? base : base + " (" + this.through + " + " + CollectionsKt.joinToString$default(e, " + ", null, null, 0, null, null, 62, null) + ")") + tw;
+            return (e.isEmpty() ? base : base + " (" + this.through + " + " + CollectionsKt.joinToString(e, " + ", "", "", -1, "...", null) + ")") + tw;
         }
 
         private static final String sentence$ex$1(int n, String k, String side) {
@@ -231,7 +231,7 @@ public final class LaneFixDialog {
                 append = new StringBuilder().append(this.through).append(" lane").append(this.through == 1 ? "" : "s");
             }
             String base = append.toString();
-            return e.isEmpty() ? base : base + ", plus " + CollectionsKt.joinToString$default(e, " and ", null, null, 0, null, null, 62, null);
+            return e.isEmpty() ? base : base + ", plus " + CollectionsKt.joinToString(e, " and ", "", "", -1, "...", null);
         }
     }
 
@@ -971,7 +971,7 @@ public final class LaneFixDialog {
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit show$lambda$12;
-                        show$lambda$12 = LaneFixDialog.show$lambda$12(Ref.ObjectRef.this);
+                        show$lambda$12 = LaneFixDialog.show$lambda$12(paint);
                         return show$lambda$12;
                     }
                 });
@@ -1034,7 +1034,7 @@ public final class LaneFixDialog {
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit show$lambda$26;
-                                show$lambda$26 = LaneFixDialog.show$lambda$26(LaneFixDialog.Road.this, rp, paint3, roadView);
+                                show$lambda$26 = LaneFixDialog.show$lambda$26(road, rp, paint3, roadView);
                                 return show$lambda$26;
                             }
                         });
@@ -1064,7 +1064,7 @@ public final class LaneFixDialog {
                         @Override // kotlin.jvm.functions.Function0
                         public final Object invoke() {
                             Unit show$lambda$29;
-                            show$lambda$29 = LaneFixDialog.show$lambda$29(LaneFixDialog.Result.this, $this$show_u24lambda_u246, $this$show_u24lambda_u240, onSave);
+                            show$lambda$29 = LaneFixDialog.show$lambda$29(last, $this$show_u24lambda_u246, $this$show_u24lambda_u240, onSave);
                             return show$lambda$29;
                         }
                     }));
@@ -1147,7 +1147,7 @@ public final class LaneFixDialog {
                         @Override // kotlin.jvm.functions.Function0
                         public final Object invoke() {
                             Unit show$lambda$42;
-                            show$lambda$42 = LaneFixDialog.show$lambda$42(LaneFixDialog.Road.this, $this$show_u24lambda_u246, dlg, onSave);
+                            show$lambda$42 = LaneFixDialog.show$lambda$42(road, $this$show_u24lambda_u246, dlg, onSave);
                             return show$lambda$42;
                         }
                     }));
@@ -1216,7 +1216,7 @@ public final class LaneFixDialog {
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit show$lambda$42;
-                        show$lambda$42 = LaneFixDialog.show$lambda$42(LaneFixDialog.Road.this, $this$show_u24lambda_u246, dlg, onSave);
+                        show$lambda$42 = LaneFixDialog.show$lambda$42(road, $this$show_u24lambda_u246, dlg, onSave);
                         return show$lambda$42;
                     }
                 }));
@@ -1280,7 +1280,7 @@ public final class LaneFixDialog {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit show$lambda$12;
-                show$lambda$12 = LaneFixDialog.show$lambda$12(Ref.ObjectRef.this);
+                show$lambda$12 = LaneFixDialog.show$lambda$12(paint);
                 return show$lambda$12;
             }
         });
@@ -1347,7 +1347,7 @@ public final class LaneFixDialog {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit show$lambda$42;
-                    show$lambda$42 = LaneFixDialog.show$lambda$42(LaneFixDialog.Road.this, $this$show_u24lambda_u246, dlg, onSave);
+                    show$lambda$42 = LaneFixDialog.show$lambda$42(road, $this$show_u24lambda_u246, dlg, onSave);
                     return show$lambda$42;
                 }
             }));
@@ -1406,7 +1406,7 @@ public final class LaneFixDialog {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit show$lambda$42;
-                show$lambda$42 = LaneFixDialog.show$lambda$42(LaneFixDialog.Road.this, $this$show_u24lambda_u246, dlg, onSave);
+                show$lambda$42 = LaneFixDialog.show$lambda$42(road, $this$show_u24lambda_u246, dlg, onSave);
                 return show$lambda$42;
             }
         }));
@@ -1492,7 +1492,7 @@ public final class LaneFixDialog {
         $this$show_u24chip_u24lambda_u245.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda0
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                function0.invoke();
             }
         });
         LinearLayout.LayoutParams $this$show_u24chip_u24lambda_u245_u24lambda_u244 = new LinearLayout.LayoutParams(-2, -2);
@@ -1519,7 +1519,7 @@ public final class LaneFixDialog {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit show$lambda$11$lambda$9;
-                    show$lambda$11$lambda$9 = LaneFixDialog.show$lambda$11$lambda$9(LaneFixDialog.Road.this, k, $paint, $roadView);
+                    show$lambda$11$lambda$9 = LaneFixDialog.show$lambda$11$lambda$9($road, k, $paint, $roadView);
                     return show$lambda$11$lambda$9;
                 }
             }, 16, null));
@@ -1533,7 +1533,7 @@ public final class LaneFixDialog {
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit show$lambda$11$lambda$10;
-                        show$lambda$11$lambda$10 = LaneFixDialog.show$lambda$11$lambda$10(LaneFixDialog.Road.this, k2, $paint, $roadView);
+                        show$lambda$11$lambda$10 = LaneFixDialog.show$lambda$11$lambda$10($road, k2, $paint, $roadView);
                         return show$lambda$11$lambda$10;
                     }
                 }));
@@ -1626,7 +1626,7 @@ public final class LaneFixDialog {
         $this$show_u24pm_u24lambda_u2416.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda5
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                LaneFixDialog.show$pm$lambda$16$lambda$14(Function0.this, objectRef, objectRef2, view);
+                LaneFixDialog.show$pm$lambda$16$lambda$14(function0, objectRef, objectRef2, view);
             }
         });
         LinearLayout.LayoutParams $this$show_u24pm_u24lambda_u2416_u24lambda_u2415 = new LinearLayout.LayoutParams(show$dp(d, 60), show$dp(d, 60));
@@ -1665,7 +1665,7 @@ public final class LaneFixDialog {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit show$side$lambda$20$lambda$17;
-                show$side$lambda$20$lambda$17 = LaneFixDialog.show$side$lambda$20$lambda$17(LaneFixDialog.Road.this, s);
+                show$side$lambda$20$lambda$17 = LaneFixDialog.show$side$lambda$20$lambda$17(road, s);
                 return show$side$lambda$20$lambda$17;
             }
         }));
@@ -1673,7 +1673,7 @@ public final class LaneFixDialog {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit show$side$lambda$20$lambda$18;
-                show$side$lambda$20$lambda$18 = LaneFixDialog.show$side$lambda$20$lambda$18(LaneFixDialog.Road.this, s);
+                show$side$lambda$20$lambda$18 = LaneFixDialog.show$side$lambda$20$lambda$18(road, s);
                 return show$side$lambda$20$lambda$18;
             }
         }));
@@ -1764,7 +1764,7 @@ public final class LaneFixDialog {
         $this$show_u24bbtn_u24lambda_u2438.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.LaneFixDialog$$ExternalSyntheticLambda6
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                function0.invoke();
             }
         });
         LinearLayout.LayoutParams $this$show_u24bbtn_u24lambda_u2438_u24lambda_u2437 = new LinearLayout.LayoutParams(-2, -2);

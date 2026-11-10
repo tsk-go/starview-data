@@ -663,7 +663,7 @@ public final class DoorsBeltsView extends CardPage {
                                 if (valueOf2 != null) {
                                     k = valueOf2.intValue() + " moving";
                                     strArr[1] = k;
-                                    String it6 = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", null, null, 0, null, null, 62, null);
+                                    String it6 = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", "", "", -1, "...", null);
                                     destination$iv$iv.add(nameOf2 + " " + optInt + "×" + ((Object) (it6.length() == 0 ? str21 : " (" + it6 + ")")));
                                     $this$map$iv = $this$map$iv2;
                                     $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
@@ -675,7 +675,7 @@ public final class DoorsBeltsView extends CardPage {
                             }
                             k = null;
                             strArr[1] = k;
-                            String it62 = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", null, null, 0, null, null, 62, null);
+                            String it62 = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", "", "", -1, "...", null);
                             destination$iv$iv.add(nameOf2 + " " + optInt + "×" + ((Object) (it62.length() == 0 ? str21 : " (" + it62 + ")")));
                             $this$map$iv = $this$map$iv2;
                             $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
@@ -692,7 +692,7 @@ public final class DoorsBeltsView extends CardPage {
                     }
                     k = null;
                     strArr[1] = k;
-                    String it622 = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", null, null, 0, null, null, 62, null);
+                    String it622 = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", "", "", -1, "...", null);
                     destination$iv$iv.add(nameOf2 + " " + optInt + "×" + ((Object) (it622.length() == 0 ? str21 : " (" + it622 + ")")));
                     $this$map$iv = $this$map$iv2;
                     $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
@@ -708,7 +708,7 @@ public final class DoorsBeltsView extends CardPage {
                 JSONObject s2 = s;
                 List parts2 = parts;
                 dc.addView(line(this.shortFmt.format(new Date(d2.optLong("start") * 1000)) + " · " + d2.optInt("segs") + " min", CarUi.Companion.getTEXT(), 17.0f));
-                dc.addView(line("      " + CollectionsKt.joinToString$default(parts2, " · ", null, null, 0, null, null, 62, null), (f3 != null || f3.length() <= 0) ? CarUi.Companion.getDIM() : CarUi.Companion.getWARN(), 15.0f));
+                dc.addView(line("      " + CollectionsKt.joinToString(parts2, " · ", "", "", -1, "...", null), (f3 != null || f3.length() <= 0) ? CarUi.Companion.getDIM() : CarUi.Companion.getWARN(), 15.0f));
                 i3++;
                 s = s2;
                 drives = drives2;
@@ -724,7 +724,7 @@ public final class DoorsBeltsView extends CardPage {
             JSONObject s22 = s;
             List parts22 = parts;
             dc.addView(line(this.shortFmt.format(new Date(d2.optLong("start") * 1000)) + " · " + d2.optInt("segs") + " min", CarUi.Companion.getTEXT(), 17.0f));
-            dc.addView(line("      " + CollectionsKt.joinToString$default(parts22, " · ", null, null, 0, null, null, 62, null), (f3 != null || f3.length() <= 0) ? CarUi.Companion.getDIM() : CarUi.Companion.getWARN(), 15.0f));
+            dc.addView(line("      " + CollectionsKt.joinToString(parts22, " · ", "", "", -1, "...", null), (f3 != null || f3.length() <= 0) ? CarUi.Companion.getDIM() : CarUi.Companion.getWARN(), 15.0f));
             i3++;
             s = s22;
             drives = drives2;
@@ -774,7 +774,7 @@ public final class DoorsBeltsView extends CardPage {
                 strArr2[0] = day2;
                 String str25 = str23;
                 strArr2[1] = e.optBoolean(str25) ? "QUICK" : null;
-                String tail = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr2), " · ", null, null, 0, null, null, 62, null);
+                String tail = CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr2), " · ", "", "", -1, "...", null);
                 String format = this.timeFmt.format(t);
                 Intrinsics.checkNotNull(id);
                 int i5 = min2;
@@ -1266,7 +1266,7 @@ public final class DoorsBeltsView extends CardPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit paint$lambda$2$lambda$1;
-                    paint$lambda$2$lambda$1 = DoorsBeltsView.Learn.paint$lambda$2$lambda$1(DoorsBeltsView.Learn.this, this$0, (JSONObject) obj);
+                    paint$lambda$2$lambda$1 = DoorsBeltsView.Learn.paint$lambda$2$lambda$1(this$1, this$0, (JSONObject) obj);
                     return paint$lambda$2$lambda$1;
                 }
             }, 2, null);
@@ -1282,7 +1282,7 @@ public final class DoorsBeltsView extends CardPage {
                 this$1.getMain().postDelayed(new Runnable() { // from class: com.starpilot.starview.DoorsBeltsView$Learn$$ExternalSyntheticLambda16
                     @Override // java.lang.Runnable
                     public final void run() {
-                        DoorsBeltsView.Learn.paint$lambda$2$lambda$1$lambda$0(DoorsBeltsView.this, this$0);
+                        DoorsBeltsView.Learn.paint$lambda$2$lambda$1$lambda$0(this$1, this$0);
                     }
                 }, 5000L);
             } else {
@@ -1311,7 +1311,7 @@ public final class DoorsBeltsView extends CardPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit paint$lambda$6$lambda$5;
-                    paint$lambda$6$lambda$5 = DoorsBeltsView.Learn.paint$lambda$6$lambda$5(DoorsBeltsView.Learn.this, (JSONObject) obj);
+                    paint$lambda$6$lambda$5 = DoorsBeltsView.Learn.paint$lambda$6$lambda$5(this$1, (JSONObject) obj);
                     return paint$lambda$6$lambda$5;
                 }
             });
@@ -1336,7 +1336,7 @@ public final class DoorsBeltsView extends CardPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit paint$lambda$10$lambda$9;
-                    paint$lambda$10$lambda$9 = DoorsBeltsView.Learn.paint$lambda$10$lambda$9(DoorsBeltsView.this, (JSONObject) obj);
+                    paint$lambda$10$lambda$9 = DoorsBeltsView.Learn.paint$lambda$10$lambda$9(this$0, (JSONObject) obj);
                     return paint$lambda$10$lambda$9;
                 }
             }, 2, null);
@@ -1356,7 +1356,7 @@ public final class DoorsBeltsView extends CardPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit paint$lambda$8$lambda$7;
-                    paint$lambda$8$lambda$7 = DoorsBeltsView.Learn.paint$lambda$8$lambda$7(DoorsBeltsView.Learn.this, (JSONObject) obj);
+                    paint$lambda$8$lambda$7 = DoorsBeltsView.Learn.paint$lambda$8$lambda$7(this$1, (JSONObject) obj);
                     return paint$lambda$8$lambda$7;
                 }
             });
@@ -1376,7 +1376,7 @@ public final class DoorsBeltsView extends CardPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit paint$lambda$12$lambda$11;
-                    paint$lambda$12$lambda$11 = DoorsBeltsView.Learn.paint$lambda$12$lambda$11(DoorsBeltsView.Learn.this, (JSONObject) obj);
+                    paint$lambda$12$lambda$11 = DoorsBeltsView.Learn.paint$lambda$12$lambda$11(this$1, (JSONObject) obj);
                     return paint$lambda$12$lambda$11;
                 }
             });
@@ -1403,7 +1403,7 @@ public final class DoorsBeltsView extends CardPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit paint$lambda$14$lambda$13;
-                    paint$lambda$14$lambda$13 = DoorsBeltsView.Learn.paint$lambda$14$lambda$13(DoorsBeltsView.this, (JSONObject) obj);
+                    paint$lambda$14$lambda$13 = DoorsBeltsView.Learn.paint$lambda$14$lambda$13(this$0, (JSONObject) obj);
                     return paint$lambda$14$lambda$13;
                 }
             }, 2, null);
@@ -1436,7 +1436,7 @@ public final class DoorsBeltsView extends CardPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit paint$lambda$21$lambda$20;
-                    paint$lambda$21$lambda$20 = DoorsBeltsView.Learn.paint$lambda$21$lambda$20(DoorsBeltsView.Learn.this, this$0, (JSONObject) obj);
+                    paint$lambda$21$lambda$20 = DoorsBeltsView.Learn.paint$lambda$21$lambda$20(this$1, this$0, (JSONObject) obj);
                     return paint$lambda$21$lambda$20;
                 }
             }, 2, null);
@@ -1461,7 +1461,7 @@ public final class DoorsBeltsView extends CardPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit paint$lambda$23$lambda$22;
-                    paint$lambda$23$lambda$22 = DoorsBeltsView.Learn.paint$lambda$23$lambda$22(DoorsBeltsView.this, (JSONObject) obj);
+                    paint$lambda$23$lambda$22 = DoorsBeltsView.Learn.paint$lambda$23$lambda$22(this$0, (JSONObject) obj);
                     return paint$lambda$23$lambda$22;
                 }
             }, 2, null);
@@ -1490,7 +1490,7 @@ public final class DoorsBeltsView extends CardPage {
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit paint$lambda$26$lambda$25;
-                    paint$lambda$26$lambda$25 = DoorsBeltsView.Learn.paint$lambda$26$lambda$25(DoorsBeltsView.this, (JSONObject) obj);
+                    paint$lambda$26$lambda$25 = DoorsBeltsView.Learn.paint$lambda$26$lambda$25(this$0, (JSONObject) obj);
                     return paint$lambda$26$lambda$25;
                 }
             }, 2, null);

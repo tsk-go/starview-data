@@ -71,7 +71,7 @@ public final class GalaxyPages {
                 main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyPages$$ExternalSyntheticLambda2
                     @Override // java.lang.Runnable
                     public final void run() {
-                        GalaxyPages.get$lambda$2$lambda$1(Function1.this, h);
+                        GalaxyPages.get$lambda$2$lambda$1(done, h);
                     }
                 });
                 return;
@@ -82,7 +82,7 @@ public final class GalaxyPages {
             main.post(new Runnable() { // from class: com.starpilot.starview.GalaxyPages$$ExternalSyntheticLambda3
                 @Override // java.lang.Runnable
                 public final void run() {
-                    Function1.this.invoke(null);
+                    done.invoke(null);
                 }
             });
         } else {
@@ -129,7 +129,7 @@ public final class GalaxyPages {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit summary$lambda$6;
-                summary$lambda$6 = GalaxyPages.summary$lambda$6(Function1.this, (JSONObject) obj);
+                summary$lambda$6 = GalaxyPages.summary$lambda$6(done, (JSONObject) obj);
                 return summary$lambda$6;
             }
         }, 2, null);

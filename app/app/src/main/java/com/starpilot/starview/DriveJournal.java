@@ -81,14 +81,14 @@ public final class DriveJournal {
             if (logic.getOut().isEmpty()) {
                 return;
             }
-            final String lines = CollectionsKt.joinToString$default(logic.getOut(), "", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.DriveJournal$$ExternalSyntheticLambda0
+            final String lines = CollectionsKt.joinToString(logic.getOut(), "", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.DriveJournal$$ExternalSyntheticLambda0
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     CharSequence onState$lambda$6$lambda$2;
                     onState$lambda$6$lambda$2 = DriveJournal.onState$lambda$6$lambda$2((JSONObject) obj);
                     return onState$lambda$6$lambda$2;
                 }
-            }, 30, null);
+            });
             logic.getOut().clear();
             final File f = file;
             if (f == null) {
@@ -116,12 +116,12 @@ public final class DriveJournal {
             DriveJournal $this$onState_u24lambda_u246_u24lambda_u245_u24lambda_u244_u24lambda_u243 = INSTANCE;
             try {
                 Result.Companion companion = Result.Companion;
-                FilesKt.appendText$default($f, $lines, null, 2, null);
+                FilesKt.appendText($f, $lines, kotlin.text.Charsets.UTF_8);
                 $this$onState_u24lambda_u246_u24lambda_u245_u24lambda_u244_u24lambda_u243.trim($f);
-                Result.m1191constructorimpl(Unit.INSTANCE);
+                KtCompat.resultOf(Unit.INSTANCE);
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                Result.m1191constructorimpl(ResultKt.createFailure(th));
+                KtCompat.resultOf(ResultKt.createFailure(th));
             }
             Unit unit = Unit.INSTANCE;
         }
@@ -131,8 +131,8 @@ public final class DriveJournal {
         if (f.length() < 1500000) {
             return;
         }
-        List keep = CollectionsKt.takeLast(FilesKt.readLines$default(f, null, 1, null), 3000);
-        FilesKt.writeText$default(f, CollectionsKt.joinToString$default(keep, "\n", null, "\n", 0, null, null, 58, null), null, 2, null);
+        List keep = CollectionsKt.takeLast(FilesKt.readLines(f, kotlin.text.Charsets.UTF_8), 3000);
+        FilesKt.writeText(f, CollectionsKt.joinToString(keep, "\n", "", "\n", -1, "...", null), kotlin.text.Charsets.UTF_8);
     }
 
     public static /* synthetic */ List read$default(DriveJournal driveJournal, String str, int i, Object obj) {
@@ -154,13 +154,13 @@ public final class DriveJournal {
             DriveJournal driveJournal = INSTANCE;
             try {
                 Result.Companion companion = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(FilesKt.readLines$default(f, null, 1, null));
+                m1191constructorimpl = KtCompat.resultOf(FilesKt.readLines(f, kotlin.text.Charsets.UTF_8));
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
             }
             List emptyList = CollectionsKt.emptyList();
-            if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+            if (KtCompat.isFailure(m1191constructorimpl)) {
                 m1191constructorimpl = emptyList;
             }
             iterable = (List) m1191constructorimpl;
@@ -172,12 +172,12 @@ public final class DriveJournal {
             DriveJournal driveJournal2 = INSTANCE;
             try {
                 Result.Companion companion3 = Result.Companion;
-                m1191constructorimpl2 = Result.m1191constructorimpl(new JSONObject(it));
+                m1191constructorimpl2 = KtCompat.resultOf(new JSONObject(it));
             } catch (Throwable th2) {
                 Result.Companion companion4 = Result.Companion;
-                m1191constructorimpl2 = Result.m1191constructorimpl(ResultKt.createFailure(th2));
+                m1191constructorimpl2 = KtCompat.resultOf(ResultKt.createFailure(th2));
             }
-            if (Result.m1197isFailureimpl(m1191constructorimpl2)) {
+            if (KtCompat.isFailure(m1191constructorimpl2)) {
                 m1191constructorimpl2 = null;
             }
             JSONObject jSONObject = (JSONObject) m1191constructorimpl2;

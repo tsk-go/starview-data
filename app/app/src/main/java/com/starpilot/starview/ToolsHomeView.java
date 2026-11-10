@@ -81,7 +81,7 @@ public final class ToolsHomeView extends ScrollView {
                 }
             }
             String desc = str;
-            Pair<LinearLayout, TextView> iconTile = this.ui.iconTile((String) t.getFirst(), desc, icon, StringsKt.startsWith$default((String) t.getThird(), "#", z, 2, (Object) null) ? "tablet" : "device", new Function0() { // from class: com.starpilot.starview.ToolsHomeView$$ExternalSyntheticLambda1
+            Pair<LinearLayout, TextView> iconTile = this.ui.iconTile((String) t.getFirst(), desc, icon, StringsKt.startsWith((String) t.getThird(), "#", false) ? "tablet" : "device", new Function0() { // from class: com.starpilot.starview.ToolsHomeView$$ExternalSyntheticLambda1
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit _init_$lambda$2;

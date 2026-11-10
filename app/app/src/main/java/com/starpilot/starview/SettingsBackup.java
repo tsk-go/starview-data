@@ -73,7 +73,7 @@ public final class SettingsBackup {
             for (File file : listFiles) {
                 String name = file.getName();
                 Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-                if (StringsKt.endsWith$default(name, ".xml", false, 2, (Object) null)) {
+                if (StringsKt.endsWith(name, ".xml", false)) {
                     destination$iv$iv.add(file);
                 }
             }
@@ -221,7 +221,7 @@ public final class SettingsBackup {
             if (keys.hasNext()) {
                 String name = keys.next();
                 Intrinsics.checkNotNull(name);
-                if (!((!(name.length() > 0) || Intrinsics.areEqual(name, "starview_backup_meta") || StringsKt.contains$default((CharSequence) name, '/', false, 2, (Object) null)) ? false : true)) {
+                if (!((!(name.length() > 0) || Intrinsics.areEqual(name, "starview_backup_meta") || StringsKt.contains((CharSequence) name, '/', false)) ? false : true)) {
                     throw new IllegalArgumentException("bad settings file name".toString());
                 }
                 JSONObject o = prefs2.getJSONObject(name);
@@ -346,12 +346,12 @@ public final class SettingsBackup {
                 } else {
                     bool = null;
                 }
-                m1191constructorimpl = Result.m1191constructorimpl(bool);
+                m1191constructorimpl = KtCompat.resultOf(bool);
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
             }
-            if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+            if (KtCompat.isFailure(m1191constructorimpl)) {
                 m1191constructorimpl = null;
             }
             boolean alive = Intrinsics.areEqual(m1191constructorimpl, (Object) true);
@@ -456,7 +456,7 @@ public final class SettingsBackup {
             fileInputStream = new FileInputStream(src);
             try {
                 FileInputStream it = fileInputStream;
-                ByteStreamsKt.copyTo$default(it, out, 0, 2, null);
+                ByteStreamsKt.copyTo(it, out, 8192);
                 CloseableKt.closeFinally(fileInputStream, null);
                 CloseableKt.closeFinally(fileInputStream, null);
                 ctx.getSharedPreferences("starview_backup_meta", 0).edit().putString("row_" + name, uri.toString()).apply();
@@ -568,10 +568,10 @@ public final class SettingsBackup {
                 try {
                     Result.Companion companion = Result.Companion;
                     SettingsBackup settingsBackup = this;
-                    Result.m1191constructorimpl(Integer.valueOf(ctx.getContentResolver().delete(uri, null, null)));
+                    KtCompat.resultOf(Integer.valueOf(ctx.getContentResolver().delete(uri, null, null)));
                 } catch (Throwable th) {
                     Result.Companion companion2 = Result.Companion;
-                    Result.m1191constructorimpl(ResultKt.createFailure(th));
+                    KtCompat.resultOf(ResultKt.createFailure(th));
                 }
             }
         }
@@ -625,7 +625,7 @@ public final class SettingsBackup {
             new AlertDialog.Builder(act).setMessage("That file isn't a StarView settings backup.").setPositiveButton("OK", (DialogInterface.OnClickListener) null).setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.starpilot.starview.SettingsBackup$$ExternalSyntheticLambda1
                 @Override // android.content.DialogInterface.OnDismissListener
                 public final void onDismiss(DialogInterface dialogInterface) {
-                    Function0.this.invoke();
+                    onCancel.invoke();
                 }
             }).show();
             return;
@@ -638,12 +638,12 @@ public final class SettingsBackup {
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SettingsBackup$$ExternalSyntheticLambda3
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                Function0.this.invoke();
+                onCancel.invoke();
             }
         }).setOnCancelListener(new DialogInterface.OnCancelListener() { // from class: com.starpilot.starview.SettingsBackup$$ExternalSyntheticLambda4
             @Override // android.content.DialogInterface.OnCancelListener
             public final void onCancel(DialogInterface dialogInterface) {
-                Function0.this.invoke();
+                onCancel.invoke();
             }
         }).show();
     }
@@ -657,7 +657,7 @@ public final class SettingsBackup {
             new AlertDialog.Builder($act).setMessage("Restore failed, nothing was changed: " + e.getMessage()).setPositiveButton("OK", (DialogInterface.OnClickListener) null).setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.starpilot.starview.SettingsBackup$$ExternalSyntheticLambda5
                 @Override // android.content.DialogInterface.OnDismissListener
                 public final void onDismiss(DialogInterface dialogInterface2) {
-                    Function0.this.invoke();
+                    $onCancel.invoke();
                 }
             }).show();
         }

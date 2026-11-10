@@ -510,14 +510,14 @@ public final class LaneCardView extends View {
         double qr = side2.component2().doubleValue();
         double d = 100;
         line(c, "lanes left of us: " + sl + " (" + ((int) (ql * d)) + "%)  ·  right: " + sr + " (" + ((int) (d * qr)) + "%)", this.small, this.d * 56.0f, lineW);
-        String joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.take(tr3.getWhy(), 2), "  ·  ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda0
+        String joinToString$default = CollectionsKt.joinToString(CollectionsKt.take(tr3.getWhy(), 2), "  ·  ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence onDraw$lambda$10;
                 onDraw$lambda$10 = LaneCardView.onDraw$lambda$10(LaneCardView.this, (LaneBrain.Event) obj);
                 return onDraw$lambda$10;
             }
-        }, 30, null);
+        });
         if (joinToString$default.length() == 0) {
             joinToString$default = "nothing seen yet";
         }
@@ -880,7 +880,7 @@ public final class LaneCardView extends View {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit askCount$lambda$17;
-                askCount$lambda$17 = LaneCardView.askCount$lambda$17(LaneBrain.this, this);
+                askCount$lambda$17 = LaneCardView.askCount$lambda$17(tr, this);
                 return askCount$lambda$17;
             }
         };
@@ -988,7 +988,7 @@ public final class LaneCardView extends View {
         new AlertDialog.Builder(getContext()).setTitle("Reset").setItems(items, new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda4
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
-                LaneCardView.askReset$lambda$19(LaneBrain.this, this, dialogInterface, i);
+                LaneCardView.askReset$lambda$19(tr, this, dialogInterface, i);
             }
         }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
     }
@@ -1036,14 +1036,14 @@ public final class LaneCardView extends View {
         }
         final SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss", Locale.US);
         String head = "This drive: " + tr.summary() + "\nYour checks: " + this.nRight + " of " + (this.nRight + this.nWrong) + " right\n\n";
-        final String text = head + (tr.getEvents().isEmpty() ? "Nothing yet." : CollectionsKt.joinToString$default(tr.getEvents(), "\n", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda5
+        final String text = head + (tr.getEvents().isEmpty() ? "Nothing yet." : CollectionsKt.joinToString(tr.getEvents(), "\n", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda5
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence showHistory$lambda$20;
                 showHistory$lambda$20 = LaneCardView.showHistory$lambda$20(fmt, (LaneBrain.Event) obj);
                 return showHistory$lambda$20;
             }
-        }, 30, null));
+        }));
         new AlertDialog.Builder(getContext()).setTitle("Lanes (newest first)").setMessage(text).setPositiveButton("Close", (DialogInterface.OnClickListener) null).setNegativeButton("Reset…", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.LaneCardView$$ExternalSyntheticLambda6
             @Override // android.content.DialogInterface.OnClickListener
             public final void onClick(DialogInterface dialogInterface, int i) {
@@ -1085,10 +1085,10 @@ public final class LaneCardView extends View {
             try {
                 File f = new File(ctx.getFilesDir(), "lane_log.txt");
                 if (f.length() > 1000000) {
-                    FilesKt.writeText$default(f, CollectionsKt.joinToString$default(CollectionsKt.takeLast(FilesKt.readLines$default(f, null, 1, null), 3000), "\n", null, null, 0, null, null, 62, null) + "\n", null, 2, null);
+                    FilesKt.writeText(f, CollectionsKt.joinToString(CollectionsKt.takeLast(FilesKt.readLines(f, kotlin.text.Charsets.UTF_8), 3000), "\n", "", "", -1, "...", null) + "\n", kotlin.text.Charsets.UTF_8);
                 }
                 try {
-                    FilesKt.appendText$default(f, line + "\n", null, 2, null);
+                    FilesKt.appendText(f, line + "\n", kotlin.text.Charsets.UTF_8);
                 } catch (Exception e) {
                 }
             } catch (Exception e2) {

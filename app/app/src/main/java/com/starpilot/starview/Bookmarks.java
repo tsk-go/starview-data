@@ -133,7 +133,7 @@ public final class Bookmarks {
         File tmp = new File(d, "bookmark.json.tmp");
         String jSONObject = j.toString(2);
         Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
-        FilesKt.writeText$default(tmp, jSONObject, null, 2, null);
+        FilesKt.writeText(tmp, jSONObject, kotlin.text.Charsets.UTF_8);
         tmp.renameTo(new File(d, "bookmark.json"));
     }
 
@@ -142,7 +142,7 @@ public final class Bookmarks {
         try {
             String name = d.getName();
             Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-            return new Item(name, d, new JSONObject(FilesKt.readText$default(new File(d, "bookmark.json"), null, 1, null)));
+            return new Item(name, d, new JSONObject(FilesKt.readText(new File(d, "bookmark.json"), kotlin.text.Charsets.UTF_8)));
         } catch (Exception e) {
             return null;
         }
@@ -292,7 +292,7 @@ public final class Bookmarks {
                                 ContentValues cv2 = cv;
                                 Uri uri2 = uri;
                                 try {
-                                    if (StringsKt.endsWith$default(name2, ".tmp", false, 2, (Object) null)) {
+                                    if (StringsKt.endsWith(name2, ".tmp", false)) {
                                         os = os2;
                                     } else {
                                         z2.putNextEntry(new ZipEntry(it3.getId() + "/" + f.getName()));
@@ -302,7 +302,7 @@ public final class Bookmarks {
                                             FileInputStream s = fileInputStream;
                                             os = os2;
                                             try {
-                                                ByteStreamsKt.copyTo$default(s, z2, 0, 2, null);
+                                                ByteStreamsKt.copyTo(s, z2, 8192);
                                                 try {
                                                     CloseableKt.closeFinally(fileInputStream, null);
                                                     z2.closeEntry();
@@ -390,7 +390,7 @@ public final class Bookmarks {
                     r.seek(from);
                     byte[] b = new byte[(int) (len - from)];
                     r.readFully(b);
-                    Iterable $this$filter$iv = StringsKt.split$default((CharSequence) new String(b, Charsets.UTF_8), new String[]{"\n"}, false, 0, 6, (Object) null);
+                    Iterable $this$filter$iv = StringsKt.split((CharSequence) new String(b, Charsets.UTF_8), new String[]{"\n"}, false, 0);
                     Collection destination$iv$iv = new ArrayList();
                     for (Object element$iv$iv : $this$filter$iv) {
                         String it = (String) element$iv$iv;

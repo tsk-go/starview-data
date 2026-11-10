@@ -344,7 +344,7 @@ public final class MapPane extends FrameLayout {
         this$0.post(new Runnable() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda47
             @Override // java.lang.Runnable
             public final void run() {
-                MapPane.tiles$lambda$1$lambda$0(MapPane.this);
+                MapPane.tiles$lambda$1$lambda$0(this$0);
             }
         });
         return Unit.INSTANCE;
@@ -364,7 +364,7 @@ public final class MapPane extends FrameLayout {
         b.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda6
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                function0.invoke();
             }
         });
         LinearLayout.LayoutParams $this$sideBtn_u24lambda_u2411_u24lambda_u2410 = new LinearLayout.LayoutParams(this$0.dpi(48), this$0.dpi(48));
@@ -928,7 +928,7 @@ public final class MapPane extends FrameLayout {
         v.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda48
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                function0.invoke();
             }
         });
         LinearLayout.LayoutParams $this$refreshButtons_u24b_u24lambda_u2441 = new LinearLayout.LayoutParams(0, -1, weight);
@@ -1276,7 +1276,7 @@ public final class MapPane extends FrameLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit saveDestination$lambda$60$lambda$57;
-                saveDestination$lambda$60$lambda$57 = MapPane.saveDestination$lambda$60$lambda$57(MapPane.this, i, $d, (String) obj);
+                saveDestination$lambda$60$lambda$57 = MapPane.saveDestination$lambda$60$lambda$57(this$0, i, $d, (String) obj);
                 return saveDestination$lambda$60$lambda$57;
             }
         };
@@ -1351,7 +1351,7 @@ public final class MapPane extends FrameLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit confirmEnd$lambda$62$lambda$61;
-                confirmEnd$lambda$62$lambda$61 = MapPane.confirmEnd$lambda$62$lambda$61(MapPane.this, (String) obj);
+                confirmEnd$lambda$62$lambda$61 = MapPane.confirmEnd$lambda$62$lambda$61(this$0, (String) obj);
                 return confirmEnd$lambda$62$lambda$61;
             }
         });
@@ -1606,7 +1606,7 @@ public final class MapPane extends FrameLayout {
                 $this$fillSheet_u24lambda_u2484.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda34
                     @Override // android.view.View.OnClickListener
                     public final void onClick(View view) {
-                        Function0.this.invoke();
+                        done.invoke();
                     }
                 });
                 $this$fillSheet_u24lambda_u2466.addView($this$fillSheet_u24lambda_u2484, new LinearLayout.LayoutParams(!other ? -2 : dpi(84), dpi(i2)));
@@ -1712,7 +1712,7 @@ public final class MapPane extends FrameLayout {
         $this$fillSheet_u24lambda_u24842.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda34
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
-                Function0.this.invoke();
+                done2.invoke();
             }
         });
         $this$fillSheet_u24lambda_u2466.addView($this$fillSheet_u24lambda_u24842, new LinearLayout.LayoutParams(!other ? -2 : dpi(84), dpi(i2)));
@@ -1912,7 +1912,7 @@ public final class MapPane extends FrameLayout {
             }
         }
         int carpool = opts.optInt("carpool", 0);
-        String a = avoided.isEmpty() ? "Avoiding nothing" : "Avoiding " + CollectionsKt.joinToString$default(avoided, ", ", null, null, 0, null, null, 62, null);
+        String a = avoided.isEmpty() ? "Avoiding nothing" : "Avoiding " + CollectionsKt.joinToString(avoided, ", ", "", "", -1, "...", null);
         String cp = carpool > 0 ? " · carpool lanes (" + carpool + "+)" : " · no carpool lanes";
         col.addView(label$default(this, a + cp, 13.0f, false, true, 4, null));
     }
@@ -1968,7 +1968,7 @@ public final class MapPane extends FrameLayout {
             if (r.getVia().length() > 0) {
                 notes.add("via " + r.getVia());
             }
-            TextView $this$fillLook_u24lambda_u24105 = label$default(this, CollectionsKt.joinToString$default(notes, "  ·  ", null, null, 0, null, null, 62, null), 13.0f, false, true, 4, null);
+            TextView $this$fillLook_u24lambda_u24105 = label$default(this, CollectionsKt.joinToString(notes, "  ·  ", "", "", -1, "...", null), 13.0f, false, true, 4, null);
             $this$fillLook_u24lambda_u24105.setPadding(0, 0, 0, dpi(8));
             col.addView($this$fillLook_u24lambda_u24105);
             fillSteps(col, l, false);
@@ -1985,7 +1985,7 @@ public final class MapPane extends FrameLayout {
         }
         if (r.getVia().length() > 0) {
         }
-        TextView $this$fillLook_u24lambda_u241052 = label$default(this, CollectionsKt.joinToString$default(notes, "  ·  ", null, null, 0, null, null, 62, null), 13.0f, false, true, 4, null);
+        TextView $this$fillLook_u24lambda_u241052 = label$default(this, CollectionsKt.joinToString(notes, "  ·  ", "", "", -1, "...", null), 13.0f, false, true, 4, null);
         $this$fillLook_u24lambda_u241052.setPadding(0, 0, 0, dpi(8));
         col.addView($this$fillLook_u24lambda_u241052);
         fillSteps(col, l, false);
@@ -2048,18 +2048,18 @@ public final class MapPane extends FrameLayout {
                 when = "";
             }
             List<String> names = new ArrayList<>();
-            for (String s : CollectionsKt.listOf(new String[]{step.getRef(), StringsKt.contains$default((CharSequence) step.getText(), (CharSequence) step.getRoad(), false, 2, (Object) null) ? "" : step.getRoad()})) {
+            for (String s : CollectionsKt.listOf(new String[]{step.getRef(), StringsKt.contains((CharSequence) step.getText(), (CharSequence) step.getRoad(), false) ? "" : step.getRoad()})) {
                 if (s.length() > 0) {
                     names.add(s);
                 }
             }
             List<String> parts = new ArrayList<>();
-            for (String s : CollectionsKt.listOf(new String[]{when, CollectionsKt.joinToString$default(names, " · ", null, null, 0, null, null, 62, null)})) {
+            for (String s : CollectionsKt.listOf(new String[]{when, CollectionsKt.joinToString(names, " · ", "", "", -1, "...", null)})) {
                 if (s.length() > 0) {
                     parts.add(s);
                 }
             }
-            text.addView(label$default(this, CollectionsKt.joinToString$default(parts, "   ", null, null, 0, null, null, 62, null), 13.0f, false, true, 4, null));
+            text.addView(label$default(this, CollectionsKt.joinToString(parts, "   ", "", "", -1, "...", null), 13.0f, false, true, 4, null));
             row.addView(text, new LinearLayout.LayoutParams(0, -2, 1.0f));
             row.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda22
                 @Override // android.view.View.OnClickListener
@@ -2194,7 +2194,7 @@ public final class MapPane extends FrameLayout {
         String[] strArr = new String[2];
         strArr[0] = tl != null ? tl.optInt("used") + " of " + tl.optInt("free") + " free map views" : null;
         strArr[1] = dr != null ? dr.optInt("used") + " of " + dr.optInt("free") + " free routes" : null;
-        TextView $this$fillOptions_u24lambda_u24141 = label$default(this, "This month on the comma's Mapbox key: " + CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", null, null, 0, null, null, 62, null) + ".", 12.0f, false, true, 4, null);
+        TextView $this$fillOptions_u24lambda_u24141 = label$default(this, "This month on the comma's Mapbox key: " + CollectionsKt.joinToString(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", "", "", -1, "...", null) + ".", 12.0f, false, true, 4, null);
         $this$fillOptions_u24lambda_u24141.setPadding(0, dpi(10), 0, 0);
         col.addView($this$fillOptions_u24lambda_u24141);
     }
@@ -2209,7 +2209,7 @@ public final class MapPane extends FrameLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit fillOptions$lambda$117$lambda$116;
-                fillOptions$lambda$117$lambda$116 = MapPane.fillOptions$lambda$117$lambda$116(MapPane.this, (String) obj);
+                fillOptions$lambda$117$lambda$116 = MapPane.fillOptions$lambda$117$lambda$116(this$0, (String) obj);
                 return fillOptions$lambda$117$lambda$116;
             }
         });
@@ -2234,7 +2234,7 @@ public final class MapPane extends FrameLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit fillOptions$lambda$122$lambda$121$lambda$120;
-                fillOptions$lambda$122$lambda$121$lambda$120 = MapPane.fillOptions$lambda$122$lambda$121$lambda$120(MapPane.this, (String) obj);
+                fillOptions$lambda$122$lambda$121$lambda$120 = MapPane.fillOptions$lambda$122$lambda$121$lambda$120(this$0, (String) obj);
                 return fillOptions$lambda$122$lambda$121$lambda$120;
             }
         });
@@ -2258,7 +2258,7 @@ public final class MapPane extends FrameLayout {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit fillOptions$lambda$126$lambda$125;
-                fillOptions$lambda$126$lambda$125 = MapPane.fillOptions$lambda$126$lambda$125(MapPane.this, (String) obj);
+                fillOptions$lambda$126$lambda$125 = MapPane.fillOptions$lambda$126$lambda$125(this$0, (String) obj);
                 return fillOptions$lambda$126$lambda$125;
             }
         });
@@ -2303,7 +2303,7 @@ public final class MapPane extends FrameLayout {
         this$0.post(new Runnable() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda21
             @Override // java.lang.Runnable
             public final void run() {
-                MapPane.fillOptions$lambda$138$lambda$137(MapPane.this);
+                MapPane.fillOptions$lambda$138$lambda$137(this$0);
             }
         });
         return Unit.INSTANCE;
@@ -2422,7 +2422,7 @@ public final class MapPane extends FrameLayout {
         $this$toggleRow_u24lambda_u24150.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.MapPane$$ExternalSyntheticLambda0
             @Override // android.widget.CompoundButton.OnCheckedChangeListener
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                MapPane.toggleRow$lambda$150$lambda$149(Function1.this, compoundButton, z);
+                MapPane.toggleRow$lambda$150$lambda$149(onChange, compoundButton, z);
             }
         });
         row.addView($this$toggleRow_u24lambda_u24150);
@@ -4017,7 +4017,7 @@ public final class MapPane extends FrameLayout {
             String str;
             String str2;
             String substringBefore$default;
-            if ($addr != null && (substringBefore$default = StringsKt.substringBefore$default($addr, ",", (String) null, 2, (Object) null)) != null) {
+            if ($addr != null && (substringBefore$default = StringsKt.substringBefore($addr, ",", $addr)) != null) {
                 String str3 = substringBefore$default;
                 if (str3.length() == 0) {
                     str3 = null;
@@ -4036,7 +4036,7 @@ public final class MapPane extends FrameLayout {
             title.setMessage(str2).setPositiveButton("Go", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.MapPane$MapCanvas$$ExternalSyntheticLambda1
                 @Override // android.content.DialogInterface.OnClickListener
                 public final void onClick(DialogInterface dialogInterface, int i) {
-                    MapPane.MapCanvas.dropPin$lambda$19$lambda$18$lambda$17(MapPane.this, name, $addr, $lat, $lon, dialogInterface, i);
+                    MapPane.MapCanvas.dropPin$lambda$19$lambda$18$lambda$17(this$1, name, $addr, $lat, $lon, dialogInterface, i);
                 }
             }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
         }

@@ -25,7 +25,7 @@ import kotlin.jvm.internal.Intrinsics;
 
 /* compiled from: GxVehicle.kt */
 public final class GxVehicleKt {
-    private static final int GX_VEHICLE_ERR = Color.rgb(255, 107, 107);
+    static final int GX_VEHICLE_ERR = Color.rgb(255, 107, 107);
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void gxVehicleEnable(View v, boolean on) {
@@ -39,12 +39,12 @@ public final class GxVehicleKt {
         try {
             Result.Companion companion = Result.Companion;
             act.startActivity(new Intent("android.intent.action.VIEW", Uri.parse(url)).addFlags(268435456));
-            m1191constructorimpl = Result.m1191constructorimpl(true);
+            m1191constructorimpl = KtCompat.resultOf(true);
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = false;
         }
         return ((Boolean) m1191constructorimpl).booleanValue();

@@ -81,9 +81,9 @@ public final class GxThemePage extends GxPage {
     private String discord;
     private GxPage.Row discordRow;
     private LinearLayout distBox;
-    private GxPage.Row dlRow;
+    GxPage.Row dlRow;
     private final HashMap<String, List<String>> downloadable;
-    private boolean downloading;
+    boolean downloading;
     private final HashMap<String, GxThemeFile> files;
     private final LinkedHashMap<String, Boolean> flags;
     private final ArrayList<GxThemeFile> frames;
@@ -318,7 +318,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit build$lambda$8$lambda$7;
-                build$lambda$8$lambda$7 = GxThemePage.build$lambda$8$lambda$7(GxThemePage.this, (String) obj);
+                build$lambda$8$lambda$7 = GxThemePage.build$lambda$8$lambda$7(this$0, (String) obj);
                 return build$lambda$8$lambda$7;
             }
         }, 8, null);
@@ -365,14 +365,14 @@ public final class GxThemePage extends GxPage {
     }
 
     private final String assetPath(String theme, String type, String rel) {
-        return "/api/themes/asset/" + enc(theme) + "/" + CollectionsKt.joinToString$default(StringsKt.split$default((CharSequence) rel, new String[]{"/"}, false, 0, 6, (Object) null), "/", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda66
+        return "/api/themes/asset/" + enc(theme) + "/" + CollectionsKt.joinToString(StringsKt.split((CharSequence) rel, new String[]{"/"}, false, 0), "/", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda66
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence assetPath$lambda$14;
                 assetPath$lambda$14 = GxThemePage.assetPath$lambda$14(GxThemePage.this, (String) obj);
                 return assetPath$lambda$14;
             }
-        }, 30, null) + typeQs(type);
+        }) + typeQs(type);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -388,7 +388,7 @@ public final class GxThemePage extends GxPage {
     }
 
     private final String compOf(String slot) {
-        if (StringsKt.startsWith$default(slot, "distanceIcons_", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(slot, "distanceIcons_", false)) {
             return "distance_icons";
         }
         if (Intrinsics.areEqual(slot, "homeButton") || Intrinsics.areEqual(slot, "settingsButton")) {
@@ -397,7 +397,7 @@ public final class GxThemePage extends GxPage {
         if (Intrinsics.areEqual(slot, "steeringWheel")) {
             return "steering_wheel";
         }
-        if (StringsKt.startsWith$default(slot, "turnSignal", false, 2, (Object) null) || Intrinsics.areEqual(slot, "__sequential__")) {
+        if (StringsKt.startsWith(slot, "turnSignal", false) || Intrinsics.areEqual(slot, "__sequential__")) {
             return "turn_signals";
         }
         return "sounds";
@@ -412,7 +412,7 @@ public final class GxThemePage extends GxPage {
 
     private final String withExt(String name, String mime) {
         String ext;
-        return (StringsKt.contains$default((CharSequence) name, '.', false, 2, (Object) null) || (ext = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime)) == null) ? name : name + "." + ext;
+        return (StringsKt.contains((CharSequence) name, '.', false) || (ext = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime)) == null) ? name : name + "." + ext;
     }
 
     private final boolean has(String slot) {
@@ -570,12 +570,12 @@ public final class GxThemePage extends GxPage {
                 BitmapFactory.Options $this$thumbOf_u24lambda_u2420_u24lambda_u2419 = new BitmapFactory.Options();
                 $this$thumbOf_u24lambda_u2420_u24lambda_u2419.inSampleSize = s;
                 Unit unit = Unit.INSTANCE;
-                m1191constructorimpl = Result.m1191constructorimpl(BitmapFactory.decodeByteArray(bytes, 0, length, $this$thumbOf_u24lambda_u2420_u24lambda_u2419));
+                m1191constructorimpl = KtCompat.resultOf(BitmapFactory.decodeByteArray(bytes, 0, length, $this$thumbOf_u24lambda_u2420_u24lambda_u2419));
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
             }
-            if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+            if (KtCompat.isFailure(m1191constructorimpl)) {
                 m1191constructorimpl = null;
             }
             f.setThumb((Bitmap) m1191constructorimpl);
@@ -657,9 +657,9 @@ public final class GxThemePage extends GxPage {
                                 try {
                                     $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
                                     try {
-                                        String name = URLDecoder.decode(StringsKt.substringAfterLast$default(StringsKt.substringBefore$default(u, '?', (String) null, 2, (Object) null), '/', (String) null, 2, (Object) null), "UTF-8");
-                                        String header$default = Response.header$default(r, "Content-Type", null, 2, null);
-                                        if (header$default != null && (substringBefore$default = StringsKt.substringBefore$default(header$default, ';', (String) null, 2, (Object) null)) != null && (obj = StringsKt.trim((CharSequence) substringBefore$default).toString()) != null) {
+                                        String name = URLDecoder.decode(StringsKt.substringAfterLast(StringsKt.substringBefore(u, '?', u), '/', (StringsKt.substringBefore(u, '?', u))), "UTF-8");
+                                        String header$default = r.header("Content-Type", null);
+                                        if (header$default != null && (substringBefore$default = StringsKt.substringBefore(header$default, ';', header$default)) != null && (obj = StringsKt.trim((CharSequence) substringBefore$default).toString()) != null) {
                                             String str = obj;
                                             if (StringsKt.isBlank(str)) {
                                                 str = null;
@@ -705,12 +705,12 @@ public final class GxThemePage extends GxPage {
                     }
                     try {
                         CloseableKt.closeFinally(execute, null);
-                        m1191constructorimpl = Result.m1191constructorimpl(gxThemeFile);
+                        m1191constructorimpl = KtCompat.resultOf(gxThemeFile);
                     } catch (Throwable th5) {
                         th = th5;
                         Result.Companion companion2 = Result.Companion;
-                        m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
-                        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+                        m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
+                        if (KtCompat.isFailure(m1191constructorimpl)) {
                         }
                         destination$iv$iv.add((GxThemeFile) obj2);
                         $this$map$iv2 = $this$map$iv;
@@ -729,7 +729,7 @@ public final class GxThemePage extends GxPage {
                 $i$f$map = $i$f$map2;
                 $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
             }
-            if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+            if (KtCompat.isFailure(m1191constructorimpl)) {
                 obj2 = m1191constructorimpl;
             }
             destination$iv$iv.add((GxThemeFile) obj2);
@@ -741,7 +741,7 @@ public final class GxThemePage extends GxPage {
         this$0.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda38
             @Override // java.lang.Runnable
             public final void run() {
-                Function1.this.invoke(out);
+                $then.invoke(out);
             }
         });
     }
@@ -838,7 +838,7 @@ public final class GxThemePage extends GxPage {
                     @Override // kotlin.jvm.functions.Function1
                     public final Object invoke(Object obj) {
                         Unit loadDefault$lambda$43$lambda$40;
-                        loadDefault$lambda$43$lambda$40 = GxThemePage.loadDefault$lambda$43$lambda$40(GxThemePage.this, (GxThemeFile) obj);
+                        loadDefault$lambda$43$lambda$40 = GxThemePage.loadDefault$lambda$43$lambda$40(this$0, (GxThemeFile) obj);
                         return loadDefault$lambda$43$lambda$40;
                     }
                 }));
@@ -880,7 +880,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit loadDefault$lambda$43$slot$lambda$33;
-                loadDefault$lambda$43$slot$lambda$33 = GxThemePage.loadDefault$lambda$43$slot$lambda$33(GxThemePage.this, slot, (GxThemeFile) obj);
+                loadDefault$lambda$43$slot$lambda$33 = GxThemePage.loadDefault$lambda$43$slot$lambda$33(this$0, slot, (GxThemeFile) obj);
                 return loadDefault$lambda$43$slot$lambda$33;
             }
         }));
@@ -1470,7 +1470,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit renderTurn$lambda$65$lambda$64;
-                renderTurn$lambda$65$lambda$64 = GxThemePage.renderTurn$lambda$65$lambda$64(GxThemePage.this, $tv, (String) obj);
+                renderTurn$lambda$65$lambda$64 = GxThemePage.renderTurn$lambda$65$lambda$64(this$0, $tv, (String) obj);
                 return renderTurn$lambda$65$lambda$64;
             }
         }, 16, null);
@@ -1626,12 +1626,12 @@ public final class GxThemePage extends GxPage {
         }
         try {
             Result.Companion companion = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(this$0.getAct().getContentResolver().getType(uri));
+            m1191constructorimpl = KtCompat.resultOf(this$0.getAct().getContentResolver().getType(uri));
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = null;
         }
         final String typed = (String) m1191constructorimpl;
@@ -1639,7 +1639,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit choose$lambda$83$lambda$82;
-                choose$lambda$83$lambda$82 = GxThemePage.choose$lambda$83$lambda$82(GxThemePage.this, typed, $image, $slot, (byte[]) obj, (String) obj2);
+                choose$lambda$83$lambda$82 = GxThemePage.choose$lambda$83$lambda$82(this$0, typed, $image, $slot, (byte[]) obj, (String) obj2);
                 return choose$lambda$83$lambda$82;
             }
         });
@@ -1676,11 +1676,11 @@ public final class GxThemePage extends GxPage {
         if (mime == null) {
             mime = "";
         }
-        if ($image && !StringsKt.startsWith$default(mime, "image/", false, 2, (Object) null)) {
+        if ($image && !StringsKt.startsWith(mime, "image/", false)) {
             this$0.toast("Invalid file type! Please upload an image file.");
             return Unit.INSTANCE;
         }
-        if (!$image && !StringsKt.startsWith$default(mime, "audio/", false, 2, (Object) null)) {
+        if (!$image && !StringsKt.startsWith(mime, "audio/", false)) {
             this$0.toast("Invalid file type! Please upload an audio file.");
             return Unit.INSTANCE;
         }
@@ -1935,7 +1935,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit apply$lambda$88$lambda$87;
-                apply$lambda$88$lambda$87 = GxThemePage.apply$lambda$88$lambda$87(GxThemePage.this, (String) obj, (JSONObject) obj2);
+                apply$lambda$88$lambda$87 = GxThemePage.apply$lambda$88$lambda$87(this$0, (String) obj, (JSONObject) obj2);
                 return apply$lambda$88$lambda$87;
             }
         });
@@ -2021,14 +2021,14 @@ public final class GxThemePage extends GxPage {
                 destination$iv$iv.add(element$iv$iv);
             }
         }
-        String comps = CollectionsKt.joinToString$default((List) destination$iv$iv, ", ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda1
+        String comps = CollectionsKt.joinToString((List) destination$iv$iv, ", ", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda1
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence submit$lambda$91;
                 submit$lambda$91 = GxThemePage.submit$lambda$91((String) obj);
                 return submit$lambda$91;
             }
-        }, 30, null);
+        });
         confirm("Submit Theme for Community Use", "Submit your theme for everyone to use!\n\nTheme: " + StringsKt.trim((CharSequence) this.themeName).toString() + "\nDiscord: " + this.discord + "\nComponents: " + comps, "Submit", new Function0() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda2
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
@@ -2058,7 +2058,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit submit$lambda$93$lambda$92;
-                submit$lambda$93$lambda$92 = GxThemePage.submit$lambda$93$lambda$92(GxThemePage.this, (String) obj, (JSONObject) obj2);
+                submit$lambda$93$lambda$92 = GxThemePage.submit$lambda$93$lambda$92(this$0, (String) obj, (JSONObject) obj2);
                 return submit$lambda$93$lambda$92;
             }
         });
@@ -2119,7 +2119,7 @@ public final class GxThemePage extends GxPage {
             String field = triple.component1();
             String name = triple.component2();
             Pair data = triple.component3();
-            b.addFormDataPart(field, name, RequestBody.Companion.create$default(RequestBody.Companion, data.getFirst(), MediaType.Companion.get(data.getSecond()), 0, 0, 6, (Object) null));
+            b.addFormDataPart(field, name, RequestBody.Companion.create(data.getFirst(), MediaType.Companion.get(data.getSecond()), 0, data.getFirst().length));
         }
         final MultipartBody body = b.build();
         new Thread(new Runnable() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda7
@@ -2172,7 +2172,7 @@ public final class GxThemePage extends GxPage {
             gxThemePage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda53
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxThemePage.exportTheme$lambda$102$lambda$101(GxThemePage.this, objectRef);
+                    GxThemePage.exportTheme$lambda$102$lambda$101(gxThemePage, objectRef);
                 }
             });
             return;
@@ -2193,7 +2193,7 @@ public final class GxThemePage extends GxPage {
                     OutputStream outputStream2 = outputStream;
                     ResponseBody body = response.body();
                     if (body != null && (byteStream = body.byteStream()) != null) {
-                        Long.valueOf(ByteStreamsKt.copyTo$default(byteStream, outputStream2, 0, 2, null));
+                        Long.valueOf(ByteStreamsKt.copyTo(byteStream, outputStream2, 8192));
                     }
                     CloseableKt.closeFinally(outputStream, null);
                 } finally {
@@ -2204,7 +2204,7 @@ public final class GxThemePage extends GxPage {
             gxThemePage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda53
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxThemePage.exportTheme$lambda$102$lambda$101(GxThemePage.this, objectRef);
+                    GxThemePage.exportTheme$lambda$102$lambda$101(gxThemePage, objectRef);
                 }
             });
             return;
@@ -2221,12 +2221,12 @@ public final class GxThemePage extends GxPage {
             if (StringsKt.isBlank(optString)) {
                 optString = jSONObject.optString("error");
             }
-            m1191constructorimpl = Result.m1191constructorimpl(optString);
+            m1191constructorimpl = KtCompat.resultOf(optString);
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = null;
         }
         String str8 = (String) m1191constructorimpl;
@@ -2310,7 +2310,7 @@ public final class GxThemePage extends GxPage {
         Intrinsics.checkNotNullParameter(t, "t");
         if (e == null) {
             HashMap<String, List<String>> hashMap = this$0.downloadable;
-            Iterable $this$map$iv = StringsKt.split$default((CharSequence) t, new String[]{","}, false, 0, 6, (Object) null);
+            Iterable $this$map$iv = StringsKt.split((CharSequence) t, new String[]{","}, false, 0);
             Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
             for (Object item$iv$iv : $this$map$iv) {
                 String it = (String) item$iv$iv;
@@ -2575,7 +2575,7 @@ public final class GxThemePage extends GxPage {
                 }
                 GxThemePage gxThemePage = this;
                 String titleOf = titleOf(t);
-                joinToString$default = CollectionsKt.joinToString$default(chips, " · ", null, null, 0, null, null, 62, null);
+                joinToString$default = CollectionsKt.joinToString(chips, " · ", "", "", -1, "...", null);
                 if (StringsKt.isBlank(joinToString$default)) {
                     joinToString$default = null;
                 }
@@ -2613,7 +2613,7 @@ public final class GxThemePage extends GxPage {
             }
             GxThemePage gxThemePage2 = this;
             String titleOf2 = titleOf(t);
-            joinToString$default = CollectionsKt.joinToString$default(chips, " · ", null, null, 0, null, null, 62, null);
+            joinToString$default = CollectionsKt.joinToString(chips, " · ", "", "", -1, "...", null);
             if (StringsKt.isBlank(joinToString$default)) {
             }
             String str32 = joinToString$default;
@@ -2698,7 +2698,7 @@ public final class GxThemePage extends GxPage {
                 }
                 GxThemePage gxThemePage = this;
                 String titleOf = titleOf(t2);
-                joinToString$default = CollectionsKt.joinToString$default(bits, " · ", null, null, 0, null, null, 62, null);
+                joinToString$default = CollectionsKt.joinToString(bits, " · ", "", "", -1, "...", null);
                 LinearLayout linearLayout2 = null;
                 if (StringsKt.isBlank(joinToString$default)) {
                     joinToString$default = null;
@@ -2752,7 +2752,7 @@ public final class GxThemePage extends GxPage {
                 }
                 GxThemePage gxThemePage2 = this;
                 String titleOf2 = titleOf(t2);
-                joinToString$default = CollectionsKt.joinToString$default(bits, " · ", null, null, 0, null, null, 62, null);
+                joinToString$default = CollectionsKt.joinToString(bits, " · ", "", "", -1, "...", null);
                 LinearLayout linearLayout22 = null;
                 if (StringsKt.isBlank(joinToString$default)) {
                 }
@@ -2900,7 +2900,7 @@ public final class GxThemePage extends GxPage {
                         @Override // kotlin.jvm.functions.Function1
                         public final Object invoke(Object obj) {
                             Unit loadToEditor$lambda$135$lambda$132;
-                            loadToEditor$lambda$135$lambda$132 = GxThemePage.loadToEditor$lambda$135$lambda$132(GxThemePage.this, (GxThemeFile) obj);
+                            loadToEditor$lambda$135$lambda$132 = GxThemePage.loadToEditor$lambda$135$lambda$132(this$0, (GxThemeFile) obj);
                             return loadToEditor$lambda$135$lambda$132;
                         }
                     }));
@@ -2947,7 +2947,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit loadToEditor$lambda$135$slot$126$lambda$125;
-                loadToEditor$lambda$135$slot$126$lambda$125 = GxThemePage.loadToEditor$lambda$135$slot$126$lambda$125(GxThemePage.this, slot, (GxThemeFile) obj);
+                loadToEditor$lambda$135$slot$126$lambda$125 = GxThemePage.loadToEditor$lambda$135$slot$126$lambda$125(this$0, slot, (GxThemeFile) obj);
                 return loadToEditor$lambda$135$slot$126$lambda$125;
             }
         }));
@@ -3025,7 +3025,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit useComponent$lambda$137$lambda$136;
-                useComponent$lambda$137$lambda$136 = GxThemePage.useComponent$lambda$137$lambda$136(GxThemePage.this, $t, $comp, (String) obj);
+                useComponent$lambda$137$lambda$136 = GxThemePage.useComponent$lambda$137$lambda$136(this$0, $t, $comp, (String) obj);
                 return useComponent$lambda$137$lambda$136;
             }
         });
@@ -3066,7 +3066,7 @@ public final class GxThemePage extends GxPage {
         }
         setBusy(true);
         clearComp(comp);
-        final String what = StringsKt.replace$default(comp, "_", " ", false, 4, (Object) null);
+        final String what = StringsKt.replace(comp, "_", " ", false);
         getJson("/api/themes/load/" + enc(t.getPath()) + typeQs(t.getType()), new Function2() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
@@ -3157,7 +3157,7 @@ public final class GxThemePage extends GxPage {
                                 @Override // kotlin.jvm.functions.Function1
                                 public final Object invoke(Object obj) {
                                     Unit loadComponent$lambda$152$lambda$149;
-                                    loadComponent$lambda$152$lambda$149 = GxThemePage.loadComponent$lambda$152$lambda$149(GxThemePage.this, (GxThemeFile) obj);
+                                    loadComponent$lambda$152$lambda$149 = GxThemePage.loadComponent$lambda$152$lambda$149(this$0, (GxThemeFile) obj);
                                     return loadComponent$lambda$152$lambda$149;
                                 }
                             }));
@@ -3180,7 +3180,7 @@ public final class GxThemePage extends GxPage {
                             @Override // kotlin.jvm.functions.Function1
                             public final Object invoke(Object obj) {
                                 Unit loadComponent$lambda$152$lambda$145$lambda$144;
-                                loadComponent$lambda$152$lambda$145$lambda$144 = GxThemePage.loadComponent$lambda$152$lambda$145$lambda$144(GxThemePage.this, fn, (GxThemeFile) obj);
+                                loadComponent$lambda$152$lambda$145$lambda$144 = GxThemePage.loadComponent$lambda$152$lambda$145$lambda$144(this$0, fn, (GxThemeFile) obj);
                                 return loadComponent$lambda$152$lambda$145$lambda$144;
                             }
                         }));
@@ -3226,7 +3226,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit loadComponent$lambda$152$slot$140$lambda$139;
-                loadComponent$lambda$152$slot$140$lambda$139 = GxThemePage.loadComponent$lambda$152$slot$140$lambda$139(GxThemePage.this, slot, (GxThemeFile) obj);
+                loadComponent$lambda$152$slot$140$lambda$139 = GxThemePage.loadComponent$lambda$152$slot$140$lambda$139(this$0, slot, (GxThemeFile) obj);
                 return loadComponent$lambda$152$slot$140$lambda$139;
             }
         }));
@@ -3323,7 +3323,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit removeTheme$lambda$154$lambda$153;
-                removeTheme$lambda$154$lambda$153 = GxThemePage.removeTheme$lambda$154$lambda$153(GxThemePage.this, (String) obj, (JSONObject) obj2);
+                removeTheme$lambda$154$lambda$153 = GxThemePage.removeTheme$lambda$154$lambda$153(this$0, (String) obj, (JSONObject) obj2);
                 return removeTheme$lambda$154$lambda$153;
             }
         }, 12, null);
@@ -3375,7 +3375,7 @@ public final class GxThemePage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit removeComponent$lambda$156$lambda$155;
-                removeComponent$lambda$156$lambda$155 = GxThemePage.removeComponent$lambda$156$lambda$155(GxThemePage.this, (String) obj, (JSONObject) obj2);
+                removeComponent$lambda$156$lambda$155 = GxThemePage.removeComponent$lambda$156$lambda$155(this$0, (String) obj, (JSONObject) obj2);
                 return removeComponent$lambda$156$lambda$155;
             }
         }, 12, null);
@@ -3406,7 +3406,7 @@ public final class GxThemePage extends GxPage {
             return;
         }
         this.downloading = true;
-        final String what = StringsKt.replace$default(comp, "_", " ", false, 4, (Object) null);
+        final String what = StringsKt.replace(comp, "_", " ", false);
         GxPage.send$default(this, "POST", "/api/themes/download_asset", new JSONObject().put("component", comp).put("name", name), 0L, new Function2() { // from class: com.starpilot.starview.GxThemePage$$ExternalSyntheticLambda11
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
@@ -3566,7 +3566,7 @@ public final class GxThemePage extends GxPage {
                 String obj3;
                 String t;
                 Function1<Boolean, Unit> function12;
-                if (Ref.BooleanRef.this.element || s == null || (obj2 = s.toString()) == null || (obj3 = StringsKt.trim((CharSequence) obj2).toString()) == null || (t = StringsKt.removePrefix(obj3, (CharSequence) "#")) == null || !new Regex("[0-9a-fA-F]{6}").matches(t)) {
+                if (updating.element || s == null || (obj2 = s.toString()) == null || (obj3 = StringsKt.trim((CharSequence) obj2).toString()) == null || (t = StringsKt.removePrefix(obj3, (CharSequence) "#")) == null || !new Regex("[0-9a-fA-F]{6}").matches(t)) {
                     return;
                 }
                 Color.colorToHSV(Color.parseColor("#" + t), hsv);

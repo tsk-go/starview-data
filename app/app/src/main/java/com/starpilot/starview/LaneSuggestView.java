@@ -48,15 +48,15 @@ public final class LaneSuggestView extends View {
     private long crossAt;
     private double crossGap;
     private final float d;
-    private String holdWhy;
-    private int holding;
+    String holdWhy;
+    int holding;
     private boolean lastArmed;
     private boolean lastLaneHold;
     private long lastSpoke;
     private LaneSuggest.State lastState;
     private TurnSignal.State lastTurn;
     private final LaneSuggest logic;
-    private final Handler main;
+    final Handler main;
     private boolean metric;
     private final RectF noR;
     private final RectF okR;
@@ -481,7 +481,7 @@ public final class LaneSuggestView extends View {
                     str4 = str14;
                     this.askedAt = now3;
                     this.repeated = false;
-                    boolean route = !StringsKt.startsWith$default(this.logic.getWhy(), "the driving model", false, 2, (Object) null);
+                    boolean route = !StringsKt.startsWith(this.logic.getWhy(), "the driving model", false);
                     if (this.lastState == LaneSuggest.State.WAITING) {
                         BlinkLog.INSTANCE.add("Change lanes? " + (this.logic.getDir() < 0 ? "LEFT" : "RIGHT") + " asked again - the blind spot is clear");
                         String str30 = str3;
@@ -509,11 +509,11 @@ public final class LaneSuggestView extends View {
                                 Iterable $this$filterTo$iv$iv2 = $this$filterTo$iv$iv;
                                 int $i$f$filterTo2 = $i$f$filterTo;
                                 Iterator it3 = it;
-                                if (StringsKt.startsWith$default(it2, str31, false, 2, (Object) null)) {
+                                if (StringsKt.startsWith(it2, str31, false)) {
                                     str20 = str31;
                                 } else {
                                     str20 = str31;
-                                    if (!StringsKt.startsWith$default(it2, "lanes", false, 2, (Object) null)) {
+                                    if (!StringsKt.startsWith(it2, "lanes", false)) {
                                         z = true;
                                         if (!z) {
                                             destination$iv$iv.add(element$iv$iv);
@@ -539,7 +539,7 @@ public final class LaneSuggestView extends View {
                             String str33 = str31;
                             List keys = CollectionsKt.plus((Collection<? extends String>) destination$iv$iv, "changing");
                             if (route) {
-                                String substringBefore$default = StringsKt.substringBefore$default(Speech.INSTANCE.spoken(this.logic.getWhy()), str7, (String) null, 2, (Object) null);
+                                String substringBefore$default = StringsKt.substringBefore(Speech.INSTANCE.spoken(this.logic.getWhy()), str7, (Speech.INSTANCE.spoken(this.logic.getWhy())));
                                 if (substringBefore$default.length() > 0) {
                                     StringBuilder sb = new StringBuilder();
                                     char it4 = substringBefore$default.charAt(0);
@@ -606,7 +606,7 @@ public final class LaneSuggestView extends View {
                         s4 = s5;
                         str21 = str34;
                         if (this.logic.getExitTries() == 1) {
-                            say((StringsKt.startsWith$default(this.logic.getWhy(), "fork", false, 2, (Object) null) ? "Fork" : "Exit") + " on the " + side + ". Signaling.", AmySynth.Style.SHORT, CollectionsKt.listOf(str21 + side), now3);
+                            say((StringsKt.startsWith(this.logic.getWhy(), "fork", false) ? "Fork" : "Exit") + " on the " + side + ". Signaling.", AmySynth.Style.SHORT, CollectionsKt.listOf(str21 + side), now3);
                         }
                     } else {
                         s4 = s5;
@@ -639,7 +639,7 @@ public final class LaneSuggestView extends View {
                     str2 = lside;
                     str6 = "substring(...)";
                     String str37 = str12;
-                    if (StringsKt.contains$default((CharSequence) this.logic.getResult(), (CharSequence) "signaling again", false, 2, (Object) null)) {
+                    if (StringsKt.contains((CharSequence) this.logic.getResult(), (CharSequence) "signaling again", false)) {
                         str27 = str13;
                         obj = "nudge";
                         str4 = str14;
@@ -647,12 +647,12 @@ public final class LaneSuggestView extends View {
                         Pair<AmySynth.Style, String> result = AmyPrompts.INSTANCE.result(this.logic.getResult(), this.logic.getDir());
                         AmySynth.Style st = result.component1();
                         String key = result.component2();
-                        if (StringsKt.startsWith$default(this.logic.getResult(), "changed lanes", false, 2, (Object) null)) {
+                        if (StringsKt.startsWith(this.logic.getResult(), "changed lanes", false)) {
                             str24 = "Done.";
                             str23 = str13;
                             str22 = str14;
                         } else {
-                            String replace$default = StringsKt.replace$default(this.logic.getResult(), " - ", ". ", false, 4, (Object) null);
+                            String replace$default = StringsKt.replace(this.logic.getResult(), " - ", ". ", false);
                             if (replace$default.length() > 0) {
                                 StringBuilder sb3 = new StringBuilder();
                                 char it6 = replace$default.charAt(0);
@@ -811,12 +811,12 @@ public final class LaneSuggestView extends View {
                     Unit unit17 = Unit.INSTANCE;
                     break;
                 case 2:
-                    if (StringsKt.startsWith$default(this.turn.getResult(), "turned", false, 2, (Object) null)) {
+                    if (StringsKt.startsWith(this.turn.getResult(), "turned", false)) {
                         ts = ts2;
                         s2 = s3;
                     } else {
-                        String key2 = StringsKt.startsWith$default(this.turn.getResult(), "cancelled", false, 2, (Object) null) ? "stop_cancelled" : StringsKt.startsWith$default(this.turn.getResult(), "other blinker", false, 2, (Object) null) ? "stop_blinker" : "stop_generic";
-                        String substringBefore$default2 = StringsKt.substringBefore$default(this.turn.getResult(), str7, (String) null, 2, (Object) null);
+                        String key2 = StringsKt.startsWith(this.turn.getResult(), "cancelled", false) ? "stop_cancelled" : StringsKt.startsWith(this.turn.getResult(), "other blinker", false) ? "stop_blinker" : "stop_generic";
+                        String substringBefore$default2 = StringsKt.substringBefore(this.turn.getResult(), str7, this.turn.getResult());
                         if (substringBefore$default2.length() > 0) {
                             StringBuilder sb4 = new StringBuilder();
                             char it7 = substringBefore$default2.charAt(0);
@@ -1187,7 +1187,7 @@ public final class LaneSuggestView extends View {
                 float textW3 = (this.noR.left - tx) - (this.d * 10.0f);
                 boolean exitCard = Intrinsics.areEqual(this.logic.getKind(), "exit");
                 if (exitCard) {
-                    append = new StringBuilder().append(StringsKt.startsWith$default(this.logic.getWhy(), "fork", false, 2, (Object) null) ? "Fork" : "Exit").append(" ").append(side);
+                    append = new StringBuilder().append(StringsKt.startsWith(this.logic.getWhy(), "fork", false) ? "Fork" : "Exit").append(" ").append(side);
                     str = " - signaling…";
                 } else {
                     append = new StringBuilder().append("Signaling ").append(side);

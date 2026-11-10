@@ -295,7 +295,7 @@ public final class SlowReason {
         }
         String str = null;
         String str2 = "Lead car (camera only)";
-        if (StringsKt.startsWith$default(src, "lead", false, 2, (Object) null)) {
+        if (StringsKt.startsWith(src, "lead", false)) {
             Lead l = (Intrinsics.areEqual(src, "lead1") || Intrinsics.areEqual(src, "lead2")) ? i.getLead1() : i.getLead0();
             boolean camOnly = !l.getRadar();
             if (camOnly && l.getModelProb() < 0.7f) {

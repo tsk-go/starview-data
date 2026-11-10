@@ -87,12 +87,12 @@ public final class GxGalaxyPage extends GxPage {
             if (200 <= code && code < 300) {
                 try {
                     Result.Companion companion = Result.Companion;
-                    m1191constructorimpl = Result.m1191constructorimpl(new JSONObject(text));
+                    m1191constructorimpl = KtCompat.resultOf(new JSONObject(text));
                 } catch (Throwable th) {
                     Result.Companion companion2 = Result.Companion;
-                    m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                    m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
                 }
-                if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+                if (KtCompat.isFailure(m1191constructorimpl)) {
                     m1191constructorimpl = null;
                 }
                 JSONObject it = (JSONObject) m1191constructorimpl;
@@ -300,7 +300,7 @@ public final class GxGalaxyPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit unpair$lambda$13$lambda$12;
-                unpair$lambda$13$lambda$12 = GxGalaxyPage.unpair$lambda$13$lambda$12(GxGalaxyPage.this, (String) obj, (JSONObject) obj2);
+                unpair$lambda$13$lambda$12 = GxGalaxyPage.unpair$lambda$13$lambda$12(this$0, (String) obj, (JSONObject) obj2);
                 return unpair$lambda$13$lambda$12;
             }
         }, 12, null);
@@ -570,7 +570,7 @@ public final class GxGalaxyPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit uninstall$lambda$25$lambda$24;
-                uninstall$lambda$25$lambda$24 = GxGalaxyPage.uninstall$lambda$25$lambda$24(GxGalaxyPage.this, (String) obj, (JSONObject) obj2);
+                uninstall$lambda$25$lambda$24 = GxGalaxyPage.uninstall$lambda$25$lambda$24(this$0, (String) obj, (JSONObject) obj2);
                 return uninstall$lambda$25$lambda$24;
             }
         });

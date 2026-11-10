@@ -143,25 +143,25 @@ public final class GxModelsKt {
             return Instant.parse(t).toEpochMilli();
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            Result.m1191constructorimpl(ResultKt.createFailure(th));
+            KtCompat.resultOf(ResultKt.createFailure(th));
             try {
                 Result.Companion companion3 = Result.Companion;
                 return OffsetDateTime.parse(t).toInstant().toEpochMilli();
             } catch (Throwable th2) {
                 Result.Companion companion4 = Result.Companion;
-                Result.m1191constructorimpl(ResultKt.createFailure(th2));
+                KtCompat.resultOf(ResultKt.createFailure(th2));
                 try {
                     Result.Companion companion5 = Result.Companion;
                     return LocalDateTime.parse(t).toInstant(ZoneOffset.UTC).toEpochMilli();
                 } catch (Throwable th3) {
                     Result.Companion companion6 = Result.Companion;
-                    Result.m1191constructorimpl(ResultKt.createFailure(th3));
+                    KtCompat.resultOf(ResultKt.createFailure(th3));
                     try {
                         Result.Companion companion7 = Result.Companion;
                         return LocalDate.parse(StringsKt.take(t, 10)).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
                     } catch (Throwable th4) {
                         Result.Companion companion8 = Result.Companion;
-                        Result.m1191constructorimpl(ResultKt.createFailure(th4));
+                        KtCompat.resultOf(ResultKt.createFailure(th4));
                         Iterator it = CollectionsKt.listOf((Object[]) new String[]{"yyyy/MM/dd", "MM/dd/yyyy", "M/d/yyyy", "MMMM d, yyyy", "MMM d, yyyy", "d MMMM yyyy", "d MMM yyyy"}).iterator();
                         while (it.hasNext()) {
                             String p = (String) it.next();
@@ -170,7 +170,7 @@ public final class GxModelsKt {
                                 return LocalDate.parse(t, DateTimeFormatter.ofPattern(p, Locale.US)).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
                             } catch (Throwable th5) {
                                 Result.Companion companion10 = Result.Companion;
-                                Result.m1191constructorimpl(ResultKt.createFailure(th5));
+                                KtCompat.resultOf(ResultKt.createFailure(th5));
                             }
                         }
                         for (String p2 : CollectionsKt.listOf((Object[]) new String[]{"MMMM yyyy", "MMM yyyy", "yyyy-MM"})) {
@@ -179,7 +179,7 @@ public final class GxModelsKt {
                                 return YearMonth.parse(t, DateTimeFormatter.ofPattern(p2, Locale.US)).atDay(i).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
                             } catch (Throwable th6) {
                                 Result.Companion companion12 = Result.Companion;
-                                Result.m1191constructorimpl(ResultKt.createFailure(th6));
+                                KtCompat.resultOf(ResultKt.createFailure(th6));
                             }
                         }
                         return 0L;

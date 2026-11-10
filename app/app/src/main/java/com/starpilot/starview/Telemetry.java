@@ -1775,7 +1775,7 @@ public final class Telemetry {
             @Override // java.util.function.BiFunction
             public final Object apply(Object obj, Object obj2) {
                 Long count$lambda$2;
-                count$lambda$2 = Telemetry.count$lambda$2(Function2.this, obj, obj2);
+                count$lambda$2 = Telemetry.count$lambda$2($tmp0, obj, obj2);
                 return count$lambda$2;
             }
         });
@@ -1786,7 +1786,7 @@ public final class Telemetry {
             @Override // java.util.function.BiFunction
             public final Object apply(Object obj, Object obj2) {
                 Long count$lambda$3;
-                count$lambda$3 = Telemetry.count$lambda$3(Function2.this, obj, obj2);
+                count$lambda$3 = Telemetry.count$lambda$3($tmp0, obj, obj2);
                 return count$lambda$3;
             }
         });

@@ -496,7 +496,7 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit fillSentryConfig$urlRow$lambda$14;
-                fillSentryConfig$urlRow$lambda$14 = GxCamerasPage.fillSentryConfig$urlRow$lambda$14(GxCamerasPage.this, title, hint, key, desc);
+                fillSentryConfig$urlRow$lambda$14 = GxCamerasPage.fillSentryConfig$urlRow$lambda$14(this$0, title, hint, key, desc);
                 return fillSentryConfig$urlRow$lambda$14;
             }
         }, 2, null);
@@ -505,7 +505,7 @@ public final class GxCamerasPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit fillSentryConfig$urlRow$lambda$16;
-                    fillSentryConfig$urlRow$lambda$16 = GxCamerasPage.fillSentryConfig$urlRow$lambda$16(GxCamerasPage.this, key);
+                    fillSentryConfig$urlRow$lambda$16 = GxCamerasPage.fillSentryConfig$urlRow$lambda$16(this$0, key);
                     return fillSentryConfig$urlRow$lambda$16;
                 }
             }, 2, null);
@@ -518,7 +518,7 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit fillSentryConfig$urlRow$lambda$14$lambda$13;
-                fillSentryConfig$urlRow$lambda$14$lambda$13 = GxCamerasPage.fillSentryConfig$urlRow$lambda$14$lambda$13(GxCamerasPage.this, $key, (String) obj);
+                fillSentryConfig$urlRow$lambda$14$lambda$13 = GxCamerasPage.fillSentryConfig$urlRow$lambda$14$lambda$13(this$0, $key, (String) obj);
                 return fillSentryConfig$urlRow$lambda$14$lambda$13;
             }
         });
@@ -532,7 +532,7 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit fillSentryConfig$urlRow$lambda$14$lambda$13$lambda$12;
-                fillSentryConfig$urlRow$lambda$14$lambda$13$lambda$12 = GxCamerasPage.fillSentryConfig$urlRow$lambda$14$lambda$13$lambda$12(GxCamerasPage.this);
+                fillSentryConfig$urlRow$lambda$14$lambda$13$lambda$12 = GxCamerasPage.fillSentryConfig$urlRow$lambda$14$lambda$13$lambda$12(this$0);
                 return fillSentryConfig$urlRow$lambda$14$lambda$13$lambda$12;
             }
         });
@@ -551,7 +551,7 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit fillSentryConfig$urlRow$lambda$16$lambda$15;
-                fillSentryConfig$urlRow$lambda$16$lambda$15 = GxCamerasPage.fillSentryConfig$urlRow$lambda$16$lambda$15(GxCamerasPage.this);
+                fillSentryConfig$urlRow$lambda$16$lambda$15 = GxCamerasPage.fillSentryConfig$urlRow$lambda$16$lambda$15(this$0);
                 return fillSentryConfig$urlRow$lambda$16$lambda$15;
             }
         });
@@ -597,7 +597,7 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit numRow$lambda$23;
-                numRow$lambda$23 = GxCamerasPage.numRow$lambda$23(Ref.DoubleRef.this, step, decimals, mn, mx, onSet, $this$numRow_u24lambda_u2419, suffix);
+                numRow$lambda$23 = GxCamerasPage.numRow$lambda$23(cur, step, decimals, mn, mx, onSet, $this$numRow_u24lambda_u2419, suffix);
                 return numRow$lambda$23;
             }
         }));
@@ -606,7 +606,7 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 Unit numRow$lambda$24;
-                numRow$lambda$24 = GxCamerasPage.numRow$lambda$24(Ref.DoubleRef.this, step, decimals, mn, mx, onSet, $this$numRow_u24lambda_u2419, suffix);
+                numRow$lambda$24 = GxCamerasPage.numRow$lambda$24(cur, step, decimals, mn, mx, onSet, $this$numRow_u24lambda_u2419, suffix);
                 return numRow$lambda$24;
             }
         }));
@@ -637,7 +637,7 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 Unit numRow$lambda$22$lambda$21;
-                numRow$lambda$22$lambda$21 = GxCamerasPage.numRow$lambda$22$lambda$21(GxCamerasPage.this, $decimals, $cur, $mn, $mx, $onSet, $tv, $suffix, (String) obj);
+                numRow$lambda$22$lambda$21 = GxCamerasPage.numRow$lambda$22$lambda$21(this$0, $decimals, $cur, $mn, $mx, $onSet, $tv, $suffix, (String) obj);
                 return numRow$lambda$22$lambda$21;
             }
         });
@@ -724,7 +724,7 @@ public final class GxCamerasPage extends GxPage {
         List<String> strings;
         String str$default = GxPage.str$default(this, ev, "eventId", null, 2, null);
         JSONArray optJSONArray = ev.optJSONArray("imageUrls");
-        if (optJSONArray == null || (strings = strings(optJSONArray)) == null || (str = CollectionsKt.joinToString$default(strings, ",", null, null, 0, null, null, 62, null)) == null) {
+        if (optJSONArray == null || (strings = strings(optJSONArray)) == null || (str = CollectionsKt.joinToString(strings, ",", "", "", -1, "...", null)) == null) {
             str = "";
         }
         return str$default + "|" + str + "|" + GxPage.str$default(this, ev, "message", null, 2, null);
@@ -875,7 +875,7 @@ public final class GxCamerasPage extends GxPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit kindLine$lambda$34;
-                    kindLine$lambda$34 = GxCamerasPage.kindLine$lambda$34(Function0.this);
+                    kindLine$lambda$34 = GxCamerasPage.kindLine$lambda$34(onDelete);
                     return kindLine$lambda$34;
                 }
             }, 2, null);
@@ -1045,7 +1045,7 @@ public final class GxCamerasPage extends GxPage {
                 }
             }
         }
-        this$0.toast(!names.isEmpty() ? "Test notification sent through " + CollectionsKt.joinToString$default(names, ", ", null, null, 0, null, null, 62, null) + "." : "Test notification sent.");
+        this$0.toast(!names.isEmpty() ? "Test notification sent through " + CollectionsKt.joinToString(names, ", ", "", "", -1, "...", null) + "." : "Test notification sent.");
         return Unit.INSTANCE;
     }
 
@@ -1176,7 +1176,7 @@ public final class GxCamerasPage extends GxPage {
             this$0.getMain().postDelayed(new Runnable() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda34
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxCamerasPage.sendTestEvent$lambda$54$lambda$53(GxCamerasPage.this);
+                    GxCamerasPage.sendTestEvent$lambda$54$lambda$53(this$0);
                 }
             }, 2500L);
         }
@@ -1276,14 +1276,14 @@ public final class GxCamerasPage extends GxPage {
 
     private final void renderHistory(boolean force) {
         List urls;
-        String sig = CollectionsKt.joinToString$default(this.sHistory, ";", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda27
+        String sig = CollectionsKt.joinToString(this.sHistory, ";", "", "", -1, "...", new Function1() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda27
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 CharSequence renderHistory$lambda$56;
                 renderHistory$lambda$56 = GxCamerasPage.renderHistory$lambda$56(GxCamerasPage.this, (JSONObject) obj);
                 return renderHistory$lambda$56;
             }
-        }, 30, null);
+        });
         if (force || !Intrinsics.areEqual(sig, this.sHistorySig)) {
             this.sHistorySig = sig;
             LinearLayout linearLayout = this.sHistBox;
@@ -1378,7 +1378,7 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit deleteEvent$lambda$63$lambda$62;
-                deleteEvent$lambda$63$lambda$62 = GxCamerasPage.deleteEvent$lambda$63$lambda$62(GxCamerasPage.this, $eventId, (String) obj, (JSONObject) obj2);
+                deleteEvent$lambda$63$lambda$62 = GxCamerasPage.deleteEvent$lambda$63$lambda$62(this$0, $eventId, (String) obj, (JSONObject) obj2);
                 return deleteEvent$lambda$63$lambda$62;
             }
         }, 12, null);
@@ -1422,12 +1422,12 @@ public final class GxCamerasPage extends GxPage {
         try {
             Result.Companion companion = Result.Companion;
             GxCamerasPage gxCamerasPage = this;
-            m1191constructorimpl = Result.m1191constructorimpl(OffsetDateTime.parse(s).atZoneSameInstant(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("MMM d, yyyy h:mm:ss a", Locale.US)));
+            m1191constructorimpl = KtCompat.resultOf(OffsetDateTime.parse(s).atZoneSameInstant(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("MMM d, yyyy h:mm:ss a", Locale.US)));
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
         }
-        if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+        if (KtCompat.isFailure(m1191constructorimpl)) {
             m1191constructorimpl = null;
         }
         String str = (String) m1191constructorimpl;
@@ -1484,7 +1484,7 @@ public final class GxCamerasPage extends GxPage {
             gxCamerasPage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda65
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxCamerasPage.gxCamLoadBitmap$lambda$73$lambda$72(Function2.this, objectRef, objectRef2);
+                    GxCamerasPage.gxCamLoadBitmap$lambda$73$lambda$72(function2, objectRef, objectRef2);
                 }
             });
         }
@@ -1492,7 +1492,7 @@ public final class GxCamerasPage extends GxPage {
             Response execute = GxPage.Companion.client(30L).newCall(new Request.Builder().url("http://" + str + ":8082" + str2).header("Cache-Control", "no-store").build()).execute();
             try {
                 Response response = execute;
-                String header$default = Response.header$default(response, "Content-Type", null, 2, null);
+                String header$default = response.header("Content-Type", null);
                 String str3 = "";
                 if (header$default == null) {
                     header$default = "";
@@ -1504,15 +1504,15 @@ public final class GxCamerasPage extends GxPage {
                 }
                 byte[] bArr2 = bArr;
                 if (response.isSuccessful()) {
-                    if (StringsKt.contains$default((CharSequence) str4, (CharSequence) "json", false, 2, (Object) null)) {
+                    if (StringsKt.contains((CharSequence) str4, (CharSequence) "json", false)) {
                         try {
                             Result.Companion companion = Result.Companion;
-                            m1191constructorimpl2 = Result.m1191constructorimpl(new JSONObject(new String(bArr2, Charsets.UTF_8)).optString("jpeg"));
+                            m1191constructorimpl2 = KtCompat.resultOf(new JSONObject(new String(bArr2, Charsets.UTF_8)).optString("jpeg"));
                         } catch (Throwable th) {
                             Result.Companion companion2 = Result.Companion;
-                            m1191constructorimpl2 = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                            m1191constructorimpl2 = KtCompat.resultOf(ResultKt.createFailure(th));
                         }
-                        if (Result.m1197isFailureimpl(m1191constructorimpl2)) {
+                        if (KtCompat.isFailure(m1191constructorimpl2)) {
                             m1191constructorimpl2 = null;
                         }
                         String str5 = (String) m1191constructorimpl2;
@@ -1542,12 +1542,12 @@ public final class GxCamerasPage extends GxPage {
                         if (StringsKt.isBlank(optString)) {
                             optString = jSONObject.optString("message");
                         }
-                        m1191constructorimpl = Result.m1191constructorimpl(optString);
+                        m1191constructorimpl = KtCompat.resultOf(optString);
                     } catch (Throwable th2) {
                         Result.Companion companion4 = Result.Companion;
-                        m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th2));
+                        m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th2));
                     }
-                    if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+                    if (KtCompat.isFailure(m1191constructorimpl)) {
                         m1191constructorimpl = null;
                     }
                     String str7 = (String) m1191constructorimpl;
@@ -1579,14 +1579,14 @@ public final class GxCamerasPage extends GxPage {
             gxCamerasPage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda65
                 @Override // java.lang.Runnable
                 public final void run() {
-                    GxCamerasPage.gxCamLoadBitmap$lambda$73$lambda$72(Function2.this, objectRef, objectRef2);
+                    GxCamerasPage.gxCamLoadBitmap$lambda$73$lambda$72(function2, objectRef, objectRef2);
                 }
             });
         }
         gxCamerasPage.getMain().post(new Runnable() { // from class: com.starpilot.starview.GxCamerasPage$$ExternalSyntheticLambda65
             @Override // java.lang.Runnable
             public final void run() {
-                GxCamerasPage.gxCamLoadBitmap$lambda$73$lambda$72(Function2.this, objectRef, objectRef2);
+                GxCamerasPage.gxCamLoadBitmap$lambda$73$lambda$72(function2, objectRef, objectRef2);
             }
         });
     }
@@ -2349,7 +2349,7 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit vDelete$lambda$101$lambda$100;
-                vDelete$lambda$101$lambda$100 = GxCamerasPage.vDelete$lambda$101$lambda$100(GxCamerasPage.this, (String) obj, (JSONObject) obj2);
+                vDelete$lambda$101$lambda$100 = GxCamerasPage.vDelete$lambda$101$lambda$100(this$0, (String) obj, (JSONObject) obj2);
                 return vDelete$lambda$101$lambda$100;
             }
         }, 12, null);
@@ -2591,7 +2591,7 @@ public final class GxCamerasPage extends GxPage {
         Intrinsics.checkNotNullParameter(t, "t");
         if (e == null && (tv = this$0.vStat.get($k)) != null) {
             boolean z = false;
-            if (StringsKt.endsWith$default($k, "Active", false, 2, (Object) null)) {
+            if (StringsKt.endsWith($k, "Active", false)) {
                 boolean on = Intrinsics.areEqual(StringsKt.trim((CharSequence) t).toString(), "1");
                 tv.setText(on ? "YES" : "no");
                 if (on) {
@@ -3291,7 +3291,7 @@ public final class GxCamerasPage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit pDelete$lambda$129$lambda$128;
-                pDelete$lambda$129$lambda$128 = GxCamerasPage.pDelete$lambda$129$lambda$128(GxCamerasPage.this, (String) obj, (JSONObject) obj2);
+                pDelete$lambda$129$lambda$128 = GxCamerasPage.pDelete$lambda$129$lambda$128(this$0, (String) obj, (JSONObject) obj2);
                 return pDelete$lambda$129$lambda$128;
             }
         }, 12, null);

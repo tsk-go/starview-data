@@ -457,7 +457,7 @@ public final class LaneFeed {
             i = 2;
         }
         try {
-            match = Hpms.INSTANCE.match(f.getLat(), f.getLon(), yaw, (w3 == null || (kind = w3.getKind()) == null) ? null : Boolean.valueOf(StringsKt.endsWith$default(kind, "_link", false, 2, (Object) null)), (r24 & 16) != 0 ? 45.0d : 0.0d, (r24 & 32) != 0 ? "" : null);
+            match = Hpms.INSTANCE.match(f.getLat(), f.getLon(), yaw, (w3 == null || (kind = w3.getKind()) == null) ? null : Boolean.valueOf(StringsKt.endsWith(kind, "_link", false)), (r24 & 16) != 0 ? 45.0d : 0.0d, (r24 & 32) != 0 ? "" : null);
         } catch (Exception e3) {
             match = null;
             this.hpms = match;
@@ -471,7 +471,7 @@ public final class LaneFeed {
             this.ramps = CollectionsKt.emptyList();
             return;
         }
-        if (!w3.getHighway() || StringsKt.endsWith$default(w3.getKind(), "_link", false, i, (Object) null)) {
+        if (!w3.getHighway() || StringsKt.endsWith(w3.getKind(), "_link", false)) {
             w = w3;
             emptyList = CollectionsKt.emptyList();
         } else {
@@ -499,7 +499,7 @@ public final class LaneFeed {
         }
         this.ramps = emptyList;
         prev = this.way;
-        if (prev != null && prev.getId() != w.getId() && StringsKt.endsWith$default(prev.getKind(), "_link", false, i, (Object) null) && w.getHighway() && !StringsKt.endsWith$default(w.getKind(), "_link", false, i, (Object) null)) {
+        if (prev != null && prev.getId() != w.getId() && StringsKt.endsWith(prev.getKind(), "_link", false) && w.getHighway() && !StringsKt.endsWith(w.getKind(), "_link", false)) {
             this.pendingEntry = Companion.rampSide(prev, w, e, n, yaw);
         }
         w2 = w;
@@ -652,7 +652,7 @@ public final class LaneFeed {
                 }
             }
         }
-        return new LaneBrain.RoadInfo((h == null || (s6 = h.getS()) == null) ? 0 : s6.ourLanes(), (h == null || (s5 = h.getS()) == null || (name = s5.getName()) == null) ? "" : name, (h == null || (s4 = h.getS()) == null || !s4.getRamp()) ? false : true, (h == null || (s2 = h.getS()) == null || !s2.getTunnel()) ? false : true, (h == null || (s = h.getS()) == null || !s.getBridge()) ? false : true, !((h == null || (s3 = h.getS()) == null || s3.getOurLanesSure()) ? false : true), xL, xR, kL, kR, CollectionsKt.joinToString$default(why, ", ", null, null, 0, null, null, 62, null), straight2, navDist);
+        return new LaneBrain.RoadInfo((h == null || (s6 = h.getS()) == null) ? 0 : s6.ourLanes(), (h == null || (s5 = h.getS()) == null || (name = s5.getName()) == null) ? "" : name, (h == null || (s4 = h.getS()) == null || !s4.getRamp()) ? false : true, (h == null || (s2 = h.getS()) == null || !s2.getTunnel()) ? false : true, (h == null || (s = h.getS()) == null || !s.getBridge()) ? false : true, !((h == null || (s3 = h.getS()) == null || s3.getOurLanesSure()) ? false : true), xL, xR, kL, kR, CollectionsKt.joinToString(why, ", ", "", "", -1, "...", null), straight2, navDist);
     }
 
     /* compiled from: LaneFeed.kt */

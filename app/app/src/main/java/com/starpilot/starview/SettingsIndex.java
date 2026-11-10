@@ -54,7 +54,7 @@ public final class SettingsIndex {
 
     /* JADX WARN: Code restructure failed: missing block: B:131:0x00d4, code lost:
     
-        if (kotlin.text.StringsKt.endsWith$default(r13.getLabel(), " Controller", false, 2, (java.lang.Object) null) != false) goto L35;
+        if (kotlin.text.StringsKt.endsWith(r13.getLabel(), " Controller", false) != false) goto L35;
      */
     /* JADX WARN: Removed duplicated region for block: B:129:? A[LOOP:1: B:20:0x0078->B:129:?, LOOP_END, SYNTHETIC] */
     /* JADX WARN: Removed duplicated region for block: B:36:0x00e1 A[EDGE_INSN: B:36:0x00e1->B:37:0x00e1 BREAK  A[LOOP:1: B:20:0x0078->B:129:?], SYNTHETIC] */
@@ -187,7 +187,7 @@ public final class SettingsIndex {
                 parts.add(label + " " + lowerCase3);
             }
         }
-        return new Summary(on, CollectionsKt.joinToString$default(parts, " · ", null, null, 0, null, null, 62, null));
+        return new Summary(on, CollectionsKt.joinToString(parts, " · ", "", "", -1, "...", null));
     }
 
     /* renamed from: short, reason: not valid java name */
@@ -195,7 +195,7 @@ public final class SettingsIndex {
         Intrinsics.checkNotNullParameter(label, "label");
         String l = label.toLowerCase(Locale.ROOT);
         Intrinsics.checkNotNullExpressionValue(l, "toLowerCase(...)");
-        return StringsKt.contains$default((CharSequence) l, (CharSequence) "strength", false, 2, (Object) null) ? "strength" : StringsKt.contains$default((CharSequence) l, (CharSequence) "offset", false, 2, (Object) null) ? "offset" : (StringsKt.contains$default((CharSequence) l, (CharSequence) "minimum", false, 2, (Object) null) && StringsKt.contains$default((CharSequence) l, (CharSequence) "speed", false, 2, (Object) null)) ? "min speed" : StringsKt.contains$default((CharSequence) l, (CharSequence) "delay", false, 2, (Object) null) ? "delay" : StringsKt.contains$default((CharSequence) l, (CharSequence) "high-speed follow", false, 2, (Object) null) ? "highway" : StringsKt.contains$default((CharSequence) l, (CharSequence) "follow", false, 2, (Object) null) ? "follow" : StringsKt.contains$default((CharSequence) l, (CharSequence) "threshold", false, 2, (Object) null) ? "below" : CollectionsKt.joinToString$default(CollectionsKt.takeLast(StringsKt.split$default((CharSequence) l, new char[]{' '}, false, 0, 6, (Object) null), 2), " ", null, null, 0, null, null, 62, null);
+        return StringsKt.contains((CharSequence) l, (CharSequence) "strength", false) ? "strength" : StringsKt.contains((CharSequence) l, (CharSequence) "offset", false) ? "offset" : (StringsKt.contains((CharSequence) l, (CharSequence) "minimum", false) && StringsKt.contains((CharSequence) l, (CharSequence) "speed", false)) ? "min speed" : StringsKt.contains((CharSequence) l, (CharSequence) "delay", false) ? "delay" : StringsKt.contains((CharSequence) l, (CharSequence) "high-speed follow", false) ? "highway" : StringsKt.contains((CharSequence) l, (CharSequence) "follow", false) ? "follow" : StringsKt.contains((CharSequence) l, (CharSequence) "threshold", false) ? "below" : CollectionsKt.joinToString(CollectionsKt.takeLast(StringsKt.split((CharSequence) l, new char[]{' '}, false, 0), 2), " ", "", "", -1, "...", null);
     }
 
     /* compiled from: SettingsIndex.kt */
@@ -223,7 +223,7 @@ public final class SettingsIndex {
             this.reason = reason;
             this.unit = unit;
             this.icon = icon;
-            String lowerCase = CollectionsKt.joinToString$default(CollectionsKt.listOf((Object[]) new String[]{this.label, this.value, this.reason, this.unit, this.where}), " ", null, null, 0, null, null, 62, null).toLowerCase(Locale.ROOT);
+            String lowerCase = CollectionsKt.joinToString(CollectionsKt.listOf((Object[]) new String[]{this.label, this.value, this.reason, this.unit, this.where}), " ", "", "", -1, "...", null).toLowerCase(Locale.ROOT);
             Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
             this.search = lowerCase;
         }
@@ -330,7 +330,7 @@ public final class SettingsIndex {
                     $this$filter$iv = $this$filter$iv3;
                     $i$f$filter = $i$f$filter3;
                     $i$f$filter2 = 0;
-                    if (!StringsKt.contains$default((CharSequence) e.getSearch(), (CharSequence) element$iv, false, 2, (Object) null)) {
+                    if (!StringsKt.contains((CharSequence) e.getSearch(), (CharSequence) element$iv, false)) {
                         z = false;
                         break;
                     }
@@ -353,11 +353,11 @@ public final class SettingsIndex {
                 SettingsIndex.Entry it2 = (SettingsIndex.Entry) t2;
                 String lowerCase2 = it2.getLabel().toLowerCase(Locale.ROOT);
                 Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
-                Boolean valueOf = Boolean.valueOf(StringsKt.startsWith$default(lowerCase2, (String) words.get(0), false, 2, (Object) null));
+                Boolean valueOf = Boolean.valueOf(StringsKt.startsWith(lowerCase2, (String) words.get(0), false));
                 SettingsIndex.Entry it3 = (SettingsIndex.Entry) t;
                 String lowerCase3 = it3.getLabel().toLowerCase(Locale.ROOT);
                 Intrinsics.checkNotNullExpressionValue(lowerCase3, "toLowerCase(...)");
-                return ComparisonsKt.compareValues(valueOf, Boolean.valueOf(StringsKt.startsWith$default(lowerCase3, (String) words.get(0), false, 2, (Object) null)));
+                return ComparisonsKt.compareValues(valueOf, Boolean.valueOf(StringsKt.startsWith(lowerCase3, (String) words.get(0), false)));
             }
         };
         Iterable $this$distinctBy$iv = CollectionsKt.sortedWith((List) destination$iv$iv2, new Comparator() { // from class: com.starpilot.starview.SettingsIndex$search$$inlined$thenBy$1

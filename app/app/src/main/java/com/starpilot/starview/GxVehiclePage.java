@@ -271,12 +271,12 @@ public final class GxVehiclePage extends GxPage {
         if (200 <= code && code < 300) {
             try {
                 Result.Companion companion = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(Boolean.valueOf(new JSONObject(text).optBoolean("result", false)));
+                m1191constructorimpl = KtCompat.resultOf(Boolean.valueOf(new JSONObject(text).optBoolean("result", false)));
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+                m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
             }
-            if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+            if (KtCompat.isFailure(m1191constructorimpl)) {
                 m1191constructorimpl = false;
             }
             if (((Boolean) m1191constructorimpl).booleanValue()) {
@@ -739,7 +739,7 @@ public final class GxVehiclePage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit editKey$lambda$28$lambda$27;
-                editKey$lambda$28$lambda$27 = GxVehiclePage.editKey$lambda$28$lambda$27(GxVehiclePage.this, (String) obj, obj2);
+                editKey$lambda$28$lambda$27 = GxVehiclePage.editKey$lambda$28$lambda$27(this$0, (String) obj, obj2);
                 return editKey$lambda$28$lambda$27;
             }
         }, 8, null);
@@ -777,7 +777,7 @@ public final class GxVehiclePage extends GxPage {
             @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 Unit removeKey$lambda$31$lambda$30;
-                removeKey$lambda$31$lambda$30 = GxVehiclePage.removeKey$lambda$31$lambda$30(GxVehiclePage.this, (String) obj, obj2);
+                removeKey$lambda$31$lambda$30 = GxVehiclePage.removeKey$lambda$31$lambda$30(this$0, (String) obj, obj2);
                 return removeKey$lambda$31$lambda$30;
             }
         }, 12, null);

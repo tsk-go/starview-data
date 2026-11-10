@@ -200,10 +200,10 @@ public final class GpsBridge {
                         Result.Companion companion = Result.Companion;
                         GpsBridge gpsBridge = this;
                         lm.removeTestProvider(p2);
-                        Result.m1191constructorimpl(Unit.INSTANCE);
+                        KtCompat.resultOf(Unit.INSTANCE);
                     } catch (Throwable th) {
                         Result.Companion companion2 = Result.Companion;
-                        Result.m1191constructorimpl(ResultKt.createFailure(th));
+                        KtCompat.resultOf(ResultKt.createFailure(th));
                     }
                     if (Build.VERSION.SDK_INT >= 31) {
                         p = p2;
@@ -535,10 +535,10 @@ public final class GpsBridge {
                 GpsBridge gpsBridge = this;
                 lm.setTestProviderEnabled(p, false);
                 lm.removeTestProvider(p);
-                Result.m1191constructorimpl(Unit.INSTANCE);
+                KtCompat.resultOf(Unit.INSTANCE);
             } catch (Throwable th) {
                 Result.Companion companion2 = Result.Companion;
-                Result.m1191constructorimpl(ResultKt.createFailure(th));
+                KtCompat.resultOf(ResultKt.createFailure(th));
             }
         }
         ready = false;
