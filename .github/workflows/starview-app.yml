@@ -1,7 +1,8 @@
-# Builds the StarView tablet app from app/ and signs it with the StarView key (repo secret STARVIEW_KEYSTORE_B64:
-# base64 of keystore/starview.jks). When versionName in app/app/build.gradle.kts is new, it publishes a release
-# "v<versionName>" with StarView-<versionName>.apk - the app's Settings > Tablet > About > Check for updates installs it.
-# A push that keeps the same versionName only builds (the APK is kept as a run artifact for 30 days).
+# Builds the StarView tablet app (app/app) and StarLock, the phone app (app/starlock), and signs both with the StarView key
+# (repo secret STARVIEW_KEYSTORE_B64: base64 of keystore/starview.jks). When an app's versionName is new, it publishes a
+# release: StarView "v<versionName>" with StarView-<versionName>.apk (StarView's Settings > Tablet > About > Check for
+# updates installs it), StarLock "starlock-v<versionName>" with StarLock-<versionName>.apk.
+# A push that keeps the same versionName only builds (the APKs are kept as run artifacts for 30 days).
 name: StarView app
 
 on:
@@ -50,43 +51,48 @@ jobs:
         working-directory: app
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon :app:assembleDebug
+          ./gradlew --no-daemon :app:assembleDebug :starlock:assembleDebug
 
-      - name: Check the signing key
-        run: |
-          apk=app/app/build/outputs/apk/debug/app-debug.apk
-          signer=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
-          "$signer" verify --print-certs "$apk" | tee /dev/stderr \
-            | grep -q "SHA-256 digest: 00fecaf167346f9812e0511144e610d3d85f0d2b59096ff60e21b600c754094f" \
-            || { echo "::error::APK is not signed with the StarView key: it would not install over the tablet's app"; exit 1; }
-
-      - name: Version
+      - name: Check the signing key, name the APKs
         id: v
         run: |
-          name=$(sed -n 's/.*versionName = "\(.*\)".*/\1/p' app/app/build.gradle.kts)
-          code=$(sed -n 's/.*versionCode = \([0-9]*\).*/\1/p' app/app/build.gradle.kts)
-          echo "name=$name" >> "$GITHUB_OUTPUT"
-          echo "code=$code" >> "$GITHUB_OUTPUT"
-          cp app/app/build/outputs/apk/debug/app-debug.apk "StarView-$name.apk"
+          signer=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
+          for m in app:StarView starlock:StarLock; do
+            mod=${m%%:*}; app=${m##*:}
+            apk=app/$mod/build/outputs/apk/debug/$mod-debug.apk
+            "$signer" verify --print-certs "$apk" | tee /dev/stderr \
+              | grep -q "SHA-256 digest: 00fecaf167346f9812e0511144e610d3d85f0d2b59096ff60e21b600c754094f" \
+              || { echo "::error::$app is not signed with the StarView key: it would not install over the app on the device"; exit 1; }
+            name=$(sed -n 's/.*versionName = "\(.*\)".*/\1/p' app/$mod/build.gradle.kts)
+            code=$(sed -n 's/.*versionCode = \([0-9]*\).*/\1/p' app/$mod/build.gradle.kts)
+            cp "$apk" "$app-$name.apk"
+            echo "${mod}_name=$name" >> "$GITHUB_OUTPUT"
+            echo "${mod}_code=$code" >> "$GITHUB_OUTPUT"
+          done
 
       - uses: actions/upload-artifact@v4
         with:
-          name: StarView-${{ steps.v.outputs.name }}
-          path: StarView-${{ steps.v.outputs.name }}.apk
+          name: apks
+          path: "*.apk"
           retention-days: 30
 
-      - name: Release
+      - name: Releases
         env:
           GH_TOKEN: ${{ github.token }}
-          NAME: ${{ steps.v.outputs.name }}
-          CODE: ${{ steps.v.outputs.code }}
+          SV_NAME: ${{ steps.v.outputs.app_name }}
+          SV_CODE: ${{ steps.v.outputs.app_code }}
+          SL_NAME: ${{ steps.v.outputs.starlock_name }}
+          SL_CODE: ${{ steps.v.outputs.starlock_code }}
         run: |
-          tag="v$NAME"
-          if gh release view "$tag" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            echo "Release $tag already exists: bump versionName (and versionCode) in app/app/build.gradle.kts for a new one."
-            exit 0
-          fi
-          printf 'StarView %s (versionCode %s), built from %s.\n\n%s\n' "$NAME" "$CODE" "${GITHUB_SHA:0:9}" \
-            "$(git log -1 --format=%B)" > notes.md
-          gh release create "$tag" "StarView-$NAME.apk" -R "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
-            --title "StarView $NAME" --notes-file notes.md
+          release() {  # tag app name code
+            if gh release view "$1" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+              echo "Release $1 already exists: bump $2's versionName (and versionCode) for a new one."
+              return 0
+            fi
+            printf '%s %s (versionCode %s), built from %s.\n\n%s\n' "$2" "$3" "$4" "${GITHUB_SHA:0:9}" \
+              "$(git log -1 --format=%B)" > notes.md
+            gh release create "$1" "$2-$3.apk" -R "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+              --title "$2 $3" --notes-file notes.md
+          }
+          release "v$SV_NAME" StarView "$SV_NAME" "$SV_CODE"
+          release "starlock-v$SL_NAME" StarLock "$SL_NAME" "$SL_CODE"

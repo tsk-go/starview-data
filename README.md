@@ -18,7 +18,11 @@ or new code.
   is not in this public repo: the workflow takes it from the repository secret `STARVIEW_KEYSTORE_B64` (base64 of
   `starview.jks`), and a local build reads `app/keystore/starview.jks` (git-ignored). Losing the key means the next
   version can only be installed after uninstalling StarView, which wipes its settings.
-- **Local build:** `cd app && ./gradlew :app:assembleDebug` (needs the Android SDK in `local.properties` or `ANDROID_HOME`).
+- **StarLock** (the phone's Lock / Unlock, `app/starlock`): recovered the same way from StarLock 2.19 and released as
+  `starlock-v<versionName>` (`StarLock-<versionName>.apk`) by the same workflow, signed with the same key. Its library
+  dex files rebuild byte-identical to 2.19's; only the app's own code differs (decompiled, then checked against 2.19).
+- **Local build:** `cd app && ./gradlew :app:assembleDebug :starlock:assembleDebug` (needs the Android SDK in
+  `local.properties` or `ANDROID_HOME`).
 
 ## HPMS lane counts (release `hpms-2024`)
 
