@@ -57,7 +57,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
     private TextView info;
 
     /* renamed from: lastPrefs$delegate, reason: from kotlin metadata */
-    private final Lazy lastPrefs;
+    private final Lazy lastPrefs$delegate;
     private final ActivityResultLauncher<String[]> pickModel;
     private TextView score;
     private LaneShots shots;
@@ -77,7 +77,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
         });
         Intrinsics.checkNotNullExpressionValue(registerForActivityResult, "registerForActivityResult(...)");
         this.pickModel = registerForActivityResult;
-        this.lastPrefs = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda4
+        this.lastPrefs$delegate = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.LanePicturesActivity$$ExternalSyntheticLambda4
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 SharedPreferences lastPrefs_delegate$lambda$52;
@@ -1021,7 +1021,7 @@ public final class LanePicturesActivity extends AppCompatActivity {
     }
 
     private final SharedPreferences getLastPrefs() {
-        return (SharedPreferences) this.lastPrefs.getValue();
+        return (SharedPreferences) this.lastPrefs$delegate.getValue();
     }
 
     /* JADX INFO: Access modifiers changed from: private */

@@ -42,7 +42,7 @@ public final class LaneModel {
     private GpuDelegate gpu;
 
     /* renamed from: input$delegate, reason: from kotlin metadata */
-    private final Lazy input;
+    private final Lazy input$delegate;
     private Interpreter interp;
     private long lastMs;
     private long loadedMtime;
@@ -69,7 +69,7 @@ public final class LaneModel {
         this.status = "off";
         this.accel = "-";
         this.enabled = true;
-        this.input = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.LaneModel$$ExternalSyntheticLambda0
+        this.input$delegate = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.LaneModel$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 ByteBuffer input_delegate$lambda$0;
@@ -230,7 +230,7 @@ public final class LaneModel {
     }
 
     private final ByteBuffer getInput() {
-        Object value = this.input.getValue();
+        Object value = this.input$delegate.getValue();
         Intrinsics.checkNotNullExpressionValue(value, "getValue(...)");
         return (ByteBuffer) value;
     }

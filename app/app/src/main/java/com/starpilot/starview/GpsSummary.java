@@ -144,15 +144,15 @@ public final class GpsSummary {
             GpsFixInfo var61 = (GpsFixInfo)var30;
             if (var30 == null) {
                 var22 = var24;
-                var30 = new ArrayList();
+                ArrayList var30s = new ArrayList();
 
                 for (Object var67 : var22) {
                     if (Intrinsics.areEqual(((GpsFixInfo)var67).getService(), "gpsLocation")) {
-                        var30.add(var67);
+                        var30s.add(var67);
                     }
                 }
 
-                List var33 = (List)var30;
+                List var33 = (List)var30s;
                 Iterator var75 = var33.iterator();
                 if (!var75.hasNext()) {
                     var30 = null;

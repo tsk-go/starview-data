@@ -642,7 +642,7 @@ public final class LaneAhead {
                         var16 = (((boolean)false) ? 1 : 0);
                     }
 
-                    if ((var16 != 0) && (var1 != 0) < var7 * -0.6 && !(var5 < var7 * -0.3)) {
+                    if ((var16 != 0) && var1 < var7 * -0.6 && !(var5 < var7 * -0.3)) {
                         var16 = 1;
                     } else {
                         boolean var38;

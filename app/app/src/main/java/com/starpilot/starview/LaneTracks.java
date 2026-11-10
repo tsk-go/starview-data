@@ -345,8 +345,8 @@ public final class LaneTracks {
                             var41 = new float[var23.length];
                         }
 
-                        var41 = new LaneTracks.Line(var23, var50, (float[])var41);
-                        var6 = var41.getY0();
+                        LaneTracks.Line var41ss = new LaneTracks.Line(var23, var50, (float[])var41);
+                        var6 = var41ss.getY0();
                         Iterable var51 = this.lines;
                         var var22 = new ArrayList();
 
@@ -386,14 +386,14 @@ public final class LaneTracks {
                         }
 
                         LaneTracks.Line var55 = (LaneTracks.Line)(Object)var50;
-                        if (var55 != null && Math.abs(var55.getY0() - var6) < 1.5F && var55.getY().length == var41.getY().length) {
+                        if (var55 != null && Math.abs(var55.getY0() - var6) < 1.5F && var55.getY().length == var41ss.getY().length) {
                             var15 = 0;
 
                             for (int var16 = var55.getY().length; var15 < var16; var15++) {
                                 float[] var62 = var55.getY();
-                                var62[var15] += (var41.getY()[var15] - var55.getY()[var15]) * var8;
+                                var62[var15] += (var41ss.getY()[var15] - var55.getY()[var15]) * var8;
                                 float[] var63 = var55.getZ();
-                                var63[var15] += (var41.getZ()[var15] - var55.getZ()[var15]) * var8;
+                                var63[var15] += (var41ss.getZ()[var15] - var55.getZ()[var15]) * var8;
                             }
 
                             var55.setX(var23);
@@ -405,8 +405,8 @@ public final class LaneTracks {
                             float[] var46 = var41.getZ();
                             float[] var47 = Arrays.copyOf(var46, var46.length);
                             Intrinsics.checkNotNullExpressionValue(var47, "copyOf(...)");
-                            var41 = new LaneTracks.Line(var23, var50, var47);
-                            this.lines.add(((Line) var41));
+                            LaneTracks.Line var41s = new LaneTracks.Line(var23, var50, var47);
+                            this.lines.add(((Line) var41s));
                         }
 
                         var41.setSeen(true);

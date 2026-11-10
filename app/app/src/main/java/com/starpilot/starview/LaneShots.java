@@ -66,7 +66,7 @@ public final class LaneShots {
     private final File index;
 
     /* renamed from: io$delegate, reason: from kotlin metadata */
-    private final Lazy io;
+    private final Lazy io$delegate;
     private Function0<Pair<Integer, Integer>> lanes;
     private long lastEventMs;
     private long lastPeriodicMs;
@@ -116,7 +116,7 @@ public final class LaneShots {
         this.ctx = ctx;
         this.index = new File(this.ctx.getFilesDir(), "lane_shots.txt");
         this.reviews = new File(this.ctx.getFilesDir(), "lane_reviews.txt");
-        this.io = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.LaneShots$$ExternalSyntheticLambda0
+        this.io$delegate = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.LaneShots$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 ExecutorService newSingleThreadExecutor;
@@ -278,7 +278,7 @@ public final class LaneShots {
     }
 
     private final ExecutorService getIo() {
-        return (ExecutorService) this.io.getValue();
+        return (ExecutorService) this.io$delegate.getValue();
     }
 
     public final String getDriveFolder() {
