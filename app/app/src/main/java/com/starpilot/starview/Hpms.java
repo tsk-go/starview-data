@@ -574,6 +574,10 @@ public final class Hpms {
         return list;
     }
 
+    public static /* synthetic */ Match match$default(Hpms hpms, double lat, double lon, double headingRad, Boolean rampWanted, double maxM, String preferName, int i, Object obj) {
+        return hpms.match(lat, lon, headingRad, rampWanted, (i & 16) != 0 ? 45.0d : maxM, (i & 32) != 0 ? "" : preferName);
+    }
+
     public final Match match(double lat, double lon, double headingRad, Boolean rampWanted, double maxM, String preferName) {
         Match bn;
         Intrinsics.checkNotNullParameter(preferName, "preferName");

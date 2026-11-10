@@ -939,7 +939,7 @@ public final class DestinationActivity extends AppCompatActivity {
                         DestinationActivity.Place p2 = (DestinationActivity.Place) t2;
                         Double valueOf3 = Double.valueOf(p2.getDistM());
                         double d2 = valueOf3.doubleValue();
-                        Double d3 = (Double.isInfinite(d2) || Double.isNaN(d2)) ? false : true ? valueOf3 : null;
+                        Double d3 = (!Double.isInfinite(d2) && !Double.isNaN(d2)) ? valueOf3 : null;
                         if (d3 != null) {
                             doubleValue2 = d3.doubleValue();
                         } else {

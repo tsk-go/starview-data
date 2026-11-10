@@ -1800,7 +1800,7 @@ public final class GxNavigationPage extends GxPage {
         Double valueOf2 = Double.valueOf(valueOf != null ? valueOf.doubleValue() : 0.0d);
         Double valueOf3 = Double.valueOf(r.optDouble("duration", 0.0d));
         double it2 = valueOf3.doubleValue();
-        Double d = (Double.isInfinite(it2) || Double.isNaN(it2)) ? false : true ? valueOf3 : null;
+        Double d = (!Double.isInfinite(it2) && !Double.isNaN(it2)) ? valueOf3 : null;
         this.routeSummary = new Triple<>(valueOf2, Double.valueOf(d != null ? d.doubleValue() : 0.0d), rid);
     }
 
