@@ -221,8 +221,8 @@ public final class GalaxySettingsView extends FrameLayout {
             /* VF: from Vineflower (jadx: ) */
             public Unplaced(Set<String> var1) {
                 Intrinsics.checkNotNullParameter(var1, "placed");
-        super(var1);
                 super(null);
+        super(var1);
                 this.placed = var1;
             }
 

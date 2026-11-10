@@ -1071,7 +1071,7 @@ public final class OffroadHome extends FrameLayout {
                 var43 = (byte)8;
             }
 
-            ((LinearLayout) var65).setVisibility(var43);
+            ((View) var65).setVisibility(var43);
             var65 = this.detailContent;
             if (this.state == OffroadHome.State.HOME) {
                 var43 = (byte)8;
@@ -1079,7 +1079,7 @@ public final class OffroadHome extends FrameLayout {
                 var43 = (byte)0;
             }
 
-            ((LinearLayout) var65).setVisibility(var43);
+            ((View) var65).setVisibility(var43);
             OffroadHome.State var71 = this.state;
             switch (OffroadHome.WhenMappings.$EnumSwitchMapping$0[var71.ordinal()]) {
                 case 1:
@@ -1263,7 +1263,7 @@ public final class OffroadHome extends FrameLayout {
                     StringBuilder var16 = new StringBuilder();
                     Object var101 = Telemetry.pStr$default(var1, "DongleId", null, 2, null);
                     int var56;
-                    if (((CharSequence) var101).length() == 0) {
+                    if (var101.length() == 0) {
                         var56 = 1;
                     } else {
                         var56 = 0;
@@ -1304,7 +1304,7 @@ public final class OffroadHome extends FrameLayout {
                         String var18 = this.gb((JSONObject)var101, "total_GB");
                         var16.append("Internal    " + var25 + " free of " + var18 + " GB");
                         if (((JSONObject) var101).has("newest_time")) {
-                            String var26 = this.whenStr(((JSONObject) var101).optDouble("newest_time"));
+                            String var26 = this.whenStr(var101.optDouble("newest_time"));
                             var16.append("  ·  newest drive " + var26);
                         }
 
@@ -1412,7 +1412,7 @@ public final class OffroadHome extends FrameLayout {
                     var13 = tv$default(this, 22.0F, Color.rgb(210, 216, 228), false, 4, null);
                     var13.setText(var75);
                     var13.setLineSpacing(this.dp(6), 1.0F);
-                    ((LinearLayout) var22).addView((View)var13);
+                    ((ViewGroup) var22).addView((View)var13);
                     this.detailAction.setText("Open Software settings");
                     this.detailAction.setVisibility(0);
                     this.detailAction.setOnClickListener(new OffroadHome$$ExternalSyntheticLambda1(this));

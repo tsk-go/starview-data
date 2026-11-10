@@ -1199,7 +1199,7 @@ public final class GxModelsPage extends GxPage {
             var3 = null;
         }
 
-        ((LinearLayout) var3).removeAllViews();
+        ((ViewGroup) var3).removeAllViews();
         if (!this.loading) {
             List var14 = this.sorted();
             if (var14.isEmpty()) {
@@ -1209,7 +1209,7 @@ public final class GxModelsPage extends GxPage {
                     var3 = var4;
                 }
 
-                ((LinearLayout) var3).addView((View)this.empty("No models match these filters. Try Both or clear the favourite filters."));
+                ((ViewGroup) var3).addView((View)this.empty("No models match these filters. Try Both or clear the favourite filters."));
             } else {
                 boolean var1;
                 if (this.busy.length() == 0) {

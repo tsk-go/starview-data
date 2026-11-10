@@ -2238,7 +2238,7 @@ public final class MainActivity extends AppCompatActivity {
                 }
 
                 Object var10 = var8;
-                if (((CharSequence) var10).length() == 0) {
+                if (var10.length() == 0) {
                     var2 = true;
                 }
 
@@ -5008,7 +5008,7 @@ public final class MainActivity extends AppCompatActivity {
                         label684: {
                             try {
                                 var146 = var144;
-                                if (((CharSequence) var146).length() == 0) {
+                                if (var146.length() == 0) {
                                     break label684;
                                 }
                             } catch (Exception var97) {
@@ -5084,7 +5084,7 @@ public final class MainActivity extends AppCompatActivity {
         double var3 = 100;
 
         try {
-            ((Map) ((Map) ((Map) var154).put("sure", bookmarkNow$r1(var1 * var3))).put("lanes", var7)).put("lanes_from", var280);
+            ((GalaxyApi) var154).put("sure", bookmarkNow$r1(var1 * var3)).put("lanes", var7).put("lanes_from", var280);
             var131 = var20.marg(-1);
             ArrayList var282 = new ArrayList(var131.length);
             var283 = var282;
@@ -5155,7 +5155,7 @@ public final class MainActivity extends AppCompatActivity {
         try {
             Collection var396 = var291;
             JSONArray var293 = new JSONArray(var396);
-            ((Map) var162).put("lanes_right_probabilities", var293);
+            ((GalaxyApi) var162).put("lanes_right_probabilities", var293);
             var294 = var20.getWhy();
         } catch (Exception var85) {
             Context var165 = (Context)this;
@@ -5483,7 +5483,7 @@ public final class MainActivity extends AppCompatActivity {
                     try {
                         Collection var206 = ((Collection) var204);
                         JSONArray var329 = new JSONArray(var206);
-                        var19.put("route_next_lanes", ((Map) var377).put("lanes", var329));
+                        var19.put("route_next_lanes", ((GalaxyApi) var377).put("lanes", var329));
                     } catch (Exception var61) {
                         Context var205 = (Context)this;
                         String var328 = var61.getMessage();
@@ -5614,7 +5614,7 @@ public final class MainActivity extends AppCompatActivity {
                 }
 
                 try {
-                    var21 = ((JSONObject) ((Map) var380).put("lead", var220));
+                    var21 = ((GalaxyApi) var380).put("lead", var220);
                     var8 = var18.getLeftBlinker();
                 } catch (Exception var52) {
                     Context var221 = (Context)this;
@@ -5788,7 +5788,7 @@ public final class MainActivity extends AppCompatActivity {
                 try {
                     var19.put(
                         "openpilot",
-                        ((Map) var382).put("lane_change", var232)
+                        ((GalaxyApi) var382).put("lane_change", var232)
                             .put("gas", var18.getGasPressed())
                             .put("brake", var18.getBrakePressed())
                             .put("steering_pressed", var18.getSteeringPressed())
@@ -5856,7 +5856,7 @@ public final class MainActivity extends AppCompatActivity {
                 }
 
                 try {
-                    var19.put("lane_question", ((Map) var383).put("side", var240).put("why", var355.getWhy()));
+                    var19.put("lane_question", ((GalaxyApi) var383).put("side", var240).put("why", var355.getWhy()));
                     var358 = this.laneSuggest;
                 } catch (Exception var38) {
                     Context var241 = (Context)this;
@@ -5921,7 +5921,7 @@ public final class MainActivity extends AppCompatActivity {
                 label381: {
                     label380: {
                         try {
-                            var249 = ((Map) var384).put("side", var247).put("street", var361.getStreet());
+                            var249 = ((GalaxyApi) var384).put("side", var247).put("street", var361.getStreet());
                             var1 = var361.getDistM();
                             if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
                                 break label380;
@@ -5956,7 +5956,7 @@ public final class MainActivity extends AppCompatActivity {
                 label365: {
                     label364: {
                         try {
-                            var252 = ((Map) var249).put("ft_to_turn", var11);
+                            var252 = ((GalaxyApi) var249).put("ft_to_turn", var11);
                             if (var361.getHoldSide() != 0) {
                                 break label364;
                             }
@@ -5975,7 +5975,7 @@ public final class MainActivity extends AppCompatActivity {
                 }
 
                 try {
-                    var19.put("turn_signal", ((Map) ((Map) var252).put("holding", var8)).put("not_a_turn_lane", ((TurnSignal) var361).getLaneHold()).put("last", var361.getResult()));
+                    var19.put("turn_signal", ((GalaxyApi) var252).put("holding", var8).put("not_a_turn_lane", ((TurnSignal) var361).getLaneHold()).put("last", var361.getResult()));
                     JSONObject var254 = new JSONObject();
                     var19.put(
                         "blinker_settings",

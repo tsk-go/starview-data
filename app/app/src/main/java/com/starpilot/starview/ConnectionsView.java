@@ -111,7 +111,7 @@ public final class ConnectionsView extends ScrollView {
             var17.setMinimumHeight(this.ui.dp(110));
             View var25 = var22;
             Object var28 = new LayoutParams(this.ui.dp(52), this.ui.dp(52));
-            ((android.widget.LinearLayout.LayoutParams) var28).rightMargin = this.ui.dp(16);
+            var28.rightMargin = this.ui.dp(16);
             Unit var12 = Unit.INSTANCE;
             var17.addView(var25, (android.view.ViewGroup.LayoutParams)var28);
             LinearLayout var26 = new LinearLayout(var1);

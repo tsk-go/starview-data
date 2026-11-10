@@ -5726,7 +5726,7 @@ public final class SceneView extends SurfaceView {
             var54 = 0;
             if (var39 != null) {
                 boolean var23;
-                if (System.nanoTime() - ((SceneView.LaneHint) var39).getAtNs() < 2000000000L && ((SceneView.LaneHint) var39).getConf() >= 0.5) {
+                if (System.nanoTime() - var39.getAtNs() < 2000000000L && var39.getConf() >= 0.5) {
                     var23 = true;
                 } else {
                     var23 = false;
@@ -6367,11 +6367,11 @@ public final class SceneView extends SurfaceView {
                                 if (var270 != null) {
                                     List var271 = this.crossNow.get(var33);
                                     if (var271 != null) {
-                                        var252 = CollectionsKt.listOf(new Integer[]{var54, ((OsmRoads.Way) var270).getE().length - 1}).iterator();
+                                        var252 = CollectionsKt.listOf(new Integer[]{var54, var270.getE().length - 1}).iterator();
 
                                         while (var252.hasNext()) {
                                             int var141 = ((Number)var252.next()).intValue();
-                                            List var267 = (List)var74.get(drawMapRoads$k(((OsmRoads.Way) var270).getE()[var141], ((OsmRoads.Way) var270).getN()[var141]));
+                                            List var267 = (List)var74.get(drawMapRoads$k(var270.getE()[var141], var270.getN()[var141]));
                                             List var191 = var267;
                                             if (var267 == null) {
                                                 var191 = CollectionsKt.emptyList();
@@ -6381,7 +6381,7 @@ public final class SceneView extends SurfaceView {
                                                 if (var268.getId() != var33
                                                     && !this.crossNow.containsKey(var268.getId())
                                                     && StringsKt.endsWith(var268.getKind(), "_link", false)
-                                                        == StringsKt.endsWith(((OsmRoads.Way) var270).getKind(), "_link", false)) {
+                                                        == StringsKt.endsWith(var270.getKind(), "_link", false)) {
                                                     this.crossNow.put(var268.getId(), var271);
                                                     var262.add(var268.getId());
                                                 }
@@ -6481,7 +6481,7 @@ public final class SceneView extends SurfaceView {
                             var239 = var73;
                             var73 = var73;
                             var183 = var183;
-                            if (((OsmRoads.Way) var248).getHighway()) {
+                            if (var248.getHighway()) {
                                 var116 = (((boolean)true) ? 1 : 0);
                                 var73 = var239;
                                 var183 = var231;
@@ -7423,8 +7423,8 @@ public final class SceneView extends SurfaceView {
                 Object var27 = var1.get(var31);
                 Intrinsics.checkNotNull(var27);
                 var27 = (Pair)var27;
-                var5 = (((Pair) (Number)var27).component1()).doubleValue();
-                var9 = (((Pair) (Number)var27).component2()).doubleValue();
+                var5 = (((RtkCalibration) (Number)var27).component1()).doubleValue();
+                var9 = ((Number)var27.component2()).doubleValue();
                 boolean var32;
                 if ((var4 != 1 || var19 != 0) && (var4 != 0 || var19 != 1)) {
                     var32 = false;
@@ -7435,8 +7435,8 @@ public final class SceneView extends SurfaceView {
                 var27 = var1.get(var3);
                 Intrinsics.checkNotNull(var27);
                 var27 = (Pair)var27;
-                double var40 = (((Pair) (Number)var27).component1()).doubleValue();
-                var7 = (((Pair) (Number)var27).component2()).doubleValue();
+                double var40 = (((RtkCalibration) (Number)var27).component1()).doubleValue();
+                var7 = ((Number)var27.component2()).doubleValue();
                 if (!var32) {
                     var5 = -var5;
                 }
@@ -7932,8 +7932,8 @@ public final class SceneView extends SurfaceView {
                     var35 = (Iterator)var107.next();
                     Intrinsics.checkNotNullExpressionValue(var35, "next(...)");
                     Object var41 = (LaneTracks.Line)var35;
-                    if (!(((LaneTracks.Line) var41).getAlpha() < 0.03F)) {
-                        LaneMarks.Mark var129 = ((LaneTracks.Line) var41).getMark();
+                    if (!(((View) var41).getAlpha() < 0.03F)) {
+                        LaneMarks.Mark var129 = ((LaneTracks) var41).getMark();
                         if (var129 != null) {
                             var16 = var129.getKind();
                         } else {
@@ -7941,7 +7941,7 @@ public final class SceneView extends SurfaceView {
                         }
 
                         if (var16 != var65 && (!var104 || var16 == 2 || var16 == 3)) {
-                            float[] var39 = ((LaneTracks.Line) var41).getX();
+                            float[] var39 = ((View) var41).getX();
                             boolean var82;
                             if (var41 != var36 && var41 != var38) {
                                 var82 = false;
@@ -7983,7 +7983,7 @@ public final class SceneView extends SurfaceView {
                                 var19 = 255;
                             }
 
-                            int var21 = RangesKt.coerceIn((int)(var19 * ((LaneTracks.Line) var41).getAlpha()), 0, 255);
+                            int var21 = RangesKt.coerceIn((int)(var19 * ((View) var41).getAlpha()), 0, 255);
                             int var25 = Companion.withAlpha(var66, var21);
                             int var68;
                             if ((var94 != 0) || (var129) != null && var16 != 0 && var129.getDouble()) {

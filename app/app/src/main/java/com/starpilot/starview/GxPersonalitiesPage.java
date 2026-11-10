@@ -2814,12 +2814,12 @@ public final class GxPersonalitiesPage extends GxPage {
                         minElem$iv = iterator$iv.next();
                         if (iterator$iv.hasNext()) {
                             int it = ((Number) minElem$iv).intValue();
-                            double minValue$iv = Math.abs(((Number) ((List) pts.get(it)).getFirst()).doubleValue() - x);
+                            double minValue$iv = Math.abs(((GxTuningPage) pts.get(it)).getFirst().doubleValue() - x);
                             while (true) {
                                 Object e$iv = iterator$iv.next();
                                 int it2 = ((Number) e$iv).intValue();
                                 List pts2 = pts;
-                                double v$iv = Math.abs(((Number) ((List) pts.get(it2)).getFirst()).doubleValue() - x);
+                                double v$iv = Math.abs(((GxTuningPage) pts.get(it2)).getFirst().doubleValue() - x);
                                 if (Double.compare(minValue$iv, v$iv) > 0) {
                                     minElem$iv = e$iv;
                                     minValue$iv = v$iv;

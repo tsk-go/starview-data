@@ -953,7 +953,7 @@ public final class GxHomePage extends GxPage {
                     var304 = (String)var226.component1();
                     var256 = var219.optJSONObject((String)var226.component2());
                     if (var256 != null) {
-                        var25 = ((JSONObject) (String)var256).opt("value");
+                        var25 = (String)var256.opt("value");
                         if (var25 != null) {
                             if (Intrinsics.areEqual(var25, JSONObject.NULL)) {
                                 var25 = null;
@@ -974,7 +974,7 @@ public final class GxHomePage extends GxPage {
 
                 label472: {
                     if (var256 != null) {
-                        var29 = ((JSONObject) (LinearLayout)var256).opt("detail");
+                        var29 = (LinearLayout)var256.opt("detail");
                         if (var29 != null) {
                             var27 = var29;
                             if (Intrinsics.areEqual(var29, JSONObject.NULL)) {
@@ -1252,7 +1252,7 @@ public final class GxHomePage extends GxPage {
                 var239 = this;
                 var11 = false;
                 var247 = columns$default(((GxHomePage) var239), 2, null, 2, null);
-                var250 = ((GxPage) var239).card(((Map) (ViewGroup)var247).get(0));
+                var250 = ((GxPage) var239).card((ViewGroup)var247.get(0));
                 var239.cardHead(var250, "Most used models", TuplesKt.to("Models", "gx:models"));
                 JSONArray var181 = var31.optJSONArray("favoriteModels");
                 if (var181 != null) {
@@ -1344,7 +1344,7 @@ public final class GxHomePage extends GxPage {
                 Unit var79 = Unit.INSTANCE;
             }
 
-            LinearLayout var212 = ((GxPage) var239).card(((Map) (ViewGroup)var247).get(1));
+            LinearLayout var212 = ((GxPage) var239).card((ViewGroup)var247.get(1));
             var239.cardHead(var212, "Storage", TuplesKt.to("Recordings", "gx:recordings"));
             JSONObject var121 = var67.optJSONObject("segmentCounts");
             JSONObject var80 = var121;

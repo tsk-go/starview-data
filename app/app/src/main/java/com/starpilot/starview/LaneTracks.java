@@ -346,7 +346,7 @@ public final class LaneTracks {
                         }
 
                         var41 = new LaneTracks.Line(var23, var50, (float[])var41);
-                        var6 = ((LaneTracks.Line) var41).getY0();
+                        var6 = var41.getY0();
                         Iterable var51 = this.lines;
                         var var22 = new ArrayList();
 
@@ -386,45 +386,45 @@ public final class LaneTracks {
                         }
 
                         Object var55 = (LaneTracks.Line)var50;
-                        if (var55 != null && Math.abs(((LaneTracks.Line) var55).getY0() - var6) < 1.5F && ((LaneTracks.Line) var55).getY().length == ((LaneTracks.Line) var41).getY().length) {
+                        if (var55 != null && Math.abs(var55.getY0() - var6) < 1.5F && ((View) var55).getY().length == ((View) var41).getY().length) {
                             var15 = 0;
 
-                            for (int var16 = ((LaneTracks.Line) var55).getY().length; var15 < var16; var15++) {
-                                float[] var62 = ((LaneTracks.Line) var55).getY();
-                                var62[var15] += (((LaneTracks.Line) var41).getY()[var15] - ((LaneTracks.Line) var55).getY()[var15]) * var8;
-                                float[] var63 = ((LaneTracks.Line) var55).getZ();
-                                var63[var15] += (((LaneTracks.Line) var41).getZ()[var15] - ((LaneTracks.Line) var55).getZ()[var15]) * var8;
+                            for (int var16 = ((View) var55).getY().length; var15 < var16; var15++) {
+                                float[] var62 = ((View) var55).getY();
+                                var62[var15] += (((View) var41).getY()[var15] - ((View) var55).getY()[var15]) * var8;
+                                float[] var63 = ((View) var55).getZ();
+                                var63[var15] += (((View) var41).getZ()[var15] - ((View) var55).getZ()[var15]) * var8;
                             }
 
-                            ((LaneTracks.Line) var55).setX(var23);
+                            ((View) var55).setX(var23);
                             var41 = var55;
                         } else {
-                            var50 = ((LaneTracks.Line) var41).getY();
+                            var50 = ((View) var41).getY();
                             var50 = Arrays.copyOf(var50, var50.length);
                             Intrinsics.checkNotNullExpressionValue(var50, "copyOf(...)");
-                            float[] var46 = ((LaneTracks.Line) var41).getZ();
+                            float[] var46 = ((View) var41).getZ();
                             float[] var47 = Arrays.copyOf(var46, var46.length);
                             Intrinsics.checkNotNullExpressionValue(var47, "copyOf(...)");
                             var41 = new LaneTracks.Line(var23, var50, var47);
                             this.lines.add(((Line) var41));
                         }
 
-                        ((LaneTracks.Line) var41).setSeen(true);
-                        ((LaneTracks.Line) var41).setSlot(var14);
-                        ((LaneTracks.Line) var41).setProb(((LaneTracks.Line) var41).getProb() + (var9 - ((LaneTracks.Line) var41).getProb()) * var7);
+                        var41.setSeen(true);
+                        ((LaneTracks) var41).setSlot(var14);
+                        var41.setProb(((LaneTracks) var41).getProb() + (var9 - var41.getProb()) * var7);
                         LaneMarks.Mark var58 = (LaneMarks.Mark)var21;
                         if (var5 != null) {
                             var58 = ArraysKt.getOrNull(var5, var14);
                         }
 
                         if (var58 == null || var58.getKind() != 2 && var58.getKind() != 3) {
-                            if (var58 != null && var58.getKind() == 1 && var17 - ((LaneTracks.Line) var41).getMarkMs() > 4000L) {
-                                ((LaneTracks.Line) var41).setMark(var58);
-                                ((LaneTracks.Line) var41).setMarkMs(var17);
+                            if (var58 != null && var58.getKind() == 1 && var17 - ((LaneTracks) var41).getMarkMs() > 4000L) {
+                                ((LaneTracks) var41).setMark(var58);
+                                ((LaneTracks) var41).setMarkMs(var17);
                             }
                         } else {
-                            ((LaneTracks.Line) var41).setMark(var58);
-                            ((LaneTracks.Line) var41).setMarkMs(var17);
+                            ((LaneTracks) var41).setMark(var58);
+                            ((LaneTracks) var41).setMarkMs(var17);
                         }
                     }
                 }

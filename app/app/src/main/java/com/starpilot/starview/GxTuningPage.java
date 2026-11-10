@@ -2263,7 +2263,7 @@ public final class GxTuningPage extends GxPage {
                 this.paintComparison();
                 var22 = this.pathList();
 
-                for (JSONObject var70 : (Iterable) (JSONObject) (JSONObject) (JSONObject) (JSONObject) var22) {
+                for (JSONObject var70 : (JSONObject) (JSONObject) (JSONObject) (JSONObject) var22) {
                     this.sub(this.s(var70, "title"), (ViewGroup)var9);
                     if (!StringsKt.isBlank(this.s(var70, "description"))) {
                         GxPage.text$default(this, this.s(var70, "description"), (ViewGroup)var9, 16.0F, 0, false, 24, null);
@@ -2276,7 +2276,7 @@ public final class GxTuningPage extends GxPage {
                     String var73 = this.s(var70, "key");
                     if (Intrinsics.areEqual(var73, this.activePathKey())) {
                         this.text("Active path", (ViewGroup)var9, 15.0F, CarUi.Companion.getACCENT(), true);
-                    } else if (((EditText) var22).size() > 1) {
+                    } else if (var22.size() > 1) {
                         GxPage var71 = this;
                         Pair var78 = TuplesKt.to("Use this path", new GxTuningPage$$ExternalSyntheticLambda48(this, var73));
                         ViewGroup var74 = (ViewGroup)var9;
@@ -2315,16 +2315,16 @@ public final class GxTuningPage extends GxPage {
                 GxPage.text$default(this, "Finding decisions save immediately and regenerate trial profiles.", (ViewGroup)var7, 0.0F, 0, false, 28, null);
                 var22 = new EditText((Context)this.getAct());
                 ((EditText) var22).setText(this.fbNotes);
-                ((EditText) var22).setHint("Optional tuning notes");
-                ((EditText) var22).setTextSize(18.0F);
-                ((EditText) var22).setTextColor(CarUi.Companion.getTEXT());
-                ((EditText) var22).setHintTextColor(CarUi.Companion.getDIM());
-                ((EditText) var22).setInputType(147457);
-                ((EditText) var22).setMinLines(2);
+                ((TextView) var22).setHint("Optional tuning notes");
+                ((TextView) var22).setTextSize(18.0F);
+                ((TextView) var22).setTextColor(CarUi.Companion.getTEXT());
+                ((TextView) var22).setHintTextColor(CarUi.Companion.getDIM());
+                ((TextView) var22).setInputType(147457);
+                ((TextView) var22).setMinLines(2);
                 ((LinearLayout) var22).setGravity(8388659);
-                ((EditText) var22).setBackground((Drawable)this.getUi().rounded(Color.rgb(6, 8, 11), 12, Color.rgb(50, 55, 66)));
-                ((EditText) var22).setPadding(this.getUi().dp(14), this.getUi().dp(10), this.getUi().dp(14), this.getUi().dp(10));
-                ((EditText) var22).addTextChangedListener(new TextWatcher() {
+                ((View) var22).setBackground((Drawable)this.getUi().rounded(Color.rgb(6, 8, 11), 12, Color.rgb(50, 55, 66)));
+                ((View) var22).setPadding(this.getUi().dp(14), this.getUi().dp(10), this.getUi().dp(14), this.getUi().dp(10));
+                ((TextView) var22).addTextChangedListener(new TextWatcher() {
                     final GxTuningPage this$0 = GxTuningPage.this;
 
                     public void afterTextChanged(Editable var1) {
@@ -2353,7 +2353,7 @@ public final class GxTuningPage extends GxPage {
                 });
                 View var51 = (View)var22;
                 Object var31 = new LayoutParams(-1, -2);
-                ((android.widget.LinearLayout.LayoutParams) var31).topMargin = this.getUi().dp(8);
+                var31.topMargin = this.getUi().dp(8);
                 Unit var62 = Unit.INSTANCE;
                 var7.addView(var51, (android.view.ViewGroup.LayoutParams)var31);
                 GxPage var52 = this;
@@ -4965,7 +4965,7 @@ public final class GxTuningPage extends GxPage {
 
                         View var85 = (View)var81;
                         Object var82 = new LayoutParams(-1, -2);
-                        ((android.widget.LinearLayout.LayoutParams) var82).bottomMargin = this.getUi().dp(4);
+                        var82.bottomMargin = this.getUi().dp(4);
                         Unit var88 = Unit.INSTANCE;
                         var7.addView(var85, (android.view.ViewGroup.LayoutParams)var82);
                     }

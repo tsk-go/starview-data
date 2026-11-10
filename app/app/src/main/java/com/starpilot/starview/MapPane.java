@@ -1197,8 +1197,8 @@ public final class MapPane extends FrameLayout {
         if (var58 != null) {
             var9 = var11;
             if (var12 != null) {
-                var5 = ((Nav.Route) var58).getIndex();
-                var6 = MathKt.roundToInt(((Nav.Route) var58).getDurationS() / 60);
+                var5 = var58.getIndex();
+                var6 = MathKt.roundToInt(((Nav) var58).getDurationS() / 60);
                 var9 = var5 + "|" + var6;
             }
         }
@@ -1209,7 +1209,7 @@ public final class MapPane extends FrameLayout {
             && Intrinsics.areEqual(Nav.INSTANCE.getStatus(), "guiding")
             && !Intrinsics.areEqual(this.sheetKind, "routes")) {
             TextView var61 = this.faster;
-            var12 = Nav.INSTANCE.durationText(((Nav.Route)var12).getDurationS() - ((Nav.Route) var58).getDurationS());
+            var12 = Nav.INSTANCE.durationText(((Nav.Route)var12).getDurationS() - ((Nav) var58).getDurationS());
             var61.setText("Faster route · saves " + var12 + "   TAKE IT    ✕");
             this.faster.setVisibility(0);
             this.faster.setOnTouchListener(new MapPane$$ExternalSyntheticLambda33(this, var9, ((Route) var58)));

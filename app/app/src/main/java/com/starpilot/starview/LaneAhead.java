@@ -851,7 +851,7 @@ public final class LaneAhead {
 
                 if (var50 != null) {
                     Object var21 = var50.getWay();
-                    if (StringsKt.endsWith(((OsmRoads.Way) var21).getKind(), "_link", false)) {
+                    if (StringsKt.endsWith(var21.getKind(), "_link", false)) {
                         return null;
                     }
 
@@ -863,7 +863,7 @@ public final class LaneAhead {
 
                     String var24;
                     while (true) {
-                        var19.add(((OsmRoads.Way) var21).getId());
+                        var19.add(((View) var21).getId());
 
                         for (double[] var23 : ((double[]) var20)) {
                             if (!var25.isEmpty()) {
@@ -893,7 +893,7 @@ public final class LaneAhead {
                             label179: {
                                 OsmRoads.Way var29 = (OsmRoads.Way)var30;
                                 if (!var19.contains(var29.getId()) && !StringsKt.endsWith(var29.getKind(), var51, false)) {
-                                    if (((OsmRoads.Way) var21).getName().length() > 0) {
+                                    if (((File) var21).getName().length() > 0) {
                                         var13 = (((boolean)true) ? 1 : 0);
                                     } else {
                                         var13 = (((boolean)false) ? 1 : 0);
@@ -901,9 +901,9 @@ public final class LaneAhead {
 
                                     boolean var17;
                                     if ((var13 != 0)) {
-                                        var17 = OsmRoads.INSTANCE.sameStreet(var29.getName(), ((OsmRoads.Way) var21).getName());
+                                        var17 = OsmRoads.INSTANCE.sameStreet(var29.getName(), ((File) var21).getName());
                                     } else {
-                                        var17 = Intrinsics.areEqual(var29.getKind(), ((OsmRoads.Way) var21).getKind());
+                                        var17 = Intrinsics.areEqual(var29.getKind(), var21.getKind());
                                     }
 
                                     if (var17) {

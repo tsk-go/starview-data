@@ -294,7 +294,7 @@ public final class DestinationActivity extends AppCompatActivity {
         label94: {
             var11 = this.getIntent().getStringExtra("route");
             if (var11 != null) {
-                if (((CharSequence) var11).length() >= 10) {
+                if (var11.length() >= 10) {
                     var6 = true;
                 } else {
                     var6 = false;
@@ -1190,7 +1190,7 @@ public final class DestinationActivity extends AppCompatActivity {
                                 while (true) {
                                     label145: {
                                         try {
-                                            if (var6 < ((CharSequence) var50).length()) {
+                                            if (var6 < var50.length()) {
                                                 if (Character.isLetter(((CharSequence) var50).charAt(var6))) {
                                                     break;
                                                 }

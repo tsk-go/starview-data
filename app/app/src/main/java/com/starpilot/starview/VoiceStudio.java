@@ -580,14 +580,14 @@ public final class VoiceStudio {
     public final long downloadedBytes(Context c) {
         Intrinsics.checkNotNullParameter(c, "c");
         long j = 0;
-        for (File it : (Iterable<File>) SequencesKt.asIterable(SequencesKt.filter(FilesKt.walk(new File(c.getFilesDir(), "piper"), kotlin.io.FileWalkDirection.TOP_DOWN), new Function1() { // from class: com.starpilot.starview.VoiceStudio$$ExternalSyntheticLambda4
+        for (File it : SequencesKt.filter(FilesKt.walk(new File(c.getFilesDir(), "piper"), kotlin.io.FileWalkDirection.TOP_DOWN), new Function1() { // from class: com.starpilot.starview.VoiceStudio$$ExternalSyntheticLambda4
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 boolean downloadedBytes$lambda$10;
                 downloadedBytes$lambda$10 = VoiceStudio.downloadedBytes$lambda$10((File) obj);
                 return Boolean.valueOf(downloadedBytes$lambda$10);
             }
-        }))) {
+        })) {
             j += it.length();
         }
         return j;
