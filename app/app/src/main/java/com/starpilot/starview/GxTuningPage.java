@@ -458,27 +458,28 @@ public final class GxTuningPage extends GxPage {
     }
 
     private final double num(Object v, double fb) {
-        double d;
-        if (v != null && !Intrinsics.areEqual(v, JSONObject.NULL)) {
-            if (v instanceof Number) {
-                d = ((Number) v).doubleValue();
-            } else if (v instanceof Boolean) {
-                if (((Boolean) v).booleanValue()) {
-                    d = 1.0d;
-                }
-                d = 0.0d;
-            } else if (v instanceof String) {
-                if (!StringsKt.isBlank((CharSequence) v)) {
-                    Double doubleOrNull = StringsKt.toDoubleOrNull(StringsKt.trim((CharSequence) v).toString());
-                    if (doubleOrNull != null) {
-                        d = doubleOrNull.doubleValue();
-                    }
-                }
-                d = 0.0d;
-            }
-            return !Double.isInfinite(d) && !Double.isNaN(d) ? d : fb;
+        if (v == null || Intrinsics.areEqual(v, JSONObject.NULL)) {
+            return fb;
         }
-        return fb;
+        double d;
+        if (v instanceof Number) {
+            d = ((Number) v).doubleValue();
+        } else if (v instanceof Boolean) {
+            d = ((Boolean) v).booleanValue() ? 1.0d : 0.0d;
+        } else if (v instanceof String) {
+            if (StringsKt.isBlank((CharSequence) v)) {
+                d = 0.0d;
+            } else {
+                Double doubleOrNull = StringsKt.toDoubleOrNull(StringsKt.trim((CharSequence) v).toString());
+                if (doubleOrNull == null) {
+                    return fb;
+                }
+                d = doubleOrNull.doubleValue();
+            }
+        } else {
+            return fb;
+        }
+        return !Double.isInfinite(d) && !Double.isNaN(d) ? d : fb;
     }
 
     private final boolean truthy(Object v) {
@@ -2369,8 +2370,8 @@ public final class GxTuningPage extends GxPage {
                             var55 = "center";
                         }
 
-                        long var4 = (long)num$default(this, var14.opt("eventCount"), 0.0, 2, null);
-                        GxPage.text$default(var13, var22 + " | " + var55 + " | " + var4 + " event(s)", (ViewGroup)var75, 14.0F, 0, false, 24, null);
+                        long var4b = (long)num$default(this, var14.opt("eventCount"), 0.0, 2, null);
+                        GxPage.text$default(var13, var22 + " | " + var55 + " | " + var4b + " event(s)", (ViewGroup)var75, 14.0F, 0, false, 24, null);
                     }
 
                     if (!StringsKt.isBlank(this.s(var79, "observedBehavior"))) {

@@ -992,20 +992,20 @@ public final class LaneAhead {
                             var18 = (Pair)var75.next();
                             if (var75.hasNext()) {
                                 var5 = ((Number)((Pair) var18).getSecond()).doubleValue();
-                                var21 = var18;
+                                Object var21p = var18;
 
                                 do {
                                     var68 = var75.next();
                                     double var11 = ((Number)((Pair)var68).getSecond()).doubleValue();
                                     double var39 = var5;
-                                    var18 = var21;
+                                    var18 = var21p;
                                     if (Double.compare(var5, var11) > 0) {
                                         var18 = (Pair)var68;
                                         var39 = var11;
                                     }
 
                                     var5 = var39;
-                                    var21 = var18;
+                                    var21p = var18;
                                 } while (var75.hasNext());
                             }
                         }

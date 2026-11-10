@@ -91,7 +91,7 @@ public abstract class GxPage extends FrameLayout {
     private final LinearLayout col;
     private final GxHost gx;
     private final Handler main;
-    private final boolean needsOffroad;
+    private boolean needsOffroad;
     private final ArrayList<Runnable> pollRunners;
     private final ArrayList<Pair<Long, Function0<Unit>>> polls;
     private final NestedScrollView scroll;
@@ -323,86 +323,42 @@ public abstract class GxPage extends FrameLayout {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:50:0x011e, code lost:
-    
-        if (r0 == null) goto L53;
-     */
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Removed duplicated region for block: B:68:0x015d  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* recovered by hand from the bytecode (jadx lost its try blocks, Vineflower could not decompile it) */
     public static final void call$lambda$8(Object obj, String str, String str2, String str3, long j, final GxPage gxPage, final Function3 function3) {
-        String message;
-        RequestBody create;
-        Object m1191constructorimpl;
-        T t;
         final Ref.IntRef intRef = new Ref.IntRef();
         intRef.element = -1;
         final Ref.ObjectRef objectRef = new Ref.ObjectRef();
-        String str4 = "";
+        String empty = "";
         objectRef.element = "";
         final Ref.ObjectRef objectRef2 = new Ref.ObjectRef();
         try {
+            RequestBody create;
             if (obj == null) {
-                if (!Intrinsics.areEqual(str, "GET") && !Intrinsics.areEqual(str, "DELETE")) {
+                if (Intrinsics.areEqual(str, "GET") || Intrinsics.areEqual(str, "DELETE")) {
+                    create = null;
+                } else {
                     create = RequestBody.Companion.create("{}", JSON);
                 }
-                create = null;
+            } else if ((obj instanceof JSONObject) || (obj instanceof JSONArray)) {
+                create = RequestBody.Companion.create(obj.toString(), JSON);
+            } else if (obj instanceof RequestBody) {
+                create = (RequestBody) obj;
             } else {
-                if (!(obj instanceof JSONObject) && !(obj instanceof JSONArray)) {
-                    create = obj instanceof RequestBody ? (RequestBody) obj : RequestBody.Companion.create(obj.toString(), JSON);
-                }
                 create = RequestBody.Companion.create(obj.toString(), JSON);
             }
-        } catch (Exception e) {
-            e = e;
-        }
-        try {
-        } catch (Exception e2) {
-            e = e2;
-            message = e.getMessage();
-            T t2 = message;
-            if (message == null) {
-                t2 = e.toString();
-            }
-            objectRef2.element = t2;
-            gxPage.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda16
-                @Override // java.lang.Runnable
-                public final void run() {
-                    GxPage.call$lambda$8$lambda$7(gxPage, function3, intRef, objectRef, objectRef2);
-                }
-            });
-        }
-        try {
-        } catch (Exception e3) {
-            e = e3;
-            message = e.getMessage();
-            T t22 = message;
-            if (message == null) {
-            }
-            objectRef2.element = t22;
-            gxPage.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda16
-                @Override // java.lang.Runnable
-                public final void run() {
-                    GxPage.call$lambda$8$lambda$7(gxPage, function3, intRef, objectRef, objectRef2);
-                }
-            });
-        }
-        try {
-            Response execute = Companion.client(j).newCall(new Request.Builder().url("http://" + str2 + ":8082" + str3).method(str, create).build()).execute();
+            Response response = Companion.client(j).newCall(new Request.Builder().url("http://" + str2 + ":8082" + str3).method(str, create).build()).execute();
+            Throwable cause = null;
             try {
-                Response response = execute;
                 intRef.element = response.code();
                 ResponseBody body = response.body();
-                T t3 = str4;
+                String text = empty;
                 if (body != null) {
                     String string = body.string();
-                    t3 = string == null ? str4 : string;
+                    text = string == null ? empty : string;
                 }
-                objectRef.element = t3;
+                objectRef.element = text;
                 if (!response.isSuccessful()) {
+                    Object res;
                     try {
                         Result.Companion companion = Result.Companion;
                         JSONObject jSONObject = new JSONObject((String) objectRef.element);
@@ -410,50 +366,34 @@ public abstract class GxPage extends FrameLayout {
                         if (StringsKt.isBlank(optString)) {
                             optString = jSONObject.optString("message");
                         }
-                        m1191constructorimpl = KtCompat.resultOf(optString);
+                        res = KtCompat.resultOf(optString);
                     } catch (Throwable th) {
                         Result.Companion companion2 = Result.Companion;
-                        m1191constructorimpl = KtCompat.resultOf(ResultKt.createFailure(th));
+                        res = KtCompat.resultOf(ResultKt.createFailure(th));
                     }
-                    if (KtCompat.isFailure(m1191constructorimpl)) {
-                        m1191constructorimpl = null;
+                    if (KtCompat.isFailure(res)) {
+                        res = null;
                     }
-                    String str5 = (String) m1191constructorimpl;
-                    if (str5 != null) {
-                        String str6 = str5;
-                        if (StringsKt.isBlank(str6)) {
-                            str6 = null;
-                        }
-                        String str7 = str6;
-                        t = str7;
+                    String s = (String) res;
+                    if (s != null && StringsKt.isBlank(s)) {
+                        s = null;
                     }
-                    t = "HTTP " + response.code();
-                    objectRef2.element = t;
+                    if (s == null) {
+                        s = "HTTP " + response.code();
+                    }
+                    objectRef2.element = s;
                 }
-                Unit unit = Unit.INSTANCE;
-                CloseableKt.closeFinally(execute, null);
+            } catch (Throwable th) {
+                cause = th;
+                throw th;
             } finally {
+                CloseableKt.closeFinally(response, cause);
             }
-        } catch (Exception e4) {
-            e = e4;
-            message = e.getMessage();
-            T t222 = message;
-            if (message == null) {
-            }
-            objectRef2.element = t222;
-            gxPage.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda16
-                @Override // java.lang.Runnable
-                public final void run() {
-                    GxPage.call$lambda$8$lambda$7(gxPage, function3, intRef, objectRef, objectRef2);
-                }
-            });
+        } catch (Exception e) {
+            String message = e.getMessage();
+            objectRef2.element = message == null ? e.toString() : message;
         }
-        gxPage.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda16
-            @Override // java.lang.Runnable
-            public final void run() {
-                GxPage.call$lambda$8$lambda$7(gxPage, function3, intRef, objectRef, objectRef2);
-            }
-        });
+        gxPage.main.post(() -> GxPage.call$lambda$8$lambda$7(gxPage, function3, intRef, objectRef, objectRef2));
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -695,7 +635,7 @@ public abstract class GxPage extends FrameLayout {
         Intrinsics.checkNotNullParameter(files, "files");
         Intrinsics.checkNotNullParameter(fields, "fields");
         Intrinsics.checkNotNullParameter(then, "then");
-        MultipartBody.Builder b = new MultipartBody.Builder(null, 1, null).setType(MultipartBody.FORM);
+        MultipartBody.Builder b = new MultipartBody.Builder().setType(MultipartBody.FORM);
         for (Map.Entry<String, String> entry : fields.entrySet()) {
             String k = entry.getKey();
             String v = entry.getValue();
@@ -705,7 +645,7 @@ public abstract class GxPage extends FrameLayout {
             String field = triple.component1();
             String name = triple.component2();
             Pair data = triple.component3();
-            b.addFormDataPart(field, name, RequestBody.Companion.create(data.getFirst(), MediaType.Companion.get(((String) data.getSecond())), 0, data.getFirst().length));
+            b.addFormDataPart(field, name, RequestBody.Companion.create((byte[]) data.getFirst(), MediaType.Companion.get(((String) data.getSecond())), 0, ((byte[]) data.getFirst()).length));
         }
         json("POST", path, b.build(), 120L, new Function2() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function2
@@ -734,24 +674,23 @@ public abstract class GxPage extends FrameLayout {
         }).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
     public static final void readUri$lambda$24(final GxPage gxPage, Uri uri, final Function2 function2) {
         Object m1191constructorimpl;
         Object obj;
-        String str;
-        byte[] bArr;
         try {
             Result.Companion companion = Result.Companion;
-            InputStream openInputStream = gxPage.act.getContentResolver().openInputStream(uri);
-            if (openInputStream != null) {
-                InputStream inputStream = openInputStream;
+            byte[] bArr = null;
+            InputStream inputStream = gxPage.act.getContentResolver().openInputStream(uri);
+            if (inputStream != null) {
+                Throwable cause = null;
                 try {
                     bArr = ByteStreamsKt.readBytes(inputStream);
-                    CloseableKt.closeFinally(inputStream, null);
+                } catch (Throwable th) {
+                    cause = th;
+                    throw th;
                 } finally {
+                    CloseableKt.closeFinally(inputStream, cause);
                 }
-            } else {
-                bArr = null;
             }
             m1191constructorimpl = KtCompat.resultOf(bArr);
         } catch (Throwable th) {
@@ -764,21 +703,18 @@ public abstract class GxPage extends FrameLayout {
         final byte[] bArr2 = (byte[]) m1191constructorimpl;
         try {
             Result.Companion companion3 = Result.Companion;
-            Cursor query = gxPage.act.getContentResolver().query(uri, new String[]{"_display_name"}, null, null, null);
-            if (query != null) {
-                Cursor cursor = query;
+            String str = null;
+            Cursor cursor = gxPage.act.getContentResolver().query(uri, new String[]{"_display_name"}, null, null, null);
+            if (cursor != null) {
+                Throwable cause2 = null;
                 try {
-                    Cursor cursor2 = cursor;
-                    str = cursor2.moveToFirst() ? cursor2.getString(0) : null;
-                    CloseableKt.closeFinally(cursor, null);
+                    str = cursor.moveToFirst() ? cursor.getString(0) : null;
+                } catch (Throwable th) {
+                    cause2 = th;
+                    throw th;
                 } finally {
-                    try {
-                        throw th;
-                    } finally {
-                    }
+                    CloseableKt.closeFinally(cursor, cause2);
                 }
-            } else {
-                str = null;
             }
             obj = KtCompat.resultOf(str);
         } catch (Throwable th2) {
@@ -789,13 +725,8 @@ public abstract class GxPage extends FrameLayout {
         if (str2 == null && (str2 = uri.getLastPathSegment()) == null) {
             str2 = "file";
         }
-        final var str2$f = str2;
-        gxPage.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda24
-            @Override // java.lang.Runnable
-            public final void run() {
-                GxPage.readUri$lambda$24$lambda$23(gxPage, function2, bArr2, str2$f);
-            }
-        });
+        final String name = str2;
+        gxPage.main.post(() -> GxPage.readUri$lambda$24$lambda$23(gxPage, function2, bArr2, name));
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -833,85 +764,51 @@ public abstract class GxPage extends FrameLayout {
         }).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Type inference failed for: r0v28, types: [T, java.lang.String] */
-    /* JADX WARN: Type inference failed for: r4v2, types: [T, java.lang.String] */
+    /* recovered by hand from the bytecode (jadx lost its try blocks, Vineflower could not decompile it) */
     public static final void download$lambda$29(String $h, String $path, String $fileName, final GxPage this$0, String $mime) {
-        Response execute;
-        Response r;
-        InputStream byteStream;
         final Ref.ObjectRef msg = new Ref.ObjectRef();
         try {
+            Response r = Companion.client(300L).newCall(new Request.Builder().url("http://" + $h + ":8082" + $path).build()).execute();
+            Throwable cause = null;
             try {
-                execute = Companion.client(300L).newCall(new Request.Builder().url("http://" + $h + ":8082" + $path).build()).execute();
-                try {
-                    r = execute;
+                if (!r.isSuccessful()) {
+                    throw new IllegalStateException("HTTP " + r.code());
+                }
+                ContentValues cv = new ContentValues();
+                cv.put("_display_name", $fileName);
+                cv.put("mime_type", $mime);
+                cv.put("relative_path", "Download/StarView");
+                Uri uri = this$0.act.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, cv);
+                if (uri == null) {
+                    throw new IllegalStateException("cannot create file");
+                }
+                OutputStream out = this$0.act.getContentResolver().openOutputStream(uri);
+                if (out != null) {
+                    Throwable cause2 = null;
                     try {
-                    } catch (Throwable th) {
-                        th = th;
-                        Throwable th2 = th;
-                        try {
-                            throw th2;
-                        } catch (Throwable th3) {
-                            CloseableKt.closeFinally(execute, th2);
-                            throw th3;
+                        InputStream byteStream;
+                        ResponseBody body = r.body();
+                        if (body != null && (byteStream = body.byteStream()) != null) {
+                            ByteStreamsKt.copyTo(byteStream, out, 8192);
                         }
+                    } catch (Throwable th) {
+                        cause2 = th;
+                        throw th;
+                    } finally {
+                        CloseableKt.closeFinally(out, cause2);
                     }
-                } catch (Throwable th4) {
-                    th = th4;
                 }
-            } catch (Exception e) {
-                e = e;
-                msg.element = "Download failed: " + e.getMessage();
-                this$0.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda2
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        GxPage.download$lambda$29$lambda$28(this$0, msg);
-                    }
-                });
-            }
-        } catch (Exception e2) {
-            e = e2;
-            msg.element = "Download failed: " + e.getMessage();
-            this$0.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda2
-                @Override // java.lang.Runnable
-                public final void run() {
-                    GxPage.download$lambda$29$lambda$28(this$0, msg);
-                }
-            });
-        }
-        if (!r.isSuccessful()) {
-            throw new IllegalStateException("HTTP " + r.code());
-        }
-        ContentValues $this$download_u24lambda_u2429_u24lambda_u2427_u24lambda_u2425 = new ContentValues();
-        $this$download_u24lambda_u2429_u24lambda_u2427_u24lambda_u2425.put("_display_name", $fileName);
-        $this$download_u24lambda_u2429_u24lambda_u2427_u24lambda_u2425.put("mime_type", $mime);
-        $this$download_u24lambda_u2429_u24lambda_u2427_u24lambda_u2425.put("relative_path", "Download/StarView");
-        Uri uri = this$0.act.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, $this$download_u24lambda_u2429_u24lambda_u2427_u24lambda_u2425);
-        if (uri == null) {
-            throw new IllegalStateException("cannot create file");
-        }
-        OutputStream openOutputStream = this$0.act.getContentResolver().openOutputStream(uri);
-        if (openOutputStream != null) {
-            OutputStream outputStream = openOutputStream;
-            try {
-                OutputStream out = outputStream;
-                ResponseBody body = r.body();
-                if (body != null && (byteStream = body.byteStream()) != null) {
-                    Long.valueOf(ByteStreamsKt.copyTo(byteStream, out, 8192));
-                }
-                CloseableKt.closeFinally(outputStream, null);
+            } catch (Throwable th) {
+                cause = th;
+                throw th;
             } finally {
+                CloseableKt.closeFinally(r, cause);
             }
+            msg.element = "Saved to Downloads/StarView/" + $fileName;
+        } catch (Exception e) {
+            msg.element = "Download failed: " + e.getMessage();
         }
-        CloseableKt.closeFinally(execute, null);
-        msg.element = "Saved to Downloads/StarView/" + $fileName;
-        this$0.main.post(new Runnable() { // from class: com.starpilot.starview.GxPage$$ExternalSyntheticLambda2
-            @Override // java.lang.Runnable
-            public final void run() {
-                GxPage.download$lambda$29$lambda$28(this$0, msg);
-            }
-        });
+        this$0.main.post(() -> GxPage.download$lambda$29$lambda$28(this$0, msg));
     }
 
     /* VF: from Vineflower (jadx: ) */
@@ -1473,7 +1370,7 @@ public abstract class GxPage extends FrameLayout {
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit choice$lambda$45(Ref.ObjectRef $paint, Function1 $onPick, int i) {
         Function1 function1;
-        if ($paint.element == 0) {
+        if ($paint.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("paint");
             function1 = null;
         } else {
@@ -1725,7 +1622,7 @@ public abstract class GxPage extends FrameLayout {
     /* JADX INFO: Access modifiers changed from: private */
     public static final Unit tabs$lambda$61(Ref.ObjectRef $selectRef, int i) {
         Function1 function1;
-        if ($selectRef.element == 0) {
+        if ($selectRef.element == null) {
             Intrinsics.throwUninitializedPropertyAccessException("selectRef");
             function1 = null;
         } else {

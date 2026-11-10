@@ -147,7 +147,7 @@ public final class SceneView extends SurfaceView {
     private long hintChainOf;
     private LaneHint hintNow;
     private Set<Long> hintSame;
-    private final double horizonShift;
+    private double horizonShift;
     private IndirectLight ibl;
     private final ByteBuffer[] ibufs;
     private volatile LaneHint laneHint;
