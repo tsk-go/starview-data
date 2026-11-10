@@ -365,9 +365,6 @@ public final class AmyVoice {
     }
 
     public final String install(Context ctx, Uri uri) {
-        Throwable th;
-        ZipInputStream z;
-        Throwable th2;
         Intrinsics.checkNotNullParameter(ctx, "ctx");
         Intrinsics.checkNotNullParameter(uri, "uri");
         File tmp = new File(ctx.getFilesDir(), "amy.tmp");
@@ -375,112 +372,66 @@ public final class AmyVoice {
         tmp.mkdirs();
         int n = 0;
         try {
-            InputStream openInputStream = ctx.getContentResolver().openInputStream(uri);
-            if (openInputStream == null) {
+            InputStream ins = ctx.getContentResolver().openInputStream(uri);
+            if (ins == null) {
                 return "Couldn't open that file";
             }
-            InputStream inputStream = openInputStream;
+            Throwable insCause = null;
             try {
-                InputStream ins = inputStream;
-                ZipInputStream zipInputStream = new ZipInputStream(ins instanceof BufferedInputStream ? (BufferedInputStream) ins : new BufferedInputStream(ins, 8192));
+                ZipInputStream z = new ZipInputStream(ins instanceof BufferedInputStream ? (BufferedInputStream) ins : new BufferedInputStream(ins, 8192));
+                Throwable zCause = null;
                 try {
-                    z = zipInputStream;
-                } catch (Throwable th3) {
-                    th = th3;
-                }
-                while (true) {
-                    ZipEntry e = z.getNextEntry();
-                    if (e == null) {
-                        try {
+                    while (true) {
+                        ZipEntry e = z.getNextEntry();
+                        if (e == null) {
                             break;
-                        } catch (Throwable th4) {
-                            th = th4;
                         }
-                    } else {
-                        try {
-                            String name = e.getName();
-                            Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
-                            String name2 = StringsKt.substringAfterLast(name, '/', name);
-                            if (e.isDirectory() || !new Regex("[a-z0-9_]+\\.wav").matches(name2)) {
-                                ins = ins;
-                            } else {
-                                FileOutputStream fileOutputStream = new FileOutputStream(new File(tmp, name2));
-                                try {
-                                    FileOutputStream it = fileOutputStream;
-                                    InputStream ins2 = ins;
-                                    try {
-                                        ByteStreamsKt.copyTo(z, it, 8192);
-                                        try {
-                                            CloseableKt.closeFinally(fileOutputStream, null);
-                                            n++;
-                                            ins = ins2;
-                                        } catch (Throwable th5) {
-                                            th = th5;
-                                        }
-                                    } catch (Throwable th6) {
-                                        th2 = th6;
-                                        try {
-                                            throw th2;
-                                        } finally {
-                                        }
-                                    }
-                                } catch (Throwable th7) {
-                                    th2 = th7;
-                                }
-                            }
-                        } catch (Throwable th8) {
-                            th = th8;
-                            th = th;
-                            throw th;
-                        }
-                    }
-                    try {
-                        throw th;
-                    } catch (Throwable th9) {
-                        try {
-                            CloseableKt.closeFinally(zipInputStream, th);
-                            throw th9;
-                        } catch (Throwable th10) {
-                            th = th10;
-                            Throwable th11 = th;
+                        String name0 = e.getName();
+                        Intrinsics.checkNotNullExpressionValue(name0, "getName(...)");
+                        String name = StringsKt.substringAfterLast(name0, '/', name0);
+                        if (!e.isDirectory() && new Regex("[a-z0-9_]+\\.wav").matches(name)) {
+                            FileOutputStream it = new FileOutputStream(new File(tmp, name));
+                            Throwable itCause = null;
                             try {
-                                throw th11;
-                            } catch (Throwable th12) {
-                                try {
-                                    CloseableKt.closeFinally(inputStream, th11);
-                                    throw th12;
-                                } catch (Exception e2) {
-                                    e = e2;
-                                    FilesKt.deleteRecursively(tmp);
-                                    return "Not a voice pack zip (" + e.getMessage() + ")";
-                                }
+                                ByteStreamsKt.copyTo(z, it, 8192);
+                            } catch (Throwable th) {
+                                itCause = th;
+                                throw th;
+                            } finally {
+                                CloseableKt.closeFinally(it, itCause);
                             }
+                            n++;
                         }
                     }
+                } catch (Throwable th2) {
+                    zCause = th2;
+                    throw th2;
+                } finally {
+                    CloseableKt.closeFinally(z, zCause);
                 }
-                Unit unit = Unit.INSTANCE;
-                CloseableKt.closeFinally(zipInputStream, null);
-                Unit unit2 = Unit.INSTANCE;
-                CloseableKt.closeFinally(inputStream, null);
-                if (!new File(tmp, "ask_left.wav").isFile()) {
-                    FilesKt.deleteRecursively(tmp);
-                    return "That zip has no Amy recordings in it - pick StarView-Amy-voice.zip";
-                }
-                File dst = new File(ctx.getFilesDir(), "amy");
-                FilesKt.deleteRecursively(dst);
-                if (!tmp.renameTo(dst)) {
-                    FilesKt.deleteRecursively(tmp);
-                    return "Couldn't save it";
-                }
-                Log.i("AmyVoice", "installed " + n + " recordings");
-                use("amy");
-                return null;
-            } catch (Throwable th13) {
-                th = th13;
+            } catch (Throwable th3) {
+                insCause = th3;
+                throw th3;
+            } finally {
+                CloseableKt.closeFinally(ins, insCause);
             }
-        } catch (Exception e3) {
-            e = e3;
+        } catch (Exception e2) {
+            FilesKt.deleteRecursively(tmp);
+            return "Not a voice pack zip (" + e2.getMessage() + ")";
         }
+        if (!new File(tmp, "ask_left.wav").isFile()) {
+            FilesKt.deleteRecursively(tmp);
+            return "That zip has no Amy recordings in it - pick StarView-Amy-voice.zip";
+        }
+        File dst = new File(ctx.getFilesDir(), "amy");
+        FilesKt.deleteRecursively(dst);
+        if (!tmp.renameTo(dst)) {
+            FilesKt.deleteRecursively(tmp);
+            return "Couldn't save it";
+        }
+        Log.i("AmyVoice", "installed " + n + " recordings");
+        use("amy");
+        return null;
     }
 
     public static /* synthetic */ int recordings$default(AmyVoice amyVoice, Pack pack, int i, Object obj) {
