@@ -75,16 +75,10 @@ public final class City311 {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final void want$lambda$2(int $ty, int $tx, String $k) {
-        String since;
-        double s;
-        double w;
         try {
-            since = new SimpleDateFormat("yyyy-MM-dd'T'00:00:00", Locale.US).format(new Date(System.currentTimeMillis() - 3888000000L));
-            s = $ty * 0.01d;
-            w = $tx * 0.01d;
-        } catch (Exception e) {
-        }
-        try {
+            String since = new SimpleDateFormat("yyyy-MM-dd'T'00:00:00", Locale.US).format(new Date(System.currentTimeMillis() - 3888000000L));
+            double s = $ty * 0.01d;
+            double w = $tx * 0.01d;
             String where = "descriptor='Pothole' AND status='Open' AND created_date>'" + since + "' AND latitude between " + s + " and " + (s + 0.01d) + " AND longitude between " + w + " and " + (0.01d + w);
             HttpUrl url = new HttpUrl.Builder().scheme("https").host("data.cityofnewyork.us").addPathSegments("resource/erm2-nwe9.json").addQueryParameter("$select", "latitude,longitude").addQueryParameter("$where", where).addQueryParameter("$limit", "500").build();
             Response execute = INSTANCE.getHttp().newCall(new Request.Builder().url(url).build()).execute();

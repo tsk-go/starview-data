@@ -725,7 +725,7 @@ public final class CarUi {
     }
 
     public final void railSelect(TextView v, boolean on) {
-        GradientDrawable rounded$default;
+        Drawable rounded$default;
         Intrinsics.checkNotNullParameter(v, "v");
         if (!on) {
             rounded$default = rounded$default(this, CARD, 0, null, 6, null);

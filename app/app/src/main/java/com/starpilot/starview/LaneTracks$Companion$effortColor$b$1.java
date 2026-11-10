@@ -5,7 +5,7 @@ import kotlin.jvm.functions.Function3;
 import kotlin.jvm.internal.FunctionReferenceImpl;
 
 /* compiled from: LaneTracks.kt */
-/* synthetic */ class LaneTracks$Companion$effortColor$b$1 extends FunctionReferenceImpl implements Function3<Integer, Integer, Float, Integer> {
+/* synthetic */ class LaneTracks$Companion$effortColor$b$1 extends FunctionReferenceImpl implements Function3 {
     LaneTracks$Companion$effortColor$b$1(Object obj) {
         super(3, obj, LaneTracks.Companion.class, "blend", "blend(IIF)I", 0);
     }
@@ -15,7 +15,10 @@ import kotlin.jvm.internal.FunctionReferenceImpl;
     }
 
     @Override // kotlin.jvm.functions.Function3
-    public /* bridge */ /* synthetic */ Integer invoke(Integer num, Integer num2, Float f) {
+    public /* bridge */ /* synthetic */ Object invoke(Object num$o, Object num2$o, Object f$o) {
+        Integer num = (Integer) num$o;
+        Integer num2 = (Integer) num2$o;
+        Float f = (Float) f$o;
         return invoke(num.intValue(), num2.intValue(), f.floatValue());
     }
 }

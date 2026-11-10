@@ -103,26 +103,18 @@ public final class FileKinds {
     }
 
     public final boolean showable(byte[] bytes) {
-        int i;
         Intrinsics.checkNotNullParameter(bytes, "bytes");
         int n = Math.min(bytes.length, 4096);
         int bad = 0;
-        while (true) {
-            boolean z = false;
-            if (i >= n) {
-                return n == 0 || bad * 20 < n;
-            }
+        for (int i = 0; i < n; i++) {
             int b = bytes[i] & 255;
             if (b == 0) {
                 return false;
             }
-            if (b >= 9) {
-                if (14 <= b && b < 32) {
-                    z = true;
-                }
-                i = z ? 0 : i + 1;
+            if (b < 9 || (14 <= b && b < 32)) {
+                bad++;
             }
-            bad++;
         }
+        return n == 0 || bad * 20 < n;
     }
 }

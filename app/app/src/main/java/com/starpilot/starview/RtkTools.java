@@ -418,7 +418,7 @@ public final class RtkTools {
             str2 = k.getSpeedFeedHz() <= 0.0d ? "Waiting for the car's speed (it comes with the road view's data)" : "Learning, " + Math.round(k.getSpeedFeedHz()) + " a second: just drive";
         }
         stepArr[3] = new Step("Car speed", speed, str2);
-        return CollectionsKt.listOf((Object[]) stepArr);
+        return CollectionsKt.listOf(stepArr);
     }
 
     /* VF: from Vineflower (jadx: ) */
@@ -621,7 +621,7 @@ public final class RtkTools {
         needArr[0] = new Need("A stop with the engine on", str, c.getLongestStillS() >= 20, RangesKt.coerceAtMost(c.getLongestStillS() / 20.0f, 1.0f));
         needArr[1] = new Need("Turns of 90°", turns + " so far: " + c.getLeft() + " left, " + c.getRight() + " right" + (turns > 0 ? "; " + fast + " at 20+ mph" : "") + " (about 10 at 20+ mph, both ways; slow corners count half here)", bothWays && ((float) fast) + (((float) (turns - fast)) * 0.5f) >= 10.0f, RangesKt.coerceAtMost((fast + ((turns - fast) * 0.5f)) / 10.0f, 1.0f));
         needArr[2] = new Need("Driving at 20+ mph", duration(c.getFastS()) + " so far (5 min is plenty)", c.getFastS() >= 300, RangesKt.coerceAtMost(c.getFastS() / 300.0f, 1.0f));
-        return CollectionsKt.listOf((Object[]) needArr);
+        return CollectionsKt.listOf(needArr);
     }
 
     public final String duration(int s) {

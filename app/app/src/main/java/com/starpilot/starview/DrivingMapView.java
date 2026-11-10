@@ -90,7 +90,7 @@ public final class DrivingMapView extends ScrollView {
             }
 
             View var12 = (View)var11;
-            android.widget.LinearLayout.LayoutParams var15 = new LayoutParams(0, -2, 1.0F);
+            android.widget.LinearLayout.LayoutParams var15 = new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F);
             var15.leftMargin = this.ui.dp(6);
             var15.rightMargin = this.ui.dp(6);
             Unit var17 = Unit.INSTANCE;

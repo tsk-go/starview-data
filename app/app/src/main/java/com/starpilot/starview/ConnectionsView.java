@@ -123,7 +123,7 @@ public final class ConnectionsView extends ScrollView {
             var29.setTypeface(Typeface.DEFAULT_BOLD);
             var26.addView((View)var29);
             var26.addView((View)var24);
-            var17.addView((View)var26, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
+            var17.addView((View)var26, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
             TextView var27 = new TextView(var1);
             var27.setText("›");
             var27.setTextSize(30.0F);

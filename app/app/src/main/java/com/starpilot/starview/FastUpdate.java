@@ -34,7 +34,7 @@ public final class FastUpdate {
 
     /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
     public final JSONObject from70(JSONObject var1) {
-        String var17 = null; Object var18 = null; String var20 = null; // declarations Vineflower left out
+        String var17 = null; Pair var18 = null; String var20 = null; // declarations Vineflower left out
         Intrinsics.checkNotNullParameter(var1, "r");
         JSONObject var13 = var1.optJSONObject("installed");
         JSONObject var11 = var1.optJSONObject("updater");
@@ -96,7 +96,7 @@ public final class FastUpdate {
 
         JSONObject var14 = new JSONObject();
         boolean var4;
-        if (((var3 != 0) || (var2 != 0)) && !Intrinsics.areEqual(var5, "error") && !Intrinsics.areEqual(var5, "rebooting")) {
+        if ((var3 || (var2 != 0)) && !Intrinsics.areEqual(var5, "error") && !Intrinsics.areEqual(var5, "rebooting")) {
             var4 = true;
         } else {
             var4 = false;

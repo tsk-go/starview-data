@@ -5,7 +5,7 @@ import kotlin.jvm.internal.FunctionReferenceImpl;
 import kotlin.jvm.internal.Intrinsics;
 
 /* compiled from: SettingsActivity.kt */
-/* synthetic */ class SettingsActivity$tabletBlinkerPage$15 extends FunctionReferenceImpl implements Function1<Float, String> {
+/* synthetic */ class SettingsActivity$tabletBlinkerPage$15 extends FunctionReferenceImpl implements Function1 {
     public static final SettingsActivity$tabletBlinkerPage$15 INSTANCE = new SettingsActivity$tabletBlinkerPage$15();
 
     SettingsActivity$tabletBlinkerPage$15() {
@@ -13,7 +13,8 @@ import kotlin.jvm.internal.Intrinsics;
     }
 
     @Override // kotlin.jvm.functions.Function1
-    public /* bridge */ /* synthetic */ String invoke(Float f) {
+    public /* bridge */ /* synthetic */ Object invoke(Object f$o) {
+        Float f = (Float) f$o;
         return invoke(f.floatValue());
     }
 

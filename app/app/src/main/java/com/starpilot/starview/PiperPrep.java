@@ -59,7 +59,7 @@ public final class PiperPrep {
         pairArr[5] = TuplesKt.to("n_speakers", String.valueOf(cfg.optInt("num_speakers", 1)));
         JSONObject optJSONObject3 = cfg.optJSONObject("audio");
         pairArr[6] = TuplesKt.to("sample_rate", String.valueOf(optJSONObject3 != null ? optJSONObject3.optInt("sample_rate", 22050) : 22050));
-        return CollectionsKt.listOf((Object[]) pairArr);
+        return CollectionsKt.listOf(pairArr);
     }
 
     public final byte[] metadataBytes(JSONObject cfg) {

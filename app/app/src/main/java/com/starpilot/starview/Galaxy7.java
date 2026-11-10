@@ -131,7 +131,7 @@ public final class Galaxy7 {
                 throw new Error(401, "Galaxy gave no local session (is the tablet on the comma's own network?)");
             } catch (Throwable execute$t) {
                 execute$c = execute$t;
-                throw execute$t;
+                throw KtCompat.sneaky(execute$t);
             } finally {
                 CloseableKt.closeFinally(execute, execute$c);
             }
@@ -203,18 +203,17 @@ public final class Galaxy7 {
                 return obj;
             }
             int code = r.code();
-            if (obj != null && (optString = obj.optString("error")) != null) {
-                String str3 = optString;
-                if (!StringsKt.isBlank(str3)) {
-                    str2 = str3;
-                }
-                str = str2;
+            str = null;
+            if (obj != null && (optString = obj.optString("error")) != null && !StringsKt.isBlank(optString)) {
+                str = optString;
             }
-            str = "Galaxy answered HTTP " + r.code();
+            if (str == null) {
+                str = "Galaxy answered HTTP " + r.code();
+            }
             throw new Error(code, str);
         } catch (Throwable execute$t) {
             execute$c = execute$t;
-            throw execute$t;
+            throw KtCompat.sneaky(execute$t);
         } finally {
             CloseableKt.closeFinally(execute, execute$c);
         }
@@ -259,6 +258,7 @@ public final class Galaxy7 {
         String substringBefore$default;
         String obj;
         try {
+            KtCompat.<Error>mayThrow();
             Response r = postImage$lambda$12$once(this$0, $path, $body);
             if (r.code() == 401) {
                 r.close();
@@ -294,14 +294,10 @@ public final class Galaxy7 {
                         m1191constructorimpl = null;
                     }
                     String str3 = (String) m1191constructorimpl;
-                    if (str3 != null) {
-                        String str4 = str3;
-                        if (StringsKt.isBlank(str4)) {
-                            str4 = null;
-                        }
-                        str = str4;
+                    str = (str3 == null || StringsKt.isBlank(str3)) ? null : str3;
+                    if (str == null) {
+                        str = "Camera frame unavailable. Try taking a new snapshot.";
                     }
-                    str = "Camera frame unavailable. Try taking a new snapshot.";
                     pair = TuplesKt.to(null, str);
                 } else if (!Intrinsics.areEqual(type, "image/jpeg")) {
                     pair = TuplesKt.to(null, "Camera image is unavailable.");
@@ -410,6 +406,7 @@ public final class Galaxy7 {
     public static final void async$lambda$16(Function0 $work, Galaxy7 this$0, final Function2 $done) {
         Pair res;
         try {
+            KtCompat.<Error>mayThrow();
             res = TuplesKt.to($work.invoke(), null);
         } catch (Error e) {
             String message = e.getMessage();
