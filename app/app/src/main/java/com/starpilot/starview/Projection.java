@@ -4,713 +4,617 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 
+/* compiled from: Projection.kt */
 public final class Projection {
-   private static final Projection.Companion.Cam AR_OX_ECAM = new Projection.Companion.Cam(1928, 1208, 567.0);
-   private static final Projection.Companion.Cam AR_OX_FCAM = new Projection.Companion.Cam(1928, 1208, 2648.0);
-   public static final double CLIP_MARGIN = 500.0;
-   public static final Projection.Companion Companion = new Projection.Companion(null);
-   public static final double HEIGHT_INIT = 1.22;
-   private static final Projection.Companion.Cam OS_ECAM = new Projection.Companion.Cam(1344, 760, 425.25);
-   private static final Projection.Companion.Cam OS_FCAM = new Projection.Companion.Cam(1344, 760, 1141.5);
-   private static final double[] VIEW_FROM_DEVICE = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0};
-   private double[] calib;
-   private Projection.Companion.Cam camNow;
-   private int frameH;
-   private int frameW;
-   private double[] full;
-   private double fullH;
-   private double fullW;
-   private double pathOffsetZ;
-   private double[] rpy = new double[]{0.0, 0.0, 0.0};
-   private boolean valid;
-   private double videoScale;
-   private double videoTx;
-   private double videoTy;
-   private double viewH;
-   private double viewW;
-   private boolean wide;
-   private double xOffset;
-   private double yOffset;
-   private double zoom;
+    public static final double CLIP_MARGIN = 500.0d;
+    public static final double HEIGHT_INIT = 1.22d;
+    private int frameH;
+    private int frameW;
+    private double fullH;
+    private double fullW;
+    private boolean valid;
+    private double videoTx;
+    private double videoTy;
+    private double viewH;
+    private double viewW;
+    private boolean wide;
+    private double xOffset;
+    private double yOffset;
+    public static final Companion Companion = new Companion(null);
+    private static final Companion.Cam AR_OX_FCAM = new Companion.Cam(1928, 1208, 2648.0d);
+    private static final Companion.Cam AR_OX_ECAM = new Companion.Cam(1928, 1208, 567.0d);
+    private static final Companion.Cam OS_FCAM = new Companion.Cam(1344, 760, 1141.5d);
+    private static final Companion.Cam OS_ECAM = new Companion.Cam(1344, 760, 425.25d);
+    private static final double[] VIEW_FROM_DEVICE = {0.0d, 1.0d, 0.0d, 0.0d, 0.0d, 1.0d, 1.0d, 0.0d, 0.0d};
+    private double[] rpy = {0.0d, 0.0d, 0.0d};
+    private double pathOffsetZ = 1.22d;
+    private double zoom = 1.0d;
+    private double videoScale = 1.0d;
+    private double[] full = new double[9];
+    private double[] calib = new double[9];
+    private Companion.Cam camNow = OS_FCAM;
 
-   public Projection() {
-      this.pathOffsetZ = 1.22;
-      this.zoom = 1.0;
-      this.videoScale = 1.0;
-      this.full = new double[9];
-      this.calib = new double[9];
-      this.camNow = OS_FCAM;
-   }
+    /* compiled from: Projection.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
 
-   public final Projection.Companion.Cam cam() {
-      Projection.Companion.Cam var1;
-      if (this.frameH > 0) {
-         var1 = Companion.camFor(this.frameW, this.frameH, this.wide);
-      } else if (this.frameW == 1344) {
-         if (this.wide) {
-            var1 = OS_ECAM;
-         } else {
-            var1 = OS_FCAM;
-         }
-      } else if (this.wide) {
-         var1 = AR_OX_ECAM;
-      } else {
-         var1 = AR_OX_FCAM;
-      }
+        private Companion() {
+        }
 
-      return var1;
-   }
+        /* compiled from: Projection.kt */
+        public static final /* data */ class Cam {
+            private final double f;
+            private final int h;
+            private final int w;
 
-   public final int getFrameH() {
-      return this.frameH;
-   }
+            public static /* synthetic */ Cam copy$default(Cam cam, int i, int i2, double d, int i3, Object obj) {
+                if ((i3 & 1) != 0) {
+                    i = cam.w;
+                }
+                if ((i3 & 2) != 0) {
+                    i2 = cam.h;
+                }
+                if ((i3 & 4) != 0) {
+                    d = cam.f;
+                }
+                return cam.copy(i, i2, d);
+            }
 
-   public final int getFrameW() {
-      return this.frameW;
-   }
+            /* renamed from: component1, reason: from getter */
+            public final int getW() {
+                return this.w;
+            }
 
-   public final double getFullH() {
-      return this.fullH;
-   }
+            /* renamed from: component2, reason: from getter */
+            public final int getH() {
+                return this.h;
+            }
 
-   public final double getFullW() {
-      return this.fullW;
-   }
+            /* renamed from: component3, reason: from getter */
+            public final double getF() {
+                return this.f;
+            }
 
-   public final double getPathOffsetZ() {
-      return this.pathOffsetZ;
-   }
+            public final Cam copy(int w, int h, double f) {
+                return new Cam(w, h, f);
+            }
 
-   public final double[] getRpy() {
-      return this.rpy;
-   }
+            public boolean equals(Object other) {
+                if (this == other) {
+                    return true;
+                }
+                if (!(other instanceof Cam)) {
+                    return false;
+                }
+                Cam cam = (Cam) other;
+                return this.w == cam.w && this.h == cam.h && Double.compare(this.f, cam.f) == 0;
+            }
 
-   public final boolean getValid() {
-      return this.valid;
-   }
+            public int hashCode() {
+                return (((Integer.hashCode(this.w) * 31) + Integer.hashCode(this.h)) * 31) + Double.hashCode(this.f);
+            }
 
-   public final double getVideoScale() {
-      return this.videoScale;
-   }
+            public String toString() {
+                return "Cam(w=" + this.w + ", h=" + this.h + ", f=" + this.f + ")";
+            }
 
-   public final double getVideoTx() {
-      return this.videoTx;
-   }
+            public Cam(int w, int h, double f) {
+                this.w = w;
+                this.h = h;
+                this.f = f;
+            }
 
-   public final double getVideoTy() {
-      return this.videoTy;
-   }
+            public final double getCx() {
+                return this.w / 2.0d;
+            }
 
-   public final double getViewH() {
-      return this.viewH;
-   }
+            public final double getCy() {
+                return this.h / 2.0d;
+            }
 
-   public final double getViewW() {
-      return this.viewW;
-   }
+            public final double getF() {
+                return this.f;
+            }
 
-   public final boolean getWide() {
-      return this.wide;
-   }
+            public final int getH() {
+                return this.h;
+            }
 
-   public final double getXOffset() {
-      return this.xOffset;
-   }
+            public final int getW() {
+                return this.w;
+            }
+        }
 
-   public final double getYOffset() {
-      return this.yOffset;
-   }
+        public final Cam getAR_OX_ECAM() {
+            return Projection.AR_OX_ECAM;
+        }
 
-   public final double getZoom() {
-      return this.zoom;
-   }
+        public final Cam getAR_OX_FCAM() {
+            return Projection.AR_OX_FCAM;
+        }
 
-   public final boolean map(double var1, double var3, double var5, float[] var7) {
-      Intrinsics.checkNotNullParameter(var7, "out");
-      if (this.wide) {
-         double[] var9 = Companion.mulv(this.calib, var1, var3, var5);
-         if (var9[2] < 1.0E-6) {
+        public final Cam getOS_ECAM() {
+            return Projection.OS_ECAM;
+        }
+
+        public final Cam getOS_FCAM() {
+            return Projection.OS_FCAM;
+        }
+
+        public final double[] getVIEW_FROM_DEVICE() {
+            return Projection.VIEW_FROM_DEVICE;
+        }
+
+        public final double[] mul(double[] a, double[] b) {
+            Intrinsics.checkNotNullParameter(a, "a");
+            Intrinsics.checkNotNullParameter(b, "b");
+            double[] r = new double[9];
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    r[(i * 3) + j] = (a[i * 3] * b[j]) + (a[(i * 3) + 1] * b[j + 3]) + (a[(i * 3) + 2] * b[j + 6]);
+                }
+            }
+            return r;
+        }
+
+        public final double[] mulv(double[] a, double x, double y, double z) {
+            Intrinsics.checkNotNullParameter(a, "a");
+            return new double[]{(a[0] * x) + (a[1] * y) + (a[2] * z), (a[3] * x) + (a[4] * y) + (a[5] * z), (a[6] * x) + (a[7] * y) + (a[8] * z)};
+        }
+
+        public final Cam camFor(int frameW, int frameH, boolean wide) {
+            boolean os = ((double) frameW) / ((double) frameH) > 1.68d;
+            Cam c = os ? wide ? getOS_ECAM() : getOS_FCAM() : wide ? getAR_OX_ECAM() : getAR_OX_FCAM();
+            return new Cam(frameW, frameH, (c.getF() * frameW) / c.getW());
+        }
+
+        public final double[] groundHomographyRows(float[] rpy, float height, int frameW, int frameH, boolean wide) {
+            Intrinsics.checkNotNullParameter(rpy, "rpy");
+            Cam c = camFor(frameW, frameH, wide);
+            double[] k = {c.getF(), 0.0d, c.getCx(), 0.0d, c.getF(), c.getCy(), 0.0d, 0.0d, 1.0d};
+            double[] ct = mul(k, mul(getVIEW_FROM_DEVICE(), rotFromEuler(rpy[0], rpy[1], rpy[2])));
+            return new double[]{ct[0], ct[1], height * ct[2], ct[3], ct[4], height * ct[5], ct[6], ct[7], height * ct[8]};
+        }
+
+        public final double[] inverse3(double[] m) {
+            Intrinsics.checkNotNullParameter(m, "m");
+            double a = m[0];
+            double b = m[1];
+            double c = m[2];
+            double d = m[3];
+            double e = m[4];
+            double f = m[5];
+            double g = m[6];
+            double h = m[7];
+            double i = m[8];
+            double det = ((((e * i) - (f * h)) * a) - (((d * i) - (f * g)) * b)) + (((d * h) - (e * g)) * c);
+            if (Math.abs(det) < 1.0E-12d) {
+                return null;
+            }
+            double r = 1 / det;
+            return new double[]{((e * i) - (f * h)) * r, ((c * h) - (b * i)) * r, ((b * f) - (c * e)) * r, ((f * g) - (d * i)) * r, ((a * i) - (c * g)) * r, ((c * d) - (a * f)) * r, ((d * h) - (e * g)) * r, ((b * g) - (a * h)) * r, ((a * e) - (b * d)) * r};
+        }
+
+        public final double[] fisheyeToPinhole(double du, double dv, double f) {
+            double r = Math.hypot(du, dv);
+            if (r < 1.0E-9d) {
+                return new double[]{du, dv};
+            }
+            double th = r / f;
+            if (th > 1.4d) {
+                return null;
+            }
+            double s = (Math.tan(th) * f) / r;
+            return new double[]{du * s, dv * s};
+        }
+
+        public final double[] pinholeToFisheye(double du, double dv, double f) {
+            double r = Math.hypot(du, dv);
+            if (r < 1.0E-9d) {
+                return new double[]{du, dv};
+            }
+            double s = (Math.atan(r / f) * f) / r;
+            return new double[]{du * s, dv * s};
+        }
+
+        /* compiled from: Projection.kt */
+        public static final class GroundInverse {
+            private final float cx;
+            private final float cy;
+            private final float f;
+            private final boolean fisheye;
+            private final double[] hInv;
+
+            public GroundInverse(float f, float cx, float cy, double[] hInv, boolean fisheye) {
+                this.f = f;
+                this.cx = cx;
+                this.cy = cy;
+                this.hInv = hInv;
+                this.fisheye = fisheye;
+            }
+
+            public /* synthetic */ GroundInverse(float f, float f2, float f3, double[] dArr, boolean z, int i, DefaultConstructorMarker defaultConstructorMarker) {
+                this(f, f2, f3, dArr, (i & 16) != 0 ? false : z);
+            }
+
+            public final float getCx() {
+                return this.cx;
+            }
+
+            public final float getCy() {
+                return this.cy;
+            }
+
+            public final float getF() {
+                return this.f;
+            }
+
+            public final boolean getFisheye() {
+                return this.fisheye;
+            }
+
+            public final float[] undistort(float u, float v) {
+                if (!this.fisheye) {
+                    return new float[]{u, v};
+                }
+                double[] p = Projection.Companion.fisheyeToPinhole(u - this.cx, v - this.cy, this.f);
+                if (p == null) {
+                    return null;
+                }
+                return new float[]{(float) (this.cx + p[0]), (float) (this.cy + p[1])};
+            }
+
+            public final float offAxis(float u, float v) {
+                float r = (float) Math.hypot(u - this.cx, v - this.cy);
+                return this.fisheye ? r / this.f : (float) Math.atan(r / this.f);
+            }
+
+            public final float[] ground(float u0, float v0) {
+                float[] uv;
+                double[] m = this.hInv;
+                if (m == null || (uv = undistort(u0, v0)) == null) {
+                    return null;
+                }
+                float u = uv[0];
+                float v = uv[1];
+                double x = (m[0] * u) + (m[1] * v) + m[2];
+                double y = (m[3] * u) + (m[4] * v) + m[5];
+                double w = (m[6] * u) + (m[7] * v) + m[8];
+                if (w < 1.0E-6d) {
+                    return null;
+                }
+                double gx = x / w;
+                if (gx <= 0.0d) {
+                    return null;
+                }
+                return new float[]{(float) gx, (float) (y / w)};
+            }
+        }
+
+        public final GroundInverse groundInverse(float[] rpy, float height, int frameW, int frameH, boolean wide) {
+            Intrinsics.checkNotNullParameter(rpy, "rpy");
+            Cam c = camFor(frameW, frameH, wide);
+            return new GroundInverse((float) c.getF(), (float) c.getCx(), (float) c.getCy(), inverse3(groundHomographyRows(rpy, height, frameW, frameH, wide)), wide);
+        }
+
+        public final double[] rotFromEuler(double roll, double pitch, double yaw) {
+            double cr = Math.cos(roll);
+            double sr = Math.sin(roll);
+            double cp = Math.cos(pitch);
+            double sp = Math.sin(pitch);
+            double cy = Math.cos(yaw);
+            double sy = Math.sin(yaw);
+            double[] rx = {1.0d, 0.0d, 0.0d, 0.0d, cr, -sr, 0.0d, sr, cr};
+            double[] ry = {cp, 0.0d, sp, 0.0d, 1.0d, 0.0d, -sp, 0.0d, cp};
+            double[] rz = {cy, -sy, 0.0d, sy, cy, 0.0d, 0.0d, 0.0d, 1.0d};
+            return mul(rz, mul(ry, rx));
+        }
+    }
+
+    public final int getFrameH() {
+        return this.frameH;
+    }
+
+    public final int getFrameW() {
+        return this.frameW;
+    }
+
+    public final void setFrameH(int i) {
+        this.frameH = i;
+    }
+
+    public final void setFrameW(int i) {
+        this.frameW = i;
+    }
+
+    public final boolean getWide() {
+        return this.wide;
+    }
+
+    public final void setWide(boolean z) {
+        this.wide = z;
+    }
+
+    public final double getViewH() {
+        return this.viewH;
+    }
+
+    public final double getViewW() {
+        return this.viewW;
+    }
+
+    public final void setViewH(double d) {
+        this.viewH = d;
+    }
+
+    public final void setViewW(double d) {
+        this.viewW = d;
+    }
+
+    public final double getFullH() {
+        return this.fullH;
+    }
+
+    public final double getFullW() {
+        return this.fullW;
+    }
+
+    public final void setFullH(double d) {
+        this.fullH = d;
+    }
+
+    public final void setFullW(double d) {
+        this.fullW = d;
+    }
+
+    public final double[] getRpy() {
+        return this.rpy;
+    }
+
+    public final void setRpy(double[] dArr) {
+        Intrinsics.checkNotNullParameter(dArr, "<set-?>");
+        this.rpy = dArr;
+    }
+
+    public final double getPathOffsetZ() {
+        return this.pathOffsetZ;
+    }
+
+    public final void setPathOffsetZ(double d) {
+        this.pathOffsetZ = d;
+    }
+
+    public final double getXOffset() {
+        return this.xOffset;
+    }
+
+    public final double getYOffset() {
+        return this.yOffset;
+    }
+
+    public final double getZoom() {
+        return this.zoom;
+    }
+
+    public final void setXOffset(double d) {
+        this.xOffset = d;
+    }
+
+    public final void setYOffset(double d) {
+        this.yOffset = d;
+    }
+
+    public final void setZoom(double d) {
+        this.zoom = d;
+    }
+
+    public final double getVideoScale() {
+        return this.videoScale;
+    }
+
+    public final double getVideoTx() {
+        return this.videoTx;
+    }
+
+    public final double getVideoTy() {
+        return this.videoTy;
+    }
+
+    public final void setVideoScale(double d) {
+        this.videoScale = d;
+    }
+
+    public final void setVideoTx(double d) {
+        this.videoTx = d;
+    }
+
+    public final void setVideoTy(double d) {
+        this.videoTy = d;
+    }
+
+    public final boolean getValid() {
+        return this.valid;
+    }
+
+    public final void setValid(boolean z) {
+        this.valid = z;
+    }
+
+    public final Companion.Cam cam() {
+        return this.frameH > 0 ? Companion.camFor(this.frameW, this.frameH, this.wide) : this.frameW == 1344 ? this.wide ? OS_ECAM : OS_FCAM : this.wide ? AR_OX_ECAM : AR_OX_FCAM;
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:10:0x0098, code lost:
+    
+        if ((r47.frameW / r47.frameH) > 1.68d) goto L20;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final void update() {
+        double h;
+        double[] k;
+        double z;
+        double yo;
+        if (this.frameW != 0) {
+            if (!(this.viewW == 0.0d)) {
+                Companion.Cam c = cam();
+                double[] k2 = {c.getF(), 0.0d, c.getCx(), 0.0d, c.getF(), c.getCy(), 0.0d, 0.0d, 1.0d};
+                double[] deviceFromCalib = Companion.rotFromEuler(this.rpy[0], this.rpy[1], this.rpy[2]);
+                double[] viewFromCalib = Companion.mul(VIEW_FROM_DEVICE, deviceFromCalib);
+                double[] calibTransform = Companion.mul(k2, viewFromCalib);
+                double[] kep = Companion.mulv(calibTransform, 1000.0d, 0.0d, 0.0d);
+                double w = this.viewW;
+                double h2 = this.viewH;
+                double sensorW = 1344.0d;
+                if (this.frameH > 0) {
+                    h = h2;
+                } else {
+                    h = h2;
+                }
+                if (this.frameW != 1344) {
+                    sensorW = 1928.0d;
+                }
+                double z2 = ((this.wide ? 2.0d : 1.1d) * sensorW) / c.getW();
+                if (this.fullW > 0.0d && w < this.fullW * 0.98d) {
+                    double fh = Math.max(this.fullH, 1.0d);
+                    double sensorW2 = 2;
+                    k = k2;
+                    double zFull = Math.max(z2, Math.max(this.fullW / (c.getCx() * sensorW2), fh / (c.getCy() * sensorW2)));
+                    z = Math.max((w / this.fullW) * zFull, w / (sensorW2 * c.getCx()));
+                } else {
+                    k = k2;
+                    double d = 2;
+                    z = Math.max(z2, Math.max(w / (c.getCx() * d), h / (d * c.getCy())));
+                }
+                double d2 = 2;
+                double maxX = Math.max(0.0d, ((c.getCx() * z) - (w / d2)) - 5.0d);
+                double maxY = Math.max(0.0d, ((c.getCy() * z) - (h / d2)) - 5.0d);
+                double xo = 0.0d;
+                if (Math.abs(kep[2]) > 1.0E-6d) {
+                    double margin = -maxX;
+                    xo = RangesKt.coerceIn(((kep[0] / kep[2]) - c.getCx()) * z, margin, maxX);
+                    double yo2 = RangesKt.coerceIn(((kep[1] / kep[2]) - c.getCy()) * z, -maxY, maxY);
+                    yo = yo2;
+                } else {
+                    yo = 0.0d;
+                }
+                this.zoom = z;
+                this.xOffset = xo;
+                this.yOffset = yo;
+                this.videoScale = z;
+                this.videoTx = ((w / d2) - xo) - (c.getCx() * z);
+                this.videoTy = ((h / d2) - yo) - (c.getCy() * z);
+                double[] videoTransform = {z, 0.0d, this.videoTx, 0.0d, z, this.videoTy, 0.0d, 0.0d, 1.0d};
+                this.full = Companion.mul(videoTransform, calibTransform);
+                this.calib = calibTransform;
+                this.camNow = c;
+                this.valid = true;
+                return;
+            }
+        }
+        this.valid = false;
+    }
+
+    public final boolean map(double x, double y, double z, float[] out) {
+        double sx;
+        double sy;
+        Intrinsics.checkNotNullParameter(out, "out");
+        if (this.wide) {
+            double[] p = Companion.mulv(this.calib, x, y, z);
+            if (p[2] < 1.0E-6d) {
+                return false;
+            }
+            Companion.Cam c = this.camNow;
+            double[] d = Companion.pinholeToFisheye((p[0] / p[2]) - c.getCx(), (p[1] / p[2]) - c.getCy(), c.getF());
+            sx = ((c.getCx() + d[0]) * this.videoScale) + this.videoTx;
+            double sx2 = c.getCy();
+            sy = ((sx2 + d[1]) * this.videoScale) + this.videoTy;
+        } else {
+            double[] p2 = Companion.mulv(this.full, x, y, z);
+            if (Math.abs(p2[2]) < 1.0E-6d) {
+                return false;
+            }
+            sx = p2[0] / p2[2];
+            double sx3 = p2[1];
+            sy = sx3 / p2[2];
+        }
+        if (sx < -500.0d || sx > this.viewW + 500.0d || sy < -500.0d || sy > this.viewH + 500.0d) {
             return false;
-         }
+        }
+        out[0] = (float) sx;
+        out[1] = (float) sy;
+        return true;
+    }
 
-         Projection.Companion.Cam var8 = this.camNow;
-         var9 = Companion.pinholeToFisheye(var9[0] / var9[2] - var8.getCx(), var9[1] / var9[2] - var8.getCy(), var8.getF());
-         var3 = (var8.getCx() + var9[0]) * this.videoScale + this.videoTx;
-         var1 = (var8.getCy() + var9[1]) * this.videoScale + this.videoTy;
-      } else {
-         double[] var12 = Companion.mulv(this.full, var1, var3, var5);
-         if (Math.abs(var12[2]) < 1.0E-6) {
-            return false;
-         }
-
-         var3 = var12[0] / var12[2];
-         var1 = var12[1] / var12[2];
-      }
-
-      if (!(var3 < -500.0) && !(var3 > this.viewW + 500.0) && !(var1 < -500.0) && !(var1 > this.viewH + 500.0)) {
-         var7[0] = (float)var3;
-         var7[1] = (float)var1;
-         return true;
-      } else {
-         return false;
-      }
-   }
-
-   public final float[] ribbon(float[] var1, float[] var2, float[] var3, double var4, double var6, int var8, boolean var9) {
-      Intrinsics.checkNotNullParameter(var1, "x");
-      Intrinsics.checkNotNullParameter(var2, "y");
-      Intrinsics.checkNotNullParameter(var3, "z");
-      int var15 = Math.min(var8 + 1, Math.min(var1.length, Math.min(var2.length, var3.length)));
-      if (var15 < 2) {
-         return null;
-      } else {
-         float[] var16 = new float[var15];
-         float[] var19 = new float[var15];
-         float[] var20 = new float[var15];
-         float[] var18 = new float[var15];
-         float[] var17 = new float[2];
-         var8 = 0;
-         float var10 = Float.MAX_VALUE;
-
-         for (int var14 = 0; var14 < var15; var14++) {
-            if (this.map(var1[var14], var2[var14] - var4, var3[var14] + var6, var17)) {
-               float var13 = var17[0];
-               float var12 = var17[1];
-               if (this.map(var1[var14], var2[var14] + var4, var3[var14] + var6, var17)) {
-                  float var11 = var10;
-                  if (!var9) {
-                     if (var12 > var10) {
-                        continue;
-                     }
-
-                     var11 = var12;
-                  }
-
-                  var16[var8] = var13;
-                  var19[var8] = var12;
-                  var20[var8] = var17[0];
-                  var18[var8] = var17[1];
-                  var8++;
-                  var10 = var11;
-               }
-            }
-         }
-
-         if (var8 < 2) {
+    public final float[] ribbon(float[] x, float[] y, float[] z, double yOff, double zOff, int maxIdx, boolean allowInvert) {
+        float[] lx;
+        Intrinsics.checkNotNullParameter(x, "x");
+        Intrinsics.checkNotNullParameter(y, "y");
+        Intrinsics.checkNotNullParameter(z, "z");
+        int n = Math.min(maxIdx + 1, Math.min(x.length, Math.min(y.length, z.length)));
+        if (n < 2) {
             return null;
-         } else {
-            var1 = new float[var8 * 4];
-
-            for (int var23 = 0; var23 < var8; var23++) {
-               var1[var23 * 2] = var16[var23];
-               var1[var23 * 2 + 1] = var19[var23];
-            }
-
-            for (int var24 = 0; var24 < var8; var24++) {
-               var15 = var8 - 1 - var24;
-               var1[(var8 + var24) * 2] = var20[var15];
-               var1[(var8 + var24) * 2 + 1] = var18[var15];
-            }
-
-            return var1;
-         }
-      }
-   }
-
-   public final void setFrameH(int var1) {
-      this.frameH = var1;
-   }
-
-   public final void setFrameW(int var1) {
-      this.frameW = var1;
-   }
-
-   public final void setFullH(double var1) {
-      this.fullH = var1;
-   }
-
-   public final void setFullW(double var1) {
-      this.fullW = var1;
-   }
-
-   public final void setPathOffsetZ(double var1) {
-      this.pathOffsetZ = var1;
-   }
-
-   public final void setRpy(double[] var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.rpy = var1;
-   }
-
-   public final void setValid(boolean var1) {
-      this.valid = var1;
-   }
-
-   public final void setVideoScale(double var1) {
-      this.videoScale = var1;
-   }
-
-   public final void setVideoTx(double var1) {
-      this.videoTx = var1;
-   }
-
-   public final void setVideoTy(double var1) {
-      this.videoTy = var1;
-   }
-
-   public final void setViewH(double var1) {
-      this.viewH = var1;
-   }
-
-   public final void setViewW(double var1) {
-      this.viewW = var1;
-   }
-
-   public final void setWide(boolean var1) {
-      this.wide = var1;
-   }
-
-   public final void setXOffset(double var1) {
-      this.xOffset = var1;
-   }
-
-   public final void setYOffset(double var1) {
-      this.yOffset = var1;
-   }
-
-   public final void setZoom(double var1) {
-      this.zoom = var1;
-   }
-
-   public final void update() {
-      if (this.frameW != 0) {
-         boolean var15;
-         if (this.viewW == 0.0) {
-            var15 = 1;
-         } else {
-            var15 = 0;
-         }
-
-         if (!var15) {
-            Projection.Companion.Cam var16 = this.cam();
-            double var1 = var16.getF();
-            double var3 = var16.getCx();
-            double var5 = var16.getF();
-            double var7 = var16.getCy();
-            double[] var17 = new double[]{var1, 0.0, var3, 0.0, var5, var7, 0.0, 0.0, 1.0};
-            double[] var18 = Companion.rotFromEuler(this.rpy[0], this.rpy[1], this.rpy[2]);
-            var18 = Companion.mul(VIEW_FROM_DEVICE, var18);
-            var17 = Companion.mul(var17, var18);
-            var18 = Companion.mulv(var17, 1000.0, 0.0, 0.0);
-            var7 = this.viewW;
-            double var9 = this.viewH;
-            var15 = this.frameH;
-            var1 = 1344.0;
-            if ((var15 <= 0 || !((double)this.frameW / this.frameH > 1.68)) && this.frameW != 1344) {
-               var1 = 1928.0;
-            }
-
-            if (this.wide) {
-               var3 = 2.0;
+        }
+        float[] lx2 = new float[n];
+        float[] ly = new float[n];
+        float[] rx = new float[n];
+        float[] ry = new float[n];
+        float[] tmp = new float[2];
+        int k = 0;
+        float minY = Float.MAX_VALUE;
+        int i = 0;
+        while (i < n) {
+            int k2 = k;
+            int i2 = i;
+            int n2 = n;
+            float[] tmp2 = tmp;
+            if (!map(x[i], y[i] - yOff, z[i] + zOff, tmp2)) {
+                lx = lx2;
             } else {
-               var3 = 1.1;
+                float lX = tmp2[0];
+                float lY = tmp2[1];
+                lx = lx2;
+                if (map(x[i2], y[i2] + yOff, z[i2] + zOff, tmp2)) {
+                    if (!allowInvert) {
+                        if (lY <= minY) {
+                            minY = lY;
+                        }
+                    }
+                    lx[k2] = lX;
+                    ly[k2] = lY;
+                    rx[k2] = tmp2[0];
+                    ry[k2] = tmp2[1];
+                    k = k2 + 1;
+                    i = i2 + 1;
+                    tmp = tmp2;
+                    n = n2;
+                    lx2 = lx;
+                }
             }
-
-            var1 = var3 * var1 / var16.getW();
-            if (this.fullW > 0.0 && var7 < this.fullW * 0.98) {
-               var5 = Math.max(this.fullH, 1.0);
-               double var11 = this.fullW;
-               var3 = 2;
-               var1 = Math.max(var1, Math.max(var11 / (var16.getCx() * var3), var5 / (var16.getCy() * var3)));
-               var1 = Math.max(var7 / this.fullW * var1, var7 / (var3 * var16.getCx()));
-            } else {
-               var3 = 2;
-               var1 = Math.max(var1, Math.max(var7 / (var16.getCx() * var3), var9 / (var3 * var16.getCy())));
-            }
-
-            var3 = var16.getCx();
-            double var34 = 2;
-            double var13 = Math.max(0.0, var3 * var1 - var7 / var34 - 5.0);
-            var3 = Math.max(0.0, var16.getCy() * var1 - var9 / var34 - 5.0);
-            var5 = 0.0;
-            if (Math.abs(var18[2]) > 1.0E-6) {
-               var5 = RangesKt.coerceIn((var18[0] / var18[2] - var16.getCx()) * var1, -var13, var13);
-               var3 = RangesKt.coerceIn((var18[1] / var18[2] - var16.getCy()) * var1, -var3, var3);
-            } else {
-               var3 = 0.0;
-            }
-
-            this.zoom = var1;
-            this.xOffset = var5;
-            this.yOffset = var3;
-            this.videoScale = var1;
-            this.videoTx = var7 / var34 - var5 - var16.getCx() * var1;
-            this.videoTy = var9 / var34 - var3 - var16.getCy() * var1;
-            var5 = this.videoTx;
-            var3 = this.videoTy;
-            this.full = Companion.mul(new double[]{var1, 0.0, var5, 0.0, var1, var3, 0.0, 0.0, 1.0}, var17);
-            this.calib = var17;
-            this.camNow = var16;
-            this.valid = true;
-            return;
-         }
-      }
-
-      this.valid = false;
-   }
-
-   public static final class Companion {
-      private Companion() {
-      }
-
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
-
-      public final Projection.Companion.Cam camFor(int var1, int var2, boolean var3) {
-         boolean var4;
-         if ((double)var1 / var2 > 1.68) {
-            var4 = true;
-         } else {
-            var4 = false;
-         }
-
-         Projection.Companion.Cam var5;
-         if (var4) {
-            if (var3) {
-               var5 = this.getOS_ECAM();
-            } else {
-               var5 = this.getOS_FCAM();
-            }
-         } else if (var3) {
-            var5 = this.getAR_OX_ECAM();
-         } else {
-            var5 = this.getAR_OX_FCAM();
-         }
-
-         return new Projection.Companion.Cam(var1, var2, var5.getF() * var1 / var5.getW());
-      }
-
-      public final double[] fisheyeToPinhole(double var1, double var3, double var5) {
-         double var7 = Math.hypot(var1, var3);
-         if (var7 < 1.0E-9) {
-            return new double[]{var1, var3};
-         } else {
-            double var9 = var7 / var5;
-            if (var9 > 1.4) {
-               return null;
-            } else {
-               var5 = Math.tan(var9) * var5 / var7;
-               return new double[]{var1 * var5, var3 * var5};
-            }
-         }
-      }
-
-      public final Projection.Companion.Cam getAR_OX_ECAM() {
-         return Projection.AR_OX_ECAM;
-      }
-
-      public final Projection.Companion.Cam getAR_OX_FCAM() {
-         return Projection.AR_OX_FCAM;
-      }
-
-      public final Projection.Companion.Cam getOS_ECAM() {
-         return Projection.OS_ECAM;
-      }
-
-      public final Projection.Companion.Cam getOS_FCAM() {
-         return Projection.OS_FCAM;
-      }
-
-      public final double[] getVIEW_FROM_DEVICE() {
-         return Projection.VIEW_FROM_DEVICE;
-      }
-
-      public final double[] groundHomographyRows(float[] var1, float var2, int var3, int var4, boolean var5) {
-         Intrinsics.checkNotNullParameter(var1, "rpy");
-         Projection.Companion.Cam var14 = this.camFor(var3, var4, var5);
-         double var8 = var14.getF();
-         double var10 = var14.getCx();
-         double var12 = var14.getF();
-         double var6 = var14.getCy();
-         double[] var15 = this.mul(this.getVIEW_FROM_DEVICE(), this.rotFromEuler(var1[0], var1[1], var1[2]));
-         double[] var16 = this.mul(new double[]{var8, 0.0, var10, 0.0, var12, var6, 0.0, 0.0, 1.0}, var15);
-         return new double[]{var16[0], var16[1], var2 * var16[2], var16[3], var16[4], var2 * var16[5], var16[6], var16[7], var2 * var16[8]};
-      }
-
-      public final Projection.Companion.GroundInverse groundInverse(float[] var1, float var2, int var3, int var4, boolean var5) {
-         Intrinsics.checkNotNullParameter(var1, "rpy");
-         Projection.Companion.Cam var6 = this.camFor(var3, var4, var5);
-         return new Projection.Companion.GroundInverse(
-            (float)var6.getF(), (float)var6.getCx(), (float)var6.getCy(), this.inverse3(this.groundHomographyRows(var1, var2, var3, var4, var5)), var5
-         );
-      }
-
-      public final double[] inverse3(double[] var1) {
-         Intrinsics.checkNotNullParameter(var1, "m");
-         double var14 = var1[0];
-         double var2 = var1[1];
-         double var10 = var1[2];
-         double var16 = var1[3];
-         double var18 = var1[4];
-         double var4 = var1[5];
-         double var8 = var1[6];
-         double var6 = var1[7];
-         double var12 = var1[8];
-         double var20 = (var18 * var12 - var4 * var6) * var14 - (var16 * var12 - var4 * var8) * var2 + (var16 * var6 - var18 * var8) * var10;
-         if (Math.abs(var20) < 1.0E-12) {
+            k = k2;
+            i = i2 + 1;
+            tmp = tmp2;
+            n = n2;
+            lx2 = lx;
+        }
+        float[] lx3 = lx2;
+        int n3 = k;
+        if (n3 < 2) {
             return null;
-         } else {
-            var20 = 1 / var20;
-            return new double[]{
-               (var18 * var12 - var4 * var6) * var20,
-               (var10 * var6 - var2 * var12) * var20,
-               (var2 * var4 - var10 * var18) * var20,
-               (var4 * var8 - var16 * var12) * var20,
-               (var14 * var12 - var10 * var8) * var20,
-               (var10 * var16 - var14 * var4) * var20,
-               (var16 * var6 - var18 * var8) * var20,
-               (var2 * var8 - var14 * var6) * var20,
-               (var14 * var18 - var2 * var16) * var20
-            };
-         }
-      }
-
-      public final double[] mul(double[] var1, double[] var2) {
-         Intrinsics.checkNotNullParameter(var1, "a");
-         Intrinsics.checkNotNullParameter(var2, "b");
-         double[] var5 = new double[9];
-
-         for (int var3 = 0; var3 < 3; var3++) {
-            for (int var4 = 0; var4 < 3; var4++) {
-               var5[var3 * 3 + var4] = var1[var3 * 3] * var2[var4] + var1[var3 * 3 + 1] * var2[var4 + 3] + var1[var3 * 3 + 2] * var2[var4 + 6];
-            }
-         }
-
-         return var5;
-      }
-
-      public final double[] mulv(double[] var1, double var2, double var4, double var6) {
-         Intrinsics.checkNotNullParameter(var1, "a");
-         return new double[]{
-            var1[0] * var2 + var1[1] * var4 + var1[2] * var6,
-            var1[3] * var2 + var1[4] * var4 + var1[5] * var6,
-            var1[6] * var2 + var1[7] * var4 + var1[8] * var6
-         };
-      }
-
-      public final double[] pinholeToFisheye(double var1, double var3, double var5) {
-         double var7 = Math.hypot(var1, var3);
-         if (var7 < 1.0E-9) {
-            return new double[]{var1, var3};
-         } else {
-            var5 = Math.atan(var7 / var5) * var5 / var7;
-            return new double[]{var1 * var5, var3 * var5};
-         }
-      }
-
-      public final double[] rotFromEuler(double var1, double var3, double var5) {
-         double var7 = Math.cos(var1);
-         double var9 = Math.sin(var1);
-         var1 = Math.cos(var3);
-         var3 = Math.sin(var3);
-         double var11 = Math.cos(var5);
-         double var15 = Math.sin(var5);
-         double var17 = -var9;
-         var5 = -var3;
-         double var13 = -var15;
-         double[] var19 = this.mul(
-            new double[]{var1, 0.0, var3, 0.0, 1.0, 0.0, var5, 0.0, var1}, new double[]{1.0, 0.0, 0.0, 0.0, var7, var17, 0.0, var9, var7}
-         );
-         return this.mul(new double[]{var11, var13, 0.0, var15, var11, 0.0, 0.0, 0.0, 1.0}, var19);
-      }
-
-      public static final class Cam {
-         private final double f;
-         private final int h;
-         private final int w;
-
-         public Cam(int var1, int var2, double var3) {
-            this.w = var1;
-            this.h = var2;
-            this.f = var3;
-         }
-
-         // $VF: synthetic method
-         public static Projection.Companion.Cam copy$default(Projection.Companion.Cam var0, int var1, int var2, double var3, int var5, Object var6) {
-            if ((var5 & 1) != 0) {
-               var1 = var0.w;
-            }
-
-            if ((var5 & 2) != 0) {
-               var2 = var0.h;
-            }
-
-            if ((var5 & 4) != 0) {
-               var3 = var0.f;
-            }
-
-            return var0.copy(var1, var2, var3);
-         }
-
-         public final int component1() {
-            return this.w;
-         }
-
-         public final int component2() {
-            return this.h;
-         }
-
-         public final double component3() {
-            return this.f;
-         }
-
-         public final Projection.Companion.Cam copy(int var1, int var2, double var3) {
-            return new Projection.Companion.Cam(var1, var2, var3);
-         }
-
-         @Override
-         public boolean equals(Object var1) {
-            if (this == var1) {
-               return true;
-            } else if (!(var1 instanceof Projection.Companion.Cam)) {
-               return false;
-            } else {
-               var1 = var1;
-               if (this.w != var1.w) {
-                  return false;
-               } else {
-                  return this.h != var1.h ? false : Double.compare(this.f, var1.f) == 0;
-               }
-            }
-         }
-
-         public final double getCx() {
-            return this.w / 2.0;
-         }
-
-         public final double getCy() {
-            return this.h / 2.0;
-         }
-
-         public final double getF() {
-            return this.f;
-         }
-
-         public final int getH() {
-            return this.h;
-         }
-
-         public final int getW() {
-            return this.w;
-         }
-
-         @Override
-         public int hashCode() {
-            return (Integer.hashCode(this.w) * 31 + Integer.hashCode(this.h)) * 31 + Double.hashCode(this.f);
-         }
-
-         @Override
-         public String toString() {
-            int var3 = this.w;
-            int var4 = this.h;
-            double var1 = this.f;
-            return "Cam(w=" + var3 + ", h=" + var4 + ", f=" + var1 + ")";
-         }
-      }
-
-      public static final class GroundInverse {
-         private final float cx;
-         private final float cy;
-         private final float f;
-         private final boolean fisheye;
-         private final double[] hInv;
-
-         public GroundInverse(float var1, float var2, float var3, double[] var4, boolean var5) {
-            this.f = var1;
-            this.cx = var2;
-            this.cy = var3;
-            this.hInv = var4;
-            this.fisheye = var5;
-         }
-
-         // $VF: synthetic method
-         public GroundInverse(float var1, float var2, float var3, double[] var4, boolean var5, int var6, DefaultConstructorMarker var7) {
-            if ((var6 & 16) != 0) {
-               var5 = false;
-            }
-
-            this(var1, var2, var3, var4, var5);
-         }
-
-         public final float getCx() {
-            return this.cx;
-         }
-
-         public final float getCy() {
-            return this.cy;
-         }
-
-         public final float getF() {
-            return this.f;
-         }
-
-         public final boolean getFisheye() {
-            return this.fisheye;
-         }
-
-         public final float[] ground(float var1, float var2) {
-            double[] var26 = this.hInv;
-            if (var26 == null) {
-               return null;
-            } else {
-               float[] var25 = this.undistort(var1, var2);
-               if (var25 == null) {
-                  return null;
-               } else {
-                  var2 = var25[0];
-                  var1 = var25[1];
-                  double var21 = var26[0];
-                  double var15 = var2;
-                  double var23 = var26[1];
-                  double var19 = var1;
-                  double var17 = var26[2];
-                  double var5 = var26[3];
-                  double var7 = var2;
-                  double var9 = var26[4];
-                  double var11 = var1;
-                  double var13 = var26[5];
-                  double var3 = var26[6] * var2 + var26[7] * var1 + var26[8];
-                  if (var3 < 1.0E-6) {
-                     return null;
-                  } else {
-                     var15 = (var21 * var15 + var23 * var19 + var17) / var3;
-                     return var15 <= 0.0 ? null : new float[]{(float)var15, (float)((var5 * var7 + var9 * var11 + var13) / var3)};
-                  }
-               }
-            }
-         }
-
-         public final float offAxis(float var1, float var2) {
-            var1 = (float)Math.hypot(var1 - this.cx, var2 - this.cy);
-            if (this.fisheye) {
-               var1 /= this.f;
-            } else {
-               var1 = (float)Math.atan(var1 / this.f);
-            }
-
-            return var1;
-         }
-
-         public final float[] undistort(float var1, float var2) {
-            if (!this.fisheye) {
-               return new float[]{var1, var2};
-            } else {
-               double[] var3 = Projection.Companion.fisheyeToPinhole(var1 - this.cx, var2 - this.cy, this.f);
-               return var3 == null ? null : new float[]{(float)(this.cx + var3[0]), (float)(this.cy + var3[1])};
-            }
-         }
-      }
-   }
+        }
+        float[] out = new float[n3 * 4];
+        for (int i3 = 0; i3 < n3; i3++) {
+            out[i3 * 2] = lx3[i3];
+            out[(i3 * 2) + 1] = ly[i3];
+        }
+        for (int i4 = 0; i4 < n3; i4++) {
+            int j = (n3 - 1) - i4;
+            out[(n3 + i4) * 2] = rx[j];
+            out[((n3 + i4) * 2) + 1] = ry[j];
+        }
+        return out;
+    }
 }

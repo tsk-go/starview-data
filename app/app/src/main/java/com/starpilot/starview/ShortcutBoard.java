@@ -12,488 +12,310 @@ import kotlin.ranges.RangesKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: SettingsLauncher.kt */
 public final class ShortcutBoard {
-   public static final ShortcutBoard.Companion Companion = new ShortcutBoard.Companion(null);
-   public static final int PER_PAGE = 12;
-   private final List<List<ShortcutBoard.Item>> pages = new ArrayList<>();
+    public static final Companion Companion = new Companion(null);
+    public static final int PER_PAGE = 12;
+    private final List<List<Item>> pages = new ArrayList();
 
-   // $VF: Duplicated exception handlers to handle obfuscated exceptions
-   public ShortcutBoard(String var1) {
-      label102: {
-         JSONObject var4;
-         try {
-         } catch (Exception var20) {
+    /* compiled from: SettingsLauncher.kt */
+    public static final class Item {
+        private final String group;
+        private final String icon;
+        private final String label;
+        private final String target;
+        private final String where;
+
+        public Item(String label, String where, String target, String icon, String group) {
+            Intrinsics.checkNotNullParameter(label, "label");
+            Intrinsics.checkNotNullParameter(where, "where");
+            Intrinsics.checkNotNullParameter(target, "target");
+            Intrinsics.checkNotNullParameter(icon, "icon");
+            Intrinsics.checkNotNullParameter(group, "group");
+            this.label = label;
+            this.where = where;
+            this.target = target;
+            this.icon = icon;
+            this.group = group;
+        }
+
+        public final String getGroup() {
+            return this.group;
+        }
+
+        public final String getIcon() {
+            return this.icon;
+        }
+
+        public final String getLabel() {
+            return this.label;
+        }
+
+        public final String getTarget() {
+            return this.target;
+        }
+
+        public final String getWhere() {
+            return this.where;
+        }
+
+        public final JSONObject json() {
+            JSONObject put = new JSONObject().put("l", this.label).put("w", this.where).put("t", this.target).put("i", this.icon).put("g", this.group);
+            Intrinsics.checkNotNullExpressionValue(put, "put(...)");
+            return put;
+        }
+    }
+
+    public ShortcutBoard(String json) {
+        int i;
+        Item item;
+        try {
+            JSONArray a = new JSONObject(json == null ? "{}" : json).optJSONArray("pages");
+            a = a == null ? new JSONArray() : a;
+            int p = 0;
+            int length = a.length();
+            while (p < length) {
+                JSONArray arr = a.optJSONArray(p);
+                arr = arr == null ? new JSONArray() : arr;
+                List<List<Item>> list = this.pages;
+                Iterable $this$mapNotNull$iv = RangesKt.until(0, arr.length());
+                Collection destination$iv$iv = new ArrayList();
+                Iterator<Integer> it = $this$mapNotNull$iv.iterator();
+                while (it.hasNext()) {
+                    int element$iv$iv$iv = ((IntIterator) it).nextInt();
+                    JSONArray a2 = a;
+                    JSONObject p0 = arr.optJSONObject(element$iv$iv$iv);
+                    if (p0 != null) {
+                        i = length;
+                        item = Companion.item(p0);
+                    } else {
+                        i = length;
+                        item = null;
+                    }
+                    if (item != null) {
+                        destination$iv$iv.add(item);
+                    }
+                    a = a2;
+                    length = i;
+                }
+                JSONArray a3 = a;
+                int i2 = length;
+                list.add(CollectionsKt.toMutableList((Collection) CollectionsKt.take((List) destination$iv$iv, 12)));
+                p++;
+                a = a3;
+                length = i2;
+            }
+        } catch (Exception e) {
             this.pages.clear();
-            break label102;
-         }
+        }
+        normalize();
+    }
 
-         if (var1 == null) {
-            var1 = "{}";
-         }
+    /* compiled from: SettingsLauncher.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
 
-         try {
-            var4 = new JSONObject(var1);
-            var22 = var4.optJSONArray("pages");
-         } catch (Exception var19) {
-            this.pages.clear();
-            break label102;
-         }
+        private Companion() {
+        }
 
-         JSONArray var21 = var22;
-         if (var22 == null) {
-            try {
-               var21 = new JSONArray();
-            } catch (Exception var18) {
-               this.pages.clear();
-               break label102;
+        public final Item item(JSONObject o) {
+            Intrinsics.checkNotNullParameter(o, "o");
+            String optString = o.optString("t");
+            if (optString.length() == 0) {
+                optString = null;
             }
-         }
-
-         int var3 = 0;
-
-         int var2;
-         try {
-            var2 = var21.length();
-         } catch (Exception var16) {
-            this.pages.clear();
-            break label102;
-         }
-
-         label84:
-         for (; var3 < var2; var3++) {
-            JSONArray var5;
-            try {
-               var5 = var21.optJSONArray(var3);
-            } catch (Exception var10) {
-               this.pages.clear();
-               break;
+            String it = optString;
+            if (it == null) {
+                return null;
             }
+            String optString2 = o.optString("l", it);
+            Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
+            String optString3 = o.optString("w");
+            Intrinsics.checkNotNullExpressionValue(optString3, "optString(...)");
+            String optString4 = o.optString("i", "new");
+            Intrinsics.checkNotNullExpressionValue(optString4, "optString(...)");
+            String optString5 = o.optString("g", "device");
+            Intrinsics.checkNotNullExpressionValue(optString5, "optString(...)");
+            return new Item(optString2, optString3, it, optString4, optString5);
+        }
+    }
 
-            JSONArray var23 = var5;
-            if (var5 == null) {
-               try {
-                  var23 = new JSONArray();
-               } catch (Exception var9) {
-                  this.pages.clear();
-                  break;
-               }
+    public final List<List<Item>> getPages() {
+        return this.pages;
+    }
+
+    public final void normalize() {
+        if (this.pages.isEmpty()) {
+            this.pages.add(new ArrayList());
+        }
+        Iterable $this$filter$iv = CollectionsKt.drop(this.pages, 1);
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            List it = (List) element$iv$iv;
+            if (!it.isEmpty()) {
+                destination$iv$iv.add(element$iv$iv);
             }
+        }
+        List right = CollectionsKt.toMutableList(destination$iv$iv);
+        if (right.isEmpty() || ((List) CollectionsKt.last(right)).size() >= 12) {
+            right.add(new ArrayList());
+        }
+        while (this.pages.size() > 1) {
+            this.pages.remove(this.pages.size() - 1);
+        }
+        this.pages.addAll(right);
+    }
 
-            List var6;
-            Iterator var8;
-            ArrayList var28;
-            try {
-               var6 = this.pages;
-               Iterable var25 = RangesKt.until(0, var23.length());
-               var28 = new ArrayList();
-               var28 = var28;
-               var8 = var25.iterator();
-            } catch (Exception var15) {
-               this.pages.clear();
-               break;
-            }
-
-            while (true) {
-               try {
-                  if (!var8.hasNext()) {
-                     break;
-                  }
-
-                  var26 = var23.optJSONObject(((IntIterator)var8).nextInt());
-               } catch (Exception var17) {
-                  this.pages.clear();
-                  break label84;
-               }
-
-               ShortcutBoard.Item var27;
-               if (var26 != null) {
-                  try {
-                     var27 = Companion.item(var26);
-                  } catch (Exception var14) {
-                     this.pages.clear();
-                     break label84;
-                  }
-               } else {
-                  var27 = null;
-               }
-
-               if (var27 != null) {
-                  try {
-                     var28.add(var27);
-                  } catch (Exception var13) {
-                     this.pages.clear();
-                     break label84;
-                  }
-               }
-            }
-
-            try {
-               var24 = var28;
-            } catch (Exception var12) {
-               this.pages.clear();
-               break;
-            }
-
-            try {
-               var6.add(CollectionsKt.toMutableList(CollectionsKt.take(var24, 12)));
-            } catch (Exception var11) {
-               this.pages.clear();
-               break;
-            }
-         }
-      }
-
-      this.normalize();
-   }
-
-   // $VF: synthetic method
-   public static int add$default(ShortcutBoard var0, ShortcutBoard.Item var1, int var2, int var3, Object var4) {
-      if ((var3 & 2) != 0) {
-         var2 = -1;
-      }
-
-      return var0.add(var1, var2);
-   }
-
-   public final int add(ShortcutBoard.Item var1, int var2) {
-      Intrinsics.checkNotNullParameter(var1, "item");
-      boolean var3;
-      if (var2 >= 0 && var2 < this.pages.size()) {
-         var3 = true;
-      } else {
-         var3 = false;
-      }
-
-      List var4;
-      if (var3) {
-         var4 = CollectionsKt.plus(RangesKt.until(var2, this.pages.size()), RangesKt.until(0, var2));
-      } else {
-         var4 = CollectionsKt.toList(CollectionsKt.getIndices(this.pages));
-      }
-
-      Iterator var5 = var4.iterator();
-
-      do {
-         if (!var5.hasNext()) {
-            var4 = null;
-            break;
-         }
-
-         var4 = (List)var5.next();
-         var2 = ((Number)var4).intValue();
-         if (this.pages.get(var2).size() < 12) {
-            var8 = true;
-         } else {
-            var8 = false;
-         }
-      } while (!var8);
-
-      Integer var13 = (Integer)var4;
-      if (var13 != null) {
-         var2 = var13;
-      } else {
-         ShortcutBoard var14 = this;
-         var14.pages.add(new ArrayList<>());
-         var2 = var14.pages.size() - 1;
-      }
-
-      this.pages.get(var2).add(var1);
-      List var6 = this.pages.get(var2);
-      this.normalize();
-      var4 = this.pages;
-      var2 = 0;
-      Iterator var16 = var4.iterator();
-
-      while (true) {
-         if (!var16.hasNext()) {
-            var2 = -1;
-            break;
-         }
-
-         if ((List)var16.next() == var6) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         if (var3) {
-            break;
-         }
-
-         var2++;
-      }
-
-      return var2;
-   }
-
-   public final boolean contains(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "target");
-      var var4 = this.pages;
-      boolean var3;
-      if (var4 instanceof Collection && ((Collection)var4).isEmpty()) {
-         var3 = false;
-      } else {
-         Iterator var6 = var4.iterator();
-
-         while (true) {
-            if (!var6.hasNext()) {
-               var3 = false;
-               break;
-            }
-
-            var var5 = (Iterable & List)var6.next();
-            boolean var2;
-            if (var5 instanceof Collection && ((Collection)var5).isEmpty()) {
-               var2 = false;
-            } else {
-               Iterator var7 = var5.iterator();
-
-               while (true) {
-                  if (!var7.hasNext()) {
-                     var2 = false;
-                     break;
-                  }
-
-                  if (Intrinsics.areEqual(((ShortcutBoard.Item)var7.next()).getTarget(), var1)) {
-                     var2 = true;
-                     break;
-                  }
-               }
-            }
-
-            if (var2) {
-               var3 = true;
-               break;
-            }
-         }
-      }
-
-      return var3;
-   }
-
-   public final List<List<ShortcutBoard.Item>> getPages() {
-      return this.pages;
-   }
-
-   public final String json() {
-      JSONObject var1 = new JSONObject();
-      Iterable var3 = this.pages;
-      var var2 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var3, 10));
-
-      for (Iterable var5 : var3) {
-         var var4 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var5, 10));
-         Iterator var10 = var5.iterator();
-
-         while (var10.hasNext()) {
-            var4.add(((ShortcutBoard.Item)var10.next()).json());
-         }
-
-         List var9 = var4;
-         var2.add(new JSONArray(var9));
-      }
-
-      List var7 = var2;
-      String var6 = var1.put("pages", new JSONArray(var7)).toString();
-      Intrinsics.checkNotNullExpressionValue(var6, "toString(...)");
-      return var6;
-   }
-
-   public final void move(int var1, int var2, int var3) {
-      List var6 = CollectionsKt.getOrNull(this.pages, var1);
-      if (var6 != null) {
-         int var4 = var2 + var3;
-         boolean var9 = true;
-         boolean var7;
-         if (var2 >= 0 && var2 < var6.size()) {
-            var7 = true;
-         } else {
-            var7 = false;
-         }
-
-         if (var7) {
-            if (var4 >= 0 && var4 < var6.size()) {
-               var7 = var9;
-            } else {
-               var7 = false;
-            }
-
-            if (var7) {
-               ShortcutBoard.Item var5 = (ShortcutBoard.Item)var6.get(var2);
-               var6.set(var2, var6.get(var4));
-               var6.set(var4, var5);
-               return;
-            }
-         }
-      }
-   }
-
-   public final void normalize() {
-      if (this.pages.isEmpty()) {
-         this.pages.add(new ArrayList<>());
-      }
-
-      Iterable var2 = CollectionsKt.drop(this.pages, 1);
-      var var1 = new ArrayList();
-
-      for (var var2_it : var2) {
-
-         var2 = var2_it;
-         if (!((List)var2).isEmpty()) {
-            var1.add(var2);
-         }
-      }
-
-      List var4 = var1;
-      List var5 = CollectionsKt.toMutableList(var4);
-      if (var5.isEmpty() || CollectionsKt.<List>last(var5).size() >= 12) {
-         var5.add(new ArrayList());
-      }
-
-      while (this.pages.size() > 1) {
-         this.pages.remove(this.pages.size() - 1);
-      }
-
-      this.pages.addAll(var5);
-   }
-
-   public final void remove(int var1, int var2) {
-      List var4 = CollectionsKt.getOrNull(this.pages, var1);
-      if (var4 != null) {
-         boolean var3 = false;
-         boolean var5 = var3;
-         if (var2 >= 0) {
-            var5 = var3;
-            if (var2 < var4.size()) {
-               var5 = true;
-            }
-         }
-
-         if (!var5) {
-            var4 = null;
-         }
-
-         if (var4 != null) {
-            ShortcutBoard.Item var6 = (ShortcutBoard.Item)var4.remove(var2);
-         }
-      }
-
-      this.normalize();
-   }
-
-   public final boolean toPage(int var1, int var2, int var3) {
-      List var5 = CollectionsKt.getOrNull(this.pages, var1);
-      if (var5 == null) {
-         return false;
-      } else {
-         List var4 = CollectionsKt.getOrNull(this.pages, var1 + var3);
-         if (var4 == null) {
+    public final boolean contains(String target) {
+        boolean z;
+        Intrinsics.checkNotNullParameter(target, "target");
+        Iterable $this$any$iv = this.pages;
+        if (($this$any$iv instanceof Collection) && ((Collection) $this$any$iv).isEmpty()) {
             return false;
-         } else {
-            boolean var6;
-            if (var2 >= 0 && var2 < var5.size()) {
-               var6 = true;
+        }
+        for (Object element$iv : $this$any$iv) {
+            Iterable p = (List) element$iv;
+            Iterable $this$any$iv2 = p;
+            if (!($this$any$iv2 instanceof Collection) || !((Collection) $this$any$iv2).isEmpty()) {
+                Iterator it = $this$any$iv2.iterator();
+                while (true) {
+                    if (!it.hasNext()) {
+                        z = false;
+                        break;
+                    }
+                    Object element$iv2 = it.next();
+                    Item it2 = (Item) element$iv2;
+                    if (Intrinsics.areEqual(it2.getTarget(), target)) {
+                        z = true;
+                        break;
+                    }
+                }
             } else {
-               var6 = false;
+                z = false;
             }
-
-            if (var6 && var4.size() < 12) {
-               var4.add(var5.remove(var2));
-               this.normalize();
-               return true;
-            } else {
-               return false;
+            if (z) {
+                return true;
             }
-         }
-      }
-   }
+        }
+        return false;
+    }
 
-   public static final class Companion {
-      private Companion() {
-      }
+    public static /* synthetic */ int add$default(ShortcutBoard shortcutBoard, Item item, int i, int i2, Object obj) {
+        if ((i2 & 2) != 0) {
+            i = -1;
+        }
+        return shortcutBoard.add(item, i);
+    }
 
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
+    public final int add(Item item, int page) {
+        Object element$iv;
+        int p;
+        Intrinsics.checkNotNullParameter(item, "item");
+        List order = page >= 0 && page < this.pages.size() ? CollectionsKt.plus((Iterable) RangesKt.until(page, this.pages.size()), (Iterable) RangesKt.until(0, page)) : CollectionsKt.toList(CollectionsKt.getIndices(this.pages));
+        List $this$firstOrNull$iv = order;
+        Iterator it = $this$firstOrNull$iv.iterator();
+        while (true) {
+            if (!it.hasNext()) {
+                element$iv = null;
+                break;
+            }
+            element$iv = it.next();
+            int it2 = ((Number) element$iv).intValue();
+            int it3 = this.pages.get(it2).size() < 12 ? 1 : 0;
+            if (it3 != 0) {
+                break;
+            }
+        }
+        Integer num = (Integer) element$iv;
+        if (num != null) {
+            p = num.intValue();
+        } else {
+            ShortcutBoard $this$add_u24lambda_u245 = this;
+            $this$add_u24lambda_u245.pages.add(new ArrayList());
+            p = $this$add_u24lambda_u245.pages.size() - 1;
+        }
+        this.pages.get(p).add(item);
+        List target = this.pages.get(p);
+        normalize();
+        List $this$indexOfFirst$iv = this.pages;
+        int index$iv = 0;
+        for (Object item$iv : $this$indexOfFirst$iv) {
+            List it4 = (List) item$iv;
+            List it5 = it4 == target ? 1 : null;
+            if (it5 != null) {
+                return index$iv;
+            }
+            index$iv++;
+        }
+        return -1;
+    }
 
-      public final ShortcutBoard.Item item(JSONObject var1) {
-         Intrinsics.checkNotNullParameter(var1, "o");
-         var var3 = var1.optString("t");
-         boolean var2;
-         if (var3.length() == 0) {
-            var2 = true;
-         } else {
-            var2 = false;
-         }
+    public final void remove(int page, int i) {
+        List it = (List) CollectionsKt.getOrNull(this.pages, page);
+        if (it != null) {
+            boolean z = false;
+            if (i >= 0 && i < it.size()) {
+                z = true;
+            }
+            if (!z) {
+                it = null;
+            }
+            if (it != null) {
+            }
+        }
+        normalize();
+    }
 
-         Object var4 = null;
-         if (var2) {
-            var3 = null;
-         }
+    public final void move(int page, int i, int delta) {
+        List p = (List) CollectionsKt.getOrNull(this.pages, page);
+        if (p == null) {
+            return;
+        }
+        int j = i + delta;
+        if (i >= 0 && i < p.size()) {
+            if (!(j >= 0 && j < p.size())) {
+                return;
+            }
+            Item t = (Item) p.get(i);
+            p.set(i, p.get(j));
+            p.set(j, t);
+        }
+    }
 
-         String var5 = var3;
-         ShortcutBoard.Item var8 = (ShortcutBoard.Item)var4;
-         if (var5 != null) {
-            String var6 = var1.optString("l", var5);
-            Intrinsics.checkNotNullExpressionValue(var6, "optString(...)");
-            var3 = var1.optString("w");
-            Intrinsics.checkNotNullExpressionValue(var3, "optString(...)");
-            var4 = var1.optString("i", "new");
-            Intrinsics.checkNotNullExpressionValue(var4, "optString(...)");
-            String var7 = var1.optString("g", "device");
-            Intrinsics.checkNotNullExpressionValue(var7, "optString(...)");
-            var8 = new ShortcutBoard.Item(var6, var3, var5, (String)var4, var7);
-         }
+    public final boolean toPage(int page, int i, int delta) {
+        List q;
+        List p = (List) CollectionsKt.getOrNull(this.pages, page);
+        if (p == null || (q = (List) CollectionsKt.getOrNull(this.pages, page + delta)) == null) {
+            return false;
+        }
+        if (!(i >= 0 && i < p.size()) || q.size() >= 12) {
+            return false;
+        }
+        q.add(p.remove(i));
+        normalize();
+        return true;
+    }
 
-         return var8;
-      }
-   }
-
-   public static final class Item {
-      private final String group;
-      private final String icon;
-      private final String label;
-      private final String target;
-      private final String where;
-
-      public Item(String var1, String var2, String var3, String var4, String var5) {
-         Intrinsics.checkNotNullParameter(var1, "label");
-         Intrinsics.checkNotNullParameter(var2, "where");
-         Intrinsics.checkNotNullParameter(var3, "target");
-         Intrinsics.checkNotNullParameter(var4, "icon");
-         Intrinsics.checkNotNullParameter(var5, "group");
-         super();
-         this.label = var1;
-         this.where = var2;
-         this.target = var3;
-         this.icon = var4;
-         this.group = var5;
-      }
-
-      public final String getGroup() {
-         return this.group;
-      }
-
-      public final String getIcon() {
-         return this.icon;
-      }
-
-      public final String getLabel() {
-         return this.label;
-      }
-
-      public final String getTarget() {
-         return this.target;
-      }
-
-      public final String getWhere() {
-         return this.where;
-      }
-
-      public final JSONObject json() {
-         JSONObject var1 = new JSONObject().put("l", this.label).put("w", this.where).put("t", this.target).put("i", this.icon).put("g", this.group);
-         Intrinsics.checkNotNullExpressionValue(var1, "put(...)");
-         return var1;
-      }
-   }
+    public final String json() {
+        JSONObject jSONObject = new JSONObject();
+        Iterable $this$map$iv = this.pages;
+        int i = 10;
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            Iterable p = (List) item$iv$iv;
+            Iterable $this$map$iv2 = p;
+            Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv2, i));
+            for (Object item$iv$iv2 : $this$map$iv2) {
+                Item it = (Item) item$iv$iv2;
+                destination$iv$iv2.add(it.json());
+            }
+            destination$iv$iv.add(new JSONArray(destination$iv$iv2));
+            i = 10;
+        }
+        String jSONObject2 = jSONObject.put("pages", new JSONArray(destination$iv$iv)).toString();
+        Intrinsics.checkNotNullExpressionValue(jSONObject2, "toString(...)");
+        return jSONObject2;
+    }
 }

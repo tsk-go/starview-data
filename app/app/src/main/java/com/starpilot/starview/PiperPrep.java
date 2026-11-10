@@ -11,117 +11,91 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.Charsets;
 import org.json.JSONObject;
 
+/* compiled from: AmySynth.kt */
 public final class PiperPrep {
-   public static final PiperPrep INSTANCE = new PiperPrep();
+    public static final PiperPrep INSTANCE = new PiperPrep();
 
-   private PiperPrep() {
-   }
+    private PiperPrep() {
+    }
 
-   private final byte[] ld(int var1, byte[] var2) {
-      return ArraysKt.plus(ArraysKt.plus(this.varint(var1 << 3 | 2), this.varint(var2.length)), var2);
-   }
-
-   private final byte[] varint(int var1) {
-      ByteArrayOutputStream var3 = new ByteArrayOutputStream();
-
-      while (true) {
-         int var2 = var1 & 127;
-         var1 >>>= 7;
-         if (var1 == 0) {
-            var3.write(var2);
-            byte[] var4 = var3.toByteArray();
-            Intrinsics.checkNotNullExpressionValue(var4, "toByteArray(...)");
-            return var4;
-         }
-
-         var3.write(var2 | 128);
-      }
-   }
-
-   public final List<Pair<String, String>> meta(JSONObject var1) {
-      Pair var5;
-      Pair var6;
-      String var11;
-      label23: {
-         Intrinsics.checkNotNullParameter(var1, "cfg");
-         var5 = TuplesKt.to("model_type", "vits");
-         var6 = TuplesKt.to("comment", "piper");
-         JSONObject var3 = var1.optJSONObject("language");
-         if (var3 != null) {
-            String var4 = var3.optString("name_english");
-            var11 = var4;
-            if (var4 != null) {
-               break label23;
+    private final byte[] varint(int v) {
+        ByteArrayOutputStream o = new ByteArrayOutputStream();
+        int n = v;
+        while (true) {
+            int b = n & 127;
+            n >>>= 7;
+            if (n == 0) {
+                o.write(b);
+                byte[] byteArray = o.toByteArray();
+                Intrinsics.checkNotNullExpressionValue(byteArray, "toByteArray(...)");
+                return byteArray;
             }
-         }
+            o.write(b | 128);
+        }
+    }
 
-         var11 = "English";
-      }
+    private final byte[] ld(int field, byte[] data) {
+        return ArraysKt.plus(ArraysKt.plus(varint((field << 3) | 2), varint(data.length)), data);
+    }
 
-      Pair var7;
-      label18: {
-         var7 = TuplesKt.to("language", var11);
-         JSONObject var12 = var1.optJSONObject("espeak");
-         if (var12 != null) {
-            String var15 = var12.optString("voice");
-            var11 = var15;
-            if (var15 != null) {
-               break label18;
-            }
-         }
+    public final List<Pair<String, String>> meta(JSONObject cfg) {
+        String str;
+        String str2;
+        Intrinsics.checkNotNullParameter(cfg, "cfg");
+        Pair[] pairArr = new Pair[7];
+        pairArr[0] = TuplesKt.to("model_type", "vits");
+        pairArr[1] = TuplesKt.to("comment", "piper");
+        JSONObject optJSONObject = cfg.optJSONObject("language");
+        if (optJSONObject == null || (str = optJSONObject.optString("name_english")) == null) {
+            str = "English";
+        }
+        pairArr[2] = TuplesKt.to("language", str);
+        JSONObject optJSONObject2 = cfg.optJSONObject("espeak");
+        if (optJSONObject2 == null || (str2 = optJSONObject2.optString("voice")) == null) {
+            str2 = "en-us";
+        }
+        pairArr[3] = TuplesKt.to("voice", str2);
+        pairArr[4] = TuplesKt.to("has_espeak", "1");
+        pairArr[5] = TuplesKt.to("n_speakers", String.valueOf(cfg.optInt("num_speakers", 1)));
+        JSONObject optJSONObject3 = cfg.optJSONObject("audio");
+        pairArr[6] = TuplesKt.to("sample_rate", String.valueOf(optJSONObject3 != null ? optJSONObject3.optInt("sample_rate", 22050) : 22050));
+        return CollectionsKt.listOf((Object[]) pairArr);
+    }
 
-         var11 = "en-us";
-      }
+    public final byte[] metadataBytes(JSONObject cfg) {
+        Intrinsics.checkNotNullParameter(cfg, "cfg");
+        Iterable $this$fold$iv = meta(cfg);
+        byte[] bArr = new byte[0];
+        for (Object element$iv : $this$fold$iv) {
+            Pair pair = (Pair) element$iv;
+            byte[] acc = bArr;
+            String k = (String) pair.component1();
+            String v = (String) pair.component2();
+            PiperPrep piperPrep = INSTANCE;
+            PiperPrep piperPrep2 = INSTANCE;
+            byte[] bytes = k.getBytes(Charsets.UTF_8);
+            Intrinsics.checkNotNullExpressionValue(bytes, "getBytes(...)");
+            byte[] ld = piperPrep2.ld(1, bytes);
+            PiperPrep piperPrep3 = INSTANCE;
+            byte[] bytes2 = v.getBytes(Charsets.UTF_8);
+            Intrinsics.checkNotNullExpressionValue(bytes2, "getBytes(...)");
+            bArr = ArraysKt.plus(acc, piperPrep.ld(14, ArraysKt.plus(ld, piperPrep3.ld(2, bytes2))));
+        }
+        return bArr;
+    }
 
-      Pair var14 = TuplesKt.to("voice", var11);
-      Pair var8 = TuplesKt.to("has_espeak", "1");
-      Pair var16 = TuplesKt.to("n_speakers", String.valueOf(var1.optInt("num_speakers", 1)));
-      var1 = var1.optJSONObject("audio");
-      int var2 = 22050;
-      if (var1 != null) {
-         var2 = var1.optInt("sample_rate", 22050);
-      }
-
-      Pair var10 = TuplesKt.to("sample_rate", String.valueOf(var2));
-      return CollectionsKt.listOf(new Pair[]{var5, var6, var7, var14, var8, var16, var10});
-   }
-
-   public final byte[] metadataBytes(JSONObject var1) {
-      Intrinsics.checkNotNullParameter(var1, "cfg");
-      Iterable var2 = this.meta(var1);
-      byte[] var7 = new byte[0];
-
-      for (Pair var3 : var2) {
-         String var5 = (String)var3.component1();
-         String var4 = (String)var3.component2();
-         PiperPrep var9 = INSTANCE;
-         PiperPrep var6 = INSTANCE;
-         byte[] var11 = var5.getBytes(Charsets.UTF_8);
-         Intrinsics.checkNotNullExpressionValue(var11, "getBytes(...)");
-         byte[] var13 = var6.ld(1, var11);
-         PiperPrep var12 = INSTANCE;
-         byte[] var10 = var4.getBytes(Charsets.UTF_8);
-         Intrinsics.checkNotNullExpressionValue(var10, "getBytes(...)");
-         var7 = ArraysKt.plus(var7, var9.ld(14, ArraysKt.plus(var13, var12.ld(2, var10))));
-      }
-
-      return var7;
-   }
-
-   public final String tokens(JSONObject var1) {
-      Intrinsics.checkNotNullParameter(var1, "cfg");
-      var1 = var1.getJSONObject("phoneme_id_map");
-      StringBuilder var3 = new StringBuilder();
-      Iterator var4 = var1.keys();
-      Intrinsics.checkNotNullExpressionValue(var4, "keys(...)");
-
-      while (var4.hasNext()) {
-         String var2 = (String)var4.next();
-         var3.append(var2).append(' ').append(var1.getJSONArray(var2).getInt(0)).append('\n');
-      }
-
-      String var6 = var3.toString();
-      Intrinsics.checkNotNullExpressionValue(var6, "toString(...)");
-      return var6;
-   }
+    public final String tokens(JSONObject cfg) {
+        Intrinsics.checkNotNullParameter(cfg, "cfg");
+        JSONObject m = cfg.getJSONObject("phoneme_id_map");
+        StringBuilder sb = new StringBuilder();
+        Iterator<String> keys = m.keys();
+        Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
+        while (keys.hasNext()) {
+            String k = keys.next();
+            sb.append(k).append(' ').append(m.getJSONArray(k).getInt(0)).append('\n');
+        }
+        String sb2 = sb.toString();
+        Intrinsics.checkNotNullExpressionValue(sb2, "toString(...)");
+        return sb2;
+    }
 }

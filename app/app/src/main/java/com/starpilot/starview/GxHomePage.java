@@ -1,15 +1,13 @@
 package com.starpilot.starview;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.starpilot.starview.GxPage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,1583 +17,1477 @@ import kotlin.TuplesKt;
 import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.collections.IntIterator;
+import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: GxHome.kt */
 public final class GxHomePage extends GxPage {
-   private LinearLayout body;
-   private Boolean devOnline;
-   private String devStatus;
-   private String error;
-   private final List<Integer> favColors;
-   private GxPage.Row hero;
-   private boolean keepRefreshing;
-   private JSONObject payload;
-   private boolean refreshing;
-   private String status;
-   private String togglingKey;
-   private String unit;
+    private LinearLayout body;
+    private Boolean devOnline;
+    private String devStatus;
+    private String error;
+    private final List<Integer> favColors;
+    private GxPage.Row hero;
+    private boolean keepRefreshing;
+    private JSONObject payload;
+    private boolean refreshing;
+    private String status;
+    private String togglingKey;
+    private String unit;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$6SgqF9EA7r3E_vPzPR_rcylSsb4(GxHomePage var0) {
-      return build$lambda$2(var0);
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public GxHomePage(Activity act, GxHost gx) {
+        super(act, gx);
+        Intrinsics.checkNotNullParameter(act, "act");
+        Intrinsics.checkNotNullParameter(gx, "gx");
+        this.status = "loading";
+        this.error = "";
+        this.unit = "miles";
+        this.togglingKey = "";
+        Iterable $this$map$iv = CollectionsKt.listOf((Object[]) new String[]{"#5ec8c8", "#8b6cc5", "#d4a060", "#e05577", "#6cc56e", "#8aa3ff"});
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            String it = (String) item$iv$iv;
+            destination$iv$iv.add(Integer.valueOf(Color.parseColor(it)));
+        }
+        this.favColors = (List) destination$iv$iv;
+    }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$7uDLdl_a_Ei40atsW5a5fl44muo/* $VF was: $r8$lambda$7uDLdl_a_Ei40atsW5a5fl44muo*/(GxHomePage var0) {
-      return build$lambda$1(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$LdTwMOrmmJw4DTAbu6EbIe_0M6U(GxHomePage var0, String var1, String var2, List var3) {
-      return render$lambda$71$lambda$69(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$M1xh8hDCg4R5EJ6Ob_yghSWL8Jo(GxHomePage var0, Pair var1) {
-      return cardHead$lambda$19(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$MQqrA9YdRNAHH2h6g6n6jEnr0Ew(GxHomePage var0) {
-      return render$lambda$27(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$PnxtHdujnG0rytDQQ254be3rzJ4(GxHomePage var0, List var1, String var2) {
-      return toggleDriveStats$lambda$90(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$T8p59cCSGt08rwV0tSU9lGTwI6w(GxHomePage var0, String var1, JSONObject var2) {
-      return load$lambda$11(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$cvLfSdI7Oc20iRJiXWrJKlZHZWM(GxHomePage var0) {
-      return build$lambda$3(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$pLjSVyqYEoPk4pB9xeFw_eC4vyQ(GxHomePage var0, String var1, JSONObject var2) {
-      return refreshStatus$lambda$5(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$zms_Uc_pleODFHNSrEG44tJC12U(GxHomePage var0, String var1, String var2, JSONObject var3) {
-      return toggleDriveStats$go$lambda$89(var0, var1, var2, var3);
-   }
-
-   public GxHomePage(Activity var1, GxHost var2) {
-      Intrinsics.checkNotNullParameter(var1, "act");
-      Intrinsics.checkNotNullParameter(var2, "gx");
-      super(var1, var2);
-      this.status = "loading";
-      this.error = "";
-      this.unit = "miles";
-      this.togglingKey = "";
-      Iterable var5 = CollectionsKt.listOf(new String[]{"#5ec8c8", "#8b6cc5", "#d4a060", "#e05577", "#6cc56e", "#8aa3ff"});
-      var var3 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var5, 10));
-      Iterator var6 = var5.iterator();
-
-      while (var6.hasNext()) {
-         var3.add(Color.parseColor((String)var6.next()));
-      }
-
-      List var4 = var3;
-      this.favColors = var4;
-   }
-
-   private static final Unit build$lambda$1(GxHomePage var0) {
-      var0.refresh();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit build$lambda$2(GxHomePage var0) {
-      if (var0.keepRefreshing) {
-         var0.load();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit build$lambda$3(GxHomePage var0) {
-      var0.refreshStatus();
-      return Unit.INSTANCE;
-   }
-
-   private final void cardHead(LinearLayout var1, String var2, Pair<String, String> var3) {
-      LinearLayout var4 = new LinearLayout((Context)this.getAct());
-      var4.setOrientation(0);
-      var4.setGravity(16);
-      var4.setPadding(0, 0, 0, this.getUi().dp(6));
-      TextView var5 = new TextView((Context)this.getAct());
-      var5.setText(var2);
-      var5.setTextSize(21.0F);
-      var5.setTextColor(CarUi.Companion.getTEXT());
-      var5.setTypeface(Typeface.DEFAULT_BOLD);
-      var4.addView((View)var5, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
-      if (var3 != null) {
-         var4.addView((View)CarUi.button$default(this.getUi(), (String)var3.getFirst(), false, new GxHomePage$$ExternalSyntheticLambda0(this, var3), 2, null));
-      }
-
-      var1.addView((View)var4);
-   }
-
-   // $VF: synthetic method
-   static void cardHead$default(GxHomePage var0, LinearLayout var1, String var2, Pair var3, int var4, Object var5) {
-      if ((var4 & 4) != 0) {
-         var3 = null;
-      }
-
-      var0.cardHead(var1, var2, var3);
-   }
-
-   private static final Unit cardHead$lambda$19(GxHomePage var0, Pair var1) {
-      var0.getGx().openPage((String)var1.getSecond());
-      return Unit.INSTANCE;
-   }
-
-   private final List<LinearLayout> columns(int var1, ViewGroup var2) {
-      LinearLayout var5 = new LinearLayout((Context)this.getAct());
-      var5.setOrientation(0);
-      var2.addView((View)var5, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
-      Iterable var12 = RangesKt.until(0, var1);
-      boolean var4 = false;
-      var var6 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var12, 10));
-      Iterator var7 = var12.iterator();
-
-      while (var7.hasNext()) {
-         int var3 = ((IntIterator)var7).nextInt();
-         LinearLayout var8 = new LinearLayout((Context)this.getAct());
-         var8.setOrientation(1);
-         View var11 = (View)var8;
-         android.widget.LinearLayout.LayoutParams var10 = new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F);
-         if (var3 < var1 - 1) {
-            var10.rightMargin = this.getUi().dp(8);
-         }
-
-         Unit var9 = Unit.INSTANCE;
-         var5.addView(var11, (LayoutParams)var10);
-         var6.add(var8);
-      }
-
-      return var6;
-   }
-
-   // $VF: synthetic method
-   static List columns$default(GxHomePage var0, int var1, ViewGroup var2, int var3, Object var4) {
-      if ((var3 & 2) != 0) {
-         var4 = var0.body;
-         LinearLayout var5 = var4;
-         if (var4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("body");
-            var5 = null;
-         }
-
-         var2 = (ViewGroup)var5;
-      }
-
-      return var0.columns(var1, var2);
-   }
-
-   private final JSONObject dash() {
-      JSONObject var1 = this.payload;
-      if (var1 != null) {
-         JSONObject var2 = var1.optJSONObject("dashboard");
-         if (var2 != null) {
-            return var2;
-         }
-      }
-
-      return new JSONObject();
-   }
-
-   private final boolean driveReady(JSONObject var1) {
-      Object var4 = var1.opt("ignored");
-      boolean var3 = true;
-      boolean var2 = var3;
-      if (!Intrinsics.areEqual(var4, true)) {
-         if (!Intrinsics.areEqual(var1.opt("attentionKnown"), false)) {
-            var2 = var3;
-         } else {
-            var2 = false;
-         }
-      }
-
-      return var2;
-   }
-
-   private final boolean hasPendingWork(JSONObject var1) {
-      JSONObject var9 = var1.optJSONObject("analysis");
-      JSONObject var8 = var9;
-      if (var9 == null) {
-         var8 = new JSONObject();
-      }
-
-      long var6;
-      label41: {
-         var6 = Math.max(0L, Math.round(GxHomeKt.access$gxHomeNum(var8.opt("pendingRoutes"))));
-         JSONArray var10 = var1.optJSONArray("recentDrives");
-         if (var10 != null) {
-            List var14 = this.objects(var10);
-            var11 = var14;
-            if (var14 != null) {
-               break label41;
+    @Override // com.starpilot.starview.GxPage
+    public void build() {
+        GxPage.Row row;
+        this.hero = GxPage.row$default(this, "Dashboard", "Loading dashboard...", null, 0, 12, null);
+        GxPage.Row row2 = this.hero;
+        if (row2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("hero");
+            row2 = null;
+        }
+        row2.getTitleView().setTextSize(26.0f);
+        GxPage.Row row3 = this.hero;
+        if (row3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("hero");
+            row3 = null;
+        }
+        row3.getTitleView().setTypeface(Typeface.DEFAULT_BOLD);
+        GxPage.Row row4 = this.hero;
+        if (row4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("hero");
+            row = null;
+        } else {
+            row = row4;
+        }
+        GxPage.Row.button$default(row, "Refresh", false, new Function0() { // from class: com.starpilot.starview.GxHomePage$$ExternalSyntheticLambda2
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit build$lambda$1;
+                build$lambda$1 = GxHomePage.build$lambda$1(GxHomePage.this);
+                return build$lambda$1;
             }
-         }
+        }, 2, null);
+        this.body = GxPage.box$default(this, null, 1, null);
+        every(3500L, new Function0() { // from class: com.starpilot.starview.GxHomePage$$ExternalSyntheticLambda3
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit build$lambda$2;
+                build$lambda$2 = GxHomePage.build$lambda$2(GxHomePage.this);
+                return build$lambda$2;
+            }
+        });
+        every(5000L, new Function0() { // from class: com.starpilot.starview.GxHomePage$$ExternalSyntheticLambda4
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit build$lambda$3;
+                build$lambda$3 = GxHomePage.build$lambda$3(GxHomePage.this);
+                return build$lambda$3;
+            }
+        });
+    }
 
-         var11 = CollectionsKt.emptyList();
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$1(GxHomePage this$0) {
+        this$0.refresh();
+        return Unit.INSTANCE;
+    }
 
-      boolean var5 = GxHomeKt.access$gxHomeTruthy(var8.opt("running"));
-      boolean var4 = true;
-      boolean var3 = var4;
-      if (!var5) {
-         var3 = var4;
-         if (var6 <= 0L) {
-            var var12 = var11;
-            boolean var2;
-            if (var12 instanceof Collection && ((Collection)var12).isEmpty()) {
-               var2 = false;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$2(GxHomePage this$0) {
+        if (this$0.keepRefreshing) {
+            this$0.load();
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$3(GxHomePage this$0) {
+        this$0.refreshStatus();
+        return Unit.INSTANCE;
+    }
+
+    @Override // com.starpilot.starview.GxPage
+    public void onShow() {
+        load();
+    }
+
+    private final JSONObject dash() {
+        JSONObject optJSONObject;
+        JSONObject jSONObject = this.payload;
+        return (jSONObject == null || (optJSONObject = jSONObject.optJSONObject("dashboard")) == null) ? new JSONObject() : optJSONObject;
+    }
+
+    private final void refreshStatus() {
+        getJson("/api/device/status", new Function2() { // from class: com.starpilot.starview.GxHomePage$$ExternalSyntheticLambda1
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit refreshStatus$lambda$5;
+                refreshStatus$lambda$5 = GxHomePage.refreshStatus$lambda$5(GxHomePage.this, (String) obj, (JSONObject) obj2);
+                return refreshStatus$lambda$5;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit refreshStatus$lambda$5(GxHomePage this$0, String e, JSONObject o) {
+        if (e != null || o == null) {
+            this$0.devOnline = false;
+        } else {
+            this$0.devOnline = true;
+            String str = "Parked";
+            String str2 = this$0.str(o, "status", "Parked");
+            if (!StringsKt.isBlank(str2)) {
+                str = str2;
+            }
+            this$0.devStatus = str;
+        }
+        this$0.paintHero();
+        return Unit.INSTANCE;
+    }
+
+    private final void paintHero() {
+        GxPage.Row row = null;
+        if (this.payload == null) {
+            GxPage.Row row2 = this.hero;
+            if (row2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("hero");
             } else {
-               Iterator var13 = var12.iterator();
-
-               while (true) {
-                  if (!var13.hasNext()) {
-                     var2 = false;
-                     break;
-                  }
-
-                  if (!this.driveReady((JSONObject)var13.next())) {
-                     var2 = true;
-                     break;
-                  }
-               }
+                row = row2;
             }
-
-            if (var2) {
-               var3 = var4;
-            } else {
-               var3 = false;
+            row.setDesc(Intrinsics.areEqual(this.status, "error") ? "Failed to load dashboard" : "Loading dashboard...");
+            return;
+        }
+        JSONObject device = dash().optJSONObject("device");
+        if (device == null) {
+            device = new JSONObject();
+        }
+        boolean z = false;
+        if (!Intrinsics.areEqual((Object) this.devOnline, (Object) false) && !Intrinsics.areEqual(device.opt("online"), (Object) false)) {
+            z = true;
+        }
+        boolean online = z;
+        String st = this.devStatus;
+        if (st == null) {
+            String str$default = GxPage.str$default(this, device, "status", null, 2, null);
+            if (StringsKt.isBlank(str$default)) {
+                str$default = "Parked";
             }
-         }
-      }
+            st = str$default;
+        }
+        GxPage.Row row3 = this.hero;
+        if (row3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("hero");
+        } else {
+            row = row3;
+        }
+        row.setDesc(st + " - " + (online ? "device online" : "device offline"));
+    }
 
-      return var3;
-   }
+    private final void refresh() {
+        if (Intrinsics.areEqual(this.status, "loading")) {
+            return;
+        }
+        this.status = this.payload != null ? "ready" : "loading";
+        this.error = "";
+        load();
+    }
 
-   private final void kv(LinearLayout var1, String var2, String var3) {
-      LinearLayout var4 = new LinearLayout((Context)this.getAct());
-      var4.setOrientation(0);
-      var4.setGravity(16);
-      var4.setPadding(0, this.getUi().dp(8), 0, this.getUi().dp(8));
-      TextView var5 = new TextView((Context)this.getAct());
-      var5.setText(var2);
-      var5.setTextSize(17.0F);
-      var5.setTextColor(CarUi.Companion.getDIM());
-      var4.addView((View)var5, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
-      TextView var6 = new TextView((Context)this.getAct());
-      var6.setText(var3);
-      var6.setTextSize(17.0F);
-      var6.setTextColor(CarUi.Companion.getTEXT());
-      var6.setTypeface(Typeface.DEFAULT_BOLD);
-      var6.setGravity(8388613);
-      var6.setPadding(this.getUi().dp(12), 0, 0, 0);
-      var4.addView((View)var6);
-      var1.addView((View)var4);
-   }
+    private final boolean driveReady(JSONObject d) {
+        return Intrinsics.areEqual(d.opt("ignored"), (Object) true) || !Intrinsics.areEqual(d.opt("attentionKnown"), (Object) false);
+    }
 
-   private final void load() {
-      if (!this.refreshing) {
-         this.refreshing = true;
-         if (this.payload == null) {
+    private final boolean hasPendingWork(JSONObject dash) {
+        double gxHomeNum;
+        List recent;
+        boolean gxHomeTruthy;
+        Iterable $this$any$iv;
+        JSONObject a = dash.optJSONObject("analysis");
+        if (a == null) {
+            a = new JSONObject();
+        }
+        gxHomeNum = GxHomeKt.gxHomeNum(a.opt("pendingRoutes"));
+        long pending = Math.max(0L, Math.round(gxHomeNum));
+        JSONArray optJSONArray = dash.optJSONArray("recentDrives");
+        if (optJSONArray == null || (recent = objects(optJSONArray)) == null) {
+            recent = CollectionsKt.emptyList();
+        }
+        gxHomeTruthy = GxHomeKt.gxHomeTruthy(a.opt("running"));
+        if (gxHomeTruthy || pending > 0) {
+            return true;
+        }
+        List $this$any$iv2 = recent;
+        if (!($this$any$iv2 instanceof Collection) || !$this$any$iv2.isEmpty()) {
+            Iterator it = $this$any$iv2.iterator();
+            while (true) {
+                if (it.hasNext()) {
+                    Object element$iv = it.next();
+                    JSONObject it2 = (JSONObject) element$iv;
+                    if (!driveReady(it2)) {
+                        $this$any$iv = 1;
+                        break;
+                    }
+                } else {
+                    $this$any$iv = null;
+                    break;
+                }
+            }
+        } else {
+            $this$any$iv = null;
+        }
+        return $this$any$iv != null;
+    }
+
+    private final void load() {
+        if (this.refreshing) {
+            return;
+        }
+        this.refreshing = true;
+        if (this.payload == null) {
             this.status = "loading";
-         }
-
-         this.error = "";
-         this.getJson("/api/stats", new GxHomePage$$ExternalSyntheticLambda8(this));
-      }
-   }
-
-   private static final Unit load$lambda$11(GxHomePage var0, String var1, JSONObject var2) {
-      var0.refreshing = false;
-      if (var1 == null && var2 != null) {
-         label53: {
-            JSONObject var6 = var2.optJSONObject("dashboard");
-            Object var4 = null;
-            Object var3 = null;
-            if (var6 != null) {
-               JSONObject var7 = var6.optJSONObject("week");
-               if (var7 != null) {
-                  var1 = GxPage.str$default(var0, var7, "distanceUnit", null, 2, null);
-                  if (var1 != null) {
-                     CharSequence var5 = var1;
-                     CharSequence var9 = var5;
-                     if (StringsKt.isBlank(var5)) {
-                        var9 = null;
-                     }
-
-                     var1 = (String)var9;
-                     if (var1 != null) {
-                        break label53;
-                     }
-                  }
-               }
+        }
+        this.error = "";
+        getJson("/api/stats", new Function2() { // from class: com.starpilot.starview.GxHomePage$$ExternalSyntheticLambda8
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit load$lambda$11;
+                load$lambda$11 = GxHomePage.load$lambda$11(GxHomePage.this, (String) obj, (JSONObject) obj2);
+                return load$lambda$11;
             }
-
-            JSONObject var16 = var2.optJSONObject("driveStats");
-            var1 = (String)var4;
-            if (var16 != null) {
-               var16 = var16.optJSONObject("all");
-               var1 = (String)var4;
-               if (var16 != null) {
-                  String var18 = GxPage.str$default(var0, var16, "unit", null, 2, null);
-                  var1 = (String)var4;
-                  if (var18 != null) {
-                     var1 = var18;
-                     if (StringsKt.isBlank(var1)) {
-                        var1 = (String)var3;
-                     }
-
-                     var1 = var1;
-                  }
-               }
-            }
-         }
-
-         var0.payload = var2;
-         if (var1 == null) {
-            CharSequence var15 = var0.unit;
-            Object var12 = var15;
-            if (StringsKt.isBlank(var15)) {
-               var12 = "miles";
-            }
-
-            var1 = (String)var12;
-         }
-
-         var0.unit = var1;
-         var0.status = "ready";
-         var2 = var2.optJSONObject("dashboard");
-         JSONObject var13 = var2;
-         if (var2 == null) {
-            var13 = new JSONObject();
-         }
-
-         var0.keepRefreshing = var0.hasPendingWork(var13);
-      } else if (var0.payload != null) {
-         var0.toast("Couldn't refresh dashboard.");
-      } else {
-         var0.status = "error";
-         if (var1 == null) {
-            var1 = "empty stats payload";
-         }
-
-         var0.error = var1;
-      }
-
-      var0.render();
-      return Unit.INSTANCE;
-   }
-
-   private final void metrics(LinearLayout var1, List<Pair<String, String>> var2) {
-      LinearLayout var3 = new LinearLayout((Context)this.getAct());
-      var3.setOrientation(0);
-      var3.setPadding(0, this.getUi().dp(6), 0, this.getUi().dp(6));
-
-      for (Pair var5 : var2) {
-         String var4 = (String)var5.component1();
-         String var6 = (String)var5.component2();
-         LinearLayout var10 = new LinearLayout((Context)this.getAct());
-         var10.setOrientation(1);
-         TextView var7 = new TextView((Context)this.getAct());
-         var7.setText(var4);
-         var7.setTextSize(26.0F);
-         var7.setTextColor(CarUi.Companion.getTEXT());
-         var7.setTypeface(Typeface.DEFAULT_BOLD);
-         var10.addView((View)var7);
-         TextView var9 = new TextView((Context)this.getAct());
-         var9.setText(var6);
-         var9.setTextSize(14.0F);
-         var9.setTextColor(CarUi.Companion.getDIM());
-         var10.addView((View)var9);
-         var3.addView((View)var10, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
-      }
-
-      var1.addView((View)var3);
-   }
-
-   private final void paintHero() {
-      JSONObject var4 = this.payload;
-      Object var5 = null;
-      GxPage.Row var3 = null;
-      if (var4 == null) {
-         GxPage.Row var14 = this.hero;
-         if (var14 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("hero");
-         } else {
-            var3 = var14;
-         }
-
-         String var15;
-         if (Intrinsics.areEqual(this.status, "error")) {
-            var15 = "Failed to load dashboard";
-         } else {
-            var15 = "Loading dashboard...";
-         }
-
-         var3.setDesc(var15);
-      } else {
-         JSONObject var7 = this.dash().optJSONObject("device");
-         var4 = var7;
-         if (var7 == null) {
-            var4 = new JSONObject();
-         }
-
-         Boolean var8 = this.devOnline;
-         boolean var2 = false;
-         boolean var1 = var2;
-         if (!Intrinsics.areEqual(var8, false)) {
-            var1 = var2;
-            if (!Intrinsics.areEqual(var4.opt("online"), false)) {
-               var1 = true;
-            }
-         }
-
-         String var6 = this.devStatus;
-         String var9 = var6;
-         if (var6 == null) {
-            CharSequence var12 = GxPage.str$default(this, var4, "status", null, 2, null);
-            Object var10 = var12;
-            if (StringsKt.isBlank(var12)) {
-               var10 = "Parked";
-            }
-
-            var9 = (String)var10;
-         }
-
-         GxPage.Row var13 = this.hero;
-         if (var13 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("hero");
-            var13 = (GxPage.Row)var5;
-         }
-
-         if (var1) {
-            var5 = "device online";
-         } else {
-            var5 = "device offline";
-         }
-
-         var13.setDesc(var9 + " - " + var5);
-      }
-   }
-
-   private final void refresh() {
-      String var2 = this.status;
-      String var1 = "loading";
-      if (!Intrinsics.areEqual(var2, "loading")) {
-         if (this.payload != null) {
-            var1 = "ready";
-         }
-
-         this.status = var1;
-         this.error = "";
-         this.load();
-      }
-   }
-
-   private final void refreshStatus() {
-      this.getJson("/api/device/status", new GxHomePage$$ExternalSyntheticLambda1(this));
-   }
-
-   private static final Unit refreshStatus$lambda$5(GxHomePage var0, String var1, JSONObject var2) {
-      if (var1 == null && var2 != null) {
-         var0.devOnline = true;
-         Object var3 = "Parked";
-         CharSequence var4 = var0.str(var2, "status", "Parked");
-         if (!StringsKt.isBlank(var4)) {
-            var3 = var4;
-         }
-
-         var0.devStatus = (String)var3;
-      } else {
-         var0.devOnline = false;
-      }
-
-      var0.paintHero();
-      return Unit.INSTANCE;
-   }
-
-   private final void render() {
-      this.paintHero();
-      LinearLayout var17 = this.body;
-      String var30 = "body";
-      LinearLayout var16 = var17;
-      if (var17 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("body");
-         var16 = null;
-      }
-
-      var16.removeAllViews();
-      if (Intrinsics.areEqual(this.status, "loading") && this.payload == null) {
-         var16 = this.body;
-         if (var16 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("body");
-            var16 = null;
-         }
-
-         var16.addView((View)this.empty("Loading dashboard..."));
-      } else if (Intrinsics.areEqual(this.status, "error") && this.payload == null) {
-         var16 = this.body;
-         if (var16 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("body");
-            var16 = null;
-         }
-
-         LinearLayout var188 = this.card((ViewGroup)var16);
-         this.text("Failed to load dashboard", (ViewGroup)var188, 21.0F, CarUi.Companion.getWARN(), true);
-         GxPage.text$default(this, this.error, (ViewGroup)var188, 0.0F, 0, false, 28, null);
-         GxPage var131 = this;
-         Pair var97 = TuplesKt.to("Refresh", new GxHomePage$$ExternalSyntheticLambda5(this));
-         ViewGroup var189 = (ViewGroup)var188;
-         GxPage.buttons$default(var131, new Pair[]{var97}, var189, false, 4, null);
-      } else {
-         JSONObject var18;
-         JSONObject var31;
-         label560: {
-            var31 = this.dash();
-            JSONObject var61 = this.payload;
-            if (var61 != null) {
-               JSONObject var62 = var61.optJSONObject("driveStats");
-               var18 = var62;
-               if (var62 != null) {
-                  break label560;
-               }
-            }
-
-            var18 = new JSONObject();
-         }
-
-         label555: {
-            JSONObject var63 = this.payload;
-            if (var63 != null) {
-               JSONObject var64 = var63.optJSONObject("softwareInfo");
-               var99 = var64;
-               if (var64 != null) {
-                  break label555;
-               }
-            }
-
-            var99 = new JSONObject();
-         }
-
-         JSONObject var65 = var31.optJSONObject("device");
-         JSONObject var19 = var65;
-         if (var65 == null) {
-            var19 = new JSONObject();
-         }
-
-         JSONObject var66 = var31.optJSONObject("week");
-         JSONObject var22 = var66;
-         if (var66 == null) {
-            var22 = new JSONObject();
-         }
-
-         JSONObject var20 = var31.optJSONObject("storage");
-         JSONObject var67 = var20;
-         if (var20 == null) {
-            var67 = new JSONObject();
-         }
-
-         GxHomePage var24 = this;
-         JSONObject var21 = var31.optJSONObject("analysis");
-         var20 = var21;
-         if (var21 == null) {
-            var20 = new JSONObject();
-         }
-
-         int var9;
-         label544: {
-            long var14 = Math.round(GxHomeKt.access$gxHomeNum(var20.opt("pendingRoutes")));
-            var9 = (int)Math.max(0L, var14);
-            JSONArray var132 = var31.optJSONArray("recentDrives");
-            if (var132 != null) {
-               List var23 = var24.objects(var132);
-               var133 = var23;
-               if (var23 != null) {
-                  break label544;
-               }
-            }
-
-            var133 = CollectionsKt.emptyList();
-         }
-
-         var var134 = var133;
-         int var8;
-         if (var134 instanceof Collection && ((Collection)var134).isEmpty()) {
-            var8 = 0;
-         } else {
-            var8 = 0;
-            Iterator var135 = var134.iterator();
-
-            while (var135.hasNext()) {
-               if (!var24.driveReady((JSONObject)var135.next())) {
-                  if (++var8 < 0) {
-                     CollectionsKt.throwCountOverflow();
-                  }
-               }
-            }
-         }
-
-         var9 = Math.max(var9, var8);
-         boolean var11 = GxHomeKt.access$gxHomeTruthy(var20.opt("running"));
-         String var25 = "drives";
-         if (var11 || var9 > 0) {
-            if (var9 != 0) {
-               var8 = var9;
-            } else {
-               var8 = (int)Math.max(1L, Math.round(GxHomeKt.access$gxHomeNum(var20.opt("batchSize"))));
-            }
-
-            StringBuilder var137;
-            if (var11) {
-               String var136;
-               if (var8 == 1) {
-                  var136 = "drive";
-               } else {
-                  var136 = "drives";
-               }
-
-               var137 = new StringBuilder().append("Analyzing ").append(var8).append(" ").append(var136);
-            } else {
-               String var138;
-               if (var9 == 1) {
-                  var138 = "drive";
-               } else {
-                  var138 = "drives";
-               }
-
-               var137 = new StringBuilder().append(var9).append(" ").append(var138).append(" queued");
-            }
-
-            String var206 = var137.toString();
-            LinearLayout var192 = var24.body;
-            LinearLayout var139 = var192;
-            if (var192 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("body");
-               var139 = null;
-            }
-
-            var24.note(var206, (ViewGroup)var139).setTextColor(CarUi.Companion.getACCENT());
-         }
-
-         Unit var140 = Unit.INSTANCE;
-         GxHomePage var28 = this;
-         var18 = var31.optJSONObject("lastDrive");
-         JSONObject var207 = var18;
-         if (var18 == null) {
-            var207 = new JSONObject();
-         }
-
-         var11 = var28.driveReady(var207);
-         CharSequence var193 = GxPage.str$default(var28, var207, "distanceUnit", null, 2, null);
-         var18 = var193;
-         if (StringsKt.isBlank(var193)) {
-            var18 = var28.unit;
-         }
-
-         String var213 = (String)var18;
-         CharSequence var194 = GxPage.str$default(var28, var207, "speedUnit", null, 2, null);
-         var18 = var194;
-         if (StringsKt.isBlank(var194)) {
-            if (Intrinsics.areEqual(var213, "kilometers")) {
-               var18 = "kph";
-            } else {
-               var18 = "mph";
-            }
-         }
-
-         String var33 = (String)var18;
-         LinearLayout var195 = var28.body;
-         LinearLayout var144 = var195;
-         if (var195 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("body");
-            var144 = null;
-         }
-
-         LinearLayout var29 = var28.card((ViewGroup)var144);
-         cardHead$default(var28, var29, "Last drive", null, 4, null);
-         GxPage.text$default(
-            var28,
-            GxHomeKt.access$gxHomeRange(GxPage.str$default(var28, var207, "date", null, 2, null), GxPage.str$default(var28, var207, "endDate", null, 2, null)),
-            (ViewGroup)var29,
-            18.0F,
-            CarUi.Companion.getTEXT(),
-            false,
-            16,
-            null
-         );
-         String var27 = "...";
-         String var32 = "distance";
-         String var145;
-         if (var11) {
-            var145 = GxHomeKt.access$gxHomeDec(var207.opt("distance"));
-         } else {
-            var145 = "...";
-         }
-
-         if (!var11) {
-            var213 = "analyzing";
-         }
-
-         var20 = var99;
-         Pair var34 = TuplesKt.to(var145, var213);
-         String var26 = "duration";
-         Pair var214 = TuplesKt.to(GxHomeKt.access$gxHomeDuration(var207.opt("duration")), "duration");
-         String var100;
-         if (var11) {
-            var100 = GxHomeKt.access$gxHomeInt(var207.opt("avgSpeed"));
-         } else {
-            var100 = "...";
-         }
-
-         String var146;
-         if (var11) {
-            var146 = var33 + " avg";
-         } else {
-            var146 = "speed";
-         }
-
-         Pair var147 = TuplesKt.to(var100, var146);
-         var33 = "engagedPercent";
-         String var101 = var27;
-         if (var11) {
-            var101 = GxHomeKt.access$gxHomePct(var207.opt("engagedPercent"));
-         }
-
-         Pair var102 = TuplesKt.to(var101, "engaged");
-         var28.metrics(var29, CollectionsKt.listOf(new Pair[]{var34, var214, var147, var102}));
-         CharSequence var148 = GxPage.str$default(var28, var207, "model", null, 2, null);
-         var17 = var148;
-         if (StringsKt.isBlank(var148)) {
-            var17 = "Unknown model";
-         }
-
-         List var149 = CollectionsKt.mutableListOf(new String[]{var17});
-         String var106;
-         if (var11) {
-            String var104 = GxHomeKt.access$gxHomeInt(var207.opt("distractedMoments"));
-            var149.add(var104 + " distracted");
-            String var105 = GxHomeKt.access$gxHomeInt(var207.opt("unresponsiveMoments"));
-            var106 = var105 + " unresponsive";
-         } else {
-            var106 = "Analyzing stats";
-         }
-
-         var149.add(var106);
-         GxPage.text$default(
-            var28, CollectionsKt.joinToString$default(var149, "   ·   ", null, null, 0, null, null, 62, null), (ViewGroup)var29, 0.0F, 0, false, 28, null
-         );
-         LinearLayout var150 = this.body;
-         var17 = var150;
-         if (var150 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("body");
-            var17 = null;
-         }
-
-         this.header("Your driving", (ViewGroup)var17);
-         GxHomePage var240 = this;
-         var11 = false;
-         List var151 = columns$default(var240, 3, null, 2, null);
-         Iterator var248 = CollectionsKt.listOf(
-               new Pair[]{TuplesKt.to("All time", "all"), TuplesKt.to("Past week", "week"), TuplesKt.to("StarPilot", "starpilot")}
-            )
-            .iterator();
-         var8 = 0;
-
-         for (JSONObject var108 = var18; var248.hasNext(); var8++) {
-            Pair var215 = (Pair)var248.next();
-            var207 = var108.optJSONObject((String)var215.getSecond());
-            JSONObject var68 = var207;
-            if (var207 == null) {
-               var68 = new JSONObject();
-            }
-
-            var29 = var240.card((ViewGroup)var151.get(var8));
-            cardHead$default(var240, var29, (String)var215.getFirst(), null, 4, null);
-            var34 = TuplesKt.to(GxHomeKt.access$gxHomeInt(var68.opt("drives")), "drives");
-            String var35 = GxHomeKt.access$gxHomeDec(var68.opt("distance"));
-            CharSequence var216 = GxPage.str$default(var240, var68, "unit", null, 2, null);
-            var207 = var216;
-            if (StringsKt.isBlank(var216)) {
-               var207 = var240.unit;
-            }
-
-            var240.metrics(
-               var29, CollectionsKt.listOf(new Pair[]{var34, TuplesKt.to(var35, var207), TuplesKt.to(GxHomeKt.access$gxHomeDec(var68.opt("hours")), "hours")})
-            );
-         }
-
-         Unit var69 = Unit.INSTANCE;
-         GxHomePage var294 = this;
-         var11 = false;
-         List var241 = columns$default(var294, 2, null, 2, null);
-         LinearLayout var210 = var294.card((ViewGroup)var241.get(0));
-         cardHead$default(var294, var210, "This week", null, 4, null);
-         GxPage var70 = var294;
-         String var249 = " ";
-         CharSequence var109 = GxPage.str$default(var70, var22, "distanceUnit", null, 2, null);
-         Iterable var71 = var109;
-         if (StringsKt.isBlank(var109)) {
-            var71 = var294.unit;
-         }
-
-         label517: {
-            var71 = (String)var71;
-            String var110 = GxHomeKt.access$gxHomePct(var22.opt("engagedPercent"));
-            String var111 = var110 + " engaged";
-            var294.text(var111, (ViewGroup)var210, 24.0F, CarUi.Companion.getACCENT(), true);
-            var294.setProgress(var294.progress((ViewGroup)var210), GxHomeKt.gxHomeClamp$default(var22.opt("engagedPercent"), 0.0, 0.0, 6, null));
-            var294.metrics(
-               var210,
-               CollectionsKt.listOf(
-                  new Pair[]{
-                     TuplesKt.to(GxHomeKt.access$gxHomeDec(var22.opt("distance")), var71),
-                     TuplesKt.to(GxHomeKt.access$gxHomeDec(var22.opt("hours")), "hours"),
-                     TuplesKt.to(GxHomeKt.access$gxHomeInt(var22.opt("drives")), "drives")
-                  }
-               )
-            );
-            var71 = var22.optJSONArray("dailyDistance");
-            if (var71 != null) {
-               var71 = var294.objects((JSONArray)var71);
-               if (var71 != null && !((Collection)var71).isEmpty()) {
-                  break label517;
-               }
-            }
-
-            var71 = null;
-         }
-
-         List var154;
-         if (var71 != null) {
-            Iterable var152 = (Iterable)var71;
-            var var112 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var152, 10));
-
-            for (JSONObject var201 : var152) {
-               var112.add(TuplesKt.to(GxPage.str$default(var294, var201, "label", null, 2, null), GxHomeKt.access$gxHomeNum(var201.opt("distance"))));
-            }
-
-            var154 = var112;
-         } else {
-            var71 = CollectionsKt.listOf(new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"});
-            var11 = false;
-            var var113 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var71, 10));
-            Iterator var155 = var71.iterator();
-
-            while (var155.hasNext()) {
-               var113.add(TuplesKt.to((String)var155.next(), 0.0));
-            }
-
-            var154 = var113;
-         }
-
-         Iterator var76 = var154.iterator();
-         Double var77;
-         if (!var76.hasNext()) {
-            var77 = null;
-         } else {
-            double var1 = ((Number)((Pair)var76.next()).getSecond()).doubleValue();
-
-            while (var76.hasNext()) {
-               var1 = Math.max(var1, ((Number)((Pair)var76.next()).getSecond()).doubleValue());
-            }
-
-            var77 = var1;
-         }
-
-         double var40;
-         if (var77 != null) {
-            var40 = var77;
-         } else {
-            var40 = 1.0;
-         }
-
-         var40 = Math.max(1.0, var40);
-         LinearLayout var202 = new LinearLayout((Context)var294.getAct());
-         var202.setOrientation(0);
-         var202.setGravity(80);
-         var202.setPadding(0, var294.getUi().dp(8), 0, 0);
-         var8 = var294.getUi().dp(110);
-         Iterator var217 = var154.iterator();
-         String var78 = var25;
-
-         while (var217.hasNext()) {
-            Pair var236 = (Pair)var217.next();
-            var25 = (String)var236.component1();
-            double var3 = ((Number)var236.component2()).doubleValue();
-            LinearLayout var237 = new LinearLayout((Context)var294.getAct());
-            var237.setOrientation(1);
-            var237.setGravity(81);
-            TextView var252 = new TextView((Context)var294.getAct());
-            var252.setText(GxHomeKt.access$gxHomeDec(var3));
-            var252.setTextSize(12.0F);
-            var252.setTextColor(CarUi.Companion.getDIM());
-            var252.setGravity(17);
-            var237.addView((View)var252);
-            double var5 = Math.max(4.0, var3 / var40 * 100) / 100.0;
-            var3 = var8;
-            View var296 = new View((Context)var294.getAct());
-            var296.setBackground((Drawable)CarUi.rounded$default(var294.getUi(), CarUi.Companion.getACCENT(), 4, null, 4, null));
-            android.widget.LinearLayout.LayoutParams var253 = new android.widget.LinearLayout.LayoutParams(var294.getUi().dp(26), (int)(var5 * var3));
-            var253.topMargin = var294.getUi().dp(2);
-            Unit var36 = Unit.INSTANCE;
-            var237.addView(var296, (LayoutParams)var253);
-            TextView var254 = new TextView((Context)var294.getAct());
-            var254.setText(var25);
-            var254.setTextSize(14.0F);
-            var254.setTextColor(CarUi.Companion.getTEXT());
-            var254.setGravity(17);
-            var254.setPadding(0, var294.getUi().dp(4), 0, 0);
-            var237.addView((View)var254);
-            var202.addView((View)var237, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, var294.getUi().dp(48) + var8, 1.0F)));
-         }
-
-         var26 = var26;
-         var210.addView((View)var202);
-         LinearLayout var297 = var294.card((ViewGroup)var241.get(1));
-         cardHead$default(var294, var297, "Personal records", null, 4, null);
-         var18 = var31.optJSONObject("records");
-         JSONObject var115 = var18;
-         if (var18 == null) {
-            var115 = new JSONObject();
-         }
-
-         Pair var157 = TuplesKt.to("Longest drive", "longestDrive");
-         Pair var255 = TuplesKt.to("Most-engaged day", "mostEngagedDay");
-         Pair var218 = TuplesKt.to("Best week", "bestWeek");
-         Pair var303 = TuplesKt.to("Highest streak", "highestStreak");
-         Pair var242 = TuplesKt.to("Longest undistracted drive", "longestUndistractedDrive");
-         Iterator var158 = CollectionsKt.listOf(new Pair[]{var157, var255, var218, var303, var242, TuplesKt.to("Clean-drive streak", "cleanDriveStreak")})
-            .iterator();
-         JSONObject var219 = var115;
-
-         while (var158.hasNext()) {
-            label480: {
-               Pair var226 = (Pair)var158.next();
-               var304 = (String)var226.component1();
-               var256 = var219.optJSONObject((String)var226.component2());
-               if (var256 != null) {
-                  var25 = (String)var256.opt("value");
-                  if (var25 != null) {
-                     if (Intrinsics.areEqual(var25, JSONObject.NULL)) {
-                        var25 = null;
-                     }
-
-                     if (var25 != null) {
-                        var27 = var25.toString();
-                        var25 = var27;
-                        if (var27 != null) {
-                           break label480;
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Removed duplicated region for block: B:18:0x0067  */
+    /* JADX WARN: Removed duplicated region for block: B:24:0x0085  */
+    /* JADX WARN: Removed duplicated region for block: B:29:0x0078  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit load$lambda$11(GxHomePage this$0, String e, JSONObject data) {
+        JSONObject optJSONObject;
+        String str$default;
+        String pu;
+        String str;
+        JSONObject optJSONObject2;
+        JSONObject optJSONObject3;
+        String str$default2;
+        this$0.refreshing = false;
+        if (e == null && data != null) {
+            JSONObject optJSONObject4 = data.optJSONObject("dashboard");
+            String str2 = null;
+            if (optJSONObject4 != null && (optJSONObject3 = optJSONObject4.optJSONObject("week")) != null && (str$default2 = GxPage.str$default(this$0, optJSONObject3, "distanceUnit", null, 2, null)) != null) {
+                String str3 = str$default2;
+                if (StringsKt.isBlank(str3)) {
+                    str3 = null;
+                }
+                String str4 = str3;
+                if (str4 != null) {
+                    str2 = str4;
+                    pu = str2;
+                    this$0.payload = data;
+                    if (pu != null) {
+                        String str5 = this$0.unit;
+                        if (StringsKt.isBlank(str5)) {
+                            str5 = "miles";
                         }
-                     }
-                  }
-               }
-
-               var25 = "0";
+                        str = str5;
+                    } else {
+                        str = pu;
+                    }
+                    this$0.unit = str;
+                    this$0.status = "ready";
+                    optJSONObject2 = data.optJSONObject("dashboard");
+                    if (optJSONObject2 == null) {
+                        optJSONObject2 = new JSONObject();
+                    }
+                    this$0.keepRefreshing = this$0.hasPendingWork(optJSONObject2);
+                }
             }
-
-            label472: {
-               if (var256 != null) {
-                  var29 = (LinearLayout)var256.opt("detail");
-                  if (var29 != null) {
-                     var27 = var29;
-                     if (Intrinsics.areEqual(var29, JSONObject.NULL)) {
-                        var27 = null;
-                     }
-
-                     if (var27 != null) {
-                        String var258 = var27.toString();
-                        var27 = var258;
-                        if (var258 != null) {
-                           break label472;
-                        }
-                     }
-                  }
-               }
-
-               var27 = "";
+            JSONObject optJSONObject5 = data.optJSONObject("driveStats");
+            if (optJSONObject5 != null && (optJSONObject = optJSONObject5.optJSONObject("all")) != null && (str$default = GxPage.str$default(this$0, optJSONObject, "unit", null, 2, null)) != null) {
+                String str6 = str$default;
+                if (!StringsKt.isBlank(str6)) {
+                    str2 = str6;
+                }
+                str2 = str2;
             }
+            pu = str2;
+            this$0.payload = data;
+            if (pu != null) {
+            }
+            this$0.unit = str;
+            this$0.status = "ready";
+            optJSONObject2 = data.optJSONObject("dashboard");
+            if (optJSONObject2 == null) {
+            }
+            this$0.keepRefreshing = this$0.hasPendingWork(optJSONObject2);
+        } else if (this$0.payload != null) {
+            this$0.toast("Couldn't refresh dashboard.");
+        } else {
+            this$0.status = "error";
+            this$0.error = e == null ? "empty stats payload" : e;
+        }
+        this$0.render();
+        return Unit.INSTANCE;
+    }
 
-            var29 = new LinearLayout((Context)var294.getAct());
-            var29.setOrientation(0);
-            var29.setGravity(16);
-            var29.setPadding(0, var294.getUi().dp(7), 0, var294.getUi().dp(7));
-            LinearLayout var37 = new LinearLayout((Context)var294.getAct());
-            var37.setOrientation(1);
-            TextView var38 = new TextView((Context)var294.getAct());
-            var38.setText(var304);
-            var38.setTextSize(15.0F);
-            var38.setTextColor(CarUi.Companion.getDIM());
-            var37.addView((View)var38);
-            TextView var305 = new TextView((Context)var294.getAct());
-            var305.setText(var25);
-            var305.setTextSize(19.0F);
-            var305.setTextColor(CarUi.Companion.getTEXT());
-            var305.setTypeface(Typeface.DEFAULT_BOLD);
-            var37.addView((View)var305);
-            var29.addView((View)var37, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
-            TextView var229 = new TextView((Context)var294.getAct());
-            var229.setText(var27);
-            var229.setTextSize(14.0F);
-            var229.setTextColor(CarUi.Companion.getDIM());
-            var229.setGravity(8388613);
-            var229.setPadding(var294.getUi().dp(10), 0, 0, 0);
-            var29.addView((View)var229);
-            var297.addView((View)var29);
-         }
+    static /* synthetic */ List columns$default(GxHomePage gxHomePage, int i, ViewGroup viewGroup, int i2, Object obj) {
+        if ((i2 & 2) != 0) {
+            LinearLayout linearLayout = gxHomePage.body;
+            if (linearLayout == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("body");
+                linearLayout = null;
+            }
+            viewGroup = linearLayout;
+        }
+        return gxHomePage.columns(i, viewGroup);
+    }
 
-         Unit var116 = Unit.INSTANCE;
-         GxHomePage var295 = this;
-         var11 = false;
-         LinearLayout var159 = var295.body;
-         var17 = var159;
-         if (var159 == null) {
+    private final List<LinearLayout> columns(int n, ViewGroup into) {
+        LinearLayout rowL = new LinearLayout(getAct());
+        rowL.setOrientation(0);
+        into.addView(rowL, new LinearLayout.LayoutParams(-1, -2));
+        Iterable $this$map$iv = RangesKt.until(0, n);
+        int $i$f$map = 0;
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        Iterator<Integer> it = $this$map$iv.iterator();
+        while (it.hasNext()) {
+            int item$iv$iv = ((IntIterator) it).nextInt();
+            LinearLayout $this$columns_u24lambda_u2416_u24lambda_u2413 = new LinearLayout(getAct());
+            $this$columns_u24lambda_u2416_u24lambda_u2413.setOrientation(1);
+            LinearLayout linearLayout = $this$columns_u24lambda_u2416_u24lambda_u2413;
+            Iterable $this$map$iv2 = $this$map$iv;
+            int $i$f$map2 = $i$f$map;
+            LinearLayout.LayoutParams $this$columns_u24lambda_u2416_u24lambda_u2415_u24lambda_u2414 = new LinearLayout.LayoutParams(0, -2, 1.0f);
+            if (item$iv$iv < n - 1) {
+                $this$columns_u24lambda_u2416_u24lambda_u2415_u24lambda_u2414.rightMargin = getUi().dp(8);
+            }
+            Unit unit = Unit.INSTANCE;
+            rowL.addView(linearLayout, $this$columns_u24lambda_u2416_u24lambda_u2415_u24lambda_u2414);
+            destination$iv$iv.add($this$columns_u24lambda_u2416_u24lambda_u2413);
+            $this$map$iv = $this$map$iv2;
+            $i$f$map = $i$f$map2;
+        }
+        return (List) destination$iv$iv;
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    static /* synthetic */ void cardHead$default(GxHomePage gxHomePage, LinearLayout linearLayout, String str, Pair pair, int i, Object obj) {
+        if ((i & 4) != 0) {
+            pair = null;
+        }
+        gxHomePage.cardHead(linearLayout, str, pair);
+    }
+
+    private final void cardHead(LinearLayout c, String title, final Pair<String, String> link) {
+        LinearLayout h = new LinearLayout(getAct());
+        h.setOrientation(0);
+        h.setGravity(16);
+        h.setPadding(0, 0, 0, getUi().dp(6));
+        TextView $this$cardHead_u24lambda_u2418 = new TextView(getAct());
+        $this$cardHead_u24lambda_u2418.setText(title);
+        $this$cardHead_u24lambda_u2418.setTextSize(21.0f);
+        $this$cardHead_u24lambda_u2418.setTextColor(CarUi.Companion.getTEXT());
+        $this$cardHead_u24lambda_u2418.setTypeface(Typeface.DEFAULT_BOLD);
+        h.addView($this$cardHead_u24lambda_u2418, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        if (link != null) {
+            h.addView(CarUi.button$default(getUi(), link.getFirst(), false, new Function0() { // from class: com.starpilot.starview.GxHomePage$$ExternalSyntheticLambda0
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit cardHead$lambda$19;
+                    cardHead$lambda$19 = GxHomePage.cardHead$lambda$19(GxHomePage.this, link);
+                    return cardHead$lambda$19;
+                }
+            }, 2, null));
+        }
+        c.addView(h);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit cardHead$lambda$19(GxHomePage this$0, Pair $link) {
+        this$0.getGx().openPage((String) $link.getSecond());
+        return Unit.INSTANCE;
+    }
+
+    private final void metrics(LinearLayout c, List<Pair<String, String>> items) {
+        LinearLayout r = new LinearLayout(getAct());
+        r.setOrientation(0);
+        r.setPadding(0, getUi().dp(6), 0, getUi().dp(6));
+        for (Pair<String, String> pair : items) {
+            String v = pair.component1();
+            String l = pair.component2();
+            LinearLayout cell = new LinearLayout(getAct());
+            cell.setOrientation(1);
+            TextView $this$metrics_u24lambda_u2422 = new TextView(getAct());
+            $this$metrics_u24lambda_u2422.setText(v);
+            $this$metrics_u24lambda_u2422.setTextSize(26.0f);
+            $this$metrics_u24lambda_u2422.setTextColor(CarUi.Companion.getTEXT());
+            $this$metrics_u24lambda_u2422.setTypeface(Typeface.DEFAULT_BOLD);
+            cell.addView($this$metrics_u24lambda_u2422);
+            TextView $this$metrics_u24lambda_u2423 = new TextView(getAct());
+            $this$metrics_u24lambda_u2423.setText(l);
+            $this$metrics_u24lambda_u2423.setTextSize(14.0f);
+            $this$metrics_u24lambda_u2423.setTextColor(CarUi.Companion.getDIM());
+            cell.addView($this$metrics_u24lambda_u2423);
+            r.addView(cell, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        }
+        c.addView(r);
+    }
+
+    private final void kv(LinearLayout c, String label, String value) {
+        LinearLayout r = new LinearLayout(getAct());
+        r.setOrientation(0);
+        r.setGravity(16);
+        r.setPadding(0, getUi().dp(8), 0, getUi().dp(8));
+        TextView $this$kv_u24lambda_u2425 = new TextView(getAct());
+        $this$kv_u24lambda_u2425.setText(label);
+        $this$kv_u24lambda_u2425.setTextSize(17.0f);
+        $this$kv_u24lambda_u2425.setTextColor(CarUi.Companion.getDIM());
+        r.addView($this$kv_u24lambda_u2425, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        TextView $this$kv_u24lambda_u2426 = new TextView(getAct());
+        $this$kv_u24lambda_u2426.setText(value);
+        $this$kv_u24lambda_u2426.setTextSize(17.0f);
+        $this$kv_u24lambda_u2426.setTextColor(CarUi.Companion.getTEXT());
+        $this$kv_u24lambda_u2426.setTypeface(Typeface.DEFAULT_BOLD);
+        $this$kv_u24lambda_u2426.setGravity(8388613);
+        $this$kv_u24lambda_u2426.setPadding(getUi().dp(12), 0, 0, 0);
+        r.addView($this$kv_u24lambda_u2426);
+        c.addView(r);
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:152:0x094a, code lost:
+    
+        if (r5 != null) goto L203;
+     */
+    /* JADX WARN: Removed duplicated region for block: B:217:0x0c28  */
+    /* JADX WARN: Removed duplicated region for block: B:223:0x0cdc  */
+    /* JADX WARN: Removed duplicated region for block: B:230:0x0df2  */
+    /* JADX WARN: Removed duplicated region for block: B:237:0x0ee5  */
+    /* JADX WARN: Removed duplicated region for block: B:251:0x0f5b  */
+    /* JADX WARN: Removed duplicated region for block: B:255:0x0d31  */
+    /* JADX WARN: Removed duplicated region for block: B:257:0x0c3a  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void render() {
+        JSONObject driveStats;
+        JSONObject jSONObject;
+        double gxHomeNum;
+        Iterable emptyList;
+        int count$iv;
+        boolean running;
+        double gxHomeNum2;
+        int pendingRoutes;
+        String gxHomeRange;
+        String str;
+        String str2;
+        JSONObject software;
+        String str3;
+        String gxHomeDuration;
+        JSONObject device;
+        String str4;
+        String str5;
+        String gxHomePct;
+        String gxHomeDec;
+        String gxHomeDec2;
+        String gxHomeInt;
+        List it;
+        List days;
+        Double valueOf;
+        List drives;
+        List<JSONObject> emptyList2;
+        double n;
+        String gxHomeInt2;
+        double gxHomeNum3;
+        String gxHomeInt3;
+        String gxHomeInt4;
+        String gxHomeInt5;
+        String gxHomeBytes;
+        String str6;
+        String str7;
+        String gxHomeInt6;
+        String gxHomeInt7;
+        String gxHomeBytes2;
+        String gxHomeBytes3;
+        int i;
+        JSONObject dash;
+        String str8;
+        Iterator it2;
+        int i2;
+        List emptyList3;
+        String gxHomeDec3;
+        String str9;
+        String distance;
+        String gxHomePct2;
+        String str10;
+        String gxHomeInt8;
+        String gxHomeInt9;
+        Pair pair;
+        String str11;
+        String str12;
+        String gxHomeRange2;
+        String str$default;
+        String gxHomeDuration2;
+        boolean gxHomeTruthy;
+        List cols;
+        JSONObject records;
+        String value;
+        Object it3;
+        Object it4;
+        String gxHomeDec4;
+        double gxHomeNum4;
+        String gxHomeInt10;
+        String gxHomeDec5;
+        String gxHomeDec6;
+        String gxHomeInt11;
+        String gxHomeInt12;
+        String gxHomeDec7;
+        LinearLayout linearLayout;
+        LinearLayout linearLayout2;
+        paintHero();
+        LinearLayout linearLayout3 = this.body;
+        String str13 = "body";
+        if (linearLayout3 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("body");
-            var17 = null;
-         }
-
-         label461: {
-            var29 = var295.card((ViewGroup)var17);
-            cardHead$default(var295, var29, "Recent drives", null, 4, null);
-            JSONArray var118 = var31.optJSONArray("recentDrives");
-            if (var118 != null) {
-               List var160 = var295.objects(var118);
-               var119 = var160;
-               if (var160 != null) {
-                  break label461;
-               }
-            }
-
-            var119 = CollectionsKt.emptyList();
-         }
-
-         if (var119.isEmpty()) {
-            GxPage.text$default(var295, "No local drives found yet.", (ViewGroup)var29, 17.0F, 0, false, 24, null);
-         }
-
-         Iterator var230 = var119.iterator();
-         var8 = 0;
-         String var211 = var249;
-         String var220 = var33;
-         var27 = var32;
-
-         while (var230.hasNext()) {
-            int var10 = var8 + 1;
-            JSONObject var291 = (JSONObject)var230.next();
-            boolean var13 = Intrinsics.areEqual(var291.opt("ignored"), true);
-            boolean var12 = var295.driveReady(var291);
-            boolean var53;
-            if (!var12 && !var13) {
-               var53 = true;
+            linearLayout3 = null;
+        }
+        linearLayout3.removeAllViews();
+        if (Intrinsics.areEqual(this.status, "loading") && this.payload == null) {
+            LinearLayout linearLayout4 = this.body;
+            if (linearLayout4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("body");
+                linearLayout2 = null;
             } else {
-               var53 = false;
+                linearLayout2 = linearLayout4;
             }
-
-            var var161 = GxPage.str$default(var295, var291, "distanceUnit", null, 2, null);
-            if (StringsKt.isBlank(var161)) {
-               var161 = var295.unit;
-            }
-
-            String var273 = var161;
-            JSONArray var264 = var291.optJSONArray("routeNames");
-            List var268;
-            if (var264 == null) {
-               var268 = CollectionsKt.emptyList();
+            linearLayout2.addView(empty("Loading dashboard..."));
+            return;
+        }
+        if (Intrinsics.areEqual(this.status, "error") && this.payload == null) {
+            LinearLayout linearLayout5 = this.body;
+            if (linearLayout5 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("body");
+                linearLayout = null;
             } else {
-               Iterable var162 = RangesKt.until(0, var264.length());
-               var var280 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var162, 10));
-               Iterator var298 = var162.iterator();
-
-               while (var298.hasNext()) {
-                  var280.add(var264.opt(((IntIterator)var298).nextInt()));
-               }
-
-               List var163 = var280;
-               Iterable var164 = var163;
-               var var281 = new ArrayList();
-
-               for (Object var299 : var164) {
-                  if (GxHomeKt.access$gxHomeTruthy(var299)) {
-                     var281.add(var299);
-                  }
-               }
-
-               List var165 = var281;
-               Iterable var266 = var165;
-               var var166 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var266, 10));
-               Iterator var267 = var266.iterator();
-
-               while (var267.hasNext()) {
-                  var166.add(var267.next().toString());
-               }
-
-               var268 = var166;
+                linearLayout = linearLayout5;
             }
-
-            label453: {
-               String var167;
-               if (var13) {
-                  var167 = "Stats excluded";
-               } else {
-                  if (!var53) {
-                     String var168 = GxHomeKt.access$gxHomeDec(var291.opt(var27));
-                     var274 = var168 + var211 + var273;
-                     break label453;
-                  }
-
-                  var167 = "Analyzing stats";
-               }
-
-               var274 = var167;
+            LinearLayout c = card(linearLayout);
+            text("Failed to load dashboard", c, 21.0f, CarUi.Companion.getWARN(), true);
+            GxPage.text$default(this, this.error, c, 0.0f, 0, false, 28, null);
+            GxPage.buttons$default(this, new Pair[]{TuplesKt.to("Refresh", new Function0() { // from class: com.starpilot.starview.GxHomePage$$ExternalSyntheticLambda5
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit render$lambda$27;
+                    render$lambda$27 = GxHomePage.render$lambda$27(GxHomePage.this);
+                    return render$lambda$27;
+                }
+            })}, c, false, 4, null);
+            return;
+        }
+        JSONObject dash2 = dash();
+        JSONObject jSONObject2 = this.payload;
+        if (jSONObject2 == null || (driveStats = jSONObject2.optJSONObject("driveStats")) == null) {
+            driveStats = new JSONObject();
+        }
+        JSONObject jSONObject3 = this.payload;
+        if (jSONObject3 == null || (jSONObject = jSONObject3.optJSONObject("softwareInfo")) == null) {
+            jSONObject = new JSONObject();
+        }
+        JSONObject software2 = jSONObject;
+        JSONObject device2 = dash2.optJSONObject("device");
+        if (device2 == null) {
+            device2 = new JSONObject();
+        }
+        JSONObject week = dash2.optJSONObject("week");
+        if (week == null) {
+            week = new JSONObject();
+        }
+        JSONObject storage = dash2.optJSONObject("storage");
+        if (storage == null) {
+            storage = new JSONObject();
+        }
+        GxHomePage $this$render_u24lambda_u2429 = this;
+        JSONObject a = dash2.optJSONObject("analysis");
+        if (a == null) {
+            a = new JSONObject();
+        }
+        gxHomeNum = GxHomeKt.gxHomeNum(a.opt("pendingRoutes"));
+        JSONObject driveStats2 = driveStats;
+        int pendingRoutes2 = (int) Math.max(0L, Math.round(gxHomeNum));
+        JSONArray optJSONArray = dash2.optJSONArray("recentDrives");
+        if (optJSONArray == null || (emptyList = $this$render_u24lambda_u2429.objects(optJSONArray)) == null) {
+            emptyList = CollectionsKt.emptyList();
+        }
+        Iterable $this$count$iv = emptyList;
+        if (($this$count$iv instanceof Collection) && ((Collection) $this$count$iv).isEmpty()) {
+            count$iv = 0;
+        } else {
+            count$iv = 0;
+            for (Object element$iv : $this$count$iv) {
+                JSONObject it5 = (JSONObject) element$iv;
+                if (!$this$render_u24lambda_u2429.driveReady(it5)) {
+                    count$iv++;
+                    if (count$iv < 0) {
+                        CollectionsKt.throwCountOverflow();
+                    }
+                }
             }
-
-            Pair var169;
-            if (var13) {
-               var169 = TuplesKt.to("Excluded", CollectionsKt.listOf("Ignored from stats"));
-            } else if (var53) {
-               var169 = TuplesKt.to("Pending", CollectionsKt.listOf("Waiting for full route analysis"));
+        }
+        int pendingDrives = count$iv;
+        int count = Math.max(pendingRoutes2, pendingDrives);
+        running = GxHomeKt.gxHomeTruthy(a.opt("running"));
+        String str14 = "drives";
+        if (running || count > 0) {
+            if (count != 0) {
+                pendingRoutes = count;
             } else {
-               String var170 = GxHomeKt.access$gxHomePct(var291.opt(var220));
-               String var171 = var170 + " engaged";
-               var32 = GxHomeKt.access$gxHomeInt(var291.opt("distractedMoments"));
-               var32 = var32 + " distracted";
-               String var300 = GxHomeKt.access$gxHomeInt(var291.opt("unresponsiveMoments"));
-               var169 = TuplesKt.to(var171, CollectionsKt.listOf(new String[]{var32, var300 + " unresponsive"}));
+                gxHomeNum2 = GxHomeKt.gxHomeNum(a.opt("batchSize"));
+                pendingRoutes = (int) Math.max(1L, Math.round(gxHomeNum2));
             }
-
-            String var306 = (String)var169.component1();
-            List var307 = (List)var169.component2();
-            if (var12 && !var13) {
-               var40 = GxHomeKt.gxHomeClamp$default(var291.opt(var220), 0.0, 0.0, 6, null);
+            String label = (running ? new StringBuilder().append("Analyzing ").append(pendingRoutes).append(" ").append(pendingRoutes == 1 ? "drive" : "drives") : new StringBuilder().append(count).append(" ").append(count == 1 ? "drive" : "drives").append(" queued")).toString();
+            LinearLayout linearLayout6 = $this$render_u24lambda_u2429.body;
+            if (linearLayout6 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("body");
+                linearLayout6 = null;
+            }
+            $this$render_u24lambda_u2429.note(label, linearLayout6).setTextColor(CarUi.Companion.getACCENT());
+        }
+        Unit unit = Unit.INSTANCE;
+        GxHomePage $this$render_u24lambda_u2433 = this;
+        JSONObject d = dash2.optJSONObject("lastDrive");
+        if (d == null) {
+            d = new JSONObject();
+        }
+        boolean ready = $this$render_u24lambda_u2433.driveReady(d);
+        String str$default2 = GxPage.str$default($this$render_u24lambda_u2433, d, "distanceUnit", null, 2, null);
+        if (StringsKt.isBlank(str$default2)) {
+            str$default2 = $this$render_u24lambda_u2433.unit;
+        }
+        String u = str$default2;
+        String str$default3 = GxPage.str$default($this$render_u24lambda_u2433, d, "speedUnit", null, 2, null);
+        if (StringsKt.isBlank(str$default3)) {
+            str$default3 = Intrinsics.areEqual(u, "kilometers") ? "kph" : "mph";
+        }
+        String su = str$default3;
+        LinearLayout linearLayout7 = $this$render_u24lambda_u2433.body;
+        if (linearLayout7 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("body");
+            linearLayout7 = null;
+        }
+        LinearLayout c2 = $this$render_u24lambda_u2433.card(linearLayout7);
+        cardHead$default($this$render_u24lambda_u2433, c2, "Last drive", null, 4, null);
+        JSONObject jSONObject4 = d;
+        gxHomeRange = GxHomeKt.gxHomeRange(GxPage.str$default($this$render_u24lambda_u2433, jSONObject4, "date", null, 2, null), GxPage.str$default($this$render_u24lambda_u2433, jSONObject4, "endDate", null, 2, null));
+        GxPage.text$default($this$render_u24lambda_u2433, gxHomeRange, c2, 18.0f, CarUi.Companion.getTEXT(), false, 16, null);
+        Pair[] pairArr = new Pair[4];
+        String engaged = "distance";
+        if (ready) {
+            gxHomeDec7 = GxHomeKt.gxHomeDec(d.opt("distance"));
+            str = " ";
+            str2 = gxHomeDec7;
+        } else {
+            str = " ";
+            str2 = "...";
+        }
+        if (ready) {
+            software = software2;
+            str3 = u;
+        } else {
+            software = software2;
+            str3 = "analyzing";
+        }
+        pairArr[0] = TuplesKt.to(str2, str3);
+        String str15 = "duration";
+        gxHomeDuration = GxHomeKt.gxHomeDuration(d.opt("duration"));
+        pairArr[1] = TuplesKt.to(gxHomeDuration, "duration");
+        String gxHomeInt13 = ready ? GxHomeKt.gxHomeInt(d.opt("avgSpeed")) : "...";
+        if (ready) {
+            device = device2;
+            str4 = su + " avg";
+        } else {
+            device = device2;
+            str4 = "speed";
+        }
+        pairArr[2] = TuplesKt.to(gxHomeInt13, str4);
+        String str16 = "engagedPercent";
+        pairArr[3] = TuplesKt.to(ready ? GxHomeKt.gxHomePct(d.opt("engagedPercent")) : "...", "engaged");
+        $this$render_u24lambda_u2433.metrics(c2, CollectionsKt.listOf((Object[]) pairArr));
+        String[] strArr = new String[1];
+        String str$default4 = GxPage.str$default($this$render_u24lambda_u2433, d, "model", null, 2, null);
+        if (StringsKt.isBlank(str$default4)) {
+            str$default4 = "Unknown model";
+        }
+        strArr[0] = str$default4;
+        List tags = CollectionsKt.mutableListOf(strArr);
+        if (ready) {
+            gxHomeInt11 = GxHomeKt.gxHomeInt(d.opt("distractedMoments"));
+            tags.add(gxHomeInt11 + " distracted");
+            gxHomeInt12 = GxHomeKt.gxHomeInt(d.opt("unresponsiveMoments"));
+            str5 = gxHomeInt12 + " unresponsive";
+        } else {
+            str5 = "Analyzing stats";
+        }
+        tags.add(str5);
+        GxPage.text$default($this$render_u24lambda_u2433, CollectionsKt.joinToString$default(tags, "   ·   ", null, null, 0, null, null, 62, null), c2, 0.0f, 0, false, 28, null);
+        LinearLayout linearLayout8 = this.body;
+        if (linearLayout8 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("body");
+            linearLayout8 = null;
+        }
+        header("Your driving", linearLayout8);
+        GxHomePage $this$render_u24lambda_u2435 = this;
+        int i3 = 0;
+        List cols2 = columns$default($this$render_u24lambda_u2435, 3, null, 2, null);
+        int i4 = 0;
+        for (Pair g : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("All time", "all"), TuplesKt.to("Past week", "week"), TuplesKt.to("StarPilot", "starpilot")})) {
+            int i5 = i4;
+            int i6 = i4 + 1;
+            JSONObject driveStats3 = driveStats2;
+            JSONObject s = driveStats3.optJSONObject((String) g.getSecond());
+            if (s == null) {
+                s = new JSONObject();
+            }
+            int i7 = i3;
+            LinearLayout c3 = $this$render_u24lambda_u2435.card((ViewGroup) cols2.get(i5));
+            JSONObject s2 = s;
+            JSONObject storage2 = storage;
+            List cols3 = cols2;
+            cardHead$default($this$render_u24lambda_u2435, c3, (String) g.getFirst(), null, 4, null);
+            Pair[] pairArr2 = new Pair[3];
+            gxHomeInt10 = GxHomeKt.gxHomeInt(s2.opt("drives"));
+            pairArr2[0] = TuplesKt.to(gxHomeInt10, "drives");
+            gxHomeDec5 = GxHomeKt.gxHomeDec(s2.opt("distance"));
+            String str$default5 = GxPage.str$default($this$render_u24lambda_u2435, s2, "unit", null, 2, null);
+            if (StringsKt.isBlank(str$default5)) {
+                str$default5 = $this$render_u24lambda_u2435.unit;
+            }
+            pairArr2[1] = TuplesKt.to(gxHomeDec5, str$default5);
+            gxHomeDec6 = GxHomeKt.gxHomeDec(s2.opt("hours"));
+            pairArr2[2] = TuplesKt.to(gxHomeDec6, "hours");
+            $this$render_u24lambda_u2435.metrics(c3, CollectionsKt.listOf((Object[]) pairArr2));
+            i3 = i7;
+            i4 = i6;
+            cols2 = cols3;
+            driveStats2 = driveStats3;
+            storage = storage2;
+        }
+        JSONObject storage3 = storage;
+        Unit unit2 = Unit.INSTANCE;
+        GxHomePage $this$render_u24lambda_u2454 = this;
+        int i8 = 0;
+        List cols4 = columns$default($this$render_u24lambda_u2454, 2, null, 2, null);
+        LinearLayout c4 = $this$render_u24lambda_u2454.card((ViewGroup) cols4.get(0));
+        cardHead$default($this$render_u24lambda_u2454, c4, "This week", null, 4, null);
+        String str17 = str;
+        String str$default6 = GxPage.str$default($this$render_u24lambda_u2454, week, "distanceUnit", null, 2, null);
+        if (StringsKt.isBlank(str$default6)) {
+            str$default6 = $this$render_u24lambda_u2454.unit;
+        }
+        String wu = str$default6;
+        gxHomePct = GxHomeKt.gxHomePct(week.opt("engagedPercent"));
+        String str18 = gxHomePct + " engaged";
+        LinearLayout c5 = c4;
+        $this$render_u24lambda_u2454.text(str18, c5, 24.0f, CarUi.Companion.getACCENT(), true);
+        $this$render_u24lambda_u2454.setProgress($this$render_u24lambda_u2454.progress(c5), GxHomeKt.gxHomeClamp$default(week.opt("engagedPercent"), 0.0d, 0.0d, 6, null));
+        gxHomeDec = GxHomeKt.gxHomeDec(week.opt("distance"));
+        gxHomeDec2 = GxHomeKt.gxHomeDec(week.opt("hours"));
+        gxHomeInt = GxHomeKt.gxHomeInt(week.opt("drives"));
+        $this$render_u24lambda_u2454.metrics(c5, CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(gxHomeDec, wu), TuplesKt.to(gxHomeDec2, "hours"), TuplesKt.to(gxHomeInt, "drives")}));
+        JSONArray optJSONArray2 = week.optJSONArray("dailyDistance");
+        if (optJSONArray2 == null || (it = $this$render_u24lambda_u2454.objects(optJSONArray2)) == null || it.isEmpty()) {
+            it = null;
+        }
+        if (it != null) {
+            List $this$map$iv = it;
+            Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+            for (Object item$iv$iv : $this$map$iv) {
+                JSONObject it6 = (JSONObject) item$iv$iv;
+                int i9 = i8;
+                String str$default7 = GxPage.str$default($this$render_u24lambda_u2454, it6, "label", null, 2, null);
+                gxHomeNum4 = GxHomeKt.gxHomeNum(it6.opt("distance"));
+                List daysArr = it;
+                destination$iv$iv.add(TuplesKt.to(str$default7, Double.valueOf(gxHomeNum4)));
+                it = daysArr;
+                i8 = i9;
+            }
+            days = (List) destination$iv$iv;
+        } else {
+            Iterable $this$map$iv2 = CollectionsKt.listOf((Object[]) new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"});
+            int $i$f$map = 0;
+            Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv2, 10));
+            for (Object item$iv$iv2 : $this$map$iv2) {
+                Iterable $this$map$iv3 = $this$map$iv2;
+                String it7 = (String) item$iv$iv2;
+                destination$iv$iv2.add(TuplesKt.to(it7, Double.valueOf(0.0d)));
+                $this$map$iv2 = $this$map$iv3;
+                $i$f$map = $i$f$map;
+            }
+            days = (List) destination$iv$iv2;
+        }
+        Iterator it8 = days.iterator();
+        if (it8.hasNext()) {
+            Pair it9 = (Pair) it8.next();
+            double doubleValue = ((Number) it9.getSecond()).doubleValue();
+            while (it8.hasNext()) {
+                Pair it10 = (Pair) it8.next();
+                doubleValue = Math.max(doubleValue, ((Number) it10.getSecond()).doubleValue());
+                it8 = it8;
+            }
+            valueOf = Double.valueOf(doubleValue);
+        } else {
+            valueOf = null;
+        }
+        double maxD = Math.max(1.0d, valueOf != null ? valueOf.doubleValue() : 1.0d);
+        LinearLayout $this$render_u24lambda_u2454_u24lambda_u2441 = new LinearLayout($this$render_u24lambda_u2454.getAct());
+        $this$render_u24lambda_u2454_u24lambda_u2441.setOrientation(0);
+        $this$render_u24lambda_u2454_u24lambda_u2441.setGravity(80);
+        $this$render_u24lambda_u2454_u24lambda_u2441.setPadding(0, $this$render_u24lambda_u2454.getUi().dp(8), 0, 0);
+        LinearLayout bars = $this$render_u24lambda_u2454_u24lambda_u2441;
+        int barMax = $this$render_u24lambda_u2454.getUi().dp(110);
+        Iterator it11 = days.iterator();
+        while (true) {
+            List days2 = days;
+            if (!it11.hasNext()) {
+                break;
+            }
+            Pair pair2 = (Pair) it11.next();
+            String label2 = (String) pair2.component1();
+            double dist = ((Number) pair2.component2()).doubleValue();
+            LinearLayout $this$render_u24lambda_u2454_u24lambda_u2442 = new LinearLayout($this$render_u24lambda_u2454.getAct());
+            Iterator it12 = it11;
+            $this$render_u24lambda_u2454_u24lambda_u2442.setOrientation(1);
+            $this$render_u24lambda_u2454_u24lambda_u2442.setGravity(81);
+            TextView $this$render_u24lambda_u2454_u24lambda_u2443 = new TextView($this$render_u24lambda_u2454.getAct());
+            gxHomeDec4 = GxHomeKt.gxHomeDec(Double.valueOf(dist));
+            String str19 = str14;
+            $this$render_u24lambda_u2454_u24lambda_u2443.setText(gxHomeDec4);
+            $this$render_u24lambda_u2454_u24lambda_u2443.setTextSize(12.0f);
+            $this$render_u24lambda_u2454_u24lambda_u2443.setTextColor(CarUi.Companion.getDIM());
+            $this$render_u24lambda_u2454_u24lambda_u2443.setGravity(17);
+            $this$render_u24lambda_u2454_u24lambda_u2442.addView($this$render_u24lambda_u2454_u24lambda_u2443);
+            double h = (Math.max(4.0d, (dist / maxD) * 100) / 100.0d) * barMax;
+            View $this$render_u24lambda_u2454_u24lambda_u2444 = new View($this$render_u24lambda_u2454.getAct());
+            $this$render_u24lambda_u2454_u24lambda_u2444.setBackground(CarUi.rounded$default($this$render_u24lambda_u2454.getUi(), CarUi.Companion.getACCENT(), 4, null, 4, null));
+            LinearLayout.LayoutParams $this$render_u24lambda_u2454_u24lambda_u2445 = new LinearLayout.LayoutParams($this$render_u24lambda_u2454.getUi().dp(26), (int) h);
+            $this$render_u24lambda_u2454_u24lambda_u2445.topMargin = $this$render_u24lambda_u2454.getUi().dp(2);
+            Unit unit3 = Unit.INSTANCE;
+            $this$render_u24lambda_u2454_u24lambda_u2442.addView($this$render_u24lambda_u2454_u24lambda_u2444, $this$render_u24lambda_u2454_u24lambda_u2445);
+            TextView $this$render_u24lambda_u2454_u24lambda_u2446 = new TextView($this$render_u24lambda_u2454.getAct());
+            $this$render_u24lambda_u2454_u24lambda_u2446.setText(label2);
+            $this$render_u24lambda_u2454_u24lambda_u2446.setTextSize(14.0f);
+            $this$render_u24lambda_u2454_u24lambda_u2446.setTextColor(CarUi.Companion.getTEXT());
+            $this$render_u24lambda_u2454_u24lambda_u2446.setGravity(17);
+            $this$render_u24lambda_u2454_u24lambda_u2446.setPadding(0, $this$render_u24lambda_u2454.getUi().dp(4), 0, 0);
+            $this$render_u24lambda_u2454_u24lambda_u2442.addView($this$render_u24lambda_u2454_u24lambda_u2446);
+            bars.addView($this$render_u24lambda_u2454_u24lambda_u2442, new LinearLayout.LayoutParams(0, $this$render_u24lambda_u2454.getUi().dp(48) + barMax, 1.0f));
+            it11 = it12;
+            days = days2;
+            str14 = str19;
+            str15 = str15;
+            maxD = maxD;
+        }
+        String str20 = str14;
+        String str21 = str15;
+        c5.addView(bars);
+        List cols5 = cols4;
+        LinearLayout r = $this$render_u24lambda_u2454.card((ViewGroup) cols5.get(1));
+        cardHead$default($this$render_u24lambda_u2454, r, "Personal records", null, 4, null);
+        JSONObject records2 = dash2.optJSONObject("records");
+        if (records2 == null) {
+            records2 = new JSONObject();
+        }
+        Iterator it13 = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Longest drive", "longestDrive"), TuplesKt.to("Most-engaged day", "mostEngagedDay"), TuplesKt.to("Best week", "bestWeek"), TuplesKt.to("Highest streak", "highestStreak"), TuplesKt.to("Longest undistracted drive", "longestUndistractedDrive"), TuplesKt.to("Clean-drive streak", "cleanDriveStreak")}).iterator();
+        while (it13.hasNext()) {
+            Pair pair3 = (Pair) it13.next();
+            String title = (String) pair3.component1();
+            String k = (String) pair3.component2();
+            JSONObject rec = records2.optJSONObject(k);
+            if (rec == null || (it4 = rec.opt("value")) == null) {
+                cols = cols5;
+                records = records2;
             } else {
-               var40 = 0.0;
+                cols = cols5;
+                records = records2;
+                if (Intrinsics.areEqual(it4, JSONObject.NULL)) {
+                    it4 = null;
+                }
+                if (it4 != null) {
+                    value = it4.toString();
+                }
             }
-
-            if (var8 > 0) {
-               View var284 = new View((Context)var295.getAct());
-               var284.setBackgroundColor(Color.rgb(40, 44, 52));
-               android.widget.LinearLayout.LayoutParams var301 = new android.widget.LinearLayout.LayoutParams(-1, var295.getUi().dp(1));
-               var301.topMargin = var295.getUi().dp(6);
-               var301.bottomMargin = var295.getUi().dp(6);
-               Unit var172 = Unit.INSTANCE;
-               var29.addView(var284, (LayoutParams)var301);
+            value = "0";
+            if (rec != null && (it3 = rec.opt("detail")) != null) {
+                Object obj = it3;
+                if (Intrinsics.areEqual(it3, JSONObject.NULL)) {
+                    obj = null;
+                }
+                if (obj != null && (detail = obj.toString()) != null) {
+                    LinearLayout $this$render_u24lambda_u2454_u24lambda_u2449 = new LinearLayout($this$render_u24lambda_u2454.getAct());
+                    $this$render_u24lambda_u2454_u24lambda_u2449.setOrientation(0);
+                    $this$render_u24lambda_u2454_u24lambda_u2449.setGravity(16);
+                    LinearLayout bars2 = bars;
+                    $this$render_u24lambda_u2454_u24lambda_u2449.setPadding(0, $this$render_u24lambda_u2454.getUi().dp(7), 0, $this$render_u24lambda_u2454.getUi().dp(7));
+                    LinearLayout tb = new LinearLayout($this$render_u24lambda_u2454.getAct());
+                    tb.setOrientation(1);
+                    TextView $this$render_u24lambda_u2454_u24lambda_u2451 = new TextView($this$render_u24lambda_u2454.getAct());
+                    $this$render_u24lambda_u2454_u24lambda_u2451.setText(title);
+                    $this$render_u24lambda_u2454_u24lambda_u2451.setTextSize(15.0f);
+                    $this$render_u24lambda_u2454_u24lambda_u2451.setTextColor(CarUi.Companion.getDIM());
+                    tb.addView($this$render_u24lambda_u2454_u24lambda_u2451);
+                    TextView $this$render_u24lambda_u2454_u24lambda_u2452 = new TextView($this$render_u24lambda_u2454.getAct());
+                    $this$render_u24lambda_u2454_u24lambda_u2452.setText(value);
+                    $this$render_u24lambda_u2454_u24lambda_u2452.setTextSize(19.0f);
+                    $this$render_u24lambda_u2454_u24lambda_u2452.setTextColor(CarUi.Companion.getTEXT());
+                    $this$render_u24lambda_u2454_u24lambda_u2452.setTypeface(Typeface.DEFAULT_BOLD);
+                    tb.addView($this$render_u24lambda_u2454_u24lambda_u2452);
+                    $this$render_u24lambda_u2454_u24lambda_u2449.addView(tb, new LinearLayout.LayoutParams(0, -2, 1.0f));
+                    TextView $this$render_u24lambda_u2454_u24lambda_u2453 = new TextView($this$render_u24lambda_u2454.getAct());
+                    $this$render_u24lambda_u2454_u24lambda_u2453.setText(detail);
+                    $this$render_u24lambda_u2454_u24lambda_u2453.setTextSize(14.0f);
+                    $this$render_u24lambda_u2454_u24lambda_u2453.setTextColor(CarUi.Companion.getDIM());
+                    $this$render_u24lambda_u2454_u24lambda_u2453.setGravity(8388613);
+                    $this$render_u24lambda_u2454_u24lambda_u2453.setPadding($this$render_u24lambda_u2454.getUi().dp(10), 0, 0, 0);
+                    $this$render_u24lambda_u2454_u24lambda_u2449.addView($this$render_u24lambda_u2454_u24lambda_u2453);
+                    r.addView($this$render_u24lambda_u2454_u24lambda_u2449);
+                    barMax = barMax;
+                    it13 = it13;
+                    records2 = records;
+                    bars = bars2;
+                    c5 = c5;
+                    cols5 = cols;
+                }
             }
-
-            var297 = new LinearLayout((Context)var295.getAct());
-            var297.setOrientation(0);
-            var297.setGravity(16);
-            var297.setPadding(0, var295.getUi().dp(6), 0, var295.getUi().dp(6));
-            LinearLayout var308 = new LinearLayout((Context)var295.getAct());
-            var308.setOrientation(1);
-            float var7;
-            if (!var13 && !var53) {
-               var7 = 1.0F;
+            String detail = "";
+            LinearLayout $this$render_u24lambda_u2454_u24lambda_u24492 = new LinearLayout($this$render_u24lambda_u2454.getAct());
+            $this$render_u24lambda_u2454_u24lambda_u24492.setOrientation(0);
+            $this$render_u24lambda_u2454_u24lambda_u24492.setGravity(16);
+            LinearLayout bars22 = bars;
+            $this$render_u24lambda_u2454_u24lambda_u24492.setPadding(0, $this$render_u24lambda_u2454.getUi().dp(7), 0, $this$render_u24lambda_u2454.getUi().dp(7));
+            LinearLayout tb2 = new LinearLayout($this$render_u24lambda_u2454.getAct());
+            tb2.setOrientation(1);
+            TextView $this$render_u24lambda_u2454_u24lambda_u24512 = new TextView($this$render_u24lambda_u2454.getAct());
+            $this$render_u24lambda_u2454_u24lambda_u24512.setText(title);
+            $this$render_u24lambda_u2454_u24lambda_u24512.setTextSize(15.0f);
+            $this$render_u24lambda_u2454_u24lambda_u24512.setTextColor(CarUi.Companion.getDIM());
+            tb2.addView($this$render_u24lambda_u2454_u24lambda_u24512);
+            TextView $this$render_u24lambda_u2454_u24lambda_u24522 = new TextView($this$render_u24lambda_u2454.getAct());
+            $this$render_u24lambda_u2454_u24lambda_u24522.setText(value);
+            $this$render_u24lambda_u2454_u24lambda_u24522.setTextSize(19.0f);
+            $this$render_u24lambda_u2454_u24lambda_u24522.setTextColor(CarUi.Companion.getTEXT());
+            $this$render_u24lambda_u2454_u24lambda_u24522.setTypeface(Typeface.DEFAULT_BOLD);
+            tb2.addView($this$render_u24lambda_u2454_u24lambda_u24522);
+            $this$render_u24lambda_u2454_u24lambda_u24492.addView(tb2, new LinearLayout.LayoutParams(0, -2, 1.0f));
+            TextView $this$render_u24lambda_u2454_u24lambda_u24532 = new TextView($this$render_u24lambda_u2454.getAct());
+            $this$render_u24lambda_u2454_u24lambda_u24532.setText(detail);
+            $this$render_u24lambda_u2454_u24lambda_u24532.setTextSize(14.0f);
+            $this$render_u24lambda_u2454_u24lambda_u24532.setTextColor(CarUi.Companion.getDIM());
+            $this$render_u24lambda_u2454_u24lambda_u24532.setGravity(8388613);
+            $this$render_u24lambda_u2454_u24lambda_u24532.setPadding($this$render_u24lambda_u2454.getUi().dp(10), 0, 0, 0);
+            $this$render_u24lambda_u2454_u24lambda_u24492.addView($this$render_u24lambda_u2454_u24lambda_u24532);
+            r.addView($this$render_u24lambda_u2454_u24lambda_u24492);
+            barMax = barMax;
+            it13 = it13;
+            records2 = records;
+            bars = bars22;
+            c5 = c5;
+            cols5 = cols;
+        }
+        Unit unit4 = Unit.INSTANCE;
+        final GxHomePage $this$render_u24lambda_u2471 = this;
+        int i10 = 0;
+        LinearLayout linearLayout9 = $this$render_u24lambda_u2471.body;
+        if (linearLayout9 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("body");
+            linearLayout9 = null;
+        }
+        LinearLayout c6 = $this$render_u24lambda_u2471.card(linearLayout9);
+        cardHead$default($this$render_u24lambda_u2471, c6, "Recent drives", null, 4, null);
+        JSONArray optJSONArray3 = dash2.optJSONArray("recentDrives");
+        if (optJSONArray3 == null || (drives = $this$render_u24lambda_u2471.objects(optJSONArray3)) == null) {
+            drives = CollectionsKt.emptyList();
+        }
+        if (drives.isEmpty()) {
+            GxPage.text$default($this$render_u24lambda_u2471, "No local drives found yet.", c6, 17.0f, 0, false, 24, null);
+        }
+        Iterator it14 = drives.iterator();
+        int i11 = 0;
+        while (it14.hasNext()) {
+            int i12 = i11;
+            int i13 = i11 + 1;
+            JSONObject d2 = (JSONObject) it14.next();
+            boolean ignored = Intrinsics.areEqual(d2.opt("ignored"), (Object) true);
+            boolean ready2 = $this$render_u24lambda_u2471.driveReady(d2);
+            boolean pending = (ready2 || ignored) ? false : true;
+            String str$default8 = GxPage.str$default($this$render_u24lambda_u2471, d2, "distanceUnit", null, 2, null);
+            if (StringsKt.isBlank(str$default8)) {
+                i = i10;
+                str$default8 = $this$render_u24lambda_u2471.unit;
             } else {
-               var7 = 0.7F;
+                i = i10;
             }
-
-            var308.setAlpha(var7);
-            TextView var173 = new TextView((Context)var295.getAct());
-            var173.setText(
-               GxHomeKt.access$gxHomeRange(
-                  GxPage.str$default(var295, var291, "date", null, 2, null), GxPage.str$default(var295, var291, "endDate", null, 2, null)
-               )
-            );
-            var173.setTextSize(18.0F);
-            var173.setTextColor(CarUi.Companion.getTEXT());
-            var173.setTypeface(Typeface.DEFAULT_BOLD);
-            var308.addView((View)var173);
-            TextView var39 = new TextView((Context)var295.getAct());
-            CharSequence var285 = GxPage.str$default(var295, var291, "model", null, 2, null);
-            var18 = var285;
-            if (StringsKt.isBlank(var285)) {
-               var18 = "Unknown model";
-            }
-
-            var39.setText((CharSequence)var18);
-            var39.setTextSize(15.0F);
-            var39.setTextColor(CarUi.Companion.getDIM());
-            var308.addView((View)var39);
-            TextView var175 = new TextView((Context)var295.getAct());
-            var32 = GxHomeKt.access$gxHomeDuration(var291.opt(var26));
-            var175.setText(var274 + "   ·   " + var32);
-            var175.setTextSize(16.0F);
-            var175.setTextColor(CarUi.Companion.getTEXT());
-            var175.setPadding(0, var295.getUi().dp(4), 0, 0);
-            var308.addView((View)var175);
-            var295.setProgress(var295.progress((ViewGroup)var308), var40);
-            TextView var176 = new TextView((Context)var295.getAct());
-            var176.setText(
-               CollectionsKt.joinToString$default(CollectionsKt.plus(CollectionsKt.listOf(var306), var307), "   ·   ", null, null, 0, null, null, 62, null)
-            );
-            var176.setTextSize(15.0F);
-            if (!var53 && !var13) {
-               var8 = CarUi.Companion.getTEXT();
+            String u2 = str$default8;
+            List drives2 = drives;
+            JSONArray a2 = d2.optJSONArray("routeNames");
+            if (a2 != null) {
+                it2 = it14;
+                i2 = i13;
+                Iterable $this$map$iv4 = RangesKt.until(0, a2.length());
+                dash = dash2;
+                str8 = str13;
+                Collection destination$iv$iv3 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv4, 10));
+                Iterable $this$mapTo$iv$iv = $this$map$iv4;
+                Iterator<Integer> it15 = $this$mapTo$iv$iv.iterator();
+                while (it15.hasNext()) {
+                    int item$iv$iv3 = ((IntIterator) it15).nextInt();
+                    destination$iv$iv3.add(a2.opt(item$iv$iv3));
+                    $this$mapTo$iv$iv = $this$mapTo$iv$iv;
+                }
+                Iterable $this$filter$iv = (List) destination$iv$iv3;
+                Collection destination$iv$iv4 = new ArrayList();
+                for (Object element$iv$iv : $this$filter$iv) {
+                    Iterable $this$filter$iv2 = $this$filter$iv;
+                    gxHomeTruthy = GxHomeKt.gxHomeTruthy(element$iv$iv);
+                    if (gxHomeTruthy) {
+                        destination$iv$iv4.add(element$iv$iv);
+                    }
+                    $this$filter$iv = $this$filter$iv2;
+                }
+                Iterable $this$map$iv5 = (List) destination$iv$iv4;
+                int $i$f$map2 = CollectionsKt.collectionSizeOrDefault($this$map$iv5, 10);
+                Collection destination$iv$iv5 = new ArrayList($i$f$map2);
+                for (Object item$iv$iv4 : $this$map$iv5) {
+                    destination$iv$iv5.add(item$iv$iv4.toString());
+                }
+                emptyList3 = (List) destination$iv$iv5;
             } else {
-               var8 = CarUi.Companion.getDIM();
+                dash = dash2;
+                str8 = str13;
+                it2 = it14;
+                i2 = i13;
+                emptyList3 = CollectionsKt.emptyList();
             }
-
-            var176.setTextColor(var8);
-            var308.addView((View)var176);
-            var297.addView((View)var308, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
-            if (!var268.isEmpty()) {
-               var32 = CollectionsKt.joinToString$default(var268, ",", null, null, 0, null, null, 62, null);
-               String var177;
-               if (var13) {
-                  var177 = "include";
-               } else {
-                  var177 = "ignore";
-               }
-
-               CarUi var292 = var295.getUi();
-               String var275;
-               if (var13) {
-                  var275 = "Include drive stats";
-               } else {
-                  var275 = "Ignore drive stats";
-               }
-
-               TextView var178 = CarUi.button$default(var292, var275, false, new GxHomePage$$ExternalSyntheticLambda6(var295, var32, var177, var268), 2, null);
-               if (Intrinsics.areEqual(var295.togglingKey, var32)) {
-                  var178.setAlpha(0.45F);
-               }
-
-               View var269 = (View)var178;
-               android.widget.LinearLayout.LayoutParams var179 = new android.widget.LinearLayout.LayoutParams(-2, -2);
-               var179.leftMargin = var295.getUi().dp(12);
-               Unit var276 = Unit.INSTANCE;
-               var297.addView(var269, (LayoutParams)var179);
+            final List routeNames = emptyList3;
+            if (ignored) {
+                distance = "Stats excluded";
+            } else if (pending) {
+                distance = "Analyzing stats";
+            } else {
+                gxHomeDec3 = GxHomeKt.gxHomeDec(d2.opt(engaged));
+                str9 = str17;
+                distance = gxHomeDec3 + str9 + u2;
+                if (!ignored) {
+                    pair = TuplesKt.to("Excluded", CollectionsKt.listOf("Ignored from stats"));
+                    str10 = engaged;
+                } else if (pending) {
+                    pair = TuplesKt.to("Pending", CollectionsKt.listOf("Waiting for full route analysis"));
+                    str10 = engaged;
+                } else {
+                    gxHomePct2 = GxHomeKt.gxHomePct(d2.opt(str16));
+                    str10 = engaged;
+                    gxHomeInt8 = GxHomeKt.gxHomeInt(d2.opt("distractedMoments"));
+                    gxHomeInt9 = GxHomeKt.gxHomeInt(d2.opt("unresponsiveMoments"));
+                    pair = TuplesKt.to(gxHomePct2 + " engaged", CollectionsKt.listOf((Object[]) new String[]{gxHomeInt8 + " distracted", gxHomeInt9 + " unresponsive"}));
+                }
+                String engaged2 = (String) pair.component1();
+                List attention = (List) pair.component2();
+                double engagedValue = (ready2 || ignored) ? 0.0d : GxHomeKt.gxHomeClamp$default(d2.opt(str16), 0.0d, 0.0d, 6, null);
+                if (i12 <= 0) {
+                    str11 = str16;
+                    View $this$render_u24lambda_u2471_u24lambda_u2460 = new View($this$render_u24lambda_u2471.getAct());
+                    str12 = str9;
+                    $this$render_u24lambda_u2471_u24lambda_u2460.setBackgroundColor(Color.rgb(40, 44, 52));
+                    LinearLayout.LayoutParams $this$render_u24lambda_u2471_u24lambda_u2461 = new LinearLayout.LayoutParams(-1, $this$render_u24lambda_u2471.getUi().dp(1));
+                    $this$render_u24lambda_u2471_u24lambda_u2461.topMargin = $this$render_u24lambda_u2471.getUi().dp(6);
+                    $this$render_u24lambda_u2471_u24lambda_u2461.bottomMargin = $this$render_u24lambda_u2471.getUi().dp(6);
+                    Unit unit5 = Unit.INSTANCE;
+                    c6.addView($this$render_u24lambda_u2471_u24lambda_u2460, $this$render_u24lambda_u2471_u24lambda_u2461);
+                } else {
+                    str11 = str16;
+                    str12 = str9;
+                }
+                LinearLayout line = new LinearLayout($this$render_u24lambda_u2471.getAct());
+                line.setOrientation(0);
+                line.setGravity(16);
+                line.setPadding(0, $this$render_u24lambda_u2471.getUi().dp(6), 0, $this$render_u24lambda_u2471.getUi().dp(6));
+                LinearLayout left = new LinearLayout($this$render_u24lambda_u2471.getAct());
+                left.setOrientation(1);
+                left.setAlpha((!ignored || pending) ? 0.7f : 1.0f);
+                TextView $this$render_u24lambda_u2471_u24lambda_u2464 = new TextView($this$render_u24lambda_u2471.getAct());
+                LinearLayout c7 = c6;
+                gxHomeRange2 = GxHomeKt.gxHomeRange(GxPage.str$default($this$render_u24lambda_u2471, d2, "date", null, 2, null), GxPage.str$default($this$render_u24lambda_u2471, d2, "endDate", null, 2, null));
+                $this$render_u24lambda_u2471_u24lambda_u2464.setText(gxHomeRange2);
+                $this$render_u24lambda_u2471_u24lambda_u2464.setTextSize(18.0f);
+                $this$render_u24lambda_u2471_u24lambda_u2464.setTextColor(CarUi.Companion.getTEXT());
+                $this$render_u24lambda_u2471_u24lambda_u2464.setTypeface(Typeface.DEFAULT_BOLD);
+                left.addView($this$render_u24lambda_u2471_u24lambda_u2464);
+                TextView $this$render_u24lambda_u2471_u24lambda_u2466 = new TextView($this$render_u24lambda_u2471.getAct());
+                str$default = GxPage.str$default($this$render_u24lambda_u2471, d2, "model", null, 2, null);
+                if (StringsKt.isBlank(str$default)) {
+                    str$default = "Unknown model";
+                }
+                $this$render_u24lambda_u2471_u24lambda_u2466.setText(str$default);
+                $this$render_u24lambda_u2471_u24lambda_u2466.setTextSize(15.0f);
+                $this$render_u24lambda_u2471_u24lambda_u2466.setTextColor(CarUi.Companion.getDIM());
+                left.addView($this$render_u24lambda_u2471_u24lambda_u2466);
+                TextView $this$render_u24lambda_u2471_u24lambda_u2467 = new TextView($this$render_u24lambda_u2471.getAct());
+                String str22 = str21;
+                gxHomeDuration2 = GxHomeKt.gxHomeDuration(d2.opt(str22));
+                $this$render_u24lambda_u2471_u24lambda_u2467.setText(distance + "   ·   " + gxHomeDuration2);
+                $this$render_u24lambda_u2471_u24lambda_u2467.setTextSize(16.0f);
+                $this$render_u24lambda_u2471_u24lambda_u2467.setTextColor(CarUi.Companion.getTEXT());
+                $this$render_u24lambda_u2471_u24lambda_u2467.setPadding(0, $this$render_u24lambda_u2471.getUi().dp(4), 0, 0);
+                left.addView($this$render_u24lambda_u2471_u24lambda_u2467);
+                $this$render_u24lambda_u2471.setProgress($this$render_u24lambda_u2471.progress(left), engagedValue);
+                TextView $this$render_u24lambda_u2471_u24lambda_u2468 = new TextView($this$render_u24lambda_u2471.getAct());
+                $this$render_u24lambda_u2471_u24lambda_u2468.setText(CollectionsKt.joinToString$default(CollectionsKt.plus((Collection) CollectionsKt.listOf(engaged2), (Iterable) attention), "   ·   ", null, null, 0, null, null, 62, null));
+                $this$render_u24lambda_u2471_u24lambda_u2468.setTextSize(15.0f);
+                $this$render_u24lambda_u2471_u24lambda_u2468.setTextColor((!pending || ignored) ? CarUi.Companion.getDIM() : CarUi.Companion.getTEXT());
+                left.addView($this$render_u24lambda_u2471_u24lambda_u2468);
+                line.addView(left, new LinearLayout.LayoutParams(0, -2, 1.0f));
+                if (routeNames.isEmpty()) {
+                    final String key = CollectionsKt.joinToString$default(routeNames, ",", null, null, 0, null, null, 62, null);
+                    final String action = ignored ? "include" : "ignore";
+                    TextView b = CarUi.button$default($this$render_u24lambda_u2471.getUi(), ignored ? "Include drive stats" : "Ignore drive stats", false, new Function0() { // from class: com.starpilot.starview.GxHomePage$$ExternalSyntheticLambda6
+                        @Override // kotlin.jvm.functions.Function0
+                        public final Object invoke() {
+                            Unit render$lambda$71$lambda$69;
+                            render$lambda$71$lambda$69 = GxHomePage.render$lambda$71$lambda$69(GxHomePage.this, key, action, routeNames);
+                            return render$lambda$71$lambda$69;
+                        }
+                    }, 2, null);
+                    if (Intrinsics.areEqual($this$render_u24lambda_u2471.togglingKey, key)) {
+                        b.setAlpha(0.45f);
+                    }
+                    LinearLayout.LayoutParams $this$render_u24lambda_u2471_u24lambda_u2470 = new LinearLayout.LayoutParams(-2, -2);
+                    $this$render_u24lambda_u2471_u24lambda_u2470.leftMargin = $this$render_u24lambda_u2471.getUi().dp(12);
+                    Unit unit6 = Unit.INSTANCE;
+                    line.addView(b, $this$render_u24lambda_u2471_u24lambda_u2470);
+                }
+                c7.addView(line);
+                c6 = c7;
+                str21 = str22;
+                drives = drives2;
+                i10 = i;
+                engaged = str10;
+                it14 = it2;
+                i11 = i2;
+                str13 = str8;
+                str16 = str11;
+                dash2 = dash;
+                str17 = str12;
             }
-
-            var29.addView((View)var297);
-            var8 = var10;
-         }
-
-         label399: {
-            Unit var180 = Unit.INSTANCE;
-            var239 = this;
-            var11 = false;
-            var247 = columns$default(var239, 2, null, 2, null);
-            var250 = var239.card((ViewGroup)var247.get(0));
-            var239.cardHead(var250, "Most used models", TuplesKt.to("Models", "gx:models"));
-            JSONArray var181 = var31.optJSONArray("favoriteModels");
-            if (var181 != null) {
-               List var221 = var239.objects(var181);
-               var182 = var221;
-               if (var221 != null) {
-                  break label399;
-               }
+            str9 = str17;
+            if (!ignored) {
             }
-
-            var182 = CollectionsKt.emptyList();
-         }
-
-         List var222 = CollectionsKt.take(var182, 3);
-         if (var222.isEmpty()) {
-            GxPage.text$default(var239, "No model usage recorded yet.", (ViewGroup)var250, 17.0F, 0, false, 24, null);
-         } else {
-            LinearLayout var231 = new LinearLayout((Context)var239.getAct());
-            var231.setOrientation(0);
-            Iterator var183 = var222.iterator();
-
-            for (int var50 = 0; var183.hasNext(); var50++) {
-               JSONObject var261 = (JSONObject)var183.next();
-               View var270 = new View((Context)var239.getAct());
-               var270.setBackgroundColor(var239.favColors.get(var50).intValue());
-               var231.addView(
-                  var270,
-                  (LayoutParams)(
-                     new android.widget.LinearLayout.LayoutParams(
-                        0, var239.getUi().dp(18), (float)Math.max(1.0, GxHomeKt.access$gxHomeNum(var261.opt("weight")))
-                     )
-                  )
-               );
+            String engaged22 = (String) pair.component1();
+            List attention2 = (List) pair.component2();
+            if (ready2) {
             }
-
-            View var262 = (View)var231;
-            android.widget.LinearLayout.LayoutParams var184 = new android.widget.LinearLayout.LayoutParams(-1, var239.getUi().dp(18));
-            var184.topMargin = var239.getUi().dp(4);
-            var184.bottomMargin = var239.getUi().dp(8);
-            Unit var232 = Unit.INSTANCE;
-            var250.addView(var262, (LayoutParams)var184);
-            Iterator var233 = var222.iterator();
-            var8 = 0;
-
-            for (Iterator var223 = var233; var223.hasNext(); var8++) {
-               JSONObject var234 = (JSONObject)var223.next();
-               var29 = new LinearLayout((Context)var239.getAct());
-               var29.setOrientation(0);
-               var29.setGravity(16);
-               var29.setPadding(0, var239.getUi().dp(6), 0, var239.getUi().dp(6));
-               View var288 = new View((Context)var239.getAct());
-               var288.setBackground((Drawable)CarUi.rounded$default(var239.getUi(), var239.favColors.get(var8).intValue(), 5, null, 4, null));
-               android.widget.LinearLayout.LayoutParams var271 = new android.widget.LinearLayout.LayoutParams(var239.getUi().dp(20), var239.getUi().dp(20));
-               var271.rightMargin = var239.getUi().dp(12);
-               Unit var277 = Unit.INSTANCE;
-               var29.addView(var288, (LayoutParams)var271);
-               LinearLayout var272 = new LinearLayout((Context)var239.getAct());
-               var272.setOrientation(1);
-               TextView var278 = new TextView((Context)var239.getAct());
-               var278.setText(GxPage.str$default(var239, var234, "name", null, 2, null));
-               var278.setTextSize(18.0F);
-               var278.setTextColor(CarUi.Companion.getTEXT());
-               var278.setTypeface(Typeface.DEFAULT_BOLD);
-               var272.addView((View)var278);
-               var40 = GxHomeKt.access$gxHomeNum(var234.opt(var78));
-               TextView var279 = new TextView((Context)var239.getAct());
-               var32 = GxHomeKt.access$gxHomeInt(var40);
-               boolean var54;
-               if (var40 == 1.0) {
-                  var54 = true;
-               } else {
-                  var54 = false;
-               }
-
-               if (var54) {
-                  var25 = "drive";
-               } else {
-                  var25 = var78;
-               }
-
-               var279.setText(var32 + var211 + var25 + " using this model");
-               var279.setTextSize(15.0F);
-               var279.setTextColor(CarUi.Companion.getDIM());
-               var272.addView((View)var279);
-               var29.addView((View)var272);
-               var250.addView((View)var29);
+            if (i12 <= 0) {
             }
-
-            Unit var79 = Unit.INSTANCE;
-         }
-
-         LinearLayout var212 = var239.card((ViewGroup)var247.get(1));
-         var239.cardHead(var212, "Storage", TuplesKt.to("Recordings", "gx:recordings"));
-         JSONObject var121 = var67.optJSONObject("segmentCounts");
-         JSONObject var80 = var121;
-         if (var121 == null) {
-            var80 = new JSONObject();
-         }
-
-         GxPage var224 = var239;
-         CharSequence var185 = GxPage.str$default(var239, var67, "legacyText", null, 2, null);
-         var17 = var185;
-         if (StringsKt.isBlank(var185)) {
-            String var186 = GxHomeKt.access$gxHomeBytes(var67.opt("usedBytes"));
-            String var123 = GxHomeKt.access$gxHomeBytes(var67.opt("totalBytes"));
-            var17 = var186 + " used of " + var123;
-         }
-
-         GxPage.text$default(var224, (String)var17, (ViewGroup)var212, 17.0F, CarUi.Companion.getTEXT(), false, 16, null);
-         var239.setProgress(var239.progress((ViewGroup)var212), GxHomeKt.gxHomeClamp$default(var67.opt("usedPercent"), 0.0, 0.0, 6, null));
-         String var124 = GxHomeKt.access$gxHomeInt(var80.opt("standard"));
-         var239.kv(var212, "Dashcam footage", var124 + " segments");
-         String var125 = GxHomeKt.access$gxHomeInt(var80.opt("highResolution"));
-         var239.kv(var212, "High-resolution footage", var125 + " segments");
-         String var81 = GxHomeKt.access$gxHomeInt(var80.opt("alternate"));
-         var239.kv(var212, "Konik footage", var81 + " segments");
-         var239.kv(var212, "Free space", GxHomeKt.access$gxHomeBytes(var67.opt("freeBytes")));
-         Unit var82 = Unit.INSTANCE;
-         var17 = this.body;
-         LinearLayout var83 = var17;
-         if (var17 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException(var30);
-            var83 = null;
-         }
-
-         this.header("Your device", (ViewGroup)var83);
-         GxHomePage var187 = this;
-         List var204 = columns$default(var187, 2, null, 2, null);
-         LinearLayout var199 = var187.card((ViewGroup)var204.get(0));
-         var187.cardHead(var199, "Vitals", TuplesKt.to("System", "gx:system"));
-         CharSequence var127 = GxPage.str$default(var187, var19, "status", null, 2, null);
-         var71 = var127;
-         if (StringsKt.isBlank(var127)) {
-            var71 = "Parked";
-         }
-
-         var187.kv(var199, "Status", (String)var71);
-         CharSequence var128 = GxPage.str$default(var187, var19, "lanIp", null, 2, null);
-         var71 = var128;
-         if (StringsKt.isBlank(var128)) {
-            var71 = "unknown";
-         }
-
-         var187.kv(var199, "LAN IP", (String)var71);
-         CharSequence var129 = GxPage.str$default(var187, var19, "networkName", null, 2, null);
-         var71 = var129;
-         if (StringsKt.isBlank(var129)) {
-            var71 = "No wireless connectivity";
-         }
-
-         var187.kv(var199, "Network", (String)var71);
-         String var87;
-         if (var19.has("uptimeSeconds") && !var19.isNull("uptimeSeconds")) {
-            var87 = GxHomeKt.access$gxHomeDuration(var19.opt("uptimeSeconds"));
-         } else {
-            var87 = "unknown";
-         }
-
-         var187.kv(var199, "Uptime", var87);
-         String var88;
-         if (var19.has("cpuTempC") && !var19.isNull("cpuTempC")) {
-            String var89 = GxHomeKt.access$gxHomeInt(var19.opt("cpuTempC"));
-            var88 = var89 + " C";
-         } else {
-            var88 = "unknown";
-         }
-
-         var187.kv(var199, "CPU temp", var88);
-         String var90;
-         if (var19.has("gpuTempC") && !var19.isNull("gpuTempC")) {
-            String var91 = GxHomeKt.access$gxHomeInt(var19.opt("gpuTempC"));
-            var90 = var91 + " C";
-         } else {
-            var90 = "unknown";
-         }
-
-         var187.kv(var199, "GPU temp", var90);
-         LinearLayout var200 = var187.card((ViewGroup)var204.get(1));
-         var187.cardHead(var200, "Software", TuplesKt.to("Updates", "native:software"));
-
-         for (Pair var92 : CollectionsKt.listOf(
-            new Pair[]{
-               TuplesKt.to("Branch", "branchName"),
-               TuplesKt.to("Build", "buildEnvironment"),
-               TuplesKt.to("Commit", "commitHash"),
-               TuplesKt.to("Version date", "versionDate"),
-               TuplesKt.to("Fork maintainer", "forkMaintainer"),
-               TuplesKt.to("Update available", "updateAvailable")
+            LinearLayout line2 = new LinearLayout($this$render_u24lambda_u2471.getAct());
+            line2.setOrientation(0);
+            line2.setGravity(16);
+            line2.setPadding(0, $this$render_u24lambda_u2471.getUi().dp(6), 0, $this$render_u24lambda_u2471.getUi().dp(6));
+            LinearLayout left2 = new LinearLayout($this$render_u24lambda_u2471.getAct());
+            left2.setOrientation(1);
+            left2.setAlpha((!ignored || pending) ? 0.7f : 1.0f);
+            TextView $this$render_u24lambda_u2471_u24lambda_u24642 = new TextView($this$render_u24lambda_u2471.getAct());
+            LinearLayout c72 = c6;
+            gxHomeRange2 = GxHomeKt.gxHomeRange(GxPage.str$default($this$render_u24lambda_u2471, d2, "date", null, 2, null), GxPage.str$default($this$render_u24lambda_u2471, d2, "endDate", null, 2, null));
+            $this$render_u24lambda_u2471_u24lambda_u24642.setText(gxHomeRange2);
+            $this$render_u24lambda_u2471_u24lambda_u24642.setTextSize(18.0f);
+            $this$render_u24lambda_u2471_u24lambda_u24642.setTextColor(CarUi.Companion.getTEXT());
+            $this$render_u24lambda_u2471_u24lambda_u24642.setTypeface(Typeface.DEFAULT_BOLD);
+            left2.addView($this$render_u24lambda_u2471_u24lambda_u24642);
+            TextView $this$render_u24lambda_u2471_u24lambda_u24662 = new TextView($this$render_u24lambda_u2471.getAct());
+            str$default = GxPage.str$default($this$render_u24lambda_u2471, d2, "model", null, 2, null);
+            if (StringsKt.isBlank(str$default)) {
             }
-         )) {
-            String var205 = (String)var92.component1();
-            String var93 = (String)var92.component2();
-            CharSequence var130 = GxPage.str$default(var187, var20, var93, null, 2, null);
-            var71 = var130;
-            if (StringsKt.isBlank(var130)) {
-               var71 = "unknown";
+            $this$render_u24lambda_u2471_u24lambda_u24662.setText(str$default);
+            $this$render_u24lambda_u2471_u24lambda_u24662.setTextSize(15.0f);
+            $this$render_u24lambda_u2471_u24lambda_u24662.setTextColor(CarUi.Companion.getDIM());
+            left2.addView($this$render_u24lambda_u2471_u24lambda_u24662);
+            TextView $this$render_u24lambda_u2471_u24lambda_u24672 = new TextView($this$render_u24lambda_u2471.getAct());
+            String str222 = str21;
+            gxHomeDuration2 = GxHomeKt.gxHomeDuration(d2.opt(str222));
+            $this$render_u24lambda_u2471_u24lambda_u24672.setText(distance + "   ·   " + gxHomeDuration2);
+            $this$render_u24lambda_u2471_u24lambda_u24672.setTextSize(16.0f);
+            $this$render_u24lambda_u2471_u24lambda_u24672.setTextColor(CarUi.Companion.getTEXT());
+            $this$render_u24lambda_u2471_u24lambda_u24672.setPadding(0, $this$render_u24lambda_u2471.getUi().dp(4), 0, 0);
+            left2.addView($this$render_u24lambda_u2471_u24lambda_u24672);
+            $this$render_u24lambda_u2471.setProgress($this$render_u24lambda_u2471.progress(left2), engagedValue);
+            TextView $this$render_u24lambda_u2471_u24lambda_u24682 = new TextView($this$render_u24lambda_u2471.getAct());
+            $this$render_u24lambda_u2471_u24lambda_u24682.setText(CollectionsKt.joinToString$default(CollectionsKt.plus((Collection) CollectionsKt.listOf(engaged22), (Iterable) attention2), "   ·   ", null, null, 0, null, null, 62, null));
+            $this$render_u24lambda_u2471_u24lambda_u24682.setTextSize(15.0f);
+            $this$render_u24lambda_u2471_u24lambda_u24682.setTextColor((!pending || ignored) ? CarUi.Companion.getDIM() : CarUi.Companion.getTEXT());
+            left2.addView($this$render_u24lambda_u2471_u24lambda_u24682);
+            line2.addView(left2, new LinearLayout.LayoutParams(0, -2, 1.0f));
+            if (routeNames.isEmpty()) {
             }
+            c72.addView(line2);
+            c6 = c72;
+            str21 = str222;
+            drives = drives2;
+            i10 = i;
+            engaged = str10;
+            it14 = it2;
+            i11 = i2;
+            str13 = str8;
+            str16 = str11;
+            dash2 = dash;
+            str17 = str12;
+        }
+        JSONObject dash3 = dash2;
+        String str23 = str13;
+        String str24 = str17;
+        Unit unit7 = Unit.INSTANCE;
+        GxHomePage $this$render_u24lambda_u2482 = this;
+        int i14 = 0;
+        List cols6 = columns$default($this$render_u24lambda_u2482, 2, null, 2, null);
+        LinearLayout m = $this$render_u24lambda_u2482.card((ViewGroup) cols6.get(0));
+        $this$render_u24lambda_u2482.cardHead(m, "Most used models", TuplesKt.to("Models", "gx:models"));
+        JSONObject dash4 = dash3;
+        JSONArray optJSONArray4 = dash4.optJSONArray("favoriteModels");
+        if (optJSONArray4 == null || (emptyList2 = $this$render_u24lambda_u2482.objects(optJSONArray4)) == null) {
+            emptyList2 = CollectionsKt.emptyList();
+        }
+        List models = CollectionsKt.take(emptyList2, 3);
+        if (models.isEmpty()) {
+            GxPage.text$default($this$render_u24lambda_u2482, "No model usage recorded yet.", m, 17.0f, 0, false, 24, null);
+        } else {
+            LinearLayout share = new LinearLayout($this$render_u24lambda_u2482.getAct());
+            share.setOrientation(0);
+            Iterator it16 = models.iterator();
+            int i15 = 0;
+            while (it16.hasNext()) {
+                int i16 = i15;
+                JSONObject mo = (JSONObject) it16.next();
+                View $this$render_u24lambda_u2482_u24lambda_u2473 = new View($this$render_u24lambda_u2482.getAct());
+                $this$render_u24lambda_u2482_u24lambda_u2473.setBackgroundColor($this$render_u24lambda_u2482.favColors.get(i16).intValue());
+                int dp = $this$render_u24lambda_u2482.getUi().dp(18);
+                Iterator it17 = it16;
+                gxHomeNum3 = GxHomeKt.gxHomeNum(mo.opt("weight"));
+                share.addView($this$render_u24lambda_u2482_u24lambda_u2473, new LinearLayout.LayoutParams(0, dp, (float) Math.max(1.0d, gxHomeNum3)));
+                it16 = it17;
+                i15++;
+            }
+            LinearLayout.LayoutParams $this$render_u24lambda_u2482_u24lambda_u2474 = new LinearLayout.LayoutParams(-1, $this$render_u24lambda_u2482.getUi().dp(18));
+            $this$render_u24lambda_u2482_u24lambda_u2474.topMargin = $this$render_u24lambda_u2482.getUi().dp(4);
+            $this$render_u24lambda_u2482_u24lambda_u2474.bottomMargin = $this$render_u24lambda_u2482.getUi().dp(8);
+            Unit unit8 = Unit.INSTANCE;
+            m.addView(share, $this$render_u24lambda_u2482_u24lambda_u2474);
+            Iterator it18 = models.iterator();
+            int i17 = 0;
+            while (it18.hasNext()) {
+                int i18 = i17;
+                int i19 = i17 + 1;
+                JSONObject mo2 = (JSONObject) it18.next();
+                LinearLayout $this$render_u24lambda_u2482_u24lambda_u2475 = new LinearLayout($this$render_u24lambda_u2482.getAct());
+                $this$render_u24lambda_u2482_u24lambda_u2475.setOrientation(0);
+                $this$render_u24lambda_u2482_u24lambda_u2475.setGravity(16);
+                int i20 = i14;
+                $this$render_u24lambda_u2482_u24lambda_u2475.setPadding(0, $this$render_u24lambda_u2482.getUi().dp(6), 0, $this$render_u24lambda_u2482.getUi().dp(6));
+                View $this$render_u24lambda_u2482_u24lambda_u2476 = new View($this$render_u24lambda_u2482.getAct());
+                $this$render_u24lambda_u2482_u24lambda_u2476.setBackground(CarUi.rounded$default($this$render_u24lambda_u2482.getUi(), $this$render_u24lambda_u2482.favColors.get(i18).intValue(), 5, null, 4, null));
+                Iterator it19 = it18;
+                LinearLayout.LayoutParams $this$render_u24lambda_u2482_u24lambda_u2477 = new LinearLayout.LayoutParams($this$render_u24lambda_u2482.getUi().dp(20), $this$render_u24lambda_u2482.getUi().dp(20));
+                List models2 = models;
+                $this$render_u24lambda_u2482_u24lambda_u2477.rightMargin = $this$render_u24lambda_u2482.getUi().dp(12);
+                Unit unit9 = Unit.INSTANCE;
+                $this$render_u24lambda_u2482_u24lambda_u2475.addView($this$render_u24lambda_u2482_u24lambda_u2476, $this$render_u24lambda_u2482_u24lambda_u2477);
+                LinearLayout tb3 = new LinearLayout($this$render_u24lambda_u2482.getAct());
+                tb3.setOrientation(1);
+                TextView $this$render_u24lambda_u2482_u24lambda_u2479 = new TextView($this$render_u24lambda_u2482.getAct());
+                $this$render_u24lambda_u2482_u24lambda_u2479.setText(GxPage.str$default($this$render_u24lambda_u2482, mo2, "name", null, 2, null));
+                $this$render_u24lambda_u2482_u24lambda_u2479.setTextSize(18.0f);
+                $this$render_u24lambda_u2482_u24lambda_u2479.setTextColor(CarUi.Companion.getTEXT());
+                $this$render_u24lambda_u2482_u24lambda_u2479.setTypeface(Typeface.DEFAULT_BOLD);
+                tb3.addView($this$render_u24lambda_u2482_u24lambda_u2479);
+                n = GxHomeKt.gxHomeNum(mo2.opt(str20));
+                TextView $this$render_u24lambda_u2482_u24lambda_u2480 = new TextView($this$render_u24lambda_u2482.getAct());
+                gxHomeInt2 = GxHomeKt.gxHomeInt(Double.valueOf(n));
+                JSONObject dash5 = dash4;
+                $this$render_u24lambda_u2482_u24lambda_u2480.setText(gxHomeInt2 + str24 + ((n > 1.0d ? 1 : (n == 1.0d ? 0 : -1)) == 0 ? "drive" : str20) + " using this model");
+                $this$render_u24lambda_u2482_u24lambda_u2480.setTextSize(15.0f);
+                $this$render_u24lambda_u2482_u24lambda_u2480.setTextColor(CarUi.Companion.getDIM());
+                tb3.addView($this$render_u24lambda_u2482_u24lambda_u2480);
+                $this$render_u24lambda_u2482_u24lambda_u2475.addView(tb3);
+                m.addView($this$render_u24lambda_u2482_u24lambda_u2475);
+                it18 = it19;
+                i14 = i20;
+                models = models2;
+                i17 = i19;
+                dash4 = dash5;
+            }
+            Unit unit10 = Unit.INSTANCE;
+        }
+        LinearLayout s3 = $this$render_u24lambda_u2482.card((ViewGroup) cols6.get(1));
+        $this$render_u24lambda_u2482.cardHead(s3, "Storage", TuplesKt.to("Recordings", "gx:recordings"));
+        JSONObject counts = storage3.optJSONObject("segmentCounts");
+        if (counts == null) {
+            counts = new JSONObject();
+        }
+        GxHomePage gxHomePage = $this$render_u24lambda_u2482;
+        String str$default9 = GxPage.str$default($this$render_u24lambda_u2482, storage3, "legacyText", null, 2, null);
+        if (StringsKt.isBlank(str$default9)) {
+            gxHomeBytes2 = GxHomeKt.gxHomeBytes(storage3.opt("usedBytes"));
+            gxHomeBytes3 = GxHomeKt.gxHomeBytes(storage3.opt("totalBytes"));
+            str$default9 = gxHomeBytes2 + " used of " + gxHomeBytes3;
+        }
+        GxPage.text$default(gxHomePage, str$default9, s3, 17.0f, CarUi.Companion.getTEXT(), false, 16, null);
+        $this$render_u24lambda_u2482.setProgress($this$render_u24lambda_u2482.progress(s3), GxHomeKt.gxHomeClamp$default(storage3.opt("usedPercent"), 0.0d, 0.0d, 6, null));
+        gxHomeInt3 = GxHomeKt.gxHomeInt(counts.opt("standard"));
+        $this$render_u24lambda_u2482.kv(s3, "Dashcam footage", gxHomeInt3 + " segments");
+        gxHomeInt4 = GxHomeKt.gxHomeInt(counts.opt("highResolution"));
+        $this$render_u24lambda_u2482.kv(s3, "High-resolution footage", gxHomeInt4 + " segments");
+        gxHomeInt5 = GxHomeKt.gxHomeInt(counts.opt("alternate"));
+        $this$render_u24lambda_u2482.kv(s3, "Konik footage", gxHomeInt5 + " segments");
+        gxHomeBytes = GxHomeKt.gxHomeBytes(storage3.opt("freeBytes"));
+        $this$render_u24lambda_u2482.kv(s3, "Free space", gxHomeBytes);
+        Unit unit11 = Unit.INSTANCE;
+        LinearLayout linearLayout10 = this.body;
+        if (linearLayout10 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException(str23);
+            linearLayout10 = null;
+        }
+        header("Your device", linearLayout10);
+        GxHomePage $this$render_u24lambda_u2487 = this;
+        List cols7 = columns$default($this$render_u24lambda_u2487, 2, null, 2, null);
+        LinearLayout v = $this$render_u24lambda_u2487.card((ViewGroup) cols7.get(0));
+        $this$render_u24lambda_u2487.cardHead(v, "Vitals", TuplesKt.to("System", "gx:system"));
+        String str$default10 = GxPage.str$default($this$render_u24lambda_u2487, device, "status", null, 2, null);
+        if (StringsKt.isBlank(str$default10)) {
+            str$default10 = "Parked";
+        }
+        $this$render_u24lambda_u2487.kv(v, "Status", str$default10);
+        String str$default11 = GxPage.str$default($this$render_u24lambda_u2487, device, "lanIp", null, 2, null);
+        if (StringsKt.isBlank(str$default11)) {
+            str$default11 = "unknown";
+        }
+        $this$render_u24lambda_u2487.kv(v, "LAN IP", str$default11);
+        String str$default12 = GxPage.str$default($this$render_u24lambda_u2487, device, "networkName", null, 2, null);
+        if (StringsKt.isBlank(str$default12)) {
+            str$default12 = "No wireless connectivity";
+        }
+        $this$render_u24lambda_u2487.kv(v, "Network", str$default12);
+        JSONObject device3 = device;
+        $this$render_u24lambda_u2487.kv(v, "Uptime", (!device3.has("uptimeSeconds") || device3.isNull("uptimeSeconds")) ? "unknown" : GxHomeKt.gxHomeDuration(device3.opt("uptimeSeconds")));
+        if (!device3.has("cpuTempC") || device3.isNull("cpuTempC")) {
+            str6 = "unknown";
+        } else {
+            gxHomeInt7 = GxHomeKt.gxHomeInt(device3.opt("cpuTempC"));
+            str6 = gxHomeInt7 + " C";
+        }
+        $this$render_u24lambda_u2487.kv(v, "CPU temp", str6);
+        if (!device3.has("gpuTempC") || device3.isNull("gpuTempC")) {
+            str7 = "unknown";
+        } else {
+            gxHomeInt6 = GxHomeKt.gxHomeInt(device3.opt("gpuTempC"));
+            str7 = gxHomeInt6 + " C";
+        }
+        $this$render_u24lambda_u2487.kv(v, "GPU temp", str7);
+        LinearLayout sw = $this$render_u24lambda_u2487.card((ViewGroup) cols7.get(1));
+        $this$render_u24lambda_u2487.cardHead(sw, "Software", TuplesKt.to("Updates", "native:software"));
+        for (Pair pair4 : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Branch", "branchName"), TuplesKt.to("Build", "buildEnvironment"), TuplesKt.to("Commit", "commitHash"), TuplesKt.to("Version date", "versionDate"), TuplesKt.to("Fork maintainer", "forkMaintainer"), TuplesKt.to("Update available", "updateAvailable")})) {
+            String label3 = (String) pair4.component1();
+            String k2 = (String) pair4.component2();
+            JSONObject software3 = software;
+            String str$default13 = GxPage.str$default($this$render_u24lambda_u2487, software3, k2, null, 2, null);
+            if (StringsKt.isBlank(str$default13)) {
+                str$default13 = "unknown";
+            }
+            $this$render_u24lambda_u2487.kv(sw, label3, str$default13);
+            software = software3;
+        }
+        Unit unit12 = Unit.INSTANCE;
+    }
 
-            var187.kv(var200, var205, (String)var71);
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit render$lambda$27(GxHomePage this$0) {
+        this$0.refresh();
+        return Unit.INSTANCE;
+    }
 
-         Unit var95 = Unit.INSTANCE;
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit render$lambda$71$lambda$69(GxHomePage $this_run, String $key, String $action, List $routeNames) {
+        if (!Intrinsics.areEqual($this_run.togglingKey, $key)) {
+            $this_run.toggleDriveStats($action, $routeNames);
+        }
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit render$lambda$27(GxHomePage var0) {
-      var0.refresh();
-      return Unit.INSTANCE;
-   }
+    private static final void toggleDriveStats$go(final GxHomePage this$0, List<String> list, final String $action) {
+        this$0.togglingKey = CollectionsKt.joinToString$default(list, ",", null, null, 0, null, null, 62, null);
+        this$0.render();
+        GxPage.send$default(this$0, "POST", "/api/stats/" + $action + "_drive", new JSONObject().put("routeNames", new JSONArray((Collection) list)), 0L, new Function2() { // from class: com.starpilot.starview.GxHomePage$$ExternalSyntheticLambda9
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit unit;
+                unit = GxHomePage.toggleDriveStats$go$lambda$89(GxHomePage.this, $action, (String) obj, (JSONObject) obj2);
+                return unit;
+            }
+        }, 8, null);
+    }
 
-   private static final Unit render$lambda$71$lambda$69(GxHomePage var0, String var1, String var2, List var3) {
-      if (!Intrinsics.areEqual(var0.togglingKey, var1)) {
-         var0.toggleDriveStats(var2, var3);
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit toggleDriveStats$go$lambda$89(GxHomePage this$0, String $action, String e, JSONObject jSONObject) {
+        if (e != null) {
+            String str = e;
+            if (StringsKt.isBlank(str)) {
+                str = "Unable to " + $action + " drive statistics.";
+            }
+            this$0.toast(str);
+            this$0.togglingKey = "";
+            this$0.render();
+        } else {
+            this$0.togglingKey = "";
+            this$0.refreshing = false;
+            this$0.load();
+        }
+        return Unit.INSTANCE;
+    }
 
-      return Unit.INSTANCE;
-   }
+    private final void toggleDriveStats(final String action, final List<String> routeNames) {
+        if (!Intrinsics.areEqual(action, "ignore")) {
+            toggleDriveStats$go(this, routeNames, action);
+        } else {
+            confirm("Ignore this drive's statistics?", "It will no longer affect local weekly totals, records, model usage, engagement, or attention streaks.", "Ignore", new Function0() { // from class: com.starpilot.starview.GxHomePage$$ExternalSyntheticLambda7
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit unit;
+                    unit = GxHomePage.toggleDriveStats$lambda$90(GxHomePage.this, routeNames, action);
+                    return unit;
+                }
+            });
+        }
+    }
 
-   private final void toggleDriveStats(String var1, List<String> var2) {
-      if (Intrinsics.areEqual(var1, "ignore")) {
-         this.confirm(
-            "Ignore this drive's statistics?",
-            "It will no longer affect local weekly totals, records, model usage, engagement, or attention streaks.",
-            "Ignore",
-            new GxHomePage$$ExternalSyntheticLambda7(this, var2, var1)
-         );
-      } else {
-         toggleDriveStats$go(this, var2, var1);
-      }
-   }
-
-   private static final void toggleDriveStats$go(GxHomePage var0, List<String> var1, String var2) {
-      var0.togglingKey = CollectionsKt.joinToString$default(var1, ",", null, null, 0, null, null, 62, null);
-      var0.render();
-      GxPage.send$default(
-         var0,
-         "POST",
-         "/api/stats/" + var2 + "_drive",
-         new JSONObject().put("routeNames", new JSONArray(var1)),
-         0L,
-         new GxHomePage$$ExternalSyntheticLambda9(var0, var2),
-         8,
-         null
-      );
-   }
-
-   private static final Unit toggleDriveStats$go$lambda$89(GxHomePage var0, String var1, String var2, JSONObject var3) {
-      if (var2 != null) {
-         CharSequence var5 = var2;
-         Object var4 = var5;
-         if (StringsKt.isBlank(var5)) {
-            var4 = "Unable to " + var1 + " drive statistics.";
-         }
-
-         var0.toast((String)var4);
-         var0.togglingKey = "";
-         var0.render();
-      } else {
-         var0.togglingKey = "";
-         var0.refreshing = false;
-         var0.load();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit toggleDriveStats$lambda$90(GxHomePage var0, List var1, String var2) {
-      toggleDriveStats$go(var0, var1, var2);
-      return Unit.INSTANCE;
-   }
-
-   @Override
-   public void build() {
-      this.hero = GxPage.row$default(this, "Dashboard", "Loading dashboard...", null, 0, 12, null);
-      GxPage.Row var2 = this.hero;
-      GxPage.Row var1 = var2;
-      if (var2 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("hero");
-         var1 = null;
-      }
-
-      var1.getTitleView().setTextSize(26.0F);
-      var2 = this.hero;
-      var1 = var2;
-      if (var2 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("hero");
-         var1 = null;
-      }
-
-      var1.getTitleView().setTypeface(Typeface.DEFAULT_BOLD);
-      var1 = this.hero;
-      if (var1 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("hero");
-         var1 = null;
-      }
-
-      GxPage.Row.button$default(var1, "Refresh", false, new GxHomePage$$ExternalSyntheticLambda2(this), 2, null);
-      this.body = GxPage.box$default(this, null, 1, null);
-      this.every(3500L, new GxHomePage$$ExternalSyntheticLambda3(this));
-      this.every(5000L, new GxHomePage$$ExternalSyntheticLambda4(this));
-   }
-
-   @Override
-   public void onShow() {
-      this.load();
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit toggleDriveStats$lambda$90(GxHomePage this$0, List $routeNames, String $action) {
+        toggleDriveStats$go(this$0, $routeNames, $action);
+        return Unit.INSTANCE;
+    }
 }

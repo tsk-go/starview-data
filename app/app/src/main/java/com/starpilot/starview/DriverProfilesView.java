@@ -1,6 +1,6 @@
 package com.starpilot.starview;
 
-import android.app.AlertDialog.Builder;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -9,8 +9,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
 import java.io.File;
+import java.io.FileFilter;
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
@@ -19,12 +21,13 @@ import java.util.Locale;
 import kotlin.Result;
 import kotlin.ResultKt;
 import kotlin.Unit;
-import kotlin.Result.Companion;
 import kotlin.collections.ArraysKt;
 import kotlin.collections.CollectionsKt;
 import kotlin.collections.SetsKt;
 import kotlin.comparisons.ComparisonsKt;
 import kotlin.io.FilesKt;
+import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.SequencesKt;
 import kotlin.text.Regex;
@@ -32,380 +35,320 @@ import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: JournalPages.kt */
 public final class DriverProfilesView extends CardPage {
-   // $VF: synthetic method
-   public static Unit $r8$lambda$1QLavDfu2gUUiUw2tFd624HqeB4(DriverProfilesView var0) {
-      return refresh$lambda$1(var0);
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public DriverProfilesView(Context ctx, CarUi ui) {
+        super(ctx, ui);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(ui, "ui");
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$EXwCQMFfEq3UryZRXJ6IvgWOA44(EditText var0, DriverProfilesView var1, DialogInterface var2, int var3) {
-      askSave$lambda$17(var0, var1, var2, var3);
-   }
+    private final File getDir() {
+        File $this$_get_dir__u24lambda_u240 = new File(getContext().getFilesDir(), "profiles");
+        $this$_get_dir__u24lambda_u240.mkdirs();
+        return $this$_get_dir__u24lambda_u240;
+    }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$FBjfCCQOtpP4P0BfdfbTRshK11g(DriverProfilesView var0, String var1, JSONObject var2, String var3) {
-      return askSave$lambda$17$lambda$16(var0, var1, var2, var3);
-   }
+    private final void toast(String s) {
+        Toast.makeText(getContext(), s, 1).show();
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$FFpS_qKI2b2XA8tynn_aWkZgJDY(DriverProfilesView var0, JSONObject var1, DialogInterface var2, int var3) {
-      apply$lambda$22(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static boolean $r8$lambda$FkFxo6PpPxM7QtbyAvNDULuuwsU(File var0) {
-      return refresh$lambda$3(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Y8mXL8mIZpXAsMRRhZTAlrA6pTA(DriverProfilesView var0, JSONObject var1) {
-      return refresh$lambda$14$lambda$11(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$oqJlnziAaQ0s4QoETrbMbau__3k/* $VF was: $r8$lambda$oqJlnziAaQ0s4QoETrbMbau__3k*/(
-      File var0, DriverProfilesView var1, DialogInterface var2, int var3
-   ) {
-      refresh$lambda$14$lambda$13$lambda$12(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$sKKaAxYN6jHN5zYb3WI1ITrkReo(DriverProfilesView var0, JSONObject var1, JSONObject var2, String var3) {
-      return apply$lambda$22$lambda$21(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$xDwRIdsc8Efiju69UtP0TZCcipw(LinearLayout var0, JSONObject var1, File var2, DriverProfilesView var3) {
-      return refresh$lambda$14$lambda$13(var0, var1, var2, var3);
-   }
-
-   public DriverProfilesView(Context var1, CarUi var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "ui");
-      super(var1, var2);
-   }
-
-   private final void apply(JSONObject var1) {
-      Builder var2 = new Builder(this.getContext());
-      String var3 = var1.optString("name");
-      var2.setTitle("Apply \"" + var3 + "\"?")
-         .setMessage("StarPilot's settings and this tablet's settings change to this profile. The car must be parked (Galaxy only restores while parked).")
-         .setPositiveButton("Apply", new DriverProfilesView$$ExternalSyntheticLambda6(this, var1))
-         .setNegativeButton("Cancel", null)
-         .show();
-   }
-
-   private static final void apply$lambda$22(DriverProfilesView var0, JSONObject var1, DialogInterface var2, int var3) {
-      Galaxy7 var5 = Galaxy7.Companion.current();
-      if (var5 == null) {
-         var0.toast("Not connected to the comma");
-      } else {
-         JSONObject var4 = var1.optJSONObject("galaxy");
-         if (var4 == null) {
-            var0.toast("This profile has no StarPilot settings");
-         } else {
-            var5.post("/api/settings/restore", var4, new DriverProfilesView$$ExternalSyntheticLambda8(var0, var1));
-         }
-      }
-   }
-
-   private static final Unit apply$lambda$22$lambda$21(DriverProfilesView var0, JSONObject var1, JSONObject var2, String var3) {
-      if (var2 == null) {
-         String var10;
-         if (var3 == null) {
-            var10 = "Galaxy refused";
-         } else {
-            var10 = var3;
-         }
-
-         var0.toast("StarPilot settings not applied: " + var10);
-         return Unit.INSTANCE;
-      } else {
-         JSONObject var12 = var1.optJSONObject("tablet");
-         int var4;
-         if (var12 != null) {
-            SettingsBackup var6 = SettingsBackup.INSTANCE;
-            Context var7 = var0.getContext();
-            Intrinsics.checkNotNullExpressionValue(var7, "getContext(...)");
-            var4 = var6.import_(var7, var12);
-         } else {
-            var4 = 0;
-         }
-
-         var3 = var1.optString("name");
-         Integer var8 = var2.optInt("restored", -1);
-         int var5 = var8.intValue();
-         boolean var14;
-         if (var5 >= 0) {
-            var14 = 1;
-         } else {
-            var14 = 0;
-         }
-
-         String var11 = null;
-         if (!var14) {
-            var8 = null;
-         }
-
-         if (var8 != null) {
-            var14 = var8.intValue();
-            var11 = var14 + " StarPilot settings changed";
-         }
-
-         String var9 = CollectionsKt.joinToString$default(
-            CollectionsKt.listOfNotNull(new String[]{var11, var4 + " tablet settings"}), ", ", null, null, 0, null, null, 62, null
-         );
-         var0.toast("Applied \"" + var3 + "\": " + var9);
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final void askSave() {
-      EditText var1 = new EditText(this.getContext());
-      var1.setHint("Driver's name");
-      new Builder(this.getContext())
-         .setTitle("Save profile")
-         .setView((View)var1)
-         .setPositiveButton("Save", new DriverProfilesView$$ExternalSyntheticLambda4(var1, this))
-         .setNegativeButton("Cancel", null)
-         .show();
-   }
-
-   private static final void askSave$lambda$17(EditText var0, DriverProfilesView var1, DialogInterface var2, int var3) {
-      String var4 = StringsKt.trim(var0.getText().toString()).toString();
-      boolean var6;
-      if (var4.length() == 0) {
-         var6 = true;
-      } else {
-         var6 = false;
-      }
-
-      if (!var6) {
-         Galaxy7 var5 = Galaxy7.Companion.current();
-         if (var5 == null) {
-            var1.toast("Not connected to the comma");
-         } else {
-            var5.get("/api/settings/backup", new DriverProfilesView$$ExternalSyntheticLambda5(var1, var4));
-         }
-      }
-   }
-
-   private static final Unit askSave$lambda$17$lambda$16(DriverProfilesView var0, String var1, JSONObject var2, String var3) {
-      if (var2 == null) {
-         if (var3 == null) {
-            var1 = "Galaxy didn't give its settings";
-         } else {
-            var1 = var3;
-         }
-
-         var0.toast(var1);
-         return Unit.INSTANCE;
-      } else {
-         var2 = new JSONObject().put("name", var1).put("savedAt", System.currentTimeMillis()).put("galaxy", var2);
-         SettingsBackup var4 = SettingsBackup.INSTANCE;
-         Context var9 = var0.getContext();
-         Intrinsics.checkNotNullExpressionValue(var9, "getContext(...)");
-         var2 = var2.put("tablet", var0.feel(var4.export(var9)));
-         File var10 = var0.getDir();
-         CharSequence var12 = var1;
-         String var13 = new Regex("[^A-Za-z0-9 _-]").replace(var12, "_");
-         File var11 = new File(var10, var13 + ".json");
-         String var8 = var2.toString();
-         Intrinsics.checkNotNullExpressionValue(var8, "toString(...)");
-         FilesKt.writeText$default(var11, var8, null, 2, null);
-         var0.toast("Saved \"" + var1 + "\"");
-         var0.refresh();
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final JSONObject feel(JSONObject var1) {
-      JSONObject var2 = var1.optJSONObject("prefs");
-      if (var2 == null) {
-         return var1;
-      } else {
-         Iterator var3 = var2.keys();
-         Intrinsics.checkNotNullExpressionValue(var3, "keys(...)");
-
-         for (String var5 : SequencesKt.toList(SequencesKt.asSequence(var3))) {
-            if (!SetsKt.setOf(new String[]{"starview_ui", "starview_hud", "speech"}).contains(var5)) {
-               var2.remove(var5);
+    @Override // com.starpilot.starview.CardPage
+    public void refresh() {
+        List emptyList;
+        Object m1191constructorimpl;
+        SimpleDateFormat simpleDateFormat;
+        JSONArray optJSONArray;
+        getCol().removeAllViews();
+        LinearLayout head = card();
+        add(head);
+        head.addView(title("Driver profiles", "standard", "person"));
+        head.addView(CardPage.line$default(this, "Each driver keeps their own feel: following distance, speed offsets, steering, sounds, the tablet's screen. Save how it's set now under a name; apply a profile while parked.", 0, 0.0f, 6, null));
+        int i = 1;
+        TextView button = getUi().button("Save current settings as a profile…", true, new Function0() { // from class: com.starpilot.starview.DriverProfilesView$$ExternalSyntheticLambda0
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit refresh$lambda$1;
+                refresh$lambda$1 = DriverProfilesView.refresh$lambda$1(DriverProfilesView.this);
+                return refresh$lambda$1;
             }
-         }
+        });
+        int i2 = 0;
+        Charset charset = null;
+        LinearLayout.LayoutParams $this$refresh_u24lambda_u242 = CarUi.lp$default(getUi(), 0, 0, 1, null);
+        $this$refresh_u24lambda_u242.topMargin = getUi().dp(8);
+        Unit unit = Unit.INSTANCE;
+        head.addView(button, $this$refresh_u24lambda_u242);
+        Object[] $this$sortedBy$iv = getDir().listFiles(new FileFilter() { // from class: com.starpilot.starview.DriverProfilesView$$ExternalSyntheticLambda1
+            @Override // java.io.FileFilter
+            public final boolean accept(File file) {
+                boolean refresh$lambda$3;
+                refresh$lambda$3 = DriverProfilesView.refresh$lambda$3(file);
+                return refresh$lambda$3;
+            }
+        });
+        if ($this$sortedBy$iv == null || (emptyList = ArraysKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.DriverProfilesView$refresh$$inlined$sortedBy$1
+            /* JADX WARN: Multi-variable type inference failed */
+            @Override // java.util.Comparator
+            public final int compare(T t, T t2) {
+                File it = (File) t;
+                String name = it.getName();
+                Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
+                String lowerCase = name.toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+                File it2 = (File) t2;
+                String name2 = it2.getName();
+                Intrinsics.checkNotNullExpressionValue(name2, "getName(...)");
+                String lowerCase2 = name2.toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
+                return ComparisonsKt.compareValues(lowerCase, lowerCase2);
+            }
+        })) == null) {
+            emptyList = CollectionsKt.emptyList();
+        }
+        List files = emptyList;
+        if (files.isEmpty()) {
+            LinearLayout $this$refresh_u24lambda_u245 = card();
+            $this$refresh_u24lambda_u245.addView(CardPage.line$default(this, "No profiles yet.", 0, 0.0f, 6, null));
+            add($this$refresh_u24lambda_u245);
+        }
+        Iterator it = files.iterator();
+        while (it.hasNext()) {
+            final File f = (File) it.next();
+            try {
+                Result.Companion companion = Result.Companion;
+                DriverProfilesView driverProfilesView = this;
+                Intrinsics.checkNotNull(f);
+                m1191constructorimpl = Result.m1191constructorimpl(new JSONObject(FilesKt.readText$default(f, charset, i, charset)));
+            } catch (Throwable th) {
+                Result.Companion companion2 = Result.Companion;
+                m1191constructorimpl = Result.m1191constructorimpl(ResultKt.createFailure(th));
+            }
+            if (Result.m1197isFailureimpl(m1191constructorimpl)) {
+                m1191constructorimpl = charset;
+            }
+            final JSONObject o = (JSONObject) m1191constructorimpl;
+            if (o != null) {
+                LinearLayout c = card();
+                add(c);
+                JSONObject optJSONObject = o.optJSONObject("galaxy");
+                int n = (optJSONObject == null || (optJSONArray = optJSONObject.optJSONArray("settings")) == null) ? i2 : optJSONArray.length();
+                final LinearLayout $this$refresh_u24lambda_u2414 = new LinearLayout(getContext());
+                $this$refresh_u24lambda_u2414.setOrientation(i2);
+                $this$refresh_u24lambda_u2414.setGravity(16);
+                SvIcon svIcon = SvIcon.INSTANCE;
+                Context context = $this$refresh_u24lambda_u2414.getContext();
+                Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
+                View chip$default = SvIcon.chip$default(svIcon, context, "standard", "person", 48, null, 16, null);
+                LinearLayout.LayoutParams $this$refresh_u24lambda_u2414_u24lambda_u247 = new LinearLayout.LayoutParams(getUi().dp(48), getUi().dp(48));
+                LinearLayout head2 = head;
+                $this$refresh_u24lambda_u2414_u24lambda_u247.rightMargin = getUi().dp(14);
+                Unit unit2 = Unit.INSTANCE;
+                $this$refresh_u24lambda_u2414.addView(chip$default, $this$refresh_u24lambda_u2414_u24lambda_u247);
+                LinearLayout $this$refresh_u24lambda_u2414_u24lambda_u2410 = new LinearLayout($this$refresh_u24lambda_u2414.getContext());
+                $this$refresh_u24lambda_u2414_u24lambda_u2410.setOrientation(1);
+                TextView $this$refresh_u24lambda_u2414_u24lambda_u2410_u24lambda_u248 = new TextView($this$refresh_u24lambda_u2414_u24lambda_u2410.getContext());
+                List files2 = files;
+                $this$refresh_u24lambda_u2414_u24lambda_u2410_u24lambda_u248.setText(o.optString("name"));
+                $this$refresh_u24lambda_u2414_u24lambda_u2410_u24lambda_u248.setTextColor(CarUi.Companion.getTEXT());
+                $this$refresh_u24lambda_u2414_u24lambda_u2410_u24lambda_u248.setTextSize(21.0f);
+                $this$refresh_u24lambda_u2414_u24lambda_u2410_u24lambda_u248.setTypeface(Typeface.DEFAULT_BOLD);
+                $this$refresh_u24lambda_u2414_u24lambda_u2410.addView($this$refresh_u24lambda_u2414_u24lambda_u2410_u24lambda_u248);
+                TextView $this$refresh_u24lambda_u2414_u24lambda_u2410_u24lambda_u249 = new TextView($this$refresh_u24lambda_u2414_u24lambda_u2410.getContext());
+                simpleDateFormat = JournalPagesKt.dayFmt;
+                $this$refresh_u24lambda_u2414_u24lambda_u2410_u24lambda_u249.setText("Saved " + simpleDateFormat.format(new Date(o.optLong("savedAt"))) + " · " + n + " StarPilot settings + tablet");
+                $this$refresh_u24lambda_u2414_u24lambda_u2410_u24lambda_u249.setTextColor(CarUi.Companion.getDIM());
+                $this$refresh_u24lambda_u2414_u24lambda_u2410_u24lambda_u249.setTextSize(15.0f);
+                $this$refresh_u24lambda_u2414_u24lambda_u2410.addView($this$refresh_u24lambda_u2414_u24lambda_u2410_u24lambda_u249);
+                $this$refresh_u24lambda_u2414.addView($this$refresh_u24lambda_u2414_u24lambda_u2410, new LinearLayout.LayoutParams(0, -2, 1.0f));
+                i = 1;
+                $this$refresh_u24lambda_u2414.addView(getUi().button("Apply", true, new Function0() { // from class: com.starpilot.starview.DriverProfilesView$$ExternalSyntheticLambda2
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit refresh$lambda$14$lambda$11;
+                        refresh$lambda$14$lambda$11 = DriverProfilesView.refresh$lambda$14$lambda$11(DriverProfilesView.this, o);
+                        return refresh$lambda$14$lambda$11;
+                    }
+                }));
+                $this$refresh_u24lambda_u2414.addView(new View($this$refresh_u24lambda_u2414.getContext()), new LinearLayout.LayoutParams(getUi().dp(10), 1));
+                $this$refresh_u24lambda_u2414.addView(CarUi.button$default(getUi(), "Delete", false, new Function0() { // from class: com.starpilot.starview.DriverProfilesView$$ExternalSyntheticLambda3
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit refresh$lambda$14$lambda$13;
+                        refresh$lambda$14$lambda$13 = DriverProfilesView.refresh$lambda$14$lambda$13($this$refresh_u24lambda_u2414, o, f, this);
+                        return refresh$lambda$14$lambda$13;
+                    }
+                }, 2, null));
+                c.addView($this$refresh_u24lambda_u2414);
+                i2 = 0;
+                head = head2;
+                files = files2;
+                it = it;
+                charset = null;
+            }
+        }
+    }
 
-         return var1;
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit refresh$lambda$1(DriverProfilesView this$0) {
+        this$0.askSave();
+        return Unit.INSTANCE;
+    }
 
-   private final File getDir() {
-      File var1 = new File(this.getContext().getFilesDir(), "profiles");
-      var1.mkdirs();
-      return var1;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean refresh$lambda$3(File f) {
+        String name = f.getName();
+        Intrinsics.checkNotNullExpressionValue(name, "getName(...)");
+        return StringsKt.endsWith$default(name, ".json", false, 2, (Object) null);
+    }
 
-   private static final Unit refresh$lambda$1(DriverProfilesView var0) {
-      var0.askSave();
-      return Unit.INSTANCE;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit refresh$lambda$14$lambda$11(DriverProfilesView this$0, JSONObject $o) {
+        this$0.apply($o);
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit refresh$lambda$14$lambda$11(DriverProfilesView var0, JSONObject var1) {
-      var0.apply(var1);
-      return Unit.INSTANCE;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit refresh$lambda$14$lambda$13(LinearLayout $this_apply, JSONObject $o, final File $f, final DriverProfilesView this$0) {
+        new AlertDialog.Builder($this_apply.getContext()).setMessage("Delete the profile \"" + $o.optString("name") + "\"?").setPositiveButton("Delete", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DriverProfilesView$$ExternalSyntheticLambda7
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                DriverProfilesView.refresh$lambda$14$lambda$13$lambda$12($f, this$0, dialogInterface, i);
+            }
+        }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit refresh$lambda$14$lambda$13(LinearLayout var0, JSONObject var1, File var2, DriverProfilesView var3) {
-      Builder var4 = new Builder(var0.getContext());
-      String var5 = var1.optString("name");
-      var4.setMessage("Delete the profile \"" + var5 + "\"?")
-         .setPositiveButton("Delete", new DriverProfilesView$$ExternalSyntheticLambda7(var2, var3))
-         .setNegativeButton("Cancel", null)
-         .show();
-      return Unit.INSTANCE;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void refresh$lambda$14$lambda$13$lambda$12(File $f, DriverProfilesView this$0, DialogInterface dialogInterface, int i) {
+        $f.delete();
+        this$0.refresh();
+    }
 
-   private static final void refresh$lambda$14$lambda$13$lambda$12(File var0, DriverProfilesView var1, DialogInterface var2, int var3) {
-      var0.delete();
-      var1.refresh();
-   }
+    private final JSONObject feel(JSONObject backup) {
+        JSONObject prefs = backup.optJSONObject("prefs");
+        if (prefs == null) {
+            return backup;
+        }
+        Iterator<String> keys = prefs.keys();
+        Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
+        for (String k : SequencesKt.toList(SequencesKt.asSequence(keys))) {
+            if (!SetsKt.setOf((Object[]) new String[]{"starview_ui", "starview_hud", "speech"}).contains(k)) {
+                prefs.remove(k);
+            }
+        }
+        return backup;
+    }
 
-   private static final boolean refresh$lambda$3(File var0) {
-      String var1 = var0.getName();
-      Intrinsics.checkNotNullExpressionValue(var1, "getName(...)");
-      return StringsKt.endsWith$default(var1, ".json", false, 2, null);
-   }
+    private final void askSave() {
+        final EditText $this$askSave_u24lambda_u2415 = new EditText(getContext());
+        $this$askSave_u24lambda_u2415.setHint("Driver's name");
+        new AlertDialog.Builder(getContext()).setTitle("Save profile").setView($this$askSave_u24lambda_u2415).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DriverProfilesView$$ExternalSyntheticLambda4
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                DriverProfilesView.askSave$lambda$17($this$askSave_u24lambda_u2415, this, dialogInterface, i);
+            }
+        }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
+    }
 
-   private final void toast(String var1) {
-      Toast.makeText(this.getContext(), var1, 1).show();
-   }
-
-   // $VF: Could not inline inconsistent finally blocks
-   // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-   @Override
-   public void refresh() {
-      List var15;
-      label82: {
-         this.getCol().removeAllViews();
-         LinearLayout var5 = this.card();
-         this.add((View)var5);
-         var5.addView(this.title("Driver profiles", "standard", "person"));
-         var5.addView(
-            (View)CardPage.line$default(
-               this,
-               "Each driver keeps their own feel: following distance, speed offsets, steering, sounds, the tablet's screen. Save how it's set now under a name; apply a profile while parked.",
-               0,
-               0.0F,
-               6,
-               null
-            )
-         );
-         View var4 = (View)this.getUi().button("Save current settings as a profile…", true, new DriverProfilesView$$ExternalSyntheticLambda0(this));
-         LayoutParams var2 = CarUi.lp$default(this.getUi(), 0, 0, 1, null);
-         var2.topMargin = this.getUi().dp(8);
-         Unit var3 = Unit.INSTANCE;
-         var5.addView(var4, (android.view.ViewGroup.LayoutParams)var2);
-         File[] var14 = this.getDir().listFiles(new DriverProfilesView$$ExternalSyntheticLambda1());
-         if (var14 != null) {
-            List var21 = ArraysKt.sortedWith(var14, new Comparator() {
-               @Override
-               public final int compare(T var1, T var2x) {
-                  var1 = ((File)var1).getName();
-                  Intrinsics.checkNotNullExpressionValue(var1, "getName(...)");
-                  var1 = var1.toLowerCase(Locale.ROOT);
-                  Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-                  Comparable var5x = var1;
-                  var2x = ((File)var2x).getName();
-                  Intrinsics.checkNotNullExpressionValue(var2x, "getName(...)");
-                  var2x = var2x.toLowerCase(Locale.ROOT);
-                  Intrinsics.checkNotNullExpressionValue(var2x, "toLowerCase(...)");
-                  return ComparisonsKt.compareValues(var5x, var2x);
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void askSave$lambda$17(EditText $et, final DriverProfilesView this$0, DialogInterface dialogInterface, int i) {
+        final String name = StringsKt.trim((CharSequence) $et.getText().toString()).toString();
+        if (name.length() == 0) {
+            return;
+        }
+        Galaxy7 g = Galaxy7.Companion.current();
+        if (g == null) {
+            this$0.toast("Not connected to the comma");
+        } else {
+            g.get("/api/settings/backup", new Function2() { // from class: com.starpilot.starview.DriverProfilesView$$ExternalSyntheticLambda5
+                @Override // kotlin.jvm.functions.Function2
+                public final Object invoke(Object obj, Object obj2) {
+                    Unit askSave$lambda$17$lambda$16;
+                    askSave$lambda$17$lambda$16 = DriverProfilesView.askSave$lambda$17$lambda$16(DriverProfilesView.this, name, (JSONObject) obj, (String) obj2);
+                    return askSave$lambda$17$lambda$16;
+                }
             });
-            var15 = var21;
-            if (var21 != null) {
-               break label82;
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit askSave$lambda$17$lambda$16(DriverProfilesView this$0, String $name, JSONObject doc, String err) {
+        if (doc == null) {
+            this$0.toast(err == null ? "Galaxy didn't give its settings" : err);
+            return Unit.INSTANCE;
+        }
+        JSONObject put = new JSONObject().put("name", $name).put("savedAt", System.currentTimeMillis()).put("galaxy", doc);
+        SettingsBackup settingsBackup = SettingsBackup.INSTANCE;
+        Context context = this$0.getContext();
+        Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
+        JSONObject o = put.put("tablet", this$0.feel(settingsBackup.export(context)));
+        File file = new File(this$0.getDir(), new Regex("[^A-Za-z0-9 _-]").replace($name, "_") + ".json");
+        String jSONObject = o.toString();
+        Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
+        FilesKt.writeText$default(file, jSONObject, null, 2, null);
+        this$0.toast("Saved \"" + $name + "\"");
+        this$0.refresh();
+        return Unit.INSTANCE;
+    }
+
+    private final void apply(final JSONObject o) {
+        new AlertDialog.Builder(getContext()).setTitle("Apply \"" + o.optString("name") + "\"?").setMessage("StarPilot's settings and this tablet's settings change to this profile. The car must be parked (Galaxy only restores while parked).").setPositiveButton("Apply", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.DriverProfilesView$$ExternalSyntheticLambda6
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                DriverProfilesView.apply$lambda$22(DriverProfilesView.this, o, dialogInterface, i);
             }
-         }
+        }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
+    }
 
-         var15 = CollectionsKt.emptyList();
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void apply$lambda$22(final DriverProfilesView this$0, final JSONObject $o, DialogInterface dialogInterface, int i) {
+        Galaxy7 g = Galaxy7.Companion.current();
+        if (g == null) {
+            this$0.toast("Not connected to the comma");
+            return;
+        }
+        JSONObject doc = $o.optJSONObject("galaxy");
+        if (doc == null) {
+            this$0.toast("This profile has no StarPilot settings");
+        } else {
+            g.post("/api/settings/restore", doc, new Function2() { // from class: com.starpilot.starview.DriverProfilesView$$ExternalSyntheticLambda8
+                @Override // kotlin.jvm.functions.Function2
+                public final Object invoke(Object obj, Object obj2) {
+                    Unit apply$lambda$22$lambda$21;
+                    apply$lambda$22$lambda$21 = DriverProfilesView.apply$lambda$22$lambda$21(DriverProfilesView.this, $o, (JSONObject) obj, (String) obj2);
+                    return apply$lambda$22$lambda$21;
+                }
+            });
+        }
+    }
 
-      if (var15.isEmpty()) {
-         LinearLayout var22 = this.card();
-         var22.addView((View)CardPage.line$default(this, "No profiles yet.", 0, 0.0F, 6, null));
-         this.add((View)var22);
-      }
-
-      for (File var7 : var15) {
-         label73:
-         try {
-            Companion var17 = Result.Companion;
-            DriverProfilesView var18 = this;
-            Intrinsics.checkNotNull(var7);
-            JSONObject var19 = new JSONObject(FilesKt.readText$default(var7, null, 1, null));
-            var15 = (List)KtCompat.resultOf(var19);
-         } catch (Throwable var13) {
-            Companion var6 = Result.Companion;
-            var15 = (List)KtCompat.resultOf(ResultKt.createFailure(var13));
-            break label73;
-         }
-
-         LinearLayout var24 = var15;
-         if (KtCompat.isFailure(var15)) {
-            var24 = null;
-         }
-
-         JSONObject var20 = (JSONObject)var24;
-         if (var20 != null) {
-            int var1;
-            label69: {
-               var24 = this.card();
-               this.add((View)var24);
-               JSONObject var8 = var20.optJSONObject("galaxy");
-               if (var8 != null) {
-                  JSONArray var26 = var8.optJSONArray("settings");
-                  if (var26 != null) {
-                     var1 = var26.length();
-                     break label69;
-                  }
-               }
-
-               var1 = 0;
-            }
-
-            LinearLayout var27 = new LinearLayout(this.getContext());
-            var27.setOrientation(0);
-            var27.setGravity(16);
-            SvIcon var9 = SvIcon.INSTANCE;
-            Context var10 = var27.getContext();
-            Intrinsics.checkNotNullExpressionValue(var10, "getContext(...)");
-            View var11 = SvIcon.chip$default(var9, var10, "standard", "person", 48, null, 16, null);
-            LayoutParams var30 = new LayoutParams(this.getUi().dp(48), this.getUi().dp(48));
-            var30.rightMargin = this.getUi().dp(14);
-            Unit var28 = Unit.INSTANCE;
-            var27.addView(var11, (android.view.ViewGroup.LayoutParams)var30);
-            LinearLayout var29 = new LinearLayout(var27.getContext());
-            var29.setOrientation(1);
-            TextView var31 = new TextView(var29.getContext());
-            var31.setText(var20.optString("name"));
-            var31.setTextColor(CarUi.Companion.getTEXT());
-            var31.setTextSize(21.0F);
-            var31.setTypeface(Typeface.DEFAULT_BOLD);
-            var29.addView((View)var31);
-            TextView var32 = new TextView(var29.getContext());
-            String var33 = JournalPagesKt.access$getDayFmt$p().format(new Date(var20.optLong("savedAt")));
-            var32.setText("Saved " + var33 + " · " + var1 + " StarPilot settings + tablet");
-            var32.setTextColor(CarUi.Companion.getDIM());
-            var32.setTextSize(15.0F);
-            var29.addView((View)var32);
-            var27.addView((View)var29, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
-            var27.addView((View)this.getUi().button("Apply", true, new DriverProfilesView$$ExternalSyntheticLambda2(this, var20)));
-            var27.addView(new View(var27.getContext()), (android.view.ViewGroup.LayoutParams)(new LayoutParams(this.getUi().dp(10), 1)));
-            var27.addView(
-               (View)CarUi.button$default(this.getUi(), "Delete", false, new DriverProfilesView$$ExternalSyntheticLambda3(var27, var20, var7, this), 2, null)
-            );
-            var24.addView((View)var27);
-         }
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit apply$lambda$22$lambda$21(DriverProfilesView this$0, JSONObject $o, JSONObject r, String err) {
+        int tab;
+        if (r == null) {
+            this$0.toast("StarPilot settings not applied: " + (err == null ? "Galaxy refused" : err));
+            return Unit.INSTANCE;
+        }
+        JSONObject it = $o.optJSONObject("tablet");
+        if (it != null) {
+            SettingsBackup settingsBackup = SettingsBackup.INSTANCE;
+            Context context = this$0.getContext();
+            Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
+            tab = settingsBackup.m1159import(context, it);
+        } else {
+            tab = 0;
+        }
+        String optString = $o.optString("name");
+        String[] strArr = new String[2];
+        Integer valueOf = Integer.valueOf(r.optInt("restored", -1));
+        if ((valueOf.intValue() >= 0 ? 1 : 0) == 0) {
+            valueOf = null;
+        }
+        strArr[0] = valueOf != null ? valueOf.intValue() + " StarPilot settings changed" : null;
+        strArr[1] = tab + " tablet settings";
+        this$0.toast("Applied \"" + optString + "\": " + CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), ", ", null, null, 0, null, null, 62, null));
+        return Unit.INSTANCE;
+    }
 }

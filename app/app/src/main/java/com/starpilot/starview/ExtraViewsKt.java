@@ -2,13 +2,10 @@ package com.starpilot.starview;
 
 import android.view.View;
 
+/* compiled from: ExtraViews.kt */
 public final class ExtraViewsKt {
-   // $VF: synthetic method
-   public static final float access$dpf(View var0, float var1) {
-      return dpf(var0, var1);
-   }
-
-   private static final float dpf(View var0, float var1) {
-      return var0.getResources().getDisplayMetrics().density * var1;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final float dpf(View $this$dpf, float v) {
+        return $this$dpf.getResources().getDisplayMetrics().density * v;
+    }
 }

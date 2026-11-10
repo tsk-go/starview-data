@@ -1,27 +1,27 @@
 package com.starpilot.starview;
 
-import android.app.AlertDialog.Builder;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.GradientDrawable.Orientation;
 import android.text.SpannableStringBuilder;
-import android.text.TextUtils.TruncateAt;
+import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import com.starpilot.starview.OffroadHome;
+import com.starpilot.starview.StorageInfo;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
@@ -29,7 +29,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import kotlin.NoWhenBranchMatchedException;
 import kotlin.Pair;
 import kotlin.TuplesKt;
@@ -47,1577 +46,1305 @@ import kotlin.math.MathKt;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
 
+/* compiled from: OffroadHome.kt */
 public final class OffroadHome extends FrameLayout {
-   public static final long AMBIENT_MS = 180000L;
-   public static final OffroadHome.Companion Companion = new OffroadHome.Companion(null);
-   private final OffroadHome.Actions actions;
-   private final TextView alertsBtn;
-   private final OffroadHome.StatBlock allTime;
-   private final TextView ambClock;
-   private final TextView ambDate;
-   private final TextView ambLine;
-   private final LinearLayout ambient;
-   private final float d;
-   private final TextView detailAction;
-   private final LinearLayout detailBody;
-   private final LinearLayout detailContent;
-   private final TextView detailTitle;
-   private final TextView devLines;
-   private final TextView devName;
-   private final TextView expBtn;
-   private final LinearLayout homeContent;
-   private final TextView lastDrive;
-   private long lastDriveAt;
-   private String lastDriveLine;
-   private int lastGen;
-   private Telemetry lastT;
-   private long lastTouch;
-   private final OffroadHome.StatBlock pastWeek;
-   private final List<TextView> persBtns;
-   private boolean prevAlerts;
-   private boolean prevUpdate;
-   private OffroadHome.State state;
-   private final TextView statsNote;
-   private JSONObject storage;
-   private final TextView updateBtn;
-   private final TextView version;
+    public static final long AMBIENT_MS = 180000;
+    public static final Companion Companion = new Companion(null);
+    private final Actions actions;
+    private final TextView alertsBtn;
+    private final StatBlock allTime;
+    private final TextView ambClock;
+    private final TextView ambDate;
+    private final TextView ambLine;
+    private final LinearLayout ambient;
+    private final float d;
+    private final TextView detailAction;
+    private final LinearLayout detailBody;
+    private final LinearLayout detailContent;
+    private final TextView detailTitle;
+    private final TextView devLines;
+    private final TextView devName;
+    private final TextView expBtn;
+    private final LinearLayout homeContent;
+    private final TextView lastDrive;
+    private long lastDriveAt;
+    private String lastDriveLine;
+    private int lastGen;
+    private Telemetry lastT;
+    private long lastTouch;
+    private final StatBlock pastWeek;
+    private final List<TextView> persBtns;
+    private boolean prevAlerts;
+    private boolean prevUpdate;
+    private State state;
+    private final TextView statsNote;
+    private JSONObject storage;
+    private final TextView updateBtn;
+    private final TextView version;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$2zpruIcmrIXP7fTvCze_e_mdHYU/* $VF was: $r8$lambda$2zpruIcmrIXP7fTvCze_e_mdHYU*/(OffroadHome var0) {
-      return _init_$lambda$49(var0);
-   }
+    /* compiled from: OffroadHome.kt */
+    public interface Actions {
+        void control(JSONObject req);
 
-   // $VF: synthetic method
-   public static void $r8$lambda$S0iKKoWVK0g3C7M49zOtbbqKb5w(OffroadHome var0, View var1) {
-      _init_$lambda$22(var0, var1);
-   }
+        void openFiles();
 
-   // $VF: synthetic method
-   public static void $r8$lambda$ZBIXojftdtiV_a10gWXDTHLPa3M(OffroadHome var0, View var1) {
-      _init_$lambda$23(var0, var1);
-   }
+        void openSettings(String tab);
 
-   // $VF: synthetic method
-   public static void $r8$lambda$ZiKwe2_XIgvUsGrnwt1LnuIMbWo/* $VF was: $r8$lambda$ZiKwe2_XIgvUsGrnwt1LnuIMbWo*/(OffroadHome var0, View var1) {
-      _init_$lambda$34(var0, var1);
-   }
+        void openTerminal();
+    }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$eh9M_JtXvsQOSuiKLhpN0c_pjgg/* $VF was: $r8$lambda$eh9M_JtXvsQOSuiKLhpN0c_pjgg*/(OffroadHome var0) {
-      return _init_$lambda$47(var0);
-   }
+    /* compiled from: OffroadHome.kt */
+    public /* synthetic */ class WhenMappings {
+        public static final /* synthetic */ int[] $EnumSwitchMapping$0;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$fNjOXbNatU6GSz14BfQG3Jq0yf4(OffroadHome var0) {
-      return _init_$lambda$48(var0);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$jIRbb_GoHx6ZFFgdVYAlhrspLuE/* $VF was: $r8$lambda$jIRbb_GoHx6ZFFgdVYAlhrspLuE*/(
-      OffroadHome var0, DialogInterface var1, int var2
-   ) {
-      toggleExperimental$lambda$86(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$qqX3kqv_WK3oNruaLov89_CEtxI/* $VF was: $r8$lambda$qqX3kqv_WK3oNruaLov89_CEtxI*/(OffroadHome var0, View var1) {
-      refresh$lambda$83(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$x8sMlsJdFLxPcADSIQwaxuQ_C9g(OffroadHome var0, View var1) {
-      _init_$lambda$32(var0, var1);
-   }
-
-   public OffroadHome(Context var1, OffroadHome.Actions var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "actions");
-      super(var1);
-      this.actions = var2;
-      this.d = this.getResources().getDisplayMetrics().density;
-      this.state = OffroadHome.State.HOME;
-      TextView var5 = tv$default(this, 22.0F, 0, true, 2, null);
-      var5.setText("UPDATE");
-      var5.setGravity(17);
-      var5.setPadding(this.dp(26), this.dp(12), this.dp(26), this.dp(12));
-      var5.setBackground((Drawable)this.rounded(Color.rgb(54, 77, 239), 14));
-      Unit var18 = Unit.INSTANCE;
-      this.updateBtn = var5;
-      var5 = tv$default(this, 22.0F, 0, true, 2, null);
-      var5.setGravity(17);
-      var5.setPadding(this.dp(26), this.dp(12), this.dp(26), this.dp(12));
-      var5.setBackground((Drawable)this.rounded(Color.rgb(226, 44, 44), 14));
-      Unit var19 = Unit.INSTANCE;
-      this.alertsBtn = var5;
-      var5 = tv$default(this, 26.0F, 0, false, 6, null);
-      var5.setGravity(8388629);
-      var5.setMaxLines(1);
-      var5.setEllipsize(TruncateAt.END);
-      Unit var20 = Unit.INSTANCE;
-      this.version = var5;
-      this.allTime = new OffroadHome.StatBlock(this, (int)"ALL TIME", Color.rgb(145, 110, 255));
-      this.pastWeek = new OffroadHome.StatBlock(this, (int)"PAST WEEK", Color.rgb(40, 200, 190));
-      this.statsNote = tv$default(this, 15.0F, Color.rgb(150, 160, 180), false, 4, null);
-      var5 = tv$default(this, 26.0F, 0, true, 2, null);
-      var5.setGravity(16);
-      var5.setPadding(this.dp(30), 0, this.dp(30), 0);
-      Unit var21 = Unit.INSTANCE;
-      this.expBtn = var5;
-      Iterable var22 = CollectionsKt.listOf(new Pair[]{TuplesKt.to("Aggressive", 0), TuplesKt.to("Standard", 1), TuplesKt.to("Relaxed", 2)});
-      var var48 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var22, 10));
-
-      for (Pair var8 : var22) {
-         String var7 = (String)var8.component1();
-         int var3 = ((Number)var8.component2()).intValue();
-         TextView var109 = tv$default(this, 19.0F, 0, true, 2, null);
-         var109.setText(var7);
-         var109.setGravity(17);
-         var109.setPadding(0, this.dp(16), 0, this.dp(16));
-         var109.setTag(var3);
-         var48.add(var109);
-      }
-
-      List var23 = var48;
-      this.persBtns = var23;
-      this.devName = tv$default(this, 24.0F, 0, true, 2, null);
-      var5 = tv$default(this, 17.0F, Color.rgb(190, 198, 214), false, 4, null);
-      var5.setLineSpacing(this.dp(6), 1.0F);
-      Unit var24 = Unit.INSTANCE;
-      this.devLines = var5;
-      this.detailTitle = tv$default(this, 34.0F, 0, true, 2, null);
-      LinearLayout var25 = new LinearLayout(var1);
-      var25.setOrientation(1);
-      Unit var50 = Unit.INSTANCE;
-      this.detailBody = var25;
-      var5 = tv$default(this, 20.0F, 0, true, 2, null);
-      var5.setGravity(17);
-      var5.setPadding(this.dp(28), this.dp(16), this.dp(28), this.dp(16));
-      var5.setBackground((Drawable)this.rounded(Color.rgb(54, 77, 239), 14));
-      Unit var26 = Unit.INSTANCE;
-      this.detailAction = var5;
-      TextView var27 = tv$default(this, 17.0F, Color.rgb(190, 198, 214), false, 4, null);
-      var27.setPadding(this.dp(18), this.dp(14), this.dp(18), this.dp(14));
-      var27.setBackground((Drawable)this.rounded(Color.rgb(34, 36, 44), 14));
-      var27.setLineSpacing(this.dp(4), 1.0F);
-      var27.setVisibility(8);
-      Unit var52 = Unit.INSTANCE;
-      this.lastDrive = var27;
-      LinearLayout var53 = new LinearLayout(var1);
-      var53.setOrientation(1);
-      var53.setGravity(17);
-      var53.setBackgroundColor(-16777216);
-      var53.setVisibility(8);
-      var53.setClickable(true);
-      Unit var28 = Unit.INSTANCE;
-      this.ambient = var53;
-      TextView var29 = tv$default(this, 150.0F, Color.rgb(205, 210, 220), false, 4, null);
-      var29.setGravity(17);
-      var29.setTypeface(Typeface.create("sans-serif-thin", 0));
-      Unit var54 = Unit.INSTANCE;
-      this.ambClock = var29;
-      var5 = tv$default(this, 28.0F, Color.rgb(130, 138, 155), false, 4, null);
-      var5.setGravity(17);
-      Unit var30 = Unit.INSTANCE;
-      this.ambDate = var5;
-      TextView var31 = tv$default(this, 20.0F, Color.rgb(100, 108, 124), false, 4, null);
-      var31.setGravity(17);
-      Unit var56 = Unit.INSTANCE;
-      this.ambLine = var31;
-      this.lastTouch = System.currentTimeMillis();
-      this.setBackgroundColor(-16777216);
-      LinearLayout var57 = new LinearLayout(var1);
-      var57.setOrientation(1);
-      var57.setPadding(this.dp(36), this.dp(28), this.dp(36), this.dp(28));
-      this.addView((View)var57, (LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
-      LinearLayout var32 = new LinearLayout(var1);
-      var32.setOrientation(0);
-      var32.setGravity(16);
-      View var71 = (View)this.updateBtn;
-      android.widget.LinearLayout.LayoutParams var110 = new android.widget.LinearLayout.LayoutParams(-2, -2);
-      var110.setMarginEnd(this.dp(16));
-      Unit var94 = Unit.INSTANCE;
-      var32.addView(var71, (LayoutParams)var110);
-      var71 = (View)this.alertsBtn;
-      android.widget.LinearLayout.LayoutParams var95 = new android.widget.LinearLayout.LayoutParams(-2, -2);
-      var95.setMarginEnd(this.dp(16));
-      Unit var111 = Unit.INSTANCE;
-      var32.addView(var71, (LayoutParams)var95);
-      var32.addView((View)this.version, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
-      var57.addView((View)var32, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, this.dp(72))));
-      this.updateBtn.setOnClickListener(new OffroadHome$$ExternalSyntheticLambda0(this));
-      this.alertsBtn.setOnClickListener(new OffroadHome$$ExternalSyntheticLambda3(this));
-      FrameLayout var112 = new FrameLayout(var1);
-      View var9 = (View)var112;
-      android.widget.LinearLayout.LayoutParams var73 = new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F);
-      var73.topMargin = this.dp(20);
-      var94 = Unit.INSTANCE;
-      var57.addView(var9, (LayoutParams)var73);
-      LinearLayout var58 = new LinearLayout(var1);
-      var58.setOrientation(0);
-      Unit var74 = Unit.INSTANCE;
-      this.homeContent = var58;
-      LinearLayout var59 = new LinearLayout(var1);
-      var59.setOrientation(1);
-      int var42 = Color.rgb(24, 24, 28);
-      var59.setBackground((Drawable)rounded$default(this, var42, 0, 2, null));
-      var59.setPadding(this.dp(32), this.dp(28), this.dp(32), this.dp(28));
-      TextView var97 = this.tv(16.0F, Color.rgb(150, 160, 180), true);
-      var97.setText("DRIVE STATS");
-      var97.setLetterSpacing(0.12F);
-      Unit var75 = Unit.INSTANCE;
-      var59.addView((View)var97);
-      var71 = (View)this.allTime.getView();
-      android.widget.LinearLayout.LayoutParams var113 = new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F);
-      var113.topMargin = this.dp(18);
-      var94 = Unit.INSTANCE;
-      var59.addView(var71, (LayoutParams)var113);
-      var9 = (View)this.pastWeek.getView();
-      android.widget.LinearLayout.LayoutParams var99 = new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F);
-      var99.topMargin = this.dp(18);
-      Unit var77 = Unit.INSTANCE;
-      var59.addView(var9, (LayoutParams)var99);
-      var71 = (View)this.statsNote;
-      android.widget.LinearLayout.LayoutParams var100 = new android.widget.LinearLayout.LayoutParams(-2, -2);
-      var100.topMargin = this.dp(12);
-      Unit var115 = Unit.INSTANCE;
-      var59.addView(var71, (LayoutParams)var100);
-      var9 = (View)this.lastDrive;
-      android.widget.LinearLayout.LayoutParams var101 = new android.widget.LinearLayout.LayoutParams(-1, -2);
-      var101.topMargin = this.dp(14);
-      Unit var79 = Unit.INSTANCE;
-      var59.addView(var9, (LayoutParams)var101);
-      this.lastDrive.setOnClickListener(new OffroadHome$$ExternalSyntheticLambda4(this));
-      this.homeContent.addView((View)var59, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -1, 1.25F)));
-      LinearLayout var117 = new LinearLayout(var1);
-      var117.setOrientation(1);
-      var117.addView((View)this.expBtn, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, this.dp(110))));
-      this.expBtn.setOnClickListener(new OffroadHome$$ExternalSyntheticLambda5(this));
-      LinearLayout var60 = new LinearLayout(var1);
-      var60.setOrientation(1);
-      var60.setBackground((Drawable)rounded$default(this, Color.rgb(24, 24, 28), 0, 2, null));
-      var60.setPadding(this.dp(22), this.dp(20), this.dp(22), this.dp(22));
-      TextView var102 = this.tv(16.0F, Color.rgb(150, 160, 180), true);
-      var102.setText("DRIVING PERSONALITY");
-      var102.setLetterSpacing(0.12F);
-      Unit var80 = Unit.INSTANCE;
-      var60.addView((View)var102);
-      LinearLayout var10 = new LinearLayout(var1);
-      var10.setOrientation(0);
-      Iterable var103 = this.persBtns;
-      boolean var4 = false;
-      var42 = 0;
-
-      for (Object var11 : var103) {
-         if (var42 < 0) {
-            CollectionsKt.throwIndexOverflow();
-         }
-
-         TextView var14 = (TextView)var11;
-         View var13 = (View)var14;
-         android.widget.LinearLayout.LayoutParams var12 = new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F);
-         if (var42 > 0) {
-            var12.setMarginStart(this.dp(10));
-         }
-
-         var11 = Unit.INSTANCE;
-         var10.addView(var13, (LayoutParams)var12);
-         var14.setOnClickListener(new OffroadHome$$ExternalSyntheticLambda6(this, var14));
-         var42++;
-      }
-
-      View var118 = (View)var10;
-      android.widget.LinearLayout.LayoutParams var104 = new android.widget.LinearLayout.LayoutParams(-1, -2);
-      var104.topMargin = this.dp(14);
-      Unit var82 = Unit.INSTANCE;
-      var60.addView(var118, (LayoutParams)var104);
-      View var119 = (View)var60;
-      android.widget.LinearLayout.LayoutParams var83 = new android.widget.LinearLayout.LayoutParams(-1, -2);
-      var83.topMargin = this.dp(20);
-      var94 = Unit.INSTANCE;
-      var117.addView(var119, (LayoutParams)var83);
-      LinearLayout var106 = new LinearLayout(var1);
-      var106.setOrientation(1);
-      var106.setBackground((Drawable)rounded$default(this, Color.rgb(24, 24, 28), 0, 2, null));
-      var106.setPadding(this.dp(26), this.dp(22), this.dp(26), this.dp(22));
-      var106.addView((View)this.devName);
-      View var120 = (View)this.devLines;
-      android.widget.LinearLayout.LayoutParams var124 = new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F);
-      var124.topMargin = this.dp(12);
-      Unit var84 = Unit.INSTANCE;
-      var106.addView(var120, (LayoutParams)var124);
-      LinearLayout var85 = new LinearLayout(var1);
-      var85.setOrientation(0);
-      Iterable var121 = CollectionsKt.listOf(
-         new Pair[]{
-            TuplesKt.to("Settings", new OffroadHome$$ExternalSyntheticLambda7(this)),
-            TuplesKt.to("Files", new OffroadHome$$ExternalSyntheticLambda8(this)),
-            TuplesKt.to("Terminal", new OffroadHome$$ExternalSyntheticLambda9(this))
-         }
-      );
-      var42 = 0;
-
-      for (Object var125 : var121) {
-         if (var42 < 0) {
-            CollectionsKt.throwIndexOverflow();
-         }
-
-         Pair var128 = (Pair)var125;
-         String var126 = (String)var128.component1();
-         Function0 var131 = (Function0)var128.component2();
-         TextView var129 = tv$default(this, 18.0F, 0, true, 2, null);
-         var129.setText(var126);
-         var129.setGravity(17);
-         var129.setPadding(0, this.dp(16), 0, this.dp(16));
-         var129.setBackground((Drawable)this.rounded(Color.rgb(44, 48, 60), 14));
-         var129.setOnClickListener(new OffroadHome$$ExternalSyntheticLambda10(var131));
-         View var127 = (View)var129;
-         android.widget.LinearLayout.LayoutParams var132 = new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F);
-         if (var42 > 0) {
-            var132.setMarginStart(this.dp(10));
-         }
-
-         Unit var130 = Unit.INSTANCE;
-         var85.addView(var127, (LayoutParams)var132);
-         var42++;
-      }
-
-      var71 = (View)var85;
-      android.widget.LinearLayout.LayoutParams var33 = new android.widget.LinearLayout.LayoutParams(-1, -2);
-      var33.topMargin = this.dp(12);
-      Unit var61 = Unit.INSTANCE;
-      var106.addView(var71, (LayoutParams)var33);
-      View var62 = (View)var106;
-      android.widget.LinearLayout.LayoutParams var87 = new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F);
-      var87.topMargin = this.dp(20);
-      Unit var34 = Unit.INSTANCE;
-      var117.addView(var62, (LayoutParams)var87);
-      LinearLayout var35 = this.homeContent;
-      var71 = (View)var117;
-      android.widget.LinearLayout.LayoutParams var107 = new android.widget.LinearLayout.LayoutParams(0, -1, 1.0F);
-      var107.setMarginStart(this.dp(24));
-      Unit var63 = Unit.INSTANCE;
-      var35.addView(var71, (LayoutParams)var107);
-      var112.addView((View)this.homeContent, (LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
-      LinearLayout var36 = new LinearLayout(var1);
-      var36.setOrientation(1);
-      var36.setBackground((Drawable)rounded$default(this, Color.rgb(24, 24, 28), 0, 2, null));
-      var36.setPadding(this.dp(36), this.dp(30), this.dp(36), this.dp(30));
-      var36.setVisibility(8);
-      Unit var64 = Unit.INSTANCE;
-      this.detailContent = var36;
-      this.detailContent.addView((View)this.detailTitle);
-      LinearLayout var37 = this.detailContent;
-      ScrollView var89 = new ScrollView(var1);
-      var89.addView((View)this.detailBody);
-      Unit var65 = Unit.INSTANCE;
-      View var108 = (View)var89;
-      android.widget.LinearLayout.LayoutParams var66 = new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F);
-      var66.topMargin = this.dp(20);
-      var66.bottomMargin = this.dp(20);
-      Unit var90 = Unit.INSTANCE;
-      var37.addView(var108, (LayoutParams)var66);
-      LinearLayout var15 = new LinearLayout(var1);
-      var15.setOrientation(0);
-      var15.setGravity(8388613);
-      var5 = tv$default(this, 20.0F, 0, true, 2, null);
-      var5.setText("Close");
-      var5.setGravity(17);
-      var5.setPadding(this.dp(28), this.dp(16), this.dp(28), this.dp(16));
-      var5.setBackground((Drawable)this.rounded(Color.rgb(44, 48, 60), 14));
-      var5.setOnClickListener(new OffroadHome$$ExternalSyntheticLambda11(this));
-      Unit var38 = Unit.INSTANCE;
-      var15.addView((View)var5);
-      View var68 = (View)this.detailAction;
-      android.widget.LinearLayout.LayoutParams var91 = new android.widget.LinearLayout.LayoutParams(-2, -2);
-      var91.setMarginStart(this.dp(14));
-      Unit var39 = Unit.INSTANCE;
-      var15.addView(var68, (LayoutParams)var91);
-      this.detailContent.addView((View)var15, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
-      var112.addView((View)this.detailContent, (LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
-      this.ambient.addView((View)this.ambClock);
-      LinearLayout var40 = this.ambient;
-      View var69 = (View)this.ambDate;
-      android.widget.LinearLayout.LayoutParams var92 = new android.widget.LinearLayout.LayoutParams(-2, -2);
-      var92.topMargin = this.dp(8);
-      Unit var16 = Unit.INSTANCE;
-      var40.addView(var69, (LayoutParams)var92);
-      LinearLayout var93 = this.ambient;
-      View var41 = (View)this.ambLine;
-      android.widget.LinearLayout.LayoutParams var17 = new android.widget.LinearLayout.LayoutParams(-2, -2);
-      var17.topMargin = this.dp(30);
-      Unit var70 = Unit.INSTANCE;
-      var93.addView(var41, (LayoutParams)var17);
-      this.addView((View)this.ambient, (LayoutParams)(new android.widget.FrameLayout.LayoutParams(-1, -1)));
-      this.lastGen = -1;
-   }
-
-   private static final void _init_$lambda$22(OffroadHome var0, View var1) {
-      OffroadHome.State var2;
-      if (var0.state == OffroadHome.State.UPDATE) {
-         var2 = OffroadHome.State.HOME;
-      } else {
-         var2 = OffroadHome.State.UPDATE;
-      }
-
-      var0.setState(var2);
-   }
-
-   private static final void _init_$lambda$23(OffroadHome var0, View var1) {
-      OffroadHome.State var2;
-      if (var0.state == OffroadHome.State.ALERTS) {
-         var2 = OffroadHome.State.HOME;
-      } else {
-         var2 = OffroadHome.State.ALERTS;
-      }
-
-      var0.setState(var2);
-   }
-
-   private static final void _init_$lambda$32(OffroadHome var0, View var1) {
-      var0.actions.openSettings("journal:last");
-   }
-
-   private static final void _init_$lambda$34(OffroadHome var0, View var1) {
-      var0.toggleExperimental();
-   }
-
-   private static final Unit _init_$lambda$47(OffroadHome var0) {
-      var0.actions.openSettings(null);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit _init_$lambda$48(OffroadHome var0) {
-      var0.actions.openFiles();
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit _init_$lambda$49(OffroadHome var0) {
-      var0.actions.openTerminal();
-      return Unit.INSTANCE;
-   }
-
-   private final List<OffroadHome.Alert> alerts(Telemetry var1) {
-      Map var4 = var1.getParams();
-      LinkedHashMap var10 = new LinkedHashMap();
-      Iterator var5 = var4.entrySet().iterator();
-
-      while (true) {
-         boolean var3 = var5.hasNext();
-         boolean var2 = false;
-         if (!var3) {
-            Map var19 = var10;
-            var3 = false;
-            var var7 = new ArrayList();
-            Iterator var6 = var19.entrySet().iterator();
-
-            while (var6.hasNext()) {
-               JSONObject var11 = this.jobj(((Entry)var6.next()).getValue());
-               OffroadHome.Alert var12;
-               if (var11 == null) {
-                  var12 = null;
-               } else {
-                  String var9 = var11.optString("text");
-                  Intrinsics.checkNotNullExpressionValue(var9, "optString(...)");
-                  String var8 = var11.optString("extra");
-                  Intrinsics.checkNotNullExpressionValue(var8, "optString(...)");
-                  var8 = StringsKt.replace$default(var9, "%1", var8, false, 4, null);
-                  if (StringsKt.isBlank(var8)) {
-                     var12 = null;
-                     var2 = false;
-                  } else {
-                     var2 = false;
-                     var12 = new OffroadHome.Alert(var8, var11.optInt("severity", 0));
-                  }
-               }
-
-               if (var12 != null) {
-                  var7.add(var12);
-               }
+        static {
+            int[] iArr = new int[State.values().length];
+            try {
+                iArr[State.HOME.ordinal()] = 1;
+            } catch (NoSuchFieldError e) {
             }
+            try {
+                iArr[State.UPDATE.ordinal()] = 2;
+            } catch (NoSuchFieldError e2) {
+            }
+            try {
+                iArr[State.ALERTS.ordinal()] = 3;
+            } catch (NoSuchFieldError e3) {
+            }
+            $EnumSwitchMapping$0 = iArr;
+        }
+    }
 
-            List var13 = var7;
-            Iterable var14 = var13;
-            return CollectionsKt.sortedWith(var14, new Comparator() {
-               @Override
-               public final int compare(T var1, T var2x) {
-                  return ComparisonsKt.compareValues(((OffroadHome.Alert)var2x).getSeverity(), ((OffroadHome.Alert)var1).getSeverity());
-               }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public OffroadHome(Context ctx, Actions actions) {
+        super(ctx);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(actions, "actions");
+        this.actions = actions;
+        this.d = getResources().getDisplayMetrics().density;
+        this.state = State.HOME;
+        TextView $this$updateBtn_u24lambda_u242 = tv$default(this, 22.0f, 0, true, 2, null);
+        $this$updateBtn_u24lambda_u242.setText("UPDATE");
+        $this$updateBtn_u24lambda_u242.setGravity(17);
+        $this$updateBtn_u24lambda_u242.setPadding(dp(26), dp(12), dp(26), dp(12));
+        $this$updateBtn_u24lambda_u242.setBackground(rounded(Color.rgb(54, 77, 239), 14));
+        Unit unit = Unit.INSTANCE;
+        this.updateBtn = $this$updateBtn_u24lambda_u242;
+        TextView $this$alertsBtn_u24lambda_u243 = tv$default(this, 22.0f, 0, true, 2, null);
+        $this$alertsBtn_u24lambda_u243.setGravity(17);
+        $this$alertsBtn_u24lambda_u243.setPadding(dp(26), dp(12), dp(26), dp(12));
+        $this$alertsBtn_u24lambda_u243.setBackground(rounded(Color.rgb(226, 44, 44), 14));
+        Unit unit2 = Unit.INSTANCE;
+        this.alertsBtn = $this$alertsBtn_u24lambda_u243;
+        TextView $this$version_u24lambda_u244 = tv$default(this, 26.0f, 0, false, 6, null);
+        $this$version_u24lambda_u244.setGravity(8388629);
+        $this$version_u24lambda_u244.setMaxLines(1);
+        $this$version_u24lambda_u244.setEllipsize(TextUtils.TruncateAt.END);
+        Unit unit3 = Unit.INSTANCE;
+        this.version = $this$version_u24lambda_u244;
+        this.allTime = new StatBlock(this, "ALL TIME", Color.rgb(145, 110, 255));
+        this.pastWeek = new StatBlock(this, "PAST WEEK", Color.rgb(40, 200, 190));
+        this.statsNote = tv$default(this, 15.0f, Color.rgb(150, 160, 180), false, 4, null);
+        TextView $this$expBtn_u24lambda_u245 = tv$default(this, 26.0f, 0, true, 2, null);
+        $this$expBtn_u24lambda_u245.setGravity(16);
+        $this$expBtn_u24lambda_u245.setPadding(dp(30), 0, dp(30), 0);
+        Unit unit4 = Unit.INSTANCE;
+        this.expBtn = $this$expBtn_u24lambda_u245;
+        Iterable $this$map$iv = CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Aggressive", 0), TuplesKt.to("Standard", 1), TuplesKt.to("Relaxed", 2)});
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            Pair pair = (Pair) item$iv$iv;
+            String label = (String) pair.component1();
+            int v = ((Number) pair.component2()).intValue();
+            Collection destination$iv$iv2 = destination$iv$iv;
+            TextView $this$persBtns_u24lambda_u247_u24lambda_u246 = tv$default(this, 19.0f, 0, true, 2, null);
+            $this$persBtns_u24lambda_u247_u24lambda_u246.setText(label);
+            $this$persBtns_u24lambda_u247_u24lambda_u246.setGravity(17);
+            $this$persBtns_u24lambda_u247_u24lambda_u246.setPadding(0, dp(16), 0, dp(16));
+            $this$persBtns_u24lambda_u247_u24lambda_u246.setTag(Integer.valueOf(v));
+            destination$iv$iv2.add($this$persBtns_u24lambda_u247_u24lambda_u246);
+            destination$iv$iv = destination$iv$iv2;
+            $this$map$iv = $this$map$iv;
+        }
+        this.persBtns = (List) destination$iv$iv;
+        this.devName = tv$default(this, 24.0f, 0, true, 2, null);
+        TextView $this$devLines_u24lambda_u248 = tv$default(this, 17.0f, Color.rgb(190, 198, 214), false, 4, null);
+        $this$devLines_u24lambda_u248.setLineSpacing(dp(6), 1.0f);
+        Unit unit5 = Unit.INSTANCE;
+        this.devLines = $this$devLines_u24lambda_u248;
+        this.detailTitle = tv$default(this, 34.0f, 0, true, 2, null);
+        LinearLayout $this$detailBody_u24lambda_u249 = new LinearLayout(ctx);
+        $this$detailBody_u24lambda_u249.setOrientation(1);
+        Unit unit6 = Unit.INSTANCE;
+        this.detailBody = $this$detailBody_u24lambda_u249;
+        TextView $this$detailAction_u24lambda_u2410 = tv$default(this, 20.0f, 0, true, 2, null);
+        $this$detailAction_u24lambda_u2410.setGravity(17);
+        $this$detailAction_u24lambda_u2410.setPadding(dp(28), dp(16), dp(28), dp(16));
+        $this$detailAction_u24lambda_u2410.setBackground(rounded(Color.rgb(54, 77, 239), 14));
+        Unit unit7 = Unit.INSTANCE;
+        this.detailAction = $this$detailAction_u24lambda_u2410;
+        TextView $this$lastDrive_u24lambda_u2411 = tv$default(this, 17.0f, Color.rgb(190, 198, 214), false, 4, null);
+        $this$lastDrive_u24lambda_u2411.setPadding(dp(18), dp(14), dp(18), dp(14));
+        $this$lastDrive_u24lambda_u2411.setBackground(rounded(Color.rgb(34, 36, 44), 14));
+        $this$lastDrive_u24lambda_u2411.setLineSpacing(dp(4), 1.0f);
+        $this$lastDrive_u24lambda_u2411.setVisibility(8);
+        Unit unit8 = Unit.INSTANCE;
+        this.lastDrive = $this$lastDrive_u24lambda_u2411;
+        LinearLayout $this$ambient_u24lambda_u2412 = new LinearLayout(ctx);
+        $this$ambient_u24lambda_u2412.setOrientation(1);
+        $this$ambient_u24lambda_u2412.setGravity(17);
+        $this$ambient_u24lambda_u2412.setBackgroundColor(-16777216);
+        $this$ambient_u24lambda_u2412.setVisibility(8);
+        $this$ambient_u24lambda_u2412.setClickable(true);
+        Unit unit9 = Unit.INSTANCE;
+        this.ambient = $this$ambient_u24lambda_u2412;
+        TextView $this$ambClock_u24lambda_u2413 = tv$default(this, 150.0f, Color.rgb(205, 210, 220), false, 4, null);
+        $this$ambClock_u24lambda_u2413.setGravity(17);
+        $this$ambClock_u24lambda_u2413.setTypeface(Typeface.create("sans-serif-thin", 0));
+        Unit unit10 = Unit.INSTANCE;
+        this.ambClock = $this$ambClock_u24lambda_u2413;
+        TextView $this$ambDate_u24lambda_u2414 = tv$default(this, 28.0f, Color.rgb(130, 138, 155), false, 4, null);
+        $this$ambDate_u24lambda_u2414.setGravity(17);
+        Unit unit11 = Unit.INSTANCE;
+        this.ambDate = $this$ambDate_u24lambda_u2414;
+        TextView $this$ambLine_u24lambda_u2415 = tv$default(this, 20.0f, Color.rgb(100, 108, 124), false, 4, null);
+        $this$ambLine_u24lambda_u2415.setGravity(17);
+        Unit unit12 = Unit.INSTANCE;
+        this.ambLine = $this$ambLine_u24lambda_u2415;
+        this.lastTouch = System.currentTimeMillis();
+        setBackgroundColor(-16777216);
+        LinearLayout $this$_init__u24lambda_u2418 = new LinearLayout(ctx);
+        $this$_init__u24lambda_u2418.setOrientation(1);
+        $this$_init__u24lambda_u2418.setPadding(dp(36), dp(28), dp(36), dp(28));
+        addView($this$_init__u24lambda_u2418, new FrameLayout.LayoutParams(-1, -1));
+        LinearLayout $this$_init__u24lambda_u2419 = new LinearLayout(ctx);
+        $this$_init__u24lambda_u2419.setOrientation(0);
+        $this$_init__u24lambda_u2419.setGravity(16);
+        TextView textView = this.updateBtn;
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2420 = new LinearLayout.LayoutParams(-2, -2);
+        $this$_init__u24lambda_u2420.setMarginEnd(dp(16));
+        Unit unit13 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2419.addView(textView, $this$_init__u24lambda_u2420);
+        TextView textView2 = this.alertsBtn;
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2421 = new LinearLayout.LayoutParams(-2, -2);
+        $this$_init__u24lambda_u2421.setMarginEnd(dp(16));
+        Unit unit14 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2419.addView(textView2, $this$_init__u24lambda_u2421);
+        $this$_init__u24lambda_u2419.addView(this.version, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        $this$_init__u24lambda_u2418.addView($this$_init__u24lambda_u2419, new LinearLayout.LayoutParams(-1, dp(72)));
+        this.updateBtn.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda0
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                OffroadHome._init_$lambda$22(OffroadHome.this, view);
+            }
+        });
+        this.alertsBtn.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda3
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                OffroadHome._init_$lambda$23(OffroadHome.this, view);
+            }
+        });
+        FrameLayout body = new FrameLayout(ctx);
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2424 = new LinearLayout.LayoutParams(-1, 0, 1.0f);
+        $this$_init__u24lambda_u2424.topMargin = dp(20);
+        Unit unit15 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2418.addView(body, $this$_init__u24lambda_u2424);
+        LinearLayout $this$_init__u24lambda_u2425 = new LinearLayout(ctx);
+        $this$_init__u24lambda_u2425.setOrientation(0);
+        Unit unit16 = Unit.INSTANCE;
+        this.homeContent = $this$_init__u24lambda_u2425;
+        LinearLayout $this$_init__u24lambda_u2426 = new LinearLayout(ctx);
+        $this$_init__u24lambda_u2426.setOrientation(1);
+        LinearLayout pers = $this$_init__u24lambda_u2419;
+        $this$_init__u24lambda_u2426.setBackground(rounded$default(this, Color.rgb(24, 24, 28), 0, 2, null));
+        $this$_init__u24lambda_u2426.setPadding(dp(32), dp(28), dp(32), dp(28));
+        TextView $this$_init__u24lambda_u2427 = tv(16.0f, Color.rgb(150, 160, 180), true);
+        $this$_init__u24lambda_u2427.setText("DRIVE STATS");
+        $this$_init__u24lambda_u2427.setLetterSpacing(0.12f);
+        Unit unit17 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2426.addView($this$_init__u24lambda_u2427);
+        LinearLayout view = this.allTime.getView();
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2428 = new LinearLayout.LayoutParams(-1, 0, 1.0f);
+        $this$_init__u24lambda_u2428.topMargin = dp(18);
+        Unit unit18 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2426.addView(view, $this$_init__u24lambda_u2428);
+        LinearLayout view2 = this.pastWeek.getView();
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2429 = new LinearLayout.LayoutParams(-1, 0, 1.0f);
+        $this$_init__u24lambda_u2429.topMargin = dp(18);
+        Unit unit19 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2426.addView(view2, $this$_init__u24lambda_u2429);
+        TextView textView3 = this.statsNote;
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2430 = new LinearLayout.LayoutParams(-2, -2);
+        $this$_init__u24lambda_u2430.topMargin = dp(12);
+        Unit unit20 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2426.addView(textView3, $this$_init__u24lambda_u2430);
+        TextView textView4 = this.lastDrive;
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2431 = new LinearLayout.LayoutParams(-1, -2);
+        $this$_init__u24lambda_u2431.topMargin = dp(14);
+        Unit unit21 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2426.addView(textView4, $this$_init__u24lambda_u2431);
+        this.lastDrive.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda4
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view3) {
+                OffroadHome._init_$lambda$32(OffroadHome.this, view3);
+            }
+        });
+        this.homeContent.addView($this$_init__u24lambda_u2426, new LinearLayout.LayoutParams(0, -1, 1.25f));
+        LinearLayout $this$_init__u24lambda_u2433 = new LinearLayout(ctx);
+        $this$_init__u24lambda_u2433.setOrientation(1);
+        $this$_init__u24lambda_u2433.addView(this.expBtn, new LinearLayout.LayoutParams(-1, dp(110)));
+        this.expBtn.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda5
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view3) {
+                OffroadHome.this.toggleExperimental();
+            }
+        });
+        LinearLayout $this$_init__u24lambda_u2435 = new LinearLayout(ctx);
+        $this$_init__u24lambda_u2435.setOrientation(1);
+        $this$_init__u24lambda_u2435.setBackground(rounded$default(this, Color.rgb(24, 24, 28), 0, 2, null));
+        $this$_init__u24lambda_u2435.setPadding(dp(22), dp(20), dp(22), dp(22));
+        LinearLayout pers2 = $this$_init__u24lambda_u2435;
+        TextView $this$_init__u24lambda_u2436 = tv(16.0f, Color.rgb(150, 160, 180), true);
+        $this$_init__u24lambda_u2436.setText("DRIVING PERSONALITY");
+        $this$_init__u24lambda_u2436.setLetterSpacing(0.12f);
+        Unit unit22 = Unit.INSTANCE;
+        pers2.addView($this$_init__u24lambda_u2436);
+        LinearLayout $this$_init__u24lambda_u2437 = new LinearLayout(ctx);
+        $this$_init__u24lambda_u2437.setOrientation(0);
+        Iterable $this$forEachIndexed$iv = this.persBtns;
+        int $i$f$forEachIndexed = 0;
+        int i = 0;
+        Iterator it = $this$forEachIndexed$iv.iterator();
+        while (it.hasNext()) {
+            Object item$iv = it.next();
+            int index$iv = i + 1;
+            if (i < 0) {
+                CollectionsKt.throwIndexOverflow();
+            }
+            final TextView b = (TextView) item$iv;
+            TextView textView5 = b;
+            Iterable $this$forEachIndexed$iv2 = $this$forEachIndexed$iv;
+            int $i$f$forEachIndexed2 = $i$f$forEachIndexed;
+            Iterator it2 = it;
+            LinearLayout.LayoutParams $this$lambda_u2441_u24lambda_u2438 = new LinearLayout.LayoutParams(0, -2, 1.0f);
+            if (i > 0) {
+                $this$lambda_u2441_u24lambda_u2438.setMarginStart(dp(10));
+            }
+            Unit unit23 = Unit.INSTANCE;
+            $this$_init__u24lambda_u2437.addView(textView5, $this$lambda_u2441_u24lambda_u2438);
+            b.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda6
+                @Override // android.view.View.OnClickListener
+                public final void onClick(View view3) {
+                    OffroadHome.lambda$41$lambda$40(OffroadHome.this, b, view3);
+                }
             });
-         }
-
-         Entry var18 = (Entry)var5.next();
-         if (StringsKt.startsWith$default((String)var18.getKey(), "Offroad_", false, 2, null)) {
-            var10.put(var18.getKey(), var18.getValue());
-         }
-      }
-   }
-
-   private final void ambientTick(Telemetry var1) {
-      if (!this.isShown()) {
-         this.lastTouch = System.currentTimeMillis();
-      } else {
-         long var5 = System.currentTimeMillis();
-         long var7 = this.lastTouch;
-         boolean var4 = false;
-         boolean var3;
-         if (var5 - var7 > 180000L) {
-            var3 = 1;
-         } else {
-            var3 = 0;
-         }
-
-         if (var3 && this.ambient.getVisibility() != 0) {
-            this.ambient.setVisibility(0);
-         }
-
-         if (this.ambient.getVisibility() == 0) {
-            Date var9 = new Date();
-            this.ambClock.setText(new SimpleDateFormat("h:mm", Locale.US).format(var9));
-            this.ambDate.setText(new SimpleDateFormat("EEEE, MMMM d", Locale.US).format(var9));
-            TextView var10 = this.ambLine;
-            String var11 = this.lastDriveLine;
-            Float var12 = var1.getCpuTempC();
-            float var2 = var12.floatValue();
-            var3 = var4;
-            if (var2 > 0.0F) {
-               var3 = (boolean)1;
+            i = index$iv;
+            $this$forEachIndexed$iv = $this$forEachIndexed$iv2;
+            $i$f$forEachIndexed = $i$f$forEachIndexed2;
+            it = it2;
+        }
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2442 = new LinearLayout.LayoutParams(-1, -2);
+        $this$_init__u24lambda_u2442.topMargin = dp(14);
+        Unit unit24 = Unit.INSTANCE;
+        pers2.addView($this$_init__u24lambda_u2437, $this$_init__u24lambda_u2442);
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2443 = new LinearLayout.LayoutParams(-1, -2);
+        $this$_init__u24lambda_u2443.topMargin = dp(20);
+        Unit unit25 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2433.addView(pers2, $this$_init__u24lambda_u2443);
+        LinearLayout $this$_init__u24lambda_u2444 = new LinearLayout(ctx);
+        $this$_init__u24lambda_u2444.setOrientation(1);
+        $this$_init__u24lambda_u2444.setBackground(rounded$default(this, Color.rgb(24, 24, 28), 0, 2, null));
+        $this$_init__u24lambda_u2444.setPadding(dp(26), dp(22), dp(26), dp(22));
+        $this$_init__u24lambda_u2444.addView(this.devName);
+        TextView textView6 = this.devLines;
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2445 = new LinearLayout.LayoutParams(-1, 0, 1.0f);
+        $this$_init__u24lambda_u2445.topMargin = dp(12);
+        Unit unit26 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2444.addView(textView6, $this$_init__u24lambda_u2445);
+        LinearLayout $this$_init__u24lambda_u2446 = new LinearLayout(ctx);
+        $this$_init__u24lambda_u2446.setOrientation(0);
+        LinearLayout buttons = $this$_init__u24lambda_u2446;
+        int index$iv2 = 0;
+        for (Object item$iv2 : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to("Settings", new Function0() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda7
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit _init_$lambda$47;
+                _init_$lambda$47 = OffroadHome._init_$lambda$47(OffroadHome.this);
+                return _init_$lambda$47;
             }
-
-            String var16 = null;
-            if (!var3) {
-               var12 = null;
+        }), TuplesKt.to("Files", new Function0() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda8
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit _init_$lambda$48;
+                _init_$lambda$48 = OffroadHome._init_$lambda$48(OffroadHome.this);
+                return _init_$lambda$48;
             }
-
-            if (var12 != null) {
-               var2 = var12.floatValue();
-               var3 = Math.round(9 * var2 / 5 + 32);
-               var16 = "comma " + var3 + "°F";
+        }), TuplesKt.to("Terminal", new Function0() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda9
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit _init_$lambda$49;
+                _init_$lambda$49 = OffroadHome._init_$lambda$49(OffroadHome.this);
+                return _init_$lambda$49;
             }
+        })})) {
+            int index$iv3 = index$iv2 + 1;
+            if (index$iv2 < 0) {
+                CollectionsKt.throwIndexOverflow();
+            }
+            Pair pair2 = (Pair) item$iv2;
+            int i2 = index$iv2;
+            String label2 = (String) pair2.component1();
+            final Function0 f = (Function0) pair2.component2();
+            LinearLayout header = pers;
+            LinearLayout buttons2 = buttons;
+            LinearLayout pers3 = pers2;
+            TextView $this$lambda_u2453_u24lambda_u2451 = tv$default(this, 18.0f, 0, true, 2, null);
+            $this$lambda_u2453_u24lambda_u2451.setText(label2);
+            $this$lambda_u2453_u24lambda_u2451.setGravity(17);
+            $this$lambda_u2453_u24lambda_u2451.setPadding(0, dp(16), 0, dp(16));
+            $this$lambda_u2453_u24lambda_u2451.setBackground(rounded(Color.rgb(44, 48, 60), 14));
+            $this$lambda_u2453_u24lambda_u2451.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda10
+                @Override // android.view.View.OnClickListener
+                public final void onClick(View view3) {
+                    Function0.this.invoke();
+                }
+            });
+            TextView textView7 = $this$lambda_u2453_u24lambda_u2451;
+            LinearLayout.LayoutParams $this$lambda_u2453_u24lambda_u2452 = new LinearLayout.LayoutParams(0, -2, 1.0f);
+            if (i2 > 0) {
+                $this$lambda_u2453_u24lambda_u2452.setMarginStart(dp(10));
+            }
+            Unit unit27 = Unit.INSTANCE;
+            buttons2.addView(textView7, $this$lambda_u2453_u24lambda_u2452);
+            buttons = buttons2;
+            pers2 = pers3;
+            index$iv2 = index$iv3;
+            pers = header;
+        }
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2454 = new LinearLayout.LayoutParams(-1, -2);
+        $this$_init__u24lambda_u2454.topMargin = dp(12);
+        Unit unit28 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2444.addView(buttons, $this$_init__u24lambda_u2454);
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2455 = new LinearLayout.LayoutParams(-1, 0, 1.0f);
+        $this$_init__u24lambda_u2455.topMargin = dp(20);
+        Unit unit29 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2433.addView($this$_init__u24lambda_u2444, $this$_init__u24lambda_u2455);
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2456 = new LinearLayout.LayoutParams(0, -1, 1.0f);
+        $this$_init__u24lambda_u2456.setMarginStart(dp(24));
+        Unit unit30 = Unit.INSTANCE;
+        this.homeContent.addView($this$_init__u24lambda_u2433, $this$_init__u24lambda_u2456);
+        body.addView(this.homeContent, new FrameLayout.LayoutParams(-1, -1));
+        LinearLayout $this$_init__u24lambda_u2457 = new LinearLayout(ctx);
+        $this$_init__u24lambda_u2457.setOrientation(1);
+        $this$_init__u24lambda_u2457.setBackground(rounded$default(this, Color.rgb(24, 24, 28), 0, 2, null));
+        $this$_init__u24lambda_u2457.setPadding(dp(36), dp(30), dp(36), dp(30));
+        $this$_init__u24lambda_u2457.setVisibility(8);
+        Unit unit31 = Unit.INSTANCE;
+        this.detailContent = $this$_init__u24lambda_u2457;
+        this.detailContent.addView(this.detailTitle);
+        LinearLayout linearLayout = this.detailContent;
+        ScrollView $this$_init__u24lambda_u2458 = new ScrollView(ctx);
+        $this$_init__u24lambda_u2458.addView(this.detailBody);
+        Unit unit32 = Unit.INSTANCE;
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2459 = new LinearLayout.LayoutParams(-1, 0, 1.0f);
+        $this$_init__u24lambda_u2459.topMargin = dp(20);
+        $this$_init__u24lambda_u2459.bottomMargin = dp(20);
+        Unit unit33 = Unit.INSTANCE;
+        linearLayout.addView($this$_init__u24lambda_u2458, $this$_init__u24lambda_u2459);
+        LinearLayout $this$_init__u24lambda_u2460 = new LinearLayout(ctx);
+        $this$_init__u24lambda_u2460.setOrientation(0);
+        $this$_init__u24lambda_u2460.setGravity(8388613);
+        TextView $this$_init__u24lambda_u2462 = tv$default(this, 20.0f, 0, true, 2, null);
+        $this$_init__u24lambda_u2462.setText("Close");
+        $this$_init__u24lambda_u2462.setGravity(17);
+        $this$_init__u24lambda_u2462.setPadding(dp(28), dp(16), dp(28), dp(16));
+        $this$_init__u24lambda_u2462.setBackground(rounded(Color.rgb(44, 48, 60), 14));
+        $this$_init__u24lambda_u2462.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda11
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view3) {
+                OffroadHome.this.setState(OffroadHome.State.HOME);
+            }
+        });
+        Unit unit34 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2460.addView($this$_init__u24lambda_u2462);
+        TextView textView8 = this.detailAction;
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2463 = new LinearLayout.LayoutParams(-2, -2);
+        $this$_init__u24lambda_u2463.setMarginStart(dp(14));
+        Unit unit35 = Unit.INSTANCE;
+        $this$_init__u24lambda_u2460.addView(textView8, $this$_init__u24lambda_u2463);
+        this.detailContent.addView($this$_init__u24lambda_u2460, new LinearLayout.LayoutParams(-1, -2));
+        body.addView(this.detailContent, new FrameLayout.LayoutParams(-1, -1));
+        this.ambient.addView(this.ambClock);
+        LinearLayout linearLayout2 = this.ambient;
+        TextView textView9 = this.ambDate;
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2464 = new LinearLayout.LayoutParams(-2, -2);
+        $this$_init__u24lambda_u2464.topMargin = dp(8);
+        Unit unit36 = Unit.INSTANCE;
+        linearLayout2.addView(textView9, $this$_init__u24lambda_u2464);
+        LinearLayout linearLayout3 = this.ambient;
+        TextView textView10 = this.ambLine;
+        LinearLayout.LayoutParams $this$_init__u24lambda_u2465 = new LinearLayout.LayoutParams(-2, -2);
+        $this$_init__u24lambda_u2465.topMargin = dp(30);
+        Unit unit37 = Unit.INSTANCE;
+        linearLayout3.addView(textView10, $this$_init__u24lambda_u2465);
+        addView(this.ambient, new FrameLayout.LayoutParams(-1, -1));
+        this.lastGen = -1;
+    }
 
-            var10.setText(
-               CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull(new String[]{var11, var16}), "   ·   ", null, null, 0, null, null, 62, null)
-            );
-         }
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final int dp(int v) {
+        return (int) (v * this.d);
+    }
 
-   private final int dp(int var1) {
-      return (int)(var1 * this.d);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final GradientDrawable rounded(int color, int r) {
+        GradientDrawable $this$rounded_u24lambda_u240 = new GradientDrawable();
+        $this$rounded_u24lambda_u240.setColor(color);
+        $this$rounded_u24lambda_u240.setCornerRadius(dp(r));
+        return $this$rounded_u24lambda_u240;
+    }
 
-   private final String fmt(double var1) {
-      String var3;
-      if (var1 >= 100.0) {
-         var3 = String.format("%,d", Arrays.copyOf(new Object[]{MathKt.roundToInt(var1)}, 1));
-      } else {
-         var3 = String.format("%.1f", Arrays.copyOf(new Object[]{var1}, 1));
-      }
+    static /* synthetic */ GradientDrawable rounded$default(OffroadHome offroadHome, int i, int i2, int i3, Object obj) {
+        if ((i3 & 2) != 0) {
+            i2 = 20;
+        }
+        return offroadHome.rounded(i, i2);
+    }
 
-      Intrinsics.checkNotNullExpressionValue(var3, "format(...)");
-      return var3;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final TextView tv(float size, int color, boolean bold) {
+        TextView $this$tv_u24lambda_u241 = new TextView(getContext());
+        $this$tv_u24lambda_u241.setTextSize(size);
+        $this$tv_u24lambda_u241.setTextColor(color);
+        if (bold) {
+            $this$tv_u24lambda_u241.setTypeface(Typeface.DEFAULT_BOLD);
+        }
+        $this$tv_u24lambda_u241.setIncludeFontPadding(false);
+        return $this$tv_u24lambda_u241;
+    }
 
-   private final String gb(JSONObject var1, String var2) {
-      double var3 = var1.optDouble(var2, Double.NaN);
-      String var5;
-      if (Double.isNaN(var3)) {
-         var5 = "?";
-      } else if (var3 >= 100.0) {
-         var5 = String.valueOf(MathKt.roundToInt(var3));
-      } else {
-         var5 = String.format("%.1f", Arrays.copyOf(new Object[]{var3}, 1));
-         Intrinsics.checkNotNullExpressionValue(var5, "format(...)");
-      }
+    static /* synthetic */ TextView tv$default(OffroadHome offroadHome, float f, int i, boolean z, int i2, Object obj) {
+        if ((i2 & 2) != 0) {
+            i = -1;
+        }
+        if ((i2 & 4) != 0) {
+            z = false;
+        }
+        return offroadHome.tv(f, i, z);
+    }
 
-      return var5;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    /* compiled from: OffroadHome.kt */
+    enum State {
+        HOME,
+        UPDATE,
+        ALERTS;
 
-   private final JSONObject jobj(Object var1) {
-      if (var1 instanceof JSONObject) {
-         var1 = var1;
-      } else if (var1 instanceof Map) {
-         var1 = new JSONObject((Map)var1);
-      } else if (var1 instanceof String) {
-         JSONObject var2;
-         try {
-            var2 = new JSONObject((String)var1);
-         } catch (Exception var3) {
-            var1 = null;
-            return var1;
-         }
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
 
-         var1 = var2;
-      } else {
-         var1 = null;
-      }
+        public static EnumEntries<State> getEntries() {
+            return $ENTRIES;
+        }
+    }
 
-      return var1;
-   }
-
-   static final void lambda$41$lambda$40(OffroadHome var0, TextView var1, View var2) {
-      OffroadHome.Actions var7 = var0.actions;
-      Pair var3 = TuplesKt.to("action", "param");
-      Pair var4 = TuplesKt.to("key", "LongitudinalPersonality");
-      Object var5 = var1.getTag();
-      Intrinsics.checkNotNull(var5, "null cannot be cast to non-null type kotlin.Int");
-      var7.control(new JSONObject(MapsKt.mapOf(new Pair[]{var3, var4, TuplesKt.to("value", (Integer)var5)})));
-      var5 = var0.lastT;
-      if (var5 != null) {
-         var0.refresh((Telemetry)var5, true);
-      }
-   }
-
-   static final void lambda$53$lambda$51$lambda$50(Function0 var0, View var1) {
-      var0.invoke();
-   }
-
-   static final void lambda$62$lambda$61(OffroadHome var0, View var1) {
-      var0.setState(OffroadHome.State.HOME);
-   }
-
-   private final double num(JSONObject var1, String var2) {
-      double var5 = 0.0;
-      double var3 = var5;
-      if (var1 != null) {
-         Double var7 = var1.optDouble(var2, 0.0);
-         if (Double.isNaN(var7.doubleValue())) {
-            var7 = null;
-         }
-
-         var3 = var5;
-         if (var7 != null) {
-            var3 = var7;
-         }
-      }
-
-      return var3;
-   }
-
-   private final void paintLastDrive() {
-      long var3 = System.currentTimeMillis();
-      if (var3 - this.lastDriveAt >= 30000L) {
-         this.lastDriveAt = var3;
-         JSONObject var5 = CollectionsKt.lastOrNull(DriveJournal.INSTANCE.read("drive"));
-         if (var5 != null) {
-            double var1 = var5.optDouble("meters") / 1609.344;
-            var3 = (var5.optLong("end") - var5.optLong("t")) / '\uea60';
-            String var6 = new SimpleDateFormat("EEE h:mm a", Locale.US).format(new Date(var5.optLong("t")));
-            StringCompanionObject var7 = StringCompanionObject.INSTANCE;
-            String var11 = String.format(Locale.US, "last drive %.1f mi", Arrays.copyOf(new Object[]{var1}, 1));
-            Intrinsics.checkNotNullExpressionValue(var11, "format(...)");
-            this.lastDriveLine = var11;
-            TextView var12 = this.lastDrive;
-            StringCompanionObject var8 = StringCompanionObject.INSTANCE;
-            String var10 = String.format(
-               Locale.US,
-               "LAST DRIVE  ·  %s\n%.1f mi  ·  %d min  ·  %d%% openpilot  ·  %d takeovers  ·  %d alerts   ›",
-               Arrays.copyOf(new Object[]{var6, var1, var3, var5.optInt("engagedPct"), var5.optInt("takeovers"), var5.optInt("alerts")}, 6)
-            );
-            Intrinsics.checkNotNullExpressionValue(var10, "format(...)");
-            var12.setText(var10);
-            this.lastDrive.setVisibility(0);
-         }
-      }
-   }
-
-   private static final double refresh$cloudDist(OffroadHome var0, boolean var1, double var2, JSONObject var4) {
-      double var7 = var0.num(var4, "distance");
-      double var5 = var7;
-      if (var1) {
-         var5 = var7 * var2;
-      }
-
-      return var5;
-   }
-
-   // $VF: synthetic method
-   public static void refresh$default(OffroadHome var0, Telemetry var1, boolean var2, int var3, Object var4) {
-      if ((var3 & 2) != 0) {
-         var2 = false;
-      }
-
-      var0.refresh(var1, var2);
-   }
-
-   private static final void refresh$lambda$83(OffroadHome var0, View var1) {
-      var0.actions.openSettings("software");
-   }
-
-   private final GradientDrawable rounded(int var1, int var2) {
-      GradientDrawable var3 = new GradientDrawable();
-      var3.setColor(var1);
-      var3.setCornerRadius(this.dp(var2));
-      return var3;
-   }
-
-   // $VF: synthetic method
-   static GradientDrawable rounded$default(OffroadHome var0, int var1, int var2, int var3, Object var4) {
-      if ((var3 & 2) != 0) {
-         var2 = 20;
-      }
-
-      return var0.rounded(var1, var2);
-   }
-
-   private final void setState(OffroadHome.State var1) {
-      this.state = var1;
-      LinearLayout var5 = this.homeContent;
-      OffroadHome.State var4 = OffroadHome.State.HOME;
-      byte var3 = 0;
-      byte var2;
-      if (var1 == var4) {
-         var2 = 0;
-      } else {
-         var2 = 8;
-      }
-
-      var5.setVisibility(var2);
-      LinearLayout var8 = this.detailContent;
-      var2 = var3;
-      if (var1 == OffroadHome.State.HOME) {
-         var2 = 8;
-      }
-
-      var8.setVisibility(var2);
-      Telemetry var6 = this.lastT;
-      if (var6 != null) {
-         this.refresh(var6, true);
-      }
-   }
-
-   private final void toggleExperimental() {
-      Telemetry var1 = this.lastT;
-      if (var1 != null) {
-         if (!var1.pBool("ExperimentalMode", false) && !var1.pBool("ExperimentalModeConfirmed", false)) {
-            new Builder(this.getContext())
-               .setTitle("Experimental mode")
-               .setMessage(
-                  "openpilot defaults to driving in chill mode. Experimental mode enables alpha-level features that aren't ready for chill mode: end-to-end longitudinal control (openpilot drives the speed, including stopping for red lights and stop signs) and more. Expect mistakes and keep your attention on the road."
-               )
-               .setPositiveButton("Enable", new OffroadHome$$ExternalSyntheticLambda2(this))
-               .setNegativeButton("Cancel", null)
-               .show();
-         } else {
-            this.actions.control(new JSONObject(MapsKt.mapOf(TuplesKt.to("action", "exp_toggle"))));
-         }
-      }
-   }
-
-   private static final void toggleExperimental$lambda$86(OffroadHome var0, DialogInterface var1, int var2) {
-      var0.actions
-         .control(new JSONObject(MapsKt.mapOf(new Pair[]{TuplesKt.to("action", "param"), TuplesKt.to("key", "ExperimentalMode"), TuplesKt.to("value", true)})));
-   }
-
-   private final TextView tv(float var1, int var2, boolean var3) {
-      TextView var4 = new TextView(this.getContext());
-      var4.setTextSize(var1);
-      var4.setTextColor(var2);
-      if (var3) {
-         var4.setTypeface(Typeface.DEFAULT_BOLD);
-      }
-
-      var4.setIncludeFontPadding(false);
-      return var4;
-   }
-
-   // $VF: synthetic method
-   static TextView tv$default(OffroadHome var0, float var1, int var2, boolean var3, int var4, Object var5) {
-      if ((var4 & 2) != 0) {
-         var2 = -1;
-      }
-
-      if ((var4 & 4) != 0) {
-         var3 = false;
-      }
-
-      return var0.tv(var1, var2, var3);
-   }
-
-   private final String whenStr(double var1) {
-      if (!Double.isNaN(var1) && !(var1 <= 0.0)) {
-         Calendar var3 = Calendar.getInstance();
-         var3.setTimeInMillis((long)(1000 * var1));
-         Calendar var4 = Calendar.getInstance();
-         String var5 = String.format("%02d:%02d", Arrays.copyOf(new Object[]{var3.get(11), var3.get(12)}, 2));
-         Intrinsics.checkNotNullExpressionValue(var5, "format(...)");
-         StringBuilder var7;
-         String var8;
-         switch ((var4.get(1) - var3.get(1)) * 366 + var4.get(6) - var3.get(6)) {
-            case 0:
-               var7 = new StringBuilder();
-               var8 = "today ";
-               break;
-            case 1:
-               var7 = new StringBuilder();
-               var8 = "yesterday ";
-               break;
-            default:
-               String var6 = new SimpleDateFormat("MMM d HH:mm", Locale.US).format(var3.getTime());
-               Intrinsics.checkNotNullExpressionValue(var6, "format(...)");
-               return var6;
-         }
-
-         return var7.append(var8).append(var5).toString();
-      } else {
-         return "–";
-      }
-   }
-
-   public boolean dispatchTouchEvent(MotionEvent var1) {
-      Intrinsics.checkNotNullParameter(var1, "ev");
-      this.lastTouch = System.currentTimeMillis();
-      if (this.ambient.getVisibility() == 0) {
-         if (var1.getActionMasked() == 1) {
+    @Override // android.view.ViewGroup, android.view.View
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Intrinsics.checkNotNullParameter(ev, "ev");
+        this.lastTouch = System.currentTimeMillis();
+        if (this.ambient.getVisibility() != 0) {
+            return super.dispatchTouchEvent(ev);
+        }
+        if (ev.getActionMasked() == 1) {
             this.ambient.setVisibility(8);
-         }
+        }
+        return true;
+    }
 
-         return true;
-      } else {
-         return super.dispatchTouchEvent(var1);
-      }
-   }
-
-   public final JSONObject getStorage() {
-      return this.storage;
-   }
-
-   public final void refresh(Telemetry var1, boolean var2) {
-      Intrinsics.checkNotNullParameter(var1, "t");
-      this.lastT = var1;
-      this.ambientTick(var1);
-      this.paintLastDrive();
-      if (var2 || var1.getParamsGeneration() != this.lastGen) {
-         this.lastGen = var1.getParamsGeneration();
-         var2 = var1.pBool("IsMetric", false);
-         List var14 = this.alerts(var1);
-         boolean var9 = var1.pBool("UpdateAvailable", false);
-         TextView var12 = this.updateBtn;
-         byte var7;
-         if (var9) {
-            var7 = 0;
-         } else {
-            var7 = 8;
-         }
-
-         var12.setVisibility(var7);
-         var12 = this.alertsBtn;
-         if (!var14.isEmpty()) {
-            var7 = (byte)0;
-         } else {
-            var7 = (byte)8;
-         }
-
-         var12.setVisibility(var7);
-         TextView var13 = this.alertsBtn;
-         String var64;
-         if (var14.size() == 1) {
-            var64 = "1 ALERT";
-         } else {
-            var7 = var14.size();
-            var64 = var7 + " ALERTS";
-         }
-
-         var13.setText(var64);
-         String var15 = StringsKt.trim(Telemetry.pStr$default(var1, "UpdaterCurrentDescription", null, 2, null)).toString();
-         CharSequence var87 = Telemetry.pStr$default(var1, "DrivingModelName", null, 2, null);
-         LinearLayout var65 = var87;
-         if (StringsKt.isBlank(var87)) {
-            var65 = Telemetry.pStr$default(var1, "Model", null, 2, null);
-         }
-
-         var65 = StringsKt.trim(
-               StringsKt.replace$default(StringsKt.replace$default((String)var65, "_default", "", false, 4, null), "(Default)", "", false, 4, null)
-            )
-            .toString();
-         SpannableStringBuilder var88 = new SpannableStringBuilder();
-         var88.append("StarPilot");
-         var88.setSpan(new StyleSpan(1), 0, var88.length(), 0);
-         boolean var43;
-         if (var15.length() > 0) {
-            var43 = 1;
-         } else {
-            var43 = 0;
-         }
-
-         if (var43) {
-            var88.append("  ").append(var15);
-         }
-
-         if (((CharSequence)var65).length() > 0) {
-            var43 = (boolean)1;
-         } else {
-            var43 = (boolean)0;
-         }
-
-         if (var43) {
-            var88.append("  -  ").append((CharSequence)var65);
-         }
-
-         this.version.setText((CharSequence)var88);
-         if (var9 && !this.prevUpdate) {
-            this.state = OffroadHome.State.UPDATE;
-         } else if (!var14.isEmpty() && !this.prevAlerts) {
-            this.state = OffroadHome.State.ALERTS;
-         }
-
-         if (!var9 && this.state == OffroadHome.State.UPDATE) {
-            if (!var14.isEmpty()) {
-               var65 = OffroadHome.State.ALERTS;
-            } else {
-               var65 = OffroadHome.State.HOME;
+    private final void ambientTick(Telemetry t) {
+        if (!isShown()) {
+            this.lastTouch = System.currentTimeMillis();
+            return;
+        }
+        boolean idle = System.currentTimeMillis() - this.lastTouch > 180000;
+        if (idle && this.ambient.getVisibility() != 0) {
+            this.ambient.setVisibility(0);
+        }
+        if (this.ambient.getVisibility() == 0) {
+            Date now = new Date();
+            this.ambClock.setText(new SimpleDateFormat("h:mm", Locale.US).format(now));
+            this.ambDate.setText(new SimpleDateFormat("EEEE, MMMM d", Locale.US).format(now));
+            TextView textView = this.ambLine;
+            String[] strArr = new String[2];
+            strArr[0] = this.lastDriveLine;
+            Float valueOf = Float.valueOf(t.getCpuTempC());
+            float it = valueOf.floatValue();
+            boolean z = it > 0.0f;
+            String str = null;
+            if (!z) {
+                valueOf = null;
             }
-
-            this.state = (OffroadHome.State)var65;
-         }
-
-         if (var14.isEmpty() && this.state == OffroadHome.State.ALERTS) {
-            if (var9) {
-               var65 = OffroadHome.State.UPDATE;
-            } else {
-               var65 = OffroadHome.State.HOME;
+            if (valueOf != null) {
+                float it2 = valueOf.floatValue();
+                str = "comma " + Math.round(((9 * it2) / 5) + 32) + "°F";
             }
+            strArr[1] = str;
+            textView.setText(CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), "   ·   ", null, null, 0, null, null, 62, null));
+        }
+    }
 
-            this.state = (OffroadHome.State)var65;
-         }
+    /* compiled from: OffroadHome.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
 
-         this.prevUpdate = var9;
-         this.prevAlerts = var14.isEmpty() ^ true;
-         var65 = this.homeContent;
-         if (this.state == OffroadHome.State.HOME) {
-            var43 = (byte)0;
-         } else {
-            var43 = (byte)8;
-         }
+        private Companion() {
+        }
+    }
 
-         var65.setVisibility(var43);
-         var65 = this.detailContent;
-         if (this.state == OffroadHome.State.HOME) {
-            var43 = (byte)8;
-         } else {
-            var43 = (byte)0;
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void _init_$lambda$22(OffroadHome this$0, View it) {
+        this$0.setState(this$0.state == State.UPDATE ? State.HOME : State.UPDATE);
+    }
 
-         var65.setVisibility(var43);
-         OffroadHome.State var71 = this.state;
-         switch (OffroadHome.WhenMappings.$EnumSwitchMapping$0[var71.ordinal()]) {
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void _init_$lambda$23(OffroadHome this$0, View it) {
+        this$0.setState(this$0.state == State.ALERTS ? State.HOME : State.ALERTS);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void _init_$lambda$32(OffroadHome this$0, View it) {
+        this$0.actions.openSettings("journal:last");
+    }
+
+    static final void lambda$41$lambda$40(OffroadHome this$0, TextView $b, View it) {
+        Actions actions = this$0.actions;
+        Object tag = $b.getTag();
+        Intrinsics.checkNotNull(tag, "null cannot be cast to non-null type kotlin.Int");
+        actions.control(new JSONObject(MapsKt.mapOf(TuplesKt.to("action", "param"), TuplesKt.to("key", "LongitudinalPersonality"), TuplesKt.to("value", (Integer) tag))));
+        Telemetry t = this$0.lastT;
+        if (t != null) {
+            this$0.refresh(t, true);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit _init_$lambda$47(OffroadHome this$0) {
+        this$0.actions.openSettings(null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit _init_$lambda$48(OffroadHome this$0) {
+        this$0.actions.openFiles();
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit _init_$lambda$49(OffroadHome this$0) {
+        this$0.actions.openTerminal();
+        return Unit.INSTANCE;
+    }
+
+    private final void paintLastDrive() {
+        long now = System.currentTimeMillis();
+        if (now - this.lastDriveAt < 30000) {
+            return;
+        }
+        this.lastDriveAt = now;
+        JSONObject d = (JSONObject) CollectionsKt.lastOrNull((List) DriveJournal.INSTANCE.read("drive"));
+        if (d == null) {
+            return;
+        }
+        double mi = d.optDouble("meters") / 1609.344d;
+        long min = (d.optLong("end") - d.optLong("t")) / 60000;
+        String whenTxt = new SimpleDateFormat("EEE h:mm a", Locale.US).format(new Date(d.optLong("t")));
+        StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
+        String format = String.format(Locale.US, "last drive %.1f mi", Arrays.copyOf(new Object[]{Double.valueOf(mi)}, 1));
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        this.lastDriveLine = format;
+        TextView textView = this.lastDrive;
+        StringCompanionObject stringCompanionObject2 = StringCompanionObject.INSTANCE;
+        String format2 = String.format(Locale.US, "LAST DRIVE  ·  %s\n%.1f mi  ·  %d min  ·  %d%% openpilot  ·  %d takeovers  ·  %d alerts   ›", Arrays.copyOf(new Object[]{whenTxt, Double.valueOf(mi), Long.valueOf(min), Integer.valueOf(d.optInt("engagedPct")), Integer.valueOf(d.optInt("takeovers")), Integer.valueOf(d.optInt("alerts"))}, 6));
+        Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
+        textView.setText(format2);
+        this.lastDrive.setVisibility(0);
+    }
+
+    /* compiled from: OffroadHome.kt */
+    private final class StatBlock {
+        private final TextView dist;
+        private final TextView distUnit;
+        private final TextView drives;
+        private final TextView hours;
+        final /* synthetic */ OffroadHome this$0;
+        private final LinearLayout view;
+
+        public StatBlock(OffroadHome this$0, String title, int accent) {
+            Intrinsics.checkNotNullParameter(title, "title");
+            this.this$0 = this$0;
+            this.drives = OffroadHome.tv$default(this.this$0, 44.0f, 0, true, 2, null);
+            this.dist = OffroadHome.tv$default(this.this$0, 44.0f, 0, true, 2, null);
+            this.hours = OffroadHome.tv$default(this.this$0, 44.0f, 0, true, 2, null);
+            this.distUnit = OffroadHome.tv$default(this.this$0, 16.0f, Color.rgb(150, 160, 180), false, 4, null);
+            LinearLayout $this$view_u24lambda_u247 = new LinearLayout(this.this$0.getContext());
+            OffroadHome offroadHome = this.this$0;
+            $this$view_u24lambda_u247.setOrientation(1);
+            $this$view_u24lambda_u247.setBackground(offroadHome.rounded(Color.rgb(34, 34, 40), 16));
+            $this$view_u24lambda_u247.setPadding(offroadHome.dp(26), offroadHome.dp(18), offroadHome.dp(26), offroadHome.dp(18));
+            TextView $this$view_u24lambda_u247_u24lambda_u240 = offroadHome.tv(15.0f, accent, true);
+            $this$view_u24lambda_u247_u24lambda_u240.setText(title);
+            $this$view_u24lambda_u247_u24lambda_u240.setLetterSpacing(0.12f);
+            $this$view_u24lambda_u247.addView($this$view_u24lambda_u247_u24lambda_u240);
+            LinearLayout row = new LinearLayout($this$view_u24lambda_u247.getContext());
+            row.setOrientation(0);
+            row.setGravity(16);
+            TextView textView = this.drives;
+            int i = 0;
+            TextView $this$view_u24lambda_u247_u24lambda_u242 = OffroadHome.tv$default(offroadHome, 16.0f, Color.rgb(150, 160, 180), false, 4, null);
+            $this$view_u24lambda_u247_u24lambda_u242.setText("drives");
+            Unit unit = Unit.INSTANCE;
+            TextView textView2 = this.hours;
+            TextView $this$view_u24lambda_u247_u24lambda_u243 = OffroadHome.tv$default(offroadHome, 16.0f, Color.rgb(150, 160, 180), false, 4, null);
+            $this$view_u24lambda_u247_u24lambda_u243.setText("hours");
+            Unit unit2 = Unit.INSTANCE;
+            for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(textView, $this$view_u24lambda_u247_u24lambda_u242), TuplesKt.to(this.dist, this.distUnit), TuplesKt.to(textView2, $this$view_u24lambda_u247_u24lambda_u243)})) {
+                TextView v = (TextView) pair.component1();
+                TextView unit3 = (TextView) pair.component2();
+                LinearLayout $this$view_u24lambda_u247_u24lambda_u245 = new LinearLayout($this$view_u24lambda_u247.getContext());
+                $this$view_u24lambda_u247_u24lambda_u245.setOrientation(1);
+                $this$view_u24lambda_u247_u24lambda_u245.addView(v);
+                LinearLayout.LayoutParams $this$view_u24lambda_u247_u24lambda_u245_u24lambda_u244 = new LinearLayout.LayoutParams(-2, -2);
+                $this$view_u24lambda_u247_u24lambda_u245_u24lambda_u244.topMargin = offroadHome.dp(6);
+                Unit unit4 = Unit.INSTANCE;
+                $this$view_u24lambda_u247_u24lambda_u245.addView(unit3, $this$view_u24lambda_u247_u24lambda_u245_u24lambda_u244);
+                row.addView($this$view_u24lambda_u247_u24lambda_u245, new LinearLayout.LayoutParams(0, -2, 1.0f));
+                i = 0;
+            }
+            LinearLayout.LayoutParams $this$view_u24lambda_u247_u24lambda_u246 = new LinearLayout.LayoutParams(-1, i, 1.0f);
+            $this$view_u24lambda_u247_u24lambda_u246.topMargin = offroadHome.dp(10);
+            Unit unit5 = Unit.INSTANCE;
+            $this$view_u24lambda_u247.addView(row, $this$view_u24lambda_u247_u24lambda_u246);
+            this.view = $this$view_u24lambda_u247;
+        }
+
+        public final TextView getDist() {
+            return this.dist;
+        }
+
+        public final TextView getDrives() {
+            return this.drives;
+        }
+
+        public final TextView getHours() {
+            return this.hours;
+        }
+
+        public final TextView getDistUnit() {
+            return this.distUnit;
+        }
+
+        public final LinearLayout getView() {
+            return this.view;
+        }
+
+        public final void set(int n, double distance, double h, boolean metric) {
+            TextView textView = this.drives;
+            String format = String.format("%,d", Arrays.copyOf(new Object[]{Integer.valueOf(n)}, 1));
+            Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+            textView.setText(format);
+            this.dist.setText(this.this$0.fmt(distance));
+            this.hours.setText(this.this$0.fmt(h));
+            this.distUnit.setText(metric ? "km" : "miles");
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public final String fmt(double v) {
+        String format = v >= 100.0d ? String.format("%,d", Arrays.copyOf(new Object[]{Integer.valueOf(MathKt.roundToInt(v))}, 1)) : String.format("%.1f", Arrays.copyOf(new Object[]{Double.valueOf(v)}, 1));
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        return format;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void setState(State s) {
+        this.state = s;
+        this.homeContent.setVisibility(s == State.HOME ? 0 : 8);
+        this.detailContent.setVisibility(s == State.HOME ? 8 : 0);
+        Telemetry it = this.lastT;
+        if (it != null) {
+            refresh(it, true);
+        }
+    }
+
+    private final JSONObject jobj(Object v) {
+        if (v instanceof JSONObject) {
+            return (JSONObject) v;
+        }
+        if (v instanceof Map) {
+            return new JSONObject((Map) v);
+        }
+        if (!(v instanceof String)) {
+            return null;
+        }
+        try {
+            return new JSONObject((String) v);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private final double num(JSONObject o, String k) {
+        if (o != null) {
+            Double valueOf = Double.valueOf(o.optDouble(k, 0.0d));
+            double it = valueOf.doubleValue();
+            if (Double.isNaN(it)) {
+                valueOf = null;
+            }
+            if (valueOf != null) {
+                return valueOf.doubleValue();
+            }
+            return 0.0d;
+        }
+        return 0.0d;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* compiled from: OffroadHome.kt */
+    static final /* data */ class Alert {
+        private final int severity;
+        private final String text;
+
+        public static /* synthetic */ Alert copy$default(Alert alert, String str, int i, int i2, Object obj) {
+            if ((i2 & 1) != 0) {
+                str = alert.text;
+            }
+            if ((i2 & 2) != 0) {
+                i = alert.severity;
+            }
+            return alert.copy(str, i);
+        }
+
+        /* renamed from: component1, reason: from getter */
+        public final String getText() {
+            return this.text;
+        }
+
+        /* renamed from: component2, reason: from getter */
+        public final int getSeverity() {
+            return this.severity;
+        }
+
+        public final Alert copy(String text, int severity) {
+            Intrinsics.checkNotNullParameter(text, "text");
+            return new Alert(text, severity);
+        }
+
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (!(other instanceof Alert)) {
+                return false;
+            }
+            Alert alert = (Alert) other;
+            return Intrinsics.areEqual(this.text, alert.text) && this.severity == alert.severity;
+        }
+
+        public int hashCode() {
+            return (this.text.hashCode() * 31) + Integer.hashCode(this.severity);
+        }
+
+        public String toString() {
+            return "Alert(text=" + this.text + ", severity=" + this.severity + ")";
+        }
+
+        public Alert(String text, int severity) {
+            Intrinsics.checkNotNullParameter(text, "text");
+            this.text = text;
+            this.severity = severity;
+        }
+
+        public final int getSeverity() {
+            return this.severity;
+        }
+
+        public final String getText() {
+            return this.text;
+        }
+    }
+
+    private final List<Alert> alerts(Telemetry t) {
+        Map map;
+        Alert alert;
+        Map $this$mapNotNull$iv;
+        int $i$f$mapNotNull;
+        Alert alert2;
+        Map $this$mapNotNullTo$iv$iv;
+        Map $this$mapNotNullTo$iv$iv2;
+        Map $this$filterKeys$iv = t.getParams();
+        LinkedHashMap result$iv = new LinkedHashMap();
+        Iterator<Map.Entry<String, Object>> it = $this$filterKeys$iv.entrySet().iterator();
+        while (true) {
+            map = null;
+            alert = null;
+            if (!it.hasNext()) {
+                break;
+            }
+            Map.Entry entry$iv = it.next();
+            String it2 = entry$iv.getKey();
+            if (StringsKt.startsWith$default(it2, "Offroad_", false, 2, (Object) null)) {
+                result$iv.put(entry$iv.getKey(), entry$iv.getValue());
+            }
+        }
+        LinkedHashMap $this$mapNotNull$iv2 = result$iv;
+        int $i$f$mapNotNull2 = 0;
+        Collection destination$iv$iv = new ArrayList();
+        Map $this$mapNotNullTo$iv$iv3 = $this$mapNotNull$iv2;
+        for (Map.Entry element$iv$iv$iv : $this$mapNotNullTo$iv$iv3.entrySet()) {
+            Object v = element$iv$iv$iv.getValue();
+            JSONObject o = jobj(v);
+            if (o == null) {
+                $this$mapNotNull$iv = $this$mapNotNull$iv2;
+                $i$f$mapNotNull = $i$f$mapNotNull2;
+                $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv3;
+                $this$mapNotNullTo$iv$iv2 = map;
+                alert2 = alert;
+            } else {
+                String optString = o.optString("text");
+                $this$mapNotNull$iv = $this$mapNotNull$iv2;
+                Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
+                $i$f$mapNotNull = $i$f$mapNotNull2;
+                String optString2 = o.optString("extra");
+                Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
+                String text = StringsKt.replace$default(optString, "%1", optString2, false, 4, (Object) null);
+                if (StringsKt.isBlank(text)) {
+                    $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv3;
+                    alert2 = null;
+                    $this$mapNotNullTo$iv$iv2 = null;
+                } else {
+                    $this$mapNotNullTo$iv$iv = $this$mapNotNullTo$iv$iv3;
+                    $this$mapNotNullTo$iv$iv2 = null;
+                    alert2 = new Alert(text, o.optInt("severity", 0));
+                }
+            }
+            if (alert2 != null) {
+                destination$iv$iv.add(alert2);
+            }
+            map = $this$mapNotNullTo$iv$iv2;
+            $this$mapNotNull$iv2 = $this$mapNotNull$iv;
+            $this$mapNotNullTo$iv$iv3 = $this$mapNotNullTo$iv$iv;
+            $i$f$mapNotNull2 = $i$f$mapNotNull;
+            alert = null;
+        }
+        Iterable $this$sortedByDescending$iv = (List) destination$iv$iv;
+        return CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.OffroadHome$alerts$$inlined$sortedByDescending$1
+            /* JADX WARN: Multi-variable type inference failed */
+            @Override // java.util.Comparator
+            public final int compare(T t2, T t3) {
+                OffroadHome.Alert it3 = (OffroadHome.Alert) t3;
+                OffroadHome.Alert it4 = (OffroadHome.Alert) t2;
+                return ComparisonsKt.compareValues(Integer.valueOf(it3.getSeverity()), Integer.valueOf(it4.getSeverity()));
+            }
+        });
+    }
+
+    public final JSONObject getStorage() {
+        return this.storage;
+    }
+
+    public final void setStorage(JSONObject v) {
+        this.storage = v;
+        Telemetry it = this.lastT;
+        if (it != null) {
+            refresh(it, true);
+        }
+    }
+
+    private final String gb(JSONObject o, String k) {
+        double v = o.optDouble(k, Double.NaN);
+        if (Double.isNaN(v)) {
+            return "?";
+        }
+        if (v >= 100.0d) {
+            return String.valueOf(MathKt.roundToInt(v));
+        }
+        String format = String.format("%.1f", Arrays.copyOf(new Object[]{Double.valueOf(v)}, 1));
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        return format;
+    }
+
+    private final String whenStr(double epoch) {
+        StringBuilder sb;
+        String str;
+        if (Double.isNaN(epoch) || epoch <= 0.0d) {
+            return "–";
+        }
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis((long) (1000 * epoch));
+        Calendar now = Calendar.getInstance();
+        String hm = String.format("%02d:%02d", Arrays.copyOf(new Object[]{Integer.valueOf(c.get(11)), Integer.valueOf(c.get(12))}, 2));
+        Intrinsics.checkNotNullExpressionValue(hm, "format(...)");
+        int dayDiff = (((now.get(1) - c.get(1)) * 366) + now.get(6)) - c.get(6);
+        switch (dayDiff) {
+            case 0:
+                sb = new StringBuilder();
+                str = "today ";
+                break;
             case 1:
-               JSONObject var111 = this.jobj(var1.getParams().get("ApiCache_DriveStats"));
-               JSONObject var108 = this.jobj(var1.getParams().get("StarPilotStats"));
-               JSONObject var92;
-               if (var111 != null) {
-                  var92 = var111.optJSONObject("all");
-               } else {
-                  var92 = null;
-               }
-
-               JSONObject var76;
-               if (var111 != null) {
-                  var76 = var111.optJSONObject("week");
-               } else {
-                  var76 = null;
-               }
-
-               long var10 = 4609926660211357856L;
-               if (var92 != null && this.num(var92, "routes") > 0.0) {
-                  this.allTime.set((int)this.num(var92, "routes"), refresh$cloudDist(this, var2, 1.609344, var92), this.num(var92, "minutes") / 60.0, var2);
-               } else if (var108 != null) {
-                  OffroadHome.StatBlock var93 = this.allTime;
-                  var43 = (int)this.num(var108, "StarPilotDrives");
-                  double var5 = this.num(var108, "StarPilotMeters");
-                  double var3;
-                  if (var2) {
-                     var3 = 1000.0;
-                  } else {
-                     var3 = 1609.344;
-                  }
-
-                  var93.set(var43, var5 / var3, this.num(var108, "StarPilotSeconds") / 3600.0, var2);
-               } else {
-                  this.allTime.set(0, 0.0, 0.0, var2);
-               }
-
-               OffroadHome.StatBlock var94 = this.pastWeek;
-               var43 = (int)this.num(var76, "routes");
-               var94.set(var43, refresh$cloudDist(this, var2, 1.609344, var76), this.num(var76, "minutes") / 60.0, var2);
-               var13 = this.statsNote;
-               String var109 = "";
-               CharSequence var77;
-               if (var111 != null) {
-                  var77 = "";
-               } else if (var1.getSp7()) {
-                  var77 = "StarPilot 7 doesn't keep drive stats yet.";
-               } else {
-                  var77 = "Past week needs comma connect drive stats (the comma caches them when online).";
-               }
-
-               var13.setText(var77);
-               var9 = var1.pBool("ExperimentalMode", false);
-               var13 = this.expBtn;
-               String var78;
-               if (var9) {
-                  var78 = "EXPERIMENTAL MODE ON";
-               } else {
-                  var78 = "CHILL MODE ON";
-               }
-
-               var13.setText(var78);
-               TextView var79 = this.expBtn;
-               if (var9) {
-                  var43 = -1;
-               } else {
-                  var43 = Color.rgb(20, 30, 28);
-               }
-
-               var79.setTextColor(var43);
-               var13 = this.expBtn;
-               Orientation var112 = Orientation.LEFT_RIGHT;
-               int[] var80;
-               if (var9) {
-                  var80 = new int[]{Color.rgb(255, 155, 63), Color.rgb(219, 56, 34)};
-               } else {
-                  var80 = new int[]{Color.rgb(20, 255, 171), Color.rgb(35, 149, 255)};
-               }
-
-               GradientDrawable var81 = new GradientDrawable(var112, var80);
-               var81.setCornerRadius(this.dp(20));
-               var13.setBackground((Drawable)var81);
-               var43 = var1.pInt("LongitudinalPersonality", 1);
-
-               for (TextView var98 : this.persBtns) {
-                  var9 = Intrinsics.areEqual(var98.getTag(), var43);
-                  int var8;
-                  if (var9) {
-                     var8 = Color.rgb(54, 77, 239);
-                  } else {
-                     var8 = Color.rgb(44, 48, 60);
-                  }
-
-                  var98.setBackground((Drawable)this.rounded(var8, 14));
-                  if (var9) {
-                     var8 = -1;
-                  } else {
-                     var8 = Color.rgb(190, 198, 214);
-                  }
-
-                  var98.setTextColor(var8);
-               }
-
-               var13 = this.devName;
-               var65 = Telemetry.pStr$default(var1, "GalaxyDeviceName", null, 2, null);
-               boolean var53;
-               if (var65.length() == 0) {
-                  var53 = 1;
-               } else {
-                  var53 = 0;
-               }
-
-               if (var53) {
-                  var65 = "comma";
-               }
-
-               label344: {
-                  var13.setText((CharSequence)var65);
-                  var15 = Telemetry.Companion.chestnutWhy(Telemetry.pStr$default(var1, "ChestnutWhy", null, 2, null));
-                  String var100 = Telemetry.pStr$default(var1, "ChestnutState", null, 2, null);
-                  var53 = var100.hashCode();
-                  var84 = "not detected";
-                  switch (var53) {
-                     case -1422950650:
-                        if (var100.equals("active")) {
-                           var84 = "active";
-                           break label344;
-                        }
-                        break;
-                     case -1381388741:
-                        if (var100.equals("disconnected")) {
-                           break label344;
-                        }
-                        break;
-                     case -1281977283:
-                        if (var100.equals("failed")) {
-                           boolean var55;
-                           if (var15.length() > 0) {
-                              var55 = true;
-                           } else {
-                              var55 = false;
-                           }
-
-                           String var85;
-                           if (var55) {
-                              var85 = " - " + var15;
-                           } else {
-                              var85 = "";
-                           }
-
-                           var84 = "FAILED" + var85;
-                           break label344;
-                        }
-                        break;
-                     case 108386723:
-                        if (var100.equals("ready")) {
-                           var84 = "connected, model ready";
-                           break label344;
-                        }
-                        break;
-                     case 336650556:
-                        if (var100.equals("loading")) {
-                           var84 = "loading";
-                           break label344;
-                        }
-                  }
-
-                  if (var1.pBool("UsbGpuActive", false)) {
-                     var84 = "active";
-                  } else if (var1.getChestnutPresent() && var1.pBool("UsbGpuCompiled", false)) {
-                     var84 = "connected, model ready";
-                  } else if (var1.getChestnutPresent()) {
-                     var84 = "connected";
-                  }
-               }
-
-               var2 = var1.pBool("SshEnabled", false);
-               String var17 = Telemetry.pStr$default(var1, "GitBranch", null, 2, null);
-               TextView var114 = this.devLines;
-               StringBuilder var16 = new StringBuilder();
-               Object var101 = Telemetry.pStr$default(var1, "DongleId", null, 2, null);
-               boolean var56;
-               if (var101.length() == 0) {
-                  var56 = 1;
-               } else {
-                  var56 = 0;
-               }
-
-               if (var56) {
-                  var101 = "–";
-               }
-
-               var16.append("Dongle ID   " + var101 + "\n");
-               if (var17.length() > 0) {
-                  var56 = (boolean)1;
-               } else {
-                  var56 = (boolean)0;
-               }
-
-               if (var56) {
-                  var16.append("Branch      " + var17 + "\n");
-               }
-
-               var16.append("eGPU        " + var84 + "\n");
-               JSONObject var115 = this.storage;
-               if (var115 != null) {
-                  var101 = var115.optJSONObject("internal");
-               } else {
-                  var101 = null;
-               }
-
-               JSONObject var86;
-               if (var115 != null) {
-                  var86 = var115.optJSONObject("stick");
-               } else {
-                  var86 = null;
-               }
-
-               if (var101 != null) {
-                  String var25 = this.gb((JSONObject)var101, "free_GB");
-                  String var18 = this.gb((JSONObject)var101, "total_GB");
-                  var16.append("Internal    " + var25 + " free of " + var18 + " GB");
-                  if (var101.has("newest_time")) {
-                     String var26 = this.whenStr(var101.optDouble("newest_time"));
-                     var16.append("  ·  newest drive " + var26);
-                  }
-
-                  var16.append("\n");
-               } else {
-                  var56 = MathKt.roundToInt(var1.getFreeSpacePct());
-                  var16.append("Storage     " + var56 + "% free\n");
-               }
-
-               if (var86 != null) {
-                  var16.append("USB stick   ");
-                  if (!var86.optBoolean("present")) {
-                     var16.append("not connected");
-                  } else if (var86.has("stick_free_GB")) {
-                     String var27 = this.gb(var86, "stick_free_GB");
-                     var101 = this.gb(var86, "stick_size_GB");
-                     var16.append(var27 + " free of " + var101 + " GB");
-                  } else {
-                     var16.append("connected, no copy finished yet");
-                  }
-
-                  var16.append("\n");
-                  StorageInfo.Copying var28 = StorageInfo.INSTANCE.copying(var115);
-                  if (var28 != null) {
-                     String var29 = var28.getLine();
-                     var16.append("  copying now: " + var29 + "\n");
-                  }
-
-                  if (var86.optBoolean("present")) {
-                     double var40 = var86.optDouble("last_copy_time", Double.NaN);
-                     double var39 = var86.optDouble("run_time", Double.NaN);
-                     String var30;
-                     if (Double.isNaN(var40)) {
-                        var30 = "–";
-                     } else {
-                        var101 = this.whenStr(var40);
-                        String var31 = StorageInfo.INSTANCE.mb(var86.optInt("last_copy_MB"));
-                        var30 = var101 + " (" + var31 + ")";
-                     }
-
-                     var16.append("  last copy " + var30);
-                     if (var86.has("stick_newest_time")) {
-                        String var32 = this.whenStr(var86.optDouble("stick_newest_time"));
-                        var16.append("  ·  newest on stick " + var32);
-                     }
-
-                     var16.append("\n");
-                     var17 = var86.optString("result");
-                     String var33;
-                     if (Double.isNaN(var39)) {
-                        var33 = "never";
-                     } else {
-                        var33 = this.whenStr(var39);
-                     }
-
-                     Intrinsics.checkNotNull(var17);
-                     boolean var59;
-                     if (var17.length() > 0) {
-                        var59 = true;
-                     } else {
-                        var59 = false;
-                     }
-
-                     var101 = var109;
-                     if (var59) {
-                        var101 = var109;
-                        if (!Intrinsics.areEqual(var17, "ok")) {
-                           var101 = "  ·  " + var17;
-                        }
-                     }
-
-                     var16.append("  checked " + var33 + var101);
-                     if (!var86.optBoolean("auto", true)) {
-                        var16.append("  ·  auto copy OFF");
-                     }
-
-                     var16.append("\n");
-                  }
-               }
-
-               String var34;
-               if (var2) {
-                  var34 = "on";
-               } else {
-                  var34 = "off";
-               }
-
-               var16.append("SSH         " + var34);
-               String var35 = var16.toString();
-               Intrinsics.checkNotNullExpressionValue(var35, "toString(...)");
-               var114.setText(var35);
-               Unit var36 = Unit.INSTANCE;
-               break;
-            case 2:
-               this.detailTitle.setText("Update available");
-               this.detailBody.removeAllViews();
-               CharSequence var74 = Telemetry.pStr$default(var1, "UpdaterNewDescription", null, 2, null);
-               LinearLayout var22 = var74;
-               if (StringsKt.isBlank(var74)) {
-                  var22 = "A new version is ready to install.";
-               }
-
-               String var75 = (String)var22;
-               var22 = this.detailBody;
-               var13 = tv$default(this, 22.0F, Color.rgb(210, 216, 228), false, 4, null);
-               var13.setText(var75);
-               var13.setLineSpacing(this.dp(6), 1.0F);
-               var22.addView((View)var13);
-               this.detailAction.setText("Open Software settings");
-               this.detailAction.setVisibility(0);
-               this.detailAction.setOnClickListener(new OffroadHome$$ExternalSyntheticLambda1(this));
-               Unit var24 = Unit.INSTANCE;
-               break;
-            case 3:
-               TextView var72 = this.detailTitle;
-               String var19;
-               if (var14.size() == 1) {
-                  var19 = "1 alert";
-               } else {
-                  var43 = var14.size();
-                  var19 = var43 + " alerts";
-               }
-
-               var72.setText(var19);
-               this.detailBody.removeAllViews();
-
-               for (OffroadHome.Alert var89 : var14) {
-                  LinearLayout var20 = this.detailBody;
-                  TextView var106 = tv$default(this, 21.0F, -1, false, 4, null);
-                  var106.setText(var89.getText());
-                  var106.setLineSpacing(this.dp(5), 1.0F);
-                  var106.setPadding(this.dp(24), this.dp(20), this.dp(24), this.dp(20));
-                  if (var89.getSeverity() > 0) {
-                     var43 = Color.rgb(201, 34, 49);
-                  } else {
-                     var43 = Color.rgb(44, 48, 60);
-                  }
-
-                  var106.setBackground((Drawable)this.rounded(var43, 16));
-                  View var110 = (View)var106;
-                  android.widget.LinearLayout.LayoutParams var90 = new android.widget.LinearLayout.LayoutParams(-1, -2);
-                  var90.bottomMargin = this.dp(12);
-                  Unit var107 = Unit.INSTANCE;
-                  var20.addView(var110, (LayoutParams)var90);
-               }
-
-               this.detailAction.setVisibility(8);
-               Unit var21 = Unit.INSTANCE;
-               break;
+                sb = new StringBuilder();
+                str = "yesterday ";
+                break;
             default:
-               throw new NoWhenBranchMatchedException();
-         }
-      }
-   }
+                String format = new SimpleDateFormat("MMM d HH:mm", Locale.US).format(c.getTime());
+                Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+                return format;
+        }
+        return sb.append(str).append(hm).toString();
+    }
 
-   public final void setStorage(JSONObject var1) {
-      this.storage = var1;
-      Telemetry var2 = this.lastT;
-      if (var2 != null) {
-         this.refresh(var2, true);
-      }
-   }
+    public static /* synthetic */ void refresh$default(OffroadHome offroadHome, Telemetry telemetry, boolean z, int i, Object obj) {
+        if ((i & 2) != 0) {
+            z = false;
+        }
+        offroadHome.refresh(telemetry, z);
+    }
 
-   public interface Actions {
-      void control(JSONObject var1);
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    /* JADX WARN: Code restructure failed: missing block: B:211:0x058e, code lost:
+    
+        if (r1.equals("disconnected") == false) goto L176;
+     */
+    /* JADX WARN: Removed duplicated region for block: B:217:0x05a5  */
+    /* JADX WARN: Removed duplicated region for block: B:218:0x05a7  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final void refresh(Telemetry t, boolean force) {
+        JSONObject week;
+        boolean metric;
+        int p;
+        boolean metric2;
+        int rgb;
+        char c;
+        int rgb2;
+        Intrinsics.checkNotNullParameter(t, "t");
+        this.lastT = t;
+        ambientTick(t);
+        paintLastDrive();
+        if (force || t.getParamsGeneration() != this.lastGen) {
+            this.lastGen = t.getParamsGeneration();
+            boolean metric3 = t.pBool("IsMetric", false);
+            List al = alerts(t);
+            boolean update = t.pBool("UpdateAvailable", false);
+            this.updateBtn.setVisibility(update ? 0 : 8);
+            this.alertsBtn.setVisibility(!al.isEmpty() ? 0 : 8);
+            this.alertsBtn.setText(al.size() == 1 ? "1 ALERT" : al.size() + " ALERTS");
+            String desc = StringsKt.trim((CharSequence) Telemetry.pStr$default(t, "UpdaterCurrentDescription", null, 2, null)).toString();
+            String pStr$default = Telemetry.pStr$default(t, "DrivingModelName", null, 2, null);
+            if (StringsKt.isBlank(pStr$default)) {
+                pStr$default = Telemetry.pStr$default(t, "Model", null, 2, null);
+            }
+            String model = StringsKt.trim((CharSequence) StringsKt.replace$default(StringsKt.replace$default(pStr$default, "_default", "", false, 4, (Object) null), "(Default)", "", false, 4, (Object) null)).toString();
+            SpannableStringBuilder sb = new SpannableStringBuilder();
+            sb.append((CharSequence) "StarPilot");
+            sb.setSpan(new StyleSpan(1), 0, sb.length(), 0);
+            if (desc.length() > 0) {
+                sb.append((CharSequence) "  ").append((CharSequence) desc);
+            }
+            if (model.length() > 0) {
+                sb.append((CharSequence) "  -  ").append((CharSequence) model);
+            }
+            this.version.setText(sb);
+            if (update && !this.prevUpdate) {
+                this.state = State.UPDATE;
+            } else if (!al.isEmpty() && !this.prevAlerts) {
+                this.state = State.ALERTS;
+            }
+            if (!update && this.state == State.UPDATE) {
+                this.state = !al.isEmpty() ? State.ALERTS : State.HOME;
+            }
+            if (al.isEmpty() && this.state == State.ALERTS) {
+                this.state = update ? State.UPDATE : State.HOME;
+            }
+            this.prevUpdate = update;
+            this.prevAlerts = !al.isEmpty();
+            this.homeContent.setVisibility(this.state == State.HOME ? 0 : 8);
+            this.detailContent.setVisibility(this.state == State.HOME ? 8 : 0);
+            float f = 1.0f;
+            switch (WhenMappings.$EnumSwitchMapping$0[this.state.ordinal()]) {
+                case 1:
+                    JSONObject cloud = jobj(t.getParams().get("ApiCache_DriveStats"));
+                    JSONObject sp = jobj(t.getParams().get("StarPilotStats"));
+                    JSONObject all = cloud != null ? cloud.optJSONObject("all") : null;
+                    JSONObject week2 = cloud != null ? cloud.optJSONObject("week") : null;
+                    double kmPerMile = 1.609344d;
+                    if (all == null || num(all, "routes") <= 0.0d) {
+                        week = week2;
+                        metric = metric3;
+                        if (sp != null) {
+                            StatBlock statBlock = this.allTime;
+                            int num = (int) num(sp, "StarPilotDrives");
+                            double num2 = num(sp, "StarPilotMeters");
+                            double d = metric ? 1000.0d : 1609.344d;
+                            metric = metric;
+                            statBlock.set(num, num2 / d, num(sp, "StarPilotSeconds") / 3600.0d, metric);
+                        } else {
+                            this.allTime.set(0, 0.0d, 0.0d, metric);
+                        }
+                    } else {
+                        StatBlock statBlock2 = this.allTime;
+                        int num3 = (int) num(all, "routes");
+                        double refresh$cloudDist = refresh$cloudDist(this, metric3, 1.609344d, all);
+                        double num4 = num(all, "minutes") / 60.0d;
+                        week = week2;
+                        metric = metric3;
+                        statBlock2.set(num3, refresh$cloudDist, num4, metric3);
+                    }
+                    boolean metric4 = metric;
+                    this.pastWeek.set((int) num(week, "routes"), refresh$cloudDist(this, metric4, 1.609344d, week), num(week, "minutes") / 60.0d, metric4);
+                    String str = "";
+                    this.statsNote.setText(cloud != null ? "" : t.getSp7() ? "StarPilot 7 doesn't keep drive stats yet." : "Past week needs comma connect drive stats (the comma caches them when online).");
+                    boolean exp = t.pBool("ExperimentalMode", false);
+                    this.expBtn.setText(exp ? "EXPERIMENTAL MODE ON" : "CHILL MODE ON");
+                    this.expBtn.setTextColor(exp ? -1 : Color.rgb(20, 30, 28));
+                    TextView textView = this.expBtn;
+                    GradientDrawable $this$refresh_u24lambda_u2475 = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, exp ? new int[]{Color.rgb(255, 155, 63), Color.rgb(219, 56, 34)} : new int[]{Color.rgb(20, 255, 171), Color.rgb(35, 149, 255)});
+                    $this$refresh_u24lambda_u2475.setCornerRadius(dp(20));
+                    textView.setBackground($this$refresh_u24lambda_u2475);
+                    int p2 = t.pInt("LongitudinalPersonality", 1);
+                    Iterable $this$forEach$iv = this.persBtns;
+                    for (Object element$iv : $this$forEach$iv) {
+                        TextView b = (TextView) element$iv;
+                        double kmPerMile2 = kmPerMile;
+                        boolean on = Intrinsics.areEqual(b.getTag(), Integer.valueOf(p2));
+                        if (on) {
+                            p = p2;
+                            metric2 = metric4;
+                            rgb = Color.rgb(54, 77, 239);
+                        } else {
+                            p = p2;
+                            metric2 = metric4;
+                            rgb = Color.rgb(44, 48, 60);
+                        }
+                        b.setBackground(rounded(rgb, 14));
+                        b.setTextColor(on ? -1 : Color.rgb(190, 198, 214));
+                        kmPerMile = kmPerMile2;
+                        p2 = p;
+                        metric4 = metric2;
+                    }
+                    TextView textView2 = this.devName;
+                    String pStr$default2 = Telemetry.pStr$default(t, "GalaxyDeviceName", null, 2, null);
+                    if (pStr$default2.length() == 0) {
+                        pStr$default2 = "comma";
+                    }
+                    textView2.setText(pStr$default2);
+                    String why = Telemetry.Companion.chestnutWhy(Telemetry.pStr$default(t, "ChestnutWhy", null, 2, null));
+                    String pStr$default3 = Telemetry.pStr$default(t, "ChestnutState", null, 2, null);
+                    String str2 = "not detected";
+                    switch (pStr$default3.hashCode()) {
+                        case -1422950650:
+                            if (pStr$default3.equals("active")) {
+                                str2 = "active";
+                                break;
+                            }
+                            if (t.pBool("UsbGpuActive", false)) {
+                                str2 = "active";
+                                break;
+                            } else if (!t.getChestnutPresent() || !t.pBool("UsbGpuCompiled", false)) {
+                                if (t.getChestnutPresent()) {
+                                    str2 = "connected";
+                                    break;
+                                }
+                            } else {
+                                str2 = "connected, model ready";
+                                break;
+                            }
+                            break;
+                        case -1381388741:
+                            break;
+                        case -1281977283:
+                            if (pStr$default3.equals("failed")) {
+                                str2 = "FAILED" + (why.length() > 0 ? " - " + why : "");
+                                break;
+                            }
+                            if (t.pBool("UsbGpuActive", false)) {
+                            }
+                            break;
+                        case 108386723:
+                            if (pStr$default3.equals("ready")) {
+                                str2 = "connected, model ready";
+                                break;
+                            }
+                            if (t.pBool("UsbGpuActive", false)) {
+                            }
+                            break;
+                        case 336650556:
+                            if (pStr$default3.equals("loading")) {
+                                str2 = "loading";
+                                break;
+                            }
+                            if (t.pBool("UsbGpuActive", false)) {
+                            }
+                            break;
+                        default:
+                            if (t.pBool("UsbGpuActive", false)) {
+                            }
+                            break;
+                    }
+                    String egpu = str2;
+                    boolean sshOn = t.pBool("SshEnabled", false);
+                    String branch = Telemetry.pStr$default(t, "GitBranch", null, 2, null);
+                    TextView textView3 = this.devLines;
+                    StringBuilder $this$refresh_u24lambda_u2480 = new StringBuilder();
+                    String pStr$default4 = Telemetry.pStr$default(t, "DongleId", null, 2, null);
+                    if (pStr$default4.length() == 0) {
+                        pStr$default4 = "–";
+                    }
+                    $this$refresh_u24lambda_u2480.append("Dongle ID   " + ((Object) pStr$default4) + "\n");
+                    if (branch.length() > 0) {
+                        $this$refresh_u24lambda_u2480.append("Branch      " + branch + "\n");
+                    }
+                    $this$refresh_u24lambda_u2480.append("eGPU        " + egpu + "\n");
+                    JSONObject sto = this.storage;
+                    JSONObject inn = sto != null ? sto.optJSONObject("internal") : null;
+                    JSONObject stick = sto != null ? sto.optJSONObject("stick") : null;
+                    if (inn != null) {
+                        $this$refresh_u24lambda_u2480.append("Internal    " + gb(inn, "free_GB") + " free of " + gb(inn, "total_GB") + " GB");
+                        if (inn.has("newest_time")) {
+                            $this$refresh_u24lambda_u2480.append("  ·  newest drive " + whenStr(inn.optDouble("newest_time")));
+                        }
+                        $this$refresh_u24lambda_u2480.append("\n");
+                    } else {
+                        $this$refresh_u24lambda_u2480.append("Storage     " + MathKt.roundToInt(t.getFreeSpacePct()) + "% free\n");
+                    }
+                    if (stick != null) {
+                        $this$refresh_u24lambda_u2480.append("USB stick   ");
+                        if (!stick.optBoolean("present")) {
+                            $this$refresh_u24lambda_u2480.append("not connected");
+                        } else if (stick.has("stick_free_GB")) {
+                            $this$refresh_u24lambda_u2480.append(gb(stick, "stick_free_GB") + " free of " + gb(stick, "stick_size_GB") + " GB");
+                        } else {
+                            $this$refresh_u24lambda_u2480.append("connected, no copy finished yet");
+                        }
+                        $this$refresh_u24lambda_u2480.append("\n");
+                        StorageInfo.Copying it = StorageInfo.INSTANCE.copying(sto);
+                        if (it != null) {
+                            $this$refresh_u24lambda_u2480.append("  copying now: " + it.getLine() + "\n");
+                        }
+                        if (stick.optBoolean("present")) {
+                            double lc = stick.optDouble("last_copy_time", Double.NaN);
+                            double run = stick.optDouble("run_time", Double.NaN);
+                            $this$refresh_u24lambda_u2480.append("  last copy " + (Double.isNaN(lc) ? "–" : whenStr(lc) + " (" + StorageInfo.INSTANCE.mb(stick.optInt("last_copy_MB")) + ")"));
+                            if (stick.has("stick_newest_time")) {
+                                $this$refresh_u24lambda_u2480.append("  ·  newest on stick " + whenStr(stick.optDouble("stick_newest_time")));
+                            }
+                            $this$refresh_u24lambda_u2480.append("\n");
+                            String res = stick.optString("result");
+                            String whenStr = Double.isNaN(run) ? "never" : whenStr(run);
+                            Intrinsics.checkNotNull(res);
+                            if ((res.length() > 0) && !Intrinsics.areEqual(res, "ok")) {
+                                str = "  ·  " + res;
+                            }
+                            $this$refresh_u24lambda_u2480.append("  checked " + whenStr + str);
+                            if (!stick.optBoolean("auto", true)) {
+                                $this$refresh_u24lambda_u2480.append("  ·  auto copy OFF");
+                            }
+                            $this$refresh_u24lambda_u2480.append("\n");
+                        }
+                    }
+                    $this$refresh_u24lambda_u2480.append("SSH         " + (sshOn ? "on" : "off"));
+                    String sb2 = $this$refresh_u24lambda_u2480.toString();
+                    Intrinsics.checkNotNullExpressionValue(sb2, "toString(...)");
+                    textView3.setText(sb2);
+                    Unit unit = Unit.INSTANCE;
+                    return;
+                case 2:
+                    this.detailTitle.setText("Update available");
+                    this.detailBody.removeAllViews();
+                    String pStr$default5 = Telemetry.pStr$default(t, "UpdaterNewDescription", null, 2, null);
+                    if (StringsKt.isBlank(pStr$default5)) {
+                        pStr$default5 = "A new version is ready to install.";
+                    }
+                    String newDesc = pStr$default5;
+                    LinearLayout linearLayout = this.detailBody;
+                    TextView $this$refresh_u24lambda_u2482 = tv$default(this, 22.0f, Color.rgb(210, 216, 228), false, 4, null);
+                    $this$refresh_u24lambda_u2482.setText(newDesc);
+                    $this$refresh_u24lambda_u2482.setLineSpacing(dp(6), 1.0f);
+                    linearLayout.addView($this$refresh_u24lambda_u2482);
+                    this.detailAction.setText("Open Software settings");
+                    this.detailAction.setVisibility(0);
+                    this.detailAction.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda1
+                        @Override // android.view.View.OnClickListener
+                        public final void onClick(View view) {
+                            OffroadHome.refresh$lambda$83(OffroadHome.this, view);
+                        }
+                    });
+                    Unit unit2 = Unit.INSTANCE;
+                    return;
+                case 3:
+                    this.detailTitle.setText(al.size() == 1 ? "1 alert" : al.size() + " alerts");
+                    this.detailBody.removeAllViews();
+                    for (Alert a : al) {
+                        LinearLayout linearLayout2 = this.detailBody;
+                        TextView $this$refresh_u24lambda_u2484 = tv$default(this, 21.0f, -1, false, 4, null);
+                        $this$refresh_u24lambda_u2484.setText(a.getText());
+                        $this$refresh_u24lambda_u2484.setLineSpacing(dp(5), f);
+                        $this$refresh_u24lambda_u2484.setPadding(dp(24), dp(20), dp(24), dp(20));
+                        if (a.getSeverity() > 0) {
+                            rgb2 = Color.rgb(201, 34, 49);
+                            c = ',';
+                        } else {
+                            c = ',';
+                            rgb2 = Color.rgb(44, 48, 60);
+                        }
+                        $this$refresh_u24lambda_u2484.setBackground(rounded(rgb2, 16));
+                        LinearLayout.LayoutParams $this$refresh_u24lambda_u2485 = new LinearLayout.LayoutParams(-1, -2);
+                        $this$refresh_u24lambda_u2485.bottomMargin = dp(12);
+                        Unit unit3 = Unit.INSTANCE;
+                        linearLayout2.addView($this$refresh_u24lambda_u2484, $this$refresh_u24lambda_u2485);
+                        f = 1.0f;
+                    }
+                    this.detailAction.setVisibility(8);
+                    Unit unit4 = Unit.INSTANCE;
+                    return;
+                default:
+                    throw new NoWhenBranchMatchedException();
+            }
+        }
+    }
 
-      void openFiles();
+    private static final double refresh$cloudDist(OffroadHome this$0, boolean metric, double kmPerMile, JSONObject o) {
+        double it = this$0.num(o, "distance");
+        return metric ? it * kmPerMile : it;
+    }
 
-      void openSettings(String var1);
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void refresh$lambda$83(OffroadHome this$0, View it) {
+        this$0.actions.openSettings("software");
+    }
 
-      void openTerminal();
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void toggleExperimental() {
+        Telemetry t = this.lastT;
+        if (t == null) {
+            return;
+        }
+        boolean exp = t.pBool("ExperimentalMode", false);
+        if (!exp && !t.pBool("ExperimentalModeConfirmed", false)) {
+            new AlertDialog.Builder(getContext()).setTitle("Experimental mode").setMessage("openpilot defaults to driving in chill mode. Experimental mode enables alpha-level features that aren't ready for chill mode: end-to-end longitudinal control (openpilot drives the speed, including stopping for red lights and stop signs) and more. Expect mistakes and keep your attention on the road.").setPositiveButton("Enable", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.OffroadHome$$ExternalSyntheticLambda2
+                @Override // android.content.DialogInterface.OnClickListener
+                public final void onClick(DialogInterface dialogInterface, int i) {
+                    OffroadHome.toggleExperimental$lambda$86(OffroadHome.this, dialogInterface, i);
+                }
+            }).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).show();
+        } else {
+            this.actions.control(new JSONObject(MapsKt.mapOf(TuplesKt.to("action", "exp_toggle"))));
+        }
+    }
 
-   private static final class Alert {
-      private final int severity;
-      private final String text;
-
-      public Alert(String var1, int var2) {
-         Intrinsics.checkNotNullParameter(var1, "text");
-         super();
-         this.text = var1;
-         this.severity = var2;
-      }
-
-      // $VF: synthetic method
-      public static OffroadHome.Alert copy$default(OffroadHome.Alert var0, String var1, int var2, int var3, Object var4) {
-         if ((var3 & 1) != 0) {
-            var1 = var0.text;
-         }
-
-         if ((var3 & 2) != 0) {
-            var2 = var0.severity;
-         }
-
-         return var0.copy(var1, var2);
-      }
-
-      public final String component1() {
-         return this.text;
-      }
-
-      public final int component2() {
-         return this.severity;
-      }
-
-      public final OffroadHome.Alert copy(String var1, int var2) {
-         Intrinsics.checkNotNullParameter(var1, "text");
-         return new OffroadHome.Alert(var1, var2);
-      }
-
-      @Override
-      public boolean equals(Object var1) {
-         if (this == var1) {
-            return true;
-         } else if (!(var1 instanceof OffroadHome.Alert)) {
-            return false;
-         } else {
-            var1 = var1;
-            return !Intrinsics.areEqual(this.text, var1.text) ? false : this.severity == var1.severity;
-         }
-      }
-
-      public final int getSeverity() {
-         return this.severity;
-      }
-
-      public final String getText() {
-         return this.text;
-      }
-
-      @Override
-      public int hashCode() {
-         return this.text.hashCode() * 31 + Integer.hashCode(this.severity);
-      }
-
-      @Override
-      public String toString() {
-         String var2 = this.text;
-         int var1 = this.severity;
-         return "Alert(text=" + var2 + ", severity=" + var1 + ")";
-      }
-   }
-
-   public static final class Companion {
-      private Companion() {
-      }
-
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
-   }
-
-   private final class StatBlock {
-      private final TextView dist;
-      private final TextView distUnit;
-      private final TextView drives;
-      private final TextView hours;
-      final OffroadHome this$0;
-      private final LinearLayout view;
-
-      public StatBlock(String var1, int var2, int var3) {
-         Intrinsics.checkNotNullParameter(var2, "title");
-         this.this$0 = var1;
-         super();
-         this.drives = OffroadHome.tv$default(this.this$0, 44.0F, 0, true, 2, null);
-         this.dist = OffroadHome.tv$default(this.this$0, 44.0F, 0, true, 2, null);
-         this.hours = OffroadHome.tv$default(this.this$0, 44.0F, 0, true, 2, null);
-         this.distUnit = OffroadHome.tv$default(this.this$0, 16.0F, Color.rgb(150, 160, 180), false, 4, null);
-         LinearLayout var10 = new LinearLayout(this.this$0.getContext());
-         OffroadHome var4 = this.this$0;
-         var10.setOrientation(1);
-         var10.setBackground((Drawable)var4.rounded(Color.rgb(34, 34, 40), 16));
-         var10.setPadding(var4.dp(26), var4.dp(18), var4.dp(26), var4.dp(18));
-         TextView var5 = var4.tv(15.0F, var3, true);
-         var5.setText(var2);
-         var5.setLetterSpacing(0.12F);
-         var10.addView((View)var5);
-         LinearLayout var11 = new LinearLayout(var10.getContext());
-         var11.setOrientation(0);
-         var11.setGravity(16);
-         Pair[] var14 = new Pair[3];
-         TextView var6 = this.drives;
-         TextView var8 = OffroadHome.tv$default(var4, 16.0F, Color.rgb(150, 160, 180), false, 4, null);
-         var8.setText("drives");
-         Unit var7 = Unit.INSTANCE;
-         var14[0] = TuplesKt.to(var6, var8);
-         var14[1] = TuplesKt.to(this.dist, this.distUnit);
-         var6 = this.hours;
-         var8 = OffroadHome.tv$default(var4, 16.0F, Color.rgb(150, 160, 180), false, 4, null);
-         var8.setText("hours");
-         var7 = Unit.INSTANCE;
-         var14[2] = TuplesKt.to(var6, var8);
-
-         for (Pair var18 : CollectionsKt.listOf(var14)) {
-            TextView var21 = (TextView)var18.component1();
-            var8 = (TextView)var18.component2();
-            LinearLayout var19 = new LinearLayout(var10.getContext());
-            var19.setOrientation(1);
-            var19.addView((View)var21);
-            View var22 = (View)var8;
-            android.widget.LinearLayout.LayoutParams var9 = new android.widget.LinearLayout.LayoutParams(-2, -2);
-            var9.topMargin = var4.dp(6);
-            Unit var25 = Unit.INSTANCE;
-            var19.addView(var22, (LayoutParams)var9);
-            var11.addView((View)var19, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
-         }
-
-         View var16 = (View)var11;
-         android.widget.LinearLayout.LayoutParams var12 = new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0F);
-         var12.topMargin = var4.dp(10);
-         Unit var13 = Unit.INSTANCE;
-         var10.addView(var16, (LayoutParams)var12);
-         this.view = var10;
-      }
-
-      public final TextView getDist() {
-         return this.dist;
-      }
-
-      public final TextView getDistUnit() {
-         return this.distUnit;
-      }
-
-      public final TextView getDrives() {
-         return this.drives;
-      }
-
-      public final TextView getHours() {
-         return this.hours;
-      }
-
-      public final LinearLayout getView() {
-         return this.view;
-      }
-
-      public final void set(int var1, double var2, double var4, boolean var6) {
-         TextView var7 = this.drives;
-         String var8 = String.format("%,d", Arrays.copyOf(new Object[]{var1}, 1));
-         Intrinsics.checkNotNullExpressionValue(var8, "format(...)");
-         var7.setText(var8);
-         this.dist.setText(this.this$0.fmt(var2));
-         this.hours.setText(this.this$0.fmt(var4));
-         TextView var10 = this.distUnit;
-         String var9;
-         if (var6) {
-            var9 = "km";
-         } else {
-            var9 = "miles";
-         }
-
-         var10.setText(var9);
-      }
-   }
-
-   private static enum State {
-      ALERTS,
-      HOME,
-      UPDATE;
-      private static final EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(OffroadHome.State.$VALUES);
-      private static final OffroadHome.State[] $VALUES = $values();
-
-      // $VF: synthetic method
-      private static final OffroadHome.State[] $values() {
-         return new OffroadHome.State[]{HOME, UPDATE, ALERTS};
-      }
-
-      public static EnumEntries<OffroadHome.State> getEntries() {
-         return $ENTRIES;
-      }
-   }
-
-   // $VF: synthetic class
-   public final class WhenMappings {
-      public static final int[] $EnumSwitchMapping$0;
-
-      static {
-         int[] var0 = new int[OffroadHome.State.values().length];
-
-         try {
-            var0[OffroadHome.State.HOME.ordinal()] = 1;
-         } catch (NoSuchFieldError var4) {
-         }
-
-         try {
-            var0[OffroadHome.State.UPDATE.ordinal()] = 2;
-         } catch (NoSuchFieldError var3) {
-         }
-
-         try {
-            var0[OffroadHome.State.ALERTS.ordinal()] = 3;
-         } catch (NoSuchFieldError var2) {
-         }
-
-         $EnumSwitchMapping$0 = var0;
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void toggleExperimental$lambda$86(OffroadHome this$0, DialogInterface dialogInterface, int i) {
+        this$0.actions.control(new JSONObject(MapsKt.mapOf(TuplesKt.to("action", "param"), TuplesKt.to("key", "ExperimentalMode"), TuplesKt.to("value", true))));
+    }
 }

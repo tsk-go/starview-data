@@ -1,10 +1,15 @@
 package com.starpilot.starview;
 
 import android.content.Context;
+import com.starpilot.starview.IdeaSpots;
+import com.starpilot.starview.Ideas;
+import com.starpilot.starview.OsmRoads;
+import com.starpilot.starview.TabletMotion;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,657 +24,466 @@ import kotlin.io.FilesKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
+/* compiled from: Ideas.kt */
 public final class IdeasRoad {
-   public static final double BUMP_MPS = 5.36448;
-   public static final IdeasRoad.Companion Companion = new IdeasRoad.Companion(null);
-   public static final float UNSURE_STD = 0.6F;
-   private Ideas.Here askHere;
-   private volatile long askWhy;
-   private long bumpSlowUntil;
-   private double cutinFrom;
-   private String cutinText;
-   private long cutinUntil;
-   private float leadD;
-   private long leadMs;
-   private long sureSince;
-   private final HashMap<Long, ArrayDeque<float[]>> trackHist;
-   private double unsureFrom = Double.NaN;
-   private long unsureSince;
-   private boolean wasEnabled;
+    public static final double BUMP_MPS = 5.36448d;
+    public static final Companion Companion = new Companion(null);
+    public static final float UNSURE_STD = 0.6f;
+    private Ideas.Here askHere;
+    private volatile long askWhy;
+    private long bumpSlowUntil;
+    private long cutinUntil;
+    private long leadMs;
+    private long sureSince;
+    private long unsureSince;
+    private boolean wasEnabled;
+    private double unsureFrom = Double.NaN;
+    private final HashMap<Long, ArrayDeque<float[]>> trackHist = new HashMap<>();
+    private double cutinFrom = Double.NaN;
+    private String cutinText = "";
+    private float leadD = Float.NaN;
 
-   public IdeasRoad() {
-      this.trackHist = new HashMap<>();
-      this.cutinFrom = Double.NaN;
-      this.cutinText = "";
-      this.leadD = Float.NaN;
-   }
+    public final long getAskWhy() {
+        return this.askWhy;
+    }
 
-   private final void bumps(Telemetry var1, Ideas.Here var2, long var3, List<Ideas.Part> var5) {
-      if (!Double.isNaN(var2.getYaw())) {
-         OsmRoads.Way var14 = Ideas.INSTANCE.street(var2);
-         boolean var10;
-         if (var14 != null && var14.getHighway()) {
-            var10 = true;
-         } else {
-            var10 = false;
-         }
+    public final void tick(Telemetry t, UiSettings s, Ideas.Here h, TabletMotion motion, long nowMs, List<Ideas.Part> out) {
+        Intrinsics.checkNotNullParameter(t, "t");
+        Intrinsics.checkNotNullParameter(s, "s");
+        Intrinsics.checkNotNullParameter(out, "out");
+        if (Ideas.INSTANCE.on(s, "speed_bumps") && h != null) {
+            MapBumps.INSTANCE.want(h.getLat(), h.getLon());
+            bumps(t, h, nowMs, out);
+        }
+        if (motion != null) {
+            learnJolts(s, h, motion, nowMs);
+        }
+        if (Ideas.INSTANCE.on(s, "potholes") && h != null) {
+            potholes(t, h, out);
+        }
+        if (Ideas.INSTANCE.on(s, "nyc_cutins")) {
+            cutins(t, s, h, nowMs, out);
+        }
+        if (Ideas.INSTANCE.on(s, "unsure_slow")) {
+            unsure(t, nowMs, out);
+        }
+        if (Ideas.INSTANCE.on(s, "spot_settings") && h != null) {
+            spots(t, h, out);
+        }
+        takeovers(t, s, h, nowMs);
+    }
 
-         if (!var10) {
-            Iterable var11 = IdeaSpots.around$default(
-               IdeaSpots.INSTANCE,
-               var2.getLat(),
-               var2.getLon(),
-               var2.getYaw(),
-               SetsKt.setOf(new String[]{"bump", "rough", "map_bump"}),
-               140.0,
-               6.0,
-               7.0,
-               0,
-               false,
-               384,
-               null
-            );
-            var var15 = new ArrayList();
-
-            for (Object var13 : var11) {
-               IdeaSpots.Seen var21 = (IdeaSpots.Seen)var13;
-               if (!Intrinsics.areEqual(var21.getSpot().getKind(), "map_bump") && var21.getSpot().getCount() < 2) {
-                  var10 = false;
-               } else {
-                  var10 = true;
-               }
-
-               if (var10) {
-                  var15.add(var13);
-               }
-            }
-
-            List var16 = var15;
-            IdeaSpots.Seen var17 = CollectionsKt.firstOrNull(var16);
-            double var6 = 5.36448;
-            if (var17 == null) {
-               if (var3 < this.bumpSlowUntil) {
-                  var5.add(new Ideas.Part("speed_bumps", 5.36448, 0.0, 0.0, "Speed bump", 60, 12, null));
-               }
-
-               return;
-            }
-
-            if (Intrinsics.areEqual(var17.getSpot().getNote(), "cushion")) {
-               var6 = 6.7056;
-            }
-
-            double var8 = Ideas.approach$default(Ideas.INSTANCE, var6, var17.getAhead() - 3.0, 0.0, 4, null);
-            if (var17.getAhead() <= 3.0) {
-               this.bumpSlowUntil = var3 + 1500L;
-            }
-
-            if (var8 < var2.getV() + 2.0 || var17.getAhead() < 40.0) {
-               var6 = Math.max(var8, var6);
-               var3 = Ideas.INSTANCE.ft(Math.max(0.0, var17.getAhead()));
-               var5.add(new Ideas.Part("speed_bumps", var6, 0.0, 0.0, "Speed bump in " + var3 + " ft", 60, 12, null));
-            }
-
+    private final void bumps(Telemetry t, Ideas.Here h, long nowMs, List<Ideas.Part> out) {
+        if (Double.isNaN(h.getYaw())) {
             return;
-         }
-      }
-   }
-
-   private final void cutins(Telemetry var1, UiSettings var2, Ideas.Here var3, long var4, List<Ideas.Part> var6) {
-      double var7;
-      boolean var29;
-      label151: {
-         label150: {
-            var7 = var1.getVEgo();
-            if (!(var7 > 15.0)) {
-               if (var3 == null) {
-                  break label150;
-               }
-
-               OsmRoads.Way var15 = Ideas.INSTANCE.street(var3);
-               if (var15 != null && var15.getHighway()) {
-                  var29 = (boolean)1;
-               } else {
-                  var29 = (boolean)0;
-               }
-
-               if (!var29) {
-                  break label150;
-               }
-            }
-
-            var29 = 1;
-            break label151;
-         }
-
-         var29 = 0;
-      }
-
-      HashSet var18 = new HashSet();
-      String var32 = null;
-      ModelSnapshot var19 = var1.getModel();
-      RadarTrack[] var16 = var1.getRadar();
-      int var12 = var16.length;
-      int var13 = 0;
-
-      while (var13 < var12) {
-         RadarTrack var20 = var16[var13];
-         var18.add(var20.getId());
-         Map var22 = this.trackHist;
-         Long var21 = var20.getId();
-         ArrayDeque var17 = (ArrayDeque)var22.get(var21);
-         if (var17 == null) {
-            var17 = new ArrayDeque();
-            var22.put(var21, var17);
-         }
-
-         var17 = var17;
-         float var9;
-         if (var19 != null && var19.getPosX().length > 2 && var20.getDRel() > 0.0F) {
-            var9 = Companion.interp(var20.getDRel(), var19.getPosX(), var19.getPosY());
-         } else {
-            var9 = 0.0F;
-         }
-
-         var17.addLast(new float[]{(float)(var4 % 1000000L), var20.getDRel(), Math.abs(var20.getYRel() + var9)});
-
-         while (var17.size() > 12) {
-            var17.removeFirst();
-         }
-
-         String var35;
-         if (var29 && var17.size() >= 6) {
-            var9 = var20.getDRel();
-            boolean var14;
-            if (-3.0F <= var9 && var9 <= 40.0F) {
-               var14 = true;
-            } else {
-               var14 = false;
-            }
-
-            if (!var14) {
-               var35 = var32;
-            } else {
-               float[] var36 = (float[])var17.first();
-               float[] var37 = (float[])var17.last();
-               var9 = (var37[0] - var36[0]) / 1000.0F;
-               var35 = var32;
-               if (!(var9 < 0.4F)) {
-                  float var10 = (var36[2] - var37[2]) / var9;
-                  var9 = var37[2];
-                  if (1.6F <= var9 && var9 <= 4.6F) {
-                     var14 = true;
-                  } else {
-                     var14 = false;
-                  }
-
-                  var35 = var32;
-                  if (var14) {
-                     var35 = var32;
-                     if (var10 > 0.45F) {
-                        var35 = "Car drifting into your lane - making room";
-                     }
-                  }
-               }
-            }
-         } else {
-            var35 = var32;
-         }
-
-         var13++;
-         var32 = var35;
-      }
-
-      this.trackHist.keySet().retainAll(var18);
-      String var33;
-      if (var32 == null) {
-         var33 = var32;
-         if (Ideas.INSTANCE.on(var2, "wheels")) {
-            String var25 = Ideas.INSTANCE.getSense().cameraDrift(var4);
-            var33 = var32;
-            if (var25 != null) {
-               var33 = var25;
-            }
-         }
-      } else {
-         var33 = var32;
-      }
-
-      if (var33 != null && var29) {
-         this.cutinUntil = 3000L + var4;
-         if (Double.isNaN(this.cutinFrom)) {
-            this.cutinFrom = var7;
-         }
-
-         this.cutinText = var33;
-      }
-
-      Lead var23 = var1.getLeadOne();
-      if (var23.getStatus()) {
-         if (!Float.isNaN(this.leadD)
-            && var4 - this.leadMs < 400L
-            && this.leadD - var23.getDRel() > 8.0F
-            && var23.getDRel() < 30.0F
-            && var29
-            && var3 != null
-            && !Double.isNaN(var3.getYaw())) {
-            IdeaSpots.record$default(IdeaSpots.INSTANCE, "cutin", var3.getLat(), var3.getLon(), var3.getHdgDeg(), 0.0, null, 0L, 60.0, null, 368, null);
-         }
-
-         this.leadD = var23.getDRel();
-         this.leadMs = var4;
-      } else {
-         this.leadD = Float.NaN;
-      }
-
-      if (var4 < this.cutinUntil) {
-         var6.add(new Ideas.Part("nyc_cutins", Math.max(4.4704, this.cutinFrom - 1.5), 0.5, 0.0, this.cutinText, 70, 8, null));
-      } else {
-         this.cutinFrom = Double.NaN;
-         if (var29 && var3 != null && !Double.isNaN(var3.getYaw())) {
-            IdeaSpots.Seen var24 = CollectionsKt.firstOrNull(
-               IdeaSpots.around$default(
-                  IdeaSpots.INSTANCE, var3.getLat(), var3.getLon(), var3.getYaw(), SetsKt.setOf("cutin"), 400.0, 50.0, 25.0, 2, false, 256, null
-               )
-            );
-            if (var24 != null) {
-               var29 = var24.getSpot().getCount();
-               var6.add(new Ideas.Part("nyc_cutins", null, 0.3, 0.0, "Cut-in spot - extra room (" + var29 + "x)", 20, 10, null));
-            }
-         }
-      }
-   }
-
-   private final void learnJolts(UiSettings var1, Ideas.Here var2, TabletMotion var3, long var4) {
-      while (true) {
-         TabletMotion.Jolt var16 = var3.poll();
-         if (var16 == null) {
+        }
+        OsmRoads.Way street = Ideas.INSTANCE.street(h);
+        if (street != null && street.getHighway()) {
             return;
-         }
-
-         if (var2 != null && !Double.isNaN(var2.getYaw())) {
-            String var17 = var16.getKind();
-            switch (var17.hashCode()) {
-               case -390630251:
-                  if (!var17.equals("pothole") || !Ideas.INSTANCE.on(var1, "potholes")) {
-                     continue;
-                  }
-
-                  double var19 = Ideas.INSTANCE.lateralOnStreet(var2);
-                  IdeaSpots var26 = IdeaSpots.INSTANCE;
-                  double var20 = var2.getLat();
-                  double var12 = var2.getLon();
-                  double var21 = var2.getHdgDeg();
-                  if (!Double.isNaN(var19)) {
-                     var19 += var16.getSide() * 0.8;
-                  }
-
-                  String var23;
-                  if (var16.getSide() < 0) {
-                     var23 = "left wheel";
-                  } else {
-                     var23 = "right wheel";
-                  }
-
-                  IdeaSpots.record$default(var26, "pothole", var20, var12, var21, var19, var23, 0L, 4.0, null, 320, null);
-                  continue;
-               case 3035446:
-                  if (!var17.equals("bump")) {
-                     continue;
-                  }
-                  break;
-               case 108703929:
-                  if (!var17.equals("rough")) {
-                     continue;
-                  }
-                  break;
-               default:
-                  continue;
+        }
+        Iterable $this$filter$iv = IdeaSpots.around$default(IdeaSpots.INSTANCE, h.getLat(), h.getLon(), h.getYaw(), SetsKt.setOf((Object[]) new String[]{"bump", "rough", "map_bump"}), 140.0d, 6.0d, 7.0d, 0, false, 384, null);
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            IdeaSpots.Seen it = (IdeaSpots.Seen) element$iv$iv;
+            if (Intrinsics.areEqual(it.getSpot().getKind(), "map_bump") || it.getSpot().getCount() >= 2) {
+                destination$iv$iv.add(element$iv$iv);
             }
-
-            if (Ideas.INSTANCE.on(var1, "speed_bumps") && var2.getV() < 13.5) {
-               OsmRoads.Way var24 = Ideas.INSTANCE.street(var2);
-               boolean var15 = false;
-               boolean var14 = var15;
-               if (var24 != null) {
-                  var14 = var15;
-                  if (var24.getHighway()) {
-                     var14 = true;
-                  }
-               }
-
-               if (!var14) {
-                  IdeaSpots var25 = IdeaSpots.INSTANCE;
-                  String var18 = var16.getKind();
-                  double var10 = var2.getLat();
-                  double var6 = var2.getLon();
-                  double var8 = var2.getHdgDeg();
-                  String var22 = String.format("felt %.1f", Arrays.copyOf(new Object[]{var16.getSize()}, 1));
-                  Intrinsics.checkNotNullExpressionValue(var22, "format(...)");
-                  IdeaSpots.record$default(var25, var18, var10, var6, var8, 0.0, var22, 0L, 0.0, null, 464, null);
-               }
+        }
+        List seen = (List) destination$iv$iv;
+        IdeaSpots.Seen next = (IdeaSpots.Seen) CollectionsKt.firstOrNull(seen);
+        if (next == null) {
+            IdeasRoad $this$bumps_u24lambda_u241 = this;
+            if (nowMs < $this$bumps_u24lambda_u241.bumpSlowUntil) {
+                out.add(new Ideas.Part("speed_bumps", Double.valueOf(5.36448d), 0.0d, 0.0d, "Speed bump", 60, 12, null));
+                return;
             }
-         }
-      }
-   }
+            return;
+        }
+        double target = Intrinsics.areEqual(next.getSpot().getNote(), "cushion") ? 6.7056d : 5.36448d;
+        double cap = Ideas.approach$default(Ideas.INSTANCE, target, next.getAhead() - 3.0d, 0.0d, 4, null);
+        if (next.getAhead() <= 3.0d) {
+            this.bumpSlowUntil = nowMs + 1500;
+        }
+        if (cap < h.getV() + 2.0d || next.getAhead() < 40.0d) {
+            out.add(new Ideas.Part("speed_bumps", Double.valueOf(Math.max(cap, target)), 0.0d, 0.0d, "Speed bump in " + Ideas.INSTANCE.ft(Math.max(0.0d, next.getAhead())) + " ft", 60, 12, null));
+        }
+    }
 
-   private final void potholes(Telemetry var1, Ideas.Here var2, List<Ideas.Part> var3) {
-      if (!Double.isNaN(var2.getYaw())) {
-         IdeaSpots.Seen var9 = CollectionsKt.firstOrNull(
-            IdeaSpots.around$default(
-               IdeaSpots.INSTANCE, var2.getLat(), var2.getLon(), var2.getYaw(), SetsKt.setOf("pothole"), 60.0, 2.0, 4.0, 0, false, 384, null
-            )
-         );
-         if (var9 != null) {
-            double var6 = Ideas.INSTANCE.lateralOnStreet(var2);
-            double var4 = var9.getSpot().getLateral();
-            if (!Double.isNaN(var6) && !Double.isNaN(var4)) {
-               var4 -= var6;
-               if (Math.abs(Math.abs(var4) - 0.8) < 0.45) {
-                  if (var4 > 0.0) {
-                     var4 = -0.3;
-                  } else {
-                     var4 = 0.3;
-                  }
-
-                  var3.add(new Ideas.Part("potholes", null, 0.0, var4, "Pothole ahead - moving over a little", 40, 6, null));
-                  return;
-               }
-
-               if (Math.abs(var4) > 1.4) {
-                  return;
-               }
-            }
-
-            Double var10 = Math.max(6.7056, var2.getV() - 2.2);
-            var10.doubleValue();
-            boolean var8;
-            if (var9.getAhead() < 40.0) {
-               var8 = true;
+    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */
+    private final void learnJolts(UiSettings s, Ideas.Here h, TabletMotion m, long nowMs) {
+        while (true) {
+            TabletMotion.Jolt j = m.poll();
+            if (j != null) {
+                if (h != null && !Double.isNaN(h.getYaw())) {
+                    String kind = j.getKind();
+                    switch (kind.hashCode()) {
+                        case -390630251:
+                            if (!kind.equals("pothole")) {
+                                continue;
+                            } else if (!Ideas.INSTANCE.on(s, "potholes")) {
+                                break;
+                            } else {
+                                double lat = Ideas.INSTANCE.lateralOnStreet(h);
+                                IdeaSpots.INSTANCE.record("pothole", h.getLat(), h.getLon(), h.getHdgDeg(), (r35 & 16) != 0 ? Double.NaN : Double.isNaN(lat) ? lat : (j.getSide() * 0.8d) + lat, (r35 & 32) != 0 ? "" : j.getSide() < 0 ? "left wheel" : "right wheel", (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 4.0d, (r35 & 256) != 0 ? "me" : null);
+                                break;
+                            }
+                        case 3035446:
+                            if (!kind.equals("bump")) {
+                                break;
+                            } else {
+                                break;
+                            }
+                        case 108703929:
+                            if (!kind.equals("rough")) {
+                                break;
+                            } else {
+                                break;
+                            }
+                    }
+                    if (Ideas.INSTANCE.on(s, "speed_bumps") && h.getV() < 13.5d) {
+                        OsmRoads.Way street = Ideas.INSTANCE.street(h);
+                        boolean z = false;
+                        if (street != null && street.getHighway()) {
+                            z = true;
+                        }
+                        if (!z) {
+                            IdeaSpots ideaSpots = IdeaSpots.INSTANCE;
+                            String kind2 = j.getKind();
+                            double lat2 = h.getLat();
+                            double lon = h.getLon();
+                            double hdgDeg = h.getHdgDeg();
+                            String format = String.format("felt %.1f", Arrays.copyOf(new Object[]{Float.valueOf(j.getSize())}, 1));
+                            Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+                            ideaSpots.record(kind2, lat2, lon, hdgDeg, (r35 & 16) != 0 ? Double.NaN : 0.0d, (r35 & 32) != 0 ? "" : format, (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 0.0d, (r35 & 256) != 0 ? "me" : null);
+                        }
+                    }
+                }
             } else {
-               var8 = false;
+                return;
             }
+        }
+    }
 
-            if (!var8) {
-               var10 = null;
+    private final void potholes(Telemetry t, Ideas.Here h, List<Ideas.Part> out) {
+        IdeaSpots.Seen next;
+        if (Double.isNaN(h.getYaw()) || (next = (IdeaSpots.Seen) CollectionsKt.firstOrNull(IdeaSpots.around$default(IdeaSpots.INSTANCE, h.getLat(), h.getLon(), h.getYaw(), SetsKt.setOf("pothole"), 60.0d, 2.0d, 4.0d, 0, false, 384, null))) == null) {
+            return;
+        }
+        double me = Ideas.INSTANCE.lateralOnStreet(h);
+        double hole = next.getSpot().getLateral();
+        if (!Double.isNaN(me) && !Double.isNaN(hole)) {
+            double gap = hole - me;
+            if (Math.abs(Math.abs(gap) - 0.8d) < 0.45d) {
+                out.add(new Ideas.Part("potholes", null, 0.0d, gap > 0.0d ? -0.3d : 0.3d, "Pothole ahead - moving over a little", 40, 6, null));
+                return;
+            } else if (Math.abs(gap) > 1.4d) {
+                return;
             }
+        }
+        Double valueOf = Double.valueOf(Math.max(6.7056d, h.getV() - 2.2d));
+        valueOf.doubleValue();
+        if (!(next.getAhead() < 40.0d)) {
+            valueOf = null;
+        }
+        out.add(new Ideas.Part("potholes", valueOf, 0.0d, 0.0d, "Pothole ahead", 40, 12, null));
+    }
 
-            var3.add(new Ideas.Part("potholes", var10, 0.0, 0.0, "Pothole ahead", 40, 12, null));
-         }
-      }
-   }
-
-   private final void spots(Telemetry var1, Ideas.Here var2, List<Ideas.Part> var3) {
-      if (!Double.isNaN(var2.getYaw())) {
-         IdeaSpots.Seen var8 = CollectionsKt.firstOrNull(
-            IdeaSpots.around$default(
-               IdeaSpots.INSTANCE, var2.getLat(), var2.getLon(), var2.getYaw(), SetsKt.setOf("takeover"), 150.0, 20.0, 15.0, 2, false, 256, null
-            )
-         );
-         if (var8 != null) {
-            double var4 = Math.max(4.4704, var2.getV() - 1.3);
-            int var7 = var8.getSpot().getCount();
-            String var9 = var8.getSpot().getNote();
-            boolean var6;
-            if (var9.length() > 0) {
-               var6 = true;
+    /* JADX WARN: Code restructure failed: missing block: B:73:0x0184, code lost:
+    
+        if (r7 == false) goto L74;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:74:0x0186, code lost:
+    
+        r31.cutinUntil = 3000 + r35;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:75:0x0191, code lost:
+    
+        if (java.lang.Double.isNaN(r31.cutinFrom) == false) goto L73;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:76:0x0193, code lost:
+    
+        r31.cutinFrom = r5;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:77:0x0195, code lost:
+    
+        r31.cutinText = r11;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:9:0x0027, code lost:
+    
+        if ((r7 != null && r7.getHighway()) != false) goto L14;
+     */
+    /* JADX WARN: Removed duplicated region for block: B:112:0x0202  */
+    /* JADX WARN: Removed duplicated region for block: B:14:0x003f  */
+    /* JADX WARN: Removed duplicated region for block: B:27:0x00db A[LOOP:1: B:25:0x00d3->B:27:0x00db, LOOP_END] */
+    /* JADX WARN: Removed duplicated region for block: B:80:0x01a1  */
+    /* JADX WARN: Removed duplicated region for block: B:96:0x020c  */
+    /* JADX WARN: Removed duplicated region for block: B:99:0x023a  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void cutins(Telemetry t, UiSettings s, Ideas.Here h, long nowMs, List<Ideas.Part> out) {
+        boolean highway;
+        String str;
+        int length;
+        int i;
+        Lead l;
+        IdeaSpots.Seen spot;
+        String it;
+        RadarTrack[] radarTrackArr;
+        ArrayDeque arrayDeque;
+        int i2;
+        float f;
+        float f2;
+        double v = t.getVEgo();
+        if (v <= 15.0d) {
+            if (h != null) {
+                OsmRoads.Way street = Ideas.INSTANCE.street(h);
+            }
+            highway = false;
+            HashSet seenIds = new HashSet();
+            str = null;
+            ModelSnapshot m = t.getModel();
+            RadarTrack[] radar = t.getRadar();
+            length = radar.length;
+            i = 0;
+            while (i < length) {
+                RadarTrack r = radar[i];
+                seenIds.add(Long.valueOf(r.getId()));
+                Map $this$getOrPut$iv = this.trackHist;
+                Long valueOf = Long.valueOf(r.getId());
+                ArrayDeque<float[]> arrayDeque2 = $this$getOrPut$iv.get(valueOf);
+                if (arrayDeque2 == null) {
+                    arrayDeque = new ArrayDeque();
+                    radarTrackArr = radar;
+                    $this$getOrPut$iv.put(valueOf, arrayDeque);
+                } else {
+                    radarTrackArr = radar;
+                    arrayDeque = arrayDeque2;
+                }
+                ArrayDeque q = arrayDeque;
+                if (m == null || m.getPosX().length <= 2) {
+                    i2 = length;
+                    f = 0.0f;
+                } else {
+                    f = 0.0f;
+                    if (r.getDRel() > 0.0f) {
+                        i2 = length;
+                        f2 = Companion.interp(r.getDRel(), m.getPosX(), m.getPosY());
+                        float pathY = f2;
+                        q.addLast(new float[]{nowMs % 1000000, r.getDRel(), Math.abs(r.getYRel() + pathY)});
+                        while (q.size() > 12) {
+                            q.removeFirst();
+                        }
+                        if (!highway && q.size() >= 6) {
+                            float dRel = r.getDRel();
+                            if (-3.0f <= dRel && dRel <= 40.0f) {
+                                float[] a = q.first();
+                                float[] b = q.last();
+                                float dt = (b[0] - a[0]) / 1000.0f;
+                                if (dt >= 0.4f) {
+                                    float toward = (a[2] - b[2]) / dt;
+                                    float f3 = b[2];
+                                    if ((1.6f <= f3 && f3 <= 4.6f) && toward > 0.45f) {
+                                        str = "Car drifting into your lane - making room";
+                                    }
+                                }
+                            }
+                        }
+                        i++;
+                        length = i2;
+                        radar = radarTrackArr;
+                    } else {
+                        i2 = length;
+                    }
+                }
+                f2 = f;
+                float pathY2 = f2;
+                q.addLast(new float[]{nowMs % 1000000, r.getDRel(), Math.abs(r.getYRel() + pathY2)});
+                while (q.size() > 12) {
+                }
+                if (!highway) {
+                }
+                i++;
+                length = i2;
+                radar = radarTrackArr;
+            }
+            this.trackHist.keySet().retainAll(seenIds);
+            if (str == null && Ideas.INSTANCE.on(s, "wheels") && (it = Ideas.INSTANCE.getSense().cameraDrift(nowMs)) != null) {
+                str = it;
+            }
+            l = t.getLeadOne();
+            if (l.getStatus()) {
+                this.leadD = Float.NaN;
             } else {
-               var6 = false;
+                if (!Float.isNaN(this.leadD) && nowMs - this.leadMs < 400 && this.leadD - l.getDRel() > 8.0f && l.getDRel() < 30.0f && highway && h != null && !Double.isNaN(h.getYaw())) {
+                    IdeaSpots.INSTANCE.record("cutin", h.getLat(), h.getLon(), h.getHdgDeg(), (r35 & 16) != 0 ? Double.NaN : 0.0d, (r35 & 32) != 0 ? "" : null, (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 60.0d, (r35 & 256) != 0 ? "me" : null);
+                }
+                this.leadD = l.getDRel();
+                this.leadMs = nowMs;
             }
-
-            if (!var6) {
-               var9 = null;
+            if (nowMs < this.cutinUntil) {
+                this.cutinFrom = Double.NaN;
+                if (highway && h != null && !Double.isNaN(h.getYaw()) && (spot = (IdeaSpots.Seen) CollectionsKt.firstOrNull(IdeaSpots.around$default(IdeaSpots.INSTANCE, h.getLat(), h.getLon(), h.getYaw(), SetsKt.setOf("cutin"), 400.0d, 50.0d, 25.0d, 2, false, 256, null))) != null) {
+                    out.add(new Ideas.Part("nyc_cutins", null, 0.3d, 0.0d, "Cut-in spot - extra room (" + spot.getSpot().getCount() + "x)", 20, 10, null));
+                    return;
+                }
+                return;
             }
+            out.add(new Ideas.Part("nyc_cutins", Double.valueOf(Math.max(4.4704d, this.cutinFrom - 1.5d)), 0.5d, 0.0d, this.cutinText, 70, 8, null));
+            return;
+        }
+        highway = true;
+        HashSet seenIds2 = new HashSet();
+        str = null;
+        ModelSnapshot m2 = t.getModel();
+        RadarTrack[] radar2 = t.getRadar();
+        length = radar2.length;
+        i = 0;
+        while (i < length) {
+        }
+        this.trackHist.keySet().retainAll(seenIds2);
+        if (str == null) {
+            str = it;
+        }
+        l = t.getLeadOne();
+        if (l.getStatus()) {
+        }
+        if (nowMs < this.cutinUntil) {
+        }
+    }
 
-            label25: {
-               if (var9 != null) {
-                  String var11 = " (" + var9 + ")";
-                  var10 = var11;
-                  if (var11 != null) {
-                     break label25;
-                  }
-               }
-
-               var10 = "";
+    private final void unsure(Telemetry t, long nowMs, List<Ideas.Part> out) {
+        ModelSnapshot m = t.getModel();
+        if (m == null) {
+            return;
+        }
+        double v = t.getVEgo();
+        float std = (m.getPosYStd().length != m.getPosX().length || m.getPosX().length <= 2) ? Float.NaN : Companion.interp(20.0f, m.getPosX(), m.getPosYStd());
+        boolean unsureNow = (!Float.isInfinite(std) && !Float.isNaN(std)) && std > 0.6f && v > 6.0d && t.getEnabled();
+        if (unsureNow) {
+            if (this.unsureSince == 0) {
+                this.unsureSince = nowMs;
             }
-
-            var3.add(new Ideas.Part("spot_settings", var4, 0.3, 0.0, "You took over here " + var7 + "x" + var10, 25, 8, null));
-         }
-      }
-   }
-
-   private final void takeovers(Telemetry var1, UiSettings var2, Ideas.Here var3, long var4) {
-      boolean var6 = var1.getEnabled();
-      if (this.wasEnabled && !var6 && var1.getVEgo() > 2.5F) {
-         if (var3 != null && (Ideas.INSTANCE.on(var2, "spot_settings") || Ideas.INSTANCE.on(var2, "takeover_why"))) {
-            IdeaSpots.record$default(IdeaSpots.INSTANCE, "takeover", var3.getLat(), var3.getLon(), var3.getHdgDeg(), 0.0, null, 0L, 60.0, null, 368, null);
-         }
-
-         if (Ideas.INSTANCE.on(var2, "takeover_why")) {
-            this.askWhy = var4;
-            this.askHere = var3;
-         }
-      }
-
-      this.wasEnabled = var6;
-   }
-
-   private final void unsure(Telemetry var1, long var2, List<Ideas.Part> var4) {
-      ModelSnapshot var11 = var1.getModel();
-      if (var11 != null) {
-         double var5 = var1.getVEgo();
-         float var7;
-         if (var11.getPosYStd().length == var11.getPosX().length && var11.getPosX().length > 2) {
-            var7 = Companion.interp(20.0F, var11.getPosX(), var11.getPosYStd());
-         } else {
-            var7 = Float.NaN;
-         }
-
-         boolean var10 = Float.isInfinite(var7);
-         boolean var9 = true;
-         boolean var8;
-         if (!var10 && !Float.isNaN(var7)) {
-            var8 = true;
-         } else {
-            var8 = false;
-         }
-
-         if (var8 && var7 > 0.6F && var5 > 6.0 && var1.getEnabled()) {
-            var8 = var9;
-         } else {
-            var8 = false;
-         }
-
-         if (var8) {
-            if (this.unsureSince == 0L) {
-               this.unsureSince = var2;
-            }
-
             this.sureSince = 0L;
-         } else {
-            if (this.sureSince == 0L) {
-               this.sureSince = var2;
+        } else {
+            if (this.sureSince == 0) {
+                this.sureSince = nowMs;
             }
-
-            if (var2 - this.sureSince > 3000L) {
-               this.unsureSince = 0L;
-               this.unsureFrom = Double.NaN;
+            if (nowMs - this.sureSince > 3000) {
+                this.unsureSince = 0L;
+                this.unsureFrom = Double.NaN;
             }
-         }
-
-         if (this.unsureSince != 0L && var2 - this.unsureSince > 1000L) {
+        }
+        if (this.unsureSince != 0 && nowMs - this.unsureSince > 1000) {
             if (Double.isNaN(this.unsureFrom)) {
-               this.unsureFrom = var5;
+                this.unsureFrom = v;
             }
+            out.add(new Ideas.Part("unsure_slow", Double.valueOf(Math.max(4.4704d, this.unsureFrom - 2.2d)), 0.0d, 0.0d, "Model unsure - 5 mph slower", 30, 12, null));
+        }
+    }
 
-            var4.add(new Ideas.Part("unsure_slow", Math.max(4.4704, this.unsureFrom - 2.2), 0.0, 0.0, "Model unsure - 5 mph slower", 30, 12, null));
-         }
-      }
-   }
-
-   // $VF: Duplicated exception handlers to handle obfuscated exceptions
-   public final void answerWhy(Context var1, String var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      long var4 = this.askWhy;
-      this.askWhy = 0L;
-      if (var2 != null && var4 != 0L) {
-         Ideas.Here var9 = this.askHere;
-         if (var9 != null) {
-            IdeaSpots.Spot var6 = IdeaSpots.record$default(
-               IdeaSpots.INSTANCE, "takeover", var9.getLat(), var9.getLon(), var9.getHdgDeg(), 0.0, var2, 0L, 60.0, null, 336, null
-            );
-            var6.setCount(var6.getCount() - 1);
-         }
-
-         boolean var3;
-         File var8;
-         try {
-            var8 = new File(var1.getFilesDir(), "takeover_why.csv");
-            var3 = var8.exists();
-         } catch (Exception var18) {
+    private final void spots(Telemetry t, Ideas.Here h, List<Ideas.Part> out) {
+        IdeaSpots.Seen sp;
+        String it;
+        if (Double.isNaN(h.getYaw()) || (sp = (IdeaSpots.Seen) CollectionsKt.firstOrNull(IdeaSpots.around$default(IdeaSpots.INSTANCE, h.getLat(), h.getLon(), h.getYaw(), SetsKt.setOf("takeover"), 150.0d, 20.0d, 15.0d, 2, false, 256, null))) == null) {
             return;
-         }
+        }
+        Double valueOf = Double.valueOf(Math.max(4.4704d, h.getV() - 1.3d));
+        int count = sp.getSpot().getCount();
+        String it2 = sp.getSpot().getNote();
+        if (!(it2.length() > 0)) {
+            it2 = null;
+        }
+        if (it2 == null || (it = " (" + it2 + ")") == null) {
+            it = "";
+        }
+        out.add(new Ideas.Part("spot_settings", valueOf, 0.3d, 0.0d, "You took over here " + count + "x" + it, 25, 8, null));
+    }
 
-         if (!var3) {
+    private final void takeovers(Telemetry t, UiSettings s, Ideas.Here h, long nowMs) {
+        boolean en = t.getEnabled();
+        if (this.wasEnabled && !en && t.getVEgo() > 2.5f) {
+            if (h != null && (Ideas.INSTANCE.on(s, "spot_settings") || Ideas.INSTANCE.on(s, "takeover_why"))) {
+                IdeaSpots.INSTANCE.record("takeover", h.getLat(), h.getLon(), h.getHdgDeg(), (r35 & 16) != 0 ? Double.NaN : 0.0d, (r35 & 32) != 0 ? "" : null, (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 60.0d, (r35 & 256) != 0 ? "me" : null);
+            }
+            if (Ideas.INSTANCE.on(s, "takeover_why")) {
+                this.askWhy = nowMs;
+                this.askHere = h;
+            }
+        }
+        this.wasEnabled = en;
+    }
+
+    public final void answerWhy(Context ctx, String why) {
+        Ideas.Here h;
+        String str;
+        long at;
+        IdeaSpots.Spot record;
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        long at2 = this.askWhy;
+        this.askWhy = 0L;
+        if (why != null && at2 != 0) {
+            Ideas.Here h2 = this.askHere;
+            if (h2 != null) {
+                h = h2;
+                at = at2;
+                str = why;
+                record = IdeaSpots.INSTANCE.record("takeover", h2.getLat(), h2.getLon(), h2.getHdgDeg(), (r35 & 16) != 0 ? Double.NaN : 0.0d, (r35 & 32) != 0 ? "" : why, (r35 & 64) != 0 ? System.currentTimeMillis() : 0L, (r35 & 128) != 0 ? 10.0d : 60.0d, (r35 & 256) != 0 ? "me" : null);
+                record.setCount(record.getCount() - 1);
+            } else {
+                h = h2;
+                str = why;
+                at = at2;
+            }
             try {
-               FilesKt.writeText$default(var8, "time,lat,lon,mph,why\n", null, 2, null);
-            } catch (Exception var17) {
-               return;
+                File f = new File(ctx.getFilesDir(), "takeover_why.csv");
+                if (!f.exists()) {
+                    try {
+                        FilesKt.writeText$default(f, "time,lat,lon,mph,why\n", null, 2, null);
+                    } catch (Exception e) {
+                        return;
+                    }
+                }
+                try {
+                    String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(new Date(at));
+                    Object obj = "";
+                    String valueOf = h != null ? Double.valueOf(h.getLat()) : "";
+                    String valueOf2 = h != null ? Double.valueOf(h.getLon()) : "";
+                    if (h != null) {
+                        Ideas.Here it = h;
+                        obj = Long.valueOf(Math.round(Ideas.INSTANCE.mph(it.getV())));
+                    }
+                    FilesKt.appendText$default(f, format + "," + valueOf + "," + valueOf2 + "," + obj + "," + str + "\n", null, 2, null);
+                } catch (Exception e2) {
+                }
+            } catch (Exception e3) {
             }
-         }
+        }
+    }
 
-         Date var21;
-         try {
-            var19 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-         } catch (Exception var16) {
-            return;
-         }
+    /* compiled from: Ideas.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
 
-         String var10;
-         try {
-            var21 = new Date(var4);
-            var10 = var19.format(var21);
-         } catch (Exception var15) {
-            return;
-         }
+        private Companion() {
+        }
 
-         Object var7 = "";
-         Object var20;
-         if (var9 != null) {
-            try {
-               var20 = var9.getLat();
-            } catch (Exception var14) {
-               return;
+        public final float interp(float x, float[] xs, float[] ys) {
+            Intrinsics.checkNotNullParameter(xs, "xs");
+            Intrinsics.checkNotNullParameter(ys, "ys");
+            if (x <= xs[0]) {
+                return ys[0];
             }
-         } else {
-            var20 = "";
-         }
-
-         Object var22;
-         if (var9 != null) {
-            try {
-               var22 = var9.getLon();
-            } catch (Exception var13) {
-               return;
+            int length = xs.length;
+            for (int i = 1; i < length; i++) {
+                if (xs[i] >= x) {
+                    float f = (x - xs[i - 1]) / Math.max(0.001f, xs[i] - xs[i - 1]);
+                    return ys[i - 1] + ((ys[i] - ys[i - 1]) * f);
+                }
             }
-         } else {
-            var22 = "";
-         }
-
-         if (var9 != null) {
-            try {
-               var7 = Math.round(Ideas.INSTANCE.mph(var9.getV()));
-            } catch (Exception var12) {
-               return;
-            }
-         }
-
-         try {
-            StringBuilder var23 = new StringBuilder();
-            FilesKt.appendText$default(
-               var8,
-               var23.append(var10)
-                  .append(",")
-                  .append(var20)
-                  .append(",")
-                  .append(var22)
-                  .append(",")
-                  .append(var7)
-                  .append(",")
-                  .append(var2)
-                  .append("\n")
-                  .toString(),
-               null,
-               2,
-               null
-            );
-         } catch (Exception var11) {
-         }
-      }
-   }
-
-   public final long getAskWhy() {
-      return this.askWhy;
-   }
-
-   public final void tick(Telemetry var1, UiSettings var2, Ideas.Here var3, TabletMotion var4, long var5, List<Ideas.Part> var7) {
-      Intrinsics.checkNotNullParameter(var1, "t");
-      Intrinsics.checkNotNullParameter(var2, "s");
-      Intrinsics.checkNotNullParameter(var7, "out");
-      if (Ideas.INSTANCE.on(var2, "speed_bumps") && var3 != null) {
-         MapBumps.INSTANCE.want(var3.getLat(), var3.getLon());
-         this.bumps(var1, var3, var5, var7);
-      }
-
-      if (var4 != null) {
-         this.learnJolts(var2, var3, var4, var5);
-      }
-
-      if (Ideas.INSTANCE.on(var2, "potholes") && var3 != null) {
-         this.potholes(var1, var3, var7);
-      }
-
-      if (Ideas.INSTANCE.on(var2, "nyc_cutins")) {
-         this.cutins(var1, var2, var3, var5, var7);
-      }
-
-      if (Ideas.INSTANCE.on(var2, "unsure_slow")) {
-         this.unsure(var1, var5, var7);
-      }
-
-      if (Ideas.INSTANCE.on(var2, "spot_settings") && var3 != null) {
-         this.spots(var1, var3, var7);
-      }
-
-      this.takeovers(var1, var2, var3, var5);
-   }
-
-   public static final class Companion {
-      private Companion() {
-      }
-
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
-
-      public final float interp(float var1, float[] var2, float[] var3) {
-         Intrinsics.checkNotNullParameter(var2, "xs");
-         Intrinsics.checkNotNullParameter(var3, "ys");
-         if (var1 <= var2[0]) {
-            return var3[0];
-         } else {
-            int var4 = 1;
-
-            for (int var5 = var2.length; var4 < var5; var4++) {
-               if (var2[var4] >= var1) {
-                  var1 = (var1 - var2[var4 - 1]) / Math.max(0.001F, var2[var4] - var2[var4 - 1]);
-                  return var3[var4 - 1] + (var3[var4] - var3[var4 - 1]) * var1;
-               }
-            }
-
-            return ArraysKt.last(var3);
-         }
-      }
-   }
+            return ArraysKt.last(ys);
+        }
+    }
 }

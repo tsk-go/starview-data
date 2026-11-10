@@ -2,112 +2,121 @@ package com.starpilot.starview;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.starpilot.starview.JournalLogic;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map.Entry;
+import java.util.Map;
 import kotlin.collections.CollectionsKt;
 import kotlin.comparisons.ComparisonsKt;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.StringCompanionObject;
 import kotlin.text.StringsKt;
 
+/* compiled from: JournalPages.kt */
 public final class TakeoverSpotsView extends CardPage {
-   // $VF: synthetic method
-   public static CharSequence $r8$lambda$6Dq35WIx1S_Ir3v02h3OwukEBoQ(Entry var0) {
-      return refresh$lambda$7$lambda$6$lambda$5$lambda$4(var0);
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public TakeoverSpotsView(Context ctx, CarUi ui) {
+        super(ctx, ui);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(ui, "ui");
+    }
 
-   public TakeoverSpotsView(Context var1, CarUi var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "ui");
-      super(var1, var2);
-   }
-
-   private static final CharSequence refresh$lambda$7$lambda$6$lambda$5$lambda$4(Entry var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      Object var1 = var0.getValue();
-      Object var2 = var0.getKey();
-      return var1 + " " + var2;
-   }
-
-   @Override
-   public void refresh() {
-      this.getCol().removeAllViews();
-      List var6 = DriveJournal.INSTANCE.read("takeover");
-      List var5 = JournalLogic.Companion.spots$default(JournalLogic.Companion, var6, 0.0, 2, null);
-      LinearLayout var4 = this.card();
-      this.add((View)var4);
-      var4.addView(this.title("Takeover hot spots", "pin", "tablet"));
-      CardPage var7 = this;
-      String var3;
-      if (var6.isEmpty()) {
-         var3 = "No takeovers noted yet. The tablet notes each one (with its place) while it's linked.";
-      } else {
-         int var1 = var6.size();
-         int var2 = var5.size();
-         var3 = var1
-            + " takeovers in "
-            + var2
-            + " places. A place you take over at again and again is worth a look: a lane that splits, a sharp curve, a merge.";
-      }
-
-      var4.addView((View)CardPage.line$default(var7, var3, 0, 0.0F, 6, null));
-
-      for (JournalLogic.Companion.Spot var11 : CollectionsKt.take(var5, 30)) {
-         LinearLayout var9 = this.card();
-         this.add((View)var9);
-         LinearLayout var8 = new LinearLayout(this.getContext());
-         var8.setOrientation(0);
-         var8.setGravity(16);
-         TextView var16 = new TextView(var8.getContext());
-         int var13 = var11.getCount();
-         var16.setText(var13 + "×");
-         if (var11.getCount() >= 3) {
-            var13 = CarUi.Companion.getWARN();
-         } else {
-            var13 = CarUi.Companion.getTEXT();
-         }
-
-         var16.setTextColor(var13);
-         var16.setTextSize(28.0F);
-         var16.setTypeface(Typeface.DEFAULT_BOLD);
-         var16.setMinWidth(this.getUi().dp(80));
-         var8.addView((View)var16);
-         LinearLayout var10 = new LinearLayout(var8.getContext());
-         var10.setOrientation(1);
-         TextView var12 = new TextView(var10.getContext());
-         var7 = var11.getRoad();
-         if (StringsKt.isBlank(var7)) {
-            StringCompanionObject var18 = StringCompanionObject.INSTANCE;
-            var7 = String.format(Locale.US, "%.5f, %.5f", Arrays.copyOf(new Object[]{var11.getLat(), var11.getLon()}, 2));
-            Intrinsics.checkNotNullExpressionValue(var7, "format(...)");
-         }
-
-         var12.setText((CharSequence)var7);
-         var12.setTextColor(CarUi.Companion.getTEXT());
-         var12.setTextSize(19.0F);
-         var10.addView((View)var12);
-         TextView var19 = new TextView(var10.getContext());
-         String var21 = CollectionsKt.joinToString$default(CollectionsKt.sortedWith(var11.getCauses().entrySet(), new Comparator() {
-            @Override
-            public final int compare(T var1, T var2) {
-               return ComparisonsKt.compareValues((T)((Integer & Comparable)((Entry)var2).getValue()), (T)((Integer & Comparable)((Entry)var1).getValue()));
+    @Override // com.starpilot.starview.CardPage
+    public void refresh() {
+        String str;
+        List tk;
+        SimpleDateFormat simpleDateFormat;
+        TakeoverSpotsView takeoverSpotsView = this;
+        getCol().removeAllViews();
+        List tk2 = DriveJournal.INSTANCE.read("takeover");
+        List spots = JournalLogic.Companion.spots$default(JournalLogic.Companion, tk2, 0.0d, 2, null);
+        LinearLayout head = card();
+        takeoverSpotsView.add(head);
+        head.addView(takeoverSpotsView.title("Takeover hot spots", "pin", "tablet"));
+        TakeoverSpotsView takeoverSpotsView2 = takeoverSpotsView;
+        if (tk2.isEmpty()) {
+            str = "No takeovers noted yet. The tablet notes each one (with its place) while it's linked.";
+        } else {
+            str = tk2.size() + " takeovers in " + spots.size() + " places. A place you take over at again and again is worth a look: a lane that splits, a sharp curve, a merge.";
+        }
+        head.addView(CardPage.line$default(takeoverSpotsView2, str, 0, 0.0f, 6, null));
+        Iterator it = CollectionsKt.take(spots, 30).iterator();
+        while (it.hasNext()) {
+            JournalLogic.Companion.Spot s = (JournalLogic.Companion.Spot) it.next();
+            LinearLayout c = card();
+            takeoverSpotsView.add(c);
+            LinearLayout $this$refresh_u24lambda_u247 = new LinearLayout(getContext());
+            $this$refresh_u24lambda_u247.setOrientation(0);
+            $this$refresh_u24lambda_u247.setGravity(16);
+            TextView $this$refresh_u24lambda_u247_u24lambda_u240 = new TextView($this$refresh_u24lambda_u247.getContext());
+            $this$refresh_u24lambda_u247_u24lambda_u240.setText(s.getCount() + "×");
+            $this$refresh_u24lambda_u247_u24lambda_u240.setTextColor(s.getCount() >= 3 ? CarUi.Companion.getWARN() : CarUi.Companion.getTEXT());
+            $this$refresh_u24lambda_u247_u24lambda_u240.setTextSize(28.0f);
+            $this$refresh_u24lambda_u247_u24lambda_u240.setTypeface(Typeface.DEFAULT_BOLD);
+            $this$refresh_u24lambda_u247_u24lambda_u240.setMinWidth(getUi().dp(80));
+            $this$refresh_u24lambda_u247.addView($this$refresh_u24lambda_u247_u24lambda_u240);
+            LinearLayout $this$refresh_u24lambda_u247_u24lambda_u246 = new LinearLayout($this$refresh_u24lambda_u247.getContext());
+            $this$refresh_u24lambda_u247_u24lambda_u246.setOrientation(1);
+            TextView $this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u242 = new TextView($this$refresh_u24lambda_u247_u24lambda_u246.getContext());
+            String road = s.getRoad();
+            if (StringsKt.isBlank(road)) {
+                StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
+                tk = tk2;
+                String format = String.format(Locale.US, "%.5f, %.5f", Arrays.copyOf(new Object[]{Double.valueOf(s.getLat()), Double.valueOf(s.getLon())}, 2));
+                Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+                road = format;
+            } else {
+                tk = tk2;
             }
-         }), " · ", null, null, 0, null, new TakeoverSpotsView$$ExternalSyntheticLambda0(), 30, null);
-         String var20 = JournalPagesKt.access$getDayFmt$p().format(new Date(var11.getLastT()));
-         var19.setText(var21 + "  ·  last " + var20);
-         var19.setTextColor(CarUi.Companion.getDIM());
-         var19.setTextSize(15.0F);
-         var10.addView((View)var19);
-         var8.addView((View)var10, (LayoutParams)(new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F)));
-         var9.addView((View)var8);
-      }
-   }
+            $this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u242.setText(road);
+            $this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u242.setTextColor(CarUi.Companion.getTEXT());
+            $this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u242.setTextSize(19.0f);
+            $this$refresh_u24lambda_u247_u24lambda_u246.addView($this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u242);
+            TextView $this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u245 = new TextView($this$refresh_u24lambda_u247_u24lambda_u246.getContext());
+            Iterable $this$sortedByDescending$iv = s.getCauses().entrySet();
+            List spots2 = spots;
+            String joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.TakeoverSpotsView$refresh$lambda$7$lambda$6$lambda$5$$inlined$sortedByDescending$1
+                @Override // java.util.Comparator
+                public final int compare(T t, T t2) {
+                    Map.Entry it2 = (Map.Entry) t2;
+                    Integer num = (Integer) it2.getValue();
+                    Map.Entry it3 = (Map.Entry) t;
+                    return ComparisonsKt.compareValues(num, (Integer) it3.getValue());
+                }
+            }), " · ", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.TakeoverSpotsView$$ExternalSyntheticLambda0
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj) {
+                    CharSequence refresh$lambda$7$lambda$6$lambda$5$lambda$4;
+                    refresh$lambda$7$lambda$6$lambda$5$lambda$4 = TakeoverSpotsView.refresh$lambda$7$lambda$6$lambda$5$lambda$4((Map.Entry) obj);
+                    return refresh$lambda$7$lambda$6$lambda$5$lambda$4;
+                }
+            }, 30, null);
+            simpleDateFormat = JournalPagesKt.dayFmt;
+            $this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u245.setText(joinToString$default + "  ·  last " + simpleDateFormat.format(new Date(s.getLastT())));
+            $this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u245.setTextColor(CarUi.Companion.getDIM());
+            $this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u245.setTextSize(15.0f);
+            $this$refresh_u24lambda_u247_u24lambda_u246.addView($this$refresh_u24lambda_u247_u24lambda_u246_u24lambda_u245);
+            $this$refresh_u24lambda_u247.addView($this$refresh_u24lambda_u247_u24lambda_u246, new LinearLayout.LayoutParams(0, -2, 1.0f));
+            c.addView($this$refresh_u24lambda_u247);
+            takeoverSpotsView = this;
+            head = head;
+            spots = spots2;
+            it = it;
+            tk2 = tk;
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final CharSequence refresh$lambda$7$lambda$6$lambda$5$lambda$4(Map.Entry it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return it.getValue() + " " + it.getKey();
+    }
 }

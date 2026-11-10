@@ -1,6 +1,6 @@
 package com.starpilot.starview;
 
-import android.app.AlertDialog.Builder;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -10,12 +10,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.graphics.Paint.Align;
 import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.TextUtils.TruncateAt;
 import android.util.AttributeSet;
 import android.view.View;
+import com.starpilot.starview.SlowReason;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -25,410 +24,306 @@ import java.util.Locale;
 import kotlin.NoWhenBranchMatchedException;
 import kotlin.collections.CollectionsKt;
 import kotlin.io.FilesKt;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.StringCompanionObject;
 import kotlin.text.StringsKt;
 
+/* compiled from: SlowReasonView.kt */
 public final class SlowReasonView extends View {
-   public static final SlowReasonView.Companion Companion = new SlowReasonView.Companion(null);
-   private final Paint acc;
-   private final Paint bar;
-   private final Paint bg;
-   private final float d;
-   private final Paint sub;
-   public Telemetry t;
-   private final Paint title;
-   private final TextPaint tp;
+    public static final Companion Companion = new Companion(null);
+    private final Paint acc;
+    private final Paint bar;
+    private final Paint bg;
+    private final float d;
+    private final Paint sub;
+    public Telemetry t;
+    private final Paint title;
+    private final TextPaint tp;
 
-   // $VF: synthetic method
-   public static CharSequence $r8$lambda$99in1d_4Q33fAOdn_3SYv7mG8Xo(SimpleDateFormat var0, SlowReason.Event var1) {
-      return showHistory$lambda$7(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$TSzxY26FKpDdd7YQm_cJsqiCIAQ(SlowReasonView var0, View var1) {
-      _init_$lambda$5(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$rmJjO2dpy3rchO_ezpACqRKHqdI/* $VF was: $r8$lambda$rmJjO2dpy3rchO_ezpACqRKHqdI*/(
-      SlowReasonView var0, String var1, DialogInterface var2, int var3
-   ) {
-      showHistory$lambda$8(var0, var1, var2, var3);
-   }
-
-   public SlowReasonView(Context var1, AttributeSet var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      super(var1, var2);
-      this.d = this.getResources().getDisplayMetrics().density;
-      Paint var3 = new Paint(1);
-      var3.setColor(Color.argb(200, 0, 0, 0));
-      this.bg = var3;
-      this.bar = new Paint(1);
-      Paint var4 = new Paint(1);
-      var4.setColor(-1);
-      var4.setTypeface(Typeface.DEFAULT_BOLD);
-      var4.setTextSize(this.d * 21.0F);
-      this.title = var4;
-      Paint var5 = new Paint(1);
-      var5.setColor(Color.rgb(200, 208, 222));
-      var5.setTextSize(this.d * 15.0F);
-      this.sub = var5;
-      Paint var6 = new Paint(1);
-      var6.setColor(-1);
-      var6.setTypeface(Typeface.DEFAULT_BOLD);
-      var6.setTextSize(this.d * 17.0F);
-      var6.setTextAlign(Align.RIGHT);
-      this.acc = var6;
-      this.tp = new TextPaint(1);
-      this.setOnClickListener(new SlowReasonView$$ExternalSyntheticLambda0(this));
-   }
-
-   // $VF: synthetic method
-   public SlowReasonView(Context var1, AttributeSet var2, int var3, DefaultConstructorMarker var4) {
-      if ((var3 & 2) != 0) {
-         var2 = null;
-      }
-
-      this(var1, var2);
-   }
-
-   private static final void _init_$lambda$5(SlowReasonView var0, View var1) {
-      var0.showHistory();
-   }
-
-   private final void showHistory() {
-      if (this.t != null) {
-         SlowReason.Tracker var2 = this.getT().getSlow();
-         List var1;
-         synchronized (var2) {
-            var1 = CollectionsKt.toList(this.getT().getSlow().getHistory());
-         }
-
-         SimpleDateFormat var6 = new SimpleDateFormat("HH:mm:ss", Locale.US);
-         String var5;
-         if (var1.isEmpty()) {
-            var5 = "No braking by openpilot since StarView started.";
-         } else {
-            var5 = CollectionsKt.joinToString$default(var1, "\n\n", null, null, 0, null, new SlowReasonView$$ExternalSyntheticLambda1(var6), 30, null);
-         }
-
-         new Builder(this.getContext())
-            .setTitle("Why it slowed (newest first)")
-            .setMessage(var5)
-            .setPositiveButton("Close", null)
-            .setNeutralButton("Copy", new SlowReasonView$$ExternalSyntheticLambda2(this, var5))
-            .show();
-      }
-   }
-
-   private static final CharSequence showHistory$lambda$7(SimpleDateFormat var0, SlowReason.Event var1) {
-      Intrinsics.checkNotNullParameter(var1, "e");
-      return SlowReasonView.Companion.line$default(Companion, var1, var0, false, 4, null);
-   }
-
-   private static final void showHistory$lambda$8(SlowReasonView var0, String var1, DialogInterface var2, int var3) {
-      Object var4 = var0.getContext().getSystemService("clipboard");
-      Intrinsics.checkNotNull(var4, "null cannot be cast to non-null type android.content.ClipboardManager");
-      ((ClipboardManager)var4).setPrimaryClip(ClipData.newPlainText("StarView braking log", var1));
-   }
-
-   public final SlowReason.Out current() {
-      SlowReason.Out var1;
-      if (this.t == null) {
-         var1 = null;
-      } else {
-         SlowReason.Tracker var2 = this.getT().getSlow();
-         synchronized (var2) {
-            var1 = this.getT().getSlow().getShown();
-         }
-      }
-
-      return var1;
-   }
-
-   public final Telemetry getT() {
-      Telemetry var1 = this.t;
-      if (var1 != null) {
-         return var1;
-      } else {
-         Intrinsics.throwUninitializedPropertyAccessException("t");
-         return null;
-      }
-   }
-
-   protected void onDraw(Canvas var1) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      SlowReason.Out var10 = this.current();
-      if (var10 != null) {
-         float var5 = this.getWidth();
-         float var7 = this.getHeight();
-         float var3 = this.d * 16.0F;
-         float var2 = 0.0F;
-         var1.drawRoundRect(new RectF(0.0F, 0.0F, var5, var7), var3, var3, this.bg);
-         this.bar.setColor(Companion.color(var10.getKind()));
-         var1.drawRoundRect(new RectF(0.0F, 0.0F, this.d * 8.0F, var7), this.d * 4.0F, this.d * 4.0F, this.bar);
-         float var6 = this.d * 20.0F;
-         float var4 = Math.min(this.getT().getATarget(), this.getT().getActAccel());
-         boolean var8;
-         if (var4 <= -0.45F) {
-            var8 = 1;
-         } else {
-            var8 = 0;
-         }
-
-         if (var8) {
-            var2 = this.acc.measureText("−9.9 m/s²") + this.d * 12.0F;
-         }
-
-         if (var8) {
-            StringCompanionObject var11 = StringCompanionObject.INSTANCE;
-            String var19 = String.format(Locale.US, "%.1f m/s²", Arrays.copyOf(new Object[]{var4}, 1));
-            Intrinsics.checkNotNullExpressionValue(var19, "format(...)");
-            var1.drawText(StringsKt.replace$default(var19, "-", "−", false, 4, null), var5 - this.d * 14.0F, this.d * 32.0F, this.acc);
-         }
-
-         this.tp.set(this.title);
-         var1.drawText(
-            TextUtils.ellipsize(var10.getTitle(), this.tp, var5 - var6 - var2 - this.d * 14.0F, TruncateAt.END).toString(), var6, this.d * 32.0F, this.title
-         );
-         this.tp.set(this.sub);
-         List var12 = StringsKt.split$default(var10.getDetail(), new String[]{" "}, false, 0, 6, null);
-         String var20 = "";
-         var4 = this.d * 58.0F;
-         var8 = 0;
-
-         for (String var13 : var12) {
-            boolean var9;
-            if (var20.length() == 0) {
-               var9 = true;
-            } else {
-               var9 = false;
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public SlowReasonView(Context ctx, AttributeSet attrs) {
+        super(ctx, attrs);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        this.d = getResources().getDisplayMetrics().density;
+        Paint $this$bg_u24lambda_u240 = new Paint(1);
+        $this$bg_u24lambda_u240.setColor(Color.argb(200, 0, 0, 0));
+        this.bg = $this$bg_u24lambda_u240;
+        this.bar = new Paint(1);
+        Paint $this$title_u24lambda_u241 = new Paint(1);
+        $this$title_u24lambda_u241.setColor(-1);
+        $this$title_u24lambda_u241.setTypeface(Typeface.DEFAULT_BOLD);
+        $this$title_u24lambda_u241.setTextSize(this.d * 21.0f);
+        this.title = $this$title_u24lambda_u241;
+        Paint $this$sub_u24lambda_u242 = new Paint(1);
+        $this$sub_u24lambda_u242.setColor(Color.rgb(200, 208, 222));
+        $this$sub_u24lambda_u242.setTextSize(this.d * 15.0f);
+        this.sub = $this$sub_u24lambda_u242;
+        Paint $this$acc_u24lambda_u243 = new Paint(1);
+        $this$acc_u24lambda_u243.setColor(-1);
+        $this$acc_u24lambda_u243.setTypeface(Typeface.DEFAULT_BOLD);
+        $this$acc_u24lambda_u243.setTextSize(this.d * 17.0f);
+        $this$acc_u24lambda_u243.setTextAlign(Paint.Align.RIGHT);
+        this.acc = $this$acc_u24lambda_u243;
+        this.tp = new TextPaint(1);
+        setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.SlowReasonView$$ExternalSyntheticLambda0
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                SlowReasonView.this.showHistory();
             }
+        });
+    }
 
-            String var21;
-            if (var9) {
-               var21 = var13;
-            } else {
-               var21 = var20 + " " + var13;
-            }
+    public /* synthetic */ SlowReasonView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this(context, (i & 2) != 0 ? null : attributeSet);
+    }
 
-            if (this.sub.measureText(var21) > var5 - var6 - this.d * 14.0F) {
-               if (var20.length() > 0) {
-                  var9 = true;
-               } else {
-                  var9 = false;
-               }
+    public final Telemetry getT() {
+        Telemetry telemetry = this.t;
+        if (telemetry != null) {
+            return telemetry;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("t");
+        return null;
+    }
 
-               if (var9) {
-                  var1.drawText(var20, var6, var4, this.sub);
-                  var4 += this.d * 20.0F;
-                  var8++;
-                  var20 = var13;
-                  if (var8 == 1 && var4 > var7 - this.d * 6.0F) {
-                     return;
-                  }
-                  continue;
-               }
-            }
+    public final void setT(Telemetry telemetry) {
+        Intrinsics.checkNotNullParameter(telemetry, "<set-?>");
+        this.t = telemetry;
+    }
 
-            var20 = var21;
-         }
+    public final SlowReason.Out current() {
+        SlowReason.Out shown;
+        if (this.t == null) {
+            return null;
+        }
+        synchronized (getT().getSlow()) {
+            shown = getT().getSlow().getShown();
+        }
+        return shown;
+    }
 
-         boolean var17;
-         if (var20.length() > 0) {
-            var17 = true;
-         } else {
-            var17 = false;
-         }
-
-         if (var17 && var4 < var7) {
-            var1.drawText(TextUtils.ellipsize(var20, this.tp, var5 - var6 - this.d * 14.0F, TruncateAt.END).toString(), var6, var4, this.sub);
-         }
-      }
-   }
-
-   public final void setT(Telemetry var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.t = var1;
-   }
-
-   public static final class Companion {
-      private Companion() {
-      }
-
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
-
-      // $VF: synthetic method
-      public static String line$default(SlowReasonView.Companion var0, SlowReason.Event var1, SimpleDateFormat var2, boolean var3, int var4, Object var5) {
-         if ((var4 & 4) != 0) {
-            var3 = false;
-         }
-
-         return var0.line(var1, var2, var3);
-      }
-
-      public final int color(SlowReason.Kind var1) {
-         Intrinsics.checkNotNullParameter(var1, "k");
-         int var2;
-         switch (SlowReasonView.Companion.WhenMappings.$EnumSwitchMapping$0[var1.ordinal()]) {
-            case 1:
-               var2 = Color.rgb(230, 40, 50);
-               break;
-            case 2:
-               var2 = Color.rgb(255, 160, 40);
-               break;
-            case 3:
-               var2 = Color.rgb(170, 110, 255);
-               break;
-            case 4:
-               var2 = Color.rgb(230, 70, 70);
-               break;
-            case 5:
-               var2 = Color.rgb(60, 160, 255);
-               break;
-            case 6:
-               var2 = Color.rgb(240, 240, 240);
-               break;
-            case 7:
-            case 8:
-               var2 = Color.rgb(90, 200, 140);
-               break;
-            case 9:
-               var2 = Color.rgb(150, 160, 180);
-               break;
-            default:
-               throw new NoWhenBranchMatchedException();
-         }
-
-         return var2;
-      }
-
-      public final String line(SlowReason.Event var1, SimpleDateFormat var2, boolean var3) {
-         Intrinsics.checkNotNullParameter(var1, "e");
-         Intrinsics.checkNotNullParameter(var2, "fmt");
-         float var6;
-         if (var3) {
-            var6 = 3.6F;
-         } else {
-            var6 = 2.23694F;
-         }
-
-         String var9;
-         if (var3) {
-            var9 = "km/h";
-         } else {
-            var9 = "mph";
-         }
-
-         String var13 = var2.format(new Date(var1.getStartMs()));
-         int var8 = (int)(var1.getVStart() * var6);
-         int var7 = (int)(var1.getVEnd() * var6);
-         StringCompanionObject var10 = StringCompanionObject.INSTANCE;
-         String var14 = String.format(Locale.US, "%.1f", Arrays.copyOf(new Object[]{var1.getMinA()}, 1));
-         Intrinsics.checkNotNullExpressionValue(var14, "format(...)");
-         double var4 = (var1.getEndMs() - var1.getStartMs()) / 100 / 10.0;
-         String var11 = var1.getReason().getTitle();
-         String var12 = var1.getReason().getDetail();
-         return var13 + "  " + var8 + "→" + var7 + " " + var9 + ", hardest " + var14 + " m/s², " + var4 + " s\n" + var11 + " - " + var12;
-      }
-
-      // $VF: Duplicated exception handlers to handle obfuscated exceptions
-      public final void log(Context var1, SlowReason.Event var2) {
-         Intrinsics.checkNotNullParameter(var1, "ctx");
-         Intrinsics.checkNotNullParameter(var2, "e");
-
-         long var3;
-         File var5;
-         try {
-            var5 = new File(var1.getFilesDir(), "braking_log.txt");
-            var3 = var5.length();
-         } catch (Exception var9) {
+    @Override // android.view.View
+    protected void onDraw(Canvas c) {
+        SlowReason.Out r;
+        String next;
+        Intrinsics.checkNotNullParameter(c, "c");
+        SlowReason.Out r2 = current();
+        if (r2 == null) {
             return;
-         }
-
-         if (var3 > 1000000L) {
-            try {
-               String var6 = CollectionsKt.joinToString$default(
-                  CollectionsKt.takeLast(FilesKt.readLines$default(var5, null, 1, null), 2000), "\n", null, null, 0, null, null, 62, null
-               );
-               StringBuilder var10 = new StringBuilder();
-               FilesKt.writeText$default(var5, var10.append(var6).append("\n").toString(), null, 2, null);
-            } catch (Exception var8) {
-               return;
+        }
+        float w = getWidth();
+        float h = getHeight();
+        float rr = this.d * 16.0f;
+        c.drawRoundRect(new RectF(0.0f, 0.0f, w, h), rr, rr, this.bg);
+        this.bar.setColor(Companion.color(r2.getKind()));
+        c.drawRoundRect(new RectF(0.0f, 0.0f, this.d * 8.0f, h), this.d * 4.0f, this.d * 4.0f, this.bar);
+        float pad = this.d * 20.0f;
+        float a = Math.min(getT().getATarget(), getT().getActAccel());
+        boolean braking = a <= -0.45f;
+        float accW = braking ? this.acc.measureText("−9.9 m/s²") + (this.d * 12.0f) : 0.0f;
+        if (braking) {
+            StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
+            String format = String.format(Locale.US, "%.1f m/s²", Arrays.copyOf(new Object[]{Float.valueOf(a)}, 1));
+            Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+            c.drawText(StringsKt.replace$default(format, "-", "−", false, 4, (Object) null), w - (this.d * 14.0f), this.d * 32.0f, this.acc);
+        }
+        this.tp.set(this.title);
+        c.drawText(TextUtils.ellipsize(r2.getTitle(), this.tp, ((w - pad) - accW) - (this.d * 14.0f), TextUtils.TruncateAt.END).toString(), pad, this.d * 32.0f, this.title);
+        this.tp.set(this.sub);
+        List<String> words = StringsKt.split$default((CharSequence) r2.getDetail(), new String[]{" "}, false, 0, 6, (Object) null);
+        String line = "";
+        float y = this.d * 58.0f;
+        int lines = 0;
+        for (String wd : words) {
+            if (line.length() == 0) {
+                r = r2;
+                next = wd;
+            } else {
+                r = r2;
+                next = line + " " + wd;
             }
-         }
-
-         try {
-            SimpleDateFormat var11 = new SimpleDateFormat("yyyy-MM-dd ", Locale.US);
-            Date var14 = new Date(var2.getStartMs());
-            String var12 = var11.format(var14);
-            SimpleDateFormat var15 = new SimpleDateFormat("HH:mm:ss", Locale.US);
-            String var16 = StringsKt.replace$default(line$default(this, var2, var15, false, 4, null), "\n", " | ", false, 4, null);
-            StringBuilder var13 = new StringBuilder();
-            FilesKt.appendText$default(var5, var13.append(var12).append(var16).append("\n").toString(), null, 2, null);
-         } catch (Exception var7) {
-         }
-      }
-
-      // $VF: synthetic class
-      public final class WhenMappings {
-         public static final int[] $EnumSwitchMapping$0;
-
-         static {
-            int[] var0 = new int[SlowReason.Kind.values().length];
-
-            try {
-               var0[SlowReason.Kind.FCW.ordinal()] = 1;
-            } catch (NoSuchFieldError var10) {
+            float rr2 = rr;
+            float accW2 = accW;
+            if (this.sub.measureText(next) > (w - pad) - (this.d * 14.0f)) {
+                if (line.length() > 0) {
+                    c.drawText(line, pad, y, this.sub);
+                    y += this.d * 20.0f;
+                    lines++;
+                    line = wd;
+                    if (lines == 1 && y > h - (this.d * 6.0f)) {
+                        return;
+                    }
+                    r2 = r;
+                    rr = rr2;
+                    accW = accW2;
+                }
             }
+            line = next;
+            r2 = r;
+            rr = rr2;
+            accW = accW2;
+        }
+        if (!(line.length() > 0) || y >= h) {
+            return;
+        }
+        c.drawText(TextUtils.ellipsize(line, this.tp, (w - pad) - (this.d * 14.0f), TextUtils.TruncateAt.END).toString(), pad, y, this.sub);
+    }
 
-            try {
-               var0[SlowReason.Kind.LEAD.ordinal()] = 2;
-            } catch (NoSuchFieldError var9) {
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void showHistory() {
+        List list;
+        if (this.t == null) {
+            return;
+        }
+        synchronized (getT().getSlow()) {
+            list = CollectionsKt.toList(getT().getSlow().getHistory());
+        }
+        final SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        final String text = list.isEmpty() ? "No braking by openpilot since StarView started." : CollectionsKt.joinToString$default(list, "\n\n", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.SlowReasonView$$ExternalSyntheticLambda1
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                CharSequence showHistory$lambda$7;
+                showHistory$lambda$7 = SlowReasonView.showHistory$lambda$7(fmt, (SlowReason.Event) obj);
+                return showHistory$lambda$7;
             }
-
-            try {
-               var0[SlowReason.Kind.MODEL.ordinal()] = 3;
-            } catch (NoSuchFieldError var8) {
+        }, 30, null);
+        new AlertDialog.Builder(getContext()).setTitle("Why it slowed (newest first)").setMessage(text).setPositiveButton("Close", (DialogInterface.OnClickListener) null).setNeutralButton("Copy", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.SlowReasonView$$ExternalSyntheticLambda2
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                SlowReasonView.showHistory$lambda$8(SlowReasonView.this, text, dialogInterface, i);
             }
+        }).show();
+    }
 
-            try {
-               var0[SlowReason.Kind.STOP.ordinal()] = 4;
-            } catch (NoSuchFieldError var7) {
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final CharSequence showHistory$lambda$7(SimpleDateFormat $fmt, SlowReason.Event e) {
+        Intrinsics.checkNotNullParameter(e, "e");
+        return Companion.line$default(Companion, e, $fmt, false, 4, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void showHistory$lambda$8(SlowReasonView this$0, String $text, DialogInterface dialogInterface, int i) {
+        Object systemService = this$0.getContext().getSystemService("clipboard");
+        Intrinsics.checkNotNull(systemService, "null cannot be cast to non-null type android.content.ClipboardManager");
+        ClipboardManager cm = (ClipboardManager) systemService;
+        cm.setPrimaryClip(ClipData.newPlainText("StarView braking log", $text));
+    }
+
+    /* compiled from: SlowReasonView.kt */
+    public static final class Companion {
+
+        /* compiled from: SlowReasonView.kt */
+        public /* synthetic */ class WhenMappings {
+            public static final /* synthetic */ int[] $EnumSwitchMapping$0;
+
+            static {
+                int[] iArr = new int[SlowReason.Kind.values().length];
+                try {
+                    iArr[SlowReason.Kind.FCW.ordinal()] = 1;
+                } catch (NoSuchFieldError e) {
+                }
+                try {
+                    iArr[SlowReason.Kind.LEAD.ordinal()] = 2;
+                } catch (NoSuchFieldError e2) {
+                }
+                try {
+                    iArr[SlowReason.Kind.MODEL.ordinal()] = 3;
+                } catch (NoSuchFieldError e3) {
+                }
+                try {
+                    iArr[SlowReason.Kind.STOP.ordinal()] = 4;
+                } catch (NoSuchFieldError e4) {
+                }
+                try {
+                    iArr[SlowReason.Kind.CURVE.ordinal()] = 5;
+                } catch (NoSuchFieldError e5) {
+                }
+                try {
+                    iArr[SlowReason.Kind.LIMIT.ordinal()] = 6;
+                } catch (NoSuchFieldError e6) {
+                }
+                try {
+                    iArr[SlowReason.Kind.TARGET.ordinal()] = 7;
+                } catch (NoSuchFieldError e7) {
+                }
+                try {
+                    iArr[SlowReason.Kind.COAST.ordinal()] = 8;
+                } catch (NoSuchFieldError e8) {
+                }
+                try {
+                    iArr[SlowReason.Kind.OTHER.ordinal()] = 9;
+                } catch (NoSuchFieldError e9) {
+                }
+                $EnumSwitchMapping$0 = iArr;
             }
+        }
 
-            try {
-               var0[SlowReason.Kind.CURVE.ordinal()] = 5;
-            } catch (NoSuchFieldError var6) {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
+
+        private Companion() {
+        }
+
+        public final int color(SlowReason.Kind k) {
+            Intrinsics.checkNotNullParameter(k, "k");
+            switch (WhenMappings.$EnumSwitchMapping$0[k.ordinal()]) {
+                case 1:
+                    return Color.rgb(230, 40, 50);
+                case 2:
+                    return Color.rgb(255, 160, 40);
+                case 3:
+                    return Color.rgb(170, 110, 255);
+                case 4:
+                    return Color.rgb(230, 70, 70);
+                case 5:
+                    return Color.rgb(60, 160, 255);
+                case 6:
+                    return Color.rgb(240, 240, 240);
+                case 7:
+                case 8:
+                    return Color.rgb(90, 200, 140);
+                case 9:
+                    return Color.rgb(150, 160, 180);
+                default:
+                    throw new NoWhenBranchMatchedException();
             }
+        }
 
-            try {
-               var0[SlowReason.Kind.LIMIT.ordinal()] = 6;
-            } catch (NoSuchFieldError var5) {
+        public static /* synthetic */ String line$default(Companion companion, SlowReason.Event event, SimpleDateFormat simpleDateFormat, boolean z, int i, Object obj) {
+            if ((i & 4) != 0) {
+                z = false;
             }
+            return companion.line(event, simpleDateFormat, z);
+        }
 
+        public final String line(SlowReason.Event e, SimpleDateFormat fmt, boolean metric) {
+            Intrinsics.checkNotNullParameter(e, "e");
+            Intrinsics.checkNotNullParameter(fmt, "fmt");
+            float f = metric ? 3.6f : 2.23694f;
+            String u = metric ? "km/h" : "mph";
+            String format = fmt.format(new Date(e.getStartMs()));
+            int vStart = (int) (e.getVStart() * f);
+            int vEnd = (int) (e.getVEnd() * f);
+            StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
+            String format2 = String.format(Locale.US, "%.1f", Arrays.copyOf(new Object[]{Float.valueOf(e.getMinA())}, 1));
+            Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
+            return format + "  " + vStart + "→" + vEnd + " " + u + ", hardest " + format2 + " m/s², " + (((e.getEndMs() - e.getStartMs()) / 100) / 10.0d) + " s\n" + e.getReason().getTitle() + " - " + e.getReason().getDetail();
+        }
+
+        public final void log(Context ctx, SlowReason.Event e) {
+            Intrinsics.checkNotNullParameter(ctx, "ctx");
+            Intrinsics.checkNotNullParameter(e, "e");
             try {
-               var0[SlowReason.Kind.TARGET.ordinal()] = 7;
-            } catch (NoSuchFieldError var4) {
+                File f = new File(ctx.getFilesDir(), "braking_log.txt");
+                if (f.length() > 1000000) {
+                    FilesKt.writeText$default(f, CollectionsKt.joinToString$default(CollectionsKt.takeLast(FilesKt.readLines$default(f, null, 1, null), 2000), "\n", null, null, 0, null, null, 62, null) + "\n", null, 2, null);
+                }
+                FilesKt.appendText$default(f, new SimpleDateFormat("yyyy-MM-dd ", Locale.US).format(new Date(e.getStartMs())) + StringsKt.replace$default(line$default(this, e, new SimpleDateFormat("HH:mm:ss", Locale.US), false, 4, null), "\n", " | ", false, 4, (Object) null) + "\n", null, 2, null);
+            } catch (Exception e2) {
             }
-
-            try {
-               var0[SlowReason.Kind.COAST.ordinal()] = 8;
-            } catch (NoSuchFieldError var3) {
-            }
-
-            try {
-               var0[SlowReason.Kind.OTHER.ordinal()] = 9;
-            } catch (NoSuchFieldError var2) {
-            }
-
-            $EnumSwitchMapping$0 = var0;
-         }
-      }
-   }
+        }
+    }
 }

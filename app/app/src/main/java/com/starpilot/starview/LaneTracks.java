@@ -1,5 +1,7 @@
 package com.starpilot.starview;
 
+import com.starpilot.starview.LaneMarks;
+import com.starpilot.starview.LaneTracks;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,925 +21,712 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 import kotlin.reflect.KFunction;
 
+/* compiled from: LaneTracks.kt */
 public final class LaneTracks {
-   public static final LaneTracks.Companion Companion = new LaneTracks.Companion(null);
-   public static final float HIGH_EFFORT = 0.65F;
-   public static final long MARK_HOLD_MS = 4000L;
-   public static final float MATCH_M = 1.5F;
-   public static final float MAX_LAT_ACCEL = 3.0F;
-   private static final int ORANGE = -34786;
-   public static final float OUTER_LINE_PROB = 0.3F;
-   private static final int RED = -1364701;
-   private boolean approaching;
-   private float changeAlpha;
-   private int changeDir;
-   private boolean crossed;
-   private float effort;
-   private float laneWidth;
-   private long lastFrame;
-   private final ArrayList<LaneTracks.Line> lines;
-   private LaneTracks.Line refAhead;
-   private LaneTracks.Line refLeft;
-   private LaneTracks.Line refRight;
-   private final float smoothRc;
+    public static final Companion Companion = new Companion(null);
+    public static final float HIGH_EFFORT = 0.65f;
+    public static final long MARK_HOLD_MS = 4000;
+    public static final float MATCH_M = 1.5f;
+    public static final float MAX_LAT_ACCEL = 3.0f;
+    private static final int ORANGE = -34786;
+    public static final float OUTER_LINE_PROB = 0.3f;
+    private static final int RED = -1364701;
+    private boolean approaching;
+    private float changeAlpha;
+    private int changeDir;
+    private boolean crossed;
+    private float effort;
+    private float laneWidth;
+    private long lastFrame;
+    private final ArrayList<Line> lines;
+    private Line refAhead;
+    private Line refLeft;
+    private Line refRight;
+    private final float smoothRc;
 
-   // $VF: synthetic method
-   public static float[] $r8$lambda$CYZDaP1CfyyCTqPKhxJjXKnvn0g(LaneTracks.Line var0) {
-      return targetCenter$lambda$11(var0);
-   }
+    public LaneTracks() {
+        this(0.0f, 1, null);
+    }
 
-   // $VF: synthetic method
-   public static boolean $r8$lambda$kkuIaK_Zo38UEFqx3FXMQPM9gCk(LaneTracks.Line var0) {
-      return update$lambda$5(var0);
-   }
+    /* compiled from: LaneTracks.kt */
+    public static final class Line {
+        private float alpha;
+        private LaneMarks.Mark mark;
+        private long markMs;
+        private boolean on;
+        private float prob;
+        private boolean seen;
+        private int slot;
+        private float[] x;
+        private float[] y;
+        private float[] z;
 
-   public LaneTracks() {
-      this(0.0F, 1, null);
-   }
+        public Line(float[] x, float[] y, float[] z) {
+            Intrinsics.checkNotNullParameter(x, "x");
+            Intrinsics.checkNotNullParameter(y, "y");
+            Intrinsics.checkNotNullParameter(z, "z");
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.seen = true;
+            this.slot = -1;
+        }
 
-   public LaneTracks(float var1) {
-      this.smoothRc = var1;
-      this.lines = new ArrayList<>();
-      this.lastFrame = -1L;
-      this.laneWidth = 3.5F;
-   }
+        public final float[] getX() {
+            return this.x;
+        }
 
-   // $VF: synthetic method
-   public LaneTracks(float var1, int var2, DefaultConstructorMarker var3) {
-      if ((var2 & 1) != 0) {
-         var1 = 0.25F;
-      }
+        public final float[] getY() {
+            return this.y;
+        }
 
-      this(var1);
-   }
+        public final float[] getZ() {
+            return this.z;
+        }
 
-   private static final float targetCenter$at(Function1<? super LaneTracks.Line, float[]> var0, float var1, LaneTracks.Line var2) {
-      float[] var5 = (float[])var0.invoke(var2);
-      float[] var4 = var2.getX();
-      if (var4.length >= 2 && var5.length == var4.length) {
-         int var3 = 1;
+        public final void setX(float[] fArr) {
+            Intrinsics.checkNotNullParameter(fArr, "<set-?>");
+            this.x = fArr;
+        }
 
-         while (var3 < var4.length - 1 && var4[var3] < var1) {
-            var3++;
-         }
+        public final void setY(float[] fArr) {
+            Intrinsics.checkNotNullParameter(fArr, "<set-?>");
+            this.y = fArr;
+        }
 
-         var1 = RangesKt.coerceIn((var1 - var4[var3 - 1]) / Math.max(0.01F, var4[var3] - var4[var3 - 1]), 0.0F, 1.0F);
-         return var5[var3 - 1] + (var5[var3] - var5[var3 - 1]) * var1;
-      } else {
-         return var2.at(var1);
-      }
-   }
+        public final void setZ(float[] fArr) {
+            Intrinsics.checkNotNullParameter(fArr, "<set-?>");
+            this.z = fArr;
+        }
 
-   // $VF: synthetic method
-   public static float targetCenter$default(LaneTracks var0, float var1, Function1 var2, int var3, Object var4) {
-      if ((var3 & 2) != 0) {
-         var2 = new LaneTracks$$ExternalSyntheticLambda1();
-      }
+        public final float getAlpha() {
+            return this.alpha;
+        }
 
-      return var0.targetCenter(var1, (Function1<? super LaneTracks.Line, float[]>)var2);
-   }
+        public final boolean getOn() {
+            return this.on;
+        }
 
-   private static final float[] targetCenter$lambda$11(LaneTracks.Line var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      return var0.getY();
-   }
+        public final float getProb() {
+            return this.prob;
+        }
 
-   // $VF: synthetic method
-   public static void update$default(
-      LaneTracks var0, ModelSnapshot var1, Telemetry var2, float var3, boolean var4, LaneMarks.Mark[] var5, int var6, Object var7
-   ) {
-      if ((var6 & 16) != 0) {
-         var5 = null;
-      }
+        public final boolean getSeen() {
+            return this.seen;
+        }
 
-      var0.update(var1, var2, var3, var4, var5);
-   }
+        public final void setAlpha(float f) {
+            this.alpha = f;
+        }
 
-   private static final boolean update$lambda$5(LaneTracks.Line var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      boolean var1;
-      if (!var0.getSeen() && var0.getAlpha() < 0.02F) {
-         var1 = true;
-      } else {
-         var1 = false;
-      }
+        public final void setOn(boolean z) {
+            this.on = z;
+        }
 
-      return var1;
-   }
+        public final void setProb(float f) {
+            this.prob = f;
+        }
 
-   private final void updateLaneChange(ModelSnapshot var1, float var2) {
-      boolean var7 = var1.getLaneChanging();
-      boolean var8 = true;
-      boolean var5;
-      if (var7 && var1.getLaneChangeDir() != 0) {
-         var5 = true;
-      } else {
-         var5 = false;
-      }
+        public final void setSeen(boolean z) {
+            this.seen = z;
+        }
 
-      float var4 = this.changeAlpha;
-      float var3;
-      if (var5) {
-         var3 = 1.0F;
-      } else {
-         var3 = 0.0F;
-      }
+        public final int getSlot() {
+            return this.slot;
+        }
 
-      this.changeAlpha = var4 + (var3 - this.changeAlpha) * var2;
-      Iterable var10 = this.lines;
-      var var9 = new ArrayList();
+        public final void setSlot(int i) {
+            this.slot = i;
+        }
 
-      for (Object var11 : var10) {
-         LaneTracks.Line var35 = (LaneTracks.Line)var11;
-         boolean var6;
-         if (var35.getSeen() && var35.getY0() < 0.0F) {
-            var6 = true;
-         } else {
-            var6 = false;
-         }
+        public final LaneMarks.Mark getMark() {
+            return this.mark;
+        }
 
-         if (var6) {
-            var9.add(var11);
-         }
-      }
+        public final long getMarkMs() {
+            return this.markMs;
+        }
 
-      List var28 = var9;
-      Iterator var13 = var28.iterator();
-      var7 = var13.hasNext();
-      Object var40 = null;
-      Object var29;
-      if (!var7) {
-         var29 = null;
-      } else {
-         var29 = (Collection)var13.next();
-         if (var13.hasNext()) {
-            var2 = ((LaneTracks.Line)var29).getY0();
-            var10 = var29;
+        public final void setMark(LaneMarks.Mark mark) {
+            this.mark = mark;
+        }
 
-            do {
-               Object var42 = var13.next();
-               var4 = ((LaneTracks.Line)var42).getY0();
-               var29 = var10;
-               var3 = var2;
-               if (Float.compare(var2, var4) < 0) {
-                  var29 = (Collection)var42;
-                  var3 = var4;
-               }
+        public final void setMarkMs(long j) {
+            this.markMs = j;
+        }
 
-               var10 = var29;
-               var2 = var3;
-            } while (var13.hasNext());
-         }
-      }
+        public final float getY0() {
+            return at(5.0f);
+        }
 
-      LaneTracks.Line var43 = (LaneTracks.Line)var29;
-      var10 = this.lines;
-      var29 = new ArrayList();
+        public final float at(float xq) {
+            if (this.x.length == 0) {
+                return 0.0f;
+            }
+            int j = 1;
+            while (j < this.x.length - 1 && this.x[j] < xq) {
+                j++;
+            }
+            if (this.x.length < 2) {
+                return this.y[0];
+            }
+            float f = RangesKt.coerceIn((xq - this.x[j - 1]) / Math.max(0.01f, this.x[j] - this.x[j - 1]), 0.0f, 1.0f);
+            return this.y[j - 1] + ((this.y[j] - this.y[j - 1]) * f);
+        }
+    }
 
-      for (Object var14 : var10) {
-         LaneTracks.Line var44 = (LaneTracks.Line)var14;
-         boolean var24;
-         if (var44.getSeen() && var44.getY0() >= 0.0F) {
-            var24 = true;
-         } else {
-            var24 = false;
-         }
+    public LaneTracks(float smoothRc) {
+        this.smoothRc = smoothRc;
+        this.lines = new ArrayList<>();
+        this.lastFrame = -1L;
+        this.laneWidth = 3.5f;
+    }
 
-         if (var24) {
-            var29.add(var14);
-         }
-      }
+    public /* synthetic */ LaneTracks(float f, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this((i & 1) != 0 ? 0.25f : f);
+    }
 
-      List var31 = (List)var29;
-      var13 = var31.iterator();
-      if (!var13.hasNext()) {
-         var29 = (Collection)var40;
-      } else {
-         var29 = (Collection)var13.next();
-         if (var13.hasNext()) {
-            var2 = ((LaneTracks.Line)var29).getY0();
-            var10 = var29;
+    public final ArrayList<Line> getLines() {
+        return this.lines;
+    }
 
-            do {
-               var40 = var13.next();
-               var4 = ((LaneTracks.Line)var40).getY0();
-               var3 = var2;
-               var29 = var10;
-               if (Float.compare(var2, var4) > 0) {
-                  var3 = var4;
-                  var29 = (Collection)var40;
-               }
+    public final float getEffort() {
+        return this.effort;
+    }
 
-               var2 = var3;
-               var10 = var29;
-            } while (var13.hasNext());
-         }
-      }
+    public static /* synthetic */ void update$default(LaneTracks laneTracks, ModelSnapshot modelSnapshot, Telemetry telemetry, float f, boolean z, LaneMarks.Mark[] markArr, int i, Object obj) {
+        if ((i & 16) != 0) {
+            markArr = null;
+        }
+        laneTracks.update(modelSnapshot, telemetry, f, z, markArr);
+    }
 
-      LaneTracks.Line var33 = (LaneTracks.Line)var29;
-      if (var43 != null && var33 != null) {
-         this.refLeft = var43;
-         this.refRight = var33;
-         if (!var5) {
+    /* JADX WARN: Code restructure failed: missing block: B:133:0x02f7, code lost:
+    
+        r6 = true;
+     */
+    /* JADX WARN: Removed duplicated region for block: B:124:0x0308  */
+    /* JADX WARN: Removed duplicated region for block: B:127:0x0322  */
+    /* JADX WARN: Removed duplicated region for block: B:130:0x0324  */
+    /* JADX WARN: Removed duplicated region for block: B:132:0x0319  */
+    /* JADX WARN: Removed duplicated region for block: B:72:0x0257  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final void update(ModelSnapshot m, Telemetry t, float dt, boolean smooth, LaneMarks.Mark[] marks) {
+        boolean z;
+        float f;
+        int i;
+        Object next;
+        Line line;
+        Line line2;
+        LaneMarks.Mark mark;
+        Intrinsics.checkNotNullParameter(m, "m");
+        Intrinsics.checkNotNullParameter(t, "t");
+        if (m.getFrameId() == this.lastFrame) {
+            return;
+        }
+        this.lastFrame = m.getFrameId();
+        float coerceIn = RangesKt.coerceIn(dt / (this.smoothRc + dt), 0.0f, 1.0f);
+        float f2 = !smooth ? 1.0f : t.getVEgo() < 0.5f ? 0.0f : t.getVEgo() < 3.0f ? 0.3f * coerceIn : coerceIn;
+        Iterator<Line> it = this.lines.iterator();
+        Intrinsics.checkNotNullExpressionValue(it, "iterator(...)");
+        while (it.hasNext()) {
+            Line next2 = it.next();
+            Intrinsics.checkNotNullExpressionValue(next2, "next(...)");
+            Line line3 = next2;
+            line3.setSeen(false);
+            line3.setSlot(-1);
+        }
+        long currentTimeMillis = System.currentTimeMillis();
+        int i2 = 0;
+        int i3 = 4;
+        int min = Math.min(4, m.getLaneX().length);
+        while (true) {
+            if (i2 >= min) {
+                break;
+            }
+            float[] fArr = m.getLaneX()[i2];
+            if (fArr.length < 2) {
+                f = f2;
+                i = min;
+            } else if (i2 >= m.getLaneY().length) {
+                f = f2;
+                i = min;
+            } else {
+                float[] laneProb = m.getLaneProb();
+                float f3 = i2 >= 0 && i2 < laneProb.length ? laneProb[i2] : 0.0f;
+                i = min;
+                if (m.getLaneX().length != i3 || (!(i2 == 0 || i2 == 3) || Companion.roadThere(m, i2, f3))) {
+                    float[] fArr2 = m.getLaneY()[i2];
+                    float[][] laneZ = m.getLaneZ();
+                    Line line4 = new Line(fArr, fArr2, i2 >= 0 && i2 < laneZ.length ? laneZ[i2] : new float[fArr.length]);
+                    float y0 = line4.getY0();
+                    ArrayList<Line> arrayList = this.lines;
+                    ArrayList arrayList2 = new ArrayList();
+                    for (Object obj : arrayList) {
+                        ArrayList<Line> arrayList3 = arrayList;
+                        if (!((Line) obj).getSeen()) {
+                            arrayList2.add(obj);
+                        }
+                        arrayList = arrayList3;
+                    }
+                    int i4 = 0;
+                    Iterator it2 = arrayList2.iterator();
+                    if (it2.hasNext()) {
+                        next = it2.next();
+                        if (it2.hasNext()) {
+                            float abs = Math.abs(((Line) next).getY0() - y0);
+                            while (true) {
+                                Object next3 = it2.next();
+                                float abs2 = Math.abs(((Line) next3).getY0() - y0);
+                                int i5 = i4;
+                                if (Float.compare(abs, abs2) > 0) {
+                                    next = next3;
+                                    abs = abs2;
+                                }
+                                if (!it2.hasNext()) {
+                                    break;
+                                }
+                                y0 = y0;
+                                i4 = i5;
+                                line4 = line4;
+                            }
+                        }
+                    } else {
+                        next = null;
+                    }
+                    Line line5 = (Line) next;
+                    if (line5 != null && Math.abs(line5.getY0() - y0) < 1.5f) {
+                        if (line5.getY().length == line4.getY().length) {
+                            int length = line5.getY().length;
+                            for (int i6 = 0; i6 < length; i6++) {
+                                float[] y = line5.getY();
+                                y[i6] = y[i6] + ((line4.getY()[i6] - line5.getY()[i6]) * f2);
+                                float[] z2 = line5.getZ();
+                                z2[i6] = z2[i6] + ((line4.getZ()[i6] - line5.getZ()[i6]) * f2);
+                            }
+                            line5.setX(fArr);
+                            line = line5;
+                            f = f2;
+                            line2 = line;
+                            line2.setSeen(true);
+                            line2.setSlot(i2);
+                            line2.setProb(line2.getProb() + ((f3 - line2.getProb()) * coerceIn));
+                            mark = marks != null ? (LaneMarks.Mark) ArraysKt.getOrNull(marks, i2) : null;
+                            if (mark == null && (mark.getKind() == 2 || mark.getKind() == 3)) {
+                                line2.setMark(mark);
+                                line2.setMarkMs(currentTimeMillis);
+                            } else if (mark != null && mark.getKind() == 1 && currentTimeMillis - line2.getMarkMs() > 4000) {
+                                line2.setMark(mark);
+                                line2.setMarkMs(currentTimeMillis);
+                            }
+                        }
+                    }
+                    float[] y2 = line4.getY();
+                    float[] copyOf = Arrays.copyOf(y2, y2.length);
+                    Intrinsics.checkNotNullExpressionValue(copyOf, "copyOf(...)");
+                    f = f2;
+                    float[] z3 = line4.getZ();
+                    float[] copyOf2 = Arrays.copyOf(z3, z3.length);
+                    Intrinsics.checkNotNullExpressionValue(copyOf2, "copyOf(...)");
+                    line = new Line(fArr, copyOf, copyOf2);
+                    this.lines.add(line);
+                    line2 = line;
+                    line2.setSeen(true);
+                    line2.setSlot(i2);
+                    line2.setProb(line2.getProb() + ((f3 - line2.getProb()) * coerceIn));
+                    mark = marks != null ? (LaneMarks.Mark) ArraysKt.getOrNull(marks, i2) : null;
+                    if (mark == null) {
+                    }
+                    if (mark != null) {
+                        line2.setMark(mark);
+                        line2.setMarkMs(currentTimeMillis);
+                    }
+                } else {
+                    f = f2;
+                }
+            }
+            i2++;
+            min = i;
+            f2 = f;
+            i3 = 4;
+        }
+        Iterator<Line> it3 = this.lines.iterator();
+        Intrinsics.checkNotNullExpressionValue(it3, "iterator(...)");
+        while (it3.hasNext()) {
+            Line next4 = it3.next();
+            Intrinsics.checkNotNullExpressionValue(next4, "next(...)");
+            Line line6 = next4;
+            if (line6.getSeen()) {
+                boolean z4 = line6.getOn() ? false : false;
+                if (z4) {
+                    z = true;
+                    line6.setOn(z);
+                    float coerceIn2 = !line6.getOn() ? RangesKt.coerceIn(line6.getProb() * 2.0f, 0.4f, 1.0f) : 0.0f;
+                    line6.setAlpha(line6.getAlpha() + ((coerceIn2 - line6.getAlpha()) * (coerceIn2 <= line6.getAlpha() ? coerceIn : dt / (dt + 1.0f))));
+                }
+            }
+            z = false;
+            line6.setOn(z);
+            if (!line6.getOn()) {
+            }
+            line6.setAlpha(line6.getAlpha() + ((coerceIn2 - line6.getAlpha()) * (coerceIn2 <= line6.getAlpha() ? coerceIn : dt / (dt + 1.0f))));
+        }
+        CollectionsKt.removeAll((List) this.lines, new Function1() { // from class: com.starpilot.starview.LaneTracks$$ExternalSyntheticLambda0
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj2) {
+                boolean update$lambda$5;
+                update$lambda$5 = LaneTracks.update$lambda$5((LaneTracks.Line) obj2);
+                return Boolean.valueOf(update$lambda$5);
+            }
+        });
+        updateLaneChange(m, coerceIn);
+        Float valueOf = Float.valueOf(m.getModelDesiredCurvature());
+        Float f4 = (valueOf.floatValue() > 0.0f ? 1 : (valueOf.floatValue() == 0.0f ? 0 : -1)) == 0 ? null : valueOf;
+        this.effort += ((Companion.pathState(t) == PathState.ENGAGED ? RangesKt.coerceIn(Math.max(Math.abs(t.getOutTorque()), ((Math.abs(f4 != null ? f4.floatValue() : t.getDesiredCurvature()) * t.getVEgo()) * t.getVEgo()) / 3.0f), 0.0f, 1.0f) : 0.0f) - this.effort) * coerceIn;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean update$lambda$5(Line it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return !it.getSeen() && it.getAlpha() < 0.02f;
+    }
+
+    public final float getChangeAlpha() {
+        return this.changeAlpha;
+    }
+
+    public final int getChangeDir() {
+        return this.changeDir;
+    }
+
+    public final boolean getCrossed() {
+        return this.crossed;
+    }
+
+    public final float getLaneWidth() {
+        return this.laneWidth;
+    }
+
+    private final void updateLaneChange(ModelSnapshot m, float k) {
+        Object maxElem$iv;
+        boolean z = true;
+        boolean changing = m.getLaneChanging() && m.getLaneChangeDir() != 0;
+        this.changeAlpha += ((changing ? 1.0f : 0.0f) - this.changeAlpha) * k;
+        Iterable $this$filter$iv = this.lines;
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            Line it = (Line) element$iv$iv;
+            Line it2 = (!it.getSeen() || it.getY0() >= 0.0f) ? null : 1;
+            if (it2 != null) {
+                destination$iv$iv.add(element$iv$iv);
+            }
+        }
+        Iterable $this$maxByOrNull$iv = (List) destination$iv$iv;
+        Iterator iterator$iv = $this$maxByOrNull$iv.iterator();
+        Object minElem$iv = null;
+        if (iterator$iv.hasNext()) {
+            maxElem$iv = iterator$iv.next();
+            if (iterator$iv.hasNext()) {
+                Line it3 = (Line) maxElem$iv;
+                float maxValue$iv = it3.getY0();
+                do {
+                    Object e$iv = iterator$iv.next();
+                    Line it4 = (Line) e$iv;
+                    float v$iv = it4.getY0();
+                    if (Float.compare(maxValue$iv, v$iv) < 0) {
+                        maxElem$iv = e$iv;
+                        maxValue$iv = v$iv;
+                    }
+                } while (iterator$iv.hasNext());
+            }
+        } else {
+            maxElem$iv = null;
+        }
+        Line left = (Line) maxElem$iv;
+        Iterable $this$filter$iv2 = this.lines;
+        Collection destination$iv$iv2 = new ArrayList();
+        for (Object element$iv$iv2 : $this$filter$iv2) {
+            Line it5 = (Line) element$iv$iv2;
+            Line it6 = (!it5.getSeen() || it5.getY0() < 0.0f) ? null : 1;
+            if (it6 != null) {
+                destination$iv$iv2.add(element$iv$iv2);
+            }
+        }
+        Iterable $this$minByOrNull$iv = (List) destination$iv$iv2;
+        Iterator iterator$iv2 = $this$minByOrNull$iv.iterator();
+        if (iterator$iv2.hasNext()) {
+            minElem$iv = iterator$iv2.next();
+            if (iterator$iv2.hasNext()) {
+                Line it7 = (Line) minElem$iv;
+                float minValue$iv = it7.getY0();
+                do {
+                    Object e$iv2 = iterator$iv2.next();
+                    Line it8 = (Line) e$iv2;
+                    float v$iv2 = it8.getY0();
+                    if (Float.compare(minValue$iv, v$iv2) > 0) {
+                        minValue$iv = v$iv2;
+                        minElem$iv = e$iv2;
+                    }
+                } while (iterator$iv2.hasNext());
+            }
+        }
+        Line right = (Line) minElem$iv;
+        if (left == null || right == null) {
+            return;
+        }
+        this.refLeft = left;
+        this.refRight = right;
+        if (!changing) {
             this.approaching = false;
             this.crossed = false;
-            this.laneWidth = RangesKt.coerceIn(var33.getY0() - var43.getY0(), 2.5F, 4.5F);
-         } else {
-            this.changeDir = var1.getLaneChangeDir();
-            Pair var15;
-            if (this.changeDir < 0) {
-               var15 = TuplesKt.to(var43, var33);
-            } else {
-               var15 = TuplesKt.to(var33, var43);
-            }
-
-            LaneTracks.Line var34 = (LaneTracks.Line)var15.component1();
-            LaneTracks.Line var16 = (LaneTracks.Line)var15.component2();
-            if (Math.abs(var34.getY0()) < Math.abs(var16.getY0())) {
-               var5 = true;
-            } else {
-               var5 = false;
-            }
-
-            if (this.crossed || this.approaching && !var5) {
-               var7 = true;
-            } else {
-               var7 = false;
-            }
-
-            this.crossed = var7;
-            var7 = var8;
-            if (!this.approaching) {
-               if (var5) {
-                  var7 = var8;
-               } else {
-                  var7 = false;
-               }
-            }
-
-            this.approaching = var7;
-            this.refAhead = var34;
-         }
-      }
-   }
-
-   public final float getChangeAlpha() {
-      return this.changeAlpha;
-   }
-
-   public final int getChangeDir() {
-      return this.changeDir;
-   }
-
-   public final boolean getCrossed() {
-      return this.crossed;
-   }
-
-   public final float getEffort() {
-      return this.effort;
-   }
-
-   public final float getLaneWidth() {
-      return this.laneWidth;
-   }
-
-   public final ArrayList<LaneTracks.Line> getLines() {
-      return this.lines;
-   }
-
-   public final Triple<LaneTracks.Line, LaneTracks.Line, LaneTracks.Line> inner() {
-      Iterable var7 = this.lines;
-      var var6 = new ArrayList();
-      Iterator var26 = var7.iterator();
-
-      while (true) {
-         boolean var5 = var26.hasNext();
-         boolean var4 = true;
-         if (!var5) {
-            List var20 = var6;
-            Iterator var10 = var20.iterator();
-            var5 = var10.hasNext();
-            Object var32 = null;
-            Object var21;
-            if (!var5) {
-               var21 = null;
-            } else {
-               var21 = (Collection)var10.next();
-               if (var10.hasNext()) {
-                  float var1 = ((LaneTracks.Line)var21).getY0();
-                  Object var27 = var21;
-
-                  do {
-                     Object var34 = var10.next();
-                     float var3 = ((LaneTracks.Line)var34).getY0();
-                     var21 = (Collection)var27;
-                     float var2 = var1;
-                     if (Float.compare(var1, var3) < 0) {
-                        var21 = (Collection)var34;
-                        var2 = var3;
-                     }
-
-                     var27 = var21;
-                     var1 = var2;
-                  } while (var10.hasNext());
-               }
-            }
-
-            LaneTracks.Line var38 = (LaneTracks.Line)var21;
-            var7 = this.lines;
-            var21 = new ArrayList();
-
-            for (Object var29 : var7) {
-               LaneTracks.Line var11 = (LaneTracks.Line)var29;
-               if (var11.getAlpha() > 0.05F && var11.getY0() >= 0.0F) {
-                  var4 = true;
-               } else {
-                  var4 = false;
-               }
-
-               if (var4) {
-                  var21.add(var29);
-               }
-            }
-
-            List var23 = (List)var21;
-            Iterator var39 = var23.iterator();
-            if (!var39.hasNext()) {
-               var21 = null;
-            } else {
-               var21 = (Collection)var39.next();
-               if (var39.hasNext()) {
-                  float var14 = ((LaneTracks.Line)var21).getY0();
-                  Object var30 = var21;
-
-                  do {
-                     Object var36 = var39.next();
-                     float var16 = ((LaneTracks.Line)var36).getY0();
-                     var21 = (Collection)var30;
-                     float var12 = var14;
-                     if (Float.compare(var14, var16) > 0) {
-                        var21 = (Collection)var36;
-                        var12 = var16;
-                     }
-
-                     var30 = var21;
-                     var14 = var12;
-                  } while (var39.hasNext());
-               }
-            }
-
-            LaneTracks.Line var37 = (LaneTracks.Line)var21;
-            var39 = CollectionsKt.listOfNotNull(new LaneTracks.Line[]{var38, var37}).iterator();
-            if (!var39.hasNext()) {
-               var21 = (Collection)var32;
-            } else {
-               var21 = (Collection)var39.next();
-               if (var39.hasNext()) {
-                  float var13 = Math.abs(((LaneTracks.Line)var21).getY0());
-                  Object var31 = var21;
-
-                  do {
-                     var32 = var39.next();
-                     float var17 = Math.abs(((LaneTracks.Line)var32).getY0());
-                     float var15 = var13;
-                     var21 = (Collection)var31;
-                     if (Float.compare(var13, var17) > 0) {
-                        var21 = (Collection)var32;
-                        var15 = var17;
-                     }
-
-                     var13 = var15;
-                     var31 = var21;
-                  } while (var39.hasNext());
-               }
-            }
-
-            return new Triple<>(var38, var37, (LaneTracks.Line)var21);
-         }
-
-         Object var8 = var26.next();
-         LaneTracks.Line var9 = (LaneTracks.Line)var8;
-         if (!(var9.getAlpha() > 0.05F) || !(var9.getY0() < 0.0F)) {
-            var4 = false;
-         }
-
-         if (var4) {
-            var6.add(var8);
-         }
-      }
-   }
-
-   public final float targetCenter(float var1, Function1<? super LaneTracks.Line, float[]> var2) {
-      Intrinsics.checkNotNullParameter(var2, "shown");
-      LaneTracks.Line var3 = this.refLeft;
-      LaneTracks.Line var4 = this.refRight;
-      if (this.changeDir == 0 || var3 == null || var4 == null) {
-         return Float.NaN;
-      } else if (this.crossed) {
-         return (targetCenter$at(var2, var1, var3) + targetCenter$at(var2, var1, var4)) / 2.0F;
-      } else {
-         var3 = this.refAhead;
-         return var3 == null ? Float.NaN : targetCenter$at(var2, var1, var3) + this.changeDir * this.laneWidth / 2.0F;
-      }
-   }
-
-   public final void update(ModelSnapshot var1, Telemetry var2, float var3, boolean var4, LaneMarks.Mark[] var5) {
-      Intrinsics.checkNotNullParameter(var1, "m");
-      Intrinsics.checkNotNullParameter(var2, "t");
-      if (var1.getFrameId() != this.lastFrame) {
-         this.lastFrame = var1.getFrameId();
-         float var7 = RangesKt.coerceIn(var3 / (this.smoothRc + var3), 0.0F, 1.0F);
-         float var6;
-         if (!var4) {
-            var6 = 1.0F;
-         } else if (var2.getVEgo() < 0.5F) {
-            var6 = 0.0F;
-         } else if (var2.getVEgo() < 3.0F) {
-            var6 = 0.3F * var7;
-         } else {
-            var6 = var7;
-         }
-
-         Iterator var19 = this.lines.iterator();
-         Intrinsics.checkNotNullExpressionValue(var19, "iterator(...)");
-
-         while (var19.hasNext()) {
-            LaneTracks.Line var20 = (LaneTracks.Line)var19.next();
-            Intrinsics.checkNotNullExpressionValue(var20, "next(...)");
-            var20 = var20;
-            var20.setSeen(false);
-            var20.setSlot(-1);
-         }
-
-         long var17 = System.currentTimeMillis();
-         int var14 = 0;
-         int var13 = Math.min(4, ((Object[])var1.getLaneX()).length);
-         float var8 = var6;
-
-         while (true) {
-            LaneTracks.Line var41 = null;
-            Object var21 = null;
-            if (var14 >= var13) {
-               Iterator var32 = this.lines.iterator();
-               Intrinsics.checkNotNullExpressionValue(var32, "iterator(...)");
-
-               while (var32.hasNext()) {
-                  LaneTracks.Line var60;
-                  label145: {
-                     Object var59 = var32.next();
-                     Intrinsics.checkNotNullExpressionValue(var59, "next(...)");
-                     var60 = (LaneTracks.Line)var59;
-                     if (var60.getSeen()) {
-                        boolean var37;
-                        if (var60.getOn() ? !(var60.getProb() > 0.04F) : !(var60.getProb() > 0.1F)) {
-                           var37 = false;
-                        } else {
-                           var37 = true;
-                        }
-
-                        if (var37) {
-                           var4 = true;
-                           break label145;
-                        }
-                     }
-
-                     var4 = false;
-                  }
-
-                  var60.setOn(var4);
-                  if (var60.getOn()) {
-                     var6 = RangesKt.coerceIn(var60.getProb() * 2.0F, 0.4F, 1.0F);
-                  } else {
-                     var6 = 0.0F;
-                  }
-
-                  if (var6 > var60.getAlpha()) {
-                     var8 = var7;
-                  } else {
-                     var8 = var3 / (var3 + 1.0F);
-                  }
-
-                  var60.setAlpha(var60.getAlpha() + (var6 - var60.getAlpha()) * var8);
-               }
-
-               CollectionsKt.removeAll(this.lines, new LaneTracks$$ExternalSyntheticLambda0());
-               this.updateLaneChange(var1, var7);
-               Float var33 = var1.getModelDesiredCurvature();
-               boolean var38;
-               if (var33.floatValue() == 0.0F) {
-                  var38 = true;
-               } else {
-                  var38 = false;
-               }
-
-               Float var26 = var41;
-               if (!var38) {
-                  var26 = var33;
-               }
-
-               if (var26 != null) {
-                  var3 = var26;
-               } else {
-                  var3 = var2.getDesiredCurvature();
-               }
-
-               var3 = Math.abs(var3) * var2.getVEgo() * var2.getVEgo() / 3.0F;
-               if (Companion.pathState(var2) == LaneTracks.PathState.ENGAGED) {
-                  var3 = RangesKt.coerceIn(Math.max(Math.abs(var2.getOutTorque()), var3), 0.0F, 1.0F);
-               } else {
-                  var3 = 0.0F;
-               }
-
-               this.effort = this.effort + (var3 - this.effort) * var7;
-               return;
-            }
-
-            float[] var23 = var1.getLaneX()[var14];
-            if (var23.length >= 2 && var14 < ((Object[])var1.getLaneY()).length) {
-               var41 = var1.getLaneProb();
-               boolean var15;
-               if (var14 >= 0 && var14 < ((Object[])var41).length) {
-                  var15 = 1;
-               } else {
-                  var15 = 0;
-               }
-
-               float var9;
-               if (var15) {
-                  var9 = (float)((Object[])var41)[var14];
-               } else {
-                  var9 = 0.0F;
-               }
-
-               if (((Object[])var1.getLaneX()).length != 4 || var14 != 0 && var14 != 3 || Companion.roadThere(var1, var14, var9)) {
-                  float[] var50 = var1.getLaneY()[var14];
-                  var41 = (Object[])var1.getLaneZ();
-                  if (var14 >= 0 && var14 < ((Object[])var41).length) {
-                     var15 = (boolean)1;
-                  } else {
-                     var15 = (boolean)0;
-                  }
-
-                  if (var15) {
-                     var41 = ((Object[])var41)[var14];
-                  } else {
-                     var41 = new float[var23.length];
-                  }
-
-                  var41 = new LaneTracks.Line(var23, var50, (float[])var41);
-                  var6 = var41.getY0();
-                  Iterable var51 = this.lines;
-                  var var22 = new ArrayList();
-
-                  for (Object var25 : var51) {
-                     if (!((LaneTracks.Line)var25).getSeen()) {
-                        var22.add(var25);
-                     }
-                  }
-
-                  List var52 = var22;
-                  Iterable var53 = var52;
-                  var4 = false;
-                  Iterator var64 = var53.iterator();
-                  if (!var64.hasNext()) {
-                     var50 = null;
-                  } else {
-                     var50 = (float[])var64.next();
-                     if (var64.hasNext()) {
-                        float var10 = Math.abs(((LaneTracks.Line)var50).getY0() - var6);
-
-                        while (true) {
-                           Object var61 = var64.next();
-                           float var12 = Math.abs(((LaneTracks.Line)var61).getY0() - var6);
-                           float var11 = var10;
-                           if (Float.compare(var10, var12) > 0) {
-                              var50 = (float[])var61;
-                              var11 = var12;
-                           }
-
-                           if (!var64.hasNext()) {
-                              break;
-                           }
-
-                           var10 = var11;
-                        }
-                     }
-                  }
-
-                  LaneTracks.Line var55 = (LaneTracks.Line)var50;
-                  if (var55 != null && Math.abs(var55.getY0() - var6) < 1.5F && var55.getY().length == var41.getY().length) {
-                     var15 = 0;
-
-                     for (int var16 = var55.getY().length; var15 < var16; var15++) {
-                        float[] var62 = var55.getY();
-                        var62[var15] += (var41.getY()[var15] - var55.getY()[var15]) * var8;
-                        float[] var63 = var55.getZ();
-                        var63[var15] += (var41.getZ()[var15] - var55.getZ()[var15]) * var8;
-                     }
-
-                     var55.setX(var23);
-                     var41 = var55;
-                  } else {
-                     var50 = var41.getY();
-                     var50 = Arrays.copyOf(var50, var50.length);
-                     Intrinsics.checkNotNullExpressionValue(var50, "copyOf(...)");
-                     float[] var46 = var41.getZ();
-                     float[] var47 = Arrays.copyOf(var46, var46.length);
-                     Intrinsics.checkNotNullExpressionValue(var47, "copyOf(...)");
-                     var41 = new LaneTracks.Line(var23, var50, var47);
-                     this.lines.add(var41);
-                  }
-
-                  var41.setSeen(true);
-                  var41.setSlot(var14);
-                  var41.setProb(var41.getProb() + (var9 - var41.getProb()) * var7);
-                  LaneMarks.Mark var58 = (LaneMarks.Mark)var21;
-                  if (var5 != null) {
-                     var58 = ArraysKt.getOrNull(var5, var14);
-                  }
-
-                  if (var58 == null || var58.getKind() != 2 && var58.getKind() != 3) {
-                     if (var58 != null && var58.getKind() == 1 && var17 - var41.getMarkMs() > 4000L) {
-                        var41.setMark(var58);
-                        var41.setMarkMs(var17);
-                     }
-                  } else {
-                     var41.setMark(var58);
-                     var41.setMarkMs(var17);
-                  }
-               }
-            }
-
-            var14++;
-         }
-      }
-   }
-
-   public static final class Companion {
-      private Companion() {
-      }
-
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
-
-      private static final int blend$ch(int var0, int var1, float var2, int var3) {
-         var0 = var0 >>> var3 & 0xFF;
-         return RangesKt.coerceIn((int)(var0 + ((var1 >>> var3 & 0xFF) - var0) * var2 + 0.5F), 0, 255) << var3;
-      }
-
-      private static final float roadThere$y5(float[] var0, float[] var1) {
-         if (var0.length >= 2 && var1.length == var0.length) {
-            int var3 = 1;
-
-            while (var3 < var0.length - 1 && var0[var3] < 5.0F) {
-               var3++;
-            }
-
-            float var2 = RangesKt.coerceIn((5.0F - var0[var3 - 1]) / Math.max(0.01F, var0[var3] - var0[var3 - 1]), 0.0F, 1.0F);
-            return var1[var3 - 1] + (var1[var3] - var1[var3 - 1]) * var2;
-         } else {
+            this.laneWidth = RangesKt.coerceIn(right.getY0() - left.getY0(), 2.5f, 4.5f);
+            return;
+        }
+        this.changeDir = m.getLaneChangeDir();
+        Pair pair = this.changeDir < 0 ? TuplesKt.to(left, right) : TuplesKt.to(right, left);
+        Line ahead = (Line) pair.component1();
+        Line behind = (Line) pair.component2();
+        boolean aheadNearest = Math.abs(ahead.getY0()) < Math.abs(behind.getY0());
+        this.crossed = this.crossed || (this.approaching && !aheadNearest);
+        if (!this.approaching && !aheadNearest) {
+            z = false;
+        }
+        this.approaching = z;
+        this.refAhead = ahead;
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    public static /* synthetic */ float targetCenter$default(LaneTracks laneTracks, float f, Function1 function1, int i, Object obj) {
+        if ((i & 2) != 0) {
+            function1 = new Function1() { // from class: com.starpilot.starview.LaneTracks$$ExternalSyntheticLambda1
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj2) {
+                    float[] targetCenter$lambda$11;
+                    targetCenter$lambda$11 = LaneTracks.targetCenter$lambda$11((LaneTracks.Line) obj2);
+                    return targetCenter$lambda$11;
+                }
+            };
+        }
+        return laneTracks.targetCenter(f, function1);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final float[] targetCenter$lambda$11(Line it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return it.getY();
+    }
+
+    private static final float targetCenter$at(Function1<? super Line, float[]> function1, float $x, Line l) {
+        float[] ys = function1.invoke(l);
+        float[] xs = l.getX();
+        if (xs.length < 2 || ys.length != xs.length) {
+            return l.at($x);
+        }
+        int j = 1;
+        while (j < xs.length - 1 && xs[j] < $x) {
+            j++;
+        }
+        float f = RangesKt.coerceIn(($x - xs[j - 1]) / Math.max(0.01f, xs[j] - xs[j - 1]), 0.0f, 1.0f);
+        return ys[j - 1] + ((ys[j] - ys[j - 1]) * f);
+    }
+
+    public final float targetCenter(float x, Function1<? super Line, float[]> shown) {
+        Intrinsics.checkNotNullParameter(shown, "shown");
+        Line l = this.refLeft;
+        Line r = this.refRight;
+        if (this.changeDir == 0 || l == null || r == null) {
             return Float.NaN;
-         }
-      }
+        }
+        if (this.crossed) {
+            return (targetCenter$at(shown, x, l) + targetCenter$at(shown, x, r)) / 2.0f;
+        }
+        Line a = this.refAhead;
+        if (a == null) {
+            return Float.NaN;
+        }
+        return targetCenter$at(shown, x, a) + ((this.changeDir * this.laneWidth) / 2.0f);
+    }
 
-      public final int blend(int var1, int var2, float var3) {
-         var3 = RangesKt.coerceIn(var3, 0.0F, 1.0F);
-         return blend$ch(var1, var2, var3, 24) | blend$ch(var1, var2, var3, 16) | blend$ch(var1, var2, var3, 8) | blend$ch(var1, var2, var3, 0);
-      }
-
-      public final int effortColor(int var1, float var2) {
-         var var3 = (KFunction & Function3)(new Function3<Integer, Integer, Float, Integer>(this) {
-            public final Integer invoke(int var1, int var2x, float var3x) {
-               return ((LaneTracks.Companion)this.receiver).blend(var1, var2x, var3x);
+    public final Triple<Line, Line, Line> inner() {
+        Object maxElem$iv;
+        Object minElem$iv;
+        Iterable $this$filter$iv = this.lines;
+        Collection destination$iv$iv = new ArrayList();
+        Iterator it = $this$filter$iv.iterator();
+        while (true) {
+            if (!it.hasNext()) {
+                break;
             }
-         });
-         Integer var4 = -34786;
-         if (var2 < 0.65F) {
-            var1 = ((Number)((Function3)var3).invoke(var1, var4, RangesKt.coerceIn((var2 - 0.65F + 0.1F) / 0.1F, 0.0F, 1.0F))).intValue();
-         } else {
-            var1 = ((Number)((Function3)var3).invoke(var4, -1364701, RangesKt.coerceIn((var2 - 0.65F) / 0.35000002F, 0.0F, 1.0F))).intValue();
-         }
-
-         return var1;
-      }
-
-      public final LaneTracks.PathState pathState(Telemetry var1) {
-         Intrinsics.checkNotNullParameter(var1, "t");
-         LaneTracks.PathState var2;
-         if (!var1.getEnabled() && !var1.getAolEnabled()) {
-            var2 = LaneTracks.PathState.OFF;
-         } else if (var1.getSteeringPressed() || Intrinsics.areEqual(var1.getOpState(), "overriding") || var1.getEnabled() && !var1.getActive()) {
-            var2 = LaneTracks.PathState.OVERRIDE;
-         } else {
-            var2 = LaneTracks.PathState.ENGAGED;
-         }
-
-         return var2;
-      }
-
-      public final boolean roadThere(ModelSnapshot var1, int var2, float var3) {
-         Intrinsics.checkNotNullParameter(var1, "m");
-         boolean var7 = false;
-         if (var3 < 0.3F) {
-            return false;
-         } else if (((Object[])var1.getEdgeY()).length >= 2 && ((Object[])var1.getEdgeX()).length >= 2) {
-            float var4 = roadThere$y5(var1.getEdgeX()[0], var1.getEdgeY()[0]);
-            var3 = roadThere$y5(var1.getEdgeX()[1], var1.getEdgeY()[1]);
-            boolean var6;
-            if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
-               var6 = true;
-            } else {
-               var6 = false;
+            Object element$iv$iv = it.next();
+            Line it2 = (Line) element$iv$iv;
+            if (it2.getAlpha() > 0.05f && it2.getY0() < 0.0f) {
+                destination$iv$iv.add(element$iv$iv);
             }
-
-            if (var6) {
-               if (!Float.isInfinite(var3) && !Float.isNaN(var3)) {
-                  var6 = true;
-               } else {
-                  var6 = false;
-               }
-
-               if (var6 && !(var3 - var4 < 2.0F)) {
-                  float var5 = roadThere$y5(var1.getLaneX()[var2], var1.getLaneY()[var2]);
-                  if (!Float.isInfinite(var5) && !Float.isNaN(var5)) {
-                     var6 = true;
-                  } else {
-                     var6 = false;
-                  }
-
-                  if (!var6) {
-                     return true;
-                  }
-
-                  if (var2 == 0 ? var5 > var4 : var5 < var3) {
-                     var7 = true;
-                  }
-
-                  return var7;
-               }
+        }
+        Iterable $this$maxByOrNull$iv = (List) destination$iv$iv;
+        Iterator iterator$iv = $this$maxByOrNull$iv.iterator();
+        Object minElem$iv2 = null;
+        if (iterator$iv.hasNext()) {
+            maxElem$iv = iterator$iv.next();
+            if (iterator$iv.hasNext()) {
+                Line it3 = (Line) maxElem$iv;
+                float maxValue$iv = it3.getY0();
+                do {
+                    Object e$iv = iterator$iv.next();
+                    Line it4 = (Line) e$iv;
+                    float v$iv = it4.getY0();
+                    if (Float.compare(maxValue$iv, v$iv) < 0) {
+                        maxElem$iv = e$iv;
+                        maxValue$iv = v$iv;
+                    }
+                } while (iterator$iv.hasNext());
             }
+        } else {
+            maxElem$iv = null;
+        }
+        Line left = (Line) maxElem$iv;
+        Iterable $this$filter$iv2 = this.lines;
+        Collection destination$iv$iv2 = new ArrayList();
+        for (Object element$iv$iv2 : $this$filter$iv2) {
+            Line it5 = (Line) element$iv$iv2;
+            Line it6 = (it5.getAlpha() <= 0.05f || it5.getY0() < 0.0f) ? null : 1;
+            if (it6 != null) {
+                destination$iv$iv2.add(element$iv$iv2);
+            }
+        }
+        Iterable $this$minByOrNull$iv = (List) destination$iv$iv2;
+        Iterator iterator$iv2 = $this$minByOrNull$iv.iterator();
+        if (iterator$iv2.hasNext()) {
+            minElem$iv = iterator$iv2.next();
+            if (iterator$iv2.hasNext()) {
+                Line it7 = (Line) minElem$iv;
+                float minValue$iv = it7.getY0();
+                do {
+                    Object e$iv2 = iterator$iv2.next();
+                    Line it8 = (Line) e$iv2;
+                    float v$iv2 = it8.getY0();
+                    if (Float.compare(minValue$iv, v$iv2) > 0) {
+                        minElem$iv = e$iv2;
+                        minValue$iv = v$iv2;
+                    }
+                } while (iterator$iv2.hasNext());
+            }
+        } else {
+            minElem$iv = null;
+        }
+        Line right = (Line) minElem$iv;
+        Iterable $this$minByOrNull$iv2 = CollectionsKt.listOfNotNull((Object[]) new Line[]{left, right});
+        Iterator iterator$iv3 = $this$minByOrNull$iv2.iterator();
+        if (iterator$iv3.hasNext()) {
+            minElem$iv2 = iterator$iv3.next();
+            if (iterator$iv3.hasNext()) {
+                Line it9 = (Line) minElem$iv2;
+                float minValue$iv2 = Math.abs(it9.getY0());
+                do {
+                    Object e$iv3 = iterator$iv3.next();
+                    Line it10 = (Line) e$iv3;
+                    float v$iv3 = Math.abs(it10.getY0());
+                    if (Float.compare(minValue$iv2, v$iv3) > 0) {
+                        minElem$iv2 = e$iv3;
+                        minValue$iv2 = v$iv3;
+                    }
+                } while (iterator$iv3.hasNext());
+            }
+        }
+        Line near = (Line) minElem$iv2;
+        return new Triple<>(left, right, near);
+    }
 
+    /* compiled from: LaneTracks.kt */
+    public enum PathState {
+        ENGAGED,
+        OVERRIDE,
+        OFF;
+
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
+
+        public static EnumEntries<PathState> getEntries() {
+            return $ENTRIES;
+        }
+    }
+
+    /* compiled from: LaneTracks.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
+
+        private Companion() {
+        }
+
+        public final boolean roadThere(ModelSnapshot m, int i, float prob) {
+            Intrinsics.checkNotNullParameter(m, "m");
+            if (prob < 0.3f) {
+                return false;
+            }
+            if (m.getEdgeY().length < 2 || m.getEdgeX().length < 2) {
+                return true;
+            }
+            float le = roadThere$y5(m.getEdgeX()[0], m.getEdgeY()[0]);
+            float re = roadThere$y5(m.getEdgeX()[1], m.getEdgeY()[1]);
+            if ((Float.isInfinite(le) || Float.isNaN(le)) ? false : true) {
+                if (((Float.isInfinite(re) || Float.isNaN(re)) ? false : true) && re - le >= 2.0f) {
+                    float line = roadThere$y5(m.getLaneX()[i], m.getLaneY()[i]);
+                    if (!((Float.isInfinite(line) || Float.isNaN(line)) ? false : true)) {
+                        return true;
+                    }
+                    if (i == 0) {
+                        if (line <= le) {
+                            return false;
+                        }
+                    } else if (line >= re) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
             return true;
-         } else {
-            return true;
-         }
-      }
-   }
+        }
 
-   public static final class Line {
-      private float alpha;
-      private LaneMarks.Mark mark;
-      private long markMs;
-      private boolean on;
-      private float prob;
-      private boolean seen;
-      private int slot;
-      private float[] x;
-      private float[] y;
-      private float[] z;
-
-      public Line(float[] var1, float[] var2, float[] var3) {
-         Intrinsics.checkNotNullParameter(var1, "x");
-         Intrinsics.checkNotNullParameter(var2, "y");
-         Intrinsics.checkNotNullParameter(var3, "z");
-         super();
-         this.x = var1;
-         this.y = var2;
-         this.z = var3;
-         this.seen = true;
-         this.slot = -1;
-      }
-
-      public final float at(float var1) {
-         boolean var2;
-         if (this.x.length == 0) {
-            var2 = 1;
-         } else {
-            var2 = 0;
-         }
-
-         if (var2) {
-            return 0.0F;
-         } else {
-            var2 = 1;
-
-            while (var2 < this.x.length - 1 && this.x[var2] < var1) {
-               var2++;
+        private static final float roadThere$y5(float[] xs, float[] ys) {
+            if (xs.length < 2 || ys.length != xs.length) {
+                return Float.NaN;
             }
-
-            if (this.x.length < 2) {
-               return this.y[0];
-            } else {
-               var1 = RangesKt.coerceIn((var1 - this.x[var2 - 1]) / Math.max(0.01F, this.x[var2] - this.x[var2 - 1]), 0.0F, 1.0F);
-               return this.y[var2 - 1] + (this.y[var2] - this.y[var2 - 1]) * var1;
+            int j = 1;
+            while (j < xs.length - 1 && xs[j] < 5.0f) {
+                j++;
             }
-         }
-      }
+            float f = RangesKt.coerceIn((5.0f - xs[j - 1]) / Math.max(0.01f, xs[j] - xs[j - 1]), 0.0f, 1.0f);
+            return ys[j - 1] + ((ys[j] - ys[j - 1]) * f);
+        }
 
-      public final float getAlpha() {
-         return this.alpha;
-      }
+        public final int blend(int c1, int c2, float t) {
+            float u = RangesKt.coerceIn(t, 0.0f, 1.0f);
+            return blend$ch(c1, c2, u, 24) | blend$ch(c1, c2, u, 16) | blend$ch(c1, c2, u, 8) | blend$ch(c1, c2, u, 0);
+        }
 
-      public final LaneMarks.Mark getMark() {
-         return this.mark;
-      }
+        private static final int blend$ch(int $c1, int $c2, float u, int sh) {
+            int a = ($c1 >>> sh) & 255;
+            int bb = ($c2 >>> sh) & 255;
+            return RangesKt.coerceIn((int) ((a + ((bb - a) * u)) + 0.5f), 0, 255) << sh;
+        }
 
-      public final long getMarkMs() {
-         return this.markMs;
-      }
+        public final PathState pathState(Telemetry t) {
+            Intrinsics.checkNotNullParameter(t, "t");
+            if (!t.getEnabled() && !t.getAolEnabled()) {
+                return PathState.OFF;
+            }
+            if (t.getSteeringPressed() || Intrinsics.areEqual(t.getOpState(), "overriding") || (t.getEnabled() && !t.getActive())) {
+                return PathState.OVERRIDE;
+            }
+            return PathState.ENGAGED;
+        }
 
-      public final boolean getOn() {
-         return this.on;
-      }
-
-      public final float getProb() {
-         return this.prob;
-      }
-
-      public final boolean getSeen() {
-         return this.seen;
-      }
-
-      public final int getSlot() {
-         return this.slot;
-      }
-
-      public final float[] getX() {
-         return this.x;
-      }
-
-      public final float[] getY() {
-         return this.y;
-      }
-
-      public final float getY0() {
-         return this.at(5.0F);
-      }
-
-      public final float[] getZ() {
-         return this.z;
-      }
-
-      public final void setAlpha(float var1) {
-         this.alpha = var1;
-      }
-
-      public final void setMark(LaneMarks.Mark var1) {
-         this.mark = var1;
-      }
-
-      public final void setMarkMs(long var1) {
-         this.markMs = var1;
-      }
-
-      public final void setOn(boolean var1) {
-         this.on = var1;
-      }
-
-      public final void setProb(float var1) {
-         this.prob = var1;
-      }
-
-      public final void setSeen(boolean var1) {
-         this.seen = var1;
-      }
-
-      public final void setSlot(int var1) {
-         this.slot = var1;
-      }
-
-      public final void setX(float[] var1) {
-         Intrinsics.checkNotNullParameter(var1, "<set-?>");
-         this.x = var1;
-      }
-
-      public final void setY(float[] var1) {
-         Intrinsics.checkNotNullParameter(var1, "<set-?>");
-         this.y = var1;
-      }
-
-      public final void setZ(float[] var1) {
-         Intrinsics.checkNotNullParameter(var1, "<set-?>");
-         this.z = var1;
-      }
-   }
-
-   public static enum PathState {
-      ENGAGED,
-      OFF,
-      OVERRIDE;
-      private static final EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(LaneTracks.PathState.$VALUES);
-      private static final LaneTracks.PathState[] $VALUES = $values();
-
-      // $VF: synthetic method
-      private static final LaneTracks.PathState[] $values() {
-         return new LaneTracks.PathState[]{ENGAGED, OVERRIDE, OFF};
-      }
-
-      public static EnumEntries<LaneTracks.PathState> getEntries() {
-         return $ENTRIES;
-      }
-   }
+        public final int effortColor(int base, float effort) {
+            KFunction b = new LaneTracks$Companion$effortColor$b$1(this);
+            return effort < 0.65f ? ((Function3) b).invoke((LaneTracks$Companion$effortColor$b$1) Integer.valueOf(base), (Integer) (-34786), (int) Float.valueOf(RangesKt.coerceIn(((effort - 0.65f) + 0.1f) / 0.1f, 0.0f, 1.0f))).intValue() : ((Function3) b).invoke((LaneTracks$Companion$effortColor$b$1) (-34786), -1364701, (int) Float.valueOf(RangesKt.coerceIn((effort - 0.65f) / 0.35000002f, 0.0f, 1.0f))).intValue();
+        }
+    }
 }

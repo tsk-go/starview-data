@@ -3,274 +3,196 @@ package com.k2fsa.sherpa.onnx;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-public final class OfflineTtsSupertonicModelConfig {
-   private String durationPredictor;
-   private String textEncoder;
-   private String ttsJson;
-   private String unicodeIndexer;
-   private String vectorEstimator;
-   private String vocoder;
-   private String voiceStyle;
+/* compiled from: Tts.kt */
+public final /* data */ class OfflineTtsSupertonicModelConfig {
+    private String durationPredictor;
+    private String textEncoder;
+    private String ttsJson;
+    private String unicodeIndexer;
+    private String vectorEstimator;
+    private String vocoder;
+    private String voiceStyle;
 
-   public OfflineTtsSupertonicModelConfig() {
-      this(null, null, null, null, null, null, null, 127, null);
-   }
+    public OfflineTtsSupertonicModelConfig() {
+        this(null, null, null, null, null, null, null, 127, null);
+    }
 
-   public OfflineTtsSupertonicModelConfig(String var1, String var2, String var3, String var4, String var5, String var6, String var7) {
-      Intrinsics.checkNotNullParameter(var1, "durationPredictor");
-      Intrinsics.checkNotNullParameter(var2, "textEncoder");
-      Intrinsics.checkNotNullParameter(var3, "vectorEstimator");
-      Intrinsics.checkNotNullParameter(var4, "vocoder");
-      Intrinsics.checkNotNullParameter(var5, "ttsJson");
-      Intrinsics.checkNotNullParameter(var6, "unicodeIndexer");
-      Intrinsics.checkNotNullParameter(var7, "voiceStyle");
-      super();
-      this.durationPredictor = var1;
-      this.textEncoder = var2;
-      this.vectorEstimator = var3;
-      this.vocoder = var4;
-      this.ttsJson = var5;
-      this.unicodeIndexer = var6;
-      this.voiceStyle = var7;
-   }
+    public static /* synthetic */ OfflineTtsSupertonicModelConfig copy$default(OfflineTtsSupertonicModelConfig offlineTtsSupertonicModelConfig, String str, String str2, String str3, String str4, String str5, String str6, String str7, int i, Object obj) {
+        if ((i & 1) != 0) {
+            str = offlineTtsSupertonicModelConfig.durationPredictor;
+        }
+        if ((i & 2) != 0) {
+            str2 = offlineTtsSupertonicModelConfig.textEncoder;
+        }
+        String str8 = str2;
+        if ((i & 4) != 0) {
+            str3 = offlineTtsSupertonicModelConfig.vectorEstimator;
+        }
+        String str9 = str3;
+        if ((i & 8) != 0) {
+            str4 = offlineTtsSupertonicModelConfig.vocoder;
+        }
+        String str10 = str4;
+        if ((i & 16) != 0) {
+            str5 = offlineTtsSupertonicModelConfig.ttsJson;
+        }
+        String str11 = str5;
+        if ((i & 32) != 0) {
+            str6 = offlineTtsSupertonicModelConfig.unicodeIndexer;
+        }
+        String str12 = str6;
+        if ((i & 64) != 0) {
+            str7 = offlineTtsSupertonicModelConfig.voiceStyle;
+        }
+        return offlineTtsSupertonicModelConfig.copy(str, str8, str9, str10, str11, str12, str7);
+    }
 
-   // $VF: synthetic method
-   public OfflineTtsSupertonicModelConfig(
-      String var1, String var2, String var3, String var4, String var5, String var6, String var7, int var8, DefaultConstructorMarker var9
-   ) {
-      if ((var8 & 1) != 0) {
-         var1 = "";
-      }
+    /* renamed from: component1, reason: from getter */
+    public final String getDurationPredictor() {
+        return this.durationPredictor;
+    }
 
-      if ((var8 & 2) != 0) {
-         var2 = "";
-      }
+    /* renamed from: component2, reason: from getter */
+    public final String getTextEncoder() {
+        return this.textEncoder;
+    }
 
-      if ((var8 & 4) != 0) {
-         var3 = "";
-      }
+    /* renamed from: component3, reason: from getter */
+    public final String getVectorEstimator() {
+        return this.vectorEstimator;
+    }
 
-      if ((var8 & 8) != 0) {
-         var4 = "";
-      }
+    /* renamed from: component4, reason: from getter */
+    public final String getVocoder() {
+        return this.vocoder;
+    }
 
-      if ((var8 & 16) != 0) {
-         var5 = "";
-      }
+    /* renamed from: component5, reason: from getter */
+    public final String getTtsJson() {
+        return this.ttsJson;
+    }
 
-      if ((var8 & 32) != 0) {
-         var6 = "";
-      }
+    /* renamed from: component6, reason: from getter */
+    public final String getUnicodeIndexer() {
+        return this.unicodeIndexer;
+    }
 
-      if ((var8 & 64) != 0) {
-         var7 = "";
-      }
+    /* renamed from: component7, reason: from getter */
+    public final String getVoiceStyle() {
+        return this.voiceStyle;
+    }
 
-      this(var1, var2, var3, var4, var5, var6, var7);
-   }
+    public final OfflineTtsSupertonicModelConfig copy(String durationPredictor, String textEncoder, String vectorEstimator, String vocoder, String ttsJson, String unicodeIndexer, String voiceStyle) {
+        Intrinsics.checkNotNullParameter(durationPredictor, "durationPredictor");
+        Intrinsics.checkNotNullParameter(textEncoder, "textEncoder");
+        Intrinsics.checkNotNullParameter(vectorEstimator, "vectorEstimator");
+        Intrinsics.checkNotNullParameter(vocoder, "vocoder");
+        Intrinsics.checkNotNullParameter(ttsJson, "ttsJson");
+        Intrinsics.checkNotNullParameter(unicodeIndexer, "unicodeIndexer");
+        Intrinsics.checkNotNullParameter(voiceStyle, "voiceStyle");
+        return new OfflineTtsSupertonicModelConfig(durationPredictor, textEncoder, vectorEstimator, vocoder, ttsJson, unicodeIndexer, voiceStyle);
+    }
 
-   // $VF: synthetic method
-   public static OfflineTtsSupertonicModelConfig copy$default(
-      OfflineTtsSupertonicModelConfig var0, String var1, String var2, String var3, String var4, String var5, String var6, String var7, int var8, Object var9
-   ) {
-      if ((var8 & 1) != 0) {
-         var1 = var0.durationPredictor;
-      }
-
-      if ((var8 & 2) != 0) {
-         var2 = var0.textEncoder;
-      }
-
-      if ((var8 & 4) != 0) {
-         var3 = var0.vectorEstimator;
-      }
-
-      if ((var8 & 8) != 0) {
-         var4 = var0.vocoder;
-      }
-
-      if ((var8 & 16) != 0) {
-         var5 = var0.ttsJson;
-      }
-
-      if ((var8 & 32) != 0) {
-         var6 = var0.unicodeIndexer;
-      }
-
-      if ((var8 & 64) != 0) {
-         var7 = var0.voiceStyle;
-      }
-
-      return var0.copy(var1, var2, var3, var4, var5, var6, var7);
-   }
-
-   public final String component1() {
-      return this.durationPredictor;
-   }
-
-   public final String component2() {
-      return this.textEncoder;
-   }
-
-   public final String component3() {
-      return this.vectorEstimator;
-   }
-
-   public final String component4() {
-      return this.vocoder;
-   }
-
-   public final String component5() {
-      return this.ttsJson;
-   }
-
-   public final String component6() {
-      return this.unicodeIndexer;
-   }
-
-   public final String component7() {
-      return this.voiceStyle;
-   }
-
-   public final OfflineTtsSupertonicModelConfig copy(String var1, String var2, String var3, String var4, String var5, String var6, String var7) {
-      Intrinsics.checkNotNullParameter(var1, "durationPredictor");
-      Intrinsics.checkNotNullParameter(var2, "textEncoder");
-      Intrinsics.checkNotNullParameter(var3, "vectorEstimator");
-      Intrinsics.checkNotNullParameter(var4, "vocoder");
-      Intrinsics.checkNotNullParameter(var5, "ttsJson");
-      Intrinsics.checkNotNullParameter(var6, "unicodeIndexer");
-      Intrinsics.checkNotNullParameter(var7, "voiceStyle");
-      return new OfflineTtsSupertonicModelConfig(var1, var2, var3, var4, var5, var6, var7);
-   }
-
-   @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
-         return true;
-      } else if (!(var1 instanceof OfflineTtsSupertonicModelConfig)) {
-         return false;
-      } else {
-         var1 = var1;
-         if (!Intrinsics.areEqual(this.durationPredictor, var1.durationPredictor)) {
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof OfflineTtsSupertonicModelConfig)) {
             return false;
-         } else if (!Intrinsics.areEqual(this.textEncoder, var1.textEncoder)) {
-            return false;
-         } else if (!Intrinsics.areEqual(this.vectorEstimator, var1.vectorEstimator)) {
-            return false;
-         } else if (!Intrinsics.areEqual(this.vocoder, var1.vocoder)) {
-            return false;
-         } else if (!Intrinsics.areEqual(this.ttsJson, var1.ttsJson)) {
-            return false;
-         } else {
-            return !Intrinsics.areEqual(this.unicodeIndexer, var1.unicodeIndexer) ? false : Intrinsics.areEqual(this.voiceStyle, var1.voiceStyle);
-         }
-      }
-   }
+        }
+        OfflineTtsSupertonicModelConfig offlineTtsSupertonicModelConfig = (OfflineTtsSupertonicModelConfig) other;
+        return Intrinsics.areEqual(this.durationPredictor, offlineTtsSupertonicModelConfig.durationPredictor) && Intrinsics.areEqual(this.textEncoder, offlineTtsSupertonicModelConfig.textEncoder) && Intrinsics.areEqual(this.vectorEstimator, offlineTtsSupertonicModelConfig.vectorEstimator) && Intrinsics.areEqual(this.vocoder, offlineTtsSupertonicModelConfig.vocoder) && Intrinsics.areEqual(this.ttsJson, offlineTtsSupertonicModelConfig.ttsJson) && Intrinsics.areEqual(this.unicodeIndexer, offlineTtsSupertonicModelConfig.unicodeIndexer) && Intrinsics.areEqual(this.voiceStyle, offlineTtsSupertonicModelConfig.voiceStyle);
+    }
 
-   public final String getDurationPredictor() {
-      return this.durationPredictor;
-   }
+    public int hashCode() {
+        return (((((((((((this.durationPredictor.hashCode() * 31) + this.textEncoder.hashCode()) * 31) + this.vectorEstimator.hashCode()) * 31) + this.vocoder.hashCode()) * 31) + this.ttsJson.hashCode()) * 31) + this.unicodeIndexer.hashCode()) * 31) + this.voiceStyle.hashCode();
+    }
 
-   public final String getTextEncoder() {
-      return this.textEncoder;
-   }
+    public String toString() {
+        return "OfflineTtsSupertonicModelConfig(durationPredictor=" + this.durationPredictor + ", textEncoder=" + this.textEncoder + ", vectorEstimator=" + this.vectorEstimator + ", vocoder=" + this.vocoder + ", ttsJson=" + this.ttsJson + ", unicodeIndexer=" + this.unicodeIndexer + ", voiceStyle=" + this.voiceStyle + ")";
+    }
 
-   public final String getTtsJson() {
-      return this.ttsJson;
-   }
+    public OfflineTtsSupertonicModelConfig(String durationPredictor, String textEncoder, String vectorEstimator, String vocoder, String ttsJson, String unicodeIndexer, String voiceStyle) {
+        Intrinsics.checkNotNullParameter(durationPredictor, "durationPredictor");
+        Intrinsics.checkNotNullParameter(textEncoder, "textEncoder");
+        Intrinsics.checkNotNullParameter(vectorEstimator, "vectorEstimator");
+        Intrinsics.checkNotNullParameter(vocoder, "vocoder");
+        Intrinsics.checkNotNullParameter(ttsJson, "ttsJson");
+        Intrinsics.checkNotNullParameter(unicodeIndexer, "unicodeIndexer");
+        Intrinsics.checkNotNullParameter(voiceStyle, "voiceStyle");
+        this.durationPredictor = durationPredictor;
+        this.textEncoder = textEncoder;
+        this.vectorEstimator = vectorEstimator;
+        this.vocoder = vocoder;
+        this.ttsJson = ttsJson;
+        this.unicodeIndexer = unicodeIndexer;
+        this.voiceStyle = voiceStyle;
+    }
 
-   public final String getUnicodeIndexer() {
-      return this.unicodeIndexer;
-   }
+    public /* synthetic */ OfflineTtsSupertonicModelConfig(String str, String str2, String str3, String str4, String str5, String str6, String str7, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this((i & 1) != 0 ? "" : str, (i & 2) != 0 ? "" : str2, (i & 4) != 0 ? "" : str3, (i & 8) != 0 ? "" : str4, (i & 16) != 0 ? "" : str5, (i & 32) != 0 ? "" : str6, (i & 64) != 0 ? "" : str7);
+    }
 
-   public final String getVectorEstimator() {
-      return this.vectorEstimator;
-   }
+    public final String getDurationPredictor() {
+        return this.durationPredictor;
+    }
 
-   public final String getVocoder() {
-      return this.vocoder;
-   }
+    public final void setDurationPredictor(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.durationPredictor = str;
+    }
 
-   public final String getVoiceStyle() {
-      return this.voiceStyle;
-   }
+    public final String getTextEncoder() {
+        return this.textEncoder;
+    }
 
-   @Override
-   public int hashCode() {
-      return (
-               (
-                        (
-                                 ((this.durationPredictor.hashCode() * 31 + this.textEncoder.hashCode()) * 31 + this.vectorEstimator.hashCode()) * 31
-                                    + this.vocoder.hashCode()
-                              )
-                              * 31
-                           + this.ttsJson.hashCode()
-                     )
-                     * 31
-                  + this.unicodeIndexer.hashCode()
-            )
-            * 31
-         + this.voiceStyle.hashCode();
-   }
+    public final void setTextEncoder(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.textEncoder = str;
+    }
 
-   public final void setDurationPredictor(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.durationPredictor = var1;
-   }
+    public final String getVectorEstimator() {
+        return this.vectorEstimator;
+    }
 
-   public final void setTextEncoder(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.textEncoder = var1;
-   }
+    public final void setVectorEstimator(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.vectorEstimator = str;
+    }
 
-   public final void setTtsJson(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.ttsJson = var1;
-   }
+    public final String getVocoder() {
+        return this.vocoder;
+    }
 
-   public final void setUnicodeIndexer(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.unicodeIndexer = var1;
-   }
+    public final void setVocoder(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.vocoder = str;
+    }
 
-   public final void setVectorEstimator(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.vectorEstimator = var1;
-   }
+    public final String getTtsJson() {
+        return this.ttsJson;
+    }
 
-   public final void setVocoder(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.vocoder = var1;
-   }
+    public final void setTtsJson(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.ttsJson = str;
+    }
 
-   public final void setVoiceStyle(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.voiceStyle = var1;
-   }
+    public final String getUnicodeIndexer() {
+        return this.unicodeIndexer;
+    }
 
-   @Override
-   public String toString() {
-      String var2 = this.durationPredictor;
-      String var3 = this.textEncoder;
-      String var6 = this.vectorEstimator;
-      String var5 = this.vocoder;
-      String var1 = this.ttsJson;
-      String var7 = this.unicodeIndexer;
-      String var4 = this.voiceStyle;
-      return "OfflineTtsSupertonicModelConfig(durationPredictor="
-         + var2
-         + ", textEncoder="
-         + var3
-         + ", vectorEstimator="
-         + var6
-         + ", vocoder="
-         + var5
-         + ", ttsJson="
-         + var1
-         + ", unicodeIndexer="
-         + var7
-         + ", voiceStyle="
-         + var4
-         + ")";
-   }
+    public final void setUnicodeIndexer(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.unicodeIndexer = str;
+    }
+
+    public final String getVoiceStyle() {
+        return this.voiceStyle;
+    }
+
+    public final void setVoiceStyle(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.voiceStyle = str;
+    }
 }

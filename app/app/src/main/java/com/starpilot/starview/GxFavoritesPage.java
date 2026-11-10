@@ -2,22 +2,21 @@ package com.starpilot.starview;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
+import com.starpilot.starview.GalaxyApi;
+import com.starpilot.starview.GxFavoritesPage;
+import com.starpilot.starview.GxPage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -37,6 +36,7 @@ import kotlin.collections.CollectionsKt;
 import kotlin.collections.IndexedValue;
 import kotlin.collections.MapsKt;
 import kotlin.comparisons.ComparisonsKt;
+import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.DefaultConstructorMarker;
@@ -47,2227 +47,1741 @@ import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: GxHome.kt */
 public final class GxFavoritesPage extends GxPage {
-   private final String actionPrefix;
-   private LinearLayout content;
-   private boolean isMetric;
-   private boolean loading;
-   private List<? extends JSONObject> options;
-   private List<GxFavoritesPage.Slot> savedSlots;
-   private boolean saving;
-   private final String setSpeed;
-   private List<GxFavoritesPage.Slot> slots;
-   private Runnable speedTimer;
-   private final HashMap<String, Object> values;
+    private final String actionPrefix;
+    private LinearLayout content;
+    private boolean isMetric;
+    private boolean loading;
+    private List<? extends JSONObject> options;
+    private List<Slot> savedSlots;
+    private boolean saving;
+    private final String setSpeed;
+    private List<Slot> slots;
+    private Runnable speedTimer;
+    private final HashMap<String, Object> values;
 
-   // $VF: synthetic method
-   public static GxFavoritesPage.Slot $r8$lambda$5HU_x8ji956mUtVzqMdAQ7KtqCI(boolean var0, GxFavoritesPage.Slot var1) {
-      return render$lambda$51$lambda$50(var0, var1);
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public GxFavoritesPage(Activity act, GxHost gx) {
+        super(act, gx);
+        Intrinsics.checkNotNullParameter(act, "act");
+        Intrinsics.checkNotNullParameter(gx, "gx");
+        this.actionPrefix = "__starpilot_favorite_action__:";
+        this.setSpeed = "__starpilot_controller_action__:set_speed";
+        this.loading = true;
+        ArrayList arrayList = new ArrayList(3);
+        for (int i = 0; i < 3; i++) {
+            arrayList.add(new Slot(false, false, null, null, null, 31, null));
+        }
+        this.slots = arrayList;
+        ArrayList arrayList2 = new ArrayList(3);
+        int i2 = 0;
+        for (int i3 = 3; i2 < i3; i3 = 3) {
+            arrayList2.add(new Slot(false, false, null, null, null, 31, null));
+            i2++;
+        }
+        this.savedSlots = arrayList2;
+        this.options = CollectionsKt.emptyList();
+        this.values = new HashMap<>();
+    }
 
-   // $VF: synthetic method
-   public static int $r8$lambda$8BYGRxBaV0HIk_zUgBVcL2l9Mho(JSONObject var0, JSONObject var1) {
-      return sortOptions$lambda$10(var0, var1);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    /* compiled from: GxHome.kt */
+    static final /* data */ class Slot {
+        private final boolean enabled;
+        private final String key;
+        private final String label;
+        private final boolean showOnroad;
+        private final Object value;
 
-   // $VF: synthetic method
-   public static void $r8$lambda$9N_4hXYRLSGd60qN13o9Iw3cqYc(GxFavoritesPage var0, int var1, double var2) {
-      render$lambda$49$lambda$48(var0, var1, var2);
-   }
+        public Slot() {
+            this(false, false, null, null, null, 31, null);
+        }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$A5ZWLxOV4xTizAhyMKLloZGVy5U(
-      List var0,
-      HashSet var1,
-      String var2,
-      LinearLayout var3,
-      EditText var4,
-      Map var5,
-      TextView var6,
-      GxFavoritesPage var7,
-      List var8,
-      String var9,
-      AlertDialog var10,
-      int var11,
-      HashMap var12,
-      View var13
-   ) {
-      chooseControl$renderList$lambda$86(var0, var1, var2, var3, var4, var5, var6, var7, var8, var9, var10, var11, var12, var13);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$KIXzPcbhGwgI1V9HBCy5taZGPxg(GxFavoritesPage var0, String var1, JSONObject var2) {
-      return runAction$lambda$33(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$KvJtrjm06csLjTLLPyLrwYkGfw0(GxFavoritesPage var0, String var1, AlertDialog var2, int var3, View var4) {
-      chooseControl$item$lambda$77(var0, var1, var2, var3, var4);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$KxWQ97RMCEsmXTD1fd8KD75jd_U(GxFavoritesPage var0, GxFavoritesPage.Slot var1, CompoundButton var2, boolean var3) {
-      render$lambda$40(var0, var1, var2, var3);
-   }
-
-   // $VF: synthetic method
-   public static GxFavoritesPage.Slot $r8$lambda$LfWD0nF3OlgpdvajXkjxK_QU5jw/* $VF was: $r8$lambda$LfWD0nF3OlgpdvajXkjxK_QU5jw*/(
-      String var0, GxFavoritesPage.Slot var1
-   ) {
-      return chooseControl$item$lambda$77$lambda$76(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Pd7VWyDWlXVTZ97jGiel40YqkqI(GxFavoritesPage var0, int var1, boolean var2) {
-      return render$lambda$43(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$PpM7nHiHAfhky_pRNx6WSkqJA2U(GxFavoritesPage var0, int var1, boolean var2) {
-      return render$lambda$51(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$QCAeznAZhZmi7YZv9ZBLSTP_ZtE/* $VF was: $r8$lambda$QCAeznAZhZmi7YZv9ZBLSTP_ZtE*/(
-      GxFavoritesPage var0, String var1, JSONObject var2
-   ) {
-      return refreshValues$lambda$18(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static GxFavoritesPage.Slot $r8$lambda$RTEQfe9AtxUoI0Q_GLo6WikdqT0(boolean var0, GxFavoritesPage.Slot var1) {
-      return render$lambda$43$lambda$42(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Rt0Kiqf645Tven2NnGWpfmKo2ws(GxFavoritesPage var0, String var1, JSONObject var2) {
-      return saveSlots$lambda$23(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static GxFavoritesPage.Slot $r8$lambda$V6mGe2B1C6whqQj2ZqplX7ck7cw(double var0, GxFavoritesPage.Slot var2) {
-      return render$lambda$49$lambda$48$lambda$47(var0, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$W_cYBkn_lxm8gXgepvjm9rW8upE/* $VF was: $r8$lambda$W_cYBkn_lxm8gXgepvjm9rW8upE*/(
-      GxFavoritesPage var0, GxFavoritesPage.Slot var1
-   ) {
-      return render$lambda$38(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$aWCv1mvgDIyQbVmBFV9bByKidGc(GxFavoritesPage var0, int var1, double var2) {
-      return render$lambda$49(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static String $r8$lambda$ad1M_obSO5825nU08Nd2rMUAQ9k(double var0) {
-      return render$lambda$45(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$cSfmLgrS9CmvYw3moYXU2QwPYyw(GxFavoritesPage var0, String var1, JSONObject var2) {
-      return load$lambda$17(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$hLy2Zv0gaT38ExO8ptXfEOcOrLo(GxFavoritesPage var0, String var1, Object var2, String var3, JSONObject var4) {
-      return toggleValue$lambda$29(var0, var1, var2, var3, var4);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$lkSLqIFbL5BROBLPkD7i7_topYo(GxFavoritesPage var0) {
-      return build$lambda$5(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$mvSftvmQ2N8hSFnzmr3AUr8me2g(GxFavoritesPage var0, int var1) {
-      return render$lambda$44(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static int $r8$lambda$nVnLF5hRggxxmxkOFpgc6Nb_ELA/* $VF was: $r8$lambda$nVnLF5hRggxxmxkOFpgc6Nb_ELA*/(Function2 var0, Object var1, Object var2) {
-      return sortOptions$lambda$11(var0, var1, var2);
-   }
-
-   public GxFavoritesPage(Activity var1, GxHost var2) {
-      Intrinsics.checkNotNullParameter(var1, "act");
-      Intrinsics.checkNotNullParameter(var2, "gx");
-      super(var1, var2);
-      this.actionPrefix = "__starpilot_favorite_action__:";
-      this.setSpeed = "__starpilot_controller_action__:set_speed";
-      this.loading = true;
-      ArrayList var4 = new ArrayList(3);
-
-      for (int var3 = 0; var3 < 3; var3++) {
-         var4.add(new GxFavoritesPage.Slot(false, false, null, null, null, 31, null));
-      }
-
-      this.slots = var4;
-      ArrayList var5 = new ArrayList(3);
-
-      for (int var6 = 0; var6 < 3; var6++) {
-         var5.add(new GxFavoritesPage.Slot(false, false, null, null, null, 31, null));
-      }
-
-      this.savedSlots = var5;
-      this.options = CollectionsKt.emptyList();
-      this.values = new HashMap<>();
-   }
-
-   private static final Unit build$lambda$5(GxFavoritesPage var0) {
-      var0.refreshValues();
-      return Unit.INSTANCE;
-   }
-
-   private final Pair<String, List<String>> categoryOf(JSONObject var1) {
-      List var5;
-      label176: {
-         GalaxyApi var3 = this.getApi();
-         if (var3 != null) {
-            List var19 = var3.getCatalog();
-            var5 = var19;
-            if (var19 != null) {
-               break label176;
+        public static /* synthetic */ Slot copy$default(Slot slot, boolean z, boolean z2, String str, Object obj, String str2, int i, Object obj2) {
+            if ((i & 1) != 0) {
+                z = slot.enabled;
             }
-         }
-
-         var5 = CollectionsKt.emptyList();
-      }
-
-      String var4;
-      String var6;
-      label171: {
-         label170: {
-            label169: {
-               var6 = var1.optString("key");
-               if (var6 != null) {
-                  switch (var6.hashCode()) {
-                     case -1223291282:
-                        if (var6.equals("ConditionalExperimental")) {
-                           break label169;
-                        }
-                        break;
-                     case -1119957410:
-                        if (var6.equals("ConditionalChill")) {
-                           break label169;
-                        }
-                        break;
-                     case -878798333:
-                        if (var6.equals("__starpilot_controller_action__:cycle_driving_personality")) {
-                           break label170;
-                        }
-                        break;
-                     case -370744618:
-                        if (var6.equals("__starpilot_favorite_action__:toggle_traffic_mode")) {
-                           break label170;
-                        }
-                        break;
-                     case 499325643:
-                        if (var6.equals("ExperimentalMode")) {
-                           break label169;
-                        }
-                  }
-               }
-
-               var4 = var6;
-               break label171;
+            if ((i & 2) != 0) {
+                z2 = slot.showOnroad;
             }
-
-            var4 = "LongitudinalControlMode";
-            break label171;
-         }
-
-         var4 = "CustomPersonalities";
-      }
-
-      ListIterator var7 = var5.listIterator(var5.size());
-
-      boolean var2;
-      Object var20;
-      label155:
-      do {
-         if (!var7.hasPrevious()) {
-            var20 = null;
-            break;
-         }
-
-         var20 = (GalaxyApi.Category)var7.previous();
-         var var8 = var20.getParams();
-         if (var8 instanceof Collection && ((Collection)var8).isEmpty()) {
-            var2 = false;
-         } else {
-            Iterator var31 = var8.iterator();
-
-            while (var31.hasNext()) {
-               if (Intrinsics.areEqual(((GalaxyApi.Param)var31.next()).getKey(), var4)) {
-                  var2 = true;
-                  continue label155;
-               }
+            boolean z3 = z2;
+            if ((i & 4) != 0) {
+                str = slot.key;
             }
-
-            var2 = false;
-         }
-      } while (!var2);
-
-      GalaxyApi.Category var27 = var20;
-      var20 = var27;
-      if (var27 == null) {
-         if (Intrinsics.areEqual(var4, "LongitudinalControlMode")) {
-            ListIterator var24 = var5.listIterator(var5.size());
-
-            label134:
-            do {
-               if (!var24.hasPrevious()) {
-                  var20 = null;
-                  break;
-               }
-
-               var20 = (GalaxyApi.Category)var24.previous();
-               var var28 = var20.getParams();
-               if (var28 instanceof Collection && ((Collection)var28).isEmpty()) {
-                  var2 = false;
-               } else {
-                  Iterator var29 = var28.iterator();
-
-                  while (var29.hasNext()) {
-                     if (Intrinsics.areEqual(((GalaxyApi.Param)var29.next()).getKey(), "ConditionalExperimental")) {
-                        var2 = true;
-                        continue label134;
-                     }
-                  }
-
-                  var2 = false;
-               }
-            } while (!var2);
-
-            var20 = var20;
-         } else {
-            var20 = null;
-         }
-      }
-
-      if (var20 == null) {
-         String var14;
-         if (Intrinsics.areEqual(var1.optString("section"), "Actions")) {
-            var14 = "Controller Actions";
-         } else {
-            var var15 = var1.optString("section");
-            if (var15.length() == 0) {
-               var2 = true;
-            } else {
-               var2 = false;
+            String str3 = str;
+            if ((i & 8) != 0) {
+                obj = slot.value;
             }
-
-            if (var2) {
-               var15 = "Other";
+            Object obj3 = obj;
+            if ((i & 16) != 0) {
+                str2 = slot.label;
             }
+            return slot.copy(z, z3, str3, obj3, str2);
+        }
 
-            var14 = var15;
-         }
+        /* renamed from: component1, reason: from getter */
+        public final boolean getEnabled() {
+            return this.enabled;
+        }
 
-         return TuplesKt.to(var14, CollectionsKt.emptyList());
-      } else {
-         Iterable var9 = var20.getParams();
-         Map var25 = new LinkedHashMap(RangesKt.coerceAtLeast(MapsKt.mapCapacity(CollectionsKt.collectionSizeOrDefault(var9, 10)), 16));
+        /* renamed from: component2, reason: from getter */
+        public final boolean getShowOnroad() {
+            return this.showOnroad;
+        }
 
-         for (Object var30 : var9) {
-            var25.put(((GalaxyApi.Param)var30).getKey(), var30);
-         }
+        /* renamed from: component3, reason: from getter */
+        public final String getKey() {
+            return this.key;
+        }
 
-         GalaxyApi.Param var11 = (GalaxyApi.Param)var25.get(var4);
-         if (var11 != null && var11.isParentToggle()) {
-            var2 = true;
-         } else {
-            var2 = false;
-         }
+        /* renamed from: component4, reason: from getter */
+        public final Object getValue() {
+            return this.value;
+        }
 
-         label107:
-         if (!var2 && Intrinsics.areEqual(var4, var6)) {
-            if (var11 != null) {
-               String var12 = var11.getParentKey();
-               if (var12 != null) {
-                  var11 = (GalaxyApi.Param)var25.get(var12);
-                  break label107;
-               }
+        /* renamed from: component5, reason: from getter */
+        public final String getLabel() {
+            return this.label;
+        }
+
+        public final Slot copy(boolean enabled, boolean showOnroad, String key, Object value, String label) {
+            Intrinsics.checkNotNullParameter(label, "label");
+            return new Slot(enabled, showOnroad, key, value, label);
+        }
+
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
             }
-
-            var11 = null;
-         }
-
-         ArrayList var26 = new ArrayList();
-         HashSet var23 = new HashSet();
-
-         while (var11 != null && var23.add(var11.getKey())) {
-            var26.add(0, var11.getLabel());
-            String var13 = var11.getParentKey();
-            if (var13 != null) {
-               var11 = (GalaxyApi.Param)var25.get(var13);
-            } else {
-               var11 = null;
+            if (!(other instanceof Slot)) {
+                return false;
             }
-         }
+            Slot slot = (Slot) other;
+            return this.enabled == slot.enabled && this.showOnroad == slot.showOnroad && Intrinsics.areEqual(this.key, slot.key) && Intrinsics.areEqual(this.value, slot.value) && Intrinsics.areEqual(this.label, slot.label);
+        }
 
-         return TuplesKt.to(var20.getName(), var26);
-      }
-   }
+        public int hashCode() {
+            return (((((((Boolean.hashCode(this.enabled) * 31) + Boolean.hashCode(this.showOnroad)) * 31) + (this.key == null ? 0 : this.key.hashCode())) * 31) + (this.value != null ? this.value.hashCode() : 0)) * 31) + this.label.hashCode();
+        }
 
-   private final void chooseControl(int var1) {
-      GxFavoritesPage.Slot var8 = this.slots.get(var1);
-      String var5 = var8.getKey();
-      String var7 = "";
-      if (var5 == null) {
-         var5 = "";
-      }
+        public String toString() {
+            return "Slot(enabled=" + this.enabled + ", showOnroad=" + this.showOnroad + ", key=" + this.key + ", value=" + this.value + ", label=" + this.label + ")";
+        }
 
-      String var4;
-      TextView var9;
-      JSONObject var10;
-      LinearLayout var11;
-      label86: {
-         var11 = new LinearLayout((Context)this.getAct());
-         var11.setOrientation(1);
-         var11.setPadding(this.getUi().dp(20), this.getUi().dp(8), this.getUi().dp(20), 0);
-         var11.setBackgroundColor(CarUi.Companion.getBG());
-         var10 = this.optionByKey(var8.getKey());
-         var9 = new TextView((Context)this.getAct());
-         if (var10 != null) {
-            String var6 = var10.optString("label");
-            var4 = var6;
-            if (var6 != null) {
-               break label86;
+        public Slot(boolean enabled, boolean showOnroad, String key, Object value, String label) {
+            Intrinsics.checkNotNullParameter(label, "label");
+            this.enabled = enabled;
+            this.showOnroad = showOnroad;
+            this.key = key;
+            this.value = value;
+            this.label = label;
+        }
+
+        public /* synthetic */ Slot(boolean z, boolean z2, String str, Object obj, String str2, int i, DefaultConstructorMarker defaultConstructorMarker) {
+            this((i & 1) != 0 ? false : z, (i & 2) != 0 ? false : z2, (i & 4) != 0 ? null : str, (i & 8) != 0 ? null : obj, (i & 16) != 0 ? "" : str2);
+        }
+
+        public final boolean getEnabled() {
+            return this.enabled;
+        }
+
+        public final String getKey() {
+            return this.key;
+        }
+
+        public final String getLabel() {
+            return this.label;
+        }
+
+        public final boolean getShowOnroad() {
+            return this.showOnroad;
+        }
+
+        public final Object getValue() {
+            return this.value;
+        }
+    }
+
+    @Override // com.starpilot.starview.GxPage
+    public void build() {
+        GalaxyApi.Param param;
+        String str;
+        Iterable catalog;
+        Object element$iv;
+        GalaxyApi api = getApi();
+        if (api == null || (catalog = api.getCatalog()) == null) {
+            param = null;
+        } else {
+            Iterable $this$flatMap$iv = catalog;
+            Collection destination$iv$iv = new ArrayList();
+            for (Object element$iv$iv : $this$flatMap$iv) {
+                Iterable list$iv$iv = ((GalaxyApi.Category) element$iv$iv).getParams();
+                CollectionsKt.addAll(destination$iv$iv, list$iv$iv);
             }
-         }
-
-         var4 = var8.getLabel();
-         boolean var2;
-         if (var4.length() == 0) {
-            var2 = true;
-         } else {
-            var2 = false;
-         }
-
-         if (var2) {
-            var4 = null;
-         }
-
-         String var25 = var4;
-         var4 = var25;
-         if (var25 == null) {
-            var25 = var8.getKey();
-            var4 = var25;
-            if (var25 == null) {
-               var4 = "Not configured";
-            }
-         }
-      }
-
-      String var27 = var7;
-      if (var8.getKey() != null) {
-         var27 = var7;
-         if (var10 == null) {
-            var27 = " (unavailable)";
-         }
-      }
-
-      var9.setText("Current: " + var4 + var27);
-      var9.setTextSize(17.0F);
-      var9.setTextColor(CarUi.Companion.getTEXT());
-      var11.addView((View)var9);
-      EditText var36 = new EditText((Context)this.getAct());
-      var36.setHint("Search by name, setting or description");
-      var36.setTextSize(19.0F);
-      var36.setTextColor(CarUi.Companion.getTEXT());
-      var36.setHintTextColor(CarUi.Companion.getDIM());
-      var36.setSingleLine();
-      var11.addView((View)var36);
-      TextView var38 = new TextView((Context)this.getAct());
-      var38.setTextSize(15.0F);
-      var38.setTextColor(CarUi.Companion.getDIM());
-      var38.setPadding(0, this.getUi().dp(4), 0, this.getUi().dp(4));
-      var11.addView((View)var38);
-      LinearLayout var35 = new LinearLayout((Context)this.getAct());
-      var35.setOrientation(1);
-      ScrollView var37 = new ScrollView((Context)this.getAct());
-      var37.addView((View)var35);
-      var11.addView(
-         (View)var37,
-         (LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, (int)(this.getAct().getResources().getDisplayMetrics().heightPixels * 0.55)))
-      );
-      AlertDialog var39 = new Builder((Context)this.getAct())
-         .setTitle("Favorite #" + (var1 + 1))
-         .setView((View)var11)
-         .setNegativeButton("Cancel", null)
-         .create();
-      HashSet var12 = new HashSet();
-      Iterable var28 = this.options;
-      LinkedHashMap var18 = new LinkedHashMap(RangesKt.coerceAtLeast(MapsKt.mapCapacity(CollectionsKt.collectionSizeOrDefault(var28, 10)), 16));
-
-      for (Object var29 : var28) {
-         var18.put(var29, this.categoryOf((JSONObject)var29));
-      }
-
-      Map var40;
-      label71: {
-         var40 = var18;
-         GalaxyApi var19 = this.getApi();
-         if (var19 != null) {
-            List var30 = var19.getCatalog();
-            var20 = var30;
-            if (var30 != null) {
-               break label71;
-            }
-         }
-
-         var20 = CollectionsKt.emptyList();
-      }
-
-      Iterable var31 = var20;
-      var var21 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var31, 10));
-      Iterator var32 = var31.iterator();
-
-      while (var32.hasNext()) {
-         var21.add(((GalaxyApi.Category)var32.next()).getName());
-      }
-
-      List var14;
-      HashMap var15;
-      int var16;
-      label60: {
-         var14 = var21;
-         var15 = new HashMap();
-         boolean var3 = false;
-         var16 = 0;
-         GalaxyApi var22 = this.getApi();
-         if (var22 != null) {
-            List var33 = var22.getCatalog();
-            var23 = var33;
-            if (var33 != null) {
-               break label60;
-            }
-         }
-
-         var23 = CollectionsKt.emptyList();
-      }
-
-      Iterator var24 = var23.iterator();
-
-      while (var24.hasNext()) {
-         for (Iterator var34 = ((GalaxyApi.Category)var24.next()).getParams().iterator(); var34.hasNext(); var16++) {
-            var15.put(((GalaxyApi.Param)var34.next()).getLabel(), var16);
-         }
-      }
-
-      var36.addTextChangedListener(
-         new TextWatcher(var37, var35, var36, var40, var38, this, var14, var12, var5, var39, var1, var15) {
-            final Map<JSONObject, Pair<String, List<String>>> $cats;
-            final TextView $count;
-            final String $cur;
-            final AlertDialog $dlg;
-            final HashSet<String> $expanded;
-            final int $index;
-            final List<String> $layoutOrder;
-            final LinearLayout $list;
-            final HashMap<String, Integer> $paramOrder;
-            final EditText $search;
-            final ScrollView $sv;
-            final GxFavoritesPage this$0;
-
-            {
-               this.$sv = var1;
-               this.$list = var2x;
-               this.$search = var3;
-               this.$cats = var4x;
-               this.$count = var5x;
-               this.this$0 = var6;
-               this.$layoutOrder = var7x;
-               this.$expanded = var8x;
-               this.$cur = var9x;
-               this.$dlg = var10x;
-               this.$index = var11x;
-               this.$paramOrder = var12x;
-            }
-
-            public void afterTextChanged(Editable var1) {
-               GxFavoritesPage.chooseControl$renderList(
-                  this.$list,
-                  this.$search,
-                  this.$cats,
-                  this.$count,
-                  this.this$0,
-                  this.$layoutOrder,
-                  this.$expanded,
-                  this.$cur,
-                  this.$dlg,
-                  this.$index,
-                  this.$paramOrder
-               );
-               this.$sv.scrollTo(0, 0);
-            }
-
-            public void beforeTextChanged(CharSequence var1, int var2x, int var3, int var4x) {
-            }
-
-            public void onTextChanged(CharSequence var1, int var2x, int var3, int var4x) {
-            }
-         }
-      );
-      chooseControl$renderList(var35, var36, var40, var38, this, var14, var12, var5, var39, var1, var15);
-      var39.show();
-   }
-
-   private static final void chooseControl$item(GxFavoritesPage var0, LinearLayout var1, String var2, AlertDialog var3, int var4, JSONObject var5, String var6) {
-      String var8;
-      String var10;
-      label53: {
-         var10 = "";
-         if (var5 != null) {
-            String var9 = var5.optString("key");
-            var8 = var9;
-            if (var9 != null) {
-               break label53;
-            }
-         }
-
-         var8 = "";
-      }
-
-      LinearLayout var11 = new LinearLayout((Context)var0.getAct());
-      var11.setOrientation(1);
-      CarUi var12 = var0.getUi();
-      int var7;
-      if (Intrinsics.areEqual(var8, var2)) {
-         var7 = CarUi.Companion.getCARD_ON();
-      } else {
-         var7 = CarUi.Companion.getCARD();
-      }
-
-      Integer var24;
-      if (Intrinsics.areEqual(var8, var2)) {
-         var24 = CarUi.Companion.getACCENT();
-      } else {
-         var24 = null;
-      }
-
-      var11.setBackground((Drawable)var12.rounded(var7, 12, var24));
-      var11.setPadding(var0.getUi().dp(16), var0.getUi().dp(10), var0.getUi().dp(16), var0.getUi().dp(10));
-      var11.setMinimumHeight(var0.getUi().dp(60));
-      var11.setClickable(true);
-      TextView var28 = new TextView((Context)var0.getAct());
-      String var25 = var10;
-      if (Intrinsics.areEqual(var8, var2)) {
-         var25 = "✓ ";
-      }
-
-      label47: {
-         if (var5 != null) {
-            var10 = var5.optString("label");
-            var2 = var10;
-            if (var10 != null) {
-               break label47;
-            }
-         }
-
-         var2 = "Not configured";
-      }
-
-      var28.setText(var25 + var2);
-      var28.setTextSize(18.0F);
-      var28.setTextColor(CarUi.Companion.getTEXT());
-      var28.setTypeface(Typeface.DEFAULT_BOLD);
-      var11.addView((View)var28);
-      if (var5 == null) {
-         var2 = "Clear this assignment";
-      } else {
-         Iterable var20 = CollectionsKt.listOf(new String[]{var6, var5.optString("description")});
-         var var16 = new ArrayList();
-
-         for (Object var21 : var20) {
-            String var26 = (String)var21;
-            Intrinsics.checkNotNull(var26);
-            if (!StringsKt.isBlank(var26)) {
-               var16.add(var21);
-            }
-         }
-
-         List var17 = var16;
-         var2 = CollectionsKt.joinToString$default(var17, " · ", null, null, 0, null, null, 62, null);
-      }
-
-      if (!StringsKt.isBlank(var2)) {
-         TextView var22 = new TextView((Context)var0.getAct());
-         var22.setText(var2);
-         var22.setTextSize(14.0F);
-         var22.setTextColor(CarUi.Companion.getDIM());
-         var11.addView((View)var22);
-      }
-
-      var11.setOnClickListener(new GxFavoritesPage$$ExternalSyntheticLambda19(var0, var8, var3, var4));
-      View var19 = (View)var11;
-      android.widget.LinearLayout.LayoutParams var18 = new android.widget.LinearLayout.LayoutParams(-1, -2);
-      var18.bottomMargin = var0.getUi().dp(6);
-      Unit var13 = Unit.INSTANCE;
-      var1.addView(var19, (LayoutParams)var18);
-   }
-
-   private static final void chooseControl$item$lambda$77(GxFavoritesPage var0, String var1, AlertDialog var2, int var3, View var4) {
-      label42: {
-         if (!var0.saving && !var0.loading) {
-            int var5 = var1.length();
-            boolean var6 = false;
-            boolean var9;
-            if (var5 > 0) {
-               var9 = true;
-            } else {
-               var9 = false;
-            }
-
-            if (!var9) {
-               break label42;
-            }
-
-            var var7 = var0.options;
-            if (var7 instanceof Collection && ((Collection)var7).isEmpty()) {
-               var9 = true;
-            } else {
-               Iterator var8 = var7.iterator();
-
-               while (true) {
-                  if (!var8.hasNext()) {
-                     var9 = true;
-                     break;
-                  }
-
-                  if (Intrinsics.areEqual(((JSONObject)var8.next()).optString("key"), var1)) {
-                     var9 = var6;
-                     break;
-                  }
-               }
-            }
-
-            if (!var9) {
-               break label42;
-            }
-         }
-
-         return;
-      }
-
-      var2.dismiss();
-      var0.updateSlot(var3, true, new GxFavoritesPage$$ExternalSyntheticLambda6(var1));
-   }
-
-   private static final GxFavoritesPage.Slot chooseControl$item$lambda$77$lambda$76(String var0, GxFavoritesPage.Slot var1) {
-      Intrinsics.checkNotNullParameter(var1, "it");
-      var0 = var0;
-      boolean var2;
-      if (var0.length() == 0) {
-         var2 = true;
-      } else {
-         var2 = false;
-      }
-
-      if (var2) {
-         var0 = null;
-      }
-
-      return GxFavoritesPage.Slot.copy$default(var1, false, false, var0, null, null, 27, null);
-   }
-
-   private static final void chooseControl$renderList(
-      LinearLayout var0,
-      EditText var1,
-      Map<JSONObject, ? extends Pair<String, ? extends List<String>>> var2,
-      TextView var3,
-      GxFavoritesPage var4,
-      List<String> var5,
-      HashSet<String> var6,
-      String var7,
-      AlertDialog var8,
-      int var9,
-      HashMap<String, Integer> var10
-   ) {
-      var0.removeAllViews();
-      String var17 = StringsKt.trim(var1.getText().toString()).toString();
-      Locale var15 = Locale.ROOT;
-      String var16 = "ROOT";
-      Intrinsics.checkNotNullExpressionValue(var15, "ROOT");
-      var17 = var17.toLowerCase(var15);
-      String var32 = "toLowerCase(...)";
-      Intrinsics.checkNotNullExpressionValue(var17, "toLowerCase(...)");
-      CharSequence var49 = var17;
-      Regex var18 = new Regex("\\s+");
-      Iterable var55 = var18.split(var49, 0);
-      var var50 = new ArrayList();
-
-      for (Object var56 : var55) {
-         boolean var11;
-         if (((String)var56).length() > 0) {
-            var11 = true;
-         } else {
-            var11 = false;
-         }
-
-         if (var11) {
-            var50.add(var56);
-         }
-      }
-
-      List var21 = var50;
-      Iterable var51 = var2.keySet();
-      boolean var14 = false;
-      var var23 = new ArrayList();
-
-      for (Object var24 : var51) {
-         JSONObject var57 = (JSONObject)var24;
-         Object var68 = var2.get(var57);
-         Intrinsics.checkNotNull(var68);
-         Pair var20 = (Pair)var68;
-         var68 = (String)var20.component1();
-         List var25 = (List)var20.component2();
-         String[] var75 = new String[]{
-            var57.optString("label"),
-            var57.optString("key"),
-            var57.optString("description"),
-            var57.optString("picker_label"),
-            var57.optString("picker_description"),
-            (String)var68
-         };
-         String var58 = CollectionsKt.joinToString$default(CollectionsKt.plus(CollectionsKt.listOf(var75), var25), " ", null, null, 0, null, null, 62, null);
-         var68 = Locale.ROOT;
-         Intrinsics.checkNotNullExpressionValue(var68, var16);
-         String var26 = var58.toLowerCase((Locale)var68);
-         Intrinsics.checkNotNullExpressionValue(var26, var32);
-         var var76 = var21;
-         boolean var29;
-         Iterable var34;
-         if (var76 instanceof Collection && ((Collection)var76).isEmpty()) {
-            var17 = var16;
-            var29 = true;
-            var34 = var51;
-            var16 = var32;
-         } else {
-            Iterator var86 = var76.iterator();
-
+            Iterable $this$firstOrNull$iv = (List) destination$iv$iv;
+            Iterator it = $this$firstOrNull$iv.iterator();
             while (true) {
-               if (!var86.hasNext()) {
-                  var29 = true;
-                  var17 = var16;
-                  var16 = var32;
-                  var34 = var51;
-                  break;
-               }
-
-               String var59 = (String)var86.next();
-               CharSequence var27 = var26;
-               CharSequence var33 = var59;
-               if (!StringsKt.contains$default(var27, var33, false, 2, null)) {
-                  var29 = false;
-                  var34 = var51;
-                  var16 = var32;
-                  var17 = var16;
-                  break;
-               }
-
-               var32 = var32;
-               var16 = var16;
-               var51 = var51;
+                if (!it.hasNext()) {
+                    element$iv = null;
+                    break;
+                }
+                element$iv = it.next();
+                GalaxyApi.Param it2 = (GalaxyApi.Param) element$iv;
+                String optString = it2.getO().optString("galaxy_ui_type");
+                if (StringsKt.isBlank(optString)) {
+                    optString = it2.getUiType();
+                }
+                if (Intrinsics.areEqual(optString, "favorites")) {
+                    break;
+                }
             }
-         }
-
-         if (var29) {
-            var23.add(var24);
-         }
-
-         var16 = var17;
-         var51 = var34;
-         var32 = var16;
-      }
-
-      byte var30 = 6;
-      List var54 = var23;
-      CharSequence var35;
-      if (var4.saving) {
-         var35 = "Selection is currently unavailable.";
-      } else {
-         int var12 = var54.size();
-         String var36;
-         if (var54.size() == 1) {
-            var36 = "control";
-         } else {
-            var36 = "controls";
-         }
-
-         var35 = var12 + " " + var36;
-      }
-
-      var3.setText(var35);
-      chooseControl$item(var4, var0, var7, var8, var9, null, "");
-      Iterable var41 = var54;
-      var var37 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var41, 10));
-      Iterator var42 = var41.iterator();
-
-      while (var42.hasNext()) {
-         Object var64 = var2.get((JSONObject)var42.next());
-         Intrinsics.checkNotNull(var64);
-         var37.add((String)((Pair)var64).getFirst());
-      }
-
-      List var38 = var37;
-      Set var39 = CollectionsKt.toSet(var38);
-      Iterable var65 = var5;
-      var var43 = new ArrayList();
-
-      for (Object var66 : var65) {
-         if (var39.contains((String)var66)) {
-            var43.add(var66);
-         }
-      }
-
-      List var44 = var43;
-
-      for (String var74 : CollectionsKt.distinct(CollectionsKt.plus(var44, var39))) {
-         Iterable var77 = var54;
-         var var45 = new ArrayList();
-
-         for (Object var81 : var77) {
-            Object var84 = var2.get((JSONObject)var81);
-            Intrinsics.checkNotNull(var84);
-            if (Intrinsics.areEqual(((Pair)var84).getFirst(), var74)) {
-               var45.add(var81);
+            param = (GalaxyApi.Param) element$iv;
+        }
+        GalaxyApi.Param fav = param;
+        GxFavoritesPage gxFavoritesPage = this;
+        if (fav == null || (str = fav.getLabel()) == null) {
+            str = "Favorites";
+        }
+        GxPage.Row r = GxPage.row$default(gxFavoritesPage, str, fav != null ? fav.getDescription() : null, null, 0, 12, null);
+        r.getTitleView().setTypeface(Typeface.DEFAULT_BOLD);
+        this.content = GxPage.box$default(this, null, 1, null);
+        every(5000L, new Function0() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda10
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit build$lambda$5;
+                build$lambda$5 = GxFavoritesPage.build$lambda$5(GxFavoritesPage.this);
+                return build$lambda$5;
             }
-         }
+        });
+    }
 
-         List var82 = var45;
-         if (!var82.isEmpty()) {
-            boolean var31;
-            if (var21.isEmpty() && !var6.contains(var74)) {
-               var31 = false;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$5(GxFavoritesPage this$0) {
+        this$0.refreshValues();
+        return Unit.INSTANCE;
+    }
+
+    @Override // com.starpilot.starview.GxPage
+    public void onShow() {
+        load();
+    }
+
+    @Override // com.starpilot.starview.GxPage
+    public void onHide() {
+        Runnable it = this.speedTimer;
+        if (it != null) {
+            getMain().removeCallbacks(it);
+        }
+        this.speedTimer = null;
+    }
+
+    private final JSONObject optionByKey(String k) {
+        String str = k;
+        Object obj = null;
+        if (str == null || str.length() == 0) {
+            return null;
+        }
+        Iterable $this$firstOrNull$iv = this.options;
+        Iterator it = $this$firstOrNull$iv.iterator();
+        while (true) {
+            if (!it.hasNext()) {
+                break;
+            }
+            Object element$iv = it.next();
+            JSONObject it2 = (JSONObject) element$iv;
+            if (Intrinsics.areEqual(it2.optString("key"), k)) {
+                obj = element$iv;
+                break;
+            }
+        }
+        return (JSONObject) obj;
+    }
+
+    private final List<JSONObject> sortOptions(JSONArray a) {
+        List<JSONObject> emptyList;
+        if (a == null || (emptyList = objects(a)) == null) {
+            emptyList = CollectionsKt.emptyList();
+        }
+        final Function2 function2 = new Function2() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda7
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                int sortOptions$lambda$10;
+                sortOptions$lambda$10 = GxFavoritesPage.sortOptions$lambda$10((JSONObject) obj, (JSONObject) obj2);
+                return Integer.valueOf(sortOptions$lambda$10);
+            }
+        };
+        return CollectionsKt.sortedWith(emptyList, new Comparator() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda8
+            @Override // java.util.Comparator
+            public final int compare(Object obj, Object obj2) {
+                int sortOptions$lambda$11;
+                sortOptions$lambda$11 = GxFavoritesPage.sortOptions$lambda$11(Function2.this, obj, obj2);
+                return sortOptions$lambda$11;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final int sortOptions$lambda$10(JSONObject x, JSONObject y) {
+        int gxHomeNatural;
+        String optString = x.optString("label");
+        if (optString.length() == 0) {
+            optString = x.optString("key");
+        }
+        Intrinsics.checkNotNullExpressionValue(optString, "ifEmpty(...)");
+        String str = optString;
+        String optString2 = y.optString("label");
+        if (optString2.length() == 0) {
+            optString2 = y.optString("key");
+        }
+        Intrinsics.checkNotNullExpressionValue(optString2, "ifEmpty(...)");
+        gxHomeNatural = GxHomeKt.gxHomeNatural(str, optString2);
+        return gxHomeNatural;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final int sortOptions$lambda$11(Function2 $tmp0, Object p0, Object p1) {
+        return ((Number) $tmp0.invoke(p0, p1)).intValue();
+    }
+
+    private final List<Slot> normalizeSlots(JSONArray a) {
+        boolean gxHomeTruthy;
+        boolean gxHomeTruthy2;
+        boolean gxHomeTruthy3;
+        String str;
+        boolean gxHomeTruthy4;
+        ArrayList arrayList = new ArrayList(3);
+        for (int i = 0; i < 3; i++) {
+            arrayList.add(new Slot(false, false, null, null, null, 31, null));
+        }
+        ArrayList base = arrayList;
+        if (a == null) {
+            return base;
+        }
+        int min = Math.min(3, a.length());
+        for (int i2 = 0; i2 < min; i2++) {
+            JSONObject o = a.optJSONObject(i2);
+            if (o != null) {
+                Object kRaw = o.opt("key");
+                gxHomeTruthy = GxHomeKt.gxHomeTruthy(kRaw);
+                Object obj = null;
+                String k = gxHomeTruthy ? kRaw.toString() : null;
+                gxHomeTruthy2 = GxHomeKt.gxHomeTruthy(o.opt("enabled"));
+                gxHomeTruthy3 = GxHomeKt.gxHomeTruthy(o.opt("show_onroad"));
+                if (Intrinsics.areEqual(k, this.setSpeed) && o.has("value") && !o.isNull("value")) {
+                    obj = o.opt("value");
+                }
+                Object obj2 = obj;
+                if (k != null) {
+                    Object l = o.opt("label");
+                    gxHomeTruthy4 = GxHomeKt.gxHomeTruthy(l);
+                    str = gxHomeTruthy4 ? l.toString() : k;
+                } else {
+                    str = "";
+                }
+                base.set(i2, new Slot(gxHomeTruthy2, gxHomeTruthy3, k, obj2, str));
+            }
+        }
+        return base;
+    }
+
+    private final JSONObject slotJson(Slot s) {
+        JSONObject put = new JSONObject().put("enabled", s.getEnabled()).put("show_onroad", s.getShowOnroad());
+        Object key = s.getKey();
+        if (key == null) {
+            key = JSONObject.NULL;
+        }
+        JSONObject $this$slotJson_u24lambda_u2414 = put.put("key", key).put("label", s.getLabel());
+        if (Intrinsics.areEqual(s.getKey(), this.setSpeed) && s.getValue() != null) {
+            $this$slotJson_u24lambda_u2414.put("value", s.getValue());
+        }
+        Intrinsics.checkNotNullExpressionValue($this$slotJson_u24lambda_u2414, "apply(...)");
+        return $this$slotJson_u24lambda_u2414;
+    }
+
+    private final void mergeValues(JSONObject o) {
+        if (o == null) {
+            return;
+        }
+        Iterator<String> keys = o.keys();
+        Intrinsics.checkNotNullExpressionValue(keys, "keys(...)");
+        while (keys.hasNext()) {
+            String k = keys.next();
+            this.values.put(k, o.isNull(k) ? null : o.opt(k));
+        }
+    }
+
+    private final String unitLabel() {
+        return this.isMetric ? "km/h" : "mph";
+    }
+
+    private final double speedValue(Slot s) {
+        double gxHomeNum;
+        if (s.getValue() == null) {
+            return 30.0d;
+        }
+        gxHomeNum = GxHomeKt.gxHomeNum(s.getValue());
+        return gxHomeNum;
+    }
+
+    private final boolean isSpeedSlot(Slot s) {
+        return Intrinsics.areEqual(s.getKey(), this.setSpeed);
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:11:0x0026, code lost:
+    
+        if (r0 == null) goto L14;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final String controlLabel(Slot s) {
+        String l;
+        String gxHomeFmt;
+        String optString;
+        JSONObject optionByKey = optionByKey(s.getKey());
+        String str = null;
+        if (optionByKey != null && (optString = optionByKey.optString("label")) != null) {
+            String str2 = optString;
+            if (str2.length() == 0) {
+                str2 = null;
+            }
+            l = str2;
+        }
+        String label = s.getLabel();
+        if (!(label.length() == 0)) {
+            str = label;
+        }
+        l = str;
+        if (l == null && (l = s.getKey()) == null) {
+            l = "Not configured";
+        }
+        if (!isSpeedSlot(s)) {
+            return l;
+        }
+        gxHomeFmt = GxHomeKt.gxHomeFmt(speedValue(s));
+        return l + " " + gxHomeFmt + " " + unitLabel();
+    }
+
+    private final boolean isActionSlot(Slot s) {
+        boolean gxHomeTruthy;
+        String key = s.getKey();
+        if (key == null) {
+            key = "";
+        }
+        if (!StringsKt.startsWith$default(key, this.actionPrefix, false, 2, (Object) null)) {
+            JSONObject optionByKey = optionByKey(s.getKey());
+            gxHomeTruthy = GxHomeKt.gxHomeTruthy(optionByKey != null ? optionByKey.opt("action") : null);
+            if (!gxHomeTruthy) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private final void load() {
+        getJson("/api/favorites/slots", new Function2() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda18
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit load$lambda$17;
+                load$lambda$17 = GxFavoritesPage.load$lambda$17(GxFavoritesPage.this, (String) obj, (JSONObject) obj2);
+                return load$lambda$17;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit load$lambda$17(GxFavoritesPage this$0, String e, JSONObject o) {
+        boolean gxHomeTruthy;
+        if (e == null && o != null) {
+            this$0.options = this$0.sortOptions(o.optJSONArray("options"));
+            this$0.slots = this$0.normalizeSlots(o.optJSONArray("slots"));
+            this$0.savedSlots = this$0.slots;
+            this$0.mergeValues(o.optJSONObject("values"));
+            gxHomeTruthy = GxHomeKt.gxHomeTruthy(o.opt("is_metric"));
+            this$0.isMetric = gxHomeTruthy;
+        } else {
+            this$0.toast("Failed to load favorite slots.");
+        }
+        this$0.loading = false;
+        this$0.render();
+        return Unit.INSTANCE;
+    }
+
+    private final void refreshValues() {
+        if (this.loading || this.saving) {
+            return;
+        }
+        getJson("/api/favorites/values", new Function2() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda11
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit refreshValues$lambda$18;
+                refreshValues$lambda$18 = GxFavoritesPage.refreshValues$lambda$18(GxFavoritesPage.this, (String) obj, (JSONObject) obj2);
+                return refreshValues$lambda$18;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit refreshValues$lambda$18(GxFavoritesPage this$0, String e, JSONObject o) {
+        if (e == null && o != null && !this$0.saving) {
+            this$0.mergeValues(o.optJSONObject("values"));
+            this$0.render();
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void saveSlots() {
+        if (this.saving) {
+            return;
+        }
+        this.saving = true;
+        render();
+        JSONObject jSONObject = new JSONObject();
+        JSONArray $this$saveSlots_u24lambda_u2419 = new JSONArray();
+        for (Slot s : this.slots) {
+            $this$saveSlots_u24lambda_u2419.put(slotJson(s));
+        }
+        Unit unit = Unit.INSTANCE;
+        JSONObject body = jSONObject.put("slots", $this$saveSlots_u24lambda_u2419);
+        GxPage.send$default(this, "PUT", "/api/favorites/slots", body, 0L, new Function2() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda17
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit saveSlots$lambda$23;
+                saveSlots$lambda$23 = GxFavoritesPage.saveSlots$lambda$23(GxFavoritesPage.this, (String) obj, (JSONObject) obj2);
+                return saveSlots$lambda$23;
+            }
+        }, 8, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:20:0x004d, code lost:
+    
+        if (r0 == null) goto L25;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit saveSlots$lambda$23(GxFavoritesPage this$0, String e, JSONObject o) {
+        String str;
+        String optString;
+        JSONArray it;
+        if (e == null) {
+            String str2 = null;
+            this$0.slots = this$0.normalizeSlots(o != null ? o.optJSONArray("slots") : null);
+            this$0.savedSlots = this$0.slots;
+            if (o != null && (it = o.optJSONArray("options")) != null) {
+                this$0.options = this$0.sortOptions(it);
+            }
+            this$0.mergeValues(o != null ? o.optJSONObject("values") : null);
+            if (o != null && (optString = o.optString("message")) != null) {
+                String str3 = optString;
+                if (!StringsKt.isBlank(str3)) {
+                    str2 = str3;
+                }
+                str = str2;
+            }
+            str = "Favorite slots saved.";
+            this$0.toast(str);
+        } else {
+            this$0.slots = this$0.savedSlots;
+            String str4 = e;
+            if (StringsKt.isBlank(str4)) {
+                str4 = "Failed to save favorite slots.";
+            }
+            this$0.toast(str4);
+        }
+        this$0.saving = false;
+        this$0.render();
+        return Unit.INSTANCE;
+    }
+
+    static /* synthetic */ void updateSlot$default(GxFavoritesPage gxFavoritesPage, int i, boolean z, Function1 function1, int i2, Object obj) {
+        if ((i2 & 2) != 0) {
+            z = false;
+        }
+        gxFavoritesPage.updateSlot(i, z, function1);
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:32:0x0089, code lost:
+    
+        if (r3 == null) goto L32;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void updateSlot(int index, boolean keyChanged, Function1<? super Slot, Slot> patch) {
+        String key;
+        String optString;
+        int i;
+        Object obj;
+        boolean z;
+        boolean z2;
+        String str;
+        Object obj2;
+        if (this.saving) {
+            return;
+        }
+        Slot prev = this.slots.get(index);
+        Object s = patch.invoke(prev);
+        if (keyChanged) {
+            Slot slot = (Slot) s;
+            if (Intrinsics.areEqual(((Slot) s).getKey(), this.setSpeed)) {
+                obj2 = Intrinsics.areEqual(prev.getKey(), this.setSpeed) ? prev.getValue() : 30;
+                i = 23;
+                obj = null;
+                z = false;
+                z2 = false;
+                str = null;
             } else {
-               var31 = true;
+                i = 23;
+                obj = null;
+                z = false;
+                z2 = false;
+                str = null;
+                obj2 = null;
             }
-
-            TextView var79 = new TextView((Context)var4.getAct());
-            if (var31) {
-               var16 = "▾";
-            } else {
-               var16 = "▸";
+            s = Slot.copy$default(slot, z, z2, str, obj2, null, i, obj);
+        }
+        Slot slot2 = (Slot) s;
+        if (((Slot) s).getKey() == null) {
+            key = "";
+        } else {
+            JSONObject optionByKey = optionByKey(((Slot) s).getKey());
+            if (optionByKey != null && (optString = optionByKey.optString("label")) != null) {
+                String str2 = optString;
+                if (str2.length() == 0) {
+                    str2 = null;
+                }
+                key = str2;
             }
+            key = ((Slot) s).getKey();
+            Intrinsics.checkNotNull(key);
+        }
+        Slot copy$default = Slot.copy$default(slot2, false, false, null, null, key, 15, null);
+        List it = CollectionsKt.toMutableList((Collection) this.slots);
+        it.set(index, copy$default);
+        this.slots = it;
+        saveSlots();
+    }
 
-            int var13 = var82.size();
-            var79.setText(var16 + "  " + var74 + " (" + var13 + ")");
-            var79.setTextSize(18.0F);
-            var79.setTextColor(CarUi.Companion.getACCENT());
-            var79.setTypeface(Typeface.DEFAULT_BOLD);
-            var79.setMinHeight(var4.getUi().dp(56));
-            var79.setGravity(16);
-            var79.setPadding(var4.getUi().dp(var30), var4.getUi().dp(var30), var4.getUi().dp(var30), var4.getUi().dp(var30));
-            var79.setOnClickListener(
-               new GxFavoritesPage$$ExternalSyntheticLambda13(var21, var6, var74, var0, var1, var2, var3, var4, var5, var7, var8, var9, var10)
-            );
-            var0.addView((View)var79);
-            if (var31) {
-               for (JSONObject var85 : CollectionsKt.sortedWith(
-                  var82,
-                  new Comparator(new Comparator(var2, var10) {
-                     final Map $cats$inlined;
-                     final HashMap $paramOrder$inlined;
-
-                     {
-                        this.$cats$inlined = var1;
-                        this.$paramOrder$inlined = var2x;
-                     }
-
-                     @Override
-                     public final int compare(T var1, T var2) {
-                        var1 = (JSONObject)var1;
-                        var1 = this.$cats$inlined.get(var1);
-                        Intrinsics.checkNotNull(var1);
-                        var1 = (List)((Pair)var1).getSecond();
-                        boolean var5 = var1.isEmpty();
-                        int var4 = Integer.MAX_VALUE;
-                        Integer var6 = -1;
-                        Comparable var10;
-                        if (var5) {
-                           var10 = var6;
-                        } else {
-                           Integer var11 = (Integer)this.$paramOrder$inlined.get(var1.get(0));
-                           int var3;
-                           if (var11 != null) {
-                              var3 = var11;
-                           } else {
-                              var3 = Integer.MAX_VALUE;
-                           }
-
-                           var10 = var3;
-                        }
-
-                        var2 = (JSONObject)var2;
-                        var2 = this.$cats$inlined.get(var2);
-                        Intrinsics.checkNotNull(var2);
-                        var2 = (List)((Pair)var2).getSecond();
-                        Comparable var15;
-                        if (var2.isEmpty()) {
-                           var15 = var6;
-                        } else {
-                           Integer var16 = (Integer)this.$paramOrder$inlined.get(var2.get(0));
-                           int var17 = var4;
-                           if (var16 != null) {
-                              var17 = var16;
-                           }
-
-                           var15 = var17;
-                        }
-
-                        return ComparisonsKt.compareValues((T)var10, (T)var15);
-                     }
-                  }, var2) {
-                     final Map $cats$inlined;
-                     final Comparator $this_thenBy;
-
-                     {
-                        this.$this_thenBy = var1;
-                        this.$cats$inlined = var2x;
-                     }
-
-                     @Override
-                     public final int compare(T var1, T var2x) {
-                        int var3x = this.$this_thenBy.compare(var1, (Comparable)var2x);
-                        if (var3x == 0) {
-                           var1 = (JSONObject)var1;
-                           var1 = this.$cats$inlined.get(var1);
-                           Intrinsics.checkNotNull(var1);
-                           var1 = CollectionsKt.joinToString$default((Iterable)((Pair)var1).getSecond(), "/", null, null, 0, null, null, 62, null);
-                           var2x = (JSONObject)var2x;
-                           var2x = this.$cats$inlined.get(var2x);
-                           Intrinsics.checkNotNull(var2x);
-                           var3x = ComparisonsKt.compareValues(
-                              var1, CollectionsKt.joinToString$default((Iterable)((Pair)var2x).getSecond(), "/", null, null, 0, null, null, 62, null)
-                           );
-                        }
-
-                        return var3x;
-                     }
-                  }
-               )) {
-                  Collection var47 = CollectionsKt.listOf(var74);
-                  Object var83 = var2.get(var85);
-                  Intrinsics.checkNotNull(var83);
-                  chooseControl$item(
-                     var4,
-                     var0,
-                     var7,
-                     var8,
-                     var9,
-                     var85,
-                     CollectionsKt.joinToString$default(
-                        CollectionsKt.plus(var47, (Iterable)((Pair)var83).getSecond()), " · ", null, null, 0, null, null, 62, null
-                     )
-                  );
-               }
+    private final void toggleValue(final String k, boolean checked) {
+        final Object previous = this.values.get(k);
+        this.values.put(k, Boolean.valueOf(checked));
+        GxPage.send$default(this, "PUT", "/api/params", new JSONObject().put("key", k).put("value", checked), 0L, new Function2() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda15
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit unit;
+                unit = GxFavoritesPage.toggleValue$lambda$29(GxFavoritesPage.this, k, previous, (String) obj, (JSONObject) obj2);
+                return unit;
             }
-         }
-      }
+        }, 8, null);
+    }
 
-      if (var54.isEmpty()) {
-         TextView var28 = new TextView((Context)var4.getAct());
-         var28.setText("No matching controls. Try another search.");
-         var28.setTextSize(16.0F);
-         var28.setTextColor(CarUi.Companion.getDIM());
-         var28.setPadding(0, var4.getUi().dp(10), 0, var4.getUi().dp(10));
-         var0.addView((View)var28);
-      }
-   }
-
-   private static final void chooseControl$renderList$lambda$86(
-      List var0,
-      HashSet var1,
-      String var2,
-      LinearLayout var3,
-      EditText var4,
-      Map var5,
-      TextView var6,
-      GxFavoritesPage var7,
-      List var8,
-      String var9,
-      AlertDialog var10,
-      int var11,
-      HashMap var12,
-      View var13
-   ) {
-      if (var0.isEmpty()) {
-         if (var1.contains(var2)) {
-            var1.remove(var2);
-         } else {
-            var1.add(var2);
-         }
-
-         chooseControl$renderList(var3, var4, var5, var6, var7, var8, var1, var9, var10, var11, var12);
-      }
-   }
-
-   private final String controlLabel(GxFavoritesPage.Slot var1) {
-      String var12;
-      label43: {
-         JSONObject var4 = this.optionByKey(var1.getKey());
-         Object var5 = null;
-         boolean var3 = true;
-         if (var4 != null) {
-            var12 = var4.optString("label");
-            if (var12 != null) {
-               var12 = var12;
-               boolean var2;
-               if (var12.length() == 0) {
-                  var2 = true;
-               } else {
-                  var2 = false;
-               }
-
-               if (var2) {
-                  var12 = null;
-               }
-
-               String var6 = var12;
-               var12 = var6;
-               if (var6 != null) {
-                  break label43;
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:14:0x0027, code lost:
+    
+        if (r1 == null) goto L16;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit toggleValue$lambda$29(GxFavoritesPage this$0, String $k, Object $previous, String e, JSONObject o) {
+        String str;
+        String optString;
+        JSONObject it;
+        if (e == null) {
+            if (o != null && (it = o.optJSONObject("updated")) != null) {
+                this$0.mergeValues(it);
             }
-         }
-
-         var12 = var1.getLabel();
-         boolean var9;
-         if (var12.length() == 0) {
-            var9 = var3;
-         } else {
-            var9 = false;
-         }
-
-         if (var9) {
-            var12 = (String)var5;
-         }
-
-         var5 = var12;
-         var12 = (String)var5;
-         if (var5 == null) {
-            var5 = var1.getKey();
-            var12 = (String)var5;
-            if (var5 == null) {
-               var12 = "Not configured";
+            if (o != null && (optString = o.optString("message")) != null) {
+                String str2 = optString;
+                if (StringsKt.isBlank(str2)) {
+                    str2 = null;
+                }
+                str = str2;
             }
-         }
-      }
-
-      String var8;
-      if (this.isSpeedSlot(var1)) {
-         String var16 = GxHomeKt.access$gxHomeFmt(this.speedValue(var1));
-         String var7 = this.unitLabel();
-         var8 = var12 + " " + var16 + " " + var7;
-      } else {
-         var8 = var12;
-      }
-
-      return var8;
-   }
-
-   private final boolean isActionSlot(GxFavoritesPage.Slot var1) {
-      String var4 = var1.getKey();
-      String var3 = var4;
-      if (var4 == null) {
-         var3 = "";
-      }
-
-      String var5 = this.actionPrefix;
-      boolean var2 = false;
-      var4 = null;
-      if (!StringsKt.startsWith$default(var3, var5, false, 2, null)) {
-         JSONObject var7 = this.optionByKey(var1.getKey());
-         Object var6 = var4;
-         if (var7 != null) {
-            var6 = var7.opt("action");
-         }
-
-         if (!GxHomeKt.access$gxHomeTruthy(var6)) {
-            return var2;
-         }
-      }
-
-      return true;
-   }
-
-   private final boolean isSpeedSlot(GxFavoritesPage.Slot var1) {
-      return Intrinsics.areEqual(var1.getKey(), this.setSpeed);
-   }
-
-   private final void load() {
-      this.getJson("/api/favorites/slots", new GxFavoritesPage$$ExternalSyntheticLambda18(this));
-   }
-
-   private static final Unit load$lambda$17(GxFavoritesPage var0, String var1, JSONObject var2) {
-      if (var1 == null && var2 != null) {
-         var0.options = var0.sortOptions(var2.optJSONArray("options"));
-         var0.slots = var0.normalizeSlots(var2.optJSONArray("slots"));
-         var0.savedSlots = var0.slots;
-         var0.mergeValues(var2.optJSONObject("values"));
-         var0.isMetric = GxHomeKt.access$gxHomeTruthy(var2.opt("is_metric"));
-      } else {
-         var0.toast("Failed to load favorite slots.");
-      }
-
-      var0.loading = false;
-      var0.render();
-      return Unit.INSTANCE;
-   }
-
-   private final void mergeValues(JSONObject var1) {
-      if (var1 != null) {
-         Iterator var4 = var1.keys();
-         Intrinsics.checkNotNullExpressionValue(var4, "keys(...)");
-
-         while (var4.hasNext()) {
-            String var5 = (String)var4.next();
-            Map var3 = this.values;
-            Object var2;
-            if (var1.isNull(var5)) {
-               var2 = null;
-            } else {
-               var2 = var1.opt(var5);
+            str = "Parameter '" + $k + "' updated.";
+            this$0.toast(str);
+            GalaxyApi api = this$0.getApi();
+            if (api != null) {
+                GalaxyApi.refreshValues$default(api, null, 1, null);
             }
-
-            var3.put(var5, var2);
-         }
-      }
-   }
-
-   private final List<GxFavoritesPage.Slot> normalizeSlots(JSONArray var1) {
-      ArrayList var6 = new ArrayList(3);
-
-      for (int var2 = 0; var2 < 3; var2++) {
-         var6.add(new GxFavoritesPage.Slot(false, false, null, null, null, 31, null));
-      }
-
-      List var9 = var6;
-      if (var1 == null) {
-         return var9;
-      } else {
-         int var11 = 0;
-
-         for (int var3 = Math.min(3, var1.length()); var11 < var3; var11++) {
-            JSONObject var10 = var1.optJSONObject(var11);
-            if (var10 != null) {
-               Object var13 = var10.opt("key");
-               boolean var4 = GxHomeKt.access$gxHomeTruthy(var13);
-               Object var7 = null;
-               if (var4) {
-                  var13 = var13.toString();
-               } else {
-                  var13 = null;
-               }
-
-               var4 = GxHomeKt.access$gxHomeTruthy(var10.opt("enabled"));
-               boolean var5 = GxHomeKt.access$gxHomeTruthy(var10.opt("show_onroad"));
-               Object var8 = var7;
-               if (Intrinsics.areEqual(var13, this.setSpeed)) {
-                  var8 = var7;
-                  if (var10.has("value")) {
-                     var8 = var7;
-                     if (!var10.isNull("value")) {
-                        var8 = var10.opt("value");
-                     }
-                  }
-               }
-
-               if (var13 != null) {
-                  var7 = var10.opt("label");
-                  if (GxHomeKt.access$gxHomeTruthy(var7)) {
-                     var7 = var7.toString();
-                  } else {
-                     var7 = var13;
-                  }
-               } else {
-                  var7 = "";
-               }
-
-               var9.set(var11, new GxFavoritesPage.Slot(var4, var5, (String)var13, var8, (String)var7));
+        } else {
+            this$0.values.put($k, $previous);
+            String str3 = e;
+            if (StringsKt.isBlank(str3)) {
+                str3 = "Network error — is the device reachable?";
             }
-         }
+            this$0.toast(str3);
+        }
+        this$0.render();
+        return Unit.INSTANCE;
+    }
 
-         return var9;
-      }
-   }
-
-   private final JSONObject optionByKey(String var1) {
-      CharSequence var3 = var1;
-      boolean var2;
-      if (var3 != null && var3.length() != 0) {
-         var2 = false;
-      } else {
-         var2 = true;
-      }
-
-      Object var4 = null;
-      var3 = null;
-      JSONObject var6;
-      if (var2) {
-         var6 = (JSONObject)var4;
-      } else {
-         Iterator var5 = this.options.iterator();
-
-         while (true) {
-            if (!var5.hasNext()) {
-               var7 = var3;
-               break;
+    private final void runAction(String k, Object value) {
+        JSONObject body = new JSONObject().put("key", k);
+        if (value != null) {
+            body.put("value", value);
+        }
+        GxPage.send$default(this, "POST", "/api/favorites/action", body, 0L, new Function2() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda0
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit runAction$lambda$33;
+                runAction$lambda$33 = GxFavoritesPage.runAction$lambda$33(GxFavoritesPage.this, (String) obj, (JSONObject) obj2);
+                return runAction$lambda$33;
             }
+        }, 8, null);
+    }
 
-            var4 = var5.next();
-            if (Intrinsics.areEqual(((JSONObject)var4).optString("key"), var1)) {
-               var7 = var4;
-               break;
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:9:0x0019, code lost:
+    
+        if (r0 == null) goto L11;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit runAction$lambda$33(GxFavoritesPage this$0, String e, JSONObject o) {
+        String str;
+        String optString;
+        if (e == null) {
+            if (o != null && (optString = o.optString("message")) != null) {
+                String str2 = optString;
+                if (StringsKt.isBlank(str2)) {
+                    str2 = null;
+                }
+                str = str2;
             }
-         }
+            str = "Favorite action sent.";
+        } else {
+            String str3 = e;
+            if (StringsKt.isBlank(str3)) {
+                str3 = "Failed to send favorite action.";
+            }
+            str = str3;
+        }
+        this$0.toast(str);
+        return Unit.INSTANCE;
+    }
 
-         var6 = (JSONObject)var7;
-      }
-
-      return var6;
-   }
-
-   private final void refreshValues() {
-      if (!this.loading && !this.saving) {
-         this.getJson("/api/favorites/values", new GxFavoritesPage$$ExternalSyntheticLambda11(this));
-      }
-   }
-
-   private static final Unit refreshValues$lambda$18(GxFavoritesPage var0, String var1, JSONObject var2) {
-      if (var1 == null && var2 != null && !var0.saving) {
-         var0.mergeValues(var2.optJSONObject("values"));
-         var0.render();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final void render() {
-      if (this.speedTimer == null) {
-         LinearLayout var13 = this.content;
-         Iterable var12 = null;
-         LinearLayout var11 = var13;
-         if (var13 == null) {
+    private final void render() {
+        boolean z;
+        int i;
+        char c;
+        String str;
+        boolean z2;
+        int i2;
+        boolean z3;
+        LinearLayout linearLayout;
+        Slot s;
+        String gxHomeFmt;
+        String gxHomeFmt2;
+        String str2;
+        boolean gxHomeTruthy;
+        if (this.speedTimer != null) {
+            return;
+        }
+        LinearLayout linearLayout2 = this.content;
+        LinearLayout linearLayout3 = null;
+        if (linearLayout2 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("content");
-            var11 = null;
-         }
-
-         var11.removeAllViews();
-         if (this.loading) {
-            var11 = this.content;
-            if (var11 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("content");
-               var11 = var12;
+            linearLayout2 = null;
+        }
+        linearLayout2.removeAllViews();
+        if (this.loading) {
+            LinearLayout linearLayout4 = this.content;
+            if (linearLayout4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("content");
+            } else {
+                linearLayout3 = linearLayout4;
             }
+            linearLayout3.addView(empty("Loading favorite slots..."));
+            return;
+        }
+        Iterable $this$filter$iv = CollectionsKt.withIndex(this.slots);
+        Collection destination$iv$iv = new ArrayList();
+        Iterator it = $this$filter$iv.iterator();
+        while (true) {
+            z = false;
+            i = 1;
+            if (!it.hasNext()) {
+                break;
+            }
+            Object element$iv$iv = it.next();
+            Slot s2 = (Slot) ((IndexedValue) element$iv$iv).component2();
+            if (s2.getEnabled() && s2.getKey() != null && optionByKey(s2.getKey()) != null) {
+                z = true;
+            }
+            if (z) {
+                destination$iv$iv.add(element$iv$iv);
+            }
+        }
+        List<IndexedValue> quick = (List) destination$iv$iv;
+        String str3 = "Favorite #";
+        if (!quick.isEmpty()) {
+            LinearLayout $this$render_u24lambda_u2435 = new LinearLayout(getAct());
+            $this$render_u24lambda_u2435.setOrientation(0);
+            LinearLayout linearLayout5 = this.content;
+            if (linearLayout5 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("content");
+                linearLayout5 = null;
+            }
+            linearLayout5.addView($this$render_u24lambda_u2435, CarUi.lp$default(getUi(), 0, 0, 3, null));
+            int i3 = 0;
+            for (IndexedValue iv : quick) {
+                int n = i3;
+                int i4 = i3 + 1;
+                int i5 = iv.getIndex();
+                final Slot s3 = (Slot) iv.component2();
+                LinearLayout $this$render_u24lambda_u2436 = new LinearLayout(getAct());
+                $this$render_u24lambda_u2436.setOrientation(i);
+                $this$render_u24lambda_u2436.setBackground(getUi().rounded(CarUi.Companion.getCARD(), 14, Integer.valueOf(Color.rgb(50, 55, 66))));
+                $this$render_u24lambda_u2436.setPadding(getUi().dp(18), getUi().dp(14), getUi().dp(18), getUi().dp(14));
+                LinearLayout linearLayout6 = $this$render_u24lambda_u2436;
+                LinearLayout.LayoutParams $this$render_u24lambda_u2437 = new LinearLayout.LayoutParams(0, -2, 1.0f);
+                if (n < quick.size() - 1) {
+                    $this$render_u24lambda_u2437.rightMargin = getUi().dp(8);
+                }
+                Unit unit = Unit.INSTANCE;
+                $this$render_u24lambda_u2435.addView(linearLayout6, $this$render_u24lambda_u2437);
+                GxPage.text$default(this, "Favorite #" + (i5 + 1), $this$render_u24lambda_u2436, 14.0f, 0, false, 24, null);
+                text(controlLabel(s3), $this$render_u24lambda_u2436, 19.0f, CarUi.Companion.getTEXT(), true);
+                GxFavoritesPage gxFavoritesPage = this;
+                JSONObject optionByKey = optionByKey(s3.getKey());
+                if (optionByKey == null || (str2 = optionByKey.optString("section")) == null) {
+                    str2 = "";
+                }
+                GxPage.text$default(gxFavoritesPage, str2, $this$render_u24lambda_u2436, 14.0f, 0, false, 24, null);
+                if (isActionSlot(s3)) {
+                    TextView b = CarUi.button$default(getUi(), "Press", false, new Function0() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda20
+                        @Override // kotlin.jvm.functions.Function0
+                        public final Object invoke() {
+                            Unit render$lambda$38;
+                            render$lambda$38 = GxFavoritesPage.render$lambda$38(GxFavoritesPage.this, s3);
+                            return render$lambda$38;
+                        }
+                    }, 2, null);
+                    if (this.saving) {
+                        b.setAlpha(0.5f);
+                    }
+                    LinearLayout.LayoutParams $this$render_u24lambda_u2439 = new LinearLayout.LayoutParams(-2, -2);
+                    $this$render_u24lambda_u2439.topMargin = getUi().dp(6);
+                    Unit unit2 = Unit.INSTANCE;
+                    $this$render_u24lambda_u2436.addView(b, $this$render_u24lambda_u2439);
+                } else {
+                    Switch sw = getUi().bigSwitch();
+                    gxHomeTruthy = GxHomeKt.gxHomeTruthy(this.values.get(s3.getKey()));
+                    sw.setChecked(gxHomeTruthy);
+                    sw.setEnabled(!this.saving);
+                    sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda21
+                        @Override // android.widget.CompoundButton.OnCheckedChangeListener
+                        public final void onCheckedChanged(CompoundButton compoundButton, boolean z4) {
+                            GxFavoritesPage.render$lambda$40(GxFavoritesPage.this, s3, compoundButton, z4);
+                        }
+                    });
+                    LinearLayout.LayoutParams $this$render_u24lambda_u2441 = new LinearLayout.LayoutParams(-2, -2);
+                    $this$render_u24lambda_u2441.topMargin = getUi().dp(8);
+                    $this$render_u24lambda_u2441.leftMargin = getUi().dp(10);
+                    Unit unit3 = Unit.INSTANCE;
+                    $this$render_u24lambda_u2436.addView(sw, $this$render_u24lambda_u2441);
+                }
+                i3 = i4;
+                i = 1;
+            }
+        }
+        int i6 = 0;
+        for (Slot s4 : this.slots) {
+            final int i7 = i6;
+            int i8 = i6 + 1;
+            String str4 = str3 + (i7 + 1);
+            LinearLayout linearLayout7 = this.content;
+            if (linearLayout7 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("content");
+                linearLayout7 = null;
+            }
+            header(str4, linearLayout7);
+            String str5 = str3 + (i7 + 1);
+            String str6 = s4.getEnabled() ? "Enabled" : "Off";
+            boolean enabled = s4.getEnabled();
+            LinearLayout linearLayout8 = this.content;
+            if (linearLayout8 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("content");
+                linearLayout8 = null;
+            }
+            Switch en = toggle(str5, str6, enabled, linearLayout8, new Function1() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda1
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj) {
+                    Unit render$lambda$43;
+                    render$lambda$43 = GxFavoritesPage.render$lambda$43(GxFavoritesPage.this, i7, ((Boolean) obj).booleanValue());
+                    return render$lambda$43;
+                }
+            }).component2();
+            en.setEnabled(!this.saving);
+            GxFavoritesPage gxFavoritesPage2 = this;
+            String controlLabel = controlLabel(s4);
+            LinearLayout linearLayout9 = this.content;
+            if (linearLayout9 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("content");
+                linearLayout9 = null;
+            }
+            GxPage.Row cr = GxPage.row$default(gxFavoritesPage2, controlLabel, "Control for this favorite", linearLayout9, 0, 8, null);
+            TextView cb = GxPage.Row.button$default(cr, "Choose control", false, new Function0() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda2
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit render$lambda$44;
+                    render$lambda$44 = GxFavoritesPage.render$lambda$44(GxFavoritesPage.this, i7);
+                    return render$lambda$44;
+                }
+            }, 2, null);
+            if (this.saving) {
+                c = 0;
+                cb.setAlpha(0.5f);
+            } else {
+                c = 0;
+            }
+            if (isSpeedSlot(s4)) {
+                double min = this.isMetric ? 8.0d : 5.0d;
+                double max = this.isMetric ? 145.0d : 90.0d;
+                String str7 = "Set speed (" + unitLabel() + ")";
+                gxHomeFmt = GxHomeKt.gxHomeFmt(min);
+                gxHomeFmt2 = GxHomeKt.gxHomeFmt(max);
+                String str8 = gxHomeFmt + "–" + gxHomeFmt2;
+                double speedValue = speedValue(s4);
+                Function1<? super Double, String> function1 = new Function1() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda3
+                    @Override // kotlin.jvm.functions.Function1
+                    public final Object invoke(Object obj) {
+                        String access$gxHomeFmt;
+                        access$gxHomeFmt = GxHomeKt.access$gxHomeFmt(((Double) obj).doubleValue());
+                        return access$gxHomeFmt;
+                    }
+                };
+                LinearLayout linearLayout10 = this.content;
+                if (linearLayout10 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("content");
+                    linearLayout10 = null;
+                }
+                str = str3;
+                z3 = true;
+                s = s4;
+                z2 = z;
+                i2 = i7;
+                linearLayout = null;
+                stepper(str7, str8, speedValue, min, max, 1.0d, function1, linearLayout10, new Function1() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda4
+                    @Override // kotlin.jvm.functions.Function1
+                    public final Object invoke(Object obj) {
+                        Unit render$lambda$49;
+                        render$lambda$49 = GxFavoritesPage.render$lambda$49(GxFavoritesPage.this, i7, ((Double) obj).doubleValue());
+                        return render$lambda$49;
+                    }
+                });
+            } else {
+                str = str3;
+                z2 = z;
+                i2 = i7;
+                z3 = true;
+                linearLayout = null;
+                s = s4;
+            }
+            boolean showOnroad = s.getShowOnroad();
+            LinearLayout linearLayout11 = this.content;
+            if (linearLayout11 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("content");
+                linearLayout11 = linearLayout;
+            }
+            final int i9 = i2;
+            Switch on = toggle("On-Road Button (C4: tap invisible third)", null, showOnroad, linearLayout11, new Function1() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda5
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj) {
+                    Unit render$lambda$51;
+                    render$lambda$51 = GxFavoritesPage.render$lambda$51(GxFavoritesPage.this, i9, ((Boolean) obj).booleanValue());
+                    return render$lambda$51;
+                }
+            }).component2();
+            on.setEnabled((this.saving || !s.getEnabled() || s.getKey() == null) ? z2 : z3);
+            i6 = i8;
+            z = z2;
+            str3 = str;
+        }
+    }
 
-            var11.addView((View)this.empty("Loading favorite slots..."));
-         } else {
-            var12 = CollectionsKt.withIndex(this.slots);
-            var var27 = new ArrayList();
-            Iterator var51 = var12.iterator();
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit render$lambda$38(GxFavoritesPage this$0, Slot $s) {
+        if (!this$0.saving) {
+            String key = $s.getKey();
+            Intrinsics.checkNotNull(key);
+            this$0.runAction(key, $s.getValue());
+        }
+        return Unit.INSTANCE;
+    }
 
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void render$lambda$40(GxFavoritesPage this$0, Slot $s, CompoundButton b, boolean v) {
+        if (b.isPressed()) {
+            String key = $s.getKey();
+            Intrinsics.checkNotNull(key);
+            this$0.toggleValue(key, v);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit render$lambda$43(GxFavoritesPage this$0, int $i, final boolean v) {
+        updateSlot$default(this$0, $i, false, new Function1() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda14
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                GxFavoritesPage.Slot render$lambda$43$lambda$42;
+                render$lambda$43$lambda$42 = GxFavoritesPage.render$lambda$43$lambda$42(v, (GxFavoritesPage.Slot) obj);
+                return render$lambda$43$lambda$42;
+            }
+        }, 2, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Slot render$lambda$43$lambda$42(boolean $v, Slot it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return Slot.copy$default(it, $v, false, null, null, null, 30, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit render$lambda$44(GxFavoritesPage this$0, int $i) {
+        if (!this$0.loading && !this$0.saving) {
+            this$0.chooseControl($i);
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit render$lambda$49(final GxFavoritesPage this$0, final int $i, final double v) {
+        if (this$0.saving) {
+            return Unit.INSTANCE;
+        }
+        Runnable it = this$0.speedTimer;
+        if (it != null) {
+            this$0.getMain().removeCallbacks(it);
+        }
+        Runnable r = new Runnable() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda16
+            @Override // java.lang.Runnable
+            public final void run() {
+                GxFavoritesPage.render$lambda$49$lambda$48(GxFavoritesPage.this, $i, v);
+            }
+        };
+        this$0.speedTimer = r;
+        this$0.getMain().postDelayed(r, 900L);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void render$lambda$49$lambda$48(GxFavoritesPage this$0, int $i, final double $v) {
+        this$0.speedTimer = null;
+        updateSlot$default(this$0, $i, false, new Function1() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda9
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                GxFavoritesPage.Slot render$lambda$49$lambda$48$lambda$47;
+                render$lambda$49$lambda$48$lambda$47 = GxFavoritesPage.render$lambda$49$lambda$48$lambda$47($v, (GxFavoritesPage.Slot) obj);
+                return render$lambda$49$lambda$48$lambda$47;
+            }
+        }, 2, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Slot render$lambda$49$lambda$48$lambda$47(double $v, Slot it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return Slot.copy$default(it, false, false, null, Long.valueOf((long) $v), null, 23, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit render$lambda$51(GxFavoritesPage this$0, int $i, final boolean v) {
+        updateSlot$default(this$0, $i, false, new Function1() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda12
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                GxFavoritesPage.Slot render$lambda$51$lambda$50;
+                render$lambda$51$lambda$50 = GxFavoritesPage.render$lambda$51$lambda$50(v, (GxFavoritesPage.Slot) obj);
+                return render$lambda$51$lambda$50;
+            }
+        }, 2, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Slot render$lambda$51$lambda$50(boolean $v, Slot it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return Slot.copy$default(it, false, $v, null, null, null, 29, null);
+    }
+
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    /* JADX WARN: Code restructure failed: missing block: B:10:0x002c, code lost:
+    
+        if (r2.equals("ExperimentalMode") == false) goto L29;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:11:0x0054, code lost:
+    
+        r5 = "LongitudinalControlMode";
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:121:0x0035, code lost:
+    
+        if (r2.equals("__starpilot_favorite_action__:toggle_traffic_mode") == false) goto L29;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:122:0x0041, code lost:
+    
+        r5 = "CustomPersonalities";
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:124:0x003e, code lost:
+    
+        if (r2.equals("__starpilot_controller_action__:cycle_driving_personality") == false) goto L29;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:126:0x004a, code lost:
+    
+        if (r2.equals("ConditionalChill") == false) goto L29;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:128:0x0051, code lost:
+    
+        if (r2.equals("ConditionalExperimental") == false) goto L29;
+     */
+    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
+    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
+    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
+    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
+    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
+    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
+     */
+    /* JADX WARN: Removed duplicated region for block: B:118:0x00ac A[SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:15:0x0068  */
+    /* JADX WARN: Removed duplicated region for block: B:25:0x00b1  */
+    /* JADX WARN: Removed duplicated region for block: B:57:0x0113  */
+    /* JADX WARN: Removed duplicated region for block: B:70:0x0144  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final Pair<String, List<String>> categoryOf(JSONObject o) {
+        List cat;
+        Object anchor;
+        ListIterator iterator$iv;
+        Object element$iv;
+        GalaxyApi.Category category;
+        GalaxyApi.Category section;
+        String it;
+        String str;
+        Object element$iv2;
+        boolean z;
+        boolean z2;
+        GalaxyApi api = getApi();
+        if (api == null || (cat = api.getCatalog()) == null) {
+            cat = CollectionsKt.emptyList();
+        }
+        String k = o.optString("key");
+        if (k != null) {
+            switch (k.hashCode()) {
+                case -1223291282:
+                    break;
+                case -1119957410:
+                    break;
+                case -878798333:
+                    break;
+                case -370744618:
+                    break;
+                case 499325643:
+                    break;
+            }
+            List $this$lastOrNull$iv = cat;
+            iterator$iv = $this$lastOrNull$iv.listIterator($this$lastOrNull$iv.size());
             while (true) {
-               boolean var10 = var51.hasNext();
-               boolean var9 = false;
-               int var8 = 0;
-               if (!var10) {
-                  List var63 = var27;
-                  var10 = var63.isEmpty();
-                  String var41 = "Favorite #";
-                  if (!var10) {
-                     LinearLayout var15 = new LinearLayout((Context)this.getAct());
-                     var15.setOrientation(0);
-                     var13 = this.content;
-                     var11 = var13;
-                     if (var13 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("content");
-                        var11 = null;
-                     }
-
-                     var11.addView((View)var15, (LayoutParams)CarUi.lp$default(this.getUi(), 0, 0, 3, null));
-                     Iterator var16 = var63.iterator();
-
-                     for (int var20 = 0; var16.hasNext(); var20++) {
-                        IndexedValue var29 = (IndexedValue)var16.next();
-                        var8 = var29.component1();
-                        GxFavoritesPage.Slot var18 = (GxFavoritesPage.Slot)var29.component2();
-                        LinearLayout var17 = new LinearLayout((Context)this.getAct());
-                        var17.setOrientation(1);
-                        var17.setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD(), 14, Color.rgb(50, 55, 66)));
-                        var17.setPadding(this.getUi().dp(18), this.getUi().dp(14), this.getUi().dp(18), this.getUi().dp(14));
-                        View var53 = (View)var17;
-                        android.widget.LinearLayout.LayoutParams var30 = new android.widget.LinearLayout.LayoutParams(0, -2, 1.0F);
-                        if (var20 < var63.size() - 1) {
-                           var30.rightMargin = this.getUi().dp(8);
+                if (iterator$iv.hasPrevious()) {
+                    element$iv = null;
+                } else {
+                    element$iv = iterator$iv.previous();
+                    GalaxyApi.Category s = (GalaxyApi.Category) element$iv;
+                    Iterable $this$any$iv = s.getParams();
+                    if (($this$any$iv instanceof Collection) && ((Collection) $this$any$iv).isEmpty()) {
+                        z2 = false;
+                    } else {
+                        Iterator it2 = $this$any$iv.iterator();
+                        while (true) {
+                            if (it2.hasNext()) {
+                                Object element$iv3 = it2.next();
+                                if (Intrinsics.areEqual(((GalaxyApi.Param) element$iv3).getKey(), anchor)) {
+                                    z2 = true;
+                                }
+                            } else {
+                                z2 = false;
+                            }
                         }
-
-                        GxPage var76;
-                        label126: {
-                           Unit var19 = Unit.INSTANCE;
-                           var15.addView(var53, (LayoutParams)var30);
-                           GxPage.text$default(this, "Favorite #" + (var8 + 1), (ViewGroup)var17, 14.0F, 0, false, 24, null);
-                           this.text(this.controlLabel(var18), (ViewGroup)var17, 19.0F, CarUi.Companion.getTEXT(), true);
-                           var76 = this;
-                           JSONObject var31 = this.optionByKey(var18.getKey());
-                           if (var31 != null) {
-                              String var54 = var31.optString("section");
-                              var32 = var54;
-                              if (var54 != null) {
-                                 break label126;
-                              }
-                           }
-
-                           var32 = "";
-                        }
-
-                        GxPage.text$default(var76, var32, (ViewGroup)var17, 14.0F, 0, false, 24, null);
-                        if (this.isActionSlot(var18)) {
-                           TextView var33 = CarUi.button$default(
-                              this.getUi(), "Press", false, new GxFavoritesPage$$ExternalSyntheticLambda20(this, var18), 2, null
-                           );
-                           if (this.saving) {
-                              var33.setAlpha(0.5F);
-                           }
-
-                           View var34 = (View)var33;
-                           android.widget.LinearLayout.LayoutParams var55 = new android.widget.LinearLayout.LayoutParams(-2, -2);
-                           var55.topMargin = this.getUi().dp(6);
-                           Unit var73 = Unit.INSTANCE;
-                           var17.addView(var34, (LayoutParams)var55);
+                    }
+                    if (z2) {
+                    }
+                }
+            }
+            category = (GalaxyApi.Category) element$iv;
+            if (category == null) {
+                if (Intrinsics.areEqual(anchor, "LongitudinalControlMode")) {
+                    List $this$lastOrNull$iv2 = cat;
+                    ListIterator iterator$iv2 = $this$lastOrNull$iv2.listIterator($this$lastOrNull$iv2.size());
+                    while (true) {
+                        if (iterator$iv2.hasPrevious()) {
+                            element$iv2 = iterator$iv2.previous();
+                            GalaxyApi.Category s2 = (GalaxyApi.Category) element$iv2;
+                            Iterable $this$any$iv2 = s2.getParams();
+                            if (($this$any$iv2 instanceof Collection) && ((Collection) $this$any$iv2).isEmpty()) {
+                                z = false;
+                            } else {
+                                Iterator it3 = $this$any$iv2.iterator();
+                                while (true) {
+                                    if (it3.hasNext()) {
+                                        Object element$iv4 = it3.next();
+                                        if (Intrinsics.areEqual(((GalaxyApi.Param) element$iv4).getKey(), "ConditionalExperimental")) {
+                                            z = true;
+                                        }
+                                    } else {
+                                        z = false;
+                                    }
+                                }
+                            }
+                            if (z) {
+                            }
                         } else {
-                           Switch var35 = this.getUi().bigSwitch();
-                           var35.setChecked(GxHomeKt.access$gxHomeTruthy(this.values.get(var18.getKey())));
-                           var35.setEnabled(this.saving ^ true);
-                           var35.setOnCheckedChangeListener(new GxFavoritesPage$$ExternalSyntheticLambda21(this, var18));
-                           View var74 = (View)var35;
-                           android.widget.LinearLayout.LayoutParams var56 = new android.widget.LinearLayout.LayoutParams(-2, -2);
-                           var56.topMargin = this.getUi().dp(8);
-                           var56.leftMargin = this.getUi().dp(10);
-                           Unit var36 = Unit.INSTANCE;
-                           var17.addView(var74, (LayoutParams)var56);
+                            element$iv2 = null;
                         }
-                     }
-                  }
-
-                  Iterator var68 = this.slots.iterator();
-                  int var21 = 0;
-
-                  for (String var37 = var41; var68.hasNext(); var21++) {
-                     GxFavoritesPage.Slot var69 = (GxFavoritesPage.Slot)var68.next();
-                     String var64 = var37 + (var21 + 1);
-                     var13 = this.content;
-                     LinearLayout var42 = var13;
-                     if (var13 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("content");
-                        var42 = null;
-                     }
-
-                     this.header(var64, (ViewGroup)var42);
-                     String var70 = var37 + (var21 + 1);
-                     String var43;
-                     if (var69.getEnabled()) {
-                        var43 = "Enabled";
-                     } else {
-                        var43 = "Off";
-                     }
-
-                     var10 = var69.getEnabled();
-                     LinearLayout var65 = this.content;
-                     var13 = var65;
-                     if (var65 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("content");
-                        var13 = null;
-                     }
-
-                     this.toggle(var70, var43, var10, (ViewGroup)var13, new GxFavoritesPage$$ExternalSyntheticLambda1(this, var21))
-                        .component2()
-                        .setEnabled(this.saving ^ true);
-                     GxPage var71 = this;
-                     String var66 = this.controlLabel(var69);
-                     var13 = this.content;
-                     LinearLayout var44 = var13;
-                     if (var13 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("content");
-                        var44 = null;
-                     }
-
-                     TextView var45 = GxPage.Row.button$default(
-                        GxPage.row$default(var71, var66, "Control for this favorite", (ViewGroup)var44, 0, 8, null),
-                        "Choose control",
-                        false,
-                        new GxFavoritesPage$$ExternalSyntheticLambda2(this, var21),
-                        2,
-                        null
-                     );
-                     if (this.saving) {
-                        var45.setAlpha(0.5F);
-                     }
-
-                     if (this.isSpeedSlot(var69)) {
-                        double var1;
-                        if (this.isMetric) {
-                           var1 = 8.0;
-                        } else {
-                           var1 = 5.0;
-                        }
-
-                        double var3;
-                        if (this.isMetric) {
-                           var3 = 145.0;
-                        } else {
-                           var3 = 90.0;
-                        }
-
-                        String var46 = this.unitLabel();
-                        String var67 = "Set speed (" + var46 + ")";
-                        String var60 = GxHomeKt.access$gxHomeFmt(var1);
-                        String var47 = GxHomeKt.access$gxHomeFmt(var3);
-                        String var75 = var60 + "–" + var47;
-                        double var5 = this.speedValue(var69);
-                        GxFavoritesPage$$ExternalSyntheticLambda3 var72 = new GxFavoritesPage$$ExternalSyntheticLambda3();
-                        var13 = this.content;
-                        LinearLayout var48 = var13;
-                        if (var13 == null) {
-                           Intrinsics.throwUninitializedPropertyAccessException("content");
-                           var48 = null;
-                        }
-
-                        this.stepper(var67, var75, var5, var1, var3, 1.0, var72, (ViewGroup)var48, new GxFavoritesPage$$ExternalSyntheticLambda4(this, var21));
-                     }
-
-                     var10 = var69.getShowOnroad();
-                     var13 = this.content;
-                     LinearLayout var49 = var13;
-                     if (var13 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("content");
-                        var49 = null;
-                     }
-
-                     Switch var50 = this.toggle(
-                           "On-Road Button (C4: tap invisible third)",
-                           null,
-                           var10,
-                           (ViewGroup)var49,
-                           new GxFavoritesPage$$ExternalSyntheticLambda5(this, var21)
-                        )
-                        .component2();
-                     if (!this.saving && var69.getEnabled() && var69.getKey() != null) {
-                        var10 = true;
-                     } else {
-                        var10 = var9;
-                     }
-
-                     var50.setEnabled(var10);
-                  }
-
-                  return;
-               }
-
-               Object var14 = var51.next();
-               GxFavoritesPage.Slot var40 = (GxFavoritesPage.Slot)((IndexedValue)var14).component2();
-               boolean var7 = (boolean)var8;
-               if (var40.getEnabled()) {
-                  var7 = (boolean)var8;
-                  if (var40.getKey() != null) {
-                     var7 = (boolean)var8;
-                     if (this.optionByKey(var40.getKey()) != null) {
-                        var7 = true;
-                     }
-                  }
-               }
-
-               if (var7) {
-                  var27.add(var14);
-               }
+                    }
+                    category = (GalaxyApi.Category) element$iv2;
+                } else {
+                    category = null;
+                }
             }
-         }
-      }
-   }
-
-   private static final Unit render$lambda$38(GxFavoritesPage var0, GxFavoritesPage.Slot var1) {
-      if (!var0.saving) {
-         String var2 = var1.getKey();
-         Intrinsics.checkNotNull(var2);
-         var0.runAction(var2, var1.getValue());
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final void render$lambda$40(GxFavoritesPage var0, GxFavoritesPage.Slot var1, CompoundButton var2, boolean var3) {
-      if (var2.isPressed()) {
-         String var4 = var1.getKey();
-         Intrinsics.checkNotNull(var4);
-         var0.toggleValue(var4, var3);
-      }
-   }
-
-   private static final Unit render$lambda$43(GxFavoritesPage var0, int var1, boolean var2) {
-      updateSlot$default(var0, var1, false, new GxFavoritesPage$$ExternalSyntheticLambda14(var2), 2, null);
-      return Unit.INSTANCE;
-   }
-
-   private static final GxFavoritesPage.Slot render$lambda$43$lambda$42(boolean var0, GxFavoritesPage.Slot var1) {
-      Intrinsics.checkNotNullParameter(var1, "it");
-      return GxFavoritesPage.Slot.copy$default(var1, var0, false, null, null, null, 30, null);
-   }
-
-   private static final Unit render$lambda$44(GxFavoritesPage var0, int var1) {
-      if (!var0.loading && !var0.saving) {
-         var0.chooseControl(var1);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final String render$lambda$45(double var0) {
-      return GxHomeKt.access$gxHomeFmt(var0);
-   }
-
-   private static final Unit render$lambda$49(GxFavoritesPage var0, int var1, double var2) {
-      if (var0.saving) {
-         return Unit.INSTANCE;
-      } else {
-         Runnable var4 = var0.speedTimer;
-         if (var4 != null) {
-            var0.getMain().removeCallbacks(var4);
-         }
-
-         GxFavoritesPage$$ExternalSyntheticLambda16 var5 = new GxFavoritesPage$$ExternalSyntheticLambda16(var0, var1, var2);
-         var0.speedTimer = var5;
-         var0.getMain().postDelayed(var5, 900L);
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final void render$lambda$49$lambda$48(GxFavoritesPage var0, int var1, double var2) {
-      var0.speedTimer = null;
-      updateSlot$default(var0, var1, false, new GxFavoritesPage$$ExternalSyntheticLambda9(var2), 2, null);
-   }
-
-   private static final GxFavoritesPage.Slot render$lambda$49$lambda$48$lambda$47(double var0, GxFavoritesPage.Slot var2) {
-      Intrinsics.checkNotNullParameter(var2, "it");
-      return GxFavoritesPage.Slot.copy$default(var2, false, false, null, (long)var0, null, 23, null);
-   }
-
-   private static final Unit render$lambda$51(GxFavoritesPage var0, int var1, boolean var2) {
-      updateSlot$default(var0, var1, false, new GxFavoritesPage$$ExternalSyntheticLambda12(var2), 2, null);
-      return Unit.INSTANCE;
-   }
-
-   private static final GxFavoritesPage.Slot render$lambda$51$lambda$50(boolean var0, GxFavoritesPage.Slot var1) {
-      Intrinsics.checkNotNullParameter(var1, "it");
-      return GxFavoritesPage.Slot.copy$default(var1, false, var0, null, null, null, 29, null);
-   }
-
-   private final void runAction(String var1, Object var2) {
-      JSONObject var3 = new JSONObject().put("key", var1);
-      if (var2 != null) {
-         var3.put("value", var2);
-      }
-
-      GxPage.send$default(this, "POST", "/api/favorites/action", var3, 0L, new GxFavoritesPage$$ExternalSyntheticLambda0(this), 8, null);
-   }
-
-   private static final Unit runAction$lambda$33(GxFavoritesPage var0, String var1, JSONObject var2) {
-      label24:
-      if (var1 == null) {
-         if (var2 != null) {
-            var1 = var2.optString("message");
-            if (var1 != null) {
-               CharSequence var7 = var1;
-               CharSequence var4 = var7;
-               if (StringsKt.isBlank(var7)) {
-                  var4 = null;
-               }
-
-               String var8 = (String)var4;
-               var1 = var8;
-               if (var8 != null) {
-                  break label24;
-               }
+            section = category;
+            if (section != null) {
+                if (Intrinsics.areEqual(o.optString("section"), "Actions")) {
+                    str = "Controller Actions";
+                } else {
+                    String optString = o.optString("section");
+                    if (optString.length() == 0) {
+                        optString = "Other";
+                    }
+                    str = optString;
+                }
+                return TuplesKt.to(str, CollectionsKt.emptyList());
             }
-         }
-
-         var1 = "Favorite action sent.";
-      } else {
-         CharSequence var9 = var1;
-         Object var6 = var9;
-         if (StringsKt.isBlank(var9)) {
-            var6 = "Failed to send favorite action.";
-         }
-
-         var1 = (String)var6;
-      }
-
-      var0.toast(var1);
-      return Unit.INSTANCE;
-   }
-
-   private final void saveSlots() {
-      if (!this.saving) {
-         this.saving = true;
-         this.render();
-         JSONObject var1 = new JSONObject();
-         JSONArray var2 = new JSONArray();
-         Iterator var3 = this.slots.iterator();
-
-         while (var3.hasNext()) {
-            var2.put(this.slotJson((GxFavoritesPage.Slot)var3.next()));
-         }
-
-         Unit var5 = Unit.INSTANCE;
-         var1 = var1.put("slots", var2);
-         GxPage.send$default(this, "PUT", "/api/favorites/slots", var1, 0L, new GxFavoritesPage$$ExternalSyntheticLambda17(this), 8, null);
-      }
-   }
-
-   private static final Unit saveSlots$lambda$23(GxFavoritesPage var0, String var1, JSONObject var2) {
-      if (var1 == null) {
-         Object var3 = null;
-         JSONArray var4;
-         if (var2 != null) {
-            var4 = var2.optJSONArray("slots");
-         } else {
-            var4 = null;
-         }
-
-         var0.slots = var0.normalizeSlots(var4);
-         var0.savedSlots = var0.slots;
-         if (var2 != null) {
-            JSONArray var5 = var2.optJSONArray("options");
-            if (var5 != null) {
-               var0.options = var0.sortOptions(var5);
+            Iterable $this$associateBy$iv = section.getParams();
+            int capacity$iv = RangesKt.coerceAtLeast(MapsKt.mapCapacity(CollectionsKt.collectionSizeOrDefault($this$associateBy$iv, 10)), 16);
+            Map destination$iv$iv = new LinkedHashMap(capacity$iv);
+            for (Object element$iv$iv : $this$associateBy$iv) {
+                destination$iv$iv.put(((GalaxyApi.Param) element$iv$iv).getKey(), element$iv$iv);
             }
-         }
+            GalaxyApi.Param own = (GalaxyApi.Param) destination$iv$iv.get(anchor);
+            GalaxyApi.Param node = ((own != null && own.getIsParentToggle()) || !Intrinsics.areEqual(anchor, k)) ? own : (own == null || (it = own.getParentKey()) == null) ? null : (GalaxyApi.Param) destination$iv$iv.get(it);
+            ArrayList path = new ArrayList();
+            HashSet seen = new HashSet();
+            while (node != null && seen.add(node.getKey())) {
+                path.add(0, node.getLabel());
+                String it4 = node.getParentKey();
+                node = it4 != null ? (GalaxyApi.Param) destination$iv$iv.get(it4) : null;
+            }
+            return TuplesKt.to(section.getName(), path);
+        }
+        anchor = k;
+        List $this$lastOrNull$iv3 = cat;
+        iterator$iv = $this$lastOrNull$iv3.listIterator($this$lastOrNull$iv3.size());
+        while (true) {
+            if (iterator$iv.hasPrevious()) {
+            }
+        }
+        category = (GalaxyApi.Category) element$iv;
+        if (category == null) {
+        }
+        section = category;
+        if (section != null) {
+        }
+    }
 
-         JSONObject var6;
-         if (var2 != null) {
-            var6 = var2.optJSONObject("values");
-         } else {
-            var6 = null;
-         }
-
-         label36: {
-            var0.mergeValues(var6);
-            if (var2 != null) {
-               var1 = var2.optString("message");
-               if (var1 != null) {
-                  var1 = var1;
-                  if (StringsKt.isBlank(var1)) {
-                     var1 = (String)var3;
-                  }
-
-                  String var11 = var1;
-                  var1 = var11;
-                  if (var11 != null) {
-                     break label36;
-                  }
-               }
+    private final void chooseControl(final int index) {
+        String str;
+        Iterable emptyList;
+        List<GalaxyApi.Category> emptyList2;
+        Slot slot = this.slots.get(index);
+        String key = slot.getKey();
+        String str2 = "";
+        final String cur = key == null ? "" : key;
+        LinearLayout $this$chooseControl_u24lambda_u2460 = new LinearLayout(getAct());
+        $this$chooseControl_u24lambda_u2460.setOrientation(1);
+        $this$chooseControl_u24lambda_u2460.setPadding(getUi().dp(20), getUi().dp(8), getUi().dp(20), 0);
+        $this$chooseControl_u24lambda_u2460.setBackgroundColor(CarUi.Companion.getBG());
+        JSONObject selected = optionByKey(slot.getKey());
+        TextView $this$chooseControl_u24lambda_u2462 = new TextView(getAct());
+        if (selected == null || (str = selected.optString("label")) == null) {
+            String label = slot.getLabel();
+            if (label.length() == 0) {
+                label = null;
+            }
+            str = label;
+            if (str == null && (str = slot.getKey()) == null) {
+                str = "Not configured";
+            }
+        }
+        if (slot.getKey() != null && selected == null) {
+            str2 = " (unavailable)";
+        }
+        $this$chooseControl_u24lambda_u2462.setText("Current: " + str + str2);
+        $this$chooseControl_u24lambda_u2462.setTextSize(17.0f);
+        $this$chooseControl_u24lambda_u2462.setTextColor(CarUi.Companion.getTEXT());
+        $this$chooseControl_u24lambda_u2460.addView($this$chooseControl_u24lambda_u2462);
+        final EditText $this$chooseControl_u24lambda_u2463 = new EditText(getAct());
+        $this$chooseControl_u24lambda_u2463.setHint("Search by name, setting or description");
+        $this$chooseControl_u24lambda_u2463.setTextSize(19.0f);
+        $this$chooseControl_u24lambda_u2463.setTextColor(CarUi.Companion.getTEXT());
+        $this$chooseControl_u24lambda_u2463.setHintTextColor(CarUi.Companion.getDIM());
+        $this$chooseControl_u24lambda_u2463.setSingleLine();
+        $this$chooseControl_u24lambda_u2460.addView($this$chooseControl_u24lambda_u2463);
+        final TextView $this$chooseControl_u24lambda_u2464 = new TextView(getAct());
+        $this$chooseControl_u24lambda_u2464.setTextSize(15.0f);
+        $this$chooseControl_u24lambda_u2464.setTextColor(CarUi.Companion.getDIM());
+        $this$chooseControl_u24lambda_u2464.setPadding(0, getUi().dp(4), 0, getUi().dp(4));
+        $this$chooseControl_u24lambda_u2460.addView($this$chooseControl_u24lambda_u2464);
+        final LinearLayout $this$chooseControl_u24lambda_u2465 = new LinearLayout(getAct());
+        $this$chooseControl_u24lambda_u2465.setOrientation(1);
+        final ScrollView $this$chooseControl_u24lambda_u2466 = new ScrollView(getAct());
+        $this$chooseControl_u24lambda_u2466.addView($this$chooseControl_u24lambda_u2465);
+        $this$chooseControl_u24lambda_u2460.addView($this$chooseControl_u24lambda_u2466, new LinearLayout.LayoutParams(-1, (int) (getAct().getResources().getDisplayMetrics().heightPixels * 0.55d)));
+        final AlertDialog dlg = new AlertDialog.Builder(getAct()).setTitle("Favorite #" + (index + 1)).setView($this$chooseControl_u24lambda_u2460).setNegativeButton("Cancel", (DialogInterface.OnClickListener) null).create();
+        final HashSet expanded = new HashSet();
+        Iterable $this$associateWith$iv = this.options;
+        Map result$iv = new LinkedHashMap(RangesKt.coerceAtLeast(MapsKt.mapCapacity(CollectionsKt.collectionSizeOrDefault($this$associateWith$iv, 10)), 16));
+        for (Object element$iv$iv : $this$associateWith$iv) {
+            JSONObject it = (JSONObject) element$iv$iv;
+            result$iv.put(element$iv$iv, categoryOf(it));
+        }
+        final Map cats = result$iv;
+        GalaxyApi api = getApi();
+        if (api == null || (emptyList = api.getCatalog()) == null) {
+            emptyList = CollectionsKt.emptyList();
+        }
+        Iterable $this$map$iv = emptyList;
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            GalaxyApi.Category it2 = (GalaxyApi.Category) item$iv$iv;
+            destination$iv$iv.add(it2.getName());
+        }
+        final List layoutOrder = (List) destination$iv$iv;
+        final HashMap $this$chooseControl_u24lambda_u2469 = new HashMap();
+        int i = 0;
+        int n = 0;
+        GalaxyApi api2 = getApi();
+        if (api2 == null || (emptyList2 = api2.getCatalog()) == null) {
+            emptyList2 = CollectionsKt.emptyList();
+        }
+        for (GalaxyApi.Category c : emptyList2) {
+            for (GalaxyApi.Param p : c.getParams()) {
+                $this$chooseControl_u24lambda_u2469.put(p.getLabel(), Integer.valueOf(n));
+                i = i;
+                n++;
+            }
+        }
+        $this$chooseControl_u24lambda_u2463.addTextChangedListener(new TextWatcher() { // from class: com.starpilot.starview.GxFavoritesPage$chooseControl$2
+            @Override // android.text.TextWatcher
+            public void beforeTextChanged(CharSequence s, int a, int b, int c2) {
             }
 
-            var1 = "Favorite slots saved.";
-         }
-
-         var0.toast(var1);
-      } else {
-         var0.slots = var0.savedSlots;
-         CharSequence var12 = var1;
-         Object var10 = var12;
-         if (StringsKt.isBlank(var12)) {
-            var10 = "Failed to save favorite slots.";
-         }
-
-         var0.toast((String)var10);
-      }
-
-      var0.saving = false;
-      var0.render();
-      return Unit.INSTANCE;
-   }
-
-   private final JSONObject slotJson(GxFavoritesPage.Slot var1) {
-      JSONObject var4 = new JSONObject().put("enabled", var1.getEnabled()).put("show_onroad", var1.getShowOnroad());
-      String var3 = var1.getKey();
-      JSONObject var2 = var3;
-      if (var3 == null) {
-         var2 = (JSONObject)JSONObject.NULL;
-      }
-
-      var2 = var4.put("key", var2).put("label", var1.getLabel());
-      if (Intrinsics.areEqual(var1.getKey(), this.setSpeed) && var1.getValue() != null) {
-         var2.put("value", var1.getValue());
-      }
-
-      Intrinsics.checkNotNullExpressionValue(var2, "apply(...)");
-      return var2;
-   }
-
-   private final List<JSONObject> sortOptions(JSONArray var1) {
-      if (var1 != null) {
-         List var2 = this.objects(var1);
-         if (var2 != null) {
-            return CollectionsKt.sortedWith(var2, new GxFavoritesPage$$ExternalSyntheticLambda8(new GxFavoritesPage$$ExternalSyntheticLambda7()));
-         }
-      }
-
-      List var3 = CollectionsKt.emptyList();
-      return CollectionsKt.sortedWith(var3, new GxFavoritesPage$$ExternalSyntheticLambda8(new GxFavoritesPage$$ExternalSyntheticLambda7()));
-   }
-
-   private static final int sortOptions$lambda$10(JSONObject var0, JSONObject var1) {
-      var var4 = var0.optString("label");
-      int var2 = var4.length();
-      boolean var3 = true;
-      boolean var6;
-      if (var2 == 0) {
-         var6 = true;
-      } else {
-         var6 = false;
-      }
-
-      if (var6) {
-         var4 = var0.optString("key");
-      }
-
-      Intrinsics.checkNotNullExpressionValue(var4, "ifEmpty(...)");
-      var4 = var4;
-      var var5 = var1.optString("label");
-      if (var5.length() == 0) {
-         var6 = var3;
-      } else {
-         var6 = false;
-      }
-
-      if (var6) {
-         var5 = var1.optString("key");
-      }
-
-      Intrinsics.checkNotNullExpressionValue(var5, "ifEmpty(...)");
-      return GxHomeKt.access$gxHomeNatural(var4, var5);
-   }
-
-   private static final int sortOptions$lambda$11(Function2 var0, Object var1, Object var2) {
-      return ((Number)var0.invoke(var1, var2)).intValue();
-   }
-
-   private final double speedValue(GxFavoritesPage.Slot var1) {
-      double var2;
-      if (var1.getValue() == null) {
-         var2 = 30.0;
-      } else {
-         var2 = GxHomeKt.access$gxHomeNum(var1.getValue());
-      }
-
-      return var2;
-   }
-
-   private final void toggleValue(String var1, boolean var2) {
-      Object var3 = this.values.get(var1);
-      this.values.put(var1, var2);
-      GxPage.send$default(
-         this,
-         "PUT",
-         "/api/params",
-         new JSONObject().put("key", var1).put("value", var2),
-         0L,
-         new GxFavoritesPage$$ExternalSyntheticLambda15(this, var1, var3),
-         8,
-         null
-      );
-   }
-
-   private static final Unit toggleValue$lambda$29(GxFavoritesPage var0, String var1, Object var2, String var3, JSONObject var4) {
-      if (var3 == null) {
-         if (var4 != null) {
-            var2 = var4.optJSONObject("updated");
-            if (var2 != null) {
-               var0.mergeValues(var2);
-            }
-         }
-
-         label31: {
-            if (var4 != null) {
-               var2 = var4.optString("message");
-               if (var2 != null) {
-                  CharSequence var12 = var2;
-                  CharSequence var9 = var12;
-                  if (StringsKt.isBlank(var12)) {
-                     var9 = null;
-                  }
-
-                  var3 = (String)var9;
-                  var2 = var3;
-                  if (var3 != null) {
-                     break label31;
-                  }
-               }
+            @Override // android.text.TextWatcher
+            public void onTextChanged(CharSequence s, int a, int b, int c2) {
             }
 
-            var2 = "Parameter '" + var1 + "' updated.";
-         }
+            @Override // android.text.TextWatcher
+            public void afterTextChanged(Editable s) {
+                GxFavoritesPage.chooseControl$renderList($this$chooseControl_u24lambda_u2465, $this$chooseControl_u24lambda_u2463, cats, $this$chooseControl_u24lambda_u2464, this, layoutOrder, expanded, cur, dlg, index, $this$chooseControl_u24lambda_u2469);
+                $this$chooseControl_u24lambda_u2466.scrollTo(0, 0);
+            }
+        });
+        chooseControl$renderList($this$chooseControl_u24lambda_u2465, $this$chooseControl_u24lambda_u2463, cats, $this$chooseControl_u24lambda_u2464, this, layoutOrder, expanded, cur, dlg, index, $this$chooseControl_u24lambda_u2469);
+        dlg.show();
+    }
 
-         var0.toast(var2);
-         GalaxyApi var5 = var0.getApi();
-         if (var5 != null) {
-            GalaxyApi.refreshValues$default(var5, null, 1, null);
-         }
-      } else {
-         var0.values.put(var1, var2);
-         CharSequence var11 = var3;
-         Object var6 = var11;
-         if (StringsKt.isBlank(var11)) {
-            var6 = "Network error — is the device reachable?";
-         }
+    private static final void chooseControl$item(final GxFavoritesPage this$0, LinearLayout list, String cur, final AlertDialog dlg, final int $index, JSONObject o, String detail) {
+        final String k;
+        String str;
+        String dt;
+        if (o == null || (k = o.optString("key")) == null) {
+            k = "";
+        }
+        LinearLayout v = new LinearLayout(this$0.getAct());
+        v.setOrientation(1);
+        v.setBackground(this$0.getUi().rounded(Intrinsics.areEqual(k, cur) ? CarUi.Companion.getCARD_ON() : CarUi.Companion.getCARD(), 12, Intrinsics.areEqual(k, cur) ? Integer.valueOf(CarUi.Companion.getACCENT()) : null));
+        v.setPadding(this$0.getUi().dp(16), this$0.getUi().dp(10), this$0.getUi().dp(16), this$0.getUi().dp(10));
+        v.setMinimumHeight(this$0.getUi().dp(60));
+        v.setClickable(true);
+        TextView $this$chooseControl_u24item_u24lambda_u2471 = new TextView(this$0.getAct());
+        String str2 = Intrinsics.areEqual(k, cur) ? "✓ " : "";
+        if (o == null || (str = o.optString("label")) == null) {
+            str = "Not configured";
+        }
+        $this$chooseControl_u24item_u24lambda_u2471.setText(str2 + str);
+        $this$chooseControl_u24item_u24lambda_u2471.setTextSize(18.0f);
+        $this$chooseControl_u24item_u24lambda_u2471.setTextColor(CarUi.Companion.getTEXT());
+        $this$chooseControl_u24item_u24lambda_u2471.setTypeface(Typeface.DEFAULT_BOLD);
+        v.addView($this$chooseControl_u24item_u24lambda_u2471);
+        if (o == null) {
+            dt = "Clear this assignment";
+        } else {
+            Iterable $this$filter$iv = CollectionsKt.listOf((Object[]) new String[]{detail, o.optString("description")});
+            Collection destination$iv$iv = new ArrayList();
+            for (Object element$iv$iv : $this$filter$iv) {
+                String it = (String) element$iv$iv;
+                Intrinsics.checkNotNull(it);
+                if (!StringsKt.isBlank(it)) {
+                    destination$iv$iv.add(element$iv$iv);
+                }
+            }
+            dt = CollectionsKt.joinToString$default((List) destination$iv$iv, " · ", null, null, 0, null, null, 62, null);
+        }
+        if (!StringsKt.isBlank(dt)) {
+            TextView $this$chooseControl_u24item_u24lambda_u2473 = new TextView(this$0.getAct());
+            $this$chooseControl_u24item_u24lambda_u2473.setText(dt);
+            $this$chooseControl_u24item_u24lambda_u2473.setTextSize(14.0f);
+            $this$chooseControl_u24item_u24lambda_u2473.setTextColor(CarUi.Companion.getDIM());
+            v.addView($this$chooseControl_u24item_u24lambda_u2473);
+        }
+        v.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda19
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                GxFavoritesPage.chooseControl$item$lambda$77(GxFavoritesPage.this, k, dlg, $index, view);
+            }
+        });
+        LinearLayout.LayoutParams $this$chooseControl_u24item_u24lambda_u2478 = new LinearLayout.LayoutParams(-1, -2);
+        $this$chooseControl_u24item_u24lambda_u2478.bottomMargin = this$0.getUi().dp(6);
+        Unit unit = Unit.INSTANCE;
+        list.addView(v, $this$chooseControl_u24item_u24lambda_u2478);
+    }
 
-         var0.toast((String)var6);
-      }
-
-      var0.render();
-      return Unit.INSTANCE;
-   }
-
-   private final String unitLabel() {
-      String var1;
-      if (this.isMetric) {
-         var1 = "km/h";
-      } else {
-         var1 = "mph";
-      }
-
-      return var1;
-   }
-
-   private final void updateSlot(int var1, boolean var2, Function1<? super GxFavoritesPage.Slot, GxFavoritesPage.Slot> var3) {
-      if (!this.saving) {
-         GxFavoritesPage.Slot var6 = this.slots.get(var1);
-         JSONObject var9 = (JSONObject)var3.invoke(var6);
-         List var5 = var9;
-         if (var2) {
-            var2 = Intrinsics.areEqual(((GxFavoritesPage.Slot)var9).getKey(), this.setSpeed);
-            var5 = (GxFavoritesPage.Slot)var9;
-            if (var2) {
-               if (Intrinsics.areEqual(var6.getKey(), this.setSpeed)) {
-                  var9 = var6.getValue();
-               } else {
-                  var9 = 30;
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void chooseControl$item$lambda$77(GxFavoritesPage this$0, final String $k, AlertDialog $dlg, int $index, View it) {
+        if (this$0.saving || this$0.loading) {
+            return;
+        }
+        boolean z = false;
+        if ($k.length() > 0) {
+            Iterable $this$none$iv = this$0.options;
+            if (!($this$none$iv instanceof Collection) || !((Collection) $this$none$iv).isEmpty()) {
+                Iterator it2 = $this$none$iv.iterator();
+                while (true) {
+                    if (!it2.hasNext()) {
+                        z = true;
+                        break;
+                    }
+                    Object element$iv = it2.next();
+                    JSONObject it3 = (JSONObject) element$iv;
+                    if (Intrinsics.areEqual(it3.optString("key"), $k)) {
+                        break;
+                    }
+                }
             } else {
-               var9 = null;
+                z = true;
             }
-
-            var5 = GxFavoritesPage.Slot.copy$default((GxFavoritesPage.Slot)var5, false, false, null, var9, null, 23, null);
-         }
-
-         GxFavoritesPage.Slot var7 = (GxFavoritesPage.Slot)var5;
-         if (((GxFavoritesPage.Slot)var5).getKey() == null) {
-            var9 = "";
-         } else {
-            label39: {
-               var9 = this.optionByKey(((GxFavoritesPage.Slot)var5).getKey());
-               if (var9 != null) {
-                  String var13 = var9.optString("label");
-                  if (var13 != null) {
-                     var var14 = var13;
-                     boolean var4;
-                     if (var14.length() == 0) {
-                        var4 = true;
-                     } else {
-                        var4 = false;
-                     }
-
-                     if (var4) {
-                        var14 = null;
-                     }
-
-                     String var18 = var14;
-                     var9 = var18;
-                     if (var18 != null) {
-                        break label39;
-                     }
-                  }
-               }
-
-               var9 = ((GxFavoritesPage.Slot)var5).getKey();
-               Intrinsics.checkNotNull(var9);
+            if (z) {
+                return;
             }
-         }
-
-         GxFavoritesPage.Slot var15 = GxFavoritesPage.Slot.copy$default(var7, false, false, null, null, (String)var9, 15, null);
-         var5 = CollectionsKt.toMutableList(this.slots);
-         var5.set(var1, var15);
-         this.slots = var5;
-         this.saveSlots();
-      }
-   }
-
-   // $VF: synthetic method
-   static void updateSlot$default(GxFavoritesPage var0, int var1, boolean var2, Function1 var3, int var4, Object var5) {
-      if ((var4 & 2) != 0) {
-         var2 = false;
-      }
-
-      var0.updateSlot(var1, var2, var3);
-   }
-
-   @Override
-   public void build() {
-      GalaxyApi.Param var2;
-      label52: {
-         GalaxyApi var1 = this.getApi();
-         if (var1 != null) {
-            List var6 = var1.getCatalog();
-            if (var6 != null) {
-               Iterable var12 = var6;
-               var var7 = new ArrayList();
-               Iterator var13 = var12.iterator();
-
-               while (var13.hasNext()) {
-                  CollectionsKt.addAll(var7, ((GalaxyApi.Category)var13.next()).getParams());
-               }
-
-               List var8 = var7;
-
-               label40: {
-                  for (Object var14 : var8) {
-                     GalaxyApi.Param var5 = (GalaxyApi.Param)var14;
-                     CharSequence var3 = var5.getO().optString("galaxy_ui_type");
-                     Object var9 = var3;
-                     if (StringsKt.isBlank(var3)) {
-                        var9 = var5.getUiType();
-                     }
-
-                     if (Intrinsics.areEqual(var9, "favorites")) {
-                        var10 = var14;
-                        break label40;
-                     }
-                  }
-
-                  var10 = null;
-               }
-
-               var2 = (GalaxyApi.Param)var10;
-               break label52;
+        }
+        $dlg.dismiss();
+        this$0.updateSlot($index, true, new Function1() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda6
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                GxFavoritesPage.Slot chooseControl$item$lambda$77$lambda$76;
+                chooseControl$item$lambda$77$lambda$76 = GxFavoritesPage.chooseControl$item$lambda$77$lambda$76($k, (GxFavoritesPage.Slot) obj);
+                return chooseControl$item$lambda$77$lambda$76;
             }
-         }
+        });
+    }
 
-         var2 = null;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Slot chooseControl$item$lambda$77$lambda$76(String $k, Slot it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        String str = $k;
+        if (str.length() == 0) {
+            str = null;
+        }
+        return Slot.copy$default(it, false, false, str, null, null, 27, null);
+    }
 
-      String var11;
-      GxPage var17;
-      label31: {
-         var17 = this;
-         if (var2 != null) {
-            String var16 = var2.getLabel();
-            var11 = var16;
-            if (var16 != null) {
-               break label31;
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Removed duplicated region for block: B:84:0x02df  */
+    /* JADX WARN: Removed duplicated region for block: B:87:0x0414 A[SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:90:0x0396 A[SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:98:0x02e2  */
+    /* JADX WARN: Type inference failed for: r13v0 */
+    /* JADX WARN: Type inference failed for: r13v1 */
+    /* JADX WARN: Type inference failed for: r13v12 */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final void chooseControl$renderList(final LinearLayout list, final EditText search, final Map<JSONObject, ? extends Pair<String, ? extends List<String>>> map, final TextView count, final GxFavoritesPage this$0, final List<String> list2, final HashSet<String> hashSet, final String cur, final AlertDialog dlg, final int $index, final HashMap<String, Integer> hashMap) {
+        String str;
+        boolean z;
+        boolean open;
+        Iterable $this$filter$iv;
+        String str2;
+        String str3;
+        int $i$f$filter;
+        Iterable $this$all$iv;
+        boolean z2;
+        LinearLayout linearLayout = list;
+        Map<JSONObject, ? extends Pair<String, ? extends List<String>>> map2 = map;
+        list.removeAllViews();
+        String obj = StringsKt.trim((CharSequence) search.getText().toString()).toString();
+        Locale ROOT = Locale.ROOT;
+        String str4 = "ROOT";
+        Intrinsics.checkNotNullExpressionValue(ROOT, "ROOT");
+        String lowerCase = obj.toLowerCase(ROOT);
+        String str5 = "toLowerCase(...)";
+        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+        ?? r13 = 0;
+        Iterable $this$filter$iv2 = new Regex("\\s+").split(lowerCase, 0);
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv2) {
+            String it = (String) element$iv$iv;
+            if (it.length() > 0) {
+                destination$iv$iv.add(element$iv$iv);
             }
-         }
-
-         var11 = "Favorites";
-      }
-
-      String var15;
-      if (var2 != null) {
-         var15 = var2.getDescription();
-      } else {
-         var15 = null;
-      }
-
-      GxPage.row$default(var17, var11, var15, null, 0, 12, null).getTitleView().setTypeface(Typeface.DEFAULT_BOLD);
-      this.content = GxPage.box$default(this, null, 1, null);
-      this.every(5000L, new GxFavoritesPage$$ExternalSyntheticLambda10(this));
-   }
-
-   @Override
-   public void onHide() {
-      Runnable var1 = this.speedTimer;
-      if (var1 != null) {
-         this.getMain().removeCallbacks(var1);
-      }
-
-      this.speedTimer = null;
-   }
-
-   @Override
-   public void onShow() {
-      this.load();
-   }
-
-   private static final class Slot {
-      private final boolean enabled;
-      private final String key;
-      private final String label;
-      private final boolean showOnroad;
-      private final Object value;
-
-      public Slot() {
-         this(false, false, null, null, null, 31, null);
-      }
-
-      public Slot(boolean var1, boolean var2, String var3, Object var4, String var5) {
-         Intrinsics.checkNotNullParameter(var5, "label");
-         super();
-         this.enabled = var1;
-         this.showOnroad = var2;
-         this.key = var3;
-         this.value = var4;
-         this.label = var5;
-      }
-
-      // $VF: synthetic method
-      public Slot(boolean var1, boolean var2, String var3, Object var4, String var5, int var6, DefaultConstructorMarker var7) {
-         if ((var6 & 1) != 0) {
-            var1 = false;
-         }
-
-         if ((var6 & 2) != 0) {
-            var2 = false;
-         }
-
-         if ((var6 & 4) != 0) {
-            var3 = null;
-         }
-
-         if ((var6 & 8) != 0) {
-            var4 = null;
-         }
-
-         if ((var6 & 16) != 0) {
-            var5 = "";
-         }
-
-         this(var1, var2, var3, var4, var5);
-      }
-
-      // $VF: synthetic method
-      public static GxFavoritesPage.Slot copy$default(
-         GxFavoritesPage.Slot var0, boolean var1, boolean var2, String var3, Object var4, String var5, int var6, Object var7
-      ) {
-         if ((var6 & 1) != 0) {
-            var1 = var0.enabled;
-         }
-
-         if ((var6 & 2) != 0) {
-            var2 = var0.showOnroad;
-         }
-
-         if ((var6 & 4) != 0) {
-            var3 = var0.key;
-         }
-
-         if ((var6 & 8) != 0) {
-            var4 = var0.value;
-         }
-
-         if ((var6 & 16) != 0) {
-            var5 = var0.label;
-         }
-
-         return var0.copy(var1, var2, var3, var4, var5);
-      }
-
-      public final boolean component1() {
-         return this.enabled;
-      }
-
-      public final boolean component2() {
-         return this.showOnroad;
-      }
-
-      public final String component3() {
-         return this.key;
-      }
-
-      public final Object component4() {
-         return this.value;
-      }
-
-      public final String component5() {
-         return this.label;
-      }
-
-      public final GxFavoritesPage.Slot copy(boolean var1, boolean var2, String var3, Object var4, String var5) {
-         Intrinsics.checkNotNullParameter(var5, "label");
-         return new GxFavoritesPage.Slot(var1, var2, var3, var4, var5);
-      }
-
-      @Override
-      public boolean equals(Object var1) {
-         if (this == var1) {
-            return true;
-         } else if (!(var1 instanceof GxFavoritesPage.Slot)) {
-            return false;
-         } else {
-            var1 = var1;
-            if (this.enabled != var1.enabled) {
-               return false;
-            } else if (this.showOnroad != var1.showOnroad) {
-               return false;
-            } else if (!Intrinsics.areEqual(this.key, var1.key)) {
-               return false;
+        }
+        final List q = (List) destination$iv$iv;
+        Iterable $this$filter$iv3 = map.keySet();
+        int $i$f$filter2 = 0;
+        Collection destination$iv$iv2 = new ArrayList();
+        for (Object element$iv$iv2 : $this$filter$iv3) {
+            JSONObject o = (JSONObject) element$iv$iv2;
+            Pair<String, ? extends List<String>> pair = map2.get(o);
+            Intrinsics.checkNotNull(pair);
+            Pair<String, ? extends List<String>> pair2 = pair;
+            String cn = pair2.component1();
+            List path = pair2.component2();
+            String[] strArr = new String[6];
+            strArr[r13] = o.optString("label");
+            strArr[1] = o.optString("key");
+            strArr[2] = o.optString("description");
+            strArr[3] = o.optString("picker_label");
+            strArr[4] = o.optString("picker_description");
+            strArr[5] = cn;
+            String joinToString$default = CollectionsKt.joinToString$default(CollectionsKt.plus((Collection) CollectionsKt.listOf((Object[]) strArr), (Iterable) path), " ", null, null, 0, null, null, 62, null);
+            Locale locale = Locale.ROOT;
+            Intrinsics.checkNotNullExpressionValue(locale, str4);
+            String hay = joinToString$default.toLowerCase(locale);
+            Intrinsics.checkNotNullExpressionValue(hay, str5);
+            List $this$all$iv2 = q;
+            if (!($this$all$iv2 instanceof Collection) || !$this$all$iv2.isEmpty()) {
+                Iterator it2 = $this$all$iv2.iterator();
+                while (true) {
+                    if (it2.hasNext()) {
+                        Object element$iv = it2.next();
+                        String it3 = (String) element$iv;
+                        $this$filter$iv = $this$filter$iv3;
+                        str2 = str5;
+                        str3 = str4;
+                        $i$f$filter = $i$f$filter2;
+                        Iterable $this$all$iv3 = $this$all$iv2;
+                        $this$all$iv = null;
+                        if (!StringsKt.contains$default((CharSequence) hay, (CharSequence) it3, false, 2, (Object) null)) {
+                            z2 = false;
+                            break;
+                        }
+                        $this$all$iv2 = $this$all$iv3;
+                        $this$filter$iv3 = $this$filter$iv;
+                        str5 = str2;
+                        str4 = str3;
+                        $i$f$filter2 = $i$f$filter;
+                    } else {
+                        $this$filter$iv = $this$filter$iv3;
+                        str2 = str5;
+                        str3 = str4;
+                        $i$f$filter = $i$f$filter2;
+                        $this$all$iv = null;
+                        z2 = true;
+                        break;
+                    }
+                }
             } else {
-               return !Intrinsics.areEqual(this.value, var1.value) ? false : Intrinsics.areEqual(this.label, var1.label);
+                $this$filter$iv = $this$filter$iv3;
+                str2 = str5;
+                str3 = str4;
+                $i$f$filter = $i$f$filter2;
+                z2 = true;
+                $this$all$iv = null;
             }
-         }
-      }
+            if (z2) {
+                destination$iv$iv2.add(element$iv$iv2);
+            }
+            r13 = $this$all$iv;
+            $this$filter$iv3 = $this$filter$iv;
+            str5 = str2;
+            str4 = str3;
+            $i$f$filter2 = $i$f$filter;
+        }
+        int i = 6;
+        List matches = (List) destination$iv$iv2;
+        if (!this$0.saving) {
+            str = matches.size() + " " + (matches.size() == 1 ? "control" : "controls");
+        }
+        count.setText(str);
+        chooseControl$item(this$0, list, cur, dlg, $index, null, "");
+        List $this$map$iv = matches;
+        Collection destination$iv$iv3 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            JSONObject it4 = (JSONObject) item$iv$iv;
+            Pair<String, ? extends List<String>> pair3 = map2.get(it4);
+            Intrinsics.checkNotNull(pair3);
+            destination$iv$iv3.add(pair3.getFirst());
+        }
+        Set available = CollectionsKt.toSet((List) destination$iv$iv3);
+        List<String> $this$filter$iv4 = list2;
+        Collection destination$iv$iv4 = new ArrayList();
+        for (Object element$iv$iv3 : $this$filter$iv4) {
+            String it5 = (String) element$iv$iv3;
+            if (available.contains(it5)) {
+                destination$iv$iv4.add(element$iv$iv3);
+            }
+        }
+        List<String> orderedCats = CollectionsKt.distinct(CollectionsKt.plus(destination$iv$iv4, (Iterable) available));
+        for (final String cn2 : orderedCats) {
+            List $this$filter$iv5 = matches;
+            Collection destination$iv$iv5 = new ArrayList();
+            for (Object element$iv$iv4 : $this$filter$iv5) {
+                JSONObject it6 = (JSONObject) element$iv$iv4;
+                Pair<String, ? extends List<String>> pair4 = map2.get(it6);
+                Intrinsics.checkNotNull(pair4);
+                if (Intrinsics.areEqual(pair4.getFirst(), cn2)) {
+                    destination$iv$iv5.add(element$iv$iv4);
+                }
+            }
+            List items = (List) destination$iv$iv5;
+            if (items.isEmpty()) {
+                available = available;
+            } else {
+                if (q.isEmpty() && !hashSet.contains(cn2)) {
+                    z = false;
+                    open = z;
+                    TextView $this$chooseControl_u24renderList_u24lambda_u2485 = new TextView(this$0.getAct());
+                    $this$chooseControl_u24renderList_u24lambda_u2485.setText((!open ? "▾" : "▸") + "  " + cn2 + " (" + items.size() + ")");
+                    $this$chooseControl_u24renderList_u24lambda_u2485.setTextSize(18.0f);
+                    $this$chooseControl_u24renderList_u24lambda_u2485.setTextColor(CarUi.Companion.getACCENT());
+                    $this$chooseControl_u24renderList_u24lambda_u2485.setTypeface(Typeface.DEFAULT_BOLD);
+                    $this$chooseControl_u24renderList_u24lambda_u2485.setMinHeight(this$0.getUi().dp(56));
+                    $this$chooseControl_u24renderList_u24lambda_u2485.setGravity(16);
+                    $this$chooseControl_u24renderList_u24lambda_u2485.setPadding(this$0.getUi().dp(i), this$0.getUi().dp(i), this$0.getUi().dp(i), this$0.getUi().dp(i));
+                    Set available2 = available;
+                    int i2 = i;
+                    $this$chooseControl_u24renderList_u24lambda_u2485.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda13
+                        @Override // android.view.View.OnClickListener
+                        public final void onClick(View view) {
+                            GxFavoritesPage.chooseControl$renderList$lambda$86(q, hashSet, cn2, list, search, map, count, this$0, list2, cur, dlg, $index, hashMap, view);
+                        }
+                    });
+                    list.addView($this$chooseControl_u24renderList_u24lambda_u2485);
+                    if (open) {
+                        linearLayout = list;
+                        map2 = map;
+                        i = i2;
+                        available = available2;
+                    } else {
+                        final Comparator comparator = new Comparator() { // from class: com.starpilot.starview.GxFavoritesPage$chooseControl$renderList$$inlined$compareBy$1
+                            /* JADX WARN: Multi-variable type inference failed */
+                            @Override // java.util.Comparator
+                            public final int compare(T t, T t2) {
+                                Integer valueOf;
+                                Integer valueOf2;
+                                JSONObject it7 = (JSONObject) t;
+                                Object obj2 = map.get(it7);
+                                Intrinsics.checkNotNull(obj2);
+                                List p = (List) ((Pair) obj2).getSecond();
+                                if (p.isEmpty()) {
+                                    valueOf = (Comparable) (-1);
+                                } else {
+                                    Integer num = (Integer) hashMap.get(p.get(0));
+                                    valueOf = Integer.valueOf(num != null ? num.intValue() : Integer.MAX_VALUE);
+                                }
+                                JSONObject it8 = (JSONObject) t2;
+                                Object obj3 = map.get(it8);
+                                Intrinsics.checkNotNull(obj3);
+                                List p2 = (List) ((Pair) obj3).getSecond();
+                                if (p2.isEmpty()) {
+                                    valueOf2 = (Comparable) (-1);
+                                } else {
+                                    Integer num2 = (Integer) hashMap.get(p2.get(0));
+                                    valueOf2 = Integer.valueOf(num2 != null ? num2.intValue() : Integer.MAX_VALUE);
+                                }
+                                return ComparisonsKt.compareValues(valueOf, valueOf2);
+                            }
+                        };
+                        List<JSONObject> sorted = CollectionsKt.sortedWith(items, new Comparator() { // from class: com.starpilot.starview.GxFavoritesPage$chooseControl$renderList$$inlined$thenBy$1
+                            /* JADX WARN: Multi-variable type inference failed */
+                            @Override // java.util.Comparator
+                            public final int compare(T t, T t2) {
+                                int previousCompare = comparator.compare(t, t2);
+                                if (previousCompare != 0) {
+                                    return previousCompare;
+                                }
+                                JSONObject it7 = (JSONObject) t;
+                                Object obj2 = map.get(it7);
+                                Intrinsics.checkNotNull(obj2);
+                                String joinToString$default2 = CollectionsKt.joinToString$default((Iterable) ((Pair) obj2).getSecond(), "/", null, null, 0, null, null, 62, null);
+                                JSONObject it8 = (JSONObject) t2;
+                                Object obj3 = map.get(it8);
+                                Intrinsics.checkNotNull(obj3);
+                                return ComparisonsKt.compareValues(joinToString$default2, CollectionsKt.joinToString$default((Iterable) ((Pair) obj3).getSecond(), "/", null, null, 0, null, null, 62, null));
+                            }
+                        });
+                        for (JSONObject o2 : sorted) {
+                            List listOf = CollectionsKt.listOf(cn2);
+                            Pair<String, ? extends List<String>> pair5 = map.get(o2);
+                            Intrinsics.checkNotNull(pair5);
+                            chooseControl$item(this$0, list, cur, dlg, $index, o2, CollectionsKt.joinToString$default(CollectionsKt.plus((Collection) listOf, (Iterable) pair5.getSecond()), " · ", null, null, 0, null, null, 62, null));
+                        }
+                        linearLayout = list;
+                        map2 = map;
+                        i = i2;
+                        available = available2;
+                    }
+                }
+                z = true;
+                open = z;
+                TextView $this$chooseControl_u24renderList_u24lambda_u24852 = new TextView(this$0.getAct());
+                if (!open) {
+                }
+                $this$chooseControl_u24renderList_u24lambda_u24852.setText((!open ? "▾" : "▸") + "  " + cn2 + " (" + items.size() + ")");
+                $this$chooseControl_u24renderList_u24lambda_u24852.setTextSize(18.0f);
+                $this$chooseControl_u24renderList_u24lambda_u24852.setTextColor(CarUi.Companion.getACCENT());
+                $this$chooseControl_u24renderList_u24lambda_u24852.setTypeface(Typeface.DEFAULT_BOLD);
+                $this$chooseControl_u24renderList_u24lambda_u24852.setMinHeight(this$0.getUi().dp(56));
+                $this$chooseControl_u24renderList_u24lambda_u24852.setGravity(16);
+                $this$chooseControl_u24renderList_u24lambda_u24852.setPadding(this$0.getUi().dp(i), this$0.getUi().dp(i), this$0.getUi().dp(i), this$0.getUi().dp(i));
+                Set available22 = available;
+                int i22 = i;
+                $this$chooseControl_u24renderList_u24lambda_u24852.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda13
+                    @Override // android.view.View.OnClickListener
+                    public final void onClick(View view) {
+                        GxFavoritesPage.chooseControl$renderList$lambda$86(q, hashSet, cn2, list, search, map, count, this$0, list2, cur, dlg, $index, hashMap, view);
+                    }
+                });
+                list.addView($this$chooseControl_u24renderList_u24lambda_u24852);
+                if (open) {
+                }
+            }
+        }
+        LinearLayout linearLayout2 = linearLayout;
+        if (!matches.isEmpty()) {
+            return;
+        }
+        TextView $this$chooseControl_u24renderList_u24lambda_u2489 = new TextView(this$0.getAct());
+        $this$chooseControl_u24renderList_u24lambda_u2489.setText("No matching controls. Try another search.");
+        $this$chooseControl_u24renderList_u24lambda_u2489.setTextSize(16.0f);
+        $this$chooseControl_u24renderList_u24lambda_u2489.setTextColor(CarUi.Companion.getDIM());
+        $this$chooseControl_u24renderList_u24lambda_u2489.setPadding(0, this$0.getUi().dp(10), 0, this$0.getUi().dp(10));
+        linearLayout2.addView($this$chooseControl_u24renderList_u24lambda_u2489);
+    }
 
-      public final boolean getEnabled() {
-         return this.enabled;
-      }
-
-      public final String getKey() {
-         return this.key;
-      }
-
-      public final String getLabel() {
-         return this.label;
-      }
-
-      public final boolean getShowOnroad() {
-         return this.showOnroad;
-      }
-
-      public final Object getValue() {
-         return this.value;
-      }
-
-      @Override
-      public int hashCode() {
-         int var4 = Boolean.hashCode(this.enabled);
-         int var3 = Boolean.hashCode(this.showOnroad);
-         String var5 = this.key;
-         int var2 = 0;
-         int var1;
-         if (var5 == null) {
-            var1 = 0;
-         } else {
-            var1 = this.key.hashCode();
-         }
-
-         if (this.value != null) {
-            var2 = this.value.hashCode();
-         }
-
-         return (((var4 * 31 + var3) * 31 + var1) * 31 + var2) * 31 + this.label.hashCode();
-      }
-
-      @Override
-      public String toString() {
-         boolean var1 = this.enabled;
-         boolean var2 = this.showOnroad;
-         String var5 = this.key;
-         Object var4 = this.value;
-         String var3 = this.label;
-         return "Slot(enabled=" + var1 + ", showOnroad=" + var2 + ", key=" + var5 + ", value=" + var4 + ", label=" + var3 + ")";
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void chooseControl$renderList$lambda$86(List $q, HashSet $expanded, String $cn, LinearLayout $list, EditText $search, Map $cats, TextView $count, GxFavoritesPage this$0, List $layoutOrder, String $cur, AlertDialog $dlg, int $index, HashMap $paramOrder, View it) {
+        if ($q.isEmpty()) {
+            if ($expanded.contains($cn)) {
+                $expanded.remove($cn);
+            } else {
+                $expanded.add($cn);
+            }
+            chooseControl$renderList($list, $search, $cats, $count, this$0, $layoutOrder, $expanded, $cur, $dlg, $index, $paramOrder);
+        }
+    }
 }

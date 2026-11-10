@@ -1,12 +1,11 @@
 package com.starpilot.starview;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.starpilot.starview.GxPage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -16,1419 +15,1071 @@ import kotlin.TuplesKt;
 import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function1;
+import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
 
+/* compiled from: GxModels.kt */
 public final class GxModelLabPage extends GxPage {
-   private LinearLayout availBox;
-   private boolean cfgEnabled;
-   private boolean chestnutReady;
-   private boolean dirty;
-   private JSONObject download;
-   private String error;
-   private int gen;
-   private LinearLayout headBox;
-   private boolean isOnroad;
-   private String lastSig;
-   private String lateral;
-   private boolean loading;
-   private String longitudinal;
-   private String message;
-   private List<? extends JSONObject> models;
-   private final boolean needsOffroad;
-   private LinearLayout pairBox;
-   private boolean polling;
-   private JSONObject runtime;
-   private LinearLayout runtimeBox;
-   private boolean saving;
-   private JSONObject summary;
+    private LinearLayout availBox;
+    private boolean cfgEnabled;
+    private boolean chestnutReady;
+    private boolean dirty;
+    private JSONObject download;
+    private String error;
+    private int gen;
+    private LinearLayout headBox;
+    private boolean isOnroad;
+    private String lastSig;
+    private String lateral;
+    private boolean loading;
+    private String longitudinal;
+    private String message;
+    private List<? extends JSONObject> models;
+    private final boolean needsOffroad;
+    private LinearLayout pairBox;
+    private boolean polling;
+    private JSONObject runtime;
+    private LinearLayout runtimeBox;
+    private boolean saving;
+    private JSONObject summary;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$_vtaFmW9rqXql6cG6dhpWN8q8c0/* $VF was: $r8$lambda$_vtaFmW9rqXql6cG6dhpWN8q8c0*/(GxModelLabPage var0) {
-      return renderPair$lambda$39(var0);
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public GxModelLabPage(Activity act, GxHost gx) {
+        super(act, gx);
+        Intrinsics.checkNotNullParameter(act, "act");
+        Intrinsics.checkNotNullParameter(gx, "gx");
+        this.needsOffroad = true;
+        this.loading = true;
+        this.error = "";
+        this.message = "";
+        this.lateral = "";
+        this.longitudinal = "";
+        this.runtime = new JSONObject();
+        this.download = new JSONObject();
+        this.summary = new JSONObject();
+        this.models = CollectionsKt.emptyList();
+        this.lastSig = "";
+    }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$0GRiUci_qcCQL6aeXCCVaWGC_a8/* $VF was: $r8$lambda$0GRiUci_qcCQL6aeXCCVaWGC_a8*/(
-      GxModelLabPage var0, String var1, JSONObject var2
-   ) {
-      return save$lambda$17(var0, var1, var2);
-   }
+    @Override // com.starpilot.starview.GxPage
+    public boolean getNeedsOffroad() {
+        return this.needsOffroad;
+    }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$4vHA_n2hBLCFBQbpM9YBHSjN7Gs/* $VF was: $r8$lambda$4vHA_n2hBLCFBQbpM9YBHSjN7Gs*/(GxModelLabPage var0) {
-      return renderPair$lambda$43(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$6u3YV3Nm34QXbBHJLXcRulAgax8(GxModelLabPage var0) {
-      return build$lambda$1(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$C2Oi_PHYpDFiNxrZukTgnsBTnj0(GxModelLabPage var0, String var1) {
-      return deleteModel$lambda$25(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static CharSequence $r8$lambda$ElqQoZ_g5oZvdwk363sIS97pNIw(JSONObject var0) {
-      return render$lambda$26(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$KV9f_BiHuLpHkrWbPU1MeKXa4bY/* $VF was: $r8$lambda$KV9f_BiHuLpHkrWbPU1MeKXa4bY*/(GxModelLabPage var0) {
-      return build$lambda$1$lambda$0(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Km7QT8kZKZGuEGvq5T9YhL3t62M(GxModelLabPage var0, String var1) {
-      return renderAvailable$lambda$33(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$KumQ5FvyQt1Fg_FYEVxr2vDxhe8(GxModelLabPage var0, int var1, Function0 var2, String var3, JSONObject var4) {
-      return refresh$lambda$9(var0, var1, var2, var3, var4);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$NfO_9_IGlm2iMHsW2JkE_VU0I_A/* $VF was: $r8$lambda$NfO_9_IGlm2iMHsW2JkE_VU0I_A*/(GxModelLabPage var0) {
-      return prepareModel$lambda$20$lambda$19(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$Y0lSYx2dylmQksr9ApNvROCuTB4(GxModelLabPage var0) {
-      return renderPair$lambda$45(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$YgMozNqnFXxu2Qs4iYKdzN_Syp8(GxModelLabPage var0) {
-      return renderPair$lambda$46(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$itaJSSZDG9HfqnBJnipx5Qa8Or8(GxModelLabPage var0, String var1, JSONObject var2) {
-      return prepareModel$lambda$20(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$kZyo6CDGdjBtass4RocjiPcdnqM(GxModelLabPage var0, List var1, int var2) {
-      return renderPair$lambda$43$lambda$42(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$lsv0SGhK_o3PFxnAIQeX7ibkZto/* $VF was: $r8$lambda$lsv0SGhK_o3PFxnAIQeX7ibkZto*/(
-      GxModelLabPage var0, String var1, JSONObject var2
-   ) {
-      return deleteModel$lambda$25$lambda$24(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$mIhBfpOgmc7_uPjzEIwoPLqolfA(GxModelLabPage var0, String var1) {
-      return renderAvailable$lambda$34(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$ppkjr3S4xZgaITOXTk3p48_4RMY(GxModelLabPage var0) {
-      return renderPair$lambda$47(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$ywRl6M7JDj_jp5Os_L81vp1E9y0(GxModelLabPage var0, List var1, int var2) {
-      return renderPair$lambda$39$lambda$38(var0, var1, var2);
-   }
-
-   public GxModelLabPage(Activity var1, GxHost var2) {
-      Intrinsics.checkNotNullParameter(var1, "act");
-      Intrinsics.checkNotNullParameter(var2, "gx");
-      super(var1, var2);
-      this.needsOffroad = true;
-      this.loading = true;
-      this.error = "";
-      this.message = "";
-      this.lateral = "";
-      this.longitudinal = "";
-      this.runtime = new JSONObject();
-      this.download = new JSONObject();
-      this.summary = new JSONObject();
-      this.models = CollectionsKt.emptyList();
-      this.lastSig = "";
-   }
-
-   private final void applyPayload(JSONObject var1) {
-      this.chestnutReady = var1.optBoolean("chestnutReady");
-      this.isOnroad = var1.optBoolean("isOnroad");
-      this.error = GxModelsKt.gxModelsText$default(var1, "configurationError", null, 4, null);
-      JSONObject var3 = var1.optJSONObject("runtime");
-      JSONObject var2 = var3;
-      if (var3 == null) {
-         var2 = new JSONObject();
-      }
-
-      this.runtime = var2;
-      var3 = var1.optJSONObject("download");
-      var2 = var3;
-      if (var3 == null) {
-         var2 = new JSONObject();
-      }
-
-      this.download = var2;
-      var3 = var1.optJSONObject("summary");
-      var2 = var3;
-      if (var3 == null) {
-         var2 = new JSONObject();
-      }
-
-      this.summary = var2;
-      this.models = GxModelsKt.access$gxModelsObjects(var1.optJSONArray("models"));
-      var2 = var1.optJSONObject("configuration");
-      var1 = var2;
-      if (var2 == null) {
-         var1 = new JSONObject();
-      }
-
-      this.cfgEnabled = var1.optBoolean("enabled");
-      if (!this.dirty) {
-         this.lateral = GxModelsKt.gxModelsText$default(var1, "lateralModel", null, 4, null);
-         this.longitudinal = GxModelsKt.gxModelsText$default(var1, "longitudinalModel", null, 4, null);
-      }
-
-      this.normalizeSelection();
-   }
-
-   private final List<JSONObject> available() {
-      Iterable var2 = this.models;
-      var var1 = new ArrayList();
-
-      for (var var2_it : var2) {
-
-         var2 = var2_it;
-         if (((JSONObject)var2).optBoolean("modelLabArtifactAvailable")) {
-            var1.add(var2);
-         }
-      }
-
-      return var1;
-   }
-
-   private static final Unit build$lambda$1(GxModelLabPage var0) {
-      if (!var0.polling) {
-         var0.polling = true;
-         var0.refresh(new GxModelLabPage$$ExternalSyntheticLambda8(var0));
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit build$lambda$1$lambda$0(GxModelLabPage var0) {
-      var0.polling = false;
-      return Unit.INSTANCE;
-   }
-
-   private final JSONObject byId(String var1) {
-      Iterator var4 = this.models.iterator();
-
-      while (true) {
-         boolean var2 = var4.hasNext();
-         Object var3 = null;
-         if (var2) {
-            var3 = var4.next();
-            if (!Intrinsics.areEqual(GxModelsKt.gxModelsText$default((JSONObject)var3, "value", null, 4, null), var1)) {
-               continue;
+    @Override // com.starpilot.starview.GxPage
+    public void build() {
+        this.headBox = GxPage.box$default(this, null, 1, null);
+        GxPage.header$default(this, "Available models", null, 2, null);
+        this.availBox = GxPage.box$default(this, null, 1, null);
+        GxPage.header$default(this, "Compose a pair", null, 2, null);
+        this.pairBox = GxPage.box$default(this, null, 1, null);
+        GxPage.header$default(this, "Runtime", null, 2, null);
+        this.runtimeBox = GxPage.box$default(this, null, 1, null);
+        render(true);
+        every(2000L, new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda11
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit build$lambda$1;
+                build$lambda$1 = GxModelLabPage.build$lambda$1(GxModelLabPage.this);
+                return build$lambda$1;
             }
+        });
+    }
 
-            var5 = var3;
-            break;
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$1(final GxModelLabPage this$0) {
+        if (!this$0.polling) {
+            this$0.polling = true;
+            this$0.refresh(new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda8
+                @Override // kotlin.jvm.functions.Function0
+                public final Object invoke() {
+                    Unit build$lambda$1$lambda$0;
+                    build$lambda$1$lambda$0 = GxModelLabPage.build$lambda$1$lambda$0(GxModelLabPage.this);
+                    return build$lambda$1$lambda$0;
+                }
+            });
+        }
+        return Unit.INSTANCE;
+    }
 
-         var5 = var3;
-         break;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit build$lambda$1$lambda$0(GxModelLabPage this$0) {
+        this$0.polling = false;
+        return Unit.INSTANCE;
+    }
 
-      return (JSONObject)var5;
-   }
+    @Override // com.starpilot.starview.GxPage
+    public void onHide() {
+        this.gen++;
+        this.polling = false;
+    }
 
-   private final List<JSONObject> candidates() {
-      Iterable var5 = this.ready();
-      var var4 = new ArrayList();
-
-      for (Object var6 : var5) {
-         JSONObject var7 = (JSONObject)var6;
-         int var1 = this.lateral.length();
-         boolean var3 = true;
-         boolean var8;
-         if (var1 == 0) {
-            var8 = true;
-         } else {
-            var8 = false;
-         }
-
-         boolean var2 = var3;
-         if (!var8) {
-            if (!Intrinsics.areEqual(GxModelsKt.gxModelsText$default(var7, "value", null, 4, null), this.lateral)) {
-               var2 = var3;
-            } else {
-               var2 = false;
+    private final List<JSONObject> available() {
+        Iterable $this$filter$iv = this.models;
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            JSONObject it = (JSONObject) element$iv$iv;
+            if (it.optBoolean("modelLabArtifactAvailable")) {
+                destination$iv$iv.add(element$iv$iv);
             }
-         }
+        }
+        return (List) destination$iv$iv;
+    }
 
-         if (var2) {
-            var4.add(var6);
-         }
-      }
-
-      return var4;
-   }
-
-   private final void deleteModel(String var1) {
-      if (!this.saving) {
-         boolean var2;
-         if (var1.length() == 0) {
-            var2 = true;
-         } else {
-            var2 = false;
-         }
-
-         if (!var2) {
-            String var5;
-            label24: {
-               JSONObject var4 = this.byId(var1);
-               if (var4 != null) {
-                  CharSequence var3 = null;
-                  CharSequence var6 = GxModelsKt.gxModelsText$default(var4, "label", null, 4, null);
-                  if (!StringsKt.isBlank(var6)) {
-                     var3 = var6;
-                  }
-
-                  String var7 = (String)var3;
-                  var5 = var7;
-                  if (var7 != null) {
-                     break label24;
-                  }
-               }
-
-               var5 = var1;
+    private final List<JSONObject> ready() {
+        Iterable $this$filter$iv = available();
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            JSONObject it = (JSONObject) element$iv$iv;
+            if (it.optBoolean("modelLabArtifactInstalled")) {
+                destination$iv$iv.add(element$iv$iv);
             }
+        }
+        return (List) destination$iv$iv;
+    }
 
-            this.confirm(
-               "Delete eGPU variant",
-               "Delete the eGPU variant for \"" + var5 + "\"? The normal on-device model will not be removed.",
-               "Delete",
-               new GxModelLabPage$$ExternalSyntheticLambda5(this, var1)
-            );
-            return;
-         }
-      }
-   }
-
-   private static final Unit deleteModel$lambda$25(GxModelLabPage var0, String var1) {
-      if (var0.saving) {
-         return Unit.INSTANCE;
-      } else {
-         var0.saving = true;
-         var0.error = "";
-         var0.message = "";
-         var0.render(true);
-         var0.gen++;
-         GxPage.send$default(
-            var0,
-            "DELETE",
-            "/api/model-laboratory/artifact",
-            new JSONObject().put("model", var1),
-            0L,
-            new GxModelLabPage$$ExternalSyntheticLambda6(var0),
-            8,
-            null
-         );
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final Unit deleteModel$lambda$25$lambda$24(GxModelLabPage var0, String var1, JSONObject var2) {
-      var0.saving = false;
-      if (var1 != null) {
-         var0.error = var1;
-         var0.toast(var1);
-      } else {
-         var0.dirty = false;
-         if (var2 != null) {
-            var0.applyPayload(var2);
-         }
-
-         label23: {
-            if (var2 != null) {
-               var1 = var2.optString("message");
-               if (var1 != null) {
-                  CharSequence var6 = var1;
-                  CharSequence var4 = var6;
-                  if (StringsKt.isBlank(var6)) {
-                     var4 = null;
-                  }
-
-                  String var7 = (String)var4;
-                  var1 = var7;
-                  if (var7 != null) {
-                     break label23;
-                  }
-               }
+    private final List<JSONObject> candidates() {
+        Iterable $this$filter$iv = ready();
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            JSONObject it = (JSONObject) element$iv$iv;
+            boolean z = true;
+            if (!(this.lateral.length() == 0) && Intrinsics.areEqual(GxModelsKt.gxModelsText$default(it, "value", null, 4, null), this.lateral)) {
+                z = false;
             }
-
-            var1 = "eGPU variant deleted.";
-         }
-
-         var0.message = var1;
-         var0.toast("eGPU variant deleted");
-      }
-
-      var0.render(true);
-      return Unit.INSTANCE;
-   }
-
-   private final String modelLabel(String var1) {
-      JSONObject var3 = this.byId(var1);
-      if (var3 != null) {
-         CharSequence var2 = null;
-         CharSequence var7 = GxModelsKt.gxModelsText$default(var3, "label", null, 4, null);
-         if (!StringsKt.isBlank(var7)) {
-            var2 = var7;
-         }
-
-         String var8 = (String)var2;
-         if (var8 != null) {
-            return var8;
-         }
-      }
-
-      CharSequence var6 = var1;
-      Object var4 = var6;
-      if (StringsKt.isBlank(var6)) {
-         var4 = "not selected";
-      }
-
-      return (String)var4;
-   }
-
-   private final void normalizeSelection() {
-      List var7 = this.ready();
-      var var4 = var7;
-      boolean var3 = var4 instanceof Collection;
-      boolean var2 = false;
-      boolean var1;
-      if (var3 && ((Collection)var4).isEmpty()) {
-         var1 = true;
-      } else {
-         Iterator var9 = var4.iterator();
-
-         while (true) {
-            if (!var9.hasNext()) {
-               var1 = true;
-               break;
+            if (z) {
+                destination$iv$iv.add(element$iv$iv);
             }
+        }
+        return (List) destination$iv$iv;
+    }
 
-            if (Intrinsics.areEqual(GxModelsKt.gxModelsText$default((JSONObject)var9.next(), "value", null, 4, null), this.lateral)) {
-               var1 = false;
-               break;
+    private final JSONObject byId(String id) {
+        Object obj;
+        Iterable $this$firstOrNull$iv = this.models;
+        Iterator it = $this$firstOrNull$iv.iterator();
+        while (true) {
+            obj = null;
+            if (!it.hasNext()) {
+                break;
             }
-         }
-      }
-
-      String var5 = "";
-      if (var1) {
-         label62: {
-            JSONObject var10 = CollectionsKt.firstOrNull(var7);
-            if (var10 != null) {
-               String var6 = GxModelsKt.gxModelsText$default(var10, "value", null, 4, null);
-               var11 = var6;
-               if (var6 != null) {
-                  break label62;
-               }
+            Object element$iv = it.next();
+            JSONObject it2 = (JSONObject) element$iv;
+            if (Intrinsics.areEqual(GxModelsKt.gxModelsText$default(it2, "value", null, 4, null), id)) {
+                obj = element$iv;
+                break;
             }
+        }
+        return (JSONObject) obj;
+    }
 
-            var11 = "";
-         }
-
-         this.lateral = var11;
-      }
-
-      var4 = var7;
-      if (var4 instanceof Collection && ((Collection)var4).isEmpty()) {
-         var1 = true;
-      } else {
-         Iterator var13 = var4.iterator();
-
-         while (true) {
-            if (!var13.hasNext()) {
-               var1 = true;
-               break;
+    private final String modelLabel(String id) {
+        JSONObject it = byId(id);
+        if (it != null) {
+            String str = null;
+            String gxModelsText$default = GxModelsKt.gxModelsText$default(it, "label", null, 4, null);
+            if (!StringsKt.isBlank(gxModelsText$default)) {
+                str = gxModelsText$default;
             }
-
-            if (Intrinsics.areEqual(GxModelsKt.gxModelsText$default((JSONObject)var13.next(), "value", null, 4, null), this.longitudinal)) {
-               var1 = var2;
-               break;
+            String str2 = str;
+            if (str2 != null) {
+                return str2;
             }
-         }
-      }
-
-      if (var1) {
-         Iterator var16 = var7.iterator();
-
-         do {
-            if (!var16.hasNext()) {
-               var14 = null;
-               break;
-            }
-
-            var14 = var16.next();
-         } while (Intrinsics.areEqual(GxModelsKt.gxModelsText$default((JSONObject)var14, "value", null, 4, null), this.lateral));
-
-         JSONObject var17 = (JSONObject)var14;
-         String var15 = var5;
-         if (var17 != null) {
-            var15 = GxModelsKt.gxModelsText$default(var17, "value", null, 4, null);
-            if (var15 == null) {
-               var15 = var5;
-            }
-         }
-
-         this.longitudinal = var15;
-      }
-   }
-
-   private final void onLateralChange() {
-      this.dirty = true;
-      JSONObject var2 = this.byId(this.longitudinal);
-      JSONObject var1 = this.byId(this.lateral);
-      if (var2 != null
-         && var1 != null
-         && Intrinsics.areEqual(GxModelsKt.gxModelsText$default(var2, "value", null, 4, null), GxModelsKt.gxModelsText$default(var1, "value", null, 4, null))) {
-         label15: {
-            var1 = CollectionsKt.firstOrNull(this.candidates());
-            if (var1 != null) {
-               String var5 = GxModelsKt.gxModelsText$default(var1, "value", null, 4, null);
-               var4 = var5;
-               if (var5 != null) {
-                  break label15;
-               }
-            }
-
-            var4 = "";
-         }
-
-         this.longitudinal = var4;
-      }
-   }
-
-   private final String pickLabel(JSONObject var1) {
-      String var2 = GxModelsKt.gxModelsText$default(var1, "label", null, 4, null);
-      String var3 = GxModelsKt.gxModelsText$default(var1, "version", null, 4, null);
-      return var2 + " · " + var3;
-   }
-
-   private final void prepareModel(String var1) {
-      if (!this.saving) {
-         boolean var2;
-         if (var1.length() == 0) {
-            var2 = true;
-         } else {
-            var2 = false;
-         }
-
-         if (!var2) {
-            this.saving = true;
-            this.error = "";
-            this.message = "";
-            this.render(true);
-            GxPage.send$default(
-               this,
-               "POST",
-               "/api/model-laboratory/download",
-               new JSONObject().put("model", var1),
-               0L,
-               new GxModelLabPage$$ExternalSyntheticLambda0(this),
-               8,
-               null
-            );
-            return;
-         }
-      }
-   }
-
-   private static final Unit prepareModel$lambda$20(GxModelLabPage var0, String var1, JSONObject var2) {
-      if (var1 != null) {
-         var0.saving = false;
-         var0.error = var1;
-         var0.toast(var1);
-         var0.render(true);
-         return Unit.INSTANCE;
-      } else {
-         label20: {
-            if (var2 != null) {
-               var1 = var2.optString("message");
-               if (var1 != null) {
-                  CharSequence var6 = var1;
-                  CharSequence var4 = var6;
-                  if (StringsKt.isBlank(var6)) {
-                     var4 = null;
-                  }
-
-                  String var7 = (String)var4;
-                  var1 = var7;
-                  if (var7 != null) {
-                     break label20;
-                  }
-               }
-            }
-
-            var1 = "eGPU variant download queued.";
-         }
-
-         var0.message = var1;
-         var0.toast("eGPU variant download queued");
-         var0.refresh(new GxModelLabPage$$ExternalSyntheticLambda12(var0));
-         return Unit.INSTANCE;
-      }
-   }
-
-   private static final Unit prepareModel$lambda$20$lambda$19(GxModelLabPage var0) {
-      var0.saving = false;
-      var0.render(true);
-      return Unit.INSTANCE;
-   }
-
-   private final List<JSONObject> ready() {
-      Iterable var2 = this.available();
-      var var1 = new ArrayList();
-
-      for (var var2_it : var2) {
-
-         var2 = var2_it;
-         if (((JSONObject)var2).optBoolean("modelLabArtifactInstalled")) {
-            var1.add(var2);
-         }
-      }
-
-      return var1;
-   }
-
-   private final void refresh(Function0<Unit> var1) {
-      this.gen++;
-      this.getJson("/api/model-laboratory", new GxModelLabPage$$ExternalSyntheticLambda9(this, this.gen, var1));
-   }
-
-   // $VF: synthetic method
-   static void refresh$default(GxModelLabPage var0, Function0 var1, int var2, Object var3) {
-      if ((var2 & 1) != 0) {
-         var1 = null;
-      }
-
-      var0.refresh(var1);
-   }
-
-   private static final Unit refresh$lambda$9(GxModelLabPage var0, int var1, Function0 var2, String var3, JSONObject var4) {
-      if (var0.getShown() && var1 == var0.gen) {
-         if (var3 == null && var4 != null) {
-            var0.applyPayload(var4);
-         } else {
-            if (var3 == null) {
-               var3 = "bad reply";
-            }
-
-            var0.error = var3;
-         }
-
-         var0.loading = false;
-         render$default(var0, false, 1, null);
-         if (var2 != null) {
-            var2.invoke();
-         }
-
-         return Unit.INSTANCE;
-      } else {
-         if (var2 != null) {
-            var2.invoke();
-         }
-
-         return Unit.INSTANCE;
-      }
-   }
-
-   private final void render(boolean var1) {
-      if (this.runtimeBox != null) {
-         String var2 = CollectionsKt.joinToString$default(
-            CollectionsKt.listOf(
-               new Object[]{
-                  this.loading,
-                  this.saving,
-                  this.error,
-                  this.message,
-                  this.dirty,
-                  this.chestnutReady,
-                  this.isOnroad,
-                  this.cfgEnabled,
-                  this.lateral,
-                  this.longitudinal,
-                  this.runtime.toString(),
-                  this.download.toString(),
-                  this.summary.toString(),
-                  CollectionsKt.joinToString$default(this.models, "|", null, null, 0, null, new GxModelLabPage$$ExternalSyntheticLambda7(), 30, null)
-               }
-            ),
-            "\u0001",
-            null,
-            null,
-            0,
-            null,
-            null,
-            62,
-            null
-         );
-         if (var1 || !Intrinsics.areEqual(var2, this.lastSig)) {
-            this.lastSig = var2;
-            this.renderHead();
-            this.renderAvailable();
-            this.renderPair();
-            this.renderRuntime();
-         }
-      }
-   }
-
-   // $VF: synthetic method
-   static void render$default(GxModelLabPage var0, boolean var1, int var2, Object var3) {
-      if ((var2 & 1) != 0) {
-         var1 = false;
-      }
-
-      var0.render(var1);
-   }
-
-   private static final CharSequence render$lambda$26(JSONObject var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      String var1 = var0.toString();
-      Intrinsics.checkNotNullExpressionValue(var1, "toString(...)");
-      return var1;
-   }
-
-   private final void renderAvailable() {
-      LinearLayout var7 = this.availBox;
-      Object var6 = null;
-      LinearLayout var5 = var7;
-      if (var7 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("availBox");
-         var5 = null;
-      }
-
-      var5.removeAllViews();
-      if (!this.loading) {
-         int var2 = this.summary.optInt("ready");
-         int var1 = this.summary.optInt("published");
-         boolean var4 = false;
-         var1 = Math.max(var1 - var2, 0);
-         String var8 = var2
-            + " downloaded · "
-            + var1
-            + " available to download\nDownload eGPU-compatible small models. These are separate from the small models in Model Manager because they are compiled for the eGPU.";
-         var7 = this.availBox;
-         var5 = var7;
-         if (var7 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("availBox");
-            var5 = null;
-         }
-
-         this.note(var8, (ViewGroup)var5);
-         List var17 = this.available();
-         if (var17.isEmpty()) {
-            var5 = this.availBox;
-            if (var5 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("availBox");
-               var5 = (LinearLayout)var6;
-            }
-
-            var5.addView((View)this.empty("No eGPU variants are published in the model manifest."));
-         } else {
-            var6 = this.download;
-            String var10 = GxModelsKt.gxModelsText$default((JSONObject)var6, "model", null, 4, null);
-            boolean var3 = var4;
-            if (!this.saving) {
-               var3 = var4;
-               if (!this.isOnroad) {
-                  boolean var14;
-                  if (var10.length() == 0) {
-                     var14 = true;
-                  } else {
-                     var14 = false;
-                  }
-
-                  var3 = var4;
-                  if (var14) {
-                     var3 = true;
-                  }
-               }
-            }
-
-            for (JSONObject var12 : var17) {
-               String var9 = GxModelsKt.gxModelsText$default(var12, "value", null, 4, null);
-               var4 = var12.optBoolean("modelLabArtifactInstalled");
-               var6 = GxModelsKt.gxModelsText$default(var12, "series", null, 4, null);
-               TextView var18 = (TextView)var6;
-               if (StringsKt.isBlank((CharSequence)var6)) {
-                  var18 = "Unknown series";
-               }
-
-               CharSequence var32 = GxModelsKt.gxModelsText$default(var12, "version", null, 4, null);
-               var6 = var32;
-               if (StringsKt.isBlank(var32)) {
-                  var6 = "unknown version";
-               }
-
-               CharSequence var36 = GxModelsKt.gxModelsText$default(var12, "modelSize", null, 4, null);
-               var7 = var36;
-               if (StringsKt.isBlank(var36)) {
-                  var7 = "small";
-               }
-
-               if (var4) {
-                  var8 = "eGPU variant downloaded";
-               } else {
-                  var8 = "eGPU variant not downloaded";
-               }
-
-               String var34 = var9 + " · " + var18 + "\n" + var6 + " · " + var7 + " · " + var8;
-               GxPage var38 = this;
-               var6 = GxModelsKt.gxModelsText$default(var12, "label", null, 4, null);
-               var18 = var6;
-               if (StringsKt.isBlank((CharSequence)var6)) {
-                  var18 = var9;
-               }
-
-               String var39 = (String)var18;
-               var6 = this.availBox;
-               var18 = var6;
-               if (var6 == null) {
-                  Intrinsics.throwUninitializedPropertyAccessException("availBox");
-                  var18 = null;
-               }
-
-               GxPage.Row var35 = GxPage.row$default(var38, var39, var34, (ViewGroup)var18, 0, 8, null);
-               if (!var4) {
-                  if (Intrinsics.areEqual(var10, var9)) {
-                     var6 = GxModelsKt.gxModelsText$default(this.download, "progress", null, 4, null);
-                     var18 = var6;
-                     if (StringsKt.isBlank((CharSequence)var6)) {
-                        var18 = "starting…";
-                     }
-
-                     var18 = "Downloading · " + var18;
-                  } else {
-                     var18 = "Download eGPU variant";
-                  }
-
-                  GxModelsKt.access$gxModelsEnable(
-                     (View)GxPage.Row.button$default(var35, (String)var18, false, new GxModelLabPage$$ExternalSyntheticLambda2(this, var9), 2, null), var3
-                  );
-               } else {
-                  var18 = GxPage.Row.button$default(var35, "Delete eGPU variant", false, new GxModelLabPage$$ExternalSyntheticLambda3(this, var9), 2, null);
-                  var18.setTextColor(CarUi.Companion.getWARN());
-                  GxModelsKt.access$gxModelsEnable((View)var18, var3);
-               }
-            }
-         }
-      }
-   }
-
-   private static final Unit renderAvailable$lambda$33(GxModelLabPage var0, String var1) {
-      var0.prepareModel(var1);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderAvailable$lambda$34(GxModelLabPage var0, String var1) {
-      var0.deleteModel(var1);
-      return Unit.INSTANCE;
-   }
-
-   private final void renderHead() {
-      LinearLayout var6 = this.headBox;
-      LinearLayout var5 = null;
-      LinearLayout var4 = null;
-      LinearLayout var3 = var6;
-      if (var6 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("headBox");
-         var3 = null;
-      }
-
-      var3.removeAllViews();
-      if (this.loading) {
-         var3 = this.headBox;
-         if (var3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("headBox");
-            var3 = var4;
-         }
-
-         var3.addView((View)this.empty("Loading laboratory status..."));
-      } else {
-         var3 = this.headBox;
-         if (var3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("headBox");
-            var3 = var5;
-         }
-
-         var4 = this.card((ViewGroup)var3);
-         this.text("Model Laboratory", (ViewGroup)var4, 21.0F, CarUi.Companion.getTEXT(), true);
-         var5 = new LinearLayout((Context)this.getAct());
-         boolean var2 = false;
-         var5.setOrientation(0);
-         var4.addView((View)var5);
-         String var11;
-         if (this.chestnutReady) {
-            var11 = "Chestnut ready";
-         } else {
-            var11 = "Chestnut required";
-         }
-
-         ViewGroup var17 = (ViewGroup)var5;
-         int var1;
-         if (this.chestnutReady) {
-            var1 = CarUi.Companion.getACCENT();
-         } else {
-            var1 = CarUi.Companion.getWARN();
-         }
-
-         this.text(var11, var17, 17.0F, var1, true).setPadding(0, this.getUi().dp(4), this.getUi().dp(24), this.getUi().dp(4));
-         String var12;
-         if (this.isOnroad) {
-            var12 = "Onroad · locked";
-         } else {
-            var12 = "Parked · configurable";
-         }
-
-         ViewGroup var16 = (ViewGroup)var5;
-         if (this.isOnroad) {
-            var1 = CarUi.Companion.getWARN();
-         } else {
-            var1 = CarUi.Companion.getACCENT();
-         }
-
-         this.text(var12, var16, 17.0F, var1, true);
-         GxPage.text$default(
-            this, "Use the lateral judgment of one small model and the longitudinal judgment of another.", (ViewGroup)var4, 0.0F, 0, false, 28, null
-         );
-         boolean var8;
-         if (this.error.length() > 0) {
-            var8 = true;
-         } else {
-            var8 = false;
-         }
-
-         if (var8) {
-            GxPage.text$default(this, this.error, (ViewGroup)var4, 17.0F, CarUi.Companion.getWARN(), false, 16, null);
-         }
-
-         var8 = var2;
-         if (this.message.length() > 0) {
-            var8 = true;
-         }
-
-         if (var8) {
-            GxPage.text$default(this, this.message, (ViewGroup)var4, 17.0F, CarUi.Companion.getACCENT(), false, 16, null);
-         }
-      }
-   }
-
-   private final void renderPair() {
-      LinearLayout var6 = this.pairBox;
-      LinearLayout var5 = null;
-      LinearLayout var4 = var6;
-      if (var6 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("pairBox");
-         var4 = null;
-      }
-
-      var4.removeAllViews();
-      if (!this.loading) {
-         GxPage var7 = this;
-         var6 = this.pairBox;
-         var4 = var6;
-         if (var6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("pairBox");
-            var4 = null;
-         }
-
-         GxPage.Row var34 = GxPage.row$default(
-            var7, "Model Laboratory pair", "Choose from downloaded eGPU variant combinations below.", (ViewGroup)var4, 0, 8, null
-         );
-         String var17;
-         if (this.cfgEnabled) {
-            var17 = "Enabled";
-         } else {
-            var17 = "Disabled";
-         }
-
-         TextView var18 = var34.value(var17);
-         int var1;
-         if (this.cfgEnabled) {
-            var1 = CarUi.Companion.getACCENT();
-         } else {
-            var1 = CarUi.Companion.getDIM();
-         }
-
-         var18.setTextColor(var1);
-         GxPage var8 = this;
-         var1 = this.lateral.length();
-         boolean var3 = false;
-         boolean var11;
-         if (var1 == 0) {
-            var11 = true;
-         } else {
-            var11 = false;
-         }
-
-         String var35 = "Choose a model";
-         String var19;
-         if (var11) {
-            var19 = "Choose a model";
-         } else {
-            label94: {
-               JSONObject var20 = this.byId(this.lateral);
-               if (var20 != null) {
-                  String var41 = this.pickLabel(var20);
-                  var19 = var41;
-                  if (var41 != null) {
-                     break label94;
-                  }
-               }
-
-               var19 = this.lateral;
-            }
-         }
-
-         String var9 = "Path shape, curvature, lane geometry, and driving desire\nSelected: " + var19;
-         LinearLayout var42 = this.pairBox;
-         var4 = var42;
-         if (var42 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("pairBox");
-            var4 = null;
-         }
-
-         GxPage.Row.button$default(
-            GxPage.row$default(var8, "Lateral model", var9, (ViewGroup)var4, 0, 8, null),
-            "Choose",
-            false,
-            new GxModelLabPage$$ExternalSyntheticLambda13(this),
-            2,
-            null
-         );
-         var7 = this;
-         if (this.longitudinal.length() == 0) {
-            var11 = true;
-         } else {
-            var11 = false;
-         }
-
-         String var22;
-         if (var11) {
-            var22 = var35;
-         } else {
-            label85: {
-               JSONObject var23 = this.byId(this.longitudinal);
-               if (var23 != null) {
-                  String var36 = this.pickLabel(var23);
-                  var22 = var36;
-                  if (var36 != null) {
-                     break label85;
-                  }
-               }
-
-               var22 = this.longitudinal;
-            }
-         }
-
-         String var46 = "Speed, acceleration, stopping, leads, and scene confidence\nSelected: " + var22;
-         var6 = this.pairBox;
-         var4 = var6;
-         if (var6 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("pairBox");
-            var4 = null;
-         }
-
-         GxPage.Row.button$default(
-            GxPage.row$default(var7, "Longitudinal model", var46, (ViewGroup)var4, 0, 8, null),
-            "Choose",
-            false,
-            new GxModelLabPage$$ExternalSyntheticLambda14(this),
-            2,
-            null
-         );
-         var4 = this.pairBox;
-         if (var4 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("pairBox");
-            var4 = var5;
-         }
-
-         var5 = this.card((ViewGroup)var4);
-         TextView var38 = new TextView((Context)this.getAct());
-         String var26 = this.modelLabel(this.lateral);
-         String var44 = this.modelLabel(this.longitudinal);
-         var38.setText(var26 + "  steers   ⇄   " + var44 + "  paces");
-         var38.setTextSize(19.0F);
-         var38.setTextColor(CarUi.Companion.getTEXT());
-         var38.setTypeface(Typeface.DEFAULT_BOLD);
-         var5.addView((View)var38);
-         String var27 = this.selectionError();
-         if (var27.length() > 0) {
-            var11 = true;
-         } else {
-            var11 = false;
-         }
-
-         if (var11) {
-            GxPage.text$default(this, var27, (ViewGroup)var5, 15.0F, CarUi.Companion.getWARN(), false, 16, null);
-         }
-
-         boolean var2;
-         label76: {
-            Pair var45 = TuplesKt.to("Enable for next drive", new GxModelLabPage$$ExternalSyntheticLambda15(this));
-            Pair var39 = TuplesKt.to("Disable", new GxModelLabPage$$ExternalSyntheticLambda16(this));
-            Pair var47 = TuplesKt.to("Refresh", new GxModelLabPage$$ExternalSyntheticLambda17(this));
-            ViewGroup var31 = (ViewGroup)var5;
-            var5 = this.buttons(new Pair[]{var45, var39, var47}, var31, true);
-            var40 = var5.getChildAt(0);
-            Intrinsics.checkNotNullExpressionValue(var40, "getChildAt(...)");
-            if (!this.saving) {
-               if (var27.length() == 0) {
-                  var11 = true;
-               } else {
-                  var11 = false;
-               }
-
-               if (var11) {
-                  var2 = true;
-                  break label76;
-               }
-            }
-
-            var2 = false;
-         }
-
-         GxModelsKt.access$gxModelsEnable(var40, var2);
-         View var28 = var5.getChildAt(1);
-         Intrinsics.checkNotNullExpressionValue(var28, "getChildAt(...)");
-         var2 = var3;
-         if (!this.saving) {
-            var2 = var3;
-            if (!this.isOnroad) {
-               var2 = var3;
-               if (this.cfgEnabled) {
-                  var2 = true;
-               }
-            }
-         }
-
-         GxModelsKt.access$gxModelsEnable(var28, var2);
-         View var29 = var5.getChildAt(2);
-         Intrinsics.checkNotNullExpressionValue(var29, "getChildAt(...)");
-         GxModelsKt.access$gxModelsEnable(var29, this.saving ^ true);
-      }
-   }
-
-   private static final Unit renderPair$lambda$39(GxModelLabPage var0) {
-      List var2 = var0.ready();
-      Collection var3 = CollectionsKt.listOf("Choose a model");
-      Iterable var1 = var2;
-      var var4 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var1, 10));
-
-      for (JSONObject var7 : var1) {
-         String var6 = var0.pickLabel(var7);
-         String var8;
-         if (Intrinsics.areEqual(GxModelsKt.gxModelsText$default(var7, "value", null, 4, null), var0.lateral)) {
-            var8 = "  ✓";
-         } else {
-            var8 = "";
-         }
-
-         var4.add(var6 + var8);
-      }
-
-      List var9 = var4;
-      var0.pick("Lateral model", CollectionsKt.plus(var3, var9), new GxModelLabPage$$ExternalSyntheticLambda1(var0, var2));
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderPair$lambda$39$lambda$38(GxModelLabPage var0, List var1, int var2) {
-      String var3;
-      if (var2 == 0) {
-         var3 = "";
-      } else {
-         var3 = GxModelsKt.gxModelsText$default((JSONObject)var1.get(var2 - 1), "value", null, 4, null);
-      }
-
-      var0.lateral = var3;
-      var0.onLateralChange();
-      var0.render(true);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderPair$lambda$43(GxModelLabPage var0) {
-      List var2 = var0.candidates();
-      Collection var3 = CollectionsKt.listOf("Choose a model");
-      Iterable var1 = var2;
-      var var4 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var1, 10));
-
-      for (JSONObject var7 : var1) {
-         String var6 = var0.pickLabel(var7);
-         String var8;
-         if (Intrinsics.areEqual(GxModelsKt.gxModelsText$default(var7, "value", null, 4, null), var0.longitudinal)) {
-            var8 = "  ✓";
-         } else {
-            var8 = "";
-         }
-
-         var4.add(var6 + var8);
-      }
-
-      List var9 = var4;
-      var0.pick("Longitudinal model", CollectionsKt.plus(var3, var9), new GxModelLabPage$$ExternalSyntheticLambda10(var0, var2));
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderPair$lambda$43$lambda$42(GxModelLabPage var0, List var1, int var2) {
-      String var3;
-      if (var2 == 0) {
-         var3 = "";
-      } else {
-         var3 = GxModelsKt.gxModelsText$default((JSONObject)var1.get(var2 - 1), "value", null, 4, null);
-      }
-
-      var0.longitudinal = var3;
-      var0.dirty = true;
-      var0.render(true);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderPair$lambda$45(GxModelLabPage var0) {
-      var0.save(true);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderPair$lambda$46(GxModelLabPage var0) {
-      var0.save(false);
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit renderPair$lambda$47(GxModelLabPage var0) {
-      refresh$default(var0, null, 1, null);
-      return Unit.INSTANCE;
-   }
-
-   private final void renderRuntime() {
-      LinearLayout var3 = this.runtimeBox;
-      Object var4 = null;
-      LinearLayout var2 = var3;
-      if (var3 == null) {
-         Intrinsics.throwUninitializedPropertyAccessException("runtimeBox");
-         var2 = null;
-      }
-
-      var2.removeAllViews();
-      if (!this.loading) {
-         GxPage var5 = this;
-         var3 = this.runtimeBox;
-         var2 = var3;
-         if (var3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("runtimeBox");
-            var2 = null;
-         }
-
-         TextView var7 = GxPage.row$default(var5, "State", null, (ViewGroup)var2, 0, 8, null).value(this.runtimeState());
-         int var1;
-         if (this.runtime.optBoolean("active")) {
-            var1 = CarUi.Companion.getACCENT();
-         } else {
-            var1 = CarUi.Companion.getTEXT();
-         }
-
-         var7.setTextColor(var1);
-         var5 = this;
-         var3 = this.runtimeBox;
-         var2 = var3;
-         if (var3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("runtimeBox");
-            var2 = null;
-         }
-
-         GxPage.row$default(var5, "Lateral", null, (ViewGroup)var2, 0, 8, null)
-            .value(this.modelLabel(GxModelsKt.gxModelsText$default(this.runtime, "lateralModel", null, 4, null)));
-         var5 = this;
-         var3 = this.runtimeBox;
-         var2 = var3;
-         if (var3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("runtimeBox");
-            var2 = null;
-         }
-
-         GxPage.row$default(var5, "Longitudinal", null, (ViewGroup)var2, 0, 8, null)
-            .value(this.modelLabel(GxModelsKt.gxModelsText$default(this.runtime, "longitudinalModel", null, 4, null)));
-         String var10 = GxModelsKt.gxModelsText$default(this.runtime, "error", null, 4, null);
-         if (StringsKt.isBlank(var10)) {
-            var10 = null;
-         }
-
-         if (var10 != null) {
-            LinearLayout var19 = this.runtimeBox;
-            var3 = var19;
-            if (var19 == null) {
-               Intrinsics.throwUninitializedPropertyAccessException("runtimeBox");
-               var3 = null;
-            }
-
-            var3 = this.card((ViewGroup)var3);
-            GxPage.text$default(this, var10, (ViewGroup)var3, 17.0F, CarUi.Companion.getWARN(), false, 16, null);
-         }
-
-         var2 = this.runtimeBox;
-         if (var2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("runtimeBox");
-            var2 = (LinearLayout)var4;
-         }
-
-         this.note(
-            "Both roles evaluate the same frame at 20 Hz. A runtime failure suppresses that frame and falls back to the built-in QCOM model.", (ViewGroup)var2
-         );
-      }
-   }
-
-   private final String runtimeState() {
-      String var1;
-      if (this.runtime.optBoolean("active")) {
-         var1 = "Pair active";
-      } else if (this.runtime.optBoolean("requested")) {
-         var1 = "Pair requested";
-      } else {
-         var1 = "Inactive";
-      }
-
-      return var1;
-   }
-
-   private final void save(boolean var1) {
-      if (!this.saving) {
-         if (var1) {
-            String var3 = this.selectionError();
-            boolean var2;
-            if (var3.length() > 0) {
-               var2 = true;
-            } else {
-               var2 = false;
-            }
-
-            if (var2) {
-               this.error = var3;
-               this.render(true);
-               return;
-            }
-         }
-
-         this.saving = true;
-         this.error = "";
-         this.message = "";
-         this.render(true);
-         this.gen++;
-         GxPage.send$default(
-            this,
-            "PUT",
-            "/api/model-laboratory",
-            new JSONObject().put("enabled", var1).put("lateralModel", this.lateral).put("longitudinalModel", this.longitudinal),
-            0L,
-            new GxModelLabPage$$ExternalSyntheticLambda4(this),
-            8,
-            null
-         );
-      }
-   }
-
-   private static final Unit save$lambda$17(GxModelLabPage var0, String var1, JSONObject var2) {
-      var0.saving = false;
-      if (var1 != null) {
-         var0.error = var1;
-         var0.toast(var1);
-      } else {
-         var0.dirty = false;
-         if (var2 != null) {
-            var0.applyPayload(var2);
-         }
-
-         label23: {
-            if (var2 != null) {
-               var1 = var2.optString("message");
-               if (var1 != null) {
-                  CharSequence var6 = var1;
-                  CharSequence var4 = var6;
-                  if (StringsKt.isBlank(var6)) {
-                     var4 = null;
-                  }
-
-                  String var7 = (String)var4;
-                  var1 = var7;
-                  if (var7 != null) {
-                     break label23;
-                  }
-               }
-            }
-
-            var1 = "Model Laboratory configuration saved.";
-         }
-
-         var0.message = var1;
-         var0.toast("Model Laboratory saved");
-      }
-
-      var0.render(true);
-      return Unit.INSTANCE;
-   }
-
-   private final String selectionError() {
-      if (this.isOnroad) {
-         return "Park before changing the laboratory pair.";
-      } else if (this.ready().size() < 2) {
-         return "Download at least two eGPU variants before composing a pair.";
-      } else {
-         JSONObject var1 = this.byId(this.lateral);
-         JSONObject var2 = this.byId(this.longitudinal);
-         if (var1 != null && var2 != null) {
-            if (Intrinsics.areEqual(
-               GxModelsKt.gxModelsText$default(var1, "value", null, 4, null), GxModelsKt.gxModelsText$default(var2, "value", null, 4, null)
-            )) {
-               return "Lateral and longitudinal models must be different.";
-            } else if (!var1.optBoolean("modelLabArtifactInstalled") || !var2.optBoolean("modelLabArtifactInstalled")) {
-               return "Download both eGPU variants first.";
-            } else {
-               return !this.chestnutReady ? "Connect a firmware-ready Chestnut to enable this pair." : "";
-            }
-         } else {
+        }
+        String str3 = id;
+        if (StringsKt.isBlank(str3)) {
+            str3 = "not selected";
+        }
+        return str3;
+    }
+
+    private final String selectionError() {
+        if (this.isOnroad) {
+            return "Park before changing the laboratory pair.";
+        }
+        if (ready().size() < 2) {
+            return "Download at least two eGPU variants before composing a pair.";
+        }
+        JSONObject lat = byId(this.lateral);
+        JSONObject lon = byId(this.longitudinal);
+        if (lat == null || lon == null) {
             return "Choose two downloaded eGPU variants.";
-         }
-      }
-   }
+        }
+        if (Intrinsics.areEqual(GxModelsKt.gxModelsText$default(lat, "value", null, 4, null), GxModelsKt.gxModelsText$default(lon, "value", null, 4, null))) {
+            return "Lateral and longitudinal models must be different.";
+        }
+        if (lat.optBoolean("modelLabArtifactInstalled") && lon.optBoolean("modelLabArtifactInstalled")) {
+            return !this.chestnutReady ? "Connect a firmware-ready Chestnut to enable this pair." : "";
+        }
+        return "Download both eGPU variants first.";
+    }
 
-   @Override
-   public void build() {
-      this.headBox = GxPage.box$default(this, null, 1, null);
-      GxPage.header$default(this, "Available models", null, 2, null);
-      this.availBox = GxPage.box$default(this, null, 1, null);
-      GxPage.header$default(this, "Compose a pair", null, 2, null);
-      this.pairBox = GxPage.box$default(this, null, 1, null);
-      GxPage.header$default(this, "Runtime", null, 2, null);
-      this.runtimeBox = GxPage.box$default(this, null, 1, null);
-      this.render(true);
-      this.every(2000L, new GxModelLabPage$$ExternalSyntheticLambda11(this));
-   }
+    private final String runtimeState() {
+        return this.runtime.optBoolean("active") ? "Pair active" : this.runtime.optBoolean("requested") ? "Pair requested" : "Inactive";
+    }
 
-   @Override
-   public boolean getNeedsOffroad() {
-      return this.needsOffroad;
-   }
+    /* JADX WARN: Multi-variable type inference failed */
+    static /* synthetic */ void refresh$default(GxModelLabPage gxModelLabPage, Function0 function0, int i, Object obj) {
+        if ((i & 1) != 0) {
+            function0 = null;
+        }
+        gxModelLabPage.refresh(function0);
+    }
 
-   @Override
-   public void onHide() {
-      this.gen++;
-      this.polling = false;
-   }
+    private final void refresh(final Function0<Unit> then) {
+        this.gen++;
+        final int g = this.gen;
+        getJson("/api/model-laboratory", new Function2() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda9
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit refresh$lambda$9;
+                refresh$lambda$9 = GxModelLabPage.refresh$lambda$9(GxModelLabPage.this, g, then, (String) obj, (JSONObject) obj2);
+                return refresh$lambda$9;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit refresh$lambda$9(GxModelLabPage this$0, int $g, Function0 $then, String e, JSONObject p) {
+        if (!this$0.getShown() || $g != this$0.gen) {
+            if ($then != null) {
+                $then.invoke();
+            }
+            return Unit.INSTANCE;
+        }
+        if (e != null || p == null) {
+            this$0.error = e == null ? "bad reply" : e;
+        } else {
+            this$0.applyPayload(p);
+        }
+        this$0.loading = false;
+        render$default(this$0, false, 1, null);
+        if ($then != null) {
+            $then.invoke();
+        }
+        return Unit.INSTANCE;
+    }
+
+    private final void applyPayload(JSONObject p) {
+        List<? extends JSONObject> gxModelsObjects;
+        this.chestnutReady = p.optBoolean("chestnutReady");
+        this.isOnroad = p.optBoolean("isOnroad");
+        this.error = GxModelsKt.gxModelsText$default(p, "configurationError", null, 4, null);
+        JSONObject optJSONObject = p.optJSONObject("runtime");
+        if (optJSONObject == null) {
+            optJSONObject = new JSONObject();
+        }
+        this.runtime = optJSONObject;
+        JSONObject optJSONObject2 = p.optJSONObject("download");
+        if (optJSONObject2 == null) {
+            optJSONObject2 = new JSONObject();
+        }
+        this.download = optJSONObject2;
+        JSONObject optJSONObject3 = p.optJSONObject("summary");
+        if (optJSONObject3 == null) {
+            optJSONObject3 = new JSONObject();
+        }
+        this.summary = optJSONObject3;
+        gxModelsObjects = GxModelsKt.gxModelsObjects(p.optJSONArray("models"));
+        this.models = gxModelsObjects;
+        JSONObject cfg = p.optJSONObject("configuration");
+        if (cfg == null) {
+            cfg = new JSONObject();
+        }
+        this.cfgEnabled = cfg.optBoolean("enabled");
+        if (!this.dirty) {
+            this.lateral = GxModelsKt.gxModelsText$default(cfg, "lateralModel", null, 4, null);
+            this.longitudinal = GxModelsKt.gxModelsText$default(cfg, "longitudinalModel", null, 4, null);
+        }
+        normalizeSelection();
+    }
+
+    private final void normalizeSelection() {
+        Iterable $this$none$iv;
+        Object element$iv;
+        String gxModelsText$default;
+        String str;
+        List r = ready();
+        List $this$none$iv2 = r;
+        boolean z = false;
+        if (!($this$none$iv2 instanceof Collection) || !$this$none$iv2.isEmpty()) {
+            Iterator it = $this$none$iv2.iterator();
+            while (true) {
+                if (!it.hasNext()) {
+                    $this$none$iv = 1;
+                    break;
+                }
+                Object element$iv2 = it.next();
+                JSONObject it2 = (JSONObject) element$iv2;
+                if (Intrinsics.areEqual(GxModelsKt.gxModelsText$default(it2, "value", null, 4, null), this.lateral)) {
+                    $this$none$iv = null;
+                    break;
+                }
+            }
+        } else {
+            $this$none$iv = 1;
+        }
+        String str2 = "";
+        if ($this$none$iv != null) {
+            JSONObject it3 = (JSONObject) CollectionsKt.firstOrNull(r);
+            if (it3 == null || (str = GxModelsKt.gxModelsText$default(it3, "value", null, 4, null)) == null) {
+                str = "";
+            }
+            this.lateral = str;
+        }
+        List $this$none$iv3 = r;
+        if (!($this$none$iv3 instanceof Collection) || !$this$none$iv3.isEmpty()) {
+            Iterator it4 = $this$none$iv3.iterator();
+            while (true) {
+                if (!it4.hasNext()) {
+                    z = true;
+                    break;
+                }
+                Object element$iv3 = it4.next();
+                JSONObject it5 = (JSONObject) element$iv3;
+                if (Intrinsics.areEqual(GxModelsKt.gxModelsText$default(it5, "value", null, 4, null), this.longitudinal)) {
+                    break;
+                }
+            }
+        } else {
+            z = true;
+        }
+        if (z) {
+            List $this$firstOrNull$iv = r;
+            Iterator it6 = $this$firstOrNull$iv.iterator();
+            while (true) {
+                if (!it6.hasNext()) {
+                    element$iv = null;
+                    break;
+                }
+                element$iv = it6.next();
+                JSONObject it7 = (JSONObject) element$iv;
+                if (!Intrinsics.areEqual(GxModelsKt.gxModelsText$default(it7, "value", null, 4, null), this.lateral)) {
+                    break;
+                }
+            }
+            JSONObject it8 = (JSONObject) element$iv;
+            if (it8 != null && (gxModelsText$default = GxModelsKt.gxModelsText$default(it8, "value", null, 4, null)) != null) {
+                str2 = gxModelsText$default;
+            }
+            this.longitudinal = str2;
+        }
+    }
+
+    private final void onLateralChange() {
+        String str;
+        this.dirty = true;
+        JSONObject lon = byId(this.longitudinal);
+        JSONObject lat = byId(this.lateral);
+        if (lon == null || lat == null || !Intrinsics.areEqual(GxModelsKt.gxModelsText$default(lon, "value", null, 4, null), GxModelsKt.gxModelsText$default(lat, "value", null, 4, null))) {
+            return;
+        }
+        JSONObject it = (JSONObject) CollectionsKt.firstOrNull((List) candidates());
+        if (it == null || (str = GxModelsKt.gxModelsText$default(it, "value", null, 4, null)) == null) {
+            str = "";
+        }
+        this.longitudinal = str;
+    }
+
+    private final void save(boolean enabled) {
+        if (this.saving) {
+            return;
+        }
+        if (enabled) {
+            String se = selectionError();
+            if (se.length() > 0) {
+                this.error = se;
+                render(true);
+                return;
+            }
+        }
+        this.saving = true;
+        this.error = "";
+        this.message = "";
+        render(true);
+        this.gen++;
+        GxPage.send$default(this, "PUT", "/api/model-laboratory", new JSONObject().put("enabled", enabled).put("lateralModel", this.lateral).put("longitudinalModel", this.longitudinal), 0L, new Function2() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda4
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit save$lambda$17;
+                save$lambda$17 = GxModelLabPage.save$lambda$17(GxModelLabPage.this, (String) obj, (JSONObject) obj2);
+                return save$lambda$17;
+            }
+        }, 8, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:17:0x0029, code lost:
+    
+        if (r0 == null) goto L16;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit save$lambda$17(GxModelLabPage this$0, String e, JSONObject p) {
+        String str;
+        String optString;
+        this$0.saving = false;
+        if (e != null) {
+            this$0.error = e;
+            this$0.toast(e);
+        } else {
+            this$0.dirty = false;
+            if (p != null) {
+                this$0.applyPayload(p);
+            }
+            if (p != null && (optString = p.optString("message")) != null) {
+                String str2 = optString;
+                if (StringsKt.isBlank(str2)) {
+                    str2 = null;
+                }
+                str = str2;
+            }
+            str = "Model Laboratory configuration saved.";
+            this$0.message = str;
+            this$0.toast("Model Laboratory saved");
+        }
+        this$0.render(true);
+        return Unit.INSTANCE;
+    }
+
+    private final void prepareModel(String id) {
+        if (this.saving) {
+            return;
+        }
+        if (id.length() == 0) {
+            return;
+        }
+        this.saving = true;
+        this.error = "";
+        this.message = "";
+        render(true);
+        GxPage.send$default(this, "POST", "/api/model-laboratory/download", new JSONObject().put("model", id), 0L, new Function2() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda0
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit prepareModel$lambda$20;
+                prepareModel$lambda$20 = GxModelLabPage.prepareModel$lambda$20(GxModelLabPage.this, (String) obj, (JSONObject) obj2);
+                return prepareModel$lambda$20;
+            }
+        }, 8, null);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:12:0x0028, code lost:
+    
+        if (r0 == null) goto L13;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit prepareModel$lambda$20(final GxModelLabPage this$0, String e, JSONObject p) {
+        String str;
+        String optString;
+        if (e != null) {
+            this$0.saving = false;
+            this$0.error = e;
+            this$0.toast(e);
+            this$0.render(true);
+            return Unit.INSTANCE;
+        }
+        if (p != null && (optString = p.optString("message")) != null) {
+            String str2 = optString;
+            if (StringsKt.isBlank(str2)) {
+                str2 = null;
+            }
+            str = str2;
+        }
+        str = "eGPU variant download queued.";
+        this$0.message = str;
+        this$0.toast("eGPU variant download queued");
+        this$0.refresh(new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda12
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit prepareModel$lambda$20$lambda$19;
+                prepareModel$lambda$20$lambda$19 = GxModelLabPage.prepareModel$lambda$20$lambda$19(GxModelLabPage.this);
+                return prepareModel$lambda$20$lambda$19;
+            }
+        });
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit prepareModel$lambda$20$lambda$19(GxModelLabPage this$0) {
+        this$0.saving = false;
+        this$0.render(true);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:13:0x0030, code lost:
+    
+        if (r4 == null) goto L18;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void deleteModel(final String id) {
+        String str;
+        if (this.saving) {
+            return;
+        }
+        if (id.length() == 0) {
+            return;
+        }
+        JSONObject it = byId(id);
+        if (it != null) {
+            String str2 = null;
+            String gxModelsText$default = GxModelsKt.gxModelsText$default(it, "label", null, 4, null);
+            if (!StringsKt.isBlank(gxModelsText$default)) {
+                str2 = gxModelsText$default;
+            }
+            str = str2;
+        }
+        str = id;
+        String label = str;
+        confirm("Delete eGPU variant", "Delete the eGPU variant for \"" + label + "\"? The normal on-device model will not be removed.", "Delete", new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda5
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit deleteModel$lambda$25;
+                deleteModel$lambda$25 = GxModelLabPage.deleteModel$lambda$25(GxModelLabPage.this, id);
+                return deleteModel$lambda$25;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit deleteModel$lambda$25(final GxModelLabPage this$0, String $id) {
+        if (this$0.saving) {
+            return Unit.INSTANCE;
+        }
+        this$0.saving = true;
+        this$0.error = "";
+        this$0.message = "";
+        this$0.render(true);
+        this$0.gen++;
+        GxPage.send$default(this$0, "DELETE", "/api/model-laboratory/artifact", new JSONObject().put("model", $id), 0L, new Function2() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda6
+            @Override // kotlin.jvm.functions.Function2
+            public final Object invoke(Object obj, Object obj2) {
+                Unit deleteModel$lambda$25$lambda$24;
+                deleteModel$lambda$25$lambda$24 = GxModelLabPage.deleteModel$lambda$25$lambda$24(GxModelLabPage.this, (String) obj, (JSONObject) obj2);
+                return deleteModel$lambda$25$lambda$24;
+            }
+        }, 8, null);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    /* JADX WARN: Code restructure failed: missing block: B:17:0x0029, code lost:
+    
+        if (r0 == null) goto L16;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static final Unit deleteModel$lambda$25$lambda$24(GxModelLabPage this$0, String e, JSONObject p) {
+        String str;
+        String optString;
+        this$0.saving = false;
+        if (e != null) {
+            this$0.error = e;
+            this$0.toast(e);
+        } else {
+            this$0.dirty = false;
+            if (p != null) {
+                this$0.applyPayload(p);
+            }
+            if (p != null && (optString = p.optString("message")) != null) {
+                String str2 = optString;
+                if (StringsKt.isBlank(str2)) {
+                    str2 = null;
+                }
+                str = str2;
+            }
+            str = "eGPU variant deleted.";
+            this$0.message = str;
+            this$0.toast("eGPU variant deleted");
+        }
+        this$0.render(true);
+        return Unit.INSTANCE;
+    }
+
+    static /* synthetic */ void render$default(GxModelLabPage gxModelLabPage, boolean z, int i, Object obj) {
+        if ((i & 1) != 0) {
+            z = false;
+        }
+        gxModelLabPage.render(z);
+    }
+
+    private final void render(boolean force) {
+        if (this.runtimeBox == null) {
+            return;
+        }
+        String sig = CollectionsKt.joinToString$default(CollectionsKt.listOf(Boolean.valueOf(this.loading), Boolean.valueOf(this.saving), this.error, this.message, Boolean.valueOf(this.dirty), Boolean.valueOf(this.chestnutReady), Boolean.valueOf(this.isOnroad), Boolean.valueOf(this.cfgEnabled), this.lateral, this.longitudinal, this.runtime.toString(), this.download.toString(), this.summary.toString(), CollectionsKt.joinToString$default(this.models, "|", null, null, 0, null, new Function1() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda7
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                CharSequence render$lambda$26;
+                render$lambda$26 = GxModelLabPage.render$lambda$26((JSONObject) obj);
+                return render$lambda$26;
+            }
+        }, 30, null)), "\u0001", null, null, 0, null, null, 62, null);
+        if (force || !Intrinsics.areEqual(sig, this.lastSig)) {
+            this.lastSig = sig;
+            renderHead();
+            renderAvailable();
+            renderPair();
+            renderRuntime();
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final CharSequence render$lambda$26(JSONObject it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        String jSONObject = it.toString();
+        Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
+        return jSONObject;
+    }
+
+    private final void renderHead() {
+        LinearLayout linearLayout = this.headBox;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("headBox");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        if (this.loading) {
+            LinearLayout linearLayout3 = this.headBox;
+            if (linearLayout3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("headBox");
+            } else {
+                linearLayout2 = linearLayout3;
+            }
+            linearLayout2.addView(empty("Loading laboratory status..."));
+            return;
+        }
+        LinearLayout linearLayout4 = this.headBox;
+        if (linearLayout4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("headBox");
+        } else {
+            linearLayout2 = linearLayout4;
+        }
+        LinearLayout c = card(linearLayout2);
+        text("Model Laboratory", c, 21.0f, CarUi.Companion.getTEXT(), true);
+        LinearLayout $this$renderHead_u24lambda_u2427 = new LinearLayout(getAct());
+        $this$renderHead_u24lambda_u2427.setOrientation(0);
+        c.addView($this$renderHead_u24lambda_u2427);
+        text(this.chestnutReady ? "Chestnut ready" : "Chestnut required", $this$renderHead_u24lambda_u2427, 17.0f, this.chestnutReady ? CarUi.Companion.getACCENT() : CarUi.Companion.getWARN(), true).setPadding(0, getUi().dp(4), getUi().dp(24), getUi().dp(4));
+        text(this.isOnroad ? "Onroad · locked" : "Parked · configurable", $this$renderHead_u24lambda_u2427, 17.0f, this.isOnroad ? CarUi.Companion.getWARN() : CarUi.Companion.getACCENT(), true);
+        GxPage.text$default(this, "Use the lateral judgment of one small model and the longitudinal judgment of another.", c, 0.0f, 0, false, 28, null);
+        if (this.error.length() > 0) {
+            GxPage.text$default(this, this.error, c, 17.0f, CarUi.Companion.getWARN(), false, 16, null);
+        }
+        if (this.message.length() > 0) {
+            GxPage.text$default(this, this.message, c, 17.0f, CarUi.Companion.getACCENT(), false, 16, null);
+        }
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r14v5 */
+    /* JADX WARN: Type inference failed for: r14v6 */
+    /* JADX WARN: Type inference failed for: r14v7 */
+    /* JADX WARN: Type inference failed for: r8v10 */
+    /* JADX WARN: Type inference failed for: r8v8 */
+    /* JADX WARN: Type inference failed for: r8v9 */
+    private final void renderAvailable() {
+        int i;
+        ?? r14;
+        String str;
+        LinearLayout linearLayout = this.availBox;
+        String str2 = null;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("availBox");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        if (this.loading) {
+            return;
+        }
+        int optInt = this.summary.optInt("ready");
+        boolean z = false;
+        String str3 = optInt + " downloaded · " + Math.max(this.summary.optInt("published") - optInt, 0) + " available to download\nDownload eGPU-compatible small models. These are separate from the small models in Model Manager because they are compiled for the eGPU.";
+        LinearLayout linearLayout3 = this.availBox;
+        if (linearLayout3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("availBox");
+            linearLayout3 = null;
+        }
+        note(str3, linearLayout3);
+        List<JSONObject> available = available();
+        if (available.isEmpty()) {
+            LinearLayout linearLayout4 = this.availBox;
+            if (linearLayout4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("availBox");
+            } else {
+                linearLayout2 = linearLayout4;
+            }
+            linearLayout2.addView(empty("No eGPU variants are published in the model manifest."));
+            return;
+        }
+        int i2 = 4;
+        String gxModelsText$default = GxModelsKt.gxModelsText$default(this.download, "model", null, 4, null);
+        if (!this.saving && !this.isOnroad) {
+            if ((gxModelsText$default.length() == 0) != false) {
+                z = true;
+            }
+        }
+        for (JSONObject jSONObject : available) {
+            final String gxModelsText$default2 = GxModelsKt.gxModelsText$default(jSONObject, "value", str2, i2, str2);
+            boolean optBoolean = jSONObject.optBoolean("modelLabArtifactInstalled");
+            String gxModelsText$default3 = GxModelsKt.gxModelsText$default(jSONObject, "series", str2, i2, str2);
+            if (StringsKt.isBlank(gxModelsText$default3)) {
+                gxModelsText$default3 = "Unknown series";
+            }
+            String gxModelsText$default4 = GxModelsKt.gxModelsText$default(jSONObject, "version", str2, i2, str2);
+            if (StringsKt.isBlank(gxModelsText$default4)) {
+                gxModelsText$default4 = "unknown version";
+            }
+            String gxModelsText$default5 = GxModelsKt.gxModelsText$default(jSONObject, "modelSize", str2, i2, str2);
+            if (StringsKt.isBlank(gxModelsText$default5)) {
+                gxModelsText$default5 = "small";
+            }
+            int i3 = optInt;
+            String str4 = gxModelsText$default2 + " · " + ((Object) gxModelsText$default3) + "\n" + ((Object) gxModelsText$default4) + " · " + ((Object) gxModelsText$default5) + " · " + (optBoolean ? "eGPU variant downloaded" : "eGPU variant not downloaded");
+            GxModelLabPage gxModelLabPage = this;
+            String gxModelsText$default6 = GxModelsKt.gxModelsText$default(jSONObject, "label", null, 4, null);
+            if (StringsKt.isBlank(gxModelsText$default6)) {
+                gxModelsText$default6 = gxModelsText$default2;
+            }
+            String str5 = gxModelsText$default6;
+            LinearLayout linearLayout5 = this.availBox;
+            if (linearLayout5 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("availBox");
+                linearLayout5 = null;
+            }
+            GxPage.Row row$default = GxPage.row$default(gxModelLabPage, str5, str4, linearLayout5, 0, 8, null);
+            if (optBoolean) {
+                TextView button$default = GxPage.Row.button$default(row$default, "Delete eGPU variant", false, new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda3
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit renderAvailable$lambda$34;
+                        renderAvailable$lambda$34 = GxModelLabPage.renderAvailable$lambda$34(GxModelLabPage.this, gxModelsText$default2);
+                        return renderAvailable$lambda$34;
+                    }
+                }, 2, null);
+                button$default.setTextColor(CarUi.Companion.getWARN());
+                GxModelsKt.gxModelsEnable(button$default, z);
+                str2 = null;
+                optInt = i3;
+                i2 = 4;
+            } else {
+                if (Intrinsics.areEqual(gxModelsText$default, gxModelsText$default2)) {
+                    i = 4;
+                    r14 = null;
+                    String gxModelsText$default7 = GxModelsKt.gxModelsText$default(this.download, "progress", null, 4, null);
+                    if (StringsKt.isBlank(gxModelsText$default7)) {
+                        gxModelsText$default7 = "starting…";
+                    }
+                    str = "Downloading · " + ((Object) gxModelsText$default7);
+                } else {
+                    i = 4;
+                    r14 = null;
+                    str = "Download eGPU variant";
+                }
+                GxModelsKt.gxModelsEnable(GxPage.Row.button$default(row$default, str, false, new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda2
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit renderAvailable$lambda$33;
+                        renderAvailable$lambda$33 = GxModelLabPage.renderAvailable$lambda$33(GxModelLabPage.this, gxModelsText$default2);
+                        return renderAvailable$lambda$33;
+                    }
+                }, 2, null), z);
+                i2 = i;
+                str2 = r14;
+                optInt = i3;
+            }
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderAvailable$lambda$33(GxModelLabPage this$0, String $id) {
+        this$0.prepareModel($id);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderAvailable$lambda$34(GxModelLabPage this$0, String $id) {
+        this$0.deleteModel($id);
+        return Unit.INSTANCE;
+    }
+
+    private final String pickLabel(JSONObject m) {
+        return GxModelsKt.gxModelsText$default(m, "label", null, 4, null) + " · " + GxModelsKt.gxModelsText$default(m, "version", null, 4, null);
+    }
+
+    private final void renderPair() {
+        String str;
+        boolean z;
+        JSONObject it;
+        LinearLayout linearLayout = this.pairBox;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("pairBox");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        if (this.loading) {
+            return;
+        }
+        GxModelLabPage gxModelLabPage = this;
+        LinearLayout linearLayout3 = this.pairBox;
+        if (linearLayout3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("pairBox");
+            linearLayout3 = null;
+        }
+        GxPage.Row st = GxPage.row$default(gxModelLabPage, "Model Laboratory pair", "Choose from downloaded eGPU variant combinations below.", linearLayout3, 0, 8, null);
+        st.value(this.cfgEnabled ? "Enabled" : "Disabled").setTextColor(this.cfgEnabled ? CarUi.Companion.getACCENT() : CarUi.Companion.getDIM());
+        GxModelLabPage gxModelLabPage2 = this;
+        boolean z2 = false;
+        String str2 = "Choose a model";
+        if (this.lateral.length() == 0) {
+            str = "Choose a model";
+        } else {
+            JSONObject it2 = byId(this.lateral);
+            if (it2 == null || (str = pickLabel(it2)) == null) {
+                str = this.lateral;
+            }
+        }
+        String str3 = "Path shape, curvature, lane geometry, and driving desire\nSelected: " + str;
+        LinearLayout linearLayout4 = this.pairBox;
+        if (linearLayout4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("pairBox");
+            linearLayout4 = null;
+        }
+        GxPage.Row rl = GxPage.row$default(gxModelLabPage2, "Lateral model", str3, linearLayout4, 0, 8, null);
+        GxPage.Row.button$default(rl, "Choose", false, new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda13
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit renderPair$lambda$39;
+                renderPair$lambda$39 = GxModelLabPage.renderPair$lambda$39(GxModelLabPage.this);
+                return renderPair$lambda$39;
+            }
+        }, 2, null);
+        GxModelLabPage gxModelLabPage3 = this;
+        if (!(this.longitudinal.length() == 0) && ((it = byId(this.longitudinal)) == null || (str2 = pickLabel(it)) == null)) {
+            str2 = this.longitudinal;
+        }
+        String str4 = "Speed, acceleration, stopping, leads, and scene confidence\nSelected: " + str2;
+        LinearLayout linearLayout5 = this.pairBox;
+        if (linearLayout5 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("pairBox");
+            linearLayout5 = null;
+        }
+        GxPage.Row rn = GxPage.row$default(gxModelLabPage3, "Longitudinal model", str4, linearLayout5, 0, 8, null);
+        GxPage.Row.button$default(rn, "Choose", false, new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda14
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit renderPair$lambda$43;
+                renderPair$lambda$43 = GxModelLabPage.renderPair$lambda$43(GxModelLabPage.this);
+                return renderPair$lambda$43;
+            }
+        }, 2, null);
+        LinearLayout linearLayout6 = this.pairBox;
+        if (linearLayout6 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("pairBox");
+        } else {
+            linearLayout2 = linearLayout6;
+        }
+        LinearLayout c = card(linearLayout2);
+        TextView $this$renderPair_u24lambda_u2444 = new TextView(getAct());
+        $this$renderPair_u24lambda_u2444.setText(modelLabel(this.lateral) + "  steers   ⇄   " + modelLabel(this.longitudinal) + "  paces");
+        $this$renderPair_u24lambda_u2444.setTextSize(19.0f);
+        $this$renderPair_u24lambda_u2444.setTextColor(CarUi.Companion.getTEXT());
+        $this$renderPair_u24lambda_u2444.setTypeface(Typeface.DEFAULT_BOLD);
+        c.addView($this$renderPair_u24lambda_u2444);
+        String se = selectionError();
+        if (se.length() > 0) {
+            GxPage.text$default(this, se, c, 15.0f, CarUi.Companion.getWARN(), false, 16, null);
+        }
+        LinearLayout bar = buttons(new Pair[]{TuplesKt.to("Enable for next drive", new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda15
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit renderPair$lambda$45;
+                renderPair$lambda$45 = GxModelLabPage.renderPair$lambda$45(GxModelLabPage.this);
+                return renderPair$lambda$45;
+            }
+        }), TuplesKt.to("Disable", new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda16
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit renderPair$lambda$46;
+                renderPair$lambda$46 = GxModelLabPage.renderPair$lambda$46(GxModelLabPage.this);
+                return renderPair$lambda$46;
+            }
+        }), TuplesKt.to("Refresh", new Function0() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda17
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit renderPair$lambda$47;
+                renderPair$lambda$47 = GxModelLabPage.renderPair$lambda$47(GxModelLabPage.this);
+                return renderPair$lambda$47;
+            }
+        })}, c, true);
+        View childAt = bar.getChildAt(0);
+        Intrinsics.checkNotNullExpressionValue(childAt, "getChildAt(...)");
+        if (!this.saving) {
+            if (se.length() == 0) {
+                z = true;
+                GxModelsKt.gxModelsEnable(childAt, z);
+                View childAt2 = bar.getChildAt(1);
+                Intrinsics.checkNotNullExpressionValue(childAt2, "getChildAt(...)");
+                if (!this.saving && !this.isOnroad && this.cfgEnabled) {
+                    z2 = true;
+                }
+                GxModelsKt.gxModelsEnable(childAt2, z2);
+                View childAt3 = bar.getChildAt(2);
+                Intrinsics.checkNotNullExpressionValue(childAt3, "getChildAt(...)");
+                GxModelsKt.gxModelsEnable(childAt3, !this.saving);
+            }
+        }
+        z = false;
+        GxModelsKt.gxModelsEnable(childAt, z);
+        View childAt22 = bar.getChildAt(1);
+        Intrinsics.checkNotNullExpressionValue(childAt22, "getChildAt(...)");
+        if (!this.saving) {
+            z2 = true;
+        }
+        GxModelsKt.gxModelsEnable(childAt22, z2);
+        View childAt32 = bar.getChildAt(2);
+        Intrinsics.checkNotNullExpressionValue(childAt32, "getChildAt(...)");
+        GxModelsKt.gxModelsEnable(childAt32, !this.saving);
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderPair$lambda$39(final GxModelLabPage this$0) {
+        final List opts = this$0.ready();
+        List listOf = CollectionsKt.listOf("Choose a model");
+        List $this$map$iv = opts;
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            JSONObject it = (JSONObject) item$iv$iv;
+            destination$iv$iv.add(this$0.pickLabel(it) + (Intrinsics.areEqual(GxModelsKt.gxModelsText$default(it, "value", null, 4, null), this$0.lateral) ? "  ✓" : ""));
+        }
+        this$0.pick("Lateral model", CollectionsKt.plus((Collection) listOf, destination$iv$iv), new Function1() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda1
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit renderPair$lambda$39$lambda$38;
+                renderPair$lambda$39$lambda$38 = GxModelLabPage.renderPair$lambda$39$lambda$38(GxModelLabPage.this, opts, ((Integer) obj).intValue());
+                return renderPair$lambda$39$lambda$38;
+            }
+        });
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderPair$lambda$39$lambda$38(GxModelLabPage this$0, List $opts, int i) {
+        this$0.lateral = i == 0 ? "" : GxModelsKt.gxModelsText$default((JSONObject) $opts.get(i - 1), "value", null, 4, null);
+        this$0.onLateralChange();
+        this$0.render(true);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderPair$lambda$43(final GxModelLabPage this$0) {
+        final List opts = this$0.candidates();
+        List listOf = CollectionsKt.listOf("Choose a model");
+        List $this$map$iv = opts;
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            JSONObject it = (JSONObject) item$iv$iv;
+            destination$iv$iv.add(this$0.pickLabel(it) + (Intrinsics.areEqual(GxModelsKt.gxModelsText$default(it, "value", null, 4, null), this$0.longitudinal) ? "  ✓" : ""));
+        }
+        this$0.pick("Longitudinal model", CollectionsKt.plus((Collection) listOf, destination$iv$iv), new Function1() { // from class: com.starpilot.starview.GxModelLabPage$$ExternalSyntheticLambda10
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit renderPair$lambda$43$lambda$42;
+                renderPair$lambda$43$lambda$42 = GxModelLabPage.renderPair$lambda$43$lambda$42(GxModelLabPage.this, opts, ((Integer) obj).intValue());
+                return renderPair$lambda$43$lambda$42;
+            }
+        });
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderPair$lambda$43$lambda$42(GxModelLabPage this$0, List $opts, int i) {
+        this$0.longitudinal = i == 0 ? "" : GxModelsKt.gxModelsText$default((JSONObject) $opts.get(i - 1), "value", null, 4, null);
+        this$0.dirty = true;
+        this$0.render(true);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderPair$lambda$45(GxModelLabPage this$0) {
+        this$0.save(true);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderPair$lambda$46(GxModelLabPage this$0) {
+        this$0.save(false);
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit renderPair$lambda$47(GxModelLabPage this$0) {
+        refresh$default(this$0, null, 1, null);
+        return Unit.INSTANCE;
+    }
+
+    private final void renderRuntime() {
+        LinearLayout linearLayout = this.runtimeBox;
+        LinearLayout linearLayout2 = null;
+        if (linearLayout == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("runtimeBox");
+            linearLayout = null;
+        }
+        linearLayout.removeAllViews();
+        if (this.loading) {
+            return;
+        }
+        GxModelLabPage gxModelLabPage = this;
+        LinearLayout linearLayout3 = this.runtimeBox;
+        if (linearLayout3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("runtimeBox");
+            linearLayout3 = null;
+        }
+        GxPage.Row s = GxPage.row$default(gxModelLabPage, "State", null, linearLayout3, 0, 8, null);
+        s.value(runtimeState()).setTextColor(this.runtime.optBoolean("active") ? CarUi.Companion.getACCENT() : CarUi.Companion.getTEXT());
+        GxModelLabPage gxModelLabPage2 = this;
+        LinearLayout linearLayout4 = this.runtimeBox;
+        if (linearLayout4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("runtimeBox");
+            linearLayout4 = null;
+        }
+        GxPage.row$default(gxModelLabPage2, "Lateral", null, linearLayout4, 0, 8, null).value(modelLabel(GxModelsKt.gxModelsText$default(this.runtime, "lateralModel", null, 4, null)));
+        GxModelLabPage gxModelLabPage3 = this;
+        LinearLayout linearLayout5 = this.runtimeBox;
+        if (linearLayout5 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("runtimeBox");
+            linearLayout5 = null;
+        }
+        GxPage.row$default(gxModelLabPage3, "Longitudinal", null, linearLayout5, 0, 8, null).value(modelLabel(GxModelsKt.gxModelsText$default(this.runtime, "longitudinalModel", null, 4, null)));
+        String it = GxModelsKt.gxModelsText$default(this.runtime, "error", null, 4, null);
+        String e = !StringsKt.isBlank(it) ? it : null;
+        if (e != null) {
+            LinearLayout linearLayout6 = this.runtimeBox;
+            if (linearLayout6 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("runtimeBox");
+                linearLayout6 = null;
+            }
+            LinearLayout c = card(linearLayout6);
+            GxPage.text$default(this, e, c, 17.0f, CarUi.Companion.getWARN(), false, 16, null);
+        }
+        LinearLayout linearLayout7 = this.runtimeBox;
+        if (linearLayout7 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("runtimeBox");
+        } else {
+            linearLayout2 = linearLayout7;
+        }
+        note("Both roles evaluate the same frame at 20 Hz. A runtime failure suppresses that frame and falls back to the built-in QCOM model.", linearLayout2);
+    }
 }

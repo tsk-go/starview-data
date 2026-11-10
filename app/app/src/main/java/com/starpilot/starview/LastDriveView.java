@@ -1,182 +1,168 @@
 package com.starpilot.starview;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.LinearLayout;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import kotlin.Pair;
 import kotlin.TuplesKt;
 import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
+import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
 
+/* compiled from: JournalPages.kt */
 public final class LastDriveView extends CardPage {
-   // $VF: synthetic method
-   public static Unit $r8$lambda$fJZkqxQrpUjQLZhbSOomkeU2MXs(LastDriveView var0, JSONObject var1, String var2) {
-      return refresh$lambda$8(var0, var1, var2);
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public LastDriveView(Context ctx, CarUi ui) {
+        super(ctx, ui);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(ui, "ui");
+    }
 
-   public LastDriveView(Context var1, CarUi var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "ui");
-      super(var1, var2);
-   }
-
-   private static final Unit refresh$lambda$8(LastDriveView var0, JSONObject var1, String var2) {
-      if (var1 != null) {
-         JSONObject var8 = var1.optJSONObject("lastDrive");
-         if (var8 != null) {
-            LinearLayout var5 = var0.card();
-            var0.add((View)var5);
-            var5.addView(var0.title("Galaxy's record", "star", "device"));
-            Pair var6 = TuplesKt.to(JournalPagesKt.access$miles(var8.optDouble("distanceMeters")), "distance");
-            Pair var7 = TuplesKt.to(JournalPagesKt.access$dur(var8.optDouble("durationSeconds")), "time");
-            long var3 = Math.round(var8.optDouble("engagedPercent", 0.0));
-            Pair var9 = TuplesKt.to(var3 + "%", "engaged");
-            Pair var12 = TuplesKt.to(String.valueOf(var8.optInt("distractedMoments")), "distracted");
-            var5.addView(var0.stats(new Pair[]{var6, var7, var9, var12, TuplesKt.to(String.valueOf(var8.optInt("unresponsiveMoments")), "unresponsive")}));
-            CharSequence var13 = var8.optString("model");
-            CharSequence var10 = var13;
-            if (StringsKt.isBlank(var13)) {
-               var10 = null;
+    @Override // com.starpilot.starview.CardPage
+    public void refresh() {
+        SimpleDateFormat simpleDateFormat;
+        String miles;
+        String dur;
+        SimpleDateFormat simpleDateFormat2;
+        List evs;
+        JSONObject d;
+        LinearLayout c;
+        String str;
+        String it;
+        getCol().removeAllViews();
+        List drives = DriveJournal.INSTANCE.read("drive");
+        JSONObject d2 = (JSONObject) CollectionsKt.lastOrNull(drives);
+        LinearLayout c2 = card();
+        add(c2);
+        c2.addView(title("Last drive", "car", "tablet"));
+        if (d2 == null) {
+            c2.addView(CardPage.line$default(this, "No drive noted yet: the tablet starts noting drives while it's linked.", 0, 0.0f, 6, null));
+        } else {
+            double secs = (d2.optLong("end") - d2.optLong("t")) / 1000.0d;
+            LastDriveView lastDriveView = this;
+            simpleDateFormat = JournalPagesKt.dayFmt;
+            String format = simpleDateFormat.format(new Date(d2.optLong("t")));
+            Iterable $this$filter$iv = CollectionsKt.listOf((Object[]) new String[]{d2.optString("from"), d2.optString("to")});
+            Collection destination$iv$iv = new ArrayList();
+            for (Object element$iv$iv : $this$filter$iv) {
+                String it2 = (String) element$iv$iv;
+                Intrinsics.checkNotNull(it2);
+                if (!StringsKt.isBlank(it2)) {
+                    destination$iv$iv.add(element$iv$iv);
+                }
             }
-
-            String var11 = (String)var10;
-            if (var11 != null) {
-               var5.addView((View)CardPage.line$default(var0, "Model: " + var11, 0, 0.0F, 6, null));
+            c2.addView(CardPage.line$default(lastDriveView, format + "  ·  " + CollectionsKt.joinToString$default(CollectionsKt.distinct((List) destination$iv$iv), " → ", null, null, 0, null, null, 62, null), 0, 0.0f, 6, null));
+            miles = JournalPagesKt.miles(d2.optDouble("meters"));
+            dur = JournalPagesKt.dur(secs);
+            c2.addView(stats(TuplesKt.to(miles, "distance"), TuplesKt.to(dur, "time"), TuplesKt.to(d2.optInt("engagedPct") + "%", "openpilot on"), TuplesKt.to(String.valueOf(d2.optInt("takeovers")), "takeovers"), TuplesKt.to(String.valueOf(d2.optInt("alerts")), "alerts"), TuplesKt.to(String.valueOf(d2.optInt("hardBrakes")), "hard brakes")));
+            Iterable $this$filter$iv2 = DriveJournal.read$default(DriveJournal.INSTANCE, null, 1, null);
+            Collection destination$iv$iv2 = new ArrayList();
+            for (Object element$iv$iv2 : $this$filter$iv2) {
+                List drives2 = drives;
+                JSONObject it3 = (JSONObject) element$iv$iv2;
+                long optLong = d2.optLong("t");
+                long optLong2 = d2.optLong("end");
+                long optLong3 = it3.optLong("t");
+                if (((optLong > optLong3 ? 1 : (optLong == optLong3 ? 0 : -1)) <= 0 && (optLong3 > optLong2 ? 1 : (optLong3 == optLong2 ? 0 : -1)) <= 0) && !Intrinsics.areEqual(it3.optString("k"), "drive")) {
+                    destination$iv$iv2.add(element$iv$iv2);
+                }
+                drives = drives2;
             }
+            List evs2 = (List) destination$iv$iv2;
+            if (!evs2.isEmpty()) {
+                LinearLayout tl = card();
+                add(tl);
+                tl.addView(title("What happened", "history", "tablet"));
+                for (JSONObject e : CollectionsKt.takeLast(evs2, 40)) {
+                    LastDriveView lastDriveView2 = this;
+                    simpleDateFormat2 = JournalPagesKt.timeFmt;
+                    String format2 = simpleDateFormat2.format(new Date(e.optLong("t")));
+                    String str2 = "";
+                    if (Intrinsics.areEqual(e.optString("k"), "takeover")) {
+                        String optString = e.optString("cause");
+                        int optInt = e.optInt("mph");
+                        evs = evs2;
+                        String optString2 = e.optString("road");
+                        if (StringsKt.isBlank(optString2)) {
+                            optString2 = null;
+                        }
+                        String it4 = optString2;
+                        if (it4 != null) {
+                            d = d2;
+                            c = c2;
+                            String it5 = " · " + it4;
+                            if (it5 != null) {
+                                str2 = it5;
+                            }
+                        } else {
+                            d = d2;
+                            c = c2;
+                        }
+                        str = "Took over (" + optString + ") at " + optInt + " mph" + str2;
+                    } else {
+                        evs = evs2;
+                        d = d2;
+                        c = c2;
+                        String optString3 = e.optString("text");
+                        String optString4 = e.optString("why");
+                        if (StringsKt.isBlank(optString4)) {
+                            optString4 = null;
+                        }
+                        String it6 = optString4;
+                        if (it6 != null && (it = " - " + it6) != null) {
+                            str2 = it;
+                        }
+                        str = optString3 + str2;
+                    }
+                    tl.addView(CardPage.line$default(lastDriveView2, format2 + "   " + str, CarUi.Companion.getTEXT(), 0.0f, 4, null));
+                    evs2 = evs;
+                    d2 = d;
+                    c2 = c;
+                }
+            }
+        }
+        Galaxy7 current = Galaxy7.Companion.current();
+        if (current != null) {
+            current.get("/api/drives/stats?timezone=" + TimeZone.getDefault().getID(), new Function2() { // from class: com.starpilot.starview.LastDriveView$$ExternalSyntheticLambda0
+                @Override // kotlin.jvm.functions.Function2
+                public final Object invoke(Object obj, Object obj2) {
+                    Unit refresh$lambda$8;
+                    refresh$lambda$8 = LastDriveView.refresh$lambda$8(LastDriveView.this, (JSONObject) obj, (String) obj2);
+                    return refresh$lambda$8;
+                }
+            });
+        }
+    }
 
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit refresh$lambda$8(LastDriveView this$0, JSONObject o, String str) {
+        JSONObject g;
+        String miles;
+        String dur;
+        if (o == null || (g = o.optJSONObject("lastDrive")) == null) {
             return Unit.INSTANCE;
-         }
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   @Override
-   public void refresh() {
-      this.getCol().removeAllViews();
-      List var11 = DriveJournal.INSTANCE.read("drive");
-      JSONObject var12 = CollectionsKt.lastOrNull(var11);
-      LinearLayout var13 = this.card();
-      this.add((View)var13);
-      var13.addView(this.title("Last drive", "car", "tablet"));
-      if (var12 == null) {
-         var13.addView((View)CardPage.line$default(this, "No drive noted yet: the tablet starts noting drives while it's linked.", 0, 0.0F, 6, null));
-      } else {
-         double var1 = (var12.optLong("end") - var12.optLong("t")) / 1000.0;
-         CardPage var15 = this;
-         String var14 = JournalPagesKt.access$getDayFmt$p().format(new Date(var12.optLong("t")));
-         Iterable var17 = CollectionsKt.listOf(new String[]{var12.optString("from"), var12.optString("to")});
-         var var16 = new ArrayList();
-
-         for (Object var18 : var17) {
-            String var19 = (String)var18;
-            Intrinsics.checkNotNull(var19);
-            if (!StringsKt.isBlank(var19)) {
-               var16.add(var18);
-            }
-         }
-
-         List var41 = var16;
-         String var42 = CollectionsKt.joinToString$default(CollectionsKt.distinct(var41), " → ", null, null, 0, null, null, 62, null);
-         var13.addView((View)CardPage.line$default(var15, var14 + "  ·  " + var42, 0, 0.0F, 6, null));
-         Pair var52 = TuplesKt.to(JournalPagesKt.access$miles(var12.optDouble("meters")), "distance");
-         Pair var43 = TuplesKt.to(JournalPagesKt.access$dur(var1), "time");
-         int var3 = var12.optInt("engagedPct");
-         Pair var49 = TuplesKt.to(var3 + "%", "openpilot on");
-         Pair var27 = TuplesKt.to(String.valueOf(var12.optInt("takeovers")), "takeovers");
-         Pair var32 = TuplesKt.to(String.valueOf(var12.optInt("alerts")), "alerts");
-         var13.addView(this.stats(new Pair[]{var52, var43, var49, var27, var32, TuplesKt.to(String.valueOf(var12.optInt("hardBrakes")), "hard brakes")}));
-         Iterable var33 = DriveJournal.read$default(DriveJournal.INSTANCE, null, 1, null);
-         var var28 = new ArrayList();
-
-         for (Object var44 : var33) {
-            JSONObject var50 = (JSONObject)var44;
-            long var6 = var12.optLong("t");
-            long var4 = var12.optLong("end");
-            long var8 = var50.optLong("t");
-            boolean var22;
-            if (var6 <= var8 && var8 <= var4) {
-               var22 = true;
-            } else {
-               var22 = false;
-            }
-
-            if (var22 && !Intrinsics.areEqual(var50.optString("k"), "drive")) {
-               var22 = true;
-            } else {
-               var22 = false;
-            }
-
-            if (var22) {
-               var28.add(var44);
-            }
-         }
-
-         List var29 = var28;
-         if (!var29.isEmpty()) {
-            LinearLayout var53 = this.card();
-            this.add((View)var53);
-            var53.addView(this.title("What happened", "history", "tablet"));
-
-            for (JSONObject var35 : CollectionsKt.takeLast(var29, 40)) {
-               CardPage var54 = this;
-               String var20 = JournalPagesKt.access$getTimeFmt$p().format(new Date(var35.optLong("t")));
-               boolean var10 = Intrinsics.areEqual(var35.optString("k"), "takeover");
-               var14 = "";
-               if (var10) {
-                  String var21 = var35.optString("cause");
-                  var3 = var35.optInt("mph");
-                  CharSequence var45 = var35.optString("road");
-                  CharSequence var36 = var45;
-                  if (StringsKt.isBlank(var45)) {
-                     var36 = null;
-                  }
-
-                  String var37 = (String)var36;
-                  if (var37 != null) {
-                     String var38 = " · " + var37;
-                     if (var38 != null) {
-                        var14 = var38;
-                     }
-                  }
-
-                  var14 = "Took over (" + var21 + ") at " + var3 + " mph" + var14;
-               } else {
-                  String var55 = var35.optString("text");
-                  CharSequence var46 = var35.optString("why");
-                  CharSequence var39 = var46;
-                  if (StringsKt.isBlank(var46)) {
-                     var39 = null;
-                  }
-
-                  String var47 = (String)var39;
-                  String var40 = var14;
-                  if (var47 != null) {
-                     var40 = " - " + var47;
-                     if (var40 == null) {
-                        var40 = var14;
-                     }
-                  }
-
-                  var14 = var55 + var40;
-               }
-
-               var53.addView((View)CardPage.line$default(var54, var20 + "   " + var14, CarUi.Companion.getTEXT(), 0.0F, 4, null));
-            }
-         }
-      }
-
-      Galaxy7 var25 = Galaxy7.Companion.current();
-      if (var25 != null) {
-         String var26 = TimeZone.getDefault().getID();
-         var25.get("/api/drives/stats?timezone=" + var26, new LastDriveView$$ExternalSyntheticLambda0(this));
-      }
-   }
+        }
+        LinearLayout gc = this$0.card();
+        this$0.add(gc);
+        gc.addView(this$0.title("Galaxy's record", "star", "device"));
+        miles = JournalPagesKt.miles(g.optDouble("distanceMeters"));
+        dur = JournalPagesKt.dur(g.optDouble("durationSeconds"));
+        gc.addView(this$0.stats(TuplesKt.to(miles, "distance"), TuplesKt.to(dur, "time"), TuplesKt.to(Math.round(g.optDouble("engagedPercent", 0.0d)) + "%", "engaged"), TuplesKt.to(String.valueOf(g.optInt("distractedMoments")), "distracted"), TuplesKt.to(String.valueOf(g.optInt("unresponsiveMoments")), "unresponsive")));
+        String optString = g.optString("model");
+        if (StringsKt.isBlank(optString)) {
+            optString = null;
+        }
+        String it = optString;
+        if (it != null) {
+            gc.addView(CardPage.line$default(this$0, "Model: " + it, 0, 0.0f, 6, null));
+        }
+        return Unit.INSTANCE;
+    }
 }

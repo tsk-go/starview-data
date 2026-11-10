@@ -2,44 +2,46 @@ package com.starpilot.starview;
 
 import java.util.List;
 import kotlin.collections.CollectionsKt;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.SequencesKt;
 import kotlin.text.MatchResult;
 import kotlin.text.Regex;
 import kotlin.text.StringsKt;
 
+/* compiled from: ForkFixes.kt */
 public final class ForkFixes {
-   public static final ForkFixes INSTANCE = new ForkFixes();
+    public static final ForkFixes INSTANCE = new ForkFixes();
 
-   // $VF: synthetic method
-   public static String $r8$lambda$0Nbyy0Z5YfiKvKXgwskcrYPqNys(MatchResult var0) {
-      return parse$lambda$1(var0);
-   }
+    private ForkFixes() {
+    }
 
-   private ForkFixes() {
-   }
+    public final List<String> parse(String md) {
+        Intrinsics.checkNotNullParameter(md, "md");
+        int start = StringsKt.indexOf$default((CharSequence) md, "# Fork fixes to drop", 0, false, 6, (Object) null);
+        if (start < 0) {
+            return CollectionsKt.emptyList();
+        }
+        int it = StringsKt.indexOf$default((CharSequence) md, "\n# ", start + 1, false, 4, (Object) null);
+        if (it < 0) {
+            it = md.length();
+        }
+        Regex regex = new Regex("(?m)^\\d+\\. \\*\\*(.+?)\\*\\*");
+        String substring = md.substring(start, it);
+        Intrinsics.checkNotNullExpressionValue(substring, "substring(...)");
+        return SequencesKt.toList(SequencesKt.map(Regex.findAll$default(regex, substring, 0, 2, null), new Function1() { // from class: com.starpilot.starview.ForkFixes$$ExternalSyntheticLambda0
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                String parse$lambda$1;
+                parse$lambda$1 = ForkFixes.parse$lambda$1((MatchResult) obj);
+                return parse$lambda$1;
+            }
+        }));
+    }
 
-   private static final String parse$lambda$1(MatchResult var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      return StringsKt.trim(var0.getGroupValues().get(1)).toString();
-   }
-
-   public final List<String> parse(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "md");
-      int var4 = StringsKt.indexOf$default(var1, "# Fork fixes to drop", 0, false, 6, null);
-      if (var4 < 0) {
-         return CollectionsKt.emptyList();
-      } else {
-         int var3 = StringsKt.indexOf$default(var1, "\n# ", var4 + 1, false, 4, null);
-         int var2 = var3;
-         if (var3 < 0) {
-            var2 = var1.length();
-         }
-
-         Regex var5 = new Regex("(?m)^\\d+\\. \\*\\*(.+?)\\*\\*");
-         var1 = var1.substring(var4, var2);
-         Intrinsics.checkNotNullExpressionValue(var1, "substring(...)");
-         return SequencesKt.toList(SequencesKt.map(Regex.findAll$default(var5, var1, 0, 2, null), new ForkFixes$$ExternalSyntheticLambda0()));
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final String parse$lambda$1(MatchResult it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return StringsKt.trim((CharSequence) it.getGroupValues().get(1)).toString();
+    }
 }

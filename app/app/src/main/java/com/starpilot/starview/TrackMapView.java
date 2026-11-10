@@ -5,394 +5,443 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Paint.Cap;
-import android.graphics.Paint.Join;
-import android.graphics.Paint.Style;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewParent;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.ScaleGestureDetector.OnScaleGestureListener;
-import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
+import com.starpilot.starview.DriveTrack;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import kotlin.Unit;
 import kotlin.collections.ArraysKt;
 import kotlin.collections.CollectionsKt;
+import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 
+/* compiled from: TrackMapView.kt */
 public final class TrackMapView extends View {
-   private double cx;
-   private double cy;
-   private final float d;
-   private final Paint dot;
-   private boolean fitted;
-   private final GestureDetector gest;
-   private final Paint line;
-   private final double[] mx;
-   private final double[] my;
-   private long nowMs;
-   private final Function1<Long, Unit> onPick;
-   private final List<DriveTrack.Pt> pts;
-   private final Paint ring;
-   private final ScaleGestureDetector scaler;
-   private final Paint seg;
-   private final long segStartMs;
-   private final Paint tileP;
-   private final MapTiles tiles;
-   private final Paint txt;
-   private double zoom;
+    private double cx;
+    private double cy;
+    private final float d;
+    private final Paint dot;
+    private boolean fitted;
+    private final GestureDetector gest;
+    private final Paint line;
+    private final double[] mx;
+    private final double[] my;
+    private long nowMs;
+    private final Function1<Long, Unit> onPick;
+    private final List<DriveTrack.Pt> pts;
+    private final Paint ring;
+    private final ScaleGestureDetector scaler;
+    private final Paint seg;
+    private final long segStartMs;
+    private final Paint tileP;
+    private final MapTiles tiles;
+    private final Paint txt;
+    private double zoom;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$N8surjs2ey4Rw3b8vitc16hxTag(TrackMapView var0) {
-      return tiles$lambda$1(var0);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$lG4EEeQ3ZaHtsl7GsTaRkKotZi4(TrackMapView var0) {
-      tiles$lambda$1$lambda$0(var0);
-   }
-
-   public TrackMapView(Context var1, List<DriveTrack.Pt> var2, long var3, Function1<? super Long, Unit> var5) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "pts");
-      Intrinsics.checkNotNullParameter(var5, "onPick");
-      super(var1);
-      this.pts = var2;
-      this.segStartMs = var3;
-      this.onPick = var5;
-      this.d = this.getResources().getDisplayMetrics().density;
-      MapTiles var9 = new MapTiles(var1, new TrackMapView$$ExternalSyntheticLambda1(this));
-      var9.setHost(Link.INSTANCE.getHost());
-      var9.setDirectKey(Nav.INSTANCE.getTileKey());
-      this.tiles = var9;
-      int var8 = this.pts.size();
-      double[] var10 = new double[var8];
-      byte var7 = 0;
-
-      for (int var6 = 0; var6 < var8; var6++) {
-         var10[var6] = Nav.INSTANCE.mercX(this.pts.get(var6).getLon());
-      }
-
-      this.mx = var10;
-      var8 = this.pts.size();
-      double[] var11 = new double[var8];
-
-      for (int var17 = var7; var17 < var8; var17++) {
-         var11[var17] = Nav.INSTANCE.mercY(this.pts.get(var17).getLat());
-      }
-
-      this.my = var11;
-      this.cx = 0.5;
-      this.cy = 0.5;
-      this.zoom = 14.0;
-      this.nowMs = Long.MIN_VALUE;
-      Paint var12 = new Paint(1);
-      var12.setStyle(Style.STROKE);
-      var12.setStrokeWidth(this.d * 5.0F);
-      var12.setColor(-13664019);
-      var12.setStrokeCap(Cap.ROUND);
-      var12.setStrokeJoin(Join.ROUND);
-      this.line = var12;
-      Paint var13 = new Paint(1);
-      var13.setColor(-1);
-      var13.setStyle(Style.FILL);
-      this.seg = var13;
-      Paint var14 = new Paint(1);
-      var14.setColor(-16121);
-      var14.setStyle(Style.FILL);
-      this.dot = var14;
-      Paint var15 = new Paint(1);
-      var15.setColor(-16777216);
-      var15.setStyle(Style.STROKE);
-      var15.setStrokeWidth(this.d * 2.0F);
-      this.ring = var15;
-      Paint var16 = new Paint(1);
-      var16.setColor(-1);
-      var16.setTextSize(this.d * 13.0F);
-      var16.setShadowLayer(this.d * 3.0F, 0.0F, 0.0F, -16777216);
-      this.txt = var16;
-      this.tileP = new Paint(2);
-      this.scaler = new ScaleGestureDetector(var1, (OnScaleGestureListener)(new SimpleOnScaleGestureListener() {
-
-         public boolean onScale(ScaleGestureDetector var1) {
-            Intrinsics.checkNotNullParameter(var1, "det");
-            TrackMapView.this.zoom = RangesKt.coerceIn(TrackMapView.this.zoom + Math.log(var1.getScaleFactor()) / Math.log(2.0), 3.0, 18.5);
-            TrackMapView.this.invalidate();
-            return true;
-         }
-      }));
-      this.gest = new GestureDetector(var1, (OnGestureListener)(new SimpleOnGestureListener() {
-
-         public boolean onDoubleTap(MotionEvent var1) {
-            Intrinsics.checkNotNullParameter(var1, "e");
-            TrackMapView.this.zoom = RangesKt.coerceAtMost(TrackMapView.this.zoom + 1, 18.5);
-            TrackMapView.this.invalidate();
-            return true;
-         }
-
-         public boolean onDown(MotionEvent var1) {
-            Intrinsics.checkNotNullParameter(var1, "e");
-            return true;
-         }
-
-         public boolean onScroll(MotionEvent var1, MotionEvent var2x, float var3x, float var4) {
-            Intrinsics.checkNotNullParameter(var2x, "e2");
-            TrackMapView.this.cx = TrackMapView.this.cx + var3x / TrackMapView.this.world();
-            TrackMapView.this.cy = TrackMapView.this.cy + var4 / TrackMapView.this.world();
-            TrackMapView.this.invalidate();
-            return true;
-         }
-
-         public boolean onSingleTapConfirmed(MotionEvent var1) {
-            Intrinsics.checkNotNullParameter(var1, "e");
-            int var6 = -1;
-            float var2x = TrackMapView.this.d * 40.0F;
-            int var5x = 0;
-            int var7x = TrackMapView.this.pts.size();
-
-            while (var5x < var7x) {
-               float var4 = (float)Math.hypot(TrackMapView.this.sx(TrackMapView.this.mx[var5x]) - var1.getX(), TrackMapView.this.sy(TrackMapView.this.my[var5x]) - var1.getY());
-               float var3x = var2x;
-               if (var4 < var2x) {
-                  var3x = var4;
-                  var6 = var5x;
-               }
-
-               var5x++;
-               var2x = var3x;
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    /* JADX WARN: Multi-variable type inference failed */
+    public TrackMapView(Context ctx, List<DriveTrack.Pt> pts, long segStartMs, Function1<? super Long, Unit> onPick) {
+        super(ctx);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(pts, "pts");
+        Intrinsics.checkNotNullParameter(onPick, "onPick");
+        this.pts = pts;
+        this.segStartMs = segStartMs;
+        this.onPick = onPick;
+        this.d = getResources().getDisplayMetrics().density;
+        MapTiles $this$tiles_u24lambda_u242 = new MapTiles(ctx, new Function0() { // from class: com.starpilot.starview.TrackMapView$$ExternalSyntheticLambda1
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit tiles$lambda$1;
+                tiles$lambda$1 = TrackMapView.tiles$lambda$1(TrackMapView.this);
+                return tiles$lambda$1;
+            }
+        });
+        $this$tiles_u24lambda_u242.setHost(Link.INSTANCE.getHost());
+        $this$tiles_u24lambda_u242.setDirectKey(Nav.INSTANCE.getTileKey());
+        this.tiles = $this$tiles_u24lambda_u242;
+        int size = this.pts.size();
+        double[] dArr = new double[size];
+        for (int i = 0; i < size; i++) {
+            dArr[i] = Nav.INSTANCE.mercX(this.pts.get(i).getLon());
+        }
+        this.mx = dArr;
+        int size2 = this.pts.size();
+        double[] dArr2 = new double[size2];
+        for (int i2 = 0; i2 < size2; i2++) {
+            dArr2[i2] = Nav.INSTANCE.mercY(this.pts.get(i2).getLat());
+        }
+        this.my = dArr2;
+        this.cx = 0.5d;
+        this.cy = 0.5d;
+        this.zoom = 14.0d;
+        this.nowMs = Long.MIN_VALUE;
+        Paint $this$line_u24lambda_u243 = new Paint(1);
+        $this$line_u24lambda_u243.setStyle(Paint.Style.STROKE);
+        $this$line_u24lambda_u243.setStrokeWidth(this.d * 5.0f);
+        $this$line_u24lambda_u243.setColor(-13664019);
+        $this$line_u24lambda_u243.setStrokeCap(Paint.Cap.ROUND);
+        $this$line_u24lambda_u243.setStrokeJoin(Paint.Join.ROUND);
+        this.line = $this$line_u24lambda_u243;
+        Paint $this$seg_u24lambda_u244 = new Paint(1);
+        $this$seg_u24lambda_u244.setColor(-1);
+        $this$seg_u24lambda_u244.setStyle(Paint.Style.FILL);
+        this.seg = $this$seg_u24lambda_u244;
+        Paint $this$dot_u24lambda_u245 = new Paint(1);
+        $this$dot_u24lambda_u245.setColor(-16121);
+        $this$dot_u24lambda_u245.setStyle(Paint.Style.FILL);
+        this.dot = $this$dot_u24lambda_u245;
+        Paint $this$ring_u24lambda_u246 = new Paint(1);
+        $this$ring_u24lambda_u246.setColor(-16777216);
+        $this$ring_u24lambda_u246.setStyle(Paint.Style.STROKE);
+        $this$ring_u24lambda_u246.setStrokeWidth(this.d * 2.0f);
+        this.ring = $this$ring_u24lambda_u246;
+        Paint $this$txt_u24lambda_u247 = new Paint(1);
+        $this$txt_u24lambda_u247.setColor(-1);
+        $this$txt_u24lambda_u247.setTextSize(this.d * 13.0f);
+        $this$txt_u24lambda_u247.setShadowLayer(this.d * 3.0f, 0.0f, 0.0f, -16777216);
+        this.txt = $this$txt_u24lambda_u247;
+        this.tileP = new Paint(2);
+        this.scaler = new ScaleGestureDetector(ctx, new ScaleGestureDetector.SimpleOnScaleGestureListener() { // from class: com.starpilot.starview.TrackMapView$scaler$1
+            @Override // android.view.ScaleGestureDetector.SimpleOnScaleGestureListener, android.view.ScaleGestureDetector.OnScaleGestureListener
+            public boolean onScale(ScaleGestureDetector det) {
+                double d;
+                Intrinsics.checkNotNullParameter(det, "det");
+                TrackMapView trackMapView = TrackMapView.this;
+                d = TrackMapView.this.zoom;
+                trackMapView.zoom = RangesKt.coerceIn(d + (Math.log(det.getScaleFactor()) / Math.log(2.0d)), 3.0d, 18.5d);
+                TrackMapView.this.invalidate();
+                return true;
+            }
+        });
+        this.gest = new GestureDetector(ctx, new GestureDetector.SimpleOnGestureListener() { // from class: com.starpilot.starview.TrackMapView$gest$1
+            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnGestureListener
+            public boolean onDown(MotionEvent e) {
+                Intrinsics.checkNotNullParameter(e, "e");
+                return true;
             }
 
-            if (var6 >= 0) {
-               TrackMapView.this.setNowMs(TrackMapView.this.pts.get(var6).getT());
-               TrackMapView.this.onPick.invoke(TrackMapView.this.pts.get(var6).getT());
+            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnGestureListener
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
+                double d;
+                double world;
+                double d2;
+                double world2;
+                Intrinsics.checkNotNullParameter(e2, "e2");
+                TrackMapView trackMapView = TrackMapView.this;
+                d = TrackMapView.this.cx;
+                world = TrackMapView.this.world();
+                trackMapView.cx = d + (dx / world);
+                TrackMapView trackMapView2 = TrackMapView.this;
+                d2 = TrackMapView.this.cy;
+                world2 = TrackMapView.this.world();
+                trackMapView2.cy = d2 + (dy / world2);
+                TrackMapView.this.invalidate();
+                return true;
             }
 
-            return true;
-         }
-      }));
-   }
+            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnDoubleTapListener
+            public boolean onDoubleTap(MotionEvent e) {
+                double d;
+                Intrinsics.checkNotNullParameter(e, "e");
+                TrackMapView trackMapView = TrackMapView.this;
+                d = TrackMapView.this.zoom;
+                trackMapView.zoom = RangesKt.coerceAtMost(d + 1, 18.5d);
+                TrackMapView.this.invalidate();
+                return true;
+            }
 
-   private final void fit() {
-      if (!this.pts.isEmpty() && this.getWidth() != 0) {
-         double var9 = ArraysKt.minOrThrow(this.mx);
-         double var7 = ArraysKt.maxOrThrow(this.mx);
-         double var1 = ArraysKt.minOrThrow(this.my);
-         double var3 = ArraysKt.maxOrThrow(this.my);
-         double var5 = 2;
-         this.cx = (var9 + var7) / var5;
-         this.cy = (var1 + var3) / var5;
-         float var12 = this.getWidth();
-         float var11 = 60;
-         var5 = var12 - this.d * var11;
-         var9 = Math.max(var7 - var9, 1.0E-7);
-         var7 = 512;
-         this.zoom = RangesKt.coerceIn(
-            Math.min(
-               Math.log(var5 / (var9 * var7)) / Math.log(2.0),
-               Math.log((this.getHeight() - var11 * this.d) / (Math.max(var3 - var1, 1.0E-7) * var7)) / Math.log(2.0)
-            ),
-            3.0,
-            17.5
-         );
-         this.fitted = true;
-      }
-   }
+            @Override // android.view.GestureDetector.SimpleOnGestureListener, android.view.GestureDetector.OnDoubleTapListener
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                float f;
+                List list;
+                List list2;
+                Function1 function1;
+                List list3;
+                double[] dArr3;
+                float sx;
+                double[] dArr4;
+                float sy;
+                Intrinsics.checkNotNullParameter(e, "e");
+                int best = -1;
+                f = TrackMapView.this.d;
+                float bd = f * 40.0f;
+                list = TrackMapView.this.pts;
+                int size3 = list.size();
+                for (int i3 = 0; i3 < size3; i3++) {
+                    TrackMapView trackMapView = TrackMapView.this;
+                    dArr3 = TrackMapView.this.mx;
+                    sx = trackMapView.sx(dArr3[i3]);
+                    double x = sx - e.getX();
+                    TrackMapView trackMapView2 = TrackMapView.this;
+                    dArr4 = TrackMapView.this.my;
+                    sy = trackMapView2.sy(dArr4[i3]);
+                    float dd = (float) Math.hypot(x, sy - e.getY());
+                    if (dd < bd) {
+                        bd = dd;
+                        best = i3;
+                    }
+                }
+                if (best >= 0) {
+                    TrackMapView trackMapView3 = TrackMapView.this;
+                    list2 = TrackMapView.this.pts;
+                    trackMapView3.setNowMs(((DriveTrack.Pt) list2.get(best)).getT());
+                    function1 = TrackMapView.this.onPick;
+                    list3 = TrackMapView.this.pts;
+                    function1.invoke(Long.valueOf(((DriveTrack.Pt) list3.get(best)).getT()));
+                    return true;
+                }
+                return true;
+            }
+        });
+    }
 
-   private final float sx(double var1) {
-      return (float)((var1 - this.cx) * this.world() + this.getWidth() / 2.0);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit tiles$lambda$1(final TrackMapView this$0) {
+        this$0.post(new Runnable() { // from class: com.starpilot.starview.TrackMapView$$ExternalSyntheticLambda0
+            @Override // java.lang.Runnable
+            public final void run() {
+                TrackMapView.this.invalidate();
+            }
+        });
+        return Unit.INSTANCE;
+    }
 
-   private final float sy(double var1) {
-      return (float)((var1 - this.cy) * this.world() + this.getHeight() / 2.0);
-   }
+    public final long getNowMs() {
+        return this.nowMs;
+    }
 
-   private static final Unit tiles$lambda$1(TrackMapView var0) {
-      var0.post(new TrackMapView$$ExternalSyntheticLambda0(var0));
-      return Unit.INSTANCE;
-   }
+    public final void setNowMs(long v) {
+        this.nowMs = v;
+        invalidate();
+    }
 
-   private static final void tiles$lambda$1$lambda$0(TrackMapView var0) {
-      var0.invalidate();
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final double world() {
+        return Math.pow(2.0d, this.zoom) * 512.0d;
+    }
 
-   private final double world() {
-      return Math.pow(2.0, this.zoom) * 512.0;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final float sx(double x) {
+        return (float) (((x - this.cx) * world()) + (getWidth() / 2.0d));
+    }
 
-   public final long getNowMs() {
-      return this.nowMs;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final float sy(double y) {
+        return (float) (((y - this.cy) * world()) + (getHeight() / 2.0d));
+    }
 
-   protected void onDraw(Canvas var1) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      if (!this.fitted) {
-         this.fit();
-      }
+    private final void fit() {
+        if (this.pts.isEmpty() || getWidth() == 0) {
+            return;
+        }
+        double x0 = ArraysKt.minOrThrow(this.mx);
+        double x1 = ArraysKt.maxOrThrow(this.mx);
+        double y0 = ArraysKt.minOrThrow(this.my);
+        double y1 = ArraysKt.maxOrThrow(this.my);
+        double d = 2;
+        this.cx = (x0 + x1) / d;
+        this.cy = (y0 + y1) / d;
+        double width = getWidth() - (this.d * 60);
+        double max = Math.max(x1 - x0, 1.0E-7d);
+        double d2 = 512;
+        double zx = Math.log(width / (max * d2)) / Math.log(2.0d);
+        double zy = Math.log((getHeight() - (r10 * this.d)) / (Math.max(y1 - y0, 1.0E-7d) * d2)) / Math.log(2.0d);
+        this.zoom = RangesKt.coerceIn(Math.min(zx, zy), 3.0d, 17.5d);
+        this.fitted = true;
+    }
 
-      var1.drawColor(-15000028);
-      int var15 = RangesKt.coerceIn((int)Math.floor(this.zoom), 0, 18);
-      int var16 = 1 << var15;
-      double var2 = this.world() / (var16 * 512.0);
-      int var7 = (int)Math.floor((this.cx - this.getWidth() / 2.0 / this.world()) * var16);
-      int var14 = (int)Math.floor((this.cx + this.getWidth() / 2.0 / this.world()) * var16);
-      int var11 = (int)Math.floor((this.cy - this.getHeight() / 2.0 / this.world()) * var16);
-      int var8 = (int)Math.floor((this.cy + this.getHeight() / 2.0 / this.world()) * var16);
-      HashSet var23 = new HashSet();
-      String var24 = "dark";
-      int var12 = var11;
-      HashSet var48;
-      if (var11 > var8) {
-         var48 = var23;
-      } else {
-         while (true) {
-            int var13 = var7;
-            int var9;
-            String var25;
-            if (var7 <= var14) {
-               var9 = var7;
-               var25 = var24;
-               var7 = var8;
-
-               while (true) {
-                  if (var12 >= 0 && var12 < var16) {
-                     var8 = (var13 % var16 + var16) % var16;
-                     var23.add(MapTiles.Companion.key(var25, var15, var8, var12));
-                     Bitmap var46 = this.tiles.get(var25, var15, var8, var12);
-                     if (var46 != null) {
-                        float var6 = this.sx((double)var13 / var16);
-                        float var4 = this.sy((double)var12 / var16);
-                        float var5 = (float)(512 * var2);
-                        var1.drawBitmap(var46, null, new RectF(var6, var4, var6 + var5 + 0.6F, var4 + var5 + 0.6F), this.tileP);
-                     }
-                  }
-
-                  HashSet var47 = var23;
-                  var7 = var7;
-                  var9 = var9;
-                  var25 = var25;
-                  var23 = var23;
-                  if (var13 == var14) {
-                     break;
-                  }
-
-                  var13++;
-                  var7 = var7;
-                  var25 = var25;
-                  var23 = var47;
-                  var9 = var9;
-               }
+    @Override // android.view.View
+    protected void onDraw(Canvas c) {
+        HashSet wanted;
+        Object obj;
+        int tx0;
+        Object minElem$iv;
+        int z;
+        int n;
+        String style;
+        int tx02;
+        int tx;
+        Intrinsics.checkNotNullParameter(c, "c");
+        if (!this.fitted) {
+            fit();
+        }
+        c.drawColor(-15000028);
+        int z2 = RangesKt.coerceIn((int) Math.floor(this.zoom), 0, 18);
+        int n2 = 1 << z2;
+        double scale = world() / (n2 * 512.0d);
+        int ty1 = (int) Math.floor((this.cx - ((getWidth() / 2.0d) / world())) * n2);
+        int tx1 = (int) Math.floor((this.cx + ((getWidth() / 2.0d) / world())) * n2);
+        int ty0 = (int) Math.floor((this.cy - ((getHeight() / 2.0d) / world())) * n2);
+        int ty12 = (int) Math.floor((this.cy + ((getHeight() / 2.0d) / world())) * n2);
+        HashSet wanted2 = new HashSet();
+        String style2 = "dark";
+        int ty = ty0;
+        if (ty <= ty12) {
+            while (true) {
+                int tx2 = ty1;
+                if (tx2 <= tx1) {
+                    while (true) {
+                        if (ty < 0) {
+                            wanted = wanted2;
+                            style = style2;
+                            tx02 = ty1;
+                            tx = tx2;
+                            obj = null;
+                            tx0 = ty12;
+                        } else if (ty >= n2) {
+                            wanted = wanted2;
+                            style = style2;
+                            tx02 = ty1;
+                            tx = tx2;
+                            obj = null;
+                            tx0 = ty12;
+                        } else {
+                            int wx = ((tx2 % n2) + n2) % n2;
+                            wanted2.add(MapTiles.Companion.key(style2, z2, wx, ty));
+                            Bitmap b = this.tiles.get(style2, z2, wx, ty);
+                            if (b == null) {
+                                wanted = wanted2;
+                                style = style2;
+                                tx02 = ty1;
+                                tx = tx2;
+                                obj = null;
+                                tx0 = ty12;
+                            } else {
+                                style = style2;
+                                tx02 = ty1;
+                                tx = tx2;
+                                float l = sx(tx2 / n2);
+                                tx0 = ty12;
+                                wanted = wanted2;
+                                float t = sy(ty / n2);
+                                float s = (float) (512 * scale);
+                                obj = null;
+                                c.drawBitmap(b, (Rect) null, new RectF(l, t, l + s + 0.6f, t + s + 0.6f), this.tileP);
+                            }
+                        }
+                        int tx3 = tx;
+                        if (tx3 == tx1) {
+                            break;
+                        }
+                        tx2 = tx3 + 1;
+                        ty12 = tx0;
+                        ty1 = tx02;
+                        style2 = style;
+                        wanted2 = wanted;
+                    }
+                } else {
+                    wanted = wanted2;
+                    style = style2;
+                    tx02 = ty1;
+                    obj = null;
+                    tx0 = ty12;
+                }
+                if (ty == tx0) {
+                    break;
+                }
+                ty++;
+                ty12 = tx0;
+                ty1 = tx02;
+                style2 = style;
+                wanted2 = wanted;
+            }
+        } else {
+            wanted = wanted2;
+            obj = null;
+            tx0 = ty12;
+        }
+        this.tiles.setWanted(wanted);
+        if (this.pts.isEmpty()) {
+            c.drawText("No path for this drive (the tablet wasn't recording one)", 16 * this.d, getHeight() / 2.0f, this.txt);
+            return;
+        }
+        Path p = new Path();
+        p.moveTo(sx(this.mx[0]), sy(this.my[0]));
+        int size = this.pts.size();
+        for (int i = 1; i < size; i++) {
+            p.lineTo(sx(this.mx[i]), sy(this.my[i]));
+        }
+        c.drawPath(p, this.line);
+        long lastSeg = -1;
+        int i2 = 0;
+        int size2 = this.pts.size();
+        while (i2 < size2) {
+            int ty13 = tx0;
+            long sg = (this.pts.get(i2).getT() - this.segStartMs) / 60000;
+            if (sg != lastSeg) {
+                z = z2;
+                n = n2;
+                c.drawCircle(sx(this.mx[i2]), sy(this.my[i2]), this.d * 3.2f, this.seg);
+                lastSeg = sg;
             } else {
-               var9 = var7;
-               var7 = var8;
-               var25 = var24;
+                z = z2;
+                n = n2;
             }
-
-            var48 = var23;
-            if (var12 == var7) {
-               break;
-            }
-
-            var12++;
-            var24 = var25;
-            var8 = var7;
-            var7 = var9;
-         }
-      }
-
-      this.tiles.setWanted(var48);
-      if (this.pts.isEmpty()) {
-         var1.drawText("No path for this drive (the tablet wasn't recording one)", 16 * this.d, this.getHeight() / 2.0F, this.txt);
-      } else {
-         Path var43 = new Path();
-         var43.moveTo(this.sx(this.mx[0]), this.sy(this.my[0]));
-         var7 = 1;
-
-         for (int var38 = this.pts.size(); var7 < var38; var7++) {
-            var43.lineTo(this.sx(this.mx[var7]), this.sy(this.my[var7]));
-         }
-
-         var1.drawPath(var43, this.line);
-         long var17 = -1L;
-         int var39 = 0;
-
-         for (int var40 = this.pts.size(); var39 < var40; var39++) {
-            long var19 = (this.pts.get(var39).getT() - this.segStartMs) / 60000L;
-            if (var19 != var17) {
-               var1.drawCircle(this.sx(this.mx[var39]), this.sy(this.my[var39]), this.d * 3.2F, this.seg);
-               var17 = var19;
-            }
-         }
-
-         float var28 = this.sx(this.mx[0]);
-         float var27 = 8;
-         var1.drawText("Start", var28 + this.d * var27, this.sy(this.my[0]) - var27 * this.d, this.txt);
-         if (this.nowMs != Long.MIN_VALUE) {
-            Iterator var51 = CollectionsKt.getIndices(this.pts).iterator();
-            Object var44;
-            if (!var51.hasNext()) {
-               var44 = null;
+            i2++;
+            tx0 = ty13;
+            z2 = z;
+            n2 = n;
+        }
+        float f = 8;
+        c.drawText("Start", sx(this.mx[0]) + (this.d * f), sy(this.my[0]) - (f * this.d), this.txt);
+        if (this.nowMs != Long.MIN_VALUE) {
+            Iterable $this$minByOrNull$iv = CollectionsKt.getIndices(this.pts);
+            Iterator iterator$iv = $this$minByOrNull$iv.iterator();
+            if (iterator$iv.hasNext()) {
+                minElem$iv = iterator$iv.next();
+                if (iterator$iv.hasNext()) {
+                    int it = ((Number) minElem$iv).intValue();
+                    long minValue$iv = Math.abs(this.pts.get(it).getT() - this.nowMs);
+                    while (true) {
+                        Object e$iv = iterator$iv.next();
+                        int it2 = ((Number) e$iv).intValue();
+                        int tx12 = tx1;
+                        int ty02 = ty0;
+                        long v$iv = Math.abs(this.pts.get(it2).getT() - this.nowMs);
+                        if (minValue$iv > v$iv) {
+                            minElem$iv = e$iv;
+                            minValue$iv = v$iv;
+                        }
+                        if (!iterator$iv.hasNext()) {
+                            break;
+                        }
+                        tx1 = tx12;
+                        ty0 = ty02;
+                    }
+                }
             } else {
-               var44 = (Integer)var51.next();
-               if (var51.hasNext()) {
-                  var7 = var44.intValue();
-                  var17 = Math.abs(this.pts.get(var7).getT() - this.nowMs);
-
-                  while (true) {
-                     var24 = (String)var51.next();
-                     var8 = ((Number)var24).intValue();
-                     long var21 = Math.abs(this.pts.get(var8).getT() - this.nowMs);
-                     long var42 = var17;
-                     if (var17 > var21) {
-                        var44 = var24;
-                        var42 = var21;
-                     }
-
-                     if (!var51.hasNext()) {
-                        break;
-                     }
-
-                     var17 = var42;
-                  }
-               }
+                minElem$iv = null;
             }
-
-            var44 = var44;
-            if (var44 == null) {
-               return;
+            Integer num = (Integer) minElem$iv;
+            if (num != null) {
+                int i3 = num.intValue();
+                c.drawCircle(sx(this.mx[i3]), sy(this.my[i3]), this.d * 8.0f, this.dot);
+                c.drawCircle(sx(this.mx[i3]), sy(this.my[i3]), this.d * 8.0f, this.ring);
             }
+        }
+    }
 
-            var7 = var44;
-            var1.drawCircle(this.sx(this.mx[var7]), this.sy(this.my[var7]), this.d * 8.0F, this.dot);
-            var1.drawCircle(this.sx(this.mx[var7]), this.sy(this.my[var7]), this.d * 8.0F, this.ring);
-         }
-      }
-   }
-
-   public boolean onTouchEvent(MotionEvent var1) {
-      Intrinsics.checkNotNullParameter(var1, "e");
-      this.scaler.onTouchEvent(var1);
-      if (!this.scaler.isInProgress()) {
-         this.gest.onTouchEvent(var1);
-      }
-
-      ViewParent var2 = this.getParent();
-      if (var2 != null) {
-         var2.requestDisallowInterceptTouchEvent(true);
-      }
-
-      return true;
-   }
-
-   public final void setNowMs(long var1) {
-      this.nowMs = var1;
-      this.invalidate();
-   }
+    @Override // android.view.View
+    public boolean onTouchEvent(MotionEvent e) {
+        Intrinsics.checkNotNullParameter(e, "e");
+        this.scaler.onTouchEvent(e);
+        if (!this.scaler.isInProgress()) {
+            this.gest.onTouchEvent(e);
+        }
+        ViewParent parent = getParent();
+        if (parent != null) {
+            parent.requestDisallowInterceptTouchEvent(true);
+        }
+        return true;
+    }
 }

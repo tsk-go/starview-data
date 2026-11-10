@@ -8,12 +8,12 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
+import com.starpilot.starview.CarUi;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -30,570 +30,504 @@ import kotlin.ranges.RangesKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: HubPower.kt */
 public final class HubPowerView extends CardPage {
-   private String err;
-   private final Runnable poll;
-   private boolean shown;
-   private JSONObject status;
-   private final SimpleDateFormat timeFmt;
+    private String err;
+    private final HubPowerView$poll$1 poll;
+    private boolean shown;
+    private JSONObject status;
+    private final SimpleDateFormat timeFmt;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$0cGQSXJen7dg3TIs0Ccl9Km6moc(boolean var0, Function0 var1) {
-      return stepRow$lambda$14$lambda$11(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$3p0JS_3QKxHfsxaAFhp9S_Jw2uU(HubPowerView var0, int var1) {
-      return paint$lambda$17(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$5FEortJxe24_Mic8id4ggDkkEvM(HubPowerView var0, double var1) {
-      return paint$lambda$19(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$5PDJEOwIzbe1Thuw_69q5l3EdCo(HubPowerView var0, int var1) {
-      return paint$lambda$16(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$8HVrgb6NVsTdzh94Dp1umjZSpgA(HubPowerView var0, double var1) {
-      return paint$lambda$18(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$9O8UOrbm9m3ylEDfHE681zoZMq4(HubPowerView var0, boolean var1) {
-      return paint$lambda$15(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$AaWGn8x2_RhDiuVwPx8g8VP7eTY/* $VF was: $r8$lambda$AaWGn8x2_RhDiuVwPx8g8VP7eTY*/(HubPowerView var0, int var1) {
-      return paint$lambda$22(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$LJrhm7CVZhOOtK6B3K1aW6KhR18(HubPowerView var0, JSONObject var1) {
-      return load$lambda$0(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$VAUUWD9FKLVQcRqZn2nJp6qik4Y(HubPowerView var0, int var1) {
-      return paint$lambda$24(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$Y_oe_FSmhmPM4hlGOJpluTNSe5E/* $VF was: $r8$lambda$Y_oe_FSmhmPM4hlGOJpluTNSe5E*/(
-      Function1 var0, CompoundButton var1, boolean var2
-   ) {
-      switchRow$lambda$7$lambda$6$lambda$5(var0, var1, var2);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$fBDXRWIgi3zvhLXRBH399T2JFxk(boolean var0, Function0 var1) {
-      return stepRow$lambda$14$lambda$9(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$t4pK1QalFSI7MFRVgIRbtGAgKvQ(HubPowerView var0, boolean var1) {
-      return paint$lambda$20(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$tAJ8nPoogsBoohVM46dXJTx2N_Q/* $VF was: $r8$lambda$tAJ8nPoogsBoohVM46dXJTx2N_Q*/(HubPowerView var0, int var1) {
-      return paint$lambda$21(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$xYeWVl95ITDOhLFOHNBReFswfPw(HubPowerView var0, JSONObject var1) {
-      return send$lambda$1(var0, var1);
-   }
-
-   public HubPowerView(Context var1, CarUi var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "ui");
-      super(var1, var2);
-      this.timeFmt = new SimpleDateFormat("EEE h:mm a", Locale.US);
-      this.poll = new Runnable() {
-
-         @Override
-         public void run() {
-            if (HubPowerView.this.shown) {
-               HubPowerView.this.load();
-               HubPowerView.this.getMain().postDelayed(this, 5000L);
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    /* JADX WARN: Type inference failed for: r0v3, types: [com.starpilot.starview.HubPowerView$poll$1] */
+    public HubPowerView(Context ctx, CarUi ui) {
+        super(ctx, ui);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(ui, "ui");
+        this.timeFmt = new SimpleDateFormat("EEE h:mm a", Locale.US);
+        this.poll = new Runnable() { // from class: com.starpilot.starview.HubPowerView$poll$1
+            @Override // java.lang.Runnable
+            public void run() {
+                boolean z;
+                z = HubPowerView.this.shown;
+                if (z) {
+                    HubPowerView.this.load();
+                    HubPowerView.this.getMain().postDelayed(this, 5000L);
+                }
             }
-         }
-      };
-   }
+        };
+    }
 
-   private final void load() {
-      req$default(this, "status", null, new HubPowerView$$ExternalSyntheticLambda4(this), 2, null);
-   }
+    public final void start() {
+        this.shown = true;
+        getMain().removeCallbacks(this.poll);
+        getMain().post(this.poll);
+    }
 
-   private static final Unit load$lambda$0(HubPowerView var0, JSONObject var1) {
-      Intrinsics.checkNotNullParameter(var1, "r");
-      String var2;
-      if (var1.has("delay_min")) {
-         var0.status = var1;
-         var2 = null;
-      } else {
-         var2 = var1.optString("error", "The comma didn't answer");
-      }
+    public final void stop() {
+        this.shown = false;
+        getMain().removeCallbacks(this.poll);
+    }
 
-      var0.err = var2;
-      var0.paint();
-      return Unit.INSTANCE;
-   }
+    @Override // com.starpilot.starview.CardPage
+    public void refresh() {
+        start();
+    }
 
-   private final void paint() {
-      this.getCol().removeAllViews();
-      JSONObject var8 = this.status;
-      LinearLayout var9 = this.card();
-      this.add((View)var9);
-      var9.addView(this.title("Power management", "power", "device"));
-      if (var8 == null) {
-         CardPage var44 = this;
-         String var39 = this.err;
-         String var38 = var39;
-         if (var39 == null) {
-            var38 = "Asking the comma…";
-         }
+    /* JADX WARN: Multi-variable type inference failed */
+    static /* synthetic */ void req$default(HubPowerView hubPowerView, String str, Map map, Function1 function1, int i, Object obj) {
+        if ((i & 2) != 0) {
+            map = MapsKt.emptyMap();
+        }
+        hubPowerView.req(str, map, function1);
+    }
 
-         var9.addView((View)CardPage.line$default(var44, var38, 0, 0.0F, 6, null));
-      } else {
-         var9.addView(
-            (View)CardPage.line$default(
-               this,
-               "What keeps running on the car battery after you turn the car off - the comma itself, and the USB hub with everything on it. Only turning the car off counts; going offroad with the car on doesn't.",
-               0,
-               0.0F,
-               6,
-               null
-            )
-         );
-         JSONObject var7 = var8.optJSONObject("comma");
-         var9 = this.card();
-         this.add((View)var9);
-         var9.addView(this.title("Comma", "device", "device"));
-         if (var7 == null) {
-            var9.addView((View)CardPage.line$default(this, "Not available on this comma.", 0, 0.0F, 6, null));
-         } else {
-            boolean var6 = var7.optBoolean("editable");
-            boolean var5 = var7.optBoolean("enabled");
-            int var3 = var7.optInt("hours", 30);
-            double var1 = var7.optDouble("volts", 11.8);
-            if (!var7.optBoolean("valid", true)) {
-               var9.addView((View)this.line("Galaxy's saved Parked Power can't be read - switch it off to go back to stock.", CarUi.Companion.getWARN(), 15.0F));
+    private final void req(String op, Map<String, ? extends Object> extra, Function1<? super JSONObject, Unit> cb) {
+        DataClient d = Link.INSTANCE.getData();
+        if (d != null) {
+            d.request("hub_power", MapsKt.plus(MapsKt.mapOf(TuplesKt.to("op", op)), extra), cb);
+            return;
+        }
+        JSONObject put = new JSONObject().put("ok", false).put("error", "Not connected to the comma.");
+        Intrinsics.checkNotNullExpressionValue(put, "put(...)");
+        cb.invoke(put);
+    }
+
+    private final void toast(String s) {
+        Toast.makeText(getContext(), s, 1).show();
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void load() {
+        req$default(this, "status", null, new Function1() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda4
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit load$lambda$0;
+                load$lambda$0 = HubPowerView.load$lambda$0(HubPowerView.this, (JSONObject) obj);
+                return load$lambda$0;
             }
+        }, 2, null);
+    }
 
-            String var23;
-            if (var5) {
-               var23 = "Your limits below. The comma turns itself off after the time, or sooner if the battery drops to the cutoff.";
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit load$lambda$0(HubPowerView this$0, JSONObject r) {
+        String optString;
+        Intrinsics.checkNotNullParameter(r, "r");
+        if (r.has("delay_min")) {
+            this$0.status = r;
+            optString = null;
+        } else {
+            optString = r.optString("error", "The comma didn't answer");
+        }
+        this$0.err = optString;
+        this$0.paint();
+        return Unit.INSTANCE;
+    }
+
+    private final void send(String op, Map<String, ? extends Object> extra) {
+        req(op, extra, new Function1() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda2
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit send$lambda$1;
+                send$lambda$1 = HubPowerView.send$lambda$1(HubPowerView.this, (JSONObject) obj);
+                return send$lambda$1;
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit send$lambda$1(HubPowerView this$0, JSONObject r) {
+        Intrinsics.checkNotNullParameter(r, "r");
+        if (r.has("delay_min")) {
+            this$0.status = r;
+        }
+        if (!r.optBoolean("ok")) {
+            String optString = r.optString("error", "The comma didn't take it");
+            Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
+            this$0.toast(optString);
+        }
+        this$0.paint();
+        return Unit.INSTANCE;
+    }
+
+    private final View switchRow(String label, String desc, boolean checked, boolean enabled, final Function1<? super Boolean, Unit> onFlip) {
+        LinearLayout $this$switchRow_u24lambda_u247 = new LinearLayout(getContext());
+        $this$switchRow_u24lambda_u247.setOrientation(0);
+        $this$switchRow_u24lambda_u247.setGravity(16);
+        $this$switchRow_u24lambda_u247.setPadding(0, getUi().dp(8), 0, getUi().dp(8));
+        LinearLayout $this$switchRow_u24lambda_u247_u24lambda_u244 = new LinearLayout($this$switchRow_u24lambda_u247.getContext());
+        $this$switchRow_u24lambda_u247_u24lambda_u244.setOrientation(1);
+        TextView $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u242 = new TextView($this$switchRow_u24lambda_u247_u24lambda_u244.getContext());
+        $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u242.setText(label);
+        CarUi.Companion companion = CarUi.Companion;
+        $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u242.setTextColor(enabled ? companion.getTEXT() : companion.getDIM());
+        $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u242.setTextSize(19.0f);
+        $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u242.setTypeface(Typeface.DEFAULT_BOLD);
+        $this$switchRow_u24lambda_u247_u24lambda_u244.addView($this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u242);
+        TextView $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u243 = new TextView($this$switchRow_u24lambda_u247_u24lambda_u244.getContext());
+        $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u243.setText(desc);
+        $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u243.setTextColor(CarUi.Companion.getDIM());
+        $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u243.setTextSize(15.0f);
+        $this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u243.setPadding(0, getUi().dp(2), getUi().dp(12), 0);
+        $this$switchRow_u24lambda_u247_u24lambda_u244.addView($this$switchRow_u24lambda_u247_u24lambda_u244_u24lambda_u243);
+        $this$switchRow_u24lambda_u247.addView($this$switchRow_u24lambda_u247_u24lambda_u244, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        Switch $this$switchRow_u24lambda_u247_u24lambda_u246 = getUi().bigSwitch();
+        $this$switchRow_u24lambda_u247_u24lambda_u246.setChecked(checked);
+        $this$switchRow_u24lambda_u247_u24lambda_u246.setEnabled(enabled);
+        $this$switchRow_u24lambda_u247_u24lambda_u246.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda3
+            @Override // android.widget.CompoundButton.OnCheckedChangeListener
+            public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
+                HubPowerView.switchRow$lambda$7$lambda$6$lambda$5(Function1.this, compoundButton, z);
+            }
+        });
+        $this$switchRow_u24lambda_u247.addView($this$switchRow_u24lambda_u247_u24lambda_u246);
+        return $this$switchRow_u24lambda_u247;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void switchRow$lambda$7$lambda$6$lambda$5(Function1 $onFlip, CompoundButton compoundButton, boolean on) {
+        $onFlip.invoke(Boolean.valueOf(on));
+    }
+
+    private final View stepRow(String label, String value, final boolean enabled, final Function0<Unit> minus, final Function0<Unit> plus) {
+        LinearLayout $this$stepRow_u24lambda_u2414 = new LinearLayout(getContext());
+        $this$stepRow_u24lambda_u2414.setOrientation(0);
+        $this$stepRow_u24lambda_u2414.setGravity(16);
+        $this$stepRow_u24lambda_u2414.setPadding(0, getUi().dp(8), 0, getUi().dp(8));
+        TextView $this$stepRow_u24lambda_u2414_u24lambda_u248 = new TextView($this$stepRow_u24lambda_u2414.getContext());
+        $this$stepRow_u24lambda_u2414_u24lambda_u248.setText(label);
+        CarUi.Companion companion = CarUi.Companion;
+        $this$stepRow_u24lambda_u2414_u24lambda_u248.setTextColor(enabled ? companion.getTEXT() : companion.getDIM());
+        $this$stepRow_u24lambda_u2414_u24lambda_u248.setTextSize(18.0f);
+        $this$stepRow_u24lambda_u2414.addView($this$stepRow_u24lambda_u2414_u24lambda_u248, new LinearLayout.LayoutParams(0, -2, 1.0f));
+        TextView $this$stepRow_u24lambda_u2414_u24lambda_u2410 = getUi().stepper("−", new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda13
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit stepRow$lambda$14$lambda$9;
+                stepRow$lambda$14$lambda$9 = HubPowerView.stepRow$lambda$14$lambda$9(enabled, minus);
+                return stepRow$lambda$14$lambda$9;
+            }
+        });
+        $this$stepRow_u24lambda_u2414_u24lambda_u2410.setAlpha(enabled ? 1.0f : 0.35f);
+        TextView $this$stepRow_u24lambda_u2414_u24lambda_u2412 = getUi().stepper("+", new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda1
+            @Override // kotlin.jvm.functions.Function0
+            public final Object invoke() {
+                Unit stepRow$lambda$14$lambda$11;
+                stepRow$lambda$14$lambda$11 = HubPowerView.stepRow$lambda$14$lambda$11(enabled, plus);
+                return stepRow$lambda$14$lambda$11;
+            }
+        });
+        $this$stepRow_u24lambda_u2414_u24lambda_u2412.setAlpha(enabled ? 1.0f : 0.35f);
+        $this$stepRow_u24lambda_u2414.addView($this$stepRow_u24lambda_u2414_u24lambda_u2410);
+        TextView $this$stepRow_u24lambda_u2414_u24lambda_u2413 = new TextView($this$stepRow_u24lambda_u2414.getContext());
+        $this$stepRow_u24lambda_u2414_u24lambda_u2413.setText(value);
+        CarUi.Companion companion2 = CarUi.Companion;
+        $this$stepRow_u24lambda_u2414_u24lambda_u2413.setTextColor(enabled ? companion2.getTEXT() : companion2.getDIM());
+        $this$stepRow_u24lambda_u2414_u24lambda_u2413.setTextSize(24.0f);
+        $this$stepRow_u24lambda_u2414_u24lambda_u2413.setTypeface(Typeface.DEFAULT_BOLD);
+        $this$stepRow_u24lambda_u2414_u24lambda_u2413.setGravity(17);
+        $this$stepRow_u24lambda_u2414.addView($this$stepRow_u24lambda_u2414_u24lambda_u2413, new LinearLayout.LayoutParams(getUi().dp(150), -2));
+        $this$stepRow_u24lambda_u2414.addView($this$stepRow_u24lambda_u2414_u24lambda_u2412);
+        return $this$stepRow_u24lambda_u2414;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit stepRow$lambda$14$lambda$9(boolean $enabled, Function0 $minus) {
+        if ($enabled) {
+            $minus.invoke();
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit stepRow$lambda$14$lambda$11(boolean $enabled, Function0 $plus) {
+        if ($enabled) {
+            $plus.invoke();
+        }
+        return Unit.INSTANCE;
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:22:0x0293, code lost:
+    
+        if ((r0.length() > 0) != false) goto L59;
+     */
+    /* JADX WARN: Removed duplicated region for block: B:25:0x02a8  */
+    /* JADX WARN: Removed duplicated region for block: B:44:0x040b  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void paint() {
+        String str;
+        JSONArray ev;
+        int i;
+        int length;
+        JSONObject s;
+        String bat;
+        getCol().removeAllViews();
+        JSONObject s2 = this.status;
+        LinearLayout head = card();
+        add(head);
+        head.addView(title("Power management", "power", "device"));
+        if (s2 == null) {
+            HubPowerView hubPowerView = this;
+            String str2 = this.err;
+            if (str2 == null) {
+                str2 = "Asking the comma…";
+            }
+            head.addView(CardPage.line$default(hubPowerView, str2, 0, 0.0f, 6, null));
+            return;
+        }
+        head.addView(CardPage.line$default(this, "What keeps running on the car battery after you turn the car off - the comma itself, and the USB hub with everything on it. Only turning the car off counts; going offroad with the car on doesn't.", 0, 0.0f, 6, null));
+        JSONObject c = s2.optJSONObject("comma");
+        LinearLayout cc = card();
+        add(cc);
+        cc.addView(title("Comma", "device", "device"));
+        if (c == null) {
+            cc.addView(CardPage.line$default(this, "Not available on this comma.", 0, 0.0f, 6, null));
+        } else {
+            boolean editable = c.optBoolean("editable");
+            boolean enabled = c.optBoolean("enabled");
+            final int hours = c.optInt("hours", 30);
+            final double volts = c.optDouble("volts", 11.8d);
+            if (!c.optBoolean("valid", true)) {
+                cc.addView(line("Galaxy's saved Parked Power can't be read - switch it off to go back to stock.", CarUi.Companion.getWARN(), 15.0f));
+            }
+            cc.addView(switchRow("Parked Power", enabled ? "Your limits below. The comma turns itself off after the time, or sooner if the battery drops to the cutoff." : "Off = stock: the comma stays on up to 30 h after you park and turns off only at 11.8 V.", enabled, editable, new Function1() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda0
+                @Override // kotlin.jvm.functions.Function1
+                public final Object invoke(Object obj) {
+                    Unit paint$lambda$15;
+                    paint$lambda$15 = HubPowerView.paint$lambda$15(HubPowerView.this, ((Boolean) obj).booleanValue());
+                    return paint$lambda$15;
+                }
+            }));
+            if (enabled) {
+                cc.addView(stepRow("Maximum parked time", hours + " h", editable, new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda5
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit paint$lambda$16;
+                        paint$lambda$16 = HubPowerView.paint$lambda$16(HubPowerView.this, hours);
+                        return paint$lambda$16;
+                    }
+                }, new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda6
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit paint$lambda$17;
+                        paint$lambda$17 = HubPowerView.paint$lambda$17(HubPowerView.this, hours);
+                        return paint$lambda$17;
+                    }
+                }));
+                StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
+                String format = String.format(Locale.US, "%.1f V", Arrays.copyOf(new Object[]{Double.valueOf(volts)}, 1));
+                Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+                cc.addView(stepRow("Low-voltage cutoff", format, editable, new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda7
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit paint$lambda$18;
+                        paint$lambda$18 = HubPowerView.paint$lambda$18(HubPowerView.this, volts);
+                        return paint$lambda$18;
+                    }
+                }, new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda8
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit paint$lambda$19;
+                        paint$lambda$19 = HubPowerView.paint$lambda$19(HubPowerView.this, volts);
+                        return paint$lambda$19;
+                    }
+                }));
+            }
+            if (!editable) {
+                cc.addView(line("These change with the car parked (openpilot offroad), like in Galaxy.", CarUi.Companion.getDIM(), 14.0f));
+            }
+        }
+        boolean on = s2.optBoolean("on");
+        final int delay = s2.optInt("delay_min", 5);
+        LinearLayout hc = card();
+        add(hc);
+        hc.addView(title("USB hub", "link", "device"));
+        if (s2.optBoolean("can_switch")) {
+            if (!s2.isNull("error")) {
+                String optString = s2.optString("error");
+                Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
+                if (optString.length() > 0) {
+                    str = "Couldn't switch the port: " + s2.optString("error");
+                }
+            }
+            if (!on) {
+                str = "Off: the hub stays on until the comma itself turns off.";
+            } else if (Intrinsics.areEqual(s2.optString("car"), "on")) {
+                str = "Car on - the hub stays on.";
+            } else if (!Intrinsics.areEqual(s2.optString("car"), "off") || s2.isNull("cut_in_s")) {
+                str = Intrinsics.areEqual(s2.optString("port"), "off") ? "The hub is off. It comes back when you start the car (or unlock it / open a door)." : "Turns the hub off " + HubDelay.INSTANCE.text(delay) + " after the car.";
             } else {
-               var23 = "Off = stock: the comma stays on up to 30 h after you park and turns off only at 11.8 V.";
+                str = "Car off - the hub turns off in " + HubDelay.INSTANCE.text(Math.max(1, (s2.optInt("cut_in_s") + 59) / 60)) + ".";
             }
-
-            var9.addView(this.switchRow("Parked Power", var23, var5, var6, new HubPowerView$$ExternalSyntheticLambda0(this)));
-            if (var5) {
-               var9.addView(
-                  this.stepRow(
-                     "Maximum parked time",
-                     var3 + " h",
-                     var6,
-                     new HubPowerView$$ExternalSyntheticLambda5(this, var3),
-                     new HubPowerView$$ExternalSyntheticLambda6(this, var3)
-                  )
-               );
-               StringCompanionObject var24 = StringCompanionObject.INSTANCE;
-               String var25 = String.format(Locale.US, "%.1f V", Arrays.copyOf(new Object[]{var1}, 1));
-               Intrinsics.checkNotNullExpressionValue(var25, "format(...)");
-               var9.addView(
-                  this.stepRow(
-                     "Low-voltage cutoff",
-                     var25,
-                     var6,
-                     new HubPowerView$$ExternalSyntheticLambda7(this, var1),
-                     new HubPowerView$$ExternalSyntheticLambda8(this, var1)
-                  )
-               );
+        } else {
+            str = "The comma can't switch its USB port - the hub stays on until the comma turns off.";
+        }
+        String state = str;
+        Object obj = "off";
+        hc.addView(switchRow("Turn the hub off after the car", state, on, true, new Function1() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda9
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj2) {
+                Unit paint$lambda$20;
+                paint$lambda$20 = HubPowerView.paint$lambda$20(HubPowerView.this, ((Boolean) obj2).booleanValue());
+                return paint$lambda$20;
             }
-
-            if (!var6) {
-               var9.addView((View)this.line("These change with the car parked (openpilot offroad), like in Galaxy.", CarUi.Companion.getDIM(), 14.0F));
+        }));
+        if (s2.optBoolean("can_switch")) {
+            if (!s2.isNull("error")) {
+                String optString2 = s2.optString("error");
+                Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
             }
-         }
-
-         boolean var21 = var8.optBoolean("on");
-         int var4 = var8.optInt("delay_min", 5);
-         LinearLayout var10 = this.card();
-         this.add((View)var10);
-         var10.addView(this.title("USB hub", "link", "device"));
-         String var26;
-         if (!var8.optBoolean("can_switch")) {
-            var26 = "The comma can't switch its USB port - the hub stays on until the comma turns off.";
-         } else {
-            label122: {
-               if (!var8.isNull("error")) {
-                  String var27 = var8.optString("error");
-                  Intrinsics.checkNotNullExpressionValue(var27, "optString(...)");
-                  boolean var16;
-                  if (var27.length() > 0) {
-                     var16 = true;
-                  } else {
-                     var16 = false;
-                  }
-
-                  if (var16) {
-                     String var30 = var8.optString("error");
-                     var26 = "Couldn't switch the port: " + var30;
-                     break label122;
-                  }
-               }
-
-               if (!var21) {
-                  var26 = "Off: the hub stays on until the comma itself turns off.";
-               } else if (Intrinsics.areEqual(var8.optString("car"), "on")) {
-                  var26 = "Car on - the hub stays on.";
-               } else if (Intrinsics.areEqual(var8.optString("car"), "off") && !var8.isNull("cut_in_s")) {
-                  String var29 = HubDelay.INSTANCE.text(Math.max(1, (var8.optInt("cut_in_s") + 59) / 60));
-                  var26 = "Car off - the hub turns off in " + var29 + ".";
-               } else if (Intrinsics.areEqual(var8.optString("port"), "off")) {
-                  var26 = "The hub is off. It comes back when you start the car (or unlock it / open a door).";
-               } else {
-                  String var28 = HubDelay.INSTANCE.text(var4);
-                  var26 = "Turns the hub off " + var28 + " after the car.";
-               }
+            if (on) {
+                hc.addView(stepRow("Turn off after", HubDelay.INSTANCE.text(delay), true, new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda10
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit paint$lambda$21;
+                        paint$lambda$21 = HubPowerView.paint$lambda$21(HubPowerView.this, delay);
+                        return paint$lambda$21;
+                    }
+                }, new Function0() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda11
+                    @Override // kotlin.jvm.functions.Function0
+                    public final Object invoke() {
+                        Unit paint$lambda$22;
+                        paint$lambda$22 = HubPowerView.paint$lambda$22(HubPowerView.this, delay);
+                        return paint$lambda$22;
+                    }
+                }));
+                CarUi ui = getUi();
+                Iterable $this$map$iv = HubDelay.INSTANCE.getPRESETS();
+                int $i$f$map = 0;
+                Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+                for (Object item$iv$iv : $this$map$iv) {
+                    Iterable $this$map$iv2 = $this$map$iv;
+                    int it = ((Number) item$iv$iv).intValue();
+                    destination$iv$iv.add(HubDelay.INSTANCE.text(it));
+                    $this$map$iv = $this$map$iv2;
+                    $i$f$map = $i$f$map;
+                }
+                Pair<LinearLayout, Function1<Integer, Unit>> chips = ui.chips((List) destination$iv$iv, new Function1() { // from class: com.starpilot.starview.HubPowerView$$ExternalSyntheticLambda12
+                    @Override // kotlin.jvm.functions.Function1
+                    public final Object invoke(Object obj2) {
+                        Unit paint$lambda$24;
+                        paint$lambda$24 = HubPowerView.paint$lambda$24(HubPowerView.this, ((Integer) obj2).intValue());
+                        return paint$lambda$24;
+                    }
+                });
+                LinearLayout chips2 = chips.component1();
+                Function1 paintChips = chips.component2();
+                paintChips.invoke(Integer.valueOf(HubDelay.INSTANCE.getPRESETS().indexOf(Integer.valueOf(delay))));
+                LinearLayout.LayoutParams $this$paint_u24lambda_u2425 = CarUi.lp$default(getUi(), 0, 4, 1, null);
+                $this$paint_u24lambda_u2425.topMargin = getUi().dp(6);
+                Unit unit = Unit.INSTANCE;
+                hc.addView(chips2, $this$paint_u24lambda_u2425);
+                double cut = s2.optDouble("hub_cutoff_v", 12.0d);
+                if (s2.isNull("battery_v")) {
+                    bat = "";
+                } else {
+                    StringCompanionObject stringCompanionObject2 = StringCompanionObject.INSTANCE;
+                    bat = String.format(Locale.US, " Battery now %.1f V.", Arrays.copyOf(new Object[]{Double.valueOf(s2.optDouble("battery_v"))}, 1));
+                    Intrinsics.checkNotNullExpressionValue(bat, "format(...)");
+                }
+                StringCompanionObject stringCompanionObject3 = StringCompanionObject.INSTANCE;
+                String format2 = String.format(Locale.US, "Also off right away if the battery drops below %.1f V - 0.2 V above the comma's own cutoff, so the hub goes first.", Arrays.copyOf(new Object[]{Double.valueOf(cut)}, 1));
+                Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
+                hc.addView(line(format2 + bat, CarUi.Companion.getDIM(), 14.0f));
+                hc.addView(line("The key fob's window closing and StarLock's window close need the hub (the radio dongle and relay box are on it), so after parking they work for as long as the hub is on.", CarUi.Companion.getDIM(), 14.0f));
             }
-         }
-
-         label110: {
-            HubPowerView$$ExternalSyntheticLambda9 var11 = new HubPowerView$$ExternalSyntheticLambda9(this);
-            var41 = "off";
-            var10.addView(this.switchRow("Turn the hub off after the car", var26, var21, true, var11));
-            if (var8.optBoolean("can_switch")) {
-               if (var8.isNull("error")) {
-                  break label110;
-               }
-
-               String var45 = var8.optString("error");
-               Intrinsics.checkNotNullExpressionValue(var45, "optString(...)");
-               boolean var17;
-               if (var45.length() > 0) {
-                  var17 = true;
-               } else {
-                  var17 = false;
-               }
-
-               if (!var17) {
-                  break label110;
-               }
+            LinearLayout log = card();
+            add(log);
+            log.addView(title("Recent", "history", "device"));
+            ev = s2.optJSONArray("events");
+            if (ev != null && ev.length() != 0) {
+                i = 0;
+                length = ev.length();
+                while (i < length) {
+                    JSONObject e = ev.optJSONObject(i);
+                    if (e == null) {
+                        s = s2;
+                    } else {
+                        Object obj2 = obj;
+                        String what = Intrinsics.areEqual(e.optString("what"), obj2) ? "Hub off" : "Hub on";
+                        s = s2;
+                        obj = obj2;
+                        log.addView(line(this.timeFmt.format(new Date((long) (1000 * e.optDouble("t")))) + "  ·  " + what + "  ·  " + e.optString("why"), CarUi.Companion.getTEXT(), 15.0f));
+                    }
+                    i++;
+                    s2 = s;
+                }
+                return;
             }
-
-            var10.addView((View)this.line(var26, CarUi.Companion.getWARN(), 15.0F));
-         }
-
-         if (var21) {
-            var10.addView(
-               this.stepRow(
-                  "Turn off after",
-                  HubDelay.INSTANCE.text(var4),
-                  true,
-                  new HubPowerView$$ExternalSyntheticLambda10(this, var4),
-                  new HubPowerView$$ExternalSyntheticLambda11(this, var4)
-               )
-            );
-            CarUi var46 = this.getUi();
-            Iterable var31 = HubDelay.INSTANCE.getPRESETS();
-            var21 = false;
-            var var13 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var31, 10));
-            Iterator var12 = var31.iterator();
-
-            while (var12.hasNext()) {
-               int var18 = ((Number)var12.next()).intValue();
-               var13.add(HubDelay.INSTANCE.text(var18));
+            log.addView(CardPage.line$default(this, "Nothing yet.", 0, 0.0f, 6, null));
+        }
+        hc.addView(line(state, CarUi.Companion.getWARN(), 15.0f));
+        if (on) {
+        }
+        LinearLayout log2 = card();
+        add(log2);
+        log2.addView(title("Recent", "history", "device"));
+        ev = s2.optJSONArray("events");
+        if (ev != null) {
+            i = 0;
+            length = ev.length();
+            while (i < length) {
             }
+            return;
+        }
+        log2.addView(CardPage.line$default(this, "Nothing yet.", 0, 0.0f, 6, null));
+    }
 
-            List var32 = var13;
-            Pair var47 = var46.chips(var32, new HubPowerView$$ExternalSyntheticLambda12(this));
-            LinearLayout var33 = (LinearLayout)var47.component1();
-            ((Function1)var47.component2()).invoke(HubDelay.INSTANCE.getPRESETS().indexOf(var4));
-            View var52 = (View)var33;
-            LayoutParams var48 = CarUi.lp$default(this.getUi(), 0, 4, 1, null);
-            var48.topMargin = this.getUi().dp(6);
-            Unit var34 = Unit.INSTANCE;
-            var10.addView(var52, (android.view.ViewGroup.LayoutParams)var48);
-            double var14 = var8.optDouble("hub_cutoff_v", 12.0);
-            String var35;
-            if (var8.isNull("battery_v")) {
-               var35 = "";
-            } else {
-               StringCompanionObject var36 = StringCompanionObject.INSTANCE;
-               var35 = String.format(Locale.US, " Battery now %.1f V.", Arrays.copyOf(new Object[]{var8.optDouble("battery_v")}, 1));
-               Intrinsics.checkNotNullExpressionValue(var35, "format(...)");
-            }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paint$lambda$15(HubPowerView this$0, boolean on) {
+        this$0.send("comma_set", MapsKt.mapOf(TuplesKt.to("enabled", Boolean.valueOf(on))));
+        return Unit.INSTANCE;
+    }
 
-            StringCompanionObject var49 = StringCompanionObject.INSTANCE;
-            String var50 = String.format(
-               Locale.US,
-               "Also off right away if the battery drops below %.1f V - 0.2 V above the comma's own cutoff, so the hub goes first.",
-               Arrays.copyOf(new Object[]{var14}, 1)
-            );
-            Intrinsics.checkNotNullExpressionValue(var50, "format(...)");
-            var10.addView((View)this.line(var50 + var35, CarUi.Companion.getDIM(), 14.0F));
-            var10.addView(
-               (View)this.line(
-                  "The key fob's window closing and StarLock's window close need the hub (the radio dongle and relay box are on it), so after parking they work for as long as the hub is on.",
-                  CarUi.Companion.getDIM(),
-                  14.0F
-               )
-            );
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paint$lambda$16(HubPowerView this$0, int $hours) {
+        this$0.send("comma_set", MapsKt.mapOf(TuplesKt.to("hours", Integer.valueOf(RangesKt.coerceAtLeast($hours - 1, 1)))));
+        return Unit.INSTANCE;
+    }
 
-         LinearLayout var51 = this.card();
-         this.add((View)var51);
-         var51.addView(this.title("Recent", "history", "device"));
-         JSONArray var43 = var8.optJSONArray("events");
-         if (var43 != null && var43.length() != 0) {
-            int var19 = 0;
-            var4 = var43.length();
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paint$lambda$17(HubPowerView this$0, int $hours) {
+        this$0.send("comma_set", MapsKt.mapOf(TuplesKt.to("hours", Integer.valueOf(RangesKt.coerceAtMost($hours + 1, 30)))));
+        return Unit.INSTANCE;
+    }
 
-            for (String var37 = var41; var19 < var4; var19++) {
-               JSONObject var53 = var43.optJSONObject(var19);
-               if (var53 != null) {
-                  String var42;
-                  if (Intrinsics.areEqual(var53.optString("what"), var37)) {
-                     var42 = "Hub off";
-                  } else {
-                     var42 = "Hub on";
-                  }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paint$lambda$18(HubPowerView this$0, double $volts) {
+        this$0.send("comma_set", MapsKt.mapOf(TuplesKt.to("volts", Double.valueOf(Math.max(11.8d, $volts - 0.1d)))));
+        return Unit.INSTANCE;
+    }
 
-                  SimpleDateFormat var55 = this.timeFmt;
-                  double var15 = var53.optDouble("t");
-                  String var56 = var55.format(new Date((long)(1000 * var15)));
-                  String var54 = var53.optString("why");
-                  var51.addView((View)this.line(var56 + "  ·  " + var42 + "  ·  " + var54, CarUi.Companion.getTEXT(), 15.0F));
-               }
-            }
-         } else {
-            var51.addView((View)CardPage.line$default(this, "Nothing yet.", 0, 0.0F, 6, null));
-         }
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paint$lambda$19(HubPowerView this$0, double $volts) {
+        this$0.send("comma_set", MapsKt.mapOf(TuplesKt.to("volts", Double.valueOf(Math.min(12.5d, 0.1d + $volts)))));
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit paint$lambda$15(HubPowerView var0, boolean var1) {
-      var0.send("comma_set", MapsKt.mapOf(TuplesKt.to("enabled", var1)));
-      return Unit.INSTANCE;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paint$lambda$20(HubPowerView this$0, boolean v) {
+        this$0.send("set", MapsKt.mapOf(TuplesKt.to("on", Boolean.valueOf(v))));
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit paint$lambda$16(HubPowerView var0, int var1) {
-      var0.send("comma_set", MapsKt.mapOf(TuplesKt.to("hours", RangesKt.coerceAtLeast(var1 - 1, 1))));
-      return Unit.INSTANCE;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paint$lambda$21(HubPowerView this$0, int $delay) {
+        this$0.send("set", MapsKt.mapOf(TuplesKt.to("delay_min", Integer.valueOf(HubDelay.INSTANCE.step($delay, false)))));
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit paint$lambda$17(HubPowerView var0, int var1) {
-      var0.send("comma_set", MapsKt.mapOf(TuplesKt.to("hours", RangesKt.coerceAtMost(var1 + 1, 30))));
-      return Unit.INSTANCE;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paint$lambda$22(HubPowerView this$0, int $delay) {
+        this$0.send("set", MapsKt.mapOf(TuplesKt.to("delay_min", Integer.valueOf(HubDelay.INSTANCE.step($delay, true)))));
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit paint$lambda$18(HubPowerView var0, double var1) {
-      var0.send("comma_set", MapsKt.mapOf(TuplesKt.to("volts", Math.max(11.8, var1 - 0.1))));
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit paint$lambda$19(HubPowerView var0, double var1) {
-      var0.send("comma_set", MapsKt.mapOf(TuplesKt.to("volts", Math.min(12.5, 0.1 + var1))));
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit paint$lambda$20(HubPowerView var0, boolean var1) {
-      var0.send("set", MapsKt.mapOf(TuplesKt.to("on", var1)));
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit paint$lambda$21(HubPowerView var0, int var1) {
-      var0.send("set", MapsKt.mapOf(TuplesKt.to("delay_min", HubDelay.INSTANCE.step(var1, false))));
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit paint$lambda$22(HubPowerView var0, int var1) {
-      var0.send("set", MapsKt.mapOf(TuplesKt.to("delay_min", HubDelay.INSTANCE.step(var1, true))));
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit paint$lambda$24(HubPowerView var0, int var1) {
-      var0.send("set", MapsKt.mapOf(TuplesKt.to("delay_min", HubDelay.INSTANCE.getPRESETS().get(var1))));
-      return Unit.INSTANCE;
-   }
-
-   private final void req(String var1, Map<String, ? extends Object> var2, Function1<? super JSONObject, Unit> var3) {
-      DataClient var4 = Link.INSTANCE.getData();
-      if (var4 == null) {
-         JSONObject var5 = new JSONObject().put("ok", false).put("error", "Not connected to the comma.");
-         Intrinsics.checkNotNullExpressionValue(var5, "put(...)");
-         var3.invoke(var5);
-      } else {
-         var4.request("hub_power", MapsKt.plus(MapsKt.mapOf(TuplesKt.to("op", var1)), var2), var3);
-      }
-   }
-
-   // $VF: synthetic method
-   static void req$default(HubPowerView var0, String var1, Map var2, Function1 var3, int var4, Object var5) {
-      if ((var4 & 2) != 0) {
-         var2 = MapsKt.emptyMap();
-      }
-
-      var0.req(var1, var2, var3);
-   }
-
-   private final void send(String var1, Map<String, ? extends Object> var2) {
-      this.req(var1, var2, new HubPowerView$$ExternalSyntheticLambda2(this));
-   }
-
-   private static final Unit send$lambda$1(HubPowerView var0, JSONObject var1) {
-      Intrinsics.checkNotNullParameter(var1, "r");
-      if (var1.has("delay_min")) {
-         var0.status = var1;
-      }
-
-      if (!var1.optBoolean("ok")) {
-         String var2 = var1.optString("error", "The comma didn't take it");
-         Intrinsics.checkNotNullExpressionValue(var2, "optString(...)");
-         var0.toast(var2);
-      }
-
-      var0.paint();
-      return Unit.INSTANCE;
-   }
-
-   private final View stepRow(String var1, String var2, boolean var3, Function0<Unit> var4, Function0<Unit> var5) {
-      LinearLayout var9 = new LinearLayout(this.getContext());
-      var9.setOrientation(0);
-      var9.setGravity(16);
-      var9.setPadding(0, this.getUi().dp(8), 0, this.getUi().dp(8));
-      TextView var10 = new TextView(var9.getContext());
-      var10.setText(var1);
-      CarUi.Companion var11 = CarUi.Companion;
-      int var8;
-      if (var3) {
-         var8 = var11.getTEXT();
-      } else {
-         var8 = var11.getDIM();
-      }
-
-      var10.setTextColor(var8);
-      var10.setTextSize(18.0F);
-      View var12 = (View)var10;
-      float var7 = 1.0F;
-      var9.addView(var12, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
-      TextView var15 = this.getUi().stepper("−", new HubPowerView$$ExternalSyntheticLambda13(var3, var4));
-      float var6;
-      if (var3) {
-         var6 = 1.0F;
-      } else {
-         var6 = 0.35F;
-      }
-
-      var15.setAlpha(var6);
-      TextView var13 = this.getUi().stepper("+", new HubPowerView$$ExternalSyntheticLambda1(var3, var5));
-      if (var3) {
-         var6 = var7;
-      } else {
-         var6 = 0.35F;
-      }
-
-      var13.setAlpha(var6);
-      var9.addView((View)var15);
-      TextView var16 = new TextView(var9.getContext());
-      var16.setText(var2);
-      CarUi.Companion var14 = CarUi.Companion;
-      if (var3) {
-         var8 = var14.getTEXT();
-      } else {
-         var8 = var14.getDIM();
-      }
-
-      var16.setTextColor(var8);
-      var16.setTextSize(24.0F);
-      var16.setTypeface(Typeface.DEFAULT_BOLD);
-      var16.setGravity(17);
-      var9.addView((View)var16, (android.view.ViewGroup.LayoutParams)(new LayoutParams(this.getUi().dp(150), -2)));
-      var9.addView((View)var13);
-      return (View)var9;
-   }
-
-   private static final Unit stepRow$lambda$14$lambda$11(boolean var0, Function0 var1) {
-      if (var0) {
-         var1.invoke();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit stepRow$lambda$14$lambda$9(boolean var0, Function0 var1) {
-      if (var0) {
-         var1.invoke();
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private final View switchRow(String var1, String var2, boolean var3, boolean var4, Function1<? super Boolean, Unit> var5) {
-      LinearLayout var7 = new LinearLayout(this.getContext());
-      var7.setOrientation(0);
-      var7.setGravity(16);
-      var7.setPadding(0, this.getUi().dp(8), 0, this.getUi().dp(8));
-      LinearLayout var8 = new LinearLayout(var7.getContext());
-      var8.setOrientation(1);
-      TextView var9 = new TextView(var8.getContext());
-      var9.setText(var1);
-      CarUi.Companion var10 = CarUi.Companion;
-      int var6;
-      if (var4) {
-         var6 = var10.getTEXT();
-      } else {
-         var6 = var10.getDIM();
-      }
-
-      var9.setTextColor(var6);
-      var9.setTextSize(19.0F);
-      var9.setTypeface(Typeface.DEFAULT_BOLD);
-      var8.addView((View)var9);
-      TextView var11 = new TextView(var8.getContext());
-      var11.setText(var2);
-      var11.setTextColor(CarUi.Companion.getDIM());
-      var11.setTextSize(15.0F);
-      var11.setPadding(0, this.getUi().dp(2), this.getUi().dp(12), 0);
-      var8.addView((View)var11);
-      var7.addView((View)var8, (android.view.ViewGroup.LayoutParams)(new LayoutParams(0, -2, 1.0F)));
-      Switch var12 = this.getUi().bigSwitch();
-      var12.setChecked(var3);
-      var12.setEnabled(var4);
-      var12.setOnCheckedChangeListener(new HubPowerView$$ExternalSyntheticLambda3(var5));
-      var7.addView((View)var12);
-      return (View)var7;
-   }
-
-   private static final void switchRow$lambda$7$lambda$6$lambda$5(Function1 var0, CompoundButton var1, boolean var2) {
-      var0.invoke(var2);
-   }
-
-   private final void toast(String var1) {
-      Toast.makeText(this.getContext(), var1, 1).show();
-   }
-
-   @Override
-   public void refresh() {
-      this.start();
-   }
-
-   public final void start() {
-      this.shown = true;
-      this.getMain().removeCallbacks(this.poll);
-      this.getMain().post(this.poll);
-   }
-
-   public final void stop() {
-      this.shown = false;
-      this.getMain().removeCallbacks(this.poll);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit paint$lambda$24(HubPowerView this$0, int i) {
+        this$0.send("set", MapsKt.mapOf(TuplesKt.to("delay_min", HubDelay.INSTANCE.getPRESETS().get(i))));
+        return Unit.INSTANCE;
+    }
 }

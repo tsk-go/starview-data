@@ -2,7 +2,6 @@ package com.starpilot.starview;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.View;
 import android.widget.LinearLayout;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
@@ -10,7 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map.Entry;
+import java.util.Map;
 import kotlin.collections.CollectionsKt;
 import kotlin.collections.Grouping;
 import kotlin.collections.GroupingKt;
@@ -19,103 +18,88 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
 
+/* compiled from: JournalPages.kt */
 public final class AlertHistoryView extends CardPage {
-   public AlertHistoryView(Context var1, CarUi var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "ui");
-      super(var1, var2);
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public AlertHistoryView(Context ctx, CarUi ui) {
+        super(ctx, ui);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(ui, "ui");
+    }
 
-   @Override
-   public void refresh() {
-      this.getCol().removeAllViews();
-      List var3 = CollectionsKt.asReversed(DriveJournal.INSTANCE.read("alert"));
-      if (var3.isEmpty()) {
-         LinearLayout var13 = this.card();
-         var13.addView(this.title("Alert history", "bell", "sound"));
-         var13.addView((View)CardPage.line$default(this, "No alerts noted yet. The tablet notes each alert while it's linked.", 0, 0.0F, 6, null));
-         this.add((View)var13);
-      } else {
-         List var5 = CollectionsKt.take(CollectionsKt.sortedWith(GroupingKt.eachCount(new Grouping<JSONObject, String>(var3) {
-            final Iterable $this_groupingBy;
+    @Override // com.starpilot.starview.CardPage
+    public void refresh() {
+        SimpleDateFormat simpleDateFormat;
+        getCol().removeAllViews();
+        List alerts = CollectionsKt.asReversed(DriveJournal.INSTANCE.read("alert"));
+        if (!alerts.isEmpty()) {
+            final List $this$groupingBy$iv = alerts;
+            Iterable $this$sortedByDescending$iv = GroupingKt.eachCount(new Grouping<JSONObject, String>() { // from class: com.starpilot.starview.AlertHistoryView$refresh$$inlined$groupingBy$1
+                @Override // kotlin.collections.Grouping
+                public Iterator<JSONObject> sourceIterator() {
+                    return $this$groupingBy$iv.iterator();
+                }
 
-            {
-               this.$this_groupingBy = var1;
+                @Override // kotlin.collections.Grouping
+                public String keyOf(JSONObject element) {
+                    JSONObject it = element;
+                    return it.optString("text");
+                }
+            }).entrySet();
+            List<Map.Entry> freq = CollectionsKt.take(CollectionsKt.sortedWith($this$sortedByDescending$iv, new Comparator() { // from class: com.starpilot.starview.AlertHistoryView$refresh$$inlined$sortedByDescending$1
+                @Override // java.util.Comparator
+                public final int compare(T t, T t2) {
+                    Map.Entry it = (Map.Entry) t2;
+                    Integer num = (Integer) it.getValue();
+                    Map.Entry it2 = (Map.Entry) t;
+                    return ComparisonsKt.compareValues(num, (Integer) it2.getValue());
+                }
+            }), 6);
+            LinearLayout $this$refresh_u24lambda_u243 = card();
+            $this$refresh_u24lambda_u243.addView(title("Most often", "bell", "sound"));
+            for (Map.Entry entry : freq) {
+                String txt = (String) entry.getKey();
+                int n = ((Number) entry.getValue()).intValue();
+                $this$refresh_u24lambda_u243.addView(line(n + "×   " + txt, CarUi.Companion.getTEXT(), 17.0f));
             }
-
-            @Override
-            public String keyOf(JSONObject var1) {
-               return ((JSONObject)var1).optString("text");
+            add($this$refresh_u24lambda_u243);
+            String day = "";
+            LinearLayout c = card();
+            add(c);
+            c.addView(title("All alerts", "history", "sound"));
+            for (JSONObject a : CollectionsKt.take(alerts, 300)) {
+                String dd = new SimpleDateFormat("EEEE, MMM d", Locale.US).format(new Date(a.optLong("t")));
+                if (!Intrinsics.areEqual(dd, day)) {
+                    day = dd;
+                    CarUi ui = getUi();
+                    Intrinsics.checkNotNull(dd);
+                    c.addView(ui.header(dd));
+                }
+                String optString = a.optString("status");
+                int color = Intrinsics.areEqual(optString, "critical") ? Color.rgb(255, 138, 128) : Intrinsics.areEqual(optString, "userprompt") ? CarUi.Companion.getWARN() : CarUi.Companion.getTEXT();
+                simpleDateFormat = JournalPagesKt.timeFmt;
+                c.addView(line(simpleDateFormat.format(new Date(a.optLong("t"))) + "   " + a.optString("text"), color, 17.0f));
+                String[] strArr = new String[3];
+                String optString2 = a.optString("why");
+                String str = null;
+                if (StringsKt.isBlank(optString2)) {
+                    optString2 = null;
+                }
+                strArr[0] = optString2;
+                strArr[1] = a.optInt("mph") + " mph";
+                String optString3 = a.optString("road");
+                if (!StringsKt.isBlank(optString3)) {
+                    str = optString3;
+                }
+                strArr[2] = str;
+                String sub = CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), " · ", null, null, 0, null, null, 62, null);
+                c.addView(line("            " + sub, CarUi.Companion.getDIM(), 14.0f));
             }
-
-            @Override
-            public Iterator<JSONObject> sourceIterator() {
-               return this.$this_groupingBy.iterator();
-            }
-         }).entrySet(), new Comparator() {
-            @Override
-            public final int compare(T var1, T var2) {
-               return ComparisonsKt.compareValues((T)((Integer & Comparable)((Entry)var2).getValue()), (T)((Integer & Comparable)((Entry)var1).getValue()));
-            }
-         }), 6);
-         LinearLayout var4 = this.card();
-         var4.addView(this.title("Most often", "bell", "sound"));
-
-         for (Entry var7 : var5) {
-            String var20 = (String)var7.getKey();
-            int var1 = ((Number)var7.getValue()).intValue();
-            var4.addView((View)this.line(var1 + "×   " + var20, CarUi.Companion.getTEXT(), 17.0F));
-         }
-
-         this.add((View)var4);
-         String var14 = "";
-         LinearLayout var26 = this.card();
-         this.add((View)var26);
-         var26.addView(this.title("All alerts", "history", "sound"));
-
-         for (JSONObject var24 : CollectionsKt.take(var3, 300)) {
-            String var21 = new SimpleDateFormat("EEEE, MMM d", Locale.US).format(new Date(var24.optLong("t")));
-            String var12 = var14;
-            if (!Intrinsics.areEqual(var21, var14)) {
-               var12 = var21;
-               CarUi var15 = this.getUi();
-               Intrinsics.checkNotNull(var21);
-               var26.addView((View)var15.header(var21));
-            }
-
-            String var16 = var24.optString("status");
-            int var10;
-            if (Intrinsics.areEqual(var16, "critical")) {
-               var10 = Color.rgb(255, 138, 128);
-            } else if (Intrinsics.areEqual(var16, "userprompt")) {
-               var10 = CarUi.Companion.getWARN();
-            } else {
-               var10 = CarUi.Companion.getTEXT();
-            }
-
-            String var22 = JournalPagesKt.access$getTimeFmt$p().format(new Date(var24.optLong("t")));
-            String var17 = var24.optString("text");
-            var26.addView((View)this.line(var22 + "   " + var17, var10, 17.0F));
-            CharSequence var18 = var24.optString("why");
-            boolean var2 = StringsKt.isBlank(var18);
-            CharSequence var23 = null;
-            if (var2) {
-               var18 = null;
-            }
-
-            var10 = var24.optInt("mph");
-            String var9 = var10 + " mph";
-            CharSequence var25 = var24.optString("road");
-            if (!StringsKt.isBlank(var25)) {
-               var23 = var25;
-            }
-
-            String var19 = CollectionsKt.joinToString$default(
-               CollectionsKt.listOfNotNull(new String[]{var18, var9, var23}), " · ", null, null, 0, null, null, 62, null
-            );
-            var26.addView((View)this.line("            " + var19, CarUi.Companion.getDIM(), 14.0F));
-            var14 = var12;
-         }
-      }
-   }
+            return;
+        }
+        LinearLayout $this$refresh_u24lambda_u240 = card();
+        $this$refresh_u24lambda_u240.addView(title("Alert history", "bell", "sound"));
+        $this$refresh_u24lambda_u240.addView(CardPage.line$default(this, "No alerts noted yet. The tablet notes each alert while it's linked.", 0, 0.0f, 6, null));
+        add($this$refresh_u24lambda_u240);
+    }
 }

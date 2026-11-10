@@ -6,226 +6,201 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.graphics.Paint.Align;
-import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.View;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import kotlin.Pair;
 import kotlin.TuplesKt;
 import kotlin.collections.CollectionsKt;
 import kotlin.collections.MapsKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt;
-import org.capnproto.SlcPeek.Reading;
-import org.capnproto.SlcPeek.Slc;
+import org.capnproto.SlcPeek;
 
+/* compiled from: ExtraViews.kt */
 public final class SlcSourcesView extends View {
-   private final Paint p;
-   public Telemetry t;
-   private final Paint tp;
+    private final Paint p;
+    public Telemetry t;
+    private final Paint tp;
 
-   public SlcSourcesView(Context var1, AttributeSet var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      super(var1, var2);
-      this.p = new Paint(1);
-      Paint var3 = new Paint(1);
-      var3.setTypeface(Typeface.DEFAULT_BOLD);
-      this.tp = var3;
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public SlcSourcesView(Context ctx, AttributeSet attrs) {
+        super(ctx, attrs);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        this.p = new Paint(1);
+        Paint $this$tp_u24lambda_u240 = new Paint(1);
+        $this$tp_u24lambda_u240.setTypeface(Typeface.DEFAULT_BOLD);
+        this.tp = $this$tp_u24lambda_u240;
+    }
 
-   // $VF: synthetic method
-   public SlcSourcesView(Context var1, AttributeSet var2, int var3, DefaultConstructorMarker var4) {
-      if ((var3 & 2) != 0) {
-         var2 = null;
-      }
+    public /* synthetic */ SlcSourcesView(Context context, AttributeSet attributeSet, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this(context, (i & 2) != 0 ? null : attributeSet);
+    }
 
-      this(var1, var2);
-   }
+    public final Telemetry getT() {
+        Telemetry telemetry = this.t;
+        if (telemetry != null) {
+            return telemetry;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("t");
+        return null;
+    }
 
-   public final Telemetry getT() {
-      Telemetry var1 = this.t;
-      if (var1 != null) {
-         return var1;
-      } else {
-         Intrinsics.throwUninitializedPropertyAccessException("t");
-         return null;
-      }
-   }
+    public final void setT(Telemetry telemetry) {
+        Intrinsics.checkNotNullParameter(telemetry, "<set-?>");
+        this.t = telemetry;
+    }
 
-   protected void onDraw(Canvas var1) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      if (this.t != null && this.getT().getStarted()) {
-         boolean var8;
-         if (this.getT().getSp7()) {
-            var8 = this.getT().s("slc_sources_sp7");
-         } else {
-            var8 = this.getT().pBool("SpeedLimitSources", false);
-         }
-
-         if (var8) {
-            float var2;
-            if (this.getT().isMetric()) {
-               var2 = 3.6F;
-            } else {
-               var2 = 2.23694F;
-            }
-
-            Slc var9;
-            Object var10;
-            label102: {
-               var9 = this.getT().getSlc();
-               var10 = null;
-               if (var9 != null) {
-                  boolean var6;
-                  if (System.nanoTime() - this.getT().getSlcAtNs() < 3000000000L) {
-                     var6 = true;
-                  } else {
-                     var6 = false;
-                  }
-
-                  if (var6) {
-                     break label102;
-                  }
-               }
-
-               var9 = null;
-            }
-
-            Map var15 = MapsKt.mapOf(
-               new Pair[]{TuplesKt.to("dashboard", "DASH"), TuplesKt.to("map", "MAP"), TuplesKt.to("vision", "VISION"), TuplesKt.to("online", "ONLINE")}
-            );
-            List var24 = var10;
-            if (var9 != null) {
-               List var12 = var9.readings;
-               var24 = var10;
-               if (var12 != null) {
-                  var10 = var12;
-                  var var25 = new ArrayList();
-
-                  for (Object var32 : var10) {
-                     if (((Reading)var32).enabled) {
-                        var25.add(var32);
-                     }
-                  }
-
-                  var24 = var25;
-               }
-            }
-
-            var10 = var24;
-            if (var24 == null) {
-               var10 = CollectionsKt.emptyList();
-            }
-
-            float var3 = this.getWidth();
-            float var4 = this.getHeight();
-            float var5 = ExtraViewsKt.access$dpf(this, 12.0F);
-            this.p.setStyle(Style.FILL);
-            this.p.setColor(Color.argb(175, 0, 0, 0));
-            var1.drawRoundRect(new RectF(0.0F, 0.0F, var3, var4), var5, var5, this.p);
-            this.p.setStyle(Style.STROKE);
-            this.p.setStrokeWidth(1.0F);
-            this.p.setColor(Color.argb(80, 196, 205, 208));
-            var1.drawRoundRect(new RectF(0.5F, 0.5F, var3 - 0.5F, var4 - 0.5F), var5, var5, this.p);
-            if (var10.isEmpty()) {
-               this.tp.setTextAlign(Align.CENTER);
-               this.tp.setTextSize(ExtraViewsKt.access$dpf(this, 14.0F));
-               this.tp.setColor(Color.rgb(166, 166, 166));
-               String var28;
-               if (var9 == null) {
-                  var28 = "No speed limit data";
-               } else if (var9.readings.isEmpty()) {
-                  var28 = "No speed limit";
-               } else {
-                  var28 = "No sources enabled";
-               }
-
-               var2 = 2;
-               var1.drawText(var28, var3 / var2, var4 / var2 + ExtraViewsKt.access$dpf(this, 5.0F), this.tp);
-               return;
-            }
-
-            var4 /= var10.size();
-            Intrinsics.checkNotNull(var9);
-            String var26 = var9.kind;
-            String var33 = "valid";
-            String var27;
-            if (Intrinsics.areEqual(var26, "valid")) {
-               var27 = var9.source;
-            } else {
-               var27 = var9.acceptedSource;
-            }
-
-            Iterator var16 = var10.iterator();
-            int var21 = 0;
-
-            while (var16.hasNext()) {
-               int var7 = var21 + 1;
-               Reading var17 = (Reading)var16.next();
-               var5 = var21 * var4;
-               var8 = Intrinsics.areEqual(var17.source, var27);
-               if (var21 > 0) {
-                  this.p.setStyle(Style.FILL);
-                  this.p.setColor(Color.argb(100, 196, 205, 208));
-                  var1.drawRect(ExtraViewsKt.access$dpf(this, 10.0F), var5, var3 - ExtraViewsKt.access$dpf(this, 10.0F), var5 + 1.0F, this.p);
-               }
-
-               if (var8) {
-                  this.p.setStyle(Style.FILL);
-                  this.p.setColor(Color.argb(230, 196, 205, 208));
-                  var1.drawRoundRect(
-                     new RectF(ExtraViewsKt.access$dpf(this, 6.0F), var5 + 0.25F * var4, ExtraViewsKt.access$dpf(this, 10.0F), var5 + 0.75F * var4),
-                     2.0F,
-                     2.0F,
-                     this.p
-                  );
-               }
-
-               this.tp.setTextAlign(Align.LEFT);
-               this.tp.setTextSize(Math.min(0.36F * var4, ExtraViewsKt.access$dpf(this, 20.0F)));
-               Paint var13 = this.tp;
-               if (var8) {
-                  var21 = -1;
-               } else {
-                  var21 = Color.rgb(166, 166, 166);
-               }
-
-               var13.setColor(var21);
-               String var14 = (String)var15.get(var17.source);
-               String var34 = var14;
-               if (var14 == null) {
-                  String var35 = var17.source;
-                  Intrinsics.checkNotNullExpressionValue(var35, "source");
-                  var34 = var35.toUpperCase(Locale.ROOT);
-                  Intrinsics.checkNotNullExpressionValue(var34, "toUpperCase(...)");
-               }
-
-               var1.drawText(var34, ExtraViewsKt.access$dpf(this, 18.0F), var5 + var4 * 0.64F, this.tp);
-               this.tp.setTextAlign(Align.RIGHT);
-               String var36;
-               if (Intrinsics.areEqual(var17.kind, var33) && var17.speedMps > 0.0F) {
-                  var36 = String.valueOf(MathKt.roundToInt(var17.speedMps * var2));
-               } else {
-                  var36 = "–";
-               }
-
-               var1.drawText(var36, var3 - ExtraViewsKt.access$dpf(this, 14.0F), var5 + 0.64F * var4, this.tp);
-               var21 = var7;
-            }
-
+    /* JADX WARN: Code restructure failed: missing block: B:17:0x0074, code lost:
+    
+        if (r4 != null) goto L25;
+     */
+    @Override // android.view.View
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    protected void onDraw(Canvas c) {
+        float rr;
+        String active;
+        String str;
+        SlcPeek.Reading r;
+        SlcPeek.Slc st;
+        List rows;
+        int i;
+        int i2;
+        float f;
+        float dpf;
+        float dpf2;
+        float dpf3;
+        float dpf4;
+        float dpf5;
+        float dpf6;
+        float dpf7;
+        float dpf8;
+        float dpf9;
+        Iterable iterable;
+        Intrinsics.checkNotNullParameter(c, "c");
+        if (this.t == null || !getT().getStarted()) {
             return;
-         }
-      }
-   }
-
-   public final void setT(Telemetry var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.t = var1;
-   }
+        }
+        if (!(getT().getSp7() ? getT().s("slc_sources_sp7") : getT().pBool("SpeedLimitSources", false))) {
+            return;
+        }
+        float conv = getT().isMetric() ? 3.6f : 2.23694f;
+        SlcPeek.Slc slc = getT().getSlc();
+        List list = null;
+        if (slc != null) {
+            SlcPeek.Slc it = System.nanoTime() - getT().getSlcAtNs() < 3000000000L ? 1 : null;
+        }
+        slc = null;
+        SlcPeek.Slc st2 = slc;
+        Map labels = MapsKt.mapOf(TuplesKt.to("dashboard", "DASH"), TuplesKt.to("map", "MAP"), TuplesKt.to("vision", "VISION"), TuplesKt.to("online", "ONLINE"));
+        if (st2 != null && (iterable = st2.readings) != null) {
+            Iterable $this$filter$iv = iterable;
+            Collection destination$iv$iv = new ArrayList();
+            for (Object element$iv$iv : $this$filter$iv) {
+                SlcPeek.Reading it2 = (SlcPeek.Reading) element$iv$iv;
+                if (it2.enabled) {
+                    destination$iv$iv.add(element$iv$iv);
+                }
+            }
+            list = (List) destination$iv$iv;
+        }
+        if (list == null) {
+            list = CollectionsKt.emptyList();
+        }
+        List<SlcPeek.Reading> rows2 = list;
+        float w = getWidth();
+        float h = getHeight();
+        rr = ExtraViewsKt.dpf(this, 12.0f);
+        this.p.setStyle(Paint.Style.FILL);
+        this.p.setColor(Color.argb(175, 0, 0, 0));
+        c.drawRoundRect(new RectF(0.0f, 0.0f, w, h), rr, rr, this.p);
+        this.p.setStyle(Paint.Style.STROKE);
+        this.p.setStrokeWidth(1.0f);
+        this.p.setColor(Color.argb(80, 196, 205, 208));
+        c.drawRoundRect(new RectF(0.5f, 0.5f, w - 0.5f, h - 0.5f), rr, rr, this.p);
+        if (rows2.isEmpty()) {
+            this.tp.setTextAlign(Paint.Align.CENTER);
+            Paint paint = this.tp;
+            dpf8 = ExtraViewsKt.dpf(this, 14.0f);
+            paint.setTextSize(dpf8);
+            this.tp.setColor(Color.rgb(166, 166, 166));
+            String str2 = st2 == null ? "No speed limit data" : st2.readings.isEmpty() ? "No speed limit" : "No sources enabled";
+            float f2 = 2;
+            dpf9 = ExtraViewsKt.dpf(this, 5.0f);
+            c.drawText(str2, w / f2, (h / f2) + dpf9, this.tp);
+            return;
+        }
+        float rowH = h / rows2.size();
+        Intrinsics.checkNotNull(st2);
+        String str3 = "valid";
+        String active2 = Intrinsics.areEqual(st2.kind, "valid") ? st2.source : st2.acceptedSource;
+        int i3 = 0;
+        for (SlcPeek.Reading r2 : rows2) {
+            int i4 = i3;
+            i3++;
+            float y = i4 * rowH;
+            boolean on = Intrinsics.areEqual(r2.source, active2);
+            if (i4 > 0) {
+                this.p.setStyle(Paint.Style.FILL);
+                this.p.setColor(Color.argb(100, 196, 205, 208));
+                dpf6 = ExtraViewsKt.dpf(this, 10.0f);
+                dpf7 = ExtraViewsKt.dpf(this, 10.0f);
+                active = active2;
+                str = str3;
+                st = st2;
+                r = r2;
+                i = 196;
+                rows = rows2;
+                i2 = 208;
+                f = 0.0f;
+                c.drawRect(dpf6, y, w - dpf7, y + 1.0f, this.p);
+            } else {
+                active = active2;
+                str = str3;
+                r = r2;
+                st = st2;
+                rows = rows2;
+                i = 196;
+                i2 = 208;
+                f = 0.0f;
+            }
+            if (on) {
+                this.p.setStyle(Paint.Style.FILL);
+                this.p.setColor(Color.argb(230, i, 205, i2));
+                dpf4 = ExtraViewsKt.dpf(this, 6.0f);
+                dpf5 = ExtraViewsKt.dpf(this, 10.0f);
+                c.drawRoundRect(new RectF(dpf4, y + (0.25f * rowH), dpf5, y + (0.75f * rowH)), 2.0f, 2.0f, this.p);
+            }
+            this.tp.setTextAlign(Paint.Align.LEFT);
+            Paint paint2 = this.tp;
+            dpf = ExtraViewsKt.dpf(this, 20.0f);
+            paint2.setTextSize(Math.min(0.36f * rowH, dpf));
+            this.tp.setColor(on ? -1 : Color.rgb(166, 166, 166));
+            SlcPeek.Reading r3 = r;
+            String str4 = (String) labels.get(r3.source);
+            if (str4 == null) {
+                String source = r3.source;
+                Intrinsics.checkNotNullExpressionValue(source, "source");
+                str4 = source.toUpperCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(str4, "toUpperCase(...)");
+            }
+            dpf2 = ExtraViewsKt.dpf(this, 18.0f);
+            c.drawText(str4, dpf2, y + (rowH * 0.64f), this.tp);
+            this.tp.setTextAlign(Paint.Align.RIGHT);
+            String str5 = str;
+            String valueOf = (!Intrinsics.areEqual(r3.kind, str5) || r3.speedMps <= f) ? "–" : String.valueOf(MathKt.roundToInt(r3.speedMps * conv));
+            dpf3 = ExtraViewsKt.dpf(this, 14.0f);
+            c.drawText(valueOf, w - dpf3, y + (0.64f * rowH), this.tp);
+            str3 = str5;
+            st2 = st;
+            rows2 = rows;
+            active2 = active;
+        }
+    }
 }

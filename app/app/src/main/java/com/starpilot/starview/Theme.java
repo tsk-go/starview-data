@@ -1,41 +1,38 @@
 package com.starpilot.starview;
 
 
+/* compiled from: Theme.kt */
 public final class Theme {
-   public static final Theme INSTANCE = new Theme();
+    public static final Theme INSTANCE = new Theme();
 
-   private Theme() {
-   }
+    private Theme() {
+    }
 
-   // $VF: synthetic method
-   public static boolean isNight$default(Theme var0, double var1, double var3, long var5, int var7, Object var8) {
-      if ((var7 & 4) != 0) {
-         var5 = System.currentTimeMillis();
-      }
+    public final double sunElevationDeg(double latDeg, double lonDeg, long epochMs) {
+        double jd = (epochMs / 8.64E7d) + 2440587.5d;
+        double d = jd - 2451545.0d;
+        double g = Math.toRadians(((0.98560028d * d) + 357.529d) % 360.0d);
+        double q = ((0.98564736d * d) + 280.459d) % 360.0d;
+        double l = Math.toRadians((((Math.sin(g) * 1.915d) + q) + (Math.sin(2 * g) * 0.02d)) % 360.0d);
+        double e = Math.toRadians(23.439d - (3.6E-7d * d));
+        double ra = Math.toDegrees(Math.atan2(Math.cos(e) * Math.sin(l), Math.cos(l)));
+        double dec = Math.asin(Math.sin(e) * Math.sin(l));
+        double gmst = ((24.06570982441908d * d) + 18.697374558d) % 24.0d;
+        double lst = ((15.0d * gmst) + lonDeg) % 360.0d;
+        double ha = Math.toRadians(((((lst - ra) % 360.0d) + 540.0d) % 360.0d) - 180.0d);
+        double lat = Math.toRadians(latDeg);
+        double el = Math.asin((Math.sin(lat) * Math.sin(dec)) + (Math.cos(lat) * Math.cos(dec) * Math.cos(ha)));
+        return Math.toDegrees(el);
+    }
 
-      return var0.isNight(var1, var3, var5);
-   }
+    public static /* synthetic */ boolean isNight$default(Theme theme, double d, double d2, long j, int i, Object obj) {
+        if ((i & 4) != 0) {
+            j = System.currentTimeMillis();
+        }
+        return theme.isNight(d, d2, j);
+    }
 
-   public final boolean isNight(double var1, double var3, long var5) {
-      boolean var7;
-      if (this.sunElevationDeg(var1, var3, var5) < -6.0) {
-         var7 = true;
-      } else {
-         var7 = false;
-      }
-
-      return var7;
-   }
-
-   public final double sunElevationDeg(double var1, double var3, long var5) {
-      double var7 = var5 / 8.64E7 + 2440587.5 - 2451545.0;
-      double var9 = Math.toRadians((0.98560028 * var7 + 357.529) % 360.0);
-      double var11 = Math.toRadians((Math.sin(var9) * 1.915 + (0.98564736 * var7 + 280.459) % 360.0 + Math.sin(2 * var9) * 0.02) % 360.0);
-      double var13 = Math.toRadians(23.439 - 3.6E-7 * var7);
-      var9 = Math.toDegrees(Math.atan2(Math.cos(var13) * Math.sin(var11), Math.cos(var11)));
-      var11 = Math.asin(Math.sin(var13) * Math.sin(var11));
-      var3 = Math.toRadians((((15.0 * ((24.06570982441908 * var7 + 18.697374558) % 24.0) + var3) % 360.0 - var9) % 360.0 + 540.0) % 360.0 - 180.0);
-      var1 = Math.toRadians(var1);
-      return Math.toDegrees(Math.asin(Math.sin(var1) * Math.sin(var11) + Math.cos(var1) * Math.cos(var11) * Math.cos(var3)));
-   }
+    public final boolean isNight(double latDeg, double lonDeg, long epochMs) {
+        return sunElevationDeg(latDeg, lonDeg, epochMs) < -6.0d;
+    }
 }

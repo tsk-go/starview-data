@@ -1,6 +1,8 @@
 package com.starpilot.starview;
 
+import com.starpilot.starview.LaneMemory;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,676 +12,524 @@ import kotlin.Triple;
 import kotlin.TuplesKt;
 import kotlin.collections.CollectionsKt;
 import kotlin.comparisons.ComparisonsKt;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 
+/* compiled from: LaneMemory.kt */
 public final class LaneMemory {
-   private double lastOdo;
-   private final float lineView;
-   private volatile List<Pair<Float, Float>> lines;
-   private final ArrayList<LaneMemory.Mark> marks = new ArrayList<>();
+    private double lastOdo;
+    private final ArrayList<Mark> marks = new ArrayList<>();
+    private volatile List<Pair<Float, Float>> lines = CollectionsKt.emptyList();
+    private final float lineView = 5.6f;
 
-   // $VF: synthetic method
-   public static boolean $r8$lambda$UquKBEBmKaNlnVUaQP6FJjdZOEU(LaneMemory.Mark var0) {
-      return pruneMarks$lambda$4(var0);
-   }
+    /* compiled from: LaneMemory.kt */
+    public static final class Mark {
+        private float conf;
+        private final boolean edge;
+        private double lastOdo;
+        private int seen;
+        private float y;
 
-   // $VF: synthetic method
-   public static boolean $r8$lambda$x1BRsnEJnLuBPM3EfXmdzdJi8LA(LaneMemory.Mark var0, LaneMemory.Mark var1, LaneMemory.Mark var2) {
-      return pruneMarks$lambda$10(var0, var1, var2);
-   }
+        public Mark(float y, boolean edge, float conf, double lastOdo) {
+            this.y = y;
+            this.edge = edge;
+            this.conf = conf;
+            this.lastOdo = lastOdo;
+        }
 
-   public LaneMemory() {
-      this.lines = CollectionsKt.emptyList();
-      this.lineView = 5.6F;
-   }
+        public final float getConf() {
+            return this.conf;
+        }
 
-   // $VF: synthetic method
-   public static Pair lanes$default(LaneMemory var0, int var1, float var2, float var3, int var4, Object var5) {
-      if ((var4 & 4) != 0) {
-         var3 = 0.45F;
-      }
+        public final boolean getEdge() {
+            return this.edge;
+        }
 
-      return var0.lanes(var1, var2, var3);
-   }
+        public final double getLastOdo() {
+            return this.lastOdo;
+        }
 
-   private final LaneMemory.Mark nearest(float var1, boolean var2, float var3) {
-      LaneMemory.Mark var5 = null;
-      Iterator var7 = this.marks.iterator();
-      Intrinsics.checkNotNullExpressionValue(var7, "iterator(...)");
+        public final float getY() {
+            return this.y;
+        }
 
-      while (var7.hasNext()) {
-         Object var6 = var7.next();
-         Intrinsics.checkNotNullExpressionValue(var6, "next(...)");
-         var6 = (LaneMemory.Mark)var6;
-         if (((LaneMemory.Mark)var6).getEdge() == var2) {
-            float var4 = Math.abs(((LaneMemory.Mark)var6).getY() - var1);
-            if (var4 < var3) {
-               var3 = var4;
-               var5 = (LaneMemory.Mark)var6;
+        public final void setConf(float f) {
+            this.conf = f;
+        }
+
+        public final void setLastOdo(double d) {
+            this.lastOdo = d;
+        }
+
+        public final void setY(float f) {
+            this.y = f;
+        }
+
+        public final int getSeen() {
+            return this.seen;
+        }
+
+        public final void setSeen(int i) {
+            this.seen = i;
+        }
+    }
+
+    public final ArrayList<Mark> getMarks() {
+        return this.marks;
+    }
+
+    public final List<Pair<Float, Float>> getLines() {
+        return this.lines;
+    }
+
+    public final void clear() {
+        this.marks.clear();
+        this.lines = CollectionsKt.emptyList();
+    }
+
+    public final void shift(float dy) {
+        Iterator<Mark> it = this.marks.iterator();
+        Intrinsics.checkNotNullExpressionValue(it, "iterator(...)");
+        while (it.hasNext()) {
+            Mark next = it.next();
+            Intrinsics.checkNotNullExpressionValue(next, "next(...)");
+            Mark m = next;
+            m.setY(m.getY() - dy);
+        }
+    }
+
+    public final void update(double odo, List<Pair<Float, Float>> lines, float edgeL, float edgeR, boolean frozen) {
+        boolean z;
+        double d = odo;
+        Intrinsics.checkNotNullParameter(lines, "lines");
+        double dOdo = RangesKt.coerceAtLeast(d - this.lastOdo, 0.0d);
+        this.lastOdo = d;
+        if (dOdo > 0.0d) {
+            float k = (float) Math.exp((-dOdo) / 1500.0d);
+            Iterator<Mark> it = this.marks.iterator();
+            Intrinsics.checkNotNullExpressionValue(it, "iterator(...)");
+            while (it.hasNext()) {
+                Mark next = it.next();
+                Intrinsics.checkNotNullExpressionValue(next, "next(...)");
+                Mark m = next;
+                if (Math.abs(m.getY()) > this.lineView || m.getEdge()) {
+                    m.setConf(m.getConf() * k);
+                }
             }
-         }
-      }
-
-      return var5;
-   }
-
-   private final void prune() {
-      this.pruneMarks();
-      Iterable var2 = this.marks;
-      var var1 = new ArrayList();
-
-      for (var var2_it : var2) {
-
-         var2 = var2_it;
-         if (!((LaneMemory.Mark)var2).getEdge()) {
-            var1.add(var2);
-         }
-      }
-
-      List var4 = var1;
-      var2 = var4;
-      var1 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var2, 10));
-
-      for (LaneMemory.Mark var10 : var2) {
-         var1.add(TuplesKt.to(var10.getY(), var10.getConf()));
-      }
-
-      List var6 = var1;
-      this.lines = var6;
-   }
-
-   private final void pruneMarks() {
-      CollectionsKt.removeAll(this.marks, new LaneMemory$$ExternalSyntheticLambda0());
-      List var7 = this.marks;
-      if (var7.size() > 1) {
-         CollectionsKt.sortWith(var7, new Comparator() {
-            @Override
-            public final int compare(T var1, T var2) {
-               return ComparisonsKt.compareValues(((LaneMemory.Mark)var1).getY(), ((LaneMemory.Mark)var2).getY());
-            }
-         });
-      }
-
-      int var4 = 1;
-
-      while (var4 < this.marks.size()) {
-         var7 = this.marks.get(var4 - 1);
-         Intrinsics.checkNotNullExpressionValue(var7, "get(...)");
-         LaneMemory.Mark var20 = (LaneMemory.Mark)var7;
-         Object var8 = this.marks.get(var4);
-         Intrinsics.checkNotNullExpressionValue(var8, "get(...)");
-         var8 = (LaneMemory.Mark)var8;
-         if (var20.getEdge() == ((LaneMemory.Mark)var8).getEdge() && Math.abs(var20.getY() - ((LaneMemory.Mark)var8).getY()) < 0.6F) {
-            if (var20.getConf() >= ((LaneMemory.Mark)var8).getConf()) {
-               var7 = this.marks.remove(var4);
-            } else {
-               var7 = this.marks.remove(var4 - 1);
-            }
-
-            Intrinsics.checkNotNull((LaneMemory.Mark)var7);
-         } else {
-            var4++;
-         }
-      }
-
-      Iterable var30 = this.marks;
-      var var22 = new ArrayList();
-      Iterator var9 = var30.iterator();
-
-      while (true) {
-         boolean var6 = var9.hasNext();
-         boolean var5 = false;
-         if (!var6) {
-            var7 = var22;
-            Iterator var11 = var7.iterator();
-            var6 = var11.hasNext();
-            Object var36 = null;
-            if (!var6) {
-               var7 = null;
-            } else {
-               var7 = (List)var11.next();
-               if (var11.hasNext()) {
-                  float var1 = ((LaneMemory.Mark)var7).getY();
-                  Object var32 = var7;
-
-                  do {
-                     Object var38 = var11.next();
-                     float var3 = ((LaneMemory.Mark)var38).getY();
-                     var7 = (List)var32;
-                     float var2 = var1;
-                     if (Float.compare(var1, var3) < 0) {
-                        var7 = (List)var38;
-                        var2 = var3;
-                     }
-
-                     var32 = var7;
-                     var1 = var2;
-                  } while (var11.hasNext());
-               }
-            }
-
-            LaneMemory.Mark var39 = (LaneMemory.Mark)var7;
-            var30 = this.marks;
-            var var25 = new ArrayList();
-
-            for (Object var40 : var30) {
-               LaneMemory.Mark var34 = (LaneMemory.Mark)var40;
-               boolean var17;
-               if (var34.getEdge() && var34.getY() > 0.0F && var34.getConf() >= 0.3F) {
-                  var17 = true;
-               } else {
-                  var17 = false;
-               }
-
-               if (var17) {
-                  var25.add(var40);
-               }
-            }
-
-            var7 = var25;
-            var11 = var7.iterator();
-            if (!var11.hasNext()) {
-               var7 = (List)var36;
-            } else {
-               var7 = (List)var11.next();
-               if (var11.hasNext()) {
-                  float var13 = ((LaneMemory.Mark)var7).getY();
-                  Object var35 = var7;
-
-                  do {
-                     var36 = var11.next();
-                     float var15 = ((LaneMemory.Mark)var36).getY();
-                     float var14 = var13;
-                     var7 = (List)var35;
-                     if (Float.compare(var13, var15) > 0) {
-                        var14 = var15;
-                        var7 = (List)var36;
-                     }
-
-                     var13 = var14;
-                     var35 = var7;
-                  } while (var11.hasNext());
-               }
-            }
-
-            LaneMemory.Mark var28 = (LaneMemory.Mark)var7;
-            CollectionsKt.removeAll(this.marks, new LaneMemory$$ExternalSyntheticLambda1(var39, var28));
+        }
+        if (frozen) {
+            prune();
             return;
-         }
-
-         Object var31 = var9.next();
-         LaneMemory.Mark var10 = (LaneMemory.Mark)var31;
-         boolean var16 = var5;
-         if (var10.getEdge()) {
-            var16 = var5;
-            if (var10.getY() < 0.0F) {
-               var16 = var5;
-               if (var10.getConf() >= 0.3F) {
-                  var16 = true;
-               }
+        }
+        ArrayList obs = new ArrayList();
+        Iterator<Pair<Float, Float>> it2 = lines.iterator();
+        while (true) {
+            z = false;
+            if (!it2.hasNext()) {
+                break;
             }
-         }
-
-         if (var16) {
-            var22.add(var31);
-         }
-      }
-   }
-
-   private static final boolean pruneMarks$lambda$10(LaneMemory.Mark var0, LaneMemory.Mark var1, LaneMemory.Mark var2) {
-      Intrinsics.checkNotNullParameter(var2, "it");
-      boolean var3;
-      if ((var0 == null || var2 == var0 || !(var2.getY() < var0.getY() - 0.8F)) && (var1 == null || var2 == var1 || !(var2.getY() > var1.getY() + 0.8F))) {
-         var3 = false;
-      } else {
-         var3 = true;
-      }
-
-      return var3;
-   }
-
-   private static final boolean pruneMarks$lambda$4(LaneMemory.Mark var0) {
-      Intrinsics.checkNotNullParameter(var0, "it");
-      boolean var1;
-      if (!(var0.getConf() < 0.1F) && !(Math.abs(var0.getY()) > 30.0F)) {
-         var1 = false;
-      } else {
-         var1 = true;
-      }
-
-      return var1;
-   }
-
-   public final void clear() {
-      this.marks.clear();
-      this.lines = CollectionsKt.emptyList();
-   }
-
-   public final List<Pair<Float, Float>> getLines() {
-      return this.lines;
-   }
-
-   public final ArrayList<LaneMemory.Mark> getMarks() {
-      return this.marks;
-   }
-
-   public final Pair<Integer, Boolean> lanes(int var1, float var2, float var3) {
-      boolean var8 = Float.isInfinite(var2);
-      boolean var9 = false;
-      boolean var6;
-      if (!var8 && !Float.isNaN(var2)) {
-         var6 = 1;
-      } else {
-         var6 = 0;
-      }
-
-      if (!var6) {
-         return null;
-      } else {
-         Iterable var11 = this.marks;
-         var var10 = new ArrayList();
-
-         for (Object var13 : var11) {
-            label138: {
-               LaneMemory.Mark var12 = (LaneMemory.Mark)var13;
-               if (!var12.getEdge() && var12.getConf() >= var3) {
-                  float var4 = var12.getY();
-                  if (var1 < 0 ? !(var4 < var2 - 1.5F) : !(var4 > 1.5F + var2)) {
-                     var6 = (boolean)0;
-                  } else {
-                     var6 = (boolean)1;
-                  }
-
-                  if (var6) {
-                     var6 = (boolean)1;
-                     break label138;
-                  }
-               }
-
-               var6 = (boolean)0;
+            Pair<Float, Float> next2 = it2.next();
+            float y = next2.component1().floatValue();
+            float p = next2.component2().floatValue();
+            if (((Float.isInfinite(y) || Float.isNaN(y)) ? false : true) && p > 0.5f) {
+                obs.add(new Triple(Float.valueOf(y), false, Float.valueOf(p)));
+                it2 = it2;
             }
-
-            if (var6) {
-               var10.add(var13);
+        }
+        if ((Float.isInfinite(edgeL) || Float.isNaN(edgeL)) ? false : true) {
+            obs.add(new Triple(Float.valueOf(-edgeL), true, Float.valueOf(0.8f)));
+        }
+        if ((Float.isInfinite(edgeR) || Float.isNaN(edgeR)) ? false : true) {
+            obs.add(new Triple(Float.valueOf(edgeR), true, Float.valueOf(0.8f)));
+        }
+        if (obs.isEmpty()) {
+            prune();
+            return;
+        }
+        ArrayList d2 = new ArrayList();
+        Iterator it3 = obs.iterator();
+        Intrinsics.checkNotNullExpressionValue(it3, "iterator(...)");
+        while (it3.hasNext()) {
+            Object next3 = it3.next();
+            Intrinsics.checkNotNullExpressionValue(next3, "next(...)");
+            Triple triple = (Triple) next3;
+            float y2 = ((Number) triple.component1()).floatValue();
+            if (((Boolean) triple.component2()).booleanValue()) {
+                z = false;
+            } else {
+                Mark it4 = nearest(y2, z, 0.7f);
+                if (it4 != null) {
+                    d2.add(Float.valueOf(y2 - it4.getY()));
+                    z = false;
+                } else {
+                    z = false;
+                }
             }
-         }
-
-         List var25 = var10;
-         List var26 = CollectionsKt.sortedWith(
-            var25,
-            new Comparator(var2) {
-               final float $ourLine$inlined;
-
-               {
-                  this.$ourLine$inlined = var1;
-               }
-
-               @Override
-               public final int compare(T var1, T var2x) {
-                  return ComparisonsKt.compareValues(
-                     Math.abs(((LaneMemory.Mark)var1).getY() - this.$ourLine$inlined), Math.abs(((LaneMemory.Mark)var2x).getY() - this.$ourLine$inlined)
-                  );
-               }
+        }
+        if (!d2.isEmpty()) {
+            CollectionsKt.sort(d2);
+            Object obj = d2.get(d2.size() / 2);
+            Intrinsics.checkNotNullExpressionValue(obj, "get(...)");
+            float s = ((Number) obj).floatValue();
+            if (d2.size() >= 2 || Math.abs(s) < 0.3f) {
+                Iterator<Mark> it5 = this.marks.iterator();
+                Intrinsics.checkNotNullExpressionValue(it5, "iterator(...)");
+                while (it5.hasNext()) {
+                    Mark next4 = it5.next();
+                    Intrinsics.checkNotNullExpressionValue(next4, "next(...)");
+                    Mark m2 = next4;
+                    m2.setY(m2.getY() + s);
+                }
             }
-         );
-         var6 = 0;
-
-         for (LaneMemory.Mark var33 : var26) {
-            var3 = Math.abs(var33.getY() - var2);
-            if (!(var3 < 2.3F)) {
-               if (var3 > 4.6F) {
-                  break;
-               }
-
-               var6++;
-               var2 = var33.getY();
+        }
+        HashSet matched = new HashSet();
+        Iterator it6 = obs.iterator();
+        Intrinsics.checkNotNullExpressionValue(it6, "iterator(...)");
+        while (it6.hasNext()) {
+            Object next5 = it6.next();
+            Intrinsics.checkNotNullExpressionValue(next5, "next(...)");
+            Triple triple2 = (Triple) next5;
+            float y3 = ((Number) triple2.component1()).floatValue();
+            boolean e = ((Boolean) triple2.component2()).booleanValue();
+            float p2 = ((Number) triple2.component3()).floatValue();
+            Mark it7 = nearest(y3, e, e ? 0.8f : 0.45f);
+            Mark m3 = (it7 == null || matched.contains(it7)) ? null : it7;
+            if (m3 != null) {
+                m3.setY(m3.getY() + ((e ? 0.1f : 0.25f) * (y3 - m3.getY())));
+                m3.setConf(Math.min(1.0f, m3.getConf() + (0.04f * p2)));
+                m3.setLastOdo(d);
+                m3.setSeen(m3.getSeen() + 1);
+                matched.add(m3);
+                d2 = d2;
+            } else {
+                ArrayList d3 = d2;
+                if (p2 > 0.6f) {
+                    HashSet matched2 = matched;
+                    Mark n = new Mark(y3, e, 0.25f, odo);
+                    n.setSeen(1);
+                    this.marks.add(n);
+                    matched2.add(n);
+                    matched = matched2;
+                    d2 = d3;
+                    it6 = it6;
+                    d = odo;
+                } else {
+                    d2 = d3;
+                    d = odo;
+                }
             }
-         }
-
-         var11 = this.marks;
-         var10 = new ArrayList();
-
-         for (Object var37 : var11) {
-            boolean var23;
-            label109: {
-               LaneMemory.Mark var39 = (LaneMemory.Mark)var37;
-               if (var39.getEdge() && var39.getConf() >= 0.35F) {
-                  var3 = var39.getY();
-                  if (var1 < 0 ? !(var3 < 0.0F) : !(var3 > 0.0F)) {
-                     var23 = false;
-                  } else {
-                     var23 = true;
-                  }
-
-                  if (var23) {
-                     var23 = true;
-                     break label109;
-                  }
-               }
-
-               var23 = false;
+        }
+        HashSet matched3 = matched;
+        Iterator<Mark> it8 = this.marks.iterator();
+        Intrinsics.checkNotNullExpressionValue(it8, "iterator(...)");
+        while (it8.hasNext()) {
+            Mark next6 = it8.next();
+            Intrinsics.checkNotNullExpressionValue(next6, "next(...)");
+            Mark m4 = next6;
+            if (!matched3.contains(m4) && !m4.getEdge() && Math.abs(m4.getY()) <= this.lineView) {
+                m4.setConf(m4.getConf() - 0.01f);
             }
-
-            if (var23) {
-               var10.add(var37);
+        }
+        Iterator<Mark> it9 = this.marks.iterator();
+        Intrinsics.checkNotNullExpressionValue(it9, "iterator(...)");
+        while (it9.hasNext()) {
+            Mark next7 = it9.next();
+            Intrinsics.checkNotNullExpressionValue(next7, "next(...)");
+            Mark m5 = next7;
+            if (!matched3.contains(m5) && m5.getEdge()) {
+                if (((Float.isInfinite(edgeL) || Float.isNaN(edgeL)) ? false : true) && m5.getY() < 0.0f && m5.getY() > (-edgeL) + 0.8f) {
+                    m5.setConf(m5.getConf() - 0.03f);
+                }
             }
-         }
-
-         List var29 = var10;
-         Iterator var40 = var29.iterator();
-         Object var30;
-         if (!var40.hasNext()) {
-            var30 = null;
-         } else {
-            var30 = (LaneMemory.Mark)var40.next();
-            if (var40.hasNext()) {
-               float var19 = Math.abs(var30.getY());
-               var11 = var30;
-
-               do {
-                  Object var38 = var40.next();
-                  float var5 = Math.abs(((LaneMemory.Mark)var38).getY());
-                  var30 = var11;
-                  var3 = var19;
-                  if (Float.compare(var19, var5) > 0) {
-                     var30 = (LaneMemory.Mark)var38;
-                     var3 = var5;
-                  }
-
-                  var11 = var30;
-                  var19 = var3;
-               } while (var40.hasNext());
+        }
+        Iterator<Mark> it10 = this.marks.iterator();
+        Intrinsics.checkNotNullExpressionValue(it10, "iterator(...)");
+        while (it10.hasNext()) {
+            Mark next8 = it10.next();
+            Intrinsics.checkNotNullExpressionValue(next8, "next(...)");
+            Mark m6 = next8;
+            if (!matched3.contains(m6) && m6.getEdge()) {
+                if (((Float.isInfinite(edgeR) || Float.isNaN(edgeR)) ? false : true) && m6.getY() > 0.0f && m6.getY() < edgeR - 0.8f) {
+                    m6.setConf(m6.getConf() - 0.03f);
+                }
             }
-         }
+        }
+        prune();
+    }
 
-         var30 = var30;
-         var8 = var9;
-         if (var30 != null) {
-            var8 = var9;
-            if (Math.abs(var30.getY() - var2) < 1.8F) {
-               var3 = var30.getY();
-               boolean var14;
-               if (var1 < 0 ? !(var3 <= 0.3F + var2) : !(var3 >= var2 - 0.3F)) {
-                  var14 = false;
-               } else {
-                  var14 = true;
-               }
-
-               var8 = var9;
-               if (var14) {
-                  var8 = true;
-               }
+    private final Mark nearest(float y, boolean edge, float tol) {
+        Mark best = null;
+        float bd = tol;
+        Iterator<Mark> it = this.marks.iterator();
+        Intrinsics.checkNotNullExpressionValue(it, "iterator(...)");
+        while (it.hasNext()) {
+            Mark next = it.next();
+            Intrinsics.checkNotNullExpressionValue(next, "next(...)");
+            Mark m = next;
+            if (m.getEdge() == edge) {
+                float dd = Math.abs(m.getY() - y);
+                if (dd < bd) {
+                    bd = dd;
+                    best = m;
+                }
             }
-         }
+        }
+        return best;
+    }
 
-         return var6 == 0 && !var8 ? null : TuplesKt.to(var6, var8);
-      }
-   }
-
-   public final void shift(float var1) {
-      Iterator var2 = this.marks.iterator();
-      Intrinsics.checkNotNullExpressionValue(var2, "iterator(...)");
-
-      while (var2.hasNext()) {
-         LaneMemory.Mark var3 = (LaneMemory.Mark)var2.next();
-         Intrinsics.checkNotNullExpressionValue(var3, "next(...)");
-         var3 = var3;
-         var3.setY(var3.getY() - var1);
-      }
-   }
-
-   public final void update(double var1, List<Pair<Float, Float>> var3, float var4, float var5, boolean var6) {
-      Intrinsics.checkNotNullParameter(var3, "lines");
-      double var7 = RangesKt.coerceAtLeast(var1 - this.lastOdo, 0.0);
-      this.lastOdo = var1;
-      if (var7 > 0.0) {
-         float var9 = (float)Math.exp(-var7 / 1500.0);
-         Iterator var14 = this.marks.iterator();
-         Intrinsics.checkNotNullExpressionValue(var14, "iterator(...)");
-
-         while (var14.hasNext()) {
-            LaneMemory.Mark var15 = (LaneMemory.Mark)var14.next();
-            Intrinsics.checkNotNullExpressionValue(var15, "next(...)");
-            var15 = var15;
-            if (Math.abs(var15.getY()) > this.lineView || var15.getEdge()) {
-               var15.setConf(var15.getConf() * var9);
+    private final void prune() {
+        pruneMarks();
+        Iterable $this$filter$iv = this.marks;
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            if (!((Mark) element$iv$iv).getEdge()) {
+                destination$iv$iv.add(element$iv$iv);
             }
-         }
-      }
+        }
+        Iterable $this$map$iv = (List) destination$iv$iv;
+        Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            Mark it = (Mark) item$iv$iv;
+            destination$iv$iv2.add(TuplesKt.to(Float.valueOf(it.getY()), Float.valueOf(it.getConf())));
+        }
+        this.lines = (List) destination$iv$iv2;
+    }
 
-      if (var6) {
-         this.prune();
-      } else {
-         ArrayList var40 = new ArrayList();
-         Iterator var17 = var3.iterator();
-
-         while (true) {
-            var6 = var17.hasNext();
-            boolean var13 = true;
-            if (!var6) {
-               if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
-                  var13 = true;
-               } else {
-                  var13 = false;
-               }
-
-               if (var13) {
-                  var40.add(new Triple<>(-var4, true, 0.8F));
-               }
-
-               if (!Float.isInfinite(var5) && !Float.isNaN(var5)) {
-                  var13 = true;
-               } else {
-                  var13 = false;
-               }
-
-               if (var13) {
-                  var40.add(new Triple<>(var5, true, 0.8F));
-               }
-
-               if (var40.isEmpty()) {
-                  this.prune();
-                  return;
-               }
-
-               ArrayList var18 = new ArrayList();
-               Iterator var35 = var40.iterator();
-               Intrinsics.checkNotNullExpressionValue(var35, "iterator(...)");
-
-               while (var35.hasNext()) {
-                  Object var16 = var35.next();
-                  Intrinsics.checkNotNullExpressionValue(var16, "next(...)");
-                  var16 = (Triple)var16;
-                  float var25 = ((Number)var16.component1()).floatValue();
-                  if (!(Boolean)var16.component2()) {
-                     var16 = this.nearest(var25, false, 0.7F);
-                     if (var16 != null) {
-                        var18.add(var25 - ((LaneMemory.Mark)var16).getY());
-                     }
-                  }
-               }
-
-               if (!var18.isEmpty()) {
-                  CollectionsKt.sort(var18);
-                  Iterator var36 = (Iterator)var18.get(var18.size() / 2);
-                  Intrinsics.checkNotNullExpressionValue(var36, "get(...)");
-                  float var26 = ((Number)var36).floatValue();
-                  if (var18.size() >= 2 || Math.abs(var26) < 0.3F) {
-                     var36 = this.marks.iterator();
-                     Intrinsics.checkNotNullExpressionValue(var36, "iterator(...)");
-
-                     while (var36.hasNext()) {
-                        LaneMemory.Mark var50 = (LaneMemory.Mark)var36.next();
-                        Intrinsics.checkNotNullExpressionValue(var50, "next(...)");
-                        var50 = var50;
-                        var50.setY(var50.getY() + var26);
-                     }
-                  }
-               }
-
-               HashSet var38 = new HashSet();
-               Iterator var41 = var40.iterator();
-               Intrinsics.checkNotNullExpressionValue(var41, "iterator(...)");
-
-               while (var41.hasNext()) {
-                  LaneMemory.Mark var52 = (LaneMemory.Mark)var41.next();
-                  Intrinsics.checkNotNullExpressionValue(var52, "next(...)");
-                  var52 = (Triple)var52;
-                  float var11 = ((Number)var52.component1()).floatValue();
-                  var6 = (Boolean)var52.component2();
-                  float var29 = ((Number)var52.component3()).floatValue();
-                  float var27;
-                  if (var6) {
-                     var27 = 0.8F;
-                  } else {
-                     var27 = 0.45F;
-                  }
-
-                  var52 = this.nearest(var11, var6, var27);
-                  if (var52 == null || var38.contains(var52)) {
-                     var52 = null;
-                  }
-
-                  if (var52 != null) {
-                     float var12 = var52.getY();
-                     if (var6) {
-                        var27 = 0.1F;
-                     } else {
-                        var27 = 0.25F;
-                     }
-
-                     var52.setY(var12 + var27 * (var11 - var52.getY()));
-                     var52.setConf(Math.min(1.0F, var52.getConf() + 0.04F * var29));
-                     var52.setLastOdo(var1);
-                     var52.setSeen(var52.getSeen() + 1);
-                     var38.add(var52);
-                  } else if (var29 > 0.6F) {
-                     var52 = new LaneMemory.Mark(var11, var6, 0.25F, var1);
-                     var52.setSeen(1);
-                     this.marks.add(var52);
-                     var38.add(var52);
-                  }
-               }
-
-               Iterator var19 = this.marks.iterator();
-               Intrinsics.checkNotNullExpressionValue(var19, "iterator(...)");
-
-               while (var19.hasNext()) {
-                  LaneMemory.Mark var42 = (LaneMemory.Mark)var19.next();
-                  Intrinsics.checkNotNullExpressionValue(var42, "next(...)");
-                  var42 = var42;
-                  if (!var38.contains(var42) && !var42.getEdge() && Math.abs(var42.getY()) <= this.lineView) {
-                     var42.setConf(var42.getConf() - 0.01F);
-                  }
-               }
-
-               Iterator var20 = this.marks.iterator();
-               Intrinsics.checkNotNullExpressionValue(var20, "iterator(...)");
-
-               while (var20.hasNext()) {
-                  LaneMemory.Mark var44 = (LaneMemory.Mark)var20.next();
-                  Intrinsics.checkNotNullExpressionValue(var44, "next(...)");
-                  var44 = var44;
-                  if (!var38.contains(var44) && var44.getEdge()) {
-                     if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
-                        var13 = true;
-                     } else {
-                        var13 = false;
-                     }
-
-                     if (var13 && var44.getY() < 0.0F && var44.getY() > -var4 + 0.8F) {
-                        var44.setConf(var44.getConf() - 0.03F);
-                     }
-                  }
-               }
-
-               Iterator var21 = this.marks.iterator();
-               Intrinsics.checkNotNullExpressionValue(var21, "iterator(...)");
-
-               while (var21.hasNext()) {
-                  LaneMemory.Mark var46 = (LaneMemory.Mark)var21.next();
-                  Intrinsics.checkNotNullExpressionValue(var46, "next(...)");
-                  var46 = var46;
-                  if (!var38.contains(var46) && var46.getEdge()) {
-                     if (!Float.isInfinite(var5) && !Float.isNaN(var5)) {
-                        var13 = true;
-                     } else {
-                        var13 = false;
-                     }
-
-                     if (var13 && var46.getY() > 0.0F && var46.getY() < var5 - 0.8F) {
-                        var46.setConf(var46.getConf() - 0.03F);
-                     }
-                  }
-               }
-
-               this.prune();
-               return;
+    private final void pruneMarks() {
+        Object maxElem$iv;
+        CollectionsKt.removeAll((List) this.marks, new Function1() { // from class: com.starpilot.starview.LaneMemory$$ExternalSyntheticLambda0
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                boolean pruneMarks$lambda$4;
+                pruneMarks$lambda$4 = LaneMemory.pruneMarks$lambda$4((LaneMemory.Mark) obj);
+                return Boolean.valueOf(pruneMarks$lambda$4);
             }
-
-            Pair var34 = (Pair)var17.next();
-            float var24 = ((Number)var34.component1()).floatValue();
-            float var10 = ((Number)var34.component2()).floatValue();
-            if (Float.isInfinite(var24) || Float.isNaN(var24)) {
-               var13 = false;
+        });
+        List $this$sortBy$iv = this.marks;
+        if ($this$sortBy$iv.size() > 1) {
+            CollectionsKt.sortWith($this$sortBy$iv, new Comparator() { // from class: com.starpilot.starview.LaneMemory$pruneMarks$$inlined$sortBy$1
+                /* JADX WARN: Multi-variable type inference failed */
+                @Override // java.util.Comparator
+                public final int compare(T t, T t2) {
+                    LaneMemory.Mark it = (LaneMemory.Mark) t;
+                    LaneMemory.Mark it2 = (LaneMemory.Mark) t2;
+                    return ComparisonsKt.compareValues(Float.valueOf(it.getY()), Float.valueOf(it2.getY()));
+                }
+            });
+        }
+        int i = 1;
+        while (i < this.marks.size()) {
+            Mark mark = this.marks.get(i - 1);
+            Intrinsics.checkNotNullExpressionValue(mark, "get(...)");
+            Mark a = mark;
+            Mark mark2 = this.marks.get(i);
+            Intrinsics.checkNotNullExpressionValue(mark2, "get(...)");
+            Mark b = mark2;
+            if (a.getEdge() != b.getEdge() || Math.abs(a.getY() - b.getY()) >= 0.6f) {
+                i++;
+            } else {
+                Intrinsics.checkNotNull(a.getConf() >= b.getConf() ? this.marks.remove(i) : this.marks.remove(i - 1));
             }
-
-            if (var13 && var10 > 0.5F) {
-               var40.add(new Triple<>(var24, false, var10));
+        }
+        Iterable $this$filter$iv = this.marks;
+        Collection destination$iv$iv = new ArrayList();
+        Iterator it = $this$filter$iv.iterator();
+        while (true) {
+            boolean z = false;
+            if (!it.hasNext()) {
+                break;
             }
-         }
-      }
-   }
+            Object element$iv$iv = it.next();
+            Mark it2 = (Mark) element$iv$iv;
+            if (it2.getEdge() && it2.getY() < 0.0f && it2.getConf() >= 0.3f) {
+                z = true;
+            }
+            if (z) {
+                destination$iv$iv.add(element$iv$iv);
+            }
+        }
+        Iterable $this$maxByOrNull$iv = (List) destination$iv$iv;
+        Iterator iterator$iv = $this$maxByOrNull$iv.iterator();
+        Object minElem$iv = null;
+        if (iterator$iv.hasNext()) {
+            maxElem$iv = iterator$iv.next();
+            if (iterator$iv.hasNext()) {
+                Mark it3 = (Mark) maxElem$iv;
+                float maxValue$iv = it3.getY();
+                do {
+                    Object e$iv = iterator$iv.next();
+                    Mark it4 = (Mark) e$iv;
+                    float v$iv = it4.getY();
+                    if (Float.compare(maxValue$iv, v$iv) < 0) {
+                        maxElem$iv = e$iv;
+                        maxValue$iv = v$iv;
+                    }
+                } while (iterator$iv.hasNext());
+            }
+        } else {
+            maxElem$iv = null;
+        }
+        final Mark eL = (Mark) maxElem$iv;
+        Iterable $this$filter$iv2 = this.marks;
+        Collection destination$iv$iv2 = new ArrayList();
+        for (Object element$iv$iv2 : $this$filter$iv2) {
+            Mark it5 = (Mark) element$iv$iv2;
+            Mark it6 = (!it5.getEdge() || it5.getY() <= 0.0f || it5.getConf() < 0.3f) ? null : 1;
+            if (it6 != null) {
+                destination$iv$iv2.add(element$iv$iv2);
+            }
+        }
+        Iterable $this$minByOrNull$iv = (List) destination$iv$iv2;
+        Iterator iterator$iv2 = $this$minByOrNull$iv.iterator();
+        if (iterator$iv2.hasNext()) {
+            minElem$iv = iterator$iv2.next();
+            if (iterator$iv2.hasNext()) {
+                Mark it7 = (Mark) minElem$iv;
+                float minValue$iv = it7.getY();
+                do {
+                    Object e$iv2 = iterator$iv2.next();
+                    Mark it8 = (Mark) e$iv2;
+                    float v$iv2 = it8.getY();
+                    if (Float.compare(minValue$iv, v$iv2) > 0) {
+                        minValue$iv = v$iv2;
+                        minElem$iv = e$iv2;
+                    }
+                } while (iterator$iv2.hasNext());
+            }
+        }
+        final Mark eR = (Mark) minElem$iv;
+        CollectionsKt.removeAll((List) this.marks, new Function1() { // from class: com.starpilot.starview.LaneMemory$$ExternalSyntheticLambda1
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                boolean pruneMarks$lambda$10;
+                pruneMarks$lambda$10 = LaneMemory.pruneMarks$lambda$10(LaneMemory.Mark.this, eR, (LaneMemory.Mark) obj);
+                return Boolean.valueOf(pruneMarks$lambda$10);
+            }
+        });
+    }
 
-   public static final class Mark {
-      private float conf;
-      private final boolean edge;
-      private double lastOdo;
-      private int seen;
-      private float y;
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean pruneMarks$lambda$4(Mark it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return it.getConf() < 0.1f || Math.abs(it.getY()) > 30.0f;
+    }
 
-      public Mark(float var1, boolean var2, float var3, double var4) {
-         this.y = var1;
-         this.edge = var2;
-         this.conf = var3;
-         this.lastOdo = var4;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean pruneMarks$lambda$10(Mark $eL, Mark $eR, Mark it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        return (($eL == null || it == $eL || it.getY() >= $eL.getY() - 0.8f) && ($eR == null || it == $eR || it.getY() <= $eR.getY() + 0.8f)) ? false : true;
+    }
 
-      public final float getConf() {
-         return this.conf;
-      }
+    public static /* synthetic */ Pair lanes$default(LaneMemory laneMemory, int i, float f, float f2, int i2, Object obj) {
+        if ((i2 & 4) != 0) {
+            f2 = 0.45f;
+        }
+        return laneMemory.lanes(i, f, f2);
+    }
 
-      public final boolean getEdge() {
-         return this.edge;
-      }
-
-      public final double getLastOdo() {
-         return this.lastOdo;
-      }
-
-      public final int getSeen() {
-         return this.seen;
-      }
-
-      public final float getY() {
-         return this.y;
-      }
-
-      public final void setConf(float var1) {
-         this.conf = var1;
-      }
-
-      public final void setLastOdo(double var1) {
-         this.lastOdo = var1;
-      }
-
-      public final void setSeen(int var1) {
-         this.seen = var1;
-      }
-
-      public final void setY(float var1) {
-         this.y = var1;
-      }
-   }
+    /* JADX WARN: Removed duplicated region for block: B:25:0x0065 A[SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:29:0x002b A[SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:62:0x00fe A[SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:66:0x00c1 A[SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final Pair<Integer, Boolean> lanes(int side, final float ourLine, float minConf) {
+        Object minElem$iv;
+        Mark it;
+        Mark it2;
+        boolean closed = false;
+        if (!((Float.isInfinite(ourLine) || Float.isNaN(ourLine)) ? false : true)) {
+            return null;
+        }
+        Iterable $this$filter$iv = this.marks;
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            Mark it3 = (Mark) element$iv$iv;
+            if (!it3.getEdge() && it3.getConf() >= minConf) {
+                float y = it3.getY();
+                if (side >= 0 ? y > 1.5f + ourLine : y < ourLine - 1.5f) {
+                    it2 = 1;
+                    if (it2 == null) {
+                        destination$iv$iv.add(element$iv$iv);
+                    }
+                }
+            }
+            it2 = null;
+            if (it2 == null) {
+            }
+        }
+        Iterable $this$sortedBy$iv = (List) destination$iv$iv;
+        List<Mark> ls = CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.LaneMemory$lanes$$inlined$sortedBy$1
+            /* JADX WARN: Multi-variable type inference failed */
+            @Override // java.util.Comparator
+            public final int compare(T t, T t2) {
+                LaneMemory.Mark it4 = (LaneMemory.Mark) t;
+                Float valueOf = Float.valueOf(Math.abs(it4.getY() - ourLine));
+                LaneMemory.Mark it5 = (LaneMemory.Mark) t2;
+                return ComparisonsKt.compareValues(valueOf, Float.valueOf(Math.abs(it5.getY() - ourLine)));
+            }
+        });
+        float last = ourLine;
+        int n = 0;
+        for (Mark m : ls) {
+            float gap = Math.abs(m.getY() - last);
+            if (gap >= 2.3f) {
+                if (gap > 4.6f) {
+                    break;
+                }
+                n++;
+                last = m.getY();
+            }
+        }
+        Iterable $this$filter$iv2 = this.marks;
+        Collection destination$iv$iv2 = new ArrayList();
+        for (Object element$iv$iv2 : $this$filter$iv2) {
+            Mark it4 = (Mark) element$iv$iv2;
+            if (it4.getEdge() && it4.getConf() >= 0.35f) {
+                float y2 = it4.getY();
+                if (side >= 0 ? y2 > 0.0f : y2 < 0.0f) {
+                    it = 1;
+                    if (it == null) {
+                        destination$iv$iv2.add(element$iv$iv2);
+                    }
+                }
+            }
+            it = null;
+            if (it == null) {
+            }
+        }
+        Iterable $this$minByOrNull$iv = (List) destination$iv$iv2;
+        Iterator iterator$iv = $this$minByOrNull$iv.iterator();
+        if (iterator$iv.hasNext()) {
+            minElem$iv = iterator$iv.next();
+            if (iterator$iv.hasNext()) {
+                Mark it5 = (Mark) minElem$iv;
+                float minValue$iv = Math.abs(it5.getY());
+                do {
+                    Object e$iv = iterator$iv.next();
+                    Mark it6 = (Mark) e$iv;
+                    float v$iv = Math.abs(it6.getY());
+                    if (Float.compare(minValue$iv, v$iv) > 0) {
+                        minElem$iv = e$iv;
+                        minValue$iv = v$iv;
+                    }
+                } while (iterator$iv.hasNext());
+            }
+        } else {
+            minElem$iv = null;
+        }
+        Mark edge = (Mark) minElem$iv;
+        if (edge != null && Math.abs(edge.getY() - last) < 1.8f) {
+            float y3 = edge.getY();
+            if (side >= 0 ? y3 >= last - 0.3f : y3 <= 0.3f + last) {
+                closed = true;
+            }
+        }
+        if (n != 0 || closed) {
+            return TuplesKt.to(Integer.valueOf(n), Boolean.valueOf(closed));
+        }
+        return null;
+    }
 }

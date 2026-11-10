@@ -1,5 +1,8 @@
 package com.starpilot.starview;
 
+import com.starpilot.starview.GalaxyRow;
+import com.starpilot.starview.SettingIcons;
+import com.starpilot.starview.SettingsIndex;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -15,498 +18,392 @@ import kotlin.text.Regex;
 import kotlin.text.RegexOption;
 import kotlin.text.StringsKt;
 
+/* compiled from: SettingsIndex.kt */
 public final class SettingsIndex {
-   public static final SettingsIndex INSTANCE = new SettingsIndex();
+    public static final SettingsIndex INSTANCE = new SettingsIndex();
 
-   private SettingsIndex() {
-   }
+    /* compiled from: SettingsIndex.kt */
+    public static final class Summary {
+        private final String line;
+        private final Boolean on;
 
-   // $VF: synthetic method
-   public static List search$default(SettingsIndex var0, List var1, String var2, int var3, int var4, Object var5) {
-      if ((var4 & 4) != 0) {
-         var3 = 40;
-      }
+        public Summary(Boolean on, String line) {
+            Intrinsics.checkNotNullParameter(line, "line");
+            this.on = on;
+            this.line = line;
+        }
 
-      return var0.search(var1, var2, var3);
-   }
+        public final String getLine() {
+            return this.line;
+        }
 
-   // $VF: synthetic method
-   public static SettingsIndex.Summary summary$default(SettingsIndex var0, List var1, String var2, int var3, Object var4) {
-      if ((var3 & 2) != 0) {
-         var2 = "";
-      }
+        public final Boolean getOn() {
+            return this.on;
+        }
+    }
 
-      return var0.summary(var1, var2);
-   }
+    private SettingsIndex() {
+    }
 
-   public final List<String> linkedPages(List<GalaxyRow> var1) {
-      Intrinsics.checkNotNullParameter(var1, "rows");
-      Iterable var5 = var1;
-      var var3 = new ArrayList();
-      Iterator var4 = var5.iterator();
+    public static /* synthetic */ Summary summary$default(SettingsIndex settingsIndex, List list, String str, int i, Object obj) {
+        if ((i & 2) != 0) {
+            str = "";
+        }
+        return settingsIndex.summary(list, str);
+    }
 
-      while (var4.hasNext()) {
-         var var6 = ((GalaxyRow)var4.next()).getPage();
-         boolean var2;
-         if (var6.length() == 0) {
-            var2 = true;
-         } else {
-            var2 = false;
-         }
-
-         if (var2) {
-            var6 = null;
-         }
-
-         String var7 = var6;
-         if (var7 != null) {
-            var3.add(var7);
-         }
-      }
-
-      var1 = var3;
-      return CollectionsKt.distinct(var1);
-   }
-
-   public final List<SettingsIndex.Entry> search(List<SettingsIndex.Entry> var1, String var2, int var3) {
-      Intrinsics.checkNotNullParameter(var1, "entries");
-      Intrinsics.checkNotNullParameter(var2, "query");
-      var2 = var2.toLowerCase(Locale.ROOT);
-      Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
-      CharSequence var8 = var2;
-      Regex var19 = new Regex("\\s+");
-      boolean var5 = false;
-      Iterable var29 = var19.split(var8, 0);
-      var var20 = new ArrayList();
-
-      for (Object var9 : var29) {
-         boolean var4;
-         if (((String)var9).length() > 0) {
-            var4 = true;
-         } else {
-            var4 = false;
-         }
-
-         if (var4) {
-            var20.add(var9);
-         }
-      }
-
-      List var21 = var20;
-      if (var21.isEmpty()) {
-         return CollectionsKt.emptyList();
-      } else {
-         Iterable var15 = var1;
-         boolean var6 = false;
-         var var34 = new ArrayList();
-
-         for (Object var10 : var15) {
-            SettingsIndex.Entry var11 = (SettingsIndex.Entry)var10;
-            var var12 = var21;
-            boolean var23;
-            if (var12 instanceof Collection && ((Collection)var12).isEmpty()) {
-               var23 = true;
-               var6 = var5;
-               var5 = var6;
-            } else {
-               Iterator var40 = var12.iterator();
-
-               while (true) {
-                  if (!var40.hasNext()) {
-                     var6 = var5;
-                     var23 = true;
-                     var5 = var6;
-                     break;
-                  }
-
-                  String var14 = (String)var40.next();
-                  CharSequence var13 = var11.getSearch();
-                  CharSequence var41 = var14;
-                  var5 = var6;
-                  var6 = false;
-                  if (!StringsKt.contains$default(var13, var41, false, 2, null)) {
-                     var23 = false;
-                     break;
-                  }
-
-                  boolean var7 = false;
-                  var6 = var6;
-                  var5 = var7;
-               }
+    /* JADX WARN: Code restructure failed: missing block: B:131:0x00d4, code lost:
+    
+        if (kotlin.text.StringsKt.endsWith$default(r13.getLabel(), " Controller", false, 2, (java.lang.Object) null) != false) goto L35;
+     */
+    /* JADX WARN: Removed duplicated region for block: B:129:? A[LOOP:1: B:20:0x0078->B:129:?, LOOP_END, SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:36:0x00e1 A[EDGE_INSN: B:36:0x00e1->B:37:0x00e1 BREAK  A[LOOP:1: B:20:0x0078->B:129:?], SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final Summary summary(List<GalaxyRow> rows, String title) {
+        int i;
+        Object obj;
+        boolean z;
+        Object element$iv;
+        Object obj2;
+        boolean z2;
+        Intrinsics.checkNotNullParameter(rows, "rows");
+        Intrinsics.checkNotNullParameter(title, "title");
+        List<GalaxyRow> $this$filter$iv = rows;
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            GalaxyRow it = (GalaxyRow) element$iv$iv;
+            if ((GalaxyRow.Companion.isPipCrop(it) || it.getControl() == GalaxyRow.Control.GROUP || it.getControl() == GalaxyRow.Control.ACTION) ? false : true) {
+                destination$iv$iv.add(element$iv$iv);
             }
-
-            if (var23) {
-               var34.add(var10);
+        }
+        List<GalaxyRow> usable = (List) destination$iv$iv;
+        String lowerCase = title.toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+        String t = StringsKt.trim((CharSequence) StringsKt.removeSuffix(lowerCase, (CharSequence) " personality")).toString();
+        Iterator it2 = usable.iterator();
+        while (true) {
+            i = 2;
+            obj = null;
+            if (!it2.hasNext()) {
+                z = false;
+                element$iv = null;
+                break;
             }
-
-            var5 = var6;
-            var6 = var5;
-         }
-
-         var1 = var34;
-         Iterable var32 = CollectionsKt.sortedWith(var1, new Comparator(new Comparator(var21) {
-            final List $words$inlined;
-
-            {
-               this.$words$inlined = var1;
-            }
-
-            @Override
-            public final int compare(T var1, T var2) {
-               var2 = ((SettingsIndex.Entry)var2).getLabel().toLowerCase(Locale.ROOT);
-               Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
-               Comparable var5 = StringsKt.startsWith$default(var2, (String)this.$words$inlined.get(0), false, 2, null);
-               var1 = ((SettingsIndex.Entry)var1).getLabel().toLowerCase(Locale.ROOT);
-               Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-               return ComparisonsKt.compareValues(var5, StringsKt.startsWith$default(var1, (String)this.$words$inlined.get(0), false, 2, null));
-            }
-         }) {
-            final Comparator $this_thenBy;
-
-            {
-               this.$this_thenBy = var1;
-            }
-
-            @Override
-            public final int compare(T var1, T var2x) {
-               int var3x = this.$this_thenBy.compare(var1, var2x);
-               if (var3x == 0) {
-                  var1 = ((SettingsIndex.Entry)var1).getLabel().toLowerCase(Locale.ROOT);
-                  Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-                  Comparable var5x = var1;
-                  var2x = ((SettingsIndex.Entry)var2x).getLabel().toLowerCase(Locale.ROOT);
-                  Intrinsics.checkNotNullExpressionValue(var2x, "toLowerCase(...)");
-                  var3x = ComparisonsKt.compareValues(var5x, var2x);
-               }
-
-               return var3x;
-            }
-         });
-         HashSet var22 = new HashSet();
-         ArrayList var17 = new ArrayList();
-
-         for (Object var33 : var32) {
-            SettingsIndex.Entry var38 = (SettingsIndex.Entry)var33;
-            String var36 = var38.getLabel();
-            String var39 = var38.getTarget();
-            var36 = var36 + "|" + var39;
-            if (var22.add(var36)) {
-               var17.add(var33);
-            }
-         }
-
-         return CollectionsKt.take(var17, var3);
-      }
-   }
-
-   public final String short_(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "label");
-      String var2 = var1.toLowerCase(Locale.ROOT);
-      Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
-      CharSequence var3 = var2;
-      var1 = "strength";
-      if (!StringsKt.contains$default(var3, "strength", false, 2, null)) {
-         var3 = var2;
-         var1 = "offset";
-         if (!StringsKt.contains$default(var3, "offset", false, 2, null)) {
-            if (StringsKt.contains$default(var2, "minimum", false, 2, null) && StringsKt.contains$default(var2, "speed", false, 2, null)) {
-               var1 = "min speed";
-            } else {
-               var3 = var2;
-               var1 = "delay";
-               if (!StringsKt.contains$default(var3, "delay", false, 2, null)) {
-                  if (StringsKt.contains$default(var2, "high-speed follow", false, 2, null)) {
-                     var1 = "highway";
-                  } else {
-                     var3 = var2;
-                     var1 = "follow";
-                     if (!StringsKt.contains$default(var3, "follow", false, 2, null)) {
-                        if (StringsKt.contains$default(var2, "threshold", false, 2, null)) {
-                           var1 = "below";
-                        } else {
-                           var1 = CollectionsKt.joinToString$default(
-                              CollectionsKt.takeLast(StringsKt.split$default(var2, new char[]{' '}, false, 0, 6, null), 2),
-                              " ",
-                              null,
-                              null,
-                              0,
-                              null,
-                              null,
-                              62,
-                              null
-                           );
+            element$iv = it2.next();
+            GalaxyRow it3 = (GalaxyRow) element$iv;
+            if (it3.getControl() == GalaxyRow.Control.SWITCH) {
+                if (new Regex("^(enable|use|allow) ", RegexOption.IGNORE_CASE).containsMatchIn(it3.getLabel())) {
+                    z = false;
+                } else {
+                    if (t.length() > 0) {
+                        String lowerCase2 = it3.getLabel().toLowerCase(Locale.ROOT);
+                        Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
+                        if (Intrinsics.areEqual(lowerCase2, t)) {
+                            z = false;
                         }
-                     }
-                  }
-               }
-            }
-         }
-      }
-
-      return var1;
-   }
-
-   public final SettingsIndex.Summary summary(List<GalaxyRow> var1, String var2) {
-      Intrinsics.checkNotNullParameter(var1, "rows");
-      Intrinsics.checkNotNullParameter(var2, "title");
-      Iterable var4 = var1;
-      var var10 = new ArrayList();
-
-      for (var var4_it : var4) {
-
-         var4 = var4_it;
-         GalaxyRow var6 = (GalaxyRow)var4;
-         boolean var3;
-         if (!GalaxyRow.Companion.isPipCrop(var6) && var6.getControl() != GalaxyRow.Control.GROUP && var6.getControl() != GalaxyRow.Control.ACTION) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         if (var3) {
-            var10.add(var4);
-         }
-      }
-
-      List var28 = var10;
-      String var11 = var2.toLowerCase(Locale.ROOT);
-      Intrinsics.checkNotNullExpressionValue(var11, "toLowerCase(...)");
-      var2 = StringsKt.trim(StringsKt.removeSuffix(var11, " personality")).toString();
-      Iterator var7 = var28.iterator();
-
-      boolean var22;
-      do {
-         if (!var7.hasNext()) {
-            var12 = null;
-            break;
-         }
-
-         label150: {
-            var12 = var7.next();
-            GalaxyRow var32 = (GalaxyRow)var12;
-            if (var32.getControl() == GalaxyRow.Control.SWITCH) {
-               if (new Regex("^(enable|use|allow) ", RegexOption.IGNORE_CASE).containsMatchIn(var32.getLabel())) {
-                  break label150;
-               }
-
-               if (var2.length() > 0) {
-                  var22 = true;
-               } else {
-                  var22 = false;
-               }
-
-               if (var22) {
-                  String var34 = var32.getLabel().toLowerCase(Locale.ROOT);
-                  Intrinsics.checkNotNullExpressionValue(var34, "toLowerCase(...)");
-                  if (Intrinsics.areEqual(var34, var2)) {
-                     break label150;
-                  }
-               }
-
-               if (StringsKt.endsWith$default(var32.getLabel(), " Controller", false, 2, null)) {
-                  break label150;
-               }
-            }
-
-            var22 = false;
-            continue;
-         }
-
-         var22 = true;
-      } while (!var22);
-
-      GalaxyRow var35 = (GalaxyRow)var12;
-      var2 = "On";
-      Boolean var13;
-      if (var35 != null) {
-         var13 = Intrinsics.areEqual(var35.getValue(), "On");
-      } else {
-         var13 = null;
-      }
-
-      ArrayList var33 = new ArrayList();
-      if (var35 != null) {
-         if (!Intrinsics.areEqual(var13, true)) {
-            var2 = "Off";
-         }
-
-         var33.add(var2);
-      }
-
-      ArrayList var37 = new ArrayList();
-
-      for (GalaxyRow var9 : var28) {
-         if (var37.size() < 2 && var9 != var35) {
-            if (StringsKt.toDoubleOrNull(var9.getValue()) != null) {
-               var22 = true;
+                    }
+                    z = false;
+                }
+                z2 = true;
+                if (!z2) {
+                    break;
+                }
             } else {
-               var22 = false;
+                z = false;
             }
-
-            if (var9.getControl() == GalaxyRow.Control.SELECT) {
-               var2 = var9.getValue();
-               if (!StringsKt.isBlank(var2) && var2.length() <= 26 && !Intrinsics.areEqual(var2, "Selected Profile")) {
-                  var22 = true;
-               } else {
-                  var22 = false;
-               }
-
-               if (!var22) {
-                  var2 = null;
-               }
-
-               if (var2 != null) {
-                  var37.add(var2);
-               }
-            } else if (var9.getControl() == GalaxyRow.Control.SLIDER || var9.getControl() == GalaxyRow.Control.READOUT && var22) {
-               if (var9.getUnit().length() > 0) {
-                  var22 = true;
-               } else {
-                  var22 = false;
-               }
-
-               if (var22) {
-                  var2 = this.short_(var9.getLabel());
-                  String var38 = var9.withUnit(GalaxyRow.shown$default(var9, null, 1, null));
-                  var37.add(var2 + " " + var38);
-               }
+            z2 = z;
+            if (!z2) {
             }
-         }
-      }
-
-      var33.addAll(var37);
-      if (var35 == null && var37.isEmpty()) {
-         label109: {
-            for (Object var29 : var28) {
-               if (((GalaxyRow)var29).getControl() == GalaxyRow.Control.SWITCH) {
-                  var22 = true;
-               } else {
-                  var22 = false;
-               }
-
-               if (var22) {
-                  var19 = var29;
-                  break label109;
-               }
+        }
+        GalaxyRow main = (GalaxyRow) element$iv;
+        Boolean on = main != null ? Boolean.valueOf(Intrinsics.areEqual(main.getValue(), "On")) : null;
+        ArrayList parts = new ArrayList();
+        if (main != null) {
+            parts.add(Intrinsics.areEqual((Object) on, (Object) true) ? "On" : "Off");
+        }
+        ArrayList values = new ArrayList();
+        for (GalaxyRow r : usable) {
+            if (values.size() >= i) {
+                i = 2;
+                z = false;
+            } else if (r != main) {
+                boolean numeric = StringsKt.toDoubleOrNull(r.getValue()) != null ? true : z;
+                if (r.getControl() == GalaxyRow.Control.SELECT) {
+                    String it4 = r.getValue();
+                    if (!((StringsKt.isBlank(it4) || it4.length() > 26 || Intrinsics.areEqual(it4, "Selected Profile")) ? false : true)) {
+                        it4 = null;
+                    }
+                    if (it4 != null) {
+                        values.add(it4);
+                        i = 2;
+                        obj = null;
+                        z = false;
+                    } else {
+                        i = 2;
+                        obj = null;
+                        z = false;
+                    }
+                } else {
+                    if (r.getControl() != GalaxyRow.Control.SLIDER && (r.getControl() != GalaxyRow.Control.READOUT || !numeric)) {
+                        i = 2;
+                        obj = null;
+                    } else if (r.getUnit().length() > 0) {
+                        values.add(m1162short(r.getLabel()) + " " + r.withUnit(GalaxyRow.shown$default(r, null, 1, null)));
+                        obj = null;
+                        i = 2;
+                        z = false;
+                    } else {
+                        obj = null;
+                        i = 2;
+                    }
+                    z = false;
+                }
             }
+        }
+        parts.addAll(values);
+        if (main == null && values.isEmpty()) {
+            List $this$firstOrNull$iv = usable;
+            Iterator it5 = $this$firstOrNull$iv.iterator();
+            while (true) {
+                if (!it5.hasNext()) {
+                    obj2 = null;
+                    break;
+                }
+                Object element$iv2 = it5.next();
+                Iterable $this$firstOrNull$iv2 = $this$firstOrNull$iv;
+                if (((GalaxyRow) element$iv2).getControl() == GalaxyRow.Control.SWITCH) {
+                    obj2 = element$iv2;
+                    break;
+                }
+                $this$firstOrNull$iv = $this$firstOrNull$iv2;
+            }
+            GalaxyRow it6 = (GalaxyRow) obj2;
+            if (it6 != null) {
+                String label = it6.getLabel();
+                String lowerCase3 = it6.getValue().toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(lowerCase3, "toLowerCase(...)");
+                parts.add(label + " " + lowerCase3);
+            }
+        }
+        return new Summary(on, CollectionsKt.joinToString$default(parts, " · ", null, null, 0, null, null, 62, null));
+    }
 
-            var19 = null;
-         }
+    /* renamed from: short, reason: not valid java name */
+    public final String m1162short(String label) {
+        Intrinsics.checkNotNullParameter(label, "label");
+        String l = label.toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(l, "toLowerCase(...)");
+        return StringsKt.contains$default((CharSequence) l, (CharSequence) "strength", false, 2, (Object) null) ? "strength" : StringsKt.contains$default((CharSequence) l, (CharSequence) "offset", false, 2, (Object) null) ? "offset" : (StringsKt.contains$default((CharSequence) l, (CharSequence) "minimum", false, 2, (Object) null) && StringsKt.contains$default((CharSequence) l, (CharSequence) "speed", false, 2, (Object) null)) ? "min speed" : StringsKt.contains$default((CharSequence) l, (CharSequence) "delay", false, 2, (Object) null) ? "delay" : StringsKt.contains$default((CharSequence) l, (CharSequence) "high-speed follow", false, 2, (Object) null) ? "highway" : StringsKt.contains$default((CharSequence) l, (CharSequence) "follow", false, 2, (Object) null) ? "follow" : StringsKt.contains$default((CharSequence) l, (CharSequence) "threshold", false, 2, (Object) null) ? "below" : CollectionsKt.joinToString$default(CollectionsKt.takeLast(StringsKt.split$default((CharSequence) l, new char[]{' '}, false, 0, 6, (Object) null), 2), " ", null, null, 0, null, null, 62, null);
+    }
 
-         GalaxyRow var30 = (GalaxyRow)var19;
-         if (var30 != null) {
-            var2 = var30.getLabel();
-            String var31 = var30.getValue().toLowerCase(Locale.ROOT);
-            Intrinsics.checkNotNullExpressionValue(var31, "toLowerCase(...)");
-            var33.add(var2 + " " + var31);
-         }
-      }
+    /* compiled from: SettingsIndex.kt */
+    public static final class Entry {
+        private final SettingIcons.Icon icon;
+        private final String label;
+        private final String reason;
+        private final String search;
+        private final String target;
+        private final String unit;
+        private final String value;
+        private final String where;
 
-      return new SettingsIndex.Summary(var13, CollectionsKt.joinToString$default(var33, " · ", null, null, 0, null, null, 62, null));
-   }
+        public Entry(String label, String value, String where, String target, String reason, String unit, SettingIcons.Icon icon) {
+            Intrinsics.checkNotNullParameter(label, "label");
+            Intrinsics.checkNotNullParameter(value, "value");
+            Intrinsics.checkNotNullParameter(where, "where");
+            Intrinsics.checkNotNullParameter(target, "target");
+            Intrinsics.checkNotNullParameter(reason, "reason");
+            Intrinsics.checkNotNullParameter(unit, "unit");
+            this.label = label;
+            this.value = value;
+            this.where = where;
+            this.target = target;
+            this.reason = reason;
+            this.unit = unit;
+            this.icon = icon;
+            String lowerCase = CollectionsKt.joinToString$default(CollectionsKt.listOf((Object[]) new String[]{this.label, this.value, this.reason, this.unit, this.where}), " ", null, null, 0, null, null, 62, null).toLowerCase(Locale.ROOT);
+            Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+            this.search = lowerCase;
+        }
 
-   public static final class Entry {
-      private final SettingIcons.Icon icon;
-      private final String label;
-      private final String reason;
-      private final String search;
-      private final String target;
-      private final String unit;
-      private final String value;
-      private final String where;
+        /* JADX WARN: Illegal instructions before constructor call */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
+        public /* synthetic */ Entry(String str, String str2, String str3, String str4, String str5, String str6, SettingIcons.Icon icon, int i, DefaultConstructorMarker defaultConstructorMarker) {
+            this(str, str2, str3, str4, r7, r8, r9);
+            SettingIcons.Icon icon2;
+            String str7 = (i & 16) != 0 ? "" : str5;
+            String str8 = (i & 32) != 0 ? "" : str6;
+            if ((i & 64) == 0) {
+                icon2 = icon;
+            } else {
+                icon2 = null;
+            }
+        }
 
-      public Entry(String var1, String var2, String var3, String var4, String var5, String var6, SettingIcons.Icon var7) {
-         Intrinsics.checkNotNullParameter(var1, "label");
-         Intrinsics.checkNotNullParameter(var2, "value");
-         Intrinsics.checkNotNullParameter(var3, "where");
-         Intrinsics.checkNotNullParameter(var4, "target");
-         Intrinsics.checkNotNullParameter(var5, "reason");
-         Intrinsics.checkNotNullParameter(var6, "unit");
-         super();
-         this.label = var1;
-         this.value = var2;
-         this.where = var3;
-         this.target = var4;
-         this.reason = var5;
-         this.unit = var6;
-         this.icon = var7;
-         var1 = CollectionsKt.joinToString$default(
-               CollectionsKt.listOf(new String[]{this.label, this.value, this.reason, this.unit, this.where}), " ", null, null, 0, null, null, 62, null
-            )
-            .toLowerCase(Locale.ROOT);
-         Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-         this.search = var1;
-      }
+        public final String getLabel() {
+            return this.label;
+        }
 
-      // $VF: synthetic method
-      public Entry(
-         String var1, String var2, String var3, String var4, String var5, String var6, SettingIcons.Icon var7, int var8, DefaultConstructorMarker var9
-      ) {
-         if ((var8 & 16) != 0) {
-            var5 = "";
-         }
+        public final String getReason() {
+            return this.reason;
+        }
 
-         if ((var8 & 32) != 0) {
-            var6 = "";
-         }
+        public final String getTarget() {
+            return this.target;
+        }
 
-         if ((var8 & 64) != 0) {
-            var7 = null;
-         }
+        public final String getUnit() {
+            return this.unit;
+        }
 
-         this(var1, var2, var3, var4, var5, var6, var7);
-      }
+        public final String getValue() {
+            return this.value;
+        }
 
-      public final SettingIcons.Icon getIcon() {
-         return this.icon;
-      }
+        public final String getWhere() {
+            return this.where;
+        }
 
-      public final String getLabel() {
-         return this.label;
-      }
+        public final SettingIcons.Icon getIcon() {
+            return this.icon;
+        }
 
-      public final String getReason() {
-         return this.reason;
-      }
+        public final String getSearch() {
+            return this.search;
+        }
+    }
 
-      public final String getSearch() {
-         return this.search;
-      }
+    public static /* synthetic */ List search$default(SettingsIndex settingsIndex, List list, String str, int i, int i2, Object obj) {
+        if ((i2 & 4) != 0) {
+            i = 40;
+        }
+        return settingsIndex.search(list, str, i);
+    }
 
-      public final String getTarget() {
-         return this.target;
-      }
+    public final List<Entry> search(List<Entry> entries, String query, int limit) {
+        Iterable $this$filter$iv;
+        int $i$f$filter;
+        int $i$f$filter2;
+        boolean z;
+        Intrinsics.checkNotNullParameter(entries, "entries");
+        Intrinsics.checkNotNullParameter(query, "query");
+        String lowerCase = query.toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+        int i = 0;
+        Iterable $this$filter$iv2 = new Regex("\\s+").split(lowerCase, 0);
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv2) {
+            if (((String) element$iv$iv).length() > 0) {
+                destination$iv$iv.add(element$iv$iv);
+            }
+        }
+        final List words = (List) destination$iv$iv;
+        if (words.isEmpty()) {
+            return CollectionsKt.emptyList();
+        }
+        List<Entry> $this$filter$iv3 = entries;
+        int $i$f$filter3 = 0;
+        Collection destination$iv$iv2 = new ArrayList();
+        for (Object element$iv$iv2 : $this$filter$iv3) {
+            Entry e = (Entry) element$iv$iv2;
+            List $this$all$iv = words;
+            if (($this$all$iv instanceof Collection) && $this$all$iv.isEmpty()) {
+                $this$filter$iv = $this$filter$iv3;
+                $i$f$filter = $i$f$filter3;
+                z = true;
+                $i$f$filter2 = i;
+            } else {
+                Iterator it = $this$all$iv.iterator();
+                while (true) {
+                    if (!it.hasNext()) {
+                        $this$filter$iv = $this$filter$iv3;
+                        $i$f$filter = $i$f$filter3;
+                        $i$f$filter2 = i;
+                        z = true;
+                        break;
+                    }
+                    Object element$iv = it.next();
+                    $this$filter$iv = $this$filter$iv3;
+                    $i$f$filter = $i$f$filter3;
+                    $i$f$filter2 = 0;
+                    if (!StringsKt.contains$default((CharSequence) e.getSearch(), (CharSequence) element$iv, false, 2, (Object) null)) {
+                        z = false;
+                        break;
+                    }
+                    i = 0;
+                    $this$filter$iv3 = $this$filter$iv;
+                    $i$f$filter3 = $i$f$filter;
+                }
+            }
+            if (z) {
+                destination$iv$iv2.add(element$iv$iv2);
+            }
+            i = $i$f$filter2;
+            $this$filter$iv3 = $this$filter$iv;
+            $i$f$filter3 = $i$f$filter;
+        }
+        final Comparator comparator = new Comparator() { // from class: com.starpilot.starview.SettingsIndex$search$$inlined$compareByDescending$1
+            /* JADX WARN: Multi-variable type inference failed */
+            @Override // java.util.Comparator
+            public final int compare(T t, T t2) {
+                SettingsIndex.Entry it2 = (SettingsIndex.Entry) t2;
+                String lowerCase2 = it2.getLabel().toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
+                Boolean valueOf = Boolean.valueOf(StringsKt.startsWith$default(lowerCase2, (String) words.get(0), false, 2, (Object) null));
+                SettingsIndex.Entry it3 = (SettingsIndex.Entry) t;
+                String lowerCase3 = it3.getLabel().toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(lowerCase3, "toLowerCase(...)");
+                return ComparisonsKt.compareValues(valueOf, Boolean.valueOf(StringsKt.startsWith$default(lowerCase3, (String) words.get(0), false, 2, (Object) null)));
+            }
+        };
+        Iterable $this$distinctBy$iv = CollectionsKt.sortedWith((List) destination$iv$iv2, new Comparator() { // from class: com.starpilot.starview.SettingsIndex$search$$inlined$thenBy$1
+            /* JADX WARN: Multi-variable type inference failed */
+            @Override // java.util.Comparator
+            public final int compare(T t, T t2) {
+                int previousCompare = comparator.compare(t, t2);
+                if (previousCompare != 0) {
+                    return previousCompare;
+                }
+                SettingsIndex.Entry it2 = (SettingsIndex.Entry) t;
+                String lowerCase2 = it2.getLabel().toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(lowerCase2, "toLowerCase(...)");
+                SettingsIndex.Entry it3 = (SettingsIndex.Entry) t2;
+                String lowerCase3 = it3.getLabel().toLowerCase(Locale.ROOT);
+                Intrinsics.checkNotNullExpressionValue(lowerCase3, "toLowerCase(...)");
+                return ComparisonsKt.compareValues(lowerCase2, lowerCase3);
+            }
+        });
+        HashSet set$iv = new HashSet();
+        ArrayList list$iv = new ArrayList();
+        for (Object e$iv : $this$distinctBy$iv) {
+            Entry it2 = (Entry) e$iv;
+            if (set$iv.add(it2.getLabel() + "|" + it2.getTarget())) {
+                list$iv.add(e$iv);
+            }
+        }
+        ArrayList $this$distinctBy$iv2 = list$iv;
+        return CollectionsKt.take($this$distinctBy$iv2, limit);
+    }
 
-      public final String getUnit() {
-         return this.unit;
-      }
-
-      public final String getValue() {
-         return this.value;
-      }
-
-      public final String getWhere() {
-         return this.where;
-      }
-   }
-
-   public static final class Summary {
-      private final String line;
-      private final Boolean on;
-
-      public Summary(Boolean var1, String var2) {
-         Intrinsics.checkNotNullParameter(var2, "line");
-         super();
-         this.on = var1;
-         this.line = var2;
-      }
-
-      public final String getLine() {
-         return this.line;
-      }
-
-      public final Boolean getOn() {
-         return this.on;
-      }
-   }
+    public final List<String> linkedPages(List<GalaxyRow> rows) {
+        Intrinsics.checkNotNullParameter(rows, "rows");
+        List<GalaxyRow> $this$mapNotNull$iv = rows;
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv$iv : $this$mapNotNull$iv) {
+            GalaxyRow it = (GalaxyRow) element$iv$iv$iv;
+            String page = it.getPage();
+            if (page.length() == 0) {
+                page = null;
+            }
+            String str = page;
+            if (str != null) {
+                destination$iv$iv.add(str);
+            }
+        }
+        return CollectionsKt.distinct((List) destination$iv$iv);
+    }
 }

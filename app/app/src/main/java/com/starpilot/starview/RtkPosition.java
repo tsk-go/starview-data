@@ -3,198 +3,114 @@ package com.starpilot.starview;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 
+/* compiled from: RtkCore.kt */
 public final class RtkPosition {
-   private static final double AHEAD_MAX_S = 2.0;
-   public static final RtkPosition INSTANCE = new RtkPosition();
-   public static final double MAX_ACC_M = 10.0;
-   public static final long MAX_AGE_MS = 2500L;
-   private static volatile double accM = Double.NaN;
-   private static volatile long atMs;
-   private static volatile long fastMs;
-   private static volatile double heading = Double.NaN;
-   private static volatile String kind = "none";
-   private static volatile double lat = Double.NaN;
-   private static volatile double lon = Double.NaN;
+    private static final double AHEAD_MAX_S = 2.0d;
+    public static final double MAX_ACC_M = 10.0d;
+    public static final long MAX_AGE_MS = 2500;
+    private static volatile long atMs;
+    private static volatile long fastMs;
+    public static final RtkPosition INSTANCE = new RtkPosition();
+    private static volatile double lat = Double.NaN;
+    private static volatile double lon = Double.NaN;
+    private static volatile double heading = Double.NaN;
+    private static volatile double accM = Double.NaN;
+    private static volatile String kind = "none";
 
-   private RtkPosition() {
-   }
+    private RtkPosition() {
+    }
 
-   public final boolean fast(long var1) {
-      boolean var3;
-      if (fastMs > 0L && var1 - fastMs < 600L) {
-         var3 = true;
-      } else {
-         var3 = false;
-      }
+    public final double getHeading() {
+        return heading;
+    }
 
-      return var3;
-   }
+    public final void reset() {
+        lat = Double.NaN;
+        lon = Double.NaN;
+        atMs = 0L;
+        heading = Double.NaN;
+        fastMs = 0L;
+    }
 
-   public final void feed(RtkStatus var1, long var2) {
-      if (var1 != null && var1.getHasFix()) {
-         double var4 = var1.getHAccM();
-         boolean var10 = Double.isInfinite(var4);
-         boolean var9 = true;
-         boolean var8;
-         if (!var10 && !Double.isNaN(var4)) {
-            var8 = true;
-         } else {
-            var8 = false;
-         }
+    public final double getAccM() {
+        return accM;
+    }
 
-         if (var8 && !(var1.getHAccM() > 10.0)) {
-            if (this.fast(var2)) {
-               return;
+    public final String getKind() {
+        return kind;
+    }
+
+    public final boolean fast(long nowMs) {
+        return fastMs > 0 && nowMs - fastMs < 600;
+    }
+
+    public final void feedFast(double lat2, double lon2, double accM2, double headingDeg, double speedMs, String kind2, long ageMs, long nowMs) {
+        Intrinsics.checkNotNullParameter(kind2, "kind");
+        if ((Double.isInfinite(lat2) || Double.isNaN(lat2)) ? false : true) {
+            if ((Double.isInfinite(lon2) || Double.isNaN(lon2)) ? false : true) {
+                if (!((Double.isInfinite(accM2) || Double.isNaN(accM2)) ? false : true) || accM2 > 10.0d) {
+                    return;
+                }
+                long at = nowMs - RangesKt.coerceIn(ageMs, 0L, 1000L);
+                lat = lat2;
+                lon = lon2;
+                atMs = at;
+                fastMs = nowMs;
+                accM = accM2;
+                kind = kind2;
+                if (!((Double.isInfinite(speedMs) || Double.isNaN(speedMs)) ? false : true) || speedMs <= 1.5d) {
+                    return;
+                }
+                if ((Double.isInfinite(headingDeg) || Double.isNaN(headingDeg)) ? false : true) {
+                    double d = 360;
+                    heading = ((headingDeg % d) + d) % d;
+                }
             }
+        }
+    }
 
-            lat = var1.getLat();
-            lon = var1.getLon();
-            atMs = var2;
-            var4 = var1.getSpeedMs();
-            if (!Double.isInfinite(var4) && !Double.isNaN(var4)) {
-               var8 = true;
-            } else {
-               var8 = false;
-            }
-
-            if (var8 && var1.getSpeedMs() > 1.5) {
-               var4 = var1.getHeadingDeg();
-               if (!Double.isInfinite(var4) && !Double.isNaN(var4)) {
-                  var8 = var9;
-               } else {
-                  var8 = false;
-               }
-
-               if (var8) {
-                  var4 = var1.getHeadingDeg();
-                  double var6 = 360;
-                  heading = (var4 % var6 + var6) % var6;
-               }
-            }
-
+    public final void feed(RtkStatus s, long nowMs) {
+        if (s == null || !s.getHasFix()) {
             return;
-         }
-      }
-   }
+        }
+        double hAccM = s.getHAccM();
+        if (!((Double.isInfinite(hAccM) || Double.isNaN(hAccM)) ? false : true) || s.getHAccM() > 10.0d || fast(nowMs)) {
+            return;
+        }
+        lat = s.getLat();
+        lon = s.getLon();
+        atMs = nowMs;
+        double speedMs = s.getSpeedMs();
+        if (!((Double.isInfinite(speedMs) || Double.isNaN(speedMs)) ? false : true) || s.getSpeedMs() <= 1.5d) {
+            return;
+        }
+        double headingDeg = s.getHeadingDeg();
+        if ((Double.isInfinite(headingDeg) || Double.isNaN(headingDeg)) ? false : true) {
+            double d = 360;
+            heading = ((s.getHeadingDeg() % d) + d) % d;
+        }
+    }
 
-   public final void feedFast(double var1, double var3, double var5, double var7, double var9, String var11, long var12, long var14) {
-      Intrinsics.checkNotNullParameter(var11, "kind");
-      boolean var18 = Double.isInfinite(var1);
-      boolean var17 = true;
-      boolean var16;
-      if (!var18 && !Double.isNaN(var1)) {
-         var16 = true;
-      } else {
-         var16 = false;
-      }
-
-      if (var16) {
-         if (!Double.isInfinite(var3) && !Double.isNaN(var3)) {
-            var16 = true;
-         } else {
-            var16 = false;
-         }
-
-         if (var16) {
-            if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
-               var16 = true;
-            } else {
-               var16 = false;
+    public final double[] now(long nowMs, double speedMs) {
+        long a = atMs;
+        if (a == 0 || nowMs - a > 2500) {
+            return null;
+        }
+        double d = lat;
+        if (!((Double.isInfinite(d) || Double.isNaN(d)) ? false : true)) {
+            return null;
+        }
+        double dt = RangesKt.coerceIn((nowMs - a) / 1000.0d, 0.0d, 2.0d);
+        double h = heading;
+        if ((Double.isInfinite(h) || Double.isNaN(h)) ? false : true) {
+            if (((Double.isInfinite(speedMs) || Double.isNaN(speedMs)) ? false : true) && speedMs > 0.3d) {
+                double d2 = speedMs * dt;
+                double r = Math.toRadians(h);
+                double dLat = (Math.cos(r) * d2) / 111195.0d;
+                double dLon = (Math.sin(r) * d2) / (Math.cos(Math.toRadians(lat)) * 111195.0d);
+                return new double[]{lat + dLat, lon + dLon};
             }
-
-            if (var16 && !(var5 > 10.0)) {
-               var12 = RangesKt.coerceIn(var12, 0L, 1000L);
-               lat = var1;
-               lon = var3;
-               atMs = var14 - var12;
-               fastMs = var14;
-               accM = var5;
-               kind = var11;
-               if (!Double.isInfinite(var9) && !Double.isNaN(var9)) {
-                  var16 = true;
-               } else {
-                  var16 = false;
-               }
-
-               if (var16 && var9 > 1.5) {
-                  if (!Double.isInfinite(var7) && !Double.isNaN(var7)) {
-                     var16 = var17;
-                  } else {
-                     var16 = false;
-                  }
-
-                  if (var16) {
-                     var1 = 360;
-                     heading = (var7 % var1 + var1) % var1;
-                  }
-               }
-
-               return;
-            }
-         }
-      }
-   }
-
-   public final double getAccM() {
-      return accM;
-   }
-
-   public final double getHeading() {
-      return heading;
-   }
-
-   public final String getKind() {
-      return kind;
-   }
-
-   public final double[] now(long var1, double var3) {
-      long var10 = atMs;
-      if (var10 != 0L && var1 - var10 <= 2500L) {
-         double var5 = lat;
-         boolean var9;
-         if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
-            var9 = true;
-         } else {
-            var9 = false;
-         }
-
-         if (var9) {
-            double var7 = RangesKt.coerceIn((var1 - var10) / 1000.0, 0.0, 2.0);
-            var5 = heading;
-            if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
-               var9 = true;
-            } else {
-               var9 = false;
-            }
-
-            if (var9) {
-               if (!Double.isInfinite(var3) && !Double.isNaN(var3)) {
-                  var9 = true;
-               } else {
-                  var9 = false;
-               }
-
-               if (var9 && !(var3 <= 0.3)) {
-                  var3 *= var7;
-                  var7 = Math.toRadians(var5);
-                  var5 = Math.cos(var7) * var3 / 111195.0;
-                  var3 = Math.sin(var7) * var3 / (Math.cos(Math.toRadians(lat)) * 111195.0);
-                  return new double[]{lat + var5, lon + var3};
-               }
-            }
-
-            return new double[]{lat, lon};
-         }
-      }
-
-      return null;
-   }
-
-   public final void reset() {
-      lat = Double.NaN;
-      lon = Double.NaN;
-      atMs = 0L;
-      heading = Double.NaN;
-      fastMs = 0L;
-   }
+        }
+        return new double[]{lat, lon};
+    }
 }

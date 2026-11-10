@@ -1,73 +1,47 @@
 package com.starpilot.starview;
 
 import kotlin.jvm.internal.Intrinsics;
+import org.capnproto.SlcPeek;
 
+/* compiled from: LaneCentering.kt */
 public final class LaneCentering {
-   private static final float EPS = 1.0E-6F;
-   public static final LaneCentering INSTANCE = new LaneCentering();
-   private static final long MAX_AGE_NS = 400000000L;
-   private static final float MAX_CORRECTION = 0.01F;
+    private static final float EPS = 1.0E-6f;
+    public static final LaneCentering INSTANCE = new LaneCentering();
+    private static final long MAX_AGE_NS = 400000000;
+    private static final float MAX_CORRECTION = 0.01f;
 
-   private LaneCentering() {
-   }
+    private LaneCentering() {
+    }
 
-   // $VF: synthetic method
-   public static int direction$default(LaneCentering var0, Telemetry var1, long var2, int var4, Object var5) {
-      if ((var4 & 2) != 0) {
-         var2 = System.nanoTime();
-      }
+    public static /* synthetic */ int direction$default(LaneCentering laneCentering, Telemetry telemetry, long j, int i, Object obj) {
+        if ((i & 2) != 0) {
+            j = System.nanoTime();
+        }
+        return laneCentering.direction(telemetry, j);
+    }
 
-      return var0.direction(var1, var2);
-   }
+    public final int direction(Telemetry t, long nowNs) {
+        Intrinsics.checkNotNullParameter(t, "t");
+        SlcPeek.LaneCentering lc = t.getLc();
+        if (lc != null && nowNs - t.getLcAtNs() <= 400000000) {
+            return direction(lc.version, lc.lateralActive, t.getLatActive(), lc.requested, lc.applied);
+        }
+        return 0;
+    }
 
-   public final int direction(int var1, boolean var2, boolean var3, float var4, float var5) {
-      byte var6 = 0;
-      if (var1 == 1 && var2 && var3) {
-         boolean var7;
-         if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
-            var7 = 1;
-         } else {
-            var7 = 0;
-         }
-
-         if (var7) {
-            if (!Float.isInfinite(var5) && !Float.isNaN(var5)) {
-               var7 = (boolean)1;
-            } else {
-               var7 = (boolean)0;
+    public final int direction(int version, boolean lateralActive, boolean carLatActive, float requested, float applied) {
+        if (version != 1 || !lateralActive || !carLatActive) {
+            return 0;
+        }
+        if ((Float.isInfinite(requested) || Float.isNaN(requested)) ? false : true) {
+            if (!((Float.isInfinite(applied) || Float.isNaN(applied)) ? false : true) || Math.abs(requested) > 0.01f || Math.abs(applied) > Math.abs(requested) + 1.0E-8f || requested * applied < 0.0f) {
+                return 0;
             }
-
-            if (var7) {
-               if (!(Math.abs(var4) > 0.01F) && !(Math.abs(var5) > Math.abs(var4) + 1.0E-8F) && !(var4 * var5 < 0.0F)) {
-                  if (var5 > 1.0E-6F) {
-                     var7 = 1;
-                  } else {
-                     var7 = var6;
-                     if (var5 < -1.0E-6F) {
-                        var7 = -1;
-                     }
-                  }
-
-                  return var7;
-               }
-
-               return 0;
+            if (applied > 1.0E-6f) {
+                return 1;
             }
-         }
-
-         return 0;
-      } else {
-         return 0;
-      }
-   }
-
-   public final int direction(Telemetry var1, long var2) {
-      Intrinsics.checkNotNullParameter(var1, "t");
-      org.capnproto.SlcPeek.LaneCentering var4 = var1.getLc();
-      if (var4 == null) {
-         return 0;
-      } else {
-         return var2 - var1.getLcAtNs() > 400000000L ? 0 : this.direction(var4.version, var4.lateralActive, var1.getLatActive(), var4.requested, var4.applied);
-      }
-   }
+            return applied < -1.0E-6f ? -1 : 0;
+        }
+        return 0;
+    }
 }

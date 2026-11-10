@@ -8,210 +8,201 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.graphics.Paint.Align;
-import android.graphics.Paint.Style;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import kotlin.jvm.internal.Intrinsics;
 
+/* compiled from: GxCameras.kt */
 class GxCamerasSnapView extends View {
-   private final Paint bg;
-   private Bitmap bmp;
-   private final float density;
-   private final Paint paint;
-   private String placeholder;
-   private final RectF rect;
-   private float s;
+    private final Paint bg;
+    private Bitmap bmp;
+    private final float density;
+    private final Paint paint;
+    private String placeholder;
+    private final RectF rect;
+    private float s;
 
-   public GxCamerasSnapView(Context var1) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      super(var1);
-      this.density = var1.getResources().getDisplayMetrics().density;
-      this.placeholder = "Loading camera snapshot...";
-      this.rect = new RectF();
-      this.s = 1.0F;
-      this.paint = new Paint(3);
-      Paint var2 = new Paint();
-      var2.setColor(Color.rgb(34, 34, 34));
-      this.bg = var2;
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public GxCamerasSnapView(Context ctx) {
+        super(ctx);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        this.density = ctx.getResources().getDisplayMetrics().density;
+        this.placeholder = "Loading camera snapshot...";
+        this.rect = new RectF();
+        this.s = 1.0f;
+        this.paint = new Paint(3);
+        Paint $this$bg_u24lambda_u242 = new Paint();
+        $this$bg_u24lambda_u242.setColor(Color.rgb(34, 34, 34));
+        this.bg = $this$bg_u24lambda_u242;
+    }
 
-   private final void fit() {
-      this.s = Math.min(this.getWidth() / this.getCw(), this.getHeight() / this.getCh());
-      float var3 = this.getCw() * this.s;
-      float var2 = this.getCh() * this.s;
-      RectF var5 = this.rect;
-      float var4 = this.getWidth();
-      float var1 = 2;
-      var5.set((var4 - var3) / var1, (this.getHeight() - var2) / var1, (this.getWidth() + var3) / var1, (this.getHeight() + var2) / var1);
-   }
+    public final float getDensity() {
+        return this.density;
+    }
 
-   public final float cx(float var1) {
-      return (var1 - this.rect.left) / this.s;
-   }
+    public final Bitmap getBmp() {
+        return this.bmp;
+    }
 
-   public final float cy(float var1) {
-      return (var1 - this.rect.top) / this.s;
-   }
+    public final void setBmp(Bitmap v) {
+        this.bmp = v;
+        requestLayout();
+        invalidate();
+    }
 
-   protected final void dot(Canvas var1, float var2, float var3, float var4, int var5, Integer var6) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      this.paint.reset();
-      this.paint.setAntiAlias(true);
-      this.paint.setStyle(Style.FILL);
-      this.paint.setColor(var5);
-      var1.drawCircle(var2, var3, var4, this.paint);
-      if (var6 != null) {
-         this.paint.setStyle(Style.STROKE);
-         this.paint.setColor(var6);
-         this.paint.setStrokeWidth(this.u(2.0F));
-         var1.drawCircle(var2, var3, var4, this.paint);
-      }
-   }
+    public final String getPlaceholder() {
+        return this.placeholder;
+    }
 
-   protected final void drawCrop(Canvas var1, Bitmap var2, RectF var3, RectF var4) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      Intrinsics.checkNotNullParameter(var2, "b");
-      Intrinsics.checkNotNullParameter(var3, "src");
-      Intrinsics.checkNotNullParameter(var4, "dst");
-      if (!(var3.width() <= 0.0F) && !(var3.height() <= 0.0F)) {
-         float var5 = Math.max(var3.left, 0.0F);
-         float var10 = Math.max(var3.top, 0.0F);
-         float var8 = Math.min(var3.right, (float)var2.getWidth());
-         float var6 = Math.min(var3.bottom, (float)var2.getHeight());
-         if (!(var8 <= var5) && !(var6 <= var10)) {
-            float var7 = var4.width() / var3.width();
-            float var9 = var4.height() / var3.height();
-            var3 = new RectF(
-               var4.left + (var5 - var3.left) * var7,
-               var4.top + (var10 - var3.top) * var9,
-               var4.left + (var8 - var3.left) * var7,
-               var4.top + (var6 - var3.top) * var9
-            );
+    public final void setPlaceholder(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        this.placeholder = str;
+    }
+
+    public final float getCw() {
+        Bitmap it = this.bmp;
+        if (it != null) {
+            return Math.min(it.getWidth(), 1280);
+        }
+        return 640.0f;
+    }
+
+    public final float getCh() {
+        int gxCamRound;
+        Bitmap it = this.bmp;
+        if (it == null) {
+            return 480.0f;
+        }
+        gxCamRound = GxCamerasKt.gxCamRound((Math.min(it.getWidth(), 1280) * it.getHeight()) / it.getWidth());
+        return gxCamRound;
+    }
+
+    protected final RectF getRect() {
+        return this.rect;
+    }
+
+    protected final float getS() {
+        return this.s;
+    }
+
+    protected final void setS(float f) {
+        this.s = f;
+    }
+
+    protected final Paint getPaint() {
+        return this.paint;
+    }
+
+    public final float u(float dp) {
+        return (this.density * dp) / this.s;
+    }
+
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int gxCamRound;
+        int w = View.MeasureSpec.getSize(widthMeasureSpec);
+        float maxH = getResources().getDisplayMetrics().heightPixels * 0.72f;
+        gxCamRound = GxCamerasKt.gxCamRound(Math.min((w * getCh()) / getCw(), maxH));
+        setMeasuredDimension(w, gxCamRound);
+    }
+
+    private final void fit() {
+        this.s = Math.min(getWidth() / getCw(), getHeight() / getCh());
+        float dw = getCw() * this.s;
+        float dh = getCh() * this.s;
+        float f = 2;
+        this.rect.set((getWidth() - dw) / f, (getHeight() - dh) / f, (getWidth() + dw) / f, (getHeight() + dh) / f);
+    }
+
+    public final float cx(float x) {
+        return (x - this.rect.left) / this.s;
+    }
+
+    public final float cy(float y) {
+        return (y - this.rect.top) / this.s;
+    }
+
+    @Override // android.view.View
+    protected void onDraw(Canvas c) {
+        Intrinsics.checkNotNullParameter(c, "c");
+        fit();
+        c.drawRect(this.rect, this.bg);
+        Bitmap b = this.bmp;
+        if (b == null) {
             this.paint.reset();
-            this.paint.setFilterBitmap(true);
-            var1.drawBitmap(var2, new Rect((int)var5, (int)var10, (int)var8, (int)var6), var3, this.paint);
-         }
-      }
-   }
+            this.paint.setAntiAlias(true);
+            this.paint.setColor(Color.rgb(136, 136, 136));
+            this.paint.setTextSize(18 * this.density);
+            this.paint.setTextAlign(Paint.Align.CENTER);
+            this.paint.setTypeface(Typeface.MONOSPACE);
+            c.drawText(this.placeholder, getWidth() / 2.0f, getHeight() / 2.0f, this.paint);
+            return;
+        }
+        c.save();
+        c.translate(this.rect.left, this.rect.top);
+        c.scale(this.s, this.s);
+        c.save();
+        c.scale(-1.0f, 1.0f, getCw() / 2, 0.0f);
+        this.paint.reset();
+        this.paint.setFilterBitmap(true);
+        c.drawBitmap(b, (Rect) null, new RectF(0.0f, 0.0f, getCw(), getCh()), this.paint);
+        c.restore();
+        this.paint.reset();
+        this.paint.setAntiAlias(true);
+        float bh = u(32.0f);
+        this.paint.setColor(Color.argb(166, 0, 0, 0));
+        this.paint.setStyle(Paint.Style.FILL);
+        c.drawRect(0.0f, 0.0f, getCw(), bh, this.paint);
+        this.paint.setColor(-1);
+        this.paint.setTextSize(u(13.0f));
+        this.paint.setTypeface(Typeface.DEFAULT_BOLD);
+        this.paint.setTextAlign(Paint.Align.CENTER);
+        float f = 4;
+        c.drawText("LEFT SIDE OF VEHICLE - LEFT HERE", getCw() / f, bh * 0.66f, this.paint);
+        c.drawText("RIGHT SIDE OF VEHICLE - RIGHT HERE", (getCw() * 3) / f, 0.66f * bh, this.paint);
+        drawOverlay(c, b);
+        c.restore();
+    }
 
-   public void drawOverlay(Canvas var1, Bitmap var2) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      Intrinsics.checkNotNullParameter(var2, "b");
-   }
+    public void drawOverlay(Canvas c, Bitmap b) {
+        Intrinsics.checkNotNullParameter(c, "c");
+        Intrinsics.checkNotNullParameter(b, "b");
+    }
 
-   public final Bitmap getBmp() {
-      return this.bmp;
-   }
+    protected final void drawCrop(Canvas c, Bitmap b, RectF src, RectF dst) {
+        Intrinsics.checkNotNullParameter(c, "c");
+        Intrinsics.checkNotNullParameter(b, "b");
+        Intrinsics.checkNotNullParameter(src, "src");
+        Intrinsics.checkNotNullParameter(dst, "dst");
+        if (src.width() <= 0.0f || src.height() <= 0.0f) {
+            return;
+        }
+        float l = Math.max(src.left, 0.0f);
+        float t = Math.max(src.top, 0.0f);
+        float r = Math.min(src.right, b.getWidth());
+        float btm = Math.min(src.bottom, b.getHeight());
+        if (r <= l || btm <= t) {
+            return;
+        }
+        float sx = dst.width() / src.width();
+        float sy = dst.height() / src.height();
+        RectF d = new RectF(dst.left + ((l - src.left) * sx), dst.top + ((t - src.top) * sy), dst.left + ((r - src.left) * sx), dst.top + ((btm - src.top) * sy));
+        this.paint.reset();
+        this.paint.setFilterBitmap(true);
+        c.drawBitmap(b, new Rect((int) l, (int) t, (int) r, (int) btm), d, this.paint);
+    }
 
-   public final float getCh() {
-      Bitmap var2 = this.bmp;
-      float var1;
-      if (var2 != null) {
-         var1 = GxCamerasKt.access$gxCamRound((float)Math.min(var2.getWidth(), 1280) * var2.getHeight() / var2.getWidth());
-      } else {
-         var1 = 480.0F;
-      }
-
-      return var1;
-   }
-
-   public final float getCw() {
-      Bitmap var2 = this.bmp;
-      float var1;
-      if (var2 != null) {
-         var1 = Math.min(var2.getWidth(), 1280);
-      } else {
-         var1 = 640.0F;
-      }
-
-      return var1;
-   }
-
-   public final float getDensity() {
-      return this.density;
-   }
-
-   protected final Paint getPaint() {
-      return this.paint;
-   }
-
-   public final String getPlaceholder() {
-      return this.placeholder;
-   }
-
-   protected final RectF getRect() {
-      return this.rect;
-   }
-
-   protected final float getS() {
-      return this.s;
-   }
-
-   protected void onDraw(Canvas var1) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      this.fit();
-      var1.drawRect(this.rect, this.bg);
-      Bitmap var5 = this.bmp;
-      if (var5 == null) {
-         this.paint.reset();
-         this.paint.setAntiAlias(true);
-         this.paint.setColor(Color.rgb(136, 136, 136));
-         this.paint.setTextSize(18 * this.density);
-         this.paint.setTextAlign(Align.CENTER);
-         this.paint.setTypeface(Typeface.MONOSPACE);
-         var1.drawText(this.placeholder, this.getWidth() / 2.0F, this.getHeight() / 2.0F, this.paint);
-      } else {
-         var1.save();
-         var1.translate(this.rect.left, this.rect.top);
-         var1.scale(this.s, this.s);
-         var1.save();
-         var1.scale(-1.0F, 1.0F, this.getCw() / 2, 0.0F);
-         this.paint.reset();
-         this.paint.setFilterBitmap(true);
-         var1.drawBitmap(var5, null, new RectF(0.0F, 0.0F, this.getCw(), this.getCh()), this.paint);
-         var1.restore();
-         this.paint.reset();
-         this.paint.setAntiAlias(true);
-         float var4 = this.u(32.0F);
-         this.paint.setColor(Color.argb(166, 0, 0, 0));
-         this.paint.setStyle(Style.FILL);
-         var1.drawRect(0.0F, 0.0F, this.getCw(), var4, this.paint);
-         this.paint.setColor(-1);
-         this.paint.setTextSize(this.u(13.0F));
-         this.paint.setTypeface(Typeface.DEFAULT_BOLD);
-         this.paint.setTextAlign(Align.CENTER);
-         float var3 = this.getCw();
-         float var2 = 4;
-         var1.drawText("LEFT SIDE OF VEHICLE - LEFT HERE", var3 / var2, var4 * 0.66F, this.paint);
-         var1.drawText("RIGHT SIDE OF VEHICLE - RIGHT HERE", this.getCw() * 3 / var2, 0.66F * var4, this.paint);
-         this.drawOverlay(var1, var5);
-         var1.restore();
-      }
-   }
-
-   protected void onMeasure(int var1, int var2) {
-      var1 = MeasureSpec.getSize(var1);
-      float var3 = this.getResources().getDisplayMetrics().heightPixels;
-      this.setMeasuredDimension(var1, GxCamerasKt.access$gxCamRound(Math.min(var1 * this.getCh() / this.getCw(), var3 * 0.72F)));
-   }
-
-   public final void setBmp(Bitmap var1) {
-      this.bmp = var1;
-      this.requestLayout();
-      this.invalidate();
-   }
-
-   public final void setPlaceholder(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      this.placeholder = var1;
-   }
-
-   protected final void setS(float var1) {
-      this.s = var1;
-   }
-
-   public final float u(float var1) {
-      return this.density * var1 / this.s;
-   }
+    protected final void dot(Canvas c, float x, float y, float r, int fill, Integer stroke) {
+        Intrinsics.checkNotNullParameter(c, "c");
+        this.paint.reset();
+        this.paint.setAntiAlias(true);
+        this.paint.setStyle(Paint.Style.FILL);
+        this.paint.setColor(fill);
+        c.drawCircle(x, y, r, this.paint);
+        if (stroke != null) {
+            this.paint.setStyle(Paint.Style.STROKE);
+            this.paint.setColor(stroke.intValue());
+            this.paint.setStrokeWidth(u(2.0f));
+            c.drawCircle(x, y, r, this.paint);
+        }
+    }
 }

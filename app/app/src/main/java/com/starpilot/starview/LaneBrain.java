@@ -1,6 +1,7 @@
 package com.starpilot.starview;
 
 import android.content.Context;
+import com.starpilot.starview.LaneMarks;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map.Entry;
+import java.util.Map;
 import kotlin.Pair;
 import kotlin.Triple;
 import kotlin.TuplesKt;
@@ -27,3691 +28,2375 @@ import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
 
+/* compiled from: LaneBrain.kt */
 public final class LaneBrain {
-   public static final LaneBrain.Companion Companion = new LaneBrain.Companion(null);
-   public static final int N = 6;
-   public static final double SHOW = 0.35;
-   private static final double[] W;
-   private long bsmMs;
-   private final ArrayDeque<double[]> camLog;
-   private final ArrayDeque<long[]> carsL;
-   private final ArrayDeque<long[]> carsR;
-   private long carsUsedMs;
-   private double driveS;
-   private long entryMs;
-   private int entrySide;
-   private final ArrayDeque<LaneBrain.Event> events;
-   private double heading;
-   private final ArrayDeque<double[]> hist;
-   private long holdUntil;
-   private LaneBrain.RoadInfo info;
-   private double knownS;
-   private float laneW;
-   private double lastBlurOdo;
-   private long lastCameraMs;
-   private int lastChangeDir;
-   private long lastChangeMs;
-   private long lastMs;
-   private final LaneMemory memory;
-   private LaneBrain.RoadModel model;
-   private volatile long modelMs;
-   private volatile String modelText;
-   private final HashMap<Long, Integer> myCounts;
-   private int nChanges;
-   private int nOpMissed;
-   private int nRamps;
-   private int nTurns;
-   private int nUndone;
-   private double odo;
-   private Function0<Unit> onCountsChanged;
-   private Function1<? super LaneBrain.Event, Unit> onEvent;
-   private final ArrayDeque<Long> oncoming;
-   private boolean opCounted;
-   private int opDir;
-   private long opSince;
-   private double[][] p = Companion.prior();
-   private LaneBrain.Pending pending;
-   private String prevAnswer;
-   private float prevC;
-   private long prevMs;
-   private float prevYL;
-   private float prevYR;
-   private double[][] q;
-   private LaneBrain.Road road;
-   private long roadChangeMs;
-   private long rtkCheckMs;
-   private long rtkDoubtMs;
-   private final ArrayDeque<double[]> rtkLog;
-   private long straightSince;
-   private final LaneBrain.Vote vDashL;
-   private final LaneBrain.Vote vDashR;
-   private final LaneBrain.Vote vEdgeL;
-   private final LaneBrain.Vote vEdgeR;
-   private final LaneBrain.Vote vOuterL;
-   private final LaneBrain.Vote vOuterR;
-   private final LaneBrain.Vote vSolidR;
-   private final LaneBrain.Vote vYellow;
-   private final ArrayDeque<LaneBrain.Event> why;
+    public static final Companion Companion = new Companion(null);
+    public static final int N = 6;
+    public static final double SHOW = 0.35d;
+    private static final double[] W;
+    private long bsmMs;
+    private final ArrayDeque<double[]> camLog;
+    private final ArrayDeque<long[]> carsL;
+    private final ArrayDeque<long[]> carsR;
+    private long carsUsedMs;
+    private double driveS;
+    private long entryMs;
+    private int entrySide;
+    private double heading;
+    private long holdUntil;
+    private RoadInfo info;
+    private double knownS;
+    private double lastBlurOdo;
+    private long lastCameraMs;
+    private int lastChangeDir;
+    private long lastChangeMs;
+    private long lastMs;
+    private volatile long modelMs;
+    private volatile String modelText;
+    private int nChanges;
+    private int nOpMissed;
+    private int nRamps;
+    private int nTurns;
+    private int nUndone;
+    private double odo;
+    private Function0<Unit> onCountsChanged;
+    private Function1<? super Event, Unit> onEvent;
+    private final ArrayDeque<Long> oncoming;
+    private boolean opCounted;
+    private int opDir;
+    private long opSince;
+    private Pending pending;
+    private String prevAnswer;
+    private float prevC;
+    private long prevMs;
+    private float prevYL;
+    private float prevYR;
+    private double[][] q;
+    private Road road;
+    private long roadChangeMs;
+    private long rtkCheckMs;
+    private long rtkDoubtMs;
+    private final ArrayDeque<double[]> rtkLog;
+    private long straightSince;
+    private final Vote vDashL;
+    private final Vote vDashR;
+    private final Vote vEdgeL;
+    private final Vote vEdgeR;
+    private final Vote vOuterL;
+    private final Vote vOuterR;
+    private final Vote vSolidR;
+    private final Vote vYellow;
+    private double[][] p = Companion.prior();
+    private RoadModel model = new RoadModel(0, "", 0.0d, 0, 0, "", "", false, false);
+    private final ArrayDeque<Event> events = new ArrayDeque<>();
+    private final ArrayDeque<Event> why = new ArrayDeque<>();
+    private final HashMap<Long, Integer> myCounts = new HashMap<>();
+    private final LaneMemory memory = new LaneMemory();
+    private final ArrayDeque<double[]> hist = new ArrayDeque<>();
+    private float laneW = 3.5f;
 
-   static {
-      double[] var5 = new double[6];
-      byte var3 = 0;
+    public LaneBrain() {
+        double[][] dArr = new double[6][];
+        for (int i = 0; i < 6; i++) {
+            dArr[i] = new double[6];
+        }
+        this.q = dArr;
+        this.prevAnswer = "";
+        this.rtkLog = new ArrayDeque<>();
+        this.camLog = new ArrayDeque<>();
+        this.vYellow = new Vote();
+        this.vDashL = new Vote();
+        this.vDashR = new Vote();
+        this.vSolidR = new Vote();
+        this.vOuterL = new Vote();
+        this.vOuterR = new Vote();
+        this.vEdgeL = new Vote();
+        this.vEdgeR = new Vote();
+        this.carsL = new ArrayDeque<>();
+        this.carsR = new ArrayDeque<>();
+        this.oncoming = new ArrayDeque<>();
+        this.modelText = "";
+    }
 
-      for (int var2 = 0; var2 < 6; var2++) {
-         var5[var2] = Math.pow(0.65, var2);
-      }
+    /* compiled from: LaneBrain.kt */
+    public static final class Road {
+        private final boolean highway;
+        private final long id;
+        private final String kind;
+        private final int lanesOurWay;
+        private final String name;
+        private final boolean oneway;
 
-      double var0 = ArraysKt.sum(var5);
-      double[] var4 = new double[6];
+        public Road(long id, String name, String kind, boolean oneway, boolean highway, int lanesOurWay) {
+            Intrinsics.checkNotNullParameter(name, "name");
+            Intrinsics.checkNotNullParameter(kind, "kind");
+            this.id = id;
+            this.name = name;
+            this.kind = kind;
+            this.oneway = oneway;
+            this.highway = highway;
+            this.lanesOurWay = lanesOurWay;
+        }
 
-      for (int var6 = var3; var6 < 6; var6++) {
-         var4[var6] = var5[var6] / var0;
-      }
+        public final boolean getHighway() {
+            return this.highway;
+        }
 
-      W = var4;
-   }
+        public final long getId() {
+            return this.id;
+        }
 
-   public LaneBrain() {
-      int var1 = 0;
-      this.model = new LaneBrain.RoadModel(0, "", 0.0, 0, 0, "", "", false, false);
-      this.events = new ArrayDeque<>();
-      this.why = new ArrayDeque<>();
-      this.myCounts = new HashMap<>();
-      this.memory = new LaneMemory();
-      this.hist = new ArrayDeque<>();
-      this.laneW = 3.5F;
+        public final String getKind() {
+            return this.kind;
+        }
 
-      double[][] var2;
-      for (var2 = new double[6][]; var1 < 6; var1++) {
-         var2[var1] = new double[6];
-      }
+        public final int getLanesOurWay() {
+            return this.lanesOurWay;
+        }
 
-      this.q = var2;
-      this.prevAnswer = "";
-      this.rtkLog = new ArrayDeque<>();
-      this.camLog = new ArrayDeque<>();
-      this.vYellow = new LaneBrain.Vote();
-      this.vDashL = new LaneBrain.Vote();
-      this.vDashR = new LaneBrain.Vote();
-      this.vSolidR = new LaneBrain.Vote();
-      this.vOuterL = new LaneBrain.Vote();
-      this.vOuterR = new LaneBrain.Vote();
-      this.vEdgeL = new LaneBrain.Vote();
-      this.vEdgeR = new LaneBrain.Vote();
-      this.carsL = new ArrayDeque<>();
-      this.carsR = new ArrayDeque<>();
-      this.oncoming = new ArrayDeque<>();
-      this.modelText = "";
-   }
+        public final String getName() {
+            return this.name;
+        }
 
-   private final void answer() {
-      double var1 = 0.0;
+        public final boolean getOneway() {
+            return this.oneway;
+        }
 
-      for (int var5 = 0; var5 < 6; var5++) {
-         for (int var6 = 0; var6 < 6; var6++) {
-            double var3 = this.p[var5][var6] * this.fits(var5 + var6 + 1, this.model);
-            this.q[var5][var6] = var3;
-            var1 += var3;
-         }
-      }
+        public final boolean getRamp() {
+            return StringsKt.endsWith$default(this.kind, "_link", false, 2, (Object) null);
+        }
+    }
 
-      if (var1 > 0.0) {
-         for (double[] var9 : this.q) {
-            int var12 = 0;
+    /* compiled from: LaneBrain.kt */
+    public static final class RoadInfo {
+        private final boolean bridge;
+        private final int extraL;
+        private final int extraR;
+        private final String extraWhy;
+        private final int hpmsLanes;
+        private final String hpmsName;
+        private final boolean hpmsRamp;
+        private final boolean hpmsSure;
+        private final String kindL;
+        private final String kindR;
+        private final double navDist;
+        private final int navStraight;
+        private final boolean tunnel;
 
-            for (int var8 = var9.length; var12 < var8; var12++) {
-               var9[var12] /= var1;
+        public RoadInfo() {
+            this(0, null, false, false, false, false, 0, 0, null, null, null, 0, 0.0d, 8191, null);
+        }
+
+        public RoadInfo(int hpmsLanes, String hpmsName, boolean hpmsRamp, boolean tunnel, boolean bridge, boolean hpmsSure, int extraL, int extraR, String kindL, String kindR, String extraWhy, int navStraight, double navDist) {
+            Intrinsics.checkNotNullParameter(hpmsName, "hpmsName");
+            Intrinsics.checkNotNullParameter(kindL, "kindL");
+            Intrinsics.checkNotNullParameter(kindR, "kindR");
+            Intrinsics.checkNotNullParameter(extraWhy, "extraWhy");
+            this.hpmsLanes = hpmsLanes;
+            this.hpmsName = hpmsName;
+            this.hpmsRamp = hpmsRamp;
+            this.tunnel = tunnel;
+            this.bridge = bridge;
+            this.hpmsSure = hpmsSure;
+            this.extraL = extraL;
+            this.extraR = extraR;
+            this.kindL = kindL;
+            this.kindR = kindR;
+            this.extraWhy = extraWhy;
+            this.navStraight = navStraight;
+            this.navDist = navDist;
+        }
+
+        public /* synthetic */ RoadInfo(int i, String str, boolean z, boolean z2, boolean z3, boolean z4, int i2, int i3, String str2, String str3, String str4, int i4, double d, int i5, DefaultConstructorMarker defaultConstructorMarker) {
+            this((i5 & 1) != 0 ? 0 : i, (i5 & 2) != 0 ? "" : str, (i5 & 4) != 0 ? false : z, (i5 & 8) != 0 ? false : z2, (i5 & 16) != 0 ? false : z3, (i5 & 32) != 0 ? true : z4, (i5 & 64) != 0 ? 0 : i2, (i5 & 128) != 0 ? 0 : i3, (i5 & 256) != 0 ? "" : str2, (i5 & 512) != 0 ? "" : str3, (i5 & 1024) == 0 ? str4 : "", (i5 & 2048) == 0 ? i4 : 0, (i5 & 4096) != 0 ? Double.NaN : d);
+        }
+
+        public final boolean getBridge() {
+            return this.bridge;
+        }
+
+        public final int getHpmsLanes() {
+            return this.hpmsLanes;
+        }
+
+        public final String getHpmsName() {
+            return this.hpmsName;
+        }
+
+        public final boolean getHpmsRamp() {
+            return this.hpmsRamp;
+        }
+
+        public final boolean getTunnel() {
+            return this.tunnel;
+        }
+
+        public final boolean getHpmsSure() {
+            return this.hpmsSure;
+        }
+
+        public final int getExtraL() {
+            return this.extraL;
+        }
+
+        public final int getExtraR() {
+            return this.extraR;
+        }
+
+        public final String getExtraWhy() {
+            return this.extraWhy;
+        }
+
+        public final String getKindL() {
+            return this.kindL;
+        }
+
+        public final String getKindR() {
+            return this.kindR;
+        }
+
+        public final double getNavDist() {
+            return this.navDist;
+        }
+
+        public final int getNavStraight() {
+            return this.navStraight;
+        }
+    }
+
+    /* compiled from: LaneBrain.kt */
+    public static final class Frame {
+        private final boolean bsmL;
+        private final boolean bsmR;
+        private final int carsLeft;
+        private final int carsRight;
+        private final float edgeL;
+        private final float edgeR;
+        private final int entrySide;
+        private final RoadInfo info;
+        private final LaneMarks.Mark leftMark;
+        private final long nowMs;
+        private final boolean oncomingLeft;
+        private final int opChange;
+        private final boolean opFinishing;
+        private final float opLcProb;
+        private final float pL;
+        private final float pL2;
+        private final float pR;
+        private final float pR2;
+        private final LaneMarks.Mark rightMark;
+        private final Road road;
+        private final double rtkOffset;
+        private final double rtkSigma;
+        private final long rtkWay;
+        private final float vEgo;
+        private final float yL;
+        private final float yL2;
+        private final float yR;
+        private final float yR2;
+        private final float yawRate;
+
+        public Frame(long nowMs, float vEgo, float yawRate, float yL, float yR, float pL, float pR, float edgeL, float edgeR, LaneMarks.Mark leftMark, LaneMarks.Mark rightMark, Road road, int entrySide, int opChange, boolean opFinishing, int carsLeft, int carsRight, boolean oncomingLeft, float yL2, float yR2, float pL2, float pR2, boolean bsmL, boolean bsmR, double rtkOffset, double rtkSigma, long rtkWay, float opLcProb, RoadInfo info) {
+            this.nowMs = nowMs;
+            this.vEgo = vEgo;
+            this.yawRate = yawRate;
+            this.yL = yL;
+            this.yR = yR;
+            this.pL = pL;
+            this.pR = pR;
+            this.edgeL = edgeL;
+            this.edgeR = edgeR;
+            this.leftMark = leftMark;
+            this.rightMark = rightMark;
+            this.road = road;
+            this.entrySide = entrySide;
+            this.opChange = opChange;
+            this.opFinishing = opFinishing;
+            this.carsLeft = carsLeft;
+            this.carsRight = carsRight;
+            this.oncomingLeft = oncomingLeft;
+            this.yL2 = yL2;
+            this.yR2 = yR2;
+            this.pL2 = pL2;
+            this.pR2 = pR2;
+            this.bsmL = bsmL;
+            this.bsmR = bsmR;
+            this.rtkOffset = rtkOffset;
+            this.rtkSigma = rtkSigma;
+            this.rtkWay = rtkWay;
+            this.opLcProb = opLcProb;
+            this.info = info;
+        }
+
+        public /* synthetic */ Frame(long j, float f, float f2, float f3, float f4, float f5, float f6, float f7, float f8, LaneMarks.Mark mark, LaneMarks.Mark mark2, Road road, int i, int i2, boolean z, int i3, int i4, boolean z2, float f9, float f10, float f11, float f12, boolean z3, boolean z4, double d, double d2, long j2, float f13, RoadInfo roadInfo, int i5, DefaultConstructorMarker defaultConstructorMarker) {
+            this(j, f, f2, f3, f4, f5, f6, f7, f8, (i5 & 512) != 0 ? null : mark, (i5 & 1024) != 0 ? null : mark2, (i5 & 2048) != 0 ? null : road, (i5 & 4096) != 0 ? 0 : i, (i5 & 8192) != 0 ? 0 : i2, (i5 & 16384) != 0 ? false : z, (32768 & i5) != 0 ? 0 : i3, (65536 & i5) != 0 ? 0 : i4, (131072 & i5) != 0 ? false : z2, (262144 & i5) != 0 ? Float.NaN : f9, (524288 & i5) != 0 ? Float.NaN : f10, (1048576 & i5) != 0 ? Float.NaN : f11, (2097152 & i5) != 0 ? Float.NaN : f12, (4194304 & i5) != 0 ? false : z3, (8388608 & i5) != 0 ? false : z4, (16777216 & i5) != 0 ? Double.NaN : d, (33554432 & i5) != 0 ? Double.NaN : d2, (67108864 & i5) != 0 ? 0L : j2, (134217728 & i5) != 0 ? Float.NaN : f13, (i5 & 268435456) != 0 ? null : roadInfo);
+        }
+
+        public final long getNowMs() {
+            return this.nowMs;
+        }
+
+        public final float getVEgo() {
+            return this.vEgo;
+        }
+
+        public final float getYawRate() {
+            return this.yawRate;
+        }
+
+        public final float getPL() {
+            return this.pL;
+        }
+
+        public final float getPR() {
+            return this.pR;
+        }
+
+        public final float getYL() {
+            return this.yL;
+        }
+
+        public final float getYR() {
+            return this.yR;
+        }
+
+        public final float getEdgeL() {
+            return this.edgeL;
+        }
+
+        public final float getEdgeR() {
+            return this.edgeR;
+        }
+
+        public final LaneMarks.Mark getLeftMark() {
+            return this.leftMark;
+        }
+
+        public final LaneMarks.Mark getRightMark() {
+            return this.rightMark;
+        }
+
+        public final Road getRoad() {
+            return this.road;
+        }
+
+        public final int getEntrySide() {
+            return this.entrySide;
+        }
+
+        public final int getOpChange() {
+            return this.opChange;
+        }
+
+        public final boolean getOpFinishing() {
+            return this.opFinishing;
+        }
+
+        public final int getCarsLeft() {
+            return this.carsLeft;
+        }
+
+        public final int getCarsRight() {
+            return this.carsRight;
+        }
+
+        public final boolean getOncomingLeft() {
+            return this.oncomingLeft;
+        }
+
+        public final float getPL2() {
+            return this.pL2;
+        }
+
+        public final float getPR2() {
+            return this.pR2;
+        }
+
+        public final float getYL2() {
+            return this.yL2;
+        }
+
+        public final float getYR2() {
+            return this.yR2;
+        }
+
+        public final boolean getBsmL() {
+            return this.bsmL;
+        }
+
+        public final boolean getBsmR() {
+            return this.bsmR;
+        }
+
+        public final double getRtkOffset() {
+            return this.rtkOffset;
+        }
+
+        public final double getRtkSigma() {
+            return this.rtkSigma;
+        }
+
+        public final long getRtkWay() {
+            return this.rtkWay;
+        }
+
+        public final float getOpLcProb() {
+            return this.opLcProb;
+        }
+
+        public final RoadInfo getInfo() {
+            return this.info;
+        }
+    }
+
+    /* compiled from: LaneBrain.kt */
+    public static final class Event {
+        private final long atMs;
+        private final String text;
+
+        public Event(long atMs, String text) {
+            Intrinsics.checkNotNullParameter(text, "text");
+            this.atMs = atMs;
+            this.text = text;
+        }
+
+        public final long getAtMs() {
+            return this.atMs;
+        }
+
+        public final String getText() {
+            return this.text;
+        }
+    }
+
+    /* compiled from: LaneBrain.kt */
+    public static final class RoadModel {
+        private final boolean bridge;
+        private final double conf;
+        private final int extraL;
+        private final int extraR;
+        private final String kindL;
+        private final String kindR;
+        private final int lanes;
+        private final String src;
+        private final boolean tunnel;
+
+        public RoadModel(int lanes, String src, double conf, int extraL, int extraR, String kindL, String kindR, boolean tunnel, boolean bridge) {
+            Intrinsics.checkNotNullParameter(src, "src");
+            Intrinsics.checkNotNullParameter(kindL, "kindL");
+            Intrinsics.checkNotNullParameter(kindR, "kindR");
+            this.lanes = lanes;
+            this.src = src;
+            this.conf = conf;
+            this.extraL = extraL;
+            this.extraR = extraR;
+            this.kindL = kindL;
+            this.kindR = kindR;
+            this.tunnel = tunnel;
+            this.bridge = bridge;
+        }
+
+        public final double getConf() {
+            return this.conf;
+        }
+
+        public final int getExtraL() {
+            return this.extraL;
+        }
+
+        public final int getExtraR() {
+            return this.extraR;
+        }
+
+        public final String getKindL() {
+            return this.kindL;
+        }
+
+        public final String getKindR() {
+            return this.kindR;
+        }
+
+        public final int getLanes() {
+            return this.lanes;
+        }
+
+        public final String getSrc() {
+            return this.src;
+        }
+
+        public final boolean getBridge() {
+            return this.bridge;
+        }
+
+        public final boolean getTunnel() {
+            return this.tunnel;
+        }
+
+        public final int getTotal() {
+            if (this.lanes > 0) {
+                return this.lanes + this.extraL + this.extraR;
             }
-         }
-      }
-   }
+            return 0;
+        }
+    }
 
-   private final void apply(LaneBrain.Pending var1, String var2) {
-      double var5 = this.sideways(var1.getAtMs() - 4000, this.lastMs);
-      boolean var10 = Intrinsics.areEqual(var2, "openpilot");
-      double var3 = 0.95;
-      if (!var10) {
-         if (Intrinsics.areEqual(var2, "rtk")) {
-            var3 = 0.85;
-         } else {
-            boolean var7;
-            if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
-               var7 = true;
-            } else {
-               var7 = false;
+    /* compiled from: LaneBrain.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
+
+        private Companion() {
+        }
+
+        public final double prior(int l, int r) {
+            return LaneBrain.W[l] * LaneBrain.W[r];
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public final double[][] prior() {
+            double[][] dArr = new double[6][];
+            for (int i = 0; i < 6; i++) {
+                double[] dArr2 = new double[6];
+                for (int i2 = 0; i2 < 6; i2++) {
+                    dArr2[i2] = LaneBrain.Companion.prior(i, i2);
+                }
+                dArr[i] = dArr2;
             }
+            return dArr;
+        }
 
-            if (!var7) {
-               var3 = 0.9;
-            } else if (Math.abs(var5) < 0.3) {
-               long var8 = var1.getAtMs();
-               String var11 = this.dirName(var1.getDir());
-               this.log(var8, "RTK saw no sideways move - lane change " + var11 + " doubted");
-               var3 = 0.5;
+        /* JADX INFO: Access modifiers changed from: private */
+        public final String sideName(int side) {
+            return side < 0 ? "left" : "right";
+        }
+    }
+
+    static {
+        double[] w = new double[6];
+        for (int i = 0; i < 6; i++) {
+            w[i] = Math.pow(0.65d, i);
+        }
+        double s = ArraysKt.sum(w);
+        double[] dArr = new double[6];
+        for (int i2 = 0; i2 < 6; i2++) {
+            dArr[i2] = w[i2] / s;
+        }
+        W = dArr;
+    }
+
+    public final Road getRoad() {
+        return this.road;
+    }
+
+    public final RoadInfo getInfo() {
+        return this.info;
+    }
+
+    public final RoadModel getModel() {
+        return this.model;
+    }
+
+    public final ArrayDeque<Event> getEvents() {
+        return this.events;
+    }
+
+    public final Function1<Event, Unit> getOnEvent() {
+        return this.onEvent;
+    }
+
+    public final void setOnEvent(Function1<? super Event, Unit> function1) {
+        this.onEvent = function1;
+    }
+
+    public final ArrayDeque<Event> getWhy() {
+        return this.why;
+    }
+
+    public final HashMap<Long, Integer> getMyCounts() {
+        return this.myCounts;
+    }
+
+    public final Function0<Unit> getOnCountsChanged() {
+        return this.onCountsChanged;
+    }
+
+    public final void setOnCountsChanged(Function0<Unit> function0) {
+        this.onCountsChanged = function0;
+    }
+
+    public final LaneMemory getMemory() {
+        return this.memory;
+    }
+
+    /* compiled from: LaneBrain.kt */
+    public static final class Live {
+        public static final Live INSTANCE = new Live();
+        private static volatile LaneBrain brain;
+
+        private Live() {
+        }
+
+        public final LaneBrain getBrain() {
+            return brain;
+        }
+
+        public final void setBrain(LaneBrain laneBrain) {
+            brain = laneBrain;
+        }
+
+        public final int savedCount(Context ctx, long wayId) {
+            HashMap<Long, Integer> myCounts;
+            Integer num;
+            Intrinsics.checkNotNullParameter(ctx, "ctx");
+            LaneBrain laneBrain = brain;
+            if (laneBrain != null && (myCounts = laneBrain.getMyCounts()) != null && (num = myCounts.get(Long.valueOf(wayId))) != null) {
+                return num.intValue();
             }
-         }
-      }
-
-      this.lastChangeMs = var1.getAtMs();
-      this.lastChangeDir = var1.getDir();
-      this.nChanges++;
-      int var15 = var1.getDir();
-      long var16 = var1.getAtMs();
-      String var19;
-      if (var1.getDir() < 0) {
-         var19 = "left";
-      } else {
-         var19 = "right";
-      }
-
-      var10 = Intrinsics.areEqual(var2, "lines");
-      String var13 = "";
-      String var12;
-      if (!var10) {
-         var12 = " (" + var2 + ")";
-      } else {
-         var12 = "";
-      }
-
-      this.moved(var15, var3, var16, "lane change " + var19 + var12);
-      if (Intrinsics.areEqual(var2, "openpilot")) {
-         this.memory.shift(var1.getDir() * this.laneW);
-      }
-
-      var16 = var1.getAtMs();
-      var19 = this.dirName(var1.getDir());
-      String var14 = var13;
-      if (!Intrinsics.areEqual(var2, "lines")) {
-         var14 = " (" + var2 + ")";
-      }
-
-      this.log(var16, "lane change " + var19 + var14);
-   }
-
-   private final void atLeast(int var1, int var2, double var3, long var5, String var7) {
-      if (var5 >= this.holdUntil || this.side(var1).getFirst().intValue() >= var2) {
-         this.lastCameraMs = var5;
-         var3 /= 1 - var3;
-
-         for (int var8 = 0; var8 < 6; var8++) {
-            for (int var9 = 0; var9 < 6; var9++) {
-               if (this.count(var8, var9, var1) >= var2) {
-                  double[] var10 = this.p[var8];
-                  var10[var9] *= var3;
-               }
+            try {
+                return new JSONObject(FilesKt.readText$default(new File(ctx.getFilesDir(), "lane_counts.json"), null, 1, null)).optInt(String.valueOf(wayId), 0);
+            } catch (Exception e) {
+                return 0;
             }
-         }
+        }
 
-         this.norm();
-         this.note(var5, var7);
-      }
-   }
-
-   private final void blindSpot(LaneBrain.Frame var1, long var2) {
-      if (!(var1.getVEgo() < 8.0F) && (var1.getBsmL() || var1.getBsmR()) && var2 - this.bsmMs >= 1000L) {
-         this.bsmMs = var2;
-         if (var1.getBsmL()) {
-            this.atLeast(-1, 1, 0.6, var2, "car in the left blind spot");
-         }
-
-         if (var1.getBsmR()) {
-            this.atLeast(1, 1, 0.6, var2, "car in the right blind spot");
-         }
-      }
-   }
-
-   private final void blur(double var1) {
-      var1 = RangesKt.coerceIn(var1 / 300.0 * 0.03, 0.0, 0.3);
-
-      for (int var3 = 0; var3 < 6; var3++) {
-         for (int var4 = 0; var4 < 6; var4++) {
-            this.p[var3][var4] = this.p[var3][var4] * (1 - var1) + Companion.prior(var3, var4) * var1;
-         }
-      }
-   }
-
-   private final void camNote(LaneBrain.Frame var1, long var2) {
-      boolean var17;
-      label70: {
-         if (var1.getPL() > 0.4F && var1.getPR() > 0.4F) {
-            float var10 = var1.getYL();
-            if (!Float.isInfinite(var10) && !Float.isNaN(var10)) {
-               var17 = true;
-            } else {
-               var17 = false;
+        public final void forgetCount(Context ctx, long wayId) {
+            Function0<Unit> onCountsChanged;
+            Intrinsics.checkNotNullParameter(ctx, "ctx");
+            LaneBrain b = brain;
+            if (b != null) {
+                if (b.getMyCounts().remove(Long.valueOf(wayId)) == null || (onCountsChanged = b.getOnCountsChanged()) == null) {
+                    return;
+                }
+                onCountsChanged.invoke();
+                return;
             }
-
-            if (var17) {
-               var10 = var1.getYR();
-               if (!Float.isInfinite(var10) && !Float.isNaN(var10)) {
-                  var17 = true;
-               } else {
-                  var17 = false;
-               }
-
-               if (var17 && var1.getYL() < 0.3F && var1.getYR() > -0.3F) {
-                  var10 = var1.getYR() - var1.getYL();
-                  if (2.3F <= var10 && var10 <= 4.9F) {
-                     var17 = true;
-                  } else {
-                     var17 = false;
-                  }
-
-                  if (var17) {
-                     var17 = true;
-                     break label70;
-                  }
-               }
+            File f = new File(ctx.getFilesDir(), "lane_counts.json");
+            try {
+                JSONObject j = new JSONObject(FilesKt.readText$default(f, null, 1, null));
+                j.remove(String.valueOf(wayId));
+                String jSONObject = j.toString();
+                Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
+                FilesKt.writeText$default(f, jSONObject, null, 2, null);
+            } catch (Exception e) {
             }
-         }
+        }
 
-         var17 = false;
-      }
-
-      ArrayDeque var12 = this.camLog;
-      double var8 = var2;
-      double var6 = 0.0;
-      double var4;
-      if (var17) {
-         var4 = 1.0;
-      } else {
-         var4 = 0.0;
-      }
-
-      if (var17) {
-         var6 = Math.abs((var1.getYL() + var1.getYR()) / 2.0);
-      }
-
-      var12.addLast(new double[]{var8, var4, var6});
-
-      while (!this.camLog.isEmpty() && var2 - ((double[])this.camLog.first())[0] > 15000.0) {
-         this.camLog.removeFirst();
-      }
-   }
-
-   private final boolean cameraStayed(long var1, long var3) {
-      int var10 = 0;
-      int var9 = 0;
-      double var5 = 0.0;
-      Iterator var13 = this.camLog.iterator();
-
-      while (true) {
-         boolean var11 = var13.hasNext();
-         boolean var12 = false;
-         if (!var11) {
-            var11 = var12;
-            if (var10 >= 20) {
-               var11 = var12;
-               if (var9 >= var10 * 0.7) {
-                  var11 = var12;
-                  if (var5 < 1.0) {
-                     var11 = true;
-                  }
-               }
+        public final void rememberCount(Context ctx, long wayId, int m) {
+            JSONObject j;
+            Intrinsics.checkNotNullParameter(ctx, "ctx");
+            LaneBrain b = brain;
+            if (b != null) {
+                b.getMyCounts().put(Long.valueOf(wayId), Integer.valueOf(m));
+                Function0<Unit> onCountsChanged = b.getOnCountsChanged();
+                if (onCountsChanged != null) {
+                    onCountsChanged.invoke();
+                    return;
+                }
+                return;
             }
-
-            return var11;
-         }
-
-         double[] var14 = (double[])var13.next();
-         if (var14[0] >= var1) {
-            double var7 = var14[0];
-            if (var7 <= var3) {
-               var10++;
-               if (var14[1] > 0.5) {
-                  var9++;
-                  var5 = Math.max(var5, var14[2]);
-               }
+            File f = new File(ctx.getFilesDir(), "lane_counts.json");
+            try {
+                try {
+                    j = new JSONObject(FilesKt.readText$default(f, null, 1, null));
+                } catch (Exception e) {
+                    j = new JSONObject();
+                }
+                j.put(String.valueOf(wayId), m);
+                String jSONObject = j.toString();
+                Intrinsics.checkNotNullExpressionValue(jSONObject, "toString(...)");
+                FilesKt.writeText$default(f, jSONObject, null, 2, null);
+            } catch (Exception e2) {
             }
-         }
-      }
-   }
+        }
+    }
 
-   private final void cars(LaneBrain.Frame var1, long var2) {
-      if (!(var1.getVEgo() < 3.0F)) {
-         if (var1.getCarsLeft() > 0) {
-            this.carsL.addLast(new long[]{var2, var1.getCarsLeft()});
-         }
+    public final int getNChanges() {
+        return this.nChanges;
+    }
 
-         if (var1.getCarsRight() > 0) {
-            this.carsR.addLast(new long[]{var2, var1.getCarsRight()});
-         }
+    public final int getNUndone() {
+        return this.nUndone;
+    }
 
-         if (var1.getOncomingLeft()) {
-            this.oncoming.addLast(var2);
-         }
+    public final int getNTurns() {
+        return this.nTurns;
+    }
 
-         while (!this.oncoming.isEmpty() && var2 - this.oncoming.first().longValue() > 2000L) {
-            this.oncoming.removeFirst();
-         }
+    public final int getNRamps() {
+        return this.nRamps;
+    }
 
-         if (var2 - this.carsUsedMs >= 1000L) {
-            int var4 = this.held(this.carsL, var2);
-            int var5 = this.held(this.carsR, var2);
-            if (var4 > 0) {
-               String var6;
-               if (var4 > 1) {
-                  var6 = "s";
-               } else {
-                  var6 = "";
-               }
+    public final int getNOpMissed() {
+        return this.nOpMissed;
+    }
 
-               this.atLeast(-1, var4, 0.65, var2, "car driving our way " + var4 + " lane" + var6 + " to the left");
+    public final double getDriveS() {
+        return this.driveS;
+    }
+
+    public final double getKnownS() {
+        return this.knownS;
+    }
+
+    public final long getLastCameraMs() {
+        return this.lastCameraMs;
+    }
+
+    public final long getLastChangeMs() {
+        return this.lastChangeMs;
+    }
+
+    public final int getLastChangeDir() {
+        return this.lastChangeDir;
+    }
+
+    public final int knownPct() {
+        if (this.driveS < 1.0d) {
+            return 0;
+        }
+        return (int) ((100 * this.knownS) / this.driveS);
+    }
+
+    public final String summary() {
+        return this.nChanges + " lane change" + (this.nChanges == 1 ? "" : "s") + (this.nUndone > 0 ? " (" + this.nUndone + " undone)" : "") + (this.nOpMissed > 0 ? " (" + this.nOpMissed + " by openpilot not finished)" : "") + " · " + this.nTurns + " turn" + (this.nTurns == 1 ? "" : "s") + " · " + this.nRamps + " ramp" + (this.nRamps == 1 ? "" : "s") + " · lane known " + knownPct() + "% of " + ((int) (this.driveS / 60)) + " min";
+    }
+
+    public final double getOdo() {
+        return this.odo;
+    }
+
+    public final float getLaneW() {
+        return this.laneW;
+    }
+
+    private final void norm() {
+        double s = 0.0d;
+        for (double[] a : this.p) {
+            for (double v : a) {
+                s += v;
             }
-
-            if (var5 > 0) {
-               String var7;
-               if (var5 > 1) {
-                  var7 = "s";
-               } else {
-                  var7 = "";
-               }
-
-               this.atLeast(1, var5, 0.65, var2, "car driving our way " + var5 + " lane" + var7 + " to the right");
-            }
-
-            if (this.oncoming.size() >= 6 && var4 == 0) {
-               this.see(-1, 0, 0.7, var2, "oncoming traffic in the lane to our left");
-            }
-
-            if (var4 > 0 || var5 > 0 || this.oncoming.size() >= 6) {
-               this.carsUsedMs = var2;
-            }
-         }
-      }
-   }
-
-   private final boolean centred(LaneBrain.Frame var1) {
-      float var2 = var1.getYL();
-      boolean var5 = Float.isInfinite(var2);
-      boolean var4 = true;
-      boolean var3;
-      if (!var5 && !Float.isNaN(var2)) {
-         var3 = true;
-      } else {
-         var3 = false;
-      }
-
-      if (var3) {
-         var2 = var1.getYR();
-         if (!Float.isInfinite(var2) && !Float.isNaN(var2)) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         if (var3 && Math.abs((var1.getYL() + var1.getYR()) / 2.0F) < 0.6F && this.pending == null && this.opDir == 0) {
-            return var4;
-         }
-      }
-
-      return false;
-   }
-
-   // $VF: synthetic method
-   public static void check$default(LaneBrain var0, boolean var1, long var2, int var4, Object var5) {
-      if ((var4 & 2) != 0) {
-         var2 = var0.lastMs;
-      }
-
-      var0.check(var1, var2);
-   }
-
-   private final void checkOpChange(LaneBrain.Frame var1, long var2) {
-      if (var1.getOpChange() != 0 && this.opDir == 0) {
-         this.opDir = var1.getOpChange();
-         this.opSince = var2;
-         this.opCounted = false;
-         this.pending = null;
-      }
-
-      if (this.opDir != 0 && var1.getOpFinishing() && !this.opCounted) {
-         this.opCounted = true;
-         this.apply(new LaneBrain.Pending(this.opDir, var2), "openpilot");
-      }
-
-      if (var1.getOpChange() == 0 && this.opDir != 0) {
-         long var6 = var2 - this.opSince;
-         if (!this.opCounted) {
-            float var4 = var1.getOpLcProb();
-            boolean var5;
-            if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
-               var5 = true;
-            } else {
-               var5 = false;
-            }
-
-            if (var5 && var1.getOpLcProb() < 0.1F) {
-               if (400L <= var6 && var6 < 10001L) {
-                  var5 = true;
-               } else {
-                  var5 = false;
-               }
-
-               if (var5) {
-                  this.opCounted = true;
-                  this.apply(new LaneBrain.Pending(this.opDir, var2), "openpilot");
-               }
-            }
-         }
-
-         if (!this.opCounted) {
-            this.nOpMissed++;
-            String var8 = this.dirName(this.opDir);
-            this.log(var2, "openpilot lane change " + var8 + " ended without finishing - not counted");
-         }
-
-         this.opDir = 0;
-         this.prevMs = 0L;
-      }
-   }
-
-   private final int count(int var1, int var2, int var3) {
-      if (var3 >= 0) {
-         var1 = var2;
-      }
-
-      return var1;
-   }
-
-   private final void detectLaneChange(LaneBrain.Frame var1, long var2) {
-      if (var1.getOpChange() == 0 && this.opDir == 0) {
-         boolean var8;
-         label119: {
-            if (var1.getPL() > 0.25F && var1.getPR() > 0.25F) {
-               float var4 = var1.getYL();
-               boolean var7;
-               if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
-                  var7 = true;
-               } else {
-                  var7 = false;
-               }
-
-               if (var7) {
-                  var4 = var1.getYR();
-                  if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
-                     var7 = true;
-                  } else {
-                     var7 = false;
-                  }
-
-                  if (var7 && var1.getYL() < 0.3F && var1.getYR() > -0.3F) {
-                     var4 = var1.getYR() - var1.getYL();
-                     if (2.3F <= var4 && var4 <= 4.9F) {
-                        var7 = true;
-                     } else {
-                        var7 = false;
-                     }
-
-                     if (var7) {
-                        var8 = true;
-                        break label119;
-                     }
-                  }
-               }
-            }
-
-            var8 = false;
-         }
-
-         if (var8) {
-            float var5 = var1.getYR() - var1.getYL();
-            float var13 = (var1.getYL() + var1.getYR()) / 2.0F;
-            if (Math.abs(var13) < 0.6F) {
-               this.laneW = this.laneW + (RangesKt.coerceIn(var5, 2.6F, 4.2F) - this.laneW) * 0.02F;
-            }
-
-            if (this.prevMs > 0L && var2 - this.prevMs < 700L) {
-               float var6 = var13 - this.prevC;
-               byte var16;
-               if (var6 < -0.55F * var5 && Math.abs(this.prevYL) < 1.3F && Math.abs(var1.getYR() - this.prevYL) < 0.9F) {
-                  var16 = -1;
-               } else if (var6 > 0.55F * var5 && Math.abs(this.prevYR) < 1.3F && Math.abs(var1.getYL() - this.prevYR) < 0.9F) {
-                  var16 = 1;
-               } else {
-                  var16 = 0;
-               }
-
-               if (var16 != 0) {
-                  LaneBrain.Pending var9 = this.pending;
-                  if (var9 != null && var9.getDir() == -var16 && var2 - var9.getAtMs() < 1500L) {
-                     this.pending = null;
-                     if (var2 - var9.getAtMs() > 300L) {
-                        this.nUndone++;
-                        String var17 = this.dirName(var9.getDir());
-                        this.log(var2, "lane change " + var17 + " undone - not counted");
-                     }
-                  } else {
-                     if (var9 != null) {
-                        this.apply(var9, "lines");
-                     }
-
-                     this.pending = new LaneBrain.Pending(var16, var2);
-                  }
-               }
-            }
-
-            this.prevC = var13;
-            this.prevYL = var1.getYL();
-            this.prevYR = var1.getYR();
-            this.prevMs = var2;
-         }
-
-         LaneBrain.Pending var10 = this.pending;
-         if (var10 != null && var2 - var10.getAtMs() >= 600L && (var2 - var10.getAtMs() >= 1500L || var8)) {
-            this.apply(var10, "lines");
-            this.pending = null;
-         }
-      }
-   }
-
-   private final void detectTurn(LaneBrain.Frame var1, long var2) {
-      float var6 = var1.getYawRate();
-      boolean var7;
-      if (!Float.isInfinite(var6) && !Float.isNaN(var6)) {
-         var7 = 1;
-      } else {
-         var7 = 0;
-      }
-
-      if (var7) {
-         this.hist.addLast(new double[]{var2, this.heading, this.odo});
-
-         while (!this.hist.isEmpty() && var2 - ((double[])this.hist.first())[0] > 12000.0) {
-            this.hist.removeFirst();
-         }
-
-         if (!(Math.abs(var1.getYawRate()) < 0.05F) && !(var1.getVEgo() < 1.0F)) {
-            this.straightSince = 0L;
-         } else if (this.straightSince == 0L) {
-            this.straightSince = var2;
-         }
-
-         if (!(var1.getVEgo() > 13.5F) && this.straightSince != 0L && var2 - this.straightSince >= 1500L && this.hist.size() >= 5) {
-            double var4 = 0.0;
-
-            for (double[] var8 : this.hist) {
-               if (Math.abs(this.heading - var8[1]) > Math.abs(var4)) {
-                  var4 = this.heading - var8[1];
-               }
-            }
-
-            var4 = Math.toDegrees(var4);
-            if (!(Math.abs(var4) < 55.0)) {
-               this.hist.clear();
-               this.memory.clear();
-               this.nTurns++;
-               if (this.lastCameraMs < this.straightSince) {
-                  if (var4 > 0.0) {
-                     var7 = (byte)-1;
-                  } else {
-                     var7 = (byte)1;
-                  }
-
-                  String var10;
-                  if (var4 > 0.0) {
-                     var10 = "left turn: usually the leftmost lane";
-                  } else {
-                     var10 = "right turn: usually the rightmost lane";
-                  }
-
-                  this.restart(var7, 0, 0.45, var2, var10);
-               }
-
-               String var11;
-               if (var4 > 0.0) {
-                  var11 = "LEFT";
-               } else {
-                  var11 = "RIGHT";
-               }
-
-               var7 = (int)Math.abs(var4);
-               this.log(var2, var11 + " turn (" + var7 + "°)");
-            }
-         }
-      }
-   }
-
-   private final String dirName(int var1) {
-      String var2;
-      if (var1 < 0) {
-         var2 = "LEFT";
-      } else {
-         var2 = "RIGHT";
-      }
-
-      return var2;
-   }
-
-   private final void edges(LaneBrain.Frame var1, long var2) {
-      if (this.centred(var1)) {
-         LaneBrain.Road var7 = this.road;
-         boolean var6 = true;
-         boolean var5;
-         if (var7 != null) {
-            if (!var7.getOneway() && !var7.getHighway()) {
-               var5 = false;
-            } else {
-               var5 = true;
-            }
-         } else {
-            var5 = false;
-         }
-
-         float var4;
-         if (this.model.getBridge()) {
-            var4 = 4.2F;
-         } else {
-            var7 = this.road;
-            if (var7 == null || !var7.getHighway()) {
-               var6 = false;
-            }
-
-            if (var6) {
-               var4 = 3.8F;
-            } else {
-               var4 = 2.8F;
-            }
-         }
-
-         if (var5) {
-            edges$side$12(this, var4, var2, -1, this.vEdgeL, var1.getEdgeL(), var1.getYL(), var1.getPL(), var1.getLeftMark(), var1.getPL2());
-         } else {
-            this.vEdgeL.clear();
-         }
-
-         edges$side$12(this, var4, var2, 1, this.vEdgeR, var1.getEdgeR(), var1.getYR(), var1.getPR(), var1.getRightMark(), var1.getPR2());
-      }
-   }
-
-   private static final void edges$side$12(
-      LaneBrain var0, float var1, long var2, int var4, LaneBrain.Vote var5, float var6, float var7, float var8, LaneMarks.Mark var9, float var10
-   ) {
-      boolean var17 = Float.isInfinite(var6);
-      int var16 = 0;
-      boolean var15;
-      if (!var17 && !Float.isNaN(var6)) {
-         var15 = 1;
-      } else {
-         var15 = 0;
-      }
-
-      if (var15) {
-         if (!Float.isInfinite(var7) && !Float.isNaN(var7)) {
-            var15 = (boolean)1;
-         } else {
-            var15 = (boolean)0;
-         }
-
-         if (var15 && !(var8 < 0.3F)) {
-            var6 -= Math.abs(var7);
-            if (var6 < -0.5F) {
-               return;
-            }
-
-            label116: {
-               if (var9 != null && var9.getKind() == 3 && !var9.getYellow() && !var9.getDouble() && var0.solidMeansEdge()) {
-                  if (!Float.isInfinite(var10) && !Float.isNaN(var10)) {
-                     var15 = (boolean)1;
-                  } else {
-                     var15 = (boolean)0;
-                  }
-
-                  if (!var15 || !(var10 >= 0.3F)) {
-                     var15 = (boolean)1;
-                     break label116;
-                  }
-               }
-
-               var15 = (boolean)0;
-            }
-
-            if (var15) {
-               var15 = var16;
-            } else {
-               var15 = RangesKt.coerceAtLeast((int)Math.ceil((var6 - var1) / var0.laneW), 0);
-            }
-
-            var16 = RangesKt.coerceAtMost((int)Math.floor((0.4F + var6) / var0.laneW), 5);
-            if (var16 < var15) {
-               return;
-            }
-
-            Integer var18 = var0.vote(var5, var15 * 10 + var16, var2, 2500L);
-            if (var18 != null) {
-               var16 = var18.intValue();
-               var15 = var16 / 10;
-               var16 %= 10;
-               var17 = var0.model.getTunnel();
-               double var13 = 0.65;
-               double var11;
-               if (var17) {
-                  var11 = 0.5;
-               } else {
-                  var11 = 0.65;
-               }
-
-               if (var16 == 0) {
-                  if (var0.solidMeansEdge()) {
-                     var11 = var13;
-                  } else {
-                     var11 = 0.5;
-                  }
-
-                  String var19 = Companion.sideName(var4);
-                  var0.see(var4, 0, var11, var2, "road edge right past our " + var19 + " line");
-               } else if (var15 == var16) {
-                  String var23 = Companion.sideName(var4);
-                  String var20;
-                  if (var15 > 1) {
-                     var20 = "s";
-                  } else {
-                     var20 = "";
-                  }
-
-                  var0.see(var4, var15, var11 * 0.75, var2, var23 + " road edge " + var15 + " lane" + var20 + " away");
-               } else {
-                  String var21 = Companion.sideName(var4);
-                  var0.seeRange(var4, var15, var16, var11, var2, var21 + " road edge " + var15 + "-" + var16 + " lanes away (shoulder width unknown)");
-               }
-            }
-
-            return;
-         }
-      }
-   }
-
-   private final String extraText() {
-      int var1 = this.model.getExtraL();
-      String var4 = "merge";
-      String var3 = null;
-      String var5;
-      if (var1 > 0) {
-         if (Intrinsics.areEqual(this.model.getKindL(), "exit")) {
-            var5 = "exit";
-         } else {
-            var5 = "merge";
-         }
-
-         var5 = var5 + " lane left";
-      } else {
-         var5 = null;
-      }
-
-      if (this.model.getExtraR() > 0) {
-         var3 = var4;
-         if (Intrinsics.areEqual(this.model.getKindR(), "exit")) {
-            var3 = "exit";
-         }
-
-         var3 = var3 + " lane right";
-      }
-
-      return CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull(new String[]{var5, var3}), " + ", null, null, 0, null, null, 62, null);
-   }
-
-   private final double fits(int var1, LaneBrain.RoadModel var2) {
-      if (var2.getLanes() <= 0) {
-         return 1.0;
-      } else {
-         int var7 = var2.getTotal();
-         double var3;
-         if (var2.getConf() >= 0.95) {
-            var3 = 3.5;
-         } else if (var2.getConf() >= 0.85) {
-            var3 = 2.5;
-         } else if (var2.getConf() >= 0.7) {
-            var3 = 1.3;
-         } else {
-            var3 = 0.8;
-         }
-
-         double var5 = Math.exp(-var3 * Math.abs(var1 - var7));
-         var3 = var5;
-         if (var2.getExtraL() + var2.getExtraR() > 0) {
-            var3 = var5;
-            if (var1 == var2.getLanes()) {
-               var3 = Math.max(var5, 0.45);
-            }
-         }
-
-         return var3;
-      }
-   }
-
-   private final int held(ArrayDeque<long[]> var1, long var2) {
-      while (!var1.isEmpty() && var2 - ((long[])var1.first())[0] > 2000L) {
-         var1.removeFirst();
-      }
-
-      for (int var5 = 4; var5 > 0; var5--) {
-         var var7 = var1;
-         int var4;
-         if (var7 instanceof Collection && var7.isEmpty()) {
-            var4 = 0;
-         } else {
-            var4 = 0;
-
-            for (long[] var10 : var7) {
-               int var6 = 1;
-               if (var10[1] < var5) {
-                  var6 = 0;
-               }
-
-               if (var6) {
-                  var6 = var4 + 1;
-                  var4 = var6;
-                  if (var6 < 0) {
-                     CollectionsKt.throwCountOverflow();
-                     var4 = var6;
-                  }
-               }
-            }
-         }
-
-         if (var4 >= 6) {
-            return var5;
-         }
-      }
-
-      return 0;
-   }
-
-   private final void lanesOnSide(int var1, int var2) {
-      if (var2 != 0) {
-         double[][] var7 = new double[6][];
-
-         for (int var3 = 0; var3 < 6; var3++) {
-            var7[var3] = new double[6];
-         }
-
-         for (int var9 = 0; var9 < 6; var9++) {
-            for (int var4 = 0; var4 < 6; var4++) {
-               int var5;
-               if (var1 < 0) {
-                  var5 = RangesKt.coerceIn(var9 + var2, 0, 5);
-               } else {
-                  var5 = var9;
-               }
-
-               int var6;
-               if (var1 > 0) {
-                  var6 = RangesKt.coerceIn(var4 + var2, 0, 5);
-               } else {
-                  var6 = var4;
-               }
-
-               double[] var8 = var7[var5];
-               var8[var6] += this.p[var9][var4];
-            }
-         }
-
-         this.p = var7;
-         this.norm();
-      }
-   }
-
-   private final void log(long var1, String var3) {
-      if (this.events.size() < 2 || !Intrinsics.areEqual(this.events.get(1).getText(), var3) || var1 - this.events.get(1).getAtMs() >= 5000L) {
-         LaneBrain.Event var5 = new LaneBrain.Event(var1, var3);
-         this.events.addFirst(var5);
-
-         while (this.events.size() > 80) {
-            this.events.removeLast();
-         }
-
-         Function1 var4 = this.onEvent;
-         if (var4 != null) {
-            var4.invoke(var5);
-         }
-      }
-   }
-
-   private static final int modelSaw$best(float[] var0) {
-      Iterator var8 = ArraysKt.getIndices(var0).iterator();
-      Object var5;
-      if (!var8.hasNext()) {
-         var5 = null;
-      } else {
-         var5 = var8.next();
-         if (var8.hasNext()) {
-            float var2 = var0[((Number)var5).intValue()];
-            Object var6 = var5;
-
-            do {
-               Object var7 = var8.next();
-               float var3 = var0[((Number)var7).intValue()];
-               var5 = var6;
-               float var1 = var2;
-               if (Float.compare(var2, var3) < 0) {
-                  var5 = var7;
-                  var1 = var3;
-               }
-
-               var6 = var5;
-               var2 = var1;
-            } while (var8.hasNext());
-         }
-      }
-
-      Integer var9 = (Integer)var5;
-      int var4;
-      if (var9 != null) {
-         var4 = var9;
-      } else {
-         var4 = 0;
-      }
-
-      return var4;
-   }
-
-   // $VF: synthetic method
-   public static void modelSaw$default(LaneBrain var0, float[] var1, float[] var2, long var3, long var5, int var7, Object var8) {
-      if ((var7 & 8) != 0) {
-         var5 = var0.lastMs;
-      }
-
-      var0.modelSaw(var1, var2, var3, var5);
-   }
-
-   private final void moved(int var1, double var2, long var4, String var6) {
-      double[][] var14 = new double[6][];
-
-      for (int var9 = 0; var9 < 6; var9++) {
-         var14[var9] = new double[6];
-      }
-
-      for (int var11 = 0; var11 < 6; var11++) {
-         for (int var12 = 0; var12 < 6; var12++) {
-            double var7 = this.p[var11][var12];
-            double[] var15 = var14[var11];
-            var15[var12] += (1 - var2) * var7;
-            int var13 = var11 + var1;
-            int var16 = var12 - var1;
-            int var10 = var13;
-            if (var13 < 0) {
-               var10 = 0;
-               var16 = RangesKt.coerceAtMost(var12 + 1, 5);
-            }
-
-            var13 = var10;
-            var10 = var16;
-            if (var16 < 0) {
-               var10 = 0;
-               var13 = RangesKt.coerceAtMost(var11 + 1, 5);
-            }
-
-            var15 = var14[RangesKt.coerceAtMost(var13, 5)];
-            var16 = RangesKt.coerceAtMost(var10, 5);
-            var15[var16] += var7 * var2;
-         }
-      }
-
-      this.p = var14;
-      this.norm();
-      this.note(var4, var6);
-      if (var4 < this.holdUntil) {
-         this.holdUntil = 60000L + var4;
-      }
-   }
-
-   private final void norm() {
-      double var1 = 0.0;
-      double[][] var12 = this.p;
-      int var10 = ((Object[])var12).length;
-      byte var9 = 0;
-
-      for (int var7 = 0; var7 < var10; var7++) {
-         double[] var13 = var12[var7];
-         int var11 = var13.length;
-
-         for (int var8 = 0; var8 < var11; var8++) {
-            var1 += var13[var8];
-         }
-      }
-
-      if (!(var1 <= 0.0)) {
-         boolean var15;
-         if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
-            var15 = true;
-         } else {
-            var15 = false;
-         }
-
-         if (var15) {
-            double var5 = 0.0;
-
-            for (int var16 = 0; var16 < 6; var16++) {
-               int var18 = 0;
-
-               while (var18 < 6) {
-                  this.p[var16][var18] = this.p[var16][var18] / var1 * 0.996 + Companion.prior(var16, var18) * 0.004;
-                  double var3 = var5;
-                  if (this.p[var16][var18] > var5) {
-                     var3 = this.p[var16][var18];
-                  }
-
-                  var18++;
-                  var5 = var3;
-               }
-            }
-
-            var1 = 0.001 * var5;
-            double[][] var23 = this.p;
-            var10 = ((Object[])var23).length;
-
-            for (int var17 = var9; var17 < var10; var17++) {
-               double[] var22 = var23[var17];
-               int var19 = 0;
-
-               for (int var20 = var22.length; var19 < var20; var19++) {
-                  if (var22[var19] < var1) {
-                     var22[var19] = var1;
-                  }
-               }
-            }
-
-            return;
-         }
-      }
-
-      this.p = Companion.prior();
-   }
-
-   private final void note(long var1, String var3) {
-      this.why.addFirst(new LaneBrain.Event(var1, var3));
-
-      while (this.why.size() > 6) {
-         this.why.removeLast();
-      }
-   }
-
-   private final void outerLines(LaneBrain.Frame var1, long var2) {
-      if (this.centred(var1)) {
-         LaneBrain.Road var6 = this.road;
-         boolean var5 = true;
-         boolean var4;
-         if (var6 != null) {
-            if (!var6.getOneway() && !var6.getHighway()) {
-               var4 = false;
-            } else {
-               var4 = true;
-            }
-         } else if (var1.getVEgo() > 17.0F) {
-            var4 = true;
-         } else {
-            var4 = false;
-         }
-
-         label39: {
-            if (var4) {
-               LaneMarks.Mark var9 = var1.getLeftMark();
-               if (var9 != null && var9.getYellow()) {
-                  var4 = true;
-               } else {
-                  var4 = false;
-               }
-
-               if (!var4) {
-                  var4 = var5;
-                  break label39;
-               }
-            }
-
-            var4 = false;
-         }
-
-         if (var4) {
-            outerLines$side(this, var2, -1, this.vOuterL, var1.getPL(), var1.getYL(), var1.getPL2(), var1.getYL2(), var1.getEdgeL());
-         } else {
-            this.vOuterL.clear();
-         }
-
-         outerLines$side(this, var2, 1, this.vOuterR, var1.getPR(), var1.getYR(), var1.getPR2(), var1.getYR2(), var1.getEdgeR());
-      }
-   }
-
-   private static final void outerLines$side(
-      LaneBrain var0, long var1, int var3, LaneBrain.Vote var4, float var5, float var6, float var7, float var8, float var9
-   ) {
-      if (!(var5 < 0.5F)) {
-         boolean var12;
-         if (!Float.isInfinite(var7) && !Float.isNaN(var7)) {
-            var12 = 1;
-         } else {
-            var12 = 0;
-         }
-
-         if (var12) {
-            label122: {
-               var5 = Math.abs(var6);
-               var6 = Math.abs(var8);
-               if (var7 > 0.6F) {
-                  boolean var19;
-                  if (!Float.isInfinite(var8) && !Float.isNaN(var8)) {
-                     var19 = true;
-                  } else {
-                     var19 = false;
-                  }
-
-                  if (var19) {
-                     var8 = var6 - var5;
-                     if (2.3F <= var8 && var8 <= 4.6F) {
-                        var19 = true;
-                     } else {
-                        var19 = false;
-                     }
-
-                     if (var19) {
-                        if (!Float.isInfinite(var9) && !Float.isNaN(var9)) {
-                           var19 = true;
-                        } else {
-                           var19 = false;
+        }
+        if (s > 0.0d) {
+            if ((Double.isInfinite(s) || Double.isNaN(s)) ? false : true) {
+                double mx = 0.0d;
+                for (int l = 0; l < 6; l++) {
+                    for (int r = 0; r < 6; r++) {
+                        this.p[l][r] = ((this.p[l][r] / s) * 0.996d) + (Companion.prior(l, r) * 0.004d);
+                        if (this.p[l][r] > mx) {
+                            mx = this.p[l][r];
                         }
-
-                        if (!var19 || var9 - var6 > -0.3F) {
-                           var12 = 1;
-                           break label122;
+                    }
+                }
+                double floor = 0.001d * mx;
+                for (double[] a2 : this.p) {
+                    int length = a2.length;
+                    for (int j = 0; j < length; j++) {
+                        if (a2[j] < floor) {
+                            a2[j] = floor;
                         }
-                     }
-                  }
-               }
-
-               if (!(var7 < 0.15F)) {
-                  return;
-               }
-
-               boolean var22;
-               if (!Float.isInfinite(var9) && !Float.isNaN(var9)) {
-                  var22 = true;
-               } else {
-                  var22 = false;
-               }
-
-               if (!var22 || !(var9 - var5 < 1.6F)) {
-                  return;
-               }
-
-               var12 = 0;
+                    }
+                }
+                return;
             }
+        }
+        this.p = Companion.prior();
+    }
 
-            Integer var13 = var0.vote(var4, var12, var1, 1500L);
-            if (var13 != null && var13 == 0) {
-               double var10;
-               if (var0.solidMeansEdge()) {
-                  var10 = 0.75;
-               } else {
-                  var10 = 0.55;
-               }
+    private final int count(int l, int r, int side) {
+        return side < 0 ? l : r;
+    }
 
-               String var15 = Companion.sideName(var3);
-               var0.see(var3, 0, var10, var1, "no lane line past ours on the " + var15 + ", road edge right there");
-            } else if (var13 != null && var13 == 1) {
-               String var14 = Companion.sideName(var3);
-               var0.atLeast(var3, 1, 0.7, var1, "a lane line one lane over on the " + var14);
+    private final void note(long now, String text) {
+        this.why.addFirst(new Event(now, text));
+        while (this.why.size() > 6) {
+            this.why.removeLast();
+        }
+    }
+
+    private final void see(int side, int v, double conf, long now, String text) {
+        if (now >= this.holdUntil || side(side).getFirst().intValue() == v) {
+            this.lastCameraMs = now;
+            double other = (1 - conf) / 5;
+            double ratio = conf / other;
+            for (int l = 0; l < 6; l++) {
+                for (int r = 0; r < 6; r++) {
+                    if (count(l, r, side) == RangesKt.coerceIn(v, 0, 5)) {
+                        double[] dArr = this.p[l];
+                        dArr[r] = dArr[r] * ratio;
+                    }
+                }
             }
+            norm();
+            note(now, text);
+        }
+    }
 
+    private final void seeRange(int side, int lo, int hi, double conf, long now, String text) {
+        if (now < this.holdUntil) {
+            int intValue = side(side).getFirst().intValue();
+            if (!(lo <= intValue && intValue <= hi)) {
+                return;
+            }
+        }
+        this.lastCameraMs = now;
+        int inside = RangesKt.coerceAtLeast((hi - lo) + 1, 1);
+        int outside = RangesKt.coerceAtLeast(6 - inside, 1);
+        double ratio = (conf / inside) / ((1 - conf) / outside);
+        for (int l = 0; l < 6; l++) {
+            for (int r = 0; r < 6; r++) {
+                int count = count(l, r, side);
+                if (lo <= count && count <= hi) {
+                    double[] dArr = this.p[l];
+                    dArr[r] = dArr[r] * ratio;
+                }
+            }
+        }
+        norm();
+        note(now, text);
+    }
+
+    private final void atLeast(int side, int n, double conf, long now, String text) {
+        if (now >= this.holdUntil || side(side).getFirst().intValue() >= n) {
+            this.lastCameraMs = now;
+            double ratio = conf / (1 - conf);
+            for (int l = 0; l < 6; l++) {
+                for (int r = 0; r < 6; r++) {
+                    if (count(l, r, side) >= n) {
+                        double[] dArr = this.p[l];
+                        dArr[r] = dArr[r] * ratio;
+                    }
+                }
+            }
+            norm();
+            note(now, text);
+        }
+    }
+
+    private final void moved(int dir, double sure, long now, String text) {
+        double[][] q = new double[6][];
+        for (int i = 0; i < 6; i++) {
+            q[i] = new double[6];
+        }
+        for (int l = 0; l < 6; l++) {
+            for (int r = 0; r < 6; r++) {
+                double v = this.p[l][r];
+                double[] dArr = q[l];
+                dArr[r] = dArr[r] + ((1 - sure) * v);
+                int nl = l + dir;
+                int nr = r - dir;
+                if (nl < 0) {
+                    nl = 0;
+                    nr = RangesKt.coerceAtMost(r + 1, 5);
+                }
+                if (nr < 0) {
+                    nr = 0;
+                    nl = RangesKt.coerceAtMost(l + 1, 5);
+                }
+                double[] dArr2 = q[RangesKt.coerceAtMost(nl, 5)];
+                int coerceAtMost = RangesKt.coerceAtMost(nr, 5);
+                dArr2[coerceAtMost] = dArr2[coerceAtMost] + (v * sure);
+            }
+        }
+        this.p = q;
+        norm();
+        note(now, text);
+        if (now < this.holdUntil) {
+            this.holdUntil = 60000 + now;
+        }
+    }
+
+    private final void lanesOnSide(int side, int d) {
+        if (d == 0) {
             return;
-         }
-      }
-   }
-
-   private final void paint(LaneBrain.Frame var1, long var2) {
-      LaneMarks.Mark var7 = var1.getLeftMark();
-      LaneMarks.Mark var6 = var1.getRightMark();
-      if (var7 != null && var7.getKind() != 0) {
-         boolean var5;
-         if (!var7.getYellow() || var7.getKind() != 3 && var7.getKind() != 2) {
-            var5 = 0;
-         } else {
-            var5 = 1;
-         }
-
-         LaneBrain.Vote var8 = this.vYellow;
-         if (var5) {
-            var5 = 1;
-         } else {
-            var5 = 0;
-         }
-
-         Integer var24 = this.vote(var8, var5, var2, 1000L);
-         if (var24 != null && var24 == 1) {
-            this.see(-1, 0, 0.9, var2, "yellow line on the left");
-         }
-
-         var8 = this.vDashL;
-         if (!var7.getYellow() && var7.getKind() == 2) {
-            var5 = 1;
-         } else {
-            var5 = 0;
-         }
-
-         Integer var20 = this.vote(var8, var5, var2, 1500L);
-         if (var20 != null && var20 == 1) {
-            this.atLeast(-1, 1, 0.6, var2, "dashed line on the left");
-         }
-      }
-
-      if (var6 != null && var6.getKind() != 0) {
-         LaneBrain.Vote var21 = this.vDashR;
-         byte var14;
-         if (!var6.getYellow() && var6.getKind() == 2) {
-            var14 = 1;
-         } else {
-            var14 = 0;
-         }
-
-         Integer var22 = this.vote(var21, var14, var2, 1500L);
-         if (var22 != null && var22 == 1) {
-            this.atLeast(1, 1, 0.6, var2, "dashed line on the right");
-         }
-
-         LaneBrain.Road var23 = this.road;
-         boolean var15;
-         if (var23 != null && var23.getHighway()) {
-            var15 = 1;
-         } else {
-            var15 = 0;
-         }
-
-         label97: {
-            if (var15 && this.solidMeansEdge() && !var6.getYellow() && !var6.getDouble() && var6.getKind() == 3) {
-               float var4 = var1.getEdgeR();
-               if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
-                  var15 = (boolean)1;
-               } else {
-                  var15 = (boolean)0;
-               }
-
-               if (var15) {
-                  var4 = var1.getYR();
-                  if (!Float.isInfinite(var4) && !Float.isNaN(var4)) {
-                     var15 = (boolean)1;
-                  } else {
-                     var15 = (boolean)0;
-                  }
-
-                  if (var15 && var1.getEdgeR() - Math.abs(var1.getYR()) < 1.6F) {
-                     var15 = (boolean)1;
-                     break label97;
-                  }
-               }
+        }
+        double[][] q = new double[6][];
+        for (int i = 0; i < 6; i++) {
+            q[i] = new double[6];
+        }
+        for (int l = 0; l < 6; l++) {
+            for (int r = 0; r < 6; r++) {
+                int nl = side < 0 ? RangesKt.coerceIn(l + d, 0, 5) : l;
+                int nr = side > 0 ? RangesKt.coerceIn(r + d, 0, 5) : r;
+                double[] dArr = q[nl];
+                dArr[nr] = dArr[nr] + this.p[l][r];
             }
+        }
+        this.p = q;
+        norm();
+    }
 
-            var15 = (boolean)0;
-         }
+    private final void restart(int side, int v, double conf, long now, String text) {
+        for (int l = 0; l < 6; l++) {
+            for (int r = 0; r < 6; r++) {
+                int mine = count(l, r, side);
+                double[] dArr = W;
+                double other = side < 0 ? dArr[r] : dArr[l];
+                this.p[l][r] = (mine == v ? conf : (1 - conf) / 5) * other;
+            }
+        }
+        norm();
+        this.holdUntil = 0L;
+        note(now, text);
+    }
 
-         LaneBrain.Vote var9 = this.vSolidR;
-         if (var15) {
-            var15 = 1;
-         } else {
-            var15 = 0;
-         }
+    private final void blur(double d) {
+        double k = RangesKt.coerceIn((d / 300.0d) * 0.03d, 0.0d, 0.3d);
+        for (int l = 0; l < 6; l++) {
+            for (int r = 0; r < 6; r++) {
+                this.p[l][r] = (this.p[l][r] * (1 - k)) + (Companion.prior(l, r) * k);
+            }
+        }
+    }
 
-         Integer var10 = this.vote(var9, var15, var2, 1500L);
-         if (var10 != null && var10 == 1) {
-            this.see(1, 0, 0.75, var2, "solid edge line, road edge past it");
-         }
-      }
-   }
-
-   // $VF: synthetic method
-   public static void reset$default(LaneBrain var0, boolean var1, int var2, Object var3) {
-      if ((var2 & 1) != 0) {
-         var1 = true;
-      }
-
-      var0.reset(var1);
-   }
-
-   private final void restart(int var1, int var2, double var3, long var5, String var7) {
-      for (int var12 = 0; var12 < 6; var12++) {
-         for (int var13 = 0; var13 < 6; var13++) {
-            int var14 = this.count(var12, var13, var1);
-            double[] var15 = W;
-            double var8;
-            if (var1 < 0) {
-               var8 = var15[var13];
+    private final RoadModel roadModel(Road r, RoadInfo i) {
+        Triple triple;
+        double d;
+        String kindR;
+        String kindL;
+        Integer mine = r != null ? this.myCounts.get(Long.valueOf(r.getId())) : null;
+        int hp = i != null ? i.getHpmsLanes() : 0;
+        if (mine != null && mine.intValue() > 0) {
+            triple = new Triple(mine, "your count", Double.valueOf(0.97d));
+        } else if (hp > 0) {
+            Integer valueOf = Integer.valueOf(hp);
+            if ((i == null || i.getHpmsSure()) ? false : true) {
+                d = 0.6d;
             } else {
-               var8 = var15[var12];
+                if (!(r != null && r.getHighway())) {
+                    if (!(i != null && i.getHpmsRamp())) {
+                        d = 0.75d;
+                    }
+                }
+                d = 0.9d;
             }
-
-            var15 = this.p[var12];
-            double var10;
-            if (var14 == var2) {
-               var10 = var3;
+            triple = new Triple(valueOf, "HPMS", Double.valueOf(d));
+        } else {
+            if ((r != null ? r.getLanesOurWay() : 0) > 0) {
+                Intrinsics.checkNotNull(r);
+                triple = new Triple(Integer.valueOf(r.getLanesOurWay()), "map", Double.valueOf(r.getLanesOurWay() == 1 ? 0.8d : 0.55d));
             } else {
-               var10 = (1 - var3) / 5;
+                if ((i != null ? i.getNavStraight() : 0) > 0) {
+                    Intrinsics.checkNotNull(i);
+                    triple = new Triple(Integer.valueOf(i.getNavStraight()), "route", Double.valueOf(0.55d));
+                } else {
+                    triple = new Triple(0, "", Double.valueOf(0.0d));
+                }
             }
+        }
+        int n = ((Number) triple.component1()).intValue();
+        String src = (String) triple.component2();
+        double conf = ((Number) triple.component3()).doubleValue();
+        return new RoadModel(n, src, conf, i != null ? i.getExtraL() : 0, i != null ? i.getExtraR() : 0, (i == null || (kindL = i.getKindL()) == null) ? "" : kindL, (i == null || (kindR = i.getKindR()) == null) ? "" : kindR, i != null && i.getTunnel(), i != null && i.getBridge());
+    }
 
-            var15[var13] = var10 * var8;
-         }
-      }
+    private final double fits(int t, RoadModel m) {
+        if (m.getLanes() <= 0) {
+            return 1.0d;
+        }
+        int target = m.getTotal();
+        double k = m.getConf() >= 0.95d ? 3.5d : m.getConf() >= 0.85d ? 2.5d : m.getConf() >= 0.7d ? 1.3d : 0.8d;
+        double f = Math.exp((-k) * Math.abs(t - target));
+        int ex = m.getExtraL() + m.getExtraR();
+        return (ex <= 0 || t != m.getLanes()) ? f : Math.max(f, 0.45d);
+    }
 
-      this.norm();
-      this.holdUntil = 0L;
-      this.note(var5, var7);
-   }
-
-   private final LaneBrain.RoadModel roadModel(LaneBrain.Road var1, LaneBrain.RoadInfo var2) {
-      Integer var10;
-      if (var1 != null) {
-         var10 = this.myCounts.get(var1.getId());
-      } else {
-         var10 = null;
-      }
-
-      int var5;
-      if (var2 != null) {
-         var5 = var2.getHpmsLanes();
-      } else {
-         var5 = 0;
-      }
-
-      Triple var12;
-      if (var10 != null && var10 > 0) {
-         var12 = new Triple<>(var10, "your count", 0.97);
-      } else if (var5 > 0) {
-         boolean var6;
-         if (var2 != null && !var2.getHpmsSure()) {
-            var6 = true;
-         } else {
-            var6 = false;
-         }
-
-         double var3;
-         if (var6) {
-            var3 = 0.6;
-         } else {
-            label144: {
-               if (var1 != null && var1.getHighway()) {
-                  var6 = true;
-               } else {
-                  var6 = false;
-               }
-
-               if (!var6) {
-                  if (var2 != null && var2.getHpmsRamp()) {
-                     var6 = true;
-                  } else {
-                     var6 = false;
-                  }
-
-                  if (!var6) {
-                     var3 = 0.75;
-                     break label144;
-                  }
-               }
-
-               var3 = 0.9;
+    private final void answer() {
+        double s = 0.0d;
+        for (int l = 0; l < 6; l++) {
+            for (int r = 0; r < 6; r++) {
+                double v = this.p[l][r] * fits(l + r + 1, this.model);
+                this.q[l][r] = v;
+                s += v;
             }
-         }
-
-         var12 = new Triple<>(var5, "HPMS", var3);
-      } else {
-         if (var1 != null) {
-            var5 = var1.getLanesOurWay();
-         } else {
-            var5 = 0;
-         }
-
-         double var14 = 0.55;
-         if (var5 > 0) {
-            Intrinsics.checkNotNull(var1);
-            var5 = var1.getLanesOurWay();
-            if (var1.getLanesOurWay() == 1) {
-               var14 = 0.8;
+        }
+        if (s > 0.0d) {
+            for (double[] a : this.q) {
+                int length = a.length;
+                for (int j = 0; j < length; j++) {
+                    a[j] = a[j] / s;
+                }
             }
+        }
+    }
 
-            var12 = new Triple<>(var5, "map", var14);
-         } else {
-            if (var2 != null) {
-               var5 = var2.getNavStraight();
+    public final double[] marg(int dir) {
+        double[] m = new double[6];
+        for (int l = 0; l < 6; l++) {
+            for (int r = 0; r < 6; r++) {
+                int i = dir < 0 ? l : r;
+                m[i] = m[i] + this.q[l][r];
+            }
+        }
+        return m;
+    }
+
+    public final Pair<Integer, Double> side(int dir) {
+        double[] m = marg(dir);
+        int b = 0;
+        for (int k = 1; k < 6; k++) {
+            if (m[k] > m[b]) {
+                b = k;
+            }
+        }
+        return TuplesKt.to(Integer.valueOf(b), Double.valueOf(m[b]));
+    }
+
+    public final Pair<Integer, Double> sideLanes(int dir) {
+        double[] m = marg(dir);
+        if (m[0] >= 0.6d) {
+            return TuplesKt.to(0, Double.valueOf(m[0]));
+        }
+        double atLeast = 1.0d;
+        int n = 0;
+        double c = m[0];
+        for (int k = 1; k < 6; k++) {
+            atLeast -= m[k - 1];
+            if (atLeast < 0.6d) {
+                break;
+            }
+            n = k;
+            c = atLeast;
+        }
+        return n == 0 ? side(dir) : TuplesKt.to(Integer.valueOf(n), Double.valueOf(c));
+    }
+
+    public final int lanesLeft() {
+        return side(-1).getFirst().intValue();
+    }
+
+    public final int lanesRight() {
+        return side(1).getFirst().intValue();
+    }
+
+    public final Pair<Integer, Double> total() {
+        double[] m = new double[12];
+        for (int l = 0; l < 6; l++) {
+            for (int r = 0; r < 6; r++) {
+                int i = l + r + 1;
+                m[i] = m[i] + this.q[l][r];
+            }
+        }
+        int b = 1;
+        int length = m.length;
+        for (int k = 2; k < length; k++) {
+            if (m[k] > m[b]) {
+                b = k;
+            }
+        }
+        return TuplesKt.to(Integer.valueOf(b), Double.valueOf(m[b]));
+    }
+
+    public final Pair<Integer, Double> laneFromLeft() {
+        Pair<Integer, Double> side = side(-1);
+        int l = side.component1().intValue();
+        double c = side.component2().doubleValue();
+        return TuplesKt.to(Integer.valueOf(c >= 0.35d ? l + 1 : 0), Double.valueOf(c));
+    }
+
+    public final Pair<Integer, String> laneCount() {
+        int i;
+        Pair<Integer, Double> pair = total();
+        int t = pair.component1().intValue();
+        double c = pair.component2().doubleValue();
+        String str = "";
+        if (this.model.getLanes() > 0 && t == this.model.getTotal()) {
+            Integer valueOf = Integer.valueOf(t);
+            String src = this.model.getSrc();
+            if (this.model.getExtraL() + this.model.getExtraR() > 0) {
+                str = " + " + extraText();
+            }
+            return TuplesKt.to(valueOf, src + str);
+        }
+        if (this.model.getLanes() > 0 && t == this.model.getLanes()) {
+            return TuplesKt.to(Integer.valueOf(t), this.model.getSrc());
+        }
+        if (c >= 0.5d) {
+            i = Integer.valueOf(t);
+            str = "camera, " + ((int) (100 * c)) + "%";
+        } else {
+            i = 0;
+        }
+        return TuplesKt.to(i, str);
+    }
+
+    public final int inExtra() {
+        Pair<Integer, Double> side = side(-1);
+        int l = side.component1().intValue();
+        double cl = side.component2().doubleValue();
+        Pair<Integer, Double> side2 = side(1);
+        int r = side2.component1().intValue();
+        double cr = side2.component2().doubleValue();
+        int t = total().component1().intValue();
+        if (this.model.getLanes() <= 0 || t != this.model.getTotal()) {
+            return 0;
+        }
+        if (this.model.getExtraR() <= 0 || r >= this.model.getExtraR() || cr < 0.5d) {
+            return (this.model.getExtraL() <= 0 || l >= this.model.getExtraL() || cl < 0.5d) ? 0 : -1;
+        }
+        return 1;
+    }
+
+    private final String extraText() {
+        String str;
+        String[] strArr = new String[2];
+        String str2 = null;
+        if (this.model.getExtraL() > 0) {
+            str = (Intrinsics.areEqual(this.model.getKindL(), "exit") ? "exit" : "merge") + " lane left";
+        } else {
+            str = null;
+        }
+        strArr[0] = str;
+        if (this.model.getExtraR() > 0) {
+            str2 = (Intrinsics.areEqual(this.model.getKindR(), "exit") ? "exit" : "merge") + " lane right";
+        }
+        strArr[1] = str2;
+        return CollectionsKt.joinToString$default(CollectionsKt.listOfNotNull((Object[]) strArr), " + ", null, null, 0, null, null, 62, null);
+    }
+
+    public final String label() {
+        String str;
+        int n = laneFromLeft().component1().intValue();
+        if (n <= 0) {
+            return "Lane ?";
+        }
+        int ex = inExtra();
+        RoadModel roadModel = this.model;
+        String k = ex < 0 ? roadModel.getKindL() : roadModel.getKindR();
+        if (ex != 0) {
+            return (Intrinsics.areEqual(k, "exit") ? "Exit" : "Merge") + " lane (" + (ex < 0 ? "left" : "right") + " of " + this.model.getLanes() + " lanes)";
+        }
+        int t = laneCount().component1().intValue();
+        int tt = total().component1().intValue();
+        if (this.model.getLanes() <= 0 || tt != this.model.getTotal() || this.model.getExtraL() + this.model.getExtraR() <= 0) {
+            return "Lane " + n + " of " + (t >= n ? String.valueOf(t) : "?");
+        }
+        int lane = n - this.model.getExtraL();
+        if (lane > this.model.getLanes() && this.model.getExtraR() > 0) {
+            return (Intrinsics.areEqual(this.model.getKindR(), "exit") ? "Exit" : "Merge") + " lane (right of " + this.model.getLanes() + " lanes)";
+        }
+        if (lane < 1 && this.model.getExtraL() > 0) {
+            return (Intrinsics.areEqual(this.model.getKindL(), "exit") ? "Exit" : "Merge") + " lane (left of " + this.model.getLanes() + " lanes)";
+        }
+        int lanes = this.model.getLanes();
+        String str2 = "";
+        if (this.model.getExtraL() > 0) {
+            str = " + " + (Intrinsics.areEqual(this.model.getKindL(), "exit") ? "exit" : "merge") + " lane ←";
+        } else {
+            str = "";
+        }
+        if (this.model.getExtraR() > 0) {
+            str2 = " + " + (Intrinsics.areEqual(this.model.getKindR(), "exit") ? "exit" : "merge") + " lane →";
+        }
+        return "Lane " + lane + " of " + lanes + str + str2;
+    }
+
+    public final void update(Frame f) {
+        String str;
+        Intrinsics.checkNotNullParameter(f, "f");
+        long now = f.getNowMs();
+        double dt = this.lastMs == 0 ? 0.0d : RangesKt.coerceIn((now - this.lastMs) / 1000.0d, 0.0d, 0.5d);
+        this.lastMs = now;
+        this.odo += f.getVEgo() * dt;
+        float yawRate = f.getYawRate();
+        if ((Float.isInfinite(yawRate) || Float.isNaN(yawRate)) ? false : true) {
+            this.heading += f.getYawRate() * dt;
+        }
+        if (this.odo - this.lastBlurOdo >= 20.0d) {
+            blur(this.odo - this.lastBlurOdo);
+            this.lastBlurOdo = this.odo;
+        }
+        roadUpdate(f, now);
+        detectTurn(f, now);
+        checkOpChange(f, now);
+        detectLaneChange(f, now);
+        this.memory.update(this.odo, CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Float.valueOf(f.getYL2()), Float.valueOf(f.getPL2())), TuplesKt.to(Float.valueOf(f.getYL()), Float.valueOf(f.getPL())), TuplesKt.to(Float.valueOf(f.getYR()), Float.valueOf(f.getPR())), TuplesKt.to(Float.valueOf(f.getYR2()), Float.valueOf(f.getPR2()))}), f.getEdgeL(), f.getEdgeR(), (f.getOpChange() == 0 && this.opDir == 0 && f.getVEgo() >= 2.0f) ? false : true);
+        if (f.getVEgo() >= 2.0f) {
+            paint(f, now);
+            outerLines(f, now);
+            edges(f, now);
+            cars(f, now);
+        }
+        blindSpot(f, now);
+        rtk(f, now);
+        answer();
+        if (f.getVEgo() > 1.0f) {
+            this.driveS += dt;
+            if (laneFromLeft().getSecond().doubleValue() >= 0.5d) {
+                this.knownS += dt;
+            }
+        }
+        String a = label();
+        if (!Intrinsics.areEqual(a, this.prevAnswer)) {
+            if ((this.prevAnswer.length() > 0) || !Intrinsics.areEqual(a, "Lane ?")) {
+                Event firstOrNull = this.why.firstOrNull();
+                if (firstOrNull == null || (str = firstOrNull.getText()) == null) {
+                    str = "start";
+                }
+                log(now, a + "  (" + str + ")");
+            }
+            this.prevAnswer = a;
+        }
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:40:0x01e1, code lost:
+    
+        if (r1 == null) goto L80;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void roadUpdate(Frame f, long now) {
+        String str;
+        String str2;
+        boolean z;
+        double d;
+        String str3;
+        int i;
+        String str4;
+        String name;
+        Road r = f.getRoad();
+        Road was = this.road;
+        if (r != null) {
+            this.road = r;
+        }
+        this.info = f.getInfo();
+        RoadModel old = this.model;
+        this.model = roadModel(this.road, this.info);
+        if (this.model.getLanes() != old.getLanes() || this.model.getExtraL() != old.getExtraL() || this.model.getExtraR() != old.getExtraR() || (r != null && was != null && !Intrinsics.areEqual(r.getName(), was.getName()))) {
+            this.roadChangeMs = now;
+        }
+        if (old.getLanes() > 0 || this.model.getLanes() > 0) {
+            if (!roadUpdate$ours(this, now, -1, this.model.getExtraL() - old.getExtraL())) {
+                lanesOnSide(-1, this.model.getExtraL() - old.getExtraL());
+            }
+            if (!roadUpdate$ours(this, now, 1, this.model.getExtraR() - old.getExtraR())) {
+                lanesOnSide(1, this.model.getExtraR() - old.getExtraR());
+            }
+            if (this.model.getExtraL() != old.getExtraL() || this.model.getExtraR() != old.getExtraR()) {
+                if (this.model.getExtraL() + this.model.getExtraR() > old.getExtraL() + old.getExtraR()) {
+                    String extraText = extraText();
+                    RoadInfo roadInfo = this.info;
+                    if (roadInfo == null || (str2 = roadInfo.getExtraWhy()) == null) {
+                        str2 = "map";
+                    }
+                    str = extraText + " (" + str2 + ")";
+                } else {
+                    str = "extra lane ended";
+                }
+                note(now, str);
+            }
+        }
+        if (r == null) {
+            z = true;
+        } else if (was == null || was.getId() != r.getId()) {
+            if (was != null && (!Intrinsics.areEqual(was.getName(), r.getName()) || was.getHighway() != r.getHighway() || was.getRamp() != r.getRamp())) {
+                this.memory.clear();
+                blur(600.0d);
+            }
+            if (this.model.getLanes() == 1) {
+                z = true;
+                restart(-1, 0, 0.85d, now, this.model.getSrc() + ": 1 lane our way");
             } else {
-               var5 = 0;
+                z = true;
             }
-
-            if (var5 > 0) {
-               Intrinsics.checkNotNull(var2);
-               var12 = new Triple<>(var2.getNavStraight(), "route", 0.55);
+        } else {
+            z = true;
+        }
+        if (f.getEntrySide() != 0) {
+            this.entrySide = f.getEntrySide();
+            this.entryMs = now;
+            this.roadChangeMs = now;
+            if (f.getEntrySide() < 0) {
+                d = 0.75d;
+                str3 = "joined from a left ramp";
+                i = -1;
             } else {
-               var12 = new Triple<>(0, "", 0.0);
+                d = 0.6d;
+                str3 = "joined from a right ramp";
+                i = 1;
             }
-         }
-      }
-
-      int var7 = ((Number)var12.component1()).intValue();
-      String var11 = (String)var12.component2();
-      double var15 = ((Number)var12.component3()).doubleValue();
-      if (var2 != null) {
-         var5 = var2.getExtraL();
-      } else {
-         var5 = 0;
-      }
-
-      int var22;
-      if (var2 != null) {
-         var22 = var2.getExtraR();
-      } else {
-         var22 = 0;
-      }
-
-      label104: {
-         if (var2 != null) {
-            var13 = var2.getKindL();
-            if (var13 != null) {
-               break label104;
+            restart(i, 0, d, now, str3);
+            this.nRamps++;
+            String str5 = f.getEntrySide() < 0 ? "LEFT" : "RIGHT";
+            if (r != null && (name = r.getName()) != null) {
+                String str6 = name;
+                if (str6.length() == 0 ? z : false) {
+                    str6 = r.getKind();
+                }
+                str4 = str6;
             }
-         }
+            str4 = "?";
+            log(now, "highway entry from the " + str5 + " (" + str4 + ")");
+        }
+    }
 
-         var13 = "";
-      }
+    private static final boolean roadUpdate$ours(LaneBrain this$0, long $now, int side, int d) {
+        return d > 0 && this$0.entrySide == side && $now - this$0.entryMs < 20000;
+    }
 
-      label99: {
-         if (var2 != null) {
-            var23 = var2.getKindR();
-            if (var23 != null) {
-               break label99;
+    private final void detectTurn(Frame f, long now) {
+        float yawRate = f.getYawRate();
+        if ((Float.isInfinite(yawRate) || Float.isNaN(yawRate)) ? false : true) {
+            this.hist.addLast(new double[]{now, this.heading, this.odo});
+            while (!this.hist.isEmpty() && now - this.hist.first()[0] > 12000.0d) {
+                this.hist.removeFirst();
             }
-         }
-
-         var23 = "";
-      }
-
-      boolean var8;
-      if (var2 != null && var2.getTunnel()) {
-         var8 = true;
-      } else {
-         var8 = false;
-      }
-
-      boolean var9;
-      if (var2 != null && var2.getBridge()) {
-         var9 = true;
-      } else {
-         var9 = false;
-      }
-
-      return new LaneBrain.RoadModel(var7, var11, var15, var5, var22, var13, var23, var8, var9);
-   }
-
-   private final void roadUpdate(LaneBrain.Frame var1, long var2) {
-      LaneBrain.Road var9 = var1.getRoad();
-      LaneBrain.Road var10 = this.road;
-      if (var9 != null) {
-         this.road = var9;
-      }
-
-      this.info = var1.getInfo();
-      LaneBrain.RoadModel var7 = this.model;
-      this.model = this.roadModel(this.road, this.info);
-      if (this.model.getLanes() != var7.getLanes()
-         || this.model.getExtraL() != var7.getExtraL()
-         || this.model.getExtraR() != var7.getExtraR()
-         || var9 != null && var10 != null && !Intrinsics.areEqual(var9.getName(), var10.getName())) {
-         this.roadChangeMs = var2;
-      }
-
-      if (var7.getLanes() > 0 || this.model.getLanes() > 0) {
-         if (!roadUpdate$ours(this, var2, -1, this.model.getExtraL() - var7.getExtraL())) {
-            this.lanesOnSide(-1, this.model.getExtraL() - var7.getExtraL());
-         }
-
-         if (!roadUpdate$ours(this, var2, 1, this.model.getExtraR() - var7.getExtraR())) {
-            this.lanesOnSide(1, this.model.getExtraR() - var7.getExtraR());
-         }
-
-         if (this.model.getExtraL() != var7.getExtraL() || this.model.getExtraR() != var7.getExtraR()) {
-            String var16;
-            if (this.model.getExtraL() + this.model.getExtraR() <= var7.getExtraL() + var7.getExtraR()) {
-               var16 = "extra lane ended";
-            } else {
-               String var11;
-               label97: {
-                  var11 = this.extraText();
-                  LaneBrain.RoadInfo var14 = this.info;
-                  if (var14 != null) {
-                     String var8 = var14.getExtraWhy();
-                     var15 = var8;
-                     if (var8 != null) {
-                        break label97;
-                     }
-                  }
-
-                  var15 = "map";
-               }
-
-               var16 = var11 + " (" + var15 + ")";
+            if (Math.abs(f.getYawRate()) >= 0.05f && f.getVEgo() >= 1.0f) {
+                this.straightSince = 0L;
+            } else if (this.straightSince == 0) {
+                this.straightSince = now;
             }
-
-            this.note(var2, var16);
-         }
-      }
-
-      if (var9 != null && (var10 == null || var10.getId() != var9.getId())) {
-         if (var10 != null
-            && (!Intrinsics.areEqual(var10.getName(), var9.getName()) || var10.getHighway() != var9.getHighway() || var10.getRamp() != var9.getRamp())) {
+            if (f.getVEgo() > 13.5f || this.straightSince == 0 || now - this.straightSince < 1500 || this.hist.size() < 5) {
+                return;
+            }
+            double deg = 0.0d;
+            Iterator it = this.hist.iterator();
+            while (it.hasNext()) {
+                double[] h = (double[]) it.next();
+                if (Math.abs(this.heading - h[1]) > Math.abs(deg)) {
+                    deg = this.heading - h[1];
+                }
+            }
+            double deg2 = Math.toDegrees(deg);
+            if (Math.abs(deg2) < 55.0d) {
+                return;
+            }
+            this.hist.clear();
             this.memory.clear();
-            this.blur(600.0);
-         }
-
-         if (this.model.getLanes() == 1) {
-            String var17 = this.model.getSrc();
-            this.restart(-1, 0, 0.85, var2, var17 + ": 1 lane our way");
-         }
-      }
-
-      if (var1.getEntrySide() != 0) {
-         this.entrySide = var1.getEntrySide();
-         this.entryMs = var2;
-         this.roadChangeMs = var2;
-         double var4;
-         byte var6;
-         String var18;
-         if (var1.getEntrySide() < 0) {
-            var4 = 0.75;
-            var18 = "joined from a left ramp";
-            var6 = -1;
-         } else {
-            var4 = 0.6;
-            var18 = "joined from a right ramp";
-            var6 = 1;
-         }
-
-         this.restart(var6, 0, var4, var2, var18);
-         this.nRamps++;
-         String var12;
-         if (var1.getEntrySide() < 0) {
-            var12 = "LEFT";
-         } else {
-            var12 = "RIGHT";
-         }
-
-         label73: {
-            if (var9 != null) {
-               String var19 = var9.getName();
-               if (var19 != null) {
-                  var var20 = var19;
-                  boolean var13;
-                  if (var20.length() == 0) {
-                     var13 = true;
-                  } else {
-                     var13 = false;
-                  }
-
-                  if (var13) {
-                     var20 = var9.getKind();
-                  }
-
-                  String var22 = var20;
-                  var21 = var22;
-                  if (var22 != null) {
-                     break label73;
-                  }
-               }
+            this.nTurns++;
+            if (this.lastCameraMs < this.straightSince) {
+                restart(deg2 > 0.0d ? -1 : 1, 0, 0.45d, now, deg2 > 0.0d ? "left turn: usually the leftmost lane" : "right turn: usually the rightmost lane");
             }
+            log(now, (deg2 > 0.0d ? "LEFT" : "RIGHT") + " turn (" + ((int) Math.abs(deg2)) + "°)");
+        }
+    }
 
-            var21 = "?";
-         }
+    /* compiled from: LaneBrain.kt */
+    private static final class Pending {
+        private final long atMs;
+        private final int dir;
 
-         this.log(var2, "highway entry from the " + var12 + " (" + var21 + ")");
-      }
-   }
+        public Pending(int dir, long atMs) {
+            this.dir = dir;
+            this.atMs = atMs;
+        }
 
-   private static final boolean roadUpdate$ours(LaneBrain var0, long var1, int var3, int var4) {
-      boolean var5;
-      if (var4 > 0 && var0.entrySide == var3 && var1 - var0.entryMs < 20000L) {
-         var5 = true;
-      } else {
-         var5 = false;
-      }
+        public final long getAtMs() {
+            return this.atMs;
+        }
 
-      return var5;
-   }
+        public final int getDir() {
+            return this.dir;
+        }
+    }
 
-   private final void rtk(LaneBrain.Frame var1, long var2) {
-      this.camNote(var1, var2);
-      double var4 = var1.getRtkOffset();
-      boolean var8 = Double.isInfinite(var4);
-      boolean var7 = false;
-      boolean var6;
-      if (!var8 && !Double.isNaN(var4)) {
-         var6 = 1;
-      } else {
-         var6 = 0;
-      }
-
-      if (var6 && !(var1.getRtkSigma() > 1.2)) {
-         this.rtkLog.addLast(new double[]{var2, var1.getRtkOffset(), var1.getRtkWay()});
-
-         while (!this.rtkLog.isEmpty() && var2 - ((double[])this.rtkLog.first())[0] > 15000.0) {
-            this.rtkLog.removeFirst();
-         }
-
-         var var9 = this.hist;
-         if (var9 instanceof Collection && var9.isEmpty()) {
-            var6 = (boolean)0;
-         } else {
-            Iterator var10 = var9.iterator();
-
-            while (true) {
-               if (!var10.hasNext()) {
-                  var6 = (boolean)0;
-                  break;
-               }
-
-               double[] var17 = (double[])var10.next();
-               if (var2 - var17[0] <= 8000.0 && Math.abs(this.heading - var17[1]) > Math.toRadians(10.0)) {
-                  var6 = (boolean)1;
-               } else {
-                  var6 = (boolean)0;
-               }
-
-               if (var6) {
-                  var6 = (boolean)1;
-                  break;
-               }
-            }
-         }
-
-         if (!(var1.getVEgo() < 6.0F)
-            && !var6
-            && this.pending == null
-            && this.opDir == 0
-            && var2 - this.rtkCheckMs >= 1000L
-            && var2 - this.lastChangeMs >= 10000L) {
-            this.rtkCheckMs = var2;
-            var4 = this.sideways(var2 - 7000, var2 - 1000);
-            var6 = var7;
-            if (!Double.isInfinite(var4)) {
-               var6 = var7;
-               if (!Double.isNaN(var4)) {
-                  var6 = (boolean)1;
-               }
-            }
-
-            if (var6 && !(Math.abs(var4) < 0.75)) {
-               if (var4 > 0.0) {
-                  var6 = 1;
-               } else {
-                  var6 = -1;
-               }
-
-               String var11;
-               if (var2 - this.roadChangeMs < 9000L) {
-                  var11 = "the road changed here";
-               } else if (this.cameraStayed(var2 - 8000, var2)) {
-                  var11 = "the camera saw us stay in our lane";
-               } else {
-                  var11 = null;
-               }
-
-               if (var11 != null) {
-                  if (var2 - this.rtkDoubtMs > 10000L) {
-                     this.rtkDoubtMs = var2;
-                     String var18 = String.format("%.1f", Arrays.copyOf(new Object[]{Math.abs(var4)}, 1));
-                     Intrinsics.checkNotNullExpressionValue(var18, "format(...)");
-                     String var19 = this.dirName(var6);
-                     this.log(var2, "RTK moved " + var18 + " lanes " + var19 + " on the map, but " + var11 + " - not counted");
-                  }
-               } else {
-                  this.apply(new LaneBrain.Pending(var6, var2), "rtk");
-               }
-            }
-         }
-      }
-   }
-
-   private final void see(int var1, int var2, double var3, long var5, String var7) {
-      if (var5 >= this.holdUntil || this.side(var1).getFirst().intValue() == var2) {
-         this.lastCameraMs = var5;
-         var3 /= (1 - var3) / 5;
-
-         for (int var8 = 0; var8 < 6; var8++) {
-            for (int var9 = 0; var9 < 6; var9++) {
-               if (this.count(var8, var9, var1) == RangesKt.coerceIn(var2, 0, 5)) {
-                  double[] var10 = this.p[var8];
-                  var10[var9] *= var3;
-               }
-            }
-         }
-
-         this.norm();
-         this.note(var5, var7);
-      }
-   }
-
-   private final void seeRange(int var1, int var2, int var3, double var4, long var6, String var8) {
-      if (var6 < this.holdUntil) {
-         int var9 = this.side(var1).getFirst().intValue();
-         boolean var14;
-         if (var2 <= var9 && var9 <= var3) {
-            var14 = true;
-         } else {
-            var14 = false;
-         }
-
-         if (!var14) {
+    /* JADX WARN: Removed duplicated region for block: B:34:0x0089  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void detectLaneChange(Frame f, long now) {
+        boolean ok;
+        Pending it;
+        int dir;
+        if (f.getOpChange() != 0 || this.opDir != 0) {
             return;
-         }
-      }
+        }
+        if (f.getPL() > 0.25f && f.getPR() > 0.25f) {
+            float yl = f.getYL();
+            if ((Float.isInfinite(yl) || Float.isNaN(yl)) ? false : true) {
+                float yr = f.getYR();
+                if (((Float.isInfinite(yr) || Float.isNaN(yr)) ? false : true) && f.getYL() < 0.3f && f.getYR() > -0.3f) {
+                    float yr2 = f.getYR() - f.getYL();
+                    if (2.3f <= yr2 && yr2 <= 4.9f) {
+                        ok = true;
+                        if (ok) {
+                            float w = f.getYR() - f.getYL();
+                            float c = (f.getYL() + f.getYR()) / 2.0f;
+                            if (Math.abs(c) < 0.6f) {
+                                this.laneW += (RangesKt.coerceIn(w, 2.6f, 4.2f) - this.laneW) * 0.02f;
+                            }
+                            if (this.prevMs > 0 && now - this.prevMs < 700) {
+                                float dc = c - this.prevC;
+                                if (dc >= (-0.55f) * w || Math.abs(this.prevYL) >= 1.3f || Math.abs(f.getYR() - this.prevYL) >= 0.9f) {
+                                    dir = (dc <= 0.55f * w || Math.abs(this.prevYR) >= 1.3f || Math.abs(f.getYL() - this.prevYR) >= 0.9f) ? 0 : 1;
+                                } else {
+                                    dir = -1;
+                                }
+                                if (dir != 0) {
+                                    Pending pd = this.pending;
+                                    if (pd != null && pd.getDir() == (-dir) && now - pd.getAtMs() < 1500) {
+                                        this.pending = null;
+                                        if (now - pd.getAtMs() > 300) {
+                                            this.nUndone++;
+                                            log(now, "lane change " + dirName(pd.getDir()) + " undone - not counted");
+                                        }
+                                    } else {
+                                        if (pd != null) {
+                                            apply(pd, "lines");
+                                        }
+                                        this.pending = new Pending(dir, now);
+                                    }
+                                }
+                            }
+                            this.prevC = c;
+                            this.prevYL = f.getYL();
+                            this.prevYR = f.getYR();
+                            this.prevMs = now;
+                        }
+                        it = this.pending;
+                        if (it != null || now - it.getAtMs() < 600) {
+                        }
+                        if (now - it.getAtMs() >= 1500 || ok) {
+                            apply(it, "lines");
+                            this.pending = null;
+                            return;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+        ok = false;
+        if (ok) {
+        }
+        it = this.pending;
+        if (it != null) {
+        }
+    }
 
-      this.lastCameraMs = var6;
-      int var15 = RangesKt.coerceAtLeast(var3 - var2 + 1, 1);
-      int var10 = RangesKt.coerceAtLeast(6 - var15, 1);
-      var4 = var4 / var15 / ((1 - var4) / var10);
+    private final void checkOpChange(Frame f, long now) {
+        if (f.getOpChange() != 0 && this.opDir == 0) {
+            this.opDir = f.getOpChange();
+            this.opSince = now;
+            this.opCounted = false;
+            this.pending = null;
+        }
+        if (this.opDir != 0 && f.getOpFinishing() && !this.opCounted) {
+            this.opCounted = true;
+            apply(new Pending(this.opDir, now), "openpilot");
+        }
+        if (f.getOpChange() == 0 && this.opDir != 0) {
+            long dur = now - this.opSince;
+            if (!this.opCounted) {
+                float opLcProb = f.getOpLcProb();
+                if (((Float.isInfinite(opLcProb) || Float.isNaN(opLcProb)) ? false : true) && f.getOpLcProb() < 0.1f) {
+                    if (400 <= dur && dur < 10001) {
+                        this.opCounted = true;
+                        apply(new Pending(this.opDir, now), "openpilot");
+                    }
+                }
+            }
+            if (!this.opCounted) {
+                this.nOpMissed++;
+                log(now, "openpilot lane change " + dirName(this.opDir) + " ended without finishing - not counted");
+            }
+            this.opDir = 0;
+            this.prevMs = 0L;
+        }
+    }
 
-      for (int var16 = 0; var16 < 6; var16++) {
-         for (int var17 = 0; var17 < 6; var17++) {
-            int var11 = this.count(var16, var17, var1);
-            boolean var18;
-            if (var2 <= var11 && var11 <= var3) {
-               var18 = true;
+    private final String dirName(int d) {
+        return d < 0 ? "LEFT" : "RIGHT";
+    }
+
+    private final void apply(Pending pd, String by) {
+        double s = sideways(pd.getAtMs() - 4000, this.lastMs);
+        double sure = 0.95d;
+        if (!Intrinsics.areEqual(by, "openpilot")) {
+            if (Intrinsics.areEqual(by, "rtk")) {
+                sure = 0.85d;
             } else {
-               var18 = false;
+                if (!((Double.isInfinite(s) || Double.isNaN(s)) ? false : true)) {
+                    sure = 0.9d;
+                } else if (Math.abs(s) < 0.3d) {
+                    log(pd.getAtMs(), "RTK saw no sideways move - lane change " + dirName(pd.getDir()) + " doubted");
+                    sure = 0.5d;
+                }
             }
+        }
+        this.lastChangeMs = pd.getAtMs();
+        this.lastChangeDir = pd.getDir();
+        this.nChanges++;
+        moved(pd.getDir(), sure, pd.getAtMs(), "lane change " + (pd.getDir() < 0 ? "left" : "right") + (!Intrinsics.areEqual(by, "lines") ? " (" + by + ")" : ""));
+        if (Intrinsics.areEqual(by, "openpilot")) {
+            this.memory.shift(pd.getDir() * this.laneW);
+        }
+        log(pd.getAtMs(), "lane change " + dirName(pd.getDir()) + (Intrinsics.areEqual(by, "lines") ? "" : " (" + by + ")"));
+    }
 
-            if (var18) {
-               double[] var12 = this.p[var16];
-               var12[var17] *= var4;
-            }
-         }
-      }
-
-      this.norm();
-      this.note(var6, var8);
-   }
-
-   // $VF: synthetic method
-   public static void setCount$default(
-      LaneBrain var0, int var1, int var2, boolean var3, long var4, int var6, int var7, String var8, String var9, int var10, Object var11
-   ) {
-      if ((var10 & 8) != 0) {
-         var4 = var0.lastMs;
-      }
-
-      if ((var10 & 16) != 0) {
-         var6 = 0;
-      }
-
-      if ((var10 & 32) != 0) {
-         var7 = 0;
-      }
-
-      if ((var10 & 64) != 0) {
-         var8 = "";
-      }
-
-      if ((var10 & 128) != 0) {
-         var9 = "";
-      }
-
-      var0.setCount(var1, var2, var3, var4, var6, var7, var8, var9);
-   }
-
-   private final double sideways(long var1, long var3) {
-      List var7 = this.rtkLog;
-      ListIterator var8 = var7.listIterator(var7.size());
-
-      boolean var5;
-      do {
-         if (!var8.hasPrevious()) {
-            var12 = null;
-            break;
-         }
-
-         var12 = var8.previous();
-         double[] var9 = (double[])var12;
-         if (var9[0] <= var1 + 500 && var9[0] >= var1 - 1500) {
-            var5 = true;
-         } else {
-            var5 = false;
-         }
-      } while (!var5);
-
-      double[] var16 = (double[])var12;
-      if (var16 == null) {
-         return Double.NaN;
-      } else {
-         var7 = this.rtkLog;
-         boolean var6 = false;
-         ListIterator var17 = var7.listIterator(var7.size());
-
-         do {
-            if (!var17.hasPrevious()) {
-               var14 = null;
-               break;
-            }
-
-            var14 = var17.previous();
-            if (((double[])var14)[0] <= var3) {
-               var5 = true;
+    private final double sideways(long from, long to) {
+        char c;
+        Object element$iv;
+        Object obj;
+        List $this$lastOrNull$iv = this.rtkLog;
+        ListIterator iterator$iv = $this$lastOrNull$iv.listIterator($this$lastOrNull$iv.size());
+        while (true) {
+            c = 0;
+            if (iterator$iv.hasPrevious()) {
+                element$iv = iterator$iv.previous();
+                double[] it = (double[]) element$iv;
+                if (it[0] <= ((double) (from + ((long) 500))) && it[0] >= ((double) (from - ((long) 1500)))) {
+                    break;
+                }
             } else {
-               var5 = false;
+                element$iv = null;
+                break;
             }
-         } while (!var5);
-
-         double[] var15 = (double[])var14;
-         if (var15 == null) {
+        }
+        double[] a = (double[]) element$iv;
+        if (a == null) {
             return Double.NaN;
-         } else {
-            if (var16[2] == var15[2]) {
-               var5 = true;
+        }
+        List $this$lastOrNull$iv2 = this.rtkLog;
+        int $i$f$lastOrNull = 0;
+        ListIterator iterator$iv2 = $this$lastOrNull$iv2.listIterator($this$lastOrNull$iv2.size());
+        while (true) {
+            if (!iterator$iv2.hasPrevious()) {
+                obj = null;
+                break;
+            }
+            Object element$iv2 = iterator$iv2.previous();
+            int $i$f$lastOrNull2 = $i$f$lastOrNull;
+            if (((double[]) element$iv2)[c] <= ((double) to)) {
+                obj = element$iv2;
+                break;
+            }
+            $i$f$lastOrNull = $i$f$lastOrNull2;
+            c = 0;
+        }
+        double[] b = (double[]) obj;
+        if (b == null) {
+            return Double.NaN;
+        }
+        if (a[2] == b[2]) {
+            return (b[1] - a[1]) / this.laneW;
+        }
+        return Double.NaN;
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:30:0x007b  */
+    /* JADX WARN: Removed duplicated region for block: B:32:0x0081  */
+    /* JADX WARN: Removed duplicated region for block: B:44:0x007e  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void camNote(Frame f, long now) {
+        boolean ok;
+        if (f.getPL() > 0.4f && f.getPR() > 0.4f) {
+            float yl = f.getYL();
+            if ((Float.isInfinite(yl) || Float.isNaN(yl)) ? false : true) {
+                float yr = f.getYR();
+                if (((Float.isInfinite(yr) || Float.isNaN(yr)) ? false : true) && f.getYL() < 0.3f && f.getYR() > -0.3f) {
+                    float yr2 = f.getYR() - f.getYL();
+                    if (2.3f <= yr2 && yr2 <= 4.9f) {
+                        ok = true;
+                        this.camLog.addLast(new double[]{now, !ok ? 1.0d : 0.0d, ok ? Math.abs((f.getYL() + f.getYR()) / 2.0d) : 0.0d});
+                        while (!this.camLog.isEmpty() && now - this.camLog.first()[0] > 15000.0d) {
+                            this.camLog.removeFirst();
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+        ok = false;
+        this.camLog.addLast(new double[]{now, !ok ? 1.0d : 0.0d, ok ? Math.abs((f.getYL() + f.getYR()) / 2.0d) : 0.0d});
+        while (!this.camLog.isEmpty()) {
+            this.camLog.removeFirst();
+        }
+    }
+
+    private final boolean cameraStayed(long from, long to) {
+        Iterator it;
+        int n = 0;
+        int seen = 0;
+        double off = 0.0d;
+        Iterator it2 = this.camLog.iterator();
+        while (it2.hasNext()) {
+            double[] c = (double[]) it2.next();
+            if (c[0] >= from) {
+                it = it2;
+                if (c[0] <= to) {
+                    n++;
+                    if (c[1] > 0.5d) {
+                        seen++;
+                        off = Math.max(off, c[2]);
+                        it2 = it;
+                    } else {
+                        it2 = it;
+                    }
+                }
             } else {
-               var5 = false;
+                it = it2;
             }
+            it2 = it;
+        }
+        return n >= 20 && ((double) seen) >= ((double) n) * 0.7d && off < 1.0d;
+    }
 
-            return !var5 ? Double.NaN : (var15[1] - var16[1]) / this.laneW;
-         }
-      }
-   }
-
-   private final boolean solidMeansEdge() {
-      boolean var1;
-      if (!this.model.getTunnel() && !this.model.getBridge()) {
-         var1 = true;
-      } else {
-         var1 = false;
-      }
-
-      return var1;
-   }
-
-   // $VF: synthetic method
-   public static boolean turning$default(LaneBrain var0, long var1, int var3, Object var4) {
-      if ((var3 & 1) != 0) {
-         var1 = var0.lastMs;
-      }
-
-      return var0.turning(var1);
-   }
-
-   private final Integer vote(LaneBrain.Vote var1, int var2, long var3, long var5) {
-      var1.getQ().addLast(new long[]{var3, var2});
-
-      while (!var1.getQ().isEmpty() && var3 - ((long[])var1.getQ().first())[0] > var5) {
-         var1.getQ().removeFirst();
-      }
-
-      if (var3 - var1.getUsed() >= 500L && var1.getQ().size() >= 8 && !(var3 - var1.getQ().first()[0] < var5 * 0.7)) {
-         Iterator var12 = GroupingKt.eachCount(new Grouping<long[], Long>(var1.getQ()) {
-            final Iterable $this_groupingBy;
-
-            {
-               this.$this_groupingBy = var1;
+    private final void rtk(Frame f, long now) {
+        Iterable $this$any$iv;
+        String doubt;
+        camNote(f, now);
+        double rtkOffset = f.getRtkOffset();
+        boolean z = false;
+        if (!((Double.isInfinite(rtkOffset) || Double.isNaN(rtkOffset)) ? false : true) || f.getRtkSigma() > 1.2d) {
+            return;
+        }
+        this.rtkLog.addLast(new double[]{now, f.getRtkOffset(), f.getRtkWay()});
+        while (!this.rtkLog.isEmpty() && now - this.rtkLog.first()[0] > 15000.0d) {
+            this.rtkLog.removeFirst();
+        }
+        Iterable $this$any$iv2 = this.hist;
+        if (!($this$any$iv2 instanceof Collection) || !((Collection) $this$any$iv2).isEmpty()) {
+            Iterator<double[]> it = $this$any$iv2.iterator();
+            while (true) {
+                if (it.hasNext()) {
+                    Object element$iv = it.next();
+                    double[] it2 = (double[]) element$iv;
+                    if (((((double) now) - it2[0] > 8000.0d || Math.abs(this.heading - it2[1]) <= Math.toRadians(10.0d)) ? null : 1) != null) {
+                        $this$any$iv = 1;
+                        break;
+                    }
+                } else {
+                    $this$any$iv = null;
+                    break;
+                }
             }
+        } else {
+            $this$any$iv = null;
+        }
+        if (f.getVEgo() < 6.0f || $this$any$iv != null || this.pending != null || this.opDir != 0 || now - this.rtkCheckMs < 1000 || now - this.lastChangeMs < 10000) {
+            return;
+        }
+        this.rtkCheckMs = now;
+        double s = sideways(now - 7000, now - 1000);
+        if (!Double.isInfinite(s) && !Double.isNaN(s)) {
+            z = true;
+        }
+        if (!z || Math.abs(s) < 0.75d) {
+            return;
+        }
+        int dir = s > 0.0d ? 1 : -1;
+        if (now - this.roadChangeMs < 9000) {
+            doubt = "the road changed here";
+        } else {
+            doubt = cameraStayed(now - ((long) 8000), now) ? "the camera saw us stay in our lane" : null;
+        }
+        if (doubt == null) {
+            apply(new Pending(dir, now), "rtk");
+        } else if (now - this.rtkDoubtMs > 10000) {
+            this.rtkDoubtMs = now;
+            String format = String.format("%.1f", Arrays.copyOf(new Object[]{Double.valueOf(Math.abs(s))}, 1));
+            Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+            log(now, "RTK moved " + format + " lanes " + dirName(dir) + " on the map, but " + doubt + " - not counted");
+        }
+    }
 
-            @Override
-            public Long keyOf(long[] var1) {
-               return ((long[])var1)[1];
-            }
+    /* compiled from: LaneBrain.kt */
+    private static final class Vote {
+        private final ArrayDeque<long[]> q = new ArrayDeque<>();
+        private long used;
 
-            @Override
+        public final void clear() {
+            this.q.clear();
+        }
+
+        public final ArrayDeque<long[]> getQ() {
+            return this.q;
+        }
+
+        public final long getUsed() {
+            return this.used;
+        }
+
+        public final void setUsed(long j) {
+            this.used = j;
+        }
+    }
+
+    private final Integer vote(Vote vt, int v, long now, long holdMs) {
+        Object next;
+        vt.getQ().addLast(new long[]{now, v});
+        while (!vt.getQ().isEmpty() && now - vt.getQ().first()[0] > holdMs) {
+            vt.getQ().removeFirst();
+        }
+        if (now - vt.getUsed() < 500 || vt.getQ().size() < 8 || now - vt.getQ().first()[0] < holdMs * 0.7d) {
+            return null;
+        }
+        final Iterable $this$groupingBy$iv = vt.getQ();
+        Iterator it = GroupingKt.eachCount(new Grouping<long[], Long>() { // from class: com.starpilot.starview.LaneBrain$vote$$inlined$groupingBy$1
+            @Override // kotlin.collections.Grouping
             public Iterator<long[]> sourceIterator() {
-               return this.$this_groupingBy.iterator();
+                return $this$groupingBy$iv.iterator();
             }
-         }).entrySet().iterator();
-         Object var9;
-         if (!var12.hasNext()) {
-            var9 = null;
-         } else {
-            var9 = var12.next();
-            if (var12.hasNext()) {
-               var2 = ((Number)((Entry)var9).getValue()).intValue();
-               Object var10 = var9;
 
-               do {
-                  Object var11 = var12.next();
-                  int var8 = ((Number)((Entry)var11).getValue()).intValue();
-                  var9 = var10;
-                  int var7 = var2;
-                  if (var2 < var8) {
-                     var9 = var11;
-                     var7 = var8;
-                  }
-
-                  var10 = var9;
-                  var2 = var7;
-               } while (var12.hasNext());
+            @Override // kotlin.collections.Grouping
+            public Long keyOf(long[] element) {
+                long[] it2 = element;
+                return Long.valueOf(it2[1]);
             }
-         }
-
-         var9 = (Entry)var9;
-         if (var9 == null) {
+        }).entrySet().iterator();
+        if (it.hasNext()) {
+            next = it.next();
+            if (it.hasNext()) {
+                Map.Entry it2 = (Map.Entry) next;
+                int intValue = ((Number) it2.getValue()).intValue();
+                do {
+                    Object next2 = it.next();
+                    Map.Entry it3 = (Map.Entry) next2;
+                    int intValue2 = ((Number) it3.getValue()).intValue();
+                    if (intValue < intValue2) {
+                        next = next2;
+                        intValue = intValue2;
+                    }
+                } while (it.hasNext());
+            }
+        } else {
+            next = null;
+        }
+        Map.Entry best = (Map.Entry) next;
+        if (best == null || ((Number) best.getValue()).intValue() < vt.getQ().size() * 0.75d) {
             return null;
-         } else if (((Number)var9.getValue()).intValue() < var1.getQ().size() * 0.75) {
-            return null;
-         } else {
-            var1.setUsed(var3);
-            return (int)((Number)var9.getKey()).longValue();
-         }
-      } else {
-         return null;
-      }
-   }
+        }
+        vt.setUsed(now);
+        return Integer.valueOf((int) ((Number) best.getKey()).longValue());
+    }
 
-   public final void check(boolean var1, long var2) {
-      int var5 = this.side(-1).component1().intValue();
-      int var4 = this.side(1).component1().intValue();
-      if (var1) {
-         this.see(-1, var5, 0.9, var2, "your check");
-         this.see(1, var4, 0.9, var2, "your check");
-      } else {
-         double[] var6 = this.p[var5];
-         var6[var4] *= 0.1;
-         this.norm();
-         this.note(var2, "your ✗");
-      }
-
-      this.answer();
-   }
-
-   public final void endDrive() {
-      if (this.driveS > 30.0) {
-         Long var4 = this.lastMs;
-         long var2 = var4.longValue();
-         boolean var1;
-         if (var2 > 0L) {
-            var1 = true;
-         } else {
-            var1 = false;
-         }
-
-         if (!var1) {
-            var4 = null;
-         }
-
-         if (var4 != null) {
-            var2 = var4;
-         } else {
-            var2 = System.currentTimeMillis();
-         }
-
-         String var6 = this.summary();
-         this.log(var2, "drive summary: " + var6);
-      }
-
-      reset$default(this, false, 1, null);
-   }
-
-   public final double getDriveS() {
-      return this.driveS;
-   }
-
-   public final ArrayDeque<LaneBrain.Event> getEvents() {
-      return this.events;
-   }
-
-   public final LaneBrain.RoadInfo getInfo() {
-      return this.info;
-   }
-
-   public final double getKnownS() {
-      return this.knownS;
-   }
-
-   public final float getLaneW() {
-      return this.laneW;
-   }
-
-   public final long getLastCameraMs() {
-      return this.lastCameraMs;
-   }
-
-   public final int getLastChangeDir() {
-      return this.lastChangeDir;
-   }
-
-   public final long getLastChangeMs() {
-      return this.lastChangeMs;
-   }
-
-   public final LaneMemory getMemory() {
-      return this.memory;
-   }
-
-   public final LaneBrain.RoadModel getModel() {
-      return this.model;
-   }
-
-   public final String getModelText() {
-      return this.modelText;
-   }
-
-   public final HashMap<Long, Integer> getMyCounts() {
-      return this.myCounts;
-   }
-
-   public final int getNChanges() {
-      return this.nChanges;
-   }
-
-   public final int getNOpMissed() {
-      return this.nOpMissed;
-   }
-
-   public final int getNRamps() {
-      return this.nRamps;
-   }
-
-   public final int getNTurns() {
-      return this.nTurns;
-   }
-
-   public final int getNUndone() {
-      return this.nUndone;
-   }
-
-   public final double getOdo() {
-      return this.odo;
-   }
-
-   public final Function0<Unit> getOnCountsChanged() {
-      return this.onCountsChanged;
-   }
-
-   public final Function1<LaneBrain.Event, Unit> getOnEvent() {
-      return this.onEvent;
-   }
-
-   public final LaneBrain.Road getRoad() {
-      return this.road;
-   }
-
-   public final ArrayDeque<LaneBrain.Event> getWhy() {
-      return this.why;
-   }
-
-   public final int inExtra() {
-      Pair var8 = this.side(-1);
-      int var6 = ((Number)var8.component1()).intValue();
-      double var1 = ((Number)var8.component2()).doubleValue();
-      var8 = this.side(1);
-      int var5 = ((Number)var8.component1()).intValue();
-      double var3 = ((Number)var8.component2()).doubleValue();
-      int var7 = this.total().component1().intValue();
-      if (this.model.getLanes() <= 0 || var7 != this.model.getTotal()) {
-         return 0;
-      } else if (this.model.getExtraR() > 0 && var5 < this.model.getExtraR() && var3 >= 0.5) {
-         return 1;
-      } else {
-         return this.model.getExtraL() > 0 && var6 < this.model.getExtraL() && var1 >= 0.5 ? -1 : 0;
-      }
-   }
-
-   public final int knownPct() {
-      int var1;
-      if (this.driveS < 1.0) {
-         var1 = 0;
-      } else {
-         var1 = (int)(100 * this.knownS / this.driveS);
-      }
-
-      return var1;
-   }
-
-   public final String label() {
-      int var1 = this.laneFromLeft().component1().intValue();
-      if (var1 <= 0) {
-         return "Lane ?";
-      } else {
-         int var2 = this.inExtra();
-         LaneBrain.RoadModel var4 = this.model;
-         String var5;
-         if (var2 < 0) {
-            var5 = var4.getKindL();
-         } else {
-            var5 = var4.getKindR();
-         }
-
-         String var14 = "Exit";
-         String var6 = "exit";
-         if (var2 != 0) {
-            if (!Intrinsics.areEqual(var5, "exit")) {
-               var14 = "Merge";
+    private final boolean centred(Frame f) {
+        float yl = f.getYL();
+        if ((Float.isInfinite(yl) || Float.isNaN(yl)) ? false : true) {
+            float yr = f.getYR();
+            if (((Float.isInfinite(yr) || Float.isNaN(yr)) ? false : true) && Math.abs((f.getYL() + f.getYR()) / 2.0f) < 0.6f && this.pending == null && this.opDir == 0) {
+                return true;
             }
+        }
+        return false;
+    }
 
-            if (var2 < 0) {
-               var5 = "left";
+    private final boolean solidMeansEdge() {
+        return (this.model.getTunnel() || this.model.getBridge()) ? false : true;
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:77:0x0133  */
+    /* JADX WARN: Removed duplicated region for block: B:87:0x0135  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void paint(Frame f, long now) {
+        boolean z;
+        Integer vote;
+        LaneMarks.Mark lm = f.getLeftMark();
+        LaneMarks.Mark rm = f.getRightMark();
+        if (lm != null && lm.getKind() != 0) {
+            boolean yellow = lm.getYellow() && (lm.getKind() == 3 || lm.getKind() == 2);
+            Integer vote2 = vote(this.vYellow, yellow ? 1 : 0, now, 1000L);
+            if (vote2 != null && vote2.intValue() == 1) {
+                see(-1, 0, 0.9d, now, "yellow line on the left");
+            }
+            Integer vote3 = vote(this.vDashL, (lm.getYellow() || lm.getKind() != 2) ? 0 : 1, now, 1500L);
+            if (vote3 != null && vote3.intValue() == 1) {
+                atLeast(-1, 1, 0.6d, now, "dashed line on the left");
+            }
+        }
+        if (rm != null && rm.getKind() != 0) {
+            Integer vote4 = vote(this.vDashR, (rm.getYellow() || rm.getKind() != 2) ? 0 : 1, now, 1500L);
+            if (vote4 != null && vote4.intValue() == 1) {
+                atLeast(1, 1, 0.6d, now, "dashed line on the right");
+            }
+            Road road = this.road;
+            if ((road != null && road.getHighway()) && solidMeansEdge() && !rm.getYellow() && !rm.getDouble() && rm.getKind() == 3) {
+                float edgeR = f.getEdgeR();
+                if ((Float.isInfinite(edgeR) || Float.isNaN(edgeR)) ? false : true) {
+                    float yr = f.getYR();
+                    if (((Float.isInfinite(yr) || Float.isNaN(yr)) ? false : true) && f.getEdgeR() - Math.abs(f.getYR()) < 1.6f) {
+                        z = true;
+                        boolean solidEdge = z;
+                        vote = vote(this.vSolidR, !solidEdge ? 1 : 0, now, 1500L);
+                        if (vote == null && vote.intValue() == 1) {
+                            see(1, 0, 0.75d, now, "solid edge line, road edge past it");
+                        }
+                        return;
+                    }
+                }
+            }
+            z = false;
+            boolean solidEdge2 = z;
+            vote = vote(this.vSolidR, !solidEdge2 ? 1 : 0, now, 1500L);
+            if (vote == null) {
+                return;
+            }
+            see(1, 0, 0.75d, now, "solid edge line, road edge past it");
+        }
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:18:0x003d, code lost:
+    
+        if ((r0 != null && r0.getYellow()) == false) goto L28;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void outerLines(Frame f, long now) {
+        Road it;
+        if (centred(f)) {
+            Road it2 = this.road;
+            boolean z = true;
+            if (it2 != null) {
+                it = (it2.getOneway() || it2.getHighway()) ? 1 : null;
             } else {
-               var5 = "right";
+                it = f.getVEgo() > 17.0f ? 1 : null;
             }
-
-            var1 = this.model.getLanes();
-            return var14 + " lane (" + var5 + " of " + var1 + " lanes)";
-         } else {
-            int var3 = this.laneCount().component1().intValue();
-            var2 = this.total().component1().intValue();
-            if (this.model.getLanes() > 0 && var2 == this.model.getTotal() && this.model.getExtraL() + this.model.getExtraR() > 0) {
-               var3 = var1 - this.model.getExtraL();
-               if (var3 > this.model.getLanes() && this.model.getExtraR() > 0) {
-                  if (!Intrinsics.areEqual(this.model.getKindR(), "exit")) {
-                     var14 = "Merge";
-                  }
-
-                  var1 = this.model.getLanes();
-                  return var14 + " lane (right of " + var1 + " lanes)";
-               } else if (var3 < 1 && this.model.getExtraL() > 0) {
-                  if (!Intrinsics.areEqual(this.model.getKindL(), "exit")) {
-                     var14 = "Merge";
-                  }
-
-                  var1 = this.model.getLanes();
-                  return var14 + " lane (left of " + var1 + " lanes)";
-               } else {
-                  var2 = this.model.getLanes();
-                  var1 = this.model.getExtraL();
-                  var5 = "";
-                  String var17;
-                  if (var1 > 0) {
-                     String var16;
-                     if (Intrinsics.areEqual(this.model.getKindL(), "exit")) {
-                        var16 = "exit";
-                     } else {
-                        var16 = "merge";
-                     }
-
-                     var17 = " + " + var16 + " lane ←";
-                  } else {
-                     var17 = "";
-                  }
-
-                  if (this.model.getExtraR() > 0) {
-                     if (Intrinsics.areEqual(this.model.getKindR(), "exit")) {
-                        var5 = var6;
-                     } else {
-                        var5 = "merge";
-                     }
-
-                     var5 = " + " + var5 + " lane →";
-                  }
-
-                  return "Lane " + var3 + " of " + var2 + var17 + var5;
-               }
+            if (it != null) {
+                LaneMarks.Mark leftMark = f.getLeftMark();
+            }
+            z = false;
+            boolean leftOurs = z;
+            if (leftOurs) {
+                outerLines$side(this, now, -1, this.vOuterL, f.getPL(), f.getYL(), f.getPL2(), f.getYL2(), f.getEdgeL());
             } else {
-               String var15;
-               if (var3 >= var1) {
-                  var15 = String.valueOf(var3);
-               } else {
-                  var15 = "?";
-               }
-
-               return "Lane " + var1 + " of " + var15;
+                this.vOuterL.clear();
             }
-         }
-      }
-   }
+            outerLines$side(this, now, 1, this.vOuterR, f.getPR(), f.getYR(), f.getPR2(), f.getYR2(), f.getEdgeR());
+        }
+    }
 
-   public final Pair<Integer, String> laneCount() {
-      Pair var5 = this.total();
-      int var3 = ((Number)var5.component1()).intValue();
-      double var1 = ((Number)var5.component2()).doubleValue();
-      int var4 = this.model.getLanes();
-      String var8 = "";
-      if (var4 > 0 && var3 == this.model.getTotal()) {
-         String var10 = this.model.getSrc();
-         if (this.model.getExtraL() + this.model.getExtraR() > 0) {
-            String var9 = this.extraText();
-            var8 = " + " + var9;
-         }
+    /* JADX WARN: Removed duplicated region for block: B:38:0x00ad  */
+    /* JADX WARN: Removed duplicated region for block: B:42:0x00b0  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private static final void outerLines$side(LaneBrain this$0, long $now, int s, Vote vt, float pIn, float yIn, float pOut, float yOut, float edge) {
+        int reading;
+        Integer vote;
+        if (pIn >= 0.5f) {
+            if (!((Float.isInfinite(pOut) || Float.isNaN(pOut)) ? false : true)) {
+                return;
+            }
+            float inner = Math.abs(yIn);
+            float outer = Math.abs(yOut);
+            if (pOut > 0.6f) {
+                if ((Float.isInfinite(yOut) || Float.isNaN(yOut)) ? false : true) {
+                    float f = outer - inner;
+                    if (2.3f <= f && f <= 4.6f) {
+                        if (!((Float.isInfinite(edge) || Float.isNaN(edge)) ? false : true) || edge - outer > -0.3f) {
+                            reading = 1;
+                            vote = this$0.vote(vt, reading, $now, 1500L);
+                            if (vote == null || vote.intValue() != 0) {
+                                if (vote == null && vote.intValue() == 1) {
+                                    this$0.atLeast(s, 1, 0.7d, $now, "a lane line one lane over on the " + Companion.sideName(s));
+                                }
+                                return;
+                            }
+                            this$0.see(s, 0, !this$0.solidMeansEdge() ? 0.75d : 0.55d, $now, "no lane line past ours on the " + Companion.sideName(s) + ", road edge right there");
+                            return;
+                        }
+                    }
+                }
+            }
+            if (pOut < 0.15f) {
+                if (!((Float.isInfinite(edge) || Float.isNaN(edge)) ? false : true) || edge - inner >= 1.6f) {
+                    return;
+                }
+                reading = 0;
+                vote = this$0.vote(vt, reading, $now, 1500L);
+                if (vote == null) {
+                    this$0.see(s, 0, !this$0.solidMeansEdge() ? 0.75d : 0.55d, $now, "no lane line past ours on the " + Companion.sideName(s) + ", road edge right there");
+                    return;
+                }
+                if (vote == null) {
+                    return;
+                }
+                this$0.atLeast(s, 1, 0.7d, $now, "a lane line one lane over on the " + Companion.sideName(s));
+            }
+        }
+    }
 
-         return TuplesKt.to(var3, var10 + var8);
-      } else if (this.model.getLanes() > 0 && var3 == this.model.getLanes()) {
-         return TuplesKt.to(var3, this.model.getSrc());
-      } else {
-         Integer var6;
-         if (var1 >= 0.5) {
-            var6 = var3;
-            var3 = (int)(100 * var1);
-            var8 = "camera, " + var3 + "%";
-         } else {
-            var6 = 0;
-         }
-
-         return TuplesKt.to(var6, var8);
-      }
-   }
-
-   public final Pair<Integer, Double> laneFromLeft() {
-      Pair var4 = this.side(-1);
-      int var3 = ((Number)var4.component1()).intValue();
-      double var1 = ((Number)var4.component2()).doubleValue();
-      if (var1 >= 0.35) {
-         var3++;
-      } else {
-         var3 = 0;
-      }
-
-      return TuplesKt.to(var3, var1);
-   }
-
-   public final int lanesLeft() {
-      return this.side(-1).getFirst().intValue();
-   }
-
-   public final int lanesRight() {
-      return this.side(1).getFirst().intValue();
-   }
-
-   public final double[] marg(int var1) {
-      double[] var5 = new double[6];
-
-      for (int var2 = 0; var2 < 6; var2++) {
-         for (int var3 = 0; var3 < 6; var3++) {
-            int var4;
-            if (var1 < 0) {
-               var4 = var2;
+    private final void edges(Frame f, long now) {
+        Road it;
+        float f2;
+        if (centred(f)) {
+            Road it2 = this.road;
+            if (it2 != null) {
+                it = (it2.getOneway() || it2.getHighway()) ? 1 : null;
             } else {
-               var4 = var3;
+                it = null;
             }
-
-            var5[var4] += this.q[var2][var3];
-         }
-      }
-
-      return var5;
-   }
-
-   public final boolean modelFresh() {
-      int var1 = this.modelText.length();
-      boolean var2 = true;
-      boolean var3;
-      if (var1 > 0) {
-         var3 = true;
-      } else {
-         var3 = false;
-      }
-
-      if (!var3 || System.currentTimeMillis() - this.modelMs >= 6000L) {
-         var2 = false;
-      }
-
-      return var2;
-   }
-
-   public final void modelSaw(float[] var1, float[] var2, long var3, long var5) {
-      Intrinsics.checkNotNullParameter(var1, "pL");
-      Intrinsics.checkNotNullParameter(var2, "pR");
-      if (var3 > this.modelMs) {
-         this.modelMs = var3;
-         LaneBrain.Road var14 = this.road;
-         boolean var9;
-         if (var14 != null && !var14.getHighway() && !var14.getRamp()) {
-            var9 = true;
-         } else {
-            var9 = false;
-         }
-
-         int var12 = modelSaw$best(var1);
-         int var11 = modelSaw$best(var2);
-         String var15 = "3+";
-         String var16;
-         if (var12 == 3) {
-            var16 = "3+";
-         } else {
-            var16 = String.valueOf(var12);
-         }
-
-         if (var11 != 3) {
-            var15 = String.valueOf(var11);
-         }
-
-         float var7 = var1[var12];
-         float var8 = 100;
-         int var10 = (int)(var7 * var8);
-         int var13 = (int)(var2[var11] * var8);
-         var15 = "model: " + var16 + " left, " + var15 + " right (" + var10 + "% / " + var13 + "%)";
-         String var17;
-         if (var9) {
-            var17 = var15;
-         } else {
-            var17 = var15 + " - not used on highways";
-         }
-
-         this.modelText = var17;
-         if (var9) {
-            if (var1[var12] >= 0.6F) {
-               if (var12 == 3) {
-                  this.atLeast(-1, 3, 0.6, var5, var15);
-               } else {
-                  this.see(-1, var12, 0.6, var5, var15);
-               }
-            }
-
-            if (var2[var11] >= 0.6F) {
-               if (var11 == 3) {
-                  this.atLeast(1, 3, 0.6, var5, var15);
-               } else {
-                  this.see(1, var11, 0.6, var5, var15);
-               }
-            }
-
-            this.answer();
-         }
-      }
-   }
-
-   public final void reset(boolean var1) {
-      this.p = Companion.prior();
-      this.q = Companion.prior();
-      this.road = null;
-      this.info = null;
-      this.model = new LaneBrain.RoadModel(0, "", 0.0, 0, 0, "", "", false, false);
-      this.memory.clear();
-      this.why.clear();
-      this.pending = null;
-      this.prevMs = 0L;
-      this.hist.clear();
-      this.opDir = 0;
-      this.lastMs = 0L;
-      this.holdUntil = 0L;
-      this.rtkLog.clear();
-      this.prevAnswer = "";
-      this.camLog.clear();
-      this.roadChangeMs = 0L;
-      this.rtkDoubtMs = 0L;
-      Iterator var2 = CollectionsKt.listOf(
-            new LaneBrain.Vote[]{this.vYellow, this.vDashL, this.vDashR, this.vSolidR, this.vOuterL, this.vOuterR, this.vEdgeL, this.vEdgeR}
-         )
-         .iterator();
-
-      while (var2.hasNext()) {
-         ((LaneBrain.Vote)var2.next()).clear();
-      }
-
-      this.carsL.clear();
-      this.carsR.clear();
-      this.oncoming.clear();
-      this.nChanges = 0;
-      this.nUndone = 0;
-      this.nOpMissed = 0;
-      this.nTurns = 0;
-      this.nRamps = 0;
-      this.driveS = 0.0;
-      this.knownS = 0.0;
-      this.lastCameraMs = 0L;
-      if (!var1) {
-         this.myCounts.clear();
-      }
-   }
-
-   public final void roadLaneEnded(int var1, long var2) {
-      this.lanesOnSide(var1, -1);
-      String var4 = Companion.sideName(var1);
-      this.note(var2, "the " + var4 + " lane ended");
-      this.answer();
-      this.roadChangeMs = var2;
-      if (var1 < 0) {
-         var4 = "left";
-      } else {
-         var4 = "right";
-      }
-
-      this.log(var2, var4 + " lane ended (road data)");
-   }
-
-   public final void setCount(int var1, int var2, boolean var3, long var4, int var6, int var7, String var8, String var9) {
-      Intrinsics.checkNotNullParameter(var8, "kind");
-      Intrinsics.checkNotNullParameter(var9, "kindR");
-      LaneBrain.Road var19 = this.road;
-      boolean var14 = false;
-      boolean var12 = false;
-      if (var1 <= 0) {
-         if (var19 != null && this.myCounts.remove(var19.getId()) != null) {
-            Function0 var28 = this.onCountsChanged;
-            if (var28 != null) {
-               var28.invoke();
-            }
-
-            Object var29 = var19.getName();
-            boolean var20 = var12;
-            if (var29.length() == 0) {
-               var20 = true;
-            }
-
-            if (var20) {
-               var29 = var19.getKind();
-            }
-
-            this.log(var4, "your count for " + var29 + " forgotten");
-         }
-
-         this.model = this.roadModel(this.road, this.info);
-         this.answer();
-      } else {
-         if (var19 != null && var3) {
-            this.myCounts.put(var19.getId(), var1);
-            Function0 var18 = this.onCountsChanged;
-            if (var18 != null) {
-               var18.invoke();
-            }
-         }
-
-         int var15 = var1 + var6 + var7;
-         if (1 <= var2 && var2 <= var15) {
-            var12 = true;
-         } else {
-            var12 = false;
-         }
-
-         if (var12) {
-            for (int var33 = 0; var33 < 6; var33++) {
-               for (int var13 = 0; var13 < 6; var13++) {
-                  double[] var35 = this.p[var33];
-                  double var10;
-                  if (var33 == var2 - 1 && var13 == var15 - var2) {
-                     var10 = 0.97;
-                  } else {
-                     var10 = 8.571428571428571E-4;
-                  }
-
-                  var35[var13] = var10;
-               }
-            }
-
-            this.norm();
-            long var16;
-            if (var6 + var7 > 0) {
-               var16 = 60000L;
+            Road road = it;
+            if (this.model.getBridge()) {
+                f2 = 4.2f;
             } else {
-               var16 = 120000L;
+                Road road2 = this.road;
+                f2 = road2 != null && road2.getHighway() ? 3.8f : 2.8f;
             }
-
-            this.holdUntil = var16 + var4;
-            this.note(var4, "you: lane " + var2 + " of " + var15);
-         }
-
-         LaneBrain.RoadModel var36 = this.roadModel(this.road, this.info);
-         LaneBrain.RoadModel var23;
-         if (var6 + var7 > 0 && var36.getExtraL() + var36.getExtraR() == 0) {
-            var9 = var9;
-            if (var9.length() == 0) {
-               var12 = true;
+            float smax = f2;
+            if (road != null) {
+                edges$side$12(this, smax, now, -1, this.vEdgeL, f.getEdgeL(), f.getYL(), f.getPL(), f.getLeftMark(), f.getPL2());
             } else {
-               var12 = false;
+                this.vEdgeL.clear();
             }
+            edges$side$12(this, smax, now, 1, this.vEdgeR, f.getEdgeR(), f.getYR(), f.getPR(), f.getRightMark(), f.getPR2());
+        }
+    }
 
-            if (var12) {
-               var9 = var8;
+    /* JADX WARN: Removed duplicated region for block: B:39:0x0075  */
+    /* JADX WARN: Removed duplicated region for block: B:47:0x00c7  */
+    /* JADX WARN: Removed duplicated region for block: B:49:0x00cf  */
+    /* JADX WARN: Removed duplicated region for block: B:54:0x0108  */
+    /* JADX WARN: Removed duplicated region for block: B:64:0x00ca  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private static final void edges$side$12(LaneBrain this$0, float smax, long $now, int s, Vote vt, float edge, float line, float pLine, LaneMarks.Mark mark, float pOut) {
+        boolean z;
+        int lo;
+        int hi;
+        Integer vote;
+        int b;
+        if (!((Float.isInfinite(edge) || Float.isNaN(edge)) ? false : true)) {
+            return;
+        }
+        if (!((Float.isInfinite(line) || Float.isNaN(line)) ? false : true) || pLine < 0.3f) {
+            return;
+        }
+        float g = edge - Math.abs(line);
+        if (g < -0.5f) {
+            return;
+        }
+        if (mark != null && mark.getKind() == 3 && !mark.getYellow() && !mark.getDouble() && this$0.solidMeansEdge()) {
+            if (!((Float.isInfinite(pOut) || Float.isNaN(pOut)) ? false : true) || pOut < 0.3f) {
+                z = true;
+                boolean loneSolid = z;
+                lo = loneSolid ? 0 : RangesKt.coerceAtLeast((int) Math.ceil((g - smax) / this$0.laneW), 0);
+                hi = RangesKt.coerceAtMost((int) Math.floor((0.4f + g) / this$0.laneW), 5);
+                if (hi < lo && (vote = this$0.vote(vt, (lo * 10) + hi, $now, 2500L)) != null) {
+                    int v = vote.intValue();
+                    int a = v / 10;
+                    b = v % 10;
+                    double c = !this$0.model.getTunnel() ? 0.5d : 0.65d;
+                    if (b != 0) {
+                        this$0.see(s, 0, this$0.solidMeansEdge() ? 0.65d : 0.5d, $now, "road edge right past our " + Companion.sideName(s) + " line");
+                        return;
+                    } else {
+                        if (a == b) {
+                            this$0.see(s, a, c * 0.75d, $now, Companion.sideName(s) + " road edge " + a + " lane" + (a > 1 ? "s" : "") + " away");
+                            return;
+                        }
+                        this$0.seeRange(s, a, b, c, $now, Companion.sideName(s) + " road edge " + a + "-" + b + " lanes away (shoulder width unknown)");
+                        return;
+                    }
+                }
+                return;
             }
+        }
+        z = false;
+        boolean loneSolid2 = z;
+        lo = loneSolid2 ? 0 : RangesKt.coerceAtLeast((int) Math.ceil((g - smax) / this$0.laneW), 0);
+        hi = RangesKt.coerceAtMost((int) Math.floor((0.4f + g) / this$0.laneW), 5);
+        if (hi < lo) {
+            return;
+        }
+        int v2 = vote.intValue();
+        int a2 = v2 / 10;
+        b = v2 % 10;
+        if (!this$0.model.getTunnel()) {
+        }
+        if (b != 0) {
+        }
+    }
 
-            var23 = new LaneBrain.RoadModel(var1, "your count", 0.97, var6, var7, var8, var9, var36.getTunnel(), var36.getBridge());
-         } else {
-            var23 = var36;
-         }
-
-         this.model = var23;
-         this.answer();
-         boolean var22;
-         if (1 <= var2 && var2 <= var15) {
-            var22 = true;
-         } else {
-            var22 = false;
-         }
-
-         StringBuilder var24 = null;
-         StringBuilder var25;
-         if (var22) {
-            var24 = new StringBuilder();
-            var25 = var24.append("lane ").append(var2).append(" of ").append(var15);
-         } else {
-            var24 = new StringBuilder();
-            var25 = var24.append(var15).append(" lanes");
-         }
-
-         var9 = var25.toString();
-         if (var19 != null && var3) {
-            Object var27 = var19.getName();
-            boolean var21 = var14;
-            if (var27.length() == 0) {
-               var21 = true;
-            }
-
-            if (var21) {
-               var27 = var19.getKind();
-            }
-
-            var8 = " - " + var1 + " remembered for " + var27;
-         } else {
-            var8 = "";
-         }
-
-         this.log(var4, "you set " + var9 + var8);
-      }
-   }
-
-   public final void setOnCountsChanged(Function0<Unit> var1) {
-      this.onCountsChanged = var1;
-   }
-
-   public final void setOnEvent(Function1<? super LaneBrain.Event, Unit> var1) {
-      this.onEvent = var1;
-   }
-
-   public final Pair<Integer, Double> side(int var1) {
-      double[] var4 = this.marg(var1);
-      int var2 = 0;
-      var1 = 1;
-
-      while (var1 < 6) {
-         int var3 = var2;
-         if (var4[var1] > var4[var2]) {
-            var3 = var1;
-         }
-
-         var1++;
-         var2 = var3;
-      }
-
-      return TuplesKt.to(var2, var4[var2]);
-   }
-
-   public final Pair<Integer, Double> sideLanes(int var1) {
-      double[] var8 = this.marg(var1);
-      if (var8[0] >= 0.6) {
-         return TuplesKt.to(0, var8[0]);
-      } else {
-         double var4 = 1.0;
-         int var7 = 0;
-         double var2 = var8[0];
-
-         for (int var6 = 1; var6 < 6; var6++) {
-            var4 -= var8[var6 - 1];
-            if (!(var4 >= 0.6)) {
-               break;
-            }
-
-            var7 = var6;
-            var2 = var4;
-         }
-
-         Pair var9;
-         if (var7 == 0) {
-            var9 = this.side(var1);
-         } else {
-            var9 = TuplesKt.to(var7, var2);
-         }
-
-         return var9;
-      }
-   }
-
-   public final String summary() {
-      int var1 = this.nChanges;
-      int var2 = this.nChanges;
-      String var10 = "s";
-      String var6;
-      if (var2 == 1) {
-         var6 = "";
-      } else {
-         var6 = "s";
-      }
-
-      String var7;
-      if (this.nUndone > 0) {
-         var2 = this.nUndone;
-         var7 = " (" + var2 + " undone)";
-      } else {
-         var7 = "";
-      }
-
-      String var8;
-      if (this.nOpMissed > 0) {
-         var2 = this.nOpMissed;
-         var8 = " (" + var2 + " by openpilot not finished)";
-      } else {
-         var8 = "";
-      }
-
-      int var4 = this.nTurns;
-      String var9;
-      if (this.nTurns == 1) {
-         var9 = "";
-      } else {
-         var9 = "s";
-      }
-
-      int var3 = this.nRamps;
-      if (this.nRamps == 1) {
-         var10 = "";
-      }
-
-      var2 = this.knownPct();
-      int var5 = (int)(this.driveS / 60);
-      return var1
-         + " lane change"
-         + var6
-         + var7
-         + var8
-         + " · "
-         + var4
-         + " turn"
-         + var9
-         + " · "
-         + var3
-         + " ramp"
-         + var10
-         + " · lane known "
-         + var2
-         + "% of "
-         + var5
-         + " min";
-   }
-
-   public final Pair<Integer, Double> total() {
-      double[] var5 = new double[12];
-
-      for (int var1 = 0; var1 < 6; var1++) {
-         for (int var2 = 0; var2 < 6; var2++) {
-            int var3 = var1 + var2 + 1;
-            var5[var3] += this.q[var1][var2];
-         }
-      }
-
-      int var8 = 1;
-      int var6 = 2;
-      int var4 = var5.length;
-
-      while (var6 < var4) {
-         int var7 = var8;
-         if (var5[var6] > var5[var8]) {
-            var7 = var6;
-         }
-
-         var6++;
-         var8 = var7;
-      }
-
-      return TuplesKt.to(var8, var5[var8]);
-   }
-
-   public final boolean turning(long var1) {
-      var var6 = this.hist;
-      boolean var5 = var6 instanceof Collection;
-      boolean var4 = false;
-      if (!var5 || !var6.isEmpty()) {
-         for (double[] var8 : var6) {
-            boolean var3;
-            if (var1 - var8[0] <= 8000.0 && Math.abs(this.heading - var8[1]) > Math.toRadians(10.0)) {
-               var3 = true;
+    private final int held(ArrayDeque<long[]> q, long now) {
+        int count$iv;
+        while (!q.isEmpty() && now - q.first()[0] > 2000) {
+            q.removeFirst();
+        }
+        for (int n = 4; n > 0; n--) {
+            ArrayDeque<long[]> $this$count$iv = q;
+            if (($this$count$iv instanceof Collection) && $this$count$iv.isEmpty()) {
+                count$iv = 0;
             } else {
-               var3 = false;
+                count$iv = 0;
+                for (Object element$iv : $this$count$iv) {
+                    long[] it = (long[]) element$iv;
+                    if ((it[1] >= ((long) n)) && (count$iv = count$iv + 1) < 0) {
+                        CollectionsKt.throwCountOverflow();
+                    }
+                }
             }
-
-            if (var3) {
-               var4 = true;
-               break;
+            if (count$iv >= 6) {
+                return n;
             }
-         }
-      }
+        }
+        return 0;
+    }
 
-      return var4;
-   }
+    private final void cars(Frame f, long now) {
+        if (f.getVEgo() < 3.0f) {
+            return;
+        }
+        if (f.getCarsLeft() > 0) {
+            this.carsL.addLast(new long[]{now, f.getCarsLeft()});
+        }
+        if (f.getCarsRight() > 0) {
+            this.carsR.addLast(new long[]{now, f.getCarsRight()});
+        }
+        if (f.getOncomingLeft()) {
+            this.oncoming.addLast(Long.valueOf(now));
+        }
+        while (!this.oncoming.isEmpty() && now - this.oncoming.first().longValue() > 2000) {
+            this.oncoming.removeFirst();
+        }
+        if (now - this.carsUsedMs < 1000) {
+            return;
+        }
+        int l = held(this.carsL, now);
+        int r = held(this.carsR, now);
+        if (l > 0) {
+            atLeast(-1, l, 0.65d, now, "car driving our way " + l + " lane" + (l > 1 ? "s" : "") + " to the left");
+        }
+        if (r > 0) {
+            atLeast(1, r, 0.65d, now, "car driving our way " + r + " lane" + (r > 1 ? "s" : "") + " to the right");
+        }
+        if (this.oncoming.size() >= 6 && l == 0) {
+            see(-1, 0, 0.7d, now, "oncoming traffic in the lane to our left");
+        }
+        if (l > 0 || r > 0 || this.oncoming.size() >= 6) {
+            this.carsUsedMs = now;
+        }
+    }
 
-   public final void update(LaneBrain.Frame var1) {
-      Intrinsics.checkNotNullParameter(var1, "f");
-      long var11 = var1.getNowMs();
-      double var2;
-      if (this.lastMs == 0L) {
-         var2 = 0.0;
-      } else {
-         var2 = RangesKt.coerceIn((var11 - this.lastMs) / 1000.0, 0.0, 0.5);
-      }
-
-      this.lastMs = var11;
-      this.odo = this.odo + var1.getVEgo() * var2;
-      float var6 = var1.getYawRate();
-      boolean var10 = Float.isInfinite(var6);
-      boolean var9 = true;
-      boolean var8;
-      if (!var10 && !Float.isNaN(var6)) {
-         var8 = true;
-      } else {
-         var8 = false;
-      }
-
-      if (var8) {
-         this.heading = this.heading + var1.getYawRate() * var2;
-      }
-
-      if (this.odo - this.lastBlurOdo >= 20.0) {
-         this.blur(this.odo - this.lastBlurOdo);
-         this.lastBlurOdo = this.odo;
-      }
-
-      this.roadUpdate(var1, var11);
-      this.detectTurn(var1, var11);
-      this.checkOpChange(var1, var11);
-      this.detectLaneChange(var1, var11);
-      LaneMemory var13 = this.memory;
-      double var4 = this.odo;
-      List var14 = CollectionsKt.listOf(
-         new Pair[]{
-            TuplesKt.to(var1.getYL2(), var1.getPL2()),
-            TuplesKt.to(var1.getYL(), var1.getPL()),
-            TuplesKt.to(var1.getYR(), var1.getPR()),
-            TuplesKt.to(var1.getYR2(), var1.getPR2())
-         }
-      );
-      float var7 = var1.getEdgeL();
-      var6 = var1.getEdgeR();
-      if (var1.getOpChange() == 0 && this.opDir == 0 && !(var1.getVEgo() < 2.0F)) {
-         var10 = false;
-      } else {
-         var10 = true;
-      }
-
-      var13.update(var4, var14, var7, var6, var10);
-      if (var1.getVEgo() >= 2.0F) {
-         this.paint(var1, var11);
-         this.outerLines(var1, var11);
-         this.edges(var1, var11);
-         this.cars(var1, var11);
-      }
-
-      this.blindSpot(var1, var11);
-      this.rtk(var1, var11);
-      this.answer();
-      if (var1.getVEgo() > 1.0F) {
-         this.driveS += var2;
-         if (this.laneFromLeft().getSecond().doubleValue() >= 0.5) {
-            this.knownS += var2;
-         }
-      }
-
-      String var21 = this.label();
-      if (!Intrinsics.areEqual(var21, this.prevAnswer)) {
-         if (this.prevAnswer.length() > 0) {
-            var8 = var9;
-         } else {
-            var8 = false;
-         }
-
-         if (var8 || !Intrinsics.areEqual(var21, "Lane ?")) {
-            label49: {
-               LaneBrain.Event var15 = this.why.firstOrNull();
-               if (var15 != null) {
-                  String var20 = var15.getText();
-                  var16 = var20;
-                  if (var20 != null) {
-                     break label49;
-                  }
-               }
-
-               var16 = "start";
+    private final void blindSpot(Frame f, long now) {
+        if (f.getVEgo() >= 8.0f) {
+            if ((!f.getBsmL() && !f.getBsmR()) || now - this.bsmMs < 1000) {
+                return;
             }
-
-            this.log(var11, var21 + "  (" + var16 + ")");
-         }
-
-         this.prevAnswer = var21;
-      }
-   }
-
-   public static final class Companion {
-      private Companion() {
-      }
-
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
-
-      private final double[][] prior() {
-         double[][] var3 = new double[6][];
-
-         for (int var1 = 0; var1 < 6; var1++) {
-            double[] var4 = new double[6];
-
-            for (int var2 = 0; var2 < 6; var2++) {
-               var4[var2] = LaneBrain.Companion.prior(var1, var2);
+            this.bsmMs = now;
+            if (f.getBsmL()) {
+                atLeast(-1, 1, 0.6d, now, "car in the left blind spot");
             }
-
-            var3[var1] = var4;
-         }
-
-         return var3;
-      }
-
-      private final String sideName(int var1) {
-         String var2;
-         if (var1 < 0) {
-            var2 = "left";
-         } else {
-            var2 = "right";
-         }
-
-         return var2;
-      }
-
-      public final double prior(int var1, int var2) {
-         return LaneBrain.W[var1] * LaneBrain.W[var2];
-      }
-   }
-
-   public static final class Event {
-      private final long atMs;
-      private final String text;
-
-      public Event(long var1, String var3) {
-         Intrinsics.checkNotNullParameter(var3, "text");
-         super();
-         this.atMs = var1;
-         this.text = var3;
-      }
-
-      public final long getAtMs() {
-         return this.atMs;
-      }
-
-      public final String getText() {
-         return this.text;
-      }
-   }
-
-   public static final class Frame {
-      private final boolean bsmL;
-      private final boolean bsmR;
-      private final int carsLeft;
-      private final int carsRight;
-      private final float edgeL;
-      private final float edgeR;
-      private final int entrySide;
-      private final LaneBrain.RoadInfo info;
-      private final LaneMarks.Mark leftMark;
-      private final long nowMs;
-      private final boolean oncomingLeft;
-      private final int opChange;
-      private final boolean opFinishing;
-      private final float opLcProb;
-      private final float pL;
-      private final float pL2;
-      private final float pR;
-      private final float pR2;
-      private final LaneMarks.Mark rightMark;
-      private final LaneBrain.Road road;
-      private final double rtkOffset;
-      private final double rtkSigma;
-      private final long rtkWay;
-      private final float vEgo;
-      private final float yL;
-      private final float yL2;
-      private final float yR;
-      private final float yR2;
-      private final float yawRate;
-
-      public Frame(
-         long var1,
-         float var3,
-         float var4,
-         float var5,
-         float var6,
-         float var7,
-         float var8,
-         float var9,
-         float var10,
-         LaneMarks.Mark var11,
-         LaneMarks.Mark var12,
-         LaneBrain.Road var13,
-         int var14,
-         int var15,
-         boolean var16,
-         int var17,
-         int var18,
-         boolean var19,
-         float var20,
-         float var21,
-         float var22,
-         float var23,
-         boolean var24,
-         boolean var25,
-         double var26,
-         double var28,
-         long var30,
-         float var32,
-         LaneBrain.RoadInfo var33
-      ) {
-         this.nowMs = var1;
-         this.vEgo = var3;
-         this.yawRate = var4;
-         this.yL = var5;
-         this.yR = var6;
-         this.pL = var7;
-         this.pR = var8;
-         this.edgeL = var9;
-         this.edgeR = var10;
-         this.leftMark = var11;
-         this.rightMark = var12;
-         this.road = var13;
-         this.entrySide = var14;
-         this.opChange = var15;
-         this.opFinishing = var16;
-         this.carsLeft = var17;
-         this.carsRight = var18;
-         this.oncomingLeft = var19;
-         this.yL2 = var20;
-         this.yR2 = var21;
-         this.pL2 = var22;
-         this.pR2 = var23;
-         this.bsmL = var24;
-         this.bsmR = var25;
-         this.rtkOffset = var26;
-         this.rtkSigma = var28;
-         this.rtkWay = var30;
-         this.opLcProb = var32;
-         this.info = var33;
-      }
-
-      // $VF: synthetic method
-      public Frame(
-         long var1,
-         float var3,
-         float var4,
-         float var5,
-         float var6,
-         float var7,
-         float var8,
-         float var9,
-         float var10,
-         LaneMarks.Mark var11,
-         LaneMarks.Mark var12,
-         LaneBrain.Road var13,
-         int var14,
-         int var15,
-         boolean var16,
-         int var17,
-         int var18,
-         boolean var19,
-         float var20,
-         float var21,
-         float var22,
-         float var23,
-         boolean var24,
-         boolean var25,
-         double var26,
-         double var28,
-         long var30,
-         float var32,
-         LaneBrain.RoadInfo var33,
-         int var34,
-         DefaultConstructorMarker var35
-      ) {
-         if ((var34 & 512) != 0) {
-            var11 = null;
-         }
-
-         if ((var34 & 1024) != 0) {
-            var12 = null;
-         }
-
-         if ((var34 & 2048) != 0) {
-            var13 = null;
-         }
-
-         if ((var34 & 4096) != 0) {
-            var14 = 0;
-         }
-
-         if ((var34 & 8192) != 0) {
-            var15 = 0;
-         }
-
-         if ((var34 & 16384) != 0) {
-            var16 = false;
-         }
-
-         if ((32768 & var34) != 0) {
-            var17 = 0;
-         }
-
-         if ((65536 & var34) != 0) {
-            var18 = 0;
-         }
-
-         if ((131072 & var34) != 0) {
-            var19 = false;
-         }
-
-         if ((262144 & var34) != 0) {
-            var20 = Float.NaN;
-         }
-
-         if ((524288 & var34) != 0) {
-            var21 = Float.NaN;
-         }
-
-         if ((1048576 & var34) != 0) {
-            var22 = Float.NaN;
-         }
-
-         if ((2097152 & var34) != 0) {
-            var23 = Float.NaN;
-         }
-
-         if ((4194304 & var34) != 0) {
-            var24 = false;
-         }
-
-         if ((8388608 & var34) != 0) {
-            var25 = false;
-         }
-
-         if ((16777216 & var34) != 0) {
-            var26 = Double.NaN;
-         }
-
-         if ((33554432 & var34) != 0) {
-            var28 = Double.NaN;
-         }
-
-         if ((67108864 & var34) != 0) {
-            var30 = 0L;
-         }
-
-         if ((134217728 & var34) != 0) {
-            var32 = Float.NaN;
-         }
-
-         if ((var34 & 268435456) != 0) {
-            var33 = null;
-         }
-
-         this(
-            var1,
-            var3,
-            var4,
-            var5,
-            var6,
-            var7,
-            var8,
-            var9,
-            var10,
-            var11,
-            var12,
-            var13,
-            var14,
-            var15,
-            var16,
-            var17,
-            var18,
-            var19,
-            var20,
-            var21,
-            var22,
-            var23,
-            var24,
-            var25,
-            var26,
-            var28,
-            var30,
-            var32,
-            var33
-         );
-      }
-
-      public final boolean getBsmL() {
-         return this.bsmL;
-      }
-
-      public final boolean getBsmR() {
-         return this.bsmR;
-      }
-
-      public final int getCarsLeft() {
-         return this.carsLeft;
-      }
-
-      public final int getCarsRight() {
-         return this.carsRight;
-      }
-
-      public final float getEdgeL() {
-         return this.edgeL;
-      }
-
-      public final float getEdgeR() {
-         return this.edgeR;
-      }
-
-      public final int getEntrySide() {
-         return this.entrySide;
-      }
-
-      public final LaneBrain.RoadInfo getInfo() {
-         return this.info;
-      }
-
-      public final LaneMarks.Mark getLeftMark() {
-         return this.leftMark;
-      }
-
-      public final long getNowMs() {
-         return this.nowMs;
-      }
-
-      public final boolean getOncomingLeft() {
-         return this.oncomingLeft;
-      }
-
-      public final int getOpChange() {
-         return this.opChange;
-      }
-
-      public final boolean getOpFinishing() {
-         return this.opFinishing;
-      }
-
-      public final float getOpLcProb() {
-         return this.opLcProb;
-      }
-
-      public final float getPL() {
-         return this.pL;
-      }
-
-      public final float getPL2() {
-         return this.pL2;
-      }
-
-      public final float getPR() {
-         return this.pR;
-      }
-
-      public final float getPR2() {
-         return this.pR2;
-      }
-
-      public final LaneMarks.Mark getRightMark() {
-         return this.rightMark;
-      }
-
-      public final LaneBrain.Road getRoad() {
-         return this.road;
-      }
-
-      public final double getRtkOffset() {
-         return this.rtkOffset;
-      }
-
-      public final double getRtkSigma() {
-         return this.rtkSigma;
-      }
-
-      public final long getRtkWay() {
-         return this.rtkWay;
-      }
-
-      public final float getVEgo() {
-         return this.vEgo;
-      }
-
-      public final float getYL() {
-         return this.yL;
-      }
-
-      public final float getYL2() {
-         return this.yL2;
-      }
-
-      public final float getYR() {
-         return this.yR;
-      }
-
-      public final float getYR2() {
-         return this.yR2;
-      }
-
-      public final float getYawRate() {
-         return this.yawRate;
-      }
-   }
-
-   public static final class Live {
-      public static final LaneBrain.Live INSTANCE = new LaneBrain.Live();
-      private static volatile LaneBrain brain;
-
-      private Live() {
-      }
-
-      public final void forgetCount(Context var1, long var2) {
-         Intrinsics.checkNotNullParameter(var1, "ctx");
-         LaneBrain var4 = brain;
-         if (var4 != null) {
-            if (var4.getMyCounts().remove(var2) != null) {
-               Function0 var7 = var4.getOnCountsChanged();
-               if (var7 != null) {
-                  var7.invoke();
-               }
+            if (f.getBsmR()) {
+                atLeast(1, 1, 0.6d, now, "car in the right blind spot");
             }
-         } else {
-            File var6 = new File(var1.getFilesDir(), "lane_counts.json");
+        }
+    }
 
-            try {
-               JSONObject var8 = new JSONObject(FilesKt.readText$default(var6, null, 1, null));
-               var8.remove(String.valueOf(var2));
-               String var9 = var8.toString();
-               Intrinsics.checkNotNullExpressionValue(var9, "toString(...)");
-               FilesKt.writeText$default(var6, var9, null, 2, null);
-            } catch (Exception var5) {
+    public final void roadLaneEnded(int side, long now) {
+        lanesOnSide(side, -1);
+        note(now, "the " + Companion.sideName(side) + " lane ended");
+        answer();
+        this.roadChangeMs = now;
+        log(now, (side < 0 ? "left" : "right") + " lane ended (road data)");
+    }
+
+    public static /* synthetic */ boolean turning$default(LaneBrain laneBrain, long j, int i, Object obj) {
+        if ((i & 1) != 0) {
+            j = laneBrain.lastMs;
+        }
+        return laneBrain.turning(j);
+    }
+
+    public final boolean turning(long now) {
+        Iterable $this$any$iv = this.hist;
+        if (($this$any$iv instanceof Collection) && ((Collection) $this$any$iv).isEmpty()) {
+            return false;
+        }
+        for (Object element$iv : $this$any$iv) {
+            double[] it = (double[]) element$iv;
+            if (((((double) now) - it[0] > 8000.0d || Math.abs(this.heading - it[1]) <= Math.toRadians(10.0d)) ? null : 1) != null) {
+                return true;
             }
-         }
-      }
+        }
+        return false;
+    }
 
-      public final LaneBrain getBrain() {
-         return brain;
-      }
+    public static /* synthetic */ void check$default(LaneBrain laneBrain, boolean z, long j, int i, Object obj) {
+        if ((i & 2) != 0) {
+            j = laneBrain.lastMs;
+        }
+        laneBrain.check(z, j);
+    }
 
-      // $VF: Duplicated exception handlers to handle obfuscated exceptions
-      public final void rememberCount(Context var1, long var2, int var4) {
-         Intrinsics.checkNotNullParameter(var1, "ctx");
-         LaneBrain var5 = brain;
-         if (var5 != null) {
-            var5.getMyCounts().put(var2, var4);
-            Function0 var11 = var5.getOnCountsChanged();
-            if (var11 != null) {
-               var11.invoke();
+    public final void check(boolean ok, long now) {
+        int l = side(-1).component1().intValue();
+        int r = side(1).component1().intValue();
+        if (ok) {
+            see(-1, l, 0.9d, now, "your check");
+            see(1, r, 0.9d, now, "your check");
+        } else {
+            double[] dArr = this.p[l];
+            dArr[r] = dArr[r] * 0.1d;
+            norm();
+            note(now, "your ✗");
+        }
+        answer();
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:68:0x016f  */
+    /* JADX WARN: Removed duplicated region for block: B:81:0x0187  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final void setCount(int m0, int lane, boolean remember, long now, int extraL, int extraR, String kind, String kindR) {
+        String str;
+        int m;
+        Road r;
+        RoadModel roadModel;
+        int m2;
+        boolean z;
+        StringBuilder sb;
+        StringBuilder append;
+        String str2;
+        Intrinsics.checkNotNullParameter(kind, "kind");
+        Intrinsics.checkNotNullParameter(kindR, "kindR");
+        Road r2 = this.road;
+        if (m0 <= 0) {
+            if (r2 != null && this.myCounts.remove(Long.valueOf(r2.getId())) != null) {
+                Function0<Unit> function0 = this.onCountsChanged;
+                if (function0 != null) {
+                    function0.invoke();
+                }
+                String name = r2.getName();
+                if (name.length() == 0) {
+                    name = r2.getKind();
+                }
+                log(now, "your count for " + ((Object) name) + " forgotten");
             }
-         } else {
-            File var12 = new File(var1.getFilesDir(), "lane_counts.json");
-
-            try {
-               var9 = new JSONObject(FilesKt.readText$default(var12, null, 1, null));
-            } catch (Exception var8) {
-               try {
-                  var9 = new JSONObject();
-               } catch (Exception var7) {
-                  return;
-               }
+            this.model = roadModel(this.road, this.info);
+            answer();
+            return;
+        }
+        if (r2 != null && remember) {
+            this.myCounts.put(Long.valueOf(r2.getId()), Integer.valueOf(m0));
+            Function0<Unit> function02 = this.onCountsChanged;
+            if (function02 != null) {
+                function02.invoke();
             }
-
-            try {
-               var9.put(String.valueOf(var2), var4);
-               String var10 = var9.toString();
-               Intrinsics.checkNotNullExpressionValue(var10, "toString(...)");
-               FilesKt.writeText$default(var12, var10, null, 2, null);
-            } catch (Exception var6) {
+        }
+        int m3 = m0 + extraL + extraR;
+        if (1 <= lane && lane <= m3) {
+            int l = 0;
+            while (l < 6) {
+                int rr = 0;
+                while (rr < 6) {
+                    this.p[l][rr] = (l == lane + (-1) && rr == m3 - lane) ? 0.97d : 8.571428571428571E-4d;
+                    rr++;
+                }
+                l++;
             }
-         }
-      }
-
-      public final int savedCount(Context var1, long var2) {
-         Intrinsics.checkNotNullParameter(var1, "ctx");
-         LaneBrain var6 = brain;
-         if (var6 != null) {
-            HashMap var9 = var6.getMyCounts();
-            if (var9 != null) {
-               Integer var10 = (Integer)var9.get(var2);
-               if (var10 != null) {
-                  int var12 = var10;
-                  return var12;
-               }
+            norm();
+            this.holdUntil = (extraL + extraR > 0 ? 60000L : 120000L) + now;
+            note(now, "you: lane " + lane + " of " + m3);
+        }
+        RoadModel rm = roadModel(this.road, this.info);
+        if (extraL + extraR <= 0 || rm.getExtraL() + rm.getExtraR() != 0) {
+            str = " of ";
+            m = m3;
+            r = r2;
+            roadModel = rm;
+        } else {
+            String str3 = kindR;
+            if (str3.length() == 0) {
+                str3 = kind;
             }
-         }
-
-         byte var4 = 0;
-
-         int var5;
-         try {
-            File var7 = new File(var1.getFilesDir(), "lane_counts.json");
-            JSONObject var11 = new JSONObject(FilesKt.readText$default(var7, null, 1, null));
-            var5 = var11.optInt(String.valueOf(var2), 0);
-         } catch (Exception var8) {
-            return var4;
-         }
-
-         return var5;
-      }
-
-      public final void setBrain(LaneBrain var1) {
-         brain = var1;
-      }
-   }
-
-   private static final class Pending {
-      private final long atMs;
-      private final int dir;
-
-      public Pending(int var1, long var2) {
-         this.dir = var1;
-         this.atMs = var2;
-      }
-
-      public final long getAtMs() {
-         return this.atMs;
-      }
-
-      public final int getDir() {
-         return this.dir;
-      }
-   }
-
-   public static final class Road {
-      private final boolean highway;
-      private final long id;
-      private final String kind;
-      private final int lanesOurWay;
-      private final String name;
-      private final boolean oneway;
-
-      public Road(long var1, String var3, String var4, boolean var5, boolean var6, int var7) {
-         Intrinsics.checkNotNullParameter(var3, "name");
-         Intrinsics.checkNotNullParameter(var4, "kind");
-         super();
-         this.id = var1;
-         this.name = var3;
-         this.kind = var4;
-         this.oneway = var5;
-         this.highway = var6;
-         this.lanesOurWay = var7;
-      }
-
-      public final boolean getHighway() {
-         return this.highway;
-      }
-
-      public final long getId() {
-         return this.id;
-      }
-
-      public final String getKind() {
-         return this.kind;
-      }
-
-      public final int getLanesOurWay() {
-         return this.lanesOurWay;
-      }
-
-      public final String getName() {
-         return this.name;
-      }
-
-      public final boolean getOneway() {
-         return this.oneway;
-      }
-
-      public final boolean getRamp() {
-         return StringsKt.endsWith$default(this.kind, "_link", false, 2, null);
-      }
-   }
-
-   public static final class RoadInfo {
-      private final boolean bridge;
-      private final int extraL;
-      private final int extraR;
-      private final String extraWhy;
-      private final int hpmsLanes;
-      private final String hpmsName;
-      private final boolean hpmsRamp;
-      private final boolean hpmsSure;
-      private final String kindL;
-      private final String kindR;
-      private final double navDist;
-      private final int navStraight;
-      private final boolean tunnel;
-
-      public RoadInfo() {
-         this(0, null, false, false, false, false, 0, 0, null, null, null, 0, 0.0, 8191, null);
-      }
-
-      public RoadInfo(
-         int var1,
-         String var2,
-         boolean var3,
-         boolean var4,
-         boolean var5,
-         boolean var6,
-         int var7,
-         int var8,
-         String var9,
-         String var10,
-         String var11,
-         int var12,
-         double var13
-      ) {
-         Intrinsics.checkNotNullParameter(var2, "hpmsName");
-         Intrinsics.checkNotNullParameter(var9, "kindL");
-         Intrinsics.checkNotNullParameter(var10, "kindR");
-         Intrinsics.checkNotNullParameter(var11, "extraWhy");
-         super();
-         this.hpmsLanes = var1;
-         this.hpmsName = var2;
-         this.hpmsRamp = var3;
-         this.tunnel = var4;
-         this.bridge = var5;
-         this.hpmsSure = var6;
-         this.extraL = var7;
-         this.extraR = var8;
-         this.kindL = var9;
-         this.kindR = var10;
-         this.extraWhy = var11;
-         this.navStraight = var12;
-         this.navDist = var13;
-      }
-
-      // $VF: synthetic method
-      public RoadInfo(
-         int var1,
-         String var2,
-         boolean var3,
-         boolean var4,
-         boolean var5,
-         boolean var6,
-         int var7,
-         int var8,
-         String var9,
-         String var10,
-         String var11,
-         int var12,
-         double var13,
-         int var15,
-         DefaultConstructorMarker var16
-      ) {
-         byte var17 = 0;
-         if ((var15 & 1) != 0) {
-            var1 = 0;
-         }
-
-         String var18 = "";
-         if ((var15 & 2) != 0) {
-            var2 = "";
-         }
-
-         if ((var15 & 4) != 0) {
-            var3 = false;
-         }
-
-         if ((var15 & 8) != 0) {
-            var4 = false;
-         }
-
-         if ((var15 & 16) != 0) {
-            var5 = false;
-         }
-
-         if ((var15 & 32) != 0) {
-            var6 = true;
-         }
-
-         if ((var15 & 64) != 0) {
-            var7 = 0;
-         }
-
-         if ((var15 & 128) != 0) {
-            var8 = 0;
-         }
-
-         if ((var15 & 256) != 0) {
-            var9 = "";
-         }
-
-         if ((var15 & 512) != 0) {
-            var10 = "";
-         }
-
-         if ((var15 & 1024) != 0) {
-            var11 = var18;
-         }
-
-         if ((var15 & 2048) != 0) {
-            var12 = var17;
-         }
-
-         if ((var15 & 4096) != 0) {
-            var13 = Double.NaN;
-         }
-
-         this(var1, var2, var3, var4, var5, var6, var7, var8, var9, var10, var11, var12, var13);
-      }
-
-      public final boolean getBridge() {
-         return this.bridge;
-      }
-
-      public final int getExtraL() {
-         return this.extraL;
-      }
-
-      public final int getExtraR() {
-         return this.extraR;
-      }
-
-      public final String getExtraWhy() {
-         return this.extraWhy;
-      }
-
-      public final int getHpmsLanes() {
-         return this.hpmsLanes;
-      }
-
-      public final String getHpmsName() {
-         return this.hpmsName;
-      }
-
-      public final boolean getHpmsRamp() {
-         return this.hpmsRamp;
-      }
-
-      public final boolean getHpmsSure() {
-         return this.hpmsSure;
-      }
-
-      public final String getKindL() {
-         return this.kindL;
-      }
-
-      public final String getKindR() {
-         return this.kindR;
-      }
-
-      public final double getNavDist() {
-         return this.navDist;
-      }
-
-      public final int getNavStraight() {
-         return this.navStraight;
-      }
-
-      public final boolean getTunnel() {
-         return this.tunnel;
-      }
-   }
-
-   public static final class RoadModel {
-      private final boolean bridge;
-      private final double conf;
-      private final int extraL;
-      private final int extraR;
-      private final String kindL;
-      private final String kindR;
-      private final int lanes;
-      private final String src;
-      private final boolean tunnel;
-
-      public RoadModel(int var1, String var2, double var3, int var5, int var6, String var7, String var8, boolean var9, boolean var10) {
-         Intrinsics.checkNotNullParameter(var2, "src");
-         Intrinsics.checkNotNullParameter(var7, "kindL");
-         Intrinsics.checkNotNullParameter(var8, "kindR");
-         super();
-         this.lanes = var1;
-         this.src = var2;
-         this.conf = var3;
-         this.extraL = var5;
-         this.extraR = var6;
-         this.kindL = var7;
-         this.kindR = var8;
-         this.tunnel = var9;
-         this.bridge = var10;
-      }
-
-      public final boolean getBridge() {
-         return this.bridge;
-      }
-
-      public final double getConf() {
-         return this.conf;
-      }
-
-      public final int getExtraL() {
-         return this.extraL;
-      }
-
-      public final int getExtraR() {
-         return this.extraR;
-      }
-
-      public final String getKindL() {
-         return this.kindL;
-      }
-
-      public final String getKindR() {
-         return this.kindR;
-      }
-
-      public final int getLanes() {
-         return this.lanes;
-      }
-
-      public final String getSrc() {
-         return this.src;
-      }
-
-      public final int getTotal() {
-         int var1;
-         if (this.lanes > 0) {
-            var1 = this.lanes + this.extraL + this.extraR;
-         } else {
-            var1 = 0;
-         }
-
-         return var1;
-      }
-
-      public final boolean getTunnel() {
-         return this.tunnel;
-      }
-   }
-
-   private static final class Vote {
-      private final ArrayDeque<long[]> q = new ArrayDeque<>();
-      private long used;
-
-      public Vote() {
-      }
-
-      public final void clear() {
-         this.q.clear();
-      }
-
-      public final ArrayDeque<long[]> getQ() {
-         return this.q;
-      }
-
-      public final long getUsed() {
-         return this.used;
-      }
-
-      public final void setUsed(long var1) {
-         this.used = var1;
-      }
-   }
+            str = " of ";
+            m = m3;
+            r = r2;
+            roadModel = new RoadModel(m0, "your count", 0.97d, extraL, extraR, kind, str3, rm.getTunnel(), rm.getBridge());
+        }
+        this.model = roadModel;
+        answer();
+        if (1 <= lane) {
+            m2 = m;
+            if (lane <= m2) {
+                z = true;
+                if (z) {
+                    sb = new StringBuilder();
+                    append = sb.append(m2).append(" lanes");
+                } else {
+                    sb = new StringBuilder();
+                    append = sb.append("lane ").append(lane).append(str).append(m2);
+                }
+                String sb2 = append.toString();
+                if (r == null && remember) {
+                    String name2 = r.getName();
+                    if (name2.length() == 0) {
+                        r16 = true;
+                    }
+                    if (r16) {
+                        name2 = r.getKind();
+                    }
+                    str2 = " - " + m0 + " remembered for " + ((Object) name2);
+                } else {
+                    str2 = "";
+                }
+                log(now, "you set " + sb2 + str2);
+            }
+        } else {
+            m2 = m;
+        }
+        z = false;
+        if (z) {
+        }
+        String sb22 = append.toString();
+        if (r == null) {
+        }
+        str2 = "";
+        log(now, "you set " + sb22 + str2);
+    }
+
+    public final String getModelText() {
+        return this.modelText;
+    }
+
+    public final boolean modelFresh() {
+        return (this.modelText.length() > 0) && System.currentTimeMillis() - this.modelMs < 6000;
+    }
+
+    public static /* synthetic */ void modelSaw$default(LaneBrain laneBrain, float[] fArr, float[] fArr2, long j, long j2, int i, Object obj) {
+        if ((i & 8) != 0) {
+            j2 = laneBrain.lastMs;
+        }
+        laneBrain.modelSaw(fArr, fArr2, j, j2);
+    }
+
+    public final void modelSaw(float[] pL, float[] pR, long atMs, long now) {
+        String txt;
+        int rr;
+        Intrinsics.checkNotNullParameter(pL, "pL");
+        Intrinsics.checkNotNullParameter(pR, "pR");
+        if (atMs <= this.modelMs) {
+            return;
+        }
+        this.modelMs = atMs;
+        Road r = this.road;
+        boolean city = (r == null || r.getHighway() || r.getRamp()) ? false : true;
+        int l = modelSaw$best(pL);
+        int rr2 = modelSaw$best(pR);
+        float f = 100;
+        String txt2 = "model: " + (l == 3 ? "3+" : String.valueOf(l)) + " left, " + (rr2 != 3 ? String.valueOf(rr2) : "3+") + " right (" + ((int) (pL[l] * f)) + "% / " + ((int) (pR[rr2] * f)) + "%)";
+        this.modelText = city ? txt2 : txt2 + " - not used on highways";
+        if (city) {
+            if (pL[l] < 0.6f) {
+                txt = txt2;
+                rr = rr2;
+            } else if (l == 3) {
+                txt = txt2;
+                rr = rr2;
+                atLeast(-1, 3, 0.6d, now, txt);
+            } else {
+                txt = txt2;
+                rr = rr2;
+                see(-1, l, 0.6d, now, txt);
+            }
+            if (pR[rr] >= 0.6f) {
+                if (rr == 3) {
+                    atLeast(1, 3, 0.6d, now, txt);
+                } else {
+                    see(1, rr, 0.6d, now, txt);
+                }
+            }
+            answer();
+        }
+    }
+
+    private static final int modelSaw$best(float[] a) {
+        Object maxElem$iv;
+        Iterable $this$maxByOrNull$iv = ArraysKt.getIndices(a);
+        Iterator iterator$iv = $this$maxByOrNull$iv.iterator();
+        if (iterator$iv.hasNext()) {
+            maxElem$iv = iterator$iv.next();
+            if (iterator$iv.hasNext()) {
+                int it = ((Number) maxElem$iv).intValue();
+                float maxValue$iv = a[it];
+                do {
+                    Object e$iv = iterator$iv.next();
+                    int it2 = ((Number) e$iv).intValue();
+                    float v$iv = a[it2];
+                    if (Float.compare(maxValue$iv, v$iv) < 0) {
+                        maxElem$iv = e$iv;
+                        maxValue$iv = v$iv;
+                    }
+                } while (iterator$iv.hasNext());
+            }
+        } else {
+            maxElem$iv = null;
+        }
+        Integer num = (Integer) maxElem$iv;
+        if (num != null) {
+            return num.intValue();
+        }
+        return 0;
+    }
+
+    private final void log(long now, String text) {
+        if (this.events.size() < 2 || !Intrinsics.areEqual(this.events.get(1).getText(), text) || now - this.events.get(1).getAtMs() >= 5000) {
+            Event e = new Event(now, text);
+            this.events.addFirst(e);
+            while (this.events.size() > 80) {
+                this.events.removeLast();
+            }
+            Function1<? super Event, Unit> function1 = this.onEvent;
+            if (function1 != null) {
+                function1.invoke(e);
+            }
+        }
+    }
+
+    public final void endDrive() {
+        if (this.driveS > 30.0d) {
+            Long valueOf = Long.valueOf(this.lastMs);
+            long it = valueOf.longValue();
+            if (!(it > 0)) {
+                valueOf = null;
+            }
+            log(valueOf != null ? valueOf.longValue() : System.currentTimeMillis(), "drive summary: " + summary());
+        }
+        reset$default(this, false, 1, null);
+    }
+
+    public static /* synthetic */ void reset$default(LaneBrain laneBrain, boolean z, int i, Object obj) {
+        if ((i & 1) != 0) {
+            z = true;
+        }
+        laneBrain.reset(z);
+    }
+
+    public final void reset(boolean keepCounts) {
+        this.p = Companion.prior();
+        this.q = Companion.prior();
+        this.road = null;
+        this.info = null;
+        this.model = new RoadModel(0, "", 0.0d, 0, 0, "", "", false, false);
+        this.memory.clear();
+        this.why.clear();
+        this.pending = null;
+        this.prevMs = 0L;
+        this.hist.clear();
+        this.opDir = 0;
+        this.lastMs = 0L;
+        this.holdUntil = 0L;
+        this.rtkLog.clear();
+        this.prevAnswer = "";
+        this.camLog.clear();
+        this.roadChangeMs = 0L;
+        this.rtkDoubtMs = 0L;
+        for (Vote v : CollectionsKt.listOf((Object[]) new Vote[]{this.vYellow, this.vDashL, this.vDashR, this.vSolidR, this.vOuterL, this.vOuterR, this.vEdgeL, this.vEdgeR})) {
+            v.clear();
+        }
+        this.carsL.clear();
+        this.carsR.clear();
+        this.oncoming.clear();
+        this.nChanges = 0;
+        this.nUndone = 0;
+        this.nOpMissed = 0;
+        this.nTurns = 0;
+        this.nRamps = 0;
+        this.driveS = 0.0d;
+        this.knownS = 0.0d;
+        this.lastCameraMs = 0L;
+        if (!keepCounts) {
+            this.myCounts.clear();
+        }
+    }
 }

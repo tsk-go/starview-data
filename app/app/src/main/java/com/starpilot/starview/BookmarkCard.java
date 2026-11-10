@@ -1,11 +1,10 @@
 package com.starpilot.starview;
 
-import android.app.AlertDialog.Builder;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,406 +13,338 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
+import com.starpilot.starview.Bookmarks;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.collections.IntIterator;
 import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 import kotlin.text.StringsKt;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: Bookmarks.kt */
 public final class BookmarkCard extends LinearLayout {
-   private final Function0<Unit> askMic;
-   private final TextView close;
-   private final float d;
-   private final Runnable hide;
-   private Bookmarks.Item item;
-   private final Handler main;
-   private boolean recording;
-   private final Function0<Boolean> stopped;
-   private final TextView sub;
-   private int takes;
-   private final TextView talk;
-   private final TextView title;
-   private final TextView type;
-   private VoiceNote voice;
+    private final Function0<Unit> askMic;
+    private final TextView close;
+    private final float d;
+    private final Runnable hide;
+    private Bookmarks.Item item;
+    private final Handler main;
+    private boolean recording;
+    private final Function0<Boolean> stopped;
+    private final TextView sub;
+    private int takes;
+    private final TextView talk;
+    private final TextView title;
+    private final TextView type;
+    private VoiceNote voice;
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$6ksCi_ZwErqxLIBf_DvQGCgBWsU/* $VF was: $r8$lambda$6ksCi_ZwErqxLIBf_DvQGCgBWsU*/(
-      Bookmarks.Item var0, BookmarkCard var1, String var2, String var3
-   ) {
-      return startTalk$lambda$16(var0, var1, var2, var3);
-   }
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public BookmarkCard(Context ctx, Function0<Boolean> stopped, Function0<Unit> askMic) {
+        super(ctx);
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(stopped, "stopped");
+        Intrinsics.checkNotNullParameter(askMic, "askMic");
+        this.stopped = stopped;
+        this.askMic = askMic;
+        this.d = getResources().getDisplayMetrics().density;
+        this.main = new Handler(Looper.getMainLooper());
+        TextView $this$title_u24lambda_u240 = new TextView(ctx);
+        $this$title_u24lambda_u240.setTextColor(-1);
+        $this$title_u24lambda_u240.setTextSize(20.0f);
+        $this$title_u24lambda_u240.setTypeface(Typeface.DEFAULT_BOLD);
+        this.title = $this$title_u24lambda_u240;
+        TextView $this$sub_u24lambda_u241 = new TextView(ctx);
+        $this$sub_u24lambda_u241.setTextColor(Color.rgb(200, 208, 222));
+        $this$sub_u24lambda_u241.setTextSize(15.0f);
+        this.sub = $this$sub_u24lambda_u241;
+        this.talk = new TextView(ctx);
+        this.type = new TextView(ctx);
+        this.close = new TextView(ctx);
+        this.hide = new Runnable() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda1
+            @Override // java.lang.Runnable
+            public final void run() {
+                BookmarkCard.hide$lambda$2(BookmarkCard.this);
+            }
+        };
+        setOrientation(1);
+        setVisibility(8);
+        setPadding(dp(18), dp(14), dp(18), dp(14));
+        GradientDrawable $this$_init__u24lambda_u243 = new GradientDrawable();
+        $this$_init__u24lambda_u243.setCornerRadius(dp(18));
+        $this$_init__u24lambda_u243.setColor(Color.argb(225, 18, 20, 26));
+        $this$_init__u24lambda_u243.setStroke(dp(2), Color.rgb(255, 196, 0));
+        setBackground($this$_init__u24lambda_u243);
+        addView(this.title);
+        addView(this.sub);
+        LinearLayout row = new LinearLayout(ctx);
+        row.setOrientation(0);
+        row.setPadding(0, dp(10), 0, 0);
+        _init_$pill(this, row, this.talk, "🎤  Hold to talk", Color.rgb(52, 92, 170));
+        _init_$pill(this, row, this.type, "✎  Type", Color.rgb(70, 76, 90));
+        _init_$pill(this, row, this.close, "✕", Color.rgb(70, 76, 90));
+        addView(row);
+        this.talk.setOnTouchListener(new View.OnTouchListener() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda2
+            @Override // android.view.View.OnTouchListener
+            public final boolean onTouch(View view, MotionEvent motionEvent) {
+                boolean _init_$lambda$7;
+                _init_$lambda$7 = BookmarkCard._init_$lambda$7(BookmarkCard.this, view, motionEvent);
+                return _init_$lambda$7;
+            }
+        });
+        this.type.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda3
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                BookmarkCard.this.typeNote();
+            }
+        });
+        this.close.setOnClickListener(new View.OnClickListener() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda4
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+                BookmarkCard._init_$lambda$9(BookmarkCard.this, view);
+            }
+        });
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$7hE33pOXrz_1p8QAMwgPwqOjLRs(BookmarkCard var0, View var1) {
-      _init_$lambda$9(var0, var1);
-   }
+    private final int dp(int v) {
+        return (int) (v * this.d);
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$9TdOq5yp_LDCOWmw_MFl5sPwdQY(BookmarkCard var0, DialogInterface var1, int var2) {
-      typeNote$lambda$20(var0, var1, var2);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void hide$lambda$2(BookmarkCard this$0) {
+        if (this$0.recording) {
+            return;
+        }
+        this$0.setVisibility(8);
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$FslzKIBETsx_u7VEIx17SIeGEZ8/* $VF was: $r8$lambda$FslzKIBETsx_u7VEIx17SIeGEZ8*/(
-      EditText var0, Bookmarks.Item var1, BookmarkCard var2, DialogInterface var3, int var4
-   ) {
-      typeNote$lambda$19(var0, var1, var2, var3, var4);
-   }
+    private static final void _init_$pill(BookmarkCard this$0, LinearLayout row, TextView t, String label, int col) {
+        t.setText(label);
+        t.setTextColor(-1);
+        t.setTextSize(18.0f);
+        t.setTypeface(Typeface.DEFAULT_BOLD);
+        t.setGravity(17);
+        t.setPadding(this$0.dp(18), this$0.dp(12), this$0.dp(18), this$0.dp(12));
+        GradientDrawable $this$pill_u24lambda_u245 = new GradientDrawable();
+        $this$pill_u24lambda_u245.setCornerRadius(this$0.dp(24));
+        $this$pill_u24lambda_u245.setColor(col);
+        t.setBackground($this$pill_u24lambda_u245);
+        LinearLayout.LayoutParams $this$pill_u24lambda_u246 = new LinearLayout.LayoutParams(-2, -2);
+        $this$pill_u24lambda_u246.setMarginEnd(this$0.dp(10));
+        Unit unit = Unit.INSTANCE;
+        row.addView(t, $this$pill_u24lambda_u246);
+    }
 
-   // $VF: synthetic method
-   public static Unit $r8$lambda$LCjav9P_taTIG8I7g674QE9915k(String var0, JSONObject var1) {
-      return typeNote$lambda$19$lambda$18(var0, var1);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean _init_$lambda$7(BookmarkCard this$0, View view, MotionEvent e) {
+        switch (e.getActionMasked()) {
+            case 0:
+                this$0.startTalk();
+                break;
+            case 1:
+            case 3:
+                this$0.stopTalk();
+                break;
+        }
+        return true;
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$P7FDibAfptVnD31jpIRbY07_anM/* $VF was: $r8$lambda$P7FDibAfptVnD31jpIRbY07_anM*/(BookmarkCard var0, View var1) {
-      _init_$lambda$8(var0, var1);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void _init_$lambda$9(BookmarkCard this$0, View it) {
+        this$0.main.removeCallbacks(this$0.hide);
+        this$0.setVisibility(8);
+    }
 
-   // $VF: synthetic method
-   public static boolean $r8$lambda$ZvQ06WjDXX5tkY_Ulcu9geTjIb8(BookmarkCard var0, View var1, MotionEvent var2) {
-      return _init_$lambda$7(var0, var1, var2);
-   }
+    public final void show(Bookmarks.Item it) {
+        Intrinsics.checkNotNullParameter(it, "it");
+        this.item = it;
+        this.takes = 0;
+        this.title.setText("🔖  Bookmarked");
+        TextView textView = this.sub;
+        Iterable $this$filter$iv = CollectionsKt.listOf((Object[]) new String[]{it.getTitle(), it.getPlace()});
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            String s = (String) element$iv$iv;
+            Intrinsics.checkNotNull(s);
+            if (s.length() > 0) {
+                destination$iv$iv.add(element$iv$iv);
+            }
+        }
+        String joinToString$default = CollectionsKt.joinToString$default((List) destination$iv$iv, "  ·  ", null, null, 0, null, null, 62, null);
+        if (joinToString$default.length() == 0) {
+            joinToString$default = "saved";
+        }
+        textView.setText(joinToString$default);
+        this.talk.setText("🎤  Hold to talk");
+        this.type.setAlpha(this.stopped.invoke().booleanValue() ? 1.0f : 0.4f);
+        setVisibility(0);
+        bringToFront();
+        this.main.removeCallbacks(this.hide);
+        this.main.postDelayed(this.hide, 10000L);
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$f1lfJz50WExzx_9_f2zHcQVpjjA/* $VF was: $r8$lambda$f1lfJz50WExzx_9_f2zHcQVpjjA*/(BookmarkCard var0) {
-      hide$lambda$2(var0);
-   }
-
-   // $VF: synthetic method
-   public static Unit $r8$lambda$ut9CmPK3chgGacxtpfSA2_q62yg/* $VF was: $r8$lambda$ut9CmPK3chgGacxtpfSA2_q62yg*/(String var0, String var1, JSONObject var2) {
-      return startTalk$lambda$16$lambda$15(var0, var1, var2);
-   }
-
-   public BookmarkCard(Context var1, Function0<Boolean> var2, Function0<Unit> var3) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "stopped");
-      Intrinsics.checkNotNullParameter(var3, "askMic");
-      super(var1);
-      this.stopped = var2;
-      this.askMic = var3;
-      this.d = this.getResources().getDisplayMetrics().density;
-      this.main = new Handler(Looper.getMainLooper());
-      TextView var5 = new TextView(var1);
-      var5.setTextColor(-1);
-      var5.setTextSize(20.0F);
-      var5.setTypeface(Typeface.DEFAULT_BOLD);
-      this.title = var5;
-      TextView var6 = new TextView(var1);
-      var6.setTextColor(Color.rgb(200, 208, 222));
-      var6.setTextSize(15.0F);
-      this.sub = var6;
-      this.talk = new TextView(var1);
-      this.type = new TextView(var1);
-      this.close = new TextView(var1);
-      this.hide = new BookmarkCard$$ExternalSyntheticLambda1(this);
-      this.setOrientation(1);
-      this.setVisibility(8);
-      this.setPadding(this.dp(18), this.dp(14), this.dp(18), this.dp(14));
-      GradientDrawable var7 = new GradientDrawable();
-      var7.setCornerRadius(this.dp(18));
-      var7.setColor(Color.argb(225, 18, 20, 26));
-      var7.setStroke(this.dp(2), Color.rgb(255, 196, 0));
-      this.setBackground((Drawable)var7);
-      this.addView((View)this.title);
-      this.addView((View)this.sub);
-      LinearLayout var4 = new LinearLayout(var1);
-      var4.setOrientation(0);
-      var4.setPadding(0, this.dp(10), 0, 0);
-      _init_$pill(this, var4, this.talk, "\ud83c\udfa4  Hold to talk", Color.rgb(52, 92, 170));
-      _init_$pill(this, var4, this.type, "✎  Type", Color.rgb(70, 76, 90));
-      _init_$pill(this, var4, this.close, "✕", Color.rgb(70, 76, 90));
-      this.addView((View)var4);
-      this.talk.setOnTouchListener(new BookmarkCard$$ExternalSyntheticLambda2(this));
-      this.type.setOnClickListener(new BookmarkCard$$ExternalSyntheticLambda3(this));
-      this.close.setOnClickListener(new BookmarkCard$$ExternalSyntheticLambda4(this));
-   }
-
-   private static final boolean _init_$lambda$7(BookmarkCard var0, View var1, MotionEvent var2) {
-      switch (var2.getActionMasked()) {
-         case 0:
-            var0.startTalk();
-            break;
-         case 1:
-         case 3:
-            var0.stopTalk();
-         case 2:
-      }
-
-      return true;
-   }
-
-   private static final void _init_$lambda$8(BookmarkCard var0, View var1) {
-      var0.typeNote();
-   }
-
-   private static final void _init_$lambda$9(BookmarkCard var0, View var1) {
-      var0.main.removeCallbacks(var0.hide);
-      var0.setVisibility(8);
-   }
-
-   private static final void _init_$pill(BookmarkCard var0, LinearLayout var1, TextView var2, String var3, int var4) {
-      var2.setText(var3);
-      var2.setTextColor(-1);
-      var2.setTextSize(18.0F);
-      var2.setTypeface(Typeface.DEFAULT_BOLD);
-      var2.setGravity(17);
-      var2.setPadding(var0.dp(18), var0.dp(12), var0.dp(18), var0.dp(12));
-      GradientDrawable var7 = new GradientDrawable();
-      var7.setCornerRadius(var0.dp(24));
-      var7.setColor(var4);
-      var2.setBackground((Drawable)var7);
-      View var8 = (View)var2;
-      LayoutParams var6 = new LayoutParams(-2, -2);
-      var6.setMarginEnd(var0.dp(10));
-      Unit var5 = Unit.INSTANCE;
-      var1.addView(var8, (android.view.ViewGroup.LayoutParams)var6);
-   }
-
-   private final int dp(int var1) {
-      return (int)(var1 * this.d);
-   }
-
-   private static final void hide$lambda$2(BookmarkCard var0) {
-      if (!var0.recording) {
-         var0.setVisibility(8);
-      }
-   }
-
-   private final void startTalk() {
-      Bookmarks.Item var3 = this.item;
-      if (var3 != null) {
-         if (this.getContext().checkSelfPermission("android.permission.RECORD_AUDIO") != 0) {
+    private final void startTalk() {
+        final String name;
+        final Bookmarks.Item it = this.item;
+        if (it == null) {
+            return;
+        }
+        if (getContext().checkSelfPermission("android.permission.RECORD_AUDIO") != 0) {
             this.askMic.invoke();
-         } else {
-            Context var2 = this.getContext();
-            Intrinsics.checkNotNullExpressionValue(var2, "getContext(...)");
-            VoiceNote var4 = new VoiceNote(var2);
-            this.voice = var4;
-            this.takes++;
-            String var5;
-            if (this.takes == 1) {
-               var5 = "voice.wav";
-            } else {
-               int var1 = this.takes;
-               var5 = "voice" + var1 + ".wav";
+            return;
+        }
+        Context context = getContext();
+        Intrinsics.checkNotNullExpressionValue(context, "getContext(...)");
+        VoiceNote v = new VoiceNote(context);
+        this.voice = v;
+        this.takes++;
+        if (this.takes == 1) {
+            name = "voice.wav";
+        } else {
+            name = "voice" + this.takes + ".wav";
+        }
+        String err = v.start(new File(it.getDir(), name), new Function1() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda7
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit startTalk$lambda$16;
+                startTalk$lambda$16 = BookmarkCard.startTalk$lambda$16(Bookmarks.Item.this, this, name, (String) obj);
+                return startTalk$lambda$16;
             }
+        });
+        if (err != null) {
+            this.sub.setText("Couldn't record: " + err);
+            return;
+        }
+        this.recording = true;
+        this.talk.setText("●  Recording… let go to stop");
+        this.main.removeCallbacks(this.hide);
+    }
 
-            String var6 = var4.start(new File(var3.getDir(), var5), new BookmarkCard$$ExternalSyntheticLambda7(var3, this, var5));
-            if (var6 != null) {
-               this.sub.setText("Couldn't record: " + var6);
-            } else {
-               this.recording = true;
-               this.talk.setText("●  Recording… let go to stop");
-               this.main.removeCallbacks(this.hide);
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit startTalk$lambda$16(Bookmarks.Item $it, BookmarkCard this$0, final String $name, final String text) {
+        Intrinsics.checkNotNullParameter(text, "text");
+        Bookmarks.INSTANCE.update($it, new Function1() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda8
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit startTalk$lambda$16$lambda$15;
+                startTalk$lambda$16$lambda$15 = BookmarkCard.startTalk$lambda$16$lambda$15($name, text, (JSONObject) obj);
+                return startTalk$lambda$16$lambda$15;
             }
-         }
-      }
-   }
+        });
+        this$0.sub.setText(text.length() > 0 ? "“" + text + "”" : "voice note saved (no transcript on this tablet)");
+        if (!this$0.recording) {
+            this$0.main.removeCallbacks(this$0.hide);
+            this$0.main.postDelayed(this$0.hide, 6000L);
+        }
+        return Unit.INSTANCE;
+    }
 
-   private static final Unit startTalk$lambda$16(Bookmarks.Item var0, BookmarkCard var1, String var2, String var3) {
-      Intrinsics.checkNotNullParameter(var3, "text");
-      Bookmarks.INSTANCE.update(var0, new BookmarkCard$$ExternalSyntheticLambda8(var2, var3));
-      TextView var6 = var1.sub;
-      boolean var4;
-      if (var3.length() > 0) {
-         var4 = true;
-      } else {
-         var4 = false;
-      }
-
-      String var5;
-      if (var4) {
-         var5 = "“" + var3 + "”";
-      } else {
-         var5 = "voice note saved (no transcript on this tablet)";
-      }
-
-      var6.setText(var5);
-      if (!var1.recording) {
-         var1.main.removeCallbacks(var1.hide);
-         var1.main.postDelayed(var1.hide, 6000L);
-      }
-
-      return Unit.INSTANCE;
-   }
-
-   private static final Unit startTalk$lambda$16$lambda$15(String var0, String var1, JSONObject var2) {
-      Intrinsics.checkNotNullParameter(var2, "j");
-      JSONArray var5 = var2.optJSONArray("voices");
-      JSONArray var4 = var5;
-      if (var5 == null) {
-         var4 = new JSONArray();
-         var2.put("voices", var4);
-      }
-
-      var4.put(new JSONObject().put("file", var0).put("text", var1));
-      Iterable var9 = RangesKt.until(0, var4.length());
-      var var7 = new ArrayList();
-      Iterator var8 = var9.iterator();
-
-      while (var8.hasNext()) {
-         JSONObject var6 = var4.optJSONObject(((IntIterator)var8).nextInt());
-         var5 = null;
-         var1 = var5;
-         if (var6 != null) {
-            String var13 = var6.optString("text");
-            var1 = var5;
-            if (var13 != null) {
-               boolean var3;
-               if (var13.length() > 0) {
-                  var3 = true;
-               } else {
-                  var3 = false;
-               }
-
-               var1 = var5;
-               if (var3) {
-                  var1 = var13;
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit startTalk$lambda$16$lambda$15(String $name, String $text, JSONObject j) {
+        String s;
+        Intrinsics.checkNotNullParameter(j, "j");
+        JSONArray x = j.optJSONArray("voices");
+        if (x == null) {
+            x = new JSONArray();
+            j.put("voices", x);
+        }
+        JSONArray a = x;
+        a.put(new JSONObject().put("file", $name).put("text", $text));
+        Iterable $this$mapNotNull$iv = RangesKt.until(0, a.length());
+        Collection destination$iv$iv = new ArrayList();
+        Iterator<Integer> it = $this$mapNotNull$iv.iterator();
+        while (it.hasNext()) {
+            int element$iv$iv$iv = ((IntIterator) it).nextInt();
+            Iterable $this$mapNotNull$iv2 = $this$mapNotNull$iv;
+            JSONObject optJSONObject = a.optJSONObject(element$iv$iv$iv);
+            String str = null;
+            if (optJSONObject != null && (s = optJSONObject.optString("text")) != null) {
+                if (s.length() > 0) {
+                    str = s;
+                }
             }
-         }
+            if (str != null) {
+                destination$iv$iv.add(str);
+            }
+            $this$mapNotNull$iv = $this$mapNotNull$iv2;
+        }
+        j.put("voice_text", CollectionsKt.joinToString$default((List) destination$iv$iv, " / ", null, null, 0, null, null, 62, null));
+        return Unit.INSTANCE;
+    }
 
-         if (var1 != null) {
-            var7.add(var1);
-         }
-      }
+    private final void stopTalk() {
+        if (this.recording) {
+            this.recording = false;
+            VoiceNote voiceNote = this.voice;
+            if (voiceNote != null) {
+                voiceNote.stop();
+            }
+            this.talk.setText("🎤  Hold to add more");
+            this.sub.setText("saving…");
+        }
+    }
 
-      List var10 = var7;
-      var2.put("voice_text", CollectionsKt.joinToString$default(var10, " / ", null, null, 0, null, null, 62, null));
-      return Unit.INSTANCE;
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void typeNote() {
+        final Bookmarks.Item it = this.item;
+        if (it == null) {
+            return;
+        }
+        if (!this.stopped.invoke().booleanValue()) {
+            this.sub.setText("Typing only when stopped - hold 🎤 to talk instead");
+            return;
+        }
+        this.main.removeCallbacks(this.hide);
+        final EditText $this$typeNote_u24lambda_u2417 = new EditText(getContext());
+        $this$typeNote_u24lambda_u2417.setText(it.getNote());
+        $this$typeNote_u24lambda_u2417.setHint("What happened here?");
+        $this$typeNote_u24lambda_u2417.setSingleLine(false);
+        $this$typeNote_u24lambda_u2417.setMinLines(2);
+        new AlertDialog.Builder(getContext()).setTitle("Bookmark note").setView($this$typeNote_u24lambda_u2417).setPositiveButton("Save", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda5
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                BookmarkCard.typeNote$lambda$19($this$typeNote_u24lambda_u2417, it, this, dialogInterface, i);
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda6
+            @Override // android.content.DialogInterface.OnClickListener
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                BookmarkCard.typeNote$lambda$20(BookmarkCard.this, dialogInterface, i);
+            }
+        }).show();
+    }
 
-   private final void stopTalk() {
-      if (this.recording) {
-         this.recording = false;
-         VoiceNote var1 = this.voice;
-         if (var1 != null) {
-            var1.stop();
-         }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void typeNote$lambda$19(EditText $et, Bookmarks.Item $it, BookmarkCard this$0, DialogInterface dialogInterface, int i) {
+        final String t = StringsKt.trim((CharSequence) $et.getText().toString()).toString();
+        Bookmarks.INSTANCE.update($it, new Function1() { // from class: com.starpilot.starview.BookmarkCard$$ExternalSyntheticLambda0
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                Unit typeNote$lambda$19$lambda$18;
+                typeNote$lambda$19$lambda$18 = BookmarkCard.typeNote$lambda$19$lambda$18(t, (JSONObject) obj);
+                return typeNote$lambda$19$lambda$18;
+            }
+        });
+        this$0.sub.setText(t.length() == 0 ? "saved" : "“" + t + "”");
+        this$0.main.postDelayed(this$0.hide, 4000L);
+    }
 
-         this.talk.setText("\ud83c\udfa4  Hold to add more");
-         this.sub.setText("saving…");
-      }
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Unit typeNote$lambda$19$lambda$18(String $t, JSONObject j) {
+        Intrinsics.checkNotNullParameter(j, "j");
+        j.put("note", $t);
+        return Unit.INSTANCE;
+    }
 
-   private final void typeNote() {
-      Bookmarks.Item var2 = this.item;
-      if (var2 != null) {
-         if (!this.stopped.invoke()) {
-            this.sub.setText("Typing only when stopped - hold \ud83c\udfa4 to talk instead");
-         } else {
-            this.main.removeCallbacks(this.hide);
-            EditText var1 = new EditText(this.getContext());
-            var1.setText(var2.getNote());
-            var1.setHint("What happened here?");
-            var1.setSingleLine(false);
-            var1.setMinLines(2);
-            new Builder(this.getContext())
-               .setTitle("Bookmark note")
-               .setView((View)var1)
-               .setPositiveButton("Save", new BookmarkCard$$ExternalSyntheticLambda5(var1, var2, this))
-               .setNegativeButton("Cancel", new BookmarkCard$$ExternalSyntheticLambda6(this))
-               .show();
-         }
-      }
-   }
-
-   private static final void typeNote$lambda$19(EditText var0, Bookmarks.Item var1, BookmarkCard var2, DialogInterface var3, int var4) {
-      String var5 = StringsKt.trim(var0.getText().toString()).toString();
-      Bookmarks.INSTANCE.update(var1, new BookmarkCard$$ExternalSyntheticLambda0(var5));
-      TextView var7 = var2.sub;
-      boolean var8;
-      if (var5.length() == 0) {
-         var8 = true;
-      } else {
-         var8 = false;
-      }
-
-      String var6;
-      if (var8) {
-         var6 = "saved";
-      } else {
-         var6 = "“" + var5 + "”";
-      }
-
-      var7.setText(var6);
-      var2.main.postDelayed(var2.hide, 4000L);
-   }
-
-   private static final Unit typeNote$lambda$19$lambda$18(String var0, JSONObject var1) {
-      Intrinsics.checkNotNullParameter(var1, "j");
-      var1.put("note", var0);
-      return Unit.INSTANCE;
-   }
-
-   private static final void typeNote$lambda$20(BookmarkCard var0, DialogInterface var1, int var2) {
-      var0.main.postDelayed(var0.hide, 4000L);
-   }
-
-   public final void show(Bookmarks.Item var1) {
-      Intrinsics.checkNotNullParameter(var1, "it");
-      this.item = var1;
-      this.takes = 0;
-      this.title.setText("\ud83d\udd16  Bookmarked");
-      TextView var5 = this.sub;
-      String var6 = var1.getTitle();
-      String var9 = var1.getPlace();
-      boolean var4 = true;
-      Iterable var15 = CollectionsKt.listOf(new String[]{var6, var9});
-      var var10 = new ArrayList();
-
-      for (Object var8 : var15) {
-         String var7 = (String)var8;
-         Intrinsics.checkNotNull(var7);
-         boolean var3;
-         if (var7.length() > 0) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
-
-         if (var3) {
-            var10.add(var8);
-         }
-      }
-
-      List var11 = var10;
-      TextView var12 = CollectionsKt.joinToString$default(var11, "  ·  ", null, null, 0, null, null, 62, null);
-      boolean var14;
-      if (var12.length() == 0) {
-         var14 = var4;
-      } else {
-         var14 = false;
-      }
-
-      if (var14) {
-         var12 = "saved";
-      }
-
-      var5.setText((CharSequence)var12);
-      this.talk.setText("\ud83c\udfa4  Hold to talk");
-      var12 = this.type;
-      float var2;
-      if (this.stopped.invoke()) {
-         var2 = 1.0F;
-      } else {
-         var2 = 0.4F;
-      }
-
-      var12.setAlpha(var2);
-      this.setVisibility(0);
-      this.bringToFront();
-      this.main.removeCallbacks(this.hide);
-      this.main.postDelayed(this.hide, 10000L);
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void typeNote$lambda$20(BookmarkCard this$0, DialogInterface dialogInterface, int i) {
+        this$0.main.postDelayed(this$0.hide, 4000L);
+    }
 }

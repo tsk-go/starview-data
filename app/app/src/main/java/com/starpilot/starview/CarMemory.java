@@ -1,5 +1,6 @@
 package com.starpilot.starview;
 
+import com.starpilot.starview.CarMemory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,397 +8,362 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import kotlin.collections.CollectionsKt;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt;
 
+/* compiled from: CarMemory.kt */
 public final class CarMemory {
-   public static final double BSM_FROM = -9.0;
-   public static final long BSM_QUIET_MS = 800L;
-   public static final double BSM_TO = -1.0;
-   public static final double BUMPER = 2.3;
-   public static final CarMemory.Companion Companion = new CarMemory.Companion(null);
-   public static final long KEEP_MS = 8000L;
-   public static final long SEEN_MS = 350L;
-   public static final double Y_MAX = 6.5;
-   public static final double Y_MIN = 1.8;
-   private final HashMap<Long, CarMemory.Car> byId = new HashMap<>();
-   private volatile List<CarMemory.Car> ghosts;
-   private long lastMs;
-   private long lastRadarFrame = -1L;
+    public static final double BSM_FROM = -9.0d;
+    public static final long BSM_QUIET_MS = 800;
+    public static final double BSM_TO = -1.0d;
+    public static final double BUMPER = 2.3d;
+    public static final Companion Companion = new Companion(null);
+    public static final long KEEP_MS = 8000;
+    public static final long SEEN_MS = 350;
+    public static final double Y_MAX = 6.5d;
+    public static final double Y_MIN = 1.8d;
+    private long lastMs;
+    private final HashMap<Long, Car> byId = new HashMap<>();
+    private long lastRadarFrame = -1;
+    private volatile List<Car> ghosts = CollectionsKt.emptyList();
 
-   // $VF: synthetic method
-   public static boolean $r8$lambda$3wCqkKXhNHYsuWaICgF7cbO6rbo(List var0, CarMemory.Car var1) {
-      return update$lambda$2(var0, var1);
-   }
+    /* compiled from: CarMemory.kt */
+    public static final class Car {
+        private long bsmQuietSinceMs;
+        private int hits;
+        private final long id;
+        private long lastSeenMs;
+        private boolean remembered;
+        private long rememberedSinceMs;
+        private float vAbs;
+        private float vRel;
+        private double x;
+        private double y;
 
-   public CarMemory() {
-      this.ghosts = CollectionsKt.emptyList();
-   }
+        public Car(long id) {
+            this.id = id;
+        }
 
-   private final void see(long var1, double var3, double var5, float var7, float var8, long var9) {
-      if (!(var3 > 110.0) && !(Math.abs(var5) > 9.0)) {
-         Map var13 = this.byId;
-         Long var12 = var1;
-         CarMemory.Car var11 = (CarMemory.Car)var13.get(var12);
-         if (var11 == null) {
-            var11 = new CarMemory.Car(var1);
-            var13.put(var12, var11);
-         }
+        public final long getId() {
+            return this.id;
+        }
 
-         var11 = var11;
-         var11.setX(var3);
-         var11.setY(var5);
-         var11.setVRel(var7);
-         var11.setVAbs(var8);
-         var11.setLastSeenMs(var9);
-         var11.setHits(var11.getHits() + 1);
-      }
-   }
+        public final float getVAbs() {
+            return this.vAbs;
+        }
 
-   private static final boolean update$lambda$2(List var0, CarMemory.Car var1) {
-      Intrinsics.checkNotNullParameter(var1, "c");
-      boolean var5 = var1.getRemembered();
-      boolean var4 = false;
-      boolean var3 = var4;
-      if (var5) {
-         var var7 = var0;
-         boolean var9;
-         if (var7 instanceof Collection && ((Collection)var7).isEmpty()) {
-            var9 = false;
-         } else {
-            Iterator var8 = var7.iterator();
+        public final float getVRel() {
+            return this.vRel;
+        }
 
+        public final double getX() {
+            return this.x;
+        }
+
+        public final double getY() {
+            return this.y;
+        }
+
+        public final void setVAbs(float f) {
+            this.vAbs = f;
+        }
+
+        public final void setVRel(float f) {
+            this.vRel = f;
+        }
+
+        public final void setX(double d) {
+            this.x = d;
+        }
+
+        public final void setY(double d) {
+            this.y = d;
+        }
+
+        public final int getHits() {
+            return this.hits;
+        }
+
+        public final long getLastSeenMs() {
+            return this.lastSeenMs;
+        }
+
+        public final void setHits(int i) {
+            this.hits = i;
+        }
+
+        public final void setLastSeenMs(long j) {
+            this.lastSeenMs = j;
+        }
+
+        public final boolean getRemembered() {
+            return this.remembered;
+        }
+
+        public final void setRemembered(boolean z) {
+            this.remembered = z;
+        }
+
+        public final long getRememberedSinceMs() {
+            return this.rememberedSinceMs;
+        }
+
+        public final void setRememberedSinceMs(long j) {
+            this.rememberedSinceMs = j;
+        }
+
+        public final long getBsmQuietSinceMs() {
+            return this.bsmQuietSinceMs;
+        }
+
+        public final void setBsmQuietSinceMs(long j) {
+            this.bsmQuietSinceMs = j;
+        }
+    }
+
+    public final List<Car> getGhosts() {
+        return this.ghosts;
+    }
+
+    /* compiled from: CarMemory.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
+
+        private Companion() {
+        }
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r15v0 */
+    /* JADX WARN: Type inference failed for: r15v1, types: [boolean] */
+    /* JADX WARN: Type inference failed for: r15v4 */
+    public final void update(Telemetry t, long nowMs, boolean leftBsm, boolean rightBsm) {
+        ?? r15;
+        long j;
+        boolean z;
+        long j2;
+        int i;
+        int i2;
+        RadarTrack[] radarTrackArr;
+        Intrinsics.checkNotNullParameter(t, "t");
+        double dt = this.lastMs == 0 ? 0.0d : RangesKt.coerceIn((nowMs - this.lastMs) / 1000.0d, 0.0d, 0.5d);
+        this.lastMs = nowMs;
+        if (!t.getStarted() || t.getVEgo() < 2.0f) {
+            this.byId.clear();
+            this.ghosts = CollectionsKt.emptyList();
+            return;
+        }
+        if (t.getRadarFrame() != this.lastRadarFrame) {
+            this.lastRadarFrame = t.getRadarFrame();
+            RadarTrack[] radar = t.getRadar();
+            int length = radar.length;
+            int i3 = 0;
+            while (i3 < length) {
+                RadarTrack p = radar[i3];
+                if (p.getMeasured()) {
+                    i = length;
+                    i2 = i3;
+                    radarTrackArr = radar;
+                    see(p.getId(), p.getDRel() + 2.3d, -p.getYRel(), p.getVRel(), t.getVEgo() + p.getVRel(), nowMs);
+                } else {
+                    i = length;
+                    i2 = i3;
+                    radarTrackArr = radar;
+                }
+                i3 = i2 + 1;
+                length = i;
+                radar = radarTrackArr;
+            }
+            r15 = 0;
+        } else {
+            r15 = 0;
+        }
+        Lead[] leadArr = new Lead[2];
+        leadArr[r15] = t.getLeadLeft();
+        leadArr[1] = t.getLeadRight();
+        int i4 = r15;
+        for (Lead l : CollectionsKt.listOf((Object[]) leadArr)) {
+            int i5 = i4;
+            int i6 = i4 + 1;
+            if (l.getStatus()) {
+                see((-200) - i5, l.getDRel() + 2.3d, -l.getYRel(), l.getVRel(), l.getVLead(), nowMs);
+            }
+            i4 = i6;
+        }
+        ArrayList out = new ArrayList();
+        Iterable values = this.byId.values();
+        Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
+        Iterable $this$filter$iv = values;
+        Collection destination$iv$iv = new ArrayList();
+        Iterator it = $this$filter$iv.iterator();
+        while (true) {
+            j = 350;
+            if (!it.hasNext()) {
+                break;
+            }
+            Object element$iv$iv = it.next();
+            Car it2 = (Car) element$iv$iv;
+            if ((nowMs - it2.getLastSeenMs() > 350 || it2.getHits() < 3) ? r15 : true) {
+                destination$iv$iv.add(element$iv$iv);
+            }
+        }
+        final List fresh = (List) destination$iv$iv;
+        Collection<Car> values2 = this.byId.values();
+        Intrinsics.checkNotNullExpressionValue(values2, "<get-values>(...)");
+        CollectionsKt.removeAll(values2, new Function1() { // from class: com.starpilot.starview.CarMemory$$ExternalSyntheticLambda0
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                boolean update$lambda$2;
+                update$lambda$2 = CarMemory.update$lambda$2(fresh, (CarMemory.Car) obj);
+                return Boolean.valueOf(update$lambda$2);
+            }
+        });
+        Iterator it3 = this.byId.values().iterator();
+        while (it3.hasNext()) {
+            Car next = it3.next();
+            Intrinsics.checkNotNullExpressionValue(next, "next(...)");
+            Car car = next;
+            if (nowMs - car.getLastSeenMs() <= j) {
+                car.setRemembered(r15);
+            } else {
+                double abs = Math.abs(car.getY());
+                boolean beside = (!(((1.8d > abs ? 1 : (1.8d == abs ? 0 : -1)) > 0 || (abs > 6.5d ? 1 : (abs == 6.5d ? 0 : -1)) > 0) ? r15 : true) || car.getX() >= 30.0d || car.getVAbs() <= 3.0f || car.getHits() < 5) ? r15 : true;
+                if (beside) {
+                    if (car.getRemembered()) {
+                        z = true;
+                        j2 = 0;
+                    } else {
+                        z = true;
+                        car.setRemembered(true);
+                        car.setRememberedSinceMs(nowMs);
+                        j2 = 0;
+                        car.setBsmQuietSinceMs(0L);
+                    }
+                    car.setX(car.getX() + (car.getVRel() * dt));
+                    boolean bsm = car.getY() > 0.0d ? leftBsm : rightBsm;
+                    double x = car.getX();
+                    boolean inZone = (-9.0d > x || x > -1.0d) ? r15 : z;
+                    if (inZone && bsm) {
+                        car.setRememberedSinceMs(nowMs);
+                        car.setBsmQuietSinceMs(j2);
+                    } else if (!inZone) {
+                        car.setBsmQuietSinceMs(j2);
+                    } else if (car.getBsmQuietSinceMs() == j2) {
+                        car.setBsmQuietSinceMs(nowMs);
+                    }
+                    boolean gone = ((car.getBsmQuietSinceMs() == j2 || nowMs - car.getBsmQuietSinceMs() <= 800) && nowMs - car.getRememberedSinceMs() <= 8000 && car.getX() >= -25.0d && car.getX() <= 60.0d) ? r15 : z;
+                    if (gone) {
+                        it3.remove();
+                        j = 350;
+                    } else {
+                        out.add(car);
+                        j = 350;
+                    }
+                } else if (nowMs - car.getLastSeenMs() > 1500) {
+                    it3.remove();
+                }
+            }
+        }
+        ArrayList $this$map$iv = out;
+        Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            Car c = (Car) item$iv$iv;
+            Car g = new Car(c.getId());
+            g.setX(c.getX());
+            g.setY(c.getY());
+            g.setVRel(c.getVRel());
+            g.setVAbs(c.getVAbs());
+            g.setRemembered(true);
+            destination$iv$iv2.add(g);
+            out = out;
+            fresh = fresh;
+            it3 = it3;
+        }
+        this.ghosts = (List) destination$iv$iv2;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final boolean update$lambda$2(List $fresh, Car c) {
+        Iterable $this$any$iv;
+        Intrinsics.checkNotNullParameter(c, "c");
+        if (!c.getRemembered()) {
+            return false;
+        }
+        List $this$any$iv2 = $fresh;
+        if (!($this$any$iv2 instanceof Collection) || !$this$any$iv2.isEmpty()) {
+            Iterator it = $this$any$iv2.iterator();
             while (true) {
-               if (!var8.hasNext()) {
-                  var9 = false;
-                  break;
-               }
-
-               CarMemory.Car var6 = (CarMemory.Car)var8.next();
-               if (var6 != var1 && Math.abs(var6.getX() - var1.getX()) < 6.0 && Math.abs(var6.getY() - var1.getY()) < 1.5) {
-                  var9 = true;
-               } else {
-                  var9 = false;
-               }
-
-               if (var9) {
-                  var9 = true;
-                  break;
-               }
+                if (it.hasNext()) {
+                    Object element$iv = it.next();
+                    Car f = (Car) element$iv;
+                    if (((f == c || Math.abs(f.getX() - c.getX()) >= 6.0d || Math.abs(f.getY() - c.getY()) >= 1.5d) ? null : 1) != null) {
+                        $this$any$iv = 1;
+                        break;
+                    }
+                } else {
+                    $this$any$iv = null;
+                    break;
+                }
             }
-         }
+        } else {
+            $this$any$iv = null;
+        }
+        return $this$any$iv != null;
+    }
 
-         var3 = var4;
-         if (var9) {
-            var3 = true;
-         }
-      }
-
-      return var3;
-   }
-
-   public final boolean beside(int var1) {
-      var var7 = this.ghosts;
-      boolean var6 = var7 instanceof Collection;
-      boolean var5 = false;
-      if (!var6 || !((Collection)var7).isEmpty()) {
-         for (CarMemory.Car var12 : var7) {
-            double var2 = var12.getY();
-            boolean var4;
-            if (var1 < 0 ? !(var2 > 0.0) : !(var2 < 0.0)) {
-               var4 = false;
+    private final void see(long id, double x, double y, float vRel, float vAbs, long nowMs) {
+        Car car;
+        if (x <= 110.0d && Math.abs(y) <= 9.0d) {
+            Map $this$getOrPut$iv = this.byId;
+            Long valueOf = Long.valueOf(id);
+            Car car2 = $this$getOrPut$iv.get(valueOf);
+            if (car2 == null) {
+                car = new Car(id);
+                $this$getOrPut$iv.put(valueOf, car);
             } else {
-               var4 = true;
+                car = car2;
             }
+            Car c = car;
+            c.setX(x);
+            c.setY(y);
+            c.setVRel(vRel);
+            c.setVAbs(vAbs);
+            c.setLastSeenMs(nowMs);
+            c.setHits(c.getHits() + 1);
+        }
+    }
 
-            label40: {
-               if (var4) {
-                  var2 = var12.getX();
-                  if (-10.0 <= var2 && var2 <= 5.0) {
-                     var4 = true;
-                  } else {
-                     var4 = false;
-                  }
-
-                  if (var4 && Math.abs(var12.getY()) <= 5.0) {
-                     var4 = true;
-                     break label40;
-                  }
-               }
-
-               var4 = false;
+    /* JADX WARN: Removed duplicated region for block: B:27:0x0063 A[SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:30:? A[LOOP:0: B:8:0x0018->B:30:?, LOOP_END, SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final boolean beside(int side) {
+        Car it;
+        Iterable $this$any$iv = this.ghosts;
+        if (($this$any$iv instanceof Collection) && ((Collection) $this$any$iv).isEmpty()) {
+            return false;
+        }
+        for (Object element$iv : $this$any$iv) {
+            Car it2 = (Car) element$iv;
+            double y = it2.getY();
+            if (side >= 0 ? y < 0.0d : y > 0.0d) {
+                double x = it2.getX();
+                if ((-10.0d <= x && x <= 5.0d) && Math.abs(it2.getY()) <= 5.0d) {
+                    it = 1;
+                    if (it == null) {
+                        return true;
+                    }
+                }
             }
-
-            if (var4) {
-               var5 = true;
-               break;
+            it = null;
+            if (it == null) {
             }
-         }
-      }
-
-      return var5;
-   }
-
-   public final List<CarMemory.Car> getGhosts() {
-      return this.ghosts;
-   }
-
-   public final void update(Telemetry var1, long var2, boolean var4, boolean var5) {
-      Intrinsics.checkNotNullParameter(var1, "t");
-      double var6;
-      if (this.lastMs == 0L) {
-         var6 = 0.0;
-      } else {
-         var6 = RangesKt.coerceIn((var2 - this.lastMs) / 1000.0, 0.0, 0.5);
-      }
-
-      this.lastMs = var2;
-      if (var1.getStarted() && !(var1.getVEgo() < 2.0F)) {
-         if (var1.getRadarFrame() != this.lastRadarFrame) {
-            this.lastRadarFrame = var1.getRadarFrame();
-
-            for (RadarTrack var14 : var1.getRadar()) {
-               if (var14.getMeasured()) {
-                  this.see(var14.getId(), var14.getDRel() + 2.3, -var14.getYRel(), var14.getVRel(), var1.getVEgo() + var14.getVRel(), var2);
-               }
-            }
-         }
-
-         Iterator var19 = CollectionsKt.listOf(new Lead[]{var1.getLeadLeft(), var1.getLeadRight()}).iterator();
-
-         for (int var26 = 0; var19.hasNext(); var26++) {
-            Lead var32 = (Lead)var19.next();
-            if (var32.getStatus()) {
-               this.see(-200L - var26, var32.getDRel() + 2.3, -var32.getYRel(), var32.getVRel(), var32.getVLead(), var2);
-            }
-         }
-
-         ArrayList var36 = new ArrayList();
-         Collection var20 = this.byId.values();
-         Intrinsics.checkNotNullExpressionValue(var20, "<get-values>(...)");
-         Iterable var33 = var20;
-         var var21 = new ArrayList();
-
-         for (var var33_it : var33) {
-
-            var33 = var33_it;
-            CarMemory.Car var16 = (CarMemory.Car)var33;
-            boolean var27;
-            if (var2 - var16.getLastSeenMs() <= 350L && var16.getHits() >= 3) {
-               var27 = true;
-            } else {
-               var27 = false;
-            }
-
-            if (var27) {
-               var21.add(var33);
-            }
-         }
-
-         List var35 = var21;
-         Collection var22 = this.byId.values();
-         Intrinsics.checkNotNullExpressionValue(var22, "<get-values>(...)");
-         CollectionsKt.removeAll(var22, new CarMemory$$ExternalSyntheticLambda0(var35));
-         Iterator var23 = this.byId.values().iterator();
-
-         while (var23.hasNext()) {
-            CarMemory.Car var37 = (CarMemory.Car)var23.next();
-            Intrinsics.checkNotNullExpressionValue(var37, "next(...)");
-            var37 = var37;
-            if (var2 - var37.getLastSeenMs() <= 350L) {
-               var37.setRemembered(false);
-            } else {
-               double var8 = Math.abs(var37.getY());
-               boolean var28;
-               if (1.8 <= var8 && var8 <= 6.5) {
-                  var28 = true;
-               } else {
-                  var28 = false;
-               }
-
-               if (var28 && var37.getX() < 30.0 && var37.getVAbs() > 3.0F && var37.getHits() >= 5) {
-                  var28 = true;
-               } else {
-                  var28 = false;
-               }
-
-               if (!var28) {
-                  if (var2 - var37.getLastSeenMs() > 1500L) {
-                     var23.remove();
-                  }
-               } else {
-                  if (!var37.getRemembered()) {
-                     var37.setRemembered(true);
-                     var37.setRememberedSinceMs(var2);
-                     var37.setBsmQuietSinceMs(0L);
-                  }
-
-                  var37.setX(var37.getX() + var37.getVRel() * var6);
-                  boolean var12;
-                  if (var37.getY() > 0.0) {
-                     var12 = var4;
-                  } else {
-                     var12 = var5;
-                  }
-
-                  var8 = var37.getX();
-                  if (-9.0 <= var8 && var8 <= -1.0) {
-                     var28 = true;
-                  } else {
-                     var28 = false;
-                  }
-
-                  if (var28 && var12) {
-                     var37.setRememberedSinceMs(var2);
-                     var37.setBsmQuietSinceMs(0L);
-                  } else if (var28) {
-                     if (var37.getBsmQuietSinceMs() == 0L) {
-                        var37.setBsmQuietSinceMs(var2);
-                     }
-                  } else {
-                     var37.setBsmQuietSinceMs(0L);
-                  }
-
-                  if ((var37.getBsmQuietSinceMs() == 0L || var2 - var37.getBsmQuietSinceMs() <= 800L)
-                     && var2 - var37.getRememberedSinceMs() <= 8000L
-                     && !(var37.getX() < -25.0)
-                     && !(var37.getX() > 60.0)) {
-                     var28 = false;
-                  } else {
-                     var28 = true;
-                  }
-
-                  if (var28) {
-                     var23.remove();
-                  } else {
-                     var36.add(var37);
-                  }
-               }
-            }
-         }
-
-         Iterable var40 = var36;
-         var var39 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var40, 10));
-
-         for (CarMemory.Car var17 : var40) {
-            CarMemory.Car var18 = new CarMemory.Car(var17.getId());
-            var18.setX(var17.getX());
-            var18.setY(var17.getY());
-            var18.setVRel(var17.getVRel());
-            var18.setVAbs(var17.getVAbs());
-            var18.setRemembered(true);
-            var39.add(var18);
-         }
-
-         List var24 = var39;
-         this.ghosts = var24;
-      } else {
-         this.byId.clear();
-         this.ghosts = CollectionsKt.emptyList();
-      }
-   }
-
-   public static final class Car {
-      private long bsmQuietSinceMs;
-      private int hits;
-      private final long id;
-      private long lastSeenMs;
-      private boolean remembered;
-      private long rememberedSinceMs;
-      private float vAbs;
-      private float vRel;
-      private double x;
-      private double y;
-
-      public Car(long var1) {
-         this.id = var1;
-      }
-
-      public final long getBsmQuietSinceMs() {
-         return this.bsmQuietSinceMs;
-      }
-
-      public final int getHits() {
-         return this.hits;
-      }
-
-      public final long getId() {
-         return this.id;
-      }
-
-      public final long getLastSeenMs() {
-         return this.lastSeenMs;
-      }
-
-      public final boolean getRemembered() {
-         return this.remembered;
-      }
-
-      public final long getRememberedSinceMs() {
-         return this.rememberedSinceMs;
-      }
-
-      public final float getVAbs() {
-         return this.vAbs;
-      }
-
-      public final float getVRel() {
-         return this.vRel;
-      }
-
-      public final double getX() {
-         return this.x;
-      }
-
-      public final double getY() {
-         return this.y;
-      }
-
-      public final void setBsmQuietSinceMs(long var1) {
-         this.bsmQuietSinceMs = var1;
-      }
-
-      public final void setHits(int var1) {
-         this.hits = var1;
-      }
-
-      public final void setLastSeenMs(long var1) {
-         this.lastSeenMs = var1;
-      }
-
-      public final void setRemembered(boolean var1) {
-         this.remembered = var1;
-      }
-
-      public final void setRememberedSinceMs(long var1) {
-         this.rememberedSinceMs = var1;
-      }
-
-      public final void setVAbs(float var1) {
-         this.vAbs = var1;
-      }
-
-      public final void setVRel(float var1) {
-         this.vRel = var1;
-      }
-
-      public final void setX(double var1) {
-         this.x = var1;
-      }
-
-      public final void setY(double var1) {
-         this.y = var1;
-      }
-   }
-
-   public static final class Companion {
-      private Companion() {
-      }
-
-      // $VF: synthetic method
-      public Companion(DefaultConstructorMarker var1) {
-         this();
-      }
-   }
+        }
+        return false;
+    }
 }

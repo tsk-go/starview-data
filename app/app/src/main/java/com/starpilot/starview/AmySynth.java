@@ -14,796 +14,694 @@ import kotlin.math.MathKt;
 import kotlin.ranges.RangesKt;
 import kotlin.text.Charsets;
 
+/* compiled from: AmySynth.kt */
 public final class AmySynth {
-   private static final double A5 = 880.0;
-   private static final double A6 = 1760.0;
-   private static final double CS7 = 2217.46;
-   private static final double E5 = 659.26;
-   private static final double E6 = 1318.51;
-   private static final double E7 = 2637.0;
-   public static final AmySynth INSTANCE = new AmySynth();
-   private static final double[][] PARTIALS;
-   public static final int SR = 48000;
-   private static final float[] TAB;
-   private static final int TN = 4096;
-   public static final int VOICE_SR = 24000;
+    private static final double A5 = 880.0d;
+    private static final double A6 = 1760.0d;
+    private static final double CS7 = 2217.46d;
+    private static final double E5 = 659.26d;
+    private static final double E6 = 1318.51d;
+    private static final double E7 = 2637.0d;
+    public static final AmySynth INSTANCE = new AmySynth();
+    private static final double[][] PARTIALS;
+    public static final int SR = 48000;
+    private static final float[] TAB;
+    private static final int TN = 4096;
+    public static final int VOICE_SR = 24000;
 
-   static {
-      float[] var1 = new float[4097];
+    /* compiled from: AmySynth.kt */
+    public /* synthetic */ class WhenMappings {
+        public static final /* synthetic */ int[] $EnumSwitchMapping$0;
 
-      for (int var0 = 0; var0 < 4097; var0++) {
-         var1[var0] = (float)Math.sin(var0 * (Math.PI * 2) / 4096);
-      }
-
-      TAB = var1;
-      PARTIALS = new double[][]{{1.0, 1.0, 1.0}, {2.0, 0.28, 1.6}, {3.0, 0.1, 2.4}, {2.76, 0.06, 3.0}, {5.4, 0.025, 4.5}};
-   }
-
-   private AmySynth() {
-   }
-
-   private final AmySynth.Stereo bells(int var1, List<AmySynth.Bell> var2) {
-      float[] var24 = new float[var1];
-
-      for (AmySynth.Bell var25 : var2) {
-         double var5 = var25.getStart();
-         double var3 = '뮀';
-         int var18 = (int)(var5 * var3);
-
-         for (double[] var23 : PARTIALS) {
-            var5 = var23[0];
-            float var17 = (float)var23[1];
-            float var14 = (float)Math.exp(-var25.getDecay() * var23[2] / var3);
-            float var15 = 1.0F;
-            float var13 = (float)Math.exp(-0.003472222222222222);
-            float var16 = 1.0F;
-
-            for (int var21 = var18; var21 < var1 && var15 > 1.0E-5F; var21++) {
-               double var7 = (var21 - var18) / var3;
-               double var9 = 1;
-               double var11 = this.sn(var7 * 4.5);
-               var24[var21] += this.sn(var25.getF0() * var5 * var7 * (var9 + var11 * 0.0015)) * var17 * var15 * (1 - var16) * var25.getAmp();
-               var15 *= var14;
-               var16 *= var13;
+        static {
+            int[] iArr = new int[Style.values().length];
+            try {
+                iArr[Style.ASK.ordinal()] = 1;
+            } catch (NoSuchFieldError e) {
             }
-         }
-      }
-
-      AmySynth.Stereo var27 = new AmySynth.Stereo(var1);
-      System.arraycopy(var24, 0, var27.getL(), 0, var1);
-      System.arraycopy(var24, 0, var27.getR(), 0, var1);
-      this.delayAdd(var27.getL(), var24, 23.0, 0.22F);
-      this.delayAdd(var27.getL(), var24, 61.0, 0.12F);
-      this.delayAdd(var27.getL(), var24, 113.0, 0.06F);
-      this.delayAdd(var27.getR(), var24, 31.0, 0.22F);
-      this.delayAdd(var27.getR(), var24, 73.0, 0.12F);
-      this.delayAdd(var27.getR(), var24, 127.0, 0.06F);
-      float var29 = 1.0E-9F;
-
-      for (int var31 = 0; var31 < var1; var31++) {
-         var29 = Math.max(var29, Math.max(Math.abs(var27.getL()[var31]), Math.abs(var27.getR()[var31])));
-      }
-
-      var29 = 0.85F / var29;
-
-      for (int var32 = 0; var32 < var1; var32++) {
-         float[] var33 = var27.getL();
-         var33[var32] *= var29;
-         var33 = var27.getR();
-         var33[var32] *= var29;
-      }
-
-      return var27;
-   }
-
-   private final void delayAdd(float[] var1, float[] var2, double var3, float var5) {
-      int var7 = (int)('뮀' * var3 / 1000);
-      int var6 = var7;
-
-      for (int var8 = var1.length; var6 < var8; var6++) {
-         var1[var6] += var2[var6 - var7] * var5;
-      }
-   }
-
-   private final AmySynth.Stereo pad(int var1, double var2) {
-      AmySynth.Stereo var25 = new AmySynth.Stereo(var1);
-      Random var22 = new Random(7L);
-      double[] var24 = new double[]{220.0, 277.18, 329.63, 493.88, 659.26};
-      int var19 = var24.length;
-
-      for (int var17 = 0; var17 < var19; var17++) {
-         int var18 = var17;
-         double var4 = var24[var17];
-
-         for (Pair var23 : CollectionsKt.listOf(new Pair[]{TuplesKt.to(0, -0.9), TuplesKt.to(1, 0.9)})) {
-            int var20 = ((Number)var23.component1()).intValue();
-            double var6 = ((Number)var23.component2()).doubleValue();
-            double var8 = var22.nextDouble();
-            float[] var37;
-            if (var20 == 0) {
-               var37 = var25.getL();
-            } else {
-               var37 = var25.getR();
+            try {
+                iArr[Style.SHORT.ordinal()] = 2;
+            } catch (NoSuchFieldError e2) {
             }
-
-            float var14;
-            if (var18 < 3) {
-               var14 = 0.9F;
-            } else {
-               var14 = 0.45F;
+            try {
+                iArr[Style.DONE.ordinal()] = 3;
+            } catch (NoSuchFieldError e3) {
             }
-
-            double var10 = var4 + var6;
-            var6 = var18 * 0.07 + 0.35;
-
-            for (int var34 = 0; var34 < var1; var34++) {
-               double var12 = (double)var34 / '뮀';
-               float var16 = 1;
-               float var15 = this.sn(var6 * var12 + var8);
-               var37[var34] += (this.sn(var10 * var12 + var8) + this.sn(2 * var10 * var12) * 0.18F) * (var16 + var15 * 0.08F) * var14;
+            try {
+                iArr[Style.STOPPED.ordinal()] = 4;
+            } catch (NoSuchFieldError e4) {
             }
-         }
-      }
-
-      double var31 = '뮀';
-      int var33 = RangesKt.coerceAtMost((int)(var2 * var31), var1);
-
-      for (int var32 = 0; var32 < var1; var32++) {
-         var2 = Math.min(1.0, var32 / var31 / 0.45);
-         double var29 = var2 * var2;
-         var2 = var29;
-         if (var32 >= var1 - var33) {
-            var2 = (double)(var1 - var32) / var33;
-            var2 = var29 * (var2 * var2);
-         }
-
-         float[] var35 = var25.getL();
-         var35[var32] *= (float)var2;
-         var35 = var25.getR();
-         var35[var32] *= (float)var2;
-      }
-
-      return var25;
-   }
-
-   private final void pluck(float[] var1, double var2, double var4, float var6) {
-      double var7 = '뮀';
-      int var14 = (int)(var4 * var7);
-      if (var14 < var1.length) {
-         float var12 = (float)Math.exp(-6.666666666666667E-5);
-         float var10 = 1.0F;
-         float var11 = (float)Math.exp(-0.005208333333333333);
-         float var9 = 1.0F;
-
-         for (int var13 = var14; var13 < var1.length && var10 > 1.0E-5F; var13++) {
-            var1[var13] += this.sn((var13 - var14) * var2 / var7) * var10 * (1 - var9) * var6;
-            var10 *= var12;
-            var9 *= var11;
-         }
-      }
-   }
-
-   // $VF: synthetic method
-   public static short[] render$default(AmySynth var0, AmySynth.Style var1, float[] var2, float var3, float var4, int var5, Object var6) {
-      if ((var5 & 4) != 0) {
-         var3 = 1.0F;
-      }
-
-      if ((var5 & 8) != 0) {
-         var4 = 1.0F;
-      }
-
-      return var0.render(var1, var2, var3, var4);
-   }
-
-   private final float sn(double var1) {
-      double var3 = Math.floor(var1);
-      var1 = 4096 * (var1 - var3);
-      int var5 = (int)var1;
-      return TAB[var5] + (TAB[var5 + 1] - TAB[var5]) * (float)(var1 - var5);
-   }
-
-   private static final float stretch$corr(int var0, float[] var1, int var2, int var3, int var4) {
-      float var5 = 0.0F;
-      int var6 = 0;
-
-      while (var6 < var0) {
-         var5 += var1[var3 + var6] * var1[var2 + var6];
-         var6 += var4;
-      }
-
-      return var5;
-   }
-
-   // $VF: synthetic method
-   public static float[] voice$default(AmySynth var0, List var1, float var2, float var3, int var4, Object var5) {
-      if ((var4 & 4) != 0) {
-         var3 = 0.0F;
-      }
-
-      return var0.voice(var1, var2, var3);
-   }
-
-   public final short[] render(AmySynth.Style var1, float[] var2, float var3, float var4) {
-      Intrinsics.checkNotNullParameter(var1, "style");
-      Intrinsics.checkNotNullParameter(var2, "voice");
-      double var5;
-      double var7;
-      boolean var12;
-      List var18;
-      switch (AmySynth.WhenMappings.$EnumSwitchMapping$0[var1.ordinal()]) {
-         case 1:
-            var18 = CollectionsKt.listOf(
-               new AmySynth.Bell[]{
-                  new AmySynth.Bell(880.0, 0.0, 0.55F, 2.2),
-                  new AmySynth.Bell(1318.51, 0.11, 0.48F, 2.0),
-                  new AmySynth.Bell(1760.0, 0.22, 0.42F, 1.7),
-                  new AmySynth.Bell(554.37, 0.22, 0.18F, 1.4)
-               }
-            );
-            var5 = 0.62;
-            var7 = 1.6;
-            var12 = 1;
-            break;
-         case 2:
-            var18 = CollectionsKt.listOf(new AmySynth.Bell[]{new AmySynth.Bell(1318.51, 0.0, 0.45F, 2.6), new AmySynth.Bell(1760.0, 0.09, 0.38F, 2.4)});
-            var5 = 0.3;
-            var7 = 0.5;
-            var12 = 0;
-            break;
-         case 3:
-            var18 = CollectionsKt.listOf(new AmySynth.Bell(1760.0, 0.0, 0.3F, 3.0));
-            var5 = 0.2;
-            var7 = 1.3;
-            var12 = 0;
-            break;
-         case 4:
-            var18 = CollectionsKt.listOf(
-               new AmySynth.Bell[]{
-                  new AmySynth.Bell(1318.51, 0.0, 0.45F, 2.4), new AmySynth.Bell(880.0, 0.13, 0.45F, 2.4), new AmySynth.Bell(659.26, 0.26, 0.4F, 2.0)
-               }
-            );
-            var5 = 0.55;
-            var7 = 0.6;
-            var12 = 0;
-            break;
-         case 5:
-            var18 = CollectionsKt.listOf(new AmySynth.Bell[]{new AmySynth.Bell(1318.51, 0.0, 0.45F, 2.6), new AmySynth.Bell(1760.0, 0.09, 0.38F, 2.4)});
-            var5 = 0.0;
-            var7 = 0.9;
-            var12 = 0;
-            break;
-         default:
-            throw new NoWhenBranchMatchedException();
-      }
-
-      int var14 = var2.length;
-      double var9 = '뮀';
-      int var15 = (int)(var5 * var9);
-      int var13 = var15 + var14 + (int)(var7 * var9);
-      float[] var20 = new float[var13];
-      float[] var19 = new float[var13];
-      if (var12 && var4 > 0.01F) {
-         AmySynth.Stereo var21 = this.pad(var13, 1.4);
-         int var16 = Math.max(0, var15 - 4800);
-         int var17 = Math.min(var13, var15 + var14 + 7200);
-         var12 = 0;
-
-         for (var5 = var9; var12 < var13; var12++) {
-            float var11 = 1.0F;
-            if (var12 >= var16 && var12 < var17) {
-               if (var12 < var16 + 5760) {
-                  var11 = 1.0F - (var12 - var16) * 0.4F / 5760;
-               } else {
-                  var11 = 0.6F;
-                  if (var12 >= var17 - 5760) {
-                     var11 = (var12 - (var17 - 5760)) * 0.4F / 5760 + 0.6F;
-                  }
-               }
+            try {
+                iArr[Style.PING.ordinal()] = 5;
+            } catch (NoSuchFieldError e5) {
             }
+            $EnumSwitchMapping$0 = iArr;
+        }
+    }
 
-            var20[var12] += var21.getL()[var12] * 0.045F * var4 * var11;
-            var19[var12] += var21.getR()[var12] * 0.045F * var4 * var11;
-         }
-      } else {
-         var5 = var9;
-      }
+    private AmySynth() {
+    }
 
-      AmySynth.Stereo var50 = this.bells(var13, var18);
-      if (var1 == AmySynth.Style.PING) {
-         var4 = 0.45F;
-      } else {
-         var4 = 0.62F;
-      }
+    /* compiled from: AmySynth.kt */
+    public enum Style {
+        ASK,
+        SHORT,
+        DONE,
+        STOPPED,
+        PING;
 
-      var4 *= var3;
+        private static final /* synthetic */ EnumEntries $ENTRIES = EnumEntriesKt.enumEntries($VALUES);
 
-      for (int var41 = 0; var41 < var13; var41++) {
-         var20[var41] += var50.getL()[var41] * var4;
-         var19[var41] += var50.getR()[var41] * var4;
-      }
+        public static EnumEntries<Style> getEntries() {
+            return $ENTRIES;
+        }
+    }
 
-      for (int var42 = 0; var42 < var14; var42++) {
-         int var48 = var15 + var42;
-         var20[var48] += var2[var42] * 0.95F;
-         var48 = var15 + var42;
-         var19[var48] += var2[var42] * 0.95F;
-      }
+    static {
+        float[] fArr = new float[4097];
+        for (int i = 0; i < 4097; i++) {
+            fArr[i] = (float) Math.sin((i * 6.283185307179586d) / 4096);
+        }
+        TAB = fArr;
+        PARTIALS = new double[][]{new double[]{1.0d, 1.0d, 1.0d}, new double[]{2.0d, 0.28d, 1.6d}, new double[]{3.0d, 0.1d, 2.4d}, new double[]{2.76d, 0.06d, 3.0d}, new double[]{5.4d, 0.025d, 4.5d}};
+    }
 
-      if (var1 == AmySynth.Style.ASK || var1 == AmySynth.Style.DONE) {
-         var7 = (var15 + var14) / var5;
-         if (var1 == AmySynth.Style.ASK) {
-            var5 = 0.15;
-         } else {
-            var5 = 0.1;
-         }
+    private final float sn(double cycles) {
+        double x = cycles - Math.floor(cycles);
+        double p = 4096 * x;
+        int i = (int) p;
+        return TAB[i] + ((TAB[i + 1] - TAB[i]) * ((float) (p - i)));
+    }
 
-         var5 += var7;
-         var2 = new float[var13];
-         this.pluck(var2, 1760.0, var5, 1.0F);
-         this.pluck(var2, 2217.46, var5 + 0.3, 0.8F);
-         this.pluck(var2, 2637.0, var5 + 0.6, 0.6F);
-         if (var1 == AmySynth.Style.ASK) {
-            var4 = 0.05F;
-         } else {
-            var4 = 0.09F;
-         }
+    /* compiled from: AmySynth.kt */
+    private static final class Stereo {
+        private final float[] l;
+        private final float[] r;
 
-         var3 = var4 * var3;
+        public Stereo(int n) {
+            this.l = new float[n];
+            this.r = new float[n];
+        }
 
-         for (int var43 = 0; var43 < var13; var43++) {
-            var20[var43] += var2[var43] * var3;
-            var19[var43] += var2[var43] * var3 * 0.8F;
-         }
-      }
+        public final float[] getL() {
+            return this.l;
+        }
 
-      var2 = new float[var13];
-      float[] var51 = new float[var13];
+        public final float[] getR() {
+            return this.r;
+        }
+    }
 
-      for (Pair var22 : CollectionsKt.listOf(
-         new Pair[]{TuplesKt.to(29.0, 0.16F), TuplesKt.to(47.0, 0.12F), TuplesKt.to(83.0, 0.08F), TuplesKt.to(131.0, 0.05F), TuplesKt.to(197.0, 0.03F)}
-      )) {
-         var5 = ((Number)var22.component1()).doubleValue();
-         var3 = ((Number)var22.component2()).floatValue();
-         this.delayAdd(var2, var20, var5, var3);
-         this.delayAdd(var51, var19, var5 * 1.13, var3);
-      }
+    private final void delayAdd(float[] dst, float[] src, double ms, float g) {
+        int d = (int) ((48000 * ms) / 1000);
+        int length = dst.length;
+        for (int i = d; i < length; i++) {
+            dst[i] = dst[i] + (src[i - d] * g);
+        }
+    }
 
-      var14 = Math.min(var13, 14400);
-      var3 = 1.0E-9F;
+    /* compiled from: AmySynth.kt */
+    private static final /* data */ class Bell {
+        private final float amp;
+        private final double decay;
+        private final double f0;
+        private final double start;
 
-      for (int var44 = 0; var44 < var13; var44++) {
-         var20[var44] += var2[var44];
-         var19[var44] += var51[var44];
-         if (var44 >= var13 - var14) {
-            var4 = (float)(var13 - var44) / var14;
-            var20[var44] *= var4 * var4;
-            var19[var44] *= var4 * var4;
-         }
+        /* renamed from: component1, reason: from getter */
+        public final double getF0() {
+            return this.f0;
+        }
 
-         var3 = Math.max(var3, Math.max(Math.abs(var20[var44]), Math.abs(var19[var44])));
-      }
+        /* renamed from: component2, reason: from getter */
+        public final double getStart() {
+            return this.start;
+        }
 
-      float var39 = 0.89F / var3;
-      var15 = var13 * 2;
-      short[] var23 = new short[var15];
+        /* renamed from: component3, reason: from getter */
+        public final float getAmp() {
+            return this.amp;
+        }
 
-      for (int var45 = 0; var45 < var15; var45++) {
-         if (var45 % 2 == 0) {
-            var4 = var20[var45 / 2];
-         } else {
-            var4 = var19[var45 / 2];
-         }
+        /* renamed from: component4, reason: from getter */
+        public final double getDecay() {
+            return this.decay;
+        }
 
-         var23[var45] = (short)RangesKt.coerceIn((int)(var4 * var39 * 32767.0F), -32768, 32767);
-      }
+        public final Bell copy(double f0, double start, float amp, double decay) {
+            return new Bell(f0, start, amp, decay);
+        }
 
-      return var23;
-   }
-
-   public final float[] stretch(float[] var1, int var2, float var3) {
-      Intrinsics.checkNotNullParameter(var1, "x");
-      if (!(Math.abs(var3 - 1.0F) < 0.01F)) {
-         boolean var10;
-         if (var1.length == 0) {
-            var10 = 1;
-         } else {
-            var10 = 0;
-         }
-
-         if (!var10) {
-            int var16 = (int)(var2 * 0.03) / 2 * 2;
-            int var15 = var16 / 2;
-            double var4 = var15;
-            double var6 = var3;
-            int var13 = (int)(var2 * 0.01);
-            int var14 = MathKt.roundToInt(var1.length / var3);
-            float[] var21 = new float[var1.length + var13 + var16 * 2 + var13 * 2 + 4];
-            System.arraycopy(var1, 0, var21, var13, var1.length);
-            float[] var22 = new float[var16];
-
-            for (int var24 = 0; var24 < var16; var24++) {
-               var22[var24] = (float)(0.5 - Math.cos(var24 * (Math.PI * 2) / var16) * 0.5);
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
             }
+            if (!(other instanceof Bell)) {
+                return false;
+            }
+            Bell bell = (Bell) other;
+            return Double.compare(this.f0, bell.f0) == 0 && Double.compare(this.start, bell.start) == 0 && Float.compare(this.amp, bell.amp) == 0 && Double.compare(this.decay, bell.decay) == 0;
+        }
 
-            float[] var20 = new float[var14 + var16];
-            var1 = new float[var14 + var16];
-            var10 = var13;
-            int var12 = 0;
+        public int hashCode() {
+            return (((((Double.hashCode(this.f0) * 31) + Double.hashCode(this.start)) * 31) + Float.hashCode(this.amp)) * 31) + Double.hashCode(this.decay);
+        }
 
-            while (true) {
-               int var17 = var12 * var15;
-               if (var17 >= var14) {
-                  break;
-               }
+        public String toString() {
+            return "Bell(f0=" + this.f0 + ", start=" + this.start + ", amp=" + this.amp + ", decay=" + this.decay + ")";
+        }
 
-               var2 = MathKt.roundToInt(var12 * (var4 * var6)) + var13;
-               if (var12 > 0) {
-                  int var18 = var10 + var15;
-                  float var8 = Float.NEGATIVE_INFINITY;
-                  var10 = var2;
-                  int var11 = Math.max(0, var2 - var13);
-                  int var19 = Math.min(var21.length - var16 - 1, var2 + var13);
+        public Bell(double f0, double start, float amp, double decay) {
+            this.f0 = f0;
+            this.start = start;
+            this.amp = amp;
+            this.decay = decay;
+        }
 
-                  while (var11 <= var19) {
-                     float var9 = stretch$corr(var16, var21, var18, var11, 2);
-                     var3 = var8;
-                     if (var9 > var8) {
-                        var3 = var9;
-                        var10 = var11;
-                     }
+        public final float getAmp() {
+            return this.amp;
+        }
 
-                     var11 += 2;
-                     var8 = var3;
-                  }
+        public final double getDecay() {
+            return this.decay;
+        }
 
-                  var8 = Float.NEGATIVE_INFINITY;
-                  var11 = var10;
-                  var2 = Math.max(0, var10 - 1);
-                  var19 = Math.min(var21.length - var16 - 1, var10 + 1);
-                  if (var2 <= var19) {
-                     var10 = var10;
+        public final double getF0() {
+            return this.f0;
+        }
 
-                     while (true) {
-                        float var33 = stretch$corr(var16, var21, var18, var2, 1);
-                        var3 = var8;
-                        if (var33 > var8) {
-                           var3 = var33;
-                           var10 = var2;
+        public final double getStart() {
+            return this.start;
+        }
+    }
+
+    private final Stereo bells(int n, List<Bell> notes) {
+        float[] out = new float[n];
+        Iterator<Bell> it = notes.iterator();
+        while (true) {
+            char c = 0;
+            if (!it.hasNext()) {
+                break;
+            }
+            Bell b = it.next();
+            double d = 48000;
+            int s0 = (int) (b.getStart() * d);
+            double[][] dArr = PARTIALS;
+            int length = dArr.length;
+            int i = 0;
+            while (i < length) {
+                double[] p = dArr[i];
+                double ratio = p[c];
+                int s02 = s0;
+                float a = (float) p[1];
+                double[][] dArr2 = dArr;
+                float k = (float) Math.exp(((-b.getDecay()) * p[2]) / d);
+                float e = 1.0f;
+                int i2 = length;
+                float ka = (float) Math.exp(-0.003472222222222222d);
+                float ea = 1.0f;
+                int i3 = s02;
+                while (i3 < n && e > 1.0E-5f) {
+                    Iterator<Bell> it2 = it;
+                    int i4 = i;
+                    double tn = (i3 - s02) / d;
+                    double d2 = d;
+                    float k2 = k;
+                    float ka2 = ka;
+                    double det = 1 + (sn(tn * 4.5d) * 0.0015d);
+                    out[i3] = out[i3] + (sn(b.getF0() * ratio * tn * det) * a * e * (1 - ea) * b.getAmp());
+                    e *= k2;
+                    ea *= ka2;
+                    i3++;
+                    k = k2;
+                    it = it2;
+                    i = i4;
+                    p = p;
+                    d = d2;
+                    ka = ka2;
+                }
+                i++;
+                s0 = s02;
+                dArr = dArr2;
+                it = it;
+                length = i2;
+                d = d;
+                c = 0;
+            }
+        }
+        Stereo st = new Stereo(n);
+        System.arraycopy(out, 0, st.getL(), 0, n);
+        System.arraycopy(out, 0, st.getR(), 0, n);
+        delayAdd(st.getL(), out, 23.0d, 0.22f);
+        delayAdd(st.getL(), out, 61.0d, 0.12f);
+        delayAdd(st.getL(), out, 113.0d, 0.06f);
+        delayAdd(st.getR(), out, 31.0d, 0.22f);
+        delayAdd(st.getR(), out, 73.0d, 0.12f);
+        delayAdd(st.getR(), out, 127.0d, 0.06f);
+        float pk = 1.0E-9f;
+        for (int i5 = 0; i5 < n; i5++) {
+            pk = Math.max(pk, Math.max(Math.abs(st.getL()[i5]), Math.abs(st.getR()[i5])));
+        }
+        float g = 0.85f / pk;
+        for (int i6 = 0; i6 < n; i6++) {
+            float[] l = st.getL();
+            l[i6] = l[i6] * g;
+            float[] r = st.getR();
+            r[i6] = r[i6] * g;
+        }
+        return st;
+    }
+
+    private final Stereo pad(int n, double fadeOut) {
+        Stereo st = new Stereo(n);
+        Random rng = new Random(7L);
+        double[] chord = {220.0d, 277.18d, 329.63d, 493.88d, 659.26d};
+        int length = chord.length;
+        int i = 0;
+        int i2 = 0;
+        while (i2 < length) {
+            int i3 = i2;
+            double f = chord[i2];
+            Pair[] pairArr = new Pair[2];
+            pairArr[i] = TuplesKt.to(Integer.valueOf(i), Double.valueOf(-0.9d));
+            pairArr[1] = TuplesKt.to(1, Double.valueOf(0.9d));
+            Iterator it = CollectionsKt.listOf((Object[]) pairArr).iterator();
+            while (it.hasNext()) {
+                Pair pair = (Pair) it.next();
+                int side = ((Number) pair.component1()).intValue();
+                double det = ((Number) pair.component2()).doubleValue();
+                double ph = rng.nextDouble();
+                float[] dst = side == 0 ? st.getL() : st.getR();
+                float g = i3 < 3 ? 0.9f : 0.45f;
+                double ff = f + det;
+                double tr = (i3 * 0.07d) + 0.35d;
+                int j = 0;
+                while (j < n) {
+                    Random rng2 = rng;
+                    int i4 = i3;
+                    double t = j / 48000;
+                    float trem = 1 + (sn((tr * t) + ph) * 0.08f);
+                    double tr2 = tr;
+                    double tr3 = 2;
+                    dst[j] = dst[j] + ((sn((ff * t) + ph) + (sn(tr3 * ff * t) * 0.18f)) * trem * g);
+                    j++;
+                    it = it;
+                    rng = rng2;
+                    chord = chord;
+                    length = length;
+                    i3 = i4;
+                    f = f;
+                    tr = tr2;
+                }
+                it = it;
+                f = f;
+            }
+            i2++;
+            i = 0;
+        }
+        double d = 48000;
+        int fo = RangesKt.coerceAtMost((int) (fadeOut * d), n);
+        for (int j2 = 0; j2 < n; j2++) {
+            double env = Math.min(1.0d, (j2 / d) / 0.45d);
+            double env2 = env * env;
+            if (j2 >= n - fo) {
+                double x = (n - j2) / fo;
+                env2 *= x * x;
+            }
+            float[] l = st.getL();
+            l[j2] = l[j2] * ((float) env2);
+            float[] r = st.getR();
+            r[j2] = r[j2] * ((float) env2);
+        }
+        return st;
+    }
+
+    private final void pluck(float[] dst, double f, double start, float amp) {
+        double d = 48000;
+        int s0 = (int) (start * d);
+        if (s0 >= dst.length) {
+            return;
+        }
+        float k = (float) Math.exp(-6.666666666666667E-5d);
+        float e = 1.0f;
+        float ka = (float) Math.exp(-0.005208333333333333d);
+        float ea = 1.0f;
+        for (int i = s0; i < dst.length && e > 1.0E-5f; i++) {
+            dst[i] = dst[i] + (sn(((i - s0) * f) / d) * e * (1 - ea) * amp);
+            e *= k;
+            ea *= ka;
+        }
+    }
+
+    public final float[] stretch(float[] x, int sr, float speed) {
+        float[] ws;
+        Intrinsics.checkNotNullParameter(x, "x");
+        if (Math.abs(speed - 1.0f) >= 0.01f) {
+            if (!(x.length == 0)) {
+                int n = (((int) (sr * 0.03d)) / 2) * 2;
+                int hs = n / 2;
+                double ha = hs * speed;
+                int tol = (int) (sr * 0.01d);
+                int outLen = MathKt.roundToInt(x.length / speed);
+                float[] pad = new float[x.length + tol + (n * 2) + (tol * 2) + 4];
+                System.arraycopy(x, 0, pad, tol, x.length);
+                float[] w = new float[n];
+                for (int i = 0; i < n; i++) {
+                    w[i] = (float) (0.5d - (Math.cos((i * 6.283185307179586d) / n) * 0.5d));
+                }
+                float[] out = new float[outLen + n];
+                float[] ws2 = new float[outLen + n];
+                int prev = tol;
+                int k = 0;
+                while (true) {
+                    int op = k * hs;
+                    if (op >= outLen) {
+                        ws = ws2;
+                        break;
+                    }
+                    ws = ws2;
+                    int nominal = MathKt.roundToInt(k * ha) + tol;
+                    int pos = nominal;
+                    if (k > 0) {
+                        int tgt = prev + hs;
+                        float best = Float.NEGATIVE_INFINITY;
+                        int bp = nominal;
+                        int pos2 = nominal - tol;
+                        int p = Math.max(0, pos2);
+                        int p2 = nominal + tol;
+                        int hi = Math.min((pad.length - n) - 1, p2);
+                        int p3 = p;
+                        while (p3 <= hi) {
+                            int nominal2 = nominal;
+                            float c = stretch$corr(n, pad, tgt, p3, 2);
+                            if (c > best) {
+                                best = c;
+                                bp = p3;
+                            }
+                            p3 += 2;
+                            nominal = nominal2;
                         }
-
-                        var11 = var10;
-                        if (var2 == var19) {
-                           break;
+                        float best2 = Float.NEGATIVE_INFINITY;
+                        int pos3 = bp;
+                        int q = Math.max(0, bp - 1);
+                        int min = Math.min((pad.length - n) - 1, bp + 1);
+                        if (q <= min) {
+                            while (true) {
+                                float c2 = stretch$corr(n, pad, tgt, q, 1);
+                                if (c2 > best2) {
+                                    best2 = c2;
+                                    pos3 = q;
+                                }
+                                if (q == min) {
+                                    break;
+                                }
+                                q++;
+                            }
                         }
-
-                        var2++;
-                        var8 = var3;
-                     }
-                  }
-
-                  var2 = var11;
-               } else {
-                  var2 = var2;
-               }
-
-               if (var2 + var16 > var21.length) {
-                  break;
-               }
-
-               for (int var37 = 0; var37 < var16; var37++) {
-                  int var39 = var17 + var37;
-                  var20[var39] += var21[var2 + var37] * var22[var37];
-                  var39 = var17 + var37;
-                  var1[var39] += var22[var37];
-               }
-
-               var12++;
-               var10 = var2;
+                        pos = pos3;
+                    }
+                    if (pos + n > pad.length) {
+                        break;
+                    }
+                    for (int j = 0; j < n; j++) {
+                        int i2 = op + j;
+                        out[i2] = out[i2] + (pad[pos + j] * w[j]);
+                        int i3 = op + j;
+                        ws[i3] = ws[i3] + w[j];
+                    }
+                    int j2 = pos;
+                    k++;
+                    prev = j2;
+                    ws2 = ws;
+                }
+                float[] fArr = new float[outLen];
+                for (int i4 = 0; i4 < outLen; i4++) {
+                    fArr[i4] = ws[i4] > 0.001f ? out[i4] / ws[i4] : out[i4];
+                }
+                return fArr;
             }
+        }
+        return x;
+    }
 
-            var21 = new float[var14];
+    private static final float stretch$corr(int n, float[] pad, int tgt, int p, int step) {
+        float c = 0.0f;
+        int j = 0;
+        while (j < n) {
+            c += pad[p + j] * pad[tgt + j];
+            j += step;
+        }
+        return c;
+    }
 
-            for (int var28 = 0; var28 < var14; var28++) {
-               if (var1[var28] > 0.001F) {
-                  var3 = var20[var28] / var1[var28];
-               } else {
-                  var3 = var20[var28];
-               }
-
-               var21[var28] = var3;
+    public final float[] upsample2(float[] x) {
+        Intrinsics.checkNotNullParameter(x, "x");
+        int length = x.length * 2;
+        float[] fArr = new float[length];
+        for (int i = 0; i < length; i++) {
+            int i2 = i / 2;
+            float a = x[i2];
+            if (i % 2 != 0) {
+                a = (x[Math.min(i2 + 1, x.length - 1)] + a) * 0.5f;
             }
+            fArr[i] = a;
+        }
+        return fArr;
+    }
 
-            return var21;
-         }
-      }
+    public static /* synthetic */ float[] voice$default(AmySynth amySynth, List list, float f, float f2, int i, Object obj) {
+        if ((i & 4) != 0) {
+            f2 = 0.0f;
+        }
+        return amySynth.voice(list, f, f2);
+    }
 
-      return var1;
-   }
-
-   public final float[] upsample2(float[] var1) {
-      Intrinsics.checkNotNullParameter(var1, "x");
-      int var4 = var1.length * 2;
-      float[] var6 = new float[var4];
-
-      for (int var3 = 0; var3 < var4; var3++) {
-         int var5 = var3 / 2;
-         float var2 = var1[var5];
-         if (var3 % 2 != 0) {
-            var2 = (var1[Math.min(var5 + 1, var1.length - 1)] + var2) * 0.5F;
-         }
-
-         var6[var3] = var2;
-      }
-
-      return var6;
-   }
-
-   public final float[] voice(List<float[]> var1, float var2, float var3) {
-      Intrinsics.checkNotNullParameter(var1, "clips");
-      short var11 = 5280;
-      Iterator var14 = var1.iterator();
-      int var9 = 0;
-
-      while (var14.hasNext()) {
-         float[] var15 = (float[])var14.next();
-         var9 += var15.length;
-      }
-
-      float[] var26 = new float[var9 + Math.max(0, var1.size() - 1) * 5280];
-      var9 = 0;
-      Iterator var27 = var1.iterator();
-      int var10 = 0;
-
-      while (var27.hasNext()) {
-         int var12 = var10 + 1;
-         float[] var16 = (float[])var27.next();
-         var10 = var9;
-         if (var10 > 0) {
-            var10 = var9 + 5280;
-         }
-
-         System.arraycopy(var16, 0, var26, var10, var16.length);
-         var9 = var10 + var16.length;
-         var10 = var12;
-      }
-
-      float var8 = RangesKt.coerceIn(var2, 0.5F, 2.0F);
-      if (Math.abs(var3) > 0.05F) {
-         boolean var22;
-         if (var26.length == 0) {
-            var22 = true;
-         } else {
-            var22 = false;
-         }
-
-         if (!var22) {
-            double var4 = Math.pow(2.0, RangesKt.coerceIn(var3, -12.0F, 12.0F) / 12.0);
-            int var24 = (int)(var26.length / var4);
-            float[] var28 = new float[var24];
-
-            for (int var23 = 0; var23 < var24; var23++) {
-               double var6 = var23 * var4;
-               int var25 = (int)var6;
-               var2 = (float)(var6 - var25);
-               if (var25 + 1 < var26.length) {
-                  var2 = var26[var25] + (var26[var25 + 1] - var26[var25]) * var2;
-               } else {
-                  var2 = var26[Math.min(var25, var26.length - 1)];
-               }
-
-               var28[var23] = var2;
+    public final float[] voice(List<float[]> clips, float speed, float pitch) {
+        float[] v;
+        Intrinsics.checkNotNullParameter(clips, "clips");
+        int gap = 5280;
+        int i = 0;
+        for (float[] it : clips) {
+            i += it.length;
+        }
+        int total = i + (Math.max(0, clips.size() - 1) * 5280);
+        float[] v2 = new float[total];
+        int o = 0;
+        int i2 = 0;
+        for (float[] c : clips) {
+            int i3 = i2;
+            i2++;
+            if (i3 > 0) {
+                o += 5280;
             }
-
-            var2 = (float)(var8 / var4);
-            return this.upsample2(this.stretch(var28, 24000, var2));
-         }
-      }
-
-      return this.upsample2(this.stretch(var26, 24000, var8));
-   }
-
-   public final float[] wavFloats(byte[] var1) {
-      Intrinsics.checkNotNullParameter(var1, "bytes");
-      int var2 = 12;
-
-      while (true) {
-         int var4 = var1.length;
-         int var3 = 0;
-         if (var2 + 8 > var4) {
-            return new float[0];
-         }
-
-         String var6 = new String(var1, var2, 4, Charsets.US_ASCII);
-         var4 = var1[var2 + 4] & 255 | (var1[var2 + 5] & 255) << 8 | (var1[var2 + 6] & 255) << 16 | (var1[var2 + 7] & 255) << 24;
-         if (Intrinsics.areEqual(var6, "data")) {
-            var4 = Math.min(var4, var1.length - var2 - 8) / 2;
-
-            for (var9 = new float[var4]; var3 < var4; var3++) {
-               int var5 = var2 + 8 + var3 * 2;
-               var9[var3] = (short)(var1[var5] & 255 | var1[var5 + 1] << 8) / 32768.0F;
+            System.arraycopy(c, 0, v2, o, c.length);
+            o += c.length;
+        }
+        float sp = RangesKt.coerceIn(speed, 0.5f, 2.0f);
+        if (Math.abs(pitch) > 0.05f) {
+            if (!(v2.length == 0)) {
+                double r = Math.pow(2.0d, RangesKt.coerceIn(pitch, -12.0f, 12.0f) / 12.0d);
+                int n = (int) (v2.length / r);
+                float[] fArr = new float[n];
+                int i4 = 0;
+                while (i4 < n) {
+                    int o2 = o;
+                    double t = i4 * r;
+                    int k = (int) t;
+                    int gap2 = gap;
+                    float[] v3 = v2;
+                    float f = (float) (t - k);
+                    fArr[i4] = k + 1 < v2.length ? v2[k] + ((v2[k + 1] - v2[k]) * f) : v2[Math.min(k, v2.length - 1)];
+                    i4++;
+                    o = o2;
+                    gap = gap2;
+                    v2 = v3;
+                }
+                v = fArr;
+                sp = (float) (sp / r);
+                return upsample2(stretch(v, 24000, sp));
             }
+        }
+        v = v2;
+        return upsample2(stretch(v, 24000, sp));
+    }
 
-            return var9;
-         }
+    public static /* synthetic */ short[] render$default(AmySynth amySynth, Style style, float[] fArr, float f, float f2, int i, Object obj) {
+        if ((i & 4) != 0) {
+            f = 1.0f;
+        }
+        if ((i & 8) != 0) {
+            f2 = 1.0f;
+        }
+        return amySynth.render(style, fArr, f, f2);
+    }
 
-         var2 += var4 + 8 + (var4 & 1);
-      }
-   }
+    public final short[] render(Style style, float[] voice, float chimeGain, float padGain) {
+        double vStart;
+        double tail;
+        List notes;
+        boolean usePad;
+        double d;
+        float[] r;
+        double d2;
+        Intrinsics.checkNotNullParameter(style, "style");
+        Intrinsics.checkNotNullParameter(voice, "voice");
+        switch (WhenMappings.$EnumSwitchMapping$0[style.ordinal()]) {
+            case 1:
+                List notes2 = CollectionsKt.listOf((Object[]) new Bell[]{new Bell(880.0d, 0.0d, 0.55f, 2.2d), new Bell(1318.51d, 0.11d, 0.48f, 2.0d), new Bell(1760.0d, 0.22d, 0.42f, 1.7d), new Bell(554.37d, 0.22d, 0.18f, 1.4d)});
+                vStart = 0.62d;
+                tail = 1.6d;
+                notes = notes2;
+                usePad = true;
+                break;
+            case 2:
+                List notes3 = CollectionsKt.listOf((Object[]) new Bell[]{new Bell(1318.51d, 0.0d, 0.45f, 2.6d), new Bell(1760.0d, 0.09d, 0.38f, 2.4d)});
+                vStart = 0.3d;
+                tail = 0.5d;
+                notes = notes3;
+                usePad = false;
+                break;
+            case 3:
+                List notes4 = CollectionsKt.listOf(new Bell(1760.0d, 0.0d, 0.3f, 3.0d));
+                vStart = 0.2d;
+                tail = 1.3d;
+                notes = notes4;
+                usePad = false;
+                break;
+            case 4:
+                List notes5 = CollectionsKt.listOf((Object[]) new Bell[]{new Bell(1318.51d, 0.0d, 0.45f, 2.4d), new Bell(880.0d, 0.13d, 0.45f, 2.4d), new Bell(659.26d, 0.26d, 0.4f, 2.0d)});
+                vStart = 0.55d;
+                tail = 0.6d;
+                notes = notes5;
+                usePad = false;
+                break;
+            case 5:
+                List notes6 = CollectionsKt.listOf((Object[]) new Bell[]{new Bell(1318.51d, 0.0d, 0.45f, 2.6d), new Bell(1760.0d, 0.09d, 0.38f, 2.4d)});
+                vStart = 0.0d;
+                tail = 0.9d;
+                notes = notes6;
+                usePad = false;
+                break;
+            default:
+                throw new NoWhenBranchMatchedException();
+        }
+        int vl = voice.length;
+        double d3 = 48000;
+        int vs = (int) (vStart * d3);
+        int n = vs + vl + ((int) (tail * d3));
+        float[] l = new float[n];
+        float[] r2 = new float[n];
+        if (!usePad || padGain <= 0.01f) {
+            d = d3;
+        } else {
+            Stereo p = pad(n, 1.4d);
+            int d0 = Math.max(0, vs - 4800);
+            int d1 = Math.min(n, vs + vl + 7200);
+            int i = 0;
+            while (i < n) {
+                float f = 1.0f;
+                if (i >= d0) {
+                    d2 = d3;
+                    if (i < d1) {
+                        if (i < d0 + 5760) {
+                            f = 1.0f - (((i - d0) * 0.4f) / 5760);
+                        } else {
+                            f = 0.6f;
+                            if (i >= d1 - 5760) {
+                                f = (((i - (d1 - 5760)) * 0.4f) / 5760) + 0.6f;
+                            }
+                        }
+                    }
+                } else {
+                    d2 = d3;
+                }
+                float duck = f;
+                l[i] = l[i] + (p.getL()[i] * 0.045f * padGain * duck);
+                r2[i] = r2[i] + (p.getR()[i] * 0.045f * padGain * duck);
+                i++;
+                d3 = d2;
+            }
+            d = d3;
+        }
+        Stereo b = bells(n, notes);
+        float bg = (style == Style.PING ? 0.45f : 0.62f) * chimeGain;
+        for (int i2 = 0; i2 < n; i2++) {
+            l[i2] = l[i2] + (b.getL()[i2] * bg);
+            r2[i2] = r2[i2] + (b.getR()[i2] * bg);
+        }
+        for (int i3 = 0; i3 < vl; i3++) {
+            int i4 = vs + i3;
+            l[i4] = l[i4] + (voice[i3] * 0.95f);
+            int i5 = vs + i3;
+            r2[i5] = r2[i5] + (voice[i3] * 0.95f);
+        }
+        if (style == Style.ASK || style == Style.DONE) {
+            double s0 = (style == Style.ASK ? 0.15d : 0.1d) + ((vs + vl) / d);
+            float[] sp = new float[n];
+            r = r2;
+            pluck(sp, 1760.0d, s0, 1.0f);
+            pluck(sp, 2217.46d, s0 + 0.3d, 0.8f);
+            pluck(sp, 2637.0d, s0 + 0.6d, 0.6f);
+            float g = (style == Style.ASK ? 0.05f : 0.09f) * chimeGain;
+            for (int i6 = 0; i6 < n; i6++) {
+                l[i6] = l[i6] + (sp[i6] * g);
+                r[i6] = r[i6] + (sp[i6] * g * 0.8f);
+            }
+        } else {
+            r = r2;
+        }
+        float[] wl = new float[n];
+        float[] wr = new float[n];
+        for (Pair pair : CollectionsKt.listOf((Object[]) new Pair[]{TuplesKt.to(Double.valueOf(29.0d), Float.valueOf(0.16f)), TuplesKt.to(Double.valueOf(47.0d), Float.valueOf(0.12f)), TuplesKt.to(Double.valueOf(83.0d), Float.valueOf(0.08f)), TuplesKt.to(Double.valueOf(131.0d), Float.valueOf(0.05f)), TuplesKt.to(Double.valueOf(197.0d), Float.valueOf(0.03f))})) {
+            double ms = ((Number) pair.component1()).doubleValue();
+            float g2 = ((Number) pair.component2()).floatValue();
+            delayAdd(wl, l, ms, g2);
+            delayAdd(wr, r, ms * 1.13d, g2);
+        }
+        int fl = Math.min(n, 14400);
+        float pk = 1.0E-9f;
+        for (int i7 = 0; i7 < n; i7++) {
+            l[i7] = l[i7] + wl[i7];
+            r[i7] = r[i7] + wr[i7];
+            if (i7 >= n - fl) {
+                float x = (n - i7) / fl;
+                l[i7] = l[i7] * x * x;
+                r[i7] = r[i7] * x * x;
+            }
+            pk = Math.max(pk, Math.max(Math.abs(l[i7]), Math.abs(r[i7])));
+        }
+        float g3 = 0.89f / pk;
+        int i8 = n * 2;
+        short[] sArr = new short[i8];
+        int i9 = 0;
+        while (i9 < i8) {
+            sArr[i9] = (short) RangesKt.coerceIn((int) ((i9 % 2 == 0 ? l[i9 / 2] : r[i9 / 2]) * g3 * 32767.0f), -32768, 32767);
+            i9++;
+            fl = fl;
+            pk = pk;
+        }
+        return sArr;
+    }
 
-   private static final class Bell {
-      private final float amp;
-      private final double decay;
-      private final double f0;
-      private final double start;
-
-      public Bell(double var1, double var3, float var5, double var6) {
-         this.f0 = var1;
-         this.start = var3;
-         this.amp = var5;
-         this.decay = var6;
-      }
-
-      // $VF: synthetic method
-      public static AmySynth.Bell copy$default(AmySynth.Bell var0, double var1, double var3, float var5, double var6, int var8, Object var9) {
-         if ((var8 & 1) != 0) {
-            var1 = var0.f0;
-         }
-
-         if ((var8 & 2) != 0) {
-            var3 = var0.start;
-         }
-
-         if ((var8 & 4) != 0) {
-            var5 = var0.amp;
-         }
-
-         if ((var8 & 8) != 0) {
-            var6 = var0.decay;
-         }
-
-         return var0.copy(var1, var3, var5, var6);
-      }
-
-      public final double component1() {
-         return this.f0;
-      }
-
-      public final double component2() {
-         return this.start;
-      }
-
-      public final float component3() {
-         return this.amp;
-      }
-
-      public final double component4() {
-         return this.decay;
-      }
-
-      public final AmySynth.Bell copy(double var1, double var3, float var5, double var6) {
-         return new AmySynth.Bell(var1, var3, var5, var6);
-      }
-
-      @Override
-      public boolean equals(Object var1) {
-         if (this == var1) {
-            return true;
-         } else if (!(var1 instanceof AmySynth.Bell)) {
-            return false;
-         } else {
-            var1 = var1;
-            if (Double.compare(this.f0, var1.f0) != 0) {
-               return false;
-            } else if (Double.compare(this.start, var1.start) != 0) {
-               return false;
+    public final float[] wavFloats(byte[] bytes) {
+        Intrinsics.checkNotNullParameter(bytes, "bytes");
+        int p = 12;
+        while (true) {
+            if (p + 8 <= bytes.length) {
+                String id = new String(bytes, p, 4, Charsets.US_ASCII);
+                int len = (bytes[p + 4] & 255) | ((bytes[p + 5] & 255) << 8) | ((bytes[p + 6] & 255) << 16) | ((bytes[p + 7] & 255) << 24);
+                if (Intrinsics.areEqual(id, "data")) {
+                    int m = Math.min(len, (bytes.length - p) - 8) / 2;
+                    float[] fArr = new float[m];
+                    for (int i = 0; i < m; i++) {
+                        int k = p + 8 + (i * 2);
+                        fArr[i] = ((short) ((bytes[k] & 255) | (bytes[k + 1] << 8))) / 32768.0f;
+                    }
+                    return fArr;
+                }
+                p += len + 8 + (len & 1);
             } else {
-               return Float.compare(this.amp, var1.amp) != 0 ? false : Double.compare(this.decay, var1.decay) == 0;
+                return new float[0];
             }
-         }
-      }
-
-      public final float getAmp() {
-         return this.amp;
-      }
-
-      public final double getDecay() {
-         return this.decay;
-      }
-
-      public final double getF0() {
-         return this.f0;
-      }
-
-      public final double getStart() {
-         return this.start;
-      }
-
-      @Override
-      public int hashCode() {
-         return ((Double.hashCode(this.f0) * 31 + Double.hashCode(this.start)) * 31 + Float.hashCode(this.amp)) * 31 + Double.hashCode(this.decay);
-      }
-
-      @Override
-      public String toString() {
-         double var1 = this.f0;
-         double var5 = this.start;
-         float var7 = this.amp;
-         double var3 = this.decay;
-         return "Bell(f0=" + var1 + ", start=" + var5 + ", amp=" + var7 + ", decay=" + var3 + ")";
-      }
-   }
-
-   private static final class Stereo {
-      private final float[] l;
-      private final float[] r;
-
-      public Stereo(int var1) {
-         this.l = new float[var1];
-         this.r = new float[var1];
-      }
-
-      public final float[] getL() {
-         return this.l;
-      }
-
-      public final float[] getR() {
-         return this.r;
-      }
-   }
-
-   public static enum Style {
-      ASK,
-      DONE,
-      PING,
-      SHORT,
-      STOPPED;
-      private static final EnumEntries $ENTRIES = EnumEntriesKt.enumEntries(AmySynth.Style.$VALUES);
-      private static final AmySynth.Style[] $VALUES = $values();
-
-      // $VF: synthetic method
-      private static final AmySynth.Style[] $values() {
-         return new AmySynth.Style[]{ASK, SHORT, DONE, STOPPED, PING};
-      }
-
-      public static EnumEntries<AmySynth.Style> getEntries() {
-         return $ENTRIES;
-      }
-   }
-
-   // $VF: synthetic class
-   public final class WhenMappings {
-      public static final int[] $EnumSwitchMapping$0;
-
-      static {
-         int[] var0 = new int[AmySynth.Style.values().length];
-
-         try {
-            var0[AmySynth.Style.ASK.ordinal()] = 1;
-         } catch (NoSuchFieldError var6) {
-         }
-
-         try {
-            var0[AmySynth.Style.SHORT.ordinal()] = 2;
-         } catch (NoSuchFieldError var5) {
-         }
-
-         try {
-            var0[AmySynth.Style.DONE.ordinal()] = 3;
-         } catch (NoSuchFieldError var4) {
-         }
-
-         try {
-            var0[AmySynth.Style.STOPPED.ordinal()] = 4;
-         } catch (NoSuchFieldError var3) {
-         }
-
-         try {
-            var0[AmySynth.Style.PING.ordinal()] = 5;
-         } catch (NoSuchFieldError var2) {
-         }
-
-         $EnumSwitchMapping$0 = var0;
-      }
-   }
+        }
+    }
 }

@@ -1,7 +1,6 @@
 package com.starpilot.starview;
 
 import android.app.DownloadManager;
-import android.app.DownloadManager.Request;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.MutableContextWrapper;
@@ -10,20 +9,23 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore.Downloads;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.webkit.CookieManager;
+import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.MimeTypeMap;
 import android.webkit.URLUtil;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import com.starpilot.starview.GalaxyWebPool;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import kotlin.Unit;
 import kotlin.io.CloseableKt;
 import kotlin.jvm.functions.Function0;
@@ -32,464 +34,307 @@ import kotlin.jvm.internal.StringCompanionObject;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
 
+/* compiled from: GalaxyWeb.kt */
 public final class GalaxyWebPool {
-   public static final GalaxyWebPool INSTANCE = new GalaxyWebPool();
-   public static final String QUIET = "/tools";
-   private static String lastPath;
-   private static String loadedHost;
-   private static final Handler main = new Handler(Looper.getMainLooper());
-   private static String pendingPath;
-   private static volatile boolean ready;
-   private static final ArrayList<Function0<Unit>> waiting = new ArrayList<>();
-   private static WebView web;
-   private static MutableContextWrapper wrapper;
+    public static final String QUIET = "/tools";
+    private static String lastPath;
+    private static String loadedHost;
+    private static String pendingPath;
+    private static volatile boolean ready;
+    private static WebView web;
+    private static MutableContextWrapper wrapper;
+    public static final GalaxyWebPool INSTANCE = new GalaxyWebPool();
+    private static final ArrayList<Function0<Unit>> waiting = new ArrayList<>();
+    private static final Handler main = new Handler(Looper.getMainLooper());
 
-   // $VF: synthetic method
-   public static void $r8$lambda$ZqhZ6DAdkhS_n49NwmcIyjjdOFs(GalaxyWebPool var0, WebView var1, String var2, String var3, String var4, String var5, long var6) {
-      get$lambda$4$lambda$2$lambda$1(var0, var1, var2, var3, var4, var5, var6);
-   }
+    private GalaxyWebPool() {
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$ZwJUsdKXP7alHEIsR0JOXge_d5U(WebView var0, int var1) {
-      pollReady$lambda$11$lambda$10(var0, var1);
-   }
+    public final WebView getWeb() {
+        return web;
+    }
 
-   // $VF: synthetic method
-   public static void $r8$lambda$_DolRg3an_tbFQ0HE_AFz7zkl6Q/* $VF was: $r8$lambda$_DolRg3an_tbFQ0HE_AFz7zkl6Q*/(int var0, WebView var1, String var2) {
-      pollReady$lambda$11(var0, var1, var2);
-   }
+    public final boolean getReady() {
+        return ready;
+    }
 
-   private GalaxyWebPool() {
-   }
+    /* JADX INFO: Access modifiers changed from: private */
+    public final String base(String host) {
+        return "http://" + host + ":8082/";
+    }
 
-   private final String base(String var1) {
-      return "http://" + var1 + ":8082/";
-   }
+    public final void warm(Context ctx, String host) {
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(host, "host");
+        get(ctx, host);
+    }
 
-   // $VF: Duplicated exception handlers to handle obfuscated exceptions
-   private final void download(WebView var1, String var2, String var3, String var4) {
-      Context var7 = var1.getContext();
-      var3 = URLUtil.guessFileName(var2, var3, var4);
-      Intrinsics.checkNotNull(var3);
-      if (StringsKt.startsWith$default(var3, "downloadfile", false, 2, null)) {
-         long var5;
-         label44: {
-            var5 = System.currentTimeMillis();
-            var3 = MimeTypeMap.getSingleton().getExtensionFromMimeType(var4);
-            if (var3 != null) {
-               var4 = "." + var3;
-               var3 = var4;
-               if (var4 != null) {
-                  break label44;
-               }
-            }
+    public final WebView get(Context ctx, String host) {
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        Intrinsics.checkNotNullParameter(host, "host");
+        WebView w = web;
+        if (w == null) {
+            final GalaxyWebPool $this$get_u24lambda_u244 = this;
+            MutableContextWrapper it = new MutableContextWrapper(ctx);
+            wrapper = it;
+            final WebView $this$get_u24lambda_u244_u24lambda_u242 = new WebView(it);
+            $this$get_u24lambda_u244_u24lambda_u242.setBackgroundColor(CarUi.Companion.getFRAME());
+            $this$get_u24lambda_u244_u24lambda_u242.getSettings().setJavaScriptEnabled(true);
+            $this$get_u24lambda_u244_u24lambda_u242.getSettings().setDomStorageEnabled(true);
+            $this$get_u24lambda_u244_u24lambda_u242.getSettings().setMediaPlaybackRequiresUserGesture(false);
+            $this$get_u24lambda_u244_u24lambda_u242.setWebChromeClient(new WebChromeClient());
+            $this$get_u24lambda_u244_u24lambda_u242.addJavascriptInterface(new SaveBridge(it), "StarViewSave");
+            $this$get_u24lambda_u244_u24lambda_u242.setDownloadListener(new DownloadListener() { // from class: com.starpilot.starview.GalaxyWebPool$$ExternalSyntheticLambda0
+                @Override // android.webkit.DownloadListener
+                public final void onDownloadStart(String str, String str2, String str3, String str4, long j) {
+                    GalaxyWebPool.get$lambda$4$lambda$2$lambda$1(GalaxyWebPool.this, $this$get_u24lambda_u244_u24lambda_u242, str, str2, str3, str4, j);
+                }
+            });
+            $this$get_u24lambda_u244_u24lambda_u242.setWebViewClient(new WebViewClient() { // from class: com.starpilot.starview.GalaxyWebPool$get$w$1$1$2
+                @Override // android.webkit.WebViewClient
+                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                    String str;
+                    String base;
+                    Intrinsics.checkNotNullParameter(view, "view");
+                    Intrinsics.checkNotNullParameter(request, "request");
+                    Intrinsics.checkNotNullExpressionValue(request.getUrl().toString(), "toString(...)");
+                    GalaxyWebPool galaxyWebPool = GalaxyWebPool.this;
+                    str = GalaxyWebPool.loadedHost;
+                    if (str == null) {
+                        str = "";
+                    }
+                    base = galaxyWebPool.base(str);
+                    return !StringsKt.startsWith$default(r0, base, false, 2, (Object) null);
+                }
 
-            var3 = "";
-         }
+                @Override // android.webkit.WebViewClient
+                public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                    Intrinsics.checkNotNullParameter(view, "view");
+                    GalaxyWebPool.ready = false;
+                    GalaxyWebPool.this.inject(view);
+                }
 
-         var3 = "galaxy-" + var5 + var3;
-      }
+                @Override // android.webkit.WebViewClient
+                public void onPageFinished(WebView view, String url) {
+                    Intrinsics.checkNotNullParameter(view, "view");
+                    GalaxyWebPool.this.inject(view);
+                    GalaxyWebPool.this.pollReady(view, 0);
+                }
+            });
+            web = $this$get_u24lambda_u244_u24lambda_u242;
+            w = $this$get_u24lambda_u244_u24lambda_u242;
+        }
+        MutableContextWrapper mutableContextWrapper = wrapper;
+        if (mutableContextWrapper != null) {
+            mutableContextWrapper.setBaseContext(ctx);
+        }
+        if (!Intrinsics.areEqual(loadedHost, host)) {
+            loadedHost = host;
+            ready = false;
+            w.loadUrl(base(host) + "#/tools");
+        }
+        return w;
+    }
 
-      if (StringsKt.startsWith$default(var2, "blob:", false, 2, null)) {
-         var2 = JSONObject.quote(var2);
-         var3 = JSONObject.quote(var3);
-         var1.evaluateJavascript(
-            "(function(){fetch("
-               + var2
-               + ").then(r=>r.blob()).then(b=>{var f=new FileReader();f.onload=function(){StarViewSave.save("
-               + var3
-               + ",f.result.split(',')[1]||'')};f.readAsDataURL(b)})})();",
-            null
-         );
-      } else {
-         try {
-            Request var14 = new Request(Uri.parse(var2));
-            Request var15 = var14.setTitle(var3).setDescription("From Galaxy").setNotificationVisibility(1);
-            String var8 = Environment.DIRECTORY_DOWNLOADS;
-            StringBuilder var29 = new StringBuilder();
-            var16 = var15.setDestinationInExternalPublicDir(var8, var29.append("StarView/").append(var3).toString());
-         } catch (Exception var12) {
-            String var13 = var12.getMessage();
-            Toast.makeText(var7, "Download failed: " + var13, 1).show();
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void get$lambda$4$lambda$2$lambda$1(GalaxyWebPool $this_run, WebView $this_apply, String url, String str, String disposition, String mime, long j) {
+        Intrinsics.checkNotNull(url);
+        $this_run.download($this_apply, url, disposition, mime);
+    }
+
+    public final void go(String path) {
+        Intrinsics.checkNotNullParameter(path, "path");
+        WebView w = web;
+        if (w == null) {
             return;
-         }
+        }
+        lastPath = path;
+        if (!ready) {
+            pendingPath = path;
+        } else {
+            String p = JSONObject.quote(path);
+            w.evaluateJavascript("(function(){var p=" + p + ";if(location.hash.slice(1)!==p){location.hash=p;}})();", null);
+        }
+    }
 
-         try {
-            var2 = CookieManager.getInstance().getCookie(var2);
-         } catch (Exception var11) {
-            String var17 = var11.getMessage();
-            Toast.makeText(var7, "Download failed: " + var17, 1).show();
+    public final void reload() {
+        ready = false;
+        WebView webView = web;
+        if (webView != null) {
+            webView.reload();
+        }
+    }
+
+    public final void park() {
+        WebView w = web;
+        if (w == null) {
             return;
-         }
-
-         if (var2 != null) {
-            try {
-               var16.addRequestHeader("Cookie", var2);
-            } catch (Exception var10) {
-               String var18 = var10.getMessage();
-               Toast.makeText(var7, "Download failed: " + var18, 1).show();
-               return;
-            }
-         }
-
-         try {
-            Object var22 = var7.getSystemService("download");
-            Intrinsics.checkNotNull(var22, "null cannot be cast to non-null type android.app.DownloadManager");
-            ((DownloadManager)var22).enqueue(var16);
-            StringBuilder var20 = new StringBuilder();
-            Toast.makeText(var7, var20.append("Saving ").append(var3).append(" to Download/StarView").toString(), 1).show();
-         } catch (Exception var9) {
-            String var19 = var9.getMessage();
-            Toast.makeText(var7, "Download failed: " + var19, 1).show();
-         }
-      }
-   }
-
-   private static final void get$lambda$4$lambda$2$lambda$1(GalaxyWebPool var0, WebView var1, String var2, String var3, String var4, String var5, long var6) {
-      Intrinsics.checkNotNull(var2);
-      var0.download(var1, var2, var4, var5);
-   }
-
-   private final String hex(int var1) {
-      StringCompanionObject var2 = StringCompanionObject.INSTANCE;
-      String var3 = String.format("#%06X", Arrays.copyOf(new Object[]{16777215 & var1}, 1));
-      Intrinsics.checkNotNullExpressionValue(var3, "format(...)");
-      return var3;
-   }
-
-   private final void inject(WebView var1) {
-      String var2 = StringsKt.replace$default(StringsKt.replace$default(this.getCSS(), "\\", "\\\\", false, 4, null), "`", "\\`", false, 4, null);
-      var1.evaluateJavascript(
-         "(function(){try{localStorage.setItem('galaxy-preview-theme','dark');}catch(e){}\n      var s=document.getElementById('starview-theme');if(!s){s=document.createElement('style');s.id='starview-theme';(document.head||document.documentElement).appendChild(s);}\n      s.textContent=`"
-            + var2
-            + "`;})();",
-         null
-      );
-   }
-
-   private final void pollReady(WebView var1, int var2) {
-      var1.evaluateJavascript(
-         "(function(){var b=document.getElementById('galaxy-boot');return !!document.querySelector('.gx-content')&&(!b||!b.isConnected||b.hidden);})()",
-         new GalaxyWebPool$$ExternalSyntheticLambda2(var2, var1)
-      );
-   }
-
-   private static final void pollReady$lambda$11(int var0, WebView var1, String var2) {
-      if (!Intrinsics.areEqual(var2, "true") && var0 < 60) {
-         main.postDelayed(new GalaxyWebPool$$ExternalSyntheticLambda1(var1, var0), 100L);
-      } else {
-         ready = true;
-         String var3 = pendingPath;
-         if (var3 != null) {
-            pendingPath = null;
-            INSTANCE.go(var3);
-         }
-
-         ArrayList var4 = new ArrayList<>(waiting);
-         waiting.clear();
-         Iterator var5 = var4.iterator();
-
-         while (var5.hasNext()) {
-            ((Function0)var5.next()).invoke();
-         }
-      }
-   }
-
-   private static final void pollReady$lambda$11$lambda$10(WebView var0, int var1) {
-      INSTANCE.pollReady(var0, var1 + 1);
-   }
-
-   public final WebView get(Context var1, String var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "host");
-      WebView var4 = web;
-      WebView var3 = var4;
-      if (var4 == null) {
-         GalaxyWebPool var7 = this;
-         MutableContextWrapper var5 = new MutableContextWrapper(var1);
-         wrapper = var5;
-         var3 = new WebView((Context)var5);
-         var3.setBackgroundColor(CarUi.Companion.getFRAME());
-         var3.getSettings().setJavaScriptEnabled(true);
-         var3.getSettings().setDomStorageEnabled(true);
-         var3.getSettings().setMediaPlaybackRequiresUserGesture(false);
-         var3.setWebChromeClient(new WebChromeClient());
-         var3.addJavascriptInterface(new GalaxyWebPool.SaveBridge((Context)var5), "StarViewSave");
-         var3.setDownloadListener(new GalaxyWebPool$$ExternalSyntheticLambda0(var7, var3));
-         var3.setWebViewClient(new WebViewClient(var7) {
-            final GalaxyWebPool $this_run;
-
-            {
-               this.$this_run = var1;
-            }
-
-            public void onPageFinished(WebView var1, String var2x) {
-               Intrinsics.checkNotNullParameter(var1, "view");
-               this.$this_run.inject(var1);
-               this.$this_run.pollReady(var1, 0);
-            }
-
-            public void onPageStarted(WebView var1, String var2x, Bitmap var3x) {
-               Intrinsics.checkNotNullParameter(var1, "view");
-               GalaxyWebPool.ready = false;
-               this.$this_run.inject(var1);
-            }
-
-            public boolean shouldOverrideUrlLoading(WebView var1, WebResourceRequest var2x) {
-               Intrinsics.checkNotNullParameter(var1, "view");
-               Intrinsics.checkNotNullParameter(var2x, "request");
-               String var4x = var2x.getUrl().toString();
-               Intrinsics.checkNotNullExpressionValue(var4x, "toString(...)");
-               GalaxyWebPool var3x = this.$this_run;
-               String var6 = GalaxyWebPool.loadedHost;
-               String var5x = var6;
-               if (var6 == null) {
-                  var5x = "";
-               }
-
-               return StringsKt.startsWith$default(var4x, var3x.base(var5x), false, 2, null) ^ true;
-            }
-         });
-         web = var3;
-      }
-
-      MutableContextWrapper var8 = wrapper;
-      if (var8 != null) {
-         var8.setBaseContext(var1);
-      }
-
-      if (!Intrinsics.areEqual(loadedHost, var2)) {
-         loadedHost = var2;
-         ready = false;
-         String var6 = this.base(var2);
-         var3.loadUrl(var6 + "#/tools");
-      }
-
-      return var3;
-   }
-
-   public final String getCSS() {
-      String var10 = this.hex(CarUi.Companion.getACCENT());
-      String var9 = this.hex(CarUi.Companion.getACCENT());
-      String var8 = this.hex(CarUi.Companion.getBG());
-      String var7 = this.hex(CarUi.Companion.getACCENT());
-      String var6 = this.hex(CarUi.Companion.getACCENT());
-      String var1 = this.hex(CarUi.Companion.getWARN());
-      String var4 = this.hex(CarUi.Companion.getFRAME());
-      String var11 = this.hex(CarUi.Companion.getCARD());
-      String var14 = this.hex(CarUi.Companion.getCARD());
-      String var12 = this.hex(CarUi.Companion.getCARD_ON());
-      String var13 = this.hex(CarUi.Companion.getDIM());
-      String var5 = this.hex(CarUi.Companion.getDIM());
-      String var2 = this.hex(CarUi.Companion.getCARD());
-      String var15 = this.hex(CarUi.Companion.getCARD_ON());
-      String var3 = this.hex(CarUi.Companion.getFRAME());
-      return StringsKt.trimIndent(
-         "\n    :root, [data-theme=\"light\"] { color-scheme: dark;\n      --primary: "
-            + var10
-            + "; --primary-hover: "
-            + var9
-            + "; --primary-glow: rgba(111,227,161,.25); --on-primary: "
-            + var8
-            + ";\n      --primary-container: rgba(111,227,161,.16); --on-primary-container: #d8ffe9;\n      --secondary: "
-            + var7
-            + "; --secondary-glow: rgba(111,227,161,.2); --success: "
-            + var6
-            + "; --warning: "
-            + var1
-            + ";\n      --background: "
-            + var4
-            + "; --surface: "
-            + var11
-            + "; --surface-container: "
-            + var14
-            + "; --surface-container-high: "
-            + var12
-            + ";\n      --on-surface: #FFFFFF; --on-surface-variant: "
-            + var13
-            + "; --text-muted: "
-            + var5
-            + ";\n      --glass-bg: "
-            + var2
-            + "; --glass-bg-hover: "
-            + var15
-            + "; --glass-active-bg: rgba(111,227,161,.18); --glass-border: #3C424E;\n      --glass-shadow: none; --glass-blur: none; --glass-text: #FFFFFF; --outline: #323742; --outline-variant: #262A33;\n      --font-body: Roboto, \"Noto Sans\", sans-serif; --radius-sm: 14px; --radius-md: 14px; --radius-lg: 18px;\n      --scrollbar-thumb: #3A404C; --scrollbar-thumb-hover: #4A515E; --scrollbar-border: transparent;\n      --bottomnav-height: 0px; --content-width: 100%; }\n    html, body { background: "
-            + var3
-            + " !important; font-size: 17px; }\n    #galaxy-bg, .gx-appbar, .gx-drawer, .gx-underlay, .blur-nav, .gx-nav-indicator, #galaxy-boot, .gx-boot { display: none !important; }\n    * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }\n    .gx-content { max-width: none !important; margin-top: 0 !important; padding-top: 4px !important; }\n  "
-      );
-   }
-
-   public final boolean getReady() {
-      return ready;
-   }
-
-   public final WebView getWeb() {
-      return web;
-   }
-
-   public final void go(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "path");
-      WebView var2 = web;
-      if (var2 != null) {
-         lastPath = var1;
-         if (!ready) {
-            pendingPath = var1;
-         } else {
-            var1 = JSONObject.quote(var1);
-            var2.evaluateJavascript("(function(){var p=" + var1 + ";if(location.hash.slice(1)!==p){location.hash=p;}})();", null);
-         }
-      }
-   }
-
-   public final void park() {
-      WebView var1 = web;
-      if (var1 != null) {
-         if (!ready) {
+        }
+        if (ready) {
+            w.evaluateJavascript("(function(){if(location.hash.slice(1)!=='/tools'){location.hash='/tools';}})();", null);
+        } else {
             pendingPath = "/tools";
-         } else {
-            var1.evaluateJavascript("(function(){if(location.hash.slice(1)!=='/tools'){location.hash='/tools';}})();", null);
-         }
-      }
-   }
+        }
+    }
 
-   public final void reload() {
-      ready = false;
-      WebView var1 = web;
-      if (var1 != null) {
-         var1.reload();
-      }
-   }
-
-   public final void warm(Context var1, String var2) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      Intrinsics.checkNotNullParameter(var2, "host");
-      this.get(var1, var2);
-   }
-
-   public final void whenReady(Function0<Unit> var1) {
-      Intrinsics.checkNotNullParameter(var1, "fn");
-      if (ready) {
-         var1.invoke();
-      } else {
-         waiting.add(var1);
-      }
-   }
-
-   public static final class SaveBridge {
-      private final Context ctx;
-
-      // $VF: synthetic method
-      public static void $r8$lambda$4noD2yKRPrWmdQGTCvqnL_ubrUs(GalaxyWebPool.SaveBridge var0, Exception var1) {
-         save$lambda$3(var0, var1);
-      }
-
-      // $VF: synthetic method
-      public static void $r8$lambda$IuV52B5GK3kiVx0pjDrOVaH5Zqw(GalaxyWebPool.SaveBridge var0, String var1) {
-         save$lambda$2(var0, var1);
-      }
-
-      public SaveBridge(Context var1) {
-         Intrinsics.checkNotNullParameter(var1, "ctx");
-         super();
-         this.ctx = var1;
-      }
-
-      private static final void save$lambda$2(GalaxyWebPool.SaveBridge var0, String var1) {
-         Toast.makeText(var0.ctx, "Saved " + var1 + " to Download/StarView", 1).show();
-      }
-
-      private static final void save$lambda$3(GalaxyWebPool.SaveBridge var0, Exception var1) {
-         Context var2 = var0.ctx;
-         String var3 = var1.getMessage();
-         Toast.makeText(var2, "Save failed: " + var3, 1).show();
-      }
-
-      // $VF: Duplicated exception handlers to handle obfuscated exceptions
-      // $VF: Could not inline inconsistent finally blocks
-      // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-      @JavascriptInterface
-      public final void save(String var1, String var2) {
-         Intrinsics.checkNotNullParameter(var1, "name");
-         Intrinsics.checkNotNullParameter(var2, "b64");
-
-         ContentValues var5;
-         try {
-            var37 = Base64.decode(var2, 0);
-            var5 = new ContentValues();
-            var5.put("_display_name", var1);
-            String var3 = Environment.DIRECTORY_DOWNLOADS;
-            StringBuilder var4 = new StringBuilder();
-            var5.put("relative_path", var4.append(var3).append("/StarView").toString());
-         } catch (Exception var35) {
-            new Handler(Looper.getMainLooper()).post(new GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda1(this, var35));
+    private final void download(WebView w, String url, String disposition, String mime) {
+        String e;
+        Context ctx = w.getContext();
+        String it = URLUtil.guessFileName(url, disposition, mime);
+        Intrinsics.checkNotNull(it);
+        if (StringsKt.startsWith$default(it, "downloadfile", false, 2, (Object) null)) {
+            long currentTimeMillis = System.currentTimeMillis();
+            String e2 = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
+            if (e2 == null || (e = "." + e2) == null) {
+                e = "";
+            }
+            it = "galaxy-" + currentTimeMillis + e;
+        }
+        String name = it;
+        if (StringsKt.startsWith$default(url, "blob:", false, 2, (Object) null)) {
+            String q = JSONObject.quote(url);
+            String n = JSONObject.quote(name);
+            w.evaluateJavascript("(function(){fetch(" + q + ").then(r=>r.blob()).then(b=>{var f=new FileReader();f.onload=function(){StarViewSave.save(" + n + ",f.result.split(',')[1]||'')};f.readAsDataURL(b)})})();", null);
             return;
-         }
+        }
+        try {
+            DownloadManager.Request req = new DownloadManager.Request(Uri.parse(url)).setTitle(name).setDescription("From Galaxy").setNotificationVisibility(1).setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "StarView/" + name);
+            String it2 = CookieManager.getInstance().getCookie(url);
+            if (it2 != null) {
+                req.addRequestHeader("Cookie", it2);
+            }
+            Object systemService = ctx.getSystemService("download");
+            Intrinsics.checkNotNull(systemService, "null cannot be cast to non-null type android.app.DownloadManager");
+            ((DownloadManager) systemService).enqueue(req);
+            Toast.makeText(ctx, "Saving " + name + " to Download/StarView", 1).show();
+        } catch (Exception e3) {
+            Toast.makeText(ctx, "Download failed: " + e3.getMessage(), 1).show();
+        }
+    }
 
-         Uri var41;
-         try {
-            var41 = this.ctx.getContentResolver().insert(Downloads.EXTERNAL_CONTENT_URI, var5);
-         } catch (Exception var34) {
-            new Handler(Looper.getMainLooper()).post(new GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda1(this, var34));
+    /* compiled from: GalaxyWeb.kt */
+    public static final class SaveBridge {
+        private final Context ctx;
+
+        public SaveBridge(Context ctx) {
+            Intrinsics.checkNotNullParameter(ctx, "ctx");
+            this.ctx = ctx;
+        }
+
+        @JavascriptInterface
+        public final void save(final String name, String b64) {
+            Intrinsics.checkNotNullParameter(name, "name");
+            Intrinsics.checkNotNullParameter(b64, "b64");
+            try {
+                byte[] bytes = Base64.decode(b64, 0);
+                ContentValues values = new ContentValues();
+                values.put("_display_name", name);
+                values.put("relative_path", Environment.DIRECTORY_DOWNLOADS + "/StarView");
+                Uri uri = this.ctx.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+                if (uri == null) {
+                    throw new RuntimeException("no storage");
+                }
+                OutputStream openOutputStream = this.ctx.getContentResolver().openOutputStream(uri);
+                if (openOutputStream != null) {
+                    OutputStream outputStream = openOutputStream;
+                    try {
+                        OutputStream it = outputStream;
+                        it.write(bytes);
+                        Unit unit = Unit.INSTANCE;
+                        CloseableKt.closeFinally(outputStream, null);
+                    } finally {
+                    }
+                }
+                new Handler(Looper.getMainLooper()).post(new Runnable() { // from class: com.starpilot.starview.GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda0
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        GalaxyWebPool.SaveBridge.save$lambda$2(GalaxyWebPool.SaveBridge.this, name);
+                    }
+                });
+            } catch (Exception e) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() { // from class: com.starpilot.starview.GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda1
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        GalaxyWebPool.SaveBridge.save$lambda$3(GalaxyWebPool.SaveBridge.this, e);
+                    }
+                });
+            }
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public static final void save$lambda$2(SaveBridge this$0, String $name) {
+            Toast.makeText(this$0.ctx, "Saved " + $name + " to Download/StarView", 1).show();
+        }
+
+        /* JADX INFO: Access modifiers changed from: private */
+        public static final void save$lambda$3(SaveBridge this$0, Exception $e) {
+            Toast.makeText(this$0.ctx, "Save failed: " + $e.getMessage(), 1).show();
+        }
+    }
+
+    public final void whenReady(Function0<Unit> fn) {
+        Intrinsics.checkNotNullParameter(fn, "fn");
+        if (ready) {
+            fn.invoke();
+        } else {
+            waiting.add(fn);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void pollReady(final WebView view, final int tries) {
+        view.evaluateJavascript("(function(){var b=document.getElementById('galaxy-boot');return !!document.querySelector('.gx-content')&&(!b||!b.isConnected||b.hidden);})()", new ValueCallback() { // from class: com.starpilot.starview.GalaxyWebPool$$ExternalSyntheticLambda2
+            @Override // android.webkit.ValueCallback
+            public final void onReceiveValue(Object obj) {
+                GalaxyWebPool.pollReady$lambda$11(tries, view, (String) obj);
+            }
+        });
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void pollReady$lambda$11(final int $tries, final WebView $view, String r) {
+        if (Intrinsics.areEqual(r, "true") || $tries >= 60) {
+            ready = true;
+            String it = pendingPath;
+            if (it != null) {
+                pendingPath = null;
+                INSTANCE.go(it);
+            }
+            Iterable fns = new ArrayList(waiting);
+            waiting.clear();
+            Iterable $this$forEach$iv = fns;
+            for (Object element$iv : $this$forEach$iv) {
+                ((Function0) element$iv).invoke();
+            }
             return;
-         }
-
-         if (var41 != null) {
-            try {
-               var42 = this.ctx.getContentResolver().openOutputStream(var41);
-            } catch (Exception var32) {
-               new Handler(Looper.getMainLooper()).post(new GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda1(this, var32));
-               return;
+        }
+        main.postDelayed(new Runnable() { // from class: com.starpilot.starview.GalaxyWebPool$$ExternalSyntheticLambda1
+            @Override // java.lang.Runnable
+            public final void run() {
+                GalaxyWebPool.pollReady$lambda$11$lambda$10($view, $tries);
             }
+        }, 100L);
+    }
 
-            if (var42 != null) {
-               try {
-                  var43 = var42;
-               } catch (Exception var31) {
-                  new Handler(Looper.getMainLooper()).post(new GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda1(this, var31));
-                  return;
-               }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void pollReady$lambda$11$lambda$10(WebView $view, int $tries) {
+        INSTANCE.pollReady($view, $tries + 1);
+    }
 
-               try {
-                  var43.write(var37);
-                  Unit var39 = Unit.INSTANCE;
-               } catch (Throwable var30) {
-                  Throwable var38 = var30;
+    /* JADX INFO: Access modifiers changed from: private */
+    public final void inject(WebView view) {
+        String css = StringsKt.replace$default(StringsKt.replace$default(getCSS(), "\\", "\\\\", false, 4, (Object) null), "`", "\\`", false, 4, (Object) null);
+        view.evaluateJavascript("(function(){try{localStorage.setItem('galaxy-preview-theme','dark');}catch(e){}\n      var s=document.getElementById('starview-theme');if(!s){s=document.createElement('style');s.id='starview-theme';(document.head||document.documentElement).appendChild(s);}\n      s.textContent=`" + css + "`;})();", null);
+    }
 
-                  try {
-                     throw var38;
-                  } finally {
-                     try {
-                        CloseableKt.closeFinally(var43, var38);
-                     } catch (Exception var27) {
-                        new Handler(Looper.getMainLooper()).post(new GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda1(this, var27));
-                        return;
-                     }
-                  }
-               }
+    private final String hex(int c) {
+        StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
+        String format = String.format("#%06X", Arrays.copyOf(new Object[]{Integer.valueOf(16777215 & c)}, 1));
+        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+        return format;
+    }
 
-               try {
-                  CloseableKt.closeFinally(var43, null);
-               } catch (Exception var29) {
-                  new Handler(Looper.getMainLooper()).post(new GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda1(this, var29));
-                  return;
-               }
-            }
-
-            try {
-               Handler var40 = new Handler(Looper.getMainLooper());
-               GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda0 var44 = new GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda0(this, var1);
-               var40.post(var44);
-            } catch (Exception var26) {
-               new Handler(Looper.getMainLooper()).post(new GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda1(this, var26));
-            }
-         } else {
-            try {
-               RuntimeException var36 = new RuntimeException("no storage");
-               throw var36;
-            } catch (Exception var33) {
-               new Handler(Looper.getMainLooper()).post(new GalaxyWebPool$SaveBridge$$ExternalSyntheticLambda1(this, var33));
-            }
-         }
-      }
-   }
+    public final String getCSS() {
+        return StringsKt.trimIndent("\n    :root, [data-theme=\"light\"] { color-scheme: dark;\n      --primary: " + hex(CarUi.Companion.getACCENT()) + "; --primary-hover: " + hex(CarUi.Companion.getACCENT()) + "; --primary-glow: rgba(111,227,161,.25); --on-primary: " + hex(CarUi.Companion.getBG()) + ";\n      --primary-container: rgba(111,227,161,.16); --on-primary-container: #d8ffe9;\n      --secondary: " + hex(CarUi.Companion.getACCENT()) + "; --secondary-glow: rgba(111,227,161,.2); --success: " + hex(CarUi.Companion.getACCENT()) + "; --warning: " + hex(CarUi.Companion.getWARN()) + ";\n      --background: " + hex(CarUi.Companion.getFRAME()) + "; --surface: " + hex(CarUi.Companion.getCARD()) + "; --surface-container: " + hex(CarUi.Companion.getCARD()) + "; --surface-container-high: " + hex(CarUi.Companion.getCARD_ON()) + ";\n      --on-surface: #FFFFFF; --on-surface-variant: " + hex(CarUi.Companion.getDIM()) + "; --text-muted: " + hex(CarUi.Companion.getDIM()) + ";\n      --glass-bg: " + hex(CarUi.Companion.getCARD()) + "; --glass-bg-hover: " + hex(CarUi.Companion.getCARD_ON()) + "; --glass-active-bg: rgba(111,227,161,.18); --glass-border: #3C424E;\n      --glass-shadow: none; --glass-blur: none; --glass-text: #FFFFFF; --outline: #323742; --outline-variant: #262A33;\n      --font-body: Roboto, \"Noto Sans\", sans-serif; --radius-sm: 14px; --radius-md: 14px; --radius-lg: 18px;\n      --scrollbar-thumb: #3A404C; --scrollbar-thumb-hover: #4A515E; --scrollbar-border: transparent;\n      --bottomnav-height: 0px; --content-width: 100%; }\n    html, body { background: " + hex(CarUi.Companion.getFRAME()) + " !important; font-size: 17px; }\n    #galaxy-bg, .gx-appbar, .gx-drawer, .gx-underlay, .blur-nav, .gx-nav-indicator, #galaxy-boot, .gx-boot { display: none !important; }\n    * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }\n    .gx-content { max-width: none !important; margin-top: 0 !important; padding-top: 4px !important; }\n  ");
+    }
 }

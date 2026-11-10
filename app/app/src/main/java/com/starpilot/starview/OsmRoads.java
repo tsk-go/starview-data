@@ -2,8 +2,11 @@ package com.starpilot.starview;
 
 import android.content.Context;
 import android.util.Log;
+import com.starpilot.starview.MapdMaps;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -16,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import kotlin.Lazy;
 import kotlin.LazyKt;
@@ -29,3282 +33,2470 @@ import kotlin.collections.CollectionsKt;
 import kotlin.collections.MapsKt;
 import kotlin.collections.SetsKt;
 import kotlin.comparisons.ComparisonsKt;
+import kotlin.io.CloseableKt;
 import kotlin.io.FilesKt;
+import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.jvm.internal.Ref.DoubleRef;
+import kotlin.jvm.internal.Ref;
 import kotlin.ranges.IntProgression;
+import kotlin.ranges.IntRange;
 import kotlin.ranges.RangesKt;
 import kotlin.text.Regex;
 import kotlin.text.StringsKt;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
-import okhttp3.OkHttpClient.Builder;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/* compiled from: OsmRoads.kt */
 public final class OsmRoads {
-   private static final Map<String, String> ABBR;
-   private static final Set<String> DIRS = SetsKt.setOf(new String[]{"east", "west", "north", "south", "eastbound", "westbound", "northbound", "southbound"});
-   public static final OsmRoads INSTANCE = new OsmRoads();
-   private static final Set<String> KINDS = SetsKt.setOf(
-      new String[]{
-         "motorway",
-         "trunk",
-         "primary",
-         "secondary",
-         "tertiary",
-         "unclassified",
-         "residential",
-         "living_street",
-         "service",
-         "motorway_link",
-         "trunk_link",
-         "primary_link",
-         "secondary_link",
-         "tertiary_link"
-      }
-   );
-   private static final double KY = 110540.0;
-   private static final String TAG = "StarView/Osm";
-   public static final double TILE = 0.01;
-   private static final List<String> URLS = CollectionsKt.listOf(
-      new String[]{
-         "https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter", "https://overpass.kumi.systems/api/interpreter"
-      }
-   );
-   private static final ConcurrentHashMap<String, Integer> boxState = new ConcurrentHashMap<>();
-   private static final ConcurrentHashMap<String, List<OsmRoads.Way>> boxWays = new ConcurrentHashMap<>();
-   private static File dir;
-   private static volatile boolean enabled = true;
-   private static final ConcurrentHashMap<String, Long> failedAt = new ConcurrentHashMap<>();
-   private static final ConcurrentLinkedQueue<OsmRoads.Fix> fixes = new ConcurrentLinkedQueue<>();
-   private static volatile String gpsSrc = "";
-   private static final Lazy http$delegate = LazyKt.lazy(new OsmRoads$$ExternalSyntheticLambda2());
-   private static double kx;
-   private static long lastEnsureMs;
-   private static volatile OsmRoads.Fix lastFix;
-   private static volatile double lat0 = Double.NaN;
-   private static final ExecutorService loader = Executors.newSingleThreadExecutor(new OsmRoads$$ExternalSyntheticLambda3());
-   private static volatile double lon0;
-   private static volatile String matchStatus = "";
-   private static volatile long rtkFixNs;
-   private static volatile String tileStatus = "no GPS yet";
-   private static final ConcurrentHashMap<String, Integer> tiles = new ConcurrentHashMap<>();
-   private static final ConcurrentHashMap<Long, OsmRoads.Way> ways = new ConcurrentHashMap<>();
-
-   // $VF: synthetic method
-   public static Thread $r8$lambda$QanfgN_bDj7hqf2R9NQ8_CMOhxk(Runnable var0) {
-      return loader$lambda$2(var0);
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$SO7CXvWftdNrg_fL9kvBiztGxg8/* $VF was: $r8$lambda$SO7CXvWftdNrg_fL9kvBiztGxg8*/(File var0, String var1) {
-      ensureBoxes$lambda$6(var0, var1);
-   }
-
-   // $VF: synthetic method
-   public static OkHttpClient $r8$lambda$ebUeA_GO_XjzHA_IX_V0rASedjo() {
-      return http_delegate$lambda$0();
-   }
-
-   // $VF: synthetic method
-   public static void $r8$lambda$u0Ha0OamhbaiyavHBafYFfwsqlk(int var0, int var1, int var2, int var3) {
-      ensureTiles$lambda$7(var0, var1, var2, var3);
-   }
-
-   static {
-      Pair var13 = TuplesKt.to("st", "street");
-      Pair var0 = TuplesKt.to("ave", "avenue");
-      Pair var6 = TuplesKt.to("av", "avenue");
-      Pair var11 = TuplesKt.to("rd", "road");
-      Pair var3 = TuplesKt.to("blvd", "boulevard");
-      Pair var1 = TuplesKt.to("dr", "drive");
-      Pair var18 = TuplesKt.to("ln", "lane");
-      Pair var19 = TuplesKt.to("pl", "place");
-      Pair var4 = TuplesKt.to("ct", "court");
-      Pair var15 = TuplesKt.to("hwy", "highway");
-      Pair var9 = TuplesKt.to("pkwy", "parkway");
-      Pair var7 = TuplesKt.to("expy", "expressway");
-      Pair var14 = TuplesKt.to("tpke", "turnpike");
-      Pair var12 = TuplesKt.to("e", "east");
-      Pair var8 = TuplesKt.to("w", "west");
-      Pair var10 = TuplesKt.to("n", "north");
-      Pair var16 = TuplesKt.to("s", "south");
-      Pair var2 = TuplesKt.to("ter", "terrace");
-      Pair var5 = TuplesKt.to("sq", "square");
-      Pair var17 = TuplesKt.to("rte", "route");
-      ABBR = MapsKt.mapOf(
-         new Pair[]{
-            var13,
-            var0,
-            var6,
-            var11,
-            var3,
-            var1,
-            var18,
-            var19,
-            var4,
-            var15,
-            var9,
-            var7,
-            var14,
-            var12,
-            var8,
-            var10,
-            var16,
-            var2,
-            var5,
-            var17,
-            TuplesKt.to("rt", "route")
-         }
-      );
-   }
-
-   private OsmRoads() {
-   }
-
-   private static final void carFrame$flush(
-      ArrayList<Double> var0, ArrayList<Pair<Double, OsmRoads.Piece>> var1, DoubleRef var2, OsmRoads.Way var3, ArrayList<Double> var4
-   ) {
-      if (var0.size() >= 2) {
-         var1.add(new Pair<>(var2.element, new OsmRoads.Piece(var3, CollectionsKt.toDoubleArray(var0), CollectionsKt.toDoubleArray(var4))));
-      }
-
-      var0.clear();
-      var4.clear();
-      var2.element = Double.MAX_VALUE;
-   }
-
-   private static final void crossStreetsAhead$add(double var0, ArrayList<Pair<Double, String>> var2, double var3, String var5) {
-      if (var3 > 2.0 && var3 <= var0) {
-         var var9 = var2;
-         boolean var8 = var9 instanceof Collection;
-         boolean var7 = true;
-         boolean var10;
-         if (var8 && var9.isEmpty()) {
-            var10 = var7;
-         } else {
-            label40: {
-               Iterator var11 = var9.iterator();
-
-               while (var11.hasNext()) {
-                  if (Math.abs(((Number)((Pair)var11.next()).getFirst()).doubleValue() - var3) < 10.0) {
-                     var10 = true;
-                  } else {
-                     var10 = false;
-                  }
-
-                  if (var10) {
-                     var10 = false;
-                     break label40;
-                  }
-               }
-
-               var10 = var7;
-            }
-         }
-
-         if (var10) {
-            var2.add(TuplesKt.to(var3, var5));
-         }
-      }
-   }
-
-   private final void ensureBoxes(double var1, double var3) {
-      long var13 = 4568404364472794339L;
-      double var9 = 300.0 / kx;
-
-      for (int var11 = 0; var11 < 3; var11++) {
-         double var5 = new double[]{var1 - 0.002713949701465533, var1, var1 + 0.002713949701465533}[var11];
-
-         for (int var12 = 0; var12 < 3; var12++) {
-            double var7 = new double[]{var3 - var9, var3, var3 + var9}[var12];
-            Pair var16 = MapdMaps.INSTANCE.boxFileFor(var5, var7);
-            boolean var15 = (Boolean)var16.component1();
-            File var24 = (File)var16.component2();
-            if (var15 && var24 != null) {
-               String var17 = var24.getName();
-               if (!boxState.containsKey(var17)) {
-                  boxState.put(var17, 0);
-                  loader.execute(new OsmRoads$$ExternalSyntheticLambda1(var24, var17));
-               }
-            }
-         }
-      }
-
-      Set var25 = boxWays.keySet();
-      Intrinsics.checkNotNullExpressionValue(var25, "<get-keys>(...)");
-
-      for (String var18 : CollectionsKt.toList(var25)) {
-         List var26 = StringsKt.split$default(var18, new char[]{'_'}, false, 0, 6, null);
-         var9 = Double.parseDouble((String)var26.get(0));
-         double var21 = Double.parseDouble((String)var26.get(2));
-         double var19 = 2;
-         var21 = (var9 + var21) / var19;
-         var19 = (Double.parseDouble((String)var26.get(1)) + Double.parseDouble((String)var26.get(3))) / var19;
-         if (Math.abs(var21 - var1) > 0.5 || Math.abs(var19 - var3) > 0.5) {
-            boxWays.remove(var18);
-            boxState.remove(var18);
-         }
-      }
-   }
-
-   // $VF: Duplicated exception handlers to handle obfuscated exceptions
-   private static final void ensureBoxes$lambda$6(File var0, String var1) {
-      label142: {
-         label141: {
-            label145: {
-               ArrayList var10;
-               try {
-                  var31 = MapdMaps.INSTANCE.readBox(FilesKt.readBytes(var0));
-                  ArrayList var9 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var31, 10));
-                  var10 = var9;
-               } catch (Exception var29) {
-                  Log.e("StarView/Osm", "box " + var1, var29);
-                  var30 = var29.getMessage();
-                  if (var30 != null) {
-                     break label141;
-                  }
-                  break label145;
-               }
-
-               boolean var8 = false;
-
-               Iterator var11;
-               try {
-                  var11 = var31.iterator();
-               } catch (Exception var25) {
-                  Log.e("StarView/Osm", "box " + var1, var25);
-                  var30 = var25.getMessage();
-                  if (var30 != null) {
-                     break label141;
-                  }
-                  break label145;
-               }
-
-               while (true) {
-                  double[] var12;
-                  MapdMaps.W var13;
-                  double[] var14;
-                  try {
-                     if (!var11.hasNext()) {
-                        break;
-                     }
-
-                     var13 = (MapdMaps.W)var11.next();
-                     var14 = new double[var13.getLat().length];
-                     var12 = new double[var13.getLat().length];
-                  } catch (Exception var26) {
-                     Log.e("StarView/Osm", "box " + var1, var26);
-                     var30 = var26.getMessage();
-                     if (var30 != null) {
-                        break label141;
-                     }
-                     break label145;
-                  }
-
-                  int var6 = 0;
-
-                  int var7;
-                  try {
-                     var7 = var13.getLat().length;
-                  } catch (Exception var24) {
-                     Log.e("StarView/Osm", "box " + var1, var24);
-                     var30 = var24.getMessage();
-                     if (var30 != null) {
-                        break label141;
-                     }
-                     break label145;
-                  }
-
-                  while (var6 < var7) {
-                     double var2;
-                     double var4;
-                     try {
-                        Pair var39 = INSTANCE.toLocal(var13.getLat()[var6], var13.getLon()[var6]);
-                        var2 = ((Number)var39.component1()).doubleValue();
-                        var4 = ((Number)var39.component2()).doubleValue();
-                     } catch (Exception var23) {
-                        Log.e("StarView/Osm", "box " + var1, var23);
-                        var30 = var23.getMessage();
-                        if (var30 != null) {
-                           break label141;
-                        }
-                        break label145;
-                     }
-
-                     var14[var6] = var2;
-                     var12[var6] = var4;
-                     var6++;
-                  }
-
-                  String var40;
-                  label126: {
-                     label125: {
-                        try {
-                           if (Intrinsics.areEqual(var13.getKind(), "unknown")) {
-                              break label125;
-                           }
-                        } catch (Exception var28) {
-                           Log.e("StarView/Osm", "box " + var1, var28);
-                           var30 = var28.getMessage();
-                           if (var30 != null) {
-                              break label141;
-                           }
-                           break label145;
-                        }
-
-                        try {
-                           var40 = var13.getKind();
-                           break label126;
-                        } catch (Exception var22) {
-                           Log.e("StarView/Osm", "box " + var1, var22);
-                           var30 = var22.getMessage();
-                           if (var30 != null) {
-                              break label141;
-                           }
-                           break label145;
-                        }
-                     }
-
-                     var40 = "residential";
-                  }
-
-                  label119: {
-                     label118: {
-                        try {
-                           if (var13.getOneway()) {
-                              break label118;
-                           }
-                        } catch (Exception var27) {
-                           Log.e("StarView/Osm", "box " + var1, var27);
-                           var30 = var27.getMessage();
-                           if (var30 != null) {
-                              break label141;
-                           }
-                           break label145;
-                        }
-
-                        var37 = 0;
-                        break label119;
-                     }
-
-                     var37 = 1;
-                  }
-
-                  try {
-                     OsmRoads.Way var15 = new OsmRoads.Way(
-                        var13.getId(),
-                        var13.getName(),
-                        var40,
-                        var37,
-                        INSTANCE.widthOf(var40, var37, var13.getLanes(), null, ""),
-                        var14,
-                        var12,
-                        var13.getLanes()
-                     );
-                     var10.add(var15);
-                  } catch (Exception var21) {
-                     Log.e("StarView/Osm", "box " + var1, var21);
-                     var30 = var21.getMessage();
-                     if (var30 != null) {
-                        break label141;
-                     }
-                     break label145;
-                  }
-               }
-
-               try {
-                  var32 = var10;
-               } catch (Exception var20) {
-                  Log.e("StarView/Osm", "box " + var1, var20);
-                  var30 = var20.getMessage();
-                  if (var30 != null) {
-                     break label141;
-                  }
-                  break label145;
-               }
-
-               try {
-                  boxWays.put(var1, var32);
-                  boxState.put(var1, 1);
-                  Collection var33 = boxWays.values();
-                  Intrinsics.checkNotNullExpressionValue(var33, "<get-values>(...)");
-                  var34 = var33.iterator();
-               } catch (Exception var19) {
-                  Log.e("StarView/Osm", "box " + var1, var19);
-                  var30 = var19.getMessage();
-                  if (var30 != null) {
-                     break label141;
-                  }
-                  break label145;
-               }
-
-               int var38 = 0;
-
-               while (true) {
-                  List var41;
-                  try {
-                     if (!var34.hasNext()) {
-                        break;
-                     }
-
-                     var41 = (List)var34.next();
-                  } catch (Exception var18) {
-                     Log.e("StarView/Osm", "box " + var1, var18);
-                     var30 = var18.getMessage();
-                     if (var30 != null) {
-                        break label141;
-                     }
-                     break label145;
-                  }
-
-                  try {
-                     var38 += var41.size();
-                  } catch (Exception var17) {
-                     Log.e("StarView/Osm", "box " + var1, var17);
-                     var30 = var17.getMessage();
-                     if (var30 != null) {
-                        break label141;
-                     }
-                     break label145;
-                  }
-               }
-
-               try {
-                  StringBuilder var36 = new StringBuilder();
-                  tileStatus = var36.append("offline map: ").append(var38).append(" streets").toString();
-                  return;
-               } catch (Exception var16) {
-                  Log.e("StarView/Osm", "box " + var1, var16);
-                  var30 = var16.getMessage();
-                  if (var30 != null) {
-                     break label141;
-                  }
-               }
-            }
-
-            var35 = null;
-            break label142;
-         }
-
-         var35 = StringsKt.take(var30, 50);
-      }
-
-      tileStatus = "offline map error: " + var35;
-   }
-
-   private final void ensureTiles(double var1, double var3) {
-      this.ensureBoxes(var1, var3);
-      long var15 = 4576918229304087675L;
-      int var13 = (int)Math.floor(var1 / 0.01);
-      int var12 = (int)Math.floor(var3 / 0.01);
-      double var5 = var1 / 0.01 - var13;
-      var1 = var3 / 0.01 - var12;
-      double var7 = 300.0 / (kx * 0.01);
-      int var10 = -1;
-      var3 = var5;
-
-      while (true) {
-         byte var9 = 2;
-         if (var10 >= 2) {
-            return;
-         }
-
-         for (int var11 = -1; var11 < var9; var11++) {
-            if (var10 != -1 || !(var3 > 0.2713949701465533)) {
-               if ((var10 != 1 || !(var3 < 1 - 0.2713949701465533)) && (var11 != -1 || !(var1 > var7)) && (var11 != 1 || !(var1 < 1 - var7))) {
-                  String var23 = this.key(var13 + var10, var12 + var11);
-                  MapdMaps var24 = MapdMaps.INSTANCE;
-                  var5 = var13 + var10;
-                  long var19 = 4576918229304087675L;
-                  if (!var24.boxFileFor((var5 + 0.5) * 0.01, (var12 + var11 + 0.5) * 0.01).getFirst()) {
-                     Integer var29 = tiles.get(var23);
-                     if (var29 != null && var29 == 0) {
-                        var9 = 2;
-                     } else if (var29 != null && var29 == 1) {
-                        var9 = 2;
-                     } else {
-                        if (var29 != null) {
-                           int var14 = var29;
-                           var9 = 2;
-                           if (var14 == 2) {
-                              long var21 = System.currentTimeMillis();
-                              Long var30 = failedAt.get(var23);
-                              long var17;
-                              if (var30 != null) {
-                                 var17 = var30;
-                              } else {
-                                 var17 = 0L;
-                              }
-
-                              if (var21 - var17 < 30000L) {
-                                 continue;
-                              }
-                           }
-                        }
-
-                        var9 = 2;
-                        tiles.put(var23, 0);
-                        loader.execute(new OsmRoads$$ExternalSyntheticLambda0(var13, var10, var12, var11));
-                     }
-                  } else {
-                     var9 = 2;
-                  }
-               } else {
-                  var9 = 2;
-                  var15 = 4576918229304087675L;
-               }
-            }
-         }
-
-         var10++;
-      }
-   }
-
-   private static final void ensureTiles$lambda$7(int var0, int var1, int var2, int var3) {
-      INSTANCE.load(var0 + var1, var2 + var3);
-   }
-
-   private final OkHttpClient getHttp() {
-      return (OkHttpClient)http$delegate.getValue();
-   }
-
-   private static final OkHttpClient http_delegate$lambda$0() {
-      return new Builder().connectTimeout(10L, TimeUnit.SECONDS).readTimeout(40L, TimeUnit.SECONDS).build();
-   }
-
-   private final String key(int var1, int var2) {
-      return var1 + "_" + var2;
-   }
-
-   // $VF: synthetic method
-   public static double laneCenter$default(OsmRoads var0, double var1, int var3, int var4, boolean var5, int var6, Object var7) {
-      if ((var6 & 8) != 0) {
-         var5 = true;
-      }
-
-      return var0.laneCenter(var1, var3, var4, var5);
-   }
-
-   private static final int laneIndex$count(double var0) {
-      return RangesKt.coerceAtLeast((int)Math.floor((var0 - 0.6) / 3.4), 0);
-   }
-
-   // $VF: synthetic method
-   public static int laneIndex$default(
-      OsmRoads var0, int var1, boolean var2, double var3, double var5, double var7, double var9, boolean var11, boolean var12, int var13, Object var14
-   ) {
-      if ((var13 & 64) != 0) {
-         var11 = false;
-      }
-
-      if ((var13 & 128) != 0) {
-         var12 = false;
-      }
-
-      return var0.laneIndex(var1, var2, var3, var5, var7, var9, var11, var12);
-   }
-
-   private final void load(int param1, int param2) {
-      // $VF: Couldn't be decompiled
-      // Please report this to the Vineflower issue tracker, at https://github.com/Vineflower/vineflower/issues with a copy of the class file (if you have the rights to distribute it!)
-      // java.lang.NullPointerException: Cannot invoke "org.jetbrains.java.decompiler.util.collections.fixed.FastFixedSet.contains(Object)" because "predset" is null
-      //   at org.jetbrains.java.decompiler.modules.decompiler.decompose.FastExtendedPostdominanceHelper.lambda$removeErroneousNodes$1(FastExtendedPostdominanceHelper.java:231)
-      //   at org.jetbrains.java.decompiler.modules.decompiler.decompose.FastExtendedPostdominanceHelper.iterateReachability(FastExtendedPostdominanceHelper.java:373)
-      //   at org.jetbrains.java.decompiler.modules.decompiler.decompose.FastExtendedPostdominanceHelper.removeErroneousNodes(FastExtendedPostdominanceHelper.java:207)
-      //   at org.jetbrains.java.decompiler.modules.decompiler.decompose.FastExtendedPostdominanceHelper.getExtendedPostdominators(FastExtendedPostdominanceHelper.java:63)
-      //   at org.jetbrains.java.decompiler.modules.decompiler.decompose.DomHelper.findGeneralStatement(DomHelper.java:537)
-      //   at org.jetbrains.java.decompiler.modules.decompiler.decompose.DomHelper.processStatement(DomHelper.java:472)
-      //   at org.jetbrains.java.decompiler.modules.decompiler.decompose.DomHelper.processStatement(DomHelper.java:379)
-      //   at org.jetbrains.java.decompiler.modules.decompiler.decompose.DomHelper.parseGraph(DomHelper.java:208)
-      //   at org.jetbrains.java.decompiler.main.rels.MethodProcessor.codeToJava(MethodProcessor.java:184)
-      //
-      // Bytecode:
-      // 000: aload 0
-      // 001: iload 1
-      // 002: iload 2
-      // 003: invokespecial com/starpilot/starview/OsmRoads.key (II)Ljava/lang/String;
-      // 006: astore 16
-      // 008: new java/io/File
-      // 00b: astore 17
-      // 00d: getstatic com/starpilot/starview/OsmRoads.dir Ljava/io/File;
-      // 010: astore 9
-      // 012: aload 9
-      // 014: ifnonnull 018
-      // 017: return
-      // 018: new java/lang/StringBuilder
-      // 01b: astore 10
-      // 01d: aload 10
-      // 01f: invokespecial java/lang/StringBuilder.<init> ()V
-      // 022: aload 17
-      // 024: aload 9
-      // 026: aload 10
-      // 028: aload 16
-      // 02a: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 02d: ldc_w ".json"
-      // 030: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 033: invokevirtual java/lang/StringBuilder.toString ()Ljava/lang/String;
-      // 036: invokespecial java/io/File.<init> (Ljava/io/File;Ljava/lang/String;)V
-      // 039: aload 17
-      // 03b: invokevirtual java/io/File.isFile ()Z
-      // 03e: istore 8
-      // 040: ldc_w ""
-      // 043: astore 15
-      // 045: iload 8
-      // 047: ifeq 063
-      // 04a: aload 17
-      // 04c: invokevirtual java/io/File.length ()J
-      // 04f: ldc2_w 20
-      // 052: lcmp
-      // 053: ifle 063
-      // 056: aload 17
-      // 058: aconst_null
-      // 059: bipush 1
-      // 05a: aconst_null
-      // 05b: invokestatic kotlin/io/FilesKt.readText$default (Ljava/io/File;Ljava/nio/charset/Charset;ILjava/lang/Object;)Ljava/lang/String;
-      // 05e: astore 9
-      // 060: goto 2dd
-      // 063: ldc_w "downloading streets…"
-      // 066: putstatic com/starpilot/starview/OsmRoads.tileStatus Ljava/lang/String;
-      // 069: iload 1
-      // 06a: i2d
-      // 06b: ldc2_w 0.01
-      // 06e: dmul
-      // 06f: dstore 5
-      // 071: iload 2
-      // 072: i2d
-      // 073: ldc2_w 0.01
-      // 076: dmul
-      // 077: dstore 3
-      // 078: getstatic java/util/Locale.US Ljava/util/Locale;
-      // 07b: ldc_w "%.4f"
-      // 07e: bipush 1
-      // 07f: anewarray 4
-      // 082: dup
-      // 083: bipush 0
-      // 084: dload 5
-      // 086: invokestatic java/lang/Double.valueOf (D)Ljava/lang/Double;
-      // 089: aastore
-      // 08a: bipush 1
-      // 08b: invokestatic java/util/Arrays.copyOf ([Ljava/lang/Object;I)[Ljava/lang/Object;
-      // 08e: invokestatic java/lang/String.format (Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
-      // 091: astore 11
-      // 093: aload 11
-      // 095: ldc_w "format(...)"
-      // 098: invokestatic kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue (Ljava/lang/Object;Ljava/lang/String;)V
-      // 09b: getstatic java/util/Locale.US Ljava/util/Locale;
-      // 09e: ldc_w "%.4f"
-      // 0a1: bipush 1
-      // 0a2: anewarray 4
-      // 0a5: dup
-      // 0a6: bipush 0
-      // 0a7: dload 3
-      // 0a8: invokestatic java/lang/Double.valueOf (D)Ljava/lang/Double;
-      // 0ab: aastore
-      // 0ac: bipush 1
-      // 0ad: invokestatic java/util/Arrays.copyOf ([Ljava/lang/Object;I)[Ljava/lang/Object;
-      // 0b0: invokestatic java/lang/String.format (Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
-      // 0b3: astore 12
-      // 0b5: aload 12
-      // 0b7: ldc_w "format(...)"
-      // 0ba: invokestatic kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue (Ljava/lang/Object;Ljava/lang/String;)V
-      // 0bd: getstatic java/util/Locale.US Ljava/util/Locale;
-      // 0c0: ldc_w "%.4f"
-      // 0c3: bipush 1
-      // 0c4: anewarray 4
-      // 0c7: dup
-      // 0c8: bipush 0
-      // 0c9: dload 5
-      // 0cb: ldc2_w 0.01
-      // 0ce: dadd
-      // 0cf: invokestatic java/lang/Double.valueOf (D)Ljava/lang/Double;
-      // 0d2: aastore
-      // 0d3: bipush 1
-      // 0d4: invokestatic java/util/Arrays.copyOf ([Ljava/lang/Object;I)[Ljava/lang/Object;
-      // 0d7: invokestatic java/lang/String.format (Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
-      // 0da: astore 9
-      // 0dc: aload 9
-      // 0de: ldc_w "format(...)"
-      // 0e1: invokestatic kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue (Ljava/lang/Object;Ljava/lang/String;)V
-      // 0e4: getstatic java/util/Locale.US Ljava/util/Locale;
-      // 0e7: ldc_w "%.4f"
-      // 0ea: bipush 1
-      // 0eb: anewarray 4
-      // 0ee: dup
-      // 0ef: bipush 0
-      // 0f0: dload 3
-      // 0f1: ldc2_w 0.01
-      // 0f4: dadd
-      // 0f5: invokestatic java/lang/Double.valueOf (D)Ljava/lang/Double;
-      // 0f8: aastore
-      // 0f9: bipush 1
-      // 0fa: invokestatic java/util/Arrays.copyOf ([Ljava/lang/Object;I)[Ljava/lang/Object;
-      // 0fd: invokestatic java/lang/String.format (Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
-      // 100: astore 13
-      // 102: aload 13
-      // 104: ldc_w "format(...)"
-      // 107: invokestatic kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue (Ljava/lang/Object;Ljava/lang/String;)V
-      // 10a: new java/lang/StringBuilder
-      // 10d: astore 10
-      // 10f: aload 10
-      // 111: invokespecial java/lang/StringBuilder.<init> ()V
-      // 114: aload 10
-      // 116: ldc_w "[out:json][timeout:30];way[\"highway\"][\"area\"!=\"yes\"]("
-      // 119: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 11c: aload 11
-      // 11e: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 121: ldc_w ","
-      // 124: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 127: aload 12
-      // 129: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 12c: ldc_w ","
-      // 12f: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 132: aload 9
-      // 134: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 137: ldc_w ","
-      // 13a: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 13d: aload 13
-      // 13f: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 142: ldc_w ");out tags geom;"
-      // 145: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 148: invokevirtual java/lang/StringBuilder.toString ()Ljava/lang/String;
-      // 14b: astore 13
-      // 14d: getstatic com/starpilot/starview/OsmRoads.URLS Ljava/util/List;
-      // 150: invokeinterface java/util/List.iterator ()Ljava/util/Iterator; 1
-      // 155: astore 12
-      // 157: ldc_w ""
-      // 15a: astore 10
-      // 15c: aconst_null
-      // 15d: astore 9
-      // 15f: aload 12
-      // 161: invokeinterface java/util/Iterator.hasNext ()Z 1
-      // 166: ifeq 29b
-      // 169: aload 12
-      // 16b: invokeinterface java/util/Iterator.next ()Ljava/lang/Object; 1
-      // 170: checkcast java/lang/String
-      // 173: astore 14
-      // 175: new okhttp3/Request$Builder
-      // 178: astore 11
-      // 17a: aload 11
-      // 17c: invokespecial okhttp3/Request$Builder.<init> ()V
-      // 17f: aload 11
-      // 181: aload 14
-      // 183: invokevirtual okhttp3/Request$Builder.url (Ljava/lang/String;)Lokhttp3/Request$Builder;
-      // 186: ldc_w "User-Agent"
-      // 189: ldc_w "StarView/2.25 (openpilot tablet display)"
-      // 18c: invokevirtual okhttp3/Request$Builder.header (Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Request$Builder;
-      // 18f: astore 14
-      // 191: new okhttp3/FormBody$Builder
-      // 194: astore 11
-      // 196: aload 11
-      // 198: aconst_null
-      // 199: bipush 1
-      // 19a: aconst_null
-      // 19b: invokespecial okhttp3/FormBody$Builder.<init> (Ljava/nio/charset/Charset;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-      // 19e: aload 14
-      // 1a0: aload 11
-      // 1a2: ldc_w "data"
-      // 1a5: aload 13
-      // 1a7: invokevirtual okhttp3/FormBody$Builder.add (Ljava/lang/String;Ljava/lang/String;)Lokhttp3/FormBody$Builder;
-      // 1aa: invokevirtual okhttp3/FormBody$Builder.build ()Lokhttp3/FormBody;
-      // 1ad: checkcast okhttp3/RequestBody
-      // 1b0: invokevirtual okhttp3/Request$Builder.post (Lokhttp3/RequestBody;)Lokhttp3/Request$Builder;
-      // 1b3: invokevirtual okhttp3/Request$Builder.build ()Lokhttp3/Request;
-      // 1b6: astore 11
-      // 1b8: aload 0
-      // 1b9: invokespecial com/starpilot/starview/OsmRoads.getHttp ()Lokhttp3/OkHttpClient;
-      // 1bc: aload 11
-      // 1be: invokevirtual okhttp3/OkHttpClient.newCall (Lokhttp3/Request;)Lokhttp3/Call;
-      // 1c1: invokeinterface okhttp3/Call.execute ()Lokhttp3/Response; 1
-      // 1c6: checkcast java/io/Closeable
-      // 1c9: astore 14
-      // 1cb: aload 14
-      // 1cd: checkcast okhttp3/Response
-      // 1d0: astore 18
-      // 1d2: aload 18
-      // 1d4: invokevirtual okhttp3/Response.body ()Lokhttp3/ResponseBody;
-      // 1d7: astore 11
-      // 1d9: aload 11
-      // 1db: invokestatic kotlin/jvm/internal/Intrinsics.checkNotNull (Ljava/lang/Object;)V
-      // 1de: aload 11
-      // 1e0: invokevirtual okhttp3/ResponseBody.string ()Ljava/lang/String;
-      // 1e3: astore 11
-      // 1e5: aload 18
-      // 1e7: invokevirtual okhttp3/Response.isSuccessful ()Z
-      // 1ea: ifeq 218
-      // 1ed: aload 11
-      // 1ef: checkcast java/lang/CharSequence
-      // 1f2: invokestatic kotlin/text/StringsKt.trimStart (Ljava/lang/CharSequence;)Ljava/lang/CharSequence;
-      // 1f5: astore 19
-      // 1f7: aload 19
-      // 1f9: invokevirtual java/lang/Object.toString ()Ljava/lang/String;
-      // 1fc: astore 19
-      // 1fe: aload 19
-      // 200: ldc_w "{"
-      // 203: bipush 0
-      // 204: bipush 2
-      // 205: aconst_null
-      // 206: invokestatic kotlin/text/StringsKt.startsWith$default (Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Z
-      // 209: ifeq 218
-      // 20c: aload 11
-      // 20e: astore 9
-      // 210: goto 239
-      // 213: astore 10
-      // 215: goto 257
-      // 218: aload 18
-      // 21a: invokevirtual okhttp3/Response.code ()I
-      // 21d: istore 1
-      // 21e: new java/lang/StringBuilder
-      // 221: astore 10
-      // 223: aload 10
-      // 225: invokespecial java/lang/StringBuilder.<init> ()V
-      // 228: aload 10
-      // 22a: ldc_w "HTTP "
-      // 22d: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 230: iload 1
-      // 231: invokevirtual java/lang/StringBuilder.append (I)Ljava/lang/StringBuilder;
-      // 234: invokevirtual java/lang/StringBuilder.toString ()Ljava/lang/String;
-      // 237: astore 10
-      // 239: getstatic kotlin/Unit.INSTANCE Lkotlin/Unit;
-      // 23c: astore 11
-      // 23e: aload 9
-      // 240: astore 11
-      // 242: aload 14
-      // 244: aconst_null
-      // 245: invokestatic kotlin/io/CloseableKt.closeFinally (Ljava/io/Closeable;Ljava/lang/Throwable;)V
-      // 248: goto 290
-      // 24b: astore 10
-      // 24d: goto 257
-      // 250: astore 10
-      // 252: goto 257
-      // 255: astore 10
-      // 257: aload 10
-      // 259: athrow
-      // 25a: astore 18
-      // 25c: aload 9
-      // 25e: astore 11
-      // 260: aload 14
-      // 262: aload 10
-      // 264: invokestatic kotlin/io/CloseableKt.closeFinally (Ljava/io/Closeable;Ljava/lang/Throwable;)V
-      // 267: aload 9
-      // 269: astore 11
-      // 26b: aload 18
-      // 26d: athrow
-      // 26e: astore 14
-      // 270: aload 11
-      // 272: astore 9
-      // 274: goto 279
-      // 277: astore 14
-      // 279: aload 14
-      // 27b: invokevirtual java/lang/Exception.getMessage ()Ljava/lang/String;
-      // 27e: astore 11
-      // 280: aload 11
-      // 282: astore 10
-      // 284: aload 11
-      // 286: ifnonnull 290
-      // 289: aload 14
-      // 28b: invokevirtual java/lang/Exception.toString ()Ljava/lang/String;
-      // 28e: astore 10
-      // 290: aload 9
-      // 292: ifnull 298
-      // 295: goto 29b
-      // 298: goto 15f
-      // 29b: aload 9
-      // 29d: ifnull 3d2
-      // 2a0: new java/io/File
-      // 2a3: astore 12
-      // 2a5: aload 17
-      // 2a7: invokevirtual java/io/File.getPath ()Ljava/lang/String;
-      // 2aa: astore 11
-      // 2ac: new java/lang/StringBuilder
-      // 2af: astore 10
-      // 2b1: aload 10
-      // 2b3: invokespecial java/lang/StringBuilder.<init> ()V
-      // 2b6: aload 12
-      // 2b8: aload 10
-      // 2ba: aload 11
-      // 2bc: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 2bf: ldc_w ".tmp"
-      // 2c2: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 2c5: invokevirtual java/lang/StringBuilder.toString ()Ljava/lang/String;
-      // 2c8: invokespecial java/io/File.<init> (Ljava/lang/String;)V
-      // 2cb: aload 12
-      // 2cd: aload 9
-      // 2cf: aconst_null
-      // 2d0: bipush 2
-      // 2d1: aconst_null
-      // 2d2: invokestatic kotlin/io/FilesKt.writeText$default (Ljava/io/File;Ljava/lang/String;Ljava/nio/charset/Charset;ILjava/lang/Object;)V
-      // 2d5: aload 12
-      // 2d7: aload 17
-      // 2d9: invokevirtual java/io/File.renameTo (Ljava/io/File;)Z
-      // 2dc: pop
-      // 2dd: aload 0
-      // 2de: aload 9
-      // 2e0: invokevirtual com/starpilot/starview/OsmRoads.parse$app_debug (Ljava/lang/String;)I
-      // 2e3: istore 7
-      // 2e5: getstatic com/starpilot/starview/OsmRoads.tiles Ljava/util/concurrent/ConcurrentHashMap;
-      // 2e8: checkcast java/util/Map
-      // 2eb: aload 16
-      // 2ed: bipush 1
-      // 2ee: invokestatic java/lang/Integer.valueOf (I)Ljava/lang/Integer;
-      // 2f1: invokeinterface java/util/Map.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; 3
-      // 2f6: pop
-      // 2f7: getstatic com/starpilot/starview/OsmRoads.tiles Ljava/util/concurrent/ConcurrentHashMap;
-      // 2fa: invokevirtual java/util/concurrent/ConcurrentHashMap.values ()Ljava/util/Collection;
-      // 2fd: astore 9
-      // 2ff: aload 9
-      // 301: ldc_w "<get-values>(...)"
-      // 304: invokestatic kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue (Ljava/lang/Object;Ljava/lang/String;)V
-      // 307: aload 9
-      // 309: checkcast java/lang/Iterable
-      // 30c: astore 9
-      // 30e: aload 9
-      // 310: checkcast java/util/Collection
-      // 313: invokeinterface java/util/Collection.isEmpty ()Z 1
-      // 318: ifeq 320
-      // 31b: bipush 0
-      // 31c: istore 1
-      // 31d: goto 36d
-      // 320: bipush 0
-      // 321: istore 1
-      // 322: aload 9
-      // 324: invokeinterface java/lang/Iterable.iterator ()Ljava/util/Iterator; 1
-      // 329: astore 9
-      // 32b: aload 9
-      // 32d: invokeinterface java/util/Iterator.hasNext ()Z 1
-      // 332: ifeq 36d
-      // 335: aload 9
-      // 337: invokeinterface java/util/Iterator.next ()Ljava/lang/Object; 1
-      // 33c: checkcast java/lang/Integer
-      // 33f: astore 10
-      // 341: aload 10
-      // 343: ifnonnull 349
-      // 346: goto 357
-      // 349: aload 10
-      // 34b: invokevirtual java/lang/Integer.intValue ()I
-      // 34e: bipush 1
-      // 34f: if_icmpne 357
-      // 352: bipush 1
-      // 353: istore 2
-      // 354: goto 359
-      // 357: bipush 0
-      // 358: istore 2
-      // 359: iload 2
-      // 35a: ifeq 36a
-      // 35d: iinc 1 1
-      // 360: iload 1
-      // 361: ifge 367
-      // 364: invokestatic kotlin/collections/CollectionsKt.throwCountOverflow ()V
-      // 367: goto 32b
-      // 36a: goto 32b
-      // 36d: getstatic com/starpilot/starview/OsmRoads.ways Ljava/util/concurrent/ConcurrentHashMap;
-      // 370: invokevirtual java/util/concurrent/ConcurrentHashMap.size ()I
-      // 373: istore 2
-      // 374: aload 15
-      // 376: astore 9
-      // 378: iload 7
-      // 37a: ifne 39f
-      // 37d: new java/lang/StringBuilder
-      // 380: astore 9
-      // 382: aload 9
-      // 384: invokespecial java/lang/StringBuilder.<init> ()V
-      // 387: aload 9
-      // 389: ldc_w " (tile "
-      // 38c: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 38f: aload 16
-      // 391: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 394: ldc_w " empty)"
-      // 397: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 39a: invokevirtual java/lang/StringBuilder.toString ()Ljava/lang/String;
-      // 39d: astore 9
-      // 39f: new java/lang/StringBuilder
-      // 3a2: astore 10
-      // 3a4: aload 10
-      // 3a6: invokespecial java/lang/StringBuilder.<init> ()V
-      // 3a9: aload 10
-      // 3ab: iload 1
-      // 3ac: invokevirtual java/lang/StringBuilder.append (I)Ljava/lang/StringBuilder;
-      // 3af: ldc_w " tiles, "
-      // 3b2: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 3b5: iload 2
-      // 3b6: invokevirtual java/lang/StringBuilder.append (I)Ljava/lang/StringBuilder;
-      // 3b9: ldc_w " streets"
-      // 3bc: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 3bf: aload 9
-      // 3c1: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 3c4: invokevirtual java/lang/StringBuilder.toString ()Ljava/lang/String;
-      // 3c7: putstatic com/starpilot/starview/OsmRoads.tileStatus Ljava/lang/String;
-      // 3ca: goto 46d
-      // 3cd: astore 9
-      // 3cf: goto 3e8
-      // 3d2: new java/io/IOException
-      // 3d5: astore 9
-      // 3d7: aload 9
-      // 3d9: aload 10
-      // 3db: invokespecial java/io/IOException.<init> (Ljava/lang/String;)V
-      // 3de: aload 9
-      // 3e0: athrow
-      // 3e1: astore 9
-      // 3e3: goto 3e8
-      // 3e6: astore 9
-      // 3e8: ldc "StarView/Osm"
-      // 3ea: new java/lang/StringBuilder
-      // 3ed: dup
-      // 3ee: invokespecial java/lang/StringBuilder.<init> ()V
-      // 3f1: ldc_w "tile "
-      // 3f4: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 3f7: aload 16
-      // 3f9: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 3fc: ldc_w ": "
-      // 3ff: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 402: aload 9
-      // 404: invokevirtual java/lang/StringBuilder.append (Ljava/lang/Object;)Ljava/lang/StringBuilder;
-      // 407: invokevirtual java/lang/StringBuilder.toString ()Ljava/lang/String;
-      // 40a: invokestatic android/util/Log.w (Ljava/lang/String;Ljava/lang/String;)I
-      // 40d: pop
-      // 40e: getstatic com/starpilot/starview/OsmRoads.tiles Ljava/util/concurrent/ConcurrentHashMap;
-      // 411: checkcast java/util/Map
-      // 414: aload 16
-      // 416: bipush 2
-      // 417: invokestatic java/lang/Integer.valueOf (I)Ljava/lang/Integer;
-      // 41a: invokeinterface java/util/Map.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; 3
-      // 41f: pop
-      // 420: getstatic com/starpilot/starview/OsmRoads.failedAt Ljava/util/concurrent/ConcurrentHashMap;
-      // 423: checkcast java/util/Map
-      // 426: aload 16
-      // 428: invokestatic java/lang/System.currentTimeMillis ()J
-      // 42b: invokestatic java/lang/Long.valueOf (J)Ljava/lang/Long;
-      // 42e: invokeinterface java/util/Map.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; 3
-      // 433: pop
-      // 434: aload 9
-      // 436: invokevirtual java/lang/Exception.getMessage ()Ljava/lang/String;
-      // 439: astore 9
-      // 43b: aload 9
-      // 43d: ifnull 44c
-      // 440: aload 9
-      // 442: bipush 40
-      // 444: invokestatic kotlin/text/StringsKt.take (Ljava/lang/String;I)Ljava/lang/String;
-      // 447: astore 9
-      // 449: goto 44f
-      // 44c: aconst_null
-      // 44d: astore 9
-      // 44f: new java/lang/StringBuilder
-      // 452: dup
-      // 453: invokespecial java/lang/StringBuilder.<init> ()V
-      // 456: ldc_w "street download failed: "
-      // 459: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 45c: aload 9
-      // 45e: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 461: ldc_w " (retrying)"
-      // 464: invokevirtual java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-      // 467: invokevirtual java/lang/StringBuilder.toString ()Ljava/lang/String;
-      // 46a: putstatic com/starpilot/starview/OsmRoads.tileStatus Ljava/lang/String;
-      // 46d: return
-   }
-
-   private static final Thread loader$lambda$2(Runnable var0) {
-      Thread var1 = new Thread(var0, "starview-osm");
-      var1.setDaemon(true);
-      return var1;
-   }
-
-   private static final void near$take(double var0, double var2, double var4, HashSet<Long> var6, ArrayList<OsmRoads.Way> var7, OsmRoads.Way var8) {
-      if (var8.getMaxE() >= var0 - var2
-         && var8.getMinE() <= var0 + var2
-         && var8.getMaxN() >= var4 - var2
-         && var8.getMinN() <= var4 + var2
-         && var6.add(var8.getId())) {
-         var7.add(var8);
-      }
-   }
-
-   // $VF: synthetic method
-   public static void onFix$default(
-      OsmRoads var0, double var1, double var3, float var5, float var6, float var7, float var8, long var9, long var11, boolean var13, int var14, Object var15
-   ) {
-      if ((var14 & 32) != 0) {
-         var8 = Float.NaN;
-      }
-
-      if ((var14 & 64) != 0) {
-         var9 = 0L;
-      }
-
-      if ((var14 & 128) != 0) {
-         var11 = 0L;
-      }
-
-      if ((var14 & 256) != 0) {
-         var13 = false;
-      }
-
-      var0.onFix(var1, var3, var5, var6, var7, var8, var9, var11, var13);
-   }
-
-   public final List<OsmRoads.Piece> carFrame(
-      List<OsmRoads.Way> var1, Function2<? super Double, ? super Double, Pair<Double, Double>> var2, double var3, double var5
-   ) {
-      Intrinsics.checkNotNullParameter(var1, "ways");
-      Intrinsics.checkNotNullParameter(var2, "toCar");
-      ArrayList var29 = new ArrayList();
-      ArrayList var31 = new ArrayList();
-      ArrayList var32 = new ArrayList();
-      Iterator var28 = var1.iterator();
-      ArrayList var35 = var29;
-
-      while (var28.hasNext()) {
-         OsmRoads.Way var30 = (OsmRoads.Way)var28.next();
-         int var25 = var30.getE().length;
-         if (var25 >= 2) {
-            double[] var47 = new double[var25];
-            double[] var33 = new double[var25];
-
-            for (int var23 = 0; var23 < var25; var23++) {
-               Pair var34 = (Pair)var2.invoke(var30.getE()[var23], var30.getN()[var23]);
-               double var7 = ((Number)var34.component1()).doubleValue();
-               double var9 = ((Number)var34.component2()).doubleValue();
-               var47[var23] = var7;
-               var33[var23] = var9;
-            }
-
-            DoubleRef var48 = new DoubleRef();
-            var48.element = Double.MAX_VALUE;
-            int var24 = 0;
-
-            for (int var46 = var25 - 1; var24 < var46; var24++) {
-               double var13 = var47[var24];
-               double var41 = var33[var24];
-               double var15 = var47[var24 + 1] - var13;
-               double var11 = var33[var24 + 1] - var41;
-               double var39 = var15 * var15 + var11 * var11;
-               if (!(var39 < 1.0E-6)) {
-                  double var21 = var13 * var15 + var41 * var11;
-                  double var17 = var21 * var21 - var39 * (var13 * var13 + var41 * var41 - var3 * var3);
-                  if (var17 <= 0.0) {
-                     carFrame$flush(var31, var35, var48, var30, var32);
-                  } else {
-                     double var19 = Math.sqrt(var17);
-                     var17 = Math.max(0.0, (-var21 - var19) / var39);
-                     var19 = Math.min(1.0, (-var21 + var19) / var39);
-                     if (var17 >= var19) {
-                        carFrame$flush(var31, var35, var48, var30, var32);
-                     } else {
-                        if (var17 > 0.0) {
-                           carFrame$flush(var31, var35, var48, var30, var32);
-                        }
-
-                        var21 = RangesKt.coerceIn(-var21 / var39, 0.0, 1.0);
-                        var48.element = Math.min(var48.element, Math.hypot(var13 + var21 * var15, var41 + var21 * var11));
-                        var39 = Math.sqrt(var39) * (var19 - var17);
-                        int var27 = Math.max(1, (int)Math.ceil(var39 / var5));
-                        if (var31.isEmpty()) {
-                           var31.add(var13 + var17 * var15);
-                           var32.add(var17 * var11 + var41);
-                        }
-
-                        int var26 = 1;
-                        if (1 <= var27) {
-                           while (true) {
-                              var21 = (var19 - var17) * var26 / var27 + var17;
-                              var31.add(var13 + var21 * var15);
-                              var32.add(var21 * var11 + var41);
-                              if (var26 == var27) {
-                                 break;
-                              }
-
-                              var26++;
-                           }
-                        }
-
-                        if (var19 < 1.0) {
-                           carFrame$flush(var31, var35, var48, var30, var32);
-                        }
-                     }
-                  }
-               }
-            }
-
-            carFrame$flush(var31, var35, var48, var30, var32);
-         }
-      }
-
-      Iterable var37 = CollectionsKt.sortedWith(var35, new Comparator() {
-         @Override
-         public final int compare(T var1, T var2x) {
-            return ComparisonsKt.compareValues((T)((Double & Comparable)((Pair)var1).getFirst()), (T)((Double & Comparable)((Pair)var2x).getFirst()));
-         }
-      });
-      var var36 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var37, 10));
-      Iterator var38 = var37.iterator();
-
-      while (var38.hasNext()) {
-         var36.add((OsmRoads.Piece)((Pair)var38.next()).getSecond());
-      }
-
-      return var36;
-   }
-
-   public final List<Pair<Double, String>> crossStreetsAhead(double var1, double var3, double var5, double var7) {
-      OsmRoads.Match var32 = this.matchSeg(var1, var3, var5);
-      if (var32 != null) {
-         boolean var23;
-         if (var32.getDist() < 15.0) {
-            var23 = 1;
-         } else {
-            var23 = 0;
-         }
-
-         if (!var23) {
-            var32 = null;
-         }
-
-         if (var32 != null) {
-            ArrayList var38 = new ArrayList();
-            ArrayList var39 = new ArrayList();
-            HashSet var37 = new HashSet();
-            OsmRoads.Way var35 = var32.getWay();
-            var37.add(var35.getId());
-            int var24 = 0;
-            int var25 = var35.getE().length;
-            var23 = 0;
-            double var9 = Double.MAX_VALUE;
-
-            while (var24 < var25 - 1) {
-               double var11 = var35.getE()[var24];
-               double var17 = var35.getN()[var24];
-               double var13 = var35.getE()[var24 + 1] - var11;
-               double var15 = var35.getN()[var24 + 1] - var17;
-               double var19 = var13 * var13 + var15 * var15;
-               if (!(var19 < 0.01)) {
-                  var19 = RangesKt.coerceIn(((var1 - var11) * var13 + (var3 - var17) * var15) / var19, 0.0, 1.0);
-                  var13 = Math.hypot(var1 - (var11 + var19 * var13), var3 - (var17 + var19 * var15));
-                  var11 = var9;
-                  if (var13 < var9) {
-                     var23 = var24;
-                     var11 = var13;
-                  }
-               } else {
-                  var11 = var9;
-               }
-
-               var24++;
-               var9 = var11;
-            }
-
-            boolean var88;
-            if (Math.cos(Math.atan2(var35.getN()[var23 + 1] - var35.getN()[var23], var35.getE()[var23 + 1] - var35.getE()[var23]) - var5) >= 0.0) {
-               var88 = 1;
-            } else {
-               var88 = 0;
-            }
-
-            IntProgression var104;
-            if (var88) {
-               var104 = RangesKt.until(var23 + 1, var35.getE().length);
-            } else {
-               var104 = RangesKt.downTo(var23, 0);
-            }
-
-            var38.add(var1);
-            var39.add(var3);
-            var5 = 0.0;
-            var25 = 0;
-
-            while (true) {
-               double var55;
-               label233: {
-                  int var26;
-                  int var28;
-                  int var29;
-                  double var61;
-                  label290: {
-                     int var27 = var104.getFirst();
-                     var28 = var104.getLast();
-                     var29 = var104.getStep();
-                     if (var29 > 0) {
-                        var26 = var27;
-                        var61 = var5;
-                        var88 = var23;
-                        var55 = var9;
-                        if (var27 <= var28) {
-                           break label290;
-                        }
-                     }
-
-                     if (var29 >= 0 || var28 > var27) {
-                        var55 = var5;
-                        break label233;
-                     }
-
-                     var55 = var9;
-                     var88 = var23;
-                     var61 = var5;
-                     var26 = var27;
-                  }
-
-                  while (true) {
-                     double var69 = var35.getE()[var26];
-                     var9 = CollectionsKt.last(var38).doubleValue();
-                     double var74 = var35.getN()[var26];
-                     double var78 = CollectionsKt.last(var39).doubleValue();
-                     var61 += Math.hypot(var69 - var9, var74 - var78);
-                     var38.add(var35.getE()[var26]);
-                     var39.add(var35.getN()[var26]);
-                     var55 = var61;
-                     var23 = var88;
-                     var9 = var55;
-                     if (var61 >= var7) {
-                        break;
-                     }
-
-                     var55 = var61;
-                     var23 = var88;
-                     var9 = var55;
-                     if (var26 == var28) {
-                        break;
-                     }
-
-                     var26 += var29;
-                     var55 = var55;
-                  }
-               }
-
-               var5 = var55;
-               if (!(var55 >= var7) && var25 < 8 && var38.size() >= 2) {
-                  double var79 = CollectionsKt.last(var38).doubleValue();
-                  double var75 = CollectionsKt.last(var39).doubleValue();
-                  OsmRoads.Way var105 = (OsmRoads.Way)var39.get(var39.size() - 2);
-                  Intrinsics.checkNotNullExpressionValue(var105, "get(...)");
-                  var55 = ((Number)var105).doubleValue();
-                  var105 = var38.get(var38.size() - 2);
-                  Intrinsics.checkNotNullExpressionValue(var105, "get(...)");
-                  double var21 = Math.atan2(var75 - var55, var79 - ((Number)var105).doubleValue());
-                  var105 = null;
-                  boolean var30 = true;
-                  var55 = Double.MAX_VALUE;
-
-                  for (OsmRoads.Way var36 : this.near(var79, var75, 6.0)) {
-                     if (!var37.contains(var36.getId())
-                        && !Intrinsics.areEqual(var36.getKind(), "sidewalk")
-                        && !Intrinsics.areEqual(var36.getKind(), "service")) {
-                        var88 = var36.getE().length - 1;
-
-                        for (Pair var41 : CollectionsKt.listOf(new Pair[]{TuplesKt.to(0, true), TuplesKt.to(var88, false)})) {
-                           int var96 = ((Number)var41.component1()).intValue();
-                           boolean var31 = (Boolean)var41.component2();
-                           if (!(Math.hypot(var36.getE()[var96] - var79, var36.getN()[var96] - var75) > 4.0)
-                              && (var31 || var36.getOneway() <= 0)
-                              && (!var31 || var36.getOneway() >= 0)) {
-                              double[] var121 = var36.getE();
-                              double var62;
-                              if (var31) {
-                                 var62 = var121[1] - var36.getE()[0];
-                              } else {
-                                 var62 = var121[var88 - 1] - var36.getE()[var88];
-                              }
-
-                              double[] var122 = var36.getN();
-                              double var70;
-                              if (var31) {
-                                 var70 = var122[1] - var36.getN()[0];
-                              } else {
-                                 var70 = var122[var88 - 1] - var36.getN()[var88];
-                              }
-
-                              var70 = Math.abs(Math.IEEEremainder(Math.atan2(var70, var62) - var21, Math.PI * 2));
-                              if (!(var70 > Math.toRadians(35.0))) {
-                                 if (this.sameStreet(var36.getName(), var35.getName())) {
-                                    var62 = 0.0;
-                                 } else {
-                                    var62 = 0.3;
-                                 }
-
-                                 var62 += var70;
-                                 if (var62 < var55) {
-                                    var55 = var62;
-                                    var30 = var31;
-                                    var105 = var36;
-                                 }
-                              }
-                           }
-                        }
-                     }
-                  }
-
-                  if (var105 != null) {
-                     var35 = var105;
-                     var37.add(var105.getId());
-                     var25++;
-                     double[] var108 = var105.getE();
-                     if (var30) {
-                        var104 = RangesKt.until(1, var108.length);
-                     } else {
-                        var104 = RangesKt.downTo(var108.length - 2, 0);
-                     }
-                     continue;
-                  }
-               }
-               break;
-            }
-
-            String var112 = "get(...)";
-            double[] var119 = new double[var38.size()];
-            var23 = 1;
-
-            for (int var91 = var38.size(); var23 < var91; var23++) {
-               var9 = var119[var23 - 1];
-               double var65 = ((Number)var38.get(var23)).doubleValue();
-               Object var109 = var38.get(var23 - 1);
-               Intrinsics.checkNotNullExpressionValue(var109, "get(...)");
-               double var58 = ((Number)var109).doubleValue();
-               var5 = ((Number)var39.get(var23)).doubleValue();
-               var109 = var39.get(var23 - 1);
-               Intrinsics.checkNotNullExpressionValue(var109, "get(...)");
-               var119[var23] = var9 + Math.hypot(var65 - var58, var5 - ((Number)var109).doubleValue());
-            }
-
-            String var113 = var32.getWay().getName();
-            ArrayList var120 = new ArrayList();
-
-            for (OsmRoads.Way var123 : this.near(var1, var3, var7 + 30.0)) {
-               if (!var37.contains(var123.getId()) && !Intrinsics.areEqual(var123.getKind(), "sidewalk") && !Intrinsics.areEqual(var123.getKind(), "service")) {
-                  boolean var85;
-                  if (var113.length() > 0) {
-                     var85 = 1;
-                  } else {
-                     var85 = 0;
-                  }
-
-                  if (!var85 || !this.sameStreet(var123.getName(), var113)) {
-                     var85 = var38.size() - 1;
-
-                     for (int var92 = 0; var92 < var85; var92++) {
-                        Object var114 = var38.get(var92);
-                        Intrinsics.checkNotNullExpressionValue(var114, var112);
-                        var5 = ((Number)var114).doubleValue();
-                        var114 = var39.get(var92);
-                        Intrinsics.checkNotNullExpressionValue(var114, var112);
-                        var3 = ((Number)var114).doubleValue();
-                        var114 = var38.get(var92 + 1);
-                        Intrinsics.checkNotNullExpressionValue(var114, var112);
-                        var1 = ((Number)var114).doubleValue();
-                        var114 = var39.get(var92 + 1);
-                        Intrinsics.checkNotNullExpressionValue(var114, var112);
-                        var9 = ((Number)var114).doubleValue();
-                        var1 -= var5;
-                        var9 -= var3;
-                        double var59 = Math.hypot(var1, var9);
-                        if (!(var59 < 0.01)) {
-                           var25 = var123.getE().length - 1;
-
-                           for (int var97 = 0; var97 < var25; var97++) {
-                              double var66 = var123.getE()[var97];
-                              double var72 = var123.getN()[var97];
-                              double var82 = var123.getE()[var97 + 1] - var66;
-                              double var80 = var123.getN()[var97 + 1] - var72;
-                              double var76 = var1 * var80 - var9 * var82;
-                              if (Math.abs(var76) > 1.0E-9) {
-                                 var80 = ((var66 - var5) * var80 - (var72 - var3) * var82) / var76;
-                                 var66 = ((var66 - var5) * var9 - (var72 - var3) * var1) / var76;
-                                 boolean var99;
-                                 if (0.0 <= var80 && var80 <= 1.0) {
-                                    var99 = true;
-                                 } else {
-                                    var99 = false;
-                                 }
-
-                                 if (var99) {
-                                    if (0.0 <= var66 && var66 <= 1.0) {
-                                       var99 = true;
-                                    } else {
-                                       var99 = false;
-                                    }
-
-                                    if (var99) {
-                                       crossStreetsAhead$add(var7, var120, var119[var92] + var80 * var59, var123.getName());
-                                    }
-                                 }
-                              }
-                           }
-
-                           int var102 = var123.getE().length;
-                           boolean var87 = false;
-
-                           for (int var98 = 0; var98 < 2; var98++) {
-                              int var103 = new int[]{0, var102 - 1}[var98];
-                              double var68 = ((var123.getE()[var103] - var5) * var1 + (var123.getN()[var103] - var3) * var9) / (var59 * var59);
-                              boolean var101;
-                              if (0.0 <= var68 && var68 <= 1.0) {
-                                 var101 = true;
-                              } else {
-                                 var101 = var87;
-                              }
-
-                              if (var101) {
-                                 if (Math.hypot(var123.getE()[var103] - (var5 + var68 * var1), var123.getN()[var103] - (var3 + var68 * var9)) < 6.0) {
-                                    double var73 = var119[var92];
-                                    var114 = var123.getName();
-                                    var87 = false;
-                                    crossStreetsAhead$add(var7, var120, var68 * var59 + var73, (String)var114);
-                                 } else {
-                                    var87 = false;
-                                 }
-                              }
-                           }
-
-                           var85 = var85;
-                        }
-                     }
-                  }
-               }
-            }
-
-            return CollectionsKt.sortedWith(var120, new Comparator() {
-               @Override
-               public final int compare(T var1, T var2) {
-                  return ComparisonsKt.compareValues((T)((Double & Comparable)((Pair)var1).getFirst()), (T)((Double & Comparable)((Pair)var2).getFirst()));
-               }
-            });
-         }
-      }
-
-      return CollectionsKt.emptyList();
-   }
-
-   public final boolean getEnabled() {
-      return enabled;
-   }
-
-   public final ConcurrentLinkedQueue<OsmRoads.Fix> getFixes() {
-      return fixes;
-   }
-
-   public final String getGpsSrc() {
-      return gpsSrc;
-   }
-
-   public final OsmRoads.Fix getLastFix() {
-      return lastFix;
-   }
-
-   public final double getLat0() {
-      return lat0;
-   }
-
-   public final double getLon0() {
-      return lon0;
-   }
-
-   public final String getMatchStatus() {
-      return matchStatus;
-   }
-
-   public final String getTileStatus() {
-      return tileStatus;
-   }
-
-   public final void init(Context var1) {
-      Intrinsics.checkNotNullParameter(var1, "ctx");
-      if (dir == null) {
-         File var2 = new File(var1.getFilesDir(), "osm");
-         var2.mkdirs();
-         dir = var2;
-      }
-   }
-
-   public final Pair<Double, Double> laneBand(double var1, boolean var3, double var4, double var6) {
-      return this.laneBand(var1, var3, var4, Double.NaN, var6, Double.NaN);
-   }
-
-   public final Pair<Double, Double> laneBand(double var1, boolean var3, double var4, double var6, double var8, double var10) {
-      double var18 = var1 / 2.0;
-      if (var3) {
-         var1 = -var18 + 0.9;
-      } else {
-         var1 = 0.3;
-      }
-
-      double var16 = var18 - 0.9;
-      double var12 = var16;
-      double var14 = var1;
-      if (var16 < var1) {
-         if (var3) {
-            var1 = 0.0;
-         } else {
-            var1 = var18 / 2;
-         }
-
-         var14 = var1;
-         var12 = var1;
-      }
-
-      var3 = Double.isInfinite(var4);
-      boolean var21 = true;
-      boolean var20;
-      if (!var3 && !Double.isNaN(var4)) {
-         var20 = true;
-      } else {
-         var20 = false;
-      }
-
-      var16 = Double.NEGATIVE_INFINITY;
-      if (var20) {
-         var1 = -var18 + var4;
-      } else {
-         var1 = Double.NEGATIVE_INFINITY;
-      }
-
-      if (!Double.isInfinite(var10) && !Double.isNaN(var10)) {
-         var20 = true;
-      } else {
-         var20 = false;
-      }
-
-      var4 = var16;
-      if (var20) {
-         var4 = var18 - var10;
-      }
-
-      var10 = Math.max(var1, var4);
-      if (!Double.isInfinite(var8) && !Double.isNaN(var8)) {
-         var20 = true;
-      } else {
-         var20 = false;
-      }
-
-      var4 = Double.POSITIVE_INFINITY;
-      if (var20) {
-         var1 = var18 - var8;
-      } else {
-         var1 = Double.POSITIVE_INFINITY;
-      }
-
-      if (!Double.isInfinite(var6) && !Double.isNaN(var6)) {
-         var20 = var21;
-      } else {
-         var20 = false;
-      }
-
-      if (var20) {
-         var4 = -var18 + var6;
-      }
-
-      var1 = Math.min(var1, var4);
-      if (var10 > var1) {
-         var1 = (var10 + var1) / 2;
-         return new Pair<>(var1, var1);
-      } else {
-         var4 = Math.max(var14, var10);
-         var6 = Math.min(var12, var1);
-         if (var4 <= var6) {
-            return new Pair<>(var4, var6);
-         } else {
-            Pair var22 = new Pair<>(Math.max(var10, -var18), Math.min(var1, var18));
-            if (!(((Number)var22.getFirst()).doubleValue() <= ((Number)var22.getSecond()).doubleValue())) {
-               var22 = new Pair<>(var10, var1);
-            }
-
-            return var22;
-         }
-      }
-   }
-
-   public final double laneCenter(double var1, int var3, int var4, boolean var5) {
-      var3 = Math.max(1, var3);
-      var4 = RangesKt.coerceIn(var4, 0, var3 - 1);
-      if (var5) {
-         var1 = -var1 / 2 + (var4 + 0.5) * var1 / var3;
-      } else {
-         var1 = (var4 + 0.5) * (var1 / 2) / var3;
-      }
-
-      return var1;
-   }
-
-   public final int laneIndex(int var1, boolean var2, double var3, double var5, double var7, double var9, boolean var11, boolean var12) {
-      boolean var19 = false;
-      if (var1 <= 1) {
-         return 0;
-      } else if (var2) {
-         return 0;
-      } else {
-         byte var15 = 0;
-         int var16 = var1 - 1;
-         if (var11) {
-            var15 = 1;
-         }
-
-         if (var12) {
-            var16 = var1 - 2;
-         }
-
-         int var17 = var16;
-         if (var15 > var16) {
-            var17 = var15;
-         }
-
-         boolean var25;
-         if (!Double.isInfinite(var5) && !Double.isNaN(var5)) {
-            var25 = 1;
-         } else {
-            var25 = 0;
-         }
-
-         double var13;
-         label110: {
-            var13 = Double.NaN;
-            if (var25) {
-               if (!Double.isInfinite(var3) && !Double.isNaN(var3)) {
-                  var25 = (boolean)1;
-               } else {
-                  var25 = (boolean)0;
-               }
-
-               if (var25) {
-                  var3 = var5 - var3;
-                  break label110;
-               }
-            }
-
-            var3 = Double.NaN;
-         }
-
-         if (!Double.isInfinite(var9) && !Double.isNaN(var9)) {
-            var25 = (boolean)1;
-         } else {
-            var25 = (boolean)0;
-         }
-
-         var5 = var13;
-         if (var25) {
-            if (!Double.isInfinite(var7) && !Double.isNaN(var7)) {
-               var25 = (boolean)1;
-            } else {
-               var25 = (boolean)0;
-            }
-
-            var5 = var13;
-            if (var25) {
-               var5 = var9 - var7;
-            }
-         }
-
-         if (!Double.isInfinite(var3) && !Double.isNaN(var3)) {
-            var25 = (boolean)1;
-         } else {
-            var25 = (boolean)0;
-         }
-
-         byte var20 = -1;
-         if (var25 && var3 > -0.5) {
-            var25 = laneIndex$count(var3);
-         } else {
-            var25 = -1;
-         }
-
-         boolean var18 = var19;
-         if (!Double.isInfinite(var5)) {
-            var18 = var19;
-            if (!Double.isNaN(var5)) {
-               var18 = true;
-            }
-         }
-
-         if (var18 && var5 > -0.5) {
-            var1 = var1 - 1 - laneIndex$count(var5);
-         } else {
-            var1 = -1;
-         }
-
-         if (var25 >= 0) {
-            var1 = var25;
-         } else if (var1 < 0) {
-            var1 = -1;
-         }
-
-         if (var1 >= 0) {
-            var1 = RangesKt.coerceIn(var1, var15, var17);
-         } else {
-            var1 = var20;
-            if (var15 == var17) {
-               var1 = var15;
-            }
-         }
-
-         return var1;
-      }
-   }
-
-   public final Triple<OsmRoads.Way, Double, Double> match(double var1, double var3, double var5) {
-      OsmRoads.Way var34 = null;
-      double var9 = 0.0;
-      double var11 = Double.MAX_VALUE;
-      double var7 = 0.0;
-
-      for (OsmRoads.Way var35 : this.near(var1, var3, 30.0)) {
-         if (!Intrinsics.areEqual(var35.getKind(), "sidewalk")) {
-            int var32 = 0;
-
-            for (int var31 = var35.getE().length - 1; var32 < var31; var32++) {
-               double var19 = var35.getE()[var32];
-               double var25 = var35.getN()[var32];
-               double var23 = var35.getE()[var32 + 1] - var19;
-               double var27 = var35.getN()[var32 + 1] - var25;
-               double var21 = var23 * var23 + var27 * var27;
-               if (!(var21 < 0.01)) {
-                  double var13 = RangesKt.coerceIn(((var1 - var19) * var23 + (var3 - var25) * var27) / var21, 0.0, 1.0);
-                  double var17 = Math.hypot(var1 - (var19 + var13 * var23), var3 - (var25 + var13 * var27));
-                  if (!(var17 > 25.0)) {
-                     double var29 = Math.atan2(var27, var23);
-                     int var33 = var35.getOneway();
-                     double var15 = Math.PI;
-                     if (var33 < 0) {
-                        var13 = Math.PI;
-                     } else {
-                        var13 = 0.0;
-                     }
-
-                     var13 = var29 + var13;
-                     if (var35.getOneway() == 0) {
-                        var13 -= var5;
-                     } else {
-                        var13 -= var5;
-                        var15 = Math.PI * 2;
-                     }
-
-                     var13 = 15.0 * Math.abs(Math.IEEEremainder(var13, var15)) + var17;
-                     if (var13 < var11) {
-                        double var42 = ((var3 - var25) * var23 - (var1 - var19) * var27) / Math.sqrt(var21);
-                        var34 = var35;
-                        var9 = var17;
-                        var11 = var13;
-                        var7 = var42;
-                     }
-                  }
-               }
-            }
-         }
-      }
-
-      Triple var43;
-      if (var34 != null) {
-         var43 = new Triple<>(var34, var9, var7);
-      } else {
-         var43 = null;
-      }
-
-      return var43;
-   }
-
-   public final OsmRoads.Match matchSeg(double var1, double var3, double var5) {
-      OsmRoads.Match var27 = null;
-      double var7 = Double.MAX_VALUE;
-
-      for (OsmRoads.Way var29 : this.near(var1, var3, 30.0)) {
-         if (!Intrinsics.areEqual(var29.getKind(), "sidewalk")) {
-            int var26 = 0;
-
-            for (int var25 = var29.getE().length - 1; var26 < var25; var26++) {
-               double var13 = var29.getE()[var26];
-               double var17 = var29.getN()[var26];
-               double var11 = var29.getE()[var26 + 1] - var13;
-               double var15 = var29.getN()[var26 + 1] - var17;
-               double var19 = var11 * var11 + var15 * var15;
-               if (!(var19 < 0.01)) {
-                  double var9 = RangesKt.coerceIn(((var1 - var13) * var11 + (var3 - var17) * var15) / var19, 0.0, 1.0);
-                  double var21 = Math.hypot(var1 - (var9 * var11 + var13), var3 - (var17 + var9 * var15));
-                  if (!(var21 > 25.0)) {
-                     double var23 = Math.atan2(var15, var11);
-                     if (var29.getOneway() < 0) {
-                        var9 = Math.PI;
-                     } else {
-                        var9 = 0.0;
-                     }
-
-                     var9 = var23 + var9;
-                     if (var29.getOneway() == 0) {
-                        var9 = Math.IEEEremainder(var9 - var5, Math.PI);
-                     } else {
-                        var9 = Math.IEEEremainder(var9 - var5, Math.PI * 2);
-                     }
-
-                     var9 = var21 + 15.0 * Math.abs(var9);
-                     if (var9 < var7) {
-                        var7 = var9;
-                        var27 = new OsmRoads.Match(var29, var21, ((var3 - var17) * var11 - (var1 - var13) * var15) / Math.sqrt(var19), Math.atan2(var15, var11));
-                     }
-                  }
-               }
-            }
-         }
-      }
-
-      return var27;
-   }
-
-   public final Set<String> nameTokens(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "name");
-      var1 = var1.toLowerCase(Locale.ROOT);
-      Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
-      CharSequence var8 = var1;
-      CharSequence var9 = new Regex("[^a-z0-9 ]").replace(var8, " ");
-      boolean var3 = true;
-      Iterable var4 = StringsKt.split$default(var9, new char[]{' '}, false, 0, 6, null);
-      var var10 = new ArrayList();
-
-      for (Object var5 : var4) {
-         if (!StringsKt.isBlank((String & CharSequence)var5)) {
-            var10.add(var5);
-         }
-      }
-
-      List var11 = var10;
-      Iterable var12 = var11;
-      var var20 = new ArrayList(CollectionsKt.collectionSizeOrDefault(var12, 10));
-
-      for (String var13 : var12) {
-         String var18 = ABBR.get(var13);
-         if (var18 != null) {
-            var13 = var18;
-         }
-
-         var20.add(var13);
-      }
-
-      List var14 = var20;
-      Set var15 = CollectionsKt.toSet(var14);
-      Set var19 = SetsKt.minus(var15, DIRS);
-      if (var19.size() < 2) {
-         if (var19.size() != 1) {
-            return var15;
-         }
-
-         CharSequence var21 = CollectionsKt.first(var19);
-         int var2 = 0;
-
-         while (true) {
-            if (var2 >= var21.length()) {
-               var16 = false;
-               break;
-            }
-
-            if (Character.isDigit(var21.charAt(var2))) {
-               var16 = var3;
-               break;
-            }
-
-            var2++;
-         }
-
-         if (!var16) {
-            return var15;
-         }
-      }
-
-      return var19;
-   }
-
-   public final List<OsmRoads.Way> near(double var1, double var3, double var5) {
-      ArrayList var7 = new ArrayList();
-      HashSet var8 = new HashSet();
-
-      for (Object var10 : ways.values()) {
-         Intrinsics.checkNotNullExpressionValue(var10, "next(...)");
-         near$take(var1, var5, var3, var8, var7, (OsmRoads.Way)var10);
-      }
-
-      for (Object var12 : boxWays.values()) {
-         Intrinsics.checkNotNullExpressionValue(var12, "next(...)");
-         var12 = ((List)var12).iterator();
-
-         while (var12.hasNext()) {
-            near$take(var1, var5, var3, var8, var7, (OsmRoads.Way)var12.next());
-         }
-      }
-
-      return var7;
-   }
-
-   public final void onFix(double var1, double var3, float var5, float var6, float var7, float var8, long var9, long var11, boolean var13) {
-      if (enabled) {
-         long var18 = System.nanoTime();
-         if (var13) {
-            rtkFixNs = var18;
-         } else if (var18 - rtkFixNs < 1000000000L) {
-            return;
-         }
-
-         var13 = Double.isInfinite(var1);
-         boolean var17 = true;
-         boolean var16;
-         if (!var13 && !Double.isNaN(var1)) {
-            var16 = true;
-         } else {
-            var16 = false;
-         }
-
-         if (var16) {
-            if (!Double.isInfinite(var3) && !Double.isNaN(var3)) {
-               var16 = true;
-            } else {
-               var16 = false;
-            }
-
-            if (var16) {
-               if (var1 == 0.0) {
-                  var16 = true;
-               } else {
-                  var16 = false;
-               }
-
-               if (var16) {
-                  if (var3 == 0.0) {
-                     var16 = true;
-                  } else {
-                     var16 = false;
-                  }
-
-                  if (var16) {
-                     return;
-                  }
-               }
-
-               if (Double.isNaN(lat0)) {
-                  this.setOrigin(var1, var3);
-               }
-
-               double var14;
-               if (var9 > 0L) {
-                  var14 = (System.currentTimeMillis() - var9) / 1000.0;
-               } else {
-                  var14 = Double.NaN;
-               }
-
-               var9 = System.nanoTime();
-               if (-0.5 <= var14 && var14 <= 3.0) {
-                  var16 = var17;
-               } else {
-                  var16 = false;
-               }
-
-               if (var16) {
-                  var14 = RangesKt.coerceAtLeast(var14, 0.0);
-               } else {
-                  var14 = Double.NaN;
-               }
-
-               OsmRoads.Fix var20 = new OsmRoads.Fix(var1, var3, var5, var6, var7, var9, var8, var14, var11);
-               lastFix = var20;
-               fixes.add(var20);
-
-               while (fixes.size() > 50) {
-                  fixes.poll();
-               }
-
-               var9 = System.currentTimeMillis();
-               if (var9 - lastEnsureMs < 2000L) {
-                  return;
-               }
-
-               lastEnsureMs = var9;
-
-               try {
-                  this.ensureTiles(var1, var3);
-               } catch (Exception var21) {
-                  Log.e("StarView/Osm", "tiles", var21);
-                  tileStatus = StringsKt.take("map error: " + var21, 80);
-               }
-
-               return;
-            }
-         }
-      }
-   }
-
-   public final int parse$app_debug(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "text");
-      JSONArray var21 = new JSONObject(var1).optJSONArray("elements");
-      if (var21 == null) {
-         return 0;
-      } else {
-         int var9 = 0;
-         int var8 = 0;
-
-         for (int var7 = var21.length(); var8 < var7; var8++) {
-            JSONObject var15 = var21.optJSONObject(var8);
-            if (var15 != null && Intrinsics.areEqual(var15.optString("type"), "way")) {
-               long var12 = var15.optLong("id");
-               if (!ways.containsKey(var12)) {
-                  JSONObject var17 = var15.optJSONObject("tags");
-                  if (var17 != null) {
-                     String var16 = var17.optString("highway");
-                     String var14 = var16;
-                     if (Intrinsics.areEqual(var16, "footway")) {
-                        var14 = var16;
-                        if (Intrinsics.areEqual(var17.optString("footway"), "sidewalk")) {
-                           var14 = "sidewalk";
-                        }
-                     }
-
-                     if (KINDS.contains(var14) || Intrinsics.areEqual(var14, "sidewalk")) {
-                        var16 = var17.optString("service");
-                        if (!Intrinsics.areEqual(var14, "service")
-                           || !SetsKt.setOf(new String[]{"driveway", "parking_aisle", "drive-through", "emergency_access"}).contains(var16)) {
-                           JSONArray var19 = var15.optJSONArray("geometry");
-                           if (var19 != null && var19.length() >= 2) {
-                              double[] var28 = new double[var19.length()];
-                              double[] var18 = new double[var19.length()];
-                              int var11 = 0;
-
-                              for (int var10 = var19.length(); var11 < var10; var11++) {
-                                 JSONObject var20 = var19.getJSONObject(var11);
-                                 Pair var32 = this.toLocal(var20.getDouble("lat"), var20.getDouble("lon"));
-                                 double var2 = ((Number)var32.component1()).doubleValue();
-                                 double var4 = ((Number)var32.component2()).doubleValue();
-                                 var28[var11] = var2;
-                                 var18[var11] = var4;
-                              }
-
-                              label100: {
-                                 label99: {
-                                    label98: {
-                                       String var25 = var17.optString("oneway");
-                                       if (var25 != null) {
-                                          switch (var25.hashCode()) {
-                                             case 49:
-                                                if (var25.equals("1")) {
-                                                   break label98;
-                                                }
-                                                break;
-                                             case 1444:
-                                                if (var25.equals("-1")) {
-                                                   break label99;
-                                                }
-                                                break;
-                                             case 119527:
-                                                if (var25.equals("yes")) {
-                                                   break label98;
-                                                }
-                                                break;
-                                             case 3569038:
-                                                if (var25.equals("true")) {
-                                                   break label98;
-                                                }
-                                                break;
-                                             case 1099846370:
-                                                if (var25.equals("reverse")) {
-                                                   break label99;
-                                                }
-                                          }
-                                       }
-
-                                       if (!Intrinsics.areEqual(var14, "motorway") && !Intrinsics.areEqual(var17.optString("junction"), "roundabout")) {
-                                          var22 = 0;
-                                          break label100;
-                                       }
-                                    }
-
-                                    var22 = 1;
-                                    break label100;
-                                 }
-
-                                 var22 = -1;
-                              }
-
-                              Map var31 = ways;
-                              String var26 = var17.optString("name", var17.optString("ref", ""));
-                              Intrinsics.checkNotNullExpressionValue(var26, "optString(...)");
-                              Intrinsics.checkNotNull(var14);
-                              float var6 = this.widthOf(var14, var22, var17);
-                              String var29 = var17.optString("lanes");
-                              Intrinsics.checkNotNullExpressionValue(var29, "optString(...)");
-                              Integer var30 = StringsKt.toIntOrNull(var29);
-                              if (var30 != null) {
-                                 var11 = var30;
-                              } else {
-                                 var11 = 0;
-                              }
-
-                              var31.put(var12, new OsmRoads.Way(var12, var26, var14, var22, var6, var28, var18, var11));
-                              var9++;
-                              var7 = var7;
-                           }
-                        }
-                     }
-                  }
-               }
-            }
-         }
-
-         return var9;
-      }
-   }
-
-   public final boolean sameStreet(String var1, String var2) {
-      Intrinsics.checkNotNullParameter(var1, "a");
-      Intrinsics.checkNotNullParameter(var2, "b");
-      Set var4 = this.nameTokens(var1);
-      Set var5 = this.nameTokens(var2);
-      boolean var3;
-      if (var4.isEmpty() || !Intrinsics.areEqual(var4, var5) && (var4.size() < 2 || !var5.containsAll(var4)) && (var5.size() < 2 || !var4.containsAll(var5))) {
-         var3 = false;
-      } else {
-         var3 = true;
-      }
-
-      return var3;
-   }
-
-   public final void setEnabled(boolean var1) {
-      enabled = var1;
-   }
-
-   public final void setGpsSrc(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      gpsSrc = var1;
-   }
-
-   public final void setMatchStatus(String var1) {
-      Intrinsics.checkNotNullParameter(var1, "<set-?>");
-      matchStatus = var1;
-   }
-
-   public final void setOrigin(double var1, double var3) {
-      lon0 = var3;
-      kx = Math.cos(Math.toRadians(var1)) * 111320.0;
-      lat0 = var1;
-   }
-
-   public final Pair<OsmRoads.Way, Double> streetHeading(double var1, double var3, Double var5) {
-      OsmRoads.Way var22 = null;
-      double var8 = 15.0;
-      double var6 = 0.0;
-
-      for (OsmRoads.Way var23 : this.near(var1, var3, 20.0)) {
-         if (!Intrinsics.areEqual(var23.getKind(), "sidewalk")) {
-            int var21 = 0;
-
-            for (int var20 = var23.getE().length - 1; var21 < var20; var21++) {
-               double var10 = var23.getE()[var21];
-               double var16 = var23.getN()[var21];
-               double var12 = var23.getE()[var21 + 1] - var10;
-               double var14 = var23.getN()[var21 + 1] - var16;
-               double var18 = var12 * var12 + var14 * var14;
-               if (!(var18 < 0.01)) {
-                  var18 = RangesKt.coerceIn(((var1 - var10) * var12 + (var3 - var16) * var14) / var18, 0.0, 1.0);
-                  var10 = Math.hypot(var1 - (var10 + var18 * var12), var3 - (var16 + var18 * var14));
-                  if (var10 < var8) {
-                     var22 = var23;
-                     var10 = Math.atan2(var14, var12);
-                     if (var23.getOneway() < 0) {
-                        var8 = Math.PI;
-                     } else {
-                        var8 = 0.0;
-                     }
-
-                     double var30 = var10 + var8;
-                     var8 = var10;
-                     var6 = var30;
-                  }
-               }
-            }
-         }
-      }
-
-      if (var22 == null) {
-         return null;
-      } else {
-         var1 = var6;
-         if (var22.getOneway() == 0) {
-            var1 = var6;
-            if (var5 != null) {
-               var1 = var6;
-               if (Math.abs(Math.IEEEremainder(var6 - var5, Math.PI * 2)) > Math.PI / 2) {
-                  var1 = var6 + Math.PI;
-               }
-            }
-         }
-
-         return new Pair<>(var22, var1);
-      }
-   }
-
-   public final Pair<Double, Double> toLatLon(double var1, double var3) {
-      return new Pair<>(lat0 + var3 / 110540.0, lon0 + var1 / kx);
-   }
-
-   public final Pair<Double, Double> toLocal(double var1, double var3) {
-      return new Pair<>((var3 - lon0) * kx, (var1 - lat0) * 110540.0);
-   }
-
-   public final Pair<Double, Double> turn(double var1, double var3, double var5) {
-      double var7 = Math.cos(var5);
-      var5 = Math.sin(var5);
-      var3 = -var3;
-      return new Pair<>(var7 * var1 - var5 * var3, -(var5 * var1 + var7 * var3));
-   }
-
-   public final float widthOf(String var1, int var2, int var3, Float var4, String var5) {
-      Intrinsics.checkNotNullParameter(var1, "kind");
-      Intrinsics.checkNotNullParameter(var5, "parkingTag");
-      boolean var8 = true;
-      if (var4 != null) {
-         float var6 = var4.floatValue();
-         boolean var7;
-         if (2.0F <= var6 && var6 <= 40.0F) {
-            var7 = true;
-         } else {
-            var7 = false;
-         }
-
-         if (var7) {
-            return var6;
-         }
-      }
-
-      byte var13;
-      label109: {
-         byte var9 = 2;
-         boolean var10 = SetsKt.setOf(new String[]{"residential", "tertiary", "secondary", "primary", "unclassified", "living_street"}).contains(var1);
-         if (!Intrinsics.areEqual(var5, "no")) {
-            boolean var12;
-            if (var5.length() > 0) {
-               var12 = true;
-            } else {
-               var12 = false;
-            }
-
-            if (var12 || var10) {
-               var13 = var9;
-               break label109;
-            }
-         }
-
-         var13 = 0;
-      }
-
-      if (1 > var3 || var3 >= 11) {
-         var8 = false;
-      }
-
-      if (var8) {
-         return var3 * 3.2F + var13 * 2.3F;
-      } else {
-         switch (var1.hashCode()) {
-            case -2014090663:
-               if (var1.equals("living_street")) {
-                  return 7.0F;
-               }
-
-               return 6.5F;
-            case -1174796206:
-               if (var1.equals("tertiary")) {
-                  return 12.0F;
-               }
-
-               return 6.5F;
-            case -817598092:
-               if (var1.equals("secondary")) {
-                  return 13.0F;
-               }
-
-               return 6.5F;
-            case -314765822:
-               if (var1.equals("primary")) {
-                  return 15.0F;
-               }
-
-               return 6.5F;
-            case -151535014:
-               if (var1.equals("motorway")) {
-                  return 11.0F;
-               }
-
-               return 6.5F;
-            case 110640564:
-               if (var1.equals("trunk")) {
-                  return 14.0F;
-               }
-
-               return 6.5F;
-            case 218164128:
-               if (var1.equals("sidewalk")) {
-                  return 0.0F;
-               }
-
-               return 6.5F;
-            case 1098352388:
-               if (!var1.equals("residential")) {
-                  return 6.5F;
-               }
-               break;
-            case 1840151916:
-               if (!var1.equals("unclassified")) {
-                  return 6.5F;
-               }
-               break;
-            case 1984153269:
-               if (var1.equals("service")) {
-                  return 5.0F;
-               }
-
-               return 6.5F;
-            default:
-               return 6.5F;
-         }
-
-         float var11;
-         if (var2 != 0) {
-            var11 = 9.0F;
-         } else {
-            var11 = 10.0F;
-         }
-
-         return var11;
-      }
-   }
-
-   public final float widthOf(String var1, int var2, JSONObject var3) {
-      Intrinsics.checkNotNullParameter(var1, "kind");
-      Intrinsics.checkNotNullParameter(var3, "tags");
-      String var5 = var3.optString("lanes");
-      Intrinsics.checkNotNullExpressionValue(var5, "optString(...)");
-      Integer var7 = StringsKt.toIntOrNull(var5);
-      int var4;
-      if (var7 != null) {
-         var4 = var7;
-      } else {
-         var4 = 0;
-      }
-
-      var5 = var3.optString("width");
-      Intrinsics.checkNotNullExpressionValue(var5, "optString(...)");
-      Float var9 = StringsKt.toFloatOrNull(StringsKt.trim(StringsKt.replace$default(var5, "m", "", false, 4, null)).toString());
-      String var6 = var3.optString("parking:both", var3.optString("parking:lane:both", ""));
-      Intrinsics.checkNotNullExpressionValue(var6, "optString(...)");
-      return this.widthOf(var1, var2, var4, var9, var6);
-   }
-
-   public static final class Align {
-      private volatile String guess;
-      private int jumps;
-      private double lagResid;
-      private long lastSeenNs;
-      private boolean ok;
-      private final ArrayDeque<OsmRoads.Align.P> pts = new ArrayDeque<>();
-      private volatile double rejectMiss;
-      private volatile long rejectSince;
-      private int rejected;
-      private double resid;
-      private double spread;
-      private double th;
-      private double tx;
-      private double ty;
-
-      public Align() {
-         this.lagResid = Double.NaN;
-         this.guess = "";
-      }
-
-      // $VF: synthetic method
-      public static void add$default(
-         OsmRoads.Align var0, double var1, double var3, double var5, OsmRoads.Fix var7, long var8, double var10, double var12, int var14, Object var15
-      ) {
-         if ((var14 & 32) != 0) {
-            var10 = 0.0;
-         }
-
-         if ((var14 & 64) != 0) {
-            var12 = 0.0;
-         }
-
-         var0.add(var1, var3, var5, var7, var8, var10, var12);
-      }
-
-      // $VF: synthetic method
-      public static Pair apply$default(OsmRoads.Align var0, double var1, double var3, double var5, double var7, double var9, int var11, Object var12) {
-         if ((var11 & 4) != 0) {
-            var5 = var0.th;
-         }
-
-         if ((var11 & 8) != 0) {
-            var7 = var0.tx;
-         }
-
-         if ((var11 & 16) != 0) {
-            var9 = var0.ty;
-         }
-
-         return var0.apply(var1, var3, var5, var7, var9);
-      }
-
-      private final boolean getGuessing() {
-         boolean var1;
-         if (this.guess.length() > 0) {
-            var1 = true;
-         } else {
-            var1 = false;
-         }
-
-         return var1;
-      }
-
-      public final void add(double var1, double var3, double var5, OsmRoads.Fix var7, long var8, double var10, double var12) {
-         Intrinsics.checkNotNullParameter(var7, "f");
-         this.lagResid = Double.NaN;
-         long var45 = this.lastSeenNs;
-         boolean var43 = false;
-         boolean var41;
-         if (var45 != 0L && var8 - this.lastSeenNs > 30000000000L) {
-            var41 = true;
-         } else {
-            var41 = false;
-         }
-
-         this.lastSeenNs = var8;
-         if (!Double.isNaN(OsmRoads.INSTANCE.getLat0()) && var7.getHAcc() > 0.0F && !(var7.getHAcc() > 30.0F)) {
-            Pair var47 = OsmRoads.INSTANCE.toLocal(var7.getLat(), var7.getLon());
-            double var18 = ((Number)var47.component1()).doubleValue();
-            double var20 = ((Number)var47.component2()).doubleValue();
-            double var14 = RangesKt.coerceAtLeast(var7.getHAcc() * var7.getHAcc(), 1.0F);
-            double var16 = 1.0;
-            double var22 = 1.0 / var14;
-            if (this.pts.isEmpty()) {
-               var14 = Double.MAX_VALUE;
-            } else {
-               var14 = Math.hypot(var1 - this.pts.last().getOx(), var3 - this.pts.last().getOy());
-            }
-
-            if (!this.ok || !(var14 <= 0.5)) {
-               boolean var42;
-               if (0.05 <= var14 && var14 <= 0.5) {
-                  var42 = true;
-               } else {
-                  var42 = false;
-               }
-
-               if (!var42) {
-                  if (this.ok && !this.getGuessing()) {
-                     var47 = apply$default(this, var1, var3, 0.0, 0.0, 0.0, 28, null);
-                     double var24 = Math.hypot(var18 - ((Number)var47.component1()).doubleValue(), var20 - ((Number)var47.component2()).doubleValue());
-                     if (var24 > Math.max(10.0, var7.getHAcc() * 3.0)) {
-                        if (this.rejectSince == 0L) {
-                           this.rejectSince = var8;
-                        }
-
-                        this.rejectMiss = var24;
-                        this.rejected++;
-                        if (!var41 && var8 - this.rejectSince < 10000000000L) {
-                           return;
-                        }
-
-                        this.pts.clear();
-                        this.rejectSince = 0L;
-                        this.tx = var18 - (Math.cos(this.th) * var1 - Math.sin(this.th) * var3);
-                        this.ty = var20 - (Math.sin(this.th) * var1 + Math.cos(this.th) * var3);
-                        this.jumps++;
-                        this.pts.addLast(new OsmRoads.Align.P(var1, var3, var18, var20, var22, var8, 0.0, 0.0, 192, null));
-                        this.spread = 0.0;
-                        this.resid = var7.getHAcc();
-                        return;
-                     }
-
-                     this.rejectSince = 0L;
-                  }
-
-                  while (!this.pts.isEmpty() && (var8 - this.pts.first().getTNs() > 25000000000L || this.pts.size() >= 400)) {
-                     this.pts.removeFirst();
-                  }
-
-                  if (!this.pts.isEmpty() && !(var14 > 0.5)) {
-                     this.pts.set(this.pts.size() - 1, new OsmRoads.Align.P(var1, var3, var18, var20, var22, var8, var10, var12));
-                  } else {
-                     this.pts.addLast(new OsmRoads.Align.P(var1, var3, var18, var20, var22, var8, var10, var12));
-                  }
-
-                  var10 = this.th;
-                  OsmRoads.Align.P var109 = this.pts.first();
-                  OsmRoads.Align.P var48 = this.pts.last();
-                  this.spread = Math.hypot(var48.getOx() - var109.getOx(), var48.getOy() - var109.getOy());
-                  if (this.spread >= 25.0 && this.pts.size() >= 8) {
-                     var12 = 0.0;
-                     var3 = 0.0;
-                     var1 = 0.0;
-                     Iterator var64 = this.pts.iterator();
-                     var10 = 0.0;
-                     var5 = 0.0;
-
-                     while (var64.hasNext()) {
-                        OsmRoads.Align.P var112 = (OsmRoads.Align.P)var64.next();
-                        var5 += var112.getW();
-                        var12 += var112.getW() * var112.getOx();
-                        var10 += var112.getW() * var112.getOy();
-                        var3 += var112.getW() * var112.getE();
-                        var1 += var112.getW() * var112.getN();
-                     }
-
-                     var18 = var12 / var5;
-                     var10 /= var5;
-                     var12 = var3 / var5;
-                     var5 = var1 / var5;
-                     Iterator var113 = this.pts.iterator();
-                     var1 = 0.0;
-                     var3 = 0.0;
-
-                     while (var113.hasNext()) {
-                        OsmRoads.Align.P var65 = (OsmRoads.Align.P)var113.next();
-                        var14 = var65.getOx() - var18;
-                        var22 = var65.getOy() - var10;
-                        var20 = var65.getE() - var12;
-                        double var94 = var65.getN() - var5;
-                        var3 += var65.getW() * (var14 * var20 + var22 * var94);
-                        var1 += var65.getW() * (var14 * var94 - var22 * var20);
-                     }
-
-                     var14 = Math.atan2(var1, var3);
-                     this.guess = "";
-                     var12 -= Math.cos(var14) * var18 - Math.sin(var14) * var10;
-                     var18 = var5 - (Math.sin(var14) * var18 + Math.cos(var14) * var10);
-                     Iterator var114 = this.pts.iterator();
-                     var5 = 0.0;
-
-                     while (var114.hasNext()) {
-                        var48 = (OsmRoads.Align.P)var114.next();
-                        Pair var66 = this.apply(var48.getOx(), var48.getOy(), var14, var12, var18);
-                        var10 = ((Number)var66.component1()).doubleValue();
-                        var20 = ((Number)var66.component2()).doubleValue();
-                        var5 += Math.hypot(var10 - var48.getE(), var20 - var48.getN());
-                     }
-
-                     this.resid = var5 / this.pts.size();
-                     OsmRoads.Align var115 = this;
-                     var3 = 0.0;
-                     var10 = 0.0;
-                     Iterator var67 = var115.pts.iterator();
-                     var1 = var10;
-
-                     while (var67.hasNext()) {
-                        var48 = (OsmRoads.Align.P)var67.next();
-                        var10 = Math.hypot(var48.getVx(), var48.getVy());
-                        var3 += var48.getW();
-                        var1 += var48.getW() * var10;
-                     }
-
-                     double var95 = var1 / var3;
-                     var10 = 0.0;
-                     var5 = 0.0;
-                     var22 = Math.cos(var14);
-                     var20 = Math.sin(var14);
-
-                     for (OsmRoads.Align.P var49 : var115.pts) {
-                        double var26 = Math.hypot(var49.getVx(), var49.getVy());
-                        if (!(var26 < 0.5)) {
-                           double var36 = (var49.getVx() * var22 - var49.getVy() * var20) / var26;
-                           double var32 = (var49.getVx() * var20 + var49.getVy() * var22) / var26;
-                           Pair var119 = var115.apply(var49.getOx(), var49.getOy(), var14, var12, var18);
-                           double var28 = ((Number)var119.component1()).doubleValue();
-                           double var30 = ((Number)var119.component2()).doubleValue();
-                           double var34 = var49.getE();
-                           double var38 = var49.getN();
-                           var10 += var49.getW() * ((var34 - var28) * var36 + (var38 - var30) * var32) * (var26 - var95);
-                           var5 += var49.getW() * (var26 - var95) * (var26 - var95);
-                        }
-                     }
-
-                     if (var5 > 2.0 * var3) {
-                        var115.lagResid = RangesKt.coerceIn(-var10 / var5, -1.0, 1.0);
-                     }
-
-                     Unit var69 = Unit.INSTANCE;
-                     var10 = var14;
-                     var3 = var12;
-                     var1 = var18;
-                  } else {
-                     float var40 = var7.getBearingDeg();
-                     if (!Float.isInfinite(var40) && !Float.isNaN(var40)) {
-                        var41 = true;
-                     } else {
-                        var41 = false;
-                     }
-
-                     label238: {
-                        label292: {
-                           if (var41) {
-                              if (var7.getSpeed() > 3.0F) {
-                                 break label292;
-                              }
-
-                              var40 = var7.getBearingAcc();
-                              if (!Float.isInfinite(var40) && !Float.isNaN(var40)) {
-                                 var41 = true;
-                              } else {
-                                 var41 = false;
-                              }
-
-                              if (var41) {
-                                 var40 = var7.getBearingAcc();
-                                 if (0.0F <= var40 && var40 <= 25.0F) {
-                                    var41 = true;
-                                 } else {
-                                    var41 = false;
-                                 }
-
-                                 if (var41) {
-                                    break label292;
-                                 }
-                              }
-                           }
-
-                           var41 = false;
-                           break label238;
-                        }
-
-                        var41 = true;
-                     }
-
-                     boolean var44 = this.getGuessing();
-                     this.guess = "";
-                     if (var41) {
-                        var10 = Math.toRadians(90.0 - var7.getBearingDeg()) - var5;
-                     } else if (!this.ok || var44) {
-                        var40 = var7.getBearingDeg();
-                        if (!Float.isInfinite(var40) && !Float.isNaN(var40)) {
-                           var41 = true;
-                        } else {
-                           var41 = false;
-                        }
-
-                        label205: {
-                           label287: {
-                              if (var41) {
-                                 var40 = var7.getBearingAcc();
-                                 if (!Float.isInfinite(var40) && !Float.isNaN(var40)) {
-                                    var41 = true;
-                                 } else {
-                                    var41 = false;
-                                 }
-
-                                 if (var41 && var7.getBearingAcc() < 90.0F) {
-                                    var10 = Math.toRadians(90.0 - var7.getBearingDeg());
-                                    break label287;
-                                 }
-                              }
-
-                              if (!this.ok) {
-                                 var110 = null;
-                                 break label205;
-                              }
-
-                              var10 = this.th + var5;
-                           }
-
-                           var110 = var10;
-                        }
-
-                        Pair var116 = OsmRoads.INSTANCE.streetHeading(var18, var20, var110);
-                        if (var116 == null) {
-                           return;
-                        }
-
-                        var10 = ((Number)var116.getSecond()).doubleValue() - var5;
-                        var var111 = ((OsmRoads.Way)var116.getFirst()).getName();
-                        if (var111.length() == 0) {
-                           var41 = true;
-                        } else {
-                           var41 = false;
-                        }
-
-                        if (var41) {
-                           var111 = ((OsmRoads.Way)var116.getFirst()).getKind();
-                        }
-
-                        this.guess = var111;
-                     }
-
-                     var12 = Math.cos(var10);
-                     var14 = Math.sin(var10);
-                     var5 = var20 - (Math.sin(var10) * var1 + Math.cos(var10) * var3);
-                     this.resid = var7.getHAcc();
-                     var3 = var18 - (var12 * var1 - var14 * var3);
-                     var1 = var5;
-                  }
-
-                  if (!this.ok) {
-                     this.th = var10;
-                     this.tx = var3;
-                     this.ty = var1;
-                     this.ok = true;
-                     this.jumps++;
-                  } else {
-                     label156: {
-                        var10 = Math.IEEEremainder(var10 - this.th, Math.PI * 2);
-                        if (!(Math.abs(var10) > 0.5)) {
-                           var41 = var43;
-                           if (!(Math.hypot(var3 - this.tx, var1 - this.ty) > 40.0)) {
-                              break label156;
-                           }
-                        }
-
-                        var41 = true;
-                     }
-
-                     if (var41) {
-                        var5 = var16;
-                     } else {
-                        var5 = 0.05;
-                     }
-
-                     if (var41) {
-                        this.jumps++;
-                     }
-
-                     this.th += var5 * var10;
-                     this.tx = this.tx + (var3 - this.tx) * var5;
-                     this.ty = this.ty + (var1 - this.ty) * var5;
-                  }
-               }
-            }
-         }
-      }
-
-      public final Pair<Double, Double> apply(double var1, double var3, double var5, double var7, double var9) {
-         return new Pair<>(Math.cos(var5) * var1 - Math.sin(var5) * var3 + var7, Math.sin(var5) * var1 + Math.cos(var5) * var3 + var9);
-      }
-
-      public final String getGuess() {
-         return this.guess;
-      }
-
-      public final int getJumps() {
-         return this.jumps;
-      }
-
-      public final double getLagResid() {
-         return this.lagResid;
-      }
-
-      public final boolean getOk() {
-         return this.ok;
-      }
-
-      public final double getRejectMiss() {
-         return this.rejectMiss;
-      }
-
-      public final long getRejectSince() {
-         return this.rejectSince;
-      }
-
-      public final int getRejected() {
-         return this.rejected;
-      }
-
-      public final double getResid() {
-         return this.resid;
-      }
-
-      public final double getSpread() {
-         return this.spread;
-      }
-
-      public final double getTh() {
-         return this.th;
-      }
-
-      public final double getTx() {
-         return this.tx;
-      }
-
-      public final double getTy() {
-         return this.ty;
-      }
-
-      public final Pair<Double, Double> inverse(double var1, double var3) {
-         var1 -= this.tx;
-         var3 -= this.ty;
-         return new Pair<>(Math.cos(this.th) * var1 + Math.sin(this.th) * var3, -Math.sin(this.th) * var1 + Math.cos(this.th) * var3);
-      }
-
-      public final void reset() {
-         this.pts.clear();
-         this.ok = false;
-         this.rejectSince = 0L;
-      }
-
-      private static final class P {
-         private final double e;
-         private final double n;
-         private final double ox;
-         private final double oy;
-         private final long tNs;
-         private final double vx;
-         private final double vy;
-         private final double w;
-
-         public P(double var1, double var3, double var5, double var7, double var9, long var11, double var13, double var15) {
-            this.ox = var1;
-            this.oy = var3;
-            this.e = var5;
-            this.n = var7;
-            this.w = var9;
-            this.tNs = var11;
-            this.vx = var13;
-            this.vy = var15;
-         }
-
-         // $VF: synthetic method
-         public P(
-            double var1, double var3, double var5, double var7, double var9, long var11, double var13, double var15, int var17, DefaultConstructorMarker var18
-         ) {
-            if ((var17 & 64) != 0) {
-               var13 = 0.0;
-            }
-
-            if ((var17 & 128) != 0) {
-               var15 = 0.0;
-            }
-
-            this(var1, var3, var5, var7, var9, var11, var13, var15);
-         }
-
-         public final double getE() {
+    private static final double KY = 110540.0d;
+    private static final String TAG = "StarView/Osm";
+    public static final double TILE = 0.01d;
+    private static File dir;
+    private static double kx;
+    private static long lastEnsureMs;
+    private static volatile Fix lastFix;
+    private static volatile double lon0;
+    private static volatile long rtkFixNs;
+    public static final OsmRoads INSTANCE = new OsmRoads();
+    private static final List<String> URLS = CollectionsKt.listOf((Object[]) new String[]{"https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter", "https://overpass.kumi.systems/api/interpreter"});
+    private static final Set<String> KINDS = SetsKt.setOf((Object[]) new String[]{"motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "living_street", "service", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link"});
+    private static volatile double lat0 = Double.NaN;
+    private static final ConcurrentHashMap<Long, Way> ways = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, List<Way>> boxWays = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Integer> boxState = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Integer> tiles = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Long> failedAt = new ConcurrentHashMap<>();
+    private static final ConcurrentLinkedQueue<Fix> fixes = new ConcurrentLinkedQueue<>();
+    private static volatile String tileStatus = "no GPS yet";
+    private static volatile String gpsSrc = "";
+    private static volatile String matchStatus = "";
+
+    /* renamed from: http$delegate, reason: from kotlin metadata */
+    private static final Lazy http = LazyKt.lazy(new Function0() { // from class: com.starpilot.starview.OsmRoads$$ExternalSyntheticLambda2
+        @Override // kotlin.jvm.functions.Function0
+        public final Object invoke() {
+            OkHttpClient http_delegate$lambda$0;
+            http_delegate$lambda$0 = OsmRoads.http_delegate$lambda$0();
+            return http_delegate$lambda$0;
+        }
+    });
+    private static final ExecutorService loader = Executors.newSingleThreadExecutor(new ThreadFactory() { // from class: com.starpilot.starview.OsmRoads$$ExternalSyntheticLambda3
+        @Override // java.util.concurrent.ThreadFactory
+        public final Thread newThread(Runnable runnable) {
+            Thread loader$lambda$2;
+            loader$lambda$2 = OsmRoads.loader$lambda$2(runnable);
+            return loader$lambda$2;
+        }
+    });
+    private static volatile boolean enabled = true;
+    private static final Map<String, String> ABBR = MapsKt.mapOf(TuplesKt.to("st", "street"), TuplesKt.to("ave", "avenue"), TuplesKt.to("av", "avenue"), TuplesKt.to("rd", "road"), TuplesKt.to("blvd", "boulevard"), TuplesKt.to("dr", "drive"), TuplesKt.to("ln", "lane"), TuplesKt.to("pl", "place"), TuplesKt.to("ct", "court"), TuplesKt.to("hwy", "highway"), TuplesKt.to("pkwy", "parkway"), TuplesKt.to("expy", "expressway"), TuplesKt.to("tpke", "turnpike"), TuplesKt.to("e", "east"), TuplesKt.to("w", "west"), TuplesKt.to("n", "north"), TuplesKt.to("s", "south"), TuplesKt.to("ter", "terrace"), TuplesKt.to("sq", "square"), TuplesKt.to("rte", "route"), TuplesKt.to("rt", "route"));
+    private static final Set<String> DIRS = SetsKt.setOf((Object[]) new String[]{"east", "west", "north", "south", "eastbound", "westbound", "northbound", "southbound"});
+
+    private OsmRoads() {
+    }
+
+    /* compiled from: OsmRoads.kt */
+    public static final class Way {
+        private final double[] e;
+        private final long id;
+        private final String kind;
+        private final int lanes;
+        private final double maxE;
+        private final double maxN;
+        private final double minE;
+        private final double minN;
+        private final double[] n;
+        private final String name;
+        private final int oneway;
+        private final float width;
+
+        public Way(long id, String name, String kind, int oneway, float width, double[] e, double[] n, int lanes) {
+            Intrinsics.checkNotNullParameter(name, "name");
+            Intrinsics.checkNotNullParameter(kind, "kind");
+            Intrinsics.checkNotNullParameter(e, "e");
+            Intrinsics.checkNotNullParameter(n, "n");
+            this.id = id;
+            this.name = name;
+            this.kind = kind;
+            this.oneway = oneway;
+            this.width = width;
+            this.e = e;
+            this.n = n;
+            this.lanes = lanes;
+            this.minE = ArraysKt.minOrThrow(this.e);
+            this.maxE = ArraysKt.maxOrThrow(this.e);
+            this.minN = ArraysKt.minOrThrow(this.n);
+            this.maxN = ArraysKt.maxOrThrow(this.n);
+        }
+
+        public /* synthetic */ Way(long j, String str, String str2, int i, float f, double[] dArr, double[] dArr2, int i2, int i3, DefaultConstructorMarker defaultConstructorMarker) {
+            this(j, str, str2, i, f, dArr, dArr2, (i3 & 128) != 0 ? 0 : i2);
+        }
+
+        public final double[] getE() {
             return this.e;
-         }
+        }
 
-         public final double getN() {
+        public final long getId() {
+            return this.id;
+        }
+
+        public final String getKind() {
+            return this.kind;
+        }
+
+        public final int getLanes() {
+            return this.lanes;
+        }
+
+        public final double[] getN() {
             return this.n;
-         }
+        }
 
-         public final double getOx() {
-            return this.ox;
-         }
+        public final String getName() {
+            return this.name;
+        }
 
-         public final double getOy() {
-            return this.oy;
-         }
+        public final int getOneway() {
+            return this.oneway;
+        }
 
-         public final long getTNs() {
+        public final float getWidth() {
+            return this.width;
+        }
+
+        public final double getMaxE() {
+            return this.maxE;
+        }
+
+        public final double getMaxN() {
+            return this.maxN;
+        }
+
+        public final double getMinE() {
+            return this.minE;
+        }
+
+        public final double getMinN() {
+            return this.minN;
+        }
+
+        public final boolean getHighway() {
+            return StringsKt.startsWith$default(this.kind, "motorway", false, 2, (Object) null) || StringsKt.startsWith$default(this.kind, "trunk", false, 2, (Object) null);
+        }
+
+        public final int getLaneCount() {
+            if (this.lanes > 0) {
+                return this.oneway == 0 ? Math.max(1, this.lanes / 2) : this.lanes;
+            }
+            if (getHighway()) {
+                return Math.max(1, Math.round(this.width / (this.oneway == 0 ? 6.8f : 3.4f)));
+            }
+            return 1;
+        }
+
+        public final double getLanesWidth() {
+            if (getHighway()) {
+                return this.width;
+            }
+            return Math.min(this.width, getLaneCount() * (this.oneway == 0 ? 2 : 1) * 3.3d);
+        }
+    }
+
+    /* compiled from: OsmRoads.kt */
+    public static final class Fix {
+        private final double ageS;
+        private final float bearingAcc;
+        private final float bearingDeg;
+        private final float hAcc;
+        private final double lat;
+        private final double lon;
+        private final long monoNs;
+        private final float speed;
+        private final long tNs;
+
+        public Fix(double lat, double lon, float bearingDeg, float speed, float hAcc, long tNs, float bearingAcc, double ageS, long monoNs) {
+            this.lat = lat;
+            this.lon = lon;
+            this.bearingDeg = bearingDeg;
+            this.speed = speed;
+            this.hAcc = hAcc;
+            this.tNs = tNs;
+            this.bearingAcc = bearingAcc;
+            this.ageS = ageS;
+            this.monoNs = monoNs;
+        }
+
+        /* JADX WARN: Illegal instructions before constructor call */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
+        public /* synthetic */ Fix(double d, double d2, float f, float f2, float f3, long j, float f4, double d3, long j2, int i, DefaultConstructorMarker defaultConstructorMarker) {
+            this(d, d2, f, f2, f3, j, r12, r13, r15);
+            double d4;
+            long j3;
+            float f5 = (i & 64) != 0 ? Float.NaN : f4;
+            if ((i & 128) == 0) {
+                d4 = d3;
+            } else {
+                d4 = Double.NaN;
+            }
+            if ((i & 256) == 0) {
+                j3 = j2;
+            } else {
+                j3 = 0;
+            }
+        }
+
+        public final float getBearingAcc() {
+            return this.bearingAcc;
+        }
+
+        public final float getBearingDeg() {
+            return this.bearingDeg;
+        }
+
+        public final float getHAcc() {
+            return this.hAcc;
+        }
+
+        public final double getLat() {
+            return this.lat;
+        }
+
+        public final double getLon() {
+            return this.lon;
+        }
+
+        public final float getSpeed() {
+            return this.speed;
+        }
+
+        public final long getTNs() {
             return this.tNs;
-         }
+        }
 
-         public final double getVx() {
-            return this.vx;
-         }
+        public final double getAgeS() {
+            return this.ageS;
+        }
 
-         public final double getVy() {
-            return this.vy;
-         }
+        public final long getMonoNs() {
+            return this.monoNs;
+        }
+    }
 
-         public final double getW() {
-            return this.w;
-         }
-      }
-   }
+    public final double getLat0() {
+        return lat0;
+    }
 
-   public static final class Fix {
-      private final double ageS;
-      private final float bearingAcc;
-      private final float bearingDeg;
-      private final float hAcc;
-      private final double lat;
-      private final double lon;
-      private final long monoNs;
-      private final float speed;
-      private final long tNs;
+    public final double getLon0() {
+        return lon0;
+    }
 
-      public Fix(double var1, double var3, float var5, float var6, float var7, long var8, float var10, double var11, long var13) {
-         this.lat = var1;
-         this.lon = var3;
-         this.bearingDeg = var5;
-         this.speed = var6;
-         this.hAcc = var7;
-         this.tNs = var8;
-         this.bearingAcc = var10;
-         this.ageS = var11;
-         this.monoNs = var13;
-      }
+    public final ConcurrentLinkedQueue<Fix> getFixes() {
+        return fixes;
+    }
 
-      // $VF: synthetic method
-      public Fix(
-         double var1,
-         double var3,
-         float var5,
-         float var6,
-         float var7,
-         long var8,
-         float var10,
-         double var11,
-         long var13,
-         int var15,
-         DefaultConstructorMarker var16
-      ) {
-         if ((var15 & 64) != 0) {
-            var10 = Float.NaN;
-         }
+    public final Fix getLastFix() {
+        return lastFix;
+    }
 
-         if ((var15 & 128) != 0) {
-            var11 = Double.NaN;
-         }
+    public final String getTileStatus() {
+        return tileStatus;
+    }
 
-         if ((var15 & 256) != 0) {
-            var13 = 0L;
-         }
+    public final String getGpsSrc() {
+        return gpsSrc;
+    }
 
-         this(var1, var3, var5, var6, var7, var8, var10, var11, var13);
-      }
+    public final void setGpsSrc(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        gpsSrc = str;
+    }
 
-      public final double getAgeS() {
-         return this.ageS;
-      }
+    public final String getMatchStatus() {
+        return matchStatus;
+    }
 
-      public final float getBearingAcc() {
-         return this.bearingAcc;
-      }
+    public final void setMatchStatus(String str) {
+        Intrinsics.checkNotNullParameter(str, "<set-?>");
+        matchStatus = str;
+    }
 
-      public final float getBearingDeg() {
-         return this.bearingDeg;
-      }
+    private final OkHttpClient getHttp() {
+        return (OkHttpClient) http.getValue();
+    }
 
-      public final float getHAcc() {
-         return this.hAcc;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final OkHttpClient http_delegate$lambda$0() {
+        return new OkHttpClient.Builder().connectTimeout(10L, TimeUnit.SECONDS).readTimeout(40L, TimeUnit.SECONDS).build();
+    }
 
-      public final double getLat() {
-         return this.lat;
-      }
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final Thread loader$lambda$2(Runnable r) {
+        Thread $this$loader_u24lambda_u242_u24lambda_u241 = new Thread(r, "starview-osm");
+        $this$loader_u24lambda_u242_u24lambda_u241.setDaemon(true);
+        return $this$loader_u24lambda_u242_u24lambda_u241;
+    }
 
-      public final double getLon() {
-         return this.lon;
-      }
+    public final void init(Context ctx) {
+        Intrinsics.checkNotNullParameter(ctx, "ctx");
+        if (dir == null) {
+            File $this$init_u24lambda_u243 = new File(ctx.getFilesDir(), "osm");
+            $this$init_u24lambda_u243.mkdirs();
+            dir = $this$init_u24lambda_u243;
+        }
+    }
 
-      public final long getMonoNs() {
-         return this.monoNs;
-      }
+    public final void setOrigin(double lat, double lon) {
+        lon0 = lon;
+        kx = Math.cos(Math.toRadians(lat)) * 111320.0d;
+        lat0 = lat;
+    }
 
-      public final float getSpeed() {
-         return this.speed;
-      }
+    public final Pair<Double, Double> toLocal(double lat, double lon) {
+        return new Pair<>(Double.valueOf((lon - lon0) * kx), Double.valueOf((lat - lat0) * 110540.0d));
+    }
 
-      public final long getTNs() {
-         return this.tNs;
-      }
-   }
+    public final boolean getEnabled() {
+        return enabled;
+    }
 
-   public static final class Match {
-      private final double dir;
-      private final double dist;
-      private final double signedLeft;
-      private final OsmRoads.Way way;
+    public final void setEnabled(boolean z) {
+        enabled = z;
+    }
 
-      public Match(OsmRoads.Way var1, double var2, double var4, double var6) {
-         Intrinsics.checkNotNullParameter(var1, "way");
-         super();
-         this.way = var1;
-         this.dist = var2;
-         this.signedLeft = var4;
-         this.dir = var6;
-      }
+    public static /* synthetic */ void onFix$default(OsmRoads osmRoads, double d, double d2, float f, float f2, float f3, float f4, long j, long j2, boolean z, int i, Object obj) {
+        boolean z2;
+        float f5 = (i & 32) != 0 ? Float.NaN : f4;
+        long j3 = (i & 64) != 0 ? 0L : j;
+        long j4 = (i & 128) != 0 ? 0L : j2;
+        if ((i & 256) == 0) {
+            z2 = z;
+        } else {
+            z2 = false;
+        }
+        osmRoads.onFix(d, d2, f, f2, f3, f5, j3, j4, z2);
+    }
 
-      public final double getDir() {
-         return this.dir;
-      }
-
-      public final double getDist() {
-         return this.dist;
-      }
-
-      public final double getSignedLeft() {
-         return this.signedLeft;
-      }
-
-      public final OsmRoads.Way getWay() {
-         return this.way;
-      }
-
-      public final double rightOf(double var1) {
-         if (Math.cos(this.dir - var1) >= 0.0) {
-            var1 = -this.signedLeft;
-         } else {
-            var1 = this.signedLeft;
-         }
-
-         return var1;
-      }
-   }
-
-   public static final class Piece {
-      private final OsmRoads.Way way;
-      private final double[] x;
-      private final double[] y;
-
-      public Piece(OsmRoads.Way var1, double[] var2, double[] var3) {
-         Intrinsics.checkNotNullParameter(var1, "way");
-         Intrinsics.checkNotNullParameter(var2, "x");
-         Intrinsics.checkNotNullParameter(var3, "y");
-         super();
-         this.way = var1;
-         this.x = var2;
-         this.y = var3;
-      }
-
-      public final OsmRoads.Way getWay() {
-         return this.way;
-      }
-
-      public final double[] getX() {
-         return this.x;
-      }
-
-      public final double[] getY() {
-         return this.y;
-      }
-   }
-
-   public static final class Way {
-      private final double[] e;
-      private final long id;
-      private final String kind;
-      private final int lanes;
-      private final double maxE;
-      private final double maxN;
-      private final double minE;
-      private final double minN;
-      private final double[] n;
-      private final String name;
-      private final int oneway;
-      private final float width;
-
-      public Way(long var1, String var3, String var4, int var5, float var6, double[] var7, double[] var8, int var9) {
-         Intrinsics.checkNotNullParameter(var3, "name");
-         Intrinsics.checkNotNullParameter(var4, "kind");
-         Intrinsics.checkNotNullParameter(var7, "e");
-         Intrinsics.checkNotNullParameter(var8, "n");
-         super();
-         this.id = var1;
-         this.name = var3;
-         this.kind = var4;
-         this.oneway = var5;
-         this.width = var6;
-         this.e = var7;
-         this.n = var8;
-         this.lanes = var9;
-         this.minE = ArraysKt.minOrThrow(this.e);
-         this.maxE = ArraysKt.maxOrThrow(this.e);
-         this.minN = ArraysKt.minOrThrow(this.n);
-         this.maxN = ArraysKt.maxOrThrow(this.n);
-      }
-
-      // $VF: synthetic method
-      public Way(long var1, String var3, String var4, int var5, float var6, double[] var7, double[] var8, int var9, int var10, DefaultConstructorMarker var11) {
-         if ((var10 & 128) != 0) {
-            var9 = 0;
-         }
-
-         this(var1, var3, var4, var5, var6, var7, var8, var9);
-      }
-
-      public final double[] getE() {
-         return this.e;
-      }
-
-      public final boolean getHighway() {
-         String var2 = this.kind;
-         boolean var1 = false;
-         if (StringsKt.startsWith$default(var2, "motorway", false, 2, null) || StringsKt.startsWith$default(this.kind, "trunk", false, 2, null)) {
-            var1 = true;
-         }
-
-         return var1;
-      }
-
-      public final long getId() {
-         return this.id;
-      }
-
-      public final String getKind() {
-         return this.kind;
-      }
-
-      public final int getLaneCount() {
-         int var4 = this.lanes;
-         int var3 = 1;
-         if (var4 > 0) {
-            if (this.oneway == 0) {
-               var3 = Math.max(1, this.lanes / 2);
-            } else {
-               var3 = this.lanes;
+    public final void onFix(double lat, double lon, float bearingDeg, float speed, float hAcc, float bearingAcc, long fixUnixMs, long monoNs, boolean rtk) {
+        if (enabled) {
+            long nanoTime = System.nanoTime();
+            if (rtk) {
+                rtkFixNs = nanoTime;
+            } else if (nanoTime - rtkFixNs < 1000000000) {
+                return;
             }
-         } else if (this.getHighway()) {
-            float var2 = this.width;
-            float var1;
-            if (this.oneway == 0) {
-               var1 = 6.8F;
+            if ((Double.isInfinite(lat) || Double.isNaN(lat)) ? false : true) {
+                if (!((Double.isInfinite(lon) || Double.isNaN(lon)) ? false : true)) {
+                    return;
+                }
+                if (lat == 0.0d) {
+                    if (lon == 0.0d) {
+                        return;
+                    }
+                }
+                if (Double.isNaN(lat0)) {
+                    setOrigin(lat, lon);
+                }
+                double age = fixUnixMs > 0 ? (System.currentTimeMillis() - fixUnixMs) / 1000.0d : Double.NaN;
+                Fix f = new Fix(lat, lon, bearingDeg, speed, hAcc, System.nanoTime(), bearingAcc, -0.5d <= age && age <= 3.0d ? RangesKt.coerceAtLeast(age, 0.0d) : Double.NaN, monoNs);
+                lastFix = f;
+                fixes.add(f);
+                while (fixes.size() > 50) {
+                    fixes.poll();
+                }
+                long now = System.currentTimeMillis();
+                if (now - lastEnsureMs < 2000) {
+                    return;
+                }
+                lastEnsureMs = now;
+                try {
+                    ensureTiles(lat, lon);
+                } catch (Exception e) {
+                    Log.e("StarView/Osm", "tiles", e);
+                    tileStatus = StringsKt.take("map error: " + e, 80);
+                }
+            }
+        }
+    }
+
+    private final String key(int ty, int tx) {
+        return ty + "_" + tx;
+    }
+
+    private final void ensureBoxes(double lat, double lon) {
+        double dLat;
+        double dLat2 = 0.002713949701465533d;
+        double dLon = 300.0d / kx;
+        int i = 3;
+        char c = 1;
+        char c2 = 2;
+        double[] dArr = {lat - 0.002713949701465533d, lat, lat + 0.002713949701465533d};
+        int i2 = 0;
+        while (i2 < i) {
+            double la = dArr[i2];
+            double[] dArr2 = new double[i];
+            dArr2[0] = lon - dLon;
+            dArr2[c] = lon;
+            dArr2[c2] = lon + dLon;
+            int i3 = 0;
+            while (i3 < i) {
+                double lo = dArr2[i3];
+                Pair<Boolean, File> boxFileFor = MapdMaps.INSTANCE.boxFileFor(la, lo);
+                boolean have = boxFileFor.component1().booleanValue();
+                final File f = boxFileFor.component2();
+                if (!have) {
+                    dLat = dLat2;
+                } else if (f == null) {
+                    dLat = dLat2;
+                } else {
+                    final String k = f.getName();
+                    if (boxState.containsKey(k)) {
+                        dLat = dLat2;
+                    } else {
+                        dLat = dLat2;
+                        boxState.put(k, 0);
+                        loader.execute(new Runnable() { // from class: com.starpilot.starview.OsmRoads$$ExternalSyntheticLambda1
+                            @Override // java.lang.Runnable
+                            public final void run() {
+                                OsmRoads.ensureBoxes$lambda$6(f, k);
+                            }
+                        });
+                    }
+                }
+                i3++;
+                dLat2 = dLat;
+                i = 3;
+            }
+            i2++;
+            c = 1;
+            c2 = 2;
+            i = 3;
+        }
+        Set<String> keySet = boxWays.keySet();
+        Intrinsics.checkNotNullExpressionValue(keySet, "<get-keys>(...)");
+        for (String k2 : CollectionsKt.toList(keySet)) {
+            List p = StringsKt.split$default((CharSequence) k2, new char[]{'_'}, false, 0, 6, (Object) null);
+            double d = 2;
+            double cla = (Double.parseDouble((String) p.get(0)) + Double.parseDouble((String) p.get(2))) / d;
+            double clo = (Double.parseDouble((String) p.get(1)) + Double.parseDouble((String) p.get(3))) / d;
+            if (Math.abs(cla - lat) > 0.5d || Math.abs(clo - lon) > 0.5d) {
+                boxWays.remove(k2);
+                boxState.remove(k2);
+            }
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void ensureBoxes$lambda$6(File $f, String $k) {
+        try {
+            Iterable $this$map$iv = MapdMaps.INSTANCE.readBox(FilesKt.readBytes($f));
+            Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+            Iterable $this$mapTo$iv$iv = $this$map$iv;
+            int $i$f$mapTo = 0;
+            for (Object item$iv$iv : $this$mapTo$iv$iv) {
+                MapdMaps.W w = (MapdMaps.W) item$iv$iv;
+                double[] e = new double[w.getLat().length];
+                double[] n = new double[w.getLat().length];
+                int j = 0;
+                int length = w.getLat().length;
+                while (j < length) {
+                    Iterable $this$mapTo$iv$iv2 = $this$mapTo$iv$iv;
+                    Pair<Double, Double> local = INSTANCE.toLocal(w.getLat()[j], w.getLon()[j]);
+                    double x = local.component1().doubleValue();
+                    double y = local.component2().doubleValue();
+                    e[j] = x;
+                    n[j] = y;
+                    j++;
+                    $this$mapTo$iv$iv = $this$mapTo$iv$iv2;
+                    $i$f$mapTo = $i$f$mapTo;
+                }
+                Iterable $this$mapTo$iv$iv3 = $this$mapTo$iv$iv;
+                int $i$f$mapTo2 = $i$f$mapTo;
+                String kind = Intrinsics.areEqual(w.getKind(), "unknown") ? "residential" : w.getKind();
+                int ow = w.getOneway() ? 1 : 0;
+                destination$iv$iv.add(new Way(w.getId(), w.getName(), kind, ow, INSTANCE.widthOf(kind, ow, w.getLanes(), null, ""), e, n, w.getLanes()));
+                $this$mapTo$iv$iv = $this$mapTo$iv$iv3;
+                $i$f$mapTo = $i$f$mapTo2;
+            }
+            List list = (List) destination$iv$iv;
+            boxWays.put($k, list);
+            boxState.put($k, 1);
+            Collection<List<Way>> values = boxWays.values();
+            Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
+            Iterator<T> it = values.iterator();
+            int i = 0;
+            while (it.hasNext()) {
+                List it2 = (List) it.next();
+                i += it2.size();
+            }
+            tileStatus = "offline map: " + i + " streets";
+        } catch (Exception e2) {
+            Log.e("StarView/Osm", "box " + $k, e2);
+            String message = e2.getMessage();
+            tileStatus = "offline map error: " + (message != null ? StringsKt.take(message, 50) : null);
+        }
+    }
+
+    private final void ensureTiles(double lat, double lon) {
+        double fy;
+        long j;
+        double fx;
+        int i;
+        ensureBoxes(lat, lon);
+        long j2 = 4576918229304087675L;
+        final int ty = (int) Math.floor(lat / 0.01d);
+        final int tx = (int) Math.floor(lon / 0.01d);
+        double fy2 = (lat / 0.01d) - ty;
+        double fx2 = (lon / 0.01d) - tx;
+        double mx = 300.0d / (kx * 0.01d);
+        final int dy = -1;
+        while (true) {
+            int i2 = 2;
+            if (dy >= 2) {
+                return;
+            }
+            final int dx = -1;
+            while (dx < i2) {
+                if (dy == -1 && fy2 > 0.2713949701465533d) {
+                    j = j2;
+                    fy = fy2;
+                    fx = fx2;
+                    i = i2;
+                } else if ((dy != 1 || fy2 >= 1 - 0.2713949701465533d) && ((dx != -1 || fx2 <= mx) && (dx != 1 || fx2 >= 1 - mx))) {
+                    String k = key(ty + dy, tx + dx);
+                    fy = fy2;
+                    double fy3 = ty + dy;
+                    j = 4576918229304087675L;
+                    fx = fx2;
+                    double fx3 = tx + dx;
+                    if (MapdMaps.INSTANCE.boxFileFor((fy3 + 0.5d) * 0.01d, (fx3 + 0.5d) * 0.01d).getFirst().booleanValue()) {
+                        i = 2;
+                    } else {
+                        Integer st = tiles.get(k);
+                        if (st != null && st.intValue() == 0) {
+                            i = 2;
+                        } else if (st != null && st.intValue() == 1) {
+                            i = 2;
+                        } else {
+                            if (st == null) {
+                                i = 2;
+                            } else {
+                                i = 2;
+                                if (st.intValue() == 2) {
+                                    long currentTimeMillis = System.currentTimeMillis();
+                                    Long l = failedAt.get(k);
+                                    if (currentTimeMillis - (l != null ? l.longValue() : 0L) < 30000) {
+                                    }
+                                }
+                            }
+                            tiles.put(k, 0);
+                            loader.execute(new Runnable() { // from class: com.starpilot.starview.OsmRoads$$ExternalSyntheticLambda0
+                                @Override // java.lang.Runnable
+                                public final void run() {
+                                    OsmRoads.ensureTiles$lambda$7(ty, dy, tx, dx);
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    fy = fy2;
+                    fx = fx2;
+                    i = 2;
+                    j = 4576918229304087675L;
+                }
+                dx++;
+                i2 = i;
+                j2 = j;
+                fy2 = fy;
+                fx2 = fx;
+            }
+            dy++;
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public static final void ensureTiles$lambda$7(int $ty, int $dy, int $tx, int $dx) {
+        INSTANCE.load($ty + $dy, $tx + $dx);
+    }
+
+    /* JADX WARN: Can't wrap try/catch for region: R(7:(10:58|59|60|61|62|63|64|65|66|(7:68|69|70|71|72|73|(2:76|77)(1:75)))(1:108)|69|70|71|72|73|(0)(0)) */
+    /* JADX WARN: Code restructure failed: missing block: B:83:0x01e0, code lost:
+    
+        r0 = e;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:84:0x01ee, code lost:
+    
+        r1 = r0.getMessage();
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:85:0x01f2, code lost:
+    
+        if (r1 == null) goto L59;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:86:0x01f4, code lost:
+    
+        r1 = r0.toString();
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:87:0x01f8, code lost:
+    
+        r5 = r1;
+     */
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Removed duplicated region for block: B:31:0x028b A[SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:35:0x0281 A[SYNTHETIC] */
+    /* JADX WARN: Removed duplicated region for block: B:75:0x01fc A[LOOP:1: B:49:0x00fa->B:75:0x01fc, LOOP_END] */
+    /* JADX WARN: Removed duplicated region for block: B:76:0x01fb A[SYNTHETIC] */
+    /* JADX WARN: Unreachable blocks removed: 2, instructions: 8 */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    private final void load(int ty, int tx) {
+        int i;
+        String str;
+        String str2;
+        Iterator<String> it;
+        Response execute;
+        Throwable th;
+        Response response;
+        String string;
+        String str3;
+        int i2;
+        boolean z;
+        String key = key(ty, tx);
+        try {
+            File file = dir;
+            if (file == null) {
+                return;
+            }
+            File file2 = new File(file, key + ".json");
+            try {
+                if (file2.isFile() && file2.length() > 20) {
+                    str = FilesKt.readText$default(file2, null, 1, null);
+                    i = 0;
+                } else {
+                    tileStatus = "downloading streets…";
+                    double d = ty * 0.01d;
+                    double d2 = tx * 0.01d;
+                    try {
+                        String format = String.format(Locale.US, "%.4f", Arrays.copyOf(new Object[]{Double.valueOf(d)}, 1));
+                        Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+                        String format2 = String.format(Locale.US, "%.4f", Arrays.copyOf(new Object[]{Double.valueOf(d2)}, 1));
+                        Intrinsics.checkNotNullExpressionValue(format2, "format(...)");
+                        String format3 = String.format(Locale.US, "%.4f", Arrays.copyOf(new Object[]{Double.valueOf(d + 0.01d)}, 1));
+                        Intrinsics.checkNotNullExpressionValue(format3, "format(...)");
+                        String format4 = String.format(Locale.US, "%.4f", Arrays.copyOf(new Object[]{Double.valueOf(d2 + 0.01d)}, 1));
+                        Intrinsics.checkNotNullExpressionValue(format4, "format(...)");
+                        String str4 = "[out:json][timeout:30];way[\"highway\"][\"area\"!=\"yes\"](" + format + "," + format2 + "," + format3 + "," + format4 + ");out tags geom;";
+                        Iterator<String> it2 = URLS.iterator();
+                        String str5 = "";
+                        String str6 = null;
+                        while (true) {
+                            if (!it2.hasNext()) {
+                                i = 0;
+                                break;
+                            }
+                            try {
+                                execute = getHttp().newCall(new Request.Builder().url(it2.next()).header("User-Agent", "StarView/2.25 (openpilot tablet display)").post(new FormBody.Builder(null, 1, null == true ? 1 : 0).add("data", str4).build()).build()).execute();
+                                try {
+                                    response = execute;
+                                    ResponseBody body = response.body();
+                                    Intrinsics.checkNotNull(body);
+                                    string = body.string();
+                                } catch (Throwable th2) {
+                                    str2 = str4;
+                                    it = it2;
+                                    i = 0;
+                                    th = th2;
+                                }
+                            } catch (Exception e) {
+                                e = e;
+                                str2 = str4;
+                                it = it2;
+                                i = 0;
+                            }
+                            try {
+                                if (response.isSuccessful()) {
+                                    str2 = str4;
+                                    try {
+                                        str3 = str6;
+                                        it = it2;
+                                        String str7 = str5;
+                                        i = 0;
+                                        try {
+                                            if (StringsKt.startsWith$default(StringsKt.trimStart((CharSequence) string).toString(), "{", false, 2, (Object) null)) {
+                                                str6 = string;
+                                                str5 = str7;
+                                                Unit unit = Unit.INSTANCE;
+                                                CloseableKt.closeFinally(execute, null);
+                                                if (str6 != null) {
+                                                    break;
+                                                }
+                                                str4 = str2;
+                                                it2 = it;
+                                            }
+                                        } catch (Throwable th3) {
+                                            th = th3;
+                                            str6 = str3;
+                                            try {
+                                                throw th;
+                                            } catch (Throwable th4) {
+                                                CloseableKt.closeFinally(execute, th);
+                                                throw th4;
+                                            }
+                                        }
+                                    } catch (Throwable th5) {
+                                        it = it2;
+                                        i = 0;
+                                        th = th5;
+                                    }
+                                } else {
+                                    str2 = str4;
+                                    str3 = str6;
+                                    it = it2;
+                                    i = 0;
+                                }
+                                Unit unit2 = Unit.INSTANCE;
+                                CloseableKt.closeFinally(execute, null);
+                                if (str6 != null) {
+                                }
+                            } catch (Throwable th6) {
+                                th = th6;
+                                throw th;
+                            }
+                            str5 = "HTTP " + response.code();
+                            str6 = str3;
+                        }
+                        if (str6 == null) {
+                            throw new IOException(str5);
+                        }
+                        str = str6;
+                        File file3 = new File(file2.getPath() + ".tmp");
+                        FilesKt.writeText$default(file3, str, null, 2, null);
+                        file3.renameTo(file2);
+                    } catch (Exception e2) {
+                        e = e2;
+                        Log.w("StarView/Osm", "tile " + key + ": " + e);
+                        tiles.put(key, 2);
+                        failedAt.put(key, Long.valueOf(System.currentTimeMillis()));
+                        String message = e.getMessage();
+                        tileStatus = "street download failed: " + (message != null ? StringsKt.take(message, 40) : null) + " (retrying)";
+                        return;
+                    }
+                }
+                int parse$app_debug = parse$app_debug(str);
+                tiles.put(key, 1);
+                Collection<Integer> values = tiles.values();
+                Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
+                Collection<Integer> collection = values;
+                if (collection.isEmpty()) {
+                    i2 = i;
+                } else {
+                    i2 = 0;
+                    for (Integer num : collection) {
+                        if (num != null && num.intValue() == 1) {
+                            z = true;
+                            if (z) {
+                                i2++;
+                                if (i2 < 0) {
+                                    CollectionsKt.throwCountOverflow();
+                                }
+                            }
+                        }
+                        z = false;
+                        if (z) {
+                        }
+                    }
+                }
+                tileStatus = i2 + " tiles, " + ways.size() + " streets" + (parse$app_debug == 0 ? " (tile " + key + " empty)" : "");
+            } catch (Exception e3) {
+                e = e3;
+            }
+        } catch (Exception e4) {
+            e = e4;
+        }
+    }
+
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    /* JADX WARN: Code restructure failed: missing block: B:52:0x0145, code lost:
+    
+        if (r1.equals("reverse") == false) goto L62;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:53:0x0163, code lost:
+    
+        r11 = -1;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:61:0x014e, code lost:
+    
+        if (r1.equals("true") == false) goto L62;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:64:0x0157, code lost:
+    
+        if (r1.equals("yes") == false) goto L62;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:66:0x0160, code lost:
+    
+        if (r1.equals("-1") == false) goto L62;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:68:0x016b, code lost:
+    
+        if (r1.equals("1") == false) goto L62;
+     */
+    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue
+    java.lang.NullPointerException: Cannot invoke "java.util.List.iterator()" because the return value of "jadx.core.dex.visitors.regions.SwitchOverStringVisitor$SwitchData.getNewCases()" is null
+    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.restoreSwitchOverString(SwitchOverStringVisitor.java:109)
+    	at jadx.core.dex.visitors.regions.SwitchOverStringVisitor.visitRegion(SwitchOverStringVisitor.java:66)
+    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:77)
+    	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseIterativeStepInternal(DepthRegionTraversal.java:82)
+     */
+    /* JADX WARN: Removed duplicated region for block: B:56:0x01bb  */
+    /* JADX WARN: Removed duplicated region for block: B:59:0x01c2  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final int parse$app_debug(String text) {
+        JSONArray els;
+        int i;
+        int i2;
+        Intrinsics.checkNotNullParameter(text, "text");
+        JSONArray els2 = new JSONObject(text).optJSONArray("elements");
+        char c = 0;
+        if (els2 == null) {
+            return 0;
+        }
+        int added = 0;
+        int i3 = 0;
+        int length = els2.length();
+        while (i3 < length) {
+            JSONObject o = els2.optJSONObject(i3);
+            if (o == null) {
+                els = els2;
+                i = length;
+            } else if (!Intrinsics.areEqual(o.optString("type"), "way")) {
+                els = els2;
+                i = length;
             } else {
-               var1 = 3.4F;
+                long id = o.optLong("id");
+                if (ways.containsKey(Long.valueOf(id))) {
+                    els = els2;
+                    i = length;
+                } else {
+                    JSONObject tags = o.optJSONObject("tags");
+                    if (tags == null) {
+                        els = els2;
+                        i = length;
+                    } else {
+                        String it = tags.optString("highway");
+                        if (Intrinsics.areEqual(it, "footway") && Intrinsics.areEqual(tags.optString("footway"), "sidewalk")) {
+                            it = "sidewalk";
+                        }
+                        String kind = it;
+                        if (KINDS.contains(kind) || Intrinsics.areEqual(kind, "sidewalk")) {
+                            String svc = tags.optString("service");
+                            if (Intrinsics.areEqual(kind, "service")) {
+                                String[] strArr = new String[4];
+                                strArr[c] = "driveway";
+                                strArr[1] = "parking_aisle";
+                                strArr[2] = "drive-through";
+                                strArr[3] = "emergency_access";
+                                if (SetsKt.setOf((Object[]) strArr).contains(svc)) {
+                                    els = els2;
+                                    i = length;
+                                }
+                            }
+                            JSONArray g = o.optJSONArray("geometry");
+                            if (g == null) {
+                                els = els2;
+                                i = length;
+                            } else if (g.length() < 2) {
+                                els = els2;
+                                i = length;
+                            } else {
+                                double[] e = new double[g.length()];
+                                double[] n = new double[g.length()];
+                                int j = 0;
+                                int length2 = g.length();
+                                while (j < length2) {
+                                    JSONObject p = g.getJSONObject(j);
+                                    JSONArray els3 = els2;
+                                    int i4 = length;
+                                    Pair<Double, Double> local = toLocal(p.getDouble("lat"), p.getDouble("lon"));
+                                    double x = local.component1().doubleValue();
+                                    double y = local.component2().doubleValue();
+                                    e[j] = x;
+                                    n[j] = y;
+                                    j++;
+                                    length2 = length2;
+                                    els2 = els3;
+                                    length = i4;
+                                    o = o;
+                                }
+                                els = els2;
+                                i = length;
+                                String optString = tags.optString("oneway");
+                                if (optString != null) {
+                                    switch (optString.hashCode()) {
+                                        case 49:
+                                            break;
+                                        case 1444:
+                                            break;
+                                        case 119527:
+                                            break;
+                                        case 3569038:
+                                            break;
+                                        case 1099846370:
+                                            break;
+                                    }
+                                    int ow = i2;
+                                    ConcurrentHashMap<Long, Way> concurrentHashMap = ways;
+                                    Long valueOf = Long.valueOf(id);
+                                    String optString2 = tags.optString("name", tags.optString("ref", ""));
+                                    Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
+                                    Intrinsics.checkNotNull(kind);
+                                    float widthOf = widthOf(kind, ow, tags);
+                                    String optString3 = tags.optString("lanes");
+                                    Intrinsics.checkNotNullExpressionValue(optString3, "optString(...)");
+                                    Integer intOrNull = StringsKt.toIntOrNull(optString3);
+                                    concurrentHashMap.put(valueOf, new Way(id, optString2, kind, ow, widthOf, e, n, intOrNull != null ? intOrNull.intValue() : 0));
+                                    added++;
+                                }
+                                if (!Intrinsics.areEqual(kind, "motorway") && !Intrinsics.areEqual(tags.optString("junction"), "roundabout")) {
+                                    i2 = 0;
+                                    int ow2 = i2;
+                                    ConcurrentHashMap<Long, Way> concurrentHashMap2 = ways;
+                                    Long valueOf2 = Long.valueOf(id);
+                                    String optString22 = tags.optString("name", tags.optString("ref", ""));
+                                    Intrinsics.checkNotNullExpressionValue(optString22, "optString(...)");
+                                    Intrinsics.checkNotNull(kind);
+                                    float widthOf2 = widthOf(kind, ow2, tags);
+                                    String optString32 = tags.optString("lanes");
+                                    Intrinsics.checkNotNullExpressionValue(optString32, "optString(...)");
+                                    Integer intOrNull2 = StringsKt.toIntOrNull(optString32);
+                                    concurrentHashMap2.put(valueOf2, new Way(id, optString22, kind, ow2, widthOf2, e, n, intOrNull2 != null ? intOrNull2.intValue() : 0));
+                                    added++;
+                                }
+                                i2 = 1;
+                                int ow22 = i2;
+                                ConcurrentHashMap<Long, Way> concurrentHashMap22 = ways;
+                                Long valueOf22 = Long.valueOf(id);
+                                String optString222 = tags.optString("name", tags.optString("ref", ""));
+                                Intrinsics.checkNotNullExpressionValue(optString222, "optString(...)");
+                                Intrinsics.checkNotNull(kind);
+                                float widthOf22 = widthOf(kind, ow22, tags);
+                                String optString322 = tags.optString("lanes");
+                                Intrinsics.checkNotNullExpressionValue(optString322, "optString(...)");
+                                Integer intOrNull22 = StringsKt.toIntOrNull(optString322);
+                                concurrentHashMap22.put(valueOf22, new Way(id, optString222, kind, ow22, widthOf22, e, n, intOrNull22 != null ? intOrNull22.intValue() : 0));
+                                added++;
+                            }
+                        } else {
+                            els = els2;
+                            i = length;
+                        }
+                    }
+                }
+            }
+            i3++;
+            els2 = els;
+            length = i;
+            c = 0;
+        }
+        return added;
+    }
+
+    public final float widthOf(String kind, int oneway, JSONObject tags) {
+        Intrinsics.checkNotNullParameter(kind, "kind");
+        Intrinsics.checkNotNullParameter(tags, "tags");
+        String optString = tags.optString("lanes");
+        Intrinsics.checkNotNullExpressionValue(optString, "optString(...)");
+        Integer intOrNull = StringsKt.toIntOrNull(optString);
+        int intValue = intOrNull != null ? intOrNull.intValue() : 0;
+        String optString2 = tags.optString("width");
+        Intrinsics.checkNotNullExpressionValue(optString2, "optString(...)");
+        Float floatOrNull = StringsKt.toFloatOrNull(StringsKt.trim((CharSequence) StringsKt.replace$default(optString2, "m", "", false, 4, (Object) null)).toString());
+        String optString3 = tags.optString("parking:both", tags.optString("parking:lane:both", ""));
+        Intrinsics.checkNotNullExpressionValue(optString3, "optString(...)");
+        return widthOf(kind, oneway, intValue, floatOrNull, optString3);
+    }
+
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    /* JADX WARN: Code restructure failed: missing block: B:27:0x00a1, code lost:
+    
+        if (r15.equals("unclassified") == false) goto L75;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:28:0x00ab, code lost:
+    
+        if (r16 == 0) goto L46;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:29:0x00ad, code lost:
+    
+        return 9.0f;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:30:0x00b0, code lost:
+    
+        return 10.0f;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:32:0x00a8, code lost:
+    
+        if (r15.equals("residential") == false) goto L75;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:60:0x006e, code lost:
+    
+        if (r5 != false) goto L23;
+     */
+    /* JADX WARN: Failed to restore switch over string. Please report as a decompilation issue */
+    /* JADX WARN: Removed duplicated region for block: B:19:0x007b  */
+    /* JADX WARN: Removed duplicated region for block: B:21:0x0087  */
+    /* JADX WARN: Removed duplicated region for block: B:54:0x00fe A[ORIG_RETURN, RETURN] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final float widthOf(String kind, int oneway, int lanes, Float widthTag, String parkingTag) {
+        Intrinsics.checkNotNullParameter(kind, "kind");
+        Intrinsics.checkNotNullParameter(parkingTag, "parkingTag");
+        if (widthTag != null) {
+            float it = widthTag.floatValue();
+            if (2.0f <= it && it <= 40.0f) {
+                return it;
+            }
+        }
+        int parkSides = 2;
+        boolean urban = SetsKt.setOf((Object[]) new String[]{"residential", "tertiary", "secondary", "primary", "unclassified", "living_street"}).contains(kind);
+        if (!Intrinsics.areEqual(parkingTag, "no")) {
+            if (!(parkingTag.length() > 0)) {
+            }
+            if (!(1 > lanes && lanes < 11)) {
+                return (lanes * 3.2f) + (parkSides * 2.3f);
+            }
+            switch (kind.hashCode()) {
+                case -2014090663:
+                    return !kind.equals("living_street") ? 6.5f : 7.0f;
+                case -1174796206:
+                    if (kind.equals("tertiary")) {
+                        return 12.0f;
+                    }
+                    break;
+                case -817598092:
+                    if (kind.equals("secondary")) {
+                        return 13.0f;
+                    }
+                    break;
+                case -314765822:
+                    if (kind.equals("primary")) {
+                        return 15.0f;
+                    }
+                    break;
+                case -151535014:
+                    if (kind.equals("motorway")) {
+                        return 11.0f;
+                    }
+                    break;
+                case 110640564:
+                    if (kind.equals("trunk")) {
+                        return 14.0f;
+                    }
+                    break;
+                case 218164128:
+                    if (kind.equals("sidewalk")) {
+                        return 0.0f;
+                    }
+                    break;
+                case 1098352388:
+                    break;
+                case 1840151916:
+                    break;
+                case 1984153269:
+                    if (kind.equals("service")) {
+                        return 5.0f;
+                    }
+                    break;
+            }
+        }
+        parkSides = 0;
+        if (!(1 > lanes && lanes < 11)) {
+        }
+    }
+
+    public final Pair<Double, Double> toLatLon(double e, double n) {
+        return new Pair<>(Double.valueOf(lat0 + (n / 110540.0d)), Double.valueOf(lon0 + (e / kx)));
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:33:0x00d7, code lost:
+    
+        if (r0 != false) goto L31;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final Set<String> nameTokens(String name) {
+        Intrinsics.checkNotNullParameter(name, "name");
+        String lowerCase = name.toLowerCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(lowerCase, "toLowerCase(...)");
+        String replace = new Regex("[^a-z0-9 ]").replace(lowerCase, " ");
+        boolean z = true;
+        Iterable $this$filter$iv = StringsKt.split$default((CharSequence) replace, new char[]{' '}, false, 0, 6, (Object) null);
+        Collection destination$iv$iv = new ArrayList();
+        for (Object element$iv$iv : $this$filter$iv) {
+            if (!StringsKt.isBlank((String) element$iv$iv)) {
+                destination$iv$iv.add(element$iv$iv);
+            }
+        }
+        Iterable $this$map$iv = (List) destination$iv$iv;
+        Collection destination$iv$iv2 = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            String it = (String) item$iv$iv;
+            String str = ABBR.get(it);
+            if (str != null) {
+                it = str;
+            }
+            destination$iv$iv2.add(it);
+        }
+        Set all = CollectionsKt.toSet((List) destination$iv$iv2);
+        Set core = SetsKt.minus(all, (Iterable) DIRS);
+        if (core.size() < 2) {
+            if (core.size() == 1) {
+                CharSequence $this$any$iv = (CharSequence) CollectionsKt.first(core);
+                int i = 0;
+                while (true) {
+                    if (i >= $this$any$iv.length()) {
+                        z = false;
+                        break;
+                    }
+                    char element$iv = $this$any$iv.charAt(i);
+                    if (Character.isDigit(element$iv)) {
+                        break;
+                    }
+                    i++;
+                }
+            }
+            return all;
+        }
+        return core;
+    }
+
+    public final boolean sameStreet(String a, String b) {
+        Intrinsics.checkNotNullParameter(a, "a");
+        Intrinsics.checkNotNullParameter(b, "b");
+        Set x = nameTokens(a);
+        Set y = nameTokens(b);
+        return !x.isEmpty() && (Intrinsics.areEqual(x, y) || ((x.size() >= 2 && y.containsAll(x)) || (y.size() >= 2 && x.containsAll(y))));
+    }
+
+    public final List<Way> near(double e, double n, double r) {
+        ArrayList out = new ArrayList();
+        HashSet seen = new HashSet();
+        for (Way way : ways.values()) {
+            Intrinsics.checkNotNullExpressionValue(way, "next(...)");
+            Way w = way;
+            near$take(e, r, n, seen, out, w);
+        }
+        for (List list : boxWays.values()) {
+            Intrinsics.checkNotNullExpressionValue(list, "next(...)");
+            List l = list;
+            for (Way w2 : l) {
+                near$take(e, r, n, seen, out, w2);
+            }
+        }
+        return out;
+    }
+
+    private static final void near$take(double $e, double $r, double $n, HashSet<Long> hashSet, ArrayList<Way> arrayList, Way it) {
+        if (it.getMaxE() < $e - $r || it.getMinE() > $e + $r || it.getMaxN() < $n - $r || it.getMinN() > $n + $r || !hashSet.add(Long.valueOf(it.getId()))) {
+            return;
+        }
+        arrayList.add(it);
+    }
+
+    public final Pair<Way, Double> streetHeading(double e, double n, Double hintYaw) {
+        double dir2;
+        Way best = null;
+        double bd = 15.0d;
+        double d = 0.0d;
+        for (Way w : near(e, n, 20.0d)) {
+            if (!Intrinsics.areEqual(w.getKind(), "sidewalk")) {
+                int i = 0;
+                int length = w.getE().length - 1;
+                while (i < length) {
+                    double ax = w.getE()[i];
+                    double ay = w.getN()[i];
+                    double dx = w.getE()[i + 1] - ax;
+                    int i2 = length;
+                    double dy = w.getN()[i + 1] - ay;
+                    double len2 = (dx * dx) + (dy * dy);
+                    if (len2 < 0.01d) {
+                        dir2 = d;
+                    } else {
+                        double t = RangesKt.coerceIn((((e - ax) * dx) + ((n - ay) * dy)) / len2, 0.0d, 1.0d);
+                        dir2 = d;
+                        double dir3 = e - (ax + (t * dx));
+                        double d2 = Math.hypot(dir3, n - (ay + (t * dy)));
+                        if (d2 < bd) {
+                            bd = d2;
+                            best = w;
+                            d = Math.atan2(dy, dx) + (w.getOneway() < 0 ? 3.141592653589793d : 0.0d);
+                            i++;
+                            length = i2;
+                        }
+                    }
+                    d = dir2;
+                    i++;
+                    length = i2;
+                }
+            }
+        }
+        if (best == null) {
+            return null;
+        }
+        Way w2 = best;
+        if (w2.getOneway() == 0 && hintYaw != null && Math.abs(Math.IEEEremainder(d - hintYaw.doubleValue(), 6.283185307179586d)) > 1.5707963267948966d) {
+            d += 3.141592653589793d;
+        }
+        return new Pair<>(w2, Double.valueOf(d));
+    }
+
+    /* compiled from: OsmRoads.kt */
+    public static final class Match {
+        private final double dir;
+        private final double dist;
+        private final double signedLeft;
+        private final Way way;
+
+        public Match(Way way, double dist, double signedLeft, double dir) {
+            Intrinsics.checkNotNullParameter(way, "way");
+            this.way = way;
+            this.dist = dist;
+            this.signedLeft = signedLeft;
+            this.dir = dir;
+        }
+
+        public final double getDir() {
+            return this.dir;
+        }
+
+        public final double getDist() {
+            return this.dist;
+        }
+
+        public final double getSignedLeft() {
+            return this.signedLeft;
+        }
+
+        public final Way getWay() {
+            return this.way;
+        }
+
+        public final double rightOf(double yaw) {
+            return Math.cos(this.dir - yaw) >= 0.0d ? -this.signedLeft : this.signedLeft;
+        }
+    }
+
+    public final Match matchSeg(double e, double n, double yaw) {
+        int i;
+        int i2;
+        Match best;
+        Match best2 = null;
+        double bs = Double.MAX_VALUE;
+        for (Way w : near(e, n, 30.0d)) {
+            if (!Intrinsics.areEqual(w.getKind(), "sidewalk")) {
+                int i3 = 0;
+                int length = w.getE().length - 1;
+                while (i3 < length) {
+                    double ax = w.getE()[i3];
+                    double ay = w.getN()[i3];
+                    double dx = w.getE()[i3 + 1] - ax;
+                    double dy = w.getN()[i3 + 1] - ay;
+                    double len2 = (dx * dx) + (dy * dy);
+                    if (len2 < 0.01d) {
+                        i = i3;
+                        i2 = length;
+                        best = best2;
+                    } else {
+                        double t = RangesKt.coerceIn((((e - ax) * dx) + ((n - ay) * dy)) / len2, 0.0d, 1.0d);
+                        best = best2;
+                        double d = Math.hypot(e - ((t * dx) + ax), n - (ay + (t * dy)));
+                        if (d > 25.0d) {
+                            i = i3;
+                            i2 = length;
+                        } else {
+                            i = i3;
+                            i2 = length;
+                            double dir2 = Math.atan2(dy, dx) + (w.getOneway() < 0 ? 3.141592653589793d : 0.0d);
+                            double dh = Math.abs(w.getOneway() == 0 ? Math.IEEEremainder(dir2 - yaw, 3.141592653589793d) : Math.IEEEremainder(dir2 - yaw, 6.283185307179586d));
+                            double score = d + (15.0d * dh);
+                            if (score < bs) {
+                                bs = score;
+                                best2 = new Match(w, d, (((n - ay) * dx) - ((e - ax) * dy)) / Math.sqrt(len2), Math.atan2(dy, dx));
+                                i3 = i + 1;
+                                length = i2;
+                            }
+                        }
+                    }
+                    best2 = best;
+                    i3 = i + 1;
+                    length = i2;
+                }
+            }
+        }
+        return best2;
+    }
+
+    /* JADX WARN: Code restructure failed: missing block: B:213:0x03c9, code lost:
+    
+        r41 = "get(...)";
+        r8 = r7;
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final List<Pair<Double, String>> crossStreetsAhead(double e, double n, double yaw, double maxM) {
+        double bd;
+        int bi;
+        String str;
+        OsmRoads osmRoads;
+        int k;
+        String str2;
+        int i;
+        Iterator<Way> it;
+        int i2;
+        boolean z;
+        double sx;
+        int i3;
+        int k2;
+        String str3;
+        int i4;
+        int last;
+        Iterator it2;
+        Match m;
+        OsmRoads osmRoads2 = this;
+        Match it3 = matchSeg(e, n, yaw);
+        if (it3 != null) {
+            if ((it3.getDist() < 15.0d ? 1 : null) == null) {
+                it3 = null;
+            }
+            if (it3 != null) {
+                Match m2 = it3;
+                ArrayList px = new ArrayList();
+                ArrayList py = new ArrayList();
+                HashSet chain = new HashSet();
+                Way w = m2.getWay();
+                chain.add(Long.valueOf(w.getId()));
+                int k3 = 0;
+                int length = w.getE().length - 1;
+                int bi2 = 0;
+                double bd2 = Double.MAX_VALUE;
+                while (k3 < length) {
+                    double ax = w.getE()[k3];
+                    double ay = w.getN()[k3];
+                    double dx = w.getE()[k3 + 1] - ax;
+                    double dy = w.getN()[k3 + 1] - ay;
+                    double len2 = (dx * dx) + (dy * dy);
+                    if (len2 >= 0.01d) {
+                        double t = RangesKt.coerceIn((((e - ax) * dx) + ((n - ay) * dy)) / len2, 0.0d, 1.0d);
+                        m = m2;
+                        double d = Math.hypot(e - (ax + (t * dx)), n - (ay + (t * dy)));
+                        if (d < bd2) {
+                            bi2 = k3;
+                            bd2 = d;
+                        }
+                    } else {
+                        m = m2;
+                    }
+                    k3++;
+                    m2 = m;
+                }
+                Match m3 = m2;
+                boolean fwd0 = Math.cos(Math.atan2(w.getN()[bi2 + 1] - w.getN()[bi2], w.getE()[bi2 + 1] - w.getE()[bi2]) - yaw) >= 0.0d;
+                IntRange verts = fwd0 ? RangesKt.until(bi2 + 1, w.getE().length) : RangesKt.downTo(bi2, 0);
+                px.add(Double.valueOf(e));
+                py.add(Double.valueOf(n));
+                double len = 0.0d;
+                Way w2 = w;
+                IntProgression verts2 = verts;
+                int hops = 0;
+                while (true) {
+                    int k4 = verts2.getFirst();
+                    int last2 = verts2.getLast();
+                    int step = verts2.getStep();
+                    if ((step > 0 && k4 <= last2) || (step < 0 && last2 <= k4)) {
+                        while (true) {
+                            bd = bd2;
+                            bi = bi2;
+                            len += Math.hypot(w2.getE()[k4] - ((Number) CollectionsKt.last((List) px)).doubleValue(), w2.getN()[k4] - ((Number) CollectionsKt.last((List) py)).doubleValue());
+                            px.add(Double.valueOf(w2.getE()[k4]));
+                            py.add(Double.valueOf(w2.getN()[k4]));
+                            if (len >= maxM || k4 == last2) {
+                                break;
+                            }
+                            k4 += step;
+                            bi2 = bi;
+                            bd2 = bd;
+                        }
+                    } else {
+                        bd = bd2;
+                        bi = bi2;
+                    }
+                    double len3 = len;
+                    if (len3 >= maxM || hops >= 8) {
+                        break;
+                    }
+                    if (px.size() < 2) {
+                        str = "get(...)";
+                        osmRoads = osmRoads2;
+                        break;
+                    }
+                    double ex = ((Number) CollectionsKt.last((List) px)).doubleValue();
+                    double ey = ((Number) CollectionsKt.last((List) py)).doubleValue();
+                    Object obj = py.get(py.size() - 2);
+                    Intrinsics.checkNotNullExpressionValue(obj, "get(...)");
+                    double doubleValue = ey - ((Number) obj).doubleValue();
+                    Object obj2 = px.get(px.size() - 2);
+                    Intrinsics.checkNotNullExpressionValue(obj2, "get(...)");
+                    double hd = Math.atan2(doubleValue, ex - ((Number) obj2).doubleValue());
+                    Way next = null;
+                    boolean nf = true;
+                    double best = Double.MAX_VALUE;
+                    int hops2 = hops;
+                    str = "get(...)";
+                    int i5 = 2;
+                    for (Way o : near(ex, ey, 6.0d)) {
+                        if (chain.contains(Long.valueOf(o.getId())) || Intrinsics.areEqual(o.getKind(), "sidewalk") || Intrinsics.areEqual(o.getKind(), "service")) {
+                            len3 = len3;
+                            i5 = 2;
+                        } else {
+                            int last3 = o.getE().length - 1;
+                            Pair[] pairArr = new Pair[i5];
+                            pairArr[0] = TuplesKt.to(0, true);
+                            pairArr[1] = TuplesKt.to(Integer.valueOf(last3), false);
+                            Iterator it4 = CollectionsKt.listOf((Object[]) pairArr).iterator();
+                            while (it4.hasNext()) {
+                                Pair pair = (Pair) it4.next();
+                                int end = ((Number) pair.component1()).intValue();
+                                boolean f = ((Boolean) pair.component2()).booleanValue();
+                                Way next2 = next;
+                                double len4 = len3;
+                                if (Math.hypot(o.getE()[end] - ex, o.getN()[end] - ey) > 4.0d) {
+                                    last = last3;
+                                    it2 = it4;
+                                } else if ((f || o.getOneway() <= 0) && (!f || o.getOneway() >= 0)) {
+                                    double[] e2 = o.getE();
+                                    double nx = f ? e2[1] - o.getE()[0] : e2[last3 - 1] - o.getE()[last3];
+                                    double[] n2 = o.getN();
+                                    double ny = f ? n2[1] - o.getN()[0] : n2[last3 - 1] - o.getN()[last3];
+                                    last = last3;
+                                    it2 = it4;
+                                    double dh = Math.abs(Math.IEEEremainder(Math.atan2(ny, nx) - hd, 6.283185307179586d));
+                                    if (dh <= Math.toRadians(35.0d)) {
+                                        double score = (sameStreet(o.getName(), w2.getName()) ? 0.0d : 0.3d) + dh;
+                                        if (score < best) {
+                                            best = score;
+                                            nf = f;
+                                            next = o;
+                                            last3 = last;
+                                            len3 = len4;
+                                            it4 = it2;
+                                        }
+                                    }
+                                } else {
+                                    last = last3;
+                                    it2 = it4;
+                                }
+                                next = next2;
+                                last3 = last;
+                                len3 = len4;
+                                it4 = it2;
+                            }
+                            next = next;
+                            len3 = len3;
+                            i5 = 2;
+                        }
+                    }
+                    osmRoads = this;
+                    double len5 = len3;
+                    if (next == null) {
+                        break;
+                    }
+                    w2 = next;
+                    chain.add(Long.valueOf(w2.getId()));
+                    hops = hops2 + 1;
+                    double[] e3 = w2.getE();
+                    verts2 = nf ? RangesKt.until(1, e3.length) : RangesKt.downTo(e3.length - 2, 0);
+                    osmRoads2 = osmRoads;
+                    bi2 = bi;
+                    bd2 = bd;
+                    len = len5;
+                }
+                double[] cum = new double[px.size()];
+                int size = px.size();
+                for (int k5 = 1; k5 < size; k5++) {
+                    double d2 = cum[k5 - 1];
+                    double doubleValue2 = ((Number) px.get(k5)).doubleValue();
+                    Object obj3 = px.get(k5 - 1);
+                    String str4 = str;
+                    Intrinsics.checkNotNullExpressionValue(obj3, str4);
+                    double doubleValue3 = doubleValue2 - ((Number) obj3).doubleValue();
+                    double doubleValue4 = ((Number) py.get(k5)).doubleValue();
+                    Object obj4 = py.get(k5 - 1);
+                    Intrinsics.checkNotNullExpressionValue(obj4, str4);
+                    cum[k5] = d2 + Math.hypot(doubleValue3, doubleValue4 - ((Number) obj4).doubleValue());
+                }
+                String ourName = m3.getWay().getName();
+                ArrayList out = new ArrayList();
+                Iterator<Way> it5 = near(e, n, maxM + 30.0d).iterator();
+                while (it5.hasNext()) {
+                    Way o2 = it5.next();
+                    if (chain.contains(Long.valueOf(o2.getId())) || Intrinsics.areEqual(o2.getKind(), "sidewalk")) {
+                        osmRoads = this;
+                        it5 = it5;
+                    } else if (!Intrinsics.areEqual(o2.getKind(), "service")) {
+                        if (!(ourName.length() > 0) || !osmRoads.sameStreet(o2.getName(), ourName)) {
+                            int size2 = px.size() - 1;
+                            int k6 = 0;
+                            while (k6 < size2) {
+                                Object obj5 = px.get(k6);
+                                String str5 = str;
+                                Intrinsics.checkNotNullExpressionValue(obj5, str5);
+                                double ax2 = ((Number) obj5).doubleValue();
+                                Object obj6 = py.get(k6);
+                                Intrinsics.checkNotNullExpressionValue(obj6, str5);
+                                double ay2 = ((Number) obj6).doubleValue();
+                                Object obj7 = px.get(k6 + 1);
+                                Intrinsics.checkNotNullExpressionValue(obj7, str5);
+                                double bx = ((Number) obj7).doubleValue();
+                                Object obj8 = py.get(k6 + 1);
+                                Intrinsics.checkNotNullExpressionValue(obj8, str5);
+                                double by = ((Number) obj8).doubleValue();
+                                double sx2 = bx - ax2;
+                                String ourName2 = ourName;
+                                double sy = by - ay2;
+                                double sl = Math.hypot(sx2, sy);
+                                if (sl >= 0.01d) {
+                                    int length2 = o2.getE().length - 1;
+                                    it = it5;
+                                    int j = 0;
+                                    while (j < length2) {
+                                        double cx = o2.getE()[j];
+                                        double cy = o2.getN()[j];
+                                        double tx = o2.getE()[j + 1] - cx;
+                                        double ty = o2.getN()[j + 1] - cy;
+                                        double den = (sx2 * ty) - (sy * tx);
+                                        if (Math.abs(den) <= 1.0E-9d) {
+                                            sx = sx2;
+                                            i3 = length2;
+                                            k2 = k6;
+                                            str3 = str5;
+                                            i4 = size2;
+                                        } else {
+                                            double u = (((cx - ax2) * ty) - ((cy - ay2) * tx)) / den;
+                                            double v = (((cx - ax2) * sy) - ((cy - ay2) * sx2)) / den;
+                                            if (0.0d <= u && u <= 1.0d) {
+                                                if (0.0d <= v && v <= 1.0d) {
+                                                    sx = sx2;
+                                                    i3 = length2;
+                                                    k2 = k6;
+                                                    str3 = str5;
+                                                    i4 = size2;
+                                                    crossStreetsAhead$add(maxM, out, cum[k6] + (u * sl), o2.getName());
+                                                }
+                                            }
+                                            sx = sx2;
+                                            i3 = length2;
+                                            k2 = k6;
+                                            str3 = str5;
+                                            i4 = size2;
+                                        }
+                                        j++;
+                                        length2 = i3;
+                                        sx2 = sx;
+                                        k6 = k2;
+                                        str5 = str3;
+                                        size2 = i4;
+                                    }
+                                    double sx3 = sx2;
+                                    k = k6;
+                                    str2 = str5;
+                                    i = size2;
+                                    boolean z2 = false;
+                                    int[] iArr = {0, o2.getE().length - 1};
+                                    int i6 = 0;
+                                    while (i6 < 2) {
+                                        int end2 = iArr[i6];
+                                        double t2 = (((o2.getE()[end2] - ax2) * sx3) + ((o2.getN()[end2] - ay2) * sy)) / (sl * sl);
+                                        if (!((0.0d > t2 || t2 > 1.0d) ? z2 : true)) {
+                                            i2 = i6;
+                                            z = z2;
+                                        } else if (Math.hypot(o2.getE()[end2] - (ax2 + (t2 * sx3)), o2.getN()[end2] - (ay2 + (t2 * sy))) < 6.0d) {
+                                            i2 = i6;
+                                            z = false;
+                                            crossStreetsAhead$add(maxM, out, (t2 * sl) + cum[k], o2.getName());
+                                        } else {
+                                            i2 = i6;
+                                            z = false;
+                                        }
+                                        i6 = i2 + 1;
+                                        z2 = z;
+                                    }
+                                } else {
+                                    k = k6;
+                                    str2 = str5;
+                                    i = size2;
+                                    it = it5;
+                                }
+                                k6 = k + 1;
+                                ourName = ourName2;
+                                it5 = it;
+                                str = str2;
+                                size2 = i;
+                            }
+                            osmRoads = this;
+                            it5 = it5;
+                        }
+                    }
+                }
+                ArrayList $this$sortedBy$iv = out;
+                return CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.OsmRoads$crossStreetsAhead$$inlined$sortedBy$1
+                    /* JADX WARN: Multi-variable type inference failed */
+                    @Override // java.util.Comparator
+                    public final int compare(T t3, T t4) {
+                        Pair it6 = (Pair) t3;
+                        Double d3 = (Double) it6.getFirst();
+                        Pair it7 = (Pair) t4;
+                        return ComparisonsKt.compareValues(d3, (Double) it7.getFirst());
+                    }
+                });
+            }
+        }
+        return CollectionsKt.emptyList();
+    }
+
+    private static final void crossStreetsAhead$add(double $maxM, ArrayList<Pair<Double, String>> arrayList, double s, String name) {
+        if (s > 2.0d && s <= $maxM) {
+            ArrayList<Pair<Double, String>> $this$none$iv = arrayList;
+            boolean z = true;
+            if (!($this$none$iv instanceof Collection) || !$this$none$iv.isEmpty()) {
+                Iterator it = $this$none$iv.iterator();
+                while (true) {
+                    if (!it.hasNext()) {
+                        break;
+                    }
+                    Object element$iv = it.next();
+                    Pair it2 = (Pair) element$iv;
+                    Pair it3 = Math.abs(((Number) it2.getFirst()).doubleValue() - s) < 10.0d ? 1 : null;
+                    if (it3 != null) {
+                        z = false;
+                        break;
+                    }
+                }
+            }
+            if (z) {
+                arrayList.add(TuplesKt.to(Double.valueOf(s), name));
+            }
+        }
+    }
+
+    public final Pair<Double, Double> laneBand(double width, boolean oneway, double dL, double dR) {
+        return laneBand(width, oneway, dL, Double.NaN, dR, Double.NaN);
+    }
+
+    public final Pair<Double, Double> laneBand(double width, boolean oneway, double lLo, double lHi, double rLo, double rHi) {
+        double h = width / 2.0d;
+        double lo = oneway ? (-h) + 0.9d : 0.3d;
+        double hi = h - 0.9d;
+        if (hi < lo) {
+            double c = oneway ? 0.0d : h / 2;
+            lo = c;
+            hi = c;
+        }
+        double cl = Math.max(!Double.isInfinite(lLo) && !Double.isNaN(lLo) ? (-h) + lLo : Double.NEGATIVE_INFINITY, !Double.isInfinite(rHi) && !Double.isNaN(rHi) ? h - rHi : Double.NEGATIVE_INFINITY);
+        double ch = Math.min(!Double.isInfinite(rLo) && !Double.isNaN(rLo) ? h - rLo : Double.POSITIVE_INFINITY, (Double.isInfinite(lHi) || Double.isNaN(lHi)) ? false : true ? (-h) + lHi : Double.POSITIVE_INFINITY);
+        if (cl > ch) {
+            double c2 = (cl + ch) / 2;
+            return new Pair<>(Double.valueOf(c2), Double.valueOf(c2));
+        }
+        double nlo = Math.max(lo, cl);
+        double nhi = Math.min(hi, ch);
+        if (nlo <= nhi) {
+            return new Pair<>(Double.valueOf(nlo), Double.valueOf(nhi));
+        }
+        Pair it = new Pair(Double.valueOf(Math.max(cl, -h)), Double.valueOf(Math.min(ch, h)));
+        return it.getFirst().doubleValue() <= it.getSecond().doubleValue() ? it : new Pair(Double.valueOf(cl), Double.valueOf(ch));
+    }
+
+    public static /* synthetic */ double laneCenter$default(OsmRoads osmRoads, double d, int i, int i2, boolean z, int i3, Object obj) {
+        if ((i3 & 8) != 0) {
+            z = true;
+        }
+        return osmRoads.laneCenter(d, i, i2, z);
+    }
+
+    public final double laneCenter(double width, int laneCount, int idx, boolean oneway) {
+        int n = Math.max(1, laneCount);
+        int i = RangesKt.coerceIn(idx, 0, n - 1);
+        return oneway ? ((-width) / 2) + (((i + 0.5d) * width) / n) : ((i + 0.5d) * (width / 2)) / n;
+    }
+
+    public static /* synthetic */ int laneIndex$default(OsmRoads osmRoads, int i, boolean z, double d, double d2, double d3, double d4, boolean z2, boolean z3, int i2, Object obj) {
+        boolean z4;
+        boolean z5;
+        if ((i2 & 64) == 0) {
+            z4 = z2;
+        } else {
+            z4 = false;
+        }
+        if ((i2 & 128) == 0) {
+            z5 = z3;
+        } else {
+            z5 = false;
+        }
+        return osmRoads.laneIndex(i, z, d, d2, d3, d4, z4, z5);
+    }
+
+    /* JADX WARN: Removed duplicated region for block: B:34:0x004f  */
+    /* JADX WARN: Removed duplicated region for block: B:62:0x00a0  */
+    /* JADX WARN: Removed duplicated region for block: B:64:0x00aa  */
+    /* JADX WARN: Removed duplicated region for block: B:66:0x00af  */
+    /* JADX WARN: Removed duplicated region for block: B:70:0x00a2  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public final int laneIndex(int lanes, boolean yellowLeft, double dLeftLine, double dLeftEdge, double dRightLine, double dRightEdge, boolean leftDashed, boolean rightDashed) {
+        double gl;
+        double gr;
+        int fromL;
+        int idx;
+        boolean z = false;
+        if (lanes <= 1 || yellowLeft) {
+            return 0;
+        }
+        int hi = lanes - 1;
+        int lo = leftDashed ? 1 : 0;
+        if (rightDashed) {
+            hi = lanes - 2;
+        }
+        if (lo > hi) {
+            hi = lo;
+        }
+        double d = Double.NaN;
+        if ((Double.isInfinite(dLeftEdge) || Double.isNaN(dLeftEdge)) ? false : true) {
+            if ((Double.isInfinite(dLeftLine) || Double.isNaN(dLeftLine)) ? false : true) {
+                gl = dLeftEdge - dLeftLine;
+                if (Double.isInfinite(dRightEdge) && !Double.isNaN(dRightEdge)) {
+                    if ((Double.isInfinite(dRightLine) || Double.isNaN(dRightLine)) ? false : true) {
+                        d = dRightEdge - dRightLine;
+                    }
+                }
+                gr = d;
+                fromL = ((Double.isInfinite(gl) && !Double.isNaN(gl)) || gl <= -0.5d) ? -1 : laneIndex$count(gl);
+                if (!Double.isInfinite(gr) && !Double.isNaN(gr)) {
+                    z = true;
+                }
+                int fromR = (z || gr <= -0.5d) ? -1 : (lanes - 1) - laneIndex$count(gr);
+                if (fromL < 0) {
+                    idx = fromL;
+                } else {
+                    idx = fromR >= 0 ? fromR : -1;
+                }
+                if (idx < 0) {
+                    return RangesKt.coerceIn(idx, lo, hi);
+                }
+                if (lo == hi) {
+                    return lo;
+                }
+                return -1;
+            }
+        }
+        gl = Double.NaN;
+        if (Double.isInfinite(dRightEdge) && !Double.isNaN(dRightEdge)) {
+        }
+        gr = d;
+        if (Double.isInfinite(gl) && !Double.isNaN(gl)) {
+        }
+        if (!Double.isInfinite(gr)) {
+            z = true;
+        }
+        if (z) {
+        }
+        if (fromL < 0) {
+        }
+        if (idx < 0) {
+        }
+    }
+
+    private static final int laneIndex$count(double gap) {
+        return RangesKt.coerceAtLeast((int) Math.floor((gap - 0.6d) / 3.4d), 0);
+    }
+
+    public final Pair<Double, Double> turn(double x, double yRight, double a) {
+        double c = Math.cos(a);
+        double s = Math.sin(a);
+        double yl = -yRight;
+        return new Pair<>(Double.valueOf((c * x) - (s * yl)), Double.valueOf(-((s * x) + (c * yl))));
+    }
+
+    /* compiled from: OsmRoads.kt */
+    public static final class Piece {
+        private final Way way;
+        private final double[] x;
+        private final double[] y;
+
+        public Piece(Way way, double[] x, double[] y) {
+            Intrinsics.checkNotNullParameter(way, "way");
+            Intrinsics.checkNotNullParameter(x, "x");
+            Intrinsics.checkNotNullParameter(y, "y");
+            this.way = way;
+            this.x = x;
+            this.y = y;
+        }
+
+        public final Way getWay() {
+            return this.way;
+        }
+
+        public final double[] getX() {
+            return this.x;
+        }
+
+        public final double[] getY() {
+            return this.y;
+        }
+    }
+
+    public final List<Piece> carFrame(List<Way> ways2, Function2<? super Double, ? super Double, Pair<Double, Double>> toCar, double r, double step) {
+        ArrayList out;
+        Iterator<Way> it;
+        Way w;
+        int m;
+        double[] px;
+        int i;
+        int i2;
+        Function2<? super Double, ? super Double, Pair<Double, Double>> toCar2 = toCar;
+        Intrinsics.checkNotNullParameter(ways2, "ways");
+        Intrinsics.checkNotNullParameter(toCar2, "toCar");
+        ArrayList out2 = new ArrayList();
+        ArrayList xs = new ArrayList();
+        ArrayList ys = new ArrayList();
+        Iterator<Way> it2 = ways2.iterator();
+        while (it2.hasNext()) {
+            Way w2 = it2.next();
+            int m2 = w2.getE().length;
+            if (m2 >= 2) {
+                double[] px2 = new double[m2];
+                double[] py = new double[m2];
+                for (int i3 = 0; i3 < m2; i3++) {
+                    Pair<Double, Double> invoke = toCar2.invoke(Double.valueOf(w2.getE()[i3]), Double.valueOf(w2.getN()[i3]));
+                    double x = invoke.component1().doubleValue();
+                    double y = invoke.component2().doubleValue();
+                    px2[i3] = x;
+                    py[i3] = y;
+                }
+                Ref.DoubleRef dmin = new Ref.DoubleRef();
+                dmin.element = Double.MAX_VALUE;
+                int i4 = 0;
+                int i5 = m2 - 1;
+                while (i4 < i5) {
+                    double ax = px2[i4];
+                    double ay = py[i4];
+                    double dx = px2[i4 + 1] - ax;
+                    double dy = py[i4 + 1] - ay;
+                    double a = (dx * dx) + (dy * dy);
+                    if (a >= 1.0E-6d) {
+                        m = m2;
+                        px = px2;
+                        double b = (ax * dx) + (ay * dy);
+                        double c = ((ax * ax) + (ay * ay)) - (r * r);
+                        double disc = (b * b) - (a * c);
+                        i = i4;
+                        i2 = i5;
+                        if (disc <= 0.0d) {
+                            carFrame$flush(xs, out2, dmin, w2, ys);
+                            out = out2;
+                            it = it2;
+                            w = w2;
+                        } else {
+                            double sq = Math.sqrt(disc);
+                            double t0 = Math.max(0.0d, ((-b) - sq) / a);
+                            double t1 = Math.min(1.0d, ((-b) + sq) / a);
+                            if (t0 >= t1) {
+                                carFrame$flush(xs, out2, dmin, w2, ys);
+                                out = out2;
+                                it = it2;
+                                w = w2;
+                            } else {
+                                if (t0 > 0.0d) {
+                                    carFrame$flush(xs, out2, dmin, w2, ys);
+                                }
+                                ArrayList out3 = out2;
+                                double tc = RangesKt.coerceIn((-b) / a, 0.0d, 1.0d);
+                                it = it2;
+                                Way w3 = w2;
+                                dmin.element = Math.min(dmin.element, Math.hypot(ax + (tc * dx), ay + (tc * dy)));
+                                double len = Math.sqrt(a) * (t1 - t0);
+                                int k = Math.max(1, (int) Math.ceil(len / step));
+                                if (xs.isEmpty()) {
+                                    xs.add(Double.valueOf(ax + (t0 * dx)));
+                                    ys.add(Double.valueOf((t0 * dy) + ay));
+                                }
+                                int s = 1;
+                                if (1 <= k) {
+                                    while (true) {
+                                        double len2 = len;
+                                        double t = (((t1 - t0) * s) / k) + t0;
+                                        xs.add(Double.valueOf(ax + (t * dx)));
+                                        ys.add(Double.valueOf((t * dy) + ay));
+                                        if (s == k) {
+                                            break;
+                                        }
+                                        s++;
+                                        len = len2;
+                                    }
+                                }
+                                if (t1 < 1.0d) {
+                                    out = out3;
+                                    w = w3;
+                                    carFrame$flush(xs, out, dmin, w, ys);
+                                } else {
+                                    out = out3;
+                                    w = w3;
+                                }
+                            }
+                        }
+                    } else {
+                        out = out2;
+                        it = it2;
+                        w = w2;
+                        m = m2;
+                        px = px2;
+                        i = i4;
+                        i2 = i5;
+                    }
+                    i4 = i + 1;
+                    w2 = w;
+                    m2 = m;
+                    px2 = px;
+                    i5 = i2;
+                    it2 = it;
+                    out2 = out;
+                }
+                ArrayList out4 = out2;
+                carFrame$flush(xs, out4, dmin, w2, ys);
+                out2 = out4;
+                toCar2 = toCar;
+            } else {
+                out2 = out2;
+                toCar2 = toCar;
+            }
+        }
+        Iterable $this$sortedBy$iv = out2;
+        Iterable $this$map$iv = CollectionsKt.sortedWith($this$sortedBy$iv, new Comparator() { // from class: com.starpilot.starview.OsmRoads$carFrame$$inlined$sortedBy$1
+            /* JADX WARN: Multi-variable type inference failed */
+            @Override // java.util.Comparator
+            public final int compare(T t2, T t3) {
+                Pair it3 = (Pair) t2;
+                Double d = (Double) it3.getFirst();
+                Pair it4 = (Pair) t3;
+                return ComparisonsKt.compareValues(d, (Double) it4.getFirst());
+            }
+        });
+        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
+        for (Object item$iv$iv : $this$map$iv) {
+            Pair it3 = (Pair) item$iv$iv;
+            destination$iv$iv.add((Piece) it3.getSecond());
+        }
+        return (List) destination$iv$iv;
+    }
+
+    private static final void carFrame$flush(ArrayList<Double> arrayList, ArrayList<Pair<Double, Piece>> arrayList2, Ref.DoubleRef dmin, Way w, ArrayList<Double> arrayList3) {
+        if (arrayList.size() >= 2) {
+            arrayList2.add(new Pair<>(Double.valueOf(dmin.element), new Piece(w, CollectionsKt.toDoubleArray(arrayList), CollectionsKt.toDoubleArray(arrayList3))));
+        }
+        arrayList.clear();
+        arrayList3.clear();
+        dmin.element = Double.MAX_VALUE;
+    }
+
+    public final Triple<Way, Double, Double> match(double e, double n, double yaw) {
+        int i;
+        int i2;
+        double signed;
+        double ax;
+        double ax2;
+        Way best = null;
+        double bd = 0.0d;
+        double bs = Double.MAX_VALUE;
+        double signed2 = 0.0d;
+        for (Way w : near(e, n, 30.0d)) {
+            if (!Intrinsics.areEqual(w.getKind(), "sidewalk")) {
+                int i3 = 0;
+                int length = w.getE().length - 1;
+                while (i3 < length) {
+                    double ax3 = w.getE()[i3];
+                    double ay = w.getN()[i3];
+                    Way best2 = best;
+                    double dx = w.getE()[i3 + 1] - ax3;
+                    double bd2 = bd;
+                    double bd3 = w.getN()[i3 + 1] - ay;
+                    double len2 = (dx * dx) + (bd3 * bd3);
+                    if (len2 < 0.01d) {
+                        i = i3;
+                        i2 = length;
+                        signed = signed2;
+                    } else {
+                        double t = RangesKt.coerceIn((((e - ax3) * dx) + ((n - ay) * bd3)) / len2, 0.0d, 1.0d);
+                        signed = signed2;
+                        double signed3 = e - (ax3 + (t * dx));
+                        i = i3;
+                        i2 = length;
+                        double d = Math.hypot(signed3, n - (ay + (t * bd3)));
+                        if (d <= 25.0d) {
+                            double atan2 = Math.atan2(bd3, dx);
+                            double dy = 3.141592653589793d;
+                            double dir2 = atan2 + (w.getOneway() < 0 ? 3.141592653589793d : 0.0d);
+                            if (w.getOneway() == 0) {
+                                ax = ax3;
+                                ax2 = dir2 - yaw;
+                            } else {
+                                ax = ax3;
+                                ax2 = dir2 - yaw;
+                                dy = 6.283185307179586d;
+                            }
+                            double dh = Math.abs(Math.IEEEremainder(ax2, dy));
+                            double score = (15.0d * dh) + d;
+                            if (score < bs) {
+                                bs = score;
+                                best2 = w;
+                                bd2 = d;
+                                signed = (((n - ay) * dx) - ((e - ax) * bd3)) / Math.sqrt(len2);
+                            }
+                        }
+                    }
+                    best = best2;
+                    bd = bd2;
+                    signed2 = signed;
+                    i3 = i + 1;
+                    length = i2;
+                }
+            }
+        }
+        if (best == null) {
+            return null;
+        }
+        Way it = best;
+        return new Triple<>(it, Double.valueOf(bd), Double.valueOf(signed2));
+    }
+
+    /* compiled from: OsmRoads.kt */
+    public static final class Align {
+        private int jumps;
+        private long lastSeenNs;
+        private boolean ok;
+        private volatile double rejectMiss;
+        private volatile long rejectSince;
+        private int rejected;
+        private double resid;
+        private double spread;
+        private double th;
+        private double tx;
+        private double ty;
+        private final ArrayDeque<P> pts = new ArrayDeque<>();
+        private double lagResid = Double.NaN;
+        private volatile String guess = "";
+
+        /* compiled from: OsmRoads.kt */
+        private static final class P {
+            private final double e;
+            private final double n;
+            private final double ox;
+            private final double oy;
+            private final long tNs;
+            private final double vx;
+            private final double vy;
+            private final double w;
+
+            public P(double ox, double oy, double e, double n, double w, long tNs, double vx, double vy) {
+                this.ox = ox;
+                this.oy = oy;
+                this.e = e;
+                this.n = n;
+                this.w = w;
+                this.tNs = tNs;
+                this.vx = vx;
+                this.vy = vy;
             }
 
-            var3 = Math.max(1, Math.round(var2 / var1));
-         }
-
-         return var3;
-      }
-
-      public final int getLanes() {
-         return this.lanes;
-      }
-
-      public final double getLanesWidth() {
-         double var1;
-         if (this.getHighway()) {
-            var1 = this.width;
-         } else {
-            var1 = this.width;
-            int var4 = this.getLaneCount();
-            byte var3;
-            if (this.oneway == 0) {
-               var3 = 2;
-            } else {
-               var3 = 1;
+            public /* synthetic */ P(double d, double d2, double d3, double d4, double d5, long j, double d6, double d7, int i, DefaultConstructorMarker defaultConstructorMarker) {
+                this(d, d2, d3, d4, d5, j, (i & 64) != 0 ? 0.0d : d6, (i & 128) != 0 ? 0.0d : d7);
             }
 
-            var1 = Math.min(var1, var4 * var3 * 3.3);
-         }
+            public final double getE() {
+                return this.e;
+            }
 
-         return var1;
-      }
+            public final double getN() {
+                return this.n;
+            }
 
-      public final double getMaxE() {
-         return this.maxE;
-      }
+            public final double getOx() {
+                return this.ox;
+            }
 
-      public final double getMaxN() {
-         return this.maxN;
-      }
+            public final double getOy() {
+                return this.oy;
+            }
 
-      public final double getMinE() {
-         return this.minE;
-      }
+            public final long getTNs() {
+                return this.tNs;
+            }
 
-      public final double getMinN() {
-         return this.minN;
-      }
+            public final double getVx() {
+                return this.vx;
+            }
 
-      public final double[] getN() {
-         return this.n;
-      }
+            public final double getVy() {
+                return this.vy;
+            }
 
-      public final String getName() {
-         return this.name;
-      }
+            public final double getW() {
+                return this.w;
+            }
+        }
 
-      public final int getOneway() {
-         return this.oneway;
-      }
+        public final boolean getOk() {
+            return this.ok;
+        }
 
-      public final float getWidth() {
-         return this.width;
-      }
-   }
+        public final double getTh() {
+            return this.th;
+        }
+
+        public final double getTx() {
+            return this.tx;
+        }
+
+        public final double getTy() {
+            return this.ty;
+        }
+
+        public final double getSpread() {
+            return this.spread;
+        }
+
+        public final double getResid() {
+            return this.resid;
+        }
+
+        public final int getJumps() {
+            return this.jumps;
+        }
+
+        public final long getRejectSince() {
+            return this.rejectSince;
+        }
+
+        public final double getRejectMiss() {
+            return this.rejectMiss;
+        }
+
+        public final int getRejected() {
+            return this.rejected;
+        }
+
+        public final double getLagResid() {
+            return this.lagResid;
+        }
+
+        public final String getGuess() {
+            return this.guess;
+        }
+
+        private final boolean getGuessing() {
+            return this.guess.length() > 0;
+        }
+
+        /* JADX WARN: Code restructure failed: missing block: B:137:0x0505, code lost:
+        
+            if ((0.0f <= r2 && r2 <= 25.0f) != false) goto L117;
+         */
+        /* JADX WARN: Removed duplicated region for block: B:143:0x051b  */
+        /* JADX WARN: Removed duplicated region for block: B:145:0x0529  */
+        /* JADX WARN: Removed duplicated region for block: B:166:0x058b A[RETURN] */
+        /* JADX WARN: Removed duplicated region for block: B:167:0x058c  */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
+        public final void add(double ox, double oy, double oyaw, Fix f, long nowNs, double vox, double voy) {
+            boolean z;
+            boolean bearingOk;
+            Align align;
+            Double d;
+            double d2;
+            Pair sh;
+            double nty;
+            double ntx;
+            Intrinsics.checkNotNullParameter(f, "f");
+            this.lagResid = Double.NaN;
+            int i = 1;
+            boolean gap = this.lastSeenNs != 0 && nowNs - this.lastSeenNs > 30000000000L;
+            this.lastSeenNs = nowNs;
+            if (Double.isNaN(OsmRoads.INSTANCE.getLat0()) || f.getHAcc() <= 0.0f) {
+                return;
+            }
+            if (f.getHAcc() > 30.0f) {
+                return;
+            }
+            Pair<Double, Double> local = OsmRoads.INSTANCE.toLocal(f.getLat(), f.getLon());
+            double e = local.component1().doubleValue();
+            double n = local.component2().doubleValue();
+            double w = 1.0d / RangesKt.coerceAtLeast(f.getHAcc() * f.getHAcc(), 1.0f);
+            double moved = this.pts.isEmpty() ? Double.MAX_VALUE : Math.hypot(ox - this.pts.last().getOx(), oy - this.pts.last().getOy());
+            if (!this.ok || moved > 0.5d) {
+                if (0.05d <= moved && moved <= 0.5d) {
+                    return;
+                }
+                if (this.ok && !getGuessing()) {
+                    Pair apply$default = apply$default(this, ox, oy, 0.0d, 0.0d, 0.0d, 28, null);
+                    double pe = ((Number) apply$default.component1()).doubleValue();
+                    double pn = ((Number) apply$default.component2()).doubleValue();
+                    double miss = Math.hypot(e - pe, n - pn);
+                    if (miss > Math.max(10.0d, f.getHAcc() * 3.0d)) {
+                        if (this.rejectSince == 0) {
+                            this.rejectSince = nowNs;
+                        }
+                        this.rejectMiss = miss;
+                        this.rejected++;
+                        if (gap || nowNs - this.rejectSince >= 10000000000L) {
+                            this.pts.clear();
+                            this.rejectSince = 0L;
+                            this.tx = e - ((Math.cos(this.th) * ox) - (Math.sin(this.th) * oy));
+                            this.ty = n - ((Math.sin(this.th) * ox) + (Math.cos(this.th) * oy));
+                            this.jumps++;
+                            this.pts.addLast(new P(ox, oy, e, n, w, nowNs, 0.0d, 0.0d, 192, null));
+                            this.spread = 0.0d;
+                            this.resid = f.getHAcc();
+                            return;
+                        }
+                        return;
+                    }
+                    i = 1;
+                    this.rejectSince = 0L;
+                }
+                while (!this.pts.isEmpty() && (nowNs - this.pts.first().getTNs() > 25000000000L || this.pts.size() >= 400)) {
+                    this.pts.removeFirst();
+                }
+                if (this.pts.isEmpty() || moved > 0.5d) {
+                    this.pts.addLast(new P(ox, oy, e, n, w, nowNs, vox, voy));
+                } else {
+                    this.pts.set(this.pts.size() - i, new P(ox, oy, e, n, w, nowNs, vox, voy));
+                }
+                double nth = this.th;
+                P first = this.pts.first();
+                P last = this.pts.last();
+                this.spread = Math.hypot(last.getOx() - first.getOx(), last.getOy() - first.getOy());
+                if (this.spread >= 25.0d && this.pts.size() >= 8) {
+                    double px = 0.0d;
+                    double qx = 0.0d;
+                    double qy = 0.0d;
+                    Iterator it = this.pts.iterator();
+                    double sw = 0.0d;
+                    double py = 0.0d;
+                    while (it.hasNext()) {
+                        P p = (P) it.next();
+                        py += p.getW();
+                        px += p.getW() * p.getOx();
+                        sw += p.getW() * p.getOy();
+                        qx += p.getW() * p.getE();
+                        qy += p.getW() * p.getN();
+                    }
+                    double px2 = px / py;
+                    double py2 = sw / py;
+                    double qx2 = qx / py;
+                    double qy2 = qy / py;
+                    Iterator it2 = this.pts.iterator();
+                    double sxy = 0.0d;
+                    double sxx = 0.0d;
+                    while (it2.hasNext()) {
+                        P p2 = (P) it2.next();
+                        double ax = p2.getOx() - px2;
+                        double ay = p2.getOy() - py2;
+                        double bx = p2.getE() - qx2;
+                        double by = p2.getN() - qy2;
+                        sxx += p2.getW() * ((ax * bx) + (ay * by));
+                        sxy += p2.getW() * ((ax * by) - (ay * bx));
+                    }
+                    double nth2 = Math.atan2(sxy, sxx);
+                    this.guess = "";
+                    double ntx2 = qx2 - ((Math.cos(nth2) * px2) - (Math.sin(nth2) * py2));
+                    nty = qy2 - ((Math.sin(nth2) * px2) + (Math.cos(nth2) * py2));
+                    Iterator it3 = this.pts.iterator();
+                    double r = 0.0d;
+                    while (it3.hasNext()) {
+                        P p3 = (P) it3.next();
+                        Pair<Double, Double> apply = apply(p3.getOx(), p3.getOy(), nth2, ntx2, nty);
+                        double ae = apply.component1().doubleValue();
+                        double an = apply.component2().doubleValue();
+                        r += Math.hypot(ae - p3.getE(), an - p3.getN());
+                        sxx = sxx;
+                    }
+                    this.resid = r / this.pts.size();
+                    Align $this$add_u24lambda_u240 = this;
+                    double sv = 0.0d;
+                    double swv = 0.0d;
+                    Iterator it4 = $this$add_u24lambda_u240.pts.iterator();
+                    while (it4.hasNext()) {
+                        P p4 = (P) it4.next();
+                        double v = Math.hypot(p4.getVx(), p4.getVy());
+                        sv += p4.getW();
+                        swv += p4.getW() * v;
+                        sxy = sxy;
+                    }
+                    double vm = swv / sv;
+                    double num = 0.0d;
+                    double den = 0.0d;
+                    double c = Math.cos(nth2);
+                    double sn = Math.sin(nth2);
+                    Iterator it5 = $this$add_u24lambda_u240.pts.iterator();
+                    while (it5.hasNext()) {
+                        P p5 = (P) it5.next();
+                        double swv2 = swv;
+                        double swv3 = p5.getVx();
+                        Iterator it6 = it5;
+                        double v2 = Math.hypot(swv3, p5.getVy());
+                        if (v2 >= 0.5d) {
+                            double ue = ((p5.getVx() * c) - (p5.getVy() * sn)) / v2;
+                            double un = ((p5.getVx() * sn) + (p5.getVy() * c)) / v2;
+                            Pair<Double, Double> apply2 = $this$add_u24lambda_u240.apply(p5.getOx(), p5.getOy(), nth2, ntx2, nty);
+                            double ae2 = apply2.component1().doubleValue();
+                            double an2 = apply2.component2().doubleValue();
+                            double along = ((p5.getE() - ae2) * ue) + ((p5.getN() - an2) * un);
+                            num += p5.getW() * along * (v2 - vm);
+                            den += p5.getW() * (v2 - vm) * (v2 - vm);
+                            it5 = it6;
+                            swv = swv2;
+                        } else {
+                            it5 = it6;
+                            swv = swv2;
+                        }
+                    }
+                    if (den > 2.0d * sv) {
+                        $this$add_u24lambda_u240.lagResid = RangesKt.coerceIn((-num) / den, -1.0d, 1.0d);
+                    }
+                    Unit unit = Unit.INSTANCE;
+                    align = this;
+                    nth = nth2;
+                    ntx = ntx2;
+                } else {
+                    float bearingDeg = f.getBearingDeg();
+                    if ((Float.isInfinite(bearingDeg) || Float.isNaN(bearingDeg)) ? false : true) {
+                        if (f.getSpeed() <= 3.0f) {
+                            float bearingAcc = f.getBearingAcc();
+                            if ((Float.isInfinite(bearingAcc) || Float.isNaN(bearingAcc)) ? false : true) {
+                                float bearingAcc2 = f.getBearingAcc();
+                            }
+                        }
+                        z = true;
+                        bearingOk = z;
+                        boolean wasGuessing = getGuessing();
+                        align = this;
+                        align.guess = "";
+                        if (!bearingOk) {
+                            nth = Math.toRadians(90.0d - f.getBearingDeg()) - oyaw;
+                        } else if (!align.ok || wasGuessing) {
+                            float bearingDeg2 = f.getBearingDeg();
+                            if ((Float.isInfinite(bearingDeg2) || Float.isNaN(bearingDeg2)) ? false : true) {
+                                float bearingAcc3 = f.getBearingAcc();
+                                if (((Float.isInfinite(bearingAcc3) || Float.isNaN(bearingAcc3)) ? false : true) && f.getBearingAcc() < 90.0f) {
+                                    d2 = Math.toRadians(90.0d - f.getBearingDeg());
+                                    d = Double.valueOf(d2);
+                                    Double hint = d;
+                                    sh = OsmRoads.INSTANCE.streetHeading(e, n, hint);
+                                    if (sh == null) {
+                                        return;
+                                    }
+                                    nth = sh.getSecond().doubleValue() - oyaw;
+                                    String name = sh.getFirst().getName();
+                                    if (name.length() == 0) {
+                                        name = sh.getFirst().getKind();
+                                    }
+                                    align.guess = name;
+                                }
+                            }
+                            if (align.ok) {
+                                d2 = align.th + oyaw;
+                                d = Double.valueOf(d2);
+                                Double hint2 = d;
+                                sh = OsmRoads.INSTANCE.streetHeading(e, n, hint2);
+                                if (sh == null) {
+                                }
+                            } else {
+                                d = null;
+                                Double hint22 = d;
+                                sh = OsmRoads.INSTANCE.streetHeading(e, n, hint22);
+                                if (sh == null) {
+                                }
+                            }
+                        }
+                        double ntx3 = e - ((Math.cos(nth) * ox) - (Math.sin(nth) * oy));
+                        nty = n - ((Math.sin(nth) * ox) + (Math.cos(nth) * oy));
+                        align.resid = f.getHAcc();
+                        ntx = ntx3;
+                    }
+                    z = false;
+                    bearingOk = z;
+                    boolean wasGuessing2 = getGuessing();
+                    align = this;
+                    align.guess = "";
+                    if (!bearingOk) {
+                    }
+                    double ntx32 = e - ((Math.cos(nth) * ox) - (Math.sin(nth) * oy));
+                    nty = n - ((Math.sin(nth) * ox) + (Math.cos(nth) * oy));
+                    align.resid = f.getHAcc();
+                    ntx = ntx32;
+                }
+                if (!align.ok) {
+                    align.th = nth;
+                    align.tx = ntx;
+                    align.ty = nty;
+                    align.ok = true;
+                    align.jumps++;
+                    return;
+                }
+                double dth = Math.IEEEremainder(nth - align.th, 6.283185307179586d);
+                boolean jump = Math.abs(dth) > 0.5d || Math.hypot(ntx - align.tx, nty - align.ty) > 40.0d;
+                double k = jump ? 1.0d : 0.05d;
+                if (jump) {
+                    align.jumps++;
+                }
+                align.th += k * dth;
+                double d3 = align.tx;
+                double nth3 = align.tx;
+                align.tx = d3 + ((ntx - nth3) * k);
+                align.ty += (nty - align.ty) * k;
+            }
+        }
+
+        public static /* synthetic */ Pair apply$default(Align align, double d, double d2, double d3, double d4, double d5, int i, Object obj) {
+            return align.apply(d, d2, (i & 4) != 0 ? align.th : d3, (i & 8) != 0 ? align.tx : d4, (i & 16) != 0 ? align.ty : d5);
+        }
+
+        public final Pair<Double, Double> apply(double ox, double oy, double th, double tx, double ty) {
+            return new Pair<>(Double.valueOf(((Math.cos(th) * ox) - (Math.sin(th) * oy)) + tx), Double.valueOf((Math.sin(th) * ox) + (Math.cos(th) * oy) + ty));
+        }
+
+        public final Pair<Double, Double> inverse(double e, double n) {
+            double dx = e - this.tx;
+            double dy = n - this.ty;
+            return new Pair<>(Double.valueOf((Math.cos(this.th) * dx) + (Math.sin(this.th) * dy)), Double.valueOf(((-Math.sin(this.th)) * dx) + (Math.cos(this.th) * dy)));
+        }
+
+        public final void reset() {
+            this.pts.clear();
+            this.ok = false;
+            this.rejectSince = 0L;
+        }
+    }
 }
