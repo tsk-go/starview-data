@@ -5746,13 +5746,8 @@ public final class MainActivity extends AppCompatActivity {
             frameLayout5 = null;
         }
         content.addView(frameLayout5, new FrameLayout.LayoutParams(-1, -1));
-        ?? r1 = new View() { // from class: com.starpilot.starview.MainActivity$setupMapFrame$2
-            private final Paint p;
-
-            {
-                super(MainActivity.this);
-                this.p = new Paint(1);
-            }
+        View r1 = new View(MainActivity.this) { // from class: com.starpilot.starview.MainActivity$setupMapFrame$2
+            private final Paint p = new Paint(1);
 
             @Override // android.view.View
             protected void onDraw(Canvas c) {
@@ -5789,7 +5784,7 @@ public final class MainActivity extends AppCompatActivity {
         };
         r1.setVisibility(8);
         r1.setElevation(30.0f);
-        this.divider = (View) r1;
+        this.divider = r1;
         FrameLayout frameLayout6 = this.outer;
         if (frameLayout6 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("outer");

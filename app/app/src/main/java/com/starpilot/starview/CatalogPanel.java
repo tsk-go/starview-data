@@ -1297,7 +1297,7 @@ public final class CatalogPanel extends ScrollView {
         }
         Pair<LinearLayout, Function1<Integer, Unit>> chips = carUi.chips((List) destination$iv$iv, pick);
         LinearLayout bar = chips.component1();
-        ?? r6 = (Function1) chips.component2();
+        Function1<Integer, Unit> r6 = chips.component2();
         holder.addView(bar);
         objectRef.element = r6;
     }
@@ -1378,7 +1378,7 @@ public final class CatalogPanel extends ScrollView {
         CatalogPanelKt.vis($outer, this$0.visible($p));
         String ep = $p.str("options_endpoint");
         if (ep != null) {
-            final ?? replace = new Regex("\\{(\\w+)}").replace(ep, new Function1() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda26
+            final String replace = new Regex("\\{(\\w+)}").replace(ep, new Function1() { // from class: com.starpilot.starview.CatalogPanel$$ExternalSyntheticLambda26
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     CharSequence addDropdown$lambda$64$lambda$62$lambda$60;
@@ -1388,8 +1388,8 @@ public final class CatalogPanel extends ScrollView {
             });
             if (!Intrinsics.areEqual((Object) replace, $lastKey.element)) {
                 $lastKey.element = replace;
-                ?? r5 = (List) this$0.optionCache.get(replace);
-                if (r5 != 0) {
+                List r5 = (List) this$0.optionCache.get(replace);
+                if (r5 != null) {
                     $opts.element = r5;
                     addDropdown$rebuild($holder, $paint, $opts, this$0, $p);
                 } else {
@@ -1552,34 +1552,29 @@ public final class CatalogPanel extends ScrollView {
     }
 
     /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Type inference failed for: r2v7, types: [T, java.lang.Object, java.lang.String] */
     public static final Unit addColor$lambda$72(LinearLayout $outer, CatalogPanel this$0, GalaxyApi.Param $p, Ref.ObjectRef $paintedColor, ArrayList $swatches, List $presets, TextView $descTv) {
-        boolean on;
         CatalogPanelKt.vis($outer, this$0.visible($p));
-        ?? upperCase = StringsKt.trim((CharSequence) this$0.api.string($p.getKey())).toString().toUpperCase(Locale.ROOT);
-        Intrinsics.checkNotNullExpressionValue(upperCase, "toUpperCase(...)");
-        int i = 1;
-        boolean isStock = (((CharSequence) upperCase).length() == 0) || Intrinsics.areEqual((Object) upperCase, "STOCK");
-        if (!Intrinsics.areEqual((Object) upperCase, $paintedColor.element)) {
-            $paintedColor.element = upperCase;
-            Iterator it = $swatches.iterator();
-            int i2 = 0;
-            while (it.hasNext()) {
-                int i3 = i2;
-                i2 += i;
-                View sw = (View) it.next();
-                String hex = (String) ((Pair) $presets.get(i3)).getSecond();
-                if ((hex.length() == 0 ? i : 0) != 0) {
+        String cur = StringsKt.trim((CharSequence) this$0.api.string($p.getKey())).toString().toUpperCase(Locale.ROOT);
+        Intrinsics.checkNotNullExpressionValue(cur, "toUpperCase(...)");
+        boolean isStock = cur.length() == 0 || Intrinsics.areEqual(cur, "STOCK");
+        if (!Intrinsics.areEqual(cur, $paintedColor.element)) {
+            $paintedColor.element = cur;
+            int i = 0;
+            for (Object o : $swatches) {
+                View sw = (View) o;
+                String hex = (String) ((Pair) $presets.get(i)).getSecond();
+                i++;
+                boolean on;
+                if (hex.length() == 0) {
                     on = isStock;
                 } else {
-                    String upperCase2 = hex.toUpperCase(Locale.ROOT);
-                    Intrinsics.checkNotNullExpressionValue(upperCase2, "toUpperCase(...)");
-                    on = Intrinsics.areEqual(upperCase2, (Object) upperCase);
+                    String up = hex.toUpperCase(Locale.ROOT);
+                    Intrinsics.checkNotNullExpressionValue(up, "toUpperCase(...)");
+                    on = Intrinsics.areEqual(up, cur);
                 }
-                sw.setBackground(this$0.ui.rounded((hex.length() == 0 ? i : 0) != 0 ? CarUi.Companion.getCARD_ON() : Color.parseColor(hex), 26, Integer.valueOf(on ? CarUi.Companion.getACCENT() : Color.rgb(60, 66, 78))));
+                sw.setBackground(this$0.ui.rounded(hex.length() == 0 ? CarUi.Companion.getCARD_ON() : Color.parseColor(hex), 26, Integer.valueOf(on ? CarUi.Companion.getACCENT() : Color.rgb(60, 66, 78))));
                 sw.setScaleX(on ? 1.15f : 1.0f);
                 sw.setScaleY(sw.getScaleX());
-                i = 1;
             }
         }
         this$0.lock($outer, $descTv, $p);

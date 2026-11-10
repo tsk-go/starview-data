@@ -593,239 +593,61 @@ public final class VoiceStudio {
         return j;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    /* JADX WARN: Type inference failed for: r4v0, types: [java.lang.Object] */
-    /* JADX WARN: Type inference failed for: r4v1 */
-    /* JADX WARN: Type inference failed for: r4v10 */
-    /* JADX WARN: Type inference failed for: r4v2 */
-    /* JADX WARN: Type inference failed for: r4v22 */
-    /* JADX WARN: Type inference failed for: r4v23 */
-    /* JADX WARN: Type inference failed for: r4v28 */
-    /* JADX WARN: Type inference failed for: r4v3, types: [java.io.File] */
-    /* JADX WARN: Type inference failed for: r4v4 */
-    /* JADX WARN: Type inference failed for: r4v5 */
-    /* JADX WARN: Type inference failed for: r4v6 */
-    /* JADX WARN: Type inference failed for: r4v7 */
-    /* JADX WARN: Type inference failed for: r4v8 */
-    /* JADX WARN: Type inference failed for: r4v9 */
     public final String download(Context c, Voice v, AtomicBoolean cancel, Function2<? super Long, ? super Long, Unit> progress) {
-        Throwable th;
-        Throwable th2;
-        File file;
-        Throwable th3;
-        File file2;
-        Throwable th4;
-        FileOutputStream fileOutputStream;
-        byte[] bArr;
-        long j;
-        long j2;
         Intrinsics.checkNotNullParameter(c, "c");
-        ?? v2 = v;
-        Intrinsics.checkNotNullParameter(v2, "v");
+        Intrinsics.checkNotNullParameter(v, "v");
         Intrinsics.checkNotNullParameter(cancel, "cancel");
         Intrinsics.checkNotNullParameter(progress, "progress");
         File mdir = mdir(c, v.getKey());
         mdir.mkdirs();
-        File file3 = new File(mdir, "model.onnx.part");
+        File part = new File(mdir, "model.onnx.part");
         try {
-            try {
-                Response execute = getHttp().newCall(new Request.Builder().url("https://huggingface.co/rhasspy/piper-voices/resolve/main/" + v.getJson()).build()).execute();
-                try {
-                    Response response = execute;
-                    try {
-                        if (!response.isSuccessful()) {
-                            try {
-                                String str = "Hugging Face said " + response.code();
-                                CloseableKt.closeFinally(execute, null);
-                                return str;
-                            } catch (Throwable th5) {
-                                th = th5;
-                                v2 = file3;
-                                try {
-                                    throw th;
-                                } catch (Throwable th6) {
-                                    CloseableKt.closeFinally(execute, th);
-                                    throw th6;
-                                }
-                            }
-                        }
-                        ResponseBody body = response.body();
-                        Intrinsics.checkNotNull(body);
-                        String string = body.string();
-                        CloseableKt.closeFinally(execute, null);
-                        JSONObject jSONObject = new JSONObject(string);
-                        Response execute2 = getHttp().newCall(new Request.Builder().url("https://huggingface.co/rhasspy/piper-voices/resolve/main/" + v.getOnnx()).build()).execute();
-                        try {
-                            Response response2 = execute2;
-                            try {
-                                if (!response2.isSuccessful()) {
-                                    String str2 = "Hugging Face said " + response2.code();
-                                    CloseableKt.closeFinally(execute2, null);
-                                    return str2;
-                                }
-                                ResponseBody body2 = response2.body();
-                                Intrinsics.checkNotNull(body2);
-                                Long valueOf = Long.valueOf(body2.getContentLength());
-                                if (!(valueOf.longValue() > 0)) {
-                                    valueOf = null;
-                                }
-                                long longValue = valueOf != null ? valueOf.longValue() : v.getBytes();
-                                InputStream byteStream = body2.byteStream();
-                                try {
-                                    InputStream inputStream = byteStream;
-                                    FileOutputStream fileOutputStream2 = new FileOutputStream(file3);
-                                    try {
-                                        fileOutputStream = fileOutputStream2;
-                                        bArr = new byte[65536];
-                                        j = 0;
-                                        j2 = 0;
-                                    } catch (Throwable th7) {
-                                        file2 = file3;
-                                        th4 = th7;
-                                    }
-                                    while (!cancel.get()) {
-                                        InputStream inputStream2 = inputStream;
-                                        try {
-                                            int read = inputStream2.read(bArr);
-                                            inputStream = inputStream2;
-                                            if (read >= 0) {
-                                                try {
-                                                    fileOutputStream.write(bArr, 0, read);
-                                                    File file4 = file3;
-                                                    j += read;
-                                                    if (j - j2 > 524288) {
-                                                        try {
-                                                            progress.invoke(Long.valueOf(j), Long.valueOf(longValue));
-                                                            j2 = j;
-                                                            file3 = file4;
-                                                        } catch (Throwable th8) {
-                                                            th4 = th8;
-                                                            file2 = file4;
-                                                        }
-                                                    } else {
-                                                        file3 = file4;
-                                                    }
-                                                } catch (Throwable th9) {
-                                                    th4 = th9;
-                                                    file2 = file3;
-                                                }
-                                            } else {
-                                                File file5 = file3;
-                                                try {
-                                                    progress.invoke(Long.valueOf(j), Long.valueOf(longValue));
-                                                    Unit unit = Unit.INSTANCE;
-                                                    try {
-                                                        CloseableKt.closeFinally(fileOutputStream2, null);
-                                                        Unit unit2 = Unit.INSTANCE;
-                                                        try {
-                                                            CloseableKt.closeFinally(byteStream, null);
-                                                            Unit unit3 = Unit.INSTANCE;
-                                                            try {
-                                                                CloseableKt.closeFinally(execute2, null);
-                                                                FilesKt.appendBytes(file5, PiperPrep.INSTANCE.metadataBytes(jSONObject));
-                                                                FilesKt.writeText$default(new File(mdir, "tokens.txt"), PiperPrep.INSTANCE.tokens(jSONObject), null, 2, null);
-                                                                FilesKt.writeText$default(new File(mdir, "config.json"), string, null, 2, null);
-                                                                if (file5.renameTo(new File(mdir, "model.onnx"))) {
-                                                                    return null;
-                                                                }
-                                                                return "Couldn't save it";
-                                                            } catch (Exception e) {
-                                                                e = e;
-                                                                v2 = file5;
-                                                                v2.delete();
-                                                                return "Download failed: " + e.getMessage();
-                                                            }
-                                                        } catch (Throwable th10) {
-                                                            v2 = file5;
-                                                            th2 = th10;
-                                                            try {
-                                                                throw th2;
-                                                            } catch (Throwable th11) {
-                                                                CloseableKt.closeFinally(execute2, th2);
-                                                                throw th11;
-                                                            }
-                                                        }
-                                                    } catch (Throwable th12) {
-                                                        file = file5;
-                                                        th3 = th12;
-                                                        try {
-                                                            throw th3;
-                                                        } catch (Throwable th13) {
-                                                            try {
-                                                                CloseableKt.closeFinally(byteStream, th3);
-                                                                throw th13;
-                                                            } catch (Throwable th14) {
-                                                                th2 = th14;
-                                                                v2 = file;
-                                                                throw th2;
-                                                            }
-                                                        }
-                                                    }
-                                                } catch (Throwable th15) {
-                                                    file2 = file5;
-                                                    th4 = th15;
-                                                }
-                                            }
-                                        } catch (Throwable th16) {
-                                            file2 = file3;
-                                            th4 = th16;
-                                        }
-                                        try {
-                                            throw th4;
-                                        } catch (Throwable th17) {
-                                            try {
-                                                CloseableKt.closeFinally(fileOutputStream2, th4);
-                                                throw th17;
-                                            } catch (Throwable th18) {
-                                                th3 = th18;
-                                                file = file2;
-                                                throw th3;
-                                            }
-                                        }
-                                    }
-                                    try {
-                                        file3.delete();
-                                        try {
-                                            CloseableKt.closeFinally(fileOutputStream2, null);
-                                            CloseableKt.closeFinally(byteStream, null);
-                                            CloseableKt.closeFinally(execute2, null);
-                                            return "Cancelled";
-                                        } catch (Throwable th19) {
-                                            th3 = th19;
-                                            file = file3;
-                                            throw th3;
-                                        }
-                                    } catch (Throwable th20) {
-                                        th4 = th20;
-                                        file2 = file3;
-                                    }
-                                } catch (Throwable th21) {
-                                    file = file3;
-                                    th3 = th21;
-                                }
-                            } catch (Throwable th22) {
-                                th2 = th22;
-                                v2 = file3;
-                            }
-                        } catch (Throwable th23) {
-                            v2 = file3;
-                            th2 = th23;
-                        }
-                    } catch (Exception e2) {
-                        e = e2;
-                        v2 = file3;
-                    }
-                } catch (Throwable th24) {
-                    v2 = file3;
-                    th = th24;
+            String cfgText;
+            try (Response r = getHttp().newCall(new Request.Builder().url("https://huggingface.co/rhasspy/piper-voices/resolve/main/" + v.getJson()).build()).execute()) {
+                if (!r.isSuccessful()) {
+                    return "Hugging Face said " + r.code();
                 }
-            } catch (Exception e3) {
-                e = e3;
-                v2 = file3;
+                ResponseBody body = r.body();
+                Intrinsics.checkNotNull(body);
+                cfgText = body.string();
             }
-        } catch (Exception e4) {
-            e = e4;
-            v2.delete();
+            JSONObject cfg = new JSONObject(cfgText);
+            try (Response r2 = getHttp().newCall(new Request.Builder().url("https://huggingface.co/rhasspy/piper-voices/resolve/main/" + v.getOnnx()).build()).execute()) {
+                if (!r2.isSuccessful()) {
+                    return "Hugging Face said " + r2.code();
+                }
+                ResponseBody body2 = r2.body();
+                Intrinsics.checkNotNull(body2);
+                long total = body2.contentLength() > 0 ? body2.contentLength() : v.getBytes();
+                try (InputStream inp = body2.byteStream(); FileOutputStream out = new FileOutputStream(part)) {
+                    byte[] buf = new byte[65536];
+                    long got = 0;
+                    long shown = 0;
+                    while (true) {
+                        if (cancel.get()) {
+                            part.delete();
+                            return "Cancelled";
+                        }
+                        int n = inp.read(buf);
+                        if (n < 0) {
+                            break;
+                        }
+                        out.write(buf, 0, n);
+                        got += n;
+                        if (got - shown > 524288) {
+                            progress.invoke(Long.valueOf(got), Long.valueOf(total));
+                            shown = got;
+                        }
+                    }
+                    progress.invoke(Long.valueOf(got), Long.valueOf(total));
+                }
+            }
+            FilesKt.appendBytes(part, PiperPrep.INSTANCE.metadataBytes(cfg));
+            FilesKt.writeText$default(new File(mdir, "tokens.txt"), PiperPrep.INSTANCE.tokens(cfg), null, 2, null);
+            FilesKt.writeText$default(new File(mdir, "config.json"), cfgText, null, 2, null);
+            return part.renameTo(new File(mdir, "model.onnx")) ? null : "Couldn't save it";
+        } catch (Exception e) {
+            part.delete();
             return "Download failed: " + e.getMessage();
         }
     }

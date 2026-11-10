@@ -90,136 +90,75 @@ public final class LaneRamps {
         Code decompiled incorrectly, please refer to instructions dump.
     */
     public final List<Ramp> scan(List<OsmRoads.Way> ways, OsmRoads.Way our, double e, double n, double yaw) {
-        Object obj;
-        int i;
-        boolean z;
-        List list;
-        long j;
-        double d;
-        int i2;
-        int i3;
-        boolean z2;
         Intrinsics.checkNotNullParameter(ways, "ways");
         Intrinsics.checkNotNullParameter(our, "our");
-        long id = our.getId();
-        ArrayList arrayList = new ArrayList();
-        Iterator it = ways.iterator();
-        while (true) {
-            obj = null;
-            i = 2;
-            z = false;
-            if (!it.hasNext()) {
-                break;
-            }
-            Object next = it.next();
-            OsmRoads.Way way = (OsmRoads.Way) next;
-            if (way.getId() != id) {
-                if (!StringsKt.endsWith$default(way.getKind(), "_link", false, 2, (Object) null) && Intrinsics.areEqual(way.getKind(), our.getKind())) {
-                    if (our.getName().length() > 0) {
-                    }
-                }
-                z2 = false;
-                if (!z2) {
-                    arrayList.add(next);
-                }
-            }
-            z2 = true;
-            if (!z2) {
+        long ourId = our.getId();
+        // our road: our way, and the other pieces of the same street of the same kind
+        List<OsmRoads.Way> mains = new ArrayList<>();
+        for (OsmRoads.Way w : ways) {
+            boolean same = w.getId() == ourId || (!StringsKt.endsWith$default(w.getKind(), "_link", false, 2, (Object) null) && Intrinsics.areEqual(w.getKind(), our.getKind()) && our.getName().length() > 0 && OsmRoads.INSTANCE.sameStreet(w.getName(), our.getName()));
+            if (same) {
+                mains.add(w);
             }
         }
-        ArrayList arrayList2 = arrayList;
-        if (arrayList2.isEmpty()) {
-            arrayList2 = CollectionsKt.listOf(our);
-        }
-        List list2 = arrayList2;
-        double cos = Math.cos(yaw);
-        double sin = Math.sin(yaw);
-        HashMap hashMap = new HashMap();
-        for (OsmRoads.Way way2 : ways) {
-            if (way2.getId() == id || !StringsKt.endsWith$default(way2.getKind(), "_link", z, i, obj)) {
-                obj = null;
-                i = 2;
-                z = false;
-            } else if (way2.getE().length >= i) {
-                int i4 = 0;
-                ?? r15 = z;
-                while (i4 < i) {
-                    int length = i4 == 0 ? r15 : way2.getE().length - 1;
-                    double d2 = way2.getE()[length] - e;
-                    double d3 = way2.getN()[length] - n;
-                    OsmRoads.Way way3 = way2;
-                    double d4 = (d2 * cos) + (d3 * sin);
-                    if (Math.abs((d2 * sin) - (d3 * cos)) <= 40.0d) {
-                        Iterator it2 = list2.iterator();
-                        if (!it2.hasNext()) {
-                            throw new NoSuchElementException();
-                        }
-                        list = list2;
-                        double distTo = INSTANCE.distTo((OsmRoads.Way) it2.next(), way3.getE()[length], way3.getN()[length], cos, sin);
-                        while (it2.hasNext()) {
-                            distTo = Math.min(distTo, INSTANCE.distTo((OsmRoads.Way) it2.next(), way3.getE()[length], way3.getN()[length], cos, sin));
-                            id = id;
-                        }
-                        j = id;
-                        if (distTo > 10.0d) {
-                            d = cos;
-                        } else {
-                            if (i4 == 0) {
-                                i2 = 1;
-                                i3 = way3.getE().length - 1;
-                            } else {
-                                i2 = 1;
-                                i3 = r15;
-                            }
-                            double[] e2 = way3.getE();
-                            int min = i4 == 0 ? Math.min(e2.length - i2, i2) : Math.max((int) r15, e2.length - 2);
-                            double d5 = way3.getE()[i3] - way3.getE()[length];
-                            d = cos;
-                            double d6 = way3.getN()[i3] - way3.getN()[length];
-                            if (Math.hypot(d5, d6) >= 30.0d) {
-                                double d7 = (d5 * d) + (d6 * sin);
-                                double d8 = ((way3.getE()[min] - way3.getE()[length]) * sin) - ((way3.getN()[min] - way3.getN()[length]) * d);
-                                if (Math.abs(d8) < 1.0d) {
-                                    d8 = (d5 * sin) - (d6 * d);
-                                }
-                                int i5 = d8 > 0.0d ? 1 : -1;
-                                String str = d7 > 0.0d ? "exit" : "merge";
-                                if (!Intrinsics.areEqual(str, "exit") ? -260.0d > d4 || d4 > 60.0d : -20.0d > d4 || d4 > 320.0d) {
-                                    Ramp ramp = new Ramp(str, i5, d4);
-                                    Ramp ramp2 = (Ramp) hashMap.get(Integer.valueOf(i5));
-                                    if (ramp2 == null || Math.abs(ramp.getDist()) < Math.abs(ramp2.getDist())) {
-                                        hashMap.put(Integer.valueOf(i5), ramp);
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        list = list2;
-                        j = id;
-                        d = cos;
-                    }
-                    i4++;
-                    cos = d;
-                    way2 = way3;
-                    list2 = list;
-                    id = j;
-                    i = 2;
-                    r15 = 0;
+        List<OsmRoads.Way> road = mains.isEmpty() ? CollectionsKt.listOf(our) : mains;
+        double hx = Math.cos(yaw);
+        double hy = Math.sin(yaw);
+        HashMap<Integer, Ramp> best = new HashMap<>();
+        for (OsmRoads.Way w : ways) {
+            if (w.getId() == ourId || !StringsKt.endsWith$default(w.getKind(), "_link", false, 2, (Object) null) || w.getE().length < 2) {
+                continue;
+            }
+            for (int end = 0; end < 2; end++) {
+                int i = end == 0 ? 0 : w.getE().length - 1;
+                double de = w.getE()[i] - e;
+                double dn = w.getN()[i] - n;
+                double along = (de * hx) + (dn * hy);
+                if (Math.abs((de * hy) - (dn * hx)) > 40.0d) {
+                    continue;
                 }
-                obj = null;
-                i = 2;
-                z = false;
+                Iterator<OsmRoads.Way> it = road.iterator();
+                if (!it.hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                double d = INSTANCE.distTo(it.next(), w.getE()[i], w.getN()[i], hx, hy);
+                while (it.hasNext()) {
+                    d = Math.min(d, INSTANCE.distTo(it.next(), w.getE()[i], w.getN()[i], hx, hy));
+                }
+                if (d > 10.0d) {
+                    continue;
+                }
+                int far = end == 0 ? w.getE().length - 1 : 0;
+                int next = end == 0 ? Math.min(w.getE().length - 1, 1) : Math.max(0, w.getE().length - 2);
+                double fe = w.getE()[far] - w.getE()[i];
+                double fn = w.getN()[far] - w.getN()[i];
+                if (Math.hypot(fe, fn) < 30.0d) {
+                    continue;
+                }
+                double cross = ((w.getE()[next] - w.getE()[i]) * hy) - ((w.getN()[next] - w.getN()[i]) * hx);
+                if (Math.abs(cross) < 1.0d) {
+                    cross = (fe * hy) - (fn * hx);
+                }
+                int side = cross > 0.0d ? 1 : -1;
+                String kind = (fe * hx) + (fn * hy) > 0.0d ? "exit" : "merge";
+                boolean inRange = Intrinsics.areEqual(kind, "exit") ? (-20.0d <= along && along <= 320.0d) : (-260.0d <= along && along <= 60.0d);
+                if (!inRange) {
+                    continue;
+                }
+                Ramp r = new Ramp(kind, side, along);
+                Ramp have = best.get(Integer.valueOf(side));
+                if (have != null && !(Math.abs(r.getDist()) < Math.abs(have.getDist()))) {
+                    continue;
+                }
+                best.put(Integer.valueOf(side), r);
             }
         }
-        Collection values = hashMap.values();
+        Collection<Ramp> values = best.values();
         Intrinsics.checkNotNullExpressionValue(values, "<get-values>(...)");
-        return CollectionsKt.sortedWith(values, new Comparator() { // from class: com.starpilot.starview.LaneRamps$scan$$inlined$sortedBy$1
-            /* JADX WARN: Multi-variable type inference failed */
+        return CollectionsKt.sortedWith(values, new Comparator<Ramp>() {
             @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
-                LaneRamps.Ramp it3 = (LaneRamps.Ramp) t;
-                LaneRamps.Ramp it4 = (LaneRamps.Ramp) t2;
-                return ComparisonsKt.compareValues(Integer.valueOf(it3.getSide()), Integer.valueOf(it4.getSide()));
+            public final int compare(Ramp a, Ramp b) {
+                return ComparisonsKt.compareValues(Integer.valueOf(a.getSide()), Integer.valueOf(b.getSide()));
             }
         });
     }
