@@ -642,7 +642,7 @@ public final class GxFavoritesPage extends GxPage {
     private final void updateSlot(int var1, boolean var2, Function1<? super GxFavoritesPage.Slot, GxFavoritesPage.Slot> var3) {
         if (!this.saving) {
             GxFavoritesPage.Slot var6 = this.slots.get(var1);
-            Object var9 = (JSONObject)var3.invoke(var6);
+            Object var9 = (GxFavoritesPage.Slot)var3.invoke(var6);
             Object var5 = var9;
             if (var2) {
                 var2 = Intrinsics.areEqual(((GxFavoritesPage.Slot)var9).getKey(), this.setSpeed);
@@ -961,7 +961,7 @@ public final class GxFavoritesPage extends GxPage {
                 Intrinsics.throwUninitializedPropertyAccessException("content");
                 linearLayout8 = null;
             }
-            Switch en = toggle(str5, str6, enabled, linearLayout8, new Function1() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda1
+            Switch en = (Switch) toggle(str5, str6, enabled, linearLayout8, new Function1() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda1
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit render$lambda$43;
@@ -1042,7 +1042,7 @@ public final class GxFavoritesPage extends GxPage {
                 linearLayout11 = linearLayout;
             }
             final int i9 = i2;
-            Switch on = toggle("On-Road Button (C4: tap invisible third)", null, showOnroad, linearLayout11, new Function1() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda5
+            Switch on = (Switch) toggle("On-Road Button (C4: tap invisible third)", null, showOnroad, linearLayout11, new Function1() { // from class: com.starpilot.starview.GxFavoritesPage$$ExternalSyntheticLambda5
                 @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     Unit render$lambda$51;
@@ -1161,198 +1161,89 @@ public final class GxFavoritesPage extends GxPage {
         return Slot.copy$default(it, false, $v, null, null, null, 29, null);
     }
 
-    /* VF: from Vineflower (jadx: Code restructure failed;Removed duplicated region;incorrect) */
-    private final Pair<String, List<String>> categoryOf(JSONObject var1) {
-        List var5;
-        label176: {
-            GalaxyApi var3 = this.getApi();
-            if (var3 != null) {
-                List var19 = var3.getCatalog();
-                var5 = var19;
-                if (var19 != null) {
-                    break label176;
-                }
-            }
-
-            var5 = CollectionsKt.emptyList();
+    private final Pair<String, List<String>> categoryOf(JSONObject f) {
+        GalaxyApi api = getApi();
+        List<GalaxyApi.Category> cats = api != null ? api.getCatalog() : null;
+        if (cats == null) {
+            cats = CollectionsKt.emptyList();
         }
-
-        String var4;
-        String var6;
-        label171: {
-            label170: {
-                label169: {
-                    var6 = var1.optString("key");
-                    if (var6 != null) {
-                        switch (var6.hashCode()) {
-                            case -1223291282:
-                                if (var6.equals("ConditionalExperimental")) {
-                                    break label169;
-                                }
-                                break;
-                            case -1119957410:
-                                if (var6.equals("ConditionalChill")) {
-                                    break label169;
-                                }
-                                break;
-                            case -878798333:
-                                if (var6.equals("__starpilot_controller_action__:cycle_driving_personality")) {
-                                    break label170;
-                                }
-                                break;
-                            case -370744618:
-                                if (var6.equals("__starpilot_favorite_action__:toggle_traffic_mode")) {
-                                    break label170;
-                                }
-                                break;
-                            case 499325643:
-                                if (var6.equals("ExperimentalMode")) {
-                                    break label169;
-                                }
-                        }
-                    }
-
-                    var4 = var6;
-                    break label171;
-                }
-
-                var4 = "LongitudinalControlMode";
-                break label171;
-            }
-
-            var4 = "CustomPersonalities";
-        }
-
-        ListIterator var7 = var5.listIterator(var5.size());
-
-        boolean var2;
-        Object var20;
-        label155:
-        do {
-            if (!var7.hasPrevious()) {
-                var20 = null;
-                break;
-            }
-
-            GalaxyApi.Category var20ss = (GalaxyApi.Category)var7.previous();
-            var var8 = var20ss.getParams();
-            if (var8 instanceof Collection && ((Collection)var8).isEmpty()) {
-                var2 = false;
-            } else {
-                Iterator var31 = var8.iterator();
-
-                while (var31.hasNext()) {
-                    if (Intrinsics.areEqual(((GalaxyApi.Param)var31.next()).getKey(), var4)) {
-                        var2 = true;
-                        continue label155;
-                    }
-                }
-
-                var2 = false;
-            }
-        } while (!var2);
-
-        GalaxyApi.Category var27 = ((Category) var20);
-        var20 = var27;
-        if (var27 == null) {
-            if (Intrinsics.areEqual(var4, "LongitudinalControlMode")) {
-                ListIterator var24 = var5.listIterator(var5.size());
-
-                label134:
-                do {
-                    if (!var24.hasPrevious()) {
-                        var20 = null;
-                        break;
-                    }
-
-                    GalaxyApi.Category var20s = (GalaxyApi.Category)var24.previous();
-                    var var28 = var20s.getParams();
-                    if (var28 instanceof Collection && ((Collection)var28).isEmpty()) {
-                        var2 = false;
-                    } else {
-                        Iterator var29 = var28.iterator();
-
-                        while (var29.hasNext()) {
-                            if (Intrinsics.areEqual(((GalaxyApi.Param)var29.next()).getKey(), "ConditionalExperimental")) {
-                                var2 = true;
-                                continue label134;
-                            }
-                        }
-
-                        var2 = false;
-                    }
-                } while (!var2);
-
-                var20 = var20;
-            } else {
-                var20 = null;
+        String raw = f.optString("key");
+        String key = raw;
+        if (raw != null) {
+            switch (raw) {
+                case "ConditionalExperimental":
+                case "ConditionalChill":
+                case "ExperimentalMode":
+                    key = "LongitudinalControlMode";
+                    break;
+                case "__starpilot_favorite_action__:toggle_traffic_mode":
+                case "__starpilot_controller_action__:cycle_driving_personality":
+                    key = "CustomPersonalities";
+                    break;
             }
         }
-
-        if (var20 == null) {
-            String var14;
-            if (Intrinsics.areEqual(var1.optString("section"), "Actions")) {
-                var14 = "Controller Actions";
-            } else {
-                var var15 = var1.optString("section");
-                if (var15.length() == 0) {
-                    var2 = true;
-                } else {
-                    var2 = false;
+        GalaxyApi.Category cat = null;
+        ListIterator<GalaxyApi.Category> catIt = cats.listIterator(cats.size());
+        search_cat:
+        while (catIt.hasPrevious()) {
+            GalaxyApi.Category c = catIt.previous();
+            for (GalaxyApi.Param prm : c.getParams()) {
+                if (Intrinsics.areEqual(prm.getKey(), key)) {
+                    cat = c;
+                    break search_cat;
                 }
-
-                if (var2) {
-                    var15 = "Other";
-                }
-
-                var14 = var15;
             }
-
-            return TuplesKt.to(var14, CollectionsKt.emptyList());
+        }
+        if (cat == null && Intrinsics.areEqual(key, "LongitudinalControlMode")) {
+            GalaxyApi.Category cat2 = null;
+            ListIterator<GalaxyApi.Category> cat2It = cats.listIterator(cats.size());
+            search_cat2:
+            while (cat2It.hasPrevious()) {
+                GalaxyApi.Category c = cat2It.previous();
+                for (GalaxyApi.Param prm : c.getParams()) {
+                    if (Intrinsics.areEqual(prm.getKey(), "ConditionalExperimental")) {
+                        cat2 = c;
+                        break search_cat2;
+                    }
+                }
+            }
+            cat = cat2;
+        }
+        if (cat == null) {
+            String sec;
+            if (Intrinsics.areEqual(f.optString("section"), "Actions")) {
+                sec = "Controller Actions";
+            } else {
+                sec = f.optString("section");
+                if (sec.length() == 0) {
+                    sec = "Other";
+                }
+            }
+            return TuplesKt.to(sec, CollectionsKt.emptyList());
+        }
+        List<GalaxyApi.Param> params = cat.getParams();
+        LinkedHashMap<String, GalaxyApi.Param> byKey = new LinkedHashMap(RangesKt.coerceAtLeast(MapsKt.mapCapacity(CollectionsKt.collectionSizeOrDefault(params, 10)), 16));
+        for (GalaxyApi.Param prm : params) {
+            byKey.put(prm.getKey(), prm);
+        }
+        GalaxyApi.Param p = byKey.get(key);
+        GalaxyApi.Param cur;
+        if ((p != null && p.isParentToggle()) || !Intrinsics.areEqual(key, raw)) {
+            cur = p;
         } else {
-            Iterable var9 = var20.getParams();
-            Map var25 = new LinkedHashMap(RangesKt.coerceAtLeast(MapsKt.mapCapacity(CollectionsKt.collectionSizeOrDefault(var9, 10)), 16));
-
-            for (Object var30 : var9) {
-                var25.put(((GalaxyApi.Param)var30).getKey(), var30);
-            }
-
-            GalaxyApi.Param var11 = (GalaxyApi.Param)var25.get(var4);
-            if (var11 != null && var11.isParentToggle()) {
-                var2 = true;
-            } else {
-                var2 = false;
-            }
-
-            label107:
-            if (!var2 && Intrinsics.areEqual(var4, var6)) {
-                if (var11 != null) {
-                    String var12 = var11.getParentKey();
-                    if (var12 != null) {
-                        var11 = (GalaxyApi.Param)var25.get(var12);
-                        break label107;
-                    }
-                }
-
-                var11 = null;
-            }
-
-            ArrayList var26 = new ArrayList();
-            HashSet var23 = new HashSet();
-
-            while (var11 != null && var23.add(var11.getKey())) {
-                var26.add(0, var11.getLabel());
-                String var13 = var11.getParentKey();
-                if (var13 != null) {
-                    var11 = (GalaxyApi.Param)var25.get(var13);
-                } else {
-                    var11 = null;
-                }
-            }
-
-            return TuplesKt.to(var20.getName(), var26);
+            String pk = p != null ? p.getParentKey() : null;
+            cur = pk != null ? byKey.get(pk) : null;
         }
+        ArrayList<String> path = new ArrayList();
+        HashSet<String> seen = new HashSet();
+        while (cur != null && seen.add(cur.getKey())) {
+            path.add(0, cur.getLabel());
+            String pk2 = cur.getParentKey();
+            cur = pk2 != null ? byKey.get(pk2) : null;
+        }
+        return TuplesKt.to(cat.getName(), path);
     }
+
 
     private final void chooseControl(final int index) {
         String str;
