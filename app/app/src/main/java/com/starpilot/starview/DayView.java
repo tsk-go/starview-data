@@ -68,10 +68,9 @@ public final class DayView {
         this.dir = d;
     }
 
+    /* recovered by hand from the bytecode (jadx lost its synchronized/use blocks) */
     public final void feed(Bitmap bmp, float meanY, long nowMs) {
         File d;
-        Object obj;
-        FileOutputStream it;
         Intrinsics.checkNotNullParameter(bmp, "bmp");
         Ideas.Here h = this.here;
         if (h == null || (d = this.dir) == null || Double.isNaN(h.getYaw())) {
@@ -91,68 +90,48 @@ public final class DayView {
                 return;
             }
             this.lastLookMs = nowMs;
+            Object obj;
             synchronized (it3) {
-                int i = 0;
-                try {
-                    ArrayList $this$filter$iv = it3;
-                    Collection destination$iv$iv = new ArrayList();
-                    for (Object element$iv$iv : $this$filter$iv) {
-                        if (IdeaSpots.INSTANCE.headingOk(((double[]) element$iv$iv)[2], h.getHdgDeg(), 30.0d)) {
-                            destination$iv$iv.add(element$iv$iv);
-                        }
+                Collection destination$iv$iv = new ArrayList();
+                for (Object element$iv$iv : it3) {
+                    if (IdeaSpots.INSTANCE.headingOk(((double[]) element$iv$iv)[2], h.getHdgDeg(), 30.0d)) {
+                        destination$iv$iv.add(element$iv$iv);
                     }
-                    Iterable $this$minByOrNull$iv = (List) destination$iv$iv;
-                    Iterator iterator$iv = $this$minByOrNull$iv.iterator();
-                    if (iterator$iv.hasNext()) {
-                        Object minElem$iv = iterator$iv.next();
-                        if (iterator$iv.hasNext()) {
-                            double[] it4 = (double[]) minElem$iv;
-                            double minValue$iv = Math.hypot((it4[0] - h.getLat()) * 111195.0d, (it4[1] - h.getLon()) * 111320.0d * Math.cos(Math.toRadians(h.getLat())));
-                            while (true) {
-                                Object e$iv = iterator$iv.next();
-                                double[] it5 = (double[]) e$iv;
-                                int i2 = i;
-                                double v$iv = Math.hypot((it5[0] - h.getLat()) * 111195.0d, (it5[1] - h.getLon()) * 111320.0d * Math.cos(Math.toRadians(h.getLat())));
-                                if (Double.compare(minValue$iv, v$iv) > 0) {
-                                    minElem$iv = e$iv;
-                                    minValue$iv = v$iv;
-                                }
-                                if (!iterator$iv.hasNext()) {
-                                    break;
-                                } else {
-                                    i = i2;
-                                }
-                            }
-                            obj = minElem$iv;
-                        } else {
-                            obj = minElem$iv;
-                        }
-                    } else {
-                        obj = null;
-                    }
-                } catch (Throwable th) {
-                    th = th;
                 }
-                try {
-                    double[] best = (double[]) obj;
-                    if (best == null || Math.hypot((best[0] - h.getLat()) * 111195.0d, (best[1] - h.getLon()) * 111320.0d * Math.cos(Math.toRadians(h.getLat()))) >= 12.0d) {
-                        return;
+                Iterator iterator$iv = ((List) destination$iv$iv).iterator();
+                if (iterator$iv.hasNext()) {
+                    Object minElem$iv = iterator$iv.next();
+                    if (iterator$iv.hasNext()) {
+                        double[] it4 = (double[]) minElem$iv;
+                        double minValue$iv = Math.hypot((it4[0] - h.getLat()) * 111195.0d, (it4[1] - h.getLon()) * 111320.0d * Math.cos(Math.toRadians(h.getLat())));
+                        do {
+                            Object e$iv = iterator$iv.next();
+                            double[] it5 = (double[]) e$iv;
+                            double v$iv = Math.hypot((it5[0] - h.getLat()) * 111195.0d, (it5[1] - h.getLon()) * 111320.0d * Math.cos(Math.toRadians(h.getLat())));
+                            if (Double.compare(minValue$iv, v$iv) > 0) {
+                                minElem$iv = e$iv;
+                                minValue$iv = v$iv;
+                            }
+                        } while (iterator$iv.hasNext());
                     }
-                    String format = String.format(Locale.US, "%.6f_%.6f_%03d_%d.jpg", Arrays.copyOf(new Object[]{Double.valueOf(best[0]), Double.valueOf(best[1]), Integer.valueOf((int) best[2]), Long.valueOf((long) best[3])}, 4));
-                    Intrinsics.checkNotNullExpressionValue(format, "format(...)");
-                    File f = new File(d, format);
-                    Bitmap it6 = BitmapFactory.decodeFile(f.getPath());
-                    if (it6 != null) {
-                        this.showing = it6;
-                        this.showingAtMs = nowMs;
-                        return;
-                    }
-                    return;
-                } catch (Throwable th2) {
-                    th = th2;
-                    throw th;
+                    obj = minElem$iv;
+                } else {
+                    obj = null;
                 }
             }
+            double[] best = (double[]) obj;
+            if (best == null || Math.hypot((best[0] - h.getLat()) * 111195.0d, (best[1] - h.getLon()) * 111320.0d * Math.cos(Math.toRadians(h.getLat()))) >= 12.0d) {
+                return;
+            }
+            String format = String.format(Locale.US, "%.6f_%.6f_%03d_%d.jpg", Arrays.copyOf(new Object[]{Double.valueOf(best[0]), Double.valueOf(best[1]), Integer.valueOf((int) best[2]), Long.valueOf((long) best[3])}, 4));
+            Intrinsics.checkNotNullExpressionValue(format, "format(...)");
+            File f = new File(d, format);
+            Bitmap it6 = BitmapFactory.decodeFile(f.getPath());
+            if (it6 != null) {
+                this.showing = it6;
+                this.showingAtMs = nowMs;
+            }
+            return;
         }
         double moved = Math.hypot((h.getLat() - this.lastSaveLat) * 111195.0d, (h.getLon() - this.lastSaveLon) * 111320.0d * Math.cos(Math.toRadians(h.getLat())));
         if (moved < 15.0d) {
@@ -165,33 +144,24 @@ public final class DayView {
         String name = String.format(Locale.US, "%.6f_%.6f_%03d_%d.jpg", Arrays.copyOf(new Object[]{Double.valueOf(h.getLat()), Double.valueOf(h.getLon()), Integer.valueOf((int) h.getHdgDeg()), Long.valueOf(nowMs)}, 4));
         Intrinsics.checkNotNullExpressionValue(name, "format(...)");
         try {
-            it = new FileOutputStream(new File(d, name));
+            FileOutputStream it = new FileOutputStream(new File(d, name));
+            Throwable cause = null;
+            try {
+                small.compress(Bitmap.CompressFormat.JPEG, 60, it);
+            } catch (Throwable th) {
+                cause = th;
+                throw th;
+            } finally {
+                CloseableKt.closeFinally(it, cause);
+            }
         } catch (Exception e) {
         }
-        Throwable it$c = null;
-        try {
-            small.compress(Bitmap.CompressFormat.JPEG, 60, it);
-            small.recycle();
-            synchronized (it3) {
-                try {
-                    try {
-                        it3.add(new double[]{h.getLat(), h.getLon(), h.getHdgDeg(), nowMs});
-                        if (it3.size() % 200 == 0) {
-                            trim(d, it3);
-                        }
-                    } catch (Throwable th3) {
-                        th = th3;
-                        throw th;
-                    }
-                } catch (Throwable th4) {
-                    th = th4;
-                }
-            }
-        } catch (Throwable it$t) {
-            it$c = it$t;
-            throw it$t;
-        } finally {
-            CloseableKt.closeFinally(it, it$c);
+        small.recycle();
+        synchronized (it3) {
+            it3.add(new double[]{h.getLat(), h.getLon(), h.getHdgDeg(), nowMs});
+        }
+        if (it3.size() % 200 == 0) {
+            trim(d, it3);
         }
     }
 
