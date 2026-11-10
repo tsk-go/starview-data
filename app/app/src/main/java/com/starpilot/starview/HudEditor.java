@@ -757,7 +757,7 @@ public final class HudEditor extends FrameLayout {
     }
 
     /* compiled from: HudEditor.kt */
-    private final class Preview extends View {
+    private static final class Preview extends View {
         private String before;
         private final Paint bg;
         private final Paint dash;

@@ -623,7 +623,7 @@ public final class OffroadHome extends FrameLayout {
     }
 
     /* compiled from: OffroadHome.kt */
-    private final class StatBlock {
+    private static final class StatBlock {
         private final TextView dist;
         private final TextView distUnit;
         private final TextView drives;

@@ -235,7 +235,7 @@ public final class FilesActivity extends AppCompatActivity {
 
     /* JADX INFO: Access modifiers changed from: private */
     /* compiled from: FilesActivity.kt */
-    final class Pane {
+    static final class Pane {
         private List<Entry> entries;
         public TextView info;
         private String lastError;
@@ -745,7 +745,7 @@ public final class FilesActivity extends AppCompatActivity {
                     executorService.execute(new Runnable() { // from class: com.starpilot.starview.FilesActivity$Pane$$ExternalSyntheticLambda16
                         @Override // java.lang.Runnable
                         public final void run() {
-                            FilesActivity.Pane.refresh$lambda$32(FilesActivity.this, h, FilesActivity.Pane.this);
+                            FilesActivity.Pane.refresh$lambda$32(FilesActivity.Pane.this.this$0, h, FilesActivity.Pane.this);
                         }
                     });
                     return;
@@ -2835,7 +2835,7 @@ public final class FilesActivity extends AppCompatActivity {
     }
 
     /* compiled from: FilesActivity.kt */
-    private final class QRow {
+    private static final class QRow {
         private final ProgressBar bar;
         private final Job job;
         private final TextView state;

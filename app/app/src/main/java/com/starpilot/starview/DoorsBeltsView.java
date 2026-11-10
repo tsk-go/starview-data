@@ -1027,7 +1027,7 @@ public final class DoorsBeltsView extends CardPage {
 
     /* JADX INFO: Access modifiers changed from: private */
     /* compiled from: DoorsBelts.kt */
-    final class Learn {
+    static final class Learn {
         private final LearnState st;
         final /* synthetic */ DoorsBeltsView this$0;
 
@@ -1171,14 +1171,14 @@ public final class DoorsBeltsView extends CardPage {
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit paint$lambda$21;
-                                paint$lambda$21 = DoorsBeltsView.Learn.paint$lambda$21(DoorsBeltsView.this, DoorsBeltsView.Learn.this);
+                                paint$lambda$21 = DoorsBeltsView.Learn.paint$lambda$21(DoorsBeltsView.Learn.this.this$0, DoorsBeltsView.Learn.this);
                                 return paint$lambda$21;
                             }
                         }), CarUi.button$default(ui2, "Cancel", false, new Function0() { // from class: com.starpilot.starview.DoorsBeltsView$Learn$$ExternalSyntheticLambda2
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit paint$lambda$23;
-                                paint$lambda$23 = DoorsBeltsView.Learn.paint$lambda$23(DoorsBeltsView.this);
+                                paint$lambda$23 = DoorsBeltsView.Learn.paint$lambda$23(DoorsBeltsView.Learn.this.this$0);
                                 return paint$lambda$23;
                             }
                         }, 2, null)));
@@ -1240,7 +1240,7 @@ public final class DoorsBeltsView extends CardPage {
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit paint$lambda$26;
-                                paint$lambda$26 = DoorsBeltsView.Learn.paint$lambda$26(DoorsBeltsView.this);
+                                paint$lambda$26 = DoorsBeltsView.Learn.paint$lambda$26(DoorsBeltsView.Learn.this.this$0);
                                 return paint$lambda$26;
                             }
                         }, 2, null)));
@@ -1261,14 +1261,14 @@ public final class DoorsBeltsView extends CardPage {
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit paint$lambda$2;
-                                paint$lambda$2 = DoorsBeltsView.Learn.paint$lambda$2(DoorsBeltsView.this, DoorsBeltsView.Learn.this);
+                                paint$lambda$2 = DoorsBeltsView.Learn.paint$lambda$2(DoorsBeltsView.Learn.this.this$0, DoorsBeltsView.Learn.this);
                                 return paint$lambda$2;
                             }
                         }), CarUi.button$default(ui5, "Cancel", false, new Function0() { // from class: com.starpilot.starview.DoorsBeltsView$Learn$$ExternalSyntheticLambda5
                             @Override // kotlin.jvm.functions.Function0
                             public final Object invoke() {
                                 Unit paint$lambda$3;
-                                paint$lambda$3 = DoorsBeltsView.Learn.paint$lambda$3(DoorsBeltsView.this);
+                                paint$lambda$3 = DoorsBeltsView.Learn.paint$lambda$3(DoorsBeltsView.Learn.this.this$0);
                                 return paint$lambda$3;
                             }
                         }, 2, null)));
@@ -1314,14 +1314,14 @@ public final class DoorsBeltsView extends CardPage {
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit paint$lambda$12;
-                        paint$lambda$12 = DoorsBeltsView.Learn.paint$lambda$12(DoorsBeltsView.this, DoorsBeltsView.Learn.this);
+                        paint$lambda$12 = DoorsBeltsView.Learn.paint$lambda$12(DoorsBeltsView.Learn.this.this$0, DoorsBeltsView.Learn.this);
                         return paint$lambda$12;
                     }
                 }), CarUi.button$default(ui7, "Cancel", false, new Function0() { // from class: com.starpilot.starview.DoorsBeltsView$Learn$$ExternalSyntheticLambda10
                     @Override // kotlin.jvm.functions.Function0
                     public final Object invoke() {
                         Unit paint$lambda$14;
-                        paint$lambda$14 = DoorsBeltsView.Learn.paint$lambda$14(DoorsBeltsView.this);
+                        paint$lambda$14 = DoorsBeltsView.Learn.paint$lambda$14(DoorsBeltsView.Learn.this.this$0);
                         return paint$lambda$14;
                     }
                 }, 2, null)));
@@ -1339,21 +1339,21 @@ public final class DoorsBeltsView extends CardPage {
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit paint$lambda$6;
-                    paint$lambda$6 = DoorsBeltsView.Learn.paint$lambda$6(DoorsBeltsView.this, DoorsBeltsView.Learn.this);
+                    paint$lambda$6 = DoorsBeltsView.Learn.paint$lambda$6(DoorsBeltsView.Learn.this.this$0, DoorsBeltsView.Learn.this);
                     return paint$lambda$6;
                 }
             }), CarUi.button$default(ui9, "Skip", false, new Function0() { // from class: com.starpilot.starview.DoorsBeltsView$Learn$$ExternalSyntheticLambda7
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit paint$lambda$8;
-                    paint$lambda$8 = DoorsBeltsView.Learn.paint$lambda$8(DoorsBeltsView.this, DoorsBeltsView.Learn.this);
+                    paint$lambda$8 = DoorsBeltsView.Learn.paint$lambda$8(DoorsBeltsView.Learn.this.this$0, DoorsBeltsView.Learn.this);
                     return paint$lambda$8;
                 }
             }, 2, null), CarUi.button$default(ui10, "Cancel", false, new Function0() { // from class: com.starpilot.starview.DoorsBeltsView$Learn$$ExternalSyntheticLambda8
                 @Override // kotlin.jvm.functions.Function0
                 public final Object invoke() {
                     Unit paint$lambda$10;
-                    paint$lambda$10 = DoorsBeltsView.Learn.paint$lambda$10(DoorsBeltsView.this);
+                    paint$lambda$10 = DoorsBeltsView.Learn.paint$lambda$10(DoorsBeltsView.Learn.this.this$0);
                     return paint$lambda$10;
                 }
             }, 2, null)));

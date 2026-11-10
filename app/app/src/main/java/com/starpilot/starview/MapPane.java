@@ -2396,7 +2396,7 @@ public final class MapPane extends FrameLayout {
     }
 
     /* compiled from: MapPane.kt */
-    private final class Banner extends View {
+    private static final class Banner extends View {
         private final Paint p;
         final /* synthetic */ MapPane this$0;
         private final Paint tp;
@@ -2592,7 +2592,7 @@ public final class MapPane extends FrameLayout {
 
     /* JADX INFO: Access modifiers changed from: private */
     /* compiled from: MapPane.kt */
-    final class MapCanvas extends View {
+    static final class MapCanvas extends View {
         private float bearing;
         private double cx;
         private double cy;
