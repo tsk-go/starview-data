@@ -530,81 +530,55 @@ public final class OsmRoads {
     }
 
     private final void ensureTiles(double lat, double lon) {
-        double fy;
-        long j;
-        double fx;
-        int i;
         ensureBoxes(lat, lon);
-        long j2 = 4576918229304087675L;
         final int ty = (int) Math.floor(lat / 0.01d);
         final int tx = (int) Math.floor(lon / 0.01d);
-        double fy2 = (lat / 0.01d) - ty;
-        double fx2 = (lon / 0.01d) - tx;
+        double fy = (lat / 0.01d) - ty;
+        double fx = (lon / 0.01d) - tx;
+        double my = 0.2713949701465533d;
         double mx = 300.0d / (kx * 0.01d);
-        int dy = -1;
-        while (true) {
-            int i2 = 2;
-            if (dy >= 2) {
-                return;
-            }
-            int dx = -1;
-            while (dx < i2) {
-                if (dy == -1 && fy2 > 0.2713949701465533d) {
-                    j = j2;
-                    fy = fy2;
-                    fx = fx2;
-                    i = i2;
-                } else if ((dy != 1 || fy2 >= 1 - 0.2713949701465533d) && ((dx != -1 || fx2 <= mx) && (dx != 1 || fx2 >= 1 - mx))) {
-                    String k = key(ty + dy, tx + dx);
-                    fy = fy2;
-                    double fy3 = ty + dy;
-                    j = 4576918229304087675L;
-                    fx = fx2;
-                    double fx3 = tx + dx;
-                    if (MapdMaps.INSTANCE.boxFileFor((fy3 + 0.5d) * 0.01d, (fx3 + 0.5d) * 0.01d).getFirst().booleanValue()) {
-                        i = 2;
-                    } else {
-                        Integer st = tiles.get(k);
-                        if (st != null && st.intValue() == 0) {
-                            i = 2;
-                        } else if (st != null && st.intValue() == 1) {
-                            i = 2;
-                        } else {
-                            if (st == null) {
-                                i = 2;
-                            } else {
-                                i = 2;
-                                if (st.intValue() == 2) {
-                                    long currentTimeMillis = System.currentTimeMillis();
-                                    Long l = failedAt.get(k);
-                                    if (currentTimeMillis - (l != null ? l.longValue() : 0L) < 30000) {
-                                    }
-                                }
-                            }
-                            tiles.put(k, 0);
-                            final var dy$f = dy;
-                            final var dx$f = dx;
-                            loader.execute(new Runnable() { // from class: com.starpilot.starview.OsmRoads$$ExternalSyntheticLambda0
-                                @Override // java.lang.Runnable
-                                public final void run() {
-                                    OsmRoads.ensureTiles$lambda$7(ty, dy$f, tx, dx$f);
-                                }
-                            });
-                        }
-                    }
-                } else {
-                    fy = fy2;
-                    fx = fx2;
-                    i = 2;
-                    j = 4576918229304087675L;
+        for (int dy = -1; dy < 2; dy++) {
+            for (int dx = -1; dx < 2; dx++) {
+                if (dy == -1 && fy > my) {
+                    continue;
                 }
-                dx++;
-                i2 = i;
-                j2 = j;
-                fy2 = fy;
-                fx2 = fx;
+                if (dy == 1 && fy < 1 - my) {
+                    continue;
+                }
+                if (dx == -1 && fx > mx) {
+                    continue;
+                }
+                if (dx == 1 && fx < 1 - mx) {
+                    continue;
+                }
+                String k = key(ty + dy, tx + dx);
+                if (MapdMaps.INSTANCE.boxFileFor(((ty + dy) + 0.5d) * 0.01d, ((tx + dx) + 0.5d) * 0.01d).getFirst().booleanValue()) {
+                    continue;
+                }
+                Integer st = tiles.get(k);
+                if (st != null && st.intValue() == 0) {
+                    continue;
+                }
+                if (st != null && st.intValue() == 1) {
+                    continue;
+                }
+                if (st != null && st.intValue() == 2) {
+                    long now = System.currentTimeMillis();
+                    Long l = failedAt.get(k);
+                    if (now - (l != null ? l.longValue() : 0L) < 30000) {
+                        continue;
+                    }
+                }
+                tiles.put(k, 0);
+                final int dy$f = dy;
+                final int dx$f = dx;
+                loader.execute(new Runnable() { // from class: com.starpilot.starview.OsmRoads$$ExternalSyntheticLambda0
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        OsmRoads.ensureTiles$lambda$7(ty, dy$f, tx, dx$f);
+                    }
+                });
             }
-            dy++;
         }
     }
 

@@ -26,54 +26,21 @@ public final class VideoClientKt {
     }
 
     /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:17:0x0053 A[LOOP:0: B:4:0x0016->B:17:0x0053, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:18:0x0051 A[SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public static final boolean hevcDecoder_delegate$lambda$2() {
-        boolean z;
-        boolean z2;
-        int i = 0;
         try {
             Object[] codecInfos = new MediaCodecList(0).getCodecInfos();
             Intrinsics.checkNotNullExpressionValue(codecInfos, "getCodecInfos(...)");
-            Object[] $this$any$iv = codecInfos;
-            int length = $this$any$iv.length;
-            int i2 = 0;
-            while (i2 < length) {
-                Object element$iv = $this$any$iv[i2];
+            for (Object element$iv : codecInfos) {
                 MediaCodecInfo it = (MediaCodecInfo) element$iv;
-                if (!it.isEncoder()) {
-                    Object[] supportedTypes = it.getSupportedTypes();
-                    Intrinsics.checkNotNullExpressionValue(supportedTypes, "getSupportedTypes(...)");
-                    Object[] $this$any$iv2 = supportedTypes;
-                    int length2 = $this$any$iv2.length;
-                    int i3 = i;
-                    while (true) {
-                        if (i3 >= length2) {
-                            z2 = false;
-                            break;
-                        }
-                        Object element$iv2 = $this$any$iv2[i3];
-                        String t = (String) element$iv2;
-                        if (StringsKt.equals(t, "video/hevc", true)) {
-                            z2 = true;
-                            break;
-                        }
-                        i3++;
-                    }
-                    if (z2) {
-                        z = true;
-                        if (!z) {
-                            return true;
-                        }
-                        i2++;
-                        i = 0;
-                    }
+                if (it.isEncoder()) {
+                    continue;
                 }
-                z = false;
-                if (!z) {
+                Object[] supportedTypes = it.getSupportedTypes();
+                Intrinsics.checkNotNullExpressionValue(supportedTypes, "getSupportedTypes(...)");
+                for (Object element$iv2 : supportedTypes) {
+                    if (StringsKt.equals((String) element$iv2, "video/hevc", true)) {
+                        return true;
+                    }
                 }
             }
             return false;

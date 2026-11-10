@@ -263,6 +263,7 @@ public final class ShortcutBoard {
                 it = null;
             }
             if (it != null) {
+                Item removed = (Item) it.remove(i);
             }
         }
         normalize();

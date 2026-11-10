@@ -154,7 +154,6 @@ public final class SlcActionsView extends View {
     }
 
     public final List<Control> controls(long nowNs) {
-        boolean raisesSet;
         SlcPeek.Slc s = getT().slcLive(nowNs);
         if (this.prompt != null && !Intrinsics.areEqual(this.prompt, pendingContext(s))) {
             this.prompt = null;
@@ -182,27 +181,15 @@ public final class SlcActionsView extends View {
                         float adjusted = (!(!Float.isInfinite(f2) && !Float.isNaN(f2)) || s.adjustedMps <= 0.0f) ? s.speedMps : s.adjustedMps;
                         float vCruiseCluster = getT().getVCruiseCluster();
                         float setKph = (1.0f > vCruiseCluster ? 1 : (1.0f == vCruiseCluster ? 0 : -1)) <= 0 && (vCruiseCluster > 250.0f ? 1 : (vCruiseCluster == 250.0f ? 0 : -1)) <= 0 ? getT().getVCruiseCluster() : Float.NaN;
-                        if (getT().getCruiseEnabled()) {
-                            if (((Float.isInfinite(setKph) || Float.isNaN(setKph)) ? false : true) && MathKt.roundToInt((setKph / 3.6f) * k) < MathKt.roundToInt(adjusted * k)) {
-                                raisesSet = true;
-                                if (!s.hasAccepted && Math.abs(s.acceptedMps - s.speedMps) <= 0.02f && !s.driverOverride && !raisesSet) {
-                                    return CollectionsKt.emptyList();
-                                }
-                                float f3 = s.adjustedMps;
-                                String label = ((Float.isInfinite(f3) && !Float.isNaN(f3)) || s.adjustedMps <= 0.0f) ? "USE LIMIT" : "Use limit " + MathKt.roundToInt(s.adjustedMps * k);
-                                String sessionId4 = s.sessionId;
-                                Intrinsics.checkNotNullExpressionValue(sessionId4, "sessionId");
-                                return CollectionsKt.listOf(new Control("adopt", label, sessionId4, s.decisionId, s.presentationId, s.speedMps));
-                            }
+                        boolean raisesSet = getT().getCruiseEnabled() && !Float.isInfinite(setKph) && !Float.isNaN(setKph) && MathKt.roundToInt((setKph / 3.6f) * k) < MathKt.roundToInt(adjusted * k);
+                        if (s.hasAccepted && Math.abs(s.acceptedMps - s.speedMps) <= 0.02f && !s.driverOverride && !raisesSet) {
+                            return CollectionsKt.emptyList();
                         }
-                        raisesSet = false;
-                        if (!s.hasAccepted) {
-                        }
-                        float f32 = s.adjustedMps;
-                        String label2 = ((Float.isInfinite(f32) && !Float.isNaN(f32)) || s.adjustedMps <= 0.0f) ? "USE LIMIT" : "Use limit " + MathKt.roundToInt(s.adjustedMps * k);
-                        String sessionId42 = s.sessionId;
-                        Intrinsics.checkNotNullExpressionValue(sessionId42, "sessionId");
-                        return CollectionsKt.listOf(new Control("adopt", label2, sessionId42, s.decisionId, s.presentationId, s.speedMps));
+                        float f3 = s.adjustedMps;
+                        String label = (!Float.isInfinite(f3) && !Float.isNaN(f3) && s.adjustedMps > 0.0f) ? "Use limit " + MathKt.roundToInt(s.adjustedMps * k) : "USE LIMIT";
+                        String sessionId4 = s.sessionId;
+                        Intrinsics.checkNotNullExpressionValue(sessionId4, "sessionId");
+                        return CollectionsKt.listOf(new Control("adopt", label, sessionId4, s.decisionId, s.presentationId, s.speedMps));
                     }
                 }
                 return CollectionsKt.emptyList();

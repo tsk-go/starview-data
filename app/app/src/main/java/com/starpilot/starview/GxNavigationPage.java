@@ -3966,7 +3966,7 @@ public final class GxNavigationPage extends GxPage {
                                 }
 
                                 label174: {
-                                    var41.addView((View)var72, (android.view.ViewGroup.LayoutParams)(new LayoutParams(-1, -2)));
+                                    var41.addView((View)var72, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
                                     JSONArray var47 = var54.optJSONArray("regions");
                                     if (var47 != null) {
                                         List var67 = this.objects(var47);

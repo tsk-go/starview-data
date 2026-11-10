@@ -2333,7 +2333,7 @@ public final class GxTuningPage extends GxPage {
                     }
                 });
                 View var51 = (View)var22s;
-                LayoutParams var31 = new LayoutParams(-1, -2);
+                android.widget.LinearLayout.LayoutParams var31 = new android.widget.LinearLayout.LayoutParams(-1, -2);
                 var31.topMargin = this.getUi().dp(8);
                 Unit var62 = Unit.INSTANCE;
                 var7.addView(var51, (android.view.ViewGroup.LayoutParams)var31);
@@ -4933,7 +4933,7 @@ public final class GxTuningPage extends GxPage {
                         }
 
                         View var85 = (View)var81;
-                        LayoutParams var82 = new LayoutParams(-1, -2);
+                        android.widget.LinearLayout.LayoutParams var82 = new android.widget.LinearLayout.LayoutParams(-1, -2);
                         var82.bottomMargin = this.getUi().dp(4);
                         Unit var88 = Unit.INSTANCE;
                         var7.addView(var85, (android.view.ViewGroup.LayoutParams)var82);

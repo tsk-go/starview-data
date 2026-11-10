@@ -286,6 +286,7 @@ public final class TurnSignal {
                 if (g >= 15.0d) {
                     if (turnStreet.length() > 0) {
                         if ((name.length() > 0) && OsmRoads.INSTANCE.sameStreet(name, turnStreet)) {
+                            continue;
                         }
                     }
                     if (Double.isNaN(best) || g < best) {
