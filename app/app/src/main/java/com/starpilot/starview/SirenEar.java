@@ -108,7 +108,7 @@ public final class SirenEar {
                 }
                 List<Double> sorted = ArraysKt.sorted(mags);
                 double med = sorted.get(mags.length / 2).doubleValue();
-                double d = (best <= 40 * med || best <= 1.0E8d) ? Double.NaN : (bi * 8000) / 512;
+                double d = (best <= 40 * med || best <= 1.0E8d) ? Double.NaN : (bi * 8000.0d) / 512;
                 peaks.addLast(Double.valueOf(d));
                 if (wantHorn) {
                     double e6 = 0.0d;

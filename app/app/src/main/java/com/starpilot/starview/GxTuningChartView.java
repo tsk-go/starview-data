@@ -163,7 +163,7 @@ final class GxTuningChartView extends View {
             this.path.reset();
             int i5 = 0;
             while (i5 < n3) {
-                float x = (i5 / (n3 - 1)) * w;
+                float x = (((float) i5) / (n3 - 1)) * w;
                 Double d3 = this.samples.get(i5).getV().get(k2);
                 String suffix2 = suffix;
                 double d4 = d2;

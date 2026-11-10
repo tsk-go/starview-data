@@ -378,7 +378,7 @@ public final class Hpms {
                 int i = o.element;
                 o.element = i + 1;
                 b = byteBuffer.get(i) & 255;
-                v |= (b & 127) << s;
+                v |= ((long) (b & 127)) << s;
                 s += 7;
             } while (b >= 128);
             return (v >>> 1) ^ (-(1 & v));

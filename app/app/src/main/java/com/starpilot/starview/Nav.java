@@ -1901,29 +1901,26 @@ public final class Nav {
         int lat = 0;
         int lon = 0;
         while (i < s.length()) {
-            int k = 0;
-            while (k < 2) {
+            for (int k = 0; k < 2; k++) {
                 int shift = 0;
                 int result = 0;
-                while (i < s.length()) {
-                    int i2 = i + 1;
-                    int b = s.charAt(i) - 63;
+                while (true) {
+                    if (i >= s.length()) {
+                        return CollectionsKt.toDoubleArray(out);
+                    }
+                    int b = s.charAt(i++) - 63;
                     result |= (b & 31) << shift;
                     shift += 5;
-                    if (b >= 32) {
-                        i = i2;
-                    } else {
-                        int d = (result & 1) != 0 ? ~(result >> 1) : result >> 1;
-                        if (k == 0) {
-                            lat += d;
-                        } else {
-                            lon += d;
-                        }
-                        k++;
-                        i = i2;
+                    if (b < 32) {
+                        break;
                     }
                 }
-                return CollectionsKt.toDoubleArray(out);
+                int d = (result & 1) != 0 ? ~(result >> 1) : result >> 1;
+                if (k == 0) {
+                    lat += d;
+                } else {
+                    lon += d;
+                }
             }
             out.add(Double.valueOf(lat / 100000.0d));
             out.add(Double.valueOf(lon / 100000.0d));

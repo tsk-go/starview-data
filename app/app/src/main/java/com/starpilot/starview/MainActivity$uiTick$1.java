@@ -1131,13 +1131,18 @@ public final class MainActivity$uiTick$1 implements Runnable {
             var309 = null;
         }
 
-        if (var58.getStarted() && var58.s("nav_card") && var645 != null && !this.this$0.getMapOpen()) {
+        if ((var58.getStarted() && var58.s("nav_card") && var645 != null && !this.this$0.getMapOpen()) || NavOverlay.editing) {
             var132 = 0;
         } else {
             var132 = 8;
         }
 
         var309.setVisibility(var132);
+        // 2.85.0: the see-through map shows with the turn card (its own switch / editor entry)
+        NavMapView navMapView = this.this$0.navMap;
+        if (navMapView != null) {
+            navMapView.setVisibility(((var58.getStarted() && var58.s("nav_map") && var645 != null && !this.this$0.getMapOpen()) || NavOverlay.editing) ? 0 : 8);
+        }
         NavCardView var529 = this.this$0.navCard;
         NavCardView var310 = var529;
         if (var529 == null) {

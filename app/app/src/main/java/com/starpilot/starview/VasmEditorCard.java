@@ -374,15 +374,15 @@ public final class VasmEditorCard extends LinearLayout {
         @Override // android.view.View
         protected void onMeasure(int wSpec, int hSpec) {
             int w = View.MeasureSpec.getSize(wSpec);
-            setMeasuredDimension(w, (int) ((w * this.this$0.height0) / Math.max(1, this.this$0.width0)));
+            setMeasuredDimension(w, (int) ((((long) w) * this.this$0.height0) / Math.max(1, this.this$0.width0)));
         }
 
         private final float sx(int x) {
-            return getWidth() - ((x * getWidth()) / this.this$0.width0);
+            return getWidth() - ((((float) x) * getWidth()) / this.this$0.width0);
         }
 
         private final float sy(int y) {
-            return (y * getHeight()) / this.this$0.height0;
+            return (((float) y) * getHeight()) / this.this$0.height0;
         }
 
         @Override // android.view.View
@@ -471,7 +471,7 @@ public final class VasmEditorCard extends LinearLayout {
                         return true;
                     }
                     ArrayList list2 = this.this$0.pts();
-                    float radius = (this.this$0.ui.dp(20) * this.this$0.width0) / Math.max(1, getWidth());
+                    float radius = (((float) this.this$0.ui.dp(20)) * this.this$0.width0) / Math.max(1, getWidth());
                     ArrayList $this$indexOfFirst$iv = list2;
                     int index$iv = 0;
                     Iterator it2 = $this$indexOfFirst$iv.iterator();

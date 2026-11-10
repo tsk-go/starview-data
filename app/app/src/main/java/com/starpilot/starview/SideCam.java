@@ -92,8 +92,8 @@ public final class SideCam {
             if (c == null) {
                 return null;
             }
-            float sx = fw / this.width;
-            float sy = fh / this.height;
+            float sx = ((float) fw) / this.width;
+            float sy = ((float) fh) / this.height;
             float size = Math.max(1.0f, this.cropSize * Math.min(sx, sy));
             float f = 2;
             return new float[]{(c[0] * sx) - (size / f), (c[1] * sy) - (size / f), size};

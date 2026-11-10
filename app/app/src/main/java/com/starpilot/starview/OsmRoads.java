@@ -1043,33 +1043,22 @@ public final class OsmRoads {
         double d = 0.0d;
         for (Way w : near(e, n, 20.0d)) {
             if (!Intrinsics.areEqual(w.getKind(), "sidewalk")) {
-                int i = 0;
                 int length = w.getE().length - 1;
-                while (i < length) {
+                for (int i = 0; i < length; i++) {
                     double ax = w.getE()[i];
                     double ay = w.getN()[i];
                     double dx = w.getE()[i + 1] - ax;
-                    int i2 = length;
                     double dy = w.getN()[i + 1] - ay;
                     double len2 = (dx * dx) + (dy * dy);
-                    if (len2 < 0.01d) {
-                        dir2 = d;
-                    } else {
+                    if (len2 >= 0.01d) {
                         double t = RangesKt.coerceIn((((e - ax) * dx) + ((n - ay) * dy)) / len2, 0.0d, 1.0d);
-                        dir2 = d;
-                        double dir3 = e - (ax + (t * dx));
-                        double d2 = Math.hypot(dir3, n - (ay + (t * dy)));
+                        double d2 = Math.hypot(e - (ax + (t * dx)), n - (ay + (t * dy)));
                         if (d2 < bd) {
                             bd = d2;
                             best = w;
                             d = Math.atan2(dy, dx) + (w.getOneway() < 0 ? 3.141592653589793d : 0.0d);
-                            i++;
-                            length = i2;
                         }
                     }
-                    d = dir2;
-                    i++;
-                    length = i2;
                 }
             }
         }

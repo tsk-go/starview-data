@@ -293,7 +293,7 @@ public final class VoiceNote {
             r.write(wavHeader$lambda$5$le16(1));
             r.write(wavHeader$lambda$5$le16(1));
             r.write(wavHeader$lambda$5$le32(rate));
-            r.write(wavHeader$lambda$5$le32(rate * 2));
+            r.write(wavHeader$lambda$5$le32(((long) rate) * 2L));
             r.write(wavHeader$lambda$5$le16(2));
             r.write(wavHeader$lambda$5$le16(16));
             byte[] bytes3 = "data".getBytes(Charsets.UTF_8);

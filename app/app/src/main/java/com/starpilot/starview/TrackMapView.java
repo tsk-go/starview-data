@@ -292,10 +292,10 @@ public final class TrackMapView extends View {
                                 style = style2;
                                 tx02 = ty1;
                                 tx = tx2;
-                                float l = sx(tx2 / n2);
+                                float l = sx(((double) tx2) / n2);
                                 tx0 = ty12;
                                 wanted = wanted2;
-                                float t = sy(ty / n2);
+                                float t = sy(((double) ty) / n2);
                                 float s = (float) (512 * scale);
                                 obj = null;
                                 c.drawBitmap(b, (Rect) null, new RectF(l, t, l + s + 0.6f, t + s + 0.6f), this.tileP);

@@ -38,7 +38,7 @@ public final class VasmGeometry {
     }
 
     private final long orient(int[] a, int[] b, int[] c) {
-        return ((b[0] - a[0]) * (c[1] - a[1])) - ((b[1] - a[1]) * (c[0] - a[0]));
+        return (((long) (b[0] - a[0])) * (c[1] - a[1])) - (((long) (b[1] - a[1])) * (c[0] - a[0]));
     }
 
     private final boolean between(int a, int b, int c) {

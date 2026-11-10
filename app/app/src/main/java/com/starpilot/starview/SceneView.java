@@ -2929,7 +2929,7 @@ public final class SceneView extends SurfaceView {
         if (this.viewW == 0 || this.viewH == 0) {
             return;
         }
-        double aspect = this.viewW / this.viewH;
+        double aspect = ((double) this.viewW) / this.viewH;
         double open = aspect < 1.6d ? Math.pow(1.6d / aspect, 0.6d) : 1.0d;
         double h = Math.tan(Math.toRadians(this.fovDeg / 2)) * 0.5d * open;
         double w = (this.viewW * h) / this.viewH;
@@ -8419,7 +8419,7 @@ public final class SceneView extends SurfaceView {
 
     /* JADX INFO: Access modifiers changed from: private */
     public static final float rebuildRibbons$lambda$104(int $n, int i) {
-        return 1.0f - ((i / Math.max(1, $n - 1)) * 0.75f);
+        return 1.0f - ((((float) i) / Math.max(1, $n - 1)) * 0.75f);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
