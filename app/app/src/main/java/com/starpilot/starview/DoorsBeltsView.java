@@ -893,7 +893,7 @@ public final class DoorsBeltsView extends CardPage {
 
                     for (JSONObject var10 : this.items()) {
                         String var5 = var10.optString("id");
-                        CarUi.Companion var14 = null;
+                        CarUi.Companion_ var14 = null;
                         String var4 = var14;
                         if (var7 != null) {
                             var5 = var7.optString(var5);
@@ -962,10 +962,10 @@ public final class DoorsBeltsView extends CardPage {
                                 var14 = "not learned";
                             }
 
-                            var14 = (CharSequence)var14;
+                            var14 = (CharSequence)(Object)var14;
                         }
 
-                        var25.setText((CharSequence)var14);
+                        var25.setText((CharSequence)(Object)var14);
                         int var13;
                         if (Intrinsics.areEqual(var4, "open")) {
                             var13 = CarUi.Companion.getWARN();
