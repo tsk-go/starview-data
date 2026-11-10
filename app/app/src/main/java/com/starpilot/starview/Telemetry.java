@@ -1187,7 +1187,7 @@ public final class Telemetry {
 
     public final void setToggles(Map<String, ? extends Object> map) {
         Intrinsics.checkNotNullParameter(map, "<set-?>");
-        this.toggles = map;
+        this.toggles = (Map) map;
     }
 
     public final boolean getForceCoast() {
@@ -1684,7 +1684,7 @@ public final class Telemetry {
 
     public final void setParams(Map<String, ? extends Object> map) {
         Intrinsics.checkNotNullParameter(map, "<set-?>");
-        this.params = map;
+        this.params = (Map) map;
     }
 
     public final Map<String, Object> getMemParams() {
@@ -1693,7 +1693,7 @@ public final class Telemetry {
 
     public final void setMemParams(Map<String, ? extends Object> map) {
         Intrinsics.checkNotNullParameter(map, "<set-?>");
-        this.memParams = map;
+        this.memParams = (Map) map;
     }
 
     public final Map<String, Object> getInfo() {
@@ -1702,7 +1702,7 @@ public final class Telemetry {
 
     public final void setInfo(Map<String, ? extends Object> map) {
         Intrinsics.checkNotNullParameter(map, "<set-?>");
-        this.info = map;
+        this.info = (Map) map;
     }
 
     public final int getParamsGeneration() {

@@ -64,7 +64,7 @@ public final class DrivingMapView extends ScrollView {
         Intrinsics.checkNotNullParameter(var2, "ui");
         Intrinsics.checkNotNullParameter(var3, "open");
         this.ui = var2;
-        this.open = var3;
+        this.open = (Function2) var3;
         this.shown = new HashMap<>();
         this.hubTitles = new HashMap<>();
         LinearLayout var10 = new LinearLayout(var1);

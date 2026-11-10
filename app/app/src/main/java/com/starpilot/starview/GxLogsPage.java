@@ -323,7 +323,7 @@ public final class GxLogsPage extends GxPage {
             @Override // android.text.TextWatcher
             public void afterTextChanged(Editable s) {
                 String str;
-                Function1<String, Unit> function1 = onChange;
+                Function1<String, Unit> function1 = (Function1) onChange;
                 if (s == null || (str = s.toString()) == null) {
                     str = "";
                 }

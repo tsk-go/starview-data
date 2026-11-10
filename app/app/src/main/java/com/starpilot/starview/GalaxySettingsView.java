@@ -231,9 +231,9 @@ public final class GalaxySettingsView extends FrameLayout {
         Intrinsics.checkNotNullParameter(var4, "openWeb");
         this.ui = var2;
         this.root = var3;
-        this.openWeb = var4;
-        this.footer = var5;
-        this.pageExtras = var6;
+        this.openWeb = (Function2) var4;
+        this.footer = (Function1) var5;
+        this.pageExtras = (Function2) var6;
         this.g = Galaxy7.Companion.current();
         this.main = new Handler(Looper.getMainLooper());
         this.stack = new ArrayList<>();
@@ -276,7 +276,7 @@ public final class GalaxySettingsView extends FrameLayout {
             Intrinsics.checkNotNullParameter(var3, "entries");
             this.title = var1;
             this.page = var2;
-            this.entries = var3;
+            this.entries = (List) var3;
             this.note = var4;
         }
 

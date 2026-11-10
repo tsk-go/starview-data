@@ -46,7 +46,7 @@ public final class ToolsHomeView extends ScrollView {
         Intrinsics.checkNotNullParameter(var4, "open");
         this.ui = var2;
         this.tools = var3;
-        this.open = var4;
+        this.open = (Function1) var4;
         this.lines = new HashMap<>();
         GridLayout var7 = new GridLayout(var1);
         var7.setColumnCount(4);

@@ -71,7 +71,7 @@ public final class VasmEditorCard extends LinearLayout {
         Intrinsics.checkNotNullParameter(var2, "ui");
         Intrinsics.checkNotNullParameter(var3, "save");
         this.ui = var2;
-        this.save = var3;
+        this.save = (Function1) var3;
         this.width0 = 1928;
         this.height0 = 1208;
         this.camLeft = new ArrayList<>();

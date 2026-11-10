@@ -1711,7 +1711,7 @@ public final class GalaxyVisuals {
         }
 
         public final Function1<String, Unit> getOnMove() {
-            return this.onMove;
+            return (Function1) this.onMove;
         }
 
         public final void setOnMove(Function1<? super String, Unit> function1) {
@@ -1719,7 +1719,7 @@ public final class GalaxyVisuals {
         }
 
         public final Function1<String, Unit> getOnCommit() {
-            return this.onCommit;
+            return (Function1) this.onCommit;
         }
 
         public final void setOnCommit(Function1<? super String, Unit> function1) {

@@ -92,7 +92,7 @@ public final class BlinkerTurn {
             var29 = (Iterable) var29$it;
             boolean var41;
             label200: {
-                Object var30 = (OsmRoads.Way)var29;
+                OsmRoads.Way var30 = (OsmRoads.Way)(Object)var29;
                 if (var30.getId() != var2.getId()) {
                     if (var2.getName().length() > 0) {
                         var41 = true;

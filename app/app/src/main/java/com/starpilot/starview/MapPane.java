@@ -1184,14 +1184,14 @@ public final class MapPane extends FrameLayout {
             }
 
             var9 = (String)var57.next();
-            if (((Nav.Route)var9).getIndex() == var6) {
+            if (((Nav.Route)(Object)var9).getIndex() == var6) {
                 var21 = true;
             } else {
                 var21 = false;
             }
         } while (!var21);
 
-        Object var58 = (Nav.Route)var9;
+        Nav.Route var58 = (Nav.Route)(Object)var9;
         var12 = Nav.INSTANCE.getRoute();
         var9 = var11;
         if (var58 != null) {

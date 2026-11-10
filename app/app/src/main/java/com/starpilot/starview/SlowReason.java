@@ -447,7 +447,7 @@ public final class SlowReason {
         }
 
         public final Function1<Event, Unit> getOnEvent() {
-            return this.onEvent;
+            return (Function1) this.onEvent;
         }
 
         public final void setOnEvent(Function1<? super Event, Unit> function1) {

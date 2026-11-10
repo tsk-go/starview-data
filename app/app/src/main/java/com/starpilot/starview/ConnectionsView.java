@@ -71,7 +71,7 @@ public final class ConnectionsView extends ScrollView {
         Intrinsics.checkNotNullParameter(var2, "ui");
         Intrinsics.checkNotNullParameter(var3, "open");
         this.ui = var2;
-        this.open = var3;
+        this.open = (Function1) var3;
         this.cards = new HashMap<>();
         this.main = new Handler(Looper.getMainLooper());
         GridLayout var5 = new GridLayout(var1);

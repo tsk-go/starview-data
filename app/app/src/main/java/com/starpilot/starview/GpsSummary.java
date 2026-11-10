@@ -100,7 +100,7 @@ public final class GpsSummary {
 
             for (Object var22$it : (Iterable) var22) {
                 var22 = (Iterable) var22$it;
-                Object var25 = (GpsFixInfo)var22;
+                GpsFixInfo var25 = (GpsFixInfo)(Object)var22;
                 boolean var44;
                 if (Intrinsics.areEqual(((GpsFixInfo) var25).getService(), "gpsLocationExternal") && Intrinsics.areEqual(((GpsFixInfo) var25).getSource(), "ublox")) {
                     var44 = true;

@@ -62,7 +62,7 @@ public final class SettingsIndex {
 
         for (Object var4$it : (Iterable) var4) {
             var4 = (Iterable) var4$it;
-            Object var6 = (GalaxyRow)var4;
+            GalaxyRow var6 = (GalaxyRow)(Object)var4;
             boolean var3;
             if (!GalaxyRow.Companion.isPipCrop(((GalaxyRow) var6)) && ((GalaxyRow) var6).getControl() != GalaxyRow.Control.GROUP && ((GalaxyRow) var6).getControl() != GalaxyRow.Control.ACTION) {
                 var3 = true;

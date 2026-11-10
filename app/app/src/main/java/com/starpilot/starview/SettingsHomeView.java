@@ -66,9 +66,9 @@ public final class SettingsHomeView extends LinearLayout {
         Intrinsics.checkNotNullParameter(var6, "open");
         this.ui = var2;
         this.grid = var3;
-        this.extraEntries = var4;
-        this.addShortcut = var5;
-        this.open = var6;
+        this.extraEntries = (Function0) var4;
+        this.addShortcut = (Function1) var5;
+        this.open = (Function1) var6;
         LinearLayout var8 = new LinearLayout(var1);
         var8.setOrientation(1);
         this.results = var8;

@@ -114,7 +114,7 @@ public final class SlcActionsView extends View {
     }
 
     public final Function1<JSONObject, Unit> getSend() {
-        return this.send;
+        return (Function1) this.send;
     }
 
     public final void setSend(Function1<? super JSONObject, Unit> function1) {

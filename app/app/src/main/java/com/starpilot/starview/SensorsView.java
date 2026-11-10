@@ -238,7 +238,7 @@ public final class SensorsView extends View {
 
                             while (true) {
                                 var44 = (Iterable)var53.next();
-                                int var14 = Intrinsics.areEqual(((GpsFixInfo)var44).getSource(), "ublox") ^ 1;
+                                int var14 = Intrinsics.areEqual(((GpsFixInfo)(Object)var44).getSource(), "ublox") ^ 1;
                                 var12 = var13;
                                 if (var13 > var14) {
                                     var27 = var44;
@@ -551,7 +551,7 @@ public final class SensorsView extends View {
                                     for (var8 += var12 * var9; var30.hasNext(); var8 += this.d * var15) {
                                         var23 = (Collection)var30.next();
                                         Intrinsics.checkNotNullExpressionValue(var23, "next(...)");
-                                        Object var73 = (String)var23;
+                                        String var73 = (String)(Object)var23;
                                         Paint var83 = this.fill;
                                         Integer var88 = this.colors.get(var73);
                                         if (var88 != null) {

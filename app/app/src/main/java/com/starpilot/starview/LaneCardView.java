@@ -155,7 +155,7 @@ public final class LaneCardView extends View {
     }
 
     public final Function0<List<LaneRamps.Ramp>> getRamps() {
-        return this.ramps;
+        return (Function0) this.ramps;
     }
 
     public final void setRamps(Function0<? extends List<LaneRamps.Ramp>> function0) {

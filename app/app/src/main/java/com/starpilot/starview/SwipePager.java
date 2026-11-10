@@ -42,7 +42,7 @@ public final class SwipePager extends ViewGroup {
     }
 
     public final Function1<Integer, Unit> getOnPage() {
-        return this.onPage;
+        return (Function1) this.onPage;
     }
 
     public final void setOnPage(Function1<? super Integer, Unit> function1) {

@@ -2625,7 +2625,7 @@ public final class GxRecordingsPage extends GxPage {
         }
 
         public final Function1<Integer, Unit> getPaintQual() {
-            return this.paintQual;
+            return (Function1) this.paintQual;
         }
 
         public final void setPaintQual(Function1<? super Integer, Unit> function1) {

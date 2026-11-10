@@ -517,7 +517,7 @@ public final class Detector {
     }
 
     public final Function1<Bitmap, Unit> getShotReq() {
-        return this.shotReq;
+        return (Function1) this.shotReq;
     }
 
     public final void setShotReq(Function1<? super Bitmap, Unit> function1) {
@@ -525,7 +525,7 @@ public final class Detector {
     }
 
     public final Function1<Bitmap, Unit> getWideReq() {
-        return this.wideReq;
+        return (Function1) this.wideReq;
     }
 
     public final void setWideReq(Function1<? super Bitmap, Unit> function1) {
@@ -1962,7 +1962,7 @@ public final class Detector {
                     while (var72.hasNext()) {
                         var97 = (String)var72.next();
                         Intrinsics.checkNotNullExpressionValue(var97, var36);
-                        Object var117 = (Detector.Track)var97;
+                        Detector.Track var117 = (Detector.Track)(Object)var97;
                         if (!var29.contains(var117) && var117.getHits() >= this.need(var117.getCls()) && var117.getWeak() < 6) {
                             float var50 = var117.getX1() - var117.getX0();
                             float var46 = var117.getY1();
@@ -2012,7 +2012,7 @@ public final class Detector {
                 while (var73.hasNext()) {
                     var21 = (Iterable)var73.next();
                     Intrinsics.checkNotNullExpressionValue(var21, var36);
-                    Object var84 = (Detector.Track)var21;
+                    Detector.Track var84 = (Detector.Track)(Object)var21;
                     if (!var29.contains(var84)) {
                         var84.setMisses(var84.getMisses() + 1);
                         float var44 = var84.getVx() * var5;
@@ -2320,7 +2320,7 @@ public final class Detector {
 
                     while (true) {
                         var16 = (Iterable)var49.next();
-                        float var5 = ((Detector.Track)var16).getGx();
+                        float var5 = ((Detector.Track)(Object)var16).getGx();
                         float var25 = var4;
                         if (Float.compare(var4, var5) > 0) {
                             var38 = var16;
@@ -2945,7 +2945,7 @@ public final class Detector {
                             while (var40.hasNext()) {
                                 Detector.Track var153 = (Detector.Track)var40.next();
                                 Intrinsics.checkNotNullExpressionValue(var153, "next(...)");
-                                var153 = ((Detector.Pend)var153).getTr();
+                                var153 = ((Detector.Pend)(Object)var153).getTr();
                                 var153.setRowEv(var153.getRowEv() * 0.93F);
                             }
 
