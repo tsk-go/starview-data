@@ -3479,7 +3479,7 @@ public final class SceneView extends SurfaceView {
                 }
 
                 if (var141 != null) {
-                    var92.add(((View) var141).getId());
+                    var92.add(var141.getId());
                 } else if (var21
                     && !var44.getLead()
                     && Math.abs(var44.getVAbs()) < 2.0F
@@ -3489,7 +3489,7 @@ public final class SceneView extends SurfaceView {
                 }
 
                 boolean var22;
-                if (var141 != null && ((Detector) var141).getCls() == 7) {
+                if (var141 != null && var141.getCls() == 7) {
                     var22 = true;
                 } else {
                     var22 = false;
@@ -3499,7 +3499,7 @@ public final class SceneView extends SurfaceView {
                 if (var22) {
                     var114 = var130;
                 } else {
-                    if (var141 != null && ((Detector) var141).getCls() == 5) {
+                    if (var141 != null && var141.getCls() == 5) {
                         var22 = true;
                     } else {
                         var22 = false;
@@ -3513,7 +3513,7 @@ public final class SceneView extends SurfaceView {
                 }
 
                 if (var141 != null) {
-                    var5 = ((View) var141).getY();
+                    var5 = var141.getY();
                 } else {
                     var5 = var44.getY();
                 }
@@ -3541,7 +3541,7 @@ public final class SceneView extends SurfaceView {
 
                     var11 = var44.getX();
                     if (var141 != null) {
-                        var5 = ((View) var141).getY();
+                        var5 = var141.getY();
                     } else {
                         var5 = var44.getY();
                     }
@@ -7423,7 +7423,7 @@ public final class SceneView extends SurfaceView {
                 Object var27 = var1.get(var31);
                 Intrinsics.checkNotNull(var27);
                 var27 = (Pair)var27;
-                var5 = (((RtkCalibration) (Number)var27).component1()).doubleValue();
+                var5 = ((Number)var27.component1()).doubleValue();
                 var9 = ((Number)var27.component2()).doubleValue();
                 boolean var32;
                 if ((var4 != 1 || var19 != 0) && (var4 != 0 || var19 != 1)) {
@@ -7435,7 +7435,7 @@ public final class SceneView extends SurfaceView {
                 var27 = var1.get(var3);
                 Intrinsics.checkNotNull(var27);
                 var27 = (Pair)var27;
-                double var40 = (((RtkCalibration) (Number)var27).component1()).doubleValue();
+                double var40 = ((Number)var27.component1()).doubleValue();
                 var7 = ((Number)var27.component2()).doubleValue();
                 if (!var32) {
                     var5 = -var5;
@@ -7932,8 +7932,8 @@ public final class SceneView extends SurfaceView {
                     var35 = (Iterator)var107.next();
                     Intrinsics.checkNotNullExpressionValue(var35, "next(...)");
                     Object var41 = (LaneTracks.Line)var35;
-                    if (!(((View) var41).getAlpha() < 0.03F)) {
-                        LaneMarks.Mark var129 = ((LaneTracks) var41).getMark();
+                    if (!(var41.getAlpha() < 0.03F)) {
+                        LaneMarks.Mark var129 = var41.getMark();
                         if (var129 != null) {
                             var16 = var129.getKind();
                         } else {
@@ -7941,7 +7941,7 @@ public final class SceneView extends SurfaceView {
                         }
 
                         if (var16 != var65 && (!var104 || var16 == 2 || var16 == 3)) {
-                            float[] var39 = ((View) var41).getX();
+                            float[] var39 = var41.getX();
                             boolean var82;
                             if (var41 != var36 && var41 != var38) {
                                 var82 = false;
@@ -7983,7 +7983,7 @@ public final class SceneView extends SurfaceView {
                                 var19 = 255;
                             }
 
-                            int var21 = RangesKt.coerceIn((int)(var19 * ((View) var41).getAlpha()), 0, 255);
+                            int var21 = RangesKt.coerceIn((int)(var19 * var41.getAlpha()), 0, 255);
                             int var25 = Companion.withAlpha(var66, var21);
                             int var68;
                             if ((var94 != 0) || (var129) != null && var16 != 0 && var129.getDouble()) {

@@ -1764,14 +1764,14 @@ public abstract class GxPage extends FrameLayout {
         Object var11 = var12.get(var7);
         if (var11 == null) {
             var11 = new LinearLayout((Context)var3.act);
-            ((LinearLayout) var11).setOrientation(1);
+            var11.setOrientation(1);
             var4.addView((View)var11, (android.view.ViewGroup.LayoutParams)(new android.widget.LinearLayout.LayoutParams(-1, -2)));
 
             try {
                 var5.invoke(var6, var11);
             } catch (Exception var8) {
                 Log.e("StarView/Gx", "tab " + var6, var8);
-                ((ViewGroup) var11).addView((View)var3.empty("This tab failed to build:\n" + var8));
+                var11.addView((View)var3.empty("This tab failed to build:\n" + var8));
             }
 
             var12.put(var7, var11);

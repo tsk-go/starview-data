@@ -817,7 +817,7 @@ public final class GxPersonalitiesPage extends GxPage {
                     label234: {
                         if (var3 && var75 != null) {
                             try {
-                                if (!((GalaxyApi) var75).getCatalog().isEmpty()) {
+                                if (!var75.getCatalog().isEmpty()) {
                                     break label234;
                                 }
                             } catch (Exception var34) {
@@ -833,7 +833,7 @@ public final class GxPersonalitiesPage extends GxPage {
 
                         if (var75 != null) {
                             try {
-                                ((GalaxyApi) var75).loadCatalog();
+                                var75.loadCatalog();
                             } catch (Exception var33) {
                                 var5 = var33;
                                 String var50 = var33.getMessage();
@@ -862,7 +862,7 @@ public final class GxPersonalitiesPage extends GxPage {
                     try {
                         var0.acceptData(var2);
                         var40 = new LinkedHashMap();
-                        var76 = ((GalaxyApi) var75).getCatalog().iterator();
+                        var76 = var75.getCatalog().iterator();
                     } catch (Exception var29) {
                         var5 = var29;
                         String var52 = var29.getMessage();
@@ -875,11 +875,11 @@ public final class GxPersonalitiesPage extends GxPage {
 
                     while (true) {
                         try {
-                            if (!((Iterator) var76).hasNext()) {
+                            if (!var76.hasNext()) {
                                 break;
                             }
 
-                            var54 = (((Iterator) (GalaxyApi.Category)var76).next()).getParams().iterator();
+                            var54 = ((GalaxyApi.Category)var76.next()).getParams().iterator();
                         } catch (Exception var31) {
                             var5 = var31;
                             String var53 = var31.getMessage();
@@ -892,11 +892,11 @@ public final class GxPersonalitiesPage extends GxPage {
 
                         while (true) {
                             try {
-                                if (!((Iterator) var54).hasNext()) {
+                                if (!var54.hasNext()) {
                                     break;
                                 }
 
-                                GalaxyApi.Param var6 = ((Iterator) (GalaxyApi.Param)var54).next();
+                                GalaxyApi.Param var6 = (GalaxyApi.Param)var54.next();
                                 var40.put(var6.getKey(), var6);
                             } catch (Exception var30) {
                                 var5 = var30;
@@ -1058,7 +1058,7 @@ public final class GxPersonalitiesPage extends GxPage {
                             }
 
                             try {
-                                var43 = ((Iterable) var42).iterator();
+                                var43 = var42.iterator();
                             } catch (Exception var18) {
                                 var5 = var18;
                                 String var70 = var18.getMessage();
@@ -1071,8 +1071,8 @@ public final class GxPersonalitiesPage extends GxPage {
 
                             label143: {
                                 try {
-                                    while (((Iterator) var43).hasNext()) {
-                                        String var72 = ((Iterator) (String)var43).next();
+                                    while (var43.hasNext()) {
+                                        String var72 = (String)var43.next();
                                         if (!var0.meta.containsKey(var72)) {
                                             break label143;
                                         }
@@ -2814,12 +2814,12 @@ public final class GxPersonalitiesPage extends GxPage {
                         minElem$iv = iterator$iv.next();
                         if (iterator$iv.hasNext()) {
                             int it = ((Number) minElem$iv).intValue();
-                            double minValue$iv = Math.abs(((GxTuningPage) pts.get(it)).getFirst().doubleValue() - x);
+                            double minValue$iv = Math.abs(pts.get(it).getFirst().doubleValue() - x);
                             while (true) {
                                 Object e$iv = iterator$iv.next();
                                 int it2 = ((Number) e$iv).intValue();
                                 List pts2 = pts;
-                                double v$iv = Math.abs(((GxTuningPage) pts.get(it2)).getFirst().doubleValue() - x);
+                                double v$iv = Math.abs(pts.get(it2).getFirst().doubleValue() - x);
                                 if (Double.compare(minValue$iv, v$iv) > 0) {
                                     minElem$iv = e$iv;
                                     minValue$iv = v$iv;

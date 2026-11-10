@@ -146,7 +146,7 @@ public final class FastUpdate {
         String var32;
         label201: {
             if (var18 != null) {
-                String var10 = ((GxTuningPage) (String)var18).getFirst();
+                String var10 = (String)var18.getFirst();
                 var32 = var10;
                 if (var10 != null) {
                     break label201;

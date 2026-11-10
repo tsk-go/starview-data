@@ -181,25 +181,8 @@ public final class FilesActivity extends AppCompatActivity {
             return entry.copy(str, z2, j3, j2);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final String getName() {
-            return this.name;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final boolean getDir() {
-            return this.dir;
-        }
 
-        /* renamed from: component3, reason: from getter */
-        public final long getSize() {
-            return this.size;
-        }
-
-        /* renamed from: component4, reason: from getter */
-        public final long getMtime() {
-            return this.mtime;
-        }
 
         public final Entry copy(String name, boolean dir, long size, long mtime) {
             Intrinsics.checkNotNullParameter(name, "name");
@@ -1797,25 +1780,8 @@ public final class FilesActivity extends AppCompatActivity {
             return job.copy(str, str3, j3, j2);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final String getSrcPath() {
-            return this.srcPath;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final String getDstPath() {
-            return this.dstPath;
-        }
 
-        /* renamed from: component3, reason: from getter */
-        public final long getSize() {
-            return this.size;
-        }
-
-        /* renamed from: component4, reason: from getter */
-        public final long getMtime() {
-            return this.mtime;
-        }
 
         public final Job copy(String srcPath, String dstPath, long size, long mtime) {
             Intrinsics.checkNotNullParameter(srcPath, "srcPath");

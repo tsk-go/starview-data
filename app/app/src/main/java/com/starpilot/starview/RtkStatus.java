@@ -88,188 +88,45 @@ public final /* data */ class RtkStatus {
         return rtkStatus.copy(z5, z6, str13, str14, i5, i6, d14, d15, d16, d17, d18, d19, num4, d20, j2, str23, str16, str17, str18, str19, str20, list3, str21, str22, z7, d21, num5, (134217728 & i3) != 0 ? rtkStatus.actionOp : str11, (i3 & 268435456) != 0 ? rtkStatus.actionState : str12, (i3 & 536870912) != 0 ? rtkStatus.actionAgeS : d9, (i3 & 1073741824) != 0 ? rtkStatus.mountYawDeg : d10, (i3 & Integer.MIN_VALUE) != 0 ? rtkStatus.mountPitchDeg : d11, (i4 & 1) != 0 ? rtkStatus.mountRollDeg : d12, (i4 & 2) != 0 ? rtkStatus.mountErrors : list2, (i4 & 4) != 0 ? rtkStatus.calibration : rtkCalibration, (i4 & 8) != 0 ? rtkStatus.mountKeptYaw : d13, (i4 & 16) != 0 ? rtkStatus.mountKeeping : z4);
     }
 
-    /* renamed from: component1, reason: from getter */
-    public final boolean getConnected() {
-        return this.connected;
-    }
 
-    /* renamed from: component10, reason: from getter */
-    public final double getHAccM() {
-        return this.hAccM;
-    }
 
-    /* renamed from: component11, reason: from getter */
-    public final double getSpeedMs() {
-        return this.speedMs;
-    }
 
-    /* renamed from: component12, reason: from getter */
-    public final double getHeadingDeg() {
-        return this.headingDeg;
-    }
 
-    /* renamed from: component13, reason: from getter */
-    public final Integer getCorrectionAgeS() {
-        return this.correctionAgeS;
-    }
 
-    /* renamed from: component14, reason: from getter */
-    public final Double getRtcmAgeS() {
-        return this.rtcmAgeS;
-    }
 
-    /* renamed from: component15, reason: from getter */
-    public final long getRtcmBytes() {
-        return this.rtcmBytes;
-    }
 
-    /* renamed from: component16, reason: from getter */
-    public final String getFusion() {
-        return this.fusion;
-    }
 
-    /* renamed from: component17, reason: from getter */
-    public final String getMount() {
-        return this.mount;
-    }
 
-    /* renamed from: component18, reason: from getter */
-    public final String getImuInit() {
-        return this.imuInit;
-    }
 
-    /* renamed from: component19, reason: from getter */
-    public final String getInsInit() {
-        return this.insInit;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final boolean getFresh() {
-        return this.fresh;
-    }
 
-    /* renamed from: component20, reason: from getter */
-    public final String getMountInit() {
-        return this.mountInit;
-    }
-
-    /* renamed from: component21, reason: from getter */
-    public final String getSpeedInit() {
-        return this.speedInit;
-    }
 
     public final List<RtkSensor> component22() {
         return this.sensors;
     }
 
-    /* renamed from: component23, reason: from getter */
-    public final String getFirmware() {
-        return this.firmware;
-    }
 
-    /* renamed from: component24, reason: from getter */
-    public final String getModule() {
-        return this.module;
-    }
 
-    /* renamed from: component25, reason: from getter */
-    public final boolean getSpeedFeedOn() {
-        return this.speedFeedOn;
-    }
 
-    /* renamed from: component26, reason: from getter */
-    public final double getSpeedFeedHz() {
-        return this.speedFeedHz;
-    }
 
-    /* renamed from: component27, reason: from getter */
-    public final Integer getSpeedFeedDelayMs() {
-        return this.speedFeedDelayMs;
-    }
 
-    /* renamed from: component28, reason: from getter */
-    public final String getActionOp() {
-        return this.actionOp;
-    }
 
-    /* renamed from: component29, reason: from getter */
-    public final String getActionState() {
-        return this.actionState;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final String getRtk() {
-        return this.rtk;
-    }
 
-    /* renamed from: component30, reason: from getter */
-    public final double getActionAgeS() {
-        return this.actionAgeS;
-    }
 
-    /* renamed from: component31, reason: from getter */
-    public final double getMountYawDeg() {
-        return this.mountYawDeg;
-    }
 
-    /* renamed from: component32, reason: from getter */
-    public final double getMountPitchDeg() {
-        return this.mountPitchDeg;
-    }
-
-    /* renamed from: component33, reason: from getter */
-    public final double getMountRollDeg() {
-        return this.mountRollDeg;
-    }
 
     public final List<String> component34() {
         return this.mountErrors;
     }
 
-    /* renamed from: component35, reason: from getter */
-    public final RtkCalibration getCalibration() {
-        return this.calibration;
-    }
 
-    /* renamed from: component36, reason: from getter */
-    public final double getMountKeptYaw() {
-        return this.mountKeptYaw;
-    }
 
-    /* renamed from: component37, reason: from getter */
-    public final boolean getMountKeeping() {
-        return this.mountKeeping;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final String getFixType() {
-        return this.fixType;
-    }
 
-    /* renamed from: component5, reason: from getter */
-    public final int getUsed() {
-        return this.used;
-    }
 
-    /* renamed from: component6, reason: from getter */
-    public final int getHeard() {
-        return this.heard;
-    }
 
-    /* renamed from: component7, reason: from getter */
-    public final double getLat() {
-        return this.lat;
-    }
 
-    /* renamed from: component8, reason: from getter */
-    public final double getLon() {
-        return this.lon;
-    }
-
-    /* renamed from: component9, reason: from getter */
-    public final double getAltM() {
-        return this.altM;
-    }
 
     public final RtkStatus copy(boolean connected, boolean fresh, String rtk, String fixType, int used, int heard, double lat, double lon, double altM, double hAccM, double speedMs, double headingDeg, Integer correctionAgeS, Double rtcmAgeS, long rtcmBytes, String fusion, String mount, String imuInit, String insInit, String mountInit, String speedInit, List<RtkSensor> sensors, String firmware, String module, boolean speedFeedOn, double speedFeedHz, Integer speedFeedDelayMs, String actionOp, String actionState, double actionAgeS, double mountYawDeg, double mountPitchDeg, double mountRollDeg, List<String> mountErrors, RtkCalibration calibration, double mountKeptYaw, boolean mountKeeping) {
         Intrinsics.checkNotNullParameter(rtk, "rtk");

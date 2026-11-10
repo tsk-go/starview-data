@@ -1954,9 +1954,9 @@ public final class Detector {
                         var97 = (String)var72.next();
                         Intrinsics.checkNotNullExpressionValue(var97, var36);
                         Object var117 = (Detector.Track)var97;
-                        if (!var29.contains(var117) && var117.getHits() >= this.need(((Detector) var117).getCls()) && ((Detector) var117).getWeak() < 6) {
-                            float var50 = ((Detector) var117).getX1() - ((Detector) var117).getX0();
-                            float var46 = ((Detector) var117).getY1();
+                        if (!var29.contains(var117) && var117.getHits() >= this.need(var117.getCls()) && var117.getWeak() < 6) {
+                            float var50 = var117.getX1() - var117.getX0();
+                            float var46 = var117.getY1();
                             float var42 = var117.getY0();
                             float var51 = var117.getCx();
                             float var54 = var117.getVx();
@@ -1969,7 +1969,7 @@ public final class Detector {
 
                             while (var102.hasNext()) {
                                 Detector.Det var115 = (Detector.Det)var102.next();
-                                if (!var28.contains(var115) && this.group(var115.getCls()) == this.group(((Detector) var117).getCls())) {
+                                if (!var28.contains(var115) && this.group(var115.getCls()) == this.group(var117.getCls())) {
                                     var46 = (var115.getX1() - var115.getX0()) / Math.max(var50, 1.0F);
                                     if (!(var46 < 0.67F) && !(var46 > 1.5F)) {
                                         var46 = (float)Math.hypot(
@@ -2005,13 +2005,13 @@ public final class Detector {
                     Intrinsics.checkNotNullExpressionValue(var21, var36);
                     Object var84 = (Detector.Track)var21;
                     if (!var29.contains(var84)) {
-                        var84.setMisses(((Detector) var84).getMisses() + 1);
+                        var84.setMisses(var84.getMisses() + 1);
                         float var44 = var84.getVx() * var5;
                         float var49 = var84.getVy() * var5;
-                        var84.setX0(((Detector) var84).getX0() + var44);
-                        var84.setX1(((Detector) var84).getX1() + var44);
+                        var84.setX0(var84.getX0() + var44);
+                        var84.setX1(var84.getX1() + var44);
                         var84.setY0(var84.getY0() + var49);
-                        var84.setY1(((Detector) var84).getY1() + var49);
+                        var84.setY1(var84.getY1() + var49);
                         var84.setVx(var84.getVx() * 0.9F);
                         var84.setVy(var84.getVy() * 0.9F);
                     }

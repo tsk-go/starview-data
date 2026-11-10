@@ -857,7 +857,7 @@ public final class GxCamerasPage extends GxPage {
         ((TextView) var10).setTextSize(14.0F);
         ((TextView) var10).setTypeface(Typeface.DEFAULT_BOLD);
         ((TextView) var10).setTextColor(var5);
-        ((View) var10).setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 10, var5));
+        var10.setBackground((Drawable)this.getUi().rounded(CarUi.Companion.getCARD_ON(), 10, var5));
         ((TextView) var10).setPadding(this.getUi().dp(12), this.getUi().dp(5), this.getUi().dp(12), this.getUi().dp(5));
         TextView var19 = new TextView((Context)this.getAct());
         var19.setText(var3);

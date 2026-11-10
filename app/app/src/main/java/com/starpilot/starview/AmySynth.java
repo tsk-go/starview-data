@@ -127,25 +127,8 @@ public final class AmySynth {
         private final double f0;
         private final double start;
 
-        /* renamed from: component1, reason: from getter */
-        public final double getF0() {
-            return this.f0;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final double getStart() {
-            return this.start;
-        }
 
-        /* renamed from: component3, reason: from getter */
-        public final float getAmp() {
-            return this.amp;
-        }
-
-        /* renamed from: component4, reason: from getter */
-        public final double getDecay() {
-            return this.decay;
-        }
 
         public final Bell copy(double f0, double start, float amp, double decay) {
             return new Bell(f0, start, amp, decay);

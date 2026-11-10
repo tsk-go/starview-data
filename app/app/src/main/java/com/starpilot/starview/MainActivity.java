@@ -4759,7 +4759,7 @@ public final class MainActivity extends AppCompatActivity {
                                 var34 = var33.getAnswer();
                                 if (var34 != null) {
                                     boolean var16;
-                                    if (var8 - var34.getAtMs() < 3000L && ((LaneModel) var34).getQL() > 0.85F && ((LaneModel) var34).getQR() > 0.85F) {
+                                    if (var8 - var34.getAtMs() < 3000L && var34.getQL() > 0.85F && var34.getQR() > 0.85F) {
                                         var16 = true;
                                     } else {
                                         var16 = false;
@@ -4779,13 +4779,13 @@ public final class MainActivity extends AppCompatActivity {
                         && var2 >= 0.6
                         && var5 > 0
                         && (
-                            ((View) var34).getLeft() != RangesKt.coerceAtMost(this.laneTracker.lanesLeft(), 3)
-                                || ((View) var34).getRight() != RangesKt.coerceAtMost(this.laneTracker.lanesRight(), 3)
+                            var34.getLeft() != RangesKt.coerceAtMost(this.laneTracker.lanesLeft(), 3)
+                                || var34.getRight() != RangesKt.coerceAtMost(this.laneTracker.lanesRight(), 3)
                         )) {
                         this.ideasLabelMs = var8;
                         LaneShots var53 = this.getLaneShots();
-                        int var7 = ((View) var34).getLeft();
-                        var5 = ((View) var34).getRight();
+                        int var7 = var34.getLeft();
+                        var5 = var34.getRight();
                         int var6 = this.laneTracker.lanesLeft();
                         var15 = this.laneTracker.lanesRight();
                         String var35 = LaneShots.Companion.caption(this.laneTracker, "model and card disagree", var1.getVEgo() * 2.23694F);
@@ -5084,7 +5084,7 @@ public final class MainActivity extends AppCompatActivity {
         double var3 = 100;
 
         try {
-            ((GalaxyApi) var154).put("sure", bookmarkNow$r1(var1 * var3)).put("lanes", var7).put("lanes_from", var280);
+            var154.put("sure", bookmarkNow$r1(var1 * var3)).put("lanes", var7).put("lanes_from", var280);
             var131 = var20.marg(-1);
             ArrayList var282 = new ArrayList(var131.length);
             var283 = var282;
@@ -5155,7 +5155,7 @@ public final class MainActivity extends AppCompatActivity {
         try {
             Collection var396 = var291;
             JSONArray var293 = new JSONArray(var396);
-            ((GalaxyApi) var162).put("lanes_right_probabilities", var293);
+            var162.put("lanes_right_probabilities", var293);
             var294 = var20.getWhy();
         } catch (Exception var85) {
             Context var165 = (Context)this;
@@ -5192,7 +5192,7 @@ public final class MainActivity extends AppCompatActivity {
         while (true) {
             boolean var10;
             try {
-                var10 = ((Iterator) var397).hasNext();
+                var10 = var397.hasNext();
             } catch (Exception var81) {
                 Context var170 = (Context)this;
                 String var297 = var81.getMessage();
@@ -5241,12 +5241,12 @@ public final class MainActivity extends AppCompatActivity {
                         JSONObject var178 = new JSONObject();
                         var21.put(
                             "road_data",
-                            var178.put("hpms_lanes", ((LaneBrain) var303).getHpmsLanes())
-                                .put("hpms_name", ((LaneBrain) var303).getHpmsName())
-                                .put("hpms_ramp", ((LaneBrain) var303).getHpmsRamp())
-                                .put("hpms_sure", ((LaneBrain) var303).getHpmsSure())
-                                .put("extra_why", ((LaneBrain) var303).getExtraWhy())
-                                .put("route_straight_lanes", ((LaneBrain) var303).getNavStraight())
+                            var178.put("hpms_lanes", var303.getHpmsLanes())
+                                .put("hpms_name", var303.getHpmsName())
+                                .put("hpms_ramp", var303.getHpmsRamp())
+                                .put("hpms_sure", var303.getHpmsSure())
+                                .put("extra_why", var303.getExtraWhy())
+                                .put("route_straight_lanes", var303.getNavStraight())
                         );
                     } catch (Exception var78) {
                         Context var177 = (Context)this;
@@ -5293,11 +5293,11 @@ public final class MainActivity extends AppCompatActivity {
                     label595: {
                         label594: {
                             try {
-                                if (!((Iterator) var398).hasNext()) {
+                                if (!var398.hasNext()) {
                                     break;
                                 }
 
-                                var375 = ((Iterator) var398).next();
+                                var375 = var398.next();
                                 if (var11 - ((LaneBrain.Event)var375).getAtMs() < 120000L) {
                                     break label594;
                                 }
@@ -5371,11 +5371,11 @@ public final class MainActivity extends AppCompatActivity {
 
                 while (true) {
                     try {
-                        if (!((Iterator) var399).hasNext()) {
+                        if (!var399.hasNext()) {
                             break;
                         }
 
-                        LaneBrain.Event var402 = ((Iterator) (LaneBrain.Event)var399).next();
+                        LaneBrain.Event var402 = (LaneBrain.Event)var399.next();
                         long var130 = (var11 - var402.getAtMs()) / 1000;
                         String var403 = var402.getText();
                         StringBuilder var406 = new StringBuilder();
@@ -5455,11 +5455,11 @@ public final class MainActivity extends AppCompatActivity {
 
                     while (true) {
                         try {
-                            if (!((Iterator) var389).hasNext()) {
+                            if (!var389.hasNext()) {
                                 break;
                             }
 
-                            Nav.Lane var404 = ((Iterator) (Nav.Lane)var389).next();
+                            Nav.Lane var404 = (Nav.Lane)var389.next();
                             JSONObject var400 = new JSONObject();
                             JSONArray var407 = new JSONArray(var404.getArrows());
                             var391.add(var400.put("arrows", var407).put("ok", var404.getOk()).put("use", var404.getUse()));
@@ -5483,7 +5483,7 @@ public final class MainActivity extends AppCompatActivity {
                     try {
                         Collection var206 = ((Collection) var204);
                         JSONArray var329 = new JSONArray(var206);
-                        var19.put("route_next_lanes", ((GalaxyApi) var377).put("lanes", var329));
+                        var19.put("route_next_lanes", var377.put("lanes", var329));
                     } catch (Exception var61) {
                         Context var205 = (Context)this;
                         String var328 = var61.getMessage();
@@ -5515,11 +5515,11 @@ public final class MainActivity extends AppCompatActivity {
                     label529: {
                         label528: {
                             try {
-                                if (!((Iterator) var392).hasNext()) {
+                                if (!var392.hasNext()) {
                                     break;
                                 }
 
-                                var401 = ((Iterator) var392).next();
+                                var401 = var392.next();
                                 if (((String)var401).length() > 0) {
                                     break label528;
                                 }
@@ -5614,7 +5614,7 @@ public final class MainActivity extends AppCompatActivity {
                 }
 
                 try {
-                    var21 = ((GalaxyApi) var380).put("lead", var220);
+                    var21 = var380.put("lead", var220);
                     var8 = var18.getLeftBlinker();
                 } catch (Exception var52) {
                     Context var221 = (Context)this;
@@ -5788,7 +5788,7 @@ public final class MainActivity extends AppCompatActivity {
                 try {
                     var19.put(
                         "openpilot",
-                        ((GalaxyApi) var382).put("lane_change", var232)
+                        var382.put("lane_change", var232)
                             .put("gas", var18.getGasPressed())
                             .put("brake", var18.getBrakePressed())
                             .put("steering_pressed", var18.getSteeringPressed())
@@ -5856,7 +5856,7 @@ public final class MainActivity extends AppCompatActivity {
                 }
 
                 try {
-                    var19.put("lane_question", ((GalaxyApi) var383).put("side", var240).put("why", var355.getWhy()));
+                    var19.put("lane_question", var383.put("side", var240).put("why", var355.getWhy()));
                     var358 = this.laneSuggest;
                 } catch (Exception var38) {
                     Context var241 = (Context)this;
@@ -5921,7 +5921,7 @@ public final class MainActivity extends AppCompatActivity {
                 label381: {
                     label380: {
                         try {
-                            var249 = ((GalaxyApi) var384).put("side", var247).put("street", var361.getStreet());
+                            var249 = var384.put("side", var247).put("street", var361.getStreet());
                             var1 = var361.getDistM();
                             if (!Double.isInfinite(var1) && !Double.isNaN(var1)) {
                                 break label380;
@@ -5956,7 +5956,7 @@ public final class MainActivity extends AppCompatActivity {
                 label365: {
                     label364: {
                         try {
-                            var252 = ((GalaxyApi) var249).put("ft_to_turn", var11);
+                            var252 = var249.put("ft_to_turn", var11);
                             if (var361.getHoldSide() != 0) {
                                 break label364;
                             }
@@ -5975,7 +5975,7 @@ public final class MainActivity extends AppCompatActivity {
                 }
 
                 try {
-                    var19.put("turn_signal", ((GalaxyApi) var252).put("holding", var8).put("not_a_turn_lane", ((TurnSignal) var361).getLaneHold()).put("last", var361.getResult()));
+                    var19.put("turn_signal", var252.put("holding", var8).put("not_a_turn_lane", var361.getLaneHold()).put("last", var361.getResult()));
                     JSONObject var254 = new JSONObject();
                     var19.put(
                         "blinker_settings",
@@ -6053,7 +6053,7 @@ public final class MainActivity extends AppCompatActivity {
             }
 
             try {
-                LaneBrain.Event var24 = ((Iterator) (LaneBrain.Event)var397).next();
+                LaneBrain.Event var24 = (LaneBrain.Event)var397.next();
                 long var13 = (var11 - var24.getAtMs()) / 1000;
                 String var25 = var24.getText();
                 StringBuilder var405 = new StringBuilder();

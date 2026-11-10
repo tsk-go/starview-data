@@ -3675,10 +3675,10 @@ public final class GxNavigationPage extends GxPage {
                 var146 = CollectionsKt.joinToString(CollectionsKt.sortedWith(var150, new Comparator() {
                     @Override
                     public final int compare(Object var1, Object var2) {
-                        var1 = ((String) var1).toLowerCase(Locale.ROOT);
+                        var1 = var1.toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var1, "toLowerCase(...)");
                         Comparable var4 = ((Comparable) var1);
-                        var2 = ((String) var2).toLowerCase(Locale.ROOT);
+                        var2 = var2.toLowerCase(Locale.ROOT);
                         Intrinsics.checkNotNullExpressionValue(var2, "toLowerCase(...)");
                         return ComparisonsKt.compareValues(var4, var2);
                     }
@@ -4287,35 +4287,10 @@ public final class GxNavigationPage extends GxPage {
             return keyMeta.copy(str, str6, str7, i3, str8, str5);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final String getKind() {
-            return this.kind;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final String getBody() {
-            return this.body;
-        }
 
-        /* renamed from: component3, reason: from getter */
-        public final String getPrefix() {
-            return this.prefix;
-        }
 
-        /* renamed from: component4, reason: from getter */
-        public final int getMin() {
-            return this.min;
-        }
 
-        /* renamed from: component5, reason: from getter */
-        public final String getTitle() {
-            return this.title;
-        }
-
-        /* renamed from: component6, reason: from getter */
-        public final String getNavField() {
-            return this.navField;
-        }
 
         public final KeyMeta copy(String kind, String body, String prefix, int min, String title, String navField) {
             Intrinsics.checkNotNullParameter(kind, "kind");

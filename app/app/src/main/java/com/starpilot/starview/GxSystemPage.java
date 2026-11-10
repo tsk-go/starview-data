@@ -918,15 +918,6 @@ public final class GxSystemPage extends GxPage {
             return var0.copy(var1, var2, var3);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final String getKey() {
-            return this.key;
-        }
-
-        /* renamed from: component2, reason: from getter */
-        public final String getLabel() {
-            return this.label;
-        }
 
         public final ArrayList<JSONObject> component3() {
             return this.commits;
@@ -2426,8 +2417,8 @@ public final class GxSystemPage extends GxPage {
             if (var7) {
                 var8 = var11.iterator();
 
-                while (((Iterator) var8).hasNext()) {
-                    buildPicker$versionRow(this, var7, var1, var2, ((JSONObject) ((Iterator) (JSONObject)var8).next()), 0);
+                while (var8.hasNext()) {
+                    buildPicker$versionRow(this, var7, var1, var2, (JSONObject)var8.next(), 0);
                 }
             } else {
                 for (GxSystemPage.DayGroup var48 : (Iterable<GxSystemPage.DayGroup>) var10) {

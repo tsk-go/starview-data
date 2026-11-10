@@ -171,7 +171,7 @@ public final class ReplayBar extends View {
                 label100: {
                     var23 = (String)var28.next();
                     var29 = MapsKt.getValue(this.rects, var23);
-                    ((List) var29).set(var8, var10, var8 + var9, var10 + var12 * 32.0F);
+                    var29.set(var8, var10, var8 + var9, var10 + var12 * 32.0F);
                     var13 = this.d;
                     var1.drawRoundRect(((RectF) var29), this.d * 10.0F, this.d * 10.0F, this.btnBg);
                     switch (var23.hashCode()) {

@@ -233,49 +233,15 @@ public final class VoiceStudio {
         private final List<String> speakerNames;
         private final int speakers;
 
-        /* renamed from: component1, reason: from getter */
-        public final String getKey() {
-            return this.key;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final String getName() {
-            return this.name;
-        }
 
-        /* renamed from: component3, reason: from getter */
-        public final String getRegion() {
-            return this.region;
-        }
 
-        /* renamed from: component4, reason: from getter */
-        public final String getQuality() {
-            return this.quality;
-        }
-
-        /* renamed from: component5, reason: from getter */
-        public final int getSpeakers() {
-            return this.speakers;
-        }
 
         public final List<String> component6() {
             return this.speakerNames;
         }
 
-        /* renamed from: component7, reason: from getter */
-        public final String getOnnx() {
-            return this.onnx;
-        }
 
-        /* renamed from: component8, reason: from getter */
-        public final String getJson() {
-            return this.json;
-        }
-
-        /* renamed from: component9, reason: from getter */
-        public final long getBytes() {
-            return this.bytes;
-        }
 
         public final Voice copy(String key, String name, String region, String quality, int speakers, List<String> speakerNames, String onnx, String json, long bytes) {
             Intrinsics.checkNotNullParameter(key, "key");
@@ -675,20 +641,7 @@ public final class VoiceStudio {
             return style.copy(f, f2, f3);
         }
 
-        /* renamed from: component1, reason: from getter */
-        public final float getExpressive() {
-            return this.expressive;
-        }
 
-        /* renamed from: component2, reason: from getter */
-        public final float getRhythm() {
-            return this.rhythm;
-        }
-
-        /* renamed from: component3, reason: from getter */
-        public final float getPace() {
-            return this.pace;
-        }
 
         public final Style copy(float expressive, float rhythm, float pace) {
             return new Style(expressive, rhythm, pace);

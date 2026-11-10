@@ -13,45 +13,12 @@ final /* data */ class GxLogsProc {
     private final String state;
     private final String user;
 
-    /* renamed from: component1, reason: from getter */
-    public final int getPid() {
-        return this.pid;
-    }
 
-    /* renamed from: component2, reason: from getter */
-    public final String getName() {
-        return this.name;
-    }
 
-    /* renamed from: component3, reason: from getter */
-    public final String getUser() {
-        return this.user;
-    }
 
-    /* renamed from: component4, reason: from getter */
-    public final boolean getKernel() {
-        return this.kernel;
-    }
 
-    /* renamed from: component5, reason: from getter */
-    public final String getState() {
-        return this.state;
-    }
 
-    /* renamed from: component6, reason: from getter */
-    public final Double getCpu() {
-        return this.cpu;
-    }
 
-    /* renamed from: component7, reason: from getter */
-    public final Double getMem() {
-        return this.mem;
-    }
-
-    /* renamed from: component8, reason: from getter */
-    public final String getFeature() {
-        return this.feature;
-    }
 
     public final GxLogsProc copy(int pid, String name, String user, boolean kernel, String state, Double cpu, Double mem, String feature) {
         Intrinsics.checkNotNullParameter(name, "name");

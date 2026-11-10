@@ -1767,7 +1767,7 @@ public final class Nav {
         int k = 0;
         int size = s.size();
         for (int i = 0; i < size; i++) {
-            if (((Nav) s.get(i)).getStartM() <= 1.0d + a) {
+            if (s.get(i).getStartM() <= 1.0d + a) {
                 k = i;
             }
         }
